@@ -4,6 +4,130 @@
 }
 
 <div class="tabContent">
-    <h2>Entry_DDV</h2>
+    <div id="tbl-lbl">
+        <div class="dis-inline-block"><p>Payee:</p></div>
+        <div class="dis-inline-block">
+            <select>
+                <option value="">Yoshikazu Yamada</option>
+            </select>
+        </div>
+    </div>
+    <div>
+        <table class="table table-bordered table-striped voucher-tbl">
+            <thead>
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+                <colgroup span="2"></colgroup>
+                <colgroup span="2"></colgroup>
+                <col />
+                <col />
+                <colgroup span="2"></colgroup>
+                <col />
+                <tr>
+                    <th rowspan="2"></th>
+                    <th rowspan="2">GBase Remarks</th>
+                    <th rowspan="2">Account</th>
+                    <th rowspan="2">Inter-Entity</th>
+                    <th rowspan="2">FBT</th>
+                    <th rowspan="2">Dept</th>
+                    <th rowspan="2" colspan="2">VAT</th>
+                    <th rowspan="2" colspan="2">EWT</th>
+                    <th rowspan="2">CCY</th>
+                    <th colspan="1" scope="colgroup">Debit</th>
+                    <th colspan="2" scope="colgroup">Credit</th>
+                    <th rowspan="2"></th>
+                </tr>
+                <tr>
+                    <th scope="col">Gross Amount</th>
+                    <th scope="col">EWT Amount</th>
+                    <th scope="col">Cash</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td style="border:none" rowspan="2"><p class="float-r glyphicon glyphicon-plus"></p></td>
+                    <td style="border:none" rowspan="2"></td>
+                    <td style="border:none" rowspan="2"></td>
+                    <td style="border:none" rowspan="2"></td>
+                    <td style="border:none" rowspan="2"></td>
+                    <td style="border:none" >SUBTOTAL</td>
+                    <td style="border:none" rowspan="2"></td>
+                    <td style="border:none" rowspan="2"></td>
+                    <td style="border:none" rowspan="2"></td>
+                    <td style="border:none" rowspan="2"></td>
+                    <td style="border:none" rowspan="2"></td>
+                    <td rowspan="2"></td>
+                    <td colspan="1"></td>
+                    <td colspan="1"></td>
+                    <td style="border:none" rowspan="2"></td>
+                </tr>
+                <tr>
+                    <td  style="border:none; background-color: #f2f2f2">TOTAL</td>
+                    <td colspan="2"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="voucherPreview">
+        <div id="tbl-lbl">
+            <div class="dis-inline-block"><p>Preview of Voucher:</p></div>
+        </div>
+        @Html.Partial("DDVPartial")
+    </div>
 </div>
 

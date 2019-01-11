@@ -39,10 +39,15 @@ body, html {
     height: 100%;
     font-family: HelveticaNeue, sans-serif;
     background: #fff;
+    font-size: 11px;
 }
 
 .table {
     padding: 0px;
+}
+
+.voucher-tbl > tbody > tr > td{
+    border-top: none;
 }
 
 /*---------------------------------------------*/
@@ -444,6 +449,8 @@ div.tabContent {
     div.tabContent > div.tabContent {
         margin-left: 5px;
         min-height: 0vh;
+        overflow-y: auto;
+        max-height: 67vh;
     }
 
     div.tabContent.hide {
@@ -492,7 +499,7 @@ div.tabContent {
             text-align: left;
         }
 
-.table-bordered > thead > tr > th {
+.table-bordered > thead > tr > th, .table > tr > th {
     border-right-color: #fff;
     font-size: 12px;
 }
@@ -555,3 +562,21 @@ div.tabContent {
             padding: 5px 5px;
             font-family: HelveticaNeueBold;
         }
+
+/*//////////////////////////////////////////////////////////////////
+[ Voucher - Table ]*/
+
+/*-------------------------------------
+[ DDV ]*/
+#homepage-tabs > div > div > div > .voucher-tbl {
+    border: none;
+}
+.voucher-tbl > tbody > tr > td {
+    padding-left: 0px;
+}
+.voucher-tbl > tbody > tr > td > .input {
+    width:100%;
+}
+img#td-logo {
+    height: 200%;
+}
