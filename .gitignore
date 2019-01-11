@@ -1,3 +1,3 @@
 #ignore bin and obj folders
-ExpenseProcessingSystem/ExpenseProcessingSystem/bin/
-ExpenseProcessingSystem/ExpenseProcessingSystem/obj/
+**/bin/
+**/obj/
