@@ -1,0 +1,16 @@
+﻿
+@{
+    ViewData["Title"] = "DM";
+}
+<div class="tab-content-cont m-t-10">
+    <div id="tbl-lbl">
+        <p>Data List Title:</p>
+        <select>
+        <option value="DMPartial_Payee">Payee</option>
+        <option value="saab">Saab</option>
+        <option value="mercedes">Mercedes</option>
+        <option value="audi">Audi</option>
+        </select>
+   </div>
+    @Html.Partial("DMPartial_Payee")
+</div>

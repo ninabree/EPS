@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewData["Title"] = "BM";
+} 
+<div class="tab-content-cont m-t-10">
+    <div class="tbl-cont">
+        <table class="table table-striped tab-tbl">
+            <thead>
+                <tr>
+                    <th><a asp-action="BM" asp-route-sortOrder="@ViewData["AccountSortParm"]">Account<p class="btn-xs glyphicon @ViewData["glyph-acc"]"></p></a></th>
+                    <th><a asp-action="BM" asp-route-sortOrder="@ViewData["TypeSortParm"]">Type<p class="btn-xs glyphicon @ViewData["glyph-type"]"></p></a></th>
+                    <th>Budget</th>
+                    <th>Current Budget</th>
+                    <th>Last Transaction Date</th>
+                    <th>Last Budget Approval</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>

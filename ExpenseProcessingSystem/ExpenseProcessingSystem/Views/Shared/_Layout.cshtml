@@ -1,13 +1,26 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http;
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    var req = Context.Request.Path.ToString();
+    var isLoggedin = (Context.Request.Path.ToString() == "/Account/Login") ? false : (Context.Request.Path.ToString() == "/") ? false : true;
+    var isEntry = (Context.Request.Path.ToString() == "/Home/Entry") ? true :
+        (Context.Request.Path.ToString() == "/Home/Entry_CV") ? true :
+        (Context.Request.Path.ToString() == "/Home/Entry_DDV") ? true :
+        (Context.Request.Path.ToString() == "/Home/Entry_NC") ? true :
+        (Context.Request.Path.ToString() == "/Home/Entry_PCV") ? true :
+        (Context.Request.Path.ToString() == "/Home/Entry_SS") ? true : false;
+}
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - ExpenseProcessingSystem</title>
+    <title>@ViewData["Title"] - EPS</title>
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="~/css/util.css" />
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -17,36 +30,43 @@
     </environment>
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">ExpenseProcessingSystem</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                </ul>
+    <div id="header">
+        <a href="#" id="header-logo"><img src="~/images/mizuho-logo.jpg" alt="bnklogo"></a>
+    </div>
+    @if (isLoggedin)
+    {
+        <div id="homepage-tabs" class="m-t-30 m-l-25 m-r-25">
+            <ul id="tabs">
+                <li class="active" id="home">@Html.ActionLink("Home", "Index", "Home")</li>
+                <li id="entry">@Html.ActionLink("Entry", "Entry_CV", "Home")</li>
+                <li id="close">@Html.ActionLink("Close", "Close", "Home")</li>
+                <li id="dm">@Html.ActionLink("Data Maintenance", "DM", "Home")</li>
+                <li id="report">@Html.ActionLink("Report", "Report", "Home")</li>
+                <li id="bm">@Html.ActionLink("Budget Monitoring", "BM", "Home")</li>
+            </ul>
+
+            <div class="tabContent">
+                @if (isEntry)
+                {@Html.Partial("EntityTabsPartial")}
+                @RenderBody()
             </div>
         </div>
-    </nav>
+    }
+    else
+    {
+        <partial name="_CookieConsentPartial" />
 
-    <partial name="_CookieConsentPartial" />
-
-    <div class="container body-content">
-        @RenderBody()
+        <div class="body-content">
+            @RenderBody()
+        </div>
+    }
+    <div class="m-l-25 m-r-25">
         <hr />
         <footer>
-            <p>&copy; 2019 - ExpenseProcessingSystem</p>
+            <p>&copy; 2019 - EPS</p>
         </footer>
     </div>
+
 
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>

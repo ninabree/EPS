@@ -1,0 +1,52 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+@*@using ExpenseProcessingSystem.ViewModels.Home
+@model PaginatedList<HomeViewModel>*@
+<div class="tab-content-cont m-t-10">
+    <div id="tbl-lbl"><p>Pending Applications:</p></div>
+    <div class="tbl-cont">
+        <table class="table table-striped tab-tbl table-bordered">
+            <thead>
+                <tr>
+                    <th><a asp-action="Index" asp-route-sortOrder="@ViewData["IdSortParm"]">Application ID<p class="btn-xs glyphicon @ViewData["glyph-id"]"></p></a></th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Payee</th>
+                    <th>Maker</th>
+                    <th>Verifier</th>
+                    <th><a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]">Application Date<p class="btn-xs glyphicon @ViewData["glyph-appDate"]"></p></a></th>
+                    <th>Last Updated</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        @*@{
+            var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+            var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+        }
+
+        <a asp-action="Index"
+           asp-route-sortOrder="@ViewData["CurrentSort"]"
+           asp-route-page="@(Model.PageIndex - 1)"
+           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+           class="btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left">
+        </a>
+        <input type="text" class="pagination-input" id="paginationInput" val="" />
+        <input type="text" class="pagination-input" value="of @(Model.TotalPages)" disabled/>
+        <a asp-action="Index"
+           asp-route-sortOrder="@ViewData["CurrentSort"]"
+           asp-route-page="@(Model.PageIndex + 1)"
+           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+           class="btn btn-xs btn-default @nextDisabled glyphicon glyphicon-menu-right">
+        </a>*@
+    </div>
+</div>
+<environment include="Development">
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+</environment>
+<script type="text/javascript">
+</script>

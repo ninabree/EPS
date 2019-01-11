@@ -1,0 +1,23 @@
+﻿
+@{
+    ViewData["Title"] = "DMPartial_Payee";
+}
+
+<div class="tbl-cont">
+    <table class="table table-striped tab-tbl">
+        <thead>
+            <tr>
+                <th><a asp-action="DM" asp-route-sortOrder="@ViewData["PayeeSortParm"]">Payee<p class="btn-xs glyphicon @ViewData["glyph-payee"]"></p></a></th>
+                <th><a asp-action="DM" asp-route-sortOrder="@ViewData["TINSortParm"]">TIN<p class="btn-xs glyphicon @ViewData["glyph-tin"]"></p></a></th>
+                <th>Address</th>
+                <th>Type</th>
+                <th>Number</th>
+                <th>Input By</th>
+                <th>Approver</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
