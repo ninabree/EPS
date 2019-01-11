@@ -2,3 +2,5 @@
 **/bin/
 #ignore obj folder
 **/obj/
+#ignore .vs folder
+**/.vs/
