@@ -104,12 +104,14 @@ input {
 }
 .input {
     background: #fff;
+    padding: 2px;
     font-size: 10px;
-    color: #555555;
+    color: #333;
     line-height: 1.2;
-    height: 20px;
-    width: 100%;
-    display: inline-block;
+    height: 17px;
+    width: 90%;
+    border: 1px solid #ccc;
+    border-radius: 2px;
 }
 a.sidebar-link {
     width: 100%;
@@ -117,7 +119,13 @@ a.sidebar-link {
     height: 100%;
     text-align: left;
 }
-
+#tbl-lbl > div > select {
+    width: 50vh;
+    height: 20px;
+    margin: 5px;
+    border-color: #ccc;
+    color: #333;
+}
 textarea {
     outline: none;
     border: none;

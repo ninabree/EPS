@@ -19,8 +19,7 @@
                     <th>Status</th>
                 </tr>
             </thead>
-            <tbody>
-            </tbody>
+            <tbody></tbody>
         </table>
         <div class="tbl-controls m-t-20">
             <button class="tbl-btn float-l">Close RBU</button>
@@ -29,7 +28,11 @@
             <button class="tbl-btn float-r">Print RBU Proof sheet</button>
         </div>
 
-        <div id="tbl-lbl"><p>Status:</p></div>
+        <div id="tbl-lbl">
+            <div class="dis-inline-block"><p>Status:</p></div>
+            <div class="dis-inline-block"><input class="input" /></div>
+        </div>
+
     </div>
     <div class="tbl-cont m-t-20 m-b-20">
         <table class="table table-striped tab-tbl m-b-20">
@@ -57,16 +60,19 @@
             <button class="tbl-btn float-r">Print FCDU Proof sheet</button>
         </div>
 
-        <div id="tbl-lbl"><p>Status:</p> <input class="input"/></div>
+        <div id="tbl-lbl">
+            <div class="dis-inline-block"><p>Status:</p></div>
+            <div class="dis-inline-block"><input class="input" /></div>
+        </div>
     </div>
     <hr class="dotted" />
     <div id="tbl-lbl"><p>Petty Cash Balance:</p></div>
     <table class="table" id="close-tbl">
         <thead>
             <tr>
-                <td width="10%"></td>
-                <td width="25%"></td>
-                <td width="65%"></td>
+                <td width="18%"></td>
+                <td></td>
+                <td></td>
             </tr>
         </thead>
         <tbody>
@@ -74,9 +80,8 @@
                 <td>
                     <p>Beginning Balance</p>
                 </td>
-                <td class="login-input">
-                    <input class="input100" />
-                    <span class="focus-input100" data-placeholder=""></span>
+                <td>
+                    <input class="input" />
                 </td>
                 <td>
                     <button class="tbl-btn">Beginning Cash balance Confirmation</button>
@@ -86,9 +91,8 @@
                 <td>
                     <p>Cash-IN</p>
                 </td>
-                <td class="login-input">
-                    <input class="input100" />
-                    <span class="focus-input100" data-placeholder=""></span>
+                <td>
+                    <input class="input" />
                 </td>
                 <td></td>
             </tr>
@@ -96,9 +100,8 @@
                 <td>
                     <p>Cash-OUT</p>
                 </td>
-                <td class="login-input">
-                    <input class="input100" />
-                    <span class="focus-input100" data-placeholder=""></span>
+                <td>
+                    <input class="input" />
                 </td>
                 <td></td>
             </tr>
@@ -106,9 +109,8 @@
                 <td>
                     <p>Ending Balance</p>
                 </td>
-                <td class="login-input">
-                    <input class="input100" />
-                    <span class="focus-input100" data-placeholder=""></span>
+                <td>
+                    <input class="input" />
                 </td>
                 <td>
                     <button class="tbl-btn">Petty Cash Breakdown</button>
