@@ -45,7 +45,9 @@ body, html {
 .table {
     padding: 0px;
 }
-
+.table > tbody > tr > td {
+    border-top: none;
+}
 /*---------------------------------------------*/
 a {
     font-family: HelveticaNeue;
@@ -537,14 +539,20 @@ div.tabContent {
         color: #fff;
     }
 
-.home-btn {
-    padding: 0px 2px;
-    margin: 0px;
-    font-size: 10px;
-    /*color: #333;*/
+.btn {
+    font-size: 11px;
     background-color: #fff;
     border-color: #ccc;
+    border-radius: 2px;
+    padding: 1px 5px;
+    margin: 1px 5px;
+    font-family: HelveticaNeueMedium;
 }
+
+    .btn:hover {
+        background-color: #0a1b81;
+        color: #fff;
+    }
 
 #close-tbl > tbody > tr {
     height: 2px;
@@ -558,6 +566,18 @@ div.tabContent {
             padding: 5px 5px;
             font-family: HelveticaNeueBold;
         }
+/*//////////////////////////////////////////////////////////////////
+[ Modal ]*/
+.modal-header, .modal-body, .modal-footer {
+    padding: 5px;
+}
+    .modal-footer > .btn {
+        margin-bottom: 0;
+        margin-left: 5px;
+    }
+/*.modal-backdrop {
+    background-color: #00000099;
+}*/
 
 /*//////////////////////////////////////////////////////////////////
 [ Voucher - Table ]*/

@@ -94,6 +94,12 @@ namespace ExpenseProcessingSystem.Controllers
             return View();
         }
 
+        [HttpPost]
+        //[Route("/RedirectCont/")]
+        public IActionResult RedirectCont(string Cont, string Method)
+        {
+            return RedirectToAction(Method, Cont);
+        }
         //---
         //public List<HomeViewModel> PopulateHome()
         //{

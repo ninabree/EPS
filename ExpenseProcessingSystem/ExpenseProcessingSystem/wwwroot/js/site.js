@@ -91,4 +91,43 @@
         var hashPos = url.lastIndexOf('#');
         return url.substring(hashPos + 1);
     }
+    //modals
+    function showREModal() {
+        alert();
+    }
 });
+$(function () {
+    /*//////////////////////////////////////////////////////////////////
+    [ MODAL ]*/
+    //set content to modal body and show dynamic modal
+    $("#reversal_entry").click(function () {
+        //controller name, method name, modal header
+        ModalPopup('Modal', 'ReversalEntryModal','Reversal Entry');
+    });
+
+    //set modal contents and show
+    function ModalPopup(modal, method, modalHeader) {
+        var modalDivBody = $('.modal-body');
+        var modalDivHeader = $('.modal-header');
+
+        $.ajax({
+            url: "RedirectCont/",
+            type: "POST",
+            data: { Cont: modal, Method: method }, //set controller and method name to show
+            success: function (data) {
+                //remove prev contents
+                modalDivBody.empty();
+                modalDivHeader.find('h4').remove();
+
+                //set modal header title
+                modalDivHeader.append('<h4 class="modal-title">' + modalHeader + '</h4>');
+                modalDivBody.html(data);
+
+                $('#myModal').modal('show');
+            },
+            fail: function (ex) {
+                alert("fail");
+            }
+        });
+    }
+}); 
