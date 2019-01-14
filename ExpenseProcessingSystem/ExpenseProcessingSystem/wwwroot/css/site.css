@@ -46,10 +46,6 @@ body, html {
     padding: 0px;
 }
 
-.voucher-tbl > tbody > tr > td{
-    border-top: none;
-}
-
 /*---------------------------------------------*/
 a {
     font-family: HelveticaNeue;
@@ -572,11 +568,23 @@ div.tabContent {
     border: none;
 }
 .voucher-tbl > tbody > tr > td {
-    padding-left: 0px;
+    padding: 1px 5px;
 }
 .voucher-tbl > tbody > tr > td > .input {
     width:100%;
 }
 img#td-logo {
-    height: 200%;
+    height: 250%;
+}
+
+.voucher-tbl > tbody > tr > td {
+    border-top: none;
+}
+
+.border-dotted {
+    border: 1px dotted #555 !important;
+}
+
+.border-solid {
+    border: 1px solid #777 !important;
 }
