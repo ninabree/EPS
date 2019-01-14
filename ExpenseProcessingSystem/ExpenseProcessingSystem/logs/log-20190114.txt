@@ -1,0 +1,199 @@
+2019-01-14 10:00:31.342 +08:00 [Information] Hello, Serilog!
+2019-01-14 10:00:33.684 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/  
+2019-01-14 10:00:34.154 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-14 10:00:34.212 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 10:00:34.231 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 5.6546ms.
+2019-01-14 10:00:34.344 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-14 10:00:34.813 +08:00 [Information] Executed ViewResult - view "Login" executed in 548.1096ms.
+2019-01-14 10:00:34.821 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 663.2483ms
+2019-01-14 10:00:34.857 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/login/util.css  
+2019-01-14 10:00:34.859 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/login/main.css  
+2019-01-14 10:00:34.865 +08:00 [Information] Request finished in 1192.5483ms 200 text/html; charset=utf-8
+2019-01-14 10:00:34.869 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-14 10:00:34.870 +08:00 [Information] Request finished in 13.0355ms 404 
+2019-01-14 10:00:34.870 +08:00 [Information] Request finished in 10.1421ms 404 
+2019-01-14 10:00:34.926 +08:00 [Information] The file "/css/site.css" was not modified
+2019-01-14 10:00:34.934 +08:00 [Information] Request finished in 64.8015ms 304 text/css
+2019-01-14 10:00:35.170 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/animsition/js/animsition.min.js  
+2019-01-14 10:00:35.170 +08:00 [Information] Request finished in 0.6354ms 404 
+2019-01-14 10:00:35.171 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/select2/select2.min.js  
+2019-01-14 10:00:35.171 +08:00 [Information] Request finished in 0.461ms 404 
+2019-01-14 10:00:35.174 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/js/main.js  
+2019-01-14 10:00:35.175 +08:00 [Information] Request finished in 0.4225ms 404 
+2019-01-14 10:00:35.206 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/login/util.css  
+2019-01-14 10:00:35.207 +08:00 [Information] Request finished in 0.484ms 404 
+2019-01-14 10:00:35.264 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/login/main.css  
+2019-01-14 10:00:35.265 +08:00 [Information] Request finished in 3.2573ms 404 
+2019-01-14 10:00:35.300 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/animsition/js/animsition.min.js  
+2019-01-14 10:00:35.302 +08:00 [Information] Request finished in 4.0865ms 404 
+2019-01-14 10:00:35.313 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/select2/select2.min.js  
+2019-01-14 10:00:35.314 +08:00 [Information] Request finished in 0.7562ms 404 
+2019-01-14 10:00:35.325 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/js/main.js  
+2019-01-14 10:00:35.326 +08:00 [Information] Request finished in 0.6305ms 404 
+2019-01-14 10:25:53.542 +08:00 [Information] Hello, Serilog!
+2019-01-14 10:25:55.762 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/  
+2019-01-14 10:25:56.245 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-14 10:25:56.304 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 10:25:56.323 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 5.3416ms.
+2019-01-14 10:25:56.450 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-14 10:25:57.076 +08:00 [Information] Executed ViewResult - view "Login" executed in 725.2696ms.
+2019-01-14 10:25:57.082 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 831.8512ms
+2019-01-14 10:25:57.116 +08:00 [Information] Request finished in 1369.8043ms 200 text/html; charset=utf-8
+2019-01-14 10:25:57.117 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-14 10:25:57.173 +08:00 [Information] The file "/css/site.css" was not modified
+2019-01-14 10:25:57.182 +08:00 [Information] Request finished in 64.9835ms 304 text/css
+2019-01-14 10:25:57.397 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/login/util.css  
+2019-01-14 10:25:57.401 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/login/main.css  
+2019-01-14 10:25:57.402 +08:00 [Information] Request finished in 1.3687ms 404 
+2019-01-14 10:25:57.402 +08:00 [Information] Request finished in 4.8522ms 404 
+2019-01-14 10:25:57.427 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/animsition/js/animsition.min.js  
+2019-01-14 10:25:57.427 +08:00 [Information] Request finished in 0.6422ms 404 
+2019-01-14 10:25:57.435 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/login/util.css  
+2019-01-14 10:25:57.436 +08:00 [Information] Request finished in 2.0321ms 404 
+2019-01-14 10:25:57.437 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/select2/select2.min.js  
+2019-01-14 10:25:57.437 +08:00 [Information] Request finished in 0.3749ms 404 
+2019-01-14 10:25:57.438 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/js/main.js  
+2019-01-14 10:25:57.438 +08:00 [Information] Request finished in 0.4587ms 404 
+2019-01-14 10:25:57.454 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/login/main.css  
+2019-01-14 10:25:57.454 +08:00 [Information] Request finished in 0.5006ms 404 
+2019-01-14 10:25:57.480 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/animsition/js/animsition.min.js  
+2019-01-14 10:25:57.480 +08:00 [Information] Request finished in 0.4829ms 404 
+2019-01-14 10:25:57.487 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/select2/select2.min.js  
+2019-01-14 10:25:57.487 +08:00 [Information] Request finished in 0.3953ms 404 
+2019-01-14 10:25:57.496 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/js/main.js  
+2019-01-14 10:25:57.496 +08:00 [Information] Request finished in 0.4304ms 404 
+2019-01-14 10:27:50.296 +08:00 [Information] Hello, Serilog!
+2019-01-14 10:27:52.012 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/favicon.ico  
+2019-01-14 10:27:52.012 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/  
+2019-01-14 10:27:52.199 +08:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\favicon.ico"'
+2019-01-14 10:27:52.215 +08:00 [Information] Request finished in 208.6461ms 200 image/x-icon
+2019-01-14 10:27:52.504 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-14 10:27:52.554 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 10:27:52.570 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 4.9508ms.
+2019-01-14 10:27:52.666 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-14 10:27:53.034 +08:00 [Information] Executed ViewResult - view "Login" executed in 441.0825ms.
+2019-01-14 10:27:53.047 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 532.6371ms
+2019-01-14 10:27:53.061 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/animsition/js/animsition.min.js  
+2019-01-14 10:27:53.061 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/login/util.css  
+2019-01-14 10:27:53.066 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/select2/select2.min.js  
+2019-01-14 10:27:53.068 +08:00 [Information] Request finished in 7.3567ms 404 
+2019-01-14 10:27:53.068 +08:00 [Information] Request finished in 7.2933ms 404 
+2019-01-14 10:27:53.068 +08:00 [Information] Request finished in 2.4225ms 404 
+2019-01-14 10:27:53.069 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/login/main.css  
+2019-01-14 10:27:53.069 +08:00 [Information] Request finished in 0.3466ms 404 
+2019-01-14 10:27:53.081 +08:00 [Information] Request finished in 1087.6394ms 200 text/html; charset=utf-8
+2019-01-14 10:27:53.134 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/js/main.js  
+2019-01-14 10:27:53.135 +08:00 [Information] Request finished in 0.9741ms 404 
+2019-01-14 10:27:53.156 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/login/util.css  
+2019-01-14 10:27:53.157 +08:00 [Information] Request finished in 0.5346ms 404 
+2019-01-14 10:27:53.179 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/login/main.css  
+2019-01-14 10:27:53.181 +08:00 [Information] Request finished in 1.6152ms 404 
+2019-01-14 10:27:53.202 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/animsition/js/animsition.min.js  
+2019-01-14 10:27:53.203 +08:00 [Information] Request finished in 0.5176ms 404 
+2019-01-14 10:27:53.217 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/select2/select2.min.js  
+2019-01-14 10:27:53.218 +08:00 [Information] Request finished in 0.68ms 404 
+2019-01-14 10:27:53.227 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/js/main.js  
+2019-01-14 10:27:53.228 +08:00 [Information] Request finished in 0.834ms 404 
+2019-01-14 10:28:12.630 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/  
+2019-01-14 10:28:12.659 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-14 10:28:12.662 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 10:28:12.663 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0313ms.
+2019-01-14 10:28:12.669 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-14 10:28:12.672 +08:00 [Information] Executed ViewResult - view "Login" executed in 6.2655ms.
+2019-01-14 10:28:12.672 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 10.1474ms
+2019-01-14 10:28:12.672 +08:00 [Information] Request finished in 42.2497ms 200 text/html; charset=utf-8
+2019-01-14 10:28:12.702 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/login/util.css  
+2019-01-14 10:28:12.702 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/login/main.css  
+2019-01-14 10:28:12.703 +08:00 [Information] Request finished in 0.5033ms 404 
+2019-01-14 10:28:12.703 +08:00 [Information] Request finished in 0.7317ms 404 
+2019-01-14 10:28:13.043 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/select2/select2.min.js  
+2019-01-14 10:28:13.045 +08:00 [Information] Request finished in 1.7161ms 404 
+2019-01-14 10:28:13.045 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/js/main.js  
+2019-01-14 10:28:13.045 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/animsition/js/animsition.min.js  
+2019-01-14 10:28:13.046 +08:00 [Information] Request finished in 0.3896ms 404 
+2019-01-14 10:28:13.046 +08:00 [Information] Request finished in 0.3115ms 404 
+2019-01-14 10:28:13.121 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/login/util.css  
+2019-01-14 10:28:13.121 +08:00 [Information] Request finished in 0.5406ms 404 
+2019-01-14 10:28:13.153 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/login/main.css  
+2019-01-14 10:28:13.155 +08:00 [Information] Request finished in 2.407ms 404 
+2019-01-14 10:28:13.194 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/animsition/js/animsition.min.js  
+2019-01-14 10:28:13.196 +08:00 [Information] Request finished in 1.1402ms 404 
+2019-01-14 10:28:13.214 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/select2/select2.min.js  
+2019-01-14 10:28:13.215 +08:00 [Information] Request finished in 0.8265ms 404 
+2019-01-14 10:28:13.223 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/js/main.js  
+2019-01-14 10:28:13.224 +08:00 [Information] Request finished in 0.6467ms 404 
+2019-01-14 10:28:16.808 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/  
+2019-01-14 10:28:16.809 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-14 10:28:16.810 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 10:28:16.812 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0279ms.
+2019-01-14 10:28:16.813 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-14 10:28:16.819 +08:00 [Information] Executed ViewResult - view "Login" executed in 6.3984ms.
+2019-01-14 10:28:16.821 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 11.2885ms
+2019-01-14 10:28:16.823 +08:00 [Information] Request finished in 14.5379ms 200 text/html; charset=utf-8
+2019-01-14 10:28:16.881 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/login/util.css  
+2019-01-14 10:28:16.882 +08:00 [Information] Request finished in 1.1384ms 404 
+2019-01-14 10:28:16.882 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/login/main.css  
+2019-01-14 10:28:16.883 +08:00 [Information] Request finished in 1.0874ms 404 
+2019-01-14 10:28:16.886 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/animsition/js/animsition.min.js  
+2019-01-14 10:28:16.888 +08:00 [Information] Request finished in 1.653ms 404 
+2019-01-14 10:28:16.889 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/select2/select2.min.js  
+2019-01-14 10:28:16.890 +08:00 [Information] Request finished in 0.6335ms 404 
+2019-01-14 10:28:17.118 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/js/main.js  
+2019-01-14 10:28:17.118 +08:00 [Information] Request finished in 0.6226ms 404 
+2019-01-14 10:28:17.137 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/login/util.css  
+2019-01-14 10:28:17.137 +08:00 [Information] Request finished in 0.5946ms 404 
+2019-01-14 10:28:17.156 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/login/main.css  
+2019-01-14 10:28:17.157 +08:00 [Information] Request finished in 0.4727ms 404 
+2019-01-14 10:28:17.177 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/animsition/js/animsition.min.js  
+2019-01-14 10:28:17.177 +08:00 [Information] Request finished in 0.4614ms 404 
+2019-01-14 10:28:17.193 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/select2/select2.min.js  
+2019-01-14 10:28:17.196 +08:00 [Information] Request finished in 0.9386ms 404 
+2019-01-14 10:28:17.207 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/js/main.js  
+2019-01-14 10:28:17.209 +08:00 [Information] Request finished in 1.6987ms 404 
+2019-01-14 10:28:17.323 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/favicon.ico  
+2019-01-14 10:28:17.336 +08:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\favicon.ico"'
+2019-01-14 10:28:17.340 +08:00 [Information] Request finished in 19.4389ms 200 image/x-icon
+2019-01-14 10:28:26.398 +08:00 [Information] Hello, Serilog!
+2019-01-14 10:28:29.371 +08:00 [Information] Request starting HTTP/1.1 DEBUG http://localhost:1554/  0
+2019-01-14 10:28:29.371 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/  
+2019-01-14 10:28:29.606 +08:00 [Information] Request finished in 231.8707ms 200 
+2019-01-14 10:28:30.087 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-14 10:28:30.157 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 10:29:15.148 +08:00 [Information] Hello, Serilog!
+2019-01-14 10:29:18.119 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/  
+2019-01-14 10:29:18.119 +08:00 [Information] Request starting HTTP/1.1 DEBUG http://localhost:1554/  0
+2019-01-14 10:29:18.376 +08:00 [Information] Request finished in 259.7286ms 200 
+2019-01-14 10:29:18.834 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-14 10:29:18.894 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 10:30:18.946 +08:00 [Information] Hello, Serilog!
+2019-01-14 10:30:20.888 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/  
+2019-01-14 10:30:21.329 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-14 10:30:21.383 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 10:30:21.405 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 6.3901ms.
+2019-01-14 10:30:21.502 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-14 10:30:21.947 +08:00 [Information] Executed ViewResult - view "Login" executed in 517.0128ms.
+2019-01-14 10:30:21.956 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 621.3655ms
+2019-01-14 10:30:21.993 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/select2/select2.min.js  
+2019-01-14 10:30:21.993 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/login/util.css  
+2019-01-14 10:30:21.997 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/animsition/js/animsition.min.js  
+2019-01-14 10:30:22.001 +08:00 [Information] Request finished in 1120.6287ms 200 text/html; charset=utf-8
+2019-01-14 10:30:22.003 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/login/main.css  
+2019-01-14 10:30:22.004 +08:00 [Information] Request finished in 7.3024ms 404 
+2019-01-14 10:30:22.004 +08:00 [Information] Request finished in 11.6619ms 404 
+2019-01-14 10:30:22.004 +08:00 [Information] Request finished in 11.6615ms 404 
+2019-01-14 10:30:22.005 +08:00 [Information] Request finished in 1.929ms 404 
+2019-01-14 10:30:22.234 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/js/main.js  
+2019-01-14 10:30:22.234 +08:00 [Information] Request finished in 0.4765ms 404 
+2019-01-14 10:30:22.252 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/login/util.css  
+2019-01-14 10:30:22.252 +08:00 [Information] Request finished in 0.4723ms 404 
+2019-01-14 10:30:22.270 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/login/main.css  
+2019-01-14 10:30:22.271 +08:00 [Information] Request finished in 0.797ms 404 
+2019-01-14 10:30:22.291 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/animsition/js/animsition.min.js  
+2019-01-14 10:30:22.291 +08:00 [Information] Request finished in 0.5508ms 404 
+2019-01-14 10:30:22.309 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/select2/select2.min.js  
+2019-01-14 10:30:22.309 +08:00 [Information] Request finished in 0.5788ms 404 
+2019-01-14 10:30:22.318 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/js/main.js  
+2019-01-14 10:30:22.321 +08:00 [Information] Request finished in 2.4176ms 404 
+2019-01-14 10:30:22.431 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/favicon.ico  
+2019-01-14 10:30:22.473 +08:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\favicon.ico"'
+2019-01-14 10:30:22.473 +08:00 [Information] Request finished in 42.8844ms 200 image/x-icon
