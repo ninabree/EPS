@@ -2,8 +2,25 @@
     ViewData["Title"] = "Index";
 }
 @*@using ExpenseProcessingSystem.ViewModels.Home
-@model PaginatedList<HomeViewModel>*@
+    @model PaginatedList<HomeViewModel>*@
 <div class="tab-content-cont m-t-10">
+    <div>
+        <div class="tbl-cont" style="height: 150px; margin: 20px 0px; overflow-y: auto;">
+            <table class="table table-striped tab-tbl table-bordered"  style="height: 150px"> 
+                <thead>
+                    <tr>
+                        <th>Application ID</th>
+                        <th>Message</th>
+                        <th>Date</th>
+                        <th>Approver/Verifier</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
     <div id="tbl-lbl"><p>Pending Applications:</p></div>
     <div class="tbl-cont">
         <table class="table table-striped tab-tbl table-bordered">
@@ -21,28 +38,27 @@
                     <th></th>
                 </tr>
             </thead>
-            <tbody>
-            </tbody>
+            <tbody></tbody>
         </table>
         @*@{
-            var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
-            var nextDisabled = !Model.HasNextPage ? "disabled" : "";
-        }
+                var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+                var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+            }
 
-        <a asp-action="Index"
-           asp-route-sortOrder="@ViewData["CurrentSort"]"
-           asp-route-page="@(Model.PageIndex - 1)"
-           asp-route-currentFilter="@ViewData["CurrentFilter"]"
-           class="btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left">
-        </a>
-        <input type="text" class="pagination-input" id="paginationInput" val="" />
-        <input type="text" class="pagination-input" value="of @(Model.TotalPages)" disabled/>
-        <a asp-action="Index"
-           asp-route-sortOrder="@ViewData["CurrentSort"]"
-           asp-route-page="@(Model.PageIndex + 1)"
-           asp-route-currentFilter="@ViewData["CurrentFilter"]"
-           class="btn btn-xs btn-default @nextDisabled glyphicon glyphicon-menu-right">
-        </a>*@
+            <a asp-action="Index"
+                asp-route-sortOrder="@ViewData["CurrentSort"]"
+                asp-route-page="@(Model.PageIndex - 1)"
+                asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                class="btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left">
+            </a>
+            <input type="text" class="pagination-input" id="paginationInput" val="" />
+            <input type="text" class="pagination-input" value="of @(Model.TotalPages)" disabled/>
+            <a asp-action="Index"
+                asp-route-sortOrder="@ViewData["CurrentSort"]"
+                asp-route-page="@(Model.PageIndex + 1)"
+                asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                class="btn btn-xs btn-default @nextDisabled glyphicon glyphicon-menu-right">
+            </a>*@
     </div>
 </div>
 <environment include="Development">

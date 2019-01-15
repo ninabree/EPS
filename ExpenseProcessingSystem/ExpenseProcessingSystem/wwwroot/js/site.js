@@ -7,6 +7,13 @@
     $pageInput.data("value", $pageInput.val());
 
     /*//////////////////////////////////////////////////////////////////
+    [ Modal]*/
+
+    setInterval(function () {
+        $('div.modal-backdrop.fade.in').not(':first').remove();
+    }, 1);
+
+    /*//////////////////////////////////////////////////////////////////
     [ Pagination - Number Input]*/
 
     setInterval(function () {

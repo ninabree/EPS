@@ -575,9 +575,9 @@ div.tabContent {
         margin-bottom: 0;
         margin-left: 5px;
     }
-/*.modal-backdrop {
-    background-color: #00000099;
-}*/
+.modal-backdrop.in {
+    opacity: .1;
+}
 
 /*//////////////////////////////////////////////////////////////////
 [ Voucher - Table ]*/

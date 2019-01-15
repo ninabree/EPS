@@ -5749,3 +5749,476 @@ System.InvalidOperationException: The view 'ModalPopUp' was not found. The follo
 2019-01-14 17:10:19.190 +08:00 [Information] Executed ViewResult - view "ReversalEntryModal" executed in 0.4523ms.
 2019-01-14 17:10:19.190 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" in 1.1414ms
 2019-01-14 17:10:19.191 +08:00 [Information] Request finished in 1.9826ms 200 text/html; charset=utf-8
+2019-01-14 17:12:29.950 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Entry_DDV  
+2019-01-14 17:12:29.955 +08:00 [Information] Route matched with "{action = \"Entry_DDV\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)"
+2019-01-14 17:12:29.955 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 17:12:29.955 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.012ms.
+2019-01-14 17:12:29.956 +08:00 [Information] Executing ViewResult, running view "Entry_DDV".
+2019-01-14 17:12:29.958 +08:00 [Information] Executed ViewResult - view "Entry_DDV" executed in 2.0011ms.
+2019-01-14 17:12:29.958 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)" in 2.8333ms
+2019-01-14 17:12:29.958 +08:00 [Information] Request finished in 8.0994ms 200 text/html; charset=utf-8
+2019-01-14 17:12:30.036 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-14 17:12:30.048 +08:00 [Information] Sending file. Request path: '"/css/site.css"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\css\site.css"'
+2019-01-14 17:12:30.048 +08:00 [Information] Request finished in 12.2302ms 200 text/css
+2019-01-14 17:12:30.701 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/favicon.ico  
+2019-01-14 17:12:30.703 +08:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\favicon.ico"'
+2019-01-14 17:12:30.703 +08:00 [Information] Request finished in 2.3595ms 200 image/x-icon
+2019-01-14 17:12:32.426 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/Home/RedirectCont/ application/x-www-form-urlencoded; charset=UTF-8 36
+2019-01-14 17:12:32.427 +08:00 [Information] Route matched with "{action = \"RedirectCont\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)"
+2019-01-14 17:12:32.428 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" with arguments (["Modal", "ReversalEntryModal"]) - Validation state: Valid
+2019-01-14 17:12:32.428 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult" in 0.0135ms.
+2019-01-14 17:12:32.428 +08:00 [Information] Executing RedirectResult, redirecting to "/Modal/ReversalEntryModal".
+2019-01-14 17:12:32.429 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" in 1.2188ms
+2019-01-14 17:12:32.429 +08:00 [Information] Request finished in 2.862ms 302 
+2019-01-14 17:12:32.435 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Modal/ReversalEntryModal  
+2019-01-14 17:12:32.436 +08:00 [Information] Route matched with "{action = \"ReversalEntryModal\", controller = \"Modal\"}". Executing action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)"
+2019-01-14 17:12:32.436 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 17:12:32.436 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0083ms.
+2019-01-14 17:12:32.437 +08:00 [Information] Executing ViewResult, running view "ReversalEntryModal".
+2019-01-14 17:12:32.437 +08:00 [Information] Executed ViewResult - view "ReversalEntryModal" executed in 0.6294ms.
+2019-01-14 17:12:32.437 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" in 1.3842ms
+2019-01-14 17:12:32.438 +08:00 [Information] Request finished in 2.3039ms 200 text/html; charset=utf-8
+2019-01-14 17:12:32.455 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-14 17:12:32.456 +08:00 [Information] The file "/css/site.css" was not modified
+2019-01-14 17:12:32.457 +08:00 [Information] Request finished in 1.8252ms 304 text/css
+2019-01-14 17:12:37.491 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Entry_DDV  
+2019-01-14 17:12:37.491 +08:00 [Information] Route matched with "{action = \"Entry_DDV\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)"
+2019-01-14 17:12:37.492 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 17:12:37.492 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0128ms.
+2019-01-14 17:12:37.493 +08:00 [Information] Executing ViewResult, running view "Entry_DDV".
+2019-01-14 17:12:37.494 +08:00 [Information] Executed ViewResult - view "Entry_DDV" executed in 0.9949ms.
+2019-01-14 17:12:37.494 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)" in 2.3342ms
+2019-01-14 17:12:37.494 +08:00 [Information] Request finished in 3.7633ms 200 text/html; charset=utf-8
+2019-01-14 17:12:37.534 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-14 17:12:37.535 +08:00 [Information] The file "/css/site.css" was not modified
+2019-01-14 17:12:37.535 +08:00 [Information] Request finished in 1.03ms 304 text/css
+2019-01-14 17:12:38.129 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/favicon.ico  
+2019-01-14 17:12:38.131 +08:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\favicon.ico"'
+2019-01-14 17:12:38.132 +08:00 [Information] Request finished in 2.8967ms 200 image/x-icon
+2019-01-14 17:12:39.722 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/Home/RedirectCont/ application/x-www-form-urlencoded; charset=UTF-8 36
+2019-01-14 17:12:39.724 +08:00 [Information] Route matched with "{action = \"RedirectCont\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)"
+2019-01-14 17:12:39.724 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" with arguments (["Modal", "ReversalEntryModal"]) - Validation state: Valid
+2019-01-14 17:12:39.724 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult" in 0.0105ms.
+2019-01-14 17:12:39.725 +08:00 [Information] Executing RedirectResult, redirecting to "/Modal/ReversalEntryModal".
+2019-01-14 17:12:39.725 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" in 0.7513ms
+2019-01-14 17:12:39.725 +08:00 [Information] Request finished in 3.1256ms 302 
+2019-01-14 17:12:39.731 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Modal/ReversalEntryModal  
+2019-01-14 17:12:39.732 +08:00 [Information] Route matched with "{action = \"ReversalEntryModal\", controller = \"Modal\"}". Executing action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)"
+2019-01-14 17:12:39.732 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 17:12:39.732 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0162ms.
+2019-01-14 17:12:39.732 +08:00 [Information] Executing ViewResult, running view "ReversalEntryModal".
+2019-01-14 17:12:39.733 +08:00 [Information] Executed ViewResult - view "ReversalEntryModal" executed in 0.4353ms.
+2019-01-14 17:12:39.733 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" in 1.0557ms
+2019-01-14 17:12:39.733 +08:00 [Information] Request finished in 2.4644ms 200 text/html; charset=utf-8
+2019-01-14 17:12:39.747 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-14 17:12:39.748 +08:00 [Information] The file "/css/site.css" was not modified
+2019-01-14 17:12:39.749 +08:00 [Information] Request finished in 1.8501ms 304 text/css
+2019-01-14 17:13:00.018 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Entry_DDV  
+2019-01-14 17:13:00.019 +08:00 [Information] Route matched with "{action = \"Entry_DDV\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)"
+2019-01-14 17:13:00.020 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 17:13:00.020 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0109ms.
+2019-01-14 17:13:00.020 +08:00 [Information] Executing ViewResult, running view "Entry_DDV".
+2019-01-14 17:13:00.022 +08:00 [Information] Executed ViewResult - view "Entry_DDV" executed in 1.3532ms.
+2019-01-14 17:13:00.022 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)" in 2.2379ms
+2019-01-14 17:13:00.022 +08:00 [Information] Request finished in 17.8905ms 200 text/html; charset=utf-8
+2019-01-14 17:13:00.065 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-14 17:13:00.066 +08:00 [Information] Sending file. Request path: '"/css/site.css"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\css\site.css"'
+2019-01-14 17:13:00.066 +08:00 [Information] Request finished in 1.4506ms 200 text/css
+2019-01-14 17:13:00.712 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/favicon.ico  
+2019-01-14 17:13:00.713 +08:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\favicon.ico"'
+2019-01-14 17:13:00.713 +08:00 [Information] Request finished in 1.9936ms 200 image/x-icon
+2019-01-14 17:13:03.105 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/Home/RedirectCont/ application/x-www-form-urlencoded; charset=UTF-8 36
+2019-01-14 17:13:03.107 +08:00 [Information] Route matched with "{action = \"RedirectCont\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)"
+2019-01-14 17:13:03.108 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" with arguments (["Modal", "ReversalEntryModal"]) - Validation state: Valid
+2019-01-14 17:13:03.108 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult" in 0.0094ms.
+2019-01-14 17:13:03.109 +08:00 [Information] Executing RedirectResult, redirecting to "/Modal/ReversalEntryModal".
+2019-01-14 17:13:03.109 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" in 0.9265ms
+2019-01-14 17:13:03.109 +08:00 [Information] Request finished in 3.9325ms 302 
+2019-01-14 17:13:03.115 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Modal/ReversalEntryModal  
+2019-01-14 17:13:03.116 +08:00 [Information] Route matched with "{action = \"ReversalEntryModal\", controller = \"Modal\"}". Executing action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)"
+2019-01-14 17:13:03.116 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 17:13:03.116 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0075ms.
+2019-01-14 17:13:03.116 +08:00 [Information] Executing ViewResult, running view "ReversalEntryModal".
+2019-01-14 17:13:03.117 +08:00 [Information] Executed ViewResult - view "ReversalEntryModal" executed in 0.4413ms.
+2019-01-14 17:13:03.117 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" in 1.1032ms
+2019-01-14 17:13:03.117 +08:00 [Information] Request finished in 1.8493ms 200 text/html; charset=utf-8
+2019-01-14 17:13:03.135 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-14 17:13:03.137 +08:00 [Information] The file "/css/site.css" was not modified
+2019-01-14 17:13:03.139 +08:00 [Information] Request finished in 3.3574ms 304 text/css
+2019-01-14 17:13:14.400 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Entry_DDV  
+2019-01-14 17:13:14.400 +08:00 [Information] Route matched with "{action = \"Entry_DDV\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)"
+2019-01-14 17:13:14.401 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 17:13:14.401 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0098ms.
+2019-01-14 17:13:14.401 +08:00 [Information] Executing ViewResult, running view "Entry_DDV".
+2019-01-14 17:13:14.402 +08:00 [Information] Executed ViewResult - view "Entry_DDV" executed in 0.6483ms.
+2019-01-14 17:13:14.402 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)" in 1.5541ms
+2019-01-14 17:13:14.402 +08:00 [Information] Request finished in 2.347ms 200 text/html; charset=utf-8
+2019-01-14 17:13:14.433 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-14 17:13:14.436 +08:00 [Information] Sending file. Request path: '"/css/site.css"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\css\site.css"'
+2019-01-14 17:13:14.436 +08:00 [Information] Request finished in 3.0297ms 200 text/css
+2019-01-14 17:13:15.051 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/favicon.ico  
+2019-01-14 17:13:15.054 +08:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\favicon.ico"'
+2019-01-14 17:13:15.055 +08:00 [Information] Request finished in 3.7656ms 200 image/x-icon
+2019-01-14 17:13:16.756 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/Home/RedirectCont/ application/x-www-form-urlencoded; charset=UTF-8 36
+2019-01-14 17:13:16.757 +08:00 [Information] Route matched with "{action = \"RedirectCont\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)"
+2019-01-14 17:13:16.758 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" with arguments (["Modal", "ReversalEntryModal"]) - Validation state: Valid
+2019-01-14 17:13:16.758 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult" in 0.0128ms.
+2019-01-14 17:13:16.759 +08:00 [Information] Executing RedirectResult, redirecting to "/Modal/ReversalEntryModal".
+2019-01-14 17:13:16.759 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" in 1.6957ms
+2019-01-14 17:13:16.759 +08:00 [Information] Request finished in 5.4722ms 302 
+2019-01-14 17:13:16.766 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Modal/ReversalEntryModal  
+2019-01-14 17:13:16.767 +08:00 [Information] Route matched with "{action = \"ReversalEntryModal\", controller = \"Modal\"}". Executing action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)"
+2019-01-14 17:13:16.767 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 17:13:16.767 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0086ms.
+2019-01-14 17:13:16.767 +08:00 [Information] Executing ViewResult, running view "ReversalEntryModal".
+2019-01-14 17:13:16.768 +08:00 [Information] Executed ViewResult - view "ReversalEntryModal" executed in 0.4761ms.
+2019-01-14 17:13:16.768 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" in 1.1939ms
+2019-01-14 17:13:16.768 +08:00 [Information] Request finished in 2.2824ms 200 text/html; charset=utf-8
+2019-01-14 17:13:16.792 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-14 17:13:16.795 +08:00 [Information] The file "/css/site.css" was not modified
+2019-01-14 17:13:16.795 +08:00 [Information] Request finished in 2.4112ms 304 text/css
+2019-01-14 17:13:26.649 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Entry_DDV  
+2019-01-14 17:13:26.650 +08:00 [Information] Route matched with "{action = \"Entry_DDV\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)"
+2019-01-14 17:13:26.650 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 17:13:26.650 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0101ms.
+2019-01-14 17:13:26.651 +08:00 [Information] Executing ViewResult, running view "Entry_DDV".
+2019-01-14 17:13:26.652 +08:00 [Information] Executed ViewResult - view "Entry_DDV" executed in 1.0749ms.
+2019-01-14 17:13:26.652 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)" in 1.9626ms
+2019-01-14 17:13:26.652 +08:00 [Information] Request finished in 3.1259ms 200 text/html; charset=utf-8
+2019-01-14 17:13:26.696 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-14 17:13:26.697 +08:00 [Information] Sending file. Request path: '"/css/site.css"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\css\site.css"'
+2019-01-14 17:13:26.697 +08:00 [Information] Request finished in 1.573ms 200 text/css
+2019-01-14 17:13:27.335 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/favicon.ico  
+2019-01-14 17:13:27.336 +08:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\favicon.ico"'
+2019-01-14 17:13:27.336 +08:00 [Information] Request finished in 1.7081ms 200 image/x-icon
+2019-01-14 17:13:28.784 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/Home/RedirectCont/ application/x-www-form-urlencoded; charset=UTF-8 36
+2019-01-14 17:13:28.786 +08:00 [Information] Route matched with "{action = \"RedirectCont\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)"
+2019-01-14 17:13:28.786 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" with arguments (["Modal", "ReversalEntryModal"]) - Validation state: Valid
+2019-01-14 17:13:28.786 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult" in 0.0094ms.
+2019-01-14 17:13:28.786 +08:00 [Information] Executing RedirectResult, redirecting to "/Modal/ReversalEntryModal".
+2019-01-14 17:13:28.787 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" in 0.8616ms
+2019-01-14 17:13:28.787 +08:00 [Information] Request finished in 3.0206ms 302 
+2019-01-14 17:13:28.792 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Modal/ReversalEntryModal  
+2019-01-14 17:13:28.792 +08:00 [Information] Route matched with "{action = \"ReversalEntryModal\", controller = \"Modal\"}". Executing action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)"
+2019-01-14 17:13:28.793 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 17:13:28.793 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0075ms.
+2019-01-14 17:13:28.793 +08:00 [Information] Executing ViewResult, running view "ReversalEntryModal".
+2019-01-14 17:13:28.794 +08:00 [Information] Executed ViewResult - view "ReversalEntryModal" executed in 0.4277ms.
+2019-01-14 17:13:28.794 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" in 1.0613ms
+2019-01-14 17:13:28.794 +08:00 [Information] Request finished in 1.7568ms 200 text/html; charset=utf-8
+2019-01-14 17:13:28.812 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-14 17:13:28.813 +08:00 [Information] The file "/css/site.css" was not modified
+2019-01-14 17:13:28.813 +08:00 [Information] Request finished in 1.1716ms 304 text/css
+2019-01-14 17:13:32.814 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/Home/RedirectCont/ application/x-www-form-urlencoded; charset=UTF-8 36
+2019-01-14 17:13:32.820 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/Home/RedirectCont/ application/x-www-form-urlencoded; charset=UTF-8 36
+2019-01-14 17:13:32.821 +08:00 [Information] Route matched with "{action = \"RedirectCont\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)"
+2019-01-14 17:13:32.822 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" with arguments (["Modal", "ReversalEntryModal"]) - Validation state: Valid
+2019-01-14 17:13:32.822 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult" in 0.0166ms.
+2019-01-14 17:13:32.823 +08:00 [Information] Executing RedirectResult, redirecting to "/Modal/ReversalEntryModal".
+2019-01-14 17:13:32.823 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" in 1.6364ms
+2019-01-14 17:13:32.824 +08:00 [Information] Route matched with "{action = \"RedirectCont\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)"
+2019-01-14 17:13:32.824 +08:00 [Information] Request finished in 3.3563ms 302 
+2019-01-14 17:13:32.824 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" with arguments (["Modal", "ReversalEntryModal"]) - Validation state: Valid
+2019-01-14 17:13:32.824 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult" in 0.0075ms.
+2019-01-14 17:13:32.824 +08:00 [Information] Executing RedirectResult, redirecting to "/Modal/ReversalEntryModal".
+2019-01-14 17:13:32.825 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" in 0.6841ms
+2019-01-14 17:13:32.825 +08:00 [Information] Request finished in 10.4823ms 302 
+2019-01-14 17:13:32.835 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Modal/ReversalEntryModal  
+2019-01-14 17:13:32.836 +08:00 [Information] Route matched with "{action = \"ReversalEntryModal\", controller = \"Modal\"}". Executing action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)"
+2019-01-14 17:13:32.836 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 17:13:32.836 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0067ms.
+2019-01-14 17:13:32.836 +08:00 [Information] Executing ViewResult, running view "ReversalEntryModal".
+2019-01-14 17:13:32.837 +08:00 [Information] Executed ViewResult - view "ReversalEntryModal" executed in 0.447ms.
+2019-01-14 17:13:32.837 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" in 1.0107ms
+2019-01-14 17:13:32.837 +08:00 [Information] Request finished in 1.744ms 200 text/html; charset=utf-8
+2019-01-14 17:13:32.844 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Modal/ReversalEntryModal  
+2019-01-14 17:13:32.845 +08:00 [Information] Route matched with "{action = \"ReversalEntryModal\", controller = \"Modal\"}". Executing action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)"
+2019-01-14 17:13:32.845 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 17:13:32.845 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0075ms.
+2019-01-14 17:13:32.845 +08:00 [Information] Executing ViewResult, running view "ReversalEntryModal".
+2019-01-14 17:13:32.846 +08:00 [Information] Executed ViewResult - view "ReversalEntryModal" executed in 0.4568ms.
+2019-01-14 17:13:32.846 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" in 1.0874ms
+2019-01-14 17:13:32.846 +08:00 [Information] Request finished in 1.963ms 200 text/html; charset=utf-8
+2019-01-14 17:13:32.856 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-14 17:13:32.856 +08:00 [Information] The file "/css/site.css" was not modified
+2019-01-14 17:13:32.856 +08:00 [Information] Request finished in 1.0088ms 304 text/css
+2019-01-14 17:14:10.910 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Entry_DDV  
+2019-01-14 17:14:10.910 +08:00 [Information] Route matched with "{action = \"Entry_DDV\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)"
+2019-01-14 17:14:10.911 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 17:14:10.911 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0079ms.
+2019-01-14 17:14:10.911 +08:00 [Information] Executing ViewResult, running view "Entry_DDV".
+2019-01-14 17:14:10.913 +08:00 [Information] Executed ViewResult - view "Entry_DDV" executed in 1.7002ms.
+2019-01-14 17:14:10.913 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)" in 2.3572ms
+2019-01-14 17:14:10.913 +08:00 [Information] Request finished in 3.2483ms 200 text/html; charset=utf-8
+2019-01-14 17:14:10.945 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-14 17:14:10.947 +08:00 [Information] Sending file. Request path: '"/css/site.css"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\css\site.css"'
+2019-01-14 17:14:10.948 +08:00 [Information] Request finished in 3.2796ms 200 text/css
+2019-01-14 17:14:11.570 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/favicon.ico  
+2019-01-14 17:14:11.571 +08:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\favicon.ico"'
+2019-01-14 17:14:11.571 +08:00 [Information] Request finished in 1.2694ms 200 image/x-icon
+2019-01-14 17:14:14.678 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/Home/RedirectCont/ application/x-www-form-urlencoded; charset=UTF-8 36
+2019-01-14 17:14:14.679 +08:00 [Information] Route matched with "{action = \"RedirectCont\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)"
+2019-01-14 17:14:14.679 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" with arguments (["Modal", "ReversalEntryModal"]) - Validation state: Valid
+2019-01-14 17:14:14.679 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult" in 0.0094ms.
+2019-01-14 17:14:14.680 +08:00 [Information] Executing RedirectResult, redirecting to "/Modal/ReversalEntryModal".
+2019-01-14 17:14:14.680 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" in 0.9122ms
+2019-01-14 17:14:14.680 +08:00 [Information] Request finished in 2.39ms 302 
+2019-01-14 17:14:14.687 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Modal/ReversalEntryModal  
+2019-01-14 17:14:14.687 +08:00 [Information] Route matched with "{action = \"ReversalEntryModal\", controller = \"Modal\"}". Executing action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)"
+2019-01-14 17:14:14.688 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 17:14:14.688 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0064ms.
+2019-01-14 17:14:14.688 +08:00 [Information] Executing ViewResult, running view "ReversalEntryModal".
+2019-01-14 17:14:14.688 +08:00 [Information] Executed ViewResult - view "ReversalEntryModal" executed in 0.5059ms.
+2019-01-14 17:14:14.689 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" in 1.1157ms
+2019-01-14 17:14:14.689 +08:00 [Information] Request finished in 1.9811ms 200 text/html; charset=utf-8
+2019-01-14 17:14:14.704 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-14 17:14:14.705 +08:00 [Information] The file "/css/site.css" was not modified
+2019-01-14 17:14:14.706 +08:00 [Information] Request finished in 2.1759ms 304 text/css
+2019-01-14 17:14:32.510 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-14 17:14:32.512 +08:00 [Information] The file "/css/site.css" was not modified
+2019-01-14 17:14:32.514 +08:00 [Information] Request finished in 4.0952ms 304 text/css
+2019-01-14 17:14:47.359 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/Home/RedirectCont/ application/x-www-form-urlencoded; charset=UTF-8 36
+2019-01-14 17:14:47.360 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/Home/RedirectCont/ application/x-www-form-urlencoded; charset=UTF-8 36
+2019-01-14 17:14:47.360 +08:00 [Information] Route matched with "{action = \"RedirectCont\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)"
+2019-01-14 17:14:47.361 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" with arguments (["Modal", "ReversalEntryModal"]) - Validation state: Valid
+2019-01-14 17:14:47.361 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult" in 0.0128ms.
+2019-01-14 17:14:47.361 +08:00 [Information] Executing RedirectResult, redirecting to "/Modal/ReversalEntryModal".
+2019-01-14 17:14:47.361 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" in 0.7623ms
+2019-01-14 17:14:47.362 +08:00 [Information] Request finished in 1.8554ms 302 
+2019-01-14 17:14:47.364 +08:00 [Information] Route matched with "{action = \"RedirectCont\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)"
+2019-01-14 17:14:47.365 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" with arguments (["Modal", "ReversalEntryModal"]) - Validation state: Valid
+2019-01-14 17:14:47.365 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult" in 0.0113ms.
+2019-01-14 17:14:47.365 +08:00 [Information] Executing RedirectResult, redirecting to "/Modal/ReversalEntryModal".
+2019-01-14 17:14:47.366 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" in 1.3574ms
+2019-01-14 17:14:47.366 +08:00 [Information] Request finished in 7.4726ms 302 
+2019-01-14 17:14:47.368 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Modal/ReversalEntryModal  
+2019-01-14 17:14:47.369 +08:00 [Information] Route matched with "{action = \"ReversalEntryModal\", controller = \"Modal\"}". Executing action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)"
+2019-01-14 17:14:47.369 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 17:14:47.369 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0075ms.
+2019-01-14 17:14:47.369 +08:00 [Information] Executing ViewResult, running view "ReversalEntryModal".
+2019-01-14 17:14:47.370 +08:00 [Information] Executed ViewResult - view "ReversalEntryModal" executed in 0.6354ms.
+2019-01-14 17:14:47.370 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" in 1.3422ms
+2019-01-14 17:14:47.371 +08:00 [Information] Request finished in 2.2458ms 200 text/html; charset=utf-8
+2019-01-14 17:14:47.381 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Modal/ReversalEntryModal  
+2019-01-14 17:14:47.381 +08:00 [Information] Route matched with "{action = \"ReversalEntryModal\", controller = \"Modal\"}". Executing action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)"
+2019-01-14 17:14:47.381 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 17:14:47.382 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0094ms.
+2019-01-14 17:14:47.382 +08:00 [Information] Executing ViewResult, running view "ReversalEntryModal".
+2019-01-14 17:14:47.383 +08:00 [Information] Executed ViewResult - view "ReversalEntryModal" executed in 0.5395ms.
+2019-01-14 17:14:47.383 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" in 1.3989ms
+2019-01-14 17:14:47.383 +08:00 [Information] Request finished in 2.3961ms 200 text/html; charset=utf-8
+2019-01-14 17:14:47.393 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-14 17:14:47.394 +08:00 [Information] The file "/css/site.css" was not modified
+2019-01-14 17:14:47.394 +08:00 [Information] Request finished in 0.8178ms 304 text/css
+2019-01-14 17:14:47.437 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/js/site.js?v=v5vy51x5EETE_EkQNO-XV5IJ1JhKZvyiseAOqJ7k654  
+2019-01-14 17:14:47.437 +08:00 [Information] The file "/js/site.js" was not modified
+2019-01-14 17:14:47.437 +08:00 [Information] Request finished in 0.6128ms 304 application/javascript
+2019-01-14 17:17:33.282 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/Home/RedirectCont/ application/x-www-form-urlencoded; charset=UTF-8 36
+2019-01-14 17:17:33.282 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/Home/RedirectCont/ application/x-www-form-urlencoded; charset=UTF-8 36
+2019-01-14 17:17:33.283 +08:00 [Information] Route matched with "{action = \"RedirectCont\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)"
+2019-01-14 17:17:33.284 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/Home/RedirectCont/ application/x-www-form-urlencoded; charset=UTF-8 36
+2019-01-14 17:17:33.285 +08:00 [Information] Route matched with "{action = \"RedirectCont\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)"
+2019-01-14 17:17:33.286 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" with arguments (["Modal", "ReversalEntryModal"]) - Validation state: Valid
+2019-01-14 17:17:33.286 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult" in 0.0154ms.
+2019-01-14 17:17:33.286 +08:00 [Information] Route matched with "{action = \"RedirectCont\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)"
+2019-01-14 17:17:33.286 +08:00 [Information] Executing RedirectResult, redirecting to "/Modal/ReversalEntryModal".
+2019-01-14 17:17:33.287 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" in 2.9692ms
+2019-01-14 17:17:33.287 +08:00 [Information] Request finished in 5.564ms 302 
+2019-01-14 17:17:33.287 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" with arguments (["Modal", "ReversalEntryModal"]) - Validation state: Valid
+2019-01-14 17:17:33.287 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult" in 0.0113ms.
+2019-01-14 17:17:33.288 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/Home/RedirectCont/ application/x-www-form-urlencoded; charset=UTF-8 36
+2019-01-14 17:17:33.288 +08:00 [Information] Executing RedirectResult, redirecting to "/Modal/ReversalEntryModal".
+2019-01-14 17:17:33.288 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" in 1.8305ms
+2019-01-14 17:17:33.288 +08:00 [Information] Route matched with "{action = \"RedirectCont\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)"
+2019-01-14 17:17:33.289 +08:00 [Information] Request finished in 6.7262ms 302 
+2019-01-14 17:17:33.289 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" with arguments (["Modal", "ReversalEntryModal"]) - Validation state: Valid
+2019-01-14 17:17:33.289 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult" in 0.0113ms.
+2019-01-14 17:17:33.289 +08:00 [Information] Executing RedirectResult, redirecting to "/Modal/ReversalEntryModal".
+2019-01-14 17:17:33.289 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" in 0.8084ms
+2019-01-14 17:17:33.290 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" with arguments (["Modal", "ReversalEntryModal"]) - Validation state: Valid
+2019-01-14 17:17:33.290 +08:00 [Information] Request finished in 1.6504ms 302 
+2019-01-14 17:17:33.296 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult" in 0.0124ms.
+2019-01-14 17:17:33.296 +08:00 [Information] Executing RedirectResult, redirecting to "/Modal/ReversalEntryModal".
+2019-01-14 17:17:33.296 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" in 10.548ms
+2019-01-14 17:17:33.296 +08:00 [Information] Request finished in 12.1988ms 302 
+2019-01-14 17:17:33.297 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Modal/ReversalEntryModal  
+2019-01-14 17:17:33.297 +08:00 [Information] Route matched with "{action = \"ReversalEntryModal\", controller = \"Modal\"}". Executing action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)"
+2019-01-14 17:17:33.315 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 17:17:33.315 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0075ms.
+2019-01-14 17:17:33.315 +08:00 [Information] Executing ViewResult, running view "ReversalEntryModal".
+2019-01-14 17:17:33.316 +08:00 [Information] Executed ViewResult - view "ReversalEntryModal" executed in 0.5312ms.
+2019-01-14 17:17:33.316 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" in 1.2203ms
+2019-01-14 17:17:33.316 +08:00 [Information] Request finished in 19.5077ms 200 text/html; charset=utf-8
+2019-01-14 17:17:33.321 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Modal/ReversalEntryModal  
+2019-01-14 17:17:33.321 +08:00 [Information] Route matched with "{action = \"ReversalEntryModal\", controller = \"Modal\"}". Executing action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)"
+2019-01-14 17:17:33.322 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 17:17:33.322 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.009ms.
+2019-01-14 17:17:33.322 +08:00 [Information] Executing ViewResult, running view "ReversalEntryModal".
+2019-01-14 17:17:33.328 +08:00 [Information] Executed ViewResult - view "ReversalEntryModal" executed in 6.4989ms.
+2019-01-14 17:17:33.329 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" in 7.1978ms
+2019-01-14 17:17:33.329 +08:00 [Information] Request finished in 8.1123ms 200 text/html; charset=utf-8
+2019-01-14 17:17:33.337 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Modal/ReversalEntryModal  
+2019-01-14 17:17:33.338 +08:00 [Information] Route matched with "{action = \"ReversalEntryModal\", controller = \"Modal\"}". Executing action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)"
+2019-01-14 17:17:33.338 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 17:17:33.338 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-14 17:17:33.338 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0071ms.
+2019-01-14 17:17:33.338 +08:00 [Information] Executing ViewResult, running view "ReversalEntryModal".
+2019-01-14 17:17:33.338 +08:00 [Information] The file "/css/site.css" was not modified
+2019-01-14 17:17:33.339 +08:00 [Information] Request finished in 0.5712ms 304 text/css
+2019-01-14 17:17:33.339 +08:00 [Information] Executed ViewResult - view "ReversalEntryModal" executed in 0.646ms.
+2019-01-14 17:17:33.339 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" in 1.3079ms
+2019-01-14 17:17:33.339 +08:00 [Information] Request finished in 2.489ms 200 text/html; charset=utf-8
+2019-01-14 17:17:33.346 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Modal/ReversalEntryModal  
+2019-01-14 17:17:33.346 +08:00 [Information] Route matched with "{action = \"ReversalEntryModal\", controller = \"Modal\"}". Executing action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)"
+2019-01-14 17:17:33.350 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 17:17:33.350 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0105ms.
+2019-01-14 17:17:33.351 +08:00 [Information] Executing ViewResult, running view "ReversalEntryModal".
+2019-01-14 17:17:33.351 +08:00 [Information] Executed ViewResult - view "ReversalEntryModal" executed in 0.5059ms.
+2019-01-14 17:17:33.351 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" in 1.3ms
+2019-01-14 17:17:33.352 +08:00 [Information] Request finished in 5.8592ms 200 text/html; charset=utf-8
+2019-01-14 17:17:36.491 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/Home/RedirectCont/ application/x-www-form-urlencoded; charset=UTF-8 36
+2019-01-14 17:17:36.491 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/Home/RedirectCont/ application/x-www-form-urlencoded; charset=UTF-8 36
+2019-01-14 17:17:36.491 +08:00 [Information] Route matched with "{action = \"RedirectCont\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)"
+2019-01-14 17:17:36.491 +08:00 [Information] Route matched with "{action = \"RedirectCont\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)"
+2019-01-14 17:17:36.493 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/Home/RedirectCont/ application/x-www-form-urlencoded; charset=UTF-8 36
+2019-01-14 17:17:36.493 +08:00 [Information] Route matched with "{action = \"RedirectCont\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)"
+2019-01-14 17:17:36.497 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/Home/RedirectCont/ application/x-www-form-urlencoded; charset=UTF-8 36
+2019-01-14 17:17:36.497 +08:00 [Information] Route matched with "{action = \"RedirectCont\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)"
+2019-01-14 17:17:36.498 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" with arguments (["Modal", "ReversalEntryModal"]) - Validation state: Valid
+2019-01-14 17:17:36.498 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" with arguments (["Modal", "ReversalEntryModal"]) - Validation state: Valid
+2019-01-14 17:17:36.498 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult" in 0.0094ms.
+2019-01-14 17:17:36.498 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult" in 0.006ms.
+2019-01-14 17:17:36.498 +08:00 [Information] Executing RedirectResult, redirecting to "/Modal/ReversalEntryModal".
+2019-01-14 17:17:36.498 +08:00 [Information] Executing RedirectResult, redirecting to "/Modal/ReversalEntryModal".
+2019-01-14 17:17:36.498 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" in 7.0566ms
+2019-01-14 17:17:36.498 +08:00 [Information] Request finished in 9.9745ms 302 
+2019-01-14 17:17:36.498 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" in 7.2385ms
+2019-01-14 17:17:36.499 +08:00 [Information] Request finished in 7.9556ms 302 
+2019-01-14 17:17:36.499 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" with arguments (["Modal", "ReversalEntryModal"]) - Validation state: Valid
+2019-01-14 17:17:36.499 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult" in 0.0181ms.
+2019-01-14 17:17:36.499 +08:00 [Information] Executing RedirectResult, redirecting to "/Modal/ReversalEntryModal".
+2019-01-14 17:17:36.499 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" in 5.8668ms
+2019-01-14 17:17:36.500 +08:00 [Information] Request finished in 6.6707ms 302 
+2019-01-14 17:17:36.501 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/Home/RedirectCont/ application/x-www-form-urlencoded; charset=UTF-8 36
+2019-01-14 17:17:36.502 +08:00 [Information] Route matched with "{action = \"RedirectCont\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)"
+2019-01-14 17:17:36.502 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/Home/RedirectCont/ application/x-www-form-urlencoded; charset=UTF-8 36
+2019-01-14 17:17:36.503 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/Home/RedirectCont/ application/x-www-form-urlencoded; charset=UTF-8 36
+2019-01-14 17:17:36.506 +08:00 [Information] Route matched with "{action = \"RedirectCont\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)"
+2019-01-14 17:17:36.504 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" with arguments (["Modal", "ReversalEntryModal"]) - Validation state: Valid
+2019-01-14 17:17:36.503 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/Home/RedirectCont/ application/x-www-form-urlencoded; charset=UTF-8 36
+2019-01-14 17:17:36.506 +08:00 [Information] Route matched with "{action = \"RedirectCont\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)"
+2019-01-14 17:17:36.521 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult" in 0.0094ms.
+2019-01-14 17:17:36.521 +08:00 [Information] Route matched with "{action = \"RedirectCont\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)"
+2019-01-14 17:17:36.521 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" with arguments (["Modal", "ReversalEntryModal"]) - Validation state: Valid
+2019-01-14 17:17:36.521 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" with arguments (["Modal", "ReversalEntryModal"]) - Validation state: Valid
+2019-01-14 17:17:36.521 +08:00 [Information] Executing RedirectResult, redirecting to "/Modal/ReversalEntryModal".
+2019-01-14 17:17:36.521 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult" in 0.006ms.
+2019-01-14 17:17:36.521 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" with arguments (["Modal", "ReversalEntryModal"]) - Validation state: Valid
+2019-01-14 17:17:36.521 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" in 23.9631ms
+2019-01-14 17:17:36.521 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult" in 0.0045ms.
+2019-01-14 17:17:36.530 +08:00 [Information] Executing RedirectResult, redirecting to "/Modal/ReversalEntryModal".
+2019-01-14 17:17:36.530 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult" in 0.0083ms.
+2019-01-14 17:17:36.530 +08:00 [Information] Request finished in 33.4219ms 302 
+2019-01-14 17:17:36.530 +08:00 [Information] Executing RedirectResult, redirecting to "/Modal/ReversalEntryModal".
+2019-01-14 17:17:36.530 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" in 9.1759ms
+2019-01-14 17:17:36.530 +08:00 [Information] Executing RedirectResult, redirecting to "/Modal/ReversalEntryModal".
+2019-01-14 17:17:36.530 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" in 9.1793ms
+2019-01-14 17:17:36.530 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" in 9.0434ms
+2019-01-14 17:17:36.530 +08:00 [Information] Request finished in 28.0104ms 302 
+2019-01-14 17:17:36.530 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" with arguments (["Modal", "ReversalEntryModal"]) - Validation state: Valid
+2019-01-14 17:17:36.530 +08:00 [Information] Request finished in 27.2413ms 302 
+2019-01-14 17:17:36.530 +08:00 [Information] Request finished in 27.1065ms 302 
+2019-01-14 17:17:36.530 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult" in 0.0056ms.
+2019-01-14 17:17:36.531 +08:00 [Information] Executing RedirectResult, redirecting to "/Modal/ReversalEntryModal".
+2019-01-14 17:17:36.531 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" in 28.6545ms
+2019-01-14 17:17:36.531 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Modal/ReversalEntryModal  
+2019-01-14 17:17:36.531 +08:00 [Information] Request finished in 29.5577ms 302 
+2019-01-14 17:17:36.531 +08:00 [Information] Route matched with "{action = \"ReversalEntryModal\", controller = \"Modal\"}". Executing action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)"
+2019-01-14 17:17:36.531 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 17:17:36.546 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0086ms.
+2019-01-14 17:17:36.546 +08:00 [Information] Executing ViewResult, running view "ReversalEntryModal".
+2019-01-14 17:17:36.546 +08:00 [Information] Executed ViewResult - view "ReversalEntryModal" executed in 0.3662ms.
+2019-01-14 17:17:36.546 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" in 15.0869ms
+2019-01-14 17:17:36.547 +08:00 [Information] Request finished in 15.7806ms 200 text/html; charset=utf-8
+2019-01-14 17:17:36.552 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Modal/ReversalEntryModal  
+2019-01-14 17:17:36.559 +08:00 [Information] Route matched with "{action = \"ReversalEntryModal\", controller = \"Modal\"}". Executing action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)"
+2019-01-14 17:17:36.559 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 17:17:36.559 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0064ms.
+2019-01-14 17:17:36.559 +08:00 [Information] Executing ViewResult, running view "ReversalEntryModal".
+2019-01-14 17:17:36.560 +08:00 [Information] Executed ViewResult - view "ReversalEntryModal" executed in 0.3934ms.
+2019-01-14 17:17:36.560 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" in 0.8673ms
+2019-01-14 17:17:36.560 +08:00 [Information] Request finished in 8.2807ms 200 text/html; charset=utf-8
+2019-01-14 17:17:36.568 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Modal/ReversalEntryModal  
+2019-01-14 17:17:36.569 +08:00 [Information] Route matched with "{action = \"ReversalEntryModal\", controller = \"Modal\"}". Executing action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)"
+2019-01-14 17:17:36.569 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 17:17:36.569 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0109ms.
+2019-01-14 17:17:36.570 +08:00 [Information] Executing ViewResult, running view "ReversalEntryModal".
+2019-01-14 17:17:36.570 +08:00 [Information] Executed ViewResult - view "ReversalEntryModal" executed in 0.4746ms.
+2019-01-14 17:17:36.575 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Modal/ReversalEntryModal  
+2019-01-14 17:17:36.587 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" in 18.2673ms
+2019-01-14 17:17:36.587 +08:00 [Information] Route matched with "{action = \"ReversalEntryModal\", controller = \"Modal\"}". Executing action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)"
+2019-01-14 17:17:36.588 +08:00 [Information] Request finished in 19.5235ms 200 text/html; charset=utf-8
+2019-01-14 17:17:36.588 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 17:17:36.588 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0067ms.
+2019-01-14 17:17:36.588 +08:00 [Information] Executing ViewResult, running view "ReversalEntryModal".
+2019-01-14 17:17:36.588 +08:00 [Information] Executed ViewResult - view "ReversalEntryModal" executed in 0.3386ms.
+2019-01-14 17:17:36.588 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" in 0.7936ms
+2019-01-14 17:17:36.589 +08:00 [Information] Request finished in 13.2889ms 200 text/html; charset=utf-8
+2019-01-14 17:17:36.599 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Modal/ReversalEntryModal  
+2019-01-14 17:17:36.600 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Modal/ReversalEntryModal  
+2019-01-14 17:17:36.600 +08:00 [Information] Route matched with "{action = \"ReversalEntryModal\", controller = \"Modal\"}". Executing action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)"
+2019-01-14 17:17:36.600 +08:00 [Information] Route matched with "{action = \"ReversalEntryModal\", controller = \"Modal\"}". Executing action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)"
+2019-01-14 17:17:36.600 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 17:17:36.601 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Modal/ReversalEntryModal  
+2019-01-14 17:17:36.600 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 17:17:36.601 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Modal/ReversalEntryModal  
+2019-01-14 17:17:36.607 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0169ms.
+2019-01-14 17:17:36.607 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0056ms.
+2019-01-14 17:17:36.607 +08:00 [Information] Route matched with "{action = \"ReversalEntryModal\", controller = \"Modal\"}". Executing action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)"
+2019-01-14 17:17:36.607 +08:00 [Information] Route matched with "{action = \"ReversalEntryModal\", controller = \"Modal\"}". Executing action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)"
+2019-01-14 17:17:36.607 +08:00 [Information] Executing ViewResult, running view "ReversalEntryModal".
+2019-01-14 17:17:36.607 +08:00 [Information] Executing ViewResult, running view "ReversalEntryModal".
+2019-01-14 17:17:36.607 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 17:17:36.607 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 17:17:36.607 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0022ms.
+2019-01-14 17:17:36.607 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0022ms.
+2019-01-14 17:17:36.608 +08:00 [Information] Executing ViewResult, running view "ReversalEntryModal".
+2019-01-14 17:17:36.608 +08:00 [Information] Executed ViewResult - view "ReversalEntryModal" executed in 0.342ms.
+2019-01-14 17:17:36.608 +08:00 [Information] Executed ViewResult - view "ReversalEntryModal" executed in 0.3371ms.
+2019-01-14 17:17:36.608 +08:00 [Information] Executing ViewResult, running view "ReversalEntryModal".
+2019-01-14 17:17:36.608 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" in 7.8208ms
+2019-01-14 17:17:36.608 +08:00 [Information] Executed ViewResult - view "ReversalEntryModal" executed in 0.3349ms.
+2019-01-14 17:17:36.608 +08:00 [Information] Executed ViewResult - view "ReversalEntryModal" executed in 0.2726ms.
+2019-01-14 17:17:36.622 +08:00 [Information] Request finished in 22.1813ms 200 text/html; charset=utf-8
+2019-01-14 17:17:36.622 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" in 14.271ms
+2019-01-14 17:17:36.608 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" in 7.6875ms
+2019-01-14 17:17:36.622 +08:00 [Information] Request finished in 20.6064ms 200 text/html; charset=utf-8
+2019-01-14 17:17:36.622 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" in 14.5187ms
+2019-01-14 17:17:36.622 +08:00 [Information] Request finished in 22.1632ms 200 text/html; charset=utf-8
+2019-01-14 17:17:36.650 +08:00 [Information] Request finished in 48.7951ms 200 text/html; charset=utf-8
+2019-01-14 17:17:43.478 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Entry_DDV  
+2019-01-14 17:17:43.479 +08:00 [Information] Route matched with "{action = \"Entry_DDV\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)"
+2019-01-14 17:17:43.479 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 17:17:43.479 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0105ms.
+2019-01-14 17:17:43.479 +08:00 [Information] Executing ViewResult, running view "Entry_DDV".
+2019-01-14 17:17:43.480 +08:00 [Information] Executed ViewResult - view "Entry_DDV" executed in 0.7419ms.
+2019-01-14 17:17:43.480 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)" in 1.5382ms
+2019-01-14 17:17:43.481 +08:00 [Information] Request finished in 2.4338ms 200 text/html; charset=utf-8
+2019-01-14 17:17:43.899 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/favicon.ico  
+2019-01-14 17:17:43.901 +08:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\favicon.ico"'
+2019-01-14 17:17:43.903 +08:00 [Information] Request finished in 3.0787ms 200 image/x-icon
+2019-01-14 17:17:46.584 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/Home/RedirectCont/ application/x-www-form-urlencoded; charset=UTF-8 36
+2019-01-14 17:17:46.585 +08:00 [Information] Route matched with "{action = \"RedirectCont\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)"
+2019-01-14 17:17:46.586 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" with arguments (["Modal", "ReversalEntryModal"]) - Validation state: Valid
+2019-01-14 17:17:46.586 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult" in 0.0098ms.
+2019-01-14 17:17:46.586 +08:00 [Information] Executing RedirectResult, redirecting to "/Modal/ReversalEntryModal".
+2019-01-14 17:17:46.587 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" in 0.9522ms
+2019-01-14 17:17:46.587 +08:00 [Information] Request finished in 2.674ms 302 
+2019-01-14 17:17:46.594 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Modal/ReversalEntryModal  
+2019-01-14 17:17:46.595 +08:00 [Information] Route matched with "{action = \"ReversalEntryModal\", controller = \"Modal\"}". Executing action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)"
+2019-01-14 17:17:46.595 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-14 17:17:46.596 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.009ms.
+2019-01-14 17:17:46.596 +08:00 [Information] Executing ViewResult, running view "ReversalEntryModal".
+2019-01-14 17:17:46.597 +08:00 [Information] Executed ViewResult - view "ReversalEntryModal" executed in 0.5006ms.
+2019-01-14 17:17:46.597 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" in 1.7927ms
+2019-01-14 17:17:46.597 +08:00 [Information] Request finished in 2.9628ms 200 text/html; charset=utf-8

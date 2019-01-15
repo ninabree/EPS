@@ -5,6 +5,11 @@
 
 <div class="tabContent">
     <div id="tbl-lbl">
+        <div class="dis-inline-block"><p>Date:</p></div>
+        <div class="dis-inline-block"><input class="input" disabled /></div>
+        <div class="dis-inline-block"><input class="input" type="datetime" disabled /></div>
+    </div>
+    <div id="tbl-lbl">
         <div class="dis-inline-block"><p>Payee:</p></div>
         <div class="dis-inline-block">
             <select>
@@ -105,12 +110,12 @@
                     <td style="border:none" rowspan="2"></td>
                     <td style="border:none" rowspan="2"></td>
                     <td style="border:none" rowspan="2"></td>
+                    <td style="border:none" rowspan="2"></td>
+                    <td style="border:none" rowspan="2"></td>
+                    <td style="border:none" rowspan="2"></td>
+                    <td style="border:none" rowspan="2"></td>
+                    <td style="border:none" rowspan="2"></td>
                     <td style="border:none">SUBTOTAL</td>
-                    <td style="border:none" rowspan="2"></td>
-                    <td style="border:none" rowspan="2"></td>
-                    <td style="border:none" rowspan="2"></td>
-                    <td style="border:none" rowspan="2"></td>
-                    <td style="border:none" rowspan="2"></td>
                     <td rowspan="2"></td>
                     <td colspan="1"></td>
                     <td colspan="1"></td>
@@ -129,14 +134,24 @@
         </div>
         @Html.Partial("DDVPartial")
     </div>
-    <div id="entry-controls">
+    <div id="entry-status" class="m-t-10 m-b-10">
+        <div class="dis-inline-block"><label>Status:</label></div>
+        <div class="dis-inline-block"><input class="input" /></div>
+        <div class="dis-inline-block"><label>Approver:</label></div>
+        <div class="dis-inline-block"><input class="input" /></div>
+        <div class="dis-inline-block"><label>Verifier:</label></div>
+        <div class="dis-inline-block"><input class="input" /></div>
+    </div>
+    <div id="entry-controls" class="m-b-10">
         <div class="dis-inline-block tbl-btn"><button>Save</button></div>
         <div class="dis-inline-block tbl-btn"><button>Delete</button></div>
         <div class="dis-inline-block tbl-btn"><button>Modify</button></div>
         <div class="dis-inline-block tbl-btn"><button id="reversal_entry">Create Reversal Entry</button></div>
         <div class="dis-inline-block tbl-btn"><button>Delete GBase Post</button></div>
-        <div class="dis-inline-block tbl-btn float-r"><button>Print LOI</button></div>
-        <div class="dis-inline-block tbl-btn float-r"><button>Print BIR Certificate</button></div>
+        <div class="float-r">
+            <div class="dis-inline-block tbl-btn"><button>Print LOI</button></div>
+            <div class="dis-inline-block tbl-btn"><button>Print BIR Certificate</button></div>
+        </div>
     </div>
 
     @Html.Partial("ModalPartial")
