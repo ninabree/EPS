@@ -2,6 +2,108 @@
 @{
     ViewData["Title"] = "Report";
 }
+<div class="tabContent" style="border: none">
+    <div class="m-t-10">
+        <table class="table voucher-tbl">
+            <col style="width:5%">
+            <col style="width:15%">
+            <col style="width:10%">
+            <col style="width:10%">
+            <col style="width:10%">
+            <col style="width:10%">
+            <col style="width:10%">
+            <col style="width:10%">
+            <col style="width:10%">
+            <col style="width:10%">
 
-<h2>Report</h2>
+            <tr>
+                <td colspan="10"></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>Report Type</td>
+                <td colspan="3"><input class="input" /></td>
+                <td>Sub-Type</td>
+                <td colspan="3"><input class="input" /></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="10"></td>
+            </tr>
+            <tr>
+                <td><input type="radio" /></td>
+                <td>Year</td>
+                <td colspan="3"><input class="input" type="date" /></td>
+                <td>Month</td>
+                <td colspan="3"><input class="input" type="date" /></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><input type="radio" /></td>
+                <td>Year</td>
+                <td colspan="3"><input class="input" type="date" /></td>
+                <td></td>
+                <td colspan="2"><input class="" type="radio" /> 1st Semester</td>
+                <td colspan="2"><input class="" type="radio" /> 2nd Semester</td>
+            </tr>
+            <tr>
+                <td><input type="radio" /></td>
+                <td>Period</td>
+                <td colspan="3"><input class="input" /></td>
+                <td>To</td>
+                <td colspan="3"><input class="input" /></td>
+                <td rowspan="4"><button class="btn">Generate Preview</button></td>
+            </tr>
+            <tr>
+                <td><input type="radio" /></td>
+                <td>Check No.</td>
+                <td colspan="3"><input class="input" /></td>
+                <td></td>
+                <td colspan="3"><input class="input" /></td>
+            </tr>
+            <tr>
+                <td><input type="radio" /></td>
+                <td>Voucher No.</td>
+                <td colspan="3"><input class="input" /></td>
+                <td></td>
+                <td colspan="3"><input class="input" /></td>
+            </tr>
+            <tr>
+                <td><input type="radio" /></td>
+                <td>Covered Tran No.</td>
+                <td colspan="1"><input class="input" /></td>
+                <td colspan="1"><input class="input" /></td>
+                <td colspan="1"><input class="input" /></td>
+                <td></td>
+                <td colspan="1"><input class="input" /></td>
+                <td colspan="1"><input class="input" /></td>
+                <td colspan="1"><input class="input" /></td>
+            </tr>
+            <tr>
+                <td><input type="radio" /></td>
+                <td>Subject Name</td>
+                <td colspan="3"><input class="input" /></td>
+                <td colspan="5"></td>
+            </tr>
+            <tr>
+                <td colspan="10"></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>Save to File</td>
+                <td colspan="6"><input class="input" /></td>
+                <td>Browse</td>
+                <td rowspan="2"><button class="btn">Generate To File</button></td>
+            </tr>
+            <tr>
+                <td colspan="2"></td>
+                <td>Excel</td>
+                <td></td>
+                <td>Pdf</td>
+                <td colspan="5"></td>
+            </tr>
+        </table>
+    </div>
 
+    @Html.Partial("ModalPartial")
+</div>

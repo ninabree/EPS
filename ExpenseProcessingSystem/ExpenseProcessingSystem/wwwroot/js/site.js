@@ -7,12 +7,33 @@
     $pageInput.data("value", $pageInput.val());
 
     /*//////////////////////////////////////////////////////////////////
-    [ Modal]*/
+    [ Login ]*/
 
+    setInterval(function () {
+        var val = $('input#Acc_UserName.input100').val();
+        if (val != "") {
+            //alert(val);
+            $('span.focus-input100.UN').hide();
+        } else {
+            $('span.focus-input100.UN').show();
+        }
+    }, 100);
+
+    setInterval(function () {
+        var val = $('input#Acc_Password.input100').val();
+        if (val != "") {
+            //alert(val);
+            $('span.focus-input100.PW').hide();
+        } else {
+            $('span.focus-input100.PW').show();
+        }
+    }, 100);
+
+    /*//////////////////////////////////////////////////////////////////
+    [ Modal ]*/
     setInterval(function () {
         $('div.modal-backdrop.fade.in').not(':first').remove();
     }, 1);
-
     /*//////////////////////////////////////////////////////////////////
     [ Pagination - Number Input]*/
 

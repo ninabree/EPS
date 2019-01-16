@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ExpenseProcessingSystem.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,7 +23,8 @@ namespace ExpenseProcessingSystem.Controllers
         [HttpGet]
         public ActionResult Login()
         {
-            return View();
+            LoginViewModel lvm = new LoginViewModel();
+            return View(lvm);
         }
     }
 }
