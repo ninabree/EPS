@@ -19,6 +19,7 @@ namespace ExpenseProcessingSystem
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(configuration)
                 .MinimumLevel.Debug()
+                .WriteTo.Debug()
                 .WriteTo.Stackify()
                 .WriteTo.File("C:\\Work\\Mizuho EPS\\eps_logs\\logs\\log.txt", rollingInterval: RollingInterval.Day, fileSizeLimitBytes: null, rollOnFileSizeLimit: true)
                 .CreateLogger();

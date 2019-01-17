@@ -450,6 +450,12 @@ div.tabContent {
         overflow-y: auto;
         max-height: 67vh;
     }
+.report {
+    height: 69vh !important;
+    border: 1px solid #ccc;
+    background: #fafafa;
+    padding: 5px;
+}
 
     div.tabContent.hide {
         display: none;

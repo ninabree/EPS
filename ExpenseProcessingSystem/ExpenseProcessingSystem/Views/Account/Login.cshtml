@@ -5,7 +5,7 @@
 @model LoginViewModel
 <div class="container-login">
     <div class="form-login">
-        @using (Html.BeginForm("Index", "Home", FormMethod.Post, new { @class = "validate-form" }))
+        @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "validate-form" }))
         {
             <div class="login-input m-t-20 m-b-15" data-validate="Enter User Name">
                 @Html.TextBoxFor(model => model.Acc_UserName, new { @class = "input100" })

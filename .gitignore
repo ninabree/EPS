@@ -4,3 +4,5 @@
 **/obj/
 #ignore .vs folder
 **/.vs/
+#ignore logs folder
+**/logs/

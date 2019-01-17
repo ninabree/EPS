@@ -1581,3 +1581,891 @@ C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\Vi
 2019-01-16 10:58:46.654 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/favicon.ico  
 2019-01-16 10:58:46.654 +08:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\favicon.ico"'
 2019-01-16 10:58:46.655 +08:00 [Information] Request finished in 1.3468ms 200 image/x-icon
+2019-01-16 12:37:52.224 +08:00 [Information] Hello, Serilog!
+2019-01-16 12:37:55.404 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/  
+2019-01-16 12:37:55.404 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/favicon.ico  
+2019-01-16 12:37:55.635 +08:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\favicon.ico"'
+2019-01-16 12:37:55.653 +08:00 [Information] Request finished in 258.0314ms 200 image/x-icon
+2019-01-16 12:37:55.945 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-16 12:37:55.991 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 12:37:56.006 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 4.6563ms.
+2019-01-16 12:37:56.099 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-16 12:37:56.504 +08:00 [Information] Executed ViewResult - view "Login" executed in 474.9718ms.
+2019-01-16 12:37:56.509 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 559.0334ms
+2019-01-16 12:37:56.527 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/js/site.js?v=oaYPxzKkCNgMh3VpQxkAYYwNPoo9Tw-D2TYuhTN7hDI  
+2019-01-16 12:37:56.530 +08:00 [Information] Sending file. Request path: '"/js/site.js"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\js\site.js"'
+2019-01-16 12:37:56.530 +08:00 [Information] Request finished in 3.1244ms 200 application/javascript
+2019-01-16 12:37:56.543 +08:00 [Information] Request finished in 1161.5225ms 200 text/html; charset=utf-8
+2019-01-16 12:38:06.609 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/ application/x-www-form-urlencoded 210
+2019-01-16 12:38:06.679 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-16 12:38:06.870 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" with arguments (["ExpenseProcessingSystem.ViewModels.LoginViewModel"]) - Validation state: Invalid
+2019-01-16 12:38:06.890 +08:00 [Information] 80C7FCB313141FC98D27ADA1EA13A1F989DAD563CEA2266A85490670E33ED995C95E865D366B19F1E78844FC7CB5ED439DE3DC69168A7199A73D238D5F648A9A
+2019-01-16 12:38:06.890 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 14.5043ms.
+2019-01-16 12:38:06.892 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-16 12:38:06.899 +08:00 [Information] Executed ViewResult - view "Login" executed in 7.9265ms.
+2019-01-16 12:38:06.899 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 219.975ms
+2019-01-16 12:38:06.899 +08:00 [Information] Request finished in 293.4817ms 200 text/html; charset=utf-8
+2019-01-16 12:38:14.664 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/ application/x-www-form-urlencoded 220
+2019-01-16 12:38:14.671 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-16 12:38:14.675 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" with arguments (["ExpenseProcessingSystem.ViewModels.LoginViewModel"]) - Validation state: Valid
+2019-01-16 12:38:14.692 +08:00 [Information] 4C54DE81642F796E39C11F4AD92187707427A6780C65B9BB92403B962C99E6A702E9D829439B41094D645CDC043836EA0B46E8D60B474C4E35DC439623B13F98
+2019-01-16 12:38:14.693 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 17.127ms.
+2019-01-16 12:38:14.693 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-16 12:38:14.696 +08:00 [Information] Executed ViewResult - view "Login" executed in 2.4561ms.
+2019-01-16 12:38:14.696 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 24.6654ms
+2019-01-16 12:38:14.697 +08:00 [Information] Request finished in 32.604ms 200 text/html; charset=utf-8
+2019-01-16 12:39:21.789 +08:00 [Information] Hello, Serilog!
+2019-01-16 12:39:24.830 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/  
+2019-01-16 12:39:24.830 +08:00 [Information] Request starting HTTP/1.1 DEBUG http://localhost:1554/  0
+2019-01-16 12:39:25.038 +08:00 [Information] Request finished in 201.2429ms 200 
+2019-01-16 12:39:25.486 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-16 12:39:25.539 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 12:39:25.560 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 5.0973ms.
+2019-01-16 12:39:25.702 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-16 12:39:26.252 +08:00 [Information] Executed ViewResult - view "Login" executed in 625.8844ms.
+2019-01-16 12:39:26.265 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 769.1185ms
+2019-01-16 12:39:26.284 +08:00 [Information] Request finished in 1476.1812ms 200 text/html; charset=utf-8
+2019-01-16 12:39:38.564 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/ application/x-www-form-urlencoded 220
+2019-01-16 12:39:38.620 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-16 12:39:38.830 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" with arguments (["ExpenseProcessingSystem.ViewModels.LoginViewModel"]) - Validation state: Valid
+2019-01-16 12:39:38.851 +08:00 [Information] 4C54DE81642F796E39C11F4AD92187707427A6780C65B9BB92403B962C99E6A702E9D829439B41094D645CDC043836EA0B46E8D60B474C4E35DC439623B13F98
+2019-01-16 12:39:38.853 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 14.644ms.
+2019-01-16 12:39:38.857 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-16 12:39:38.866 +08:00 [Information] Executed ViewResult - view "Login" executed in 9.094ms.
+2019-01-16 12:39:38.869 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 245.9288ms
+2019-01-16 12:39:38.871 +08:00 [Information] Request finished in 310.5804ms 200 text/html; charset=utf-8
+2019-01-16 12:46:26.244 +08:00 [Information] Hello, Serilog!
+2019-01-16 12:46:28.277 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/ application/x-www-form-urlencoded 220
+2019-01-16 12:46:28.740 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-16 12:46:28.972 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" with arguments (["ExpenseProcessingSystem.ViewModels.LoginViewModel"]) - Validation state: Valid
+2019-01-16 12:46:29.011 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult" in 19.405ms.
+2019-01-16 12:46:29.053 +08:00 [Information] Executing RedirectResult, redirecting to "/Home/Index".
+2019-01-16 12:46:29.067 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 319.591ms
+2019-01-16 12:46:29.124 +08:00 [Information] Request finished in 865.9856ms 302 
+2019-01-16 12:46:29.133 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Index  
+2019-01-16 12:46:29.137 +08:00 [Information] Route matched with "{action = \"Index\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)"
+2019-01-16 12:46:29.141 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)" with arguments (["", "", "", ""]) - Validation state: Valid
+2019-01-16 12:46:29.147 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 4.8571ms.
+2019-01-16 12:46:29.275 +08:00 [Information] Executing ViewResult, running view "Index".
+2019-01-16 12:46:29.517 +08:00 [Information] Executed ViewResult - view "Index" executed in 362.4766ms.
+2019-01-16 12:46:29.518 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)" in 379.624ms
+2019-01-16 12:46:29.530 +08:00 [Information] Request finished in 397.4115ms 200 text/html; charset=utf-8
+2019-01-16 12:47:16.191 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/ application/x-www-form-urlencoded 210
+2019-01-16 12:47:16.196 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-16 12:47:16.212 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" with arguments (["ExpenseProcessingSystem.ViewModels.LoginViewModel"]) - Validation state: Invalid
+2019-01-16 12:47:16.233 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 20.4369ms.
+2019-01-16 12:47:16.236 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-16 12:47:16.401 +08:00 [Information] Executed ViewResult - view "Login" executed in 167.264ms.
+2019-01-16 12:47:16.401 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 203.9766ms
+2019-01-16 12:47:16.401 +08:00 [Information] Request finished in 210.7851ms 200 text/html; charset=utf-8
+2019-01-16 12:47:16.853 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/favicon.ico  
+2019-01-16 12:47:16.894 +08:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\favicon.ico"'
+2019-01-16 12:47:16.894 +08:00 [Information] Request finished in 41.6648ms 200 image/x-icon
+2019-01-16 12:47:21.249 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/ application/x-www-form-urlencoded 222
+2019-01-16 12:47:21.253 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-16 12:47:21.254 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" with arguments (["ExpenseProcessingSystem.ViewModels.LoginViewModel"]) - Validation state: Valid
+2019-01-16 12:47:21.287 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 32.7653ms.
+2019-01-16 12:47:21.291 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-16 12:47:21.296 +08:00 [Information] Executed ViewResult - view "Login" executed in 8.1787ms.
+2019-01-16 12:47:21.297 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 43.6698ms
+2019-01-16 12:47:21.298 +08:00 [Information] Request finished in 48.3846ms 200 text/html; charset=utf-8
+2019-01-16 12:47:23.493 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/ application/x-www-form-urlencoded 214
+2019-01-16 12:47:23.494 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-16 12:47:23.497 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" with arguments (["ExpenseProcessingSystem.ViewModels.LoginViewModel"]) - Validation state: Invalid
+2019-01-16 12:47:23.517 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 19.9743ms.
+2019-01-16 12:47:23.518 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-16 12:47:23.519 +08:00 [Information] Executed ViewResult - view "Login" executed in 0.9118ms.
+2019-01-16 12:47:23.519 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 24.2191ms
+2019-01-16 12:47:23.519 +08:00 [Information] Request finished in 31.0363ms 200 text/html; charset=utf-8
+2019-01-16 12:47:26.027 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/ application/x-www-form-urlencoded 214
+2019-01-16 12:47:26.028 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-16 12:47:26.079 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" with arguments (["ExpenseProcessingSystem.ViewModels.LoginViewModel"]) - Validation state: Invalid
+2019-01-16 12:47:26.102 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 21.7928ms.
+2019-01-16 12:47:26.104 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-16 12:47:26.109 +08:00 [Information] Executed ViewResult - view "Login" executed in 4.8103ms.
+2019-01-16 12:47:26.113 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 85.4804ms
+2019-01-16 12:47:26.134 +08:00 [Information] Request finished in 105.8358ms 200 text/html; charset=utf-8
+2019-01-16 12:52:41.317 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/ application/x-www-form-urlencoded 220
+2019-01-16 12:52:41.323 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-16 12:52:41.323 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" with arguments (["ExpenseProcessingSystem.ViewModels.LoginViewModel"]) - Validation state: Valid
+2019-01-16 12:52:41.336 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult" in 12.2894ms.
+2019-01-16 12:52:41.337 +08:00 [Information] Executing RedirectResult, redirecting to "/Home/Index".
+2019-01-16 12:52:41.337 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 14.0078ms
+2019-01-16 12:52:41.337 +08:00 [Information] Request finished in 20.3383ms 302 
+2019-01-16 12:52:41.345 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Index  
+2019-01-16 12:52:41.345 +08:00 [Information] Route matched with "{action = \"Index\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)"
+2019-01-16 12:52:41.346 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)" with arguments (["", "", "", ""]) - Validation state: Valid
+2019-01-16 12:52:41.346 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0151ms.
+2019-01-16 12:52:41.347 +08:00 [Information] Executing ViewResult, running view "Index".
+2019-01-16 12:52:41.348 +08:00 [Information] Executed ViewResult - view "Index" executed in 1.6126ms.
+2019-01-16 12:52:41.348 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)" in 2.3572ms
+2019-01-16 12:52:41.348 +08:00 [Information] Request finished in 3.2086ms 200 text/html; charset=utf-8
+2019-01-16 12:52:41.380 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/js/site.js?v=oaYPxzKkCNgMh3VpQxkAYYwNPoo9Tw-D2TYuhTN7hDI  
+2019-01-16 12:52:41.413 +08:00 [Information] The file "/js/site.js" was not modified
+2019-01-16 12:52:41.415 +08:00 [Information] Request finished in 36.3489ms 304 application/javascript
+2019-01-16 12:52:46.367 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Entry_CV  
+2019-01-16 12:52:46.370 +08:00 [Information] Route matched with "{action = \"Entry_CV\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Entry_CV (ExpenseProcessingSystem)"
+2019-01-16 12:52:46.374 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_CV (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 12:52:46.375 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_CV (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.3318ms.
+2019-01-16 12:52:46.382 +08:00 [Information] Executing ViewResult, running view "Entry_CV".
+2019-01-16 12:52:46.418 +08:00 [Information] Executed ViewResult - view "Entry_CV" executed in 42.2093ms.
+2019-01-16 12:52:46.418 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Entry_CV (ExpenseProcessingSystem)" in 48.6108ms
+2019-01-16 12:52:46.419 +08:00 [Information] Request finished in 51.6586ms 200 text/html; charset=utf-8
+2019-01-16 13:44:30.575 +08:00 [Information] Hello, Serilog!
+2019-01-16 13:44:33.211 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/  
+2019-01-16 13:44:33.211 +08:00 [Information] Request starting HTTP/1.1 DEBUG http://localhost:1554/  0
+2019-01-16 13:44:33.410 +08:00 [Information] Request finished in 210.5351ms 200 
+2019-01-16 13:44:33.909 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-16 13:44:33.964 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 13:44:33.985 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 4.7152ms.
+2019-01-16 13:44:34.122 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-16 13:44:34.684 +08:00 [Information] Executed ViewResult - view "Login" executed in 653.8605ms.
+2019-01-16 13:44:34.712 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 785.5028ms
+2019-01-16 13:44:34.730 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-16 13:44:34.754 +08:00 [Information] Request finished in 1574.0324ms 200 text/html; charset=utf-8
+2019-01-16 13:44:34.801 +08:00 [Information] The file "/css/site.css" was not modified
+2019-01-16 13:44:34.811 +08:00 [Information] Request finished in 93.7124ms 304 text/css
+2019-01-16 13:44:35.001 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/js/site.js?v=oaYPxzKkCNgMh3VpQxkAYYwNPoo9Tw-D2TYuhTN7hDI  
+2019-01-16 13:44:35.011 +08:00 [Information] The file "/js/site.js" was not modified
+2019-01-16 13:44:35.019 +08:00 [Information] Request finished in 15.224ms 304 application/javascript
+2019-01-16 13:44:48.559 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/ application/x-www-form-urlencoded 220
+2019-01-16 13:44:48.619 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-16 13:44:48.804 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" with arguments (["ExpenseProcessingSystem.ViewModels.LoginViewModel"]) - Validation state: Valid
+2019-01-16 13:44:48.842 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult" in 28.7909ms.
+2019-01-16 13:44:48.847 +08:00 [Information] Executing RedirectResult, redirecting to "/Home/Index".
+2019-01-16 13:44:48.852 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 229.5052ms
+2019-01-16 13:44:48.855 +08:00 [Information] Request finished in 296.7066ms 302 
+2019-01-16 13:44:48.860 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Index  
+2019-01-16 13:44:48.865 +08:00 [Information] Route matched with "{action = \"Index\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)"
+2019-01-16 13:44:48.878 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)" with arguments (["", "", "", ""]) - Validation state: Valid
+2019-01-16 13:44:48.881 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.7298ms.
+2019-01-16 13:44:48.887 +08:00 [Information] Executing ViewResult, running view "Index".
+2019-01-16 13:44:48.916 +08:00 [Information] Executed ViewResult - view "Index" executed in 31.6265ms.
+2019-01-16 13:44:48.921 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)" in 50.7207ms
+2019-01-16 13:44:48.936 +08:00 [Information] Request finished in 64.5364ms 200 text/html; charset=utf-8
+2019-01-16 13:51:13.743 +08:00 [Information] Hello, Serilog!
+2019-01-16 13:51:16.527 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Entry_CV  
+2019-01-16 13:51:17.040 +08:00 [Information] Route matched with "{action = \"Entry_CV\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Entry_CV (ExpenseProcessingSystem)"
+2019-01-16 13:51:17.087 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_CV (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 13:51:17.105 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_CV (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 5.2732ms.
+2019-01-16 13:51:17.202 +08:00 [Information] Executing ViewResult, running view "Entry_CV".
+2019-01-16 13:51:17.561 +08:00 [Information] Executed ViewResult - view "Entry_CV" executed in 429.9786ms.
+2019-01-16 13:51:17.566 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Entry_CV (ExpenseProcessingSystem)" in 523.0235ms
+2019-01-16 13:51:17.607 +08:00 [Information] Request finished in 1080.0663ms 200 text/html; charset=utf-8
+2019-01-16 13:51:17.620 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/js/site.js?v=oaYPxzKkCNgMh3VpQxkAYYwNPoo9Tw-D2TYuhTN7hDI  
+2019-01-16 13:51:17.678 +08:00 [Information] The file "/js/site.js" was not modified
+2019-01-16 13:51:17.691 +08:00 [Information] Request finished in 70.9262ms 304 application/javascript
+2019-01-16 13:51:18.070 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/favicon.ico  
+2019-01-16 13:51:18.094 +08:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\favicon.ico"'
+2019-01-16 13:51:18.097 +08:00 [Information] Request finished in 26.596ms 200 image/x-icon
+2019-01-16 13:51:25.303 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/  
+2019-01-16 13:51:25.322 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-16 13:51:25.323 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 13:51:25.327 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 3.6194ms.
+2019-01-16 13:51:25.333 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-16 13:51:25.508 +08:00 [Information] Executed ViewResult - view "Login" executed in 177.5323ms.
+2019-01-16 13:51:25.508 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 185.833ms
+2019-01-16 13:51:25.508 +08:00 [Information] Request finished in 206.7797ms 200 text/html; charset=utf-8
+2019-01-16 13:51:29.488 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/ application/x-www-form-urlencoded 210
+2019-01-16 13:51:29.539 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-16 13:51:29.731 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" with arguments (["ExpenseProcessingSystem.ViewModels.LoginViewModel"]) - Validation state: Invalid
+2019-01-16 13:51:29.752 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 14.8355ms.
+2019-01-16 13:51:29.754 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-16 13:51:29.758 +08:00 [Information] Executed ViewResult - view "Login" executed in 5.8253ms.
+2019-01-16 13:51:29.759 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 219.0179ms
+2019-01-16 13:51:29.759 +08:00 [Information] Request finished in 273.4302ms 200 text/html; charset=utf-8
+2019-01-16 13:51:31.980 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/ application/x-www-form-urlencoded 210
+2019-01-16 13:51:31.987 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-16 13:51:31.994 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" with arguments (["ExpenseProcessingSystem.ViewModels.LoginViewModel"]) - Validation state: Invalid
+2019-01-16 13:51:32.020 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 25.2235ms.
+2019-01-16 13:51:32.020 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-16 13:51:32.021 +08:00 [Information] Executed ViewResult - view "Login" executed in 1.0606ms.
+2019-01-16 13:51:32.022 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 31.8647ms
+2019-01-16 13:51:32.022 +08:00 [Information] Request finished in 42.0371ms 200 text/html; charset=utf-8
+2019-01-16 13:52:18.800 +08:00 [Information] Hello, Serilog!
+2019-01-16 13:52:21.160 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/ application/x-www-form-urlencoded 210
+2019-01-16 13:52:21.757 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-16 13:52:22.015 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" with arguments (["ExpenseProcessingSystem.ViewModels.LoginViewModel"]) - Validation state: Invalid
+2019-01-16 13:52:22.053 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 20.7053ms.
+2019-01-16 13:52:22.148 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-16 13:52:22.580 +08:00 [Information] Executed ViewResult - view "Login" executed in 502.0799ms.
+2019-01-16 13:52:22.587 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 823.7608ms
+2019-01-16 13:52:22.622 +08:00 [Information] Request finished in 1501.6188ms 200 text/html; charset=utf-8
+2019-01-16 13:52:22.950 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/favicon.ico  
+2019-01-16 13:52:22.987 +08:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\favicon.ico"'
+2019-01-16 13:52:22.987 +08:00 [Information] Request finished in 36.93ms 200 image/x-icon
+2019-01-16 13:52:28.310 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/  
+2019-01-16 13:52:28.325 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-16 13:52:28.339 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 13:52:28.341 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.76ms.
+2019-01-16 13:52:28.345 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-16 13:52:28.350 +08:00 [Information] Executed ViewResult - view "Login" executed in 8.4997ms.
+2019-01-16 13:52:28.351 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 18.802ms
+2019-01-16 13:52:28.351 +08:00 [Information] Request finished in 41.6882ms 200 text/html; charset=utf-8
+2019-01-16 13:52:42.173 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/ application/x-www-form-urlencoded 220
+2019-01-16 13:52:42.179 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-16 13:52:42.183 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" with arguments (["ExpenseProcessingSystem.ViewModels.LoginViewModel"]) - Validation state: Valid
+2019-01-16 13:52:42.200 +08:00 [Information] Valid Login Cred
+2019-01-16 13:52:42.202 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult" in 17.4423ms.
+2019-01-16 13:52:42.205 +08:00 [Information] Executing RedirectResult, redirecting to "/Home/Index".
+2019-01-16 13:52:42.208 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 27.8107ms
+2019-01-16 13:52:42.211 +08:00 [Information] Request finished in 37.9041ms 302 
+2019-01-16 13:52:42.215 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Index  
+2019-01-16 13:52:42.217 +08:00 [Information] Route matched with "{action = \"Index\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)"
+2019-01-16 13:52:42.221 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)" with arguments (["", "", "", ""]) - Validation state: Valid
+2019-01-16 13:52:42.222 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.6777ms.
+2019-01-16 13:52:42.224 +08:00 [Information] Executing ViewResult, running view "Index".
+2019-01-16 13:52:42.246 +08:00 [Information] Executed ViewResult - view "Index" executed in 23.709ms.
+2019-01-16 13:52:42.246 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)" in 28.2796ms
+2019-01-16 13:52:42.246 +08:00 [Information] Request finished in 31.7703ms 200 text/html; charset=utf-8
+2019-01-16 13:53:12.460 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/  
+2019-01-16 13:53:12.462 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-16 13:53:12.463 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 13:53:12.464 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0147ms.
+2019-01-16 13:53:12.464 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-16 13:53:12.466 +08:00 [Information] Executed ViewResult - view "Login" executed in 1.5756ms.
+2019-01-16 13:53:12.466 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 3.2324ms
+2019-01-16 13:53:12.467 +08:00 [Information] Request finished in 7.012ms 200 text/html; charset=utf-8
+2019-01-16 13:53:18.244 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/ application/x-www-form-urlencoded 220
+2019-01-16 13:53:18.245 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-16 13:53:18.249 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" with arguments (["ExpenseProcessingSystem.ViewModels.LoginViewModel"]) - Validation state: Valid
+2019-01-16 13:53:18.281 +08:00 [Information] Valid Login Cred
+2019-01-16 13:53:18.281 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult" in 31.5094ms.
+2019-01-16 13:53:18.282 +08:00 [Information] Executing RedirectResult, redirecting to "/Home/Index".
+2019-01-16 13:53:18.282 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 36.6494ms
+2019-01-16 13:53:18.282 +08:00 [Information] Request finished in 40.5423ms 302 
+2019-01-16 13:53:18.293 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Index  
+2019-01-16 13:53:18.294 +08:00 [Information] Route matched with "{action = \"Index\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)"
+2019-01-16 13:53:18.294 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)" with arguments (["", "", "", ""]) - Validation state: Valid
+2019-01-16 13:53:18.295 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0305ms.
+2019-01-16 13:53:18.297 +08:00 [Information] Executing ViewResult, running view "Index".
+2019-01-16 13:53:18.299 +08:00 [Information] Executed ViewResult - view "Index" executed in 2.64ms.
+2019-01-16 13:53:18.300 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)" in 6.1572ms
+2019-01-16 13:53:18.301 +08:00 [Information] Request finished in 7.3628ms 200 text/html; charset=utf-8
+2019-01-16 13:54:12.265 +08:00 [Information] Hello, Serilog!
+2019-01-16 13:54:14.546 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/  
+2019-01-16 13:54:15.004 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-16 13:54:15.064 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 13:54:15.081 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 4.6227ms.
+2019-01-16 13:54:15.180 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-16 13:54:15.679 +08:00 [Information] Executed ViewResult - view "Login" executed in 572.7297ms.
+2019-01-16 13:54:15.684 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 675.2553ms
+2019-01-16 13:54:15.730 +08:00 [Information] Request finished in 1196.4736ms 200 text/html; charset=utf-8
+2019-01-16 13:54:19.863 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/  
+2019-01-16 13:54:19.868 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-16 13:54:19.871 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 13:54:19.872 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0362ms.
+2019-01-16 13:54:19.874 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-16 13:54:19.878 +08:00 [Information] Executed ViewResult - view "Login" executed in 5.8743ms.
+2019-01-16 13:54:19.879 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 7.6845ms
+2019-01-16 13:54:19.879 +08:00 [Information] Request finished in 22.395ms 200 text/html; charset=utf-8
+2019-01-16 13:54:19.905 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/bootstrap/dist/css/bootstrap.css  
+2019-01-16 13:54:19.905 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/jquery/dist/jquery.js  
+2019-01-16 13:54:19.905 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-16 13:54:19.907 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/util.css  
+2019-01-16 13:54:19.908 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/images/mizuho-logo.jpg  
+2019-01-16 13:54:19.968 +08:00 [Information] Sending file. Request path: '"/css/site.css"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\css\site.css"'
+2019-01-16 13:54:19.972 +08:00 [Information] Request finished in 66.4451ms 200 text/css
+2019-01-16 13:54:19.994 +08:00 [Information] Sending file. Request path: '"/lib/jquery/dist/jquery.js"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\lib\jquery\dist\jquery.js"'
+2019-01-16 13:54:19.994 +08:00 [Information] Request finished in 89.5904ms 200 application/javascript
+2019-01-16 13:54:19.995 +08:00 [Information] Sending file. Request path: '"/css/util.css"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\css\util.css"'
+2019-01-16 13:54:19.995 +08:00 [Information] Request finished in 88.1646ms 200 text/css
+2019-01-16 13:54:19.998 +08:00 [Information] Sending file. Request path: '"/images/mizuho-logo.jpg"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\images\mizuho-logo.jpg"'
+2019-01-16 13:54:19.998 +08:00 [Information] Request finished in 90.7367ms 200 image/jpeg
+2019-01-16 13:54:19.999 +08:00 [Information] Sending file. Request path: '"/lib/bootstrap/dist/css/bootstrap.css"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\lib\bootstrap\dist\css\bootstrap.css"'
+2019-01-16 13:54:19.999 +08:00 [Information] Request finished in 95.0072ms 200 text/css
+2019-01-16 13:54:20.017 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/bootstrap/dist/js/bootstrap.js  
+2019-01-16 13:54:20.033 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/js/site.js?v=oaYPxzKkCNgMh3VpQxkAYYwNPoo9Tw-D2TYuhTN7hDI  
+2019-01-16 13:54:20.033 +08:00 [Information] Sending file. Request path: '"/lib/bootstrap/dist/js/bootstrap.js"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\lib\bootstrap\dist\js\bootstrap.js"'
+2019-01-16 13:54:20.033 +08:00 [Information] Request finished in 16.5195ms 200 application/javascript
+2019-01-16 13:54:20.034 +08:00 [Information] Sending file. Request path: '"/js/site.js"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\js\site.js"'
+2019-01-16 13:54:20.036 +08:00 [Information] Request finished in 3.354ms 200 application/javascript
+2019-01-16 13:54:20.131 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/fonts/helveticaneue/HelveticaNeue.ttf  
+2019-01-16 13:54:20.135 +08:00 [Information] Sending file. Request path: '"/lib/fonts/helveticaneue/HelveticaNeue.ttf"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\lib\fonts\helveticaneue\HelveticaNeue.ttf"'
+2019-01-16 13:54:20.135 +08:00 [Information] Request finished in 4.8217ms 200 application/x-font-ttf
+2019-01-16 13:54:20.145 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/fonts/helveticaneue/HelveticaNeue Light.ttf  
+2019-01-16 13:54:20.148 +08:00 [Information] Sending file. Request path: '"/lib/fonts/helveticaneue/HelveticaNeue Light.ttf"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\lib\fonts\helveticaneue\HelveticaNeue Light.ttf"'
+2019-01-16 13:54:20.148 +08:00 [Information] Request finished in 6.5155ms 200 application/x-font-ttf
+2019-01-16 13:54:20.178 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/favicon.ico  
+2019-01-16 13:54:20.179 +08:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\favicon.ico"'
+2019-01-16 13:54:20.179 +08:00 [Information] Request finished in 1.7296ms 200 image/x-icon
+2019-01-16 13:54:28.743 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/ application/x-www-form-urlencoded 220
+2019-01-16 13:54:28.792 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-16 13:54:28.990 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" with arguments (["ExpenseProcessingSystem.ViewModels.LoginViewModel"]) - Validation state: Valid
+2019-01-16 13:54:29.011 +08:00 [Information] Valid Login Cred
+2019-01-16 13:54:29.012 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult" in 16.3235ms.
+2019-01-16 13:54:29.015 +08:00 [Information] Executing RedirectResult, redirecting to "/Home/Index".
+2019-01-16 13:54:29.017 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 224.4108ms
+2019-01-16 13:54:29.020 +08:00 [Information] Request finished in 279.9156ms 302 
+2019-01-16 13:54:29.025 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Index  
+2019-01-16 13:54:29.027 +08:00 [Information] Route matched with "{action = \"Index\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)"
+2019-01-16 13:54:29.030 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)" with arguments (["", "", "", ""]) - Validation state: Valid
+2019-01-16 13:54:29.031 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.6543ms.
+2019-01-16 13:54:29.034 +08:00 [Information] Executing ViewResult, running view "Index".
+2019-01-16 13:54:29.053 +08:00 [Information] Executed ViewResult - view "Index" executed in 21.6002ms.
+2019-01-16 13:54:29.054 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)" in 26.3324ms
+2019-01-16 13:54:29.054 +08:00 [Information] Request finished in 29.1934ms 200 text/html; charset=utf-8
+2019-01-16 13:54:50.512 +08:00 [Information] Hello, Serilog!
+2019-01-16 13:54:53.120 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/  
+2019-01-16 13:54:53.120 +08:00 [Information] Request starting HTTP/1.1 DEBUG http://localhost:1554/  0
+2019-01-16 13:54:53.338 +08:00 [Information] Request finished in 221.5125ms 200 
+2019-01-16 13:54:53.779 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-16 13:54:53.838 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 13:54:53.861 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 8.4374ms.
+2019-01-16 13:54:53.971 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-16 13:54:54.510 +08:00 [Information] Executed ViewResult - view "Login" executed in 601.6807ms.
+2019-01-16 13:54:54.530 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 740.6372ms
+2019-01-16 13:54:54.553 +08:00 [Information] Request finished in 1459.7119ms 200 text/html; charset=utf-8
+2019-01-16 13:55:02.493 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/ application/x-www-form-urlencoded 220
+2019-01-16 13:55:02.561 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-16 13:55:02.793 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" with arguments (["ExpenseProcessingSystem.ViewModels.LoginViewModel"]) - Validation state: Valid
+2019-01-16 13:55:02.825 +08:00 [Information] Valid Login Cred
+2019-01-16 13:55:02.830 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult" in 23.0652ms.
+2019-01-16 13:55:02.837 +08:00 [Information] Executing RedirectResult, redirecting to "/Home/Index".
+2019-01-16 13:55:02.843 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 277.59ms
+2019-01-16 13:55:02.851 +08:00 [Information] Request finished in 355.9826ms 302 
+2019-01-16 13:55:02.856 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Index  
+2019-01-16 13:55:02.863 +08:00 [Information] Route matched with "{action = \"Index\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)"
+2019-01-16 13:55:02.870 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)" with arguments (["", "", "", ""]) - Validation state: Valid
+2019-01-16 13:55:02.875 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.757ms.
+2019-01-16 13:55:02.883 +08:00 [Information] Executing ViewResult, running view "Index".
+2019-01-16 13:55:02.913 +08:00 [Information] Executed ViewResult - view "Index" executed in 32.9771ms.
+2019-01-16 13:55:02.921 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)" in 53.277ms
+2019-01-16 13:55:02.943 +08:00 [Information] Request finished in 74.9943ms 200 text/html; charset=utf-8
+2019-01-16 14:05:45.946 +08:00 [Information] Hello, Serilog!
+2019-01-16 14:05:47.655 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Entry_CV  
+2019-01-16 14:05:48.072 +08:00 [Information] Route matched with "{action = \"Entry_CV\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Entry_CV (ExpenseProcessingSystem)"
+2019-01-16 14:05:48.119 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_CV (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 14:05:48.136 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_CV (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 4.9051ms.
+2019-01-16 14:05:48.244 +08:00 [Information] Executing ViewResult, running view "Entry_CV".
+2019-01-16 14:05:48.594 +08:00 [Information] Executed ViewResult - view "Entry_CV" executed in 434.2101ms.
+2019-01-16 14:05:48.600 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Entry_CV (ExpenseProcessingSystem)" in 524.6626ms
+2019-01-16 14:05:48.626 +08:00 [Information] Request finished in 981.676ms 200 text/html; charset=utf-8
+2019-01-16 14:05:48.648 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/images/mizuho-logo.png  
+2019-01-16 14:05:48.711 +08:00 [Information] The file "/images/mizuho-logo.png" was not modified
+2019-01-16 14:05:48.721 +08:00 [Information] Request finished in 72.5479ms 304 image/png
+2019-01-16 14:05:51.194 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Entry_DDV  
+2019-01-16 14:05:51.197 +08:00 [Information] Route matched with "{action = \"Entry_DDV\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)"
+2019-01-16 14:05:51.197 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 14:05:51.198 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.3122ms.
+2019-01-16 14:05:51.205 +08:00 [Information] Executing ViewResult, running view "Entry_DDV".
+2019-01-16 14:05:51.230 +08:00 [Information] Executed ViewResult - view "Entry_DDV" executed in 31.0865ms.
+2019-01-16 14:05:51.231 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)" in 33.6817ms
+2019-01-16 14:05:51.231 +08:00 [Information] Request finished in 37.0214ms 200 text/html; charset=utf-8
+2019-01-16 14:05:53.479 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Entry_CV  
+2019-01-16 14:05:53.483 +08:00 [Information] Route matched with "{action = \"Entry_CV\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Entry_CV (ExpenseProcessingSystem)"
+2019-01-16 14:05:53.484 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_CV (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 14:05:53.485 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_CV (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.009ms.
+2019-01-16 14:05:53.485 +08:00 [Information] Executing ViewResult, running view "Entry_CV".
+2019-01-16 14:05:53.486 +08:00 [Information] Executed ViewResult - view "Entry_CV" executed in 1.1723ms.
+2019-01-16 14:05:53.487 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Entry_CV (ExpenseProcessingSystem)" in 2.6003ms
+2019-01-16 14:05:53.489 +08:00 [Information] Request finished in 10.2177ms 200 text/html; charset=utf-8
+2019-01-16 14:05:54.941 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Entry_DDV  
+2019-01-16 14:05:54.942 +08:00 [Information] Route matched with "{action = \"Entry_DDV\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)"
+2019-01-16 14:05:54.943 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 14:05:54.944 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0117ms.
+2019-01-16 14:05:54.944 +08:00 [Information] Executing ViewResult, running view "Entry_DDV".
+2019-01-16 14:05:54.948 +08:00 [Information] Executed ViewResult - view "Entry_DDV" executed in 3.9332ms.
+2019-01-16 14:05:54.948 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)" in 5.3152ms
+2019-01-16 14:05:54.948 +08:00 [Information] Request finished in 7.2695ms 200 text/html; charset=utf-8
+2019-01-16 14:05:55.785 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Entry_PCV  
+2019-01-16 14:05:55.788 +08:00 [Information] Route matched with "{action = \"Entry_PCV\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Entry_PCV (ExpenseProcessingSystem)"
+2019-01-16 14:05:55.789 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_PCV (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 14:05:55.789 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_PCV (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.2492ms.
+2019-01-16 14:05:55.792 +08:00 [Information] Executing ViewResult, running view "Entry_PCV".
+2019-01-16 14:05:55.802 +08:00 [Information] Executed ViewResult - view "Entry_PCV" executed in 12.8811ms.
+2019-01-16 14:05:55.803 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Entry_PCV (ExpenseProcessingSystem)" in 14.1188ms
+2019-01-16 14:05:55.803 +08:00 [Information] Request finished in 17.7243ms 200 text/html; charset=utf-8
+2019-01-16 14:05:56.829 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Entry_SS  
+2019-01-16 14:05:56.831 +08:00 [Information] Route matched with "{action = \"Entry_SS\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Entry_SS (ExpenseProcessingSystem)"
+2019-01-16 14:05:56.832 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_SS (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 14:05:56.833 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_SS (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.2541ms.
+2019-01-16 14:05:56.836 +08:00 [Information] Executing ViewResult, running view "Entry_SS".
+2019-01-16 14:05:56.845 +08:00 [Information] Executed ViewResult - view "Entry_SS" executed in 12.2732ms.
+2019-01-16 14:05:56.846 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Entry_SS (ExpenseProcessingSystem)" in 13.6144ms
+2019-01-16 14:05:56.846 +08:00 [Information] Request finished in 18.6698ms 200 text/html; charset=utf-8
+2019-01-16 14:05:59.205 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Entry_PCV  
+2019-01-16 14:05:59.207 +08:00 [Information] Route matched with "{action = \"Entry_PCV\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Entry_PCV (ExpenseProcessingSystem)"
+2019-01-16 14:05:59.207 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_PCV (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 14:05:59.209 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_PCV (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0196ms.
+2019-01-16 14:05:59.209 +08:00 [Information] Executing ViewResult, running view "Entry_PCV".
+2019-01-16 14:05:59.212 +08:00 [Information] Executed ViewResult - view "Entry_PCV" executed in 2.1152ms.
+2019-01-16 14:05:59.212 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Entry_PCV (ExpenseProcessingSystem)" in 5.206ms
+2019-01-16 14:05:59.213 +08:00 [Information] Request finished in 7.9635ms 200 text/html; charset=utf-8
+2019-01-16 14:06:00.803 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Entry_DDV  
+2019-01-16 14:06:00.806 +08:00 [Information] Route matched with "{action = \"Entry_DDV\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)"
+2019-01-16 14:06:00.807 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 14:06:00.808 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0128ms.
+2019-01-16 14:06:00.808 +08:00 [Information] Executing ViewResult, running view "Entry_DDV".
+2019-01-16 14:06:00.810 +08:00 [Information] Executed ViewResult - view "Entry_DDV" executed in 1.2845ms.
+2019-01-16 14:06:00.810 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)" in 2.5773ms
+2019-01-16 14:06:00.810 +08:00 [Information] Request finished in 7.1219ms 200 text/html; charset=utf-8
+2019-01-16 14:06:01.464 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Entry_CV  
+2019-01-16 14:06:01.466 +08:00 [Information] Route matched with "{action = \"Entry_CV\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Entry_CV (ExpenseProcessingSystem)"
+2019-01-16 14:06:01.466 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_CV (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 14:06:01.466 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_CV (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0086ms.
+2019-01-16 14:06:01.467 +08:00 [Information] Executing ViewResult, running view "Entry_CV".
+2019-01-16 14:06:01.468 +08:00 [Information] Executed ViewResult - view "Entry_CV" executed in 0.8167ms.
+2019-01-16 14:06:01.468 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Entry_CV (ExpenseProcessingSystem)" in 1.7976ms
+2019-01-16 14:06:01.468 +08:00 [Information] Request finished in 4.4599ms 200 text/html; charset=utf-8
+2019-01-16 14:06:02.556 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Entry_NC  
+2019-01-16 14:06:02.560 +08:00 [Information] Route matched with "{action = \"Entry_NC\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Entry_NC (ExpenseProcessingSystem)"
+2019-01-16 14:06:02.560 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_NC (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 14:06:02.560 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_NC (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.2597ms.
+2019-01-16 14:06:02.563 +08:00 [Information] Executing ViewResult, running view "Entry_NC".
+2019-01-16 14:06:02.574 +08:00 [Information] Executed ViewResult - view "Entry_NC" executed in 12.9868ms.
+2019-01-16 14:06:02.574 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Entry_NC (ExpenseProcessingSystem)" in 14.1354ms
+2019-01-16 14:06:02.574 +08:00 [Information] Request finished in 18.9609ms 200 text/html; charset=utf-8
+2019-01-16 14:06:04.956 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Entry_SS  
+2019-01-16 14:06:04.958 +08:00 [Information] Route matched with "{action = \"Entry_SS\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Entry_SS (ExpenseProcessingSystem)"
+2019-01-16 14:06:04.959 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_SS (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 14:06:04.962 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_SS (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0147ms.
+2019-01-16 14:06:04.962 +08:00 [Information] Executing ViewResult, running view "Entry_SS".
+2019-01-16 14:06:04.964 +08:00 [Information] Executed ViewResult - view "Entry_SS" executed in 2.0933ms.
+2019-01-16 14:06:04.965 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Entry_SS (ExpenseProcessingSystem)" in 6.0341ms
+2019-01-16 14:06:04.965 +08:00 [Information] Request finished in 9.2488ms 200 text/html; charset=utf-8
+2019-01-16 14:06:13.478 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Close  
+2019-01-16 14:06:13.513 +08:00 [Information] Route matched with "{action = \"Close\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Close (ExpenseProcessingSystem)"
+2019-01-16 14:06:13.585 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Close (ExpenseProcessingSystem)" with arguments (["", "", "", ""]) - Validation state: Valid
+2019-01-16 14:06:13.592 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Close (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.1321ms.
+2019-01-16 14:06:13.595 +08:00 [Information] Executing ViewResult, running view "Close".
+2019-01-16 14:06:13.612 +08:00 [Information] Executed ViewResult - view "Close" executed in 19.1739ms.
+2019-01-16 14:06:13.612 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Close (ExpenseProcessingSystem)" in 98.2668ms
+2019-01-16 14:06:13.613 +08:00 [Information] Request finished in 134.6728ms 200 text/html; charset=utf-8
+2019-01-16 14:06:15.043 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/DM  
+2019-01-16 14:06:15.047 +08:00 [Information] Route matched with "{action = \"DM\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.DM (ExpenseProcessingSystem)"
+2019-01-16 14:06:15.047 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.DM (ExpenseProcessingSystem)" with arguments (["", "", "", ""]) - Validation state: Valid
+2019-01-16 14:06:15.048 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.DM (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.2665ms.
+2019-01-16 14:06:15.053 +08:00 [Information] Executing ViewResult, running view "DM".
+2019-01-16 14:06:15.073 +08:00 [Information] Executed ViewResult - view "DM" executed in 24.9558ms.
+2019-01-16 14:06:15.074 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.DM (ExpenseProcessingSystem)" in 26.5975ms
+2019-01-16 14:06:15.074 +08:00 [Information] Request finished in 31.1945ms 200 text/html; charset=utf-8
+2019-01-16 14:06:16.772 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Report  
+2019-01-16 14:06:16.776 +08:00 [Information] Route matched with "{action = \"Report\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)"
+2019-01-16 14:06:16.777 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 14:06:16.778 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.3194ms.
+2019-01-16 14:06:16.782 +08:00 [Information] Executing ViewResult, running view "Report".
+2019-01-16 14:06:16.786 +08:00 [Information] Executed ViewResult - view "Report" executed in 8.1142ms.
+2019-01-16 14:06:16.786 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)" in 9.9096ms
+2019-01-16 14:06:16.787 +08:00 [Information] Request finished in 14.5972ms 200 text/html; charset=utf-8
+2019-01-16 14:06:19.053 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/BM  
+2019-01-16 14:06:19.057 +08:00 [Information] Route matched with "{action = \"BM\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.BM (ExpenseProcessingSystem)"
+2019-01-16 14:06:19.059 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.BM (ExpenseProcessingSystem)" with arguments (["", "", "", ""]) - Validation state: Valid
+2019-01-16 14:06:19.060 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.BM (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.2794ms.
+2019-01-16 14:06:19.062 +08:00 [Information] Executing ViewResult, running view "BM".
+2019-01-16 14:06:19.069 +08:00 [Information] Executed ViewResult - view "BM" executed in 9.1461ms.
+2019-01-16 14:06:19.070 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.BM (ExpenseProcessingSystem)" in 10.8633ms
+2019-01-16 14:06:19.070 +08:00 [Information] Request finished in 16.982ms 200 text/html; charset=utf-8
+2019-01-16 14:06:20.207 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Report  
+2019-01-16 14:06:20.208 +08:00 [Information] Route matched with "{action = \"Report\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)"
+2019-01-16 14:06:20.209 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 14:06:20.210 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0294ms.
+2019-01-16 14:06:20.211 +08:00 [Information] Executing ViewResult, running view "Report".
+2019-01-16 14:06:20.212 +08:00 [Information] Executed ViewResult - view "Report" executed in 0.845ms.
+2019-01-16 14:06:20.212 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)" in 3.0187ms
+2019-01-16 14:06:20.212 +08:00 [Information] Request finished in 7.0573ms 200 text/html; charset=utf-8
+2019-01-16 16:56:22.046 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Report  
+2019-01-16 16:56:22.066 +08:00 [Information] Route matched with "{action = \"Report\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)"
+2019-01-16 16:56:22.068 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 16:56:22.069 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.3288ms.
+2019-01-16 16:56:26.903 +08:00 [Information] Executing ViewResult, running view "Report".
+2019-01-16 16:56:26.911 +08:00 [Information] Executed ViewResult - view "Report" executed in 4841.3976ms.
+2019-01-16 16:56:26.911 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)" in 4844.9204ms
+2019-01-16 16:56:26.912 +08:00 [Information] Request finished in 4869.1007ms 200 text/html; charset=utf-8
+2019-01-16 16:56:26.985 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-16 16:56:26.987 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/js/site.js?v=oaYPxzKkCNgMh3VpQxkAYYwNPoo9Tw-D2TYuhTN7hDI  
+2019-01-16 16:56:26.988 +08:00 [Information] The file "/js/site.js" was not modified
+2019-01-16 16:56:26.989 +08:00 [Information] Request finished in 1.5163ms 304 application/javascript
+2019-01-16 16:56:27.009 +08:00 [Information] Sending file. Request path: '"/css/site.css"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\css\site.css"'
+2019-01-16 16:56:27.010 +08:00 [Information] Request finished in 25.0675ms 200 text/css
+2019-01-16 16:56:27.635 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/favicon.ico  
+2019-01-16 16:56:27.659 +08:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\favicon.ico"'
+2019-01-16 16:56:27.663 +08:00 [Information] Request finished in 28.1418ms 200 image/x-icon
+2019-01-16 16:56:57.015 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/DM  
+2019-01-16 16:56:57.016 +08:00 [Information] Route matched with "{action = \"DM\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.DM (ExpenseProcessingSystem)"
+2019-01-16 16:56:57.017 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.DM (ExpenseProcessingSystem)" with arguments (["", "", "", ""]) - Validation state: Valid
+2019-01-16 16:56:57.018 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.DM (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0853ms.
+2019-01-16 16:56:57.019 +08:00 [Information] Executing ViewResult, running view "DM".
+2019-01-16 16:56:57.025 +08:00 [Information] Executed ViewResult - view "DM" executed in 6.7281ms.
+2019-01-16 16:56:57.025 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.DM (ExpenseProcessingSystem)" in 8.8489ms
+2019-01-16 16:56:57.026 +08:00 [Information] Request finished in 10.0696ms 200 text/html; charset=utf-8
+2019-01-16 16:56:57.059 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-16 16:56:57.060 +08:00 [Information] The file "/css/site.css" was not modified
+2019-01-16 16:56:57.061 +08:00 [Information] Request finished in 1.9766ms 304 text/css
+2019-01-16 16:57:00.134 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Report  
+2019-01-16 16:57:00.136 +08:00 [Information] Route matched with "{action = \"Report\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)"
+2019-01-16 16:57:00.137 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 16:57:00.138 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0143ms.
+2019-01-16 16:57:00.139 +08:00 [Information] Executing ViewResult, running view "Report".
+2019-01-16 16:57:00.141 +08:00 [Information] Executed ViewResult - view "Report" executed in 1.6488ms.
+2019-01-16 16:57:00.141 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)" in 4.3353ms
+2019-01-16 16:57:00.141 +08:00 [Information] Request finished in 7.1978ms 200 text/html; charset=utf-8
+2019-01-16 16:57:13.175 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-16 16:57:13.176 +08:00 [Information] The file "/css/site.css" was not modified
+2019-01-16 16:57:13.176 +08:00 [Information] Request finished in 1.0221ms 304 text/css
+2019-01-16 16:59:26.743 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Report  
+2019-01-16 16:59:26.746 +08:00 [Information] Route matched with "{action = \"Report\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)"
+2019-01-16 16:59:26.747 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 16:59:26.748 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0166ms.
+2019-01-16 16:59:26.920 +08:00 [Information] Executing ViewResult, running view "Report".
+2019-01-16 16:59:26.924 +08:00 [Information] Executed ViewResult - view "Report" executed in 175.8574ms.
+2019-01-16 16:59:26.925 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)" in 178.1202ms
+2019-01-16 16:59:26.925 +08:00 [Information] Request finished in 182.5126ms 200 text/html; charset=utf-8
+2019-01-16 16:59:26.944 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-16 16:59:26.945 +08:00 [Information] Sending file. Request path: '"/css/site.css"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\css\site.css"'
+2019-01-16 16:59:26.945 +08:00 [Information] Request finished in 1.6183ms 200 text/css
+2019-01-16 16:59:27.411 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/favicon.ico  
+2019-01-16 16:59:27.412 +08:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\favicon.ico"'
+2019-01-16 16:59:27.412 +08:00 [Information] Request finished in 1.4163ms 200 image/x-icon
+2019-01-16 16:59:53.108 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Report  
+2019-01-16 16:59:53.109 +08:00 [Information] Route matched with "{action = \"Report\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)"
+2019-01-16 16:59:53.109 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 16:59:53.110 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0275ms.
+2019-01-16 16:59:53.243 +08:00 [Information] Executing ViewResult, running view "Report".
+2019-01-16 16:59:53.249 +08:00 [Information] Executed ViewResult - view "Report" executed in 138.5011ms.
+2019-01-16 16:59:53.250 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)" in 140.7537ms
+2019-01-16 16:59:53.250 +08:00 [Information] Request finished in 142.2784ms 200 text/html; charset=utf-8
+2019-01-16 16:59:53.270 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-16 16:59:53.271 +08:00 [Information] The file "/css/site.css" was not modified
+2019-01-16 16:59:53.272 +08:00 [Information] Request finished in 1.175ms 304 text/css
+2019-01-16 16:59:53.687 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/favicon.ico  
+2019-01-16 16:59:53.688 +08:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\favicon.ico"'
+2019-01-16 16:59:53.688 +08:00 [Information] Request finished in 1.4336ms 200 image/x-icon
+2019-01-16 17:00:13.732 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Report  
+2019-01-16 17:00:13.735 +08:00 [Information] Route matched with "{action = \"Report\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)"
+2019-01-16 17:00:13.736 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 17:00:13.736 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0124ms.
+2019-01-16 17:00:13.940 +08:00 [Information] Executing ViewResult, running view "Report".
+2019-01-16 17:00:13.944 +08:00 [Information] Executed ViewResult - view "Report" executed in 207.5809ms.
+2019-01-16 17:00:13.945 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)" in 209.6841ms
+2019-01-16 17:00:13.946 +08:00 [Information] Request finished in 213.7574ms 200 text/html; charset=utf-8
+2019-01-16 17:00:13.971 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-16 17:00:13.972 +08:00 [Information] Sending file. Request path: '"/css/site.css"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\css\site.css"'
+2019-01-16 17:00:13.973 +08:00 [Information] Request finished in 1.4578ms 200 text/css
+2019-01-16 17:00:14.382 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/favicon.ico  
+2019-01-16 17:00:14.383 +08:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\favicon.ico"'
+2019-01-16 17:00:14.384 +08:00 [Information] Request finished in 1.8845ms 200 image/x-icon
+2019-01-16 17:00:44.006 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Index  
+2019-01-16 17:00:44.017 +08:00 [Information] Route matched with "{action = \"Index\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)"
+2019-01-16 17:00:44.018 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)" with arguments (["", "", "", ""]) - Validation state: Valid
+2019-01-16 17:00:44.018 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.3904ms.
+2019-01-16 17:00:44.022 +08:00 [Information] Executing ViewResult, running view "Index".
+2019-01-16 17:00:44.039 +08:00 [Information] Executed ViewResult - view "Index" executed in 20.2273ms.
+2019-01-16 17:00:44.039 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)" in 22.0544ms
+2019-01-16 17:00:44.040 +08:00 [Information] Request finished in 33.6726ms 200 text/html; charset=utf-8
+2019-01-16 17:00:44.067 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-16 17:00:44.068 +08:00 [Information] The file "/css/site.css" was not modified
+2019-01-16 17:00:44.069 +08:00 [Information] Request finished in 1.1202ms 304 text/css
+2019-01-16 17:00:47.254 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/DM  
+2019-01-16 17:00:47.256 +08:00 [Information] Route matched with "{action = \"DM\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.DM (ExpenseProcessingSystem)"
+2019-01-16 17:00:47.257 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.DM (ExpenseProcessingSystem)" with arguments (["", "", "", ""]) - Validation state: Valid
+2019-01-16 17:00:47.257 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.DM (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0143ms.
+2019-01-16 17:00:47.258 +08:00 [Information] Executing ViewResult, running view "DM".
+2019-01-16 17:00:47.259 +08:00 [Information] Executed ViewResult - view "DM" executed in 1.6016ms.
+2019-01-16 17:00:47.260 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.DM (ExpenseProcessingSystem)" in 3.2996ms
+2019-01-16 17:00:47.261 +08:00 [Information] Request finished in 7.1498ms 200 text/html; charset=utf-8
+2019-01-16 17:00:47.288 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-16 17:00:47.288 +08:00 [Information] The file "/css/site.css" was not modified
+2019-01-16 17:00:47.292 +08:00 [Information] Request finished in 4.1103ms 304 text/css
+2019-01-16 17:00:49.015 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Close  
+2019-01-16 17:00:49.016 +08:00 [Information] Route matched with "{action = \"Close\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Close (ExpenseProcessingSystem)"
+2019-01-16 17:00:49.017 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Close (ExpenseProcessingSystem)" with arguments (["", "", "", ""]) - Validation state: Valid
+2019-01-16 17:00:49.018 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Close (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0977ms.
+2019-01-16 17:00:49.021 +08:00 [Information] Executing ViewResult, running view "Close".
+2019-01-16 17:00:49.022 +08:00 [Information] Executed ViewResult - view "Close" executed in 3.9419ms.
+2019-01-16 17:00:49.022 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Close (ExpenseProcessingSystem)" in 5.5043ms
+2019-01-16 17:00:49.023 +08:00 [Information] Request finished in 7.6346ms 200 text/html; charset=utf-8
+2019-01-16 17:00:49.214 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/fonts/helveticaneue/Helvetica Neu Bold.ttf  
+2019-01-16 17:00:49.219 +08:00 [Information] The file "/lib/fonts/helveticaneue/Helvetica Neu Bold.ttf" was not modified
+2019-01-16 17:00:49.220 +08:00 [Information] Request finished in 20.3108ms 304 application/x-font-ttf
+2019-01-16 17:00:49.455 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Entry_CV  
+2019-01-16 17:00:49.455 +08:00 [Information] Route matched with "{action = \"Entry_CV\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Entry_CV (ExpenseProcessingSystem)"
+2019-01-16 17:00:49.455 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_CV (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 17:00:49.456 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_CV (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0075ms.
+2019-01-16 17:00:49.457 +08:00 [Information] Executing ViewResult, running view "Entry_CV".
+2019-01-16 17:00:49.458 +08:00 [Information] Executed ViewResult - view "Entry_CV" executed in 2.3961ms.
+2019-01-16 17:00:49.459 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Entry_CV (ExpenseProcessingSystem)" in 3.3302ms
+2019-01-16 17:00:49.459 +08:00 [Information] Request finished in 4.5018ms 200 text/html; charset=utf-8
+2019-01-16 17:00:50.328 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Entry_DDV  
+2019-01-16 17:00:50.330 +08:00 [Information] Route matched with "{action = \"Entry_DDV\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)"
+2019-01-16 17:00:50.330 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 17:00:50.331 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0105ms.
+2019-01-16 17:00:50.333 +08:00 [Information] Executing ViewResult, running view "Entry_DDV".
+2019-01-16 17:00:50.334 +08:00 [Information] Executed ViewResult - view "Entry_DDV" executed in 3.3668ms.
+2019-01-16 17:00:50.335 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Entry_DDV (ExpenseProcessingSystem)" in 4.7741ms
+2019-01-16 17:00:50.335 +08:00 [Information] Request finished in 7.3673ms 200 text/html; charset=utf-8
+2019-01-16 17:00:59.682 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/Home/RedirectCont/ application/x-www-form-urlencoded; charset=UTF-8 36
+2019-01-16 17:00:59.691 +08:00 [Information] Route matched with "{action = \"RedirectCont\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)"
+2019-01-16 17:00:59.805 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" with arguments (["Modal", "ReversalEntryModal"]) - Validation state: Valid
+2019-01-16 17:00:59.807 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult" in 1.6617ms.
+2019-01-16 17:00:59.810 +08:00 [Information] Executing RedirectResult, redirecting to "/Modal/ReversalEntryModal".
+2019-01-16 17:00:59.812 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.RedirectCont (ExpenseProcessingSystem)" in 121.2358ms
+2019-01-16 17:00:59.813 +08:00 [Information] Request finished in 134.7966ms 302 
+2019-01-16 17:00:59.824 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Modal/ReversalEntryModal  
+2019-01-16 17:00:59.825 +08:00 [Information] Route matched with "{action = \"ReversalEntryModal\", controller = \"Modal\"}". Executing action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)"
+2019-01-16 17:00:59.826 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 17:00:59.826 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.1921ms.
+2019-01-16 17:00:59.829 +08:00 [Information] Executing ViewResult, running view "ReversalEntryModal".
+2019-01-16 17:00:59.861 +08:00 [Information] Executed ViewResult - view "ReversalEntryModal" executed in 34.9484ms.
+2019-01-16 17:00:59.861 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.ModalController.ReversalEntryModal (ExpenseProcessingSystem)" in 36.1982ms
+2019-01-16 17:00:59.862 +08:00 [Information] Request finished in 38.244ms 200 text/html; charset=utf-8
+2019-01-16 17:00:59.874 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-16 17:00:59.875 +08:00 [Information] The file "/css/site.css" was not modified
+2019-01-16 17:00:59.875 +08:00 [Information] Request finished in 1.7546ms 304 text/css
+2019-01-16 17:18:14.405 +08:00 [Information] Hello, Serilog!
+2019-01-16 17:18:16.394 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/  
+2019-01-16 17:18:16.819 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-16 17:18:16.876 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 17:18:16.895 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 5.4247ms.
+2019-01-16 17:18:16.989 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-16 17:18:17.484 +08:00 [Information] Executed ViewResult - view "Login" executed in 564.938ms.
+2019-01-16 17:18:17.493 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 667.6863ms
+2019-01-16 17:18:17.539 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-16 17:18:17.542 +08:00 [Information] Request finished in 1158.0816ms 200 text/html; charset=utf-8
+2019-01-16 17:18:17.600 +08:00 [Information] The file "/css/site.css" was not modified
+2019-01-16 17:18:17.611 +08:00 [Information] Request finished in 72.3614ms 304 text/css
+2019-01-16 17:18:19.323 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/ application/x-www-form-urlencoded 210
+2019-01-16 17:18:19.369 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-16 17:18:19.570 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" with arguments (["ExpenseProcessingSystem.ViewModels.LoginViewModel"]) - Validation state: Invalid
+2019-01-16 17:18:19.595 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 17.1976ms.
+2019-01-16 17:18:19.597 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-16 17:18:19.602 +08:00 [Information] Executed ViewResult - view "Login" executed in 6.6393ms.
+2019-01-16 17:18:19.603 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 233.2787ms
+2019-01-16 17:18:19.603 +08:00 [Information] Request finished in 281.8382ms 200 text/html; charset=utf-8
+2019-01-16 17:18:21.550 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/ application/x-www-form-urlencoded 210
+2019-01-16 17:18:21.552 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-16 17:18:21.555 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" with arguments (["ExpenseProcessingSystem.ViewModels.LoginViewModel"]) - Validation state: Invalid
+2019-01-16 17:18:21.570 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 15.2214ms.
+2019-01-16 17:18:21.571 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-16 17:18:21.572 +08:00 [Information] Executed ViewResult - view "Login" executed in 1.1871ms.
+2019-01-16 17:18:21.573 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 19.8833ms
+2019-01-16 17:18:21.573 +08:00 [Information] Request finished in 23.1241ms 200 text/html; charset=utf-8
+2019-01-16 17:18:25.859 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/ application/x-www-form-urlencoded 220
+2019-01-16 17:18:25.860 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-16 17:18:25.861 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" with arguments (["ExpenseProcessingSystem.ViewModels.LoginViewModel"]) - Validation state: Valid
+2019-01-16 17:18:25.885 +08:00 [Information] Valid Login Cred
+2019-01-16 17:18:25.888 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult" in 25.5746ms.
+2019-01-16 17:18:25.891 +08:00 [Information] Executing RedirectResult, redirecting to "/Home/Index".
+2019-01-16 17:18:25.894 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 33.2965ms
+2019-01-16 17:18:25.894 +08:00 [Information] Request finished in 35.4578ms 302 
+2019-01-16 17:18:25.898 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Index  
+2019-01-16 17:18:25.901 +08:00 [Information] Route matched with "{action = \"Index\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)"
+2019-01-16 17:18:25.904 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)" with arguments (["", "", "", ""]) - Validation state: Valid
+2019-01-16 17:18:25.905 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.6649ms.
+2019-01-16 17:18:25.907 +08:00 [Information] Executing ViewResult, running view "Index".
+2019-01-16 17:18:25.930 +08:00 [Information] Executed ViewResult - view "Index" executed in 24.3418ms.
+2019-01-16 17:18:25.930 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Index (ExpenseProcessingSystem)" in 29.0506ms
+2019-01-16 17:18:25.930 +08:00 [Information] Request finished in 31.9554ms 200 text/html; charset=utf-8
+2019-01-16 17:18:27.469 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Report  
+2019-01-16 17:18:27.472 +08:00 [Information] Route matched with "{action = \"Report\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)"
+2019-01-16 17:18:27.472 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 17:18:27.473 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.2518ms.
+2019-01-16 17:18:27.475 +08:00 [Information] Executing ViewResult, running view "Report".
+2019-01-16 17:18:27.498 +08:00 [Information] Executed ViewResult - view "Report" executed in 25.0702ms.
+2019-01-16 17:18:27.498 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)" in 26.229ms
+2019-01-16 17:18:27.499 +08:00 [Information] Request finished in 29.3878ms 200 text/html; charset=utf-8
+2019-01-16 17:18:36.625 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Report  
+2019-01-16 17:18:36.626 +08:00 [Information] Route matched with "{action = \"Report\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)"
+2019-01-16 17:18:36.626 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 17:18:36.627 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0101ms.
+2019-01-16 17:18:41.279 +08:00 [Information] Executing ViewResult, running view "Report".
+2019-01-16 17:18:41.283 +08:00 [Information] Executed ViewResult - view "Report" executed in 4655.9942ms.
+2019-01-16 17:18:41.283 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)" in 4656.9253ms
+2019-01-16 17:18:41.283 +08:00 [Information] Request finished in 4658.6758ms 200 text/html; charset=utf-8
+2019-01-16 17:18:41.419 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/favicon.ico  
+2019-01-16 17:18:41.449 +08:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\favicon.ico"'
+2019-01-16 17:18:41.449 +08:00 [Information] Request finished in 30.5836ms 200 image/x-icon
+2019-01-16 17:19:22.021 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Report  
+2019-01-16 17:19:22.025 +08:00 [Information] Route matched with "{action = \"Report\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)"
+2019-01-16 17:19:22.027 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 17:19:22.028 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0154ms.
+2019-01-16 17:19:22.152 +08:00 [Information] Executing ViewResult, running view "Report".
+2019-01-16 17:19:22.156 +08:00 [Information] Executed ViewResult - view "Report" executed in 127.7702ms.
+2019-01-16 17:19:22.156 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)" in 129.4686ms
+2019-01-16 17:19:22.157 +08:00 [Information] Request finished in 135.4257ms 200 text/html; charset=utf-8
+2019-01-16 17:19:22.690 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/favicon.ico  
+2019-01-16 17:19:22.704 +08:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\favicon.ico"'
+2019-01-16 17:19:22.710 +08:00 [Information] Request finished in 20.1745ms 200 image/x-icon
+2019-01-16 17:21:03.751 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Report  
+2019-01-16 17:21:03.760 +08:00 [Information] Route matched with "{action = \"Report\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)"
+2019-01-16 17:21:03.760 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 17:21:03.760 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0124ms.
+2019-01-16 17:21:03.883 +08:00 [Information] Executing ViewResult, running view "Report".
+2019-01-16 17:21:03.888 +08:00 [Information] Executed ViewResult - view "Report" executed in 126.6265ms.
+2019-01-16 17:21:03.888 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)" in 127.8631ms
+2019-01-16 17:21:03.888 +08:00 [Information] Request finished in 137.5103ms 200 text/html; charset=utf-8
+2019-01-16 17:21:03.924 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-16 17:21:03.925 +08:00 [Information] The file "/css/site.css" was not modified
+2019-01-16 17:21:03.926 +08:00 [Information] Request finished in 1.7043ms 304 text/css
+2019-01-16 17:21:04.429 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/favicon.ico  
+2019-01-16 17:21:04.430 +08:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\favicon.ico"'
+2019-01-16 17:21:04.430 +08:00 [Information] Request finished in 1.4899ms 200 image/x-icon
+2019-01-16 17:21:30.875 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Report  
+2019-01-16 17:21:30.875 +08:00 [Information] Route matched with "{action = \"Report\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)"
+2019-01-16 17:21:30.876 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 17:21:30.876 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.009ms.
+2019-01-16 17:21:30.876 +08:00 [Information] Executing ViewResult, running view "Report".
+2019-01-16 17:21:30.877 +08:00 [Information] Executed ViewResult - view "Report" executed in 0.814ms.
+2019-01-16 17:21:30.878 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)" in 1.9804ms
+2019-01-16 17:21:30.878 +08:00 [Information] Request finished in 3.1709ms 200 text/html; charset=utf-8
+2019-01-16 17:21:30.922 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/bootstrap/dist/css/bootstrap.css  
+2019-01-16 17:21:30.940 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/images/mizuho-logo.jpg  
+2019-01-16 17:21:30.940 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-16 17:21:30.941 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/util.css  
+2019-01-16 17:21:30.941 +08:00 [Information] Sending file. Request path: '"/css/site.css"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\css\site.css"'
+2019-01-16 17:21:30.941 +08:00 [Information] Request finished in 1.3472ms 200 text/css
+2019-01-16 17:21:30.942 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/jquery/dist/jquery.js  
+2019-01-16 17:21:30.947 +08:00 [Information] Sending file. Request path: '"/css/util.css"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\css\util.css"'
+2019-01-16 17:21:30.947 +08:00 [Information] Request finished in 6.2104ms 200 text/css
+2019-01-16 17:21:30.949 +08:00 [Information] Sending file. Request path: '"/lib/bootstrap/dist/css/bootstrap.css"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\lib\bootstrap\dist\css\bootstrap.css"'
+2019-01-16 17:21:30.949 +08:00 [Information] Request finished in 27.1601ms 200 text/css
+2019-01-16 17:21:31.171 +08:00 [Information] Sending file. Request path: '"/images/mizuho-logo.jpg"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\images\mizuho-logo.jpg"'
+2019-01-16 17:21:31.172 +08:00 [Information] Request finished in 232.3563ms 200 image/jpeg
+2019-01-16 17:21:31.210 +08:00 [Information] Sending file. Request path: '"/lib/jquery/dist/jquery.js"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\lib\jquery\dist\jquery.js"'
+2019-01-16 17:21:31.211 +08:00 [Information] Request finished in 268.4522ms 200 application/javascript
+2019-01-16 17:21:31.277 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/js/site.js?v=oaYPxzKkCNgMh3VpQxkAYYwNPoo9Tw-D2TYuhTN7hDI  
+2019-01-16 17:21:31.278 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/bootstrap/dist/js/bootstrap.js  
+2019-01-16 17:21:31.279 +08:00 [Information] Sending file. Request path: '"/js/site.js"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\js\site.js"'
+2019-01-16 17:21:31.279 +08:00 [Information] Request finished in 2.6404ms 200 application/javascript
+2019-01-16 17:21:31.371 +08:00 [Information] Sending file. Request path: '"/lib/bootstrap/dist/js/bootstrap.js"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\lib\bootstrap\dist\js\bootstrap.js"'
+2019-01-16 17:21:31.372 +08:00 [Information] Request finished in 93.8057ms 200 application/javascript
+2019-01-16 17:21:31.376 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/fonts/helveticaneue/HelveticaNeue.ttf  
+2019-01-16 17:21:31.382 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/bootstrap/dist/css/bootstrap.css.map  
+2019-01-16 17:21:31.391 +08:00 [Information] Sending file. Request path: '"/lib/fonts/helveticaneue/HelveticaNeue.ttf"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\lib\fonts\helveticaneue\HelveticaNeue.ttf"'
+2019-01-16 17:21:31.392 +08:00 [Information] Request finished in 15.4086ms 200 application/x-font-ttf
+2019-01-16 17:21:31.410 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/fonts/helveticaneue/HelveticaNeue Medium.ttf  
+2019-01-16 17:21:31.413 +08:00 [Information] Sending file. Request path: '"/lib/fonts/helveticaneue/HelveticaNeue Medium.ttf"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\lib\fonts\helveticaneue\HelveticaNeue Medium.ttf"'
+2019-01-16 17:21:31.414 +08:00 [Information] Request finished in 5.0135ms 200 application/x-font-ttf
+2019-01-16 17:21:31.425 +08:00 [Information] Sending file. Request path: '"/lib/bootstrap/dist/css/bootstrap.css.map"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\lib\bootstrap\dist\css\bootstrap.css.map"'
+2019-01-16 17:21:31.426 +08:00 [Information] Request finished in 43.2163ms 200 text/plain
+2019-01-16 17:21:31.686 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/favicon.ico  
+2019-01-16 17:21:31.687 +08:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\favicon.ico"'
+2019-01-16 17:21:31.688 +08:00 [Information] Request finished in 2.1593ms 200 image/x-icon
+2019-01-16 17:22:10.022 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Report  
+2019-01-16 17:22:10.025 +08:00 [Information] Route matched with "{action = \"Report\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)"
+2019-01-16 17:22:10.026 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 17:22:10.026 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0086ms.
+2019-01-16 17:22:10.149 +08:00 [Information] Executing ViewResult, running view "Report".
+2019-01-16 17:22:10.153 +08:00 [Information] Executed ViewResult - view "Report" executed in 127.279ms.
+2019-01-16 17:22:10.154 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)" in 128.1772ms
+2019-01-16 17:22:10.154 +08:00 [Information] Request finished in 132.1113ms 200 text/html; charset=utf-8
+2019-01-16 17:22:10.187 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/util.css  
+2019-01-16 17:22:10.189 +08:00 [Information] The file "/css/util.css" was not modified
+2019-01-16 17:22:10.189 +08:00 [Information] Request finished in 1.6964ms 304 text/css
+2019-01-16 17:22:10.725 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/favicon.ico  
+2019-01-16 17:22:10.726 +08:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\favicon.ico"'
+2019-01-16 17:22:10.727 +08:00 [Information] Request finished in 1.63ms 200 image/x-icon
+2019-01-16 17:23:04.224 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Report  
+2019-01-16 17:23:04.226 +08:00 [Information] Route matched with "{action = \"Report\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)"
+2019-01-16 17:23:04.228 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 17:23:04.229 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0185ms.
+2019-01-16 17:23:04.389 +08:00 [Information] Executing ViewResult, running view "Report".
+2019-01-16 17:23:04.393 +08:00 [Information] Executed ViewResult - view "Report" executed in 159.6599ms.
+2019-01-16 17:23:04.393 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)" in 166.0263ms
+2019-01-16 17:23:04.393 +08:00 [Information] Request finished in 169.3902ms 200 text/html; charset=utf-8
+2019-01-16 17:23:04.414 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/bootstrap/dist/css/bootstrap.css  
+2019-01-16 17:23:04.417 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-16 17:23:04.418 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/util.css  
+2019-01-16 17:23:04.419 +08:00 [Information] Sending file. Request path: '"/css/site.css"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\css\site.css"'
+2019-01-16 17:23:04.421 +08:00 [Information] Request finished in 3.8864ms 200 text/css
+2019-01-16 17:23:04.422 +08:00 [Information] Sending file. Request path: '"/lib/bootstrap/dist/css/bootstrap.css"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\lib\bootstrap\dist\css\bootstrap.css"'
+2019-01-16 17:23:04.422 +08:00 [Information] Request finished in 7.5871ms 200 text/css
+2019-01-16 17:23:04.424 +08:00 [Information] Sending file. Request path: '"/css/util.css"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\css\util.css"'
+2019-01-16 17:23:04.425 +08:00 [Information] Request finished in 7.3488ms 200 text/css
+2019-01-16 17:23:04.436 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/jquery/dist/jquery.js  
+2019-01-16 17:23:04.436 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/images/mizuho-logo.jpg  
+2019-01-16 17:23:04.451 +08:00 [Information] Sending file. Request path: '"/images/mizuho-logo.jpg"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\images\mizuho-logo.jpg"'
+2019-01-16 17:23:04.451 +08:00 [Information] Request finished in 14.9352ms 200 image/jpeg
+2019-01-16 17:23:04.457 +08:00 [Information] Sending file. Request path: '"/lib/jquery/dist/jquery.js"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\lib\jquery\dist\jquery.js"'
+2019-01-16 17:23:04.457 +08:00 [Information] Request finished in 20.7514ms 200 application/javascript
+2019-01-16 17:23:04.766 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/bootstrap/dist/js/bootstrap.js  
+2019-01-16 17:23:04.769 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/js/site.js?v=oaYPxzKkCNgMh3VpQxkAYYwNPoo9Tw-D2TYuhTN7hDI  
+2019-01-16 17:23:04.770 +08:00 [Information] Sending file. Request path: '"/js/site.js"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\js\site.js"'
+2019-01-16 17:23:04.770 +08:00 [Information] Request finished in 1.7436ms 200 application/javascript
+2019-01-16 17:23:04.776 +08:00 [Information] Sending file. Request path: '"/lib/bootstrap/dist/js/bootstrap.js"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\lib\bootstrap\dist\js\bootstrap.js"'
+2019-01-16 17:23:04.776 +08:00 [Information] Request finished in 9.9847ms 200 application/javascript
+2019-01-16 17:23:04.917 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/fonts/helveticaneue/HelveticaNeue Medium.ttf  
+2019-01-16 17:23:04.917 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/fonts/helveticaneue/HelveticaNeue.ttf  
+2019-01-16 17:23:04.918 +08:00 [Information] Sending file. Request path: '"/lib/fonts/helveticaneue/HelveticaNeue Medium.ttf"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\lib\fonts\helveticaneue\HelveticaNeue Medium.ttf"'
+2019-01-16 17:23:04.919 +08:00 [Information] Request finished in 1.8663ms 200 application/x-font-ttf
+2019-01-16 17:23:04.919 +08:00 [Information] Sending file. Request path: '"/lib/fonts/helveticaneue/HelveticaNeue.ttf"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\lib\fonts\helveticaneue\HelveticaNeue.ttf"'
+2019-01-16 17:23:04.919 +08:00 [Information] Request finished in 1.6198ms 200 application/x-font-ttf
+2019-01-16 17:23:05.144 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/favicon.ico  
+2019-01-16 17:23:05.146 +08:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\favicon.ico"'
+2019-01-16 17:23:05.148 +08:00 [Information] Request finished in 4.1737ms 200 image/x-icon
+2019-01-16 17:23:07.737 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Report  
+2019-01-16 17:23:07.740 +08:00 [Information] Route matched with "{action = \"Report\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)"
+2019-01-16 17:23:07.742 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 17:23:07.743 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0279ms.
+2019-01-16 17:23:07.744 +08:00 [Information] Executing ViewResult, running view "Report".
+2019-01-16 17:23:07.748 +08:00 [Information] Executed ViewResult - view "Report" executed in 4.0586ms.
+2019-01-16 17:23:07.749 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)" in 6.8006ms
+2019-01-16 17:23:07.750 +08:00 [Information] Request finished in 12.8283ms 200 text/html; charset=utf-8
+2019-01-16 17:23:07.792 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/bootstrap/dist/css/bootstrap.css  
+2019-01-16 17:23:07.792 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-16 17:23:07.793 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/util.css  
+2019-01-16 17:23:07.793 +08:00 [Information] Sending file. Request path: '"/css/site.css"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\css\site.css"'
+2019-01-16 17:23:07.793 +08:00 [Information] Request finished in 1.7874ms 200 text/css
+2019-01-16 17:23:07.793 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/images/mizuho-logo.jpg  
+2019-01-16 17:23:07.794 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/jquery/dist/jquery.js  
+2019-01-16 17:23:07.799 +08:00 [Information] Sending file. Request path: '"/images/mizuho-logo.jpg"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\images\mizuho-logo.jpg"'
+2019-01-16 17:23:07.799 +08:00 [Information] Sending file. Request path: '"/css/util.css"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\css\util.css"'
+2019-01-16 17:23:07.799 +08:00 [Information] Request finished in 5.7097ms 200 image/jpeg
+2019-01-16 17:23:07.799 +08:00 [Information] Request finished in 6.7265ms 200 text/css
+2019-01-16 17:23:07.805 +08:00 [Information] Sending file. Request path: '"/lib/bootstrap/dist/css/bootstrap.css"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\lib\bootstrap\dist\css\bootstrap.css"'
+2019-01-16 17:23:07.805 +08:00 [Information] Request finished in 13.8862ms 200 text/css
+2019-01-16 17:23:07.810 +08:00 [Information] Sending file. Request path: '"/lib/jquery/dist/jquery.js"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\lib\jquery\dist\jquery.js"'
+2019-01-16 17:23:07.810 +08:00 [Information] Request finished in 16.2842ms 200 application/javascript
+2019-01-16 17:23:08.097 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/bootstrap/dist/js/bootstrap.js  
+2019-01-16 17:23:08.099 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/js/site.js?v=oaYPxzKkCNgMh3VpQxkAYYwNPoo9Tw-D2TYuhTN7hDI  
+2019-01-16 17:23:08.099 +08:00 [Information] Sending file. Request path: '"/js/site.js"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\js\site.js"'
+2019-01-16 17:23:08.100 +08:00 [Information] Request finished in 1.1183ms 200 application/javascript
+2019-01-16 17:23:08.103 +08:00 [Information] Sending file. Request path: '"/lib/bootstrap/dist/js/bootstrap.js"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\lib\bootstrap\dist\js\bootstrap.js"'
+2019-01-16 17:23:08.103 +08:00 [Information] Request finished in 5.903ms 200 application/javascript
+2019-01-16 17:23:08.211 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/fonts/helveticaneue/HelveticaNeue.ttf  
+2019-01-16 17:23:08.215 +08:00 [Information] Sending file. Request path: '"/lib/fonts/helveticaneue/HelveticaNeue.ttf"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\lib\fonts\helveticaneue\HelveticaNeue.ttf"'
+2019-01-16 17:23:08.216 +08:00 [Information] Request finished in 5.2068ms 200 application/x-font-ttf
+2019-01-16 17:23:08.222 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/fonts/helveticaneue/HelveticaNeue Medium.ttf  
+2019-01-16 17:23:08.223 +08:00 [Information] Sending file. Request path: '"/lib/fonts/helveticaneue/HelveticaNeue Medium.ttf"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\lib\fonts\helveticaneue\HelveticaNeue Medium.ttf"'
+2019-01-16 17:23:08.224 +08:00 [Information] Request finished in 1.3332ms 200 application/x-font-ttf
+2019-01-16 17:23:08.469 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/favicon.ico  
+2019-01-16 17:23:08.470 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/Home/Report  
+2019-01-16 17:23:08.470 +08:00 [Information] Route matched with "{action = \"Report\", controller = \"Home\"}". Executing action "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)"
+2019-01-16 17:23:08.470 +08:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\favicon.ico"'
+2019-01-16 17:23:08.471 +08:00 [Information] Request finished in 1.9026ms 200 image/x-icon
+2019-01-16 17:23:08.471 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-16 17:23:08.471 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0079ms.
+2019-01-16 17:23:08.471 +08:00 [Information] Executing ViewResult, running view "Report".
+2019-01-16 17:23:08.472 +08:00 [Information] Executed ViewResult - view "Report" executed in 0.6109ms.
+2019-01-16 17:23:08.472 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.HomeController.Report (ExpenseProcessingSystem)" in 1.5375ms
+2019-01-16 17:23:08.472 +08:00 [Information] Request finished in 2.5479ms 200 text/html; charset=utf-8
+2019-01-16 17:23:08.525 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/bootstrap/dist/css/bootstrap.css  
+2019-01-16 17:23:08.525 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/util.css  
+2019-01-16 17:23:08.525 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/jquery/dist/jquery.js  
+2019-01-16 17:23:08.525 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-16 17:23:08.526 +08:00 [Information] Sending file. Request path: '"/css/site.css"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\css\site.css"'
+2019-01-16 17:23:08.527 +08:00 [Information] Request finished in 1.1312ms 200 text/css
+2019-01-16 17:23:08.528 +08:00 [Information] Sending file. Request path: '"/css/util.css"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\css\util.css"'
+2019-01-16 17:23:08.528 +08:00 [Information] Request finished in 3.3918ms 200 text/css
+2019-01-16 17:23:08.533 +08:00 [Information] Sending file. Request path: '"/lib/jquery/dist/jquery.js"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\lib\jquery\dist\jquery.js"'
+2019-01-16 17:23:08.533 +08:00 [Information] Request finished in 7.6932ms 200 application/javascript
+2019-01-16 17:23:08.534 +08:00 [Information] Sending file. Request path: '"/lib/bootstrap/dist/css/bootstrap.css"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\lib\bootstrap\dist\css\bootstrap.css"'
+2019-01-16 17:23:08.535 +08:00 [Information] Request finished in 9.9537ms 200 text/css
+2019-01-16 17:23:08.540 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/images/mizuho-logo.jpg  
+2019-01-16 17:23:08.569 +08:00 [Information] Sending file. Request path: '"/images/mizuho-logo.jpg"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\images\mizuho-logo.jpg"'
+2019-01-16 17:23:08.569 +08:00 [Information] Request finished in 29.4516ms 200 image/jpeg
+2019-01-16 17:23:08.854 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/js/site.js?v=oaYPxzKkCNgMh3VpQxkAYYwNPoo9Tw-D2TYuhTN7hDI  
+2019-01-16 17:23:08.855 +08:00 [Information] Sending file. Request path: '"/js/site.js"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\js\site.js"'
+2019-01-16 17:23:08.855 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/bootstrap/dist/js/bootstrap.js  
+2019-01-16 17:23:08.856 +08:00 [Information] Request finished in 2.0166ms 200 application/javascript
+2019-01-16 17:23:08.857 +08:00 [Information] Sending file. Request path: '"/lib/bootstrap/dist/js/bootstrap.js"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\lib\bootstrap\dist\js\bootstrap.js"'
+2019-01-16 17:23:08.857 +08:00 [Information] Request finished in 2.2866ms 200 application/javascript
+2019-01-16 17:23:08.927 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/fonts/helveticaneue/HelveticaNeue.ttf  
+2019-01-16 17:23:08.931 +08:00 [Information] Sending file. Request path: '"/lib/fonts/helveticaneue/HelveticaNeue.ttf"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\lib\fonts\helveticaneue\HelveticaNeue.ttf"'
+2019-01-16 17:23:08.932 +08:00 [Information] Request finished in 4.1684ms 200 application/x-font-ttf
+2019-01-16 17:23:08.943 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/fonts/helveticaneue/HelveticaNeue Medium.ttf  
+2019-01-16 17:23:08.944 +08:00 [Information] Sending file. Request path: '"/lib/fonts/helveticaneue/HelveticaNeue Medium.ttf"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\lib\fonts\helveticaneue\HelveticaNeue Medium.ttf"'
+2019-01-16 17:23:08.944 +08:00 [Information] Request finished in 1.391ms 200 application/x-font-ttf
+2019-01-16 17:23:09.218 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/favicon.ico  
+2019-01-16 17:23:09.219 +08:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\favicon.ico"'
+2019-01-16 17:23:09.220 +08:00 [Information] Request finished in 9.0215ms 200 image/x-icon
