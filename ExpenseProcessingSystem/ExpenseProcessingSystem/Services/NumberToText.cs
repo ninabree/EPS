@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,11 @@ namespace ExpenseProcessingSystem
 {
     public class NumberToText
     {
+
+        private static readonly string[] CurrencyMap = new[]
+        {
+            "PESOS ONLY", "US DOLLAR ONLY", "YEN ONLY"
+        };
         private static readonly string[] UnitsMap = new[]
         {
             "ZERO", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "TEN",
@@ -43,11 +49,15 @@ namespace ExpenseProcessingSystem
         static StringBuilder SplitDecimals(double number)
         {
             StringBuilder decword = new StringBuilder();
-            decword.Append(" AND");
-            
-            String num = number.ToString().Split(".")[1];
-            decword.Append(" " + TensMap[int.Parse(num) / 10]);
-            decword.Append(" " + UnitsMap[int.Parse(num) % 10]);
+            String[] num = number.ToString("G17").Split('.');
+            if (num.Length > 1)
+            {
+                if (num[1].Length == 1)
+                {
+                    num[1] += 0;
+                }
+                decword.Append(" AND " + num[1] + "/100");
+            }
             return decword;
         }
 
@@ -80,39 +90,6 @@ namespace ExpenseProcessingSystem
             return result;
         }
 
-        public string NumberToWords(long number)
-        {
-            if (number == 0)
-                return "ZERO";
-
-            if (number < 0)
-                return "MINUS " + NumberToWords(-number);
-
-            var thousands = SplitIntoThousands(number).ToArray();
-
-            var result = new StringBuilder();
-
-            for (int i = thousands.Length - 1; i >= 0; i--)
-            {
-                var word = SmallNumberToWords(thousands[i]);
-
-                if (word != null)
-                {
-                    if (result.Length > 0)
-                    {
-                        //if (i == 0)
-                        //    result.Append(" AND ");
-                        //else
-                            result.Append(' ');
-                    }
-                    result.Append(word);
-                    result.Append(ScaleMap[i]);
-                }
-            }
-
-            return result.ToString();
-        }
-
         public string DoubleNumberToWords(double number)
         {
             if (number == 0)
@@ -140,8 +117,55 @@ namespace ExpenseProcessingSystem
                     result.Append(ScaleMap[i]);
                 }
             }
-            result.Append(decimals + " CENTAVOS");
+            result.Append(decimals);
+            return result.ToString();
+        }
 
+        public string DoubleNumberToWords(double number, string currency)
+        {
+            if (number == 0)
+                return "ZERO";
+
+            if (number < 0)
+                return "MINUS " + DoubleNumberToWords(-number, currency);
+
+            var decimals = SplitDecimals(number);
+            var thousands = SplitIntoThousands(number).ToArray();
+
+            var result = new StringBuilder();
+
+            for (int i = thousands.Length - 1; i >= 0; i--)
+            {
+                var word = SmallNumberToWords(thousands[i]);
+
+                if (word != null)
+                {
+                    if (result.Length > 0)
+                    {
+                        result.Append(' ');
+                    }
+                    result.Append(word);
+                    result.Append(ScaleMap[i]);
+                }
+            }
+            var j = 0;
+            switch (currency)
+            {
+                case "PHP":
+                    j = 0;
+                    break;
+                case "USD":
+                    j = 1;
+                    break;
+                case "YEN":
+                    j = 2;
+                    break;
+                default:
+                    j = 0;
+                    break;
+            }
+
+            result.Append(decimals + " " + CurrencyMap[j]);
             return result.ToString();
         }
     }

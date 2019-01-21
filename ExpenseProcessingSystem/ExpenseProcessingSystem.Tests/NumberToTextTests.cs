@@ -37,7 +37,7 @@ namespace ExpenseProcessingSystem.Tests
             int num1 = 2014;
 
             //Act
-            var result = _class.NumberToWords(num1);
+            var result = _class.DoubleNumberToWords(num1);
 
             //Assert
             Assert.That(result, Is.EqualTo("TWO THOUSAND FOURTEEN"));
@@ -53,7 +53,7 @@ namespace ExpenseProcessingSystem.Tests
             var result = _class.DoubleNumberToWords(num1);
 
             //Assert
-            Assert.That(result, Is.EqualTo("FOUR HUNDRED TWENTY TWO THOUSAND FOURTEEN AND SEVENTY FIVE CENTAVOS"));
+            Assert.That(result, Is.EqualTo("FOUR HUNDRED TWENTY TWO THOUSAND FOURTEEN AND 75/100"));
         }
 
         [Test]
@@ -66,7 +66,7 @@ namespace ExpenseProcessingSystem.Tests
             var result = _class.DoubleNumberToWords(num1);
 
             //Assert
-            Assert.That(result, Is.EqualTo("MINUS FOUR HUNDRED TWENTY TWO THOUSAND FOURTEEN AND SEVENTY FIVE CENTAVOS"));
+            Assert.That(result, Is.EqualTo("MINUS FOUR HUNDRED TWENTY TWO THOUSAND FOURTEEN AND 75/100"));
         }
 
         [Test]
@@ -79,7 +79,33 @@ namespace ExpenseProcessingSystem.Tests
             var result = _class.DoubleNumberToWords(num1);
 
             //Assert
-            Assert.That(result, Is.EqualTo("FIVE MILLION FOUR HUNDRED TWENTY TWO THOUSAND FOURTEEN AND SEVENTY FIVE CENTAVOS"));
+            Assert.That(result, Is.EqualTo("TEN TRILLION FIVE MILLION FOUR HUNDRED TWENTY TWO THOUSAND FOURTEEN AND 75/100"));
+        }
+
+        [Test]
+        public void NumberToText_ReturnNoDecimalNumericText()
+        {
+            //Arrange 
+            double num1 = 10000005422014;
+
+            //Act
+            var result = _class.DoubleNumberToWords(num1);
+
+            //Assert
+            Assert.That(result, Is.EqualTo("TEN TRILLION FIVE MILLION FOUR HUNDRED TWENTY TWO THOUSAND FOURTEEN"));
+        }
+
+        [Test]
+        public void NumberToText_ReturnWithCurrencyNumericText()
+        {
+            //Arrange 
+            double num1 = 1000000005422014.50d;
+
+            //Act
+            var result = _class.DoubleNumberToWords(num1, "PHP");
+
+            //Assert
+            Assert.That(result, Is.EqualTo("ONE QUADRILLION FIVE MILLION FOUR HUNDRED TWENTY TWO THOUSAND FOURTEEN AND 50/100 PESOS ONLY"));
         }
     }
 }
