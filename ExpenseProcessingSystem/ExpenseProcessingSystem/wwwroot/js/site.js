@@ -1,4 +1,8 @@
-﻿$(document).ready(function () {
+﻿
+$(document).ready(function () {
+    CheckUn();
+    CheckPw();
+
     var tabLinks = new Array();
     var contentDivs = new Array();
 
@@ -6,34 +10,22 @@
 
     $pageInput.data("value", $pageInput.val());
 
+
     /*//////////////////////////////////////////////////////////////////
     [ Login ]*/
-
-    setInterval(function () {
-        var val = $('input#Acc_UserName.input100').val();
-        if (val != "") {
-            //alert(val);
-            $('span.focus-input100.UN').hide();
-        } else {
-            $('span.focus-input100.UN').show();
-        }
-    }, 100);
-
-    setInterval(function () {
-        var val = $('input#Acc_Password.input100').val();
-        if (val != "") {
-            //alert(val);
-            $('span.focus-input100.PW').hide();
-        } else {
-            $('span.focus-input100.PW').show();
-        }
-    }, 100);
+    $('#Acc_UserName').change(function () {
+        CheckUn();
+    });
+    $('#Acc_Password').change(function () {
+        CheckPw();
+    });
 
     /*//////////////////////////////////////////////////////////////////
     [ Modal ]*/
     setInterval(function () {
         $('div.modal-backdrop.fade.in').not(':first').remove();
     }, 1);
+
     /*//////////////////////////////////////////////////////////////////
     [ Pagination - Number Input]*/
 
@@ -58,8 +50,32 @@
     }
     var tabVal = localStorage['tabVal'] != "" ? localStorage['tabVal'] : "/Home/Index";
 
+
+    /*//////////////////////////////////////////////////////////////////
+    [ JQuery UI ]*/
+    //always last but not after init()
+    $('.validation-summary-errors').dialog({
+        dialogClass: 'msg_dlg',
+        title: 'Error',
+        closeText: "",
+        position: {
+            of: 'section',
+            at: 'right top',
+            my: 'right top'
+        },
+        open: function (event, ui) {
+            $(this).dialog('moveToTop');
+        },
+        close: function () {
+            $(this).dialog('destroy');
+        }
+    });
+
     init();
 
+
+    /*//////////////////////////////////////////////////////////////////
+    [ Functions ]*/
     //for tabs
     function init() {
         // Grab the tab links and content divs from the page
@@ -122,6 +138,26 @@
     //modals
     function showREModal() {
         alert();
+    }
+
+    //login
+    function CheckUn() {
+        var val = $('#Acc_UserName').val();
+        if (val != "") {
+            //alert(val);
+            $('.UN').hide();
+        } else {
+            $('.UN').show();
+        }
+    }
+    function CheckPw() {
+        var val = $('#Acc_Password').val();
+        if (val != "") {
+            //alert(val);
+            $('.PW').hide();
+        } else {
+            $('.PW').show();
+        }
     }
 });
 $(function () {

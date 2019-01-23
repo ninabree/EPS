@@ -221,7 +221,11 @@ iframe {
     border: none !important;
 }
 
-
+/*//////////////////////////////////////////////////////////////////
+[ Validation Message ]*/
+.input-validation-error.input100 {
+    background-color: #ff000052;
+}
 /*//////////////////////////////////////////////////////////////////
 [ Utility ]*/
 .txt1 {

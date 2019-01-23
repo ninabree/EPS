@@ -1,8 +1,4 @@
 ﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace ExpenseProcessingSystem.Tests
 {
     [TestFixture]
@@ -99,7 +95,7 @@ namespace ExpenseProcessingSystem.Tests
         public void NumberToText_ReturnWithCurrencyNumericText()
         {
             //Arrange 
-            double num1 = 1000000005422014.50d;
+            double num1 = 1000000005422014.50;
 
             //Act
             var result = _class.DoubleNumberToWords(num1, "PHP");

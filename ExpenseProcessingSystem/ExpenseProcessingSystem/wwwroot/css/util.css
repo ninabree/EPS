@@ -2274,6 +2274,7 @@
 /*[ Display ]
 -----------------------------------------------------------
 */
+.dis-init {display: initial;}
 .dis-none {display: none;}
 .dis-block {display: block;}
 .dis-inline {display: inline;}
