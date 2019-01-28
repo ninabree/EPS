@@ -1,4 +1,5 @@
 ﻿using ExpenseProcessingSystem.ViewModels;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -26,7 +27,13 @@ namespace ExpenseProcessingSystem.Services.Validations
             }
             catch (Exception ex)
             {
+                //sample fatal error log
+                Log.Fatal(ex, "User: {user}, StackTrace : {trace}, Error Message: {message}", "UserID", ex.StackTrace, ex.Message);
                 return new ValidationResult("Invalid input");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
             }
         }
     }

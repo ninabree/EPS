@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Net;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using Serilog.Events;
+using Serilog.Exceptions;
+using Serilog.Sinks.Email;
 
 namespace ExpenseProcessingSystem
 {
@@ -16,15 +19,37 @@ namespace ExpenseProcessingSystem
         public Startup(IConfiguration configuration)
         {
             //Serilog
-            Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(configuration)
-                .MinimumLevel.Debug()
-                .WriteTo.Debug()
-                .WriteTo.Stackify()
-                .WriteTo.File("C:\\Work\\Mizuho EPS\\eps_logs\\logs\\log.txt", rollingInterval: RollingInterval.Day, fileSizeLimitBytes: null, rollOnFileSizeLimit: true)
-                .CreateLogger();
+            var outputTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] [{SourceContext}] [{EventId}] {Message:l}{NewLine}{Exception}";
 
-            Log.Information("Hello, Serilog!");
+            Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(configuration)
+            .MinimumLevel.Error()
+            .Enrich.FromLogContext()
+            .Enrich.WithThreadId()
+            .Enrich.WithExceptionDetails()
+            .Enrich.WithEnvironmentUserName()
+            .WriteTo.Debug()
+            .WriteTo.File("C:\\Work\\Mizuho EPS\\eps_logs\\logs\\log.txt", LogEventLevel.Error, outputTemplate, rollingInterval: RollingInterval.Day, fileSizeLimitBytes: null, rollOnFileSizeLimit: true)
+            .WriteTo.Email(new EmailConnectionInfo
+                {
+                    FromEmail = "mizuho.eps@gmail.com", //temp, change to dynamic
+                    ToEmail = "monina.martin@fetp.ph", //temp, change to dynamic -> login user's email
+                    MailServer = "smtp.gmail.com",
+                    NetworkCredentials = new NetworkCredential
+                    {
+                        UserName = "mizuho.eps@gmail.com", //temp, change to dynamic
+                        Password = "mizuhoeps2019" //temp, change to dynamic
+                    },
+                    EnableSsl = true,
+                    Port = 465,
+                    EmailSubject = "[EPS] Log Error"
+            },
+                outputTemplate: outputTemplate,
+                batchPostingLimit: 10
+                , restrictedToMinimumLevel: LogEventLevel.Error
+            )
+            .CreateLogger();
+
             Configuration = configuration;
         }
 
@@ -45,6 +70,7 @@ namespace ExpenseProcessingSystem
             services.AddHttpContextAccessor();
             services.AddDistributedMemoryCache();
             services.AddSession();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
