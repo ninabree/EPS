@@ -1,18 +1,78 @@
 ﻿
 @{
     ViewData["Title"] = "DM";
+    var vd = ViewData["partialName"].ToString();
+    var p = (ViewData["page"] == null) ? "" : ViewData["page"];
 }
+@using ExpenseProcessingSystem.ViewModels
+@model DMViewModel
 <div class="tab-content-cont m-t-10">
     <div id="tbl-lbl">
         <div class="dis-inline-block"><p>Data List Title:</p></div>
         <div class="dis-inline-block">
-             <select>
+            <select id="dm-tbl">
                 <option value="DMPartial_Payee">Payee</option>
-                <option value="saab">Saab</option>
-                <option value="mercedes">Mercedes</option>
-                <option value="audi">Audi</option>
+                <option value="DMPartial_Check">Check</option>
+                <option value="DMPartial_Acc">Account</option>
+                <option value="DMPartial_Dept">Department</option>
+                <option value="DMPartial_VAT">Value Added Tax</option>
+                <option value="DMPartial_FBE">Fringe Benefit Tax</option>
+                <option value="DMPartial_EWT">Expanded Withholding Tax</option>
+                <option value="DMPartial_Curr">Currency</option>
+                <option value="DMPartial_Budget">Budget</option>
             </select>
         </div>
-   </div>
-    @Html.Partial("DMPartial_Payee")
+    </div>
+    <div id="partial-container">
+    </div>
 </div>
+<environment include="Development">
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+</environment>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var cont = $('#partial-container');
+        //var sel = $('select#dm-tbl select');
+        var sortOrder = '@ViewData["sortOrder"]';
+        var currentFilter = '@ViewData["currentFilter"]';
+        var searchString = '@ViewData["searchString"]';
+        var page = '@ViewData["page"]';
+        var partial = '@ViewData["partialName"]';
+
+        initPartial();
+
+        function initPartial() {
+            $('select#dm-tbl option[value=' + partial + ']').attr('selected', 'selected');
+            $.ajax({
+                url: '/Partial/' + partial,
+                type: "Get",
+                data: { 'sortOrder': sortOrder, 'currentFilter': currentFilter, 'searchString': searchString, 'page': page},
+                async: true,
+                //processData: false,
+                datatype: "json",
+                cache: false,
+                success: function (data) {
+                    cont.empty();
+                    cont.html(data);
+                }
+            });
+        }
+        //change content of partial view on select on change
+        $('select#dm-tbl').change(function () {
+            $.ajax({
+                url: '/Partial/' + this.value,
+                type: "Get",
+                data: { sortOrder: sortOrder, currentFilter: currentFilter, searchString: searchString, page: "2" },
+                //data: model,
+                async: true,
+                processData: false,
+                datatype: "json",
+                cache: false, 
+                success: function (data) {
+                    cont.empty();
+                    cont.html(data);
+                }
+            });
+        });
+    });
+</script>

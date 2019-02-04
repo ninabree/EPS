@@ -548,11 +548,13 @@ div.tabContent {
         background-color: #0a1b81;
         color: #fff;
     }
-
+.pagination-btn {
+    font-family: 'Glyphicons Halflings'!important;
+}
 .btn {
     font-size: 11px;
     background-color: #fff;
-    border-color: #ccc;
+    border-color: #0A1B81;
     border-radius: 2px;
     padding: 1px 5px;
     margin: 1px 5px;

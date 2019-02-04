@@ -58,7 +58,7 @@ using ExpenseProcessingSystem;
             WriteLiteral("<div class=\"tab-content-cont m-t-10\">\r\n    <div class=\"tbl-cont\">\r\n        <table class=\"table table-striped tab-tbl\">\r\n            <thead>\r\n                <tr>\r\n                    <th>");
             EndContext();
             BeginContext(228, 136, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "b1c433f6fd9f4f9f9db9ea7118230cee", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "b3ba88f87a1842b8b38ba76032f3f3b6", async() => {
                 BeginContext(298, 9, true);
                 WriteLiteral("Account<p");
                 EndContext();
@@ -105,7 +105,7 @@ WriteAttributeValue(" ", 331, ViewData["glyph-acc"], 332, 22, false);
             WriteLiteral("</th>\r\n                    <th>");
             EndContext();
             BeginContext(395, 131, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "bb4d8b03787640bc8d2b811e58609213", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "88e9966dedc84d64bcf6c8e857986aa9", async() => {
                 BeginContext(462, 6, true);
                 WriteLiteral("Type<p");
                 EndContext();

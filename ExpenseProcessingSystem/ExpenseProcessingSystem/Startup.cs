@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -65,6 +66,13 @@ namespace ExpenseProcessingSystem
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            //Form authentication
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(o => {
+                o.LoginPath = new PathString("/account/login");
+                o.AccessDeniedPath = new PathString("/account/accessdenied");
+                o.LogoutPath = new PathString("/account/logout");
+            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddHttpContextAccessor();
@@ -78,6 +86,8 @@ namespace ExpenseProcessingSystem
         {
             //Serilog
             loggerFactory.AddSerilog();
+            //Form authentication
+            app.UseAuthentication();
 
             if (env.IsDevelopment())
             {

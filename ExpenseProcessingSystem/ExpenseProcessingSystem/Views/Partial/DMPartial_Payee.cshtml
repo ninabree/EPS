@@ -1,0 +1,72 @@
+﻿
+@{
+    ViewData["Title"] = "DMPartial_Payee";
+    Layout = "~/Views/Shared/_ModalLayout.cshtml";
+}
+
+@using ExpenseProcessingSystem.ViewModels
+@model DMViewModel
+
+<div class="tbl-cont">
+    <table class="table table-striped tab-tbl">
+        <thead>
+            <tr>
+                <th><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PayeeSortParm"]">Payee<p class="btn-xs glyphicon @ViewData["glyph-payee"]"></p></a></th>
+                <th><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PayeeTINSortParm"]">TIN<p class="btn-xs glyphicon @ViewData["glyph-payee-tin"]"></p></a></th>
+                <th>Address</th>
+                <th>Type</th>
+                <th>Number</th>
+                <th>Input By</th>
+                <th>Approver</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Payee != null)
+            {
+                @foreach (var item in Model.Payee)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Payee_Name)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Payee_TIN)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Payee_Address)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Payee_Type)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Payee_No)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Payee_Creator_ID)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Payee_Approver_ID)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Payee_Status)</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    @{
+        var prevDisabled = !Model.Payee.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.Payee.HasNextPage ? "disabled" : "";
+    }
+
+    <a asp-action="DM"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-page="@(Model.Payee.PageIndex - 1)"
+       asp-controller="Home"
+       asp-route-partialName="@ViewData["Title"]"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left">
+    </a>
+    <input type="text" class="pagination-input" id="paginationInput" val="" />
+    <input type="text" class="pagination-input" value="of @(Model.Payee.TotalPages)" disabled />
+    <a asp-action="DM"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-controller="Home"
+       asp-route-partialName="@ViewData["Title"]"
+       asp-route-page="@(Model.Payee.PageIndex + 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right">
+    </a>
+    <div class="float-r m-r-10">
+        <div class="dis-inline-block tbl-btn btn">Delete</div>
+        <div class="dis-inline-block tbl-btn btn">Add New</div>
+        <div class="dis-inline-block tbl-btn btn">Save Changes</div>
+        <input type="hidden" value="@ViewData["Title"]" id="partialVal" />
+    </div>
+</div>

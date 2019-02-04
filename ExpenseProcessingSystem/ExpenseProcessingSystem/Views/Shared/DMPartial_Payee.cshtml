@@ -1,7 +1,11 @@
 ﻿
 @{
     ViewData["Title"] = "DMPartial_Payee";
+    Layout = "~/Views/Shared/_ModalLayout.cshtml";
 }
+
+@using ExpenseProcessingSystem.ViewModels
+@model DMViewModel
 
 <div class="tbl-cont">
     <table class="table table-striped tab-tbl">
@@ -17,11 +21,10 @@
                 <th>Status</th>
             </tr>
         </thead>
-        <tbody>
-        </tbody>
+        <tbody></tbody>
     </table>
     <div class="float-r m-r-10">
-        <div class="dis-inline-block tbl-btn">Delete</div>
-        <div class="dis-inline-block tbl-btn">Save</div>
+        <div class="dis-inline-block tbl-btn btn">Delete</div>
+        <div class="dis-inline-block tbl-btn btn">Save</div>
     </div>
 </div>

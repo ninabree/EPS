@@ -7,7 +7,6 @@ $(document).ready(function () {
     var contentDivs = new Array();
 
     var $pageInput = $('#paginationInput');
-
     $pageInput.data("value", $pageInput.val());
 
 
@@ -30,17 +29,27 @@ $(document).ready(function () {
     [ Pagination - Number Input]*/
 
     setInterval(function () {
+        //get hidden value of partial view in Data Maintenance
+        var partial = $('input#partialVal').val();
+
         var data = $pageInput.data("value"),
             val = $pageInput.val();
 
         if (data !== val) {
             $pageInput.data("value", val);
             var url = window.location.pathname + '?page=' + val;
+            //check if in data maintenance
+            if (window.location.pathname == "/Home/DM") {
+                url = window.location.pathname + '?partialName='+partial+'&page=' + val;
+            }
             window.location = url;
         }
     }, 100);
 
 
+    /*//////////////////////////////////////////////////////////////////
+    [ Partial View ]*/
+    
     /*//////////////////////////////////////////////////////////////////
     [ Tabs ]*/
 
