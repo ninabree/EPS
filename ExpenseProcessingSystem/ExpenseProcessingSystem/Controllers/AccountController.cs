@@ -1,11 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Services;
 using ExpenseProcessingSystem.ViewModels;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 namespace ExpenseProcessingSystem.Controllers
@@ -13,13 +19,13 @@ namespace ExpenseProcessingSystem.Controllers
     public class AccountController : Controller
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        //private readonly DbContext _context;
+        private readonly EPSDbContext _context;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
 
-        public AccountController(IHttpContextAccessor httpContextAccessor/*, DbContext context*/)
+        public AccountController(IHttpContextAccessor httpContextAccessor, EPSDbContext context)
         {
             _httpContextAccessor = httpContextAccessor;
-            //_context = context;
+            _context = context;
         }
 
         [HttpGet]
@@ -49,7 +55,7 @@ namespace ExpenseProcessingSystem.Controllers
         {
             if (CryptoTools.getHashPasswd("PLACEHOLDER", model.Acc_UserName, model.Acc_Password) == "4C54DE81642F796E39C11F4AD92187707427A6780C65B9BB92403B962C99E6A702E9D829439B41094D645CDC043836EA0B46E8D60B474C4E35DC439623B13F98")
             {
-                Log.Information("Valid Login Cred");
+                Log.Information("User Logged In");
                 return RedirectToAction("Index", "Home");
             }
             else

@@ -28,7 +28,7 @@ namespace ExpenseProcessingSystem.Services.Validations
             catch (Exception ex)
             {
                 //sample fatal error log
-                Log.Fatal(ex, "User: {user}, StackTrace : {trace}, Error Message: {message}", "UserID", ex.StackTrace, ex.Message);
+                Log.Fatal(ex, "User: {user}, StackTrace : {trace}, Error Message: {message}", "[UserID]", ex.StackTrace, ex.Message);
                 return new ValidationResult("Invalid input");
             }
             finally
@@ -57,6 +57,7 @@ namespace ExpenseProcessingSystem.Services.Validations
             }
             catch (Exception ex)
             {
+                Log.Fatal(ex, "User: {user}, StackTrace : {trace}, Error Message: {message}", "[UserID]", ex.StackTrace, ex.Message);
                 return new ValidationResult("Invalid input");
             }
         }

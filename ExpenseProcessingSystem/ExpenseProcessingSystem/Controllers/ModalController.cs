@@ -8,7 +8,13 @@ namespace ExpenseProcessingSystem.Controllers
 {
     public class ModalController : Controller
     {
+        //Entry_DDV
         public IActionResult ReversalEntryModal()
+        {
+            return View();
+        }
+        //BM
+        public IActionResult BudgetAdjustmentModal()
         {
             return View();
         }

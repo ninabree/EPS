@@ -52,3 +52,5 @@ C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\ob
 C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Partial\DMPartial_Dept.g.cshtml.cs
 C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Shared\DMPartial_Dept.g.cshtml.cs
 C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Shared\DMPartial_Payee.g.cshtml.cs
+C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\BudgetAdjustmentModal.g.cshtml.cs
+C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Home\UM.g.cshtml.cs

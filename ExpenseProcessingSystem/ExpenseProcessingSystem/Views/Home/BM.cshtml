@@ -1,7 +1,9 @@
 ﻿
 @{
     ViewData["Title"] = "BM";
-} 
+}
+@using ExpenseProcessingSystem.ViewModels
+@model PaginatedList<BMViewModel>
 <div class="tab-content-cont m-t-10">
     <div class="tbl-cont">
         <table class="table table-striped tab-tbl">
@@ -13,12 +15,46 @@
                     <th>Current Budget</th>
                     <th>Last Transaction Date</th>
                     <th>Last Budget Approval</th>
+                    <th></th>
                 </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.BM_Account)</td>
+                        <td>@Html.DisplayFor(modelItem => item.BM_Type)</td>
+                        <td>@Html.DisplayFor(modelItem => item.BM_Budget)</td>
+                        <td>@Html.DisplayFor(modelItem => item.BM_Curr_Budget)</td>
+                        <td>@Html.DisplayFor(modelItem => item.BM_Last_Trans_Date)</td>
+                        <td>@Html.DisplayFor(modelItem => item.BM_Last_Budget_Approval)</td>
+                        <td><button class="btn adjust_btn" id="adjust_@item.BM_Id" style="font-size: 8px">Adjust</button></td>
+                    </tr>
+                }
+            </tbody>
         </table>
+        @{
+            var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+            var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+        }
+
+        <a asp-action="BM"
+           asp-route-sortOrder="@ViewData["CurrentSort"]"
+           asp-route-page="@(Model.PageIndex - 1)"
+           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+           class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left">
+        </a>
+        <input type="text" class="pagination-input" id="paginationInput" val="" />
+        <input type="text" class="pagination-input" value="of @(Model.TotalPages)" disabled />
+        <a asp-action="BM"
+           asp-route-sortOrder="@ViewData["CurrentSort"]"
+           asp-route-page="@(Model.PageIndex + 1)"
+           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+           class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right">
+        </a>
         <div class="float-r m-r-10">
             <div class="tbl-btn">Update Budget</div>
         </div>
+        @Html.Partial("ModalPartial")
     </div>
 </div>

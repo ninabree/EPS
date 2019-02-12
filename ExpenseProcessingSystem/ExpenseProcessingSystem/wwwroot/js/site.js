@@ -173,9 +173,17 @@ $(function () {
     /*//////////////////////////////////////////////////////////////////
     [ MODAL ]*/
     //set content to modal body and show dynamic modal
+    //Entry_DDV
     $("#reversal_entry").click(function () {
         //controller name, method name, modal header
         ModalPopup('Modal', 'ReversalEntryModal','Reversal Entry');
+    });
+
+    $(".adjust_btn").click(function () {
+        var id = this.id;
+        var splitid = id.split("_");
+        //controller name, method name, modal header
+        ModalPopup('Modal', 'BudgetAdjustmentModal', 'Budget Adjustment');
     });
 
     //set modal contents and show

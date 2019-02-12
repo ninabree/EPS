@@ -1,0 +1,77 @@
+﻿
+@{
+    ViewData["Title"] = "UM";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div>
+    <table class="table">
+        <tr>
+            <td>
+                <p>User ID:</p> @*change to label for when model is avail*@
+            </td>
+            <td><input class="input" /></td>
+            <td>
+                <p>Email:</p> @*change to label for when model is avail*@
+            </td>
+            <td><input class="input" /></td>
+            <td>
+                <p>Password:</p> @*change to label for when model is avail*@
+            </td>
+            <td><input type="password" class="input" /></td>
+        </tr>
+
+        <tr>
+            <td>
+                <p>Name:</p> @*change to label for when model is avail*@
+            </td>
+            <td><input class="input" /></td>
+            <td>
+                <p>Role:</p> @*change to label for when model is avail*@
+            </td>
+            <td><input class="input" /></td>
+            <td rowspan="2">
+                <p>Comments:</p> @*change to label for when model is avail*@
+            </td>
+            <td rowspan="2"><textarea class="input" style="width: 90%;height: 100%;"> </textarea></td>
+        </tr>
+        <tr>
+            <td>
+                <p>Department:</p> @*change to label for when model is avail*@
+            </td>
+            <td><input class="input" /></td>
+            <td>
+                <p>In Use:</p> @*change to label for when model is avail*@
+            </td>
+            <td><input class="checkbox" type="checkbox" /></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><button class="btn tbl-btn">Save Changes</button><button class="btn tbl-btn">Clear</button></td>
+        </tr>
+    </table>
+</div>
+<div id="UM_tbl">
+    <div id="tbl-lbl">
+        <div class="dis-inline-block"><p>Users Master Data:</p></div>
+    </div>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <td>ID</td>
+                <td>Name</td>
+                <td>Department</td>
+                <td>Role</td>
+                <td>Email</td>
+                <td>Comment</td>
+                <td>In-Use</td>
+                <td>Update Date</td>
+                <td>Status</td>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>

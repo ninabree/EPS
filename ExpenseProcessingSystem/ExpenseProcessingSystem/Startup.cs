@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Net;
+using ExpenseProcessingSystem.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -66,13 +69,9 @@ namespace ExpenseProcessingSystem
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            //Form authentication
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            .AddCookie(o => {
-                o.LoginPath = new PathString("/account/login");
-                o.AccessDeniedPath = new PathString("/account/accessdenied");
-                o.LogoutPath = new PathString("/account/logout");
-            });
+            //Add DB context.
+            services.AddDbContext<EPSDbContext>(options =>
+               options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddHttpContextAccessor();
@@ -86,8 +85,6 @@ namespace ExpenseProcessingSystem
         {
             //Serilog
             loggerFactory.AddSerilog();
-            //Form authentication
-            app.UseAuthentication();
 
             if (env.IsDevelopment())
             {
