@@ -44,6 +44,9 @@ body, html {
 
 .table {
     padding: 0px;
+    margin-bottom: 10px !important;
+    width: 100%;
+    table-layout: fixed;
 }
 .table > tbody > tr > td {
     border-top: none;
@@ -441,7 +444,9 @@ ul#tabs, ul#entity-tabs {
 div.tabContent {
     border: 1px solid #c9c3ba;
     padding: 0.5em;
-    max-height: 75vh;
+    max-height: 100%;
+    /*min-height: 100%;*/
+    /*max-height: 75vh;*/
     min-height: 75vh;
     height: auto;
     background-color: #f2f2f2;
@@ -589,6 +594,11 @@ div.tabContent {
     }
 .modal-backdrop.in {
     opacity: .1;
+}
+
+.editable-th > tbody > tr > th {
+    border-top: none !important;
+    border-bottom: 1px solid #ddd !important;
 }
 
 /*//////////////////////////////////////////////////////////////////

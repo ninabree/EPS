@@ -11,6 +11,7 @@
     <table class="table table-striped tab-tbl">
         <thead>
             <tr>
+                <th></th>
                 <th><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["DeptSortParm"]">Department Name<p class="btn-xs glyphicon @ViewData["glyph-dept"]"></p></a></th>
                 <th><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["DeptCodeSortParm"]">Department Code<p class="btn-xs glyphicon @ViewData["glyph-dept-code"]"></p></a></th>
                 <th>Input By</th>
@@ -24,6 +25,7 @@
                 @foreach (var item in Model.Dept)
                 {
                     <tr>
+                        <td><input class="tbl-chk" id="@item.Dept_ID" type="checkbox" /></td>
                         <td>@Html.DisplayFor(modelItem => item.Dept_Name)</td>
                         <td>@Html.DisplayFor(modelItem => item.Dept_Code)</td>
                         <td>@Html.DisplayFor(modelItem => item.Dept_Creator_ID)</td>
@@ -58,9 +60,10 @@
        class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right">
     </a>
     <div class="float-r m-r-10">
+        <div class="dis-inline-block tbl-btn btn" id="add_dept">Add</div>
+        <div class="dis-inline-block tbl-btn btn" id="edit_dept">Edit</div>
         <div class="dis-inline-block tbl-btn btn">Delete</div>
-        <div class="dis-inline-block tbl-btn btn">Add New</div>
-        <div class="dis-inline-block tbl-btn btn">Save Changes</div>
-        <input type="hidden" value="@ViewData["Title"]" id="partialVal"/>
+        <input type="hidden" value="@ViewData["Title"]" id="partialVal" />
     </div>
+    @Html.Partial("ModalPartial")
 </div>

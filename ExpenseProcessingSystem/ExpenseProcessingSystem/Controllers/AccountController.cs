@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Services;
 using ExpenseProcessingSystem.ViewModels;
@@ -56,6 +57,8 @@ namespace ExpenseProcessingSystem.Controllers
             if (CryptoTools.getHashPasswd("PLACEHOLDER", model.Acc_UserName, model.Acc_Password) == "4C54DE81642F796E39C11F4AD92187707427A6780C65B9BB92403B962C99E6A702E9D829439B41094D645CDC043836EA0B46E8D60B474C4E35DC439623B13F98")
             {
                 Log.Information("User Logged In");
+                //SetSession Info
+                //_session.SetString("clientScreenHeight", SystemInformation.PrimaryMonitorSize.Height.ToString());
                 return RedirectToAction("Index", "Home");
             }
             else

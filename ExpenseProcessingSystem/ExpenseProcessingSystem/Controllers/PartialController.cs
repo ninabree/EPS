@@ -11,6 +11,8 @@ namespace ExpenseProcessingSystem.Controllers
 {
     public class PartialController : Controller
     {
+        private readonly int pageSize = 25;
+
         [Route("/Partial/DMPartial_Payee/")]
         public IActionResult DMPartial_Payee(string sortOrder, string currentFilter, string searchString, string page)
         {
@@ -52,9 +54,6 @@ namespace ExpenseProcessingSystem.Controllers
                     ViewData["glyph-payee"] = "glyphicon-menu-down";
                     break;
             }
-
-            //pagination
-            var pageSize = 20;
             DMViewModel VM = new DMViewModel()
             {
                 Payee = PaginatedList<DMPayeeViewModel>.CreateAsync(payee.AsNoTracking(), pg ?? 1, pageSize)
@@ -103,9 +102,6 @@ namespace ExpenseProcessingSystem.Controllers
                     ViewData["glyph-dept"] = "glyphicon-menu-down";
                     break;
             }
-
-            //pagination
-            var pageSize = 20;
             DMViewModel VM = new DMViewModel()
             {
                 Dept = PaginatedList<DMDeptViewModel>.CreateAsync(depts.AsNoTracking(), pg ?? 1, pageSize)

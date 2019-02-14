@@ -4,8 +4,11 @@ using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExpenseProcessingSystem.Controllers
@@ -13,6 +16,14 @@ namespace ExpenseProcessingSystem.Controllers
     public class HomeController : Controller
     {
         private readonly int pageSize = 25;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly EPSDbContext _context;
+        private ISession _session => _httpContextAccessor.HttpContext.Session;
+        public HomeController(IHttpContextAccessor httpContextAccessor, EPSDbContext context)
+        {
+            _httpContextAccessor = httpContextAccessor;
+            _context = context;
+        }
         public IActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
             return View();
@@ -40,6 +51,8 @@ namespace ExpenseProcessingSystem.Controllers
         }
         public IActionResult BM(string sortOrder, string currentFilter, string searchString, int? page)
         {
+            //CheckScreenRes();
+
             //sort
             ViewData["CurrentSort"] = sortOrder;
             ViewData["AccountSortParm"] = String.IsNullOrEmpty(sortOrder) ? "acc_desc" : "";
@@ -112,7 +125,25 @@ namespace ExpenseProcessingSystem.Controllers
         {
             return RedirectToAction(Method, Cont);
         }
+        [HttpPost]
+        //[Route("/RedirectCont/")]
+        public IActionResult RedirectCont2(string Cont, string Method, string[] IdsArr)
+        {
+            return RedirectToAction(Method, Cont, new { IdsArr = IdsArr });
+        }
         //---
+        public void CheckScreenRes()
+        {
+            //int h = Screen.AllScreens.GetLowerBound.height;
+            //int h = Screen.PrimaryScreen.WorkingArea.Height;
+            //int height = SystemInformation.PrimaryMonitorSize.Height;
+            //int width = SystemInformation.VirtualScreen.Width;
+            //string h = _session.GetString("clientScreenHeight");
+            //if (int.Parse(h) <= 768)
+            //{
+            //    pageSize = 20;
+            //}
+        }
         public List<BMViewModel> PopulateBM()
         {
             List<BMViewModel> bmvmList = new List<BMViewModel>();

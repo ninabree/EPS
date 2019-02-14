@@ -65,19 +65,17 @@ namespace ExpenseProcessingSystem
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
+                options.CheckConsentNeeded = context => false; // orig val: true
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-
-            //Add DB context.
-            services.AddDbContext<EPSDbContext>(options =>
-               options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddHttpContextAccessor();
             services.AddDistributedMemoryCache();
             services.AddSession();
 
+            //Add DB context.
+            services.AddDbContext<EPSDbContext>(options =>
+               options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -99,6 +97,7 @@ namespace ExpenseProcessingSystem
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseSession();
 
             app.UseMvc(routes =>
             {

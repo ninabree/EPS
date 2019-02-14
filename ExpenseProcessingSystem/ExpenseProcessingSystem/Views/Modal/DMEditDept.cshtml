@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewData["Title"] = "DMEditDept";
+    Layout = "~/Views/Shared/_ModalLayout.cshtml";
+}
+@using ExpenseProcessingSystem.ViewModels
+@model List<DMDeptViewModel>
+<div id="table" class="table-editable">
+    <table class="table table-bordered editable-th">
+        <tr>
+            <th>Department Name</th>
+            <th>Department No</th>
+            <th>Status</th>
+        </tr>
+        @if (Model != null)
+        {
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td contenteditable="true">@Html.DisplayFor(modelItem => item.Dept_Name)</td>
+                    <td contenteditable="true">@Html.DisplayFor(modelItem => item.Dept_Code)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Dept_Status)</td>
+                </tr>
+            }
+        }
+    </table>
+</div>
+

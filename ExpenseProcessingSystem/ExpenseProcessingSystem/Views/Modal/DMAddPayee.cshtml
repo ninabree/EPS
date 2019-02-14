@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewData["Title"] = "DMAddPayee";
+    Layout = "~/Views/Shared/_ModalLayout.cshtml";
+}
+
+<div id="table" class="table-editable">
+    <span class="table-add glyphicon glyphicon-plus hidden"></span>
+    <table class="table table-bordered editable-th">
+        <tr>
+            <th>Payee</th>
+            <th>TIN</th>
+            <th>Address</th>
+            <th>Type</th>
+            <th>Number</th>
+            <th></th>
+        </tr>
+        <tr>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td>
+                <span class="table-remove glyphicon glyphicon-remove"></span>
+            </td>
+        </tr>
+        
+        <!-- This is our clonable table line -->
+        <tr class="hide">
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td>
+                <span class="table-remove glyphicon glyphicon-remove"></span>
+            </td>
+        </tr>
+    </table>
+</div>
