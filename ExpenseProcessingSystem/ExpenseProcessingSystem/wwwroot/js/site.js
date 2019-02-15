@@ -2,7 +2,7 @@
 $(document).ready(function () {
     CheckUn();
     CheckPw();
-
+    populateCol();
     var tabLinks = new Array();
     var contentDivs = new Array();
 
@@ -57,7 +57,7 @@ $(document).ready(function () {
 
 
     /*//////////////////////////////////////////////////////////////////
-    [ Partial View ]*/
+    [ DM ]*/
     
     /*//////////////////////////////////////////////////////////////////
     [ Tabs ]*/
@@ -94,6 +94,15 @@ $(document).ready(function () {
 
     /*//////////////////////////////////////////////////////////////////
     [ Functions ]*/
+    function populateCol() {
+        $('#dm-col').find('option').remove();
+        //get all tbale header values and populate the column header combo box
+        $("#partial-container div div table thead tr th").each(function () {
+            if ($(this).text().length > 0) {
+                $('#dm-col').append('<option value="">' + $(this).text() + '</option>');
+            }
+        });
+    }
     //for tabs
     function init() {
         // Grab the tab links and content divs from the page

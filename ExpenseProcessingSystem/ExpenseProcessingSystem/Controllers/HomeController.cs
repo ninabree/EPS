@@ -15,7 +15,7 @@ namespace ExpenseProcessingSystem.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly int pageSize = 25;
+        private readonly int pageSize = 30;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly EPSDbContext _context;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
