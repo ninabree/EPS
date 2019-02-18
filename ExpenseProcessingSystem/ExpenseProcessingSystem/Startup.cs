@@ -68,10 +68,10 @@ namespace ExpenseProcessingSystem
                 options.CheckConsentNeeded = context => false; // orig val: true
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+            services.AddSession();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddHttpContextAccessor();
             services.AddDistributedMemoryCache();
-            services.AddSession();
 
             //Add DB context.
             services.AddDbContext<EPSDbContext>(options =>

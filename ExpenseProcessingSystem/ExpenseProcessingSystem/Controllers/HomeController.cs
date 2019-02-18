@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
+//using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ExpenseProcessingSystem.Data;
+using ExpenseProcessingSystem.Models;
 using ExpenseProcessingSystem.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseProcessingSystem.Controllers
 {
@@ -36,10 +38,12 @@ namespace ExpenseProcessingSystem.Controllers
         {
             return View();
         }
-        public IActionResult DM(string sortOrder, string currentFilter, string searchString, int? page, string partialName)
+        public IActionResult DM(string sortOrder, string currentFilter, string tblName, string colName, string searchString, int? page, string partialName)
         {
             ViewData["sortOrder"] = sortOrder;
             ViewData["currentFilter"] = currentFilter;
+            ViewData["tblName"] = tblName;
+            ViewData["colName"] = colName;
             ViewData["searchString"] = searchString;
             ViewData["page"] = page;
             ViewData["partialName"] = (partialName == null) ? "DMPartial_Payee" : partialName;
@@ -126,12 +130,69 @@ namespace ExpenseProcessingSystem.Controllers
             return RedirectToAction(Method, Cont);
         }
         [HttpPost]
-        //[Route("/RedirectCont/")]
         public IActionResult RedirectCont2(string Cont, string Method, string[] IdsArr)
         {
             return RedirectToAction(Method, Cont, new { IdsArr = IdsArr });
         }
-        //---
+
+        //------------------------------------------------------------------
+        //CRUD
+        [HttpPost]
+        public IActionResult AddPayee(NewPayeeListViewModel model)
+        {
+            List<DMPayeeModel> vmList = new List<DMPayeeModel>();
+            foreach (NewPayeeViewModel dm in model.NewPayeeVM)
+            {
+                DMPayeeModel m = new DMPayeeModel
+                {
+                    Payee_Name = dm.Payee_Name,
+                    Payee_TIN = dm.Payee_TIN,
+                    Payee_Address = dm.Payee_Address,
+                    Payee_Type = dm.Payee_Type,
+                    Payee_No = dm.Payee_No,
+                    Payee_Creator_ID = int.Parse(_session.GetString("UN")),
+                    Payee_Created_Date = DateTime.Now,
+                    Payee_Last_Updated = DateTime.Now,
+                    Payee_Status = "For Approval"
+                };
+                vmList.Add(m);
+            }
+
+            if (ModelState.IsValid)
+            {
+                _context.DMPayee.AddRange(vmList);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("DM", "Home");
+        }
+        [HttpPost]
+        public IActionResult AddDept(NewDeptListViewModel model)
+        {
+            List<DMDeptModel> vmList = new List<DMDeptModel>();
+            foreach(NewDeptViewModel dm in model.NewDeptVM)
+            {
+                DMDeptModel m = new DMDeptModel
+                {
+                    Dept_Name = dm.Dept_Name,
+                    Dept_Code = dm.Dept_Code,
+                    Dept_Creator_ID = int.Parse(_session.GetString("UN")),
+                    Dept_Created_Date = DateTime.Now,
+                    Dept_Last_Updated = DateTime.Now,
+                    Dept_Status = "For Approval"
+                };
+                vmList.Add(m);
+            }
+
+            if (ModelState.IsValid)
+            {
+                _context.DMDept.AddRange(vmList);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("DM", "Home");
+        }
+
         public void CheckScreenRes()
         {
             //int h = Screen.AllScreens.GetLowerBound.height;

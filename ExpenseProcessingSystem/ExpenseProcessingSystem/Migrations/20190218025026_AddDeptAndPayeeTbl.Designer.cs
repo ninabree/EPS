@@ -4,45 +4,22 @@ using ExpenseProcessingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    partial class EPSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190218025026_AddDeptAndPayeeTbl")]
+    partial class AddDeptAndPayeeTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.2.0-rtm-35687")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("ExpenseProcessingSystem.Models.AccountModel", b =>
-                {
-                    b.Property<int>("Acc_UserID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Acc_Comment");
-
-                    b.Property<int>("Acc_DeptID");
-
-                    b.Property<string>("Acc_Email");
-
-                    b.Property<bool>("Acc_InUse");
-
-                    b.Property<string>("Acc_Password");
-
-                    b.Property<string>("Acc_Role");
-
-                    b.Property<string>("Acc_UserName");
-
-                    b.HasKey("Acc_UserID");
-
-                    b.ToTable("Account");
-                });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.DMDeptModel", b =>
                 {

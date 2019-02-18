@@ -3,39 +3,31 @@
     ViewData["Title"] = "DMAddPayee";
     Layout = "~/Views/Shared/_ModalLayout.cshtml";
 }
+@using ExpenseProcessingSystem.ViewModels
+@model NewPayeeListViewModel
 
 <div id="table" class="table-editable">
-    <span class="table-add glyphicon glyphicon-plus hidden"></span>
-    <table class="table table-bordered editable-th">
-        <tr>
-            <th>Payee</th>
-            <th>TIN</th>
-            <th>Address</th>
-            <th>Type</th>
-            <th>Number</th>
-            <th></th>
-        </tr>
-        <tr>
-            <td contenteditable="true"></td>
-            <td contenteditable="true"></td>
-            <td contenteditable="true"></td>
-            <td contenteditable="true"></td>
-            <td contenteditable="true"></td>
-            <td>
-                <span class="table-remove glyphicon glyphicon-remove"></span>
-            </td>
-        </tr>
-        
-        <!-- This is our clonable table line -->
-        <tr class="hide">
-            <td contenteditable="true"></td>
-            <td contenteditable="true"></td>
-            <td contenteditable="true"></td>
-            <td contenteditable="true"></td>
-            <td contenteditable="true"></td>
-            <td>
-                <span class="table-remove glyphicon glyphicon-remove"></span>
-            </td>
-        </tr>
-    </table>
+    @using (Html.BeginForm("AddPayee", "Home", FormMethod.Post, new { @class = "validate-form", @id = "tsForm" }))
+    {
+        <table class="table table-bordered editable-th">
+            <tr>
+                <th>Payee</th>
+                <th>TIN</th>
+                <th>Address</th>
+                <th>Type</th>
+                <th>Number</th>
+                <th></th>
+            </tr>
+            <tr id="NewPayee-Tr-0">
+                <td>@Html.TextBoxFor(m => m.NewPayeeVM[0].Payee_Name)</td>
+                <td>@Html.TextBoxFor(m => m.NewPayeeVM[0].Payee_TIN)</td>
+                <td>@Html.TextBoxFor(m => m.NewPayeeVM[0].Payee_Address)</td>
+                <td>@Html.TextBoxFor(m => m.NewPayeeVM[0].Payee_Type)</td>
+                <td>@Html.TextBoxFor(m => m.NewPayeeVM[0].Payee_No)</td>
+                <td>
+                    <span class="table-remove glyphicon glyphicon-remove"></span>
+                </td>
+            </tr>
+        </table>
+    }
 </div>

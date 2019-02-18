@@ -5,18 +5,16 @@ using System.Threading.Tasks;
 
 namespace ExpenseProcessingSystem.ViewModels
 {
-    public class DMPayeeViewModel
+    public class NewPayeeListViewModel
     {
-        public int Payee_ID { get; set; }
+        public List<NewPayeeViewModel> NewPayeeVM { get; set; }
+    }
+    public class NewPayeeViewModel
+    {
         public string Payee_Name { get; set; }
         public string Payee_TIN { get; set; }
         public string Payee_Address { get; set; }
         public string Payee_Type { get; set; }
         public int Payee_No { get; set; }
-        public int Payee_Creator_ID { get; set; }
-        public int Payee_Approver_ID { get; set; }
-        public DateTime Payee_Created_Date { get; set; }
-        public DateTime Payee_Last_Updated { get; set; }
-        public string Payee_Status { get; set; }
     }
 }

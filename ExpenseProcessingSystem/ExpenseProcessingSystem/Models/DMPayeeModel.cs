@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ExpenseProcessingSystem.ViewModels
+namespace ExpenseProcessingSystem.Models
 {
-    public class DMPayeeViewModel
+    public class DMPayeeModel
     {
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Payee_ID { get; set; }
         public string Payee_Name { get; set; }
         public string Payee_TIN { get; set; }

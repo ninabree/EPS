@@ -26,11 +26,11 @@
 }
 
 .table-add {
-    color: #070;
+    /*color: #070;*/
     cursor: pointer;
-    position: absolute;
+    /*position: absolute;
     top: 8px;
-    right: 0;
+    right: 0;*/
     &:hover
 
 {

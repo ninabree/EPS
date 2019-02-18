@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ExpenseProcessingSystem.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +16,8 @@ namespace ExpenseProcessingSystem.Data
         {
             base.OnModelCreating(builder);
         }
+        public DbSet<AccountModel> Account { get; set; }
+        public DbSet<DMDeptModel> DMDept { get; set; }
+        public DbSet<DMPayeeModel> DMPayee { get; set; }
     }
 }
