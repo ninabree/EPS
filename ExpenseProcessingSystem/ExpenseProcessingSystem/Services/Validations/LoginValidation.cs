@@ -19,10 +19,10 @@ namespace ExpenseProcessingSystem.Services.Validations
                 {
                     return new ValidationResult("User name is empty");
                 }
-                if(data.Acc_UserName.Any(char.IsDigit))
-                {
-                    return new ValidationResult("User name contains numbers");
-                }
+                //if(data.Acc_UserName.Any(char.IsDigit))
+                //{
+                //    return new ValidationResult("User name contains numbers");
+                //}
                 return ValidationResult.Success;
             }
             catch (Exception ex)

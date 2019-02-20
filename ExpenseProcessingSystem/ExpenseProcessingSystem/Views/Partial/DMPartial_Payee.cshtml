@@ -12,14 +12,14 @@
         <thead>
             <tr>
                 <th></th>
-                <th><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PayeeSortParm"]">Payee<p class="btn-xs glyphicon @ViewData["glyph-payee"]"></p></a></th>
-                <th><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PayeeTINSortParm"]">TIN<p class="btn-xs glyphicon @ViewData["glyph-payee-tin"]"></p></a></th>
-                <th>Address</th>
-                <th>Type</th>
-                <th>Number</th>
-                <th>Input By</th>
-                <th>Approver</th>
-                <th>Status</th>
+                <th id="Name"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PayeeSortParm"]">Payee<p class="btn-xs glyphicon @ViewData["glyph-payee"]"></p></a></th>
+                <th id="TIN"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PayeeTINSortParm"]">TIN<p class="btn-xs glyphicon @ViewData["glyph-payee-tin"]"></p></a></th>
+                <th id="Address">Address</th>
+                <th id="Type">Type</th>
+                <th id="No">Number</th>
+                <th id="Creator_ID">Input By</th>
+                <th id="Approver_ID">Approver</th>
+                <th id="Status">Status</th>
             </tr>
         </thead>
         <tbody>

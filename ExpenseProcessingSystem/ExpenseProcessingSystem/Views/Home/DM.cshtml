@@ -1,8 +1,6 @@
 ﻿
 @{
     ViewData["Title"] = "DM";
-    var vd = ViewData["partialName"].ToString();
-    var p = (ViewData["page"] == null) ? "" : ViewData["page"];
 }
 @using ExpenseProcessingSystem.ViewModels
 @model DMViewModel
@@ -22,14 +20,18 @@
                 <option value="DMPartial_Budget">Budget</option>
             </select>
         </div>
-        <div class="dis-inline-block float-r"><button id="btn-search" class="btn pagination-btn btn-default glyphicon glyphicon-search" style=""></button></div>
-        <div class="dis-inline-block float-r"><input id="filter-txt" class="input w-full m-t-5 m-b-5" placeholder="Search for keyword/s" /></div>
-        <div class="dis-inline-block float-r" style=" margin-right: 20px !important">
-            <select id="dm-col" @*class="m-r-100" *@ style="width: 100% !important;">
-                @*<option value="">-</option>*@
-            </select>
-        </div>
-        <div class="dis-inline-block m-t-5 m-b-5 float-r"><p>Filter:</p></div>
+        <form asp-action="DM" method="get" id="search-frm">
+            <div class="form-actions no-color">
+                <p>
+                    Find by name:
+                    <select name="colName" id="dm-col" style="width: 20% !important;"></select>
+                    <input id="search-txt" type="text" name="SearchString" value="@ViewData["currentFilter"]" />
+                    <input id="filterPartialName" name="partialName" value="DMPartial_Payee" type="hidden" />
+                    <input type="submit" value="Search" class="btn btn-default" />
+                    <input type="button" value="Back to Full List" id="full-list-btn" class="btn btn-default" />
+                </p>
+            </div>
+        </form>
     </div>
     <div id="partial-container">
     </div>
@@ -46,6 +48,7 @@
         var searchString = '@ViewData["searchString"]';
         var page = '@ViewData["page"]';
         var partial = '@ViewData["partialName"]';
+        var colName = '@ViewData["colName"]';
 
         initPartial();
 
@@ -54,7 +57,7 @@
             $.ajax({
                 url: '/Partial/' + partial,
                 type: "Get",
-                data: { 'sortOrder': sortOrder, 'currentFilter': currentFilter, 'searchString': searchString, 'page': page},
+                data: { 'sortOrder': sortOrder, 'currentFilter': currentFilter, 'colName': colName, 'searchString': searchString, 'page': page},
                 async: true,
                 //processData: false,
                 datatype: "json",
@@ -67,10 +70,11 @@
         }
         //change content of partial view on select on change
         $('select#dm-tbl').change(function () {
+            $('input#filterPartialName').val(this.value);
             $.ajax({
                 url: '/Partial/' + this.value,
                 type: "Get",
-                data: { sortOrder: sortOrder, currentFilter: currentFilter, searchString: searchString, page: "2" },
+                data: { sortOrder: sortOrder, currentFilter: currentFilter, searchString: searchString, page: page },
                 //data: model,
                 async: true,
                 processData: false,

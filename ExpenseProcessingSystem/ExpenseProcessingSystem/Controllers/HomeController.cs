@@ -41,7 +41,7 @@ namespace ExpenseProcessingSystem.Controllers
         public IActionResult DM(string sortOrder, string currentFilter, string tblName, string colName, string searchString, int? page, string partialName)
         {
             ViewData["sortOrder"] = sortOrder;
-            ViewData["currentFilter"] = currentFilter;
+            ViewData["currentFilter"] = searchString;
             ViewData["tblName"] = tblName;
             ViewData["colName"] = colName;
             ViewData["searchString"] = searchString;

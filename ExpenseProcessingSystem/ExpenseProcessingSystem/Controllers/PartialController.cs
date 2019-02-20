@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-//using System.Data.Entity;
-using System.Globalization;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Linq.Dynamic.Core;
 using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Models;
 using ExpenseProcessingSystem.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-//using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseProcessingSystem.Controllers
 {
@@ -26,7 +23,7 @@ namespace ExpenseProcessingSystem.Controllers
             _context = context;
         }
         [Route("/Partial/DMPartial_Payee/")]
-        public IActionResult DMPartial_Payee(string sortOrder, string currentFilter, string searchString, string page)
+        public IActionResult DMPartial_Payee(string sortOrder, string currentFilter, string colName, string searchString, string page)
         {
             int? pg = (page == null) ? 1 : int.Parse(page);
             //sort
@@ -45,6 +42,24 @@ namespace ExpenseProcessingSystem.Controllers
             ViewData["CurrentFilter"] = searchString;
 
             List<DMPayeeModel> mList = _context.DMPayee.ToList();
+            //FOR FILTERING
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                string[] colArr = { "No", "Creator_ID", "Approver_ID" };
+                if (colArr.Contains(colName))
+                {
+                    mList = _context.DMPayee
+                                  .Where("Payee_" + colName + " = @0", searchString)
+                                  .Select(e => e).ToList();
+                }
+                else
+                {
+                    mList = _context.DMPayee
+                                  .Where("Payee_" + colName + ".Contains(@0)", searchString)
+                                  .Select(e => e).ToList();
+                }
+                
+            }
             List<DMPayeeViewModel> vmList = new List<DMPayeeViewModel>();
             foreach(DMPayeeModel m in mList)
             {
@@ -93,7 +108,7 @@ namespace ExpenseProcessingSystem.Controllers
         }
 
         [Route("/Partial/DMPartial_Dept/")]
-        public IActionResult DMPartial_Dept(string sortOrder, string currentFilter, string tblName, string colName, string searchString, string page)
+        public IActionResult DMPartial_Dept(string sortOrder, string currentFilter, string colName, string searchString, string page)
         {
             int? pg = (page == null) ? 1 : int.Parse(page);
             //sort
@@ -112,6 +127,26 @@ namespace ExpenseProcessingSystem.Controllers
             ViewData["CurrentFilter"] = searchString;
 
             List<DMDeptModel> mList = _context.DMDept.ToList();
+
+            //FOR FILTERING
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                string[] colArr = { "Creator_ID","Approver_ID" };
+                if (colArr.Contains(colName))
+                {
+                    mList = _context.DMDept
+                                  .Where("Dept_" + colName + " = @0", searchString)
+                                  .Select(e => e).ToList();
+                }
+                else
+                {
+                    mList = _context.DMDept
+                                  .Where("Dept_" + colName + ".Contains(@0)", searchString)
+                                  .Select(e => e).ToList();
+                }
+                
+            }
+            
             List<DMDeptViewModel> vmList = new List<DMDeptViewModel>();
             foreach (DMDeptModel m in mList)
             {
@@ -128,17 +163,9 @@ namespace ExpenseProcessingSystem.Controllers
                 };
                 vmList.Add(vm);
             }
+
             var depts = from e in vmList.AsQueryable()
                         select e;
-            //FOR FILTERING
-            //if (searchString != null)
-            //{
-            //    _context.Database.ExecuteSqlCommand($"SELECT * FROM Records AS r WHERE r.{colName} IN @ids", new string[] { "1", "2", "3" });
-
-            //    depts = from e in vmList
-            //            where e.Dept_Name.Contains(searchString)
-            //            select e;
-            //}
             switch (sortOrder)
             {
                 case "name_desc":
@@ -163,51 +190,6 @@ namespace ExpenseProcessingSystem.Controllers
                 Dept = PaginatedList<DMDeptViewModel>.CreateAsync(depts.AsNoTracking(), pg ?? 1, pageSize)
             };
             return View(VM);
-        }
-
-        //-----
-        public List<DMPayeeViewModel> PopulateDMPayee()
-        {
-            List<DMPayeeViewModel> vmList = new List<DMPayeeViewModel>();
-            for (var i = 1; i <= 50; i++)
-            {
-                DMPayeeViewModel vm = new DMPayeeViewModel
-                {
-                    Payee_ID = i,
-                    Payee_Name = "Payee_" + i,
-                    Payee_TIN = "TIN_" + i + 5000,
-                    Payee_Address = "Address_" + i + 5000,
-                    Payee_Type = "Type_" + i + 5000,
-                    Payee_No = i + 5000,
-                    Payee_Creator_ID = i + 100,
-                    Payee_Approver_ID = i + 200,
-                    Payee_Last_Updated = DateTime.Parse("1/12/2017", CultureInfo.GetCultureInfo("en-GB"))
-                            .Add(DateTime.Now.TimeOfDay),
-                    Payee_Status = "For Approval"
-                };
-                vmList.Add(vm);
-            }
-            return vmList;
-        }
-        public List<DMDeptViewModel> PopulateDMDept()
-        {
-            List<DMDeptViewModel> vmList = new List<DMDeptViewModel>();
-            for (var i = 1; i <= 50; i++)
-            {
-                DMDeptViewModel vm = new DMDeptViewModel
-                {
-                    Dept_ID = i,
-                    Dept_Name = "Dept_" + i,
-                    Dept_Code = "Code" + i + 5000,
-                    Dept_Creator_ID = i + 100,
-                    Dept_Approver_ID = i + 200,
-                    Dept_Last_Updated = DateTime.Parse("1/12/2017", CultureInfo.GetCultureInfo("en-GB"))
-                            .Add(DateTime.Now.TimeOfDay),
-                    Dept_Status = "For Approval"
-                };
-                vmList.Add(vm);
-            }
-            return vmList;
         }
     }
 }

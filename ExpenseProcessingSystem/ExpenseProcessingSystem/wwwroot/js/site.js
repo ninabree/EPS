@@ -58,32 +58,14 @@ $(document).ready(function () {
 
     /*//////////////////////////////////////////////////////////////////
     [ DM ]*/
-
-    $('#btn-search').click(function (e) {
+    $('#full-list-btn').click(function (e) {
         e.stopImmediatePropagation();
-        var tblName = $('#dm-tbl').find(":selected").text();
-        var colName = $('#dm-col').find(":selected").val();
-        var searchString = $('#filter-txt').val();
-        if (tblName == "" || colName == "" || searchString == "") {
-            alert("Search filed/s should not be empty.");
-        } else {
-            var partial = (tblName == "Department") ? "DMPartial_Dept" : "DMPartial_Payee";
-            $.ajax({
-                url: '/Partial/' + partial,
-                type: "Get",
-                data: { 'tblName': tblName, 'colName': colName, 'searchString': searchString},
-                async: true,
-                //processData: false,
-                datatype: "json",
-                cache: false,
-                success: function (data) {
-                    //cont.empty();
-                    //cont.html(data);
-                }
-            });
-        }
+        $('#filter-txt').val("");
+        $('#search-txt').val("");
+        $('#filterPartialName').val($('#dm-tbl').find(":selected").val());
+        $('#search-frm').submit();
     });
-    
+
     /*//////////////////////////////////////////////////////////////////
     [ Tabs ]*/
 

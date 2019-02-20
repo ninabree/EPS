@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.1",
-    "signature": "60a099db5566eb146f84a6269298d59972585f45"
+    "signature": "ba64c743e6ba003d8b2837af4c3b2db71ab1b797"
   },
   "compilationOptions": {
     "defines": [
@@ -41,6 +41,7 @@
           "Serilog.Sinks.File": "4.0.0",
           "Serilog.Sinks.RollingFile": "3.3.0",
           "System.Drawing.Common": "4.5.1",
+          "System.Linq.Dynamic.Core": "1.0.10",
           "jQuery.UI": "1.12.1.1",
           "System.Windows.Forms": "4.0.0.0"
         },
@@ -1046,6 +1047,20 @@
         },
         "compile": {
           "ref/netstandard2.0/System.Drawing.Common.dll": {}
+        }
+      },
+      "System.Linq.Dynamic.Core/1.0.10": {
+        "dependencies": {
+          "System.Reflection.Emit": "4.3.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/System.Linq.Dynamic.Core.dll": {
+            "assemblyVersion": "1.0.10.0",
+            "fileVersion": "1.0.10.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/System.Linq.Dynamic.Core.dll": {}
         }
       },
       "System.Linq.Parallel/4.3.0": {
@@ -4988,6 +5003,13 @@
       "sha512": "sha512-m3c7Fe/CS/jZ/nLBrxCCh52dYiC33GPbGfcF4CiVukb8+p121XUTHxs6sYKbWfvDVD8JssHcM+HVFLtzl3X3Xw==",
       "path": "system.drawing.common/4.5.1",
       "hashPath": "system.drawing.common.4.5.1.nupkg.sha512"
+    },
+    "System.Linq.Dynamic.Core/1.0.10": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-JZSJMljN0X4fy8QcnK8z01PIYJyzzXhbmleTVIrva7DGc6dYAhSV6ADuXlzLvnoD+P31mmY1MMr7OVJsHRuB3A==",
+      "path": "system.linq.dynamic.core/1.0.10",
+      "hashPath": "system.linq.dynamic.core.1.0.10.nupkg.sha512"
     },
     "System.Linq.Parallel/4.3.0": {
       "type": "package",

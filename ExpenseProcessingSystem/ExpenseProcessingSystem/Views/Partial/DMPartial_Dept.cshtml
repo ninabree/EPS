@@ -12,16 +12,16 @@
         <thead>
             <tr>
                 <th></th>
-                <th id="Dept_Name"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["DeptSortParm"]">Department Name<p class="btn-xs glyphicon @ViewData["glyph-dept"]"></p></a></th>
-                <th id="Dept_Code"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["DeptCodeSortParm"]">Department Code<p class="btn-xs glyphicon @ViewData["glyph-dept-code"]"></p></a></th>
-                <th id="Dept_Creator_ID">Input By</th>
-                <th id="Dept_Approver_ID">Approver</th>
-                <th id="Dept_Last_Updated">Date Last Udpated</th>
-                <th id="Dept_Status">Status</th>
+                <th id="Name"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["DeptSortParm"]">Department Name<p class="btn-xs glyphicon @ViewData["glyph-dept"]"></p></a></th>
+                <th id="Code"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["DeptCodeSortParm"]">Department Code<p class="btn-xs glyphicon @ViewData["glyph-dept-code"]"></p></a></th>
+                <th id="Creator_ID">Input By</th>
+                <th id="Approver_ID">Approver</th>
+                <th id="Last_Updated">Date Last Udpated</th>
+                <th id="Status">Status</th>
             </tr>
         </thead>
         <tbody>
-            @if (Model.Dept != null)
+            @if (Model.Dept.Count != 0)
             {
                 @foreach (var item in Model.Dept)
                 {
@@ -36,6 +36,7 @@
                     </tr>
                 }
             }
+            else { <tr></tr>}
         </tbody>
     </table>
     @{
