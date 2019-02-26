@@ -41,7 +41,7 @@ namespace ExpenseProcessingSystem.Controllers
             }
             ViewData["CurrentFilter"] = searchString;
 
-            List<DMPayeeModel> mList = _context.DMPayee.ToList();
+            List<DMPayeeModel> mList = _context.DMPayee.Where(x=>x.Payee_isDeleted==false).ToList();
             //FOR FILTERING
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -49,13 +49,13 @@ namespace ExpenseProcessingSystem.Controllers
                 if (colArr.Contains(colName))
                 {
                     mList = _context.DMPayee
-                                  .Where("Payee_" + colName + " = @0", searchString)
+                                  .Where("Payee_" + colName + " = @0 AND Payee_isDeleted == @1", searchString, false)
                                   .Select(e => e).ToList();
                 }
                 else
                 {
                     mList = _context.DMPayee
-                                  .Where("Payee_" + colName + ".Contains(@0)", searchString)
+                                  .Where("Payee_" + colName + ".Contains(@0) AND Payee_isDeleted == @1", searchString, false)
                                   .Select(e => e).ToList();
                 }
                 
@@ -126,7 +126,7 @@ namespace ExpenseProcessingSystem.Controllers
             }
             ViewData["CurrentFilter"] = searchString;
 
-            List<DMDeptModel> mList = _context.DMDept.ToList();
+            List<DMDeptModel> mList = _context.DMDept.Where(x => x.Dept_isDeleted == false).ToList();
 
             //FOR FILTERING
             if (!String.IsNullOrEmpty(searchString))
@@ -135,13 +135,13 @@ namespace ExpenseProcessingSystem.Controllers
                 if (colArr.Contains(colName))
                 {
                     mList = _context.DMDept
-                                  .Where("Dept_" + colName + " = @0", searchString)
+                                  .Where("Dept_" + colName + " = @0 AND Dept_isDeleted == @1", searchString, false)
                                   .Select(e => e).ToList();
                 }
                 else
                 {
                     mList = _context.DMDept
-                                  .Where("Dept_" + colName + ".Contains(@0)", searchString)
+                                  .Where("Dept_" + colName + ".Contains(@0) AND Dept_isDeleted == @1", searchString, false)
                                   .Select(e => e).ToList();
                 }
                 

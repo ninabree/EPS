@@ -21,5 +21,6 @@ namespace ExpenseProcessingSystem.Models
         public DateTime Payee_Created_Date { get; set; }
         public DateTime Payee_Last_Updated { get; set; }
         public string Payee_Status { get; set; }
+        public bool Payee_isDeleted { get; set; }
     }
 }

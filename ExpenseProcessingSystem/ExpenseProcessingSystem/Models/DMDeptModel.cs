@@ -18,5 +18,6 @@ namespace ExpenseProcessingSystem.Models
         public DateTime Dept_Created_Date { get; set; }
         public DateTime Dept_Last_Updated { get; set; }
         public string Dept_Status { get; set; }
+        public bool Dept_isDeleted { get; set; }
     }
 }

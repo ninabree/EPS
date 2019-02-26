@@ -20,7 +20,8 @@
         ModalPopup('Modal', 'DMAddPayee', 'Add New Record/s');
     });
 
-    $("#edit_payee").click(function () {
+    $("#edit_payee").click(function (e) {
+        e.stopImmediatePropagation();
         var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
         if (!(chkCount <= 0)) {
             var idsArr = Array();
@@ -34,12 +35,27 @@
         }
     });
 
+    $("#delete_payee").click(function () {
+        var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
+        if (!(chkCount <= 0)) {
+            var idsArr = Array();
+            $('input.tbl-chk[type="checkbox"]:checked').each(function (i, v) {
+                idsArr.push($(v).attr('id'));
+            });
+            //controller name, method name, modal header
+            ModalPopup('Modal', 'DMDeletePayee', 'Confirm deletion of record/s?', idsArr);
+        } else {
+            alert("No data record/s selected.");
+        }
+    });
+
     $("#add_dept").click(function () {
         //controller name, method name, modal header
         ModalPopup('Modal', 'DMAddDept', 'Add New Record/s');
     });
 
-    $("#edit_dept").click(function () {
+    $("#edit_dept").click(function (e) {
+        e.stopImmediatePropagation();
         var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
         if (!(chkCount <= 0)) {
             var idsArr = Array();
@@ -48,6 +64,21 @@
             });
             //controller name, method name, modal header
             ModalPopup('Modal', 'DMEditDept', 'Edit Record/s', idsArr);
+        } else {
+            alert("No data record/s selected.");
+        }
+    });
+
+    $("#delete_dept").click(function (e) {
+        e.stopImmediatePropagation();
+        var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
+        if (!(chkCount <= 0)) {
+            var idsArr = Array();
+            $('input.tbl-chk[type="checkbox"]:checked').each(function (i, v) {
+                idsArr.push($(v).attr('id'));
+            });
+            //controller name, method name, modal header
+            ModalPopup('Modal', 'DMDeleteDept', 'Confirm deletion of record/s?', idsArr);
         } else {
             alert("No data record/s selected.");
         }

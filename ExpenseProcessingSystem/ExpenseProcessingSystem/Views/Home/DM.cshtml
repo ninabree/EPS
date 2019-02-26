@@ -27,7 +27,7 @@
                     <select name="colName" id="dm-col" style="width: 20% !important;"></select>
                     <input id="search-txt" type="text" name="SearchString" value="@ViewData["currentFilter"]" />
                     <input id="filterPartialName" name="partialName" value="DMPartial_Payee" type="hidden" />
-                    <input type="submit" value="Search" class="btn btn-default" />
+                    <input type="submit" value="Search" class="btn btn-default" id="search-btn"/>
                     <input type="button" value="Back to Full List" id="full-list-btn" class="btn btn-default" />
                 </p>
             </div>
@@ -57,7 +57,7 @@
             $.ajax({
                 url: '/Partial/' + partial,
                 type: "Get",
-                data: { 'sortOrder': sortOrder, 'currentFilter': currentFilter, 'colName': colName, 'searchString': searchString, 'page': page},
+                data: { 'sortOrder': sortOrder, 'currentFilter': currentFilter, 'colName': colName, 'searchString': searchString, 'page': page },
                 async: true,
                 //processData: false,
                 datatype: "json",
@@ -65,6 +65,7 @@
                 success: function (data) {
                     cont.empty();
                     cont.html(data);
+                    isSearchDisabled()
                 }
             });
         }
@@ -83,8 +84,20 @@
                 success: function (data) {
                     cont.empty();
                     cont.html(data);
+                    isSearchDisabled()
                 }
             });
         });
+
+        function isSearchDisabled() {
+            if ($('.tab-tbl tbody tr').length <= 1) {
+                $('#search-btn').attr("disabled", "disabled");
+                $('#full-list-btn').attr("disabled", "disabled");
+            } else {
+
+                $('#search-btn').removeAttr("disabled");
+                $('#full-list-btn').removeAttr("disabled");
+            }
+        }
     });
 </script>
