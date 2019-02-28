@@ -25,7 +25,7 @@
         }
         @*validation message*@
         <div id="ValidationSummary" style="display:none" class="">
-            @Html.ValidationSummary()
+        @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
         </div>
     </div>
 </div>

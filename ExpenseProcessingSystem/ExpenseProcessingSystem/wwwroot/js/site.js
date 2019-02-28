@@ -26,13 +26,13 @@ $(document).ready(function () {
     }, 1);
     /*//////////////////////////////////////////////////////////////////
     [ Modal ]*/
-    $('#bm a').click(function () {
-        //var h = $(window).height();
-        //this..attr("href", "/Home/BM/"+h);
-        //$("#clientScreenWidth").val($(window).width());
-        //$("#clientScreenHeight").val($(window).height());
-        //sessionStorage.setItem("clientScreenHeight", $(window).height());
-    });
+    //$('#bm a').click(function () {
+    //    //var h = $(window).height();
+    //    //this..attr("href", "/Home/BM/"+h);
+    //    //$("#clientScreenWidth").val($(window).width());
+    //    //$("#clientScreenHeight").val($(window).height());
+    //    //sessionStorage.setItem("clientScreenHeight", $(window).height());
+    //});
 
     /*//////////////////////////////////////////////////////////////////
     [ Pagination - Number Input]*/
@@ -66,6 +66,60 @@ $(document).ready(function () {
         $('#search-frm').submit();
     });
 
+    /*//////////////////////////////////////////////////////////////////
+    [ UM ]*/
+    var rows = $('#um-tbl tbody tr');
+    rows.on('click', function(e) {
+        /* Get current row */
+        var row = $(this);
+        /* Check if 'Ctrl', 'cmd' or 'Shift' keyboard key was pressed
+         * 'Ctrl' => is represented by 'e.ctrlKey' or 'e.metaKey'
+         * 'Shift' => is represented by 'e.shiftKey' */
+        if ((e.ctrlKey || e.metaKey) || e.shiftKey) {
+            /* If pressed highlight the other row that was clicked */
+            //row.addClass('highlight');
+        } else {
+            var name = $(row).children(":eq(1)").text().split(', ');
+
+            $('#NewAcc_Acc_UserName').val($(row).children(":first").text());
+            $('#NewAcc_Acc_FName').val(name[1]);
+            $('#NewAcc_Acc_LName').val(name[0]);
+            $('#NewAcc_Acc_DeptID').val($(row).children(":eq(2)").text());
+            $('#NewAcc_Acc_Email').val($(row).children(":eq(4)").text());
+            $('#NewAcc_Acc_Role').val($(row).children(":eq(3)").text());
+            $('#NewAcc_Acc_UserID').val(parseInt($(row).children(":eq(12)").val())); 
+            $('#NewAcc_Acc_Comment').val($(row).children(":eq(5)").text());
+            $('#NewAcc_Acc_InUse').prop('checked', ($(row).children(":eq(6)").find('input').is(":checked")) ? true : false);
+           
+            /* Otherwise just highlight one row and clean others */
+            rows.removeClass('highlight');
+            row.addClass('highlight');
+        }
+        /* This 'event' is used just to avoid that the table text 
+         * gets selected (just for styling). 
+         * For ex., when pressing 'Shift' keyboard key and clicking 
+         * (without this 'event') the text of the 'table' will be selected.
+         * You can remove it if you want, I just tested this in 
+         * Chrome v30.0.1599.69 */
+        $(document).bind('selectstart dragstart', function (e) {
+            e.preventDefault(); return false;
+        });
+        
+        $('#clear-btn').click(function (e) {
+            e.stopImmediatePropagation();
+            $('#NewAcc_Acc_UserName').val("");
+            $('#NewAcc_Acc_FName').val("");
+            $('#NewAcc_Acc_LName').val("");
+            $('#NewAcc_Acc_DeptID').val("");
+            $('#NewAcc_Acc_Email').val("");
+            $('#NewAcc_Acc_Role').val("");
+            $('#NewAcc_Acc_UserID').val("");
+            $('#NewAcc_Acc_Comment').val("");
+            $('#NewAcc_Acc_InUse').prop('checked', false);
+            rows.removeClass('highlight');
+            return false;
+        });
+    });
     /*//////////////////////////////////////////////////////////////////
     [ Tabs ]*/
 

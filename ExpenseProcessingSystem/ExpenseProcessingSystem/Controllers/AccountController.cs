@@ -55,12 +55,15 @@ namespace ExpenseProcessingSystem.Controllers
         public ActionResult Login(LoginViewModel model)
         {
             var acc = _context.Account.Where(x => x.Acc_UserName == model.Acc_UserName).Select(x => x).FirstOrDefault();
-            if (CryptoTools.getHashPasswd("PLACEHOLDER", model.Acc_UserName, model.Acc_Password) == acc.Acc_Password)
-            {
-                Log.Information("User Logged In");
-                //SetSession Info
-                _session.SetString("UserID", acc.Acc_UserID.ToString());
-                return RedirectToAction("Index", "Home");
+            if (acc != null){
+                if (CryptoTools.getHashPasswd("PLACEHOLDER", model.Acc_UserName, model.Acc_Password) == acc.Acc_Password)
+                {
+                    Log.Information("User Logged In");
+                    //SetSession Info
+                    _session.SetString("UserID", acc.Acc_UserID.ToString());
+                    return RedirectToAction("Index", "Home");
+                }
+                return View(model);
             }
             else
             {

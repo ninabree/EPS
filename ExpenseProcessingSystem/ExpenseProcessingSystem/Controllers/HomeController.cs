@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-//using System.Data.Entity;
+using System.Collections.Generic; 
 using System.Globalization;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Models;
+using ExpenseProcessingSystem.Services;
 using ExpenseProcessingSystem.ViewModels;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -21,11 +18,19 @@ namespace ExpenseProcessingSystem.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly EPSDbContext _context;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
+        private HomeService _service;
+        //public ImportModelStateFromTempData _importTempDataService;
+        //private ExportModelStateToTempData _exportTempDataService;
+
         public HomeController(IHttpContextAccessor httpContextAccessor, EPSDbContext context)
         {
             _httpContextAccessor = httpContextAccessor;
             _context = context;
+            _service = new HomeService(_httpContextAccessor, _context, this.ModelState);
+            //_importTempDataService = new ImportModelStateFromTempData(this.ModelState, this.TempData);
+            //_exportTempDataService = new ExportModelStateToTempData(this.ModelState, this.TempData);
         }
+
         public IActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
             return View();
@@ -103,9 +108,41 @@ namespace ExpenseProcessingSystem.Controllers
             //pagination
             return View(PaginatedList<BMViewModel>.CreateAsync(bm.AsNoTracking(), page ?? 1, pageSize));
         }
+        [ImportModelState]
         public IActionResult UM()
         {
-            return View();
+            List<AccountViewModel> vmList = new List<AccountViewModel>();
+            _context.Account.ToList().ForEach(x => {
+                AccountViewModel vm = new AccountViewModel
+                {
+                    Acc_UserID = x.Acc_UserID,
+                    Acc_UserName = x.Acc_UserName,
+                    Acc_FName = x.Acc_FName,
+                    Acc_LName = x.Acc_LName,
+                    Acc_DeptID = x.Acc_DeptID,
+                    Acc_Email = x.Acc_Email,
+                    Acc_Role = x.Acc_Role,
+                    Acc_InUse = x.Acc_InUse,
+                    Acc_Comment = x.Acc_Comment,
+                    Acc_Creator_ID = x.Acc_Creator_ID,
+                    Acc_Approver_ID = x.Acc_Approver_ID,
+                    Acc_Created_Date = x.Acc_Created_Date,
+                    Acc_Last_Updated = x.Acc_Last_Updated,
+                    Acc_Status = x.Acc_Status
+                };
+                vmList.Add(vm);
+            });
+            UserManagementViewModel mod = new UserManagementViewModel
+            {
+                NewAcc = new AccountViewModel(),
+                AccList = vmList
+            };
+            //ModelState errors not kept when redirected
+            if (ModelState.IsValid)
+            {
+
+            }
+            return View(mod);
         }
         public IActionResult Entry_CV()
         {
@@ -142,6 +179,7 @@ namespace ExpenseProcessingSystem.Controllers
 
         //------------------------------------------------------------------
         //CRUD
+        //PAYEE
         [HttpPost]
         public IActionResult AddPayee(NewPayeeListViewModel model)
         {
@@ -241,6 +279,7 @@ namespace ExpenseProcessingSystem.Controllers
 
             return RedirectToAction("DM", "Home");
         }
+        //DEPT
         [HttpPost]
         public IActionResult AddDept(NewDeptListViewModel model)
         {
@@ -334,7 +373,25 @@ namespace ExpenseProcessingSystem.Controllers
 
             return RedirectToAction("DM", "Home");
         }
+        //USER
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult AddEditUser(UserManagementViewModel model)
+        {
+            var userId = HttpContext.Session.GetString("UserID");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.addUser(model, userId);
+            }
+            
 
+            return RedirectToAction("UM", "Home");
+        }
+        //MISC
         public void CheckScreenRes()
         {
             //int h = Screen.AllScreens.GetLowerBound.height;

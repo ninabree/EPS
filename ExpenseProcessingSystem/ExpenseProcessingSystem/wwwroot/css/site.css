@@ -226,9 +226,9 @@ iframe {
 
 /*//////////////////////////////////////////////////////////////////
 [ Validation Message ]*/
-.input-validation-error.input100 {
+/*.input-validation-error.input100 {
     background-color: #ff000052;
-}
+}*/
 /*//////////////////////////////////////////////////////////////////
 [ Utility ]*/
 .txt1 {
@@ -305,7 +305,7 @@ iframe {
     background: #fff;
 }
 
-.form-login {
+.form-login{
     width: 320px;
     align-content: center;
     background: #fff;
@@ -314,7 +314,6 @@ iframe {
     border: 1px solid #0A1B81;
     text-align: center;
 }
-
     .form-login img {
         width: 100%;
         padding-top: 40%
@@ -435,7 +434,7 @@ ul#tabs, ul#entity-tabs {
 
             ul#tabs li a.selected, ul#entity-tabs li a.selected {
                 font-size: 13px;
-                color: #677e98;
+                color: #1f262e;
                 background-color: #f2f2f2;
                 font-weight: bold;
                 padding: 0.7em 0.7em 0.38em 0.7em;
@@ -450,7 +449,7 @@ div.tabContent {
     min-height: 75vh;
     height: auto;
     background-color: #f2f2f2;
-    color: #677f98;
+    color: #1f262e;
 }
 
     div.tabContent > div.tabContent {
@@ -583,6 +582,25 @@ div.tabContent {
             padding: 5px 5px;
             font-family: HelveticaNeueBold;
         }
+/*---------------------------------------
+    [Tab Content - User Management]*/
+tr {
+    cursor: default;
+}
+.highlight {
+    background-color: #1f2a6b !important;
+    color: #fff;
+}
+/*//////////////////////////////////////////////////////////////////
+[ Validation Summary Message ]*/
+div[aria-describedby=validationSummary] {
+    left: 40.8%;
+    top: 15%;
+}
+#validationSummary {
+    /*position:center;*/
+    color: red;
+}
 /*//////////////////////////////////////////////////////////////////
 [ Modal ]*/
 .modal-header, .modal-body, .modal-footer {

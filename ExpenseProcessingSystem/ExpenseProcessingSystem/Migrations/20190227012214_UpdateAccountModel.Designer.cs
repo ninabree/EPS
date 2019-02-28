@@ -4,14 +4,16 @@ using ExpenseProcessingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    partial class EPSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190227012214_UpdateAccountModel")]
+    partial class UpdateAccountModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,13 +27,7 @@ namespace ExpenseProcessingSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Acc_Approver_ID");
-
                     b.Property<string>("Acc_Comment");
-
-                    b.Property<DateTime>("Acc_Created_Date");
-
-                    b.Property<int>("Acc_Creator_ID");
 
                     b.Property<int>("Acc_DeptID");
 
@@ -43,13 +39,9 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Acc_LName");
 
-                    b.Property<DateTime>("Acc_Last_Updated");
-
                     b.Property<string>("Acc_Password");
 
                     b.Property<string>("Acc_Role");
-
-                    b.Property<string>("Acc_Status");
 
                     b.Property<string>("Acc_UserName");
 

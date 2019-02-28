@@ -3,62 +3,58 @@
     ViewData["Title"] = "UM";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@using ExpenseProcessingSystem.ViewModels
+@model UserManagementViewModel
 <div>
-    <table class="table">
-        <tr>
-            <td>
-                <p>User ID:</p> @*change to label for when model is avail*@
-            </td>
-            <td><input class="input" /></td>
-            <td>
-                <p>Email:</p> @*change to label for when model is avail*@
-            </td>
-            <td><input class="input" /></td>
-            <td>
-                <p>Password:</p> @*change to label for when model is avail*@
-            </td>
-            <td><input type="password" class="input" /></td>
-        </tr>
+    @using (Html.BeginForm("AddEditUser", "Home", FormMethod.Post, new { @class = "validate-form", @id = "tsForm" }))
+    {
+        <table class="table">
+            <tr>
+                <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.Acc_UserName)</td>
+                <td class="p-r-50">@Html.TextBoxFor(item => item.NewAcc.Acc_UserName, new { @class = "w-full input" })</td>
+                <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.Acc_Email)</td>
+                <td class="p-r-50">@Html.TextBoxFor(item => item.NewAcc.Acc_Email, new { @class = "w-full input" })</td>
+                <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.Acc_Password)</td>
+                <td class="p-r-50">@Html.TextBoxFor(item => item.NewAcc.Acc_Password, new { @class = "w-full input" })</td>
+            </tr>
 
-        <tr>
-            <td>
-                <p>Name:</p> @*change to label for when model is avail*@
-            </td>
-            <td><input class="input" /></td>
-            <td>
-                <p>Role:</p> @*change to label for when model is avail*@
-            </td>
-            <td><input class="input" /></td>
-            <td rowspan="2">
-                <p>Comments:</p> @*change to label for when model is avail*@
-            </td>
-            <td rowspan="2"><textarea class="input" style="width: 90%;height: 100%;"> </textarea></td>
-        </tr>
-        <tr>
-            <td>
-                <p>Department:</p> @*change to label for when model is avail*@
-            </td>
-            <td><input class="input" /></td>
-            <td>
-                <p>In Use:</p> @*change to label for when model is avail*@
-            </td>
-            <td><input class="checkbox" type="checkbox" /></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><button class="btn tbl-btn">Save/Update</button><button class="btn tbl-btn">Clear</button></td>
-        </tr>
-    </table>
+            <tr>
+                <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.Acc_FName)</td>
+                <td class="p-r-50">
+                    <div class="dis-inline-block w-49">@Html.TextBoxFor(item => item.NewAcc.Acc_FName, new { @class = "w-full input" })</div>
+                    <div class="dis-inline-block w-49">@Html.TextBoxFor(item => item.NewAcc.Acc_LName, new { @class = "w-full input" })</div>
+                </td>
+                <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.Acc_Role)</td>
+                <td class="p-r-50">@Html.TextBoxFor(item => item.NewAcc.Acc_Role, new { @class = "w-full input" })</td>
+                <td rowspan="2" style="width: 7%">@Html.LabelFor(item => item.NewAcc.Acc_Comment)</td>
+                <td rowspan="2" class="p-r-50">@Html.TextAreaFor(item => item.NewAcc.Acc_Comment, new { @class = "w-full h-full input" })</td>
+            </tr>
+            <tr>
+                <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.Acc_DeptID)</td>
+                <td class="p-r-50">@Html.TextBoxFor(item => item.NewAcc.Acc_DeptID, new { @class = "w-full input" })</td>
+                <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.Acc_InUse)</td>
+                <td style="text-align: left">@Html.CheckBoxFor(item => item.NewAcc.Acc_InUse, new { @class = "fs-10" })</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>@Html.TextBoxFor(item => item.NewAcc.Acc_UserID, new { @class = "hidden" })</td>
+                <td><button type="submit" class="btn tbl-btn">Save/Update</button><button id="clear-btn" class="btn tbl-btn">Clear</button></td>
+            </tr>
+        </table>
+    }
+</div>
+@*validation message*@
+<div id="ValidationSummary" style="display:none" class="">
+    @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
 </div>
 <div id="UM_tbl">
     <div id="tbl-lbl">
         <div class="dis-inline-block"><p>Users Master Data:</p></div>
     </div>
-    <table class="table table-bordered table-striped">
+    <table id="um-tbl" class="table table-bordered table-striped">
         <thead>
             <tr>
                 <td>ID</td>
@@ -68,10 +64,35 @@
                 <td>Email</td>
                 <td>Comment</td>
                 <td>In-Use</td>
-                <td>Update Date</td>
+                <td>Created By</td>
+                <td>Updated By</td>
+                <td>Created Date</td>
+                <td>Last Update Date</td>
                 <td>Status</td>
             </tr>
         </thead>
-        <tbody></tbody>
+        <tbody>
+            @if (Model.AccList != null)
+            {
+                @foreach (var item in Model.AccList)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Acc_UserName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Acc_LName), @Html.DisplayFor(modelItem => item.Acc_FName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Acc_DeptID)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Acc_Role)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Acc_Email)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Acc_Comment)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Acc_InUse)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Acc_Creator_ID)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Acc_Approver_ID)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Acc_Created_Date)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Acc_Last_Updated)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Acc_Status)</td>
+                        @Html.HiddenFor(modelItem => item.Acc_UserID)
+                    </tr>
+                }
+            }
+        </tbody>
     </table>
 </div>

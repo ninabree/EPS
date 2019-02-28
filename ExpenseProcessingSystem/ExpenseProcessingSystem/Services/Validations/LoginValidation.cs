@@ -15,10 +15,10 @@ namespace ExpenseProcessingSystem.Services.Validations
             try
             {
                 var data = (LoginViewModel) validationContext.ObjectInstance;
-                if(string.IsNullOrEmpty(data.Acc_UserName))
-                {
-                    return new ValidationResult("User name is empty");
-                }
+                //if(string.IsNullOrEmpty(data.Acc_UserName))
+                //{
+                //    return new ValidationResult("User name is empty");
+                //}
                 //if(data.Acc_UserName.Any(char.IsDigit))
                 //{
                 //    return new ValidationResult("User name contains numbers");
@@ -44,15 +44,15 @@ namespace ExpenseProcessingSystem.Services.Validations
         {
             try
             {
-                var data = (LoginViewModel)validationContext.ObjectInstance;
-                if (string.IsNullOrEmpty(data.Acc_Password))
-                {
-                    return new ValidationResult("Password is empty");
-                }
-                if (data.Acc_Password.Contains("123"))
-                {
-                    return new ValidationResult("Password contains 123");
-                }
+                //var data = (LoginViewModel)validationContext.ObjectInstance;
+                //if (string.IsNullOrEmpty(data.Acc_Password))
+                //{
+                //    return new ValidationResult("Password is empty");
+                //}
+                //if (data.Acc_Password.Contains("123"))
+                //{
+                //    return new ValidationResult("Password contains 123");
+                //}
                 return ValidationResult.Success;
             }
             catch (Exception ex)

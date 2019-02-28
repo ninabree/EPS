@@ -6,18 +6,21 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ExpenseProcessingSystem.Models
+namespace ExpenseProcessingSystem.ViewModels
 {
-    public class AccountModel
+    public class AccountViewModel
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Display(Name = "Emp ID")]
+        [Display(Name = "Employee ID")]
+        [CommonValidations]
         public int Acc_UserID { get; set; }
 
         [Display(Name = "Username")]
+        [CommonValidations]
         public string Acc_UserName { get; set; }
 
         [Display(Name = "Employee Name")]
+        [CommonValidations]
         public string Acc_FName { get; set; }
         public string Acc_LName { get; set; }
 
@@ -26,12 +29,15 @@ namespace ExpenseProcessingSystem.Models
         public string Acc_Password { get; set; }
 
         [Display(Name = "Department")]
+        [CommonValidations]
         public int Acc_DeptID { get; set; }
 
         [Display(Name = "Email")]
+        [CommonValidations]
         public string Acc_Email { get; set; }
 
         [Display(Name = "Role")]
+        [CommonValidations]
         public string Acc_Role { get; set; }
 
         [Display(Name = "Comment")]
