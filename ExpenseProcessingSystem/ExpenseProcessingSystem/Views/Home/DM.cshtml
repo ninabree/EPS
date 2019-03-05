@@ -27,13 +27,17 @@
                     <select name="colName" id="dm-col" style="width: 20% !important;"></select>
                     <input id="search-txt" type="text" name="SearchString" value="@ViewData["currentFilter"]" />
                     <input id="filterPartialName" name="partialName" value="DMPartial_Payee" type="hidden" />
-                    <input type="submit" value="Search" class="btn btn-default" id="search-btn"/>
+                    <input type="submit" value="Search" class="btn btn-default" id="search-btn" />
                     <input type="button" value="Back to Full List" id="full-list-btn" class="btn btn-default" />
                 </p>
             </div>
         </form>
     </div>
     <div id="partial-container">
+        @*validation message*@
+        <div id="ValidationSummary" style="display:none" class="">
+            @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
+        </div>
     </div>
 </div>
 <environment include="Development">

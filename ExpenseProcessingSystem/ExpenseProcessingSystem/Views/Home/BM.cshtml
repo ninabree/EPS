@@ -56,5 +56,9 @@
             <div class="tbl-btn">Update Budget</div>
         </div>
         @Html.Partial("ModalPartial")
+        @*validation message*@
+        <div id="ValidationSummary" style="display:none" class="">
+            @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
+        </div>
     </div>
 </div>

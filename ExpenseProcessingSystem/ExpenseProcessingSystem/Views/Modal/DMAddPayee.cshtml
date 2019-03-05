@@ -19,11 +19,11 @@
                 <th></th>
             </tr>
             <tr id="NewPayee-Tr-0">
-                <td>@Html.TextBoxFor(m => m.NewPayeeVM[0].Payee_Name)</td>
-                <td>@Html.TextBoxFor(m => m.NewPayeeVM[0].Payee_TIN)</td>
-                <td>@Html.TextBoxFor(m => m.NewPayeeVM[0].Payee_Address)</td>
-                <td>@Html.TextBoxFor(m => m.NewPayeeVM[0].Payee_Type)</td>
-                <td>@Html.TextBoxFor(m => m.NewPayeeVM[0].Payee_No)</td>
+                <td>@Html.TextBoxFor(m => m.NewPayeeVM[0].Payee_Name, new { @class="w-full"})</td>
+                <td>@Html.TextBoxFor(m => m.NewPayeeVM[0].Payee_TIN, new { @class = "w-full" })</td>
+                <td>@Html.TextBoxFor(m => m.NewPayeeVM[0].Payee_Address, new { @class = "w-full" })</td>
+                <td>@Html.TextBoxFor(m => m.NewPayeeVM[0].Payee_Type, new { @class = "w-full" })</td>
+                <td>@Html.TextBoxFor(m => m.NewPayeeVM[0].Payee_No, new { @class = "w-full" })</td>
                 <td>
                     <span class="table-remove glyphicon glyphicon-remove"></span>
                 </td>

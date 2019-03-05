@@ -6,11 +6,11 @@ namespace ExpenseProcessingSystem.ViewModels
     public class LoginViewModel
     {
         [Display(Name = "User Name")]
-        [/*UserNameValidation, */CommonValidations]
+        [/*UserNameValidation, */NotNullValidations]
         public string Acc_UserName { get; set; }
 
         [Display(Name = "Password")]
-        [/*PasswordValidation, */CommonValidations]
+        [PasswordValidation, NotNullValidations]
         [DataType(DataType.Password)]
         public string Acc_Password { get; set; }
     }

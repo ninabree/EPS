@@ -15,7 +15,8 @@
         ModalPopup('Modal', 'BudgetAdjustmentModal', 'Budget Adjustment');
     });
 
-    $("#add_payee").click(function () {
+    $("#add_payee").click(function (e) {
+        e.stopImmediatePropagation();
         //controller name, method name, modal header
         ModalPopup('Modal', 'DMAddPayee', 'Add New Record/s');
     });
@@ -35,7 +36,8 @@
         }
     });
 
-    $("#delete_payee").click(function () {
+    $("#delete_payee").click(function (e) {
+        e.stopImmediatePropagation();
         var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
         if (!(chkCount <= 0)) {
             var idsArr = Array();
@@ -49,7 +51,8 @@
         }
     });
 
-    $("#add_dept").click(function () {
+    $("#add_dept").click(function (e) {
+        e.stopImmediatePropagation();
         //controller name, method name, modal header
         ModalPopup('Modal', 'DMAddDept', 'Add New Record/s');
     });
@@ -118,8 +121,7 @@
         var modalDivBody = $('.modal-body');
         var modalDivHeader = $('.modal-header');
         var modalDivFooter = $('.modal-footer');
-
-        var word = "Add";
+        
         $.ajax({
             url: "RedirectCont2/",
             type: "POST",

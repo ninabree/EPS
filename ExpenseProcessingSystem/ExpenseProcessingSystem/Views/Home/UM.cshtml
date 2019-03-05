@@ -15,7 +15,7 @@
                 <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.Acc_Email)</td>
                 <td class="p-r-50">@Html.TextBoxFor(item => item.NewAcc.Acc_Email, new { @class = "w-full input" })</td>
                 <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.Acc_Password)</td>
-                <td class="p-r-50">@Html.TextBoxFor(item => item.NewAcc.Acc_Password, new { @class = "w-full input" })</td>
+                <td class="p-r-50">@Html.PasswordFor(item => item.NewAcc.Acc_Password, new { @class = "w-full input" })</td>
             </tr>
 
             <tr>
@@ -25,13 +25,17 @@
                     <div class="dis-inline-block w-49">@Html.TextBoxFor(item => item.NewAcc.Acc_LName, new { @class = "w-full input" })</div>
                 </td>
                 <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.Acc_Role)</td>
-                <td class="p-r-50">@Html.TextBoxFor(item => item.NewAcc.Acc_Role, new { @class = "w-full input" })</td>
+                <td class="p-r-50">@Html.DropDownListFor(item => item.NewAcc.Acc_Role, ViewData["list"] as SelectList, new { @class = "w-full input" })</td>
                 <td rowspan="2" style="width: 7%">@Html.LabelFor(item => item.NewAcc.Acc_Comment)</td>
                 <td rowspan="2" class="p-r-50">@Html.TextAreaFor(item => item.NewAcc.Acc_Comment, new { @class = "w-full h-full input" })</td>
             </tr>
             <tr>
                 <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.Acc_DeptID)</td>
-                <td class="p-r-50">@Html.TextBoxFor(item => item.NewAcc.Acc_DeptID, new { @class = "w-full input" })</td>
+                <td class="p-r-50">
+                    @Html.DropDownListFor(item => item.NewAcc.Acc_DeptID,
+                                     new SelectList(Model.DeptList, "Dept_ID", "Dept_Name"),
+                                     new { @class = "w-full input" })
+                            </td>
                 <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.Acc_InUse)</td>
                 <td style="text-align: left">@Html.CheckBoxFor(item => item.NewAcc.Acc_InUse, new { @class = "fs-10" })</td>
             </tr>
@@ -79,13 +83,13 @@
                     <tr>
                         <td>@Html.DisplayFor(modelItem => item.Acc_UserName)</td>
                         <td>@Html.DisplayFor(modelItem => item.Acc_LName), @Html.DisplayFor(modelItem => item.Acc_FName)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Acc_DeptID)</td>
+                        <td id=@item.Acc_Dept_ID>@Html.DisplayFor(modelItem => item.Acc_Dept_Name)</td>
                         <td>@Html.DisplayFor(modelItem => item.Acc_Role)</td>
                         <td>@Html.DisplayFor(modelItem => item.Acc_Email)</td>
                         <td>@Html.DisplayFor(modelItem => item.Acc_Comment)</td>
                         <td>@Html.DisplayFor(modelItem => item.Acc_InUse)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Acc_Creator_ID)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Acc_Approver_ID)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Acc_Creator_Name)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Acc_Approver_Name)</td>
                         <td>@Html.DisplayFor(modelItem => item.Acc_Created_Date)</td>
                         <td>@Html.DisplayFor(modelItem => item.Acc_Last_Updated)</td>
                         <td>@Html.DisplayFor(modelItem => item.Acc_Status)</td>
@@ -96,3 +100,26 @@
         </tbody>
     </table>
 </div>
+<environment include="Development">
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+</environment>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var rows = $('#um-tbl tbody tr');
+        $('#clear-btn').click(function (e) {
+            e.stopImmediatePropagation();
+            $('#NewAcc_Acc_UserName').val("");
+            $('#NewAcc_Acc_FName').val("");
+            $('#NewAcc_Acc_LName').val("");
+            $('#NewAcc_Acc_DeptID').val("");
+            $('#NewAcc_Acc_Email').val("");
+            $('#NewAcc_Acc_Role').val("");
+            $('#NewAcc_Acc_UserID').val("");
+            $('#NewAcc_Acc_Comment').val("");
+            $('#NewAcc_Acc_InUse').prop('checked', false);
+            $('#validationSummary').empty();
+            rows.removeClass('highlight');
+            return false;
+        });
+    });
+</script>

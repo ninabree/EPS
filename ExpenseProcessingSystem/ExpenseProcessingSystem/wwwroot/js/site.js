@@ -9,7 +9,9 @@ $(document).ready(function () {
     var $pageInput = $('#paginationInput');
     $pageInput.data("value", $pageInput.val());
 
-
+    $('#um').find('a').click(function () {
+        ClearValidations();
+    });
     /*//////////////////////////////////////////////////////////////////
     [ Login ]*/
     $('#Acc_UserName').change(function () {
@@ -68,6 +70,8 @@ $(document).ready(function () {
 
     /*//////////////////////////////////////////////////////////////////
     [ UM ]*/
+
+    //to highlight a table row in UM
     var rows = $('#um-tbl tbody tr');
     rows.on('click', function(e) {
         /* Get current row */
@@ -84,7 +88,7 @@ $(document).ready(function () {
             $('#NewAcc_Acc_UserName').val($(row).children(":first").text());
             $('#NewAcc_Acc_FName').val(name[1]);
             $('#NewAcc_Acc_LName').val(name[0]);
-            $('#NewAcc_Acc_DeptID').val($(row).children(":eq(2)").text());
+            $('#NewAcc_Acc_DeptID').val($(row).children(":eq(2)").attr('id'));
             $('#NewAcc_Acc_Email').val($(row).children(":eq(4)").text());
             $('#NewAcc_Acc_Role').val($(row).children(":eq(3)").text());
             $('#NewAcc_Acc_UserID').val(parseInt($(row).children(":eq(12)").val())); 
@@ -96,11 +100,7 @@ $(document).ready(function () {
             row.addClass('highlight');
         }
         /* This 'event' is used just to avoid that the table text 
-         * gets selected (just for styling). 
-         * For ex., when pressing 'Shift' keyboard key and clicking 
-         * (without this 'event') the text of the 'table' will be selected.
-         * You can remove it if you want, I just tested this in 
-         * Chrome v30.0.1599.69 */
+         * gets selected (just for styling). */
         $(document).bind('selectstart dragstart', function (e) {
             e.preventDefault(); return false;
         });
@@ -110,12 +110,13 @@ $(document).ready(function () {
             $('#NewAcc_Acc_UserName').val("");
             $('#NewAcc_Acc_FName').val("");
             $('#NewAcc_Acc_LName').val("");
-            $('#NewAcc_Acc_DeptID').val("");
+            $('#NewAcc_Acc_DeptID').val("0");
             $('#NewAcc_Acc_Email').val("");
             $('#NewAcc_Acc_Role').val("");
             $('#NewAcc_Acc_UserID').val("");
             $('#NewAcc_Acc_Comment').val("");
             $('#NewAcc_Acc_InUse').prop('checked', false);
+            $('#validationSummary').empty();
             rows.removeClass('highlight');
             return false;
         });
@@ -248,4 +249,8 @@ $(document).ready(function () {
             $('.PW').show();
         }
     }
+    //clear validation onload of User Management
+    function ClearValidations() {
+        $('#validationSummary').empty();
+    };
 });

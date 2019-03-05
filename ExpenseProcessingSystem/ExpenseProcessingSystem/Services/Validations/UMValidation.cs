@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace ExpenseProcessingSystem.Services.Validations
@@ -15,67 +16,16 @@ namespace ExpenseProcessingSystem.Services.Validations
             try
             {
                 var data = (AccountViewModel)validationContext.ObjectInstance;
-                if (string.IsNullOrEmpty(data.Acc_UserName))
+                //(?=.{8,20}$) username is 8-20 characters long / [a-zA-Z0-9._] allowed characters
+                //var regex = @"^{8,20}$";
+                if (!string.IsNullOrEmpty(data.Acc_UserName))
                 {
-                    return new ValidationResult("User name is empty");
-                }
-                return ValidationResult.Success;
-            }
-            catch (Exception ex)
-            {
-                //sample fatal error log
-                Log.Fatal(ex, "User: {user}, StackTrace : {trace}, Error Message: {message}", "[UserID]", ex.StackTrace, ex.Message);
-                return new ValidationResult("Invalid input");
-            }
-            finally
-            {
-                Log.CloseAndFlush();
-            }
-        }
-    }
-    public class UMFNameValidation : ValidationAttribute
-    {
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
-        {
-            try
-            {
-                var data = (AccountViewModel)validationContext.ObjectInstance;
-                if (string.IsNullOrEmpty(data.Acc_FName))
-                {
-                    return new ValidationResult("First name is empty");
-                }
-                if (data.Acc_UserName.Any(char.IsDigit))
-                {
-                    return new ValidationResult("First name contains numbers");
-                }
-                return ValidationResult.Success;
-            }
-            catch (Exception ex)
-            {
-                //sample fatal error log
-                Log.Fatal(ex, "User: {user}, StackTrace : {trace}, Error Message: {message}", "[UserID]", ex.StackTrace, ex.Message);
-                return new ValidationResult("Invalid input");
-            }
-            finally
-            {
-                Log.CloseAndFlush();
-            }
-        }
-    }
-    public class UMLameValidation : ValidationAttribute
-    {
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
-        {
-            try
-            {
-                var data = (AccountViewModel)validationContext.ObjectInstance;
-                if (string.IsNullOrEmpty(data.Acc_FName))
-                {
-                    return new ValidationResult("First name is empty");
-                }
-                if (data.Acc_UserName.Any(char.IsDigit))
-                {
-                    return new ValidationResult("First name contains numbers");
+                    //var match = Regex.Match(data.Acc_UserName, regex, RegexOptions.IgnoreCase);
+                    //if (!match.Success)
+                    if(data.Acc_UserName.Length < 8 || data.Acc_UserName.Length > 20)
+                    {
+                        return new ValidationResult("Sorry your username can't be stored on our system");
+                    }
                 }
                 return ValidationResult.Success;
             }

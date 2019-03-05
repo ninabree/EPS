@@ -8,6 +8,7 @@ using ExpenseProcessingSystem.Services;
 using ExpenseProcessingSystem.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseProcessingSystem.Controllers
@@ -19,16 +20,12 @@ namespace ExpenseProcessingSystem.Controllers
         private readonly EPSDbContext _context;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
         private HomeService _service;
-        //public ImportModelStateFromTempData _importTempDataService;
-        //private ExportModelStateToTempData _exportTempDataService;
 
         public HomeController(IHttpContextAccessor httpContextAccessor, EPSDbContext context)
         {
             _httpContextAccessor = httpContextAccessor;
             _context = context;
             _service = new HomeService(_httpContextAccessor, _context, this.ModelState);
-            //_importTempDataService = new ImportModelStateFromTempData(this.ModelState, this.TempData);
-            //_exportTempDataService = new ExportModelStateToTempData(this.ModelState, this.TempData);
         }
 
         public IActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
@@ -43,6 +40,7 @@ namespace ExpenseProcessingSystem.Controllers
         {
             return View();
         }
+        [ImportModelState]
         public IActionResult DM(string sortOrder, string currentFilter, string tblName, string colName, string searchString, int? page, string partialName)
         {
             ViewData["sortOrder"] = sortOrder;
@@ -51,13 +49,14 @@ namespace ExpenseProcessingSystem.Controllers
             ViewData["colName"] = colName;
             ViewData["searchString"] = searchString;
             ViewData["page"] = page;
-            ViewData["partialName"] = (partialName == null) ? "DMPartial_Payee" : partialName;
+            ViewData["partialName"] = partialName ?? "DMPartial_Payee";
             return View();
         }
         public IActionResult Report()
         {
             return View();
         }
+        [ImportModelState]
         public IActionResult BM(string sortOrder, string currentFilter, string searchString, int? page)
         {
             var userId = HttpContext.Session.GetString("UserID");
@@ -111,37 +110,91 @@ namespace ExpenseProcessingSystem.Controllers
         [ImportModelState]
         public IActionResult UM()
         {
-            List<AccountViewModel> vmList = new List<AccountViewModel>();
-            _context.Account.ToList().ForEach(x => {
-                AccountViewModel vm = new AccountViewModel
+            var userId = HttpContext.Session.GetString("UserID");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            List<UserViewModel> vmList = new List<UserViewModel>();
+            //get all accounts
+            var accs = (from a in _context.Account
+                        join d in _context.DMDept on a.Acc_DeptID equals d.Dept_ID
+                        join b in _context.Account on a.Acc_Creator_ID equals b.Acc_UserID
+                        let CreatorName = b.Acc_LName + ", " + b.Acc_FName
+                        select new { a.Acc_UserID, a.Acc_UserName, a.Acc_FName, a.Acc_LName, d.Dept_Name, a.Acc_DeptID, a.Acc_Email, a.Acc_Role,
+                        a.Acc_Comment, a.Acc_InUse, CreatorName, a.Acc_Created_Date, a.Acc_Status}).ToList();
+            //get account approver IDs and dates, not all accounts have this
+            var apprv = (from a in _context.Account
+                         join c in _context.Account on a.Acc_Approver_ID equals c.Acc_UserID
+                         let ApproverName = c.Acc_LName + ", " + c.Acc_FName
+                         select new
+                         {
+                             a.Acc_UserID,
+                             ApproverName,
+                             a.Acc_Last_Updated
+                         }).ToList();
+
+            accs.ForEach(x => {
+                var approver = apprv.Where(a => a.Acc_UserID == x.Acc_UserID).Select(a => a.ApproverName).FirstOrDefault();
+                var apprvDate = apprv.Where(a => a.Acc_UserID == x.Acc_UserID).Select(a => a.Acc_Last_Updated).FirstOrDefault();
+                UserViewModel vm = new UserViewModel
                 {
                     Acc_UserID = x.Acc_UserID,
                     Acc_UserName = x.Acc_UserName,
                     Acc_FName = x.Acc_FName,
                     Acc_LName = x.Acc_LName,
-                    Acc_DeptID = x.Acc_DeptID,
+                    Acc_Dept_ID = x.Acc_DeptID,
+                    Acc_Dept_Name = x.Dept_Name,
                     Acc_Email = x.Acc_Email,
                     Acc_Role = x.Acc_Role,
                     Acc_InUse = x.Acc_InUse,
                     Acc_Comment = x.Acc_Comment,
-                    Acc_Creator_ID = x.Acc_Creator_ID,
-                    Acc_Approver_ID = x.Acc_Approver_ID,
+                    Acc_Creator_Name = x.CreatorName,
+                    Acc_Approver_Name = approver ?? "",
                     Acc_Created_Date = x.Acc_Created_Date,
-                    Acc_Last_Updated = x.Acc_Last_Updated,
+                    Acc_Last_Updated = (apprvDate != null) ? apprvDate : new DateTime(),
                     Acc_Status = x.Acc_Status
                 };
                 vmList.Add(vm);
             });
+            //set static values for Roles
+            var list = new SelectList(new[]
+            {
+                new { ID = "admin", Name = "Admin" },
+                new { ID = "maker", Name = "Maker" },
+                new { ID = "verifier", Name = "Verifier" },
+                new { ID = "approver", Name = "Approver" }
+            },
+            "ID", "Name", 1);
+
+            ViewData["list"] = list;
+
+            List<DMDeptViewModel> deptList = new List<DMDeptViewModel>();
+
+            DMDeptViewModel optionLbl = new DMDeptViewModel
+            {
+                Dept_ID = 0,
+                Dept_Name = "--Select Department--",
+                Dept_Code = "0000"
+            };
+            deptList.Add(optionLbl);
+
+            _context.DMDept.Where(x=>x.Dept_isDeleted == false).ToList().ForEach(x => {
+                DMDeptViewModel vm = new DMDeptViewModel
+                {
+                    Dept_ID = x.Dept_ID,
+                    Dept_Name = x.Dept_Name,
+                    Dept_Code = x.Dept_Code
+                };
+                deptList.Add(vm);
+            });
+
             UserManagementViewModel mod = new UserManagementViewModel
             {
                 NewAcc = new AccountViewModel(),
-                AccList = vmList
+                AccList = vmList,
+                DeptList = deptList
             };
-            //ModelState errors not kept when redirected
-            if (ModelState.IsValid)
-            {
-
-            }
             return View(mod);
         }
         public IActionResult Entry_CV()
@@ -181,6 +234,7 @@ namespace ExpenseProcessingSystem.Controllers
         //CRUD
         //PAYEE
         [HttpPost]
+        [ExportModelState]
         public IActionResult AddPayee(NewPayeeListViewModel model)
         {
             var userId = HttpContext.Session.GetString("UserID");
@@ -188,34 +242,16 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-            List<DMPayeeModel> vmList = new List<DMPayeeModel>();
-            foreach (NewPayeeViewModel dm in model.NewPayeeVM)
-            {
-                DMPayeeModel m = new DMPayeeModel
-                {
-                    Payee_Name = dm.Payee_Name,
-                    Payee_TIN = dm.Payee_TIN,
-                    Payee_Address = dm.Payee_Address,
-                    Payee_Type = dm.Payee_Type,
-                    Payee_No = dm.Payee_No,
-                    Payee_Creator_ID = int.Parse(_session.GetString("UserID")),
-                    Payee_Created_Date = DateTime.Now,
-                    Payee_Last_Updated = DateTime.Now,
-                    Payee_Status = "For Approval"
-                };
-                vmList.Add(m);
-            }
-
             if (ModelState.IsValid)
             {
-                _context.DMPayee.AddRange(vmList);
-                _context.SaveChanges();
+                _service.addPayee(model, userId);
             }
 
-            return RedirectToAction("DM", "Home");
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Payee" });
         }
 
         [HttpPost]
+        [ExportModelState]
         public IActionResult EditPayee(List<DMPayeeViewModel> model)
         {
             var userId = HttpContext.Session.GetString("UserID");
@@ -223,37 +259,16 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-            List<int> intList = model.Select(c => c.Payee_ID).ToList();
-            List<DMPayeeModel> vmList = _context.DMPayee.Where(x => intList.Contains(x.Payee_ID)).ToList();
-
-            vmList.ForEach(dm =>
-            {
-                model.ForEach( m =>
-                {
-                    if (m.Payee_ID == dm.Payee_ID)
-                    {
-                        dm.Payee_Name = m.Payee_Name;
-                        dm.Payee_TIN = m.Payee_TIN;
-                        dm.Payee_Address = m.Payee_Address;
-                        dm.Payee_Type = m.Payee_Type;
-                        dm.Payee_No = m.Payee_No;
-                        dm.Payee_Approver_ID = int.Parse(_session.GetString("UserID"));
-                        dm.Payee_Last_Updated = DateTime.Now;
-                        dm.Payee_Status = "Is Updated";
-                        dm.Payee_isDeleted = false;
-                    }
-                });
-            });
-
             if (ModelState.IsValid)
             {
-                _context.SaveChanges();
+                _service.editPayee(model, userId);
             }
 
-            return RedirectToAction("DM", "Home");
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Payee" });
         }
 
         [HttpPost]
+        [ExportModelState]
         public IActionResult DeletePayee(List<DMPayeeViewModel> model)
         {
             var userId = HttpContext.Session.GetString("UserID");
@@ -261,26 +276,16 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-            List<int> intList = model.Select(c => c.Payee_ID).ToList();
-            List<DMPayeeModel> vmList = _context.DMPayee.Where(x => intList.Contains(x.Payee_ID)).ToList();
-
-            vmList.ForEach(dm =>
-            {
-                dm.Payee_Approver_ID = int.Parse(_session.GetString("UserID"));
-                dm.Payee_Last_Updated = DateTime.Now;
-                dm.Payee_Status = "Is Deleted";
-                dm.Payee_isDeleted = true;
-            });
-
             if (ModelState.IsValid)
             {
-                _context.SaveChanges();
+                _service.deletePayee(model, userId);
             }
 
-            return RedirectToAction("DM", "Home");
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Payee" });
         }
         //DEPT
         [HttpPost]
+        [ExportModelState]
         public IActionResult AddDept(NewDeptListViewModel model)
         {
             var userId = HttpContext.Session.GetString("UserID");
@@ -288,31 +293,16 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-            List<DMDeptModel> vmList = new List<DMDeptModel>();
-            foreach(NewDeptViewModel dm in model.NewDeptVM)
-            {
-                DMDeptModel m = new DMDeptModel
-                {
-                    Dept_Name = dm.Dept_Name,
-                    Dept_Code = dm.Dept_Code,
-                    Dept_Creator_ID = int.Parse(_session.GetString("UserID")),
-                    Dept_Created_Date = DateTime.Now,
-                    Dept_Last_Updated = DateTime.Now,
-                    Dept_Status = "For Approval"
-                };
-                vmList.Add(m);
-            }
-
             if (ModelState.IsValid)
             {
-                _context.DMDept.AddRange(vmList);
-                _context.SaveChanges();
+                _service.addDept(model, userId);
             }
 
-            return RedirectToAction("DM", "Home");
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Dept" });
         }
 
         [HttpPost]
+        [ExportModelState]
         public IActionResult EditDept(List<DMDeptViewModel> model)
         {
             var userId = HttpContext.Session.GetString("UserID");
@@ -320,34 +310,16 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-            List<int> intList = model.Select(c => c.Dept_ID).ToList();
-            List<DMDeptModel> vmList = _context.DMDept.Where(x => intList.Contains(x.Dept_ID)).ToList();
-
-            vmList.ForEach(dm =>
-            {
-                model.ForEach(m =>
-                {
-                    if (m.Dept_ID == dm.Dept_ID)
-                    {
-                        dm.Dept_Name = m.Dept_Name;
-                        dm.Dept_Code = m.Dept_Code;
-                        dm.Dept_Approver_ID = int.Parse(_session.GetString("UserID"));
-                        dm.Dept_Last_Updated = DateTime.Now;
-                        dm.Dept_Status = "Is Updated";
-                        dm.Dept_isDeleted = false;
-                    }
-                });
-            });
-
             if (ModelState.IsValid)
             {
-                _context.SaveChanges();
+                _service.editDept(model, userId);
             }
 
-            return RedirectToAction("DM", "Home");
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Dept" });
         }
 
         [HttpPost]
+        [ExportModelState]
         public IActionResult DeleteDept(List<DMDeptViewModel> model)
         {
             var userId = HttpContext.Session.GetString("UserID");
@@ -355,23 +327,12 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-            List<int> intList = model.Select(c => c.Dept_ID).ToList();
-            List<DMDeptModel> vmList = _context.DMDept.Where(x => intList.Contains(x.Dept_ID)).ToList();
-
-            vmList.ForEach(dm =>
-            {
-                dm.Dept_Approver_ID = int.Parse(_session.GetString("UserID"));
-                dm.Dept_Last_Updated = DateTime.Now;
-                dm.Dept_Status = "Is Deleted";
-                dm.Dept_isDeleted = true;
-            });
-
             if (ModelState.IsValid)
             {
-                _context.SaveChanges();
+                _service.deleteDept(model, userId);
             }
-
-            return RedirectToAction("DM", "Home");
+            
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Dept" });
         }
         //USER
         [HttpPost]

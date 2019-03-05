@@ -8,6 +8,7 @@ namespace ExpenseProcessingSystem.ViewModels
     public class UserManagementViewModel
     {
         public AccountViewModel NewAcc { get; set; }
-         public List<AccountViewModel> AccList = new List<AccountViewModel>();
+        public List<UserViewModel> AccList = new List<UserViewModel>();
+        public List<DMDeptViewModel> DeptList = new List<DMDeptViewModel>();
     }
 }

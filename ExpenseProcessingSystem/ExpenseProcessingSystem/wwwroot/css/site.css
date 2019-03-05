@@ -517,9 +517,8 @@ div.tabContent {
 }
 
 .table > tbody > tr > td, .table > thead > tr > th {
-    padding: 1.5px;
+    padding: 1.5px 1px;
     text-align: left;
-    /*padding-left: 12px;*/
 }
 
 .table > tbody > tr > td {
