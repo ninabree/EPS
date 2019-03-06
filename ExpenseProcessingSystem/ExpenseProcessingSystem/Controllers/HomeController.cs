@@ -1,15 +1,18 @@
 ﻿using System;
-using System.Collections.Generic; 
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Models;
 using ExpenseProcessingSystem.Services;
+using ExpenseProcessingSystem.Services.Excel_Services;
 using ExpenseProcessingSystem.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 
 namespace ExpenseProcessingSystem.Controllers
 {
@@ -20,12 +23,14 @@ namespace ExpenseProcessingSystem.Controllers
         private readonly EPSDbContext _context;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
         private HomeService _service;
+        private ExcelService _excelService;
 
         public HomeController(IHttpContextAccessor httpContextAccessor, EPSDbContext context)
         {
             _httpContextAccessor = httpContextAccessor;
             _context = context;
             _service = new HomeService(_httpContextAccessor, _context, this.ModelState);
+            _excelService = new ExcelService(_httpContextAccessor, _context);
         }
 
         public IActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
@@ -386,6 +391,49 @@ namespace ExpenseProcessingSystem.Controllers
                 bmvmList.Add(bmvm);
             }
             return bmvmList;
+        }
+        public IActionResult Excel()
+        {
+            var userId = HttpContext.Session.GetString("UserID");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            //List<ExcelViewModel> excelList = new List<ExcelViewModel>();
+            ExcelViewModel excelVM = new ExcelViewModel();
+            List<Row> rowList = new List<Row>();
+            DummyData d = new DummyData(_httpContextAccessor, _context);
+            string worksheetName = "Current Payee Information";
+            //get column names in DB table
+            List<string> colHeadrs = typeof(DMPayeeModel).GetProperties()
+                        .Select(property => property.Name)
+                        .ToList();
+
+            //Populate Excel VM
+            d.GetPayeeData().ForEach(x => {
+                Row row = new Row();
+                List<string> rowData = new List<string>
+                {
+                    x.Payee_ID.ToString(),
+                    x.Payee_Name,
+                    x.Payee_TIN,
+                    x.Payee_Address,
+                    x.Payee_Type,
+                    x.Payee_No.ToString(),
+                    x.Payee_Created_Date.ToString("MM/dd/yyyy"),
+                    x.Payee_Creator_ID.ToString(),
+                    x.Payee_Last_Updated.ToString("MM/dd/yyyy"),
+                    x.Payee_Approver_ID.ToString(),
+                    x.Payee_Status,
+                    x.Payee_isDeleted.ToString()
+                };
+                row.DataList = rowData;
+                rowList.Add(row);
+            });
+
+            excelVM.RowList = rowList;
+            return File(_excelService.Excel(colHeadrs, excelVM, worksheetName), "application/ms-excel", $"Payee.xlsx");
         }
     }
 }

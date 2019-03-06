@@ -41,11 +41,15 @@ namespace ExpenseProcessingSystem.Services.Validations
         {
             try
             {
-                var data = (AccountViewModel)validationContext.ObjectInstance;
-                if (!Regex.IsMatch(data.Acc_Email, @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z", RegexOptions.IgnoreCase))
+                if (!(value == null))
                 {
-                    return new ValidationResult("Invalid Email Format");
+                    var data = (AccountViewModel)validationContext.ObjectInstance;
+                    if (!Regex.IsMatch(data.Acc_Email, @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z", RegexOptions.IgnoreCase))
+                    {
+                        return new ValidationResult("Invalid Email Format");
+                    }
                 }
+                
                 return ValidationResult.Success;
             }
             catch (Exception ex)
@@ -156,16 +160,16 @@ namespace ExpenseProcessingSystem.Services.Validations
             {
                 var hasNumber = new Regex(@"[0-9]+");
                 var hasUpperChar = new Regex(@"[A-Z]+");
-                var hasMiniMaxChars = new Regex(@".{8,15}");
+                //var hasMiniMaxChars = new Regex(@".{3,20}");
                 var hasLowerChar = new Regex(@"[a-z]+");
                 var hasSymbols = new Regex(@"[!@#$%^&*()_+=\[{\]};:<>|./?,-]");
 
                 if (!(value == null || value.Equals(0)))
                 {
-                    if (!hasMiniMaxChars.IsMatch(value.ToString()))
-                    {
-                        return new ValidationResult("Password should not be less than 8 characters or greater than 15 characters");
-                    }
+                    //if (!hasMiniMaxChars.IsMatch(value.ToString()))
+                    //{
+                    //    return new ValidationResult("Password should not be less than 3 characters or greater than 20 characters");
+                    //}
                     if (!hasLowerChar.IsMatch(value.ToString()))
                     {
                         return new ValidationResult("Password should contain At least one lower case letter");
@@ -189,6 +193,35 @@ namespace ExpenseProcessingSystem.Services.Validations
             {
                 Log.Fatal(ex, "User: {user}, StackTrace : {trace}, Error Message: {message}", "[UserID]", ex.StackTrace, ex.Message);
                 return new ValidationResult("Invalid input");
+            }
+        }
+    }
+    public class LengthValidation : ValidationAttribute
+    {
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            try
+            {
+                if (!(value == null || value.Equals(0)))
+                {
+
+                    var name = validationContext.DisplayName;
+                    if (value.ToString().Length < 3 || value.ToString().Length > 20)
+                    {
+                        return new ValidationResult(name + " should not be less than 3 characters or greater than 20 characters");
+                    }
+                }
+                return ValidationResult.Success;
+            }
+            catch (Exception ex)
+            {
+                //sample fatal error log
+                Log.Fatal(ex, "User: {user}, StackTrace : {trace}, Error Message: {message}", "[UserID]", ex.StackTrace, ex.Message);
+                return new ValidationResult("Invalid input");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
             }
         }
     }

@@ -36,7 +36,15 @@ namespace ExpenseProcessingSystem.Controllers
         //DM Add Payee
         public IActionResult DMAddPayee()
         {
-            return View();
+            NewPayeeListViewModel mod = new NewPayeeListViewModel();
+            List<NewPayeeViewModel> vmList = new List<NewPayeeViewModel>();
+            NewPayeeViewModel vm = new NewPayeeViewModel
+            {
+                Payee_No = 0
+            };
+            vmList.Add(vm);
+            mod.NewPayeeVM = vmList;
+            return View(mod);
         }
         //DM Edit Payee
         public IActionResult DMEditPayee(string[] IdsArr)

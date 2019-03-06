@@ -16,15 +16,11 @@ namespace ExpenseProcessingSystem.Services.Validations
             try
             {
                 var data = (AccountViewModel)validationContext.ObjectInstance;
-                //(?=.{8,20}$) username is 8-20 characters long / [a-zA-Z0-9._] allowed characters
-                //var regex = @"^{8,20}$";
                 if (!string.IsNullOrEmpty(data.Acc_UserName))
                 {
-                    //var match = Regex.Match(data.Acc_UserName, regex, RegexOptions.IgnoreCase);
-                    //if (!match.Success)
-                    if(data.Acc_UserName.Length < 8 || data.Acc_UserName.Length > 20)
+                    if(data.Acc_UserName.Length < 3 || data.Acc_UserName.Length > 20)
                     {
-                        return new ValidationResult("Sorry your username can't be stored on our system");
+                        return new ValidationResult("Username too short");
                     }
                 }
                 return ValidationResult.Success;

@@ -1,10 +1,7 @@
 ﻿using ExpenseProcessingSystem.Services.Validations;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ExpenseProcessingSystem.ViewModels
 {
@@ -15,7 +12,7 @@ namespace ExpenseProcessingSystem.ViewModels
         public int Acc_UserID { get; set; }
 
         [Display(Name = "Username")]
-        [NotNullValidations, UMUserNameValidation]
+        [NotNullValidations, LengthValidation]
         public string Acc_UserName { get; set; }
 
         [Display(Name = "Employee Name")]
@@ -25,7 +22,7 @@ namespace ExpenseProcessingSystem.ViewModels
 
         [Display(Name = "Password")]
         [DataType(DataType.Password)]
-        [PasswordValidation]
+        [PasswordValidation, LengthValidation]
         public string Acc_Password { get; set; }
 
         [Display(Name = "Department")]

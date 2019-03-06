@@ -18,7 +18,7 @@ $('.table-add').click(function () {
         +'<td><input id="NewPayeeVM_' + itemCount + '__Payee_TIN" name="NewPayeeVM[' + itemCount + '].Payee_TIN" type="text" value=""></td>'
         +'<td><input id="NewPayeeVM_' + itemCount + '__Payee_Address" name="NewPayeeVM[' + itemCount + '].Payee_Address" type="text" value=""></td>'
         +'<td><input id="NewPayeeVM_' + itemCount + '__Payee_Type" name="NewPayeeVM[' + itemCount + '].Payee_Type" type="text" value=""></td>'
-        +'<td><input data-val="true" data-val-required="The Payee_No field is required." id="NewPayeeVM_' + itemCount + '__Payee_No" name="NewPayeeVM[' + itemCount + '].Payee_No" type="text" value=""></td>'
+        +'<td><input data-val="true" data-val-required="The Payee_No field is required." id="NewPayeeVM_' + itemCount + '__Payee_No" name="NewPayeeVM[' + itemCount + '].Payee_No" type="text" value="0"></td>'
         +'<td>'
             +'<span class="table-remove glyphicon glyphicon-remove"></span>'
         +'</td>'
