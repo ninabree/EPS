@@ -25,7 +25,7 @@
                     <div class="dis-inline-block w-49">@Html.TextBoxFor(item => item.NewAcc.Acc_LName, new { @class = "w-full input" })</div>
                 </td>
                 <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.Acc_Role)</td>
-                <td class="p-r-50">@Html.DropDownListFor(item => item.NewAcc.Acc_Role, ViewData["list"] as SelectList, new { @class = "w-full input" })</td>
+                <td class="p-r-50">@Html.DropDownListFor(item => item.NewAcc.Acc_Role, Model.RoleList, new { @class = "w-full input" })</td>
                 <td rowspan="2" style="width: 7%">@Html.LabelFor(item => item.NewAcc.Acc_Comment)</td>
                 <td rowspan="2" class="p-r-50">@Html.TextAreaFor(item => item.NewAcc.Acc_Comment, new { @class = "w-full h-full input" })</td>
             </tr>

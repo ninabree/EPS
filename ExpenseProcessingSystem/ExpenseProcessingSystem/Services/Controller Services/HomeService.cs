@@ -3,6 +3,7 @@ using ExpenseProcessingSystem.Models;
 using ExpenseProcessingSystem.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,93 @@ namespace ExpenseProcessingSystem.Services
             _context = context;
             _modelState = modelState;
         }
+        public UserManagementViewModel populateUM()
+        {
+            List<UserViewModel> vmList = new List<UserViewModel>();
+            //get all accounts
+            var accs = (from a in _context.Account
+                        join d in _context.DMDept on a.Acc_DeptID equals d.Dept_ID
+                        join b in _context.Account on a.Acc_Creator_ID equals b.Acc_UserID
+                        let CreatorName = b.Acc_LName + ", " + b.Acc_FName
+                        select new
+                        {
+                            a.Acc_UserID, a.Acc_UserName, a.Acc_FName, a.Acc_LName, d.Dept_Name, a.Acc_DeptID,
+                            a.Acc_Email, a.Acc_Role, a.Acc_Comment, a.Acc_InUse, CreatorName, a.Acc_Created_Date, a.Acc_Status
+                        }).ToList();
+            //get account approver IDs and dates, not all accounts have this
+            var apprv = (from a in _context.Account
+                         join c in _context.Account on a.Acc_Approver_ID equals c.Acc_UserID
+                         let ApproverName = c.Acc_LName + ", " + c.Acc_FName
+                         select new
+                         {
+                             a.Acc_UserID,
+                             ApproverName,
+                             a.Acc_Last_Updated
+                         }).ToList();
 
+            accs.ForEach(x => {
+                var approver = apprv.Where(a => a.Acc_UserID == x.Acc_UserID).Select(a => a.ApproverName).FirstOrDefault();
+                var apprvDate = apprv.Where(a => a.Acc_UserID == x.Acc_UserID).Select(a => a.Acc_Last_Updated).FirstOrDefault();
+                UserViewModel vm = new UserViewModel
+                {
+                    Acc_UserID = x.Acc_UserID,
+                    Acc_UserName = x.Acc_UserName,
+                    Acc_FName = x.Acc_FName,
+                    Acc_LName = x.Acc_LName,
+                    Acc_Dept_ID = x.Acc_DeptID,
+                    Acc_Dept_Name = x.Dept_Name,
+                    Acc_Email = x.Acc_Email,
+                    Acc_Role = x.Acc_Role,
+                    Acc_InUse = x.Acc_InUse,
+                    Acc_Comment = x.Acc_Comment,
+                    Acc_Creator_Name = x.CreatorName,
+                    Acc_Approver_Name = approver ?? "",
+                    Acc_Created_Date = x.Acc_Created_Date,
+                    Acc_Last_Updated = (apprvDate != null) ? apprvDate : new DateTime(),
+                    Acc_Status = x.Acc_Status
+                };
+                vmList.Add(vm);
+            });
+            //set static values for Roles
+            var list = new SelectList(new[]
+            {
+                new { ID = "admin", Name = "Admin" },
+                new { ID = "maker", Name = "Maker" },
+                new { ID = "verifier", Name = "Verifier" },
+                new { ID = "approver", Name = "Approver" }
+            },
+            "ID", "Name", 1);
+
+            //ViewData["list"] = list;
+
+            List<DMDeptViewModel> deptList = new List<DMDeptViewModel>();
+
+            DMDeptViewModel optionLbl = new DMDeptViewModel
+            {
+                Dept_ID = 0,
+                Dept_Name = "--Select Department--",
+                Dept_Code = "0000"
+            };
+            deptList.Add(optionLbl);
+
+            _context.DMDept.Where(x => x.Dept_isDeleted == false).ToList().ForEach(x => {
+                DMDeptViewModel vm = new DMDeptViewModel
+                {
+                    Dept_ID = x.Dept_ID,
+                    Dept_Name = x.Dept_Name,
+                    Dept_Code = x.Dept_Code
+                };
+                deptList.Add(vm);
+            });
+
+            UserManagementViewModel mod = new UserManagementViewModel
+            {
+                NewAcc = new AccountViewModel(),
+                AccList = vmList,
+                DeptList = deptList
+            };
+            return mod;
+        }
         public bool addUser(UserManagementViewModel model, string userId)
         {
             AccountModel mod = _context.Account.Where(x => model.NewAcc.Acc_UserID == x.Acc_UserID).FirstOrDefault();
@@ -94,7 +181,7 @@ namespace ExpenseProcessingSystem.Services
                     Payee_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Payee_Created_Date = DateTime.Now,
                     Payee_Last_Updated = DateTime.Now,
-                    Payee_Status = "For Approval"
+                    Payee_Status = "Is Created"
                 };
                 vmList.Add(m);
             }
@@ -118,7 +205,7 @@ namespace ExpenseProcessingSystem.Services
                     Dept_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Dept_Created_Date = DateTime.Now,
                     Dept_Last_Updated = DateTime.Now,
-                    Dept_Status = "For Approval"
+                    Dept_Status = "Is Created"
                 };
                 vmList.Add(m);
             }

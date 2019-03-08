@@ -25,21 +25,19 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
         }
 
         public byte[] Excel(List<string> colHeadrs, ExcelViewModel dataArr, string worksheetName)
-        //public byte[] Excel()
         {
             byte[] result;
 
             using (var package = new ExcelPackage())
             {
                 // add a new worksheet to the empty workbook
-
                 var worksheet = package.Workbook.Worksheets.Add(worksheetName); //Worksheet name
                 using (var cells = worksheet.Cells[1, 1, 1, colHeadrs.Count()]) //(1,1) (1,5)
                 {
                     cells.Style.Font.Bold = true;
                 }
 
-                //First add the headers
+                //Add the headers
                 for (var i = 0; i < colHeadrs.Count(); i++)
                 {
                     worksheet.Cells[1, i + 1].Value = colHeadrs[i];
@@ -57,25 +55,93 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     }
                     row++;
                 }
+
+                //set column values to autofit
+                worksheet.Cells.AutoFitColumns();
+
                 result = package.GetAsByteArray();
             }
             return result;
         }
     }
-    public class DummyData
+    public class ExcelData
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly EPSDbContext _context;
+        private ExcelService _excelService;
         
-        public DummyData(IHttpContextAccessor httpContextAccessor, EPSDbContext context)
+        public ExcelData(IHttpContextAccessor httpContextAccessor, EPSDbContext context)
         {
             _httpContextAccessor = httpContextAccessor;
             _context = context;
+            _excelService = new ExcelService(_httpContextAccessor, _context);
         }
 
-        public List<DMPayeeModel> GetPayeeData()
+        public byte[] GetPayeeExcelData() {
+            ExcelViewModel excelVM = new ExcelViewModel();
+            List<Row> rowList = new List<Row>();
+            string worksheetName = "Current Payee Information";
+            //get column names in DB table
+            List<string> colHeadrs = typeof(DMPayeeModel).GetProperties()
+                        .Select(property => property.Name)
+                        .ToList();
+
+            //Populate Excel VM (of All DMPayee Entries)
+            _context.DMPayee.ToList().ForEach(x => {
+                Row row = new Row();
+                List<string> rowData = new List<string>
+                {
+                    x.Payee_ID.ToString(),
+                    x.Payee_Name,
+                    x.Payee_TIN,
+                    x.Payee_Address,
+                    x.Payee_Type,
+                    x.Payee_No.ToString(),
+                    x.Payee_Created_Date.ToString("MM/dd/yyyy"),
+                    x.Payee_Creator_ID.ToString(),
+                    x.Payee_Last_Updated.ToString("MM/dd/yyyy"),
+                    x.Payee_Approver_ID.ToString(),
+                    x.Payee_Status,
+                    x.Payee_isDeleted.ToString()
+                };
+                row.DataList = rowData;
+                rowList.Add(row);
+            });
+            excelVM.RowList = rowList;
+            
+            return _excelService.Excel(colHeadrs, excelVM, worksheetName);
+        }
+        public byte[] GetDeptExcelData()
         {
-            return _context.DMPayee.ToList();
+            ExcelViewModel excelVM = new ExcelViewModel();
+            List<Row> rowList = new List<Row>();
+            string worksheetName = "Current Department Information";
+            //get column names in DB table
+            List<string> colHeadrs = typeof(DMDeptModel).GetProperties()
+                        .Select(property => property.Name)
+                        .ToList();
+
+            //Populate Excel VM (of All DMPayee Entries)
+            _context.DMDept.ToList().ForEach(x => {
+                Row row = new Row();
+                List<string> rowData = new List<string>
+                {
+                    x.Dept_ID.ToString(),
+                    x.Dept_Name,
+                    x.Dept_Code,
+                    x.Dept_Created_Date.ToString("MM/dd/yyyy"),
+                    x.Dept_Creator_ID.ToString(),
+                    x.Dept_Last_Updated.ToString("MM/dd/yyyy"),
+                    x.Dept_Approver_ID.ToString(),
+                    x.Dept_Status,
+                    x.Dept_isDeleted.ToString()
+                };
+                row.DataList = rowData;
+                rowList.Add(row);
+            });
+            excelVM.RowList = rowList;
+
+            return _excelService.Excel(colHeadrs, excelVM, worksheetName);
         }
     }
 }

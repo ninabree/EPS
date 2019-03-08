@@ -34,6 +34,8 @@ namespace ExpenseProcessingSystem.ViewModels
         public DateTime Payee_Created_Date { get; set; }
         [Display(Name = "Payee Last Updated")]
         public DateTime Payee_Last_Updated { get; set; }
+        public string Payee_Creator_Name { get; set; }
+        public string Payee_Approver_Name { get; set; }
         [Display(Name = "Payee Status")]
         public string Payee_Status { get; set; }
     }
