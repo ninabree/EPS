@@ -12,6 +12,11 @@ namespace ExpenseProcessingSystem.Data
         public EPSDbContext(DbContextOptions<EPSDbContext> options)
                 : base(options)
         { }
+
+        public EPSDbContext()
+        {
+        }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -19,5 +24,6 @@ namespace ExpenseProcessingSystem.Data
         public DbSet<AccountModel> Account { get; set; }
         public DbSet<DMDeptModel> DMDept { get; set; }
         public DbSet<DMPayeeModel> DMPayee { get; set; }
+        public DbSet<SystemMessageModel> SystemMessageModels { get; set; }
     }
 }
