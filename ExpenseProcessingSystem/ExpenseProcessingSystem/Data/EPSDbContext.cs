@@ -13,10 +13,6 @@ namespace ExpenseProcessingSystem.Data
                 : base(options)
         { }
 
-        public EPSDbContext()
-        {
-        }
-
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

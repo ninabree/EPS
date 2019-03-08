@@ -6,7 +6,7 @@ namespace ExpenseProcessingSystem.ViewModels
     public class LoginViewModel
     {
         [Display(Name = "User Name")]
-        [/*UserNameValidation, */NotNullValidations]
+        [NotNullValidations, LengthValidation]
         public string Acc_UserName { get; set; }
 
         [Display(Name = "Password")]

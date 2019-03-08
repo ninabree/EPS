@@ -1,5 +1,7 @@
 ﻿using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,25 +11,19 @@ namespace ExpenseProcessingSystem.Services
 {
     public class MsgService
     {
-        private List<SystemMessageModel> msgList;
+        private readonly SystemMessageContext _msgContext;
         public MsgService()
         {
-            using (EPSDbContext db = new EPSDbContext())
-            {
-                msgList = db.SystemMessageModels.OrderBy(a => a.Msg_Code).ToList();
-            }
+            _msgContext = new SystemMessageContext();
         }
 
-        public static string GetMessage(string msgCode, string rplcStr1 = "", string rplcStr2 = "", string rplcStr3 = "", string rplcStr4 = "", string rplcStr5 = "")
+        public string GetMessage(string msgCode, string rplcStr1 = "", string rplcStr2 = "", string rplcStr3 = "", string rplcStr4 = "", string rplcStr5 = "")
         {
-            using (var db = new EPSDbContext())
-            {
-                SystemMessageModel sysMsg = db.SystemMessageModels.Find(msgCode);
-                if (sysMsg != null)
-                    return sysMsg.Msg_Content.Replace("%1", rplcStr1).Replace("%2", rplcStr1).Replace("%3", rplcStr1).Replace("%4", rplcStr1).Replace("%5", rplcStr1);
-                else
-                    return String.Empty;
-            }
+            SystemMessageModel sysMsg = _msgContext.SystemMessageModels.Find(msgCode);
+            if (sysMsg != null)
+                return sysMsg.Msg_Content.Replace("%1", rplcStr1).Replace("%2", rplcStr1).Replace("%3", rplcStr1).Replace("%4", rplcStr1).Replace("%5", rplcStr1);
+            else
+                return String.Empty;
         }
     }
 }

@@ -24,7 +24,6 @@ namespace ExpenseProcessingSystem
         {
             //Serilog
             var outputTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] [{SourceContext}] [{EventId}] {Message:l}{NewLine}{Exception}";
-
             Log.Logger = new LoggerConfiguration()
             .ReadFrom.Configuration(configuration)
             .MinimumLevel.Error()
@@ -55,6 +54,7 @@ namespace ExpenseProcessingSystem
             .CreateLogger();
 
             Configuration = configuration;
+            Setting.ConnectionString = Configuration.GetConnectionString("DefaultConnection");
         }
 
         public IConfiguration Configuration { get; }
@@ -106,5 +106,10 @@ namespace ExpenseProcessingSystem
                     template: "{controller=Account}/{action=Login}/{id?}");
             });
         }
+    }
+
+    public static class Setting
+    {
+        public static string ConnectionString { get; set; }
     }
 }

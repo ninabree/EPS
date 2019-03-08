@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,6 +26,7 @@ namespace ExpenseProcessingSystem.Services
             _context = context;
             _modelState = modelState;
         }
+        //Populate
         public UserManagementViewModel populateUM()
         {
             List<UserViewModel> vmList = new List<UserViewModel>();
@@ -112,6 +114,49 @@ namespace ExpenseProcessingSystem.Services
             };
             return mod;
         }
+        //public IQueryable<BMViewModel> populateBM(string sortOrder, string currentFilter, string searchString, int? page)
+        //{
+
+            ////sort
+            //ViewData["CurrentSort"] = sortOrder;
+            //ViewData["AccountSortParm"] = String.IsNullOrEmpty(sortOrder) ? "acc_desc" : "";
+            //ViewData["TypeSortParm"] = sortOrder == "Type_desc" ? "Type" : "Type_desc";
+
+            //if (searchString != null)
+            //{
+            //    page = 1;
+            //}
+            //else
+            //{
+            //    searchString = currentFilter;
+            //}
+            //ViewData["CurrentFilter"] = searchString;
+
+            //var bmmvList = PopulateBM().AsQueryable();
+            //var bm = from e in bmmvList
+            //         select e;
+            //switch (sortOrder)
+            //{
+            //    case "acc_desc":
+            //        bm = bm.OrderByDescending(s => s.BM_Account);
+            //        ViewData["glyph-acc"] = "glyphicon-menu-up";
+            //        break;
+            //    case "Type":
+            //        bm = bm.OrderBy(s => s.BM_Type);
+            //        ViewData["glyph-type"] = "glyphicon-menu-down";
+            //        break;
+            //    case "Type_desc":
+            //        bm = bm.OrderByDescending(s => s.BM_Type);
+            //        ViewData["glyph-type"] = "glyphicon-menu-up";
+            //        break;
+            //    default:
+            //        bm = bm.OrderBy(s => s.BM_Account);
+            //        ViewData["glyph-acc"] = "glyphicon-menu-down";
+            //        break;
+            //}
+            //return bm;
+        //}
+        //Add / Edit User
         public bool addUser(UserManagementViewModel model, string userId)
         {
             AccountModel mod = _context.Account.Where(x => model.NewAcc.Acc_UserID == x.Acc_UserID).FirstOrDefault();
@@ -313,6 +358,29 @@ namespace ExpenseProcessingSystem.Services
                 _context.SaveChanges();
             }
             return true;
+        }
+        //MISC
+        public List<BMViewModel> PopulateBM()
+        {
+            List<BMViewModel> bmvmList = new List<BMViewModel>();
+            for (var i = 1; i <= 40; i++)
+            {
+                BMViewModel bmvm = new BMViewModel
+                {
+                    BM_Id = i,
+                    BM_Creator_ID = i + 100,
+                    BM_Approver_ID = i + 200,
+                    BM_Account = "Account_" + i,
+                    BM_Type = "Sample_Type_" + i,
+                    BM_Budget = i + 100,
+                    BM_Curr_Budget = i + 110,
+                    BM_Last_Trans_Date = DateTime.Parse("1/12/2017", CultureInfo.GetCultureInfo("en-GB"))
+                            .Add(DateTime.Now.TimeOfDay),
+                    BM_Last_Budget_Approval = "Sample"
+                };
+                bmvmList.Add(bmvm);
+            }
+            return bmvmList;
         }
     }
 }

@@ -204,11 +204,12 @@ namespace ExpenseProcessingSystem.Services.Validations
             {
                 if (!(value == null || value.Equals(0)))
                 {
-
+                    //public List<MsgListRec> MsgList { get; set; }
                     var name = validationContext.DisplayName;
                     if (value.ToString().Length < 3 || value.ToString().Length > 20)
                     {
-                        return new ValidationResult(name + " should not be less than 3 characters or greater than 20 characters");
+                        var msgSvc = new MsgService();
+                        return new ValidationResult(msgSvc.GetMessage("E0001", name));
                     }
                 }
                 return ValidationResult.Success;

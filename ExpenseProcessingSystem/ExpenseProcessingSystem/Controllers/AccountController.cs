@@ -34,21 +34,6 @@ namespace ExpenseProcessingSystem.Controllers
         [HttpGet]
         public ActionResult Login()
         {
-            //sample error log
-            try
-            {
-                //some codes
-            }catch(Exception ex)
-            {
-                Log.Error(ex, "User: {user}, StackTrace : {trace}, Error Message: {message}", "UserID", ex.StackTrace, ex.Message);
-                return RedirectToAction("Index", "Error");
-            }
-            finally
-            {
-                //required to trigger the write log to email
-                Log.CloseAndFlush();
-            }
-
             LoginViewModel lvm = new LoginViewModel();
             return View(lvm);
         }
@@ -69,7 +54,7 @@ namespace ExpenseProcessingSystem.Controllers
             }
             else
             {
-                ModelState.TryAddModelError(string.Empty,"Invalid Login Credentials");
+                //ModelState.TryAddModelError(string.Empty,"Invalid Login Credentials");
                 return View(model);
             }
         }

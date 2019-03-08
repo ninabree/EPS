@@ -64,7 +64,7 @@ namespace ExpenseProcessingSystem.Controllers
         [ImportModelState]
         public IActionResult BM(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            var userId = HttpContext.Session.GetString("UserID");
+            var userId = _session.GetString("UserID");
             if (userId == null)
             {
                 return RedirectToAction("Login", "Account");
