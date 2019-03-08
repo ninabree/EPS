@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Models;
+using ExpenseProcessingSystem.Services.Controller_Services;
 using ExpenseProcessingSystem.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,89 +18,36 @@ namespace ExpenseProcessingSystem.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly EPSDbContext _context;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
+        private PartialService _service;
+
         public PartialController(IHttpContextAccessor httpContextAccessor, EPSDbContext context)
         {
             _httpContextAccessor = httpContextAccessor;
             _context = context;
+            _service = new PartialService(_httpContextAccessor, _context);
         }
         [Route("/Partial/DMPartial_Payee/")]
         public IActionResult DMPartial_Payee(string sortOrder, string currentFilter, string colName, string searchString, string page)
         {
+            var userId = _session.GetString("UserID");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             int? pg = (page == null) ? 1 : int.Parse(page);
             //sort
             ViewData["CurrentSort"] = sortOrder;
             ViewData["PayeeSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["PayeeTINSortParm"] = sortOrder == "PayeeTINDesc" ? "PayeeTIN" : "PayeeTINDesc";
 
-            if (searchString != null)
-            {
-                pg = 1;
-            }
-            else
-            {
-                searchString = currentFilter;
-            }
+            if (searchString != null){ pg = 1; }
+            else{ searchString = currentFilter; }
+
             ViewData["CurrentFilter"] = searchString;
-
-            List<DMPayeeModel> mList = _context.DMPayee.Where(x=>x.Payee_isDeleted==false).ToList();
-            //FOR FILTERING
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                string[] colArr = { "No", "Creator_ID", "Approver_ID" };
-                if (colArr.Contains(colName))
-                {
-                    mList = _context.DMPayee
-                                  .Where("Payee_" + colName + " = @0 AND Payee_isDeleted == @1", searchString, false)
-                                  .Select(e => e).ToList();
-                }
-                else
-                {
-                    mList = _context.DMPayee
-                                  .Where("Payee_" + colName + ".Contains(@0) AND Payee_isDeleted == @1", searchString, false)
-                                  .Select(e => e).ToList();
-                }
-
-            }
-            var creatorList = (from a in mList
-                        join b in _context.Account on a.Payee_Creator_ID equals b.Acc_UserID
-                        let CreatorName = b.Acc_LName + ", " + b.Acc_FName
-                        select new
-                        {
-                            a.Payee_ID,
-                            CreatorName
-                        }).ToList();
-            var apprvrList = (from a in mList
-                               join c in _context.Account on a.Payee_Approver_ID equals c.Acc_UserID
-                               let ApproverName = c.Acc_LName + ", " + c.Acc_FName
-                               select new
-                               {
-                                   a.Payee_ID,
-                                   ApproverName
-                               }).ToList();
-            List<DMPayeeViewModel> vmList = new List<DMPayeeViewModel>();
-            foreach(DMPayeeModel m in mList)
-            {
-                var creator = creatorList.Where(a => a.Payee_ID == m.Payee_ID).Select(a => a.CreatorName).FirstOrDefault();
-                var approver = apprvrList.Where(a => a.Payee_ID == m.Payee_ID).Select(a => a.ApproverName).FirstOrDefault();
-                DMPayeeViewModel vm = new DMPayeeViewModel {
-                    Payee_ID = m.Payee_ID,
-                    Payee_Name = m.Payee_Name,
-                    Payee_TIN = m.Payee_TIN,
-                    Payee_Address = m.Payee_Address,
-                    Payee_Type = m.Payee_Type,
-                    Payee_No = m.Payee_No,
-                    Payee_Creator_ID = m.Payee_Creator_ID,
-                    Payee_Approver_ID = m.Payee_Approver_ID,
-                    Payee_Creator_Name = creator ?? "N/A",
-                    Payee_Approver_Name = approver ?? "",
-                    Payee_Created_Date = m.Payee_Created_Date,
-                    Payee_Last_Updated = m.Payee_Last_Updated,
-                    Payee_Status = m.Payee_Status
-                };
-                vmList.Add(vm);
-            }
-
-            var payee = from e in vmList.AsQueryable()
+            
+            //Sort
+            var payee = from e in _service.populatePayee(colName, searchString).AsQueryable()
                         select e;
             switch (sortOrder)
             {
@@ -130,6 +78,12 @@ namespace ExpenseProcessingSystem.Controllers
         [Route("/Partial/DMPartial_Dept/")]
         public IActionResult DMPartial_Dept(string sortOrder, string currentFilter, string colName, string searchString, string page)
         {
+            var userId = _session.GetString("UserID");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             int? pg = (page == null) ? 1 : int.Parse(page);
             //sort
             ViewData["CurrentSort"] = sortOrder;
@@ -146,45 +100,7 @@ namespace ExpenseProcessingSystem.Controllers
             }
             ViewData["CurrentFilter"] = searchString;
 
-            List<DMDeptModel> mList = _context.DMDept.Where(x => x.Dept_isDeleted == false).ToList();
-
-            //FOR FILTERING
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                string[] colArr = { "Creator_ID","Approver_ID" };
-                if (colArr.Contains(colName))
-                {
-                    mList = _context.DMDept
-                                  .Where("Dept_" + colName + " = @0 AND Dept_isDeleted == @1", searchString, false)
-                                  .Select(e => e).ToList();
-                }
-                else
-                {
-                    mList = _context.DMDept
-                                  .Where("Dept_" + colName + ".Contains(@0) AND Dept_isDeleted == @1", searchString, false)
-                                  .Select(e => e).ToList();
-                }
-                
-            }
-            
-            List<DMDeptViewModel> vmList = new List<DMDeptViewModel>();
-            foreach (DMDeptModel m in mList)
-            {
-                DMDeptViewModel vm = new DMDeptViewModel
-                {
-                    Dept_ID = m.Dept_ID,
-                    Dept_Name = m.Dept_Name,
-                    Dept_Code = m.Dept_Code,
-                    Dept_Creator_ID = m.Dept_Creator_ID,
-                    Dept_Approver_ID = m.Dept_Approver_ID,
-                    Dept_Created_Date = m.Dept_Created_Date,
-                    Dept_Last_Updated = m.Dept_Last_Updated,
-                    Dept_Status = m.Dept_Status
-                };
-                vmList.Add(vm);
-            }
-
-            var depts = from e in vmList.AsQueryable()
+            var depts = from e in _service.populateDept(colName, searchString).AsQueryable()
                         select e;
             switch (sortOrder)
             {

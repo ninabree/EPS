@@ -18,6 +18,8 @@ namespace ExpenseProcessingSystem.ViewModels
         public string Dept_Code { get; set; }
         public int Dept_Creator_ID { get; set; }
         public int Dept_Approver_ID { get; set; }
+        public string Dept_Creator_Name { get; set; }
+        public string Dept_Approver_Name { get; set; }
         [Display(Name = "Dept Created")]
         public DateTime Dept_Created_Date { get; set; }
         [Display(Name = "Dept Last Updated")]

@@ -74,18 +74,6 @@ namespace ExpenseProcessingSystem.Services
                 };
                 vmList.Add(vm);
             });
-            //set static values for Roles
-            var list = new SelectList(new[]
-            {
-                new { ID = "admin", Name = "Admin" },
-                new { ID = "maker", Name = "Maker" },
-                new { ID = "verifier", Name = "Verifier" },
-                new { ID = "approver", Name = "Approver" }
-            },
-            "ID", "Name", 1);
-
-            //ViewData["list"] = list;
-
             List<DMDeptViewModel> deptList = new List<DMDeptViewModel>();
 
             DMDeptViewModel optionLbl = new DMDeptViewModel
@@ -114,48 +102,6 @@ namespace ExpenseProcessingSystem.Services
             };
             return mod;
         }
-        //public IQueryable<BMViewModel> populateBM(string sortOrder, string currentFilter, string searchString, int? page)
-        //{
-
-            ////sort
-            //ViewData["CurrentSort"] = sortOrder;
-            //ViewData["AccountSortParm"] = String.IsNullOrEmpty(sortOrder) ? "acc_desc" : "";
-            //ViewData["TypeSortParm"] = sortOrder == "Type_desc" ? "Type" : "Type_desc";
-
-            //if (searchString != null)
-            //{
-            //    page = 1;
-            //}
-            //else
-            //{
-            //    searchString = currentFilter;
-            //}
-            //ViewData["CurrentFilter"] = searchString;
-
-            //var bmmvList = PopulateBM().AsQueryable();
-            //var bm = from e in bmmvList
-            //         select e;
-            //switch (sortOrder)
-            //{
-            //    case "acc_desc":
-            //        bm = bm.OrderByDescending(s => s.BM_Account);
-            //        ViewData["glyph-acc"] = "glyphicon-menu-up";
-            //        break;
-            //    case "Type":
-            //        bm = bm.OrderBy(s => s.BM_Type);
-            //        ViewData["glyph-type"] = "glyphicon-menu-down";
-            //        break;
-            //    case "Type_desc":
-            //        bm = bm.OrderByDescending(s => s.BM_Type);
-            //        ViewData["glyph-type"] = "glyphicon-menu-up";
-            //        break;
-            //    default:
-            //        bm = bm.OrderBy(s => s.BM_Account);
-            //        ViewData["glyph-acc"] = "glyphicon-menu-down";
-            //        break;
-            //}
-            //return bm;
-        //}
         //Add / Edit User
         public bool addUser(UserManagementViewModel model, string userId)
         {
