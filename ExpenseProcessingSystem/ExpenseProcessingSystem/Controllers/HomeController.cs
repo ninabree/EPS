@@ -6,6 +6,7 @@ using System.Linq;
 using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Models;
 using ExpenseProcessingSystem.Services;
+using ExpenseProcessingSystem.Services.Controller_Services;
 using ExpenseProcessingSystem.Services.Excel_Services;
 using ExpenseProcessingSystem.ViewModels;
 using Microsoft.AspNetCore.Http;
@@ -23,6 +24,7 @@ namespace ExpenseProcessingSystem.Controllers
         private readonly EPSDbContext _context;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
         private HomeService _service;
+        private SortService _sortService;
         private ExcelData _excelData;
 
         public HomeController(IHttpContextAccessor httpContextAccessor, EPSDbContext context)
@@ -30,11 +32,22 @@ namespace ExpenseProcessingSystem.Controllers
             _httpContextAccessor = httpContextAccessor;
             _context = context;
             _service = new HomeService(_httpContextAccessor, _context, this.ModelState);
+            _sortService = new SortService();
             _excelData = new ExcelData(_httpContextAccessor, _context);
+        }
+
+        private string GetUserID()
+        {
+            return _session.GetString("UserID");
         }
 
         public IActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
             return View();
         }
         public IActionResult Entry()
@@ -43,11 +56,21 @@ namespace ExpenseProcessingSystem.Controllers
         }
         public IActionResult Close(string sortOrder, string currentFilter, string searchString, int? page)
         {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
             return View();
         }
         [ImportModelState]
         public IActionResult DM(string sortOrder, string currentFilter, string tblName, string colName, string searchString, int? page, string partialName)
         {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
             ViewData["sortOrder"] = sortOrder;
             ViewData["currentFilter"] = searchString;
             ViewData["tblName"] = tblName;
@@ -64,16 +87,20 @@ namespace ExpenseProcessingSystem.Controllers
         [ImportModelState]
         public IActionResult BM(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            var userId = _session.GetString("UserID");
+            var userId = GetUserID();
             if (userId == null)
             {
                 return RedirectToAction("Login", "Account");
             }
 
-            //sort
+            //set sort vals
             ViewData["CurrentSort"] = sortOrder;
             ViewData["AccountSortParm"] = String.IsNullOrEmpty(sortOrder) ? "acc_desc" : "";
-            ViewData["TypeSortParm"] = sortOrder == "Type_desc" ? "Type" : "Type_desc";
+            ViewData["TypeSortParm"] = sortOrder == "type_desc" ? "type" : "type_desc";
+            ViewData["BudgetSortParm"] = sortOrder == "budget_desc" ? "budget" : "budget_desc";
+            ViewData["CurrBudgetSortParm"] = sortOrder == "curr_budget_desc" ? "curr_budget" : "curr_budget_desc";
+            ViewData["LastTransDateSortParm"] = sortOrder == "last_trans_date_desc" ? "last_trans_date" : "last_trans_date_desc";
+            ViewData["LastBudgetApprvlSortParm"] = sortOrder == "last_budget_apprvl_desc" ? "last_budget_apprvl" : "last_budget_apprvl_desc";
 
             if (searchString != null)
             {
@@ -85,41 +112,62 @@ namespace ExpenseProcessingSystem.Controllers
             }
             ViewData["CurrentFilter"] = searchString;
 
-            var bmmvList = PopulateBM().AsQueryable();
-            var bm = from e in bmmvList
-                     select e;
-            switch (sortOrder)
-            {
-                case "acc_desc":
-                    bm = bm.OrderByDescending(s => s.BM_Account);
-                    ViewData["glyph-acc"] = "glyphicon-menu-up";
-                    break;
-                case "Type":
-                    bm = bm.OrderBy(s => s.BM_Type);
-                    ViewData["glyph-type"] = "glyphicon-menu-down";
-                    break;
-                case "Type_desc":
-                    bm = bm.OrderByDescending(s => s.BM_Type);
-                    ViewData["glyph-type"] = "glyphicon-menu-up";
-                    break;
-                default:
-                    bm = bm.OrderBy(s => s.BM_Account);
-                    ViewData["glyph-acc"] = "glyphicon-menu-down";
-                    break;
-            }
+            //populate and sort
+            var sortedVals = _sortService.SortData(PopulateBM(), sortOrder);
+            ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
 
             //pagination
-            return View(PaginatedList<BMViewModel>.CreateAsync(bm.AsNoTracking(), page ?? 1, pageSize));
+            return View(PaginatedList<BMViewModel>.CreateAsync(
+                (sortedVals.list).Cast<BMViewModel>().AsQueryable().AsNoTracking(), page ?? 1, pageSize));
         }
         [ImportModelState]
-        public IActionResult UM()
+        public IActionResult UM(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            var userId = HttpContext.Session.GetString("UserID");
+            var userId = GetUserID();
             if (userId == null)
             {
                 return RedirectToAction("Login", "Account");
             }
-            UserManagementViewModel mod = _service.populateUM();
+
+            //set sort vals
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["UserSortParm"] = String.IsNullOrEmpty(sortOrder) ? "user_desc" : "";
+            ViewData["NameSortParm"] = sortOrder == "name_desc" ? "name" : "name_desc";
+            ViewData["DeptSortParm"] = sortOrder == "dept_desc" ? "dept" : "dept_desc";
+            ViewData["RoleSortParm"] = sortOrder == "role_desc" ? "role" : "role_desc";
+            ViewData["EmailSortParm"] = sortOrder == "email_desc" ? "email" : "email_desc";
+            ViewData["CommentSortParm"] = sortOrder == "comment_desc" ? "comment" : "comment_desc";
+            ViewData["InUseSortParm"] = sortOrder == "inuse_desc" ? "inuse" : "inuse_desc";
+            ViewData["CreatrSortParm"] = sortOrder == "creatr_desc" ? "creatr" : "creatr_desc";
+            ViewData["ApprvrSortParm"] = sortOrder == "apprv_desc" ? "apprv" : "apprv_desc";
+            ViewData["CreatedDateSortParm"] = sortOrder == "creatr_date_desc" ? "creatr_date" : "creatr_date_desc";
+            ViewData["LastUpdateDateSortParm"] = sortOrder == "last_updt_date_desc" ? "last_updt_date" : "last_updt_date_desc";
+            ViewData["StatusSortParm"] = sortOrder == "stats_desc" ? "stats" : "stats";
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewData["CurrentFilter"] = searchString;
+            var data = _service.populateUM();
+            //populate and sort
+            var sortedVals = _sortService.SortData(data.AccList, sortOrder);
+            ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
+
+            UserManagementViewModel mod = new UserManagementViewModel
+            {
+                AccList = PaginatedList<UserViewModel>.CreateAsync(
+                (sortedVals.list).Cast<UserViewModel>().AsQueryable().AsNoTracking(), page ?? 1, pageSize),
+                DeptList = data.DeptList,
+                NewAcc = data.NewAcc,
+                RoleList = data.RoleList
+            };
+                
+            //pagination
             return View(mod);
         }
         public IActionResult Entry_CV()
@@ -161,7 +209,7 @@ namespace ExpenseProcessingSystem.Controllers
         [ExportModelState]
         public IActionResult AddPayee(NewPayeeListViewModel model)
         {
-            var userId = HttpContext.Session.GetString("UserID");
+            var userId = GetUserID();
             if (userId == null)
             {
                 return RedirectToAction("Login", "Account");
@@ -178,7 +226,7 @@ namespace ExpenseProcessingSystem.Controllers
         [ExportModelState]
         public IActionResult EditPayee(List<DMPayeeViewModel> model)
         {
-            var userId = HttpContext.Session.GetString("UserID");
+            var userId = GetUserID();
             if (userId == null)
             {
                 return RedirectToAction("Login", "Account");
@@ -195,7 +243,7 @@ namespace ExpenseProcessingSystem.Controllers
         [ExportModelState]
         public IActionResult DeletePayee(List<DMPayeeViewModel> model)
         {
-            var userId = HttpContext.Session.GetString("UserID");
+            var userId = GetUserID();
             if (userId == null)
             {
                 return RedirectToAction("Login", "Account");
@@ -212,7 +260,7 @@ namespace ExpenseProcessingSystem.Controllers
         [ExportModelState]
         public IActionResult AddDept(NewDeptListViewModel model)
         {
-            var userId = HttpContext.Session.GetString("UserID");
+            var userId = GetUserID();
             if (userId == null)
             {
                 return RedirectToAction("Login", "Account");
@@ -229,7 +277,7 @@ namespace ExpenseProcessingSystem.Controllers
         [ExportModelState]
         public IActionResult EditDept(List<DMDeptViewModel> model)
         {
-            var userId = HttpContext.Session.GetString("UserID");
+            string userId = GetUserID();
             if (userId == null)
             {
                 return RedirectToAction("Login", "Account");
@@ -246,7 +294,7 @@ namespace ExpenseProcessingSystem.Controllers
         [ExportModelState]
         public IActionResult DeleteDept(List<DMDeptViewModel> model)
         {
-            var userId = HttpContext.Session.GetString("UserID");
+            var userId = GetUserID();
             if (userId == null)
             {
                 return RedirectToAction("Login", "Account");
@@ -263,7 +311,7 @@ namespace ExpenseProcessingSystem.Controllers
         [ExportModelState]
         public IActionResult AddEditUser(UserManagementViewModel model)
         {
-            var userId = HttpContext.Session.GetString("UserID");
+            var userId = GetUserID();
             if (userId == null)
             {
                 return RedirectToAction("Login", "Account");
@@ -280,7 +328,7 @@ namespace ExpenseProcessingSystem.Controllers
 
         public IActionResult Excel()
         {
-            var userId = HttpContext.Session.GetString("UserID");
+            var userId = GetUserID();
             if (userId == null)
             {
                 return RedirectToAction("Login", "Account");

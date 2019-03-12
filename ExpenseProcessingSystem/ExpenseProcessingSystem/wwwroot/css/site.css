@@ -512,7 +512,7 @@ div.tabContent {
         }
 
 .table-bordered > thead > tr > th, .table > tr > th {
-    border-right-color: #fff;
+    /*border-right-color: #fff;*/
     font-size: 12px;
 }
 

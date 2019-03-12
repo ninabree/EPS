@@ -17,7 +17,7 @@ namespace ExpenseProcessingSystem.Data
         {
             base.OnModelCreating(builder);
         }
-        public DbSet<AccountModel> Account { get; set; }
+        public DbSet<UserModel> Account { get; set; }
         public DbSet<DMDeptModel> DMDept { get; set; }
         public DbSet<DMPayeeModel> DMPayee { get; set; }
         public DbSet<SystemMessageModel> SystemMessageModels { get; set; }

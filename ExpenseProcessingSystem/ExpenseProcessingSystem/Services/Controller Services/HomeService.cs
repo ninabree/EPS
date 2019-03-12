@@ -27,7 +27,7 @@ namespace ExpenseProcessingSystem.Services
             _modelState = modelState;
         }
         //Populate
-        public UserManagementViewModel populateUM()
+        public UserManagementViewModel2 populateUM()
         {
             List<UserViewModel> vmList = new List<UserViewModel>();
             //get all accounts
@@ -94,9 +94,9 @@ namespace ExpenseProcessingSystem.Services
                 deptList.Add(vm);
             });
 
-            UserManagementViewModel mod = new UserManagementViewModel
+            UserManagementViewModel2 mod = new UserManagementViewModel2
             {
-                NewAcc = new AccountViewModel(),
+                NewAcc = new User2ViewModel(),
                 AccList = vmList,
                 DeptList = deptList
             };
@@ -105,10 +105,10 @@ namespace ExpenseProcessingSystem.Services
         //Add / Edit User
         public bool addUser(UserManagementViewModel model, string userId)
         {
-            AccountModel mod = _context.Account.Where(x => model.NewAcc.Acc_UserID == x.Acc_UserID).FirstOrDefault();
+            UserModel mod = _context.Account.Where(x => model.NewAcc.Acc_UserID == x.Acc_UserID).FirstOrDefault();
             if (mod == null)
             {
-                mod = new AccountModel
+                mod = new UserModel
                 {
                     Acc_UserName = model.NewAcc.Acc_UserName,
                     Acc_FName = model.NewAcc.Acc_FName,
@@ -133,15 +133,12 @@ namespace ExpenseProcessingSystem.Services
             {
                 if (model.NewAcc.Acc_UserID == mod.Acc_UserID)
                 {
-                    mod.Acc_UserID = model.NewAcc.Acc_UserID;
-                    mod.Acc_UserName = model.NewAcc.Acc_UserName;
                     mod.Acc_FName = model.NewAcc.Acc_FName;
                     mod.Acc_LName = model.NewAcc.Acc_LName;
                     mod.Acc_DeptID = model.NewAcc.Acc_DeptID;
                     mod.Acc_Email = model.NewAcc.Acc_Email;
                     mod.Acc_Role = model.NewAcc.Acc_Role;
-                    mod.Acc_Password = model.NewAcc.Acc_Password != null ? (CryptoTools.getHashPasswd("PLACEHOLDER", model.NewAcc.Acc_UserName, model.NewAcc.Acc_Password)) :
-                        model.NewAcc.Acc_UserName != null ? (CryptoTools.getHashPasswd("PLACEHOLDER", model.NewAcc.Acc_UserName, defaultPW)) : mod.Acc_Password;
+                    mod.Acc_Password = model.NewAcc.Acc_Password != null ? (CryptoTools.getHashPasswd("PLACEHOLDER", mod.Acc_UserName, model.NewAcc.Acc_Password)) : mod.Acc_Password;
                     mod.Acc_Comment = model.NewAcc.Acc_Comment;
                     mod.Acc_InUse = model.NewAcc.Acc_InUse;
                     mod.Acc_Approver_ID = int.Parse(userId);

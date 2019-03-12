@@ -5,121 +5,140 @@
 }
 @using ExpenseProcessingSystem.ViewModels
 @model UserManagementViewModel
-<div>
-    @using (Html.BeginForm("AddEditUser", "Home", FormMethod.Post, new { @class = "validate-form", @id = "tsForm" }))
-    {
-        <table class="table">
-            <tr>
-                <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.Acc_UserName)</td>
-                <td class="p-r-50">@Html.TextBoxFor(item => item.NewAcc.Acc_UserName, new { @class = "w-full input" })</td>
-                <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.Acc_Email)</td>
-                <td class="p-r-50">@Html.TextBoxFor(item => item.NewAcc.Acc_Email, new { @class = "w-full input" })</td>
-                <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.Acc_Password)</td>
-                <td class="p-r-50">@Html.PasswordFor(item => item.NewAcc.Acc_Password, new { @class = "w-full input" })</td>
-            </tr>
+    <div>
+        @using (Html.BeginForm("AddEditUser", "Home", FormMethod.Post, new { @class = "validate-form", @id = "tsForm" }))
+        {
+            <table class="table">
+                <tr>
+                    <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.Acc_UserName)</td>
+                    <td class="p-r-50">@Html.TextBoxFor(item => item.NewAcc.Acc_UserName, new { @class = "w-full input" })</td>
+                    <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.Acc_Email)</td>
+                    <td class="p-r-50">@Html.TextBoxFor(item => item.NewAcc.Acc_Email, new { @class = "w-full input" })</td>
+                    <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.Acc_Password)</td>
+                    <td class="p-r-50">@Html.PasswordFor(item => item.NewAcc.Acc_Password, new { @class = "w-full input" })</td>
+                </tr>
 
-            <tr>
-                <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.Acc_FName)</td>
-                <td class="p-r-50">
-                    <div class="dis-inline-block w-49">@Html.TextBoxFor(item => item.NewAcc.Acc_FName, new { @class = "w-full input" })</div>
-                    <div class="dis-inline-block w-49">@Html.TextBoxFor(item => item.NewAcc.Acc_LName, new { @class = "w-full input" })</div>
-                </td>
-                <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.Acc_Role)</td>
-                <td class="p-r-50">@Html.DropDownListFor(item => item.NewAcc.Acc_Role, Model.RoleList, new { @class = "w-full input" })</td>
-                <td rowspan="2" style="width: 7%">@Html.LabelFor(item => item.NewAcc.Acc_Comment)</td>
-                <td rowspan="2" class="p-r-50">@Html.TextAreaFor(item => item.NewAcc.Acc_Comment, new { @class = "w-full h-full input" })</td>
-            </tr>
-            <tr>
-                <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.Acc_DeptID)</td>
-                <td class="p-r-50">
-                    @Html.DropDownListFor(item => item.NewAcc.Acc_DeptID,
-                                     new SelectList(Model.DeptList, "Dept_ID", "Dept_Name"),
-                                     new { @class = "w-full input" })
-                            </td>
-                <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.Acc_InUse)</td>
-                <td style="text-align: left">@Html.CheckBoxFor(item => item.NewAcc.Acc_InUse, new { @class = "fs-10" })</td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>@Html.TextBoxFor(item => item.NewAcc.Acc_UserID, new { @class = "hidden" })</td>
-                <td><button type="submit" class="btn tbl-btn">Save/Update</button><button id="clear-btn" class="btn tbl-btn">Clear</button></td>
-            </tr>
-        </table>
-    }
-</div>
-@*validation message*@
-<div id="ValidationSummary" style="display:none" class="">
-    @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
-</div>
-<div id="UM_tbl">
-    <div id="tbl-lbl">
-        <div class="dis-inline-block"><p>Users Master Data:</p></div>
+                <tr>
+                    <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.Acc_FName)</td>
+                    <td class="p-r-50">
+                        <div class="dis-inline-block w-49">@Html.TextBoxFor(item => item.NewAcc.Acc_FName, new { @class = "w-full input" })</div>
+                        <div class="dis-inline-block w-49">@Html.TextBoxFor(item => item.NewAcc.Acc_LName, new { @class = "w-full input" })</div>
+                    </td>
+                    <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.Acc_Role)</td>
+                    <td class="p-r-50">@Html.DropDownListFor(item => item.NewAcc.Acc_Role, Model.RoleList, new { @class = "w-full input" })</td>
+                    <td rowspan="2" style="width: 7%">@Html.LabelFor(item => item.NewAcc.Acc_Comment)</td>
+                    <td rowspan="2" class="p-r-50">@Html.TextAreaFor(item => item.NewAcc.Acc_Comment, new { @class = "w-full h-full input" })</td>
+                </tr>
+                <tr>
+                    <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.Acc_DeptID)</td>
+                    <td class="p-r-50">
+                        @Html.DropDownListFor(item => item.NewAcc.Acc_DeptID,
+                                         new SelectList(Model.DeptList, "Dept_ID", "Dept_Name"),
+                                         new { @class = "w-full input" })
+                    </td>
+                    <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.Acc_InUse)</td>
+                    <td style="text-align: left">@Html.CheckBoxFor(item => item.NewAcc.Acc_InUse, new { @class = "fs-10" })</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>@Html.TextBoxFor(item => item.NewAcc.Acc_UserID, new { @class = "hidden" })</td>
+                    <td><button type="submit" class="btn tbl-btn">Save/Update</button><button id="clear-btn" class="btn tbl-btn">Clear</button></td>
+                </tr>
+            </table>
+        }
     </div>
-    <table id="um-tbl" class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <td>ID</td>
-                <td>Name</td>
-                <td>Department</td>
-                <td>Role</td>
-                <td>Email</td>
-                <td>Comment</td>
-                <td>In-Use</td>
-                <td>Created By</td>
-                <td>Updated By</td>
-                <td>Created Date</td>
-                <td>Last Update Date</td>
-                <td>Status</td>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model.AccList != null)
-            {
-                @foreach (var item in Model.AccList)
+    @*validation message*@
+    <div id="ValidationSummary" style="display:none" class="">
+        @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
+    </div>
+    <div id="UM_tbl" class="tbl-cont">
+        <div id="tbl-lbl">
+            <div class="dis-inline-block"><p>Users Master Data:</p></div>
+        </div>
+        <table id="um-tbl" class="table tab-tbl table-striped ">
+            <thead>
+                <tr>
+                    <th><a asp-action="UM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["UserSortParm"]">User ID<p class="btn-xs glyphicon @ViewData["glyph-1"]"></p></a></th>
+                    <th><a asp-action="UM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["NameSortParm"]">Full Name<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
+                    <th><a asp-action="UM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["DeptSortParm"]">Department<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
+                    <th><a asp-action="UM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["RoleSortParm"]">Role<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
+                    <th><a asp-action="UM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["EmailSortParm"]">Email<p class="btn-xs glyphicon @ViewData["glyph-5"]"></p></a></th>
+                    <th><a asp-action="UM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CommentSortParm"]">Comment<p class="btn-xs glyphicon @ViewData["glyph-6"]"></p></a></th>
+                    <th><a asp-action="UM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["InUseSortParm"]">In-Use<p class="btn-xs glyphicon @ViewData["glyph-7"]"></p></a></th>
+                    <th><a asp-action="UM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CreatrSortParm"]">Created By<p class="btn-xs glyphicon @ViewData["glyph-8"]"></p></a></th>
+                    <th><a asp-action="UM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["ApprvrSortParm"]">Updated By<p class="btn-xs glyphicon @ViewData["glyph-9"]"></p></a></th>
+                    <th><a asp-action="UM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CreatedDateSortParm"]">Created Date<p class="btn-xs glyphicon @ViewData["glyph-10"]"></p></a></th>
+                    <th><a asp-action="UM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["LastUpdateDateSortParm"]">Last Update Date<p class="btn-xs glyphicon @ViewData["glyph-11"]"></p></a></th>
+                    <th><a asp-action="UM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["StatusSortParm"]">Status<p class="btn-xs glyphicon @ViewData["glyph-12"]"></p></a></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.AccList != null)
                 {
-                    <tr>
-                        <td>@Html.DisplayFor(modelItem => item.Acc_UserName)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Acc_LName), @Html.DisplayFor(modelItem => item.Acc_FName)</td>
-                        <td id=@item.Acc_Dept_ID>@Html.DisplayFor(modelItem => item.Acc_Dept_Name)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Acc_Role)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Acc_Email)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Acc_Comment)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Acc_InUse)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Acc_Creator_Name)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Acc_Approver_Name)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Acc_Created_Date)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Acc_Last_Updated)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Acc_Status)</td>
-                        @Html.HiddenFor(modelItem => item.Acc_UserID)
-                    </tr>
+                    @foreach (var item in Model.AccList)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.Acc_UserName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Acc_LName), @Html.DisplayFor(modelItem => item.Acc_FName)</td>
+                            <td id=@item.Acc_Dept_ID>@Html.DisplayFor(modelItem => item.Acc_Dept_Name)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Acc_Role)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Acc_Email)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Acc_Comment)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Acc_InUse)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Acc_Creator_Name)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Acc_Approver_Name)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Acc_Created_Date)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Acc_Last_Updated)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Acc_Status)</td>
+                            @Html.HiddenFor(modelItem => item.Acc_UserID)
+                        </tr>
+                    }
                 }
-            }
-        </tbody>
-    </table>
-</div>
-<environment include="Development">
-    <script src="~/lib/jquery/dist/jquery.js"></script>
-</environment>
-<script type="text/javascript">
-    $(document).ready(function () {
-        var rows = $('#um-tbl tbody tr');
-        $('#clear-btn').click(function (e) {
-            e.stopImmediatePropagation();
-            $('#NewAcc_Acc_UserName').val("");
-            $('#NewAcc_Acc_FName').val("");
-            $('#NewAcc_Acc_LName').val("");
-            $('#NewAcc_Acc_DeptID').val("");
-            $('#NewAcc_Acc_Email').val("");
-            $('#NewAcc_Acc_Role').val("");
-            $('#NewAcc_Acc_UserID').val("");
-            $('#NewAcc_Acc_Comment').val("");
-            $('#NewAcc_Acc_InUse').prop('checked', false);
-            $('#validationSummary').empty();
-            rows.removeClass('highlight');
-            return false;
+            </tbody>
+        </table>
+        @{
+            var prevDisabled = !Model.AccList.HasPreviousPage ? "disabled" : "";
+            var nextDisabled = !Model.AccList.HasNextPage ? "disabled" : "";
+        }
+
+        <a asp-action="UM"
+           asp-route-sortOrder="@ViewData["CurrentSort"]"
+           asp-route-page="@(Model.AccList.PageIndex - 1)"
+           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+           class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left">
+        </a>
+        <input type="text" class="pagination-input" id="paginationInput" val="" />
+        <input type="text" class="pagination-input" value="of @(Model.AccList.TotalPages)" disabled />
+        <a asp-action="UM"
+           asp-route-sortOrder="@ViewData["CurrentSort"]"
+           asp-route-page="@(Model.AccList.PageIndex + 1)"
+           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+           class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right">
+        </a>
+    </div>
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+    </environment>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var rows = $('#um-tbl tbody tr');
+            $('#clear-btn').click(function (e) {
+                e.stopImmediatePropagation();
+                $('#NewAcc_Acc_UserName').val("");
+                $('#NewAcc_Acc_FName').val("");
+                $('#NewAcc_Acc_LName').val("");
+                $('#NewAcc_Acc_DeptID').val("");
+                $('#NewAcc_Acc_Email').val("");
+                $('#NewAcc_Acc_Role').val("");
+                $('#NewAcc_Acc_UserID').val("");
+                $('#NewAcc_Acc_Comment').val("");
+                $('#NewAcc_Acc_InUse').prop('checked', false);
+                $('#validationSummary').empty();
+                rows.removeClass('highlight');
+                return false;
+            });
         });
-    });
-</script>
+    </script>

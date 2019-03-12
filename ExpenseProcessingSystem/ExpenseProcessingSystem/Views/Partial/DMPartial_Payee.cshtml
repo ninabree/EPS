@@ -12,14 +12,14 @@
         <thead>
             <tr>
                 <th></th>
-                <th id="Name"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PayeeSortParm"]">Payee<p class="btn-xs glyphicon @ViewData["glyph-payee"]"></p></a></th>
-                <th id="TIN"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PayeeTINSortParm"]">TIN<p class="btn-xs glyphicon @ViewData["glyph-payee-tin"]"></p></a></th>
-                <th id="Address">Address</th>
-                <th id="Type">Type</th>
-                <th id="No">Number</th>
-                <th id="Creator_ID">Input By</th>
-                <th id="Approver_ID">Approver</th>
-                <th id="Status">Status</th>
+                <th id="Name"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PayeeSortParm"]">Payee<p class="btn-xs glyphicon @ViewData["glyph-1"]"></p></a></th>
+                <th id="TIN"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PayeeTINSortParm"]">TIN<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
+                <th id="Address"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PayeeAddSortParm"]">Address<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
+                <th id="Type"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PayeeTypeSortParm"]">Type<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
+                <th id="No"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PayeeNoSortParm"]">Number<p class="btn-xs glyphicon @ViewData["glyph-5"]"></p></a></th>
+                <th id="Creator_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PayeeCreatorSortParm"]">Input By<p class="btn-xs glyphicon @ViewData["glyph-6"]"></p></a></th>
+                <th id="Approver_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PayeeApproverSortParm"]">Approved By<p class="btn-xs glyphicon @ViewData["glyph-7"]"></p></a></th>
+                <th id="Status"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PayeeStatusSortParm"]">Status<p class="btn-xs glyphicon @ViewData["glyph-8"]"></p></a></th>
             </tr>
         </thead>
         <tbody>

@@ -84,7 +84,7 @@ $(document).ready(function () {
             //row.addClass('highlight');
         } else {
             var name = $(row).children(":eq(1)").text().split(', ');
-
+            $('#NewAcc_Acc_UserName').prop("readonly", true);
             $('#NewAcc_Acc_UserName').val($(row).children(":first").text());
             $('#NewAcc_Acc_FName').val(name[1]);
             $('#NewAcc_Acc_LName').val(name[0]);
@@ -107,6 +107,7 @@ $(document).ready(function () {
         
         $('#clear-btn').click(function (e) {
             e.stopImmediatePropagation();
+            $('#NewAcc_Acc_UserName').prop("readonly", false);
             $('#NewAcc_Acc_UserName').val("");
             $('#NewAcc_Acc_FName').val("");
             $('#NewAcc_Acc_LName').val("");

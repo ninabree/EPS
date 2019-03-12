@@ -15,7 +15,7 @@ namespace ExpenseProcessingSystem.Services.Validations
         {
             try
             {
-                var data = (AccountViewModel)validationContext.ObjectInstance;
+                var data = (User2ViewModel)validationContext.ObjectInstance;
                 if (!string.IsNullOrEmpty(data.Acc_UserName))
                 {
                     if(data.Acc_UserName.Length < 3 || data.Acc_UserName.Length > 20)

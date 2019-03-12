@@ -43,7 +43,7 @@ namespace ExpenseProcessingSystem.Services.Validations
             {
                 if (!(value == null))
                 {
-                    var data = (AccountViewModel)validationContext.ObjectInstance;
+                    var data = (User2ViewModel)validationContext.ObjectInstance;
                     if (!Regex.IsMatch(data.Acc_Email, @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z", RegexOptions.IgnoreCase))
                     {
                         return new ValidationResult("Invalid Email Format");
