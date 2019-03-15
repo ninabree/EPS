@@ -1,0 +1,74 @@
+﻿
+@{
+    ViewData["Title"] = "DMPartial_EWT";
+    Layout = "~/Views/Shared/_ModalLayout.cshtml";
+}
+
+@using ExpenseProcessingSystem.ViewModels
+@model DMViewModel
+
+<div class="tbl-cont">
+    <table class="table table-striped tab-tbl">
+        <thead>
+            <tr>
+                <th></th>
+                <th id="Nature"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["EWTSortParm"]">EWT Nature<p class="btn-xs glyphicon @ViewData["glyph-1"]"></p></a></th>
+                <th id="Tax_Rate"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["EWTTaxRateSortParm"]">Tax Rate<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
+                <th id="ATC"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["EWTATCSortParm"]">ATC<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
+                <th id="Tax_Rate_Desc"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["EWTTaxRateDescSortParm"]">Tax Rate Description<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
+                <th id="Creator_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["EWTCreatorSortParm"]">Created By<p class="btn-xs glyphicon @ViewData["glyph-5"]"></p></a></th>
+                <th id="Approver_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["EWTApproverSortParm"]">Approved By<p class="btn-xs glyphicon @ViewData["glyph-6"]"></p></a></th>
+                <th id="Approver_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["EWTLastUpdteSortParm"]">Last Updated Date<p class="btn-xs glyphicon @ViewData["glyph-7"]"></p></a></th>
+                <th id="Status"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["EWTStatusSortParm"]">Status<p class="btn-xs glyphicon @ViewData["glyph-8"]"></p></a></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.EWT != null)
+            {
+                @foreach (var item in Model.EWT)
+                {
+                    <tr>
+                        <td><input class="tbl-chk" id="@item.EWT_ID" type="checkbox" /></td>
+                        <td>@Html.DisplayFor(modelItem => item.EWT_Nature)</td>
+                        <td>@Html.DisplayFor(modelItem => item.EWT_Tax_Rate)</td>
+                        <td>@Html.DisplayFor(modelItem => item.EWT_ATC)</td>
+                        <td>@Html.DisplayFor(modelItem => item.EWT_Tax_Rate_Desc)</td>
+                        <td>@Html.DisplayFor(modelItem => item.EWT_Creator_Name)</td>
+                        <td>@Html.DisplayFor(modelItem => item.EWT_Approver_Name)</td>
+                        <td>@Html.DisplayFor(modelItem => item.EWT_Last_Updated)</td>
+                        <td>@Html.DisplayFor(modelItem => item.EWT_Status)</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    @{
+        var prevDisabled = !Model.EWT.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.EWT.HasNextPage ? "disabled" : "";
+    }
+    <a asp-action="DM"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-page="@(Model.EWT.PageIndex - 1)"
+       asp-controller="Home"
+       asp-route-partialName="@ViewData["Title"]"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left">
+    </a>
+    <input type="text" class="pagination-input" id="paginationInput" val="" />
+    <input type="text" class="pagination-input" value="of @(Model.EWT.TotalPages)" disabled />
+    <a asp-action="DM"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-controller="Home"
+       asp-route-partialName="@ViewData["Title"]"
+       asp-route-page="@(Model.EWT.PageIndex + 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right">
+    </a>
+    <div class="float-r m-r-10">
+        <div class="dis-inline-block tbl-btn btn" id="add_ewt">Add</div>
+        <div class="dis-inline-block tbl-btn btn" id="edit_ewt">Edit</div>
+        <div class="dis-inline-block tbl-btn btn" id="delete_ewt">Delete</div>
+        <input type="hidden" value="@ViewData["Title"]" id="partialVal" />
+    </div>
+    @Html.Partial("ModalPartial")
+</div>

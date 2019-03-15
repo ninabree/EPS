@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Models;
+using ExpenseProcessingSystem.Services;
 using ExpenseProcessingSystem.Services.Controller_Services;
 using ExpenseProcessingSystem.ViewModels;
 using Microsoft.AspNetCore.Http;
@@ -12,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseProcessingSystem.Controllers
 {
+    [ScreenFltr]
     public class PartialController : Controller
     {
         private readonly int pageSize = 25;
@@ -106,6 +108,266 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 Dept = PaginatedList<DMDeptViewModel>.CreateAsync(
                     (sortedVals.list).Cast<DMDeptViewModel>().AsQueryable().AsNoTracking(), pg ?? 1, pageSize)
+            };
+            return View(VM);
+        }
+
+        [Route("/Partial/DMPartial_Check/")]
+        public IActionResult DMPartial_Check(string sortOrder, string currentFilter, string colName, string searchString, string page)
+        {
+            var userId = _session.GetString("UserID");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            int? pg = (page == null) ? 1 : int.Parse(page);
+            //set sort vals
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["CheckSortParm"] = String.IsNullOrEmpty(sortOrder) ? "input_date_desc" : "";
+            ViewData["CheckSeriesFromSortParm"] = sortOrder == "chk_serires_from_desc" ? "chk_serires_from" : "chk_serires_from_desc";
+            ViewData["CheckSeriresToSortParm"] = sortOrder == "chk_serires_to_desc" ? "chk_serires_to" : "chk_serires_to_desc";
+            ViewData["CheckTypeSortParm"] = sortOrder == "chk_type_desc" ? "chk_type" : "chk_type_desc";
+            ViewData["CheckNameSortParm"] = sortOrder == "chk_name_desc" ? "chk_name" : "chk_name_desc";
+            ViewData["CheckCreatorSortParm"] = sortOrder == "chk_creatr_desc" ? "chk_creatr" : "chk_creatr_desc";
+            ViewData["CheckApproverSortParm"] = sortOrder == "chk_approvr_desc" ? "chk_approvr" : "chk_approvr_desc";
+            ViewData["CheckLastUpdatedSortParm"] = sortOrder == "chk_last_updte_desc" ? "chk_last_updte" : "chk_last_updte_desc";
+            ViewData["CheckStatusSortParm"] = sortOrder == "chk_stat_desc" ? "chk_stat" : "chk_stat_desc";
+
+            if (searchString != null)
+            {
+                pg = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewData["CurrentFilter"] = searchString;
+
+            //populate and sort
+            var sortedVals = _sortService.SortData(_service.populateCheck(colName, searchString), sortOrder);
+            ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
+
+            //pagination
+            DMViewModel VM = new DMViewModel()
+            {
+                Check = PaginatedList<DMCheckViewModel>.CreateAsync(
+                    (sortedVals.list).Cast<DMCheckViewModel>().AsQueryable().AsNoTracking(), pg ?? 1, pageSize)
+            };
+            return View(VM);
+        }
+
+        [Route("/Partial/DMPartial_Acc/")]
+        public IActionResult DMPartial_Acc(string sortOrder, string currentFilter, string colName, string searchString, string page)
+        {
+            var userId = _session.GetString("UserID");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            int? pg = (page == null) ? 1 : int.Parse(page);
+            //set sort vals
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["AccountSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["AccountCodeSortParm"] = sortOrder == "acc_code_desc" ? "acc_code" : "acc_code_desc";
+            ViewData["AccountNumberSortParm"] = sortOrder == "acc_no_desc" ? "acc_no" : "acc_no_desc";
+            ViewData["AccountCustSortParm"] = sortOrder == "acc_cust_desc" ? "acc_cust" : "acc_cust_desc";
+            ViewData["AccountDivSortParm"] = sortOrder == "acc_div_desc" ? "acc_div" : "acc_div_desc";
+            ViewData["AccountFundSortParm"] = sortOrder == "acc_fund_desc" ? "acc_fund" : "acc_fund_desc";
+            ViewData["AccountCreatorSortParm"] = sortOrder == "acc_creatr_desc" ? "acc_creatr" : "acc_creatr_desc";
+            ViewData["AccountApproverSortParm"] = sortOrder == "acc_approvr_desc" ? "acc_approvr" : "acc_approvr_desc";
+            ViewData["AccountLastUpdatedSortParm"] = sortOrder == "acc_last_updte_desc" ? "acc_last_updte" : "acc_last_updte_desc";
+            ViewData["AccountStatusSortParm"] = sortOrder == "acc_stat_desc" ? "acc_stat" : "acc_stat_desc";
+
+            if (searchString != null)
+            {
+                pg = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewData["CurrentFilter"] = searchString;
+
+            //populate and sort
+            var sortedVals = _sortService.SortData(_service.populateAccount(colName, searchString), sortOrder);
+            ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
+
+            //pagination
+            DMViewModel VM = new DMViewModel()
+            {
+                Account = PaginatedList<DMAccountViewModel>.CreateAsync(
+                    (sortedVals.list).Cast<DMAccountViewModel>().AsQueryable().AsNoTracking(), pg ?? 1, pageSize)
+            };
+            return View(VM);
+        }
+
+        [Route("/Partial/DMPartial_VAT/")]
+        public IActionResult DMPartial_VAT(string sortOrder, string currentFilter, string colName, string searchString, string page)
+        {
+            var userId = _session.GetString("UserID");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            int? pg = (page == null) ? 1 : int.Parse(page);
+            //set sort vals
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["VATSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["VATCodeSortParm"] = sortOrder == "vat_code_desc" ? "code_code" : "vat_code_desc";
+            ViewData["VATCreatorSortParm"] = sortOrder == "vat_creatr_desc" ? "vat_creatr" : "vat_creatr_desc";
+            ViewData["VATApproverSortParm"] = sortOrder == "vat_approvr_desc" ? "vat_approvr" : "vat_approvr_desc";
+            ViewData["VATLastUpdatedSortParm"] = sortOrder == "vat_last_updte_desc" ? "vat_last_updte" : "vat_last_updte_desc";
+            ViewData["VATStatusSortParm"] = sortOrder == "vat_stat_desc" ? "vat_stat" : "vat_stat_desc";
+
+            if (searchString != null)
+            {
+                pg = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewData["CurrentFilter"] = searchString;
+
+            //populate and sort
+            var sortedVals = _sortService.SortData(_service.populateVAT(colName, searchString), sortOrder);
+            ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
+
+            //pagination
+            DMViewModel VM = new DMViewModel()
+            {
+                VAT = PaginatedList<DMVATViewModel>.CreateAsync(
+                    (sortedVals.list).Cast<DMVATViewModel>().AsQueryable().AsNoTracking(), pg ?? 1, pageSize)
+            };
+            return View(VM);
+        }
+        [Route("/Partial/DMPartial_FBT/")]
+        public IActionResult DMPartial_FBT(string sortOrder, string currentFilter, string colName, string searchString, string page)
+        {
+            var userId = _session.GetString("UserID");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            int? pg = (page == null) ? 1 : int.Parse(page);
+            //set sort vals
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["FBTSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["FBTAccountSortParm"] = sortOrder == "fbt_acc_desc" ? "fbt_acc" : "fbt_acc_desc";
+            ViewData["FBTFormulaSortParm"] = sortOrder == "fbt_formula_desc" ? "fbt_formula" : "fbt_formula_desc";
+            ViewData["FBTRateSortParm"] = sortOrder == "fbt_rate_desc" ? "fbt_rate" : "fbt_rate_desc";
+            ViewData["FBTCreatorSortParm"] = sortOrder == "fbt_creatr_desc" ? "fbt_creatr" : "fbt_creatr_desc";
+            ViewData["FBTApproverSortParm"] = sortOrder == "fbt_approvr_desc" ? "fbt_approvr" : "fbt_approvr_desc";
+            ViewData["FBTLastUpdatedSortParm"] = sortOrder == "fbt_last_updte_desc" ? "fbt_last_updte" : "fbt_last_updte_desc";
+            ViewData["FBTStatusSortParm"] = sortOrder == "fbt_stat_desc" ? "fbt_stat" : "fbt_stat_desc";
+
+            if (searchString != null)
+            {
+                pg = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewData["CurrentFilter"] = searchString;
+
+            //populate and sort
+            var sortedVals = _sortService.SortData(_service.populateFBT(colName, searchString), sortOrder);
+            ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
+
+            //pagination
+            DMViewModel VM = new DMViewModel()
+            {
+                FBT = PaginatedList<DMFBTViewModel>.CreateAsync(
+                    (sortedVals.list).Cast<DMFBTViewModel>().AsQueryable().AsNoTracking(), pg ?? 1, pageSize)
+            };
+            return View(VM);
+        }
+        [Route("/Partial/DMPartial_EWT/")]
+        public IActionResult DMPartial_EWT(string sortOrder, string currentFilter, string colName, string searchString, string page)
+        {
+            var userId = _session.GetString("UserID");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            int? pg = (page == null) ? 1 : int.Parse(page);
+            //set sort vals
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["EWTSortParm"] = String.IsNullOrEmpty(sortOrder) ? "nature_desc" : "";
+            ViewData["EWTTaxRateSortParm"] = sortOrder == "ewt_tax_desc" ? "ewt_tax" : "ewt_tax_desc";
+            ViewData["EWTATCSortParm"] = sortOrder == "ewt_atc_desc" ? "ewt_atc" : "ewt_atc_desc";
+            ViewData["EWTTaxRateDescSortParm"] = sortOrder == "ewt_tax_descrp_desc" ? "ewt_tax_descrp" : "ewt_tax_descrp_desc";
+            ViewData["EWTCreatorSortParm"] = sortOrder == "ewt_creatr_desc" ? "ewt_creatr" : "ewt_creatr_desc";
+            ViewData["EWTApproverSortParm"] = sortOrder == "ewt_approvr_desc" ? "ewt_approvr" : "ewt_approvr_desc";
+            ViewData["EWTLastUpdatedSortParm"] = sortOrder == "ewt_last_updte_desc" ? "ewt_last_updte" : "ewt_last_updte_desc";
+            ViewData["EWTStatusSortParm"] = sortOrder == "ewt_stat_desc" ? "ewt_stat" : "ewt_stat_desc";
+
+            if (searchString != null)
+            {
+                pg = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewData["CurrentFilter"] = searchString;
+
+            ////populate and sort
+            var sortedVals = _sortService.SortData(_service.populateEWT(colName, searchString), sortOrder);
+            ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
+
+            //pagination
+            DMViewModel VM = new DMViewModel()
+            {
+                EWT = PaginatedList<DMEWTViewModel>.CreateAsync(
+                    (sortedVals.list).Cast<DMEWTViewModel>().AsQueryable().AsNoTracking(), pg ?? 1, pageSize)
+            };
+            return View(VM);
+        }
+        [Route("/Partial/DMPartial_Curr/")]
+        public IActionResult DMPartial_Curr(string sortOrder, string currentFilter, string colName, string searchString, string page)
+        {
+            var userId = _session.GetString("UserID");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            int? pg = (page == null) ? 1 : int.Parse(page);
+            //set sort vals
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["CurrSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["CurrCodeSortParm"] = sortOrder == "curr_code_desc" ? "curr_code" : "curr_code_desc";
+            ViewData["CurrCreatorSortParm"] = sortOrder == "curr_creatr_desc" ? "curr_creatr" : "curr_creatr_desc";
+            ViewData["CurrApproverSortParm"] = sortOrder == "curr_approvr_desc" ? "curr_approvr" : "curr_approvr_desc";
+            ViewData["CurrLastUpdatedSortParm"] = sortOrder == "curr_last_updte_desc" ? "curr_last_updte" : "curr_last_updte_desc";
+            ViewData["CurrStatusSortParm"] = sortOrder == "curr_stat_desc" ? "curr_stat" : "curr_stat_desc";
+
+            if (searchString != null)
+            {
+                pg = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewData["CurrentFilter"] = searchString;
+
+            //populate and sort
+            var sortedVals = _sortService.SortData(_service.populateCurr(colName, searchString), sortOrder);
+            ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
+
+            //pagination
+            DMViewModel VM = new DMViewModel()
+            {
+                Curr = PaginatedList<DMCurrencyViewModel>.CreateAsync(
+                    (sortedVals.list).Cast<DMCurrencyViewModel>().AsQueryable().AsNoTracking(), pg ?? 1, pageSize)
             };
             return View(VM);
         }

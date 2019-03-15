@@ -24,6 +24,7 @@ namespace ExpenseProcessingSystem.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly EPSDbContext _context;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
+        string hi = "";
 
         public AccountController(IHttpContextAccessor httpContextAccessor, EPSDbContext context)
         {
@@ -34,6 +35,13 @@ namespace ExpenseProcessingSystem.Controllers
         [HttpGet]
         public ActionResult Login()
         {
+            AccessViewModel accessVM = new AccessViewModel
+            {
+                isLoggedIn = false,
+                accessType = "",
+                isAdmin = false
+            };
+            ViewBag.access = accessVM;
             LoginViewModel lvm = new LoginViewModel();
             return View(lvm);
         }
@@ -41,22 +49,37 @@ namespace ExpenseProcessingSystem.Controllers
         [HttpPost]
         public ActionResult Login(LoginViewModel model)
         {
-            var acc = _context.Account.Where(x => x.Acc_UserName == model.Acc_UserName).Select(x => x).FirstOrDefault();
-            if (acc != null){
+            AccessViewModel accessVM = new AccessViewModel
+            {
+                isLoggedIn = false,
+                accessType = "",
+                isAdmin = false
+            };
+            ViewBag.access = accessVM;
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var acc = _context.Account.Where(x => x.Acc_UserName == model.Acc_UserName).Where(x=> x.Acc_InUse == true).Select(x => x).FirstOrDefault();
+            if (acc != null)
+            {
                 if (CryptoTools.getHashPasswd("PLACEHOLDER", model.Acc_UserName, model.Acc_Password) == acc.Acc_Password)
                 {
-                    Log.Information("User Logged In");
-                    //SetSession Info
+                    //Set Session Info
                     _session.SetString("UserID", acc.Acc_UserID.ToString());
+                    //Set Access Info
+                    _session.SetString("isLoggedIn", "true");
+                    _session.SetString("accessType", acc.Acc_Role);
+                    _session.SetString("isAdmin", acc.Acc_Role == "admin" ? "true" : "false");
+                    //ViewBag.access = accessVM;
+                    
+                    Log.Information("User Logged In");
                     return RedirectToAction("Index", "Home");
                 }
-                return View(model);
             }
-            else
-            {
-                //ModelState.TryAddModelError(string.Empty,"Invalid Login Credentials");
-                return View(model);
-            }
+            ModelState.AddModelError("","Invalid Login Credential");
+            return View(model);
         }
     }
 }

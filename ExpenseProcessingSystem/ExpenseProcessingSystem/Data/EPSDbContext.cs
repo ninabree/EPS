@@ -20,6 +20,13 @@ namespace ExpenseProcessingSystem.Data
         public DbSet<UserModel> Account { get; set; }
         public DbSet<DMDeptModel> DMDept { get; set; }
         public DbSet<DMPayeeModel> DMPayee { get; set; }
+        public DbSet<DMCheckModel> DMCheck { get; set; }
+        public DbSet<DMAccountModel> DMAccount { get; set; }
+        public DbSet<DMVATModel> DMVAT { get; set; }
+        public DbSet<DMFBTModel> DMFBT { get; set; }
+        public DbSet<DMEWTModel> DMEWT { get; set; }
+        public DbSet<DMCurrencyModel> DMCurrency { get; set; }
+        public DbSet<BudgetModel> Budget { get; set; }
         public DbSet<SystemMessageModel> SystemMessageModels { get; set; }
     }
 }

@@ -9,6 +9,9 @@
         (Context.Request.Path.ToString() == "/Home/Entry_NC") ? true :
         (Context.Request.Path.ToString() == "/Home/Entry_PCV") ? true :
         (Context.Request.Path.ToString() == "/Home/Entry_SS") ? true : false;
+    //var isAdmin = (ViewData["Access"].ToString() == "admin") ? true : false;
+    //ViewData["Access"] = "";
+
 }
 <!DOCTYPE html>
 <html>
@@ -35,17 +38,26 @@
     <div id="header">
         <a href="#" id="header-logo"><img src="~/images/bkgl-logo.svg" alt="bnklogo"></a>
     </div>
-    @if (isLoggedin)
+    @if (ViewBag.access.isLoggedIn)
     {
         <div id="homepage-tabs" class="m-t-30 m-l-25 m-r-25">
             <ul id="tabs">
-                <li class="active" id="home">@Html.ActionLink("Home", "Index", "Home")</li>
-                <li id="entry">@Html.ActionLink("Entry", "Entry_CV", "Home")</li>
-                <li id="close">@Html.ActionLink("Close", "Close", "Home")</li>
-                <li id="dm">@Html.ActionLink("Data Maintenance", "DM", "Home")</li>
-                <li id="report">@Html.ActionLink("Report", "Report", "Home")</li>
+
+                @if (!ViewBag.access.isAdmin)
+                {
+                    <li class="active" id="home">@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li id="entry">@Html.ActionLink("Entry", "Entry_CV", "Home")</li>
+                    <li id="close">@Html.ActionLink("Close", "Close", "Home")</li>
+                    <li id="report">@Html.ActionLink("Report", "Report", "Home")</li>
+                }
+
                 <li id="bm">@Html.ActionLink("Budget Monitoring", "BM", "Home")</li>
-                <li id="um">@Html.ActionLink("User Management", "UM", "Home")</li>
+                <li id="dm">@Html.ActionLink("Data Maintenance", "DM", "Home")</li>
+
+                @if (ViewBag.access.isAdmin)
+                {
+                    <li id="um">@Html.ActionLink("User Management", "UM", "Home")</li>
+                }
             </ul>
 
             <div class="tabContent">

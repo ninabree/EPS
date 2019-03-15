@@ -1,0 +1,71 @@
+﻿
+@{
+    ViewData["Title"] = "DMPartial_Curr";
+    Layout = "~/Views/Shared/_ModalLayout.cshtml";
+}
+
+
+@using ExpenseProcessingSystem.ViewModels
+@model DMViewModel
+
+<div class="tbl-cont">
+    <table class="table table-striped tab-tbl">
+        <thead>
+            <tr>
+                <th></th>
+                <th id="Name"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CurrSortParm"]">Currency Name<p class="btn-xs glyphicon @ViewData["glyph-1"]"></p></a></th>
+                <th id="CCY_Code"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CurrCodeSortParm"]">CCY Code<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
+                <th id="Creator_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CurrCreatorSortParm"]">Created By<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
+                <th id="Approver_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CurrApproverSortParm"]">Approved By<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
+                <th id="Approver_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CurrLastUpdteSortParm"]">Last Updated Date<p class="btn-xs glyphicon @ViewData["glyph-5"]"></p></a></th>
+                <th id="Status"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CurrStatusSortParm"]">Status<p class="btn-xs glyphicon @ViewData["glyph-6"]"></p></a></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Curr != null)
+            {
+                @foreach (var item in Model.Curr)
+                {
+                    <tr>
+                        <td><input class="tbl-chk" id="@item.Curr_ID" type="checkbox" /></td>
+                        <td>@Html.DisplayFor(modelItem => item.Curr_Name)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Curr_CCY_Code)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Curr_Creator_Name)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Curr_Approver_Name)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Curr_Last_Updated)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Curr_Status)</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    @{
+        var prevDisabled = !Model.Curr.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.Curr.HasNextPage ? "disabled" : "";
+    }
+    <a asp-action="DM"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-page="@(Model.Curr.PageIndex - 1)"
+       asp-controller="Home"
+       asp-route-partialName="@ViewData["Title"]"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left">
+    </a>
+    <input type="text" class="pagination-input" id="paginationInput" val="" />
+    <input type="text" class="pagination-input" value="of @(Model.Curr.TotalPages)" disabled />
+    <a asp-action="DM"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-controller="Home"
+       asp-route-partialName="@ViewData["Title"]"
+       asp-route-page="@(Model.Curr.PageIndex + 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right">
+    </a>
+    <div class="float-r m-r-10">
+        <div class="dis-inline-block tbl-btn btn" id="add_curr">Add</div>
+        <div class="dis-inline-block tbl-btn btn" id="edit_curr">Edit</div>
+        <div class="dis-inline-block tbl-btn btn" id="delete_curr">Delete</div>
+        <input type="hidden" value="@ViewData["Title"]" id="partialVal" />
+    </div>
+    @Html.Partial("ModalPartial")
+</div>

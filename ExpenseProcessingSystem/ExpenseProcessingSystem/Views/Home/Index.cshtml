@@ -1,12 +1,15 @@
 ﻿@{
     ViewData["Title"] = "Index";
 }
-@*@using ExpenseProcessingSystem.ViewModels.Home
-    @model PaginatedList<HomeViewModel>*@
+@using ExpenseProcessingSystem.ViewModels
+@model HomeIndexViewModel
 <div class="tab-content-cont m-t-10">
+    @*<div style="height: 20px; margin: 15px 0px; background-color: blue">@ViewBag.access.isLoggedIn</div>
+    <div style="height: 20px; margin: 15px 0px; background-color: forestgreen">@ViewBag.access.isAdmin</div>
+    <div style="height: 20px; margin: 15px 0px; background-color: yellow">@ViewBag.access.accessType</div>*@
     <div>
         <div class="tbl-cont" style="height: 150px; margin: 20px 0px; overflow-y: auto;">
-            <table class="table table-striped tab-tbl table-bordered"  style="height: 150px"> 
+            <table class="table table-striped tab-tbl table-bordered" style="height: 150px">
                 <thead>
                     <tr>
                         <th>Application ID</th>
@@ -16,8 +19,7 @@
                         <th></th>
                     </tr>
                 </thead>
-                <tbody>
-                </tbody>
+                <tbody></tbody>
             </table>
         </div>
     </div>

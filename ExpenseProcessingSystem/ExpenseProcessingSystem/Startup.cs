@@ -33,24 +33,24 @@ namespace ExpenseProcessingSystem
             .Enrich.WithEnvironmentUserName()
             .WriteTo.Debug()
             .WriteTo.File("C:\\Work\\Mizuho EPS\\eps_logs\\logs\\log.txt", LogEventLevel.Error, outputTemplate, rollingInterval: RollingInterval.Day, fileSizeLimitBytes: null, rollOnFileSizeLimit: true)
-            .WriteTo.Email(new EmailConnectionInfo
-                {
-                    FromEmail = "mizuho.eps@gmail.com", //temp, change to dynamic
-                    ToEmail = "monina.martin@fetp.ph", //temp, change to dynamic -> login user's email
-                    MailServer = "smtp.gmail.com",
-                    NetworkCredentials = new NetworkCredential
-                    {
-                        UserName = "mizuho.eps@gmail.com", //temp, change to dynamic
-                        Password = "mizuhoeps2019" //temp, change to dynamic
-                    },
-                    EnableSsl = true,
-                    Port = 465,
-                    EmailSubject = "[EPS] Log Error"
-            },
-                outputTemplate: outputTemplate,
-                batchPostingLimit: 10
-                , restrictedToMinimumLevel: LogEventLevel.Error
-            )
+            //.WriteTo.Email(new EmailConnectionInfo
+            //    {
+            //        FromEmail = "mizuho.eps@gmail.com", //temp, change to dynamic
+            //        ToEmail = "mizuho.eps@gmail.com", //temp, change to dynamic -> login user's email
+            //        MailServer = "smtp.gmail.com",
+            //        NetworkCredentials = new NetworkCredential
+            //        {
+            //            UserName = "mizuho.eps@gmail.com", //temp, change to dynamic
+            //            Password = "mizuhoeps2019" //temp, change to dynamic
+            //        },
+            //        EnableSsl = true,
+            //        Port = 465,
+            //        EmailSubject = "[EPS] Log Error"
+            //},
+            //    outputTemplate: outputTemplate,
+            //    batchPostingLimit: 10
+            //    , restrictedToMinimumLevel: LogEventLevel.Fatal
+            //)
             .CreateLogger();
 
             Configuration = configuration;

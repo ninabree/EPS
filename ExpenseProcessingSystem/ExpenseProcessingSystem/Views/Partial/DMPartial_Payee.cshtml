@@ -46,7 +46,6 @@
         var prevDisabled = !Model.Payee.HasPreviousPage ? "disabled" : "";
         var nextDisabled = !Model.Payee.HasNextPage ? "disabled" : "";
     }
-
     <a asp-action="DM"
        asp-route-sortOrder="@ViewData["CurrentSort"]"
        asp-route-page="@(Model.Payee.PageIndex - 1)"

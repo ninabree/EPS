@@ -14,10 +14,9 @@
                 <option value="DMPartial_Acc">Account</option>
                 <option value="DMPartial_Dept">Department</option>
                 <option value="DMPartial_VAT">Value Added Tax</option>
-                <option value="DMPartial_FBE">Fringe Benefit Tax</option>
+                <option value="DMPartial_FBT">Fringe Benefit Tax</option>
                 <option value="DMPartial_EWT">Expanded Withholding Tax</option>
                 <option value="DMPartial_Curr">Currency</option>
-                <option value="DMPartial_Budget">Budget</option>
             </select>
         </div>
         <form asp-action="DM" method="get" id="search-frm">
@@ -40,6 +39,16 @@
         </div>
     </div>
 </div>
+
+@functions {
+public int CheckSession
+{
+    get
+    {
+        return Context.Session.Id != null ? 1:0;
+    }
+}
+}
 <environment include="Development">
     <script src="~/lib/jquery/dist/jquery.js"></script>
 </environment>
@@ -75,22 +84,28 @@
         }
         //change content of partial view on select on change
         $('select#dm-tbl').change(function () {
-            $('input#filterPartialName').val(this.value);
-            $.ajax({
-                url: '/Partial/' + this.value,
-                type: "Get",
-                data: { sortOrder: sortOrder, currentFilter: currentFilter, searchString: searchString, page: page },
-                //data: model,
-                async: true,
-                processData: false,
-                datatype: "json",
-                cache: false, 
-                success: function (data) {
-                    cont.empty();
-                    cont.html(data);
-                    isSearchDisabled()
-                }
-            });
+            if (@CheckSession == 1) {
+                $('input#filterPartialName').val(this.value);
+                $.ajax({
+                    url: '/Partial/' + this.value,
+                    type: "Get",
+                    data: { sortOrder: sortOrder, currentFilter: currentFilter, searchString: searchString, page: page },
+                    //data: model,
+                    async: false,
+                    processData: false,
+                    datatype: "json",
+                    cache: false,
+                    success: function (data) {
+                        cont.empty();
+                        cont.html(data);
+                        isSearchDisabled()
+                    }
+                });
+            } else {
+                alert("Session Timeout.");
+                location.href = "/Account/Login";
+            }
+            
         });
 
         function isSearchDisabled() {

@@ -26,6 +26,12 @@ namespace ExpenseProcessingSystem.Services
             _context = context;
             _modelState = modelState;
         }
+        public string getUserRole(string id)
+        {
+            var data = _context.Account.Where(x => x.Acc_UserID == int.Parse(id))
+                .Select(x => x.Acc_Role).FirstOrDefault() ?? "";
+            return data;
+        }
         //Populate
         public UserManagementViewModel2 populateUM()
         {

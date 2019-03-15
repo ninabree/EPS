@@ -17,6 +17,7 @@ using OfficeOpenXml;
 
 namespace ExpenseProcessingSystem.Controllers
 {
+    [ScreenFltr]
     public class HomeController : Controller
     {
         private readonly int pageSize = 30;
@@ -48,7 +49,17 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-            return View();
+
+            var role = _service.getUserRole(_session.GetString("UserID"));
+            if (role == "admin")
+            {
+                return RedirectToAction("UM");
+            }
+            HomeIndexViewModel vm = new HomeIndexViewModel
+            {
+
+            };
+            return View(vm);
         }
         public IActionResult Entry()
         {
