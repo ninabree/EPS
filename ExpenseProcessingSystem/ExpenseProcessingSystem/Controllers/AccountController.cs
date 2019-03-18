@@ -35,6 +35,11 @@ namespace ExpenseProcessingSystem.Controllers
         [HttpGet]
         public ActionResult Login()
         {
+            if (Request.Headers["x-requested-with"] == "XMLHttpRequest")
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //var str = "";
             AccessViewModel accessVM = new AccessViewModel
             {
                 isLoggedIn = false,

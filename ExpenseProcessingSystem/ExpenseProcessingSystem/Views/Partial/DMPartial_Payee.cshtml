@@ -8,6 +8,40 @@
 @model DMViewModel
 
 <div class="tbl-cont">
+    <form asp-action="DM" asp-controller="Home" method="get" id="search-frm">
+        <div class="form-actions no-color">
+            <p>
+                Find by:
+                <table class="table">
+                    <tr>
+                        <td>@Html.LabelFor(model => model.DMFilters.PF.PF_Name)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.PF.PF_Name, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.PF.PF_TIN)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.PF.PF_TIN, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.PF.PF_Address)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.PF.PF_Address, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.PF.PF_Type)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.PF.PF_Type, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.PF.PF_No)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.PF.PF_No, new { @class = "input" })</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(model => model.DMFilters.PF.PF_Creator_Name)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.PF.PF_Creator_Name, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.PF.PF_Approver_Name)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.PF.PF_Approver_Name, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.PF.PF_Status)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.PF.PF_Status, new { @class = "input" })</td>
+                        <td colspan="2"></td>
+                        <td colspan="2" style="text-align: right;">
+                            <input type="submit" value="Search" class="btn btn-default" id="search-btn" />
+                            <input type="button" value="Back to Full List" id="full-list-btn" class="btn btn-default" />
+                        </td>
+                    </tr>
+                </table>
+            </p>
+        </div>
+    </form>
     <table class="table table-striped tab-tbl">
         <thead>
             <tr>
@@ -68,6 +102,11 @@
         <div class="dis-inline-block tbl-btn btn" id="add_payee">Add</div>
         <div class="dis-inline-block tbl-btn btn" id="edit_payee">Edit</div>
         <div class="dis-inline-block tbl-btn btn" id="delete_payee">Delete</div>
+        @if (ViewBag.access.isAdmin)
+        {
+            <div class="dis-inline-block tbl-btn btn" id="apprv_payee">Approve</div>
+            <div class="dis-inline-block tbl-btn btn" id="rej_payee">Reject</div>
+        }
         <input type="hidden" value="@ViewData["Title"]" id="partialVal" />
     </div>
     @Html.Partial("ModalPartial")

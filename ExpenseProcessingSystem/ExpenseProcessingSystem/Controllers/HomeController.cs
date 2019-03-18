@@ -9,6 +9,7 @@ using ExpenseProcessingSystem.Services;
 using ExpenseProcessingSystem.Services.Controller_Services;
 using ExpenseProcessingSystem.Services.Excel_Services;
 using ExpenseProcessingSystem.ViewModels;
+using ExpenseProcessingSystem.ViewModels.Search_Filters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -75,10 +76,9 @@ namespace ExpenseProcessingSystem.Controllers
             return View();
         }
         [ImportModelState]
-        public IActionResult DM(string sortOrder, string currentFilter, string tblName, string colName, string searchString, int? page, string partialName)
+        public IActionResult DM(DMViewModel vm, string sortOrder, string currentFilter, string tblName, string colName, string searchString, int? page, string partialName)
         {
-            var userId = GetUserID();
-            if (userId == null)
+            if (GetUserID() == null)
             {
                 return RedirectToAction("Login", "Account");
             }
@@ -89,6 +89,32 @@ namespace ExpenseProcessingSystem.Controllers
             ViewData["searchString"] = searchString;
             ViewData["page"] = page;
             ViewData["partialName"] = partialName ?? "DMPartial_Payee";
+
+            DMFiltersViewModel filterVM = new DMFiltersViewModel();
+            PayeeFiltersViewModel payeeFil = new PayeeFiltersViewModel();
+            if (vm.DMFilters != null)
+            {
+                _session.SetString("PF_Name", vm.DMFilters.PF.PF_Name ?? "");
+                _session.SetString("PF_TIN", vm.DMFilters.PF.PF_TIN.ToString() ?? "0");
+                _session.SetString("PF_Address", vm.DMFilters.PF.PF_Address ?? "");
+                _session.SetString("PF_Type", vm.DMFilters.PF.PF_Type ?? "");
+                _session.SetString("PF_No", vm.DMFilters.PF.PF_No.ToString() ?? "0");
+                _session.SetString("PF_Creator_Name", vm.DMFilters.PF.PF_Creator_Name ?? "");
+                _session.SetString("PF_Approver_Name", vm.DMFilters.PF.PF_Approver_Name ?? "");
+                _session.SetString("PF_Status", vm.DMFilters.PF.PF_Status ?? "");
+            }
+            else
+            {
+                _session.SetString("PF_Name", "");
+                //_session.SetString("PF_Name", filters.PF.PF_Name);
+                _session.SetString("PF_TIN", "0");
+                _session.SetString("PF_Address", "");
+                _session.SetString("PF_Type", "");
+                _session.SetString("PF_No", "0");
+                _session.SetString("PF_Creator_Name", "");
+                _session.SetString("PF_Approver_Name", "");
+                _session.SetString("PF_Status", "");
+            }
             return View();
         }
         public IActionResult Report()
@@ -203,7 +229,6 @@ namespace ExpenseProcessingSystem.Controllers
         }
 
         [HttpPost]
-        //[Route("/RedirectCont/")]
         public IActionResult RedirectCont(string Cont, string Method)
         {
             return RedirectToAction(Method, Cont);
@@ -216,6 +241,57 @@ namespace ExpenseProcessingSystem.Controllers
 
         //------------------------------------------------------------------
         //[* PAYEE *]
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult ApprovePayee(List<DMPayeeViewModel> model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.approvePayee(model, userId);
+            }
+
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Payee" });
+        }
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult RejPayee(List<DMPayeeViewModel> model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.rejPayee(model, userId);
+            }
+
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Payee" });
+        }
+        //__________________________________________________________________
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult AddPayee_Pending(NewPayeeListViewModel model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.addPayee_Pending(model, userId);
+            }
+
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Payee" });
+        }
+
+        //------------------------------------------------------------------
         [HttpPost]
         [ExportModelState]
         public IActionResult AddPayee(NewPayeeListViewModel model)
@@ -266,6 +342,7 @@ namespace ExpenseProcessingSystem.Controllers
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Payee" });
         }
+
         //[* DEPT *]
         [HttpPost]
         [ExportModelState]
@@ -317,6 +394,7 @@ namespace ExpenseProcessingSystem.Controllers
             
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Dept" });
         }
+
         //[* USER *]
         [HttpPost]
         [ExportModelState]
@@ -335,8 +413,8 @@ namespace ExpenseProcessingSystem.Controllers
 
             return RedirectToAction("UM", "Home");
         }
-        //[* EXCEL *]
 
+        //[* EXCEL *]
         public IActionResult Excel()
         {
             var userId = GetUserID();

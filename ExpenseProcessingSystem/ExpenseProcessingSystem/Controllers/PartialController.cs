@@ -7,6 +7,7 @@ using ExpenseProcessingSystem.Models;
 using ExpenseProcessingSystem.Services;
 using ExpenseProcessingSystem.Services.Controller_Services;
 using ExpenseProcessingSystem.ViewModels;
+using ExpenseProcessingSystem.ViewModels.Search_Filters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -42,32 +43,39 @@ namespace ExpenseProcessingSystem.Controllers
             int? pg = (page == null) ? 1 : int.Parse(page);
             //sort
             ViewData["CurrentSort"] = sortOrder;
-            ViewData["PayeeSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["PayeeStatusSortParm"] = String.IsNullOrEmpty(sortOrder) ? "payee_stat" : "";
             ViewData["PayeeTINSortParm"] = sortOrder == "payee_TIN_desc" ? "payee_TIN" : "payee_TIN_desc";
             ViewData["PayeeAddSortParm"] = sortOrder == "payee_add_desc" ? "payee_add" : "payee_add_desc";
             ViewData["PayeeTypeSortParm"] = sortOrder == "payee_type_desc" ? "payee_type" : "payee_type_desc";
             ViewData["PayeeNoSortParm"] = sortOrder == "payee_no_desc" ? "payee_no" : "payee_no_desc";
             ViewData["PayeeCreatorSortParm"] = sortOrder == "payee_creatr_desc" ? "payee_creatr" : "payee_creatr_desc";
             ViewData["PayeeApproverSortParm"] = sortOrder == "payee_approvr_desc" ? "payee_approvr" : "payee_approvr_desc";
-            ViewData["PayeeStatusSortParm"] = sortOrder == "payee_stat_desc" ? "payee_stat" : "payee_stat_desc";
+            ViewData["PayeeSortParm"] = sortOrder == "payee_stat_desc" ? "name" : "name_desc";
 
             if (searchString != null){ pg = 1; }
             else{ searchString = currentFilter; }
 
             ViewData["CurrentFilter"] = searchString;
-            
+            DMFiltersViewModel filters = new DMFiltersViewModel();
+            if (TempData.ContainsKey("filters"))
+            {
+                filters = (DMFiltersViewModel)TempData["filters"];
+            }
+
             //populate and sort
-            var sortedVals = _sortService.SortData(_service.populatePayee(colName, searchString), sortOrder);
+            var sortedVals = _sortService.SortData(_service.populatePayee(filters), sortOrder);
             ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
 
-            //pagination
+            
+
             DMViewModel VM = new DMViewModel()
             {
+                DMFilters = filters,
+                //pagination
                 Payee = PaginatedList<DMPayeeViewModel>.CreateAsync(
-                    (sortedVals.list).Cast<DMPayeeViewModel>().AsQueryable().AsNoTracking(), pg ?? 1, pageSize)
+                        (sortedVals.list).Cast<DMPayeeViewModel>().AsQueryable().AsNoTracking(), pg ?? 1, pageSize)
             };
             return View(VM);
-            
         }
 
         [Route("/Partial/DMPartial_Dept/")]

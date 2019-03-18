@@ -68,3 +68,6 @@ C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\ob
 C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Partial\DMPartial_FBT.g.cshtml.cs
 C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Partial\DMPartial_EWT.g.cshtml.cs
 C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Partial\DMPartial_Curr.g.cshtml.cs
+C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMAddPayee_Pending.g.cshtml.cs
+C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMApprovePayee.g.cshtml.cs
+C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMRejPayee.g.cshtml.cs

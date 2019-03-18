@@ -1,6 +1,7 @@
 ﻿using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Models;
 using ExpenseProcessingSystem.ViewModels;
+using ExpenseProcessingSystem.ViewModels.Search_Filters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
@@ -23,26 +24,58 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             _context = context;
         }
         //Populate
-        public List<DMPayeeViewModel> populatePayee(string colName, string searchString)
+        public List<DMPayeeViewModel> populatePayee(DMFiltersViewModel filters)
         {
-            List<DMPayeeModel> mList = _context.DMPayee.Where(x => x.Payee_isDeleted == false).ToList();
-            //FOR FILTERING
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                string[] colArr = { "No", "Creator_ID", "Approver_ID" };
-                if (colArr.Contains(colName))
-                {
-                    mList = _context.DMPayee
-                                  .Where("Payee_" + colName + " = @0 AND Payee_isDeleted == @1", searchString, false)
-                                  .Select(e => e).ToList();
-                }
-                else
-                {
-                    mList = _context.DMPayee
-                                  .Where("Payee_" + colName + ".Contains(@0) AND Payee_isDeleted == @1", searchString, false)
-                                  .Select(e => e).ToList();
-                }
+            IQueryable<DMPayeeModel> mList = _context.DMPayee.Where(x=>x.Payee_isDeleted == false).ToList().AsQueryable();
+            var properties = filters.PF.GetType().GetProperties();
 
+            //FILTER
+            foreach(var property in properties)
+            {
+                var propertyName = property.Name;
+                string[] split = propertyName.Split("_");
+                var toStr = property.GetValue(filters.PF).ToString();
+                string[] colArr = { "No", "Creator_ID", "Approver_ID" };
+                if (toStr != "")
+                {
+                    if (toStr != "0")
+                    {
+                        if (colArr.Contains(split[1])) // IF INT VAL
+                        {
+                            mList = mList.Where("Payee_" + split[1] + " = @0 AND  Payee_isDeleted == @1", property.GetValue(filters.PF), false)
+                                     .Select(e => e).AsQueryable();
+                        }else if (split[1] == "Creator_Name" || split[1] == "Approver_Name")
+                        { //UPDATE THIS TO SEARCH FOR CREATOR OR APPROVER NAME IN USER TABLE
+                            mList = mList.Where("Payee_" + split[1] + ".Contains(@0) AND  Payee_isDeleted == @1", property.GetValue(filters.PF), false)
+                                     .Select(e => e).AsQueryable();
+                        }
+                        else // IF STRING VALUE
+                        {
+                            mList = mList.Where("Payee_"+split[1]+ ".Contains(@0) AND  Payee_isDeleted == @1", property.GetValue(filters.PF).ToString(), false)
+                                    .Select(e => e).AsQueryable();
+                        }
+                    }
+                }
+            }
+            var pendingList = _context.DMPayee_Pending.ToList();
+            foreach (var m in pendingList)
+            {
+                mList = mList.Concat(new DMPayeeModel[] {
+                    new DMPayeeModel
+                    {
+                        Payee_ID = m.Pending_Payee_ID,
+                        Payee_Name = m.Pending_Payee_Name,
+                        Payee_TIN = m.Pending_Payee_TIN,
+                        Payee_Address = m.Pending_Payee_Address,
+                        Payee_Type = m.Pending_Payee_Type,
+                        Payee_No = m.Pending_Payee_No,
+                        Payee_Creator_ID = m.Pending_Payee_Creator_ID,
+                        Payee_Approver_ID = m.Pending_Payee_Approver_ID.Equals(null) ? 0 : m.Pending_Payee_Approver_ID,
+                        Payee_Created_Date = m.Pending_Payee_Filed_Date,
+                        Payee_Last_Updated = m.Pending_Payee_Filed_Date,
+                        Payee_Status = m.Pending_Payee_Status
+                    }
+                });
             }
 
             var creatorList = (from a in mList
@@ -56,8 +89,10 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                               select new
                               { a.Payee_ID, ApproverName }).ToList();
 
-            List<DMPayeeViewModel> vmList = new List<DMPayeeViewModel>();
-            foreach (DMPayeeModel m in mList)
+            //assign values
+            List<DMPayeeModel> mList2 = mList.ToList();
+            List <DMPayeeViewModel> vmList = new List<DMPayeeViewModel>();
+            foreach (DMPayeeModel m in mList2)
             {
                 var creator = creatorList.Where(a => a.Payee_ID == m.Payee_ID).Select(a => a.CreatorName).FirstOrDefault();
                 var approver = apprvrList.Where(a => a.Payee_ID == m.Payee_ID).Select(a => a.ApproverName).FirstOrDefault();

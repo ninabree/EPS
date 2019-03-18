@@ -15,10 +15,39 @@
         ModalPopup('Modal', 'BudgetAdjustmentModal', 'Budget Adjustment');
     });
 
+    $("#apprv_payee").click(function (e) {
+        e.stopImmediatePropagation();
+        var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
+        if (!(chkCount <= 0)) {
+            var idsArr = Array();
+            $('input.tbl-chk[type="checkbox"]:checked').each(function (i, v) {
+                idsArr.push($(v).attr('id'));
+            });
+            //controller name, method name, modal header
+            ModalPopup('Modal', 'DMApprovePayee', 'Approve Record/s', idsArr);
+        } else {
+            alert("No data record/s selected.");
+        }
+    });
+
+    $("#rej_payee").click(function (e) {
+        e.stopImmediatePropagation();
+        var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
+        if (!(chkCount <= 0)) {
+            var idsArr = Array();
+            $('input.tbl-chk[type="checkbox"]:checked').each(function (i, v) {
+                idsArr.push($(v).attr('id'));
+            });
+            //controller name, method name, modal header
+            ModalPopup('Modal', 'DMRejPayee', 'Reject Record/s', idsArr);
+        } else {
+            alert("No data record/s selected.");
+        }
+    });
     $("#add_payee").click(function (e) {
         e.stopImmediatePropagation();
         //controller name, method name, modal header
-        ModalPopup('Modal', 'DMAddPayee', 'Add New Record/s');
+        ModalPopup('Modal', 'DMAddPayee_Pending', 'Add New Record/s');
     });
 
     $("#edit_payee").click(function (e) {

@@ -91,9 +91,9 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             var vdInfo = "";
             switch (sortOrder)
             {
-                case "name_desc":
-                    tempList = tempList.OrderByDescending(s => s.Payee_Name);
-                    viewData = "glyph-1";
+                case "payee_stat":
+                    tempList = tempList.OrderBy(x => x.Payee_Status == "For Approval");
+                    viewData = "glyph-8";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "payee_TIN":
@@ -156,19 +156,20 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     viewData = "glyph-7";
                     vdInfo = "glyphicon-menu-up";
                     break;
-                case "payee_stat":
-                    tempList = tempList.OrderBy(s => s.Payee_Status);
-                    viewData = "glyph-8";
+                case "name":
+                    tempList = tempList.OrderBy(s => s.Payee_Name);
+                    viewData = "glyph-1";
                     vdInfo = "glyphicon-menu-down";
                     break;
-                case "payee_stat_desc":
-                    tempList = tempList.OrderByDescending(s => s.Payee_Status);
-                    viewData = "glyph-8";
+                case "name_desc":
+                    tempList = tempList.OrderByDescending(s => s.Payee_Name);
+                    viewData = "glyph-1";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 default:
-                    tempList = tempList.OrderBy(s => s.Payee_Name);
-                    viewData = "glyph-1";
+                    //tempList = tempList.OrderBy(s => s.Payee_Name);
+                    tempList = tempList.OrderByDescending(x => x.Payee_Status == "For Approval");
+                    viewData = "glyph-8";
                     vdInfo = "glyphicon-menu-down";
                     break;
             }

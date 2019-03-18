@@ -33,7 +33,67 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             mod.NewPayeeVM = vmList;
             return mod;
         }
+        public List<DMPayeeViewModel> approvePayee(string[] IdsArr)
+        {
+            List<DMPayeeModel_Pending> pendingList = _context.DMPayee_Pending.Where(x => IdsArr.Contains(x.Pending_Payee_ID.ToString())).ToList();
+            List<DMPayeeViewModel> tempList = new List<DMPayeeViewModel>();
+            foreach (DMPayeeModel_Pending m in pendingList)
+            {
+                foreach (string s in IdsArr)
+                {
+                    if (m.Pending_Payee_ID == int.Parse(s))
+                    {
+                        DMPayeeViewModel vm = new DMPayeeViewModel
+                        {
+                            Payee_ID = m.Pending_Payee_ID,
+                            Payee_Name = m.Pending_Payee_Name,
+                            Payee_TIN = m.Pending_Payee_TIN,
+                            Payee_Address = m.Pending_Payee_Address,
+                            Payee_Type = m.Pending_Payee_Type,
+                            Payee_No = m.Pending_Payee_No,
+                            Payee_Creator_ID = m.Pending_Payee_Creator_ID,
+                            Payee_Approver_ID = m.Pending_Payee_Approver_ID.Equals(null) ? 0 : m.Pending_Payee_Approver_ID,
+                            Payee_Created_Date = m.Pending_Payee_Filed_Date,
+                            Payee_Last_Updated = m.Pending_Payee_Filed_Date,
+                            Payee_Status = m.Pending_Payee_Status
+                        };
+                        tempList.Add(vm);
+                    }
+                }
+            }
+            return tempList;
+        }
 
+        public List<DMPayeeViewModel> rejectPayee(string[] IdsArr)
+        {
+            List<DMPayeeModel_Pending> pendingList = _context.DMPayee_Pending.Where(x => IdsArr.Contains(x.Pending_Payee_ID.ToString())).ToList();
+            List<DMPayeeViewModel> tempList = new List<DMPayeeViewModel>();
+            foreach (DMPayeeModel_Pending m in pendingList)
+            {
+                foreach (string s in IdsArr)
+                {
+                    if (m.Pending_Payee_ID == int.Parse(s))
+                    {
+                        DMPayeeViewModel vm = new DMPayeeViewModel
+                        {
+                            Payee_ID = m.Pending_Payee_ID,
+                            Payee_Name = m.Pending_Payee_Name,
+                            Payee_TIN = m.Pending_Payee_TIN,
+                            Payee_Address = m.Pending_Payee_Address,
+                            Payee_Type = m.Pending_Payee_Type,
+                            Payee_No = m.Pending_Payee_No,
+                            Payee_Creator_ID = m.Pending_Payee_Creator_ID,
+                            Payee_Approver_ID = m.Pending_Payee_Approver_ID.Equals(null) ? 0 : m.Pending_Payee_Approver_ID,
+                            Payee_Created_Date = m.Pending_Payee_Filed_Date,
+                            Payee_Last_Updated = m.Pending_Payee_Filed_Date,
+                            Payee_Status = m.Pending_Payee_Status
+                        };
+                        tempList.Add(vm);
+                    }
+                }
+            }
+            return tempList;
+        }
         public List<DMPayeeViewModel> editDeletePayee(string[] IdsArr)
         {
             List<DMPayeeModel> mList = _context.DMPayee.Where(x => IdsArr.Contains(x.Payee_ID.ToString())).ToList();

@@ -28,5 +28,8 @@ namespace ExpenseProcessingSystem.Data
         public DbSet<DMCurrencyModel> DMCurrency { get; set; }
         public DbSet<BudgetModel> Budget { get; set; }
         public DbSet<SystemMessageModel> SystemMessageModels { get; set; }
+
+        //PENDING ENTRY TABLES
+        public DbSet<DMPayeeModel_Pending> DMPayee_Pending { get; set; }
     }
 }

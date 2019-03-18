@@ -37,6 +37,48 @@ namespace ExpenseProcessingSystem.Controllers
         {
             return View();
         }
+        // [FOR APPROVAL]
+        //DM Approve Payee
+        public IActionResult DMApprovePayee(string[] IdsArr)
+        {
+            var userId = HttpContext.Session.GetString("UserID");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            List<DMPayeeViewModel> vmList = new List<DMPayeeViewModel>();
+            if (ModelState.IsValid)
+            {
+                vmList = _service.approvePayee(IdsArr);
+            }
+            return View(vmList);
+        }
+        //DM Approve Payee
+        public IActionResult DMRejPayee(string[] IdsArr)
+        {
+            var userId = HttpContext.Session.GetString("UserID");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            List<DMPayeeViewModel> vmList = new List<DMPayeeViewModel>();
+            if (ModelState.IsValid)
+            {
+                vmList = _service.rejectPayee(IdsArr);
+            }
+            return View(vmList);
+        }
+        //DM Add Payee
+        public IActionResult DMAddPayee_Pending()
+        {
+            var userId = HttpContext.Session.GetString("UserID");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            return View(_service.addPayee());
+        }
+        //APPROVED
         //DM Add Payee
         public IActionResult DMAddPayee()
         {

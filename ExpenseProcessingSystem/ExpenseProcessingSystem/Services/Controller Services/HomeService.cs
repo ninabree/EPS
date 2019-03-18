@@ -159,6 +159,110 @@ namespace ExpenseProcessingSystem.Services
             return true;
         }
         //[DM]
+        //ADMIN
+        public bool approvePayee(List<DMPayeeViewModel> model, string userId)
+        {
+            List<int> intList = model.Select(c => c.Payee_ID).ToList();
+            List<DMPayeeModel_Pending> allPending = _context.DMPayee_Pending.Where(x=> intList.Contains(x.Pending_Payee_ID)).ToList();
+            //get all records that currently exists in Master Data
+            List<DMPayeeModel> vmList = _context.DMPayee.Where(x => intList.Contains(x.Payee_ID)).ToList();
+            //create temp list for IDs of existing records to be updated
+            List<int> existingList = vmList.Select(c => c.Payee_ID).ToList();
+            //get all selected records from pending,
+            //do not fetch records already in vmList
+            List<DMPayeeModel_Pending> pendingList = _context.DMPayee_Pending
+                .Where(x => intList.Contains(x.Pending_Payee_ID) && !(existingList.Contains(x.Pending_Payee_ID))).ToList();
+            //list for formatted records to be added
+            List<DMPayeeModel> addList = new List<DMPayeeModel>();
+
+            //add to master table newly approved records
+            pendingList.ForEach(pending =>
+            {
+                DMPayeeModel m = new DMPayeeModel
+                {
+                    Payee_Name = pending.Pending_Payee_Name,
+                    Payee_TIN = pending.Pending_Payee_TIN,
+                    Payee_Address = pending.Pending_Payee_Address,
+                    Payee_Type = pending.Pending_Payee_Type,
+                    Payee_No = pending.Pending_Payee_No,
+                    Payee_Creator_ID = pending.Pending_Payee_Creator_ID,
+                    Payee_Approver_ID = int.Parse(_session.GetString("UserID")),
+                    Payee_Created_Date = DateTime.Now,
+                    Payee_Last_Updated = DateTime.Now,
+                    Payee_Status = "Approved",
+                    Payee_isDeleted = false
+                };
+                addList.Add(m);
+            });
+
+            //update existing records
+            vmList.ForEach(dm =>
+            {
+                model.ForEach(m =>
+                {
+                    if (m.Payee_ID == dm.Payee_ID)
+                    {
+                        dm.Payee_Name = m.Payee_Name;
+                        dm.Payee_TIN = m.Payee_TIN;
+                        dm.Payee_Address = m.Payee_Address;
+                        dm.Payee_Type = m.Payee_Type;
+                        dm.Payee_No = m.Payee_No;
+                        dm.Payee_Approver_ID = int.Parse(_session.GetString("UserID"));
+                        dm.Payee_Last_Updated = DateTime.Now;
+                        dm.Payee_Status = "Approved";
+                        dm.Payee_isDeleted = false;
+                    }
+                });
+            });
+
+            if (_modelState.IsValid)
+            {
+                _context.DMPayee.AddRange(addList);
+                _context.DMPayee_Pending.RemoveRange(allPending);
+                _context.SaveChanges();
+            }
+            return true;
+        }
+        public bool rejPayee(List<DMPayeeViewModel> model, string userId)
+        {
+            List<int> intList = model.Select(c => c.Payee_ID).ToList();
+            List<DMPayeeModel_Pending> allPending = _context.DMPayee_Pending.Where(x => intList.Contains(x.Pending_Payee_ID)).ToList();
+
+            if (_modelState.IsValid)
+            {
+                _context.DMPayee_Pending.RemoveRange(allPending);
+                _context.SaveChanges();
+            }
+            return true;
+        }
+        //______________________________________________________________________
+        //For Approval
+        public bool addPayee_Pending(NewPayeeListViewModel model, string userId)
+        {
+            List<DMPayeeModel_Pending> vmList = new List<DMPayeeModel_Pending>();
+            foreach (NewPayeeViewModel dm in model.NewPayeeVM)
+            {
+                DMPayeeModel_Pending m = new DMPayeeModel_Pending
+                {
+                    Pending_Payee_Name = dm.Payee_Name,
+                    Pending_Payee_TIN = dm.Payee_TIN,
+                    Pending_Payee_Address = dm.Payee_Address,
+                    Pending_Payee_Type = dm.Payee_Type,
+                    Pending_Payee_No = dm.Payee_No,
+                    Pending_Payee_Creator_ID = int.Parse(_session.GetString("UserID")),
+                    Pending_Payee_Filed_Date = DateTime.Now,
+                    Pending_Payee_Status = "For Approval"
+                };
+                vmList.Add(m);
+            }
+
+            if (_modelState.IsValid)
+            {
+                _context.DMPayee_Pending.AddRange(vmList);
+                _context.SaveChanges();
+            }
+            return true;
+        }
         //Add
         public bool addPayee(NewPayeeListViewModel model, string userId)
         {
