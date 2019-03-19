@@ -31,6 +31,7 @@ namespace ExpenseProcessingSystem.Controllers
             _service = new PartialService(_httpContextAccessor, _context);
             _sortService = new SortService();
         }
+
         [Route("/Partial/DMPartial_Payee/")]
         public IActionResult DMPartial_Payee(string sortOrder, string currentFilter, string colName, string searchString, string page)
         {

@@ -11,7 +11,7 @@ namespace ExpenseProcessingSystem.Models
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Pending_ID { get; set; }
-        public int Pending_Payee_ID { get; set; }
+        public int Pending_Payee_MasterID { get; set; }
         public string Pending_Payee_Name { get; set; }
         public string Pending_Payee_TIN { get; set; }
         public string Pending_Payee_Address { get; set; }
@@ -22,6 +22,6 @@ namespace ExpenseProcessingSystem.Models
         public DateTime Pending_Payee_Filed_Date { get; set; }
         public string Pending_Payee_Status { get; set; }
 
-        public virtual DMPayeeModel Payee { get; set; }
+       // public virtual DMPayeeModel Payee { get; set; }
     }
 }

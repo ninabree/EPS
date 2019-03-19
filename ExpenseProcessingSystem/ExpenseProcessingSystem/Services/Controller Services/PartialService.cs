@@ -26,7 +26,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         //Populate
         public List<DMPayeeViewModel> populatePayee(DMFiltersViewModel filters)
         {
-            IQueryable<DMPayeeModel> mList = _context.DMPayee.Where(x=>x.Payee_isDeleted == false).ToList().AsQueryable();
+            IQueryable<DMPayeeModel> mList = _context.DMPayee.Where(x=>x.Payee_isDeleted == false && x.Payee_isActive == true).ToList().AsQueryable();
             var properties = filters.PF.GetType().GetProperties();
 
             //FILTER
@@ -63,7 +63,8 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 mList = mList.Concat(new DMPayeeModel[] {
                     new DMPayeeModel
                     {
-                        Payee_ID = m.Pending_Payee_ID,
+                       // Payee_ID = m.Pending_Payee_MasterID,
+                        Payee_MasterID = m.Pending_Payee_MasterID,
                         Payee_Name = m.Pending_Payee_Name,
                         Payee_TIN = m.Pending_Payee_TIN,
                         Payee_Address = m.Pending_Payee_Address,
@@ -98,7 +99,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 var approver = apprvrList.Where(a => a.Payee_ID == m.Payee_ID).Select(a => a.ApproverName).FirstOrDefault();
                 DMPayeeViewModel vm = new DMPayeeViewModel
                 {
-                    Payee_ID = m.Payee_ID,
+                    Payee_MasterID = m.Payee_MasterID,
                     Payee_Name = m.Payee_Name,
                     Payee_TIN = m.Payee_TIN,
                     Payee_Address = m.Payee_Address,

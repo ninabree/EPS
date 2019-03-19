@@ -4,14 +4,16 @@ using ExpenseProcessingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    partial class EPSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190318235153_NetworkDBUpdate")]
+    partial class NetworkDBUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -246,8 +248,6 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<DateTime>("Payee_Last_Updated");
 
-                    b.Property<int>("Payee_MasterID");
-
                     b.Property<string>("Payee_Name");
 
                     b.Property<int>("Payee_No");
@@ -257,8 +257,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.Property<string>("Payee_TIN");
 
                     b.Property<string>("Payee_Type");
-
-                    b.Property<bool>("Payee_isActive");
 
                     b.Property<bool>("Payee_isDeleted");
 
@@ -273,6 +271,8 @@ namespace ExpenseProcessingSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("Payee_ID");
+
                     b.Property<string>("Pending_Payee_Address");
 
                     b.Property<int>("Pending_Payee_Approver_ID");
@@ -281,7 +281,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<DateTime>("Pending_Payee_Filed_Date");
 
-                    b.Property<int>("Pending_Payee_MasterID");
+                    b.Property<int>("Pending_Payee_ID");
 
                     b.Property<string>("Pending_Payee_Name");
 
@@ -294,6 +294,8 @@ namespace ExpenseProcessingSystem.Migrations
                     b.Property<string>("Pending_Payee_Type");
 
                     b.HasKey("Pending_ID");
+
+                    b.HasIndex("Payee_ID");
 
                     b.ToTable("DMPayee_Pending");
                 });
@@ -376,6 +378,13 @@ namespace ExpenseProcessingSystem.Migrations
                     b.HasKey("Acc_UserID");
 
                     b.ToTable("Account");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.DMPayeeModel_Pending", b =>
+                {
+                    b.HasOne("ExpenseProcessingSystem.Models.DMPayeeModel", "Payee")
+                        .WithMany("Payee_Pending")
+                        .HasForeignKey("Payee_ID");
                 });
 #pragma warning restore 612, 618
         }

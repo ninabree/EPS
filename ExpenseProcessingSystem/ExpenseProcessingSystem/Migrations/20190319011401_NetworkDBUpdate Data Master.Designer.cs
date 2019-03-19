@@ -4,14 +4,16 @@ using ExpenseProcessingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    partial class EPSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190319011401_NetworkDBUpdate Data Master")]
+    partial class NetworkDBUpdateDataMaster
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -257,8 +259,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.Property<string>("Payee_TIN");
 
                     b.Property<string>("Payee_Type");
-
-                    b.Property<bool>("Payee_isActive");
 
                     b.Property<bool>("Payee_isDeleted");
 
