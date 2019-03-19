@@ -162,35 +162,47 @@ namespace ExpenseProcessingSystem.Services
         //ADMIN
         public bool approvePayee(List<DMPayeeViewModel> model, string userId)
         {
-            List<int> intList = model.Select(c => c.Payee_ID).ToList();
-            List<DMPayeeModel_Pending> allPending = _context.DMPayee_Pending.Where(x=> intList.Contains(x.Pending_Payee_ID)).ToList();
+            List<int> intList = model.Select(c => c.Payee_MasterID).ToList();
+
+            var allPending = (from pp in _context.DMPayee_Pending
+                             from pm in _context.DMPayee.Where(x => x.Payee_MasterID == pp.Pending_Payee_MasterID).DefaultIfEmpty()
+                             select new {pp.Pending_Payee_MasterID,
+                                         pp.Pending_Payee_Name,
+                                         pp.Pending_Payee_TIN,
+                                         pp.Pending_Payee_Address,
+                                         pp.Pending_Payee_Type,
+                                         pp.Pending_Payee_No,
+                                         pp.Pending_Payee_Creator_ID,
+                                         pmCreatorID = pm.Payee_Creator_ID.ToString(),
+                                         pmCreateDate = pm.Payee_Created_Date.ToString()}).ToList();
+                
+            List<DMPayeeModel_Pending> toDelete = _context.DMPayee_Pending.Where(x=> intList.Contains(x.Pending_Payee_MasterID)).ToList();
+            
             //get all records that currently exists in Master Data
-            List<DMPayeeModel> vmList = _context.DMPayee.Where(x => intList.Contains(x.Payee_ID)).ToList();
-            //create temp list for IDs of existing records to be updated
-            List<int> existingList = vmList.Select(c => c.Payee_ID).ToList();
-            //get all selected records from pending,
-            //do not fetch records already in vmList
-            List<DMPayeeModel_Pending> pendingList = _context.DMPayee_Pending
-                .Where(x => intList.Contains(x.Pending_Payee_ID) && !(existingList.Contains(x.Pending_Payee_ID))).ToList();
+            List<DMPayeeModel> vmList = _context.DMPayee.
+                Where(x => intList.Contains(x.Payee_MasterID) && x.Payee_isActive == true).ToList();
+            
             //list for formatted records to be added
             List<DMPayeeModel> addList = new List<DMPayeeModel>();
 
             //add to master table newly approved records
-            pendingList.ForEach(pending =>
+            allPending.ForEach(pending =>
             {
                 DMPayeeModel m = new DMPayeeModel
                 {
                     Payee_Name = pending.Pending_Payee_Name,
+                    Payee_MasterID = pending.Pending_Payee_MasterID,
                     Payee_TIN = pending.Pending_Payee_TIN,
                     Payee_Address = pending.Pending_Payee_Address,
                     Payee_Type = pending.Pending_Payee_Type,
                     Payee_No = pending.Pending_Payee_No,
-                    Payee_Creator_ID = pending.Pending_Payee_Creator_ID,
+                    Payee_Creator_ID = pending.pmCreatorID == null ? pending.Pending_Payee_Creator_ID : int.Parse(pending.pmCreatorID),
                     Payee_Approver_ID = int.Parse(_session.GetString("UserID")),
-                    Payee_Created_Date = DateTime.Now,
+                    Payee_Created_Date = pending.pmCreateDate == null ? DateTime.Now : DateTime.Parse(pending.pmCreateDate),
                     Payee_Last_Updated = DateTime.Now,
                     Payee_Status = "Approved",
-                    Payee_isDeleted = false
+                    Payee_isDeleted = false,
+                    Payee_isActive = true
                 };
                 addList.Add(m);
             });
@@ -198,35 +210,21 @@ namespace ExpenseProcessingSystem.Services
             //update existing records
             vmList.ForEach(dm =>
             {
-                model.ForEach(m =>
-                {
-                    if (m.Payee_ID == dm.Payee_ID)
-                    {
-                        dm.Payee_Name = m.Payee_Name;
-                        dm.Payee_TIN = m.Payee_TIN;
-                        dm.Payee_Address = m.Payee_Address;
-                        dm.Payee_Type = m.Payee_Type;
-                        dm.Payee_No = m.Payee_No;
-                        dm.Payee_Approver_ID = int.Parse(_session.GetString("UserID"));
-                        dm.Payee_Last_Updated = DateTime.Now;
-                        dm.Payee_Status = "Approved";
-                        dm.Payee_isDeleted = false;
-                    }
-                });
+                dm.Payee_isActive = false;
             });
 
             if (_modelState.IsValid)
             {
                 _context.DMPayee.AddRange(addList);
-                _context.DMPayee_Pending.RemoveRange(allPending);
+                _context.DMPayee_Pending.RemoveRange(toDelete);
                 _context.SaveChanges();
             }
             return true;
         }
         public bool rejPayee(List<DMPayeeViewModel> model, string userId)
         {
-            List<int> intList = model.Select(c => c.Payee_ID).ToList();
-            List<DMPayeeModel_Pending> allPending = _context.DMPayee_Pending.Where(x => intList.Contains(x.Pending_Payee_ID)).ToList();
+            List<int> intList = model.Select(c => c.Payee_MasterID).ToList();
+            List<DMPayeeModel_Pending> allPending = _context.DMPayee_Pending.Where(x => intList.Contains(x.Pending_Payee_MasterID)).ToList();
 
             if (_modelState.IsValid)
             {
@@ -240,11 +238,20 @@ namespace ExpenseProcessingSystem.Services
         public bool addPayee_Pending(NewPayeeListViewModel model, string userId)
         {
             List<DMPayeeModel_Pending> vmList = new List<DMPayeeModel_Pending>();
+
+            var payeeMax = _context.DMPayee.Select(x => x.Payee_MasterID).
+                DefaultIfEmpty(0).Max();
+            var pendingMax = _context.DMPayee_Pending.Select(x => x.Pending_Payee_MasterID).
+                DefaultIfEmpty(0).Max();
+
+            int masterIDMax = payeeMax > pendingMax ? payeeMax : pendingMax;
+
             foreach (NewPayeeViewModel dm in model.NewPayeeVM)
             {
                 DMPayeeModel_Pending m = new DMPayeeModel_Pending
                 {
                     Pending_Payee_Name = dm.Payee_Name,
+                    Pending_Payee_MasterID = ++masterIDMax,
                     Pending_Payee_TIN = dm.Payee_TIN,
                     Pending_Payee_Address = dm.Payee_Address,
                     Pending_Payee_Type = dm.Payee_Type,
@@ -318,14 +325,14 @@ namespace ExpenseProcessingSystem.Services
         //Edit
         public bool editPayee(List<DMPayeeViewModel> model, string userId)
         {
-            List<int> intList = model.Select(c => c.Payee_ID).ToList();
-            List<DMPayeeModel> vmList = _context.DMPayee.Where(x => intList.Contains(x.Payee_ID)).ToList();
+            List<int> intList = model.Select(c => c.Payee_MasterID).ToList();
+            List<DMPayeeModel> vmList = _context.DMPayee.Where(x => intList.Contains(x.Payee_MasterID) && x.Payee_isActive == true).ToList();
 
             vmList.ForEach(dm =>
             {
                 model.ForEach(m =>
                 {
-                    if (m.Payee_ID == dm.Payee_ID)
+                    if (m.Payee_MasterID == dm.Payee_ID)
                     {
                         dm.Payee_Name = m.Payee_Name;
                         dm.Payee_TIN = m.Payee_TIN;
@@ -376,7 +383,7 @@ namespace ExpenseProcessingSystem.Services
         //Delete
         public bool deletePayee(List<DMPayeeViewModel> model, string userId)
         {
-            List<int> intList = model.Select(c => c.Payee_ID).ToList();
+            List<int> intList = model.Select(c => c.Payee_MasterID).ToList();
             List<DMPayeeModel> vmList = _context.DMPayee.Where(x => intList.Contains(x.Payee_ID)).ToList();
 
             vmList.ForEach(dm =>

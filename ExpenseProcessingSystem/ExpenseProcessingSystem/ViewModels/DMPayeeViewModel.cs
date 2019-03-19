@@ -12,7 +12,7 @@ namespace ExpenseProcessingSystem.ViewModels
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Display(Name = "Payee ID")]
-        public int Payee_ID { get; set; }
+        public int Payee_MasterID { get; set; }
         [Display(Name = "Payee Name")]
         [NotNullValidations, TextValidation]
         public string Payee_Name { get; set; }

@@ -28,7 +28,7 @@
                         <td contenteditable="true">@Html.TextBoxFor(item => item[i].Payee_Type, new { @class = "w-full" })</td>
                         <td contenteditable="true">@Html.TextBoxFor(item => item[i].Payee_No, new { @class = "w-full" })</td>
                         <td contenteditable="false">@Html.TextBoxFor(item => item[i].Payee_Status, new { @class = "w-full" })</td>
-                        @Html.HiddenFor(item => item[i].Payee_ID)
+                        @Html.HiddenFor(item => item[i].Payee_MasterID)
                     </tr>
                 }
             }

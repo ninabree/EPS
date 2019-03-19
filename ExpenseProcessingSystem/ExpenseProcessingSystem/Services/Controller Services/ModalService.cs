@@ -35,17 +35,17 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         }
         public List<DMPayeeViewModel> approvePayee(string[] IdsArr)
         {
-            List<DMPayeeModel_Pending> pendingList = _context.DMPayee_Pending.Where(x => IdsArr.Contains(x.Pending_Payee_ID.ToString())).ToList();
+            List<DMPayeeModel_Pending> pendingList = _context.DMPayee_Pending.Where(x => IdsArr.Contains(x.Pending_Payee_MasterID.ToString())).ToList();
             List<DMPayeeViewModel> tempList = new List<DMPayeeViewModel>();
             foreach (DMPayeeModel_Pending m in pendingList)
             {
                 foreach (string s in IdsArr)
                 {
-                    if (m.Pending_Payee_ID == int.Parse(s))
+                    if (m.Pending_Payee_MasterID == int.Parse(s))
                     {
                         DMPayeeViewModel vm = new DMPayeeViewModel
                         {
-                            Payee_ID = m.Pending_Payee_ID,
+                            Payee_MasterID = m.Pending_Payee_MasterID,
                             Payee_Name = m.Pending_Payee_Name,
                             Payee_TIN = m.Pending_Payee_TIN,
                             Payee_Address = m.Pending_Payee_Address,
@@ -66,17 +66,17 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
 
         public List<DMPayeeViewModel> rejectPayee(string[] IdsArr)
         {
-            List<DMPayeeModel_Pending> pendingList = _context.DMPayee_Pending.Where(x => IdsArr.Contains(x.Pending_Payee_ID.ToString())).ToList();
+            List<DMPayeeModel_Pending> pendingList = _context.DMPayee_Pending.Where(x => IdsArr.Contains(x.Pending_Payee_MasterID.ToString())).ToList();
             List<DMPayeeViewModel> tempList = new List<DMPayeeViewModel>();
             foreach (DMPayeeModel_Pending m in pendingList)
             {
                 foreach (string s in IdsArr)
                 {
-                    if (m.Pending_Payee_ID == int.Parse(s))
+                    if (m.Pending_Payee_MasterID == int.Parse(s))
                     {
                         DMPayeeViewModel vm = new DMPayeeViewModel
                         {
-                            Payee_ID = m.Pending_Payee_ID,
+                            Payee_MasterID = m.Pending_Payee_MasterID,
                             Payee_Name = m.Pending_Payee_Name,
                             Payee_TIN = m.Pending_Payee_TIN,
                             Payee_Address = m.Pending_Payee_Address,
@@ -96,17 +96,18 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         }
         public List<DMPayeeViewModel> editDeletePayee(string[] IdsArr)
         {
-            List<DMPayeeModel> mList = _context.DMPayee.Where(x => IdsArr.Contains(x.Payee_ID.ToString())).ToList();
+            List<DMPayeeModel> mList = _context.DMPayee.Where(x => IdsArr.Contains(x.Payee_MasterID.ToString()) 
+                                                        && x.Payee_isActive == true).ToList();
             List<DMPayeeViewModel> tempList = new List<DMPayeeViewModel>();
             foreach (DMPayeeModel m in mList)
             {
                 foreach (string s in IdsArr)
                 {
-                    if (m.Payee_ID == int.Parse(s))
+                    if (m.Payee_MasterID == int.Parse(s))
                     {
                         DMPayeeViewModel vm = new DMPayeeViewModel
                         {
-                            Payee_ID = m.Payee_ID,
+                            Payee_MasterID = m.Payee_MasterID,
                             Payee_Name = m.Payee_Name,
                             Payee_TIN = m.Payee_TIN,
                             Payee_Address = m.Payee_Address,

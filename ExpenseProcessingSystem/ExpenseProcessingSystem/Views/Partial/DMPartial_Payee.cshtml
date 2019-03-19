@@ -62,7 +62,7 @@
                 @foreach (var item in Model.Payee)
                 {
                     <tr>
-                        <td><input class="tbl-chk" id="@item.Payee_ID" type="checkbox" /></td>
+                        <td><input class="tbl-chk" id="@item.Payee_MasterID" type="checkbox" /></td>
                         <td>@Html.DisplayFor(modelItem => item.Payee_Name)</td>
                         <td>@Html.DisplayFor(modelItem => item.Payee_TIN)</td>
                         <td>@Html.DisplayFor(modelItem => item.Payee_Address)</td>
