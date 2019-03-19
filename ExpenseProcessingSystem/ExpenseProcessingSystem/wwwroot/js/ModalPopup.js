@@ -2,6 +2,11 @@
     /*//////////////////////////////////////////////////////////////////
     [ MODAL ]*/
     //set content to modal body and show dynamic modal
+    //LOGIN
+    $("#forgot_PW").click(function (e) {
+        e.stopImmediatePropagation();
+        ModalPopup('Modal', 'ForgotPW', 'Forgot Your Login Credentials?');
+    });
     //Entry_DDV
     $("#reversal_entry").click(function () {
         //controller name, method name, modal header
@@ -14,113 +19,152 @@
         //controller name, method name, modal header
         ModalPopup('Modal', 'BudgetAdjustmentModal', 'Budget Adjustment');
     });
-
+    //DM
     $("#apprv_payee").click(function (e) {
         e.stopImmediatePropagation();
-        var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
-        if (!(chkCount <= 0)) {
-            var idsArr = Array();
-            $('input.tbl-chk[type="checkbox"]:checked').each(function (i, v) {
-                idsArr.push($(v).attr('id'));
-            });
-            //controller name, method name, modal header
-            ModalPopup('Modal', 'DMApprovePayee', 'Approve Record/s', idsArr);
-        } else {
-            alert("No data record/s selected.");
+        if (!isSessionTimeout()) {
+            var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
+            if (!(chkCount <= 0)) {
+                var idsArr = Array();
+                $('input.tbl-chk[type="checkbox"]:checked').each(function (i, v) {
+                    idsArr.push($(v).attr('id'));
+                });
+                //controller name, method name, modal header
+                ModalPopup2('Modal', 'DMApprovePayee', 'Approve Record/s', idsArr);
+            } else {
+                alert("No data record/s selected.");
+            }
         }
     });
 
     $("#rej_payee").click(function (e) {
         e.stopImmediatePropagation();
-        var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
-        if (!(chkCount <= 0)) {
-            var idsArr = Array();
-            $('input.tbl-chk[type="checkbox"]:checked').each(function (i, v) {
-                idsArr.push($(v).attr('id'));
-            });
-            //controller name, method name, modal header
-            ModalPopup('Modal', 'DMRejPayee', 'Reject Record/s', idsArr);
-        } else {
-            alert("No data record/s selected.");
+        if (!isSessionTimeout()) {
+            var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
+            if (!(chkCount <= 0)) {
+                var idsArr = Array();
+                $('input.tbl-chk[type="checkbox"]:checked').each(function (i, v) {
+                    idsArr.push($(v).attr('id'));
+                });
+                //controller name, method name, modal header
+                ModalPopup2('Modal', 'DMRejPayee', 'Reject Record/s', idsArr);
+            } else {
+                alert("No data record/s selected.");
+            }
         }
+
     });
+
     $("#add_payee").click(function (e) {
         e.stopImmediatePropagation();
-        //controller name, method name, modal header
-        ModalPopup('Modal', 'DMAddPayee_Pending', 'Add New Record/s');
+        if (!isSessionTimeout()) {
+            //controller name, method name, modal header
+            ModalPopup('Modal', 'DMAddPayee_Pending', 'Add New Record/s');
+        }
     });
 
     $("#edit_payee").click(function (e) {
         e.stopImmediatePropagation();
-        var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
-        if (!(chkCount <= 0)) {
-            var idsArr = Array();
-            $('input.tbl-chk[type="checkbox"]:checked').each(function (i, v) {
-                idsArr.push($(v).attr('id'));
-            });
-            //controller name, method name, modal header
-            ModalPopup('Modal', 'DMEditPayee', 'Edit Record/s', idsArr);
-        } else {
-            alert("No data record/s selected.");
+        if (!isSessionTimeout()) {
+            var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
+            if (!(chkCount <= 0)) {
+                var idsArr = Array();
+                $('input.tbl-chk[type="checkbox"]:checked').each(function (i, v) {
+                    idsArr.push($(v).attr('id'));
+                });
+                //controller name, method name, modal header
+                ModalPopup2('Modal', 'DMEditPayee', 'Edit Record/s', idsArr);
+            } else {
+                alert("No data record/s selected.");
+            }
         }
     });
 
     $("#delete_payee").click(function (e) {
         e.stopImmediatePropagation();
-        var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
-        if (!(chkCount <= 0)) {
-            var idsArr = Array();
-            $('input.tbl-chk[type="checkbox"]:checked').each(function (i, v) {
-                idsArr.push($(v).attr('id'));
-            });
-            //controller name, method name, modal header
-            ModalPopup('Modal', 'DMDeletePayee', 'Confirm deletion of record/s?', idsArr);
-        } else {
-            alert("No data record/s selected.");
+        if (!isSessionTimeout()) {
+            var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
+            if (!(chkCount <= 0)) {
+                var idsArr = Array();
+                $('input.tbl-chk[type="checkbox"]:checked').each(function (i, v) {
+                    idsArr.push($(v).attr('id'));
+                });
+                //controller name, method name, modal header
+                ModalPopup2('Modal', 'DMDeletePayee', 'Confirm deletion of record/s?', idsArr);
+            } else {
+                alert("No data record/s selected.");
+            }
         }
     });
 
     $("#add_dept").click(function (e) {
         e.stopImmediatePropagation();
-        //controller name, method name, modal header
-        ModalPopup('Modal', 'DMAddDept', 'Add New Record/s');
+        if (!isSessionTimeout()) {
+            //controller name, method name, modal header
+            ModalPopup('Modal', 'DMAddDept', 'Add New Record/s');
+        }
     });
 
     $("#edit_dept").click(function (e) {
         e.stopImmediatePropagation();
-        var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
-        if (!(chkCount <= 0)) {
-            var idsArr = Array();
-            $('input.tbl-chk[type="checkbox"]:checked').each(function (i, v) {
-                idsArr.push($(v).attr('id'));
-            });
-            //controller name, method name, modal header
-            ModalPopup('Modal', 'DMEditDept', 'Edit Record/s', idsArr);
-        } else {
-            alert("No data record/s selected.");
+        if (!isSessionTimeout()) {
+            var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
+            if (!(chkCount <= 0)) {
+                var idsArr = Array();
+                $('input.tbl-chk[type="checkbox"]:checked').each(function (i, v) {
+                    idsArr.push($(v).attr('id'));
+                });
+                //controller name, method name, modal header
+                ModalPopup2('Modal', 'DMEditDept', 'Edit Record/s', idsArr);
+            } else {
+                alert("No data record/s selected.");
+            }
         }
     });
 
     $("#delete_dept").click(function (e) {
         e.stopImmediatePropagation();
-        var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
-        if (!(chkCount <= 0)) {
-            var idsArr = Array();
-            $('input.tbl-chk[type="checkbox"]:checked').each(function (i, v) {
-                idsArr.push($(v).attr('id'));
-            });
-            //controller name, method name, modal header
-            ModalPopup('Modal', 'DMDeleteDept', 'Confirm deletion of record/s?', idsArr);
-        } else {
-            alert("No data record/s selected.");
+        if (!isSessionTimeout()) {
+            var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
+            if (!(chkCount <= 0)) {
+                var idsArr = Array();
+                $('input.tbl-chk[type="checkbox"]:checked').each(function (i, v) {
+                    idsArr.push($(v).attr('id'));
+                });
+                //controller name, method name, modal header
+                ModalPopup2('Modal', 'DMDeleteDept', 'Confirm deletion of record/s?', idsArr);
+            } else {
+                alert("No data record/s selected.");
+            }
         }
     });
 
-    //clicks the hidden add row button inside the table
-    //$("#add_row_btn").click(function () {
-    //    $(".table-add").click();
-    //});
-
+    //check session timout
+    function isSessionTimeout() {
+        var tmp = false;
+        $.ajax({
+            url: '/Account/checkSession',
+            type: "POST",
+            dataType: 'json',
+            contentType: 'application/json',
+            async: false,
+            processData: false,
+            cache: false,
+            data: '{}',
+            success: function (data) {
+                //FOR SESSION TIMEOUT CHECK
+                if (data == true) {
+                    alert("Your session has timed out. Kindly re-login. Thank you.");
+                    tmp = true;
+                    location.href = "/Account/Login";
+                }
+            },
+            error: function (xhr) {
+                alert('error');
+            }
+        });
+        return tmp;
+    }
     //set modal contents and show
     function ModalPopup(modal, method, modalHeader) {
         var modalDivBody = $('.modal-body');
@@ -137,20 +181,21 @@
 
                 //set modal header title
                 modalDivHeader.append('<h4 class="modal-title">' + modalHeader + '</h4>');
+                modalDivBody.addClass("p-l-15 p-r-15");
                 modalDivBody.html(data);
 
                 $('#myModal').modal('show');
             },
-            fail: function (ex) {
-                alert("fail");
-            }
+            error: function (xhr) {
+                    alert(xhr);
+                }
         });
     }
-    function ModalPopup(modal, method, modalHeader, idsArr) {
+    function ModalPopup2(modal, method, modalHeader, idsArr) {
         var modalDivBody = $('.modal-body');
         var modalDivHeader = $('.modal-header');
         var modalDivFooter = $('.modal-footer');
-        
+
         $.ajax({
             url: "RedirectCont2/",
             type: "POST",

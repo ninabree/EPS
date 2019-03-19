@@ -72,7 +72,7 @@ public int CheckSession
         }
         //change content of partial view on select on change
         $('select#dm-tbl').change(function () {
-            if (@CheckSession == 1) {
+            if (isSessionTimeout() != true) {
                 $('input#filterPartialName').val(this.value);
                 $.ajax({
                     url: '/Partial/' + this.value,
@@ -89,13 +89,33 @@ public int CheckSession
                         isSearchDisabled()
                     }
                 });
-            } else {
-                alert("Session Timeout.");
-                location.href = "/Account/Login";
             }
-            
         });
-
+        function isSessionTimeout() {
+            var tmp = false;
+            $.ajax({
+                url: '/Account/checkSession',
+                type: "POST",
+                dataType: 'json',
+                contentType: 'application/json',
+                async: false,
+                processData: false,
+                cache: false,
+                data: '{}',
+                success: function (data) {
+                    //FOR SESSION TIMEOUT CHECK
+                    if (data == true) {
+                        alert("Your session has timed out. Kindly re-login. Thank you.");
+                        tmp = true;
+                        location.href = "/Account/Login";
+                    }
+                },
+                error: function (xhr) {
+                    alert('error');
+                }
+            });
+            return tmp;
+        }
         function isSearchDisabled() {
             if ($('.tab-tbl tbody tr').length <= 1) {
                 $('#search-btn').attr("disabled", "disabled");

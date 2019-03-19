@@ -153,5 +153,17 @@ namespace ExpenseProcessingSystem.Controllers
             }
             return View(vmList);
         }
+        //___________________________//[ACCOUNT]//_______________________________
+        //Forgot Login Credentials
+        public IActionResult ForgotPW()
+        {
+            var userId = HttpContext.Session.GetString("UserID");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            ForgotPWViewModel vmList = new ForgotPWViewModel();
+            return View(vmList);
+        }
     }
 }

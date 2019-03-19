@@ -4,28 +4,32 @@
 @using ExpenseProcessingSystem.ViewModels
 @model LoginViewModel
 <div class="container-login">
-    <div class="form-login">
-        @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "validate-form" }))
-        {
-            <div class="login-input m-t-20 m-b-15" data-validate="Enter User Name">
-                @Html.TextBoxFor(model => model.Acc_UserName, new { @class = "input100" })
-                <span class="focus-input100 UN" data-placeholder="User Name"></span>
-            </div>
+    <div>
+        <div class="form-login">
+            @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "validate-form" }))
+            {
+                <div class="login-input m-t-20 m-b-15" data-validate="Enter User Name">
+                    @Html.TextBoxFor(model => model.Acc_UserName, new { @class = "input100" })
+                    <span class="focus-input100 UN" data-placeholder="User Name"></span>
+                </div>
 
-            <div class="login-input m-b-40" data-validate="Enter Password">
-                @Html.PasswordFor(model => model.Acc_Password, new { @class = "input100" })
-                <span class="focus-input100 PW" data-placeholder="Password"></span>
-            </div>
+                <div class="login-input m-b-40" data-validate="Enter Password">
+                    @Html.PasswordFor(model => model.Acc_Password, new { @class = "input100" })
+                    <span class="focus-input100 PW" data-placeholder="Password"></span>
+                </div>
 
-            <div class="container-login-form-btn m-t-25">
-                <button class="login-form-btn" type="submit">
-                    Submit
-                </button>
+                <div class="container-login-form-btn m-t-25">
+                    <button class="login-form-btn" type="submit">
+                        Submit
+                    </button>
+                </div>
+            }
+            @*validation message*@
+            <div id="ValidationSummary" style="display:none" class="">
+                @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
             </div>
-        }
-        @*validation message*@
-        <div id="ValidationSummary" style="display:none" class="">
-        @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
         </div>
+        <div class="w-full" style="text-align: right;"><button class="btn" id="forgot_PW">Forgot Password?</button></div>
     </div>
+    @Html.Partial("ModalPartial")
 </div>

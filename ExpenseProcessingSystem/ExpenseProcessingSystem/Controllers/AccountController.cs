@@ -1,20 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Linq;
 using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Services;
 using ExpenseProcessingSystem.ViewModels;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Authentication;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 namespace ExpenseProcessingSystem.Controllers
@@ -24,7 +13,6 @@ namespace ExpenseProcessingSystem.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly EPSDbContext _context;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
-        string hi = "";
 
         public AccountController(IHttpContextAccessor httpContextAccessor, EPSDbContext context)
         {
@@ -35,11 +23,11 @@ namespace ExpenseProcessingSystem.Controllers
         [HttpGet]
         public ActionResult Login()
         {
-            if (Request.Headers["x-requested-with"] == "XMLHttpRequest")
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            //var str = "";
+            //var tmp = (Request.Headers["x-requested-with"] == "XMLHttpRequest") ? "true" : "false";
+            //_session.SetString("isTimeout", tmp); 
+            ////{
+            ////    //return RedirectToAction("Login", "Account");
+            ////}
             AccessViewModel accessVM = new AccessViewModel
             {
                 isLoggedIn = false,
@@ -77,7 +65,6 @@ namespace ExpenseProcessingSystem.Controllers
                     _session.SetString("isLoggedIn", "true");
                     _session.SetString("accessType", acc.Acc_Role);
                     _session.SetString("isAdmin", acc.Acc_Role == "admin" ? "true" : "false");
-                    //ViewBag.access = accessVM;
                     
                     Log.Information("User Logged In");
                     return RedirectToAction("Index", "Home");
@@ -85,6 +72,11 @@ namespace ExpenseProcessingSystem.Controllers
             }
             ModelState.AddModelError("","Invalid Login Credential");
             return View(model);
+        }
+        public JsonResult checkSession()
+        {
+            var tmp = (_session.GetString("UserID") == null) ? true : false;
+            return Json(tmp);
         }
     }
 }

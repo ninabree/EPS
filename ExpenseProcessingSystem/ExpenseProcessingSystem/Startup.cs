@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Net;
 using ExpenseProcessingSystem.Data;
+using ExpenseProcessingSystem.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -68,7 +70,12 @@ namespace ExpenseProcessingSystem
                 options.CheckConsentNeeded = context => false; // orig val: true
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-            services.AddSession();
+            services.AddSession(options =>
+            {
+                // Set a short timeout for easy testing.
+                options.IdleTimeout = TimeSpan.FromSeconds(30);
+            });
+            services.AddTransient<IEmailSender,EmailService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddHttpContextAccessor();
             services.AddDistributedMemoryCache();

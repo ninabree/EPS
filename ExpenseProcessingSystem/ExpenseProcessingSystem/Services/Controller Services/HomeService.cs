@@ -435,5 +435,15 @@ namespace ExpenseProcessingSystem.Services
             }
             return bmvmList;
         }
+        //--------------------TEMP LOCATION-->MOVE TO ACCOUNT SERVICE-----------------------
+        public bool sendEmail(ForgotPWViewModel model)
+        {
+            EmailService _email = new EmailService();
+            var email = "monina.martinn@gmail.com";
+            var subject = "EPS New PW";
+            var hmtlMessage = "You will recieve new password. Choutto matte.";
+            _email.SendEmailAsync(email, subject, hmtlMessage);
+            return true;
+        }
     }
 }

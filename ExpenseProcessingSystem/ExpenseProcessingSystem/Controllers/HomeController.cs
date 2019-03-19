@@ -240,6 +240,24 @@ namespace ExpenseProcessingSystem.Controllers
         }
 
         //------------------------------------------------------------------
+        //[* ACCOUNT *]
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult SendEmail(ForgotPWViewModel model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.sendEmail(model);
+            }
+
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Payee" });
+        }
+
         //[* PAYEE *]
         [HttpPost]
         [ExportModelState]

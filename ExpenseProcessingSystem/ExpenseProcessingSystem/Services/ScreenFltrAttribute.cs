@@ -36,7 +36,7 @@ namespace ExpenseProcessingSystem.Services
             if (actionName == "DMPartial_Payee")
             {
                 DMFiltersViewModel filters = new DMFiltersViewModel();
-                if (true)//if PF not empty
+                if (ctx.Session.GetString("PF_Name") != null)//if PF not empty
                 {
                     PayeeFiltersViewModel PF = new PayeeFiltersViewModel
                     {
