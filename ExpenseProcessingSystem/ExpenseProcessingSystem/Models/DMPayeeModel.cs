@@ -9,10 +9,6 @@ namespace ExpenseProcessingSystem.Models
 {
     public class DMPayeeModel
     {
-        //public DMPayeeModel()
-        //{
-        //    this.Payee_Pending = new HashSet<DMPayeeModel_Pending>();
-        //}
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Payee_ID { get; set; }
         public int Payee_MasterID { get; set; }
@@ -28,7 +24,5 @@ namespace ExpenseProcessingSystem.Models
         public string Payee_Status { get; set; }
         public bool Payee_isDeleted { get; set; }
         public bool Payee_isActive { get; set; }
-
-        //public virtual ICollection<DMPayeeModel_Pending> Payee_Pending { get; set; }
     }
 }

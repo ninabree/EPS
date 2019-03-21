@@ -20,22 +20,11 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             _httpContextAccessor = httpContextAccessor;
             _context = context;
         }
-
-        public NewPayeeListViewModel addPayee()
-        {
-            NewPayeeListViewModel mod = new NewPayeeListViewModel();
-            List<NewPayeeViewModel> vmList = new List<NewPayeeViewModel>();
-            NewPayeeViewModel vm = new NewPayeeViewModel
-            {
-                Payee_No = 0
-            };
-            vmList.Add(vm);
-            mod.NewPayeeVM = vmList;
-            return mod;
-        }
+        //-----------------------ADMIN-------------------------
+        // [DMPayeeModel ]
         public List<DMPayeeViewModel> approvePayee(string[] IdsArr)
         {
-            List<DMPayeeModel_Pending> pendingList = _context.DMPayee_Pending.Where(x => IdsArr.Contains(x.Pending_Payee_MasterID.ToString())).ToList();
+            List<DMPayeeModel_Pending> pendingList = _context.DMPayee_Pending.Where(x => IdsArr.Contains(x.Pending_Payee_MasterID.ToString())).Distinct().ToList();
             List<DMPayeeViewModel> tempList = new List<DMPayeeViewModel>();
             foreach (DMPayeeModel_Pending m in pendingList)
             {
@@ -66,7 +55,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
 
         public List<DMPayeeViewModel> rejectPayee(string[] IdsArr)
         {
-            List<DMPayeeModel_Pending> pendingList = _context.DMPayee_Pending.Where(x => IdsArr.Contains(x.Pending_Payee_MasterID.ToString())).ToList();
+            List<DMPayeeModel_Pending> pendingList = _context.DMPayee_Pending.Where(x => IdsArr.Contains(x.Pending_Payee_MasterID.ToString())).Distinct().ToList();
             List<DMPayeeViewModel> tempList = new List<DMPayeeViewModel>();
             foreach (DMPayeeModel_Pending m in pendingList)
             {
@@ -94,10 +83,88 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             }
             return tempList;
         }
+        //[ Department ]
+        public List<DMDeptViewModel> approveDept(string[] IdsArr)
+        {
+            List<DMDeptModel_Pending> pendingList = _context.DMDept_Pending.Where(x => IdsArr.Contains(x.Pending_Dept_MasterID.ToString())).Distinct().ToList();
+            List<DMDeptViewModel> tempList = new List<DMDeptViewModel>();
+            foreach (DMDeptModel_Pending m in pendingList)
+            {
+                foreach (string s in IdsArr)
+                {
+                    if (m.Pending_Dept_MasterID == int.Parse(s))
+                    {
+                        DMDeptViewModel vm = new DMDeptViewModel
+                        {
+                            Dept_MasterID = m.Pending_Dept_MasterID,
+                            Dept_Name = m.Pending_Dept_Name,
+                            Dept_Code = m.Pending_Dept_Code,
+                            Dept_Creator_ID = m.Pending_Dept_Creator_ID,
+                            Dept_Approver_ID = m.Pending_Dept_Approver_ID.Equals(null) ? 0 : m.Pending_Dept_Approver_ID,
+                            Dept_Created_Date = m.Pending_Dept_Filed_Date,
+                            Dept_Last_Updated = m.Pending_Dept_Filed_Date,
+                            Dept_Status = m.Pending_Dept_Status
+                        };
+                        tempList.Add(vm);
+                    }
+                }
+            }
+            return tempList;
+        }
+
+        public List<DMDeptViewModel> rejectDept(string[] IdsArr)
+        {
+            List<DMDeptModel_Pending> pendingList = _context.DMDept_Pending.Where(x => IdsArr.Contains(x.Pending_Dept_MasterID.ToString())).Distinct().ToList();
+            List<DMDeptViewModel> tempList = new List<DMDeptViewModel>();
+            foreach (DMDeptModel_Pending m in pendingList)
+            {
+                foreach (string s in IdsArr)
+                {
+                    if (m.Pending_Dept_MasterID == int.Parse(s))
+                    {
+                        DMDeptViewModel vm = new DMDeptViewModel
+                        {
+                            Dept_MasterID = m.Pending_Dept_MasterID,
+                            Dept_Name = m.Pending_Dept_Name,
+                            Dept_Code = m.Pending_Dept_Code,
+                            Dept_Creator_ID = m.Pending_Dept_Creator_ID,
+                            Dept_Approver_ID = m.Pending_Dept_Approver_ID.Equals(null) ? 0 : m.Pending_Dept_Approver_ID,
+                            Dept_Created_Date = m.Pending_Dept_Filed_Date,
+                            Dept_Last_Updated = m.Pending_Dept_Filed_Date,
+                            Dept_Status = m.Pending_Dept_Status
+                        };
+                        tempList.Add(vm);
+                    }
+                }
+            }
+            return tempList;
+        }
+        //------------------------PENDING-----------------------------
+        public NewPayeeListViewModel addPayee()
+        {
+            NewPayeeListViewModel mod = new NewPayeeListViewModel();
+            List<NewPayeeViewModel> vmList = new List<NewPayeeViewModel>();
+            NewPayeeViewModel vm = new NewPayeeViewModel
+            {
+                Payee_No = 0
+            };
+            vmList.Add(vm);
+            mod.NewPayeeVM = vmList;
+            return mod;
+        }
+        public NewDeptListViewModel addDept()
+        {
+            NewDeptListViewModel mod = new NewDeptListViewModel();
+            List<NewDeptViewModel> vmList = new List<NewDeptViewModel>();
+            NewDeptViewModel vm = new NewDeptViewModel();
+            vmList.Add(vm);
+            mod.NewDeptVM = vmList;
+            return mod;
+        }
         public List<DMPayeeViewModel> editDeletePayee(string[] IdsArr)
         {
             List<DMPayeeModel> mList = _context.DMPayee.Where(x => IdsArr.Contains(x.Payee_MasterID.ToString()) 
-                                                        && x.Payee_isActive == true).ToList();
+                                       && x.Payee_isActive == true).Distinct().ToList();
             List<DMPayeeViewModel> tempList = new List<DMPayeeViewModel>();
             foreach (DMPayeeModel m in mList)
             {
@@ -126,17 +193,18 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         }
         public List<DMDeptViewModel> editDeleteDept(string[] IdsArr)
         {
-            List<DMDeptModel> mList = _context.DMDept.Where(x => IdsArr.Contains(x.Dept_ID.ToString())).ToList();
+            List<DMDeptModel> mList = _context.DMDept.Where(x => IdsArr.Contains(x.Dept_MasterID.ToString()) 
+                                        && x.Dept_isActive == true).Distinct().ToList();
             List<DMDeptViewModel> tempList = new List<DMDeptViewModel>();
             foreach (DMDeptModel m in mList)
             {
                 foreach (string s in IdsArr)
                 {
-                    if (m.Dept_ID == int.Parse(s))
+                    if (m.Dept_MasterID == int.Parse(s))
                     {
                         DMDeptViewModel vm = new DMDeptViewModel
                         {
-                            Dept_ID = m.Dept_ID,
+                            Dept_MasterID = m.Dept_MasterID,
                             Dept_Name = m.Dept_Name,
                             Dept_Code = m.Dept_Code,
                             Dept_Creator_ID = m.Dept_Creator_ID,

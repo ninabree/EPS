@@ -11,6 +11,7 @@ namespace ExpenseProcessingSystem.Models
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Dept_ID { get; set; }
+        public int Dept_MasterID { get; set; }
         public string Dept_Name { get; set; }
         public string Dept_Code { get; set; }
         public int Dept_Creator_ID { get; set; }
@@ -19,5 +20,6 @@ namespace ExpenseProcessingSystem.Models
         public DateTime Dept_Last_Updated { get; set; }
         public string Dept_Status { get; set; }
         public bool Dept_isDeleted { get; set; }
+        public bool Dept_isActive { get; set; }
     }
 }

@@ -65,9 +65,9 @@
        class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right">
     </a>
     <div class="float-r m-r-10">
-        <div class="dis-inline-block tbl-btn btn" id="add_vat">Add</div>
-        <div class="dis-inline-block tbl-btn btn" id="edit_vat">Edit</div>
-        <div class="dis-inline-block tbl-btn btn" id="delete_vat">Delete</div>
+        <button class="dis-inline-block tbl-btn btn add-rec rec" id="add_vat">Add</button>
+        <button class="dis-inline-block tbl-btn btn edit-rec rec" id="edit_vat">Edit</button>
+        <button class="dis-inline-block tbl-btn btn delete-rec rec" id="delete_vat">Delete</button>
         <input type="hidden" value="@ViewData["Title"]" id="partialVal" />
     </div>
     @Html.Partial("ModalPartial")

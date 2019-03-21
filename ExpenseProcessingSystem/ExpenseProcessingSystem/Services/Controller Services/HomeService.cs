@@ -39,27 +39,26 @@ namespace ExpenseProcessingSystem.Services
             //get all accounts
             var accs = (from a in _context.Account
                         join d in _context.DMDept on a.Acc_DeptID equals d.Dept_ID
-                        join b in _context.Account on a.Acc_Creator_ID equals b.Acc_UserID
-                        let CreatorName = b.Acc_LName + ", " + b.Acc_FName
                         select new
                         {
-                            a.Acc_UserID, a.Acc_UserName, a.Acc_FName, a.Acc_LName, d.Dept_Name, a.Acc_DeptID,
-                            a.Acc_Email, a.Acc_Role, a.Acc_Comment, a.Acc_InUse, CreatorName, a.Acc_Created_Date, a.Acc_Status
+                            a.Acc_UserID, a.Acc_UserName, a.Acc_FName, a.Acc_LName, d.Dept_Name, a.Acc_DeptID, a.Acc_Email, a.Acc_Role,
+                            a.Acc_Comment, a.Acc_InUse, a.Acc_Creator_ID, a.Acc_Created_Date,a.Acc_Approver_ID, a.Acc_Last_Updated, a.Acc_Status
                         }).ToList();
-            //get account approver IDs and dates, not all accounts have this
-            var apprv = (from a in _context.Account
+            //get account creator/approver IDs and dates, not all accounts have this
+            var creatr = (from a in accs
+                         join c in _context.Account on a.Acc_Creator_ID equals c.Acc_UserID
+                         let CreatorName = c.Acc_LName + ", " + c.Acc_FName
+                         select new
+                         { a.Acc_UserID, CreatorName }).ToList();
+            var apprv = (from a in accs
                          join c in _context.Account on a.Acc_Approver_ID equals c.Acc_UserID
                          let ApproverName = c.Acc_LName + ", " + c.Acc_FName
                          select new
-                         {
-                             a.Acc_UserID,
-                             ApproverName,
-                             a.Acc_Last_Updated
-                         }).ToList();
+                         { a.Acc_UserID, ApproverName }).ToList();
 
             accs.ForEach(x => {
+                var creator = creatr.Where(a => a.Acc_UserID == x.Acc_UserID).Select(a => a.CreatorName).FirstOrDefault();
                 var approver = apprv.Where(a => a.Acc_UserID == x.Acc_UserID).Select(a => a.ApproverName).FirstOrDefault();
-                var apprvDate = apprv.Where(a => a.Acc_UserID == x.Acc_UserID).Select(a => a.Acc_Last_Updated).FirstOrDefault();
                 UserViewModel vm = new UserViewModel
                 {
                     Acc_UserID = x.Acc_UserID,
@@ -72,10 +71,10 @@ namespace ExpenseProcessingSystem.Services
                     Acc_Role = x.Acc_Role,
                     Acc_InUse = x.Acc_InUse,
                     Acc_Comment = x.Acc_Comment,
-                    Acc_Creator_Name = x.CreatorName,
+                    Acc_Creator_Name = creator ?? "N/A",
                     Acc_Approver_Name = approver ?? "",
                     Acc_Created_Date = x.Acc_Created_Date,
-                    Acc_Last_Updated = (apprvDate != null) ? apprvDate : new DateTime(),
+                    Acc_Last_Updated =x.Acc_Last_Updated,
                     Acc_Status = x.Acc_Status
                 };
                 vmList.Add(vm);
@@ -159,7 +158,8 @@ namespace ExpenseProcessingSystem.Services
             return true;
         }
         //[DM]
-        //ADMIN
+        //---------------------------ADMIN---------------------------
+        //[ PAYEE ]
         public bool approvePayee(List<DMPayeeViewModel> model, string userId)
         {
             List<int> intList = model.Select(c => c.Payee_MasterID).ToList();
@@ -172,10 +172,12 @@ namespace ExpenseProcessingSystem.Services
                                          pp.Pending_Payee_Address,
                                          pp.Pending_Payee_Type,
                                          pp.Pending_Payee_No,
+                                         pp.Pending_Payee_IsDeleted,
                                          pp.Pending_Payee_Creator_ID,
                                          pmCreatorID = pm.Payee_Creator_ID.ToString(),
-                                         pmCreateDate = pm.Payee_Created_Date.ToString()}).ToList();
-                
+                                         pmCreateDate = pm.Payee_Created_Date.ToString()
+                             }).Where(x => intList.Contains(x.Pending_Payee_MasterID)).ToList();
+
             List<DMPayeeModel_Pending> toDelete = _context.DMPayee_Pending.Where(x=> intList.Contains(x.Pending_Payee_MasterID)).ToList();
             
             //get all records that currently exists in Master Data
@@ -201,7 +203,7 @@ namespace ExpenseProcessingSystem.Services
                     Payee_Created_Date = pending.pmCreateDate == null ? DateTime.Now : DateTime.Parse(pending.pmCreateDate),
                     Payee_Last_Updated = DateTime.Now,
                     Payee_Status = "Approved",
-                    Payee_isDeleted = false,
+                    Payee_isDeleted = pending.Pending_Payee_IsDeleted,
                     Payee_isActive = true
                 };
                 addList.Add(m);
@@ -233,8 +235,81 @@ namespace ExpenseProcessingSystem.Services
             }
             return true;
         }
-        //______________________________________________________________________
-        //For Approval
+        //[ DEPARTMENT ]
+        public bool approveDept(List<DMDeptViewModel> model, string userId)
+        {
+            List<int> intList = model.Select(c => c.Dept_MasterID).ToList();
+
+            var allPending = ((from pp in _context.DMDept_Pending
+                               from pm in _context.DMDept.Where(x => x.Dept_MasterID == pp.Pending_Dept_MasterID).DefaultIfEmpty()
+                               select new
+                               {
+                                   pp.Pending_Dept_MasterID,
+                                   pp.Pending_Dept_Name,
+                                   pp.Pending_Dept_Code,
+                                   pp.Pending_Dept_isDeleted,
+                                   pp.Pending_Dept_Creator_ID,
+                                   pmCreatorID = pm.Dept_Creator_ID.ToString(),
+                                   pmCreateDate = pm.Dept_Created_Date.ToString(),
+                                   pp.Pending_Dept_isActive
+                               })).Where(x=> intList.Contains(x.Pending_Dept_MasterID)).Distinct().ToList();
+
+            List<DMDeptModel_Pending> toDelete = _context.DMDept_Pending.Where(x => intList.Contains(x.Pending_Dept_MasterID)).ToList();
+
+            //get all records that currently exists in Master Data
+            List<DMDeptModel> vmList = _context.DMDept.
+                Where(x => intList.Contains(x.Dept_MasterID) && x.Dept_isActive == true).ToList();
+
+            //list for formatted records to be added
+            List<DMDeptModel> addList = new List<DMDeptModel>();
+
+            //add to master table newly approved records
+            allPending.ForEach(pending =>
+            {
+                DMDeptModel m = new DMDeptModel
+                {
+                    Dept_Name = pending.Pending_Dept_Name,
+                    Dept_MasterID = pending.Pending_Dept_MasterID,
+                    Dept_Code = pending.Pending_Dept_Code,
+                    Dept_Creator_ID = pending.pmCreatorID == null ? pending.Pending_Dept_Creator_ID : int.Parse(pending.pmCreatorID),
+                    Dept_Approver_ID = int.Parse(_session.GetString("UserID")),
+                    Dept_Created_Date = pending.pmCreateDate == null ? DateTime.Now : DateTime.Parse(pending.pmCreateDate),
+                    Dept_Last_Updated = DateTime.Now,
+                    Dept_Status = "Approved",
+                    Dept_isDeleted = pending.Pending_Dept_isDeleted,
+                    Dept_isActive = true
+                };
+                addList.Add(m);
+            });
+
+            //update existing records
+            vmList.ForEach(dm =>
+            {
+                dm.Dept_isActive = false;
+            });
+
+            if (_modelState.IsValid)
+            {
+                _context.DMDept.AddRange(addList);
+                _context.DMDept_Pending.RemoveRange(toDelete);
+                _context.SaveChanges();
+            }
+            return true;
+        }
+        public bool rejDept(List<DMDeptViewModel> model, string userId)
+        {
+            List<int> intList = model.Select(c => c.Dept_MasterID).ToList();
+            List<DMDeptModel_Pending> allPending = _context.DMDept_Pending.Where(x => intList.Contains(x.Pending_Dept_MasterID)).ToList();
+
+            if (_modelState.IsValid)
+            {
+                _context.DMDept_Pending.RemoveRange(allPending);
+                _context.SaveChanges();
+            }
+            return true;
+        }
+        //------------------------------For Approval------------------------------
+        //[ PAYEE ]
         public bool addPayee_Pending(NewPayeeListViewModel model, string userId)
         {
             List<DMPayeeModel_Pending> vmList = new List<DMPayeeModel_Pending>();
@@ -258,6 +333,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Payee_No = dm.Payee_No,
                     Pending_Payee_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_Payee_Filed_Date = DateTime.Now,
+                    Pending_Payee_IsDeleted = false,
                     Pending_Payee_Status = "For Approval"
                 };
                 vmList.Add(m);
@@ -270,6 +346,159 @@ namespace ExpenseProcessingSystem.Services
             }
             return true;
         }
+        public bool editPayee_Pending(List<DMPayeeViewModel> model, string userId)
+        {
+            List<DMPayeeModel_Pending> vmList = new List<DMPayeeModel_Pending>();
+            foreach (DMPayeeViewModel dm in model)
+            {
+                DMPayeeModel_Pending m = new DMPayeeModel_Pending
+                {
+                    Pending_Payee_Name = dm.Payee_Name,
+                    Pending_Payee_MasterID = dm.Payee_MasterID,
+                    Pending_Payee_TIN = dm.Payee_TIN,
+                    Pending_Payee_Address = dm.Payee_Address,
+                    Pending_Payee_Type = dm.Payee_Type,
+                    Pending_Payee_No = dm.Payee_No,
+                    Pending_Payee_Creator_ID = int.Parse(_session.GetString("UserID")),
+                    Pending_Payee_Filed_Date = DateTime.Now,
+                    Pending_Payee_IsDeleted = false,
+                    Pending_Payee_Status = "For Approval"
+                };
+                vmList.Add(m);
+            }
+
+            if (_modelState.IsValid)
+            {
+                _context.DMPayee_Pending.AddRange(vmList);
+                _context.SaveChanges();
+            }
+            return true;
+        }
+        public bool deletePayee_Pending(List<DMPayeeViewModel> model, string userId)
+        {
+            List<DMPayeeModel_Pending> vmList = new List<DMPayeeModel_Pending>();
+            foreach (DMPayeeViewModel dm in model)
+            {
+                DMPayeeModel_Pending m = new DMPayeeModel_Pending
+                {
+                    Pending_Payee_Name = dm.Payee_Name,
+                    Pending_Payee_MasterID = dm.Payee_MasterID,
+                    Pending_Payee_TIN = dm.Payee_TIN,
+                    Pending_Payee_Address = dm.Payee_Address,
+                    Pending_Payee_Type = dm.Payee_Type,
+                    Pending_Payee_No = dm.Payee_No,
+                    Pending_Payee_Creator_ID = int.Parse(_session.GetString("UserID")),
+                    Pending_Payee_Filed_Date = DateTime.Now,
+                    Pending_Payee_IsDeleted = true,
+                    Pending_Payee_Status = "For Approval (For Deletion)"
+                };
+                vmList.Add(m);
+            }
+
+            if (_modelState.IsValid)
+            {
+                _context.DMPayee_Pending.AddRange(vmList);
+                _context.SaveChanges();
+            }
+            return true;
+        }
+        //[ PAYEE ]
+        public bool addDept_Pending(NewDeptListViewModel model, string userId)
+        {
+            List<DMDeptModel_Pending> vmList = new List<DMDeptModel_Pending>();
+
+            var deptMax = _context.DMDept.Select(x => x.Dept_MasterID).
+                DefaultIfEmpty(0).Max();
+            var pendingMax = _context.DMDept_Pending.Select(x => x.Pending_Dept_MasterID).
+                DefaultIfEmpty(0).Max();
+
+            int masterIDMax = deptMax > pendingMax ? deptMax : pendingMax;
+
+            foreach (NewDeptViewModel dm in model.NewDeptVM)
+            {
+                DMDeptModel_Pending m = new DMDeptModel_Pending
+                {
+                    Pending_Dept_Name = dm.Dept_Name,
+                    Pending_Dept_MasterID = ++masterIDMax,
+                    Pending_Dept_Code = dm.Dept_Code,
+                    Pending_Dept_Creator_ID = int.Parse(_session.GetString("UserID")),
+                    Pending_Dept_Filed_Date = DateTime.Now,
+                    Pending_Dept_isDeleted = false,
+                    Pending_Dept_Status = "For Approval"
+                };
+                vmList.Add(m);
+            }
+
+            if (_modelState.IsValid)
+            {
+                _context.DMDept_Pending.AddRange(vmList);
+                _context.SaveChanges();
+            }
+            return true;
+        }
+        public bool editDept_Pending(List<DMDeptViewModel> model, string userId)
+        {
+            List<DMDeptModel_Pending> vmList = new List<DMDeptModel_Pending>();
+            var deptMax = _context.DMDept.Select(x => x.Dept_MasterID).
+               DefaultIfEmpty(0).Max();
+            var pendingMax = _context.DMDept_Pending.Select(x => x.Pending_Dept_MasterID).
+                DefaultIfEmpty(0).Max();
+
+            int masterIDMax = deptMax > pendingMax ? deptMax : pendingMax;
+            foreach (DMDeptViewModel dm in model)
+            {
+                DMDeptModel_Pending m = new DMDeptModel_Pending
+                {
+                    Pending_Dept_Name = dm.Dept_Name,
+                    Pending_Dept_MasterID = dm.Dept_MasterID,
+                    Pending_Dept_Code = dm.Dept_Code,
+                    Pending_Dept_Creator_ID = int.Parse(_session.GetString("UserID")),
+                    Pending_Dept_Filed_Date = DateTime.Now,
+                    Pending_Dept_isDeleted = false,
+                    Pending_Dept_Status = "For Approval"
+                };
+                vmList.Add(m);
+            }
+
+            if (_modelState.IsValid)
+            {
+                _context.DMDept_Pending.AddRange(vmList);
+                _context.SaveChanges();
+            }
+            return true;
+        }
+        public bool deleteDept_Pending(List<DMDeptViewModel> model, string userId)
+        {
+            List<DMDeptModel_Pending> vmList = new List<DMDeptModel_Pending>();
+            var deptMax = _context.DMDept.Select(x => x.Dept_MasterID).
+               DefaultIfEmpty(0).Max();
+            var pendingMax = _context.DMDept_Pending.Select(x => x.Pending_Dept_MasterID).
+                DefaultIfEmpty(0).Max();
+
+            int masterIDMax = deptMax > pendingMax ? deptMax : pendingMax;
+            foreach (DMDeptViewModel dm in model)
+            {
+                DMDeptModel_Pending m = new DMDeptModel_Pending
+                {
+                    Pending_Dept_Name = dm.Dept_Name,
+                    Pending_Dept_MasterID = dm.Dept_MasterID,
+                    Pending_Dept_Code = dm.Dept_Code,
+                    Pending_Dept_Creator_ID = int.Parse(_session.GetString("UserID")),
+                    Pending_Dept_Filed_Date = DateTime.Now,
+                    Pending_Dept_isDeleted = true,
+                    Pending_Dept_Status = "For Approval (For Deletion)"
+                };
+                vmList.Add(m);
+            }
+
+            if (_modelState.IsValid)
+            {
+                _context.DMDept_Pending.AddRange(vmList);
+                _context.SaveChanges();
+            }
+            return true;
+        }
+        //---------------------------Currently Not In Use--------------------------------
         //Add
         public bool addPayee(NewPayeeListViewModel model, string userId)
         {

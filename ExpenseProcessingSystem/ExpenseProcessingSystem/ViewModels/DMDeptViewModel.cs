@@ -8,8 +8,9 @@ namespace ExpenseProcessingSystem.ViewModels
     public class DMDeptViewModel
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Display(Name = "Dept ID")]
         public int Dept_ID { get; set; }
+        [Display(Name = "Dept ID")]
+        public int Dept_MasterID { get; set; }
         [Display(Name = "Dept Name")]
         [NotNullValidations, TextValidation]
         public string Dept_Name { get; set; }

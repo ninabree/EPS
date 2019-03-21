@@ -11,6 +11,7 @@ namespace ExpenseProcessingSystem.Models
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int FBT_ID { get; set; }
+        public int FBT_MasterID { get; set; }
         public string FBT_Name { get; set; }
         public string FBT_Account { get; set; }
         public string FBT_Formula { get; set; }
@@ -21,5 +22,6 @@ namespace ExpenseProcessingSystem.Models
         public DateTime FBT_Last_Updated { get; set; }
         public string FBT_Status { get; set; }
         public bool FBT_isDeleted { get; set; }
+        public bool FBT_isActive { get; set; }
     }
 }

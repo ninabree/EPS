@@ -99,14 +99,14 @@
        class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right">
     </a>
     <div class="float-r m-r-10">
-        <div class="dis-inline-block tbl-btn btn" id="add_payee">Add</div>
-        <div class="dis-inline-block tbl-btn btn" id="edit_payee">Edit</div>
-        <div class="dis-inline-block tbl-btn btn" id="delete_payee">Delete</div>
-        <div class="w-full" style="text-align: right;"><button class="btn" id="forgot_PW">Forgot Password?</button></div>
-        @if (ViewBag.access.isAdmin)
+        <button class="dis-inline-block tbl-btn btn add-rec rec" id="add_payee">Add</button>
+        <button class="dis-inline-block tbl-btn btn edit-rec rec" id="edit_payee">Edit</button>
+        <button class="dis-inline-block tbl-btn btn delete-rec rec" id="delete_payee">Delete</button>
+        @*<div class="w-full" style="text-align: right;"><button class="btn" id="forgot_PW">Forgot Password?</button></div>*@
+        @if (ViewBag.access.accessType == "approver")
         {
-            <div class="dis-inline-block tbl-btn btn" id="apprv_payee">Approve</div>
-            <div class="dis-inline-block tbl-btn btn" id="rej_payee">Reject</div>
+            <button class="dis-inline-block tbl-btn btn apprv-rec rec" id="apprv_payee">Approve</button>
+            <button class="dis-inline-block tbl-btn btn rej-rec rec" id="rej_payee">Reject</button>
         }
         <input type="hidden" value="@ViewData["Title"]" id="partialVal" />
     </div>

@@ -116,28 +116,53 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             return vmList;
         }
 
-        public List<DMDeptViewModel> populateDept(string colName, string searchString)
+        public List<DMDeptViewModel> populateDept(DMFiltersViewModel filters)
         {
-            List<DMDeptModel> mList = _context.DMDept.Where(x => x.Dept_isDeleted == false).ToList();
-
-            //FOR FILTERING
-            if (!String.IsNullOrEmpty(searchString))
+            IQueryable<DMDeptModel> mList = _context.DMDept.Where(x => x.Dept_isDeleted == false && x.Dept_isActive == true).ToList().AsQueryable();
+            var pendingList = _context.DMDept_Pending.ToList();
+            foreach (var m in pendingList)
             {
-                string[] colArr = { "Creator_ID", "Approver_ID" };
-                if (colArr.Contains(colName))
-                {
-                    mList = _context.DMDept
-                                  .Where("Dept_" + colName + " = @0 AND Dept_isDeleted == @1", searchString, false)
-                                  .Select(e => e).ToList();
-                }
-                else
-                {
-                    mList = _context.DMDept
-                                  .Where("Dept_" + colName + ".Contains(@0) AND Dept_isDeleted == @1", searchString, false)
-                                  .Select(e => e).ToList();
-                }
-
+                mList = mList.Concat(new DMDeptModel[] {
+                    new DMDeptModel
+                    {
+                        Dept_MasterID = m.Pending_Dept_MasterID,
+                        Dept_Name = m.Pending_Dept_Name,
+                        Dept_Code = m.Pending_Dept_Code,
+                        Dept_Creator_ID = m.Pending_Dept_Creator_ID,
+                        Dept_Approver_ID = m.Pending_Dept_Approver_ID.Equals(null) ? 0 : m.Pending_Dept_Approver_ID,
+                        Dept_Created_Date = m.Pending_Dept_Filed_Date,
+                        Dept_Last_Updated = m.Pending_Dept_Filed_Date,
+                        Dept_Status = m.Pending_Dept_Status
+                    }
+                });
             }
+            var properties = filters.DF.GetType().GetProperties();
+
+            //FILTER
+            foreach (var property in properties)
+            {
+                var propertyName = property.Name;
+                string[] split = propertyName.Split("_");
+                var toStr = property.GetValue(filters.DF).ToString();
+                string[] colArr = { "No", "Creator_ID", "Approver_ID" };
+                if (toStr != "")
+                {
+                    if (toStr != "0")
+                    {
+                        if (split[1] == "Creator_Name" || split[1] == "Approver_Name")
+                        { //UPDATE THIS TO SEARCH FOR CREATOR OR APPROVER NAME IN USER TABLE
+                            mList = mList.Where("Dept_" + split[1] + ".Contains(@0)", toStr)
+                                     .Select(e => e).AsQueryable();
+                        }
+                        else // IF STRING VALUE
+                        {
+                            mList = mList.Where("Dept_" + split[1] + ".Contains(@0)", toStr)
+                                    .Select(e => e).AsQueryable();
+                        }
+                    }
+                }
+            }
+           
             var creatorList = (from a in mList
                                join b in _context.Account on a.Dept_Creator_ID equals b.Acc_UserID
                                let CreatorName = b.Acc_LName + ", " + b.Acc_FName
@@ -162,7 +187,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 var approver = apprvrList.Where(a => a.Dept_ID == m.Dept_ID).Select(a => a.ApproverName).FirstOrDefault();
                 DMDeptViewModel vm = new DMDeptViewModel
                 {
-                    Dept_ID = m.Dept_ID,
+                    Dept_MasterID = m.Dept_MasterID,
                     Dept_Name = m.Dept_Name,
                     Dept_Code = m.Dept_Code,
                     Dept_Creator_Name = creator ?? "N/A",

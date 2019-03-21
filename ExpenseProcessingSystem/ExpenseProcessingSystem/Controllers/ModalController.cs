@@ -53,7 +53,7 @@ namespace ExpenseProcessingSystem.Controllers
             }
             return View(vmList);
         }
-        //DM Approve Payee
+        //DM Reject Payee
         public IActionResult DMRejPayee(string[] IdsArr)
         {
             var userId = HttpContext.Session.GetString("UserID");
@@ -68,7 +68,37 @@ namespace ExpenseProcessingSystem.Controllers
             }
             return View(vmList);
         }
-        //DM Add Payee
+        //DM Department
+        public IActionResult DMApproveDept(string[] IdsArr)
+        {
+            var userId = HttpContext.Session.GetString("UserID");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            List<DMDeptViewModel> vmList = new List<DMDeptViewModel>();
+            if (ModelState.IsValid)
+            {
+                vmList = _service.approveDept(IdsArr);
+            }
+            return View(vmList);
+        }
+        public IActionResult DMRejDept(string[] IdsArr)
+        {
+            var userId = HttpContext.Session.GetString("UserID");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            List<DMDeptViewModel> vmList = new List<DMDeptViewModel>();
+            if (ModelState.IsValid)
+            {
+                vmList = _service.rejectDept(IdsArr);
+            }
+            return View(vmList);
+        }
+        //___________________Pending Functions___________________________
+        //DM Payee
         public IActionResult DMAddPayee_Pending()
         {
             var userId = HttpContext.Session.GetString("UserID");
@@ -78,19 +108,7 @@ namespace ExpenseProcessingSystem.Controllers
             }
             return View(_service.addPayee());
         }
-        //APPROVED
-        //DM Add Payee
-        public IActionResult DMAddPayee()
-        {
-            var userId = HttpContext.Session.GetString("UserID");
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            return View(_service.addPayee());
-        }
-        //DM Edit Payee
-        public IActionResult DMEditPayee(string[] IdsArr)
+        public IActionResult DMEditPayee_Pending(string[] IdsArr)
         {
             var userId = HttpContext.Session.GetString("UserID");
             if (userId == null)
@@ -104,7 +122,7 @@ namespace ExpenseProcessingSystem.Controllers
             }
             return View(vmList);
         }
-        public IActionResult DMDeletePayee(string[] IdsArr)
+        public IActionResult DMDeletePayee_Pending(string[] IdsArr)
         {
             var userId = HttpContext.Session.GetString("UserID");
             if (userId == null)
@@ -118,13 +136,17 @@ namespace ExpenseProcessingSystem.Controllers
             }
             return View(vmList);
         }
-        //DM Add Dept
-        public IActionResult DMAddDept()
+        // DM Department
+        public IActionResult DMAddDept_Pending()
         {
-            return View();
+            var userId = HttpContext.Session.GetString("UserID");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            return View(_service.addDept());
         }
-        //DM Edit Payee
-        public IActionResult DMEditDept(string[] IdsArr)
+        public IActionResult DMEditDept_Pending(string[] IdsArr)
         {
             var userId = HttpContext.Session.GetString("UserID");
             if (userId == null)
@@ -138,21 +160,96 @@ namespace ExpenseProcessingSystem.Controllers
             }
             return View(vmList);
         }
+        public IActionResult DMDeleteDept_Pending(string[] IdsArr)
+        {
+            var userId = HttpContext.Session.GetString("UserID");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            List<DMDeptViewModel> vmList = new List<DMDeptViewModel>();
+            if (ModelState.IsValid)
+            {
+                vmList = _service.editDeleteDept(IdsArr);
+            }
+            return View(vmList);
+        }
+        //---------------------------------------------------------------
+        //NOT IN USE
+        ////DM Add Payee
+        //public IActionResult DMAddPayee()
+        //{
+        //    var userId = HttpContext.Session.GetString("UserID");
+        //    if (userId == null)
+        //    {
+        //        return RedirectToAction("Login", "Account");
+        //    }
+        //    return View(_service.addPayee());
+        //}
+        ////DM Edit Payee
+        //public IActionResult DMEditPayee(string[] IdsArr)
+        //{
+        //    var userId = HttpContext.Session.GetString("UserID");
+        //    if (userId == null)
+        //    {
+        //        return RedirectToAction("Login", "Account");
+        //    }
+        //    List<DMPayeeViewModel> vmList = new List<DMPayeeViewModel>();
+        //    if (ModelState.IsValid)
+        //    {
+        //        vmList = _service.editDeletePayee(IdsArr);
+        //    }
+        //    return View(vmList);
+        //}
+        //public IActionResult DMDeletePayee(string[] IdsArr)
+        //{
+        //    var userId = HttpContext.Session.GetString("UserID");
+        //    if (userId == null)
+        //    {
+        //        return RedirectToAction("Login", "Account");
+        //    }
+        //    List<DMPayeeViewModel> vmList = new List<DMPayeeViewModel>();
+        //    if (ModelState.IsValid)
+        //    {
+        //        vmList = _service.editDeletePayee(IdsArr);
+        //    }
+        //    return View(vmList);
+        //}
+        ////DM Add Dept
+        //public IActionResult DMAddDept()
+        //{
+        //    return View();
+        //}
+        ////DM Edit Payee
+        //public IActionResult DMEditDept(string[] IdsArr)
+        //{
+        //    var userId = HttpContext.Session.GetString("UserID");
+        //    if (userId == null)
+        //    {
+        //        return RedirectToAction("Login", "Account");
+        //    }
+        //    List<DMDeptViewModel> vmList = new List<DMDeptViewModel>();
+        //    if (ModelState.IsValid)
+        //    {
+        //        vmList = _service.editDeleteDept(IdsArr);
+        //    }
+        //    return View(vmList);
+        //}
 
-        public IActionResult DMDeleteDept(string[] IdsArr)
-        {
-            var userId = HttpContext.Session.GetString("UserID");
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            List<DMDeptViewModel> vmList = new List<DMDeptViewModel>();
-            if (ModelState.IsValid)
-            {
-                vmList = _service.editDeleteDept(IdsArr);
-            }
-            return View(vmList);
-        }
+        //public IActionResult DMDeleteDept(string[] IdsArr)
+        //{
+        //    var userId = HttpContext.Session.GetString("UserID");
+        //    if (userId == null)
+        //    {
+        //        return RedirectToAction("Login", "Account");
+        //    }
+        //    List<DMDeptViewModel> vmList = new List<DMDeptViewModel>();
+        //    if (ModelState.IsValid)
+        //    {
+        //        vmList = _service.editDeleteDept(IdsArr);
+        //    }
+        //    return View(vmList);
+        //}
         //___________________________//[ACCOUNT]//_______________________________
         //Forgot Login Credentials
         public IActionResult ForgotPW()

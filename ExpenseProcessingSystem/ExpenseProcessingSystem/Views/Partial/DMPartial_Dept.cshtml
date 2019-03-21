@@ -8,6 +8,35 @@
 @model DMViewModel
 
 <div class="tbl-cont">
+    <form asp-action="DM" asp-controller="Home" method="get" id="search-frm">
+        <div class="form-actions no-color">
+            <p>
+                Find by:
+                <table class="table">
+                    <tr>
+                        <td>@Html.LabelFor(model => model.DMFilters.DF.DF_Name)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.DF.DF_Name, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.DF.DF_Code)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.DF.DF_Code, new { @class = "input" })</td>
+                        <td><input id="filterPartialName" name="partialName" value="DMPartial_Dept" type="hidden" /></td>
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(model => model.DMFilters.DF.DF_Creator_Name)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.DF.DF_Creator_Name, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.DF.DF_Approver_Name)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.DF.DF_Approver_Name, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.DF.DF_Status)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.DF.DF_Status, new { @class = "input" })</td>
+                        <td colspan="2"></td>
+                        <td colspan="2" style="text-align: right;">
+                            <input type="submit" value="Search" class="btn btn-default" id="search-btn" />
+                            <input type="button" value="Back to Full List" id="full-list-btn" class="btn btn-default" />
+                        </td>
+                    </tr>
+                </table>
+            </p>
+        </div>
+    </form>
     <table class="table table-striped tab-tbl">
         <thead>
             <tr>
@@ -26,7 +55,7 @@
                 @foreach (var item in Model.Dept)
                 {
                     <tr>
-                        <td><input class="tbl-chk" id="@item.Dept_ID" type="checkbox" /></td>
+                        <td><input class="tbl-chk" id="@item.Dept_MasterID" type="checkbox" /></td>
                         <td>@Html.DisplayFor(modelItem => item.Dept_Name)</td>
                         <td>@Html.DisplayFor(modelItem => item.Dept_Code)</td>
                         <td>@Html.DisplayFor(modelItem => item.Dept_Creator_Name)</td>
@@ -36,7 +65,9 @@
                     </tr>
                 }
             }
-            else { <tr></tr>}
+            else
+            {
+                <tr></tr>}
         </tbody>
     </table>
     @{
@@ -63,10 +94,19 @@
        class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right">
     </a>
     <div class="float-r m-r-10">
-        <div class="dis-inline-block tbl-btn btn" id="add_dept">Add</div>
-        <div class="dis-inline-block tbl-btn btn" id="edit_dept">Edit</div>
-        <div class="dis-inline-block tbl-btn btn" id="delete_dept">Delete</div>
+        <button class="dis-inline-block tbl-btn btn add-rec rec" id="add_dept">Add</button>
+        <button class="dis-inline-block tbl-btn btn edit-rec rec" id="edit_dept">Edit</button>
+        <button class="dis-inline-block tbl-btn btn delete-rec rec" id="delete_dept">Delete</button>
+        @if (ViewBag.access.accessType == "approver")
+        {
+            <button class="dis-inline-block tbl-btn btn apprv-rec rec" id="apprv_dept">Approve</button>
+            <button class="dis-inline-block tbl-btn btn rej-rec rec" id="rej_dept">Reject</button>
+        }
         <input type="hidden" value="@ViewData["Title"]" id="partialVal" />
     </div>
     @Html.Partial("ModalPartial")
 </div>
+<environment include="Development">
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</environment>

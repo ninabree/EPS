@@ -11,6 +11,7 @@ namespace ExpenseProcessingSystem.Models
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Curr_ID { get; set; }
+        public int Curr_MasterID { get; set; }
         public string Curr_Name { get; set; }
         public string Curr_CCY_Code { get; set; }
         public int Curr_Creator_ID { get; set; }
@@ -19,5 +20,6 @@ namespace ExpenseProcessingSystem.Models
         public DateTime Curr_Last_Updated { get; set; }
         public string Curr_Status { get; set; }
         public bool Curr_isDeleted { get; set; }
+        public bool Curr_isActive { get; set; }
     }
 }

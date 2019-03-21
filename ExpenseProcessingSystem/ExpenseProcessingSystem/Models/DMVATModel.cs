@@ -11,6 +11,7 @@ namespace ExpenseProcessingSystem.Models
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int VAT_ID { get; set; }
+        public int VAT_MasterID { get; set; }
         public string VAT_Name { get; set; }
         public string VAT_Rate { get; set; }
         public int VAT_Creator_ID { get; set; }
@@ -19,5 +20,6 @@ namespace ExpenseProcessingSystem.Models
         public DateTime VAT_Last_Updated { get; set; }
         public string VAT_Status { get; set; }
         public bool VAT_isDeleted { get; set; }
+        public bool VAT_isActive { get; set; }
     }
 }

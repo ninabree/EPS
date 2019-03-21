@@ -1,0 +1,37 @@
+﻿
+@{
+    ViewData["Title"] = "DMDeletePayee_Pending";
+    Layout = "~/Views/Shared/_ModalLayout.cshtml";
+}
+@using ExpenseProcessingSystem.ViewModels
+@model List<DMPayeeViewModel>
+<div id="table" class="table-editable">
+    @using (Html.BeginForm("DeletePayee_Pending", "Home", FormMethod.Post, new { @class = "validate-form", @id = "tsForm" }))
+    {
+        <table class="table table-bordered editable-th">
+            <tr>
+                <th>Payee</th>
+                <th>TIN</th>
+                <th>Address</th>
+                <th>Type</th>
+                <th>Number</th>
+                <th>Status</th>
+            </tr>
+            @if (Model != null)
+            {
+                @for (int i = 0; i < Model.Count(); i++)
+                {
+                    <tr>
+                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].Payee_Name, new { @class = "w-full" })</td>
+                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].Payee_TIN, new { @class = "w-full" })</td>
+                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].Payee_Address, new { @class = "w-full" })</td>
+                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].Payee_Type, new { @class = "w-full" })</td>
+                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].Payee_No, new { @class = "w-full" })</td>
+                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].Payee_Status, new { @class = "w-full" })</td>
+                        @Html.HiddenFor(item => item[i].Payee_MasterID)
+                    </tr>
+                }
+            }
+        </table>
+    }
+</div>

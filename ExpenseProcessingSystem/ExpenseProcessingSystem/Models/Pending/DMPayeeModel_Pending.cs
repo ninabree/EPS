@@ -21,7 +21,7 @@ namespace ExpenseProcessingSystem.Models
         public int Pending_Payee_Approver_ID { get; set; }
         public DateTime Pending_Payee_Filed_Date { get; set; }
         public string Pending_Payee_Status { get; set; }
-
-       // public virtual DMPayeeModel Payee { get; set; }
+        public bool Pending_Payee_IsDeleted { get; set; }
+        public bool Pending_Payee_isActive { get; set; }
     }
 }

@@ -53,7 +53,23 @@ namespace ExpenseProcessingSystem.Services
                 }
                 controller.TempData["filters"] = filters;
             }
-
+            if (actionName == "DMPartial_Dept")
+            {
+                DMFiltersViewModel filters = new DMFiltersViewModel();
+                if (ctx.Session.GetString("DF_Name") != null)//if PF not empty
+                {
+                    DeptFiltersViewModel DF = new DeptFiltersViewModel
+                    {
+                        DF_Name = ctx.Session.GetString("DF_Name"),
+                        DF_Code = ctx.Session.GetString("DF_Code"),
+                        DF_Creator_Name = ctx.Session.GetString("DF_Creator_Name"),
+                        DF_Approver_Name = ctx.Session.GetString("DF_Approver_Name"),
+                        DF_Status = ctx.Session.GetString("DF_Status")
+                    };
+                    filters.DF = DF;
+                }
+                controller.TempData["filters"] = filters;
+            }
             //check session vals
             if (ctx.Session.GetString("UserID") == null)
             {

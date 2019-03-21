@@ -68,6 +68,79 @@ $(document).ready(function () {
         $('#search-frm').submit();
     });
 
+    $('input.tbl-chk').change(function (e) {
+        e.stopImmediatePropagation();
+        //get column # of status per table
+        var count = $('#partial-container div div table thead tr th').length - 2;
+        var stat = $(this).parent().siblings(":eq(" + count + ")").text();
+        var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
+        //to check if entries are of same status
+        var txtVal = $('input#entryCheckTypes').val();
+        
+        if (txtVal != "") {
+            if ((txtVal != stat) && (this.checked == true)) {
+                alert("Kindly check rows together with the same status.");
+                //disable all other functional buttons
+                $('.rec').prop('disabled', true);
+            } else if (this.checked == false && chkCount <= 0) {
+                $('.rec').prop('disabled', false);
+                $('input#entryCheckTypes').val("");
+            } else {
+                //get status of currently checked checkbox
+                stat = $('input.tbl-chk[type="checkbox"]:checked').parent().siblings(":eq(7)").text();
+                //format only avail buttons per 
+                switch (stat) {
+                    case "For Approval":
+                        $('.apprv-rec').prop('disabled', false);
+                        $('.rej-rec').prop('disabled', false);
+                        $('.add-rec').prop('disabled', true);
+                        $('.edit-rec').prop('disabled', true);
+                        $('.delete-rec').prop('disabled', true);
+                        break;
+                    case "For Approval (For Deletion)":
+                        $('.apprv-rec').prop('disabled', false);
+                        $('.rej-rec').prop('disabled', false);
+                        $('.add-rec').prop('disabled', true);
+                        $('.edit-rec').prop('disabled', true);
+                        $('.delete-rec').prop('disabled', true);
+                        break;
+                    case "Approved":
+                        $('.apprv-rec').prop('disabled', true);
+                        $('.rej-rec').prop('disabled', true);
+                        $('.add-rec').prop('disabled', false);
+                        $('.edit-rec').prop('disabled', false);
+                        $('.delete-rec').prop('disabled', false);
+                        break;
+                }
+            }
+        } else {
+            $('input#entryCheckTypes').val(stat);
+            //format only avail buttons for clicked checkbox 
+            switch (stat) {
+                case "For Approval":
+                    $('.apprv-rec').prop('disabled', false);
+                    $('.rej-rec').prop('disabled', false);
+                    $('.add-rec').prop('disabled', true);
+                    $('.edit-rec').prop('disabled', true);
+                    $('.delete-rec').prop('disabled', true);
+                    break;
+                case "For Approval (For Deletion)":
+                    $('.apprv-rec').prop('disabled', false);
+                    $('.rej-rec').prop('disabled', false);
+                    $('.add-rec').prop('disabled', true);
+                    $('.edit-rec').prop('disabled', true);
+                    $('.delete-rec').prop('disabled', true);
+                    break;
+                case "Approved":
+                    $('.apprv-rec').prop('disabled', true);
+                    $('.rej-rec').prop('disabled', true);
+                    $('.add-rec').prop('disabled', false);
+                    $('.edit-rec').prop('disabled', false);
+                    $('.delete-rec').prop('disabled', false);
+                    break;
+            }
+        }
+    });
     /*//////////////////////////////////////////////////////////////////
     [ UM ]*/
 

@@ -1,4 +1,5 @@
 ﻿using ExpenseProcessingSystem.Models;
+using ExpenseProcessingSystem.Models.Pending;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -31,5 +32,12 @@ namespace ExpenseProcessingSystem.Data
 
         //PENDING ENTRY TABLES
         public DbSet<DMPayeeModel_Pending> DMPayee_Pending { get; set; }
+        public DbSet<DMDeptModel_Pending> DMDept_Pending { get; set; }
+        public DbSet<DMCheckModel_Pending> DMCheck_Pending { get; set; }
+        public DbSet<DMAccountModel_Pending> DMAccount_Pending { get; set; }
+        public DbSet<DMVATModel_Pending> DMVAT_Pending { get; set; }
+        public DbSet<DMFBTModel_Pending> DMFBT_Pending { get; set; }
+        public DbSet<DMEWTModel_Pending> DMEWT_Pending { get; set; }
+        public DbSet<DMCurrencyModel_Pending> DMCurrency_Pending { get; set; }
     }
 }

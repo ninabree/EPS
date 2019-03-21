@@ -11,6 +11,7 @@ namespace ExpenseProcessingSystem.Models
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int EWT_ID { get; set; }
+        public int EWT_MasterID { get; set; }
         public string EWT_Nature { get; set; }
         public int EWT_Tax_Rate { get; set; }
         public string EWT_ATC { get; set; }
@@ -21,5 +22,6 @@ namespace ExpenseProcessingSystem.Models
         public DateTime EWT_Last_Updated { get; set; }
         public string EWT_Status { get; set; }
         public bool EWT_isDeleted { get; set; }
+        public bool EWT_isActive { get; set; }
     }
 }

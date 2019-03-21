@@ -92,7 +92,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             switch (sortOrder)
             {
                 case "payee_stat":
-                    tempList = tempList.OrderBy(x => x.Payee_Status == "For Approval");
+                    tempList = tempList.OrderBy(x => x.Payee_Status == "For Approval" || x.Payee_Status == "For Approval (For Deletion)");
                     viewData = "glyph-8";
                     vdInfo = "glyphicon-menu-up";
                     break;
@@ -168,7 +168,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     break;
                 default:
                     //tempList = tempList.OrderBy(s => s.Payee_Name);
-                    tempList = tempList.OrderByDescending(x => x.Payee_Status == "For Approval");
+                    tempList = tempList.OrderByDescending(x => x.Payee_Status == "For Approval" || x.Payee_Status == "For Approval (For Deletion)");
                     viewData = "glyph-8";
                     vdInfo = "glyphicon-menu-down";
                     break;
@@ -536,9 +536,9 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             var vdInfo = "";
             switch (sortOrder)
             {
-                case "name_desc":
-                    tempList = tempList.OrderByDescending(s => s.Dept_Name);
-                    viewData = "glyph-1";
+                case "dept_stat_desc":
+                    tempList = tempList.OrderBy(x => x.Dept_Status == "For Approval" || x.Dept_Status == "For Approval (For Deletion)");
+                    viewData = "glyph-6";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "dept_code":
@@ -581,19 +581,19 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     viewData = "glyph-5";
                     vdInfo = "glyphicon-menu-up";
                     break;
-                case "dept_stat":
-                    tempList = tempList.OrderBy(s => s.Dept_Status);
-                    viewData = "glyph-6";
+                case "name":
+                    tempList = tempList.OrderBy(s => s.Dept_ID);
+                    viewData = "glyph-1";
                     vdInfo = "glyphicon-menu-down";
                     break;
-                case "dept_stat_desc":
+                case "name_desc":
                     tempList = tempList.OrderByDescending(s => s.Dept_Status);
-                    viewData = "glyph-6";
+                    viewData = "glyph-1";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 default:
-                    tempList = tempList.OrderBy(s => s.Dept_ID);
-                    viewData = "glyph-1";
+                    tempList = tempList.OrderByDescending(x => x.Dept_Status == "For Approval" || x.Dept_Status == "For Approval (For Deletion)");
+                    viewData = "glyph-6";
                     vdInfo = "glyphicon-menu-down";
                     break;
             }

@@ -91,30 +91,31 @@ namespace ExpenseProcessingSystem.Controllers
             int? pg = (page == null) ? 1 : int.Parse(page);
             //set sort vals
             ViewData["CurrentSort"] = sortOrder;
-            ViewData["DeptSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["DeptStatusSortParm"] = String.IsNullOrEmpty(sortOrder) ? "dept_stat" : "";
             ViewData["DeptCodeSortParm"] = sortOrder == "dept_code_desc" ? "dept_code" : "dept_code_desc";
             ViewData["DeptCreatorSortParm"] = sortOrder == "dept_creatr_desc" ? "dept_creatr" : "dept_creatr_desc";
             ViewData["DeptApproverSortParm"] = sortOrder == "dept_approvr_desc" ? "dept_approvr" : "dept_approvr_desc";
             ViewData["DeptLastUpdatedSortParm"] = sortOrder == "dept_last_updte_desc" ? "dept_last_updte" : "dept_last_updte_desc";
-            ViewData["DeptStatusSortParm"] = sortOrder == "dept_stat_desc" ? "dept_stat" : "dept_stat_desc";
+            ViewData["DeptSortParm"] = sortOrder == "name_desc" ? "name" : "name_desc";
 
-            if (searchString != null)
-            {
-                pg = 1;
-            }
-            else
-            {
-                searchString = currentFilter;
-            }
+            if (searchString != null) { pg = 1; }
+            else { searchString = currentFilter; }
+
             ViewData["CurrentFilter"] = searchString;
+            DMFiltersViewModel filters = new DMFiltersViewModel();
+            if (TempData.ContainsKey("filters"))
+            {
+                filters = (DMFiltersViewModel)TempData["filters"];
+            }
 
             //populate and sort
-            var sortedVals = _sortService.SortData(_service.populateDept(colName, searchString), sortOrder);
+            var sortedVals = _sortService.SortData(_service.populateDept(filters), sortOrder);
             ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
 
             //pagination
             DMViewModel VM = new DMViewModel()
             {
+                DMFilters = filters,
                 Dept = PaginatedList<DMDeptViewModel>.CreateAsync(
                     (sortedVals.list).Cast<DMDeptViewModel>().AsQueryable().AsNoTracking(), pg ?? 1, pageSize)
             };
