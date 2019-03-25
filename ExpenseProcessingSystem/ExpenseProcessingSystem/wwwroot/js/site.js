@@ -9,6 +9,10 @@ $(document).ready(function () {
     var $pageInput = $('#paginationInput');
     $pageInput.data("value", $pageInput.val());
 
+    //disable approve/reject button upon initial load
+    $('.apprv-rec').prop('disabled', true);
+    $('.rej-rec').prop('disabled', true);
+
     $('#um').find('a').click(function () {
         ClearValidations();
     });
@@ -60,6 +64,7 @@ $(document).ready(function () {
 
     /*//////////////////////////////////////////////////////////////////
     [ DM ]*/
+
     $('#full-list-btn').click(function (e) {
         e.stopImmediatePropagation();
         $('#filter-txt').val("");
@@ -79,15 +84,19 @@ $(document).ready(function () {
         
         if (txtVal != "") {
             if ((txtVal != stat) && (this.checked == true)) {
-                alert("Kindly check rows together with the same status.");
+                alert("Kindly check rows with the same status only.");
                 //disable all other functional buttons
                 $('.rec').prop('disabled', true);
             } else if (this.checked == false && chkCount <= 0) {
-                $('.rec').prop('disabled', false);
+                $('.apprv-rec').prop('disabled', true);
+                $('.rej-rec').prop('disabled', true);
+                $('.add-rec').prop('disabled', false);
+                $('.edit-rec').prop('disabled', false);
+                $('.delete-rec').prop('disabled', false);
                 $('input#entryCheckTypes').val("");
             } else {
                 //get status of currently checked checkbox
-                stat = $('input.tbl-chk[type="checkbox"]:checked').parent().siblings(":eq(7)").text();
+                stat = $('input.tbl-chk[type="checkbox"]:checked').parent().siblings(":eq(" + count + ")").text();
                 //format only avail buttons per 
                 switch (stat) {
                     case "For Approval":

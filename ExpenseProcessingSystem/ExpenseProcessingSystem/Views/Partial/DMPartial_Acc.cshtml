@@ -8,6 +8,40 @@
 @model DMViewModel
 
 <div class="tbl-cont">
+    <form asp-action="DM" asp-controller="Home" method="get" id="search-frm">
+        <div class="form-actions no-color">
+            <p>
+                Find by:
+                <table class="table">
+                    <tr>
+                        <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Name)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Name, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.AF.AF_No)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_No, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Cust)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Cust, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Div)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Div, new { @class = "input" })</td>
+                        <td><input id="filterPartialName" name="partialName" value="DMPartial_Check" type="hidden" /></td>
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Fund)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Fund, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Creator_Name)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Creator_Name, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Approver_Name)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Approver_Name, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Status)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Status, new { @class = "input" })</td>
+                        <td colspan="2" style="text-align: right;">
+                            <input type="submit" value="Search" class="btn btn-default" id="search-btn" />
+                            <input type="button" value="Back to Full List" id="full-list-btn" class="btn btn-default" />
+                        </td>
+                    </tr>
+                </table>
+            </p>
+        </div>
+    </form>
     <table class="table table-striped tab-tbl">
         <thead>
             <tr>
@@ -29,19 +63,19 @@
             {
                 @foreach (var item in Model.Account)
                 {
-            <tr>
-                <td><input class="tbl-chk" id="@item.Account_ID" type="checkbox" /></td>
-                <td>@Html.DisplayFor(modelItem => item.Account_Name)</td>
-                <td>@Html.DisplayFor(modelItem => item.Account_Code)</td>
-                <td>@Html.DisplayFor(modelItem => item.Account_No)</td>
-                <td>@Html.DisplayFor(modelItem => item.Account_Cust)</td>
-                <td>@Html.DisplayFor(modelItem => item.Account_Div)</td>
-                <td>@Html.DisplayFor(modelItem => item.Account_Fund)</td>
-                <td>@Html.DisplayFor(modelItem => item.Account_Creator_Name)</td>
-                <td>@Html.DisplayFor(modelItem => item.Account_Approver_Name)</td>
-                <td>@Html.DisplayFor(modelItem => item.Account_Last_Updated)</td>
-                <td>@Html.DisplayFor(modelItem => item.Account_Status)</td>
-            </tr>
+                    <tr>
+                        <td><input class="tbl-chk" id="@item.Account_MasterID" type="checkbox" /></td>
+                        <td>@Html.DisplayFor(modelItem => item.Account_Name)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Account_Code)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Account_No)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Account_Cust)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Account_Div)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Account_Fund)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Account_Creator_Name)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Account_Approver_Name)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Account_Last_Updated)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Account_Status)</td>
+                    </tr>
                 }
             }
             else
@@ -73,9 +107,14 @@
        class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right">
     </a>
     <div class="float-r m-r-10">
-        <button class="dis-inline-block tbl-btn btn add-rec rec" id="add_acc">Add</button>
-        <button class="dis-inline-block tbl-btn btn edit-rec rec" id="edit_acc">Edit</button>
-        <button class="dis-inline-block tbl-btn btn delete-rec rec" id="delete_acc">Delete</button>
+        <button class="dis-inline-block tbl-btn btn add-rec rec" id="add_account">Add</button>
+        <button class="dis-inline-block tbl-btn btn edit-rec rec" id="edit_account">Edit</button>
+        <button class="dis-inline-block tbl-btn btn delete-rec rec" id="delete_account">Delete</button>
+        @if (ViewBag.access.accessType == "approver")
+        {
+            <button class="dis-inline-block tbl-btn btn apprv-rec rec" id="apprv_account">Approve</button>
+            <button class="dis-inline-block tbl-btn btn rej-rec rec" id="rej_account">Reject</button>
+        }
         <input type="hidden" value="@ViewData["Title"]" id="partialVal" />
     </div>
     @Html.Partial("ModalPartial")

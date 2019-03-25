@@ -11,6 +11,7 @@ namespace ExpenseProcessingSystem.ViewModels
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int EWT_ID { get; set; }
+        public int EWT_MasterID { get; set; }
         [Display(Name = "EWT Nature")]
         public string EWT_Nature { get; set; }
         [Display(Name = "EWT Tax Rate")]
@@ -19,6 +20,8 @@ namespace ExpenseProcessingSystem.ViewModels
         public string EWT_ATC { get; set; }
         [Display(Name = "EWT Tax Rate Description")]
         public string EWT_Tax_Rate_Desc { get; set; }
+        public int EWT_Creator_ID { get; set; }
+        public int EWT_Approver_ID { get; set; }
         [Display(Name = "Creator Name")]
         public string EWT_Creator_Name { get; set; }
         [Display(Name = "Approver Name")]

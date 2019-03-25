@@ -1,0 +1,33 @@
+﻿
+@{
+    ViewData["Title"] = "DMDeleteCurr_Pending";
+    Layout = "~/Views/Shared/_ModalLayout.cshtml";
+}
+
+@using ExpenseProcessingSystem.ViewModels
+@model List<DMCurrencyViewModel>
+
+<div id="table" class="table-editable">
+    @using (Html.BeginForm("DeleteCurr_Pending", "Home", FormMethod.Post, new { @class = "validate-form", @id = "tsForm" }))
+    {
+        <table class="table table-bordered editable-th">
+            <tr>
+                <th>Currency Name</th>
+                <th>CCY Code</th>
+                <th>Status</th>
+            </tr>
+            @if (Model != null)
+            {
+                @for (int i = 0; i < Model.Count(); i++)
+                {
+                    <tr>
+                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].Curr_Name, new { @class = "w-full" })</td>
+                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].Curr_CCY_Code, new { @class = "w-full" })</td>
+                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].Curr_Status, new { @class = "w-full" })</td>
+                        @Html.HiddenFor(item => item[i].Curr_MasterID)
+                    </tr>
+                }
+            }
+        </table>
+    }
+</div>

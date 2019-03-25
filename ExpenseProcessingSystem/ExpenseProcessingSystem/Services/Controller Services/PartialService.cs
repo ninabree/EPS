@@ -201,28 +201,57 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             return vmList;
         }
 
-        public List<DMCheckViewModel> populateCheck(string colName, string searchString)
+        public List<DMCheckViewModel> populateCheck(DMFiltersViewModel filters)
         {
-            List<DMCheckModel> mList = _context.DMCheck.Where(x => x.Check_isDeleted == false).ToList();
-
-            //FOR FILTERING
-            if (!String.IsNullOrEmpty(searchString))
+            IQueryable<DMCheckModel> mList = _context.DMCheck.Where(x => x.Check_isDeleted == false && x.Check_isActive == true).ToList().AsQueryable();
+            var pendingList = _context.DMCheck_Pending.ToList();
+            foreach (var m in pendingList)
             {
-                string[] colArr = { "Creator_ID", "Approver_ID" };
-                if (colArr.Contains(colName))
-                {
-                    mList = _context.DMCheck
-                                  .Where("Check_" + colName + " = @0 AND Check_isDeleted == @1", searchString, false)
-                                  .Select(e => e).ToList();
-                }
-                else
-                {
-                    mList = _context.DMCheck
-                                  .Where("Check_" + colName + ".Contains(@0) AND Check_isDeleted == @1", searchString, false)
-                                  .Select(e => e).ToList();
-                }
-
+                mList = mList.Concat(new DMCheckModel[] {
+                    new DMCheckModel
+                    {
+                        Check_MasterID = m.Pending_Check_MasterID,
+                        Check_Input_Date = m.Pending_Check_Input_Date,
+                        Check_Series_From = m.Pending_Check_Series_From,
+                        Check_Series_To = m.Pending_Check_Series_To,
+                        Check_Name = m.Pending_Check_Name,
+                        Check_Type = m.Pending_Check_Type,
+                        Check_Creator_ID = m.Pending_Check_Creator_ID,
+                        Check_Approver_ID = m.Pending_Check_Approver_ID.Equals(null) ? 0 : m.Pending_Check_Approver_ID,
+                        Check_Created_Date = m.Pending_Check_Filed_Date,
+                        Check_Last_Updated = m.Pending_Check_Filed_Date,
+                        Check_Status = m.Pending_Check_Status
+                    }
+                });
             }
+            var properties = filters.CKF.GetType().GetProperties();
+
+            //FILTER
+            foreach (var property in properties)
+            {
+                var propertyName = property.Name;
+                string[] split = propertyName.Split("_");
+                split[1] = propertyName.Substring(propertyName.IndexOf("_")+1);
+                var toStr = property.GetValue(filters.CKF).ToString();
+                string[] colArr = { "No", "Creator_ID", "Approver_ID" };
+                if (toStr != "")
+                {
+                    if (toStr != "0" && toStr != "0001/01/01 0:00:00")
+                    {
+                        if (split[1] == "Creator_Name" || split[1] == "Approver_Name")
+                        { //UPDATE THIS TO SEARCH FOR CREATOR OR APPROVER NAME IN USER TABLE
+                            mList = mList.Where("Check_" + split[1] + ".Contains(@0)", toStr)
+                                     .Select(e => e).AsQueryable();
+                        }
+                        else // IF STRING VALUE
+                        {
+                            mList = mList.Where("Check_" + split[1] + ".Contains(@0)", toStr)
+                                    .Select(e => e).AsQueryable();
+                        }
+                    }
+                }
+            }
+            
             var creatorList = (from a in mList
                                join b in _context.Account on a.Check_Creator_ID equals b.Acc_UserID
                                let CreatorName = b.Acc_LName + ", " + b.Acc_FName
@@ -247,14 +276,14 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 var approver = apprvrList.Where(a => a.Check_ID == m.Check_ID).Select(a => a.ApproverName).FirstOrDefault();
                 DMCheckViewModel vm = new DMCheckViewModel
                 {
-                    Check_ID = m.Check_ID,
+                    Check_MasterID = m.Check_MasterID,
                     Check_Input_Date = m.Check_Input_Date,
                     Check_Series_From = m.Check_Series_From,
                     Check_Series_To = m.Check_Series_To,
                     Check_Name = m.Check_Name,
+                    Check_Type = m.Check_Type,
                     Check_Creator_Name = creator ?? "N/A",
                     Check_Approver_Name = approver ?? "",
-                    Check_Type = m.Check_Type,
                     Check_Created_Date = m.Check_Created_Date,
                     Check_Last_Updated = m.Check_Last_Updated,
                     Check_Status = m.Check_Status
@@ -264,44 +293,70 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             return vmList;
         }
 
-        public List<DMAccountViewModel> populateAccount(string colName, string searchString)
+        public List<DMAccountViewModel> populateAccount(DMFiltersViewModel filters)
         {
-            List<DMAccountModel> mList = _context.DMAccount.Where(x => x.Account_isDeleted == false).ToList();
+            IQueryable<DMAccountModel> mList = _context.DMAccount.Where(x => x.Account_isDeleted == false && x.Account_isActive == true).ToList().AsQueryable();
+            var properties = filters.AF.GetType().GetProperties();
 
-            //FOR FILTERING
-            if (!String.IsNullOrEmpty(searchString))
+            //FILTER
+            foreach (var property in properties)
             {
-                string[] colArr = { "Creator_ID", "Approver_ID" };
-                if (colArr.Contains(colName))
+                var propertyName = property.Name;
+                string[] split = propertyName.Split("_");
+                var toStr = property.GetValue(filters.AF).ToString();
+                string[] colArr = { "No", "Creator_ID", "Approver_ID" };
+                if (toStr != "")
                 {
-                    mList = _context.DMAccount
-                                  .Where("Check_" + colName + " = @0 AND Account_isDeleted == @1", searchString, false)
-                                  .Select(e => e).ToList();
+                    if (toStr != "0")
+                    {
+                        if (colArr.Contains(split[1])) // IF INT VAL
+                        {
+                            mList = mList.Where("Account_" + split[1] + " = @0 AND  Account_isDeleted == @1", property.GetValue(filters.AF), false)
+                                     .Select(e => e).AsQueryable();
+                        }
+                        else if (split[1] == "Creator_Name" || split[1] == "Approver_Name")
+                        { //UPDATE THIS TO SEARCH FOR CREATOR OR APPROVER NAME IN USER TABLE
+                            mList = mList.Where("Account_" + split[1] + ".Contains(@0) AND  Account_isDeleted == @1", property.GetValue(filters.AF), false)
+                                     .Select(e => e).AsQueryable();
+                        }
+                        else // IF STRING VALUE
+                        {
+                            mList = mList.Where("Account_" + split[1] + ".Contains(@0) AND  Account_isDeleted == @1", property.GetValue(filters.AF).ToString(), false)
+                                    .Select(e => e).AsQueryable();
+                        }
+                    }
                 }
-                else
-                {
-                    mList = _context.DMAccount
-                                  .Where("Check_" + colName + ".Contains(@0) AND Account_isDeleted == @1", searchString, false)
-                                  .Select(e => e).ToList();
-                }
-
+            }
+            var pendingList = _context.DMAccount_Pending.ToList();
+            foreach (var m in pendingList)
+            {
+                mList = mList.Concat(new DMAccountModel[] {
+                    new DMAccountModel
+                    {
+                       // Account_ID = m.Pending_Account_MasterID,
+                        Account_MasterID = m.Pending_Account_MasterID,
+                        Account_Name = m.Pending_Account_Name,
+                        Account_Code = m.Pending_Account_Code,
+                        Account_No = m.Pending_Account_No,
+                        Account_Cust = m.Pending_Account_Cust,
+                        Account_Div = m.Pending_Account_Div,
+                        Account_Fund = m.Pending_Account_Fund,
+                        Account_Creator_ID = m.Pending_Account_Creator_ID,
+                        Account_Approver_ID = m.Pending_Account_Approver_ID.Equals(null) ? 0 : m.Pending_Account_Approver_ID,
+                        Account_Created_Date = m.Pending_Account_Filed_Date,
+                        Account_Last_Updated = m.Pending_Account_Filed_Date,
+                        Account_Status = m.Pending_Account_Status
+                    }
+                });
             }
             var creatorList = (from a in mList
                                join b in _context.Account on a.Account_Creator_ID equals b.Acc_UserID
                                let CreatorName = b.Acc_LName + ", " + b.Acc_FName
-                               select new
-                               {
-                                   a.Account_ID,
-                                   CreatorName
-                               }).ToList();
+                               select new { a.Account_ID, CreatorName }).ToList();
             var apprvrList = (from a in mList
                               join c in _context.Account on a.Account_Approver_ID equals c.Acc_UserID
                               let ApproverName = c.Acc_LName + ", " + c.Acc_FName
-                              select new
-                              {
-                                  a.Account_ID,
-                                  ApproverName
-                              }).ToList();
+                              select new { a.Account_ID, ApproverName }).ToList();
 
             List<DMAccountViewModel> vmList = new List<DMAccountViewModel>();
             foreach (DMAccountModel m in mList)
@@ -310,7 +365,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 var approver = apprvrList.Where(a => a.Account_ID == m.Account_ID).Select(a => a.ApproverName).FirstOrDefault();
                 DMAccountViewModel vm = new DMAccountViewModel
                 {
-                    Account_ID = m.Account_ID,
+                    Account_MasterID = m.Account_MasterID,
                     Account_Name = m.Account_Name,
                     Account_Code = m.Account_Code,
                     Account_No = m.Account_No,
@@ -328,44 +383,66 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             return vmList;
         }
 
-        public List<DMVATViewModel> populateVAT(string colName, string searchString)
+        public List<DMVATViewModel> populateVAT(DMFiltersViewModel filters)
         {
-            List<DMVATModel> mList = _context.DMVAT.Where(x => x.VAT_isDeleted == false).ToList();
+            IQueryable<DMVATModel> mList = _context.DMVAT.Where(x => x.VAT_isDeleted == false && x.VAT_isActive == true).ToList().AsQueryable();
+            var properties = filters.VF.GetType().GetProperties();
 
-            //FOR FILTERING
-            if (!String.IsNullOrEmpty(searchString))
+            //FILTER
+            foreach (var property in properties)
             {
-                string[] colArr = { "Creator_ID", "Approver_ID" };
-                if (colArr.Contains(colName))
+                var propertyName = property.Name;
+                string[] split = propertyName.Split("_");
+                var toStr = property.GetValue(filters.VF).ToString();
+                string[] colArr = { "No", "Creator_ID", "Approver_ID" };
+                if (toStr != "")
                 {
-                    mList = _context.DMVAT
-                                  .Where("VAT_" + colName + " = @0 AND VAT_isDeleted == @1", searchString, false)
-                                  .Select(e => e).ToList();
+                    if (toStr != "0")
+                    {
+                        if (colArr.Contains(split[1])) // IF INT VAL
+                        {
+                            mList = mList.Where("VAT_" + split[1] + " = @0 AND  VAT_isDeleted == @1", property.GetValue(filters.VF), false)
+                                     .Select(e => e).AsQueryable();
+                        }
+                        else if (split[1] == "Creator_Name" || split[1] == "Approver_Name")
+                        { //UPDATE THIS TO SEARCH FOR CREATOR OR APPROVER NAME IN USER TABLE
+                            mList = mList.Where("VAT_" + split[1] + ".Contains(@0) AND  VAT_isDeleted == @1", property.GetValue(filters.VF), false)
+                                     .Select(e => e).AsQueryable();
+                        }
+                        else // IF STRING VALUE
+                        {
+                            mList = mList.Where("VAT_" + split[1] + ".Contains(@0) AND  VAT_isDeleted == @1", property.GetValue(filters.VF).ToString(), false)
+                                    .Select(e => e).AsQueryable();
+                        }
+                    }
                 }
-                else
-                {
-                    mList = _context.DMVAT
-                                  .Where("VAT_" + colName + ".Contains(@0) AND VAT_isDeleted == @1", searchString, false)
-                                  .Select(e => e).ToList();
-                }
-
+            }
+            var pendingList = _context.DMVAT_Pending.ToList();
+            foreach (var m in pendingList)
+            {
+                mList = mList.Concat(new DMVATModel[] {
+                    new DMVATModel
+                    {
+                       // VAT_ID = m.Pending_VAT_MasterID,
+                        VAT_MasterID = m.Pending_VAT_MasterID,
+                        VAT_Name = m.Pending_VAT_Name,
+                        VAT_Rate = m.Pending_VAT_Rate,
+                        VAT_Creator_ID = m.Pending_VAT_Creator_ID,
+                        VAT_Approver_ID = m.Pending_VAT_Approver_ID.Equals(null) ? 0 : m.Pending_VAT_Approver_ID,
+                        VAT_Created_Date = m.Pending_VAT_Filed_Date,
+                        VAT_Last_Updated = m.Pending_VAT_Filed_Date,
+                        VAT_Status = m.Pending_VAT_Status
+                    }
+                });
             }
             var creatorList = (from a in mList
                                join b in _context.Account on a.VAT_Creator_ID equals b.Acc_UserID
                                let CreatorName = b.Acc_LName + ", " + b.Acc_FName
-                               select new
-                               {
-                                   a.VAT_ID,
-                                   CreatorName
-                               }).ToList();
+                               select new { a.VAT_ID, CreatorName }).ToList();
             var apprvrList = (from a in mList
                               join c in _context.Account on a.VAT_Approver_ID equals c.Acc_UserID
                               let ApproverName = c.Acc_LName + ", " + c.Acc_FName
-                              select new
-                              {
-                                  a.VAT_ID,
-                                  ApproverName
-                              }).ToList();
+                              select new { a.VAT_ID, ApproverName }).ToList();
 
             List<DMVATViewModel> vmList = new List<DMVATViewModel>();
             foreach (DMVATModel m in mList)
@@ -374,7 +451,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 var approver = apprvrList.Where(a => a.VAT_ID == m.VAT_ID).Select(a => a.ApproverName).FirstOrDefault();
                 DMVATViewModel vm = new DMVATViewModel
                 {
-                    VAT_ID = m.VAT_ID,
+                    VAT_MasterID = m.VAT_MasterID,
                     VAT_Name = m.VAT_Name,
                     VAT_Rate = m.VAT_Rate,
                     VAT_Creator_Name = creator ?? "N/A",
@@ -388,28 +465,59 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             return vmList;
         }
 
-        public List<DMFBTViewModel> populateFBT(string colName, string searchString)
+        public List<DMFBTViewModel> populateFBT(DMFiltersViewModel filters)
         {
-            List<DMFBTModel> mList = _context.DMFBT.Where(x => x.FBT_isDeleted == false).ToList();
-            //FOR FILTERING
-            if (!String.IsNullOrEmpty(searchString))
+            IQueryable<DMFBTModel> mList = _context.DMFBT.Where(x => x.FBT_isDeleted == false && x.FBT_isActive == true).ToList().AsQueryable();
+            var properties = filters.FF.GetType().GetProperties();
+
+            //FILTER
+            foreach (var property in properties)
             {
-                string[] colArr = { "No", "Creator_ID", "Approver_ID" };
-                if (colArr.Contains(colName))
+                var propertyName = property.Name;
+                string[] split = propertyName.Split("_");
+                var toStr = property.GetValue(filters.FF).ToString();
+                string[] colArr = { "Tax_Rate", "Creator_ID", "Approver_ID" };
+                if (toStr != "")
                 {
-                    mList = _context.DMFBT
-                                  .Where("FBT_" + colName + " = @0 AND FBT_isDeleted == @1", searchString, false)
-                                  .Select(e => e).ToList();
+                    if (toStr != "0")
+                    {
+                        if (colArr.Contains(split[1])) // IF INT VAL
+                        {
+                            mList = mList.Where("FBT_" + split[1] + " = @0 AND  FBT_isDeleted == @1", property.GetValue(filters.FF), false)
+                                     .Select(e => e).AsQueryable();
+    }
+                        else if (split[1] == "Creator_Name" || split[1] == "Approver_Name")
+                        { //UPDATE THIS TO SEARCH FOR CREATOR OR APPROVER NAME IN USER TABLE
+                            mList = mList.Where("FBT_" + split[1] + ".Contains(@0) AND  FBT_isDeleted == @1", property.GetValue(filters.FF), false)
+                                     .Select(e => e).AsQueryable();
+}
+                        else // IF STRING VALUE
+                        {
+                            mList = mList.Where("FBT_" + split[1] + ".Contains(@0) AND  FBT_isDeleted == @1", property.GetValue(filters.FF).ToString(), false)
+                                    .Select(e => e).AsQueryable();
+                        }
+                    }
                 }
-                else
-                {
-                    mList = _context.DMFBT
-                                  .Where("FBT_" + colName + ".Contains(@0) AND FBT_isDeleted == @1", searchString, false)
-                                  .Select(e => e).ToList();
-                }
-
             }
-
+            var pendingList = _context.DMFBT_Pending.ToList();
+            foreach (var m in pendingList)
+            {
+                mList = mList.Concat(new DMFBTModel[] {
+                    new DMFBTModel
+                    {
+                        FBT_MasterID = m.Pending_FBT_MasterID,
+                        FBT_Name = m.Pending_FBT_Name,
+                        FBT_Tax_Rate = m.Pending_FBT_Tax_Rate,
+                        FBT_Account = m.Pending_FBT_Account,
+                        FBT_Formula = m.Pending_FBT_Formula,
+                        FBT_Creator_ID = m.Pending_FBT_Creator_ID,
+                        FBT_Approver_ID = m.Pending_FBT_Approver_ID.Equals(null) ? 0 : m.Pending_FBT_Approver_ID,
+                        FBT_Created_Date = m.Pending_FBT_Filed_Date,
+                        FBT_Last_Updated = m.Pending_FBT_Filed_Date,
+                        FBT_Status = m.Pending_FBT_Status
+                    }
+                });
+            }
             var creatorList = (from a in mList
                                join b in _context.Account on a.FBT_Creator_ID equals b.Acc_UserID
                                let CreatorName = b.Acc_LName + ", " + b.Acc_FName
@@ -428,7 +536,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 var approver = apprvrList.Where(a => a.FBT_ID == m.FBT_ID).Select(a => a.ApproverName).FirstOrDefault();
                 DMFBTViewModel vm = new DMFBTViewModel
                 {
-                    FBT_ID = m.FBT_ID,
+                    FBT_MasterID = m.FBT_MasterID,
                     FBT_Name = m.FBT_Name,
                     FBT_Account = m.FBT_Account,
                     FBT_Formula = m.FBT_Formula,
@@ -444,28 +552,59 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             return vmList;
         }
 
-        public List<DMEWTViewModel> populateEWT(string colName, string searchString)
+        public List<DMEWTViewModel> populateEWT(DMFiltersViewModel filters)
         {
-            List<DMEWTModel> mList = _context.DMEWT.Where(x => x.EWT_isDeleted == false).ToList();
-            //FOR FILTERING
-            if (!String.IsNullOrEmpty(searchString))
+            IQueryable<DMEWTModel> mList = _context.DMEWT.Where(x => x.EWT_isDeleted == false && x.EWT_isActive == true).ToList().AsQueryable();
+            var properties = filters.EF.GetType().GetProperties();
+
+            //FILTER
+            foreach (var property in properties)
             {
-                string[] colArr = { "No", "Creator_ID", "Approver_ID" };
-                if (colArr.Contains(colName))
+                var propertyName = property.Name;
+                string[] split = propertyName.Split("_");
+                var toStr = property.GetValue(filters.EF).ToString();
+                string[] colArr = { "Tax_Rate", "Creator_ID", "Approver_ID" };
+                if (toStr != "")
                 {
-                    mList = _context.DMEWT
-                                  .Where("EWT_" + colName + " = @0 AND EWT_isDeleted == @1", searchString, false)
-                                  .Select(e => e).ToList();
+                    if (toStr != "0")
+                    {
+                        if (colArr.Contains(split[1])) // IF INT VAL
+                        {
+                            mList = mList.Where("EWT_" + split[1] + " = @0 AND  EWT_isDeleted == @1", property.GetValue(filters.EF), false)
+                                     .Select(e => e).AsQueryable();
+                        }
+                        else if (split[1] == "Creator_Name" || split[1] == "Approver_Name")
+                        { //UPDATE THIS TO SEARCH FOR CREATOR OR APPROVER NAME IN USER TABLE
+                            mList = mList.Where("EWT_" + split[1] + ".Contains(@0) AND  EWT_isDeleted == @1", property.GetValue(filters.EF), false)
+                                     .Select(e => e).AsQueryable();
+                        }
+                        else // IF STRING VALUE
+                        {
+                            mList = mList.Where("EWT_" + split[1] + ".Contains(@0) AND  EWT_isDeleted == @1", property.GetValue(filters.EF).ToString(), false)
+                                    .Select(e => e).AsQueryable();
+                        }
+                    }
                 }
-                else
-                {
-                    mList = _context.DMEWT
-                                  .Where("EWT_" + colName + ".Contains(@0) AND EWT_isDeleted == @1", searchString, false)
-                                  .Select(e => e).ToList();
-                }
-
             }
-
+            var pendingList = _context.DMEWT_Pending.ToList();
+            foreach (var m in pendingList)
+            {
+                mList = mList.Concat(new DMEWTModel[] {
+                    new DMEWTModel
+                    {
+                        EWT_MasterID = m.Pending_EWT_MasterID,
+                        EWT_Nature = m.Pending_EWT_Nature,
+                        EWT_Tax_Rate = m.Pending_EWT_Tax_Rate,
+                        EWT_ATC = m.Pending_EWT_ATC,
+                        EWT_Tax_Rate_Desc = m.Pending_EWT_Tax_Rate_Desc,
+                        EWT_Creator_ID = m.Pending_EWT_Creator_ID,
+                        EWT_Approver_ID = m.Pending_EWT_Approver_ID.Equals(null) ? 0 : m.Pending_EWT_Approver_ID,
+                        EWT_Created_Date = m.Pending_EWT_Filed_Date,
+                        EWT_Last_Updated = m.Pending_EWT_Filed_Date,
+                        EWT_Status = m.Pending_EWT_Status
+                    }
+                });
+            }
             var creatorList = (from a in mList
                                join b in _context.Account on a.EWT_Creator_ID equals b.Acc_UserID
                                let CreatorName = b.Acc_LName + ", " + b.Acc_FName
@@ -484,7 +623,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 var approver = apprvrList.Where(a => a.EWT_ID == m.EWT_ID).Select(a => a.ApproverName).FirstOrDefault();
                 DMEWTViewModel vm = new DMEWTViewModel
                 {
-                    EWT_ID = m.EWT_ID,
+                    EWT_MasterID = m.EWT_MasterID,
                     EWT_Nature = m.EWT_Nature,
                     EWT_Tax_Rate = m.EWT_Tax_Rate,
                     EWT_ATC = m.EWT_ATC,
@@ -500,27 +639,56 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             return vmList;
         }
 
-        public List<DMCurrencyViewModel> populateCurr(string colName, string searchString)
+        public List<DMCurrencyViewModel> populateCurr(DMFiltersViewModel filters)
         {
-            List<DMCurrencyModel> mList = _context.DMCurrency.Where(x => x.Curr_isDeleted == false).ToList();
+            IQueryable<DMCurrencyModel> mList = _context.DMCurrency.Where(x => x.Curr_isDeleted == false && x.Curr_isActive == true).ToList().AsQueryable();
+            var properties = filters.CF.GetType().GetProperties();
 
-            //FOR FILTERING
-            if (!String.IsNullOrEmpty(searchString))
+            //FILTER
+            foreach (var property in properties)
             {
-                string[] colArr = { "Creator_ID", "Approver_ID" };
-                if (colArr.Contains(colName))
+                var propertyName = property.Name;
+                string[] split = propertyName.Split("_");
+                var toStr = property.GetValue(filters.CF).ToString();
+                string[] colArr = { "No", "Creator_ID", "Approver_ID" };
+                if (toStr != "")
                 {
-                    mList = _context.DMCurrency
-                                  .Where("Curr_" + colName + " = @0 AND Curr_isDeleted == @1", searchString, false)
-                                  .Select(e => e).ToList();
+                    if (toStr != "0")
+                    {
+                        if (colArr.Contains(split[1])) // IF INT VAL
+                        {
+                            mList = mList.Where("Curr_" + split[1] + " = @0 AND  Curr_isDeleted == @1", property.GetValue(filters.CF), false)
+                                     .Select(e => e).AsQueryable();
+                        }
+                        else if (split[1] == "Creator_Name" || split[1] == "Approver_Name")
+                        { //UPDATE THIS TO SEARCH FOR CREATOR OR APPROVER NAME IN USER TABLE
+                            mList = mList.Where("Curr_" + split[1] + ".Contains(@0) AND  Curr_isDeleted == @1", property.GetValue(filters.CF), false)
+                                     .Select(e => e).AsQueryable();
+                        }
+                        else // IF STRING VALUE
+                        {
+                            mList = mList.Where("Curr_" + split[1] + ".Contains(@0) AND  Curr_isDeleted == @1", property.GetValue(filters.CF).ToString(), false)
+                                    .Select(e => e).AsQueryable();
+                        }
+                    }
                 }
-                else
-                {
-                    mList = _context.DMCurrency
-                                  .Where("Curr_" + colName + ".Contains(@0) AND Curr_isDeleted == @1", searchString, false)
-                                  .Select(e => e).ToList();
-                }
-
+            }
+            var pendingList = _context.DMCurrency_Pending.ToList();
+            foreach (var m in pendingList)
+            {
+                mList = mList.Concat(new DMCurrencyModel[] {
+                    new DMCurrencyModel
+                    {
+                       // Curr_ID = m.Pending_Curr_MasterID,
+                        Curr_MasterID = m.Pending_Curr_MasterID,
+                        Curr_Name = m.Pending_Curr_Name,
+                        Curr_Creator_ID = m.Pending_Curr_Creator_ID,
+                        Curr_Approver_ID = m.Pending_Curr_Approver_ID.Equals(null) ? 0 : m.Pending_Curr_Approver_ID,
+                        Curr_Created_Date = m.Pending_Curr_Filed_Date,
+                        Curr_Last_Updated = m.Pending_Curr_Filed_Date,
+                        Curr_Status = m.Pending_Curr_Status
+                    }
+                });
             }
             var creatorList = (from a in mList
                                join b in _context.Account on a.Curr_Creator_ID equals b.Acc_UserID
@@ -546,7 +714,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 var approver = apprvrList.Where(a => a.Curr_ID == m.Curr_ID).Select(a => a.ApproverName).FirstOrDefault();
                 DMCurrencyViewModel vm = new DMCurrencyViewModel
                 {
-                    Curr_ID = m.Curr_ID,
+                    Curr_MasterID = m.Curr_MasterID,
                     Curr_Name = m.Curr_Name,
                     Curr_CCY_Code = m.Curr_CCY_Code,
                     Curr_Creator_Name = creator ?? "N/A",

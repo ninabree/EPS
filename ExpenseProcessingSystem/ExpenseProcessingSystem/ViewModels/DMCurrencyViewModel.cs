@@ -11,10 +11,13 @@ namespace ExpenseProcessingSystem.ViewModels
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Curr_ID { get; set; }
+        public int Curr_MasterID { get; set; }
         [Display(Name = "Currency Name")]
         public string Curr_Name { get; set; }
         [Display(Name = "Currency CCY Code")]
         public string Curr_CCY_Code { get; set; }
+        public int Curr_Creator_ID { get; set; }
+        public int Curr_Approver_ID { get; set; }
         [Display(Name = "Creator Name")]
         public string Curr_Creator_Name { get; set; }
         [Display(Name = "Approver Name")]

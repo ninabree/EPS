@@ -11,10 +11,13 @@ namespace ExpenseProcessingSystem.ViewModels
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int VAT_ID { get; set; }
+        public int VAT_MasterID { get; set; }
         [Display(Name = "VAT Name")]
         public string VAT_Name { get; set; }
         [Display(Name = "VAT Rate")]
         public string VAT_Rate { get; set; }
+        public int VAT_Creator_ID { get; set; }
+        public int VAT_Approver_ID { get; set; }
         [Display(Name = "Creator Name")]
         public string VAT_Creator_Name { get; set; }
         [Display(Name = "Approver Name")]

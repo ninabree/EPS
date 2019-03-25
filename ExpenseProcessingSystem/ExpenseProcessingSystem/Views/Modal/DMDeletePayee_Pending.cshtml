@@ -5,6 +5,7 @@
 }
 @using ExpenseProcessingSystem.ViewModels
 @model List<DMPayeeViewModel>
+
 <div id="table" class="table-editable">
     @using (Html.BeginForm("DeletePayee_Pending", "Home", FormMethod.Post, new { @class = "validate-form", @id = "tsForm" }))
     {

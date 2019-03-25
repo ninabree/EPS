@@ -11,6 +11,7 @@ namespace ExpenseProcessingSystem.ViewModels
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int FBT_ID { get; set; }
+        public int FBT_MasterID { get; set; }
         [Display(Name = "FBT Name")]
         public string FBT_Name { get; set; }
         [Display(Name = "FBT Account")]
@@ -19,6 +20,8 @@ namespace ExpenseProcessingSystem.ViewModels
         public string FBT_Formula { get; set; }
         [Display(Name = "FBT Tax Rate")]
         public int FBT_Tax_Rate { get; set; }
+        public int FBT_Creator_ID { get; set; }
+        public int FBT_Approver_ID { get; set; }
         [Display(Name = "Creator Name")]
         public string FBT_Creator_Name { get; set; }
         [Display(Name = "Approver Name")]

@@ -8,6 +8,7 @@ namespace ExpenseProcessingSystem.ViewModels
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Account_ID { get; set; }
+        public int Account_MasterID { get; set; }
         [Display(Name = "Account Name")]
         public string Account_Name { get; set; }
         [Display(Name = "Account Code")]
@@ -20,6 +21,8 @@ namespace ExpenseProcessingSystem.ViewModels
         public string Account_Div { get; set; }
         [Display(Name = "Account Fund")]
         public string Account_Fund { get; set; }
+        public int Account_Creator_ID { get; set; }
+        public int Account_Approver_ID { get; set; }
         [Display(Name = "Creator Name")]
         public string Account_Creator_Name { get; set; }
         [Display(Name = "Approver Name")]

@@ -1,0 +1,35 @@
+﻿
+@{
+    ViewData["Title"] = "DMApproveEWT";
+    Layout = "~/Views/Shared/_ModalLayout.cshtml";
+}
+@using ExpenseProcessingSystem.ViewModels
+@model List<DMEWTViewModel>
+<div id="table" class="table-editable">
+    @using (Html.BeginForm("ApproveEWT", "Home", FormMethod.Post, new { @class = "validate-form", @id = "tsForm" }))
+    {
+        <table class="table table-bordered editable-th">
+            <tr>
+                <th>EWT Name</th>
+                <th>Account</th>
+                <th>Formula</th>
+                <th>Tax rate</th>
+                <th>Status</th>
+            </tr>
+            @if (Model != null)
+            {
+                @for (int i = 0; i < Model.Count(); i++)
+                {
+                    <tr>
+                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].EWT_Nature, new { @class = "w-full" })</td>
+                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].EWT_Tax_Rate, new { @class = "w-full" })</td>
+                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].EWT_ATC, new { @class = "w-full" })</td>
+                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].EWT_Tax_Rate_Desc, new { @class = "w-full" })</td>
+                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].EWT_Status, new { @class = "w-full" })</td>
+                        @Html.HiddenFor(item => item[i].EWT_MasterID)
+                    </tr>
+                }
+            }
+        </table>
+    }
+</div>

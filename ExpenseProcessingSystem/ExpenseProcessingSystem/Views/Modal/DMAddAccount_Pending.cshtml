@@ -1,0 +1,36 @@
+﻿
+@{
+    ViewData["Title"] = "DMAddAccount_Pending";
+    Layout = "~/Views/Shared/_ModalLayout.cshtml";
+}
+
+@using ExpenseProcessingSystem.ViewModels.NewRecord
+@model NewAccountListViewModel
+
+<div id="table" class="table-editable">
+    @using (Html.BeginForm("AddAccount_Pending", "Home", FormMethod.Post, new { @class = "validate-form", @id = "tsForm" }))
+    {
+        <table class="table table-bordered editable-th">
+            <tr>
+                <th>Account</th>
+                <th>Code</th>
+                <th>No</th>
+                <th>Cust</th>
+                <th>Div</th>
+                <th>Fund</th>
+                <th></th>
+            </tr>
+            <tr id="NewAccount-Tr-0">
+                <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_Name, new { @class = "w-full" })</td>
+                <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_Code, new { @class = "w-full" })</td>
+                <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_No, new { @class = "w-full" })</td>
+                <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_Cust, new { @class = "w-full" })</td>
+                <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_Div, new { @class = "w-full" })</td>
+                <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_Fund, new { @class = "w-full" })</td>
+                <td>
+                    <span class="table-remove glyphicon glyphicon-remove"></span>
+                </td>
+            </tr>
+        </table>
+    }
+</div>

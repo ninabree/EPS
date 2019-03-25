@@ -185,8 +185,8 @@
 
                 $('#myModal').modal('show');
             },
-            fail: function (ex) {
-                alert("fail");
+            error: function (xhr) {
+                alert('error');
             }
         });
     }

@@ -55,7 +55,7 @@ using ExpenseProcessingSystem;
             WriteLiteral("\r\n<div class=\"tab-content-cont m-t-10\">\r\n    <div id=\"tbl-lbl\"><p>Date:</p></div>\r\n    <div class=\"tbl-cont m-b-20\">\r\n        <table class=\"table table-striped tab-tbl m-b-20\">\r\n            <thead>\r\n                <tr>\r\n                    <th>");
             EndContext();
             BeginContext(286, 141, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "fbfad52de44a4a7ab9db9ff41bd0c6c3", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "566beb4ae70948578195e8fae8388a6b", async() => {
                 BeginContext(359, 11, true);
                 WriteLiteral("Tran Type<p");
                 EndContext();
@@ -102,7 +102,7 @@ WriteAttributeValue(" ", 394, ViewData["glyph-acc"], 395, 22, false);
             WriteLiteral("</th>\r\n                    <th>");
             EndContext();
             BeginContext(458, 141, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "3682f4b6e92b45c0ad629d8cbccb57de", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "e2e3ea0ca83e4e558957d8b3cf7cd2d4", async() => {
                 BeginContext(528, 13, true);
                 WriteLiteral("GBase Tran#<p");
                 EndContext();
@@ -178,7 +178,7 @@ WriteAttributeValue(" ", 565, ViewData["glyph-type"], 566, 23, false);
             WriteLiteral("              <tr>\r\n                    <th>");
             EndContext();
             BeginContext(1667, 141, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "835241d2d4ca41d39025ae5d44efbe66", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "c5314eebe3ac49029dcd942e4b10b95a", async() => {
                 BeginContext(1740, 11, true);
                 WriteLiteral("Tran Type<p");
                 EndContext();
@@ -225,7 +225,7 @@ WriteAttributeValue(" ", 1775, ViewData["glyph-acc"], 1776, 22, false);
             WriteLiteral("</th>\r\n                    <th>");
             EndContext();
             BeginContext(1839, 141, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "085852b33add40fbae98335d78332e64", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "20b05e7a2df845efa0c4f50d08ff400c", async() => {
                 BeginContext(1909, 13, true);
                 WriteLiteral("GBase Tran#<p");
                 EndContext();

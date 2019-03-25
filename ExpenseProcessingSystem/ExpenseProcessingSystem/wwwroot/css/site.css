@@ -590,6 +590,11 @@ tr {
     background-color: #1f2a6b !important;
     color: #fff;
 }
+/*---------------------------------------
+    [Tab Content - Data Maintenance]*/
+/*modal2 div #table #tsForm tbale tbody tr td input.form-control {
+    height : 20px
+}*/
 /*//////////////////////////////////////////////////////////////////
 [ Validation Summary Message ]*/
 div[aria-describedby=validationSummary] {

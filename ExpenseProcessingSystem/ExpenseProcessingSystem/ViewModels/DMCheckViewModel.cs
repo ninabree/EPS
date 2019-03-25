@@ -12,6 +12,7 @@ namespace ExpenseProcessingSystem.ViewModels
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Check_ID { get; set; }
+        public int Check_MasterID { get; set; }
         [Display(Name = "Input Date")]
         public DateTime Check_Input_Date { get; set; }
         [Display(Name = "Series From")]
@@ -23,6 +24,8 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "Name")]
         [NotNullValidations, TextValidation]
         public string Check_Name { get; set; }
+        public int Check_Creator_ID { get; set; }
+        public int Check_Approver_ID { get; set; }
         [Display(Name = "Input By")]
         public string Check_Creator_Name { get; set; }
         [Display(Name = "Approved By")]

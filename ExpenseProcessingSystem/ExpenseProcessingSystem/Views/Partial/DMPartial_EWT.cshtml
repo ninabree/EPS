@@ -8,6 +8,38 @@
 @model DMViewModel
 
 <div class="tbl-cont">
+    <form asp-action="DM" asp-controller="Home" method="get" id="search-frm">
+        <div class="form-actions no-color">
+            <p>
+                Find by:
+                <table class="table">
+                    <tr>
+                        <td>@Html.LabelFor(model => model.DMFilters.EF.EF_Nature)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.EF.EF_Nature, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.EF.EF_Tax_Rate)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.EF.EF_Tax_Rate, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.EF.EF_ATC)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.EF.EF_ATC, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.EF.EF_Tax_Rate_Desc)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.EF.EF_Tax_Rate_Desc, new { @class = "input" })</td>
+                        <td><input id="filterPartialName" name="partialName" value="DMPartial_Check" type="hidden" /></td>
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(model => model.DMFilters.EF.EF_Creator_Name)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.EF.EF_Creator_Name, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.EF.EF_Approver_Name)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.EF.EF_Approver_Name, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.EF.EF_Status)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.EF.EF_Status, new { @class = "input" })</td>
+                        <td colspan="2" style="text-align: right;">
+                            <input type="submit" value="Search" class="btn btn-default" id="search-btn" />
+                            <input type="button" value="Back to Full List" id="full-list-btn" class="btn btn-default" />
+                        </td>
+                    </tr>
+                </table>
+            </p>
+        </div>
+    </form>
     <table class="table table-striped tab-tbl">
         <thead>
             <tr>
@@ -28,7 +60,7 @@
                 @foreach (var item in Model.EWT)
                 {
                     <tr>
-                        <td><input class="tbl-chk" id="@item.EWT_ID" type="checkbox" /></td>
+                        <td><input class="tbl-chk" id="@item.EWT_MasterID" type="checkbox" /></td>
                         <td>@Html.DisplayFor(modelItem => item.EWT_Nature)</td>
                         <td>@Html.DisplayFor(modelItem => item.EWT_Tax_Rate)</td>
                         <td>@Html.DisplayFor(modelItem => item.EWT_ATC)</td>
@@ -65,9 +97,14 @@
        class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right">
     </a>
     <div class="float-r m-r-10">
-        <button class="dis-inline-block tbl-btn btn add-rec rec" id="add_ewt">Add</button>
-        <button class="dis-inline-block tbl-btn btn edit-rec rec" id="edit_ewt">Edit</button>
-        <button class="dis-inline-block tbl-btn btn delete-rec rec" id="delete_ewt">Delete</button>
+        <button class="dis-inline-block tbl-btn btn add-rec rec" id="add_eWT">Add</button>
+        <button class="dis-inline-block tbl-btn btn edit-rec rec" id="edit_eWT">Edit</button>
+        <button class="dis-inline-block tbl-btn btn delete-rec rec" id="delete_eWT">Delete</button>
+        @if (ViewBag.access.accessType == "approver")
+        {
+            <button class="dis-inline-block tbl-btn btn apprv-rec rec" id="apprv_eWT">Approve</button>
+            <button class="dis-inline-block tbl-btn btn rej-rec rec" id="rej_eWT">Reject</button>
+        }
         <input type="hidden" value="@ViewData["Title"]" id="partialVal" />
     </div>
     @Html.Partial("ModalPartial")

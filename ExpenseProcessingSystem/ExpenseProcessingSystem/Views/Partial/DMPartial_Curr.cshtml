@@ -8,6 +8,34 @@
 @model DMViewModel
 
 <div class="tbl-cont">
+    <form asp-action="DM" asp-controller="Home" method="get" id="search-frm">
+        <div class="form-actions no-color">
+            <p>
+                Find by:
+                <table class="table">
+                    <tr>
+                        <td>@Html.LabelFor(model => model.DMFilters.CF.CF_Name)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.CF.CF_Name, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.CF.CF_CCY_Code)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.CF.CF_CCY_Code, new { @class = "input" })</td>
+                        <td><input id="filterPartialName" name="partialName" value="DMPartial_Check" type="hidden" /></td>
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(model => model.DMFilters.CF.CF_Creator_Name)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.CF.CF_Creator_Name, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.CF.CF_Approver_Name)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.CF.CF_Approver_Name, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.CF.CF_Status)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.CF.CF_Status, new { @class = "input" })</td>
+                        <td colspan="2" style="text-align: right;">
+                            <input type="submit" value="Search" class="btn btn-default" id="search-btn" />
+                            <input type="button" value="Back to Full List" id="full-list-btn" class="btn btn-default" />
+                        </td>
+                    </tr>
+                </table>
+            </p>
+        </div>
+    </form>
     <table class="table table-striped tab-tbl">
         <thead>
             <tr>
@@ -26,7 +54,7 @@
                 @foreach (var item in Model.Curr)
                 {
                     <tr>
-                        <td><input class="tbl-chk" id="@item.Curr_ID" type="checkbox" /></td>
+                        <td><input class="tbl-chk" id="@item.Curr_MasterID" type="checkbox" /></td>
                         <td>@Html.DisplayFor(modelItem => item.Curr_Name)</td>
                         <td>@Html.DisplayFor(modelItem => item.Curr_CCY_Code)</td>
                         <td>@Html.DisplayFor(modelItem => item.Curr_Creator_Name)</td>
@@ -64,6 +92,11 @@
         <button class="dis-inline-block tbl-btn btn add-rec rec" id="add_curr">Add</button>
         <button class="dis-inline-block tbl-btn btn edit-rec rec" id="edit_curr">Edit</button>
         <button class="dis-inline-block tbl-btn btn delete-rec rec" id="delete_curr">Delete</button>
+        @if (ViewBag.access.accessType == "approver")
+        {
+            <button class="dis-inline-block tbl-btn btn apprv-rec rec" id="apprv_curr">Approve</button>
+            <button class="dis-inline-block tbl-btn btn rej-rec rec" id="rej_curr">Reject</button>
+        }
         <input type="hidden" value="@ViewData["Title"]" id="partialVal" />
     </div>
     @Html.Partial("ModalPartial")
