@@ -125,7 +125,7 @@ namespace ExpenseProcessingSystem.Controllers
                     _session.SetString("CKF_Approver_Name", vm.DMFilters.CKF.CKF_Approver_Name ?? "");
                     _session.SetString("CKF_Status", vm.DMFilters.CKF.CKF_Status ?? "");
                 }
-                else if (vm.DMFilters.FF != null)
+                else if (vm.DMFilters.AF != null)
                 {
                     //Account
                     _session.SetString("AF_Name", vm.DMFilters.AF.AF_Name ?? "");

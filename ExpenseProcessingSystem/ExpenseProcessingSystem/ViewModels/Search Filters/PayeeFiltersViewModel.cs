@@ -12,12 +12,14 @@ namespace ExpenseProcessingSystem.ViewModels.Search_Filters
         [Display(Name = "Payee Name")]
         public string PF_Name { get; set; }
         [Display(Name = "Payee TIN")]
+        [Range(0, int.MaxValue, ErrorMessage = "Please enter a valid TIN number")]
         public int PF_TIN { get; set; }
         [Display(Name = "Payee Address")]
         public string PF_Address { get; set; }
         [Display(Name = "Payee Type")]
         public string PF_Type { get; set; }
         [Display(Name = "Payee No")]
+        [Range(0, int.MaxValue, ErrorMessage = "Please enter a valid Payee number")]
         public int PF_No { get; set; }
         [Display(Name = "Payee Creator Name")]
         public string PF_Creator_Name { get; set; }

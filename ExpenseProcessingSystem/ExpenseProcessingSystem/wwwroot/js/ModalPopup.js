@@ -169,6 +169,7 @@
     function ModalPopup2(modal, method, modalHeader, idsArr) {
         var modalDivBody = $('.modal-body');
         var modalDivHeader = $('.modal-header');
+        var modalDivFooter = $('.modal-footer');
 
         $.ajax({
             url: "RedirectCont2/",
@@ -180,6 +181,7 @@
                 modalDivHeader.find('h4').remove();
 
                 //set modal header title
+                modalDivFooter.find('#add_row_btn').remove();
                 modalDivHeader.append('<h4 class="modal-title">' + modalHeader + '</h4>');
                 modalDivBody.html(data);
 

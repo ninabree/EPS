@@ -44,10 +44,23 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         {
                             mList = mList.Where("Payee_" + split[1] + " = @0 AND  Payee_isDeleted == @1", property.GetValue(filters.PF), false)
                                      .Select(e => e).AsQueryable();
-                        }else if (split[1] == "Creator_Name" || split[1] == "Approver_Name")
-                        { //UPDATE THIS TO SEARCH FOR CREATOR OR APPROVER NAME IN USER TABLE
-                            mList = mList.Where("Payee_" + split[1] + ".Contains(@0) AND  Payee_isDeleted == @1", property.GetValue(filters.PF), false)
-                                     .Select(e => e).AsQueryable();
+                        }else if (split[1] == "Creator" || split[1] == "Approver")
+                        {
+                            //get all userIDs of creator or approver that contains string
+                            var names = _context.Account
+                              .Where(x => (x.Acc_FName.Contains(property.GetValue(filters.PF).ToString())
+                              || x.Acc_LName.Contains(property.GetValue(filters.PF).ToString())))
+                              .Select(x => x.Acc_UserID).ToList();
+                            if (split[1] == "Approver")
+                            {
+                                mList = mList.Where(x => names.Contains(x.Payee_Approver_ID) && x.Payee_isDeleted == false)
+                                         .Select(e => e).AsQueryable();
+                            }else if (split[1] == "Creator")
+                            {
+                                mList = mList.Where(x=> names.Contains(x.Payee_Creator_ID) &&  x.Payee_isDeleted == false)
+                                         .Select(e => e).AsQueryable();
+                            }
+                           
                         }
                         else // IF STRING VALUE
                         {
@@ -149,10 +162,23 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 {
                     if (toStr != "0")
                     {
-                        if (split[1] == "Creator_Name" || split[1] == "Approver_Name")
-                        { //UPDATE THIS TO SEARCH FOR CREATOR OR APPROVER NAME IN USER TABLE
-                            mList = mList.Where("Dept_" + split[1] + ".Contains(@0)", toStr)
-                                     .Select(e => e).AsQueryable();
+                        if (split[1] == "Creator" || split[1] == "Approver")
+                        { 
+                            //get all userIDs of creator or approver that contains string
+                            var names = _context.Account
+                              .Where(x => (x.Acc_FName.Contains(property.GetValue(filters.DF).ToString())
+                              || x.Acc_LName.Contains(property.GetValue(filters.DF).ToString())))
+                              .Select(x => x.Acc_UserID).ToList();
+                            if (split[1] == "Approver")
+                            {
+                                mList = mList.Where(x => names.Contains(x.Dept_Approver_ID) && x.Dept_isDeleted == false)
+                                         .Select(e => e).AsQueryable();
+                            }
+                            else if (split[1] == "Creator")
+                            {
+                                mList = mList.Where(x => names.Contains(x.Dept_Creator_ID) && x.Dept_isDeleted == false)
+                                         .Select(e => e).AsQueryable();
+                            }
                         }
                         else // IF STRING VALUE
                         {
@@ -239,9 +265,22 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     if (toStr != "0" && toStr != "0001/01/01 0:00:00")
                     {
                         if (split[1] == "Creator_Name" || split[1] == "Approver_Name")
-                        { //UPDATE THIS TO SEARCH FOR CREATOR OR APPROVER NAME IN USER TABLE
-                            mList = mList.Where("Check_" + split[1] + ".Contains(@0)", toStr)
-                                     .Select(e => e).AsQueryable();
+                        {
+                            //get all userIDs of creator or approver that contains string
+                            var names = _context.Account
+                              .Where(x => (x.Acc_FName.Contains(property.GetValue(filters.CKF).ToString())
+                              || x.Acc_LName.Contains(property.GetValue(filters.CKF).ToString())))
+                              .Select(x => x.Acc_UserID).ToList();
+                            if (split[1] == "Approver")
+                            {
+                                mList = mList.Where(x => names.Contains(x.Check_Approver_ID) && x.Check_isDeleted == false)
+                                         .Select(e => e).AsQueryable();
+                            }
+                            else if (split[1] == "Creator")
+                            {
+                                mList = mList.Where(x => names.Contains(x.Check_Creator_ID) && x.Check_isDeleted == false)
+                                         .Select(e => e).AsQueryable();
+                            }
                         }
                         else // IF STRING VALUE
                         {
@@ -314,10 +353,23 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             mList = mList.Where("Account_" + split[1] + " = @0 AND  Account_isDeleted == @1", property.GetValue(filters.AF), false)
                                      .Select(e => e).AsQueryable();
                         }
-                        else if (split[1] == "Creator_Name" || split[1] == "Approver_Name")
-                        { //UPDATE THIS TO SEARCH FOR CREATOR OR APPROVER NAME IN USER TABLE
-                            mList = mList.Where("Account_" + split[1] + ".Contains(@0) AND  Account_isDeleted == @1", property.GetValue(filters.AF), false)
-                                     .Select(e => e).AsQueryable();
+                        else if (split[1] == "Creator" || split[1] == "Approver")
+                        {
+                            //get all userIDs of creator or approver that contains string
+                            var names = _context.Account
+                              .Where(x => (x.Acc_FName.Contains(property.GetValue(filters.AF).ToString())
+                              || x.Acc_LName.Contains(property.GetValue(filters.AF).ToString())))
+                              .Select(x => x.Acc_UserID).ToList();
+                            if (split[1] == "Approver")
+                            {
+                                mList = mList.Where(x => names.Contains(x.Account_Approver_ID) && x.Account_isDeleted == false)
+                                         .Select(e => e).AsQueryable();
+                            }
+                            else if (split[1] == "Creator")
+                            {
+                                mList = mList.Where(x => names.Contains(x.Account_Creator_ID) && x.Account_isDeleted == false)
+                                         .Select(e => e).AsQueryable();
+                            }
                         }
                         else // IF STRING VALUE
                         {
@@ -404,10 +456,23 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             mList = mList.Where("VAT_" + split[1] + " = @0 AND  VAT_isDeleted == @1", property.GetValue(filters.VF), false)
                                      .Select(e => e).AsQueryable();
                         }
-                        else if (split[1] == "Creator_Name" || split[1] == "Approver_Name")
-                        { //UPDATE THIS TO SEARCH FOR CREATOR OR APPROVER NAME IN USER TABLE
-                            mList = mList.Where("VAT_" + split[1] + ".Contains(@0) AND  VAT_isDeleted == @1", property.GetValue(filters.VF), false)
-                                     .Select(e => e).AsQueryable();
+                        else if (split[1] == "Creator" || split[1] == "Approver")
+                        {
+                            //get all userIDs of creator or approver that contains string
+                            var names = _context.Account
+                              .Where(x => (x.Acc_FName.Contains(property.GetValue(filters.VF).ToString())
+                              || x.Acc_LName.Contains(property.GetValue(filters.VF).ToString())))
+                              .Select(x => x.Acc_UserID).ToList();
+                            if (split[1] == "Approver")
+                            {
+                                mList = mList.Where(x => names.Contains(x.VAT_Approver_ID) && x.VAT_isDeleted == false)
+                                         .Select(e => e).AsQueryable();
+                            }
+                            else if (split[1] == "Creator")
+                            {
+                                mList = mList.Where(x => names.Contains(x.VAT_Creator_ID) && x.VAT_isDeleted == false)
+                                         .Select(e => e).AsQueryable();
+                            }
                         }
                         else // IF STRING VALUE
                         {
@@ -485,12 +550,25 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         {
                             mList = mList.Where("FBT_" + split[1] + " = @0 AND  FBT_isDeleted == @1", property.GetValue(filters.FF), false)
                                      .Select(e => e).AsQueryable();
-    }
-                        else if (split[1] == "Creator_Name" || split[1] == "Approver_Name")
-                        { //UPDATE THIS TO SEARCH FOR CREATOR OR APPROVER NAME IN USER TABLE
-                            mList = mList.Where("FBT_" + split[1] + ".Contains(@0) AND  FBT_isDeleted == @1", property.GetValue(filters.FF), false)
-                                     .Select(e => e).AsQueryable();
-}
+                        }
+                        else if (split[1] == "Creator" || split[1] == "Approver")
+                        {
+                            //get all userIDs of creator or approver that contains string
+                            var names = _context.Account
+                              .Where(x => (x.Acc_FName.Contains(property.GetValue(filters.FF).ToString())
+                              || x.Acc_LName.Contains(property.GetValue(filters.FF).ToString())))
+                              .Select(x => x.Acc_UserID).ToList();
+                            if (split[1] == "Approver")
+                            {
+                                mList = mList.Where(x => names.Contains(x.FBT_Approver_ID) && x.FBT_isDeleted == false)
+                                         .Select(e => e).AsQueryable();
+                            }
+                            else if (split[1] == "Creator")
+                            {
+                                mList = mList.Where(x => names.Contains(x.FBT_Creator_ID) && x.FBT_isDeleted == false)
+                                         .Select(e => e).AsQueryable();
+                            }
+                        }
                         else // IF STRING VALUE
                         {
                             mList = mList.Where("FBT_" + split[1] + ".Contains(@0) AND  FBT_isDeleted == @1", property.GetValue(filters.FF).ToString(), false)
@@ -573,10 +651,23 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             mList = mList.Where("EWT_" + split[1] + " = @0 AND  EWT_isDeleted == @1", property.GetValue(filters.EF), false)
                                      .Select(e => e).AsQueryable();
                         }
-                        else if (split[1] == "Creator_Name" || split[1] == "Approver_Name")
-                        { //UPDATE THIS TO SEARCH FOR CREATOR OR APPROVER NAME IN USER TABLE
-                            mList = mList.Where("EWT_" + split[1] + ".Contains(@0) AND  EWT_isDeleted == @1", property.GetValue(filters.EF), false)
-                                     .Select(e => e).AsQueryable();
+                        else if (split[1] == "Creator" || split[1] == "Approver")
+                        {
+                            //get all userIDs of creator or approver that contains string
+                            var names = _context.Account
+                              .Where(x => (x.Acc_FName.Contains(property.GetValue(filters.EF).ToString())
+                              || x.Acc_LName.Contains(property.GetValue(filters.EF).ToString())))
+                              .Select(x => x.Acc_UserID).ToList();
+                            if (split[1] == "Approver")
+                            {
+                                mList = mList.Where(x => names.Contains(x.EWT_Approver_ID) && x.EWT_isDeleted == false)
+                                         .Select(e => e).AsQueryable();
+                            }
+                            else if (split[1] == "Creator")
+                            {
+                                mList = mList.Where(x => names.Contains(x.EWT_Creator_ID) && x.EWT_isDeleted == false)
+                                         .Select(e => e).AsQueryable();
+                            }
                         }
                         else // IF STRING VALUE
                         {
@@ -660,10 +751,23 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             mList = mList.Where("Curr_" + split[1] + " = @0 AND  Curr_isDeleted == @1", property.GetValue(filters.CF), false)
                                      .Select(e => e).AsQueryable();
                         }
-                        else if (split[1] == "Creator_Name" || split[1] == "Approver_Name")
-                        { //UPDATE THIS TO SEARCH FOR CREATOR OR APPROVER NAME IN USER TABLE
-                            mList = mList.Where("Curr_" + split[1] + ".Contains(@0) AND  Curr_isDeleted == @1", property.GetValue(filters.CF), false)
-                                     .Select(e => e).AsQueryable();
+                        else if (split[1] == "Creator" || split[1] == "Approver")
+                        {
+                            //get all userIDs of creator or approver that contains string
+                            var names = _context.Account
+                              .Where(x => (x.Acc_FName.Contains(property.GetValue(filters.CF).ToString())
+                              || x.Acc_LName.Contains(property.GetValue(filters.CF).ToString())))
+                              .Select(x => x.Acc_UserID).ToList();
+                            if (split[1] == "Approver")
+                            {
+                                mList = mList.Where(x => names.Contains(x.Curr_Approver_ID) && x.Curr_isDeleted == false)
+                                         .Select(e => e).AsQueryable();
+                            }
+                            else if (split[1] == "Creator")
+                            {
+                                mList = mList.Where(x => names.Contains(x.Curr_Creator_ID) && x.Curr_isDeleted == false)
+                                         .Select(e => e).AsQueryable();
+                            }
                         }
                         else // IF STRING VALUE
                         {

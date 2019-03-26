@@ -32,7 +32,7 @@
                         <td>@Html.TextBoxFor(model => model.DMFilters.PF.PF_Approver_Name, new { @class = "input" })</td>
                         <td>@Html.LabelFor(model => model.DMFilters.PF.PF_Status)</td>
                         <td>@Html.TextBoxFor(model => model.DMFilters.PF.PF_Status, new { @class = "input" })</td>
-                        <td colspan="2"></td>
+                        <td colspan="2"><input id="filterPartialName" name="partialName" value="DMPartial_payee" type="hidden" /></td>
                         <td colspan="2" style="text-align: right;">
                             <input type="submit" value="Search" class="btn btn-default" id="search-btn" />
                             <input type="button" value="Back to Full List" id="full-list-btn" class="btn btn-default" />

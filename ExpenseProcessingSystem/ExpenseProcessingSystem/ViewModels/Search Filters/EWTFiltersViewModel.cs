@@ -11,6 +11,7 @@ namespace ExpenseProcessingSystem.ViewModels.Search_Filters
         [Display(Name = "EWT Nature")]
         public string EF_Nature { get; set; }
         [Display(Name = "EWT Tax Rate")]
+        [Range(0, int.MaxValue, ErrorMessage = "Please enter a valid Tax Rate")]
         public int EF_Tax_Rate { get; set; }
         [Display(Name = "ATC")]
         public string EF_ATC { get; set; }

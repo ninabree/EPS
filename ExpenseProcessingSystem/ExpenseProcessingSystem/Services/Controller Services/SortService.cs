@@ -582,12 +582,12 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "name":
-                    tempList = tempList.OrderBy(s => s.Dept_ID);
+                    tempList = tempList.OrderBy(s => s.Dept_Name);
                     viewData = "glyph-1";
                     vdInfo = "glyphicon-menu-down";
                     break;
                 case "name_desc":
-                    tempList = tempList.OrderByDescending(s => s.Dept_Status);
+                    tempList = tempList.OrderByDescending(s => s.Dept_Name);
                     viewData = "glyph-1";
                     vdInfo = "glyphicon-menu-up";
                     break;
@@ -690,7 +690,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             {
                 case "fbt_stat":
                     tempList = tempList.OrderBy(x => x.FBT_Status == "For Approval" || x.FBT_Status == "For Approval (For Deletion)");
-                    viewData = "glyph-1";
+                    viewData = "glyph-8";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "fbt_acc_":
@@ -888,12 +888,12 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "nature":
-                    tempList = tempList.OrderBy(s => s.EWT_Status);
+                    tempList = tempList.OrderBy(s => s.EWT_Nature);
                     viewData = "glyph-1";
                     vdInfo = "glyphicon-menu-down";
                     break;
                 case "nature_desc":
-                    tempList = tempList.OrderByDescending(s => s.EWT_Status);
+                    tempList = tempList.OrderByDescending(s => s.EWT_Nature);
                     viewData = "glyph-1";
                     vdInfo = "glyphicon-menu-up";
                     break;

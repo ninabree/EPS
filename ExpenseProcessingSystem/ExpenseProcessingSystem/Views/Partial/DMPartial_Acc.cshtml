@@ -22,7 +22,7 @@
                         <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Cust, new { @class = "input" })</td>
                         <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Div)</td>
                         <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Div, new { @class = "input" })</td>
-                        <td><input id="filterPartialName" name="partialName" value="DMPartial_Check" type="hidden" /></td>
+                        <td><input id="filterPartialName" name="partialName" value="DMPartial_Acc" type="hidden" /></td>
                     </tr>
                     <tr>
                         <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Fund)</td>
@@ -50,7 +50,7 @@
                 <th id="Code"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["AccountCodeSortParm"]">Account Code<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
                 <th id="No"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["AccountNumberSortParm"]">Account Number<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
                 <th id="Cust"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["AccountCustSortParm"]">Cust<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
-                <th id="Div"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData[" Title"]" asp-route-sortOrder="@ViewData[" AccountDivSortParm"]">Div<p class="btn-xs glyphicon @ViewData[" glyph-5"]"></p></a></th>
+                <th id="Div"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["AccountDivSortParm"]">Div<p class="btn-xs glyphicon @ViewData["glyph-5"]"></p></a></th>
                 <th id="Fund"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["AccountFundSortParm"]">Fund<p class="btn-xs glyphicon @ViewData["glyph-6"]"></p></a></th>
                 <th id="Creator_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["AccountCreatorSortParm"]">Input By<p class="btn-xs glyphicon @ViewData["glyph-7"]"></p></a></th>
                 <th id="Approver_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["AccountApproverSortParm"]">Approved By<p class="btn-xs glyphicon @ViewData["glyph-8"]"></p></a></th>

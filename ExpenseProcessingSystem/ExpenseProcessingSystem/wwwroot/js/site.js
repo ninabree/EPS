@@ -64,15 +64,20 @@ $(document).ready(function () {
 
     /*//////////////////////////////////////////////////////////////////
     [ DM ]*/
-
+    //reset search filter values
     $('#full-list-btn').click(function (e) {
         e.stopImmediatePropagation();
-        $('#filter-txt').val("");
-        $('#search-txt').val("");
-        $('#filterPartialName').val($('#dm-tbl').find(":selected").val());
+        $('input[id^= "DMFilters_"]').each(function (i, obj) {
+            $(this).val("");
+            if ($(this).attr('data-val-range-min') == "0") {
+                $(this).val("0");
+            } else if ($(this).attr('type') == "datetime-local") {
+                $(this).val("0001-01-01T00:00:00.000");
+            }
+        });
         $('#search-frm').submit();
     });
-
+    //enables/disables controls in DM depending on entry status
     $('input.tbl-chk').change(function (e) {
         e.stopImmediatePropagation();
         //get column # of status per table

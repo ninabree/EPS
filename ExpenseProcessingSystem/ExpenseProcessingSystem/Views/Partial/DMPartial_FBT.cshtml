@@ -22,7 +22,7 @@
                         <td>@Html.TextBoxFor(model => model.DMFilters.FF.FF_Formula, new { @class = "input" })</td>
                         <td>@Html.LabelFor(model => model.DMFilters.FF.FF_Tax_Rate)</td>
                         <td>@Html.TextBoxFor(model => model.DMFilters.FF.FF_Tax_Rate, new { @class = "input" })</td>
-                        <td><input id="filterPartialName" name="partialName" value="DMPartial_Check" type="hidden" /></td>
+                        <td><input id="filterPartialName" name="partialName" value="DMPartial_FBT" type="hidden" /></td>
                     </tr>
                     <tr>
                         <td>@Html.LabelFor(model => model.DMFilters.FF.FF_Creator_Name)</td>
@@ -49,8 +49,8 @@
                 <th id="Formula"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["FBTFormulaSortParm"]">Formula<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
                 <th id="Tax_Rate"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["FBTRateSortParm"]">Tax Rate<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
                 <th id="Creator_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["FBTCreatorSortParm"]">Input By<p class="btn-xs glyphicon @ViewData["glyph-5"]"></p></a></th>
-                <th id="Approver_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData[" Title"]" asp-route-sortOrder="@ViewData[" FBTApproverSortParm"]">Approved By<p class="btn-xs glyphicon @ViewData[" glyph-6"]"></p></a></th>
-                <th id="Last_Updated"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["FBTLastUpdteSortParm"]">Last Updated<p class="btn-xs glyphicon @ViewData["glyph-7"]"></p></a></th>
+                <th id="Approver_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["FBTApproverSortParm"]">Approved By<p class="btn-xs glyphicon @ViewData["glyph-6"]"></p></a></th>
+                <th id="Last_Updated"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["FBTLastUpdatedSortParm"]">Last Updated<p class="btn-xs glyphicon @ViewData["glyph-7"]"></p></a></th>
                 <th id="Status"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["FBTStatusSortParm"]">Status<p class="btn-xs glyphicon @ViewData["glyph-8"]"></p></a></th>
             </tr>
         </thead>

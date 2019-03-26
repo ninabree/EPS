@@ -118,11 +118,21 @@ public int CheckSession
             return tmp;
         }
         function isSearchDisabled() {
-            if ($('.tab-tbl tbody tr').length <= 1) {
+            var noFilter = true;
+            $('input[id^= "DMFilters_"]').each(function (i, obj) {
+                if ($(this).val() == "") {
+                } else if ($(this).val() == "0") {
+                } else if ($(this).val() == "0001-01-01T00:00:00.000") {
+                } else {
+                    noFilter = false;
+                    return false;
+                }
+            });
+            //disable if no entries
+            if ($('.tab-tbl tbody tr').length <= 0 && noFilter) {
                 $('#search-btn').attr("disabled", "disabled");
                 $('#full-list-btn').attr("disabled", "disabled");
-            } else {
-
+            }else {
                 $('#search-btn').removeAttr("disabled");
                 $('#full-list-btn').removeAttr("disabled");
             }

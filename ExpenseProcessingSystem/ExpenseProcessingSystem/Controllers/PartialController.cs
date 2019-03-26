@@ -187,7 +187,7 @@ namespace ExpenseProcessingSystem.Controllers
             ViewData["AccountCreatorSortParm"] = sortOrder == "acc_creatr_desc" ? "acc_creatr" : "acc_creatr_desc";
             ViewData["AccountApproverSortParm"] = sortOrder == "acc_approvr_desc" ? "acc_approvr" : "acc_approvr_desc";
             ViewData["AccountLastUpdatedSortParm"] = sortOrder == "acc_last_updte_desc" ? "acc_last_updte" : "acc_last_updte_desc";
-            ViewData["AccountSortParm"] = sortOrder == "name_desc" ? "name_desc" : "name_desc";
+            ViewData["AccountSortParm"] = sortOrder == "name_desc" ? "name" : "name_desc";
 
             if (searchString != null) { pg = 1; }
             else { searchString = currentFilter; }
@@ -226,7 +226,7 @@ namespace ExpenseProcessingSystem.Controllers
             //set sort vals
             ViewData["CurrentSort"] = sortOrder;
             ViewData["VATStatusSortParm"] = String.IsNullOrEmpty(sortOrder) ? "vat_stat" : "";
-            ViewData["VATCodeSortParm"] = sortOrder == "vat_code_desc" ? "code_code" : "vat_code_desc";
+            ViewData["VATCodeSortParm"] = sortOrder == "vat_code_desc" ? "vat_code" : "vat_code_desc";
             ViewData["VATCreatorSortParm"] = sortOrder == "vat_creatr_desc" ? "vat_creatr" : "vat_creatr_desc";
             ViewData["VATApproverSortParm"] = sortOrder == "vat_approvr_desc" ? "vat_approvr" : "vat_approvr_desc";
             ViewData["VATLastUpdatedSortParm"] = sortOrder == "vat_last_updte_desc" ? "vat_last_updte" : "vat_last_updte_desc";

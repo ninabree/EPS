@@ -9,6 +9,7 @@ namespace ExpenseProcessingSystem.ViewModels.Search_Filters
     public class CheckFiltersViewModel
     {
         [Display(Name = "Input Date")]
+        [DataType(DataType.DateTime)]
         public DateTime CKF_Input_Date { get; set; }
         [Display(Name = "Series From")]
         public string CKF_Series_From { get; set; }
