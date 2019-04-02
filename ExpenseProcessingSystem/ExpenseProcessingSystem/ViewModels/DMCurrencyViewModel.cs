@@ -14,8 +14,8 @@ namespace ExpenseProcessingSystem.ViewModels
         public int Curr_MasterID { get; set; }
         [Display(Name = "Currency Name")]
         public string Curr_Name { get; set; }
-        [Display(Name = "Currency CCY Code")]
-        public string Curr_CCY_Code { get; set; }
+        [Display(Name = "Currency CCY ABBR")]
+        public string Curr_CCY_ABBR { get; set; }
         public int Curr_Creator_ID { get; set; }
         public int Curr_Approver_ID { get; set; }
         [Display(Name = "Creator Name")]
@@ -24,7 +24,7 @@ namespace ExpenseProcessingSystem.ViewModels
         public string Curr_Approver_Name { get; set; }
         [Display(Name = "Currency Created Date")]
         public DateTime Curr_Created_Date { get; set; }
-        [Display(Name = "Currency last Updated")]
+        [Display(Name = "Currency Last Updated")]
         public DateTime Curr_Last_Updated { get; set; }
         [Display(Name = "Currency Status")]
         public string Curr_Status { get; set; }

@@ -14,13 +14,13 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "Account Code")]
         public string Account_Code { get; set; }
         [Display(Name = "Account No")]
-        public int Account_No { get; set; }
+        public string Account_No { get; set; }
         [Display(Name = "Account Cust")]
         public string Account_Cust { get; set; }
         [Display(Name = "Account Div")]
         public string Account_Div { get; set; }
         [Display(Name = "Account Fund")]
-        public string Account_Fund { get; set; }
+        public bool Account_Fund { get; set; }
         public int Account_Creator_ID { get; set; }
         public int Account_Approver_ID { get; set; }
         [Display(Name = "Creator Name")]

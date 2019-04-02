@@ -10,12 +10,16 @@ namespace ExpenseProcessingSystem.ViewModels
     {
         public DMFiltersViewModel DMFilters { get; set; }
         public PaginatedList<DMDeptViewModel> Dept { get; set; }
-        public PaginatedList<DMPayeeViewModel> Payee { get; set; }
+        public PaginatedList<DMVendorViewModel> Vendor { get; set; }
         public PaginatedList<DMCheckViewModel> Check { get; set; }
         public PaginatedList<DMAccountViewModel> Account { get; set; }
         public PaginatedList<DMVATViewModel> VAT { get; set; }
         public PaginatedList<DMFBTViewModel> FBT { get; set; }
-        public PaginatedList<DMEWTViewModel> EWT { get; set; }
+        public PaginatedList<DMTRViewModel> TR { get; set; }
         public PaginatedList<DMCurrencyViewModel> Curr { get; set; }
+        public PaginatedList<DMEmpViewModel> Emp { get; set; }
+        public PaginatedList<DMCustViewModel> Cust { get; set; }
+        public PaginatedList<DMNCCViewModel> NCC { get; set; }
+        public PaginatedList<DMBCSViewModel> BCS { get; set; }
     }
 }

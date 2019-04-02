@@ -6,7 +6,9 @@ using ExpenseProcessingSystem.ViewModels.NewRecord;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ExpenseProcessingSystem.Services.Controller_Services
@@ -23,30 +25,28 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             _context = context;
         }
         //-----------------------ADMIN-------------------------
-        // [DMPayeeModel ]
-        public List<DMPayeeViewModel> approvePayee(string[] IdsArr)
+        // [DMVendor ]
+        public List<DMVendorViewModel> approveVendor(string[] IdsArr)
         {
-            List<DMPayeeModel_Pending> pendingList = _context.DMPayee_Pending.Where(x => IdsArr.Contains(x.Pending_Payee_MasterID.ToString())).Distinct().ToList();
-            List<DMPayeeViewModel> tempList = new List<DMPayeeViewModel>();
-            foreach (DMPayeeModel_Pending m in pendingList)
+            List<DMVendorModel_Pending> pendingList = _context.DMVendor_Pending.Where(x => IdsArr.Contains(x.Pending_Vendor_MasterID.ToString())).Distinct().ToList();
+            List<DMVendorViewModel> tempList = new List<DMVendorViewModel>();
+            foreach (DMVendorModel_Pending m in pendingList)
             {
                 foreach (string s in IdsArr)
                 {
-                    if (m.Pending_Payee_MasterID == int.Parse(s))
+                    if (m.Pending_Vendor_MasterID == int.Parse(s))
                     {
-                        DMPayeeViewModel vm = new DMPayeeViewModel
+                        DMVendorViewModel vm = new DMVendorViewModel
                         {
-                            Payee_MasterID = m.Pending_Payee_MasterID,
-                            Payee_Name = m.Pending_Payee_Name,
-                            Payee_TIN = m.Pending_Payee_TIN,
-                            Payee_Address = m.Pending_Payee_Address,
-                            Payee_Type = m.Pending_Payee_Type,
-                            Payee_No = m.Pending_Payee_No,
-                            Payee_Creator_ID = m.Pending_Payee_Creator_ID,
-                            Payee_Approver_ID = m.Pending_Payee_Approver_ID.Equals(null) ? 0 : m.Pending_Payee_Approver_ID,
-                            Payee_Created_Date = m.Pending_Payee_Filed_Date,
-                            Payee_Last_Updated = m.Pending_Payee_Filed_Date,
-                            Payee_Status = m.Pending_Payee_Status
+                            Vendor_MasterID = m.Pending_Vendor_MasterID,
+                            Vendor_Name = m.Pending_Vendor_Name,
+                            Vendor_TIN = m.Pending_Vendor_TIN,
+                            Vendor_Address = m.Pending_Vendor_Address,
+                            Vendor_Creator_ID = m.Pending_Vendor_Creator_ID,
+                            Vendor_Approver_ID = m.Pending_Vendor_Approver_ID.Equals(null) ? 0 : m.Pending_Vendor_Approver_ID,
+                            Vendor_Created_Date = m.Pending_Vendor_Filed_Date,
+                            Vendor_Last_Updated = m.Pending_Vendor_Filed_Date,
+                            Vendor_Status = m.Pending_Vendor_Status
                         };
                         tempList.Add(vm);
                     }
@@ -54,29 +54,27 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             }
             return tempList;
         }
-        public List<DMPayeeViewModel> rejectPayee(string[] IdsArr)
+        public List<DMVendorViewModel> rejectVendor(string[] IdsArr)
         {
-            List<DMPayeeModel_Pending> pendingList = _context.DMPayee_Pending.Where(x => IdsArr.Contains(x.Pending_Payee_MasterID.ToString())).Distinct().ToList();
-            List<DMPayeeViewModel> tempList = new List<DMPayeeViewModel>();
-            foreach (DMPayeeModel_Pending m in pendingList)
+            List<DMVendorModel_Pending> pendingList = _context.DMVendor_Pending.Where(x => IdsArr.Contains(x.Pending_Vendor_MasterID.ToString())).Distinct().ToList();
+            List<DMVendorViewModel> tempList = new List<DMVendorViewModel>();
+            foreach (DMVendorModel_Pending m in pendingList)
             {
                 foreach (string s in IdsArr)
                 {
-                    if (m.Pending_Payee_MasterID == int.Parse(s))
+                    if (m.Pending_Vendor_MasterID == int.Parse(s))
                     {
-                        DMPayeeViewModel vm = new DMPayeeViewModel
+                        DMVendorViewModel vm = new DMVendorViewModel
                         {
-                            Payee_MasterID = m.Pending_Payee_MasterID,
-                            Payee_Name = m.Pending_Payee_Name,
-                            Payee_TIN = m.Pending_Payee_TIN,
-                            Payee_Address = m.Pending_Payee_Address,
-                            Payee_Type = m.Pending_Payee_Type,
-                            Payee_No = m.Pending_Payee_No,
-                            Payee_Creator_ID = m.Pending_Payee_Creator_ID,
-                            Payee_Approver_ID = m.Pending_Payee_Approver_ID.Equals(null) ? 0 : m.Pending_Payee_Approver_ID,
-                            Payee_Created_Date = m.Pending_Payee_Filed_Date,
-                            Payee_Last_Updated = m.Pending_Payee_Filed_Date,
-                            Payee_Status = m.Pending_Payee_Status
+                            Vendor_MasterID = m.Pending_Vendor_MasterID,
+                            Vendor_Name = m.Pending_Vendor_Name,
+                            Vendor_TIN = m.Pending_Vendor_TIN,
+                            Vendor_Address = m.Pending_Vendor_Address,
+                            Vendor_Creator_ID = m.Pending_Vendor_Creator_ID,
+                            Vendor_Approver_ID = m.Pending_Vendor_Approver_ID.Equals(null) ? 0 : m.Pending_Vendor_Approver_ID,
+                            Vendor_Created_Date = m.Pending_Vendor_Filed_Date,
+                            Vendor_Last_Updated = m.Pending_Vendor_Filed_Date,
+                            Vendor_Status = m.Pending_Vendor_Status
                         };
                         tempList.Add(vm);
                     }
@@ -84,6 +82,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             }
             return tempList;
         }
+
         //[ Department ]
         public List<DMDeptViewModel> approveDept(string[] IdsArr)
         {
@@ -157,8 +156,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             Check_Input_Date = m.Pending_Check_Input_Date,
                             Check_Series_From = m.Pending_Check_Series_From,
                             Check_Series_To = m.Pending_Check_Series_To,
-                            Check_Name = m.Pending_Check_Name,
-                            Check_Type = m.Pending_Check_Type,
+                            Check_Bank_Info = m.Pending_Check_Bank_Info,
                             Check_Creator_ID = m.Pending_Check_Creator_ID,
                             Check_Approver_ID = m.Pending_Check_Approver_ID.Equals(null) ? 0 : m.Pending_Check_Approver_ID,
                             Check_Created_Date = m.Pending_Check_Filed_Date,
@@ -187,8 +185,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             Check_Input_Date = m.Pending_Check_Input_Date,
                             Check_Series_From = m.Pending_Check_Series_From,
                             Check_Series_To = m.Pending_Check_Series_To,
-                            Check_Name = m.Pending_Check_Name,
-                            Check_Type = m.Pending_Check_Type,
+                            Check_Bank_Info = m.Pending_Check_Bank_Info,
                             Check_Creator_ID = m.Pending_Check_Creator_ID,
                             Check_Approver_ID = m.Pending_Check_Approver_ID.Equals(null) ? 0 : m.Pending_Check_Approver_ID,
                             Check_Created_Date = m.Pending_Check_Filed_Date,
@@ -382,29 +379,29 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             return tempList;
         }
 
-        // [DMEWTModel ]
-        public List<DMEWTViewModel> approveEWT(string[] IdsArr)
+        // [DMTRModel ]
+        public List<DMTRViewModel> approveTR(string[] IdsArr)
         {
-            List<DMEWTModel_Pending> pendingList = _context.DMEWT_Pending.Where(x => IdsArr.Contains(x.Pending_EWT_MasterID.ToString())).Distinct().ToList();
-            List<DMEWTViewModel> tempList = new List<DMEWTViewModel>();
-            foreach (DMEWTModel_Pending m in pendingList)
+            List<DMTRModel_Pending> pendingList = _context.DMTR_Pending.Where(x => IdsArr.Contains(x.Pending_TR_MasterID.ToString())).Distinct().ToList();
+            List<DMTRViewModel> tempList = new List<DMTRViewModel>();
+            foreach (DMTRModel_Pending m in pendingList)
             {
                 foreach (string s in IdsArr)
                 {
-                    if (m.Pending_EWT_MasterID == int.Parse(s))
+                    if (m.Pending_TR_MasterID == int.Parse(s))
                     {
-                        DMEWTViewModel vm = new DMEWTViewModel
+                        DMTRViewModel vm = new DMTRViewModel
                         {
-                            EWT_MasterID = m.Pending_EWT_MasterID,
-                            EWT_Nature = m.Pending_EWT_Nature,
-                            EWT_Tax_Rate = m.Pending_EWT_Tax_Rate,
-                            EWT_ATC = m.Pending_EWT_ATC,
-                            EWT_Tax_Rate_Desc = m.Pending_EWT_Tax_Rate_Desc,
-                            EWT_Creator_ID = m.Pending_EWT_Creator_ID,
-                            EWT_Approver_ID = m.Pending_EWT_Approver_ID.Equals(null) ? 0 : m.Pending_EWT_Approver_ID,
-                            EWT_Created_Date = m.Pending_EWT_Filed_Date,
-                            EWT_Last_Updated = m.Pending_EWT_Filed_Date,
-                            EWT_Status = m.Pending_EWT_Status
+                            TR_MasterID = m.Pending_TR_MasterID,
+                            TR_WT_Title = m.Pending_TR_WT_Title,
+                            TR_Nature = m.Pending_TR_Nature,
+                            TR_Tax_Rate = m.Pending_TR_Tax_Rate,
+                            TR_ATC = m.Pending_TR_ATC,
+                            TR_Creator_ID = m.Pending_TR_Creator_ID,
+                            TR_Approver_ID = m.Pending_TR_Approver_ID.Equals(null) ? 0 : m.Pending_TR_Approver_ID,
+                            TR_Created_Date = m.Pending_TR_Filed_Date,
+                            TR_Last_Updated = m.Pending_TR_Filed_Date,
+                            TR_Status = m.Pending_TR_Status
                         };
                         tempList.Add(vm);
                     }
@@ -412,28 +409,28 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             }
             return tempList;
         }
-        public List<DMEWTViewModel> rejectEWT(string[] IdsArr)
+        public List<DMTRViewModel> rejectTR(string[] IdsArr)
         {
-            List<DMEWTModel_Pending> pendingList = _context.DMEWT_Pending.Where(x => IdsArr.Contains(x.Pending_EWT_MasterID.ToString())).Distinct().ToList();
-            List<DMEWTViewModel> tempList = new List<DMEWTViewModel>();
-            foreach (DMEWTModel_Pending m in pendingList)
+            List<DMTRModel_Pending> pendingList = _context.DMTR_Pending.Where(x => IdsArr.Contains(x.Pending_TR_MasterID.ToString())).Distinct().ToList();
+            List<DMTRViewModel> tempList = new List<DMTRViewModel>();
+            foreach (DMTRModel_Pending m in pendingList)
             {
                 foreach (string s in IdsArr)
                 {
-                    if (m.Pending_EWT_MasterID == int.Parse(s))
+                    if (m.Pending_TR_MasterID == int.Parse(s))
                     {
-                        DMEWTViewModel vm = new DMEWTViewModel
+                        DMTRViewModel vm = new DMTRViewModel
                         {
-                            EWT_MasterID = m.Pending_EWT_MasterID,
-                            EWT_Nature = m.Pending_EWT_Nature,
-                            EWT_Tax_Rate = m.Pending_EWT_Tax_Rate,
-                            EWT_ATC = m.Pending_EWT_ATC,
-                            EWT_Tax_Rate_Desc = m.Pending_EWT_Tax_Rate_Desc,
-                            EWT_Creator_ID = m.Pending_EWT_Creator_ID,
-                            EWT_Approver_ID = m.Pending_EWT_Approver_ID.Equals(null) ? 0 : m.Pending_EWT_Approver_ID,
-                            EWT_Created_Date = m.Pending_EWT_Filed_Date,
-                            EWT_Last_Updated = m.Pending_EWT_Filed_Date,
-                            EWT_Status = m.Pending_EWT_Status
+                            TR_WT_Title = m.Pending_TR_WT_Title,
+                            TR_MasterID = m.Pending_TR_MasterID,
+                            TR_Nature = m.Pending_TR_Nature,
+                            TR_Tax_Rate = m.Pending_TR_Tax_Rate,
+                            TR_ATC = m.Pending_TR_ATC,
+                            TR_Creator_ID = m.Pending_TR_Creator_ID,
+                            TR_Approver_ID = m.Pending_TR_Approver_ID.Equals(null) ? 0 : m.Pending_TR_Approver_ID,
+                            TR_Created_Date = m.Pending_TR_Filed_Date,
+                            TR_Last_Updated = m.Pending_TR_Filed_Date,
+                            TR_Status = m.Pending_TR_Status
                         };
                         tempList.Add(vm);
                     }
@@ -457,7 +454,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         {
                             Curr_MasterID = m.Pending_Curr_MasterID,
                             Curr_Name = m.Pending_Curr_Name,
-                            Curr_CCY_Code = m.Pending_Curr_CCY_Code,
+                            Curr_CCY_ABBR = m.Pending_Curr_CCY_ABBR,
                             Curr_Creator_ID = m.Pending_Curr_Creator_ID,
                             Curr_Approver_ID = m.Pending_Curr_Approver_ID.Equals(null) ? 0 : m.Pending_Curr_Approver_ID,
                             Curr_Created_Date = m.Pending_Curr_Filed_Date,
@@ -484,7 +481,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         {
                             Curr_MasterID = m.Pending_Curr_MasterID,
                             Curr_Name = m.Pending_Curr_Name,
-                            Curr_CCY_Code = m.Pending_Curr_CCY_Code,
+                            Curr_CCY_ABBR = m.Pending_Curr_CCY_ABBR,
                             Curr_Creator_ID = m.Pending_Curr_Creator_ID,
                             Curr_Approver_ID = m.Pending_Curr_Approver_ID.Equals(null) ? 0 : m.Pending_Curr_Approver_ID,
                             Curr_Created_Date = m.Pending_Curr_Filed_Date,
@@ -498,18 +495,245 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             return tempList;
         }
 
+        //[ Employee ]
+        public List<DMEmpViewModel> approveEmp(string[] IdsArr)
+        {
+            List<DMEmpModel_Pending> pendingList = _context.DMEmp_Pending.Where(x => IdsArr.Contains(x.Pending_Emp_MasterID.ToString())).Distinct().ToList();
+            List<DMEmpViewModel> tempList = new List<DMEmpViewModel>();
+            foreach (DMEmpModel_Pending m in pendingList)
+            {
+                foreach (string s in IdsArr)
+                {
+                    if (m.Pending_Emp_MasterID == int.Parse(s))
+                    {
+                        DMEmpViewModel vm = new DMEmpViewModel
+                        {
+                            Emp_MasterID = m.Pending_Emp_MasterID,
+                            Emp_Name = m.Pending_Emp_Name,
+                            Emp_Acc_No = m.Pending_Emp_Acc_No ?? "",
+                            Emp_Creator_ID = m.Pending_Emp_Creator_ID,
+                            Emp_Approver_ID = m.Pending_Emp_Approver_ID.Equals(null) ? 0 : m.Pending_Emp_Approver_ID,
+                            Emp_Created_Date = m.Pending_Emp_Filed_Date,
+                            Emp_Last_Updated = m.Pending_Emp_Filed_Date,
+                            Emp_Status = m.Pending_Emp_Status
+                        };
+                        tempList.Add(vm);
+                    }
+                }
+            }
+            return tempList;
+        }
+        public List<DMEmpViewModel> rejectEmp(string[] IdsArr)
+        {
+            List<DMEmpModel_Pending> pendingList = _context.DMEmp_Pending.Where(x => IdsArr.Contains(x.Pending_Emp_MasterID.ToString())).Distinct().ToList();
+            List<DMEmpViewModel> tempList = new List<DMEmpViewModel>();
+            foreach (DMEmpModel_Pending m in pendingList)
+            {
+                foreach (string s in IdsArr)
+                {
+                    if (m.Pending_Emp_MasterID == int.Parse(s))
+                    {
+                        DMEmpViewModel vm = new DMEmpViewModel
+                        {
+                            Emp_MasterID = m.Pending_Emp_MasterID,
+                            Emp_Name = m.Pending_Emp_Name,
+                            Emp_Acc_No = m.Pending_Emp_Acc_No ?? "",
+                            Emp_Creator_ID = m.Pending_Emp_Creator_ID,
+                            Emp_Approver_ID = m.Pending_Emp_Approver_ID.Equals(null) ? 0 : m.Pending_Emp_Approver_ID,
+                            Emp_Created_Date = m.Pending_Emp_Filed_Date,
+                            Emp_Last_Updated = m.Pending_Emp_Filed_Date,
+                            Emp_Status = m.Pending_Emp_Status
+                        };
+                        tempList.Add(vm);
+                    }
+                }
+            }
+            return tempList;
+        }
+
+        //[ Customer ]
+        public List<DMCustViewModel> approveCust(string[] IdsArr)
+        {
+            List<DMCustModel_Pending> pendingList = _context.DMCust_Pending.Where(x => IdsArr.Contains(x.Pending_Cust_MasterID.ToString())).Distinct().ToList();
+            List<DMCustViewModel> tempList = new List<DMCustViewModel>();
+            foreach (DMCustModel_Pending m in pendingList)
+            {
+                foreach (string s in IdsArr)
+                {
+                    if (m.Pending_Cust_MasterID == int.Parse(s))
+                    {
+                        DMCustViewModel vm = new DMCustViewModel
+                        {
+                            Cust_MasterID = m.Pending_Cust_MasterID,
+                            Cust_Name = m.Pending_Cust_Name,
+                            Cust_Abbr = m.Pending_Cust_Abbr,
+                            Cust_No = m.Pending_Cust_No,
+                            Cust_Creator_ID = m.Pending_Cust_Creator_ID,
+                            Cust_Approver_ID = m.Pending_Cust_Approver_ID.Equals(null) ? 0 : m.Pending_Cust_Approver_ID,
+                            Cust_Created_Date = m.Pending_Cust_Filed_Date,
+                            Cust_Last_Updated = m.Pending_Cust_Filed_Date,
+                            Cust_Status = m.Pending_Cust_Status
+                        };
+                        tempList.Add(vm);
+                    }
+                }
+            }
+            return tempList;
+        }
+        public List<DMCustViewModel> rejectCust(string[] IdsArr)
+        {
+            List<DMCustModel_Pending> pendingList = _context.DMCust_Pending.Where(x => IdsArr.Contains(x.Pending_Cust_MasterID.ToString())).Distinct().ToList();
+            List<DMCustViewModel> tempList = new List<DMCustViewModel>();
+            foreach (DMCustModel_Pending m in pendingList)
+            {
+                foreach (string s in IdsArr)
+                {
+                    if (m.Pending_Cust_MasterID == int.Parse(s))
+                    {
+                        DMCustViewModel vm = new DMCustViewModel
+                        {
+                            Cust_MasterID = m.Pending_Cust_MasterID,
+                            Cust_Name = m.Pending_Cust_Name,
+                            Cust_Abbr = m.Pending_Cust_Abbr,
+                            Cust_No = m.Pending_Cust_No,
+                            Cust_Creator_ID = m.Pending_Cust_Creator_ID,
+                            Cust_Approver_ID = m.Pending_Cust_Approver_ID.Equals(null) ? 0 : m.Pending_Cust_Approver_ID,
+                            Cust_Created_Date = m.Pending_Cust_Filed_Date,
+                            Cust_Last_Updated = m.Pending_Cust_Filed_Date,
+                            Cust_Status = m.Pending_Cust_Status
+                        };
+                        tempList.Add(vm);
+                    }
+                }
+            }
+            return tempList;
+        }
+
+        //[ Non Cash Category ]
+        public List<DMNCCViewModel> approveNCC(string[] IdsArr)
+        {
+            List<DMNonCashCategoryModel_Pending> pendingList = _context.DMNCC_Pending.Where(x => IdsArr.Contains(x.Pending_NCC_MasterID.ToString())).Distinct().ToList();
+            List<DMNCCViewModel> tempList = new List<DMNCCViewModel>();
+            foreach (DMNonCashCategoryModel_Pending m in pendingList)
+            {
+                foreach (string s in IdsArr)
+                {
+                    if (m.Pending_NCC_MasterID == int.Parse(s))
+                    {
+                        DMNCCViewModel vm = new DMNCCViewModel
+                        {
+                            NCC_MasterID = m.Pending_NCC_MasterID,
+                            NCC_Name = m.Pending_NCC_Name,
+                            NCC_Pro_Forma = m.Pending_NCC_Pro_Forma,
+                            NCC_Creator_ID = m.Pending_NCC_Creator_ID,
+                            NCC_Approver_ID = m.Pending_NCC_Approver_ID.Equals(null) ? 0 : m.Pending_NCC_Approver_ID,
+                            NCC_Created_Date = m.Pending_NCC_Filed_Date,
+                            NCC_Last_Updated = m.Pending_NCC_Filed_Date,
+                            NCC_Status = m.Pending_NCC_Status
+                        };
+                        tempList.Add(vm);
+                    }
+                }
+            }
+            return tempList;
+        }
+        public List<DMNCCViewModel> rejectNCC(string[] IdsArr)
+        {
+            List<DMNonCashCategoryModel_Pending> pendingList = _context.DMNCC_Pending.Where(x => IdsArr.Contains(x.Pending_NCC_MasterID.ToString())).Distinct().ToList();
+            List<DMNCCViewModel> tempList = new List<DMNCCViewModel>();
+            foreach (DMNonCashCategoryModel_Pending m in pendingList)
+            {
+                foreach (string s in IdsArr)
+                {
+                    if (m.Pending_NCC_MasterID == int.Parse(s))
+                    {
+                        DMNCCViewModel vm = new DMNCCViewModel
+                        {
+                            NCC_MasterID = m.Pending_NCC_MasterID,
+                            NCC_Name = m.Pending_NCC_Name,
+                            NCC_Pro_Forma = m.Pending_NCC_Pro_Forma,
+                            NCC_Creator_ID = m.Pending_NCC_Creator_ID,
+                            NCC_Approver_ID = m.Pending_NCC_Approver_ID.Equals(null) ? 0 : m.Pending_NCC_Approver_ID,
+                            NCC_Created_Date = m.Pending_NCC_Filed_Date,
+                            NCC_Last_Updated = m.Pending_NCC_Filed_Date,
+                            NCC_Status = m.Pending_NCC_Status
+                        };
+                        tempList.Add(vm);
+                    }
+                }
+            }
+            return tempList;
+        }
+
+        //[ BIR Cert Signatory ]
+        public List<DMBCSViewModel> approveBCS(string[] IdsArr)
+        {
+            List<DMBIRCertSignModel_Pending> pendingList = _context.DMBCS_Pending.Where(x => IdsArr.Contains(x.Pending_BCS_MasterID.ToString())).Distinct().ToList();
+            List<DMBCSViewModel> tempList = new List<DMBCSViewModel>();
+            foreach (DMBIRCertSignModel_Pending m in pendingList)
+            {
+                foreach (string s in IdsArr)
+                {
+                    if (m.Pending_BCS_MasterID == int.Parse(s))
+                    {
+                        DMBCSViewModel vm = new DMBCSViewModel
+                        {
+                            BCS_MasterID = m.Pending_BCS_MasterID,
+                            BCS_Name = m.Pending_BCS_Name,
+                            BCS_TIN = m.Pending_BCS_TIN,
+                            BCS_Position = m.Pending_BCS_Position,
+                            BCS_Signatures = m.Pending_BCS_Signatures,
+                            BCS_Creator_ID = m.Pending_BCS_Creator_ID,
+                            BCS_Approver_ID = m.Pending_BCS_Approver_ID.Equals(null) ? 0 : m.Pending_BCS_Approver_ID,
+                            BCS_Created_Date = m.Pending_BCS_Filed_Date,
+                            BCS_Last_Updated = m.Pending_BCS_Filed_Date,
+                            BCS_Status = m.Pending_BCS_Status
+                        };
+                        tempList.Add(vm);
+                    }
+                }
+            }
+            return tempList;
+        }
+        public List<DMBCSViewModel> rejectBCS(string[] IdsArr)
+        {
+            List<DMBIRCertSignModel_Pending> pendingList = _context.DMBCS_Pending.Where(x => IdsArr.Contains(x.Pending_BCS_MasterID.ToString())).Distinct().ToList();
+            List<DMBCSViewModel> tempList = new List<DMBCSViewModel>();
+            foreach (DMBIRCertSignModel_Pending m in pendingList)
+            {
+                foreach (string s in IdsArr)
+                {
+                    if (m.Pending_BCS_MasterID == int.Parse(s))
+                    {
+                        DMBCSViewModel vm = new DMBCSViewModel
+                        {
+                            BCS_MasterID = m.Pending_BCS_MasterID,
+                            BCS_Name = m.Pending_BCS_Name,
+                            BCS_TIN = m.Pending_BCS_TIN,
+                            BCS_Position = m.Pending_BCS_Position,
+                            BCS_Signatures = m.Pending_BCS_Signatures,
+                            BCS_Creator_ID = m.Pending_BCS_Creator_ID,
+                            BCS_Approver_ID = m.Pending_BCS_Approver_ID.Equals(null) ? 0 : m.Pending_BCS_Approver_ID,
+                            BCS_Created_Date = m.Pending_BCS_Filed_Date,
+                            BCS_Last_Updated = m.Pending_BCS_Filed_Date,
+                            BCS_Status = m.Pending_BCS_Status
+                        };
+                        tempList.Add(vm);
+                    }
+                }
+            }
+            return tempList;
+        }
+
         //------------------------PENDING-----------------------------
         // [Add New Pending Entries]
-        public NewPayeeListViewModel addPayee()
+        public NewVendorListViewModel addVendor()
         {
-            NewPayeeListViewModel mod = new NewPayeeListViewModel();
-            List<NewPayeeViewModel> vmList = new List<NewPayeeViewModel>();
-            NewPayeeViewModel vm = new NewPayeeViewModel
-            {
-                Payee_No = 0
-            };
+            NewVendorListViewModel mod = new NewVendorListViewModel();
+            List<NewVendorViewModel> vmList = new List<NewVendorViewModel>();
+            NewVendorViewModel vm = new NewVendorViewModel();
             vmList.Add(vm);
-            mod.NewPayeeVM = vmList;
+            mod.NewVendorVM = vmList;
             return mod;
         }
         public NewDeptListViewModel addDept()
@@ -563,16 +787,16 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             mod.NewFBTVM = vmList;
             return mod;
         }
-        public NewEWTListViewModel addEWT()
+        public NewTRListViewModel addTR()
         {
-            NewEWTListViewModel mod = new NewEWTListViewModel();
-            List<NewEWTViewModel> vmList = new List<NewEWTViewModel>();
-            NewEWTViewModel vm = new NewEWTViewModel
+            NewTRListViewModel mod = new NewTRListViewModel();
+            List<NewTRViewModel> vmList = new List<NewTRViewModel>();
+            NewTRViewModel vm = new NewTRViewModel
             {
-                EWT_Tax_Rate = 0
+                TR_Tax_Rate = 0
             };
             vmList.Add(vm);
-            mod.NewEWTVM = vmList;
+            mod.NewTRVM = vmList;
             return mod;
         }
         public NewCurrListViewModel addCurr()
@@ -584,31 +808,62 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             mod.NewCurrVM = vmList;
             return mod;
         }
+        public NewEmpListViewModel addEmp()
+        {
+            NewEmpListViewModel mod = new NewEmpListViewModel();
+            List<NewEmpViewModel> vmList = new List<NewEmpViewModel>();
+            NewEmpViewModel vm = new NewEmpViewModel();
+            vmList.Add(vm);
+            mod.NewEmpVM = vmList;
+            return mod;
+        }
+        public NewCustListViewModel addCust()
+        {
+            NewCustListViewModel mod = new NewCustListViewModel();
+            List<NewCustViewModel> vmList = new List<NewCustViewModel>();
+            NewCustViewModel vm = new NewCustViewModel();
+            vmList.Add(vm);
+            mod.NewCustVM = vmList;
+            return mod;
+        }
+        public NewNCCViewModel addNCC()
+        {
+            //NewNCCListViewModel mod = new NewNCCListViewModel();
+            //List<NewNCCViewModel> vmList = new List<NewNCCViewModel>();
+            NewNCCViewModel vm = new NewNCCViewModel();
+            //vmList.Add(vm);
+            //mod.NewNCCVM = vmList;
+            return vm;
+        }
+        public NewBCSViewModel addBCS()
+        {
+            NewBCSViewModel vm = new NewBCSViewModel();
+            return vm;
+        }
+
 
         // [Update Pending Entries]
-        public List<DMPayeeViewModel> editDeletePayee(string[] IdsArr)
+        public List<DMVendorViewModel> editDeleteVendor(string[] IdsArr)
         {
-            List<DMPayeeModel> mList = _context.DMPayee.Where(x => IdsArr.Contains(x.Payee_MasterID.ToString()) 
-                                       && x.Payee_isActive == true).Distinct().ToList();
-            List<DMPayeeViewModel> tempList = new List<DMPayeeViewModel>();
-            foreach (DMPayeeModel m in mList)
+            List<DMVendorModel> mList = _context.DMVendor.Where(x => IdsArr.Contains(x.Vendor_MasterID.ToString()) 
+                                       && x.Vendor_isActive == true).Distinct().ToList();
+            List<DMVendorViewModel> tempList = new List<DMVendorViewModel>();
+            foreach (DMVendorModel m in mList)
             {
                 foreach (string s in IdsArr)
                 {
-                    if (m.Payee_MasterID == int.Parse(s))
+                    if (m.Vendor_MasterID == int.Parse(s))
                     {
-                        DMPayeeViewModel vm = new DMPayeeViewModel
+                        DMVendorViewModel vm = new DMVendorViewModel
                         {
-                            Payee_MasterID = m.Payee_MasterID,
-                            Payee_Name = m.Payee_Name,
-                            Payee_TIN = m.Payee_TIN,
-                            Payee_Address = m.Payee_Address,
-                            Payee_Type = m.Payee_Type,
-                            Payee_No = m.Payee_No,
-                            Payee_Creator_ID = m.Payee_Creator_ID,
-                            Payee_Created_Date = m.Payee_Created_Date,
-                            Payee_Last_Updated = DateTime.Now,
-                            Payee_Status = m.Payee_Status
+                            Vendor_MasterID = m.Vendor_MasterID,
+                            Vendor_Name = m.Vendor_Name,
+                            Vendor_TIN = m.Vendor_TIN,
+                            Vendor_Address = m.Vendor_Address,
+                            Vendor_Creator_ID = m.Vendor_Creator_ID,
+                            Vendor_Created_Date = m.Vendor_Created_Date,
+                            Vendor_Last_Updated = DateTime.Now,
+                            Vendor_Status = m.Vendor_Status
                         };
                         tempList.Add(vm);
                     }
@@ -660,8 +915,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             Check_Input_Date = m.Check_Input_Date,
                             Check_Series_From = m.Check_Series_From,
                             Check_Series_To = m.Check_Series_To,
-                            Check_Name = m.Check_Name,
-                            Check_Type = m.Check_Type,
+                            Check_Bank_Info = m.Check_Bank_Info,
                             Check_Creator_ID = m.Check_Creator_ID,
                             Check_Created_Date = m.Check_Created_Date,
                             Check_Last_Updated = DateTime.Now,
@@ -760,28 +1014,28 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             }
             return tempList;
         }
-        public List<DMEWTViewModel> editDeleteEWT(string[] IdsArr)
+        public List<DMTRViewModel> editDeleteTR(string[] IdsArr)
         {
-            List<DMEWTModel> mList = _context.DMEWT.Where(x => IdsArr.Contains(x.EWT_MasterID.ToString())
-                                       && x.EWT_isActive == true).Distinct().ToList();
-            List<DMEWTViewModel> tempList = new List<DMEWTViewModel>();
-            foreach (DMEWTModel m in mList)
+            List<DMTRModel> mList = _context.DMTR.Where(x => IdsArr.Contains(x.TR_MasterID.ToString())
+                                       && x.TR_isActive == true).Distinct().ToList();
+            List<DMTRViewModel> tempList = new List<DMTRViewModel>();
+            foreach (DMTRModel m in mList)
             {
                 foreach (string s in IdsArr)
                 {
-                    if (m.EWT_MasterID == int.Parse(s))
+                    if (m.TR_MasterID == int.Parse(s))
                     {
-                        DMEWTViewModel vm = new DMEWTViewModel
+                        DMTRViewModel vm = new DMTRViewModel
                         {
-                            EWT_MasterID = m.EWT_MasterID,
-                            EWT_Nature = m.EWT_Nature,
-                            EWT_Tax_Rate = m.EWT_Tax_Rate,
-                            EWT_ATC = m.EWT_ATC,
-                            EWT_Tax_Rate_Desc = m.EWT_Tax_Rate_Desc,
-                            EWT_Creator_ID = m.EWT_Creator_ID,
-                            EWT_Created_Date = m.EWT_Created_Date,
-                            EWT_Last_Updated = DateTime.Now,
-                            EWT_Status = m.EWT_Status
+                            TR_MasterID = m.TR_MasterID,
+                            TR_WT_Title = m.TR_WT_Title,
+                            TR_Nature = m.TR_Nature,
+                            TR_Tax_Rate = m.TR_Tax_Rate,
+                            TR_ATC = m.TR_ATC,
+                            TR_Creator_ID = m.TR_Creator_ID,
+                            TR_Created_Date = m.TR_Created_Date,
+                            TR_Last_Updated = DateTime.Now,
+                            TR_Status = m.TR_Status
                         };
                         tempList.Add(vm);
                     }
@@ -804,11 +1058,188 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         {
                             Curr_MasterID = m.Curr_MasterID,
                             Curr_Name = m.Curr_Name,
-                            Curr_CCY_Code = m.Curr_CCY_Code,
+                            Curr_CCY_ABBR = m.Curr_CCY_ABBR,
                             Curr_Creator_ID = m.Curr_Creator_ID,
                             Curr_Created_Date = m.Curr_Created_Date,
                             Curr_Last_Updated = DateTime.Now,
                             Curr_Status = m.Curr_Status
+                        };
+                        tempList.Add(vm);
+                    }
+                }
+            }
+            return tempList;
+        }
+        public List<DMEmpViewModel> editDeleteEmp(string[] IdsArr)
+        {
+            List<DMEmpModel> mList = _context.DMEmp.Where(x => IdsArr.Contains(x.Emp_MasterID.ToString())
+                                        && x.Emp_isActive == true).Distinct().ToList();
+            List<DMEmpViewModel> tempList = new List<DMEmpViewModel>();
+            foreach (DMEmpModel m in mList)
+            {
+                foreach (string s in IdsArr)
+                {
+                    if (m.Emp_MasterID == int.Parse(s))
+                    {
+                        DMEmpViewModel vm = new DMEmpViewModel
+                        {
+                            Emp_MasterID = m.Emp_MasterID,
+                            Emp_Name = m.Emp_Name,
+                            Emp_Acc_No = m.Emp_Acc_No,
+                            Emp_Creator_ID = m.Emp_Creator_ID,
+                            Emp_Created_Date = m.Emp_Created_Date,
+                            Emp_Last_Updated = DateTime.Now,
+                            Emp_Status = m.Emp_Status
+                        };
+                        tempList.Add(vm);
+                    }
+                }
+            }
+            return tempList;
+        }
+        public List<DMCustViewModel> editDeleteCust(string[] IdsArr)
+        {
+            List<DMCustModel> mList = _context.DMCust.Where(x => IdsArr.Contains(x.Cust_MasterID.ToString())
+                                        && x.Cust_isActive == true).Distinct().ToList();
+            List<DMCustViewModel> tempList = new List<DMCustViewModel>();
+            foreach (DMCustModel m in mList)
+            {
+                foreach (string s in IdsArr)
+                {
+                    if (m.Cust_MasterID == int.Parse(s))
+                    {
+                        DMCustViewModel vm = new DMCustViewModel
+                        {
+                            Cust_MasterID = m.Cust_MasterID,
+                            Cust_Name = m.Cust_Name,
+                            Cust_Abbr = m.Cust_Abbr,
+                            Cust_No = m.Cust_No,
+                            Cust_Creator_ID = m.Cust_Creator_ID,
+                            Cust_Created_Date = m.Cust_Created_Date,
+                            Cust_Last_Updated = DateTime.Now,
+                            Cust_Status = m.Cust_Status
+                        };
+                        tempList.Add(vm);
+                    }
+                }
+            }
+            return tempList;
+        }
+        public DMNCC2ViewModel editNCC(string[] IdsArr)
+        {
+            List<DMNonCashCategoryModel> mList = _context.DMNCC.Where(x => IdsArr.Contains(x.NCC_MasterID.ToString())
+                                        && x.NCC_isActive == true).Distinct().ToList();
+            List<DMNCC2ViewModel> tempList = new List<DMNCC2ViewModel>();
+
+            DMNCC2ViewModel vm = new DMNCC2ViewModel();
+            //foreach (DMNonCashCategoryModel m in mList)
+            //{
+            //    foreach (string s in IdsArr)
+            //    {
+            //        if (m.NCC_MasterID == int.Parse(s))
+            //        {
+                        //byte[] byteArray = Encoding.UTF8.GetBytes(m.NCC_Pro_Forma);
+                        //MemoryStream stream = new MemoryStream(byteArray);
+                        //var ms = new MemoryStream();
+                        //try
+                        //{
+                        //    stream.FileStream.CopyTo(ms);
+                        //    return new FormFile(ms, 0, ms.Length);
+                        //}
+                        //finally
+                        //{
+                        //    ms.Dispose();
+                        //}
+                        vm = new DMNCC2ViewModel
+                        {
+                            NCC_MasterID = mList.First().NCC_MasterID,
+                            NCC_Name = mList.First().NCC_Name,
+                            NCC_Pro_Forma_Name = mList.First().NCC_Pro_Forma,
+                            NCC_Creator_ID = mList.First().NCC_Creator_ID,
+                            NCC_Created_Date = mList.First().NCC_Created_Date,
+                            NCC_Last_Updated = DateTime.Now,
+                            NCC_Status = mList.First().NCC_Status
+                        };
+                        //tempList.Add(vm);
+            //        }
+            //    }
+            //}
+            return vm;
+        }
+        public List<DMNCCViewModel> deleteNCC(string[] IdsArr)
+        {
+            List<DMNonCashCategoryModel> mList = _context.DMNCC.Where(x => IdsArr.Contains(x.NCC_MasterID.ToString())
+                                        && x.NCC_isActive == true).Distinct().ToList();
+            List<DMNCCViewModel> tempList = new List<DMNCCViewModel>();
+
+            DMNCCViewModel vm = new DMNCCViewModel();
+            foreach (DMNonCashCategoryModel m in mList)
+            {
+                foreach (string s in IdsArr)
+                {
+                    if (m.NCC_MasterID == int.Parse(s))
+                    {
+                        vm = new DMNCCViewModel
+                        {
+                            NCC_MasterID = m.NCC_MasterID,
+                            NCC_Name = m.NCC_Name,
+                            NCC_Pro_Forma = m.NCC_Pro_Forma,
+                            NCC_Creator_ID = m.NCC_Creator_ID,
+                            NCC_Created_Date = m.NCC_Created_Date,
+                            NCC_Last_Updated = DateTime.Now,
+                            NCC_Status = m.NCC_Status
+                        };
+                        tempList.Add(vm);
+                    }
+                }
+            }
+            return tempList;
+        }
+        public DMBCS2ViewModel editBCS(string[] IdsArr)
+        {
+            List<DMBIRCertSignModel> mList = _context.DMBCS.Where(x => IdsArr.Contains(x.BCS_MasterID.ToString())
+                                        && x.BCS_isActive == true).Distinct().ToList();
+            List<DMBCS2ViewModel> tempList = new List<DMBCS2ViewModel>();
+
+            DMBCS2ViewModel vm = new DMBCS2ViewModel();
+            vm = new DMBCS2ViewModel
+            {
+                BCS_MasterID = mList.First().BCS_MasterID,
+                BCS_Name = mList.First().BCS_Name,
+                BCS_TIN = mList.First().BCS_TIN,
+                BCS_Position = mList.First().BCS_Position,
+                BCS_Signatures_Name = mList.First().BCS_Signatures,
+                BCS_Creator_ID = mList.First().BCS_Creator_ID,
+                BCS_Created_Date = mList.First().BCS_Created_Date,
+                BCS_Last_Updated = DateTime.Now,
+                BCS_Status = mList.First().BCS_Status
+            };
+            return vm;
+        }
+        public List<DMBCSViewModel> deleteBCS(string[] IdsArr)
+        {
+            List<DMBIRCertSignModel> mList = _context.DMBCS.Where(x => IdsArr.Contains(x.BCS_MasterID.ToString())
+                                        && x.BCS_isActive == true).Distinct().ToList();
+            List<DMBCSViewModel> tempList = new List<DMBCSViewModel>();
+
+            DMBCSViewModel vm = new DMBCSViewModel();
+            foreach (DMBIRCertSignModel m in mList)
+            {
+                foreach (string s in IdsArr)
+                {
+                    if (m.BCS_MasterID == int.Parse(s))
+                    {
+                        vm = new DMBCSViewModel
+                        {
+                            BCS_MasterID = m.BCS_MasterID,
+                            BCS_Name = m.BCS_Name,
+                            BCS_TIN = m.BCS_TIN,
+                            BCS_Position = m.BCS_Position,
+                            BCS_Signatures = m.BCS_Signatures,
+                            BCS_Creator_ID = m.BCS_Creator_ID,
+                            BCS_Created_Date = m.BCS_Created_Date,
+                            BCS_Last_Updated = DateTime.Now,
+                            BCS_Status = m.BCS_Status
                         };
                         tempList.Add(vm);
                     }

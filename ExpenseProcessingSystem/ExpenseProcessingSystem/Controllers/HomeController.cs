@@ -11,6 +11,7 @@ using ExpenseProcessingSystem.Services.Excel_Services;
 using ExpenseProcessingSystem.ViewModels;
 using ExpenseProcessingSystem.ViewModels.NewRecord;
 using ExpenseProcessingSystem.ViewModels.Search_Filters;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -29,12 +30,13 @@ namespace ExpenseProcessingSystem.Controllers
         private HomeService _service;
         private SortService _sortService;
         private ExcelData _excelData;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
-        public HomeController(IHttpContextAccessor httpContextAccessor, EPSDbContext context)
+        public HomeController(IHttpContextAccessor httpContextAccessor, EPSDbContext context, IHostingEnvironment hostingEnvironment)
         {
             _httpContextAccessor = httpContextAccessor;
             _context = context;
-            _service = new HomeService(_httpContextAccessor, _context, this.ModelState);
+            _service = new HomeService(_httpContextAccessor, _context, this.ModelState, hostingEnvironment);
             _sortService = new SortService();
             _excelData = new ExcelData(_httpContextAccessor, _context);
         }
@@ -86,20 +88,18 @@ namespace ExpenseProcessingSystem.Controllers
             ViewData["colName"] = colName;
             ViewData["searchString"] = searchString;
             ViewData["page"] = page;
-            ViewData["partialName"] = partialName ?? "DMPartial_Payee";
+            ViewData["partialName"] = partialName ?? "DMPartial_Vendor";
 
             DMFiltersViewModel filterVM = new DMFiltersViewModel();
-            PayeeFiltersViewModel payeeFil = new PayeeFiltersViewModel();
+            VendorFiltersViewModel payeeFil = new VendorFiltersViewModel();
             if (vm.DMFilters != null)
             {
                 if (vm.DMFilters.PF != null)
                 {
-                    //Payee
+                    //Vendor
                     _session.SetString("PF_Name", vm.DMFilters.PF.PF_Name ?? "");
                     _session.SetString("PF_TIN", vm.DMFilters.PF.PF_TIN.ToString() ?? "0");
                     _session.SetString("PF_Address", vm.DMFilters.PF.PF_Address ?? "");
-                    _session.SetString("PF_Type", vm.DMFilters.PF.PF_Type ?? "");
-                    _session.SetString("PF_No", vm.DMFilters.PF.PF_No.ToString() ?? "0");
                     _session.SetString("PF_Creator_Name", vm.DMFilters.PF.PF_Creator_Name ?? "");
                     _session.SetString("PF_Approver_Name", vm.DMFilters.PF.PF_Approver_Name ?? "");
                     _session.SetString("PF_Status", vm.DMFilters.PF.PF_Status ?? "");
@@ -160,7 +160,7 @@ namespace ExpenseProcessingSystem.Controllers
                 }
                 else if (vm.DMFilters.EF != null)
                 {
-                    //EWT
+                    //TR
                     _session.SetString("EF_Nature", vm.DMFilters.EF.EF_Nature ?? "");
                     _session.SetString("EF_Tax_Rate", vm.DMFilters.EF.EF_Tax_Rate.ToString() ?? "0");
                     _session.SetString("EF_ATC", vm.DMFilters.EF.EF_ATC ?? "");
@@ -178,71 +178,46 @@ namespace ExpenseProcessingSystem.Controllers
                     _session.SetString("CF_Approver_Name", vm.DMFilters.CF.CF_Approver_Name ?? "");
                     _session.SetString("CF_Status", vm.DMFilters.CF.CF_Status ?? "");
                 }
-            }
-            else
-            {
-                //Payee
-                _session.SetString("PF_Name", "");
-                _session.SetString("PF_TIN", "0");
-                _session.SetString("PF_Address", "");
-                _session.SetString("PF_Type", "");
-                _session.SetString("PF_No", "0");
-                _session.SetString("PF_Creator_Name", "");
-                _session.SetString("PF_Approver_Name", "");
-                _session.SetString("PF_Status", "");
-                //Dept
-                _session.SetString("DF_Name", "");
-                _session.SetString("DF_Code", "");
-                _session.SetString("DF_Creator_Name", "");
-                _session.SetString("DF_Approver_Name", "");
-                _session.SetString("DF_Status", "");
-                //Check
-                _session.SetString("CKF_Input_Date", new DateTime().ToString());
-                _session.SetString("CKF_Series_From", "");
-                _session.SetString("CKF_Series_To", "");
-                _session.SetString("CKF_Name", "");
-                _session.SetString("CKF_Type", "");
-                _session.SetString("CKF_Creator_Name", "");
-                _session.SetString("CKF_Approver_Name", "");
-                _session.SetString("CKF_Status", "");
-                //Account
-                _session.SetString("AF_Name", "");
-                _session.SetString("AF_Code", "");
-                _session.SetString("AF_No", "0");
-                _session.SetString("AF_Cust", "");
-                _session.SetString("AF_Div", "");
-                _session.SetString("AF_Fund", "");
-                _session.SetString("AF_Creator_Name", "");
-                _session.SetString("AF_Approver_Name", "");
-                _session.SetString("AF_Status", "");
-                //VAT
-                _session.SetString("VF_Name", "");
-                _session.SetString("VF_Rate", "");
-                _session.SetString("VF_Creator_Name", "");
-                _session.SetString("VF_Approver_Name", "");
-                _session.SetString("VF_Status", "");
-                //FBT
-                _session.SetString("FF_Name", "");
-                _session.SetString("FF_Account", "");
-                _session.SetString("FF_Formula", "");
-                _session.SetString("FF_Tax_Rate", "0");
-                _session.SetString("FF_Creator_Name", "");
-                _session.SetString("FF_Approver_Name", "");
-                _session.SetString("FF_Status", "");
-                //EWT
-                _session.SetString("EF_Nature", "");
-                _session.SetString("EF_Tax_Rate", "0");
-                _session.SetString("EF_ATC", "");
-                _session.SetString("EF_Tax_Rate_Desc", "");
-                _session.SetString("EF_Creator_Name", "");
-                _session.SetString("EF_Approver_Name", "");
-                _session.SetString("EF_Status",  "");
-                //Currency
-                _session.SetString("CF_Name", "");
-                _session.SetString("CF_CCY_Code", "");
-                _session.SetString("CF_Creator_Name", "");
-                _session.SetString("CF_Approver_Name", "");
-                _session.SetString("CF_Status", "");
+                else if (vm.DMFilters.EMF != null)
+                {
+                    //Employee
+                    _session.SetString("EMF_Name", vm.DMFilters.EMF.EMF_Name ?? "");
+                    _session.SetString("EMF_Acc_No", vm.DMFilters.EMF.EMF_Acc_No ?? "");
+                    _session.SetString("EMF_Type", vm.DMFilters.EMF.EMF_Type ?? "");
+                    _session.SetString("EMF_Creator_Name", vm.DMFilters.EMF.EMF_Creator_Name ?? "");
+                    _session.SetString("EMF_Approver_Name", vm.DMFilters.EMF.EMF_Approver_Name ?? "");
+                    _session.SetString("EMF_Status", vm.DMFilters.EMF.EMF_Status ?? "");
+                }
+                else if (vm.DMFilters.CUF != null)
+                {
+                    //Customer
+                    _session.SetString("CUF_Name", vm.DMFilters.CUF.CUF_Name ?? "");
+                    _session.SetString("CUF_Abbr", vm.DMFilters.CUF.CUF_Abbr ?? "");
+                    _session.SetString("CUF_No", vm.DMFilters.CUF.CUF_No ?? "");
+                    _session.SetString("CUF_Creator_Name", vm.DMFilters.CUF.CUF_Creator_Name ?? "");
+                    _session.SetString("CUF_Approver_Name", vm.DMFilters.CUF.CUF_Approver_Name ?? "");
+                    _session.SetString("CUF_Status", vm.DMFilters.CUF.CUF_Status ?? "");
+                }
+                else if (vm.DMFilters.NF != null)
+                {
+                    //Non Cash Category
+                    _session.SetString("NF_Name", vm.DMFilters.NF.NF_Name ?? "");
+                    _session.SetString("NF_Abbr", vm.DMFilters.NF.NF_Pro_Forma ?? "");
+                    _session.SetString("NF_Creator_Name", vm.DMFilters.NF.NF_Creator_Name ?? "");
+                    _session.SetString("NF_Approver_Name", vm.DMFilters.NF.NF_Approver_Name ?? "");
+                    _session.SetString("NF_Status", vm.DMFilters.NF.NF_Status ?? "");
+                }
+                else if (vm.DMFilters.BF != null)
+                {
+                    //Non Cash Category
+                    _session.SetString("BF_Name", vm.DMFilters.BF.BF_Name ?? "");
+                    _session.SetString("BF_TIN", vm.DMFilters.BF.BF_TIN.ToString() ?? "");
+                    _session.SetString("BF_Position", vm.DMFilters.BF.BF_Position ?? "");
+                    _session.SetString("BF_Signatures", vm.DMFilters.BF.BF_Signatures ?? "");
+                    _session.SetString("BF_Creator_Name", vm.DMFilters.BF.BF_Creator_Name ?? "");
+                    _session.SetString("BF_Approver_Name", vm.DMFilters.BF.BF_Approver_Name ?? "");
+                    _session.SetString("BF_Status", vm.DMFilters.BF.BF_Status ?? "");
+                }
             }
             return View();
         }
@@ -384,7 +359,7 @@ namespace ExpenseProcessingSystem.Controllers
                 _service.sendEmail(model);
             }
 
-            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Payee" });
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Vendor" });
         }
 
         //------------------------------DM-------------------------------
@@ -392,7 +367,7 @@ namespace ExpenseProcessingSystem.Controllers
         //[* PAYEE *]
         [HttpPost]
         [ExportModelState]
-        public IActionResult ApprovePayee(List<DMPayeeViewModel> model)
+        public IActionResult ApproveVendor(List<DMVendorViewModel> model)
         {
             var userId = GetUserID();
             if (userId == null)
@@ -401,14 +376,14 @@ namespace ExpenseProcessingSystem.Controllers
             }
             if (ModelState.IsValid)
             {
-                _service.approvePayee(model, userId);
+                _service.approveVendor(model, userId);
             }
 
-            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Payee" });
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Vendor" });
         }
         [HttpPost]
         [ExportModelState]
-        public IActionResult RejPayee(List<DMPayeeViewModel> model)
+        public IActionResult RejVendor(List<DMVendorViewModel> model)
         {
             var userId = GetUserID();
             if (userId == null)
@@ -417,10 +392,10 @@ namespace ExpenseProcessingSystem.Controllers
             }
             if (ModelState.IsValid)
             {
-                _service.rejPayee(model, userId);
+                _service.rejVendor(model, userId);
             }
 
-            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Payee" });
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Vendor" });
         }
         //[* DEPARTMENT *]
         [HttpPost]
@@ -587,10 +562,10 @@ namespace ExpenseProcessingSystem.Controllers
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_FBT" });
         }
-        //[* EWT *]
+        //[* TR *]
         [HttpPost]
         [ExportModelState]
-        public IActionResult ApproveEWT(List<DMEWTViewModel> model)
+        public IActionResult ApproveTR(List<DMTRViewModel> model)
         {
             var userId = GetUserID();
             if (userId == null)
@@ -599,14 +574,14 @@ namespace ExpenseProcessingSystem.Controllers
             }
             if (ModelState.IsValid)
             {
-                _service.approveEWT(model, userId);
+                _service.approveTR(model, userId);
             }
 
-            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_EWT" });
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_TR" });
         }
         [HttpPost]
         [ExportModelState]
-        public IActionResult RejEWT(List<DMEWTViewModel> model)
+        public IActionResult RejTR(List<DMTRViewModel> model)
         {
             var userId = GetUserID();
             if (userId == null)
@@ -615,10 +590,10 @@ namespace ExpenseProcessingSystem.Controllers
             }
             if (ModelState.IsValid)
             {
-                _service.rejEWT(model, userId);
+                _service.rejTR(model, userId);
             }
 
-            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_EWT" });
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_TR" });
         }
         //[* Currency *]
         [HttpPost]
@@ -653,11 +628,143 @@ namespace ExpenseProcessingSystem.Controllers
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Curr" });
         }
+        //[* Employee *]
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult ApproveEmp(List<DMEmpViewModel> model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.approveEmp(model, userId);
+            }
+            var partialName = model[0].Emp_Acc_No == null ? "DMPartial_TempEmp" : "DMPartial_RegEmp";
+            return RedirectToAction("DM", "Home", new { partialName = partialName });
+        }
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult RejEmp(List<DMEmpViewModel> model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.rejEmp(model, userId);
+            }
+            var partialName = model[0].Emp_Acc_No == null ? "DMPartial_TempEmp" : "DMPartial_RegEmp";
+            return RedirectToAction("DM", "Home", new { partialName = partialName });
+        }
+        //[* CUSTOMER *]
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult ApproveCust(List<DMCustViewModel> model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.approveCust(model, userId);
+            }
+
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Cust" });
+        }
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult RejCust(List<DMCustViewModel> model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.rejCust(model, userId);
+            }
+
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Cust" });
+        }
+        //[* NON CASH CATEGORY *]
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult ApproveNCC(List<DMNCCViewModel> model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.approveNCC(model, userId);
+            }
+
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_NCC" });
+        }
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult RejNCC(List<DMNCCViewModel> model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.rejNCC(model, userId);
+            }
+
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_NCC" });
+        }
+        //[* BIR CERT SIGNATORY*]
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult ApproveBCS(List<DMBCSViewModel> model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.approveBCS(model, userId);
+            }
+
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_BCS" });
+        }
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult RejBCS(List<DMBCSViewModel> model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.rejBCS(model, userId);
+            }
+
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_BCS" });
+        }
         //--------------------------------PENDING--------------------------------
         // [PAYEE]
         [HttpPost]
         [ExportModelState]
-        public IActionResult AddPayee_Pending(NewPayeeListViewModel model)
+        public IActionResult AddVendor_Pending(NewVendorListViewModel model)
         {
             var userId = GetUserID();
             if (userId == null)
@@ -666,14 +773,14 @@ namespace ExpenseProcessingSystem.Controllers
             }
             if (ModelState.IsValid)
             {
-                _service.addPayee_Pending(model, userId);
+                _service.addVendor_Pending(model, userId);
             }
 
-            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Payee" });
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Vendor" });
         }
         [HttpPost]
         [ExportModelState]
-        public IActionResult EditPayee_Pending(List<DMPayeeViewModel> model)
+        public IActionResult EditVendor_Pending(List<DMVendorViewModel> model)
         {
             var userId = GetUserID();
             if (userId == null)
@@ -682,14 +789,14 @@ namespace ExpenseProcessingSystem.Controllers
             }
             if (ModelState.IsValid)
             {
-                _service.editPayee_Pending(model, userId);
+                _service.editVendor_Pending(model, userId);
             }
 
-            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Payee" });
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Vendor" });
         }
         [HttpPost]
         [ExportModelState]
-        public IActionResult DeletePayee_Pending(List<DMPayeeViewModel> model)
+        public IActionResult DeleteVendor_Pending(List<DMVendorViewModel> model)
         {
             var userId = GetUserID();
             if (userId == null)
@@ -698,10 +805,10 @@ namespace ExpenseProcessingSystem.Controllers
             }
             if (ModelState.IsValid)
             {
-                _service.deletePayee_Pending(model, userId);
+                _service.deleteVendor_Pending(model, userId);
             }
 
-            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Payee" });
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Vendor" });
         }
         // [DEPARTMENT]
         [HttpPost]
@@ -948,10 +1055,10 @@ namespace ExpenseProcessingSystem.Controllers
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_FBT" });
         }
-        // [EWT]
+        // [TR]
         [HttpPost]
         [ExportModelState]
-        public IActionResult AddEWT_Pending(NewEWTListViewModel model)
+        public IActionResult AddTR_Pending(NewTRListViewModel model)
         {
             var userId = GetUserID();
             if (userId == null)
@@ -960,14 +1067,14 @@ namespace ExpenseProcessingSystem.Controllers
             }
             if (ModelState.IsValid)
             {
-                _service.addEWT_Pending(model, userId);
+                _service.addTR_Pending(model, userId);
             }
 
-            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_EWT" });
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_TR" });
         }
         [HttpPost]
         [ExportModelState]
-        public IActionResult EditEWT_Pending(List<DMEWTViewModel> model)
+        public IActionResult EditTR_Pending(List<DMTRViewModel> model)
         {
             var userId = GetUserID();
             if (userId == null)
@@ -976,14 +1083,14 @@ namespace ExpenseProcessingSystem.Controllers
             }
             if (ModelState.IsValid)
             {
-                _service.editEWT_Pending(model, userId);
+                _service.editTR_Pending(model, userId);
             }
 
-            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_EWT" });
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_TR" });
         }
         [HttpPost]
         [ExportModelState]
-        public IActionResult DeleteEWT_Pending(List<DMEWTViewModel> model)
+        public IActionResult DeleteTR_Pending(List<DMTRViewModel> model)
         {
             var userId = GetUserID();
             if (userId == null)
@@ -992,10 +1099,10 @@ namespace ExpenseProcessingSystem.Controllers
             }
             if (ModelState.IsValid)
             {
-                _service.deleteEWT_Pending(model, userId);
+                _service.deleteTR_Pending(model, userId);
             }
 
-            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_EWT" });
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_TR" });
         }
         // [Curr]
         [HttpPost]
@@ -1046,6 +1153,196 @@ namespace ExpenseProcessingSystem.Controllers
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Curr" });
         }
+        // [EMPLOYEE]
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult AddEmp_Pending(NewEmpListViewModel model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.addEmp_Pending(model, userId);
+            }
+
+            var partialName = model.NewEmpVM[0].Emp_Acc_No == null ? "DMPartial_TempEmp" : "DMPartial_RegEmp";
+            return RedirectToAction("DM", "Home", new { partialName = partialName });
+        }
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult EditEmp_Pending(List<DMEmpViewModel> model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.editEmp_Pending(model, userId);
+            }
+
+            var partialName = model[0].Emp_Acc_No == null ? "DMPartial_TempEmp" : "DMPartial_RegEmp";
+            return RedirectToAction("DM", "Home", new { partialName = partialName });
+        }
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult DeleteEmp_Pending(List<DMEmpViewModel> model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.deleteEmp_Pending(model, userId);
+            }
+
+            var partialName = model[0].Emp_Acc_No == null ? "DMPartial_TempEmp" : "DMPartial_RegEmp";
+            return RedirectToAction("DM", "Home", new { partialName = partialName });
+        }
+        // [CUSTOMER]
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult AddCust_Pending(NewCustListViewModel model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.addCust_Pending(model, userId);
+            }
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Cust" });
+        }
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult EditCust_Pending(List<DMCustViewModel> model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.editCust_Pending(model, userId);
+            }
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Cust" });
+        }
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult DeleteCust_Pending(List<DMCustViewModel> model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.deleteCust_Pending(model, userId);
+            }
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Cust" });
+        }
+        // [NON CASH CATEGORY]
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult AddNCC_Pending(NewNCCViewModel model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.addNCC_Pending(model, userId);
+            }
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_NCC" });
+        }
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult EditNCC_Pending(DMNCC2ViewModel model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.editNCC_Pending(model, userId);
+            }
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_NCC" });
+        }
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult DeleteNCC_Pending(List<DMNCCViewModel> model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.deleteNCC_Pending(model, userId);
+            }
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_NCC" });
+        }
+        // [BIR CERT SIGNATORY]
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult AddBCS_Pending(NewBCSViewModel model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.addBCS_Pending(model, userId);
+            }
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_BCS" });
+        }
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult EditBCS_Pending(DMBCS2ViewModel model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.editBCS_Pending(model, userId);
+            }
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_BCS" });
+        }
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult DeleteBCS_Pending(List<DMBCSViewModel> model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.deleteBCS_Pending(model, userId);
+            }
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_BCS" });
+        }
 
         //[* USER *]
         [HttpPost]
@@ -1076,15 +1373,6 @@ namespace ExpenseProcessingSystem.Controllers
             }
             return File(_excelData.GetDeptExcelData(), "application/ms-excel", $"Department.xlsx");
         }
-        //public void PreviewExcel()
-        //{
-        //    var userId = HttpContext.Session.GetString("UserID");
-        //    if (userId == null)
-        //    {
-        //        return RedirectToAction("Login", "Account");
-        //    }
-        //    return File(_excelData.GetPayeeExcelData(), "application/ms-excel", $"Payee.xlsx");
-        //}
 
         //[* MISC *]
         public List<BMViewModel> PopulateBM()
@@ -1108,6 +1396,12 @@ namespace ExpenseProcessingSystem.Controllers
                 bmvmList.Add(bmvm);
             }
             return bmvmList;
+        }
+        public void addNCC()
+        {
+            FileService fs = new FileService();
+            //fs.CreateFileAndFolder();
+            fs.CopyFileToLocation("00283_martin.nina.png");
         }
     }
 }

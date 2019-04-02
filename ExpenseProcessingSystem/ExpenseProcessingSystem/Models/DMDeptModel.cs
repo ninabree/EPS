@@ -14,6 +14,7 @@ namespace ExpenseProcessingSystem.Models
         public int Dept_MasterID { get; set; }
         public string Dept_Name { get; set; }
         public string Dept_Code { get; set; }
+        public string Dept_Budget_Unit { get; set; }
         public int Dept_Creator_ID { get; set; }
         public int Dept_Approver_ID { get; set; }
         public DateTime Dept_Created_Date { get; set; }

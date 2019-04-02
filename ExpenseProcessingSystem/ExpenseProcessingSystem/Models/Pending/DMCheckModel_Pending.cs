@@ -15,8 +15,7 @@ namespace ExpenseProcessingSystem.Models
         public DateTime Pending_Check_Input_Date { get; set; }
         public string Pending_Check_Series_From { get; set; }
         public string Pending_Check_Series_To { get; set; }
-        public string Pending_Check_Type { get; set; }
-        public string Pending_Check_Name { get; set; }
+        public string Pending_Check_Bank_Info { get; set; }
         public int Pending_Check_Creator_ID { get; set; }
         public int Pending_Check_Approver_ID { get; set; }
         public DateTime Pending_Check_Filed_Date { get; set; }

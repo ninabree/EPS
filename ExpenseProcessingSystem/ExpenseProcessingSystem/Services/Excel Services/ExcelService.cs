@@ -82,27 +82,25 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
             List<Row> rowList = new List<Row>();
             string worksheetName = "Current Payee Information";
             //get column names in DB table
-            List<string> colHeadrs = typeof(DMPayeeModel).GetProperties()
+            List<string> colHeadrs = typeof(DMVendorModel).GetProperties()
                         .Select(property => property.Name)
                         .ToList();
 
-            //Populate Excel VM (of All DMPayee Entries)
-            _context.DMPayee.ToList().ForEach(x => {
+            //Populate Excel VM (of All DMVendor Entries)
+            _context.DMVendor.ToList().ForEach(x => {
                 Row row = new Row();
                 List<string> rowData = new List<string>
                 {
-                    x.Payee_ID.ToString(),
-                    x.Payee_Name,
-                    x.Payee_TIN,
-                    x.Payee_Address,
-                    x.Payee_Type,
-                    x.Payee_No.ToString(),
-                    x.Payee_Created_Date.ToString("MM/dd/yyyy"),
-                    x.Payee_Creator_ID.ToString(),
-                    x.Payee_Last_Updated.ToString("MM/dd/yyyy"),
-                    x.Payee_Approver_ID.ToString(),
-                    x.Payee_Status,
-                    x.Payee_isDeleted.ToString()
+                    x.Vendor_ID.ToString(),
+                    x.Vendor_Name,
+                    x.Vendor_TIN,
+                    x.Vendor_Address,
+                    x.Vendor_Created_Date.ToString("MM/dd/yyyy"),
+                    x.Vendor_Creator_ID.ToString(),
+                    x.Vendor_Last_Updated.ToString("MM/dd/yyyy"),
+                    x.Vendor_Approver_ID.ToString(),
+                    x.Vendor_Status,
+                    x.Vendor_isDeleted.ToString()
                 };
                 row.DataList = rowData;
                 rowList.Add(row);
@@ -121,7 +119,7 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                         .Select(property => property.Name)
                         .ToList();
 
-            //Populate Excel VM (of All DMPayee Entries)
+            //Populate Excel VM (of All DMVendor Entries)
             _context.DMDept.ToList().ForEach(x => {
                 Row row = new Row();
                 List<string> rowData = new List<string>

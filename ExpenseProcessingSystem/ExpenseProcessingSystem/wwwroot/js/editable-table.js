@@ -8,27 +8,28 @@ $(document).on('click', '.table-remove', function (e) {
 }); 
 $('.table-add').click(function () {
     var tblName = $('#dm-tbl').find(":selected").text();
+    var getDateTime = new Date();//$(this).closest('#NewCheckVM_0__Check_Input_Date').val()/* != "" ? $('NewCheckVM_0__Check_Input_Date').val() : ""*/;
+    var getIsoDateTime = getDateTime.toISOString();
+    //alert(getDateTime);
     //depends on chosen Master Data Table
-    var itemCount = tblName == "Payee" ? ($("[id^='NewPayee-Tr']").length) :
+    var itemCount = tblName == "Vendor" ? ($("[id^='NewVendor-Tr']").length) :
         tblName == "Department" ? ($("[id^='NewDept-Tr']").length) :
         tblName == "Check" ? ($("[id^='NewCheck-Tr']").length) :
         tblName == "Account" ? ($("[id^='NewAccount-Tr']").length) :
         tblName == "Value Added Tax" ? ($("[id^='NewVAT-Tr']").length) :
         tblName == "Fringe Benefit Tax" ? ($("[id^='NewFBT-Tr']").length) :
-        tblName == "Expanded Withholding Tax" ? ($("[id^='NewEWT-Tr']").length) :
+        tblName == "Tax Rates" ? ($("[id^='NewTR-Tr']").length) :
         tblName == "Currency" ? ($("[id^='NewCurr-Tr']").length) : 0;
     
 
     //ROW TEMPLATES
-    var newPayeeRow = $('<tr id="NewPayee-Tr-' + itemCount + '">'
-        +'<td><input class="w-full" id="NewPayeeVM_' + itemCount + '__Payee_Name" name="NewPayeeVM[' + itemCount + '].Payee_Name" type="text" value=""></td>'
-        +'<td><input class="w-full" id="NewPayeeVM_' + itemCount + '__Payee_TIN" name="NewPayeeVM[' + itemCount + '].Payee_TIN" type="text" value=""></td>'
-        +'<td><input class="w-full" id="NewPayeeVM_' + itemCount + '__Payee_Address" name="NewPayeeVM[' + itemCount + '].Payee_Address" type="text" value=""></td>'
-        +'<td><input class="w-full" id="NewPayeeVM_' + itemCount + '__Payee_Type" name="NewPayeeVM[' + itemCount + '].Payee_Type" type="text" value=""></td>'
-        +'<td><input data-val="true" data-val-required="The Payee_No field is required." id="NewPayeeVM_' + itemCount + '__Payee_No" name="NewPayeeVM[' + itemCount + '].Payee_No" type="text" value="0"></td>'
-        +'<td>'
-        +'<span class="table-remove glyphicon glyphicon-remove"></span>'
-        +'</td>'
+    var newVendorRow = $('<tr id="NewVendor-Tr-' + itemCount + '">'
+        + '<td><input class="w-full" id="NewVendorVM_' + itemCount + '__Vendor_Name" name="NewVendorVM[' + itemCount + '].Vendor_Name" type="text" value=""></td>'
+        + '<td><input class="w-full" id="NewVendorVM_' + itemCount + '__Vendor_TIN" name="NewVendorVM[' + itemCount + '].Vendor_TIN" type="text" value=""></td>'
+        + '<td><input class="w-full" id="NewVendorVM_' + itemCount + '__Vendor_Address" name="NewVendorVM[' + itemCount + '].Vendor_Address" type="text" value=""></td>'
+        + '<td>'
+        + '<span class="table-remove glyphicon glyphicon-remove"></span>'
+        + '</td>'
         + '</tr>');
 
     var newDeptRow = $('<tr id="NewDept-Tr-' + itemCount + '">'
@@ -39,22 +40,23 @@ $('.table-add').click(function () {
         + '</td>'
         + '</tr>');
     var newCheckRow = $('<tr id="NewCheck-Tr-' + itemCount + '">'
-        + '<td colspan = "3"> <input class="h-20 form-control text-box single-line" data-val="true" data-val-required="The Input Date field is required." id="NewCheckVM_' + itemCount + '__Check_Input_Date" name="NewCheckVM[' + itemCount + '].Check_Input_Date" type="datetime-local" value="2019-03-25T16:04:32.001"></td>'
+        + '<td colspan = "3"><input class="h-20 form-control text-box single-line" data-val="true" data-val-required="The Input Date field is required." id="NewCheckVM_' + itemCount + '__Check_Input_Date" name="NewCheckVM[' + itemCount + '].Check_Input_Date" class="check-datetime" type="datetime-local" value="' + getDateTime + '"></td>'
         + '<td><input class="w-full" id="NewCheckVM_' + itemCount + '__Check_Series_From" name="NewCheckVM[' + itemCount + '].Check_Series_From" type="text" value=""></td>'
         + '<td><input class="w-full" id="NewCheckVM_' + itemCount + '__Check_Series_To" name="NewCheckVM[' + itemCount + '].Check_Series_To" type="text" value=""></td>'
-        + '<td><input class="w-full" id="NewCheckVM_' + itemCount + '__Check_Name" name="NewCheckVM[' + itemCount + '].Check_Name" type="text" value=""></td>'
-        + '<td><input class="w-full" id="NewCheckVM_' + itemCount + '__Check_Type" name="NewCheckVM[' + itemCount + '].Check_Type" type="text" value=""></td>'
-        + '<td><span class="table-remove glyphicon glyphicon-remove"></span>'
+        + '<td><input class="w-full" id="NewCheckVM_' + itemCount + '__Check_Bank_Info" name="NewCheckVM[' + itemCount + '].Check_Bank_Info" type="text" value=""></td>'
+        + '<td>'
+        + '<span class="table-remove glyphicon glyphicon-remove"></span>'
         + '</td>'
         + '</tr>');
     var newAccRow = $('<tr id="NewAccount-Tr-' + itemCount + '">'
         + '<td><input class="w-full" id="NewAccountVM_' + itemCount + '__Account_Name" name="NewAccountVM[' + itemCount + '].Account_Name" type="text" value=""></td>'
         + '<td><input class="w-full" id="NewAccountVM_' + itemCount + '__Account_Code" name="NewAccountVM[' + itemCount + '].Account_Code" type="text" value=""></td>'
-        + '<td><input class="w-full" data-val="true" data-val-required="The Account No field is required." id="NewAccountVM_' + itemCount + '__Account_No" name="NewAccountVM[' + itemCount + '].Account_No" type="text" value="0"></td>'
+        + '<td><input class="w-full" id="NewAccountVM_' + itemCount + '__Account_No" name="NewAccountVM[' + itemCount + '].Account_No" type="text" value=""></td>'
         + '<td><input class="w-full" id="NewAccountVM_' + itemCount + '__Account_Cust" name="NewAccountVM[' + itemCount + '].Account_Cust" type="text" value=""></td>'
         + '<td><input class="w-full" id="NewAccountVM_' + itemCount + '__Account_Div" name="NewAccountVM[' + itemCount + '].Account_Div" type="text" value=""></td>'
-        + '<td><input class="w-full" id="NewAccountVM_' + itemCount + '__Account_Fund" name="NewAccountVM[' + itemCount + '].Account_Fund" type="text" value=""></td>'
-        + '<td><span class="table-remove glyphicon glyphicon-remove"></span>'
+        + '<td><input class="w-full" data-val="true" data-val-required="The Account Fund field is required." id="NewAccountVM_' + itemCount + '__Account_Fund" name="NewAccountVM[' + itemCount + '].Account_Fund" type="checkbox" value="true"></td>'
+        + '<td>'
+        + '<span class="table-remove glyphicon glyphicon-remove"></span>'
         + '</td>'
         + '</tr>');
     var newVatRow = $('<tr id="NewVAT-Tr-' + itemCount + '">'
@@ -72,30 +74,30 @@ $('.table-add').click(function () {
         + '<span class="table-remove glyphicon glyphicon-remove"></span>'
         + '</td>'
         + '</tr>');
-    var newEwtRow = $('<tr id="NewEWT-Tr-' + itemCount + '">'
-        + '<td><input class="w-full" id="NewEWTVM_' + itemCount + '__EWT_Nature" name="NewEWTVM[' + itemCount + '].EWT_Nature" type="text" value=""></td>'
-        + '<td><input class="w-full" data-val="true" data-val-required="The EWT Tax Rate field is required." id="NewEWTVM_' + itemCount + '__EWT_Tax_Rate" name="NewEWTVM[' + itemCount + '].EWT_Tax_Rate" type="text" value="0"></td>'
-        + '<td><input class="w-full" id="NewEWTVM_' + itemCount + '__EWT_ATC" name="NewEWTVM[' + itemCount + '].EWT_ATC" type="text" value=""></td>'
-        + '<td><input class="w-full" id="NewEWTVM_' + itemCount + '__EWT_Tax_Rate_Desc" name="NewEWTVM[' + itemCount + '].EWT_Tax_Rate_Desc" type="text" value=""></td>'
+    var newTrRow = $('<tr id="NewTR-Tr-' + itemCount + '">'
+        + '<td><input class="w-full" id="NewTRVM_' + itemCount + '__TR_WT_Title" name="NewTRVM[' + itemCount + '].TR_WT_Title" type="text" value=""></td>'
+        + '<td><input class="w-full" id="NewTRVM_' + itemCount + '__TR_Nature" name="NewTRVM[' + itemCount + '].TR_Nature" type="text" value=""></td>'
+        + '<td><input class="w-full" data-val="true" data-val-required="The Tax Rate field is required." id="NewTRVM_' + itemCount + '__TR_Tax_Rate" name="NewTRVM[' + itemCount + '].TR_Tax_Rate" type="text" value="0"></td>'
+        + '<td><input class="w-full" id="NewTRVM_' + itemCount + '__TR_ATC" name="NewTRVM[' + itemCount + '].TR_ATC" type="text" value=""></td>'
         + '<td>'
         + '<span class="table-remove glyphicon glyphicon-remove"></span>'
         + '</td>'
         + '</tr>');
     var newCurrRow = $('<tr id="NewCurr-Tr-' + itemCount + '">'
         + '<td><input class="w-full" id="NewCurrVM_' + itemCount + '__Curr_Name" name="NewCurrVM[' + itemCount + '].Curr_Name" type="text" value=""></td>'
-        + '<td><input class="w-full" id="NewCurrVM_' + itemCount + '__Curr_CCY_Code" name="NewCurrVM[' + itemCount + '].Curr_CCY_Code" type="text" value=""></td>'
+        + '<td><input class="w-full" id="NewCurrVM_' + itemCount + '__Curr_CCY_ABBR" name="NewCurrVM[' + itemCount + '].Curr_CCY_ABBR" type="text" value=""></td>'
         + '<td>'
         + '<span class="table-remove glyphicon glyphicon-remove"></span>'
         + '</td>'
         + '</tr>');
 
-    var $clone = tblName == "Payee" ? newPayeeRow :
+    var $clone = tblName == "Vendor" ? newVendorRow :
         tblName == "Department" ? newDeptRow :
         tblName == "Check" ? newCheckRow :
         tblName == "Account" ? newAccRow :
         tblName == "Value Added Tax" ? newVatRow :
         tblName == "Fringe Benefit Tax" ? newFbtRow :
-        tblName == "Expanded Withholding Tax" ? newEwtRow :
+        tblName == "Tax Rates" ? newTrRow :
         tblName == "Currency" ? newCurrRow : $('');
 
   $TABLE.find('table').append($clone);

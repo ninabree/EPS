@@ -13,7 +13,7 @@ namespace ExpenseProcessingSystem.Models
         public int Curr_ID { get; set; }
         public int Curr_MasterID { get; set; }
         public string Curr_Name { get; set; }
-        public string Curr_CCY_Code { get; set; }
+        public string Curr_CCY_ABBR { get; set; }
         public int Curr_Creator_ID { get; set; }
         public int Curr_Approver_ID { get; set; }
         public DateTime Curr_Created_Date { get; set; }

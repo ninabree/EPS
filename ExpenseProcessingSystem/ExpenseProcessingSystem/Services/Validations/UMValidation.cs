@@ -16,9 +16,9 @@ namespace ExpenseProcessingSystem.Services.Validations
             try
             {
                 var data = (User2ViewModel)validationContext.ObjectInstance;
-                if (!string.IsNullOrEmpty(data.Acc_UserName))
+                if (!string.IsNullOrEmpty(data.User_UserName))
                 {
-                    if(data.Acc_UserName.Length < 3 || data.Acc_UserName.Length > 20)
+                    if(data.User_UserName.Length < 3 || data.User_UserName.Length > 20)
                     {
                         return new ValidationResult("Username too short");
                     }

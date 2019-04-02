@@ -16,8 +16,8 @@ namespace ExpenseProcessingSystem.ViewModels.NewRecord
         [Display(Name = "Currency Name")]
         [NotNullValidations, TextValidation]
         public string Curr_Name { get; set; }
-        [Display(Name = "Currency CCY Code")]
+        [Display(Name = "Currency CCY ABBR")]
         [NotNullValidations, TextValidation]
-        public string Curr_CCY_Code { get; set; }
+        public string Curr_CCY_ABBR { get; set; }
     }
 }

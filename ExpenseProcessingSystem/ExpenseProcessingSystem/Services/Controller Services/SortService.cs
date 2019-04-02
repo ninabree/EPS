@@ -84,91 +84,71 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             };
             return vm;
         }
-        public SortViewModel SortData(List<DMPayeeViewModel> list, string sortOrder)
+        public SortViewModel SortData(List<DMVendorViewModel> list, string sortOrder)
         {
             var tempList = list.AsQueryable();
             var viewData = "";
             var vdInfo = "";
             switch (sortOrder)
             {
-                case "payee_stat":
-                    tempList = tempList.OrderBy(x => x.Payee_Status == "For Approval" || x.Payee_Status == "For Approval (For Deletion)");
+                case "vendor_stat":
+                    tempList = tempList.OrderBy(x => x.Vendor_Status == "For Approval" || x.Vendor_Status == "For Approval (For Deletion)");
                     viewData = "glyph-8";
                     vdInfo = "glyphicon-menu-up";
                     break;
-                case "payee_TIN":
-                    tempList = tempList.OrderBy(s => s.Payee_TIN);
+                case "vendor_TIN":
+                    tempList = tempList.OrderBy(s => s.Vendor_TIN);
                     viewData = "glyph-2";
                     vdInfo = "glyphicon-menu-down";
                     break;
-                case "payee_TIN_desc":
-                    tempList = tempList.OrderByDescending(s => s.Payee_TIN);
+                case "vendor_TIN_desc":
+                    tempList = tempList.OrderByDescending(s => s.Vendor_TIN);
                     viewData = "glyph-2";
                     vdInfo = "glyphicon-menu-up";
                     break;
-                case "payee_add":
-                    tempList = tempList.OrderBy(s => s.Payee_Address);
+                case "vendor_add":
+                    tempList = tempList.OrderBy(s => s.Vendor_Address);
                     viewData = "glyph-3";
                     vdInfo = "glyphicon-menu-down";
                     break;
-                case "payee_add_desc":
-                    tempList = tempList.OrderByDescending(s => s.Payee_Address);
+                case "vendor_add_desc":
+                    tempList = tempList.OrderByDescending(s => s.Vendor_Address);
                     viewData = "glyph-3";
                     vdInfo = "glyphicon-menu-up";
                     break;
-                case "payee_type":
-                    tempList = tempList.OrderBy(s => s.Payee_Type);
-                    viewData = "glyph-4";
-                    vdInfo = "glyphicon-menu-down";
-                    break;
-                case "payee_type_desc":
-                    tempList = tempList.OrderByDescending(s => s.Payee_Type);
-                    viewData = "glyph-4";
-                    vdInfo = "glyphicon-menu-up";
-                    break;
-                case "payee_no":
-                    tempList = tempList.OrderBy(s => s.Payee_No);
-                    viewData = "glyph-5";
-                    vdInfo = "glyphicon-menu-down";
-                    break;
-                case "payee_no_desc":
-                    tempList = tempList.OrderByDescending(s => s.Payee_No);
-                    viewData = "glyph-5";
-                    vdInfo = "glyphicon-menu-up";
-                    break;
-                case "payee_creatr":
-                    tempList = tempList.OrderBy(s => s.Payee_Creator_Name);
+                case "vendor_creatr":
+                    tempList = tempList.OrderBy(s => s.Vendor_Creator_Name);
                     viewData = "glyph-6";
                     vdInfo = "glyphicon-menu-down";
                     break;
-                case "payee_creatr_desc":
-                    tempList = tempList.OrderByDescending(s => s.Payee_Creator_Name);
+                case "vendor_creatr_desc":
+                    tempList = tempList.OrderByDescending(s => s.Vendor_Creator_Name);
                     viewData = "glyph-6";
                     vdInfo = "glyphicon-menu-up";
                     break;
-                case "payee_approvr":
-                    tempList = tempList.OrderBy(s => s.Payee_Approver_Name);
+                case "vendor_approvr":
+                    tempList = tempList.OrderBy(s => s.Vendor_Approver_Name);
                     viewData = "glyph-7";
                     vdInfo = "glyphicon-menu-down";
                     break;
-                case "payee_approvr_desc":
-                    tempList = tempList.OrderByDescending(s => s.Payee_Approver_Name);
+                case "vendor_approvr_desc":
+                    tempList = tempList.OrderByDescending(s => s.Vendor_Approver_Name);
                     viewData = "glyph-7";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "name":
-                    tempList = tempList.OrderBy(s => s.Payee_Name);
+                    tempList = tempList.OrderBy(s => s.Vendor_Name);
                     viewData = "glyph-1";
                     vdInfo = "glyphicon-menu-down";
                     break;
                 case "name_desc":
-                    tempList = tempList.OrderByDescending(s => s.Payee_Name);
+                    tempList = tempList.OrderByDescending(s => s.Vendor_Name);
                     viewData = "glyph-1";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 default:
-                    //tempList = tempList.OrderBy(s => s.Payee_Name);
-                    tempList = tempList.OrderByDescending(x => x.Payee_Status == "For Approval" || x.Payee_Status == "For Approval (For Deletion)");
+                    //tempList = tempList.OrderBy(s => s.Vendor_Name);
+                    tempList = tempList.OrderByDescending(x => x.Vendor_Status == "For Approval" || x.Vendor_Status == "For Approval (For Deletion)");
                     viewData = "glyph-8";
                     vdInfo = "glyphicon-menu-down";
                     break;
@@ -213,24 +193,14 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     viewData = "glyph-3";
                     vdInfo = "glyphicon-menu-up";
                     break;
-                case "chk_type":
-                    tempList = tempList.OrderBy(s => s.Check_Type);
+                case "chk_bank":
+                    tempList = tempList.OrderBy(s => s.Check_Bank_Info);
                     viewData = "glyph-4";
                     vdInfo = "glyphicon-menu-down";
                     break;
-                case "chk_type_desc":
-                    tempList = tempList.OrderByDescending(s => s.Check_Type);
+                case "chk_bank_desc":
+                    tempList = tempList.OrderByDescending(s => s.Check_Bank_Info);
                     viewData = "glyph-4";
-                    vdInfo = "glyphicon-menu-up";
-                    break;
-                case "chk_name":
-                    tempList = tempList.OrderBy(s => s.Check_Name);
-                    viewData = "glyph-5";
-                    vdInfo = "glyphicon-menu-down";
-                    break;
-                case "chk_name_desc":
-                    tempList = tempList.OrderByDescending(s => s.Check_Name);
-                    viewData = "glyph-5";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "chk_creatr":
@@ -401,122 +371,122 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             switch (sortOrder)
             {
                 case "user_desc":
-                    tempList = tempList.OrderByDescending(s => s.Acc_UserName);
+                    tempList = tempList.OrderByDescending(s => s.User_UserName);
                     viewData = "glyph-1";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "name":
-                    tempList = tempList.OrderBy(s => s.Acc_LName);
+                    tempList = tempList.OrderBy(s => s.User_LName);
                     viewData = "glyph-2";
                     vdInfo = "glyphicon-menu-down";
                     break;
                 case "name_desc":
-                    tempList = tempList.OrderByDescending(s => s.Acc_LName);
+                    tempList = tempList.OrderByDescending(s => s.User_LName);
                     viewData = "glyph-2";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "dept":
-                    tempList = tempList.OrderBy(s => s.Acc_Dept_ID);
+                    tempList = tempList.OrderBy(s => s.User_Dept_ID);
                     viewData = "glyph-3";
                     vdInfo = "glyphicon-menu-down";
                     break;
                 case "dept_desc":
-                    tempList = tempList.OrderByDescending(s => s.Acc_Dept_ID);
+                    tempList = tempList.OrderByDescending(s => s.User_Dept_ID);
                     viewData = "glyph-3";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "role":
-                    tempList = tempList.OrderBy(s => s.Acc_Role);
+                    tempList = tempList.OrderBy(s => s.User_Role);
                     viewData = "glyph-4";
                     vdInfo = "glyphicon-menu-down";
                     break;
                 case "role_desc":
-                    tempList = tempList.OrderByDescending(s => s.Acc_Role);
+                    tempList = tempList.OrderByDescending(s => s.User_Role);
                     viewData = "glyph-4";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "email":
-                    tempList = tempList.OrderBy(s => s.Acc_Email);
+                    tempList = tempList.OrderBy(s => s.User_Email);
                     viewData = "glyph-5";
                     vdInfo = "glyphicon-menu-down";
                     break;
                 case "email_desc":
-                    tempList = tempList.OrderByDescending(s => s.Acc_Email);
+                    tempList = tempList.OrderByDescending(s => s.User_Email);
                     viewData = "glyph-5";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "comment":
-                    tempList = tempList.OrderBy(s => s.Acc_Comment);
+                    tempList = tempList.OrderBy(s => s.User_Comment);
                     viewData = "glyph-6";
                     vdInfo = "glyphicon-menu-down";
                     break;
                 case "comment_desc":
-                    tempList = tempList.OrderByDescending(s => s.Acc_Comment);
+                    tempList = tempList.OrderByDescending(s => s.User_Comment);
                     viewData = "glyph-6";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "inuse":
-                    tempList = tempList.OrderBy(s => s.Acc_InUse);
+                    tempList = tempList.OrderBy(s => s.User_InUse);
                     viewData = "glyph-7";
                     vdInfo = "glyphicon-menu-down";
                     break;
                 case "inuse_desc":
-                    tempList = tempList.OrderByDescending(s => s.Acc_InUse);
+                    tempList = tempList.OrderByDescending(s => s.User_InUse);
                     viewData = "glyph-7";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "creatr":
-                    tempList = tempList.OrderBy(s => s.Acc_Creator_Name);
+                    tempList = tempList.OrderBy(s => s.User_Creator_Name);
                     viewData = "glyph-8";
                     vdInfo = "glyphicon-menu-down";
                     break;
                 case "creatr_desc":
-                    tempList = tempList.OrderByDescending(s => s.Acc_Creator_Name);
+                    tempList = tempList.OrderByDescending(s => s.User_Creator_Name);
                     viewData = "glyph-8";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "apprv":
-                    tempList = tempList.OrderBy(s => s.Acc_Approver_Name);
+                    tempList = tempList.OrderBy(s => s.User_Approver_Name);
                     viewData = "glyph-9";
                     vdInfo = "glyphicon-menu-down";
                     break;
                 case "apprv_desc":
-                    tempList = tempList.OrderByDescending(s => s.Acc_Approver_Name);
+                    tempList = tempList.OrderByDescending(s => s.User_Approver_Name);
                     viewData = "glyph-9";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "creatr_date":
-                    tempList = tempList.OrderBy(s => s.Acc_Created_Date);
+                    tempList = tempList.OrderBy(s => s.User_Created_Date);
                     viewData = "glyph-10";
                     vdInfo = "glyphicon-menu-down";
                     break;
                 case "creatr_date_desc":
-                    tempList = tempList.OrderByDescending(s => s.Acc_Created_Date);
+                    tempList = tempList.OrderByDescending(s => s.User_Created_Date);
                     viewData = "glyph-10";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "last_updt_date":
-                    tempList = tempList.OrderBy(s => s.Acc_Last_Updated);
+                    tempList = tempList.OrderBy(s => s.User_Last_Updated);
                     viewData = "glyph-11";
                     vdInfo = "glyphicon-menu-down";
                     break;
                 case "last_updt_date_desc":
-                    tempList = tempList.OrderByDescending(s => s.Acc_Last_Updated);
+                    tempList = tempList.OrderByDescending(s => s.User_Last_Updated);
                     viewData = "glyph-11";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "stats":
-                    tempList = tempList.OrderBy(s => s.Acc_Status);
+                    tempList = tempList.OrderBy(s => s.User_Status);
                     viewData = "glyph-12";
                     vdInfo = "glyphicon-menu-down";
                     break;
                 case "stats_desc":
-                    tempList = tempList.OrderByDescending(s => s.Acc_Status);
+                    tempList = tempList.OrderByDescending(s => s.User_Status);
                     viewData = "glyph-12";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 default:
-                    tempList = tempList.OrderBy(s => s.Acc_UserName);
+                    tempList = tempList.OrderBy(s => s.User_UserName);
                     viewData = "glyph-1";
                     vdInfo = "glyphicon-menu-down";
                     break;
@@ -777,45 +747,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             };
             return vm;
         }
-        public SortViewModel SortData(List<dynamic> list, string sortOrder)
-        {
-            var viewData = "";
-            var vdInfo = "";
-            if (list.GetType() == typeof(BMViewModel))
-            {
-                switch (sortOrder)
-                {
-                    case "acc_desc":
-                        list = (dynamic)list.OrderByDescending(s => s.BM_Account);
-                        viewData = "glyph-1";
-                        vdInfo = "glyphicon-menu-up";
-                        break;
-                    case "Type":
-                        list = (dynamic)list.OrderBy(s => s.BM_Type);
-                        viewData = "glyph-2";
-                        vdInfo = "glyphicon-menu-down";
-                        break;
-                    case "Type_desc":
-                        list = (dynamic)list.OrderByDescending(s => s.BM_Type);
-                        viewData = "glyph-2";
-                        vdInfo = "glyphicon-menu-up";
-                        break;
-                    default:
-                        list = (dynamic)list.OrderBy(s => s.BM_Account);
-                        viewData = "glyph-1";
-                        vdInfo = "glyphicon-menu-down";
-                        break;
-                }
-            }
-            SortViewModel vm = new SortViewModel
-            {
-                list = list,
-                viewData = viewData,
-                viewDataInfo = vdInfo
-            };
-            return vm;
-        }
-        public SortViewModel SortData(List<DMEWTViewModel> list, string sortOrder)
+        public SortViewModel SortData(List<DMTRViewModel> list, string sortOrder)
         {
             var tempList = list.AsQueryable();
             var viewData = "";
@@ -823,82 +755,82 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             switch (sortOrder)
             {
                 case "ewt_stat":
-                    tempList = tempList.OrderBy(x => x.EWT_Status == "For Approval" || x.EWT_Status == "For Approval (For Deletion)");
+                    tempList = tempList.OrderBy(x => x.TR_Status == "For Approval" || x.TR_Status == "For Approval (For Deletion)");
                     viewData = "glyph-8";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "ewt_tax":
-                    tempList = tempList.OrderBy(s => s.EWT_Tax_Rate);
+                    tempList = tempList.OrderBy(s => s.TR_Tax_Rate);
                     viewData = "glyph-2";
                     vdInfo = "glyphicon-menu-down";
                     break;
                 case "ewt_tax_desc":
-                    tempList = tempList.OrderByDescending(s => s.EWT_Tax_Rate);
+                    tempList = tempList.OrderByDescending(s => s.TR_Tax_Rate);
                     viewData = "glyph-2";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "ewt_atc":
-                    tempList = tempList.OrderBy(s => s.EWT_ATC);
+                    tempList = tempList.OrderBy(s => s.TR_ATC);
                     viewData = "glyph-3";
                     vdInfo = "glyphicon-menu-down";
                     break;
                 case "ewt_atc_desc":
-                    tempList = tempList.OrderByDescending(s => s.EWT_ATC);
+                    tempList = tempList.OrderByDescending(s => s.TR_ATC);
                     viewData = "glyph-3";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "ewt_tax_descrp":
-                    tempList = tempList.OrderBy(s => s.EWT_Tax_Rate_Desc);
+                    tempList = tempList.OrderBy(s => s.TR_WT_Title);
                     viewData = "glyph-4";
                     vdInfo = "glyphicon-menu-down";
                     break;
                 case "ewt_tax_descrp_desc":
-                    tempList = tempList.OrderByDescending(s => s.EWT_Tax_Rate_Desc);
+                    tempList = tempList.OrderByDescending(s => s.TR_WT_Title);
                     viewData = "glyph-4";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "ewt_creatr":
-                    tempList = tempList.OrderBy(s => s.EWT_Creator_Name);
+                    tempList = tempList.OrderBy(s => s.TR_Creator_Name);
                     viewData = "glyph-5";
                     vdInfo = "glyphicon-menu-down";
                     break;
                 case "ewt_creatr_desc":
-                    tempList = tempList.OrderByDescending(s => s.EWT_Creator_Name);
+                    tempList = tempList.OrderByDescending(s => s.TR_Creator_Name);
                     viewData = "glyph-5";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "ewt_approvr":
-                    tempList = tempList.OrderBy(s => s.EWT_Approver_Name);
+                    tempList = tempList.OrderBy(s => s.TR_Approver_Name);
                     viewData = "glyph-6";
                     vdInfo = "glyphicon-menu-down";
                     break;
                 case "ewt_approvr_desc":
-                    tempList = tempList.OrderByDescending(s => s.EWT_Approver_Name);
+                    tempList = tempList.OrderByDescending(s => s.TR_Approver_Name);
                     viewData = "glyph-6";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "ewt_last_updte":
-                    tempList = tempList.OrderBy(s => s.EWT_Last_Updated);
+                    tempList = tempList.OrderBy(s => s.TR_Last_Updated);
                     viewData = "glyph-7";
                     vdInfo = "glyphicon-menu-down";
                     break;
                 case "ewt_last_updte_desc":
-                    tempList = tempList.OrderByDescending(s => s.EWT_Last_Updated);
+                    tempList = tempList.OrderByDescending(s => s.TR_Last_Updated);
                     viewData = "glyph-7";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "nature":
-                    tempList = tempList.OrderBy(s => s.EWT_Nature);
+                    tempList = tempList.OrderBy(s => s.TR_Nature);
                     viewData = "glyph-1";
                     vdInfo = "glyphicon-menu-down";
                     break;
                 case "nature_desc":
-                    tempList = tempList.OrderByDescending(s => s.EWT_Nature);
+                    tempList = tempList.OrderByDescending(s => s.TR_Nature);
                     viewData = "glyph-1";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 default:
-                    tempList = tempList.OrderByDescending(x => x.EWT_Status == "For Approval" || x.EWT_Status == "For Approval (For Deletion)");
+                    tempList = tempList.OrderByDescending(x => x.TR_Status == "For Approval" || x.TR_Status == "For Approval (For Deletion)");
                     viewData = "glyph-8";
                     vdInfo = "glyphicon-menu-down";
                     break;
@@ -923,13 +855,13 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     viewData = "glyph-6";
                     vdInfo = "glyphicon-menu-up";
                     break;
-                case "curr_code":
-                    tempList = tempList.OrderBy(s => s.Curr_CCY_Code);
+                case "curr_abbr":
+                    tempList = tempList.OrderBy(s => s.Curr_CCY_ABBR);
                     viewData = "glyph-2";
                     vdInfo = "glyphicon-menu-down";
                     break;
-                case "curr_code_desc":
-                    tempList = tempList.OrderByDescending(s => s.Curr_CCY_Code);
+                case "curr_abbr_desc":
+                    tempList = tempList.OrderByDescending(s => s.Curr_CCY_ABBR);
                     viewData = "glyph-2";
                     vdInfo = "glyphicon-menu-up";
                     break;
@@ -987,7 +919,444 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             };
             return vm;
         }
-
+        public SortViewModel SortData(List<dynamic> list, string sortOrder)
+        {
+            var viewData = "";
+            var vdInfo = "";
+            if (list.GetType() == typeof(BMViewModel))
+            {
+                switch (sortOrder)
+                {
+                    case "acc_desc":
+                        list = (dynamic)list.OrderByDescending(s => s.BM_Account);
+                        viewData = "glyph-1";
+                        vdInfo = "glyphicon-menu-up";
+                        break;
+                    case "Type":
+                        list = (dynamic)list.OrderBy(s => s.BM_Type);
+                        viewData = "glyph-2";
+                        vdInfo = "glyphicon-menu-down";
+                        break;
+                    case "Type_desc":
+                        list = (dynamic)list.OrderByDescending(s => s.BM_Type);
+                        viewData = "glyph-2";
+                        vdInfo = "glyphicon-menu-up";
+                        break;
+                    default:
+                        list = (dynamic)list.OrderBy(s => s.BM_Account);
+                        viewData = "glyph-1";
+                        vdInfo = "glyphicon-menu-down";
+                        break;
+                }
+            }
+            SortViewModel vm = new SortViewModel
+            {
+                list = list,
+                viewData = viewData,
+                viewDataInfo = vdInfo
+            };
+            return vm;
+        }
+        public SortViewModel SortData(List<DMEmpViewModel> list, string sortOrder)
+        {
+            var tempList = list.AsQueryable();
+            var viewData = "";
+            var vdInfo = "";
+            switch (sortOrder)
+            {
+                case "regemp_stat":
+                    tempList = tempList.OrderBy(x => x.Emp_Status == "For Approval" || x.Emp_Status == "For Approval (For Deletion)");
+                    viewData = "glyph-6";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "regemp_no":
+                    tempList = tempList.OrderBy(s => s.Emp_Acc_No);
+                    viewData = "glyph-2";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "regemp_no_desc":
+                    tempList = tempList.OrderByDescending(s => s.Emp_Acc_No);
+                    viewData = "glyph-2";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "regemp_creatr":
+                    tempList = tempList.OrderBy(s => s.Emp_Creator_Name);
+                    viewData = "glyph-3";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "regemp_creatr_desc":
+                    tempList = tempList.OrderByDescending(s => s.Emp_Creator_Name);
+                    viewData = "glyph-3";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "regemp_approvr":
+                    tempList = tempList.OrderBy(s => s.Emp_Approver_Name);
+                    viewData = "glyph-4";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "regemp_approvr_desc":
+                    tempList = tempList.OrderByDescending(s => s.Emp_Approver_Name);
+                    viewData = "glyph-4";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "regemp_last_updte":
+                    tempList = tempList.OrderBy(s => s.Emp_Last_Updated);
+                    viewData = "glyph-5";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "dept_last_updte_desc":
+                    tempList = tempList.OrderByDescending(s => s.Emp_Last_Updated);
+                    viewData = "glyph-5";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "name":
+                    tempList = tempList.OrderBy(s => s.Emp_Name);
+                    viewData = "glyph-1";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "name_desc":
+                    tempList = tempList.OrderByDescending(s => s.Emp_Name);
+                    viewData = "glyph-1";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                default:
+                    tempList = tempList.OrderByDescending(x => x.Emp_Status == "For Approval" || x.Emp_Status == "For Approval (For Deletion)");
+                    viewData = "glyph-6";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+            }
+            SortViewModel vm = new SortViewModel
+            {
+                list = tempList.Cast<dynamic>().ToList(),
+                viewData = viewData,
+                viewDataInfo = vdInfo
+            };
+            return vm;
+        }
+        public SortViewModel SortData(List<DMEmpViewModel> list, string sortOrder, string type)
+        {
+            var tempList = list.AsQueryable();
+            var viewData = "";
+            var vdInfo = "";
+            switch (sortOrder)
+            {
+                case "tempemp_stat":
+                    tempList = tempList.OrderBy(x => x.Emp_Status == "For Approval" || x.Emp_Status == "For Approval (For Deletion)");
+                    viewData = "glyph-5";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "tempemp_creatr":
+                    tempList = tempList.OrderBy(s => s.Emp_Creator_Name);
+                    viewData = "glyph-2";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "tempemp_creatr_desc":
+                    tempList = tempList.OrderByDescending(s => s.Emp_Creator_Name);
+                    viewData = "glyph-2";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "tempemp_approvr":
+                    tempList = tempList.OrderBy(s => s.Emp_Approver_Name);
+                    viewData = "glyph-3";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "tempemp_approvr_desc":
+                    tempList = tempList.OrderByDescending(s => s.Emp_Approver_Name);
+                    viewData = "glyph-3";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "tempemp_last_updte":
+                    tempList = tempList.OrderBy(s => s.Emp_Last_Updated);
+                    viewData = "glyph-4";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "dept_last_updte_desc":
+                    tempList = tempList.OrderByDescending(s => s.Emp_Last_Updated);
+                    viewData = "glyph-4";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "name":
+                    tempList = tempList.OrderBy(s => s.Emp_Name);
+                    viewData = "glyph-1";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "name_desc":
+                    tempList = tempList.OrderByDescending(s => s.Emp_Name);
+                    viewData = "glyph-1";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                default:
+                    tempList = tempList.OrderByDescending(x => x.Emp_Status == "For Approval" || x.Emp_Status == "For Approval (For Deletion)");
+                    viewData = "glyph-5";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+            }
+            SortViewModel vm = new SortViewModel
+            {
+                list = tempList.Cast<dynamic>().ToList(),
+                viewData = viewData,
+                viewDataInfo = vdInfo
+            };
+            return vm;
+        }
+        public SortViewModel SortData(List<DMCustViewModel> list, string sortOrder)
+        {
+            var tempList = list.AsQueryable();
+            var viewData = "";
+            var vdInfo = "";
+            switch (sortOrder)
+            {
+                case "cust_stat":
+                    tempList = tempList.OrderBy(x => x.Cust_Status == "For Approval" || x.Cust_Status == "For Approval (For Deletion)");
+                    viewData = "glyph-7";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "cust_abbr":
+                    tempList = tempList.OrderBy(s => s.Cust_Abbr);
+                    viewData = "glyph-2";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "cust_abbr_desc":
+                    tempList = tempList.OrderByDescending(s => s.Cust_Abbr);
+                    viewData = "glyph-2";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "cust_no":
+                    tempList = tempList.OrderBy(s => s.Cust_No);
+                    viewData = "glyph-3";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "cust_no_desc":
+                    tempList = tempList.OrderByDescending(s => s.Cust_No);
+                    viewData = "glyph-3";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "cust_creatr":
+                    tempList = tempList.OrderBy(s => s.Cust_Creator_Name);
+                    viewData = "glyph-4";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "cust_creatr_desc":
+                    tempList = tempList.OrderByDescending(s => s.Cust_Creator_Name);
+                    viewData = "glyph-4";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "cust_approvr":
+                    tempList = tempList.OrderBy(s => s.Cust_Approver_Name);
+                    viewData = "glyph-5";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "vendor_approvr_desc":
+                    tempList = tempList.OrderByDescending(s => s.Cust_Approver_Name);
+                    viewData = "glyph-5";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "cust_last_updte":
+                    tempList = tempList.OrderBy(s => s.Cust_Last_Updated);
+                    viewData = "glyph-6";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "cust_last_updte_desc":
+                    tempList = tempList.OrderByDescending(s => s.Cust_Last_Updated);
+                    viewData = "glyph-6";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "name":
+                    tempList = tempList.OrderBy(s => s.Cust_Name);
+                    viewData = "glyph-1";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "name_desc":
+                    tempList = tempList.OrderByDescending(s => s.Cust_Name);
+                    viewData = "glyph-7";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                default:
+                    tempList = tempList.OrderByDescending(x => x.Cust_Status == "For Approval" || x.Cust_Status == "For Approval (For Deletion)");
+                    viewData = "glyph-6";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+            }
+            SortViewModel vm = new SortViewModel
+            {
+                list = tempList.Cast<dynamic>().ToList(),
+                viewData = viewData,
+                viewDataInfo = vdInfo
+            };
+            return vm;
+        }
+        public SortViewModel SortData(List<DMNCCViewModel> list, string sortOrder)
+        {
+            var tempList = list.AsQueryable();
+            var viewData = "";
+            var vdInfo = "";
+            switch (sortOrder)
+            {
+                case "ncc_stat":
+                    tempList = tempList.OrderBy(x => x.NCC_Status == "For Approval" || x.NCC_Status == "For Approval (For Deletion)");
+                    viewData = "glyph-6";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "ncc_code":
+                    tempList = tempList.OrderBy(s => s.NCC_Pro_Forma);
+                    viewData = "glyph-2";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "ncc_code_desc":
+                    tempList = tempList.OrderByDescending(s => s.NCC_Pro_Forma);
+                    viewData = "glyph-2";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "ncc_creatr":
+                    tempList = tempList.OrderBy(s => s.NCC_Creator_Name);
+                    viewData = "glyph-3";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "ncc_creatr_desc":
+                    tempList = tempList.OrderByDescending(s => s.NCC_Creator_Name);
+                    viewData = "glyph-3";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "ncc_approvr":
+                    tempList = tempList.OrderBy(s => s.NCC_Approver_Name);
+                    viewData = "glyph-4";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "ncc_approvr_desc":
+                    tempList = tempList.OrderByDescending(s => s.NCC_Approver_Name);
+                    viewData = "glyph-4";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "ncc_last_updte":
+                    tempList = tempList.OrderBy(s => s.NCC_Last_Updated);
+                    viewData = "glyph-5";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "ncc_last_updte_desc":
+                    tempList = tempList.OrderByDescending(s => s.NCC_Last_Updated);
+                    viewData = "glyph-5";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "name":
+                    tempList = tempList.OrderBy(s => s.NCC_Name);
+                    viewData = "glyph-1";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "name_desc":
+                    tempList = tempList.OrderByDescending(s => s.NCC_Name);
+                    viewData = "glyph-1";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                default:
+                    tempList = tempList.OrderByDescending(x => x.NCC_Status == "For Approval" || x.NCC_Status == "For Approval (For Deletion)");
+                    viewData = "glyph-6";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+            }
+            SortViewModel vm = new SortViewModel
+            {
+                list = tempList.Cast<dynamic>().ToList(),
+                viewData = viewData,
+                viewDataInfo = vdInfo
+            };
+            return vm;
+        }
+        public SortViewModel SortData(List<DMBCSViewModel> list, string sortOrder)
+        {
+            var tempList = list.AsQueryable();
+            var viewData = "";
+            var vdInfo = "";
+            switch (sortOrder)
+            {
+                case "bcs_stat":
+                    tempList = tempList.OrderBy(x => x.BCS_Status == "For Approval" || x.BCS_Status == "For Approval (For Deletion)");
+                    viewData = "glyph-8";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "bcs_tin":
+                    tempList = tempList.OrderBy(s => s.BCS_TIN);
+                    viewData = "glyph-2";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "bcs_tin_desc":
+                    tempList = tempList.OrderByDescending(s => s.BCS_TIN);
+                    viewData = "glyph-2";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "bcs_pos":
+                    tempList = tempList.OrderBy(s => s.BCS_Position);
+                    viewData = "glyph-3";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "bcs_pos_desc":
+                    tempList = tempList.OrderByDescending(s => s.BCS_Position);
+                    viewData = "glyph-3";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "bcs_sign":
+                    tempList = tempList.OrderBy(s => s.BCS_Signatures);
+                    viewData = "glyph-4";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "bcs_sign_desc":
+                    tempList = tempList.OrderByDescending(s => s.BCS_Signatures);
+                    viewData = "glyph-4";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "bcs_creatr":
+                    tempList = tempList.OrderBy(s => s.BCS_Creator_Name);
+                    viewData = "glyph-5";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "bcs_creatr_desc":
+                    tempList = tempList.OrderByDescending(s => s.BCS_Creator_Name);
+                    viewData = "glyph-5";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "bcs_approvr":
+                    tempList = tempList.OrderBy(s => s.BCS_Approver_Name);
+                    viewData = "glyph-6";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "bcs_approvr_desc":
+                    tempList = tempList.OrderByDescending(s => s.BCS_Approver_Name);
+                    viewData = "glyph-6";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "bcs_last_updte":
+                    tempList = tempList.OrderBy(s => s.BCS_Last_Updated);
+                    viewData = "glyph-7";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "bcs_last_updte_desc":
+                    tempList = tempList.OrderByDescending(s => s.BCS_Last_Updated);
+                    viewData = "glyph-7";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "name":
+                    tempList = tempList.OrderBy(s => s.BCS_Name);
+                    viewData = "glyph-1";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "name_desc":
+                    tempList = tempList.OrderByDescending(s => s.BCS_Name);
+                    viewData = "glyph-1";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                default:
+                    tempList = tempList.OrderByDescending(x => x.BCS_Status == "For Approval" || x.BCS_Status == "For Approval (For Deletion)");
+                    viewData = "glyph-8";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+            }
+            SortViewModel vm = new SortViewModel
+            {
+                list = tempList.Cast<dynamic>().ToList(),
+                viewData = viewData,
+                viewDataInfo = vdInfo
+            };
+            return vm;
+        }
         public class SortViewModel
         {
             public List<dynamic> list { get; set; }

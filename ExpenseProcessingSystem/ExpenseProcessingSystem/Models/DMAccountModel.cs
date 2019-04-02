@@ -14,10 +14,10 @@ namespace ExpenseProcessingSystem.Models
         public int Account_MasterID { get; set; }
         public string Account_Name { get; set; }
         public string Account_Code { get; set; }
-        public int Account_No { get; set; }
+        public string Account_No { get; set; }
         public string Account_Cust { get; set; }
         public string Account_Div { get; set; }
-        public string Account_Fund { get; set; }
+        public bool Account_Fund { get; set; }
         public int Account_Creator_ID { get; set; }
         public int Account_Approver_ID { get; set; }
         public DateTime Account_Created_Date { get; set; }

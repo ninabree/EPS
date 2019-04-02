@@ -12,39 +12,39 @@ namespace ExpenseProcessingSystem.ViewModels
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Display(Name = "Employee ID")]
-        public int Acc_UserID { get; set; }
+        public int User_ID { get; set; }
 
         [Display(Name = "Username")]
-        public string Acc_UserName { get; set; }
+        public string User_UserName { get; set; }
 
         [Display(Name = "Employee Name")]
-        public string Acc_FName { get; set; }
-        public string Acc_LName { get; set; }
+        public string User_FName { get; set; }
+        public string User_LName { get; set; }
 
         [Display(Name = "Password")]
         [DataType(DataType.Password)]
-        public string Acc_Password { get; set; }
+        public string User_Password { get; set; }
 
         [Display(Name = "Department")]
-        public int Acc_Dept_ID { get; set; }
-        public string Acc_Dept_Name { get; set; }
+        public int User_Dept_ID { get; set; }
+        public string User_Dept_Name { get; set; }
 
         [Display(Name = "Email")]
-        public string Acc_Email { get; set; }
+        public string User_Email { get; set; }
 
         [Display(Name = "Role")]
-        public string Acc_Role { get; set; }
+        public string User_Role { get; set; }
 
         [Display(Name = "Comment")]
-        public string Acc_Comment { get; set; }
+        public string User_Comment { get; set; }
 
         [Display(Name = "In-Use")]
-        public bool Acc_InUse { get; set; }
+        public bool User_InUse { get; set; }
         
-        public string Acc_Creator_Name { get; set; }
-        public string Acc_Approver_Name { get; set; }
-        public DateTime Acc_Created_Date { get; set; }
-        public DateTime Acc_Last_Updated { get; set; }
-        public string Acc_Status { get; set; }
+        public string User_Creator_Name { get; set; }
+        public string User_Approver_Name { get; set; }
+        public DateTime User_Created_Date { get; set; }
+        public DateTime User_Last_Updated { get; set; }
+        public string User_Status { get; set; }
     }
 }

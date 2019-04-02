@@ -14,10 +14,10 @@ namespace ExpenseProcessingSystem.Models
         public int Pending_Account_MasterID { get; set; }
         public string Pending_Account_Name { get; set; }
         public string Pending_Account_Code { get; set; }
-        public int Pending_Account_No { get; set; }
+        public string Pending_Account_No { get; set; }
         public string Pending_Account_Cust { get; set; }
         public string Pending_Account_Div { get; set; }
-        public string Pending_Account_Fund { get; set; }
+        public bool Pending_Account_Fund { get; set; }
         public int Pending_Account_Creator_ID { get; set; }
         public int Pending_Account_Approver_ID { get; set; }
         public DateTime Pending_Account_Filed_Date { get; set; }

@@ -28,7 +28,7 @@ namespace ExpenseProcessingSystem.Controllers
             //var tmp = (Request.Headers["x-requested-with"] == "XMLHttpRequest") ? "true" : "false";
             //_session.SetString("isTimeout", tmp); 
             ////{
-            ////    //return RedirectToAction("Login", "Account");
+            ////    //return RedirectToAction("Login", "Userount");
             ////}
             AccessViewModel accessVM = new AccessViewModel
             {
@@ -56,17 +56,17 @@ namespace ExpenseProcessingSystem.Controllers
                 return View(model);
             }
 
-            var acc = _context.Account.Where(x => x.Acc_UserName == model.Acc_UserName).Where(x=> x.Acc_InUse == true).Select(x => x).FirstOrDefault();
+            var acc = _context.User.Where(x => x.User_UserName == model.User_UserName).Where(x=> x.User_InUse == true).Select(x => x).FirstOrDefault();
             if (acc != null)
             {
-                if (CryptoTools.getHashPasswd("PLACEHOLDER", model.Acc_UserName, model.Acc_Password) == acc.Acc_Password)
+                if (CryptoTools.getHashPasswd("PLACEHOLDER", model.User_UserName, model.User_Password) == acc.User_Password)
                 {
                     //Set Session Info
-                    _session.SetString("UserID", acc.Acc_UserID.ToString());
-                    //Set Access Info
+                    _session.SetString("UserID", acc.User_ID.ToString());
+                    //Set Useress Info
                     _session.SetString("isLoggedIn", "true");
-                    _session.SetString("accessType", acc.Acc_Role);
-                    _session.SetString("isAdmin", acc.Acc_Role == "admin" ? "true" : "false");
+                    _session.SetString("accessType", acc.User_Role);
+                    _session.SetString("isAdmin", acc.User_Role == "admin" ? "true" : "false");
                     
                     Log.Information("User Logged In");
                     return RedirectToAction("Index", "Home");

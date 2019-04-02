@@ -21,7 +21,7 @@ namespace ExpenseProcessingSystem.ViewModels.NewRecord
         public string Account_Code { get; set; }
         [Display(Name = "Account No")]
         [NotNullValidations, IntegerValidation]
-        public int Account_No { get; set; }
+        public string Account_No { get; set; }
         [Display(Name = "Account Cust")]
         [NotNullValidations, TextValidation]
         public string Account_Cust { get; set; }
@@ -29,7 +29,7 @@ namespace ExpenseProcessingSystem.ViewModels.NewRecord
         [NotNullValidations, TextValidation]
         public string Account_Div { get; set; }
         [Display(Name = "Account Fund")]
-        [NotNullValidations, TextValidation]
-        public string Account_Fund { get; set; }
+        [NotNullValidations]
+        public bool Account_Fund { get; set; }
     }
 }

@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewData["Title"] = "DMAddBCS_Pending";
+    Layout = "~/Views/Shared/_ModalLayout.cshtml";
+}
+
+@using ExpenseProcessingSystem.ViewModels.NewRecord
+@model NewBCSViewModel
+
+<div id="table">
+    @using (Html.BeginForm("AddBCS_Pending", "Home", FormMethod.Post, new { @class = "validate-form", @id = "tsForm", enctype = "multipart/form-data" }))
+    {
+        <table class="table table-bordered editable-th">
+            <tr>
+                <th>Employee Name</th>
+                <th>TIN</th>
+                <th>Position</th>
+                <th colspan="2">Signatures</th>
+                <th></th>
+            </tr>
+            <tr>
+                <td>@Html.TextBoxFor(m => m.BCS_Name, new { @class = "w-full" })</td>
+                <td>@Html.TextBoxFor(m => m.BCS_TIN, new { @class = "w-full" })</td>
+                <td>@Html.TextBoxFor(m => m.BCS_Position, new { @class = "w-full" })</td>
+                <td colspan="2"><input type="file" asp-for="BCS_Signatures"></td>
+                <td>
+                    <span class="table-remove glyphicon glyphicon-remove"></span>
+                </td>
+            </tr>
+        </table>
+    }
+</div>

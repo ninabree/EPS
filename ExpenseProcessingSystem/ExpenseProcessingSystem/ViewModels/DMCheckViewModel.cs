@@ -19,11 +19,9 @@ namespace ExpenseProcessingSystem.ViewModels
         public string Check_Series_From { get; set; }
         [Display(Name = "Series To")]
         public string Check_Series_To { get; set; }
-        [Display(Name = "Type")]
-        public string Check_Type { get; set; }
-        [Display(Name = "Name")]
+        [Display(Name = "Bank Information")]
         [NotNullValidations, TextValidation]
-        public string Check_Name { get; set; }
+        public string Check_Bank_Info { get; set; }
         public int Check_Creator_ID { get; set; }
         public int Check_Approver_ID { get; set; }
         [Display(Name = "Input By")]

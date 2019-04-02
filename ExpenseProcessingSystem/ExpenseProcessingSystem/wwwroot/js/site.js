@@ -18,10 +18,10 @@ $(document).ready(function () {
     });
     /*//////////////////////////////////////////////////////////////////
     [ Login ]*/
-    $('#Acc_UserName').change(function () {
+    $('#User_UserName').change(function () {
         CheckUn();
     });
-    $('#Acc_Password').change(function () {
+    $('#User_Password').change(function () {
         CheckPw();
     });
 
@@ -30,15 +30,6 @@ $(document).ready(function () {
     setInterval(function () {
         $('div.modal-backdrop.fade.in').not(':first').remove();
     }, 1);
-    /*//////////////////////////////////////////////////////////////////
-    [ Modal ]*/
-    //$('#bm a').click(function () {
-    //    //var h = $(window).height();
-    //    //this..attr("href", "/Home/BM/"+h);
-    //    //$("#clientScreenWidth").val($(window).width());
-    //    //$("#clientScreenHeight").val($(window).height());
-    //    //sessionStorage.setItem("clientScreenHeight", $(window).height());
-    //});
 
     /*//////////////////////////////////////////////////////////////////
     [ Pagination - Number Input]*/
@@ -59,7 +50,7 @@ $(document).ready(function () {
             }
             window.location = url;
         }
-    }, 100);
+    }, 1000);
 
 
     /*//////////////////////////////////////////////////////////////////
@@ -86,12 +77,22 @@ $(document).ready(function () {
         var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
         //to check if entries are of same status
         var txtVal = $('input#entryCheckTypes').val();
-        
+        //get table name
+        var tblName = $('#dm-tbl').find(":selected").text();
+        //if there is no previously checked box
         if (txtVal != "") {
+            //when selected two different type of entries, disable all
             if ((txtVal != stat) && (this.checked == true)) {
                 alert("Kindly check rows with the same status only.");
-                //disable all other functional buttons
                 $('.rec').prop('disabled', true);
+            //when in BCS and NCC table, disable editing for more than one entry
+            } else if (chkCount >= 2 && stat == "Approved" && (tblName == "BIR Cert Signatory" || tblName == "Non-Cash Category")) {
+                $('.apprv-rec').prop('disabled', true);
+                $('.rej-rec').prop('disabled', true);
+                $('.add-rec').prop('disabled', false);
+                $('.edit-rec').prop('disabled', true);
+                $('.delete-rec').prop('disabled', false);
+            //when unselecting all checkboxes, enable only add edit delete
             } else if (this.checked == false && chkCount <= 0) {
                 $('.apprv-rec').prop('disabled', true);
                 $('.rej-rec').prop('disabled', true);
@@ -102,7 +103,7 @@ $(document).ready(function () {
             } else {
                 //get status of currently checked checkbox
                 stat = $('input.tbl-chk[type="checkbox"]:checked').parent().siblings(":eq(" + count + ")").text();
-                //format only avail buttons per 
+                //format only avail buttons per status
                 switch (stat) {
                     case "For Approval":
                         $('.apprv-rec').prop('disabled', false);
@@ -171,16 +172,16 @@ $(document).ready(function () {
             //row.addClass('highlight');
         } else {
             var name = $(row).children(":eq(1)").text().split(', ');
-            $('#NewAcc_Acc_UserName').prop("readonly", true);
-            $('#NewAcc_Acc_UserName').val($(row).children(":first").text());
-            $('#NewAcc_Acc_FName').val(name[1]);
-            $('#NewAcc_Acc_LName').val(name[0]);
-            $('#NewAcc_Acc_DeptID').val($(row).children(":eq(2)").attr('id'));
-            $('#NewAcc_Acc_Email').val($(row).children(":eq(4)").text());
-            $('#NewAcc_Acc_Role').val($(row).children(":eq(3)").text());
-            $('#NewAcc_Acc_UserID').val(parseInt($(row).children(":eq(12)").val())); 
-            $('#NewAcc_Acc_Comment').val($(row).children(":eq(5)").text());
-            $('#NewAcc_Acc_InUse').prop('checked', ($(row).children(":eq(6)").find('input').is(":checked")) ? true : false);
+            $('#NewAcc_User_UserName').prop("readonly", true);
+            $('#NewAcc_User_UserName').val($(row).children(":first").text());
+            $('#NewAcc_User_FName').val(name[1]);
+            $('#NewAcc_User_LName').val(name[0]);
+            $('#NewAcc_User_DeptID').val($(row).children(":eq(2)").attr('id'));
+            $('#NewAcc_User_Email').val($(row).children(":eq(4)").text());
+            $('#NewAcc_User_Role').val($(row).children(":eq(3)").text());
+            $('#NewAcc_User_ID').val(parseInt($(row).children(":eq(12)").val())); 
+            $('#NewAcc_User_Comment').val($(row).children(":eq(5)").text());
+            $('#NewAcc_User_InUse').prop('checked', ($(row).children(":eq(6)").find('input').is(":checked")) ? true : false);
            
             /* Otherwise just highlight one row and clean others */
             rows.removeClass('highlight');
@@ -194,16 +195,16 @@ $(document).ready(function () {
         
         $('#clear-btn').click(function (e) {
             e.stopImmediatePropagation();
-            $('#NewAcc_Acc_UserName').prop("readonly", false);
-            $('#NewAcc_Acc_UserName').val("");
-            $('#NewAcc_Acc_FName').val("");
-            $('#NewAcc_Acc_LName').val("");
-            $('#NewAcc_Acc_DeptID').val("0");
-            $('#NewAcc_Acc_Email').val("");
-            $('#NewAcc_Acc_Role').val("");
-            $('#NewAcc_Acc_UserID').val("");
-            $('#NewAcc_Acc_Comment').val("");
-            $('#NewAcc_Acc_InUse').prop('checked', false);
+            $('#NewAcc_User_UserName').prop("readonly", false);
+            $('#NewAcc_User_UserName').val("");
+            $('#NewAcc_User_FName').val("");
+            $('#NewAcc_User_LName').val("");
+            $('#NewAcc_User_DeptID').val("0");
+            $('#NewAcc_User_Email').val("");
+            $('#NewAcc_User_Role').val("");
+            $('#NewAcc_User_UserID').val("");
+            $('#NewAcc_User_Comment').val("");
+            $('#NewAcc_User_InUse').prop('checked', false);
             $('#validationSummary').empty();
             rows.removeClass('highlight');
             return false;
@@ -240,8 +241,6 @@ $(document).ready(function () {
     });
 
     init();
-
-
     /*//////////////////////////////////////////////////////////////////
     [ Functions ]*/
     function populateCol() {
@@ -320,7 +319,7 @@ $(document).ready(function () {
 
     //login
     function CheckUn() {
-        var val = $('#Acc_UserName').val();
+        var val = $('#User_UserName').val();
         if (val != "") {
             //alert(val);
             $('.UN').hide();
@@ -329,7 +328,7 @@ $(document).ready(function () {
         }
     }
     function CheckPw() {
-        var val = $('#Acc_Password').val();
+        var val = $('#User_Password').val();
         if (val != "") {
             //alert(val);
             $('.PW').hide();

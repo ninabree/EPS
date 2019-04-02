@@ -56,7 +56,6 @@
         }
 
     });
-
     $(".add-rec").click(function (e) {
         e.stopImmediatePropagation();
         if (!isSessionTimeout()) {
@@ -142,7 +141,7 @@
         var modalDivBody = $('.modal-body');
         var modalDivHeader = $('.modal-header');
         var modalDivFooter = $('.modal-footer');
-
+        var tblName = $('#dm-tbl').find(":selected").text();
         $.ajax({
             url: "RedirectCont/",
             type: "POST",
@@ -156,7 +155,11 @@
                 modalDivHeader.append('<h4 class="modal-title">' + modalHeader + '</h4>');
                 modalDivBody.addClass("p-l-15 p-r-15");
                 modalDivFooter.find('#add_row_btn').remove();
-                modalDivFooter.append('<button type="button" id="add_row_btn" class="btn table-add">Add Row</button>');
+                //when in BCS and NCC, NO add row btn
+                if (tblName != "BIR Cert Signatory" && tblName != "Non-Cash Category")
+                {
+                    modalDivFooter.append('<button type="button" id="add_row_btn" class="btn table-add">Add Row</button>');
+                }
                 modalDivBody.html(data);
 
                 $('#myModal').modal('show');

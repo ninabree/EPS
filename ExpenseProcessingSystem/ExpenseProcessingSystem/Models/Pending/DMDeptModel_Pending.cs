@@ -14,6 +14,7 @@ namespace ExpenseProcessingSystem.Models
         public int Pending_Dept_MasterID { get; set; }
         public string Pending_Dept_Name { get; set; }
         public string Pending_Dept_Code { get; set; }
+        public string Pending_Dept_Budget_Unit { get; set; }
         public int Pending_Dept_Creator_ID { get; set; }
         public int Pending_Dept_Approver_ID { get; set; }
         public DateTime Pending_Dept_Filed_Date { get; set; }

@@ -22,11 +22,8 @@ namespace ExpenseProcessingSystem.ViewModels.NewRecord
         [Display(Name = "Series To")]
         [NotNullValidations, TextValidation]
         public string Check_Series_To { get; set; }
-        [Display(Name = "Type")]
+        [Display(Name = "Bank Information")]
         [NotNullValidations, TextValidation]
-        public string Check_Type { get; set; }
-        [Display(Name = "Name")]
-        [NotNullValidations, TextValidation]
-        public string Check_Name { get; set; }
+        public string Check_Bank_Info { get; set; }
     }
 }

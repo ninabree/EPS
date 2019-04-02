@@ -9,14 +9,19 @@
         <div class="dis-inline-block"><p>Data List Title:</p></div>
         <div class="dis-inline-block">
             <select id="dm-tbl">
-                <option value="DMPartial_Payee">Payee</option>
+                <option value="DMPartial_Vendor">Vendor</option>
                 <option value="DMPartial_Check">Check</option>
                 <option value="DMPartial_Acc">Account</option>
                 <option value="DMPartial_Dept">Department</option>
                 <option value="DMPartial_VAT">Value Added Tax</option>
                 <option value="DMPartial_FBT">Fringe Benefit Tax</option>
-                <option value="DMPartial_EWT">Expanded Withholding Tax</option>
+                <option value="DMPartial_TR">Tax Rates</option>
                 <option value="DMPartial_Curr">Currency</option>
+                <option value="DMPartial_RegEmp">Regular Employee</option>
+                <option value="DMPartial_TempEmp">Temporary Employee</option>
+                <option value="DMPartial_Cust">Customer</option>
+                <option value="DMPartial_NCC">Non-Cash Category</option>
+                <option value="DMPartial_BCS">BIR Cert Signatory</option>
             </select>
         </div>
     </div>
@@ -29,15 +34,6 @@
     <input type="hidden" id="entryCheckTypes" />
 </div>
 
-@functions {
-public int CheckSession
-{
-    get
-    {
-        return Context.Session.Id != null ? 1:0;
-    }
-}
-}
 <environment include="Development">
     <script src="~/lib/jquery/dist/jquery.js"></script>
 </environment>

@@ -16,14 +16,6 @@ namespace ExpenseProcessingSystem.Services.Validations
             try
             {
                 var data = (LoginViewModel) validationContext.ObjectInstance;
-                //if(string.IsNullOrEmpty(data.Acc_UserName))
-                //{
-                //    return new ValidationResult("User name is empty");
-                //}
-                //if(data.Acc_UserName.Any(char.IsDigit))
-                //{
-                //    return new ValidationResult("User name contains numbers");
-                //}
                 return ValidationResult.Success;
             }
             catch (Exception ex)
@@ -52,27 +44,27 @@ namespace ExpenseProcessingSystem.Services.Validations
                 var hasLowerChar = new Regex(@"[a-z]+");
                 var hasSymbols = new Regex(@"[!@#$%^&*()_+=\[{\]};:<>|./?,-]");
 
-                if (!string.IsNullOrEmpty(data.Acc_Password))
+                if (!string.IsNullOrEmpty(data.User_Password))
                 {
 
-                    if (!hasLowerChar.IsMatch(data.Acc_Password))
+                    if (!hasLowerChar.IsMatch(data.User_Password))
                     {
                         return new ValidationResult("Password should contain At least one lower case letter");
                     }
-                    else if (!hasUpperChar.IsMatch(data.Acc_Password))
+                    else if (!hasUpperChar.IsMatch(data.User_Password))
                     {
                         return new ValidationResult("Password should contain At least one upper case letter");
                     }
-                    else if (!hasMiniMaxChars.IsMatch(data.Acc_Password))
+                    else if (!hasMiniMaxChars.IsMatch(data.User_Password))
                     {
                         return new ValidationResult("Password should not be less than 8 characters or greater than 15 characters");
                     }
-                    else if (!hasNumber.IsMatch(data.Acc_Password))
+                    else if (!hasNumber.IsMatch(data.User_Password))
                     {
                         return new ValidationResult("Password should contain At least one numeric value");
                     }
 
-                    else if (!hasSymbols.IsMatch(data.Acc_Password))
+                    else if (!hasSymbols.IsMatch(data.User_Password))
                     {
                         return new ValidationResult("Password should contain At least one special case characters");
                     }

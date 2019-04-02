@@ -64,7 +64,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Account_Div");
 
-                    b.Property<string>("Account_Fund");
+                    b.Property<bool>("Account_Fund");
 
                     b.Property<DateTime>("Account_Last_Updated");
 
@@ -72,7 +72,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Account_Name");
 
-                    b.Property<int>("Account_No");
+                    b.Property<string>("Account_No");
 
                     b.Property<string>("Account_Status");
 
@@ -103,13 +103,13 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<DateTime>("Pending_Account_Filed_Date");
 
-                    b.Property<string>("Pending_Account_Fund");
+                    b.Property<bool>("Pending_Account_Fund");
 
                     b.Property<int>("Pending_Account_MasterID");
 
                     b.Property<string>("Pending_Account_Name");
 
-                    b.Property<int>("Pending_Account_No");
+                    b.Property<string>("Pending_Account_No");
 
                     b.Property<string>("Pending_Account_Status");
 
@@ -122,6 +122,41 @@ namespace ExpenseProcessingSystem.Migrations
                     b.ToTable("DMAccount_Pending");
                 });
 
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.DMBIRCertSignModel", b =>
+                {
+                    b.Property<int>("BCS_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("BCS_Approver_ID");
+
+                    b.Property<DateTime>("BCS_Created_Date");
+
+                    b.Property<int>("BCS_Creator_ID");
+
+                    b.Property<DateTime>("BCS_Last_Updated");
+
+                    b.Property<int>("BCS_MasterID");
+
+                    b.Property<string>("BCS_Name");
+
+                    b.Property<string>("BCS_Position");
+
+                    b.Property<string>("BCS_Signatures");
+
+                    b.Property<string>("BCS_Status");
+
+                    b.Property<int>("BCS_TIN");
+
+                    b.Property<bool>("BCS_isActive");
+
+                    b.Property<bool>("BCS_isDeleted");
+
+                    b.HasKey("BCS_ID");
+
+                    b.ToTable("DMBCS");
+                });
+
             modelBuilder.Entity("ExpenseProcessingSystem.Models.DMCheckModel", b =>
                 {
                     b.Property<int>("Check_ID")
@@ -129,6 +164,8 @@ namespace ExpenseProcessingSystem.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("Check_Approver_ID");
+
+                    b.Property<string>("Check_Bank_Info");
 
                     b.Property<DateTime>("Check_Created_Date");
 
@@ -140,15 +177,11 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("Check_MasterID");
 
-                    b.Property<string>("Check_Name");
-
                     b.Property<string>("Check_Series_From");
 
                     b.Property<string>("Check_Series_To");
 
                     b.Property<string>("Check_Status");
-
-                    b.Property<string>("Check_Type");
 
                     b.Property<bool>("Check_isActive");
 
@@ -167,6 +200,8 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("Pending_Check_Approver_ID");
 
+                    b.Property<string>("Pending_Check_Bank_Info");
+
                     b.Property<int>("Pending_Check_Creator_ID");
 
                     b.Property<DateTime>("Pending_Check_Filed_Date");
@@ -175,15 +210,11 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("Pending_Check_MasterID");
 
-                    b.Property<string>("Pending_Check_Name");
-
                     b.Property<string>("Pending_Check_Series_From");
 
                     b.Property<string>("Pending_Check_Series_To");
 
                     b.Property<string>("Pending_Check_Status");
-
-                    b.Property<string>("Pending_Check_Type");
 
                     b.Property<bool>("Pending_Check_isActive");
 
@@ -202,7 +233,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("Curr_Approver_ID");
 
-                    b.Property<string>("Curr_CCY_Code");
+                    b.Property<string>("Curr_CCY_ABBR");
 
                     b.Property<DateTime>("Curr_Created_Date");
 
@@ -225,6 +256,39 @@ namespace ExpenseProcessingSystem.Migrations
                     b.ToTable("DMCurrency");
                 });
 
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.DMCustModel", b =>
+                {
+                    b.Property<int>("Cust_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Cust_Abbr");
+
+                    b.Property<int>("Cust_Approver_ID");
+
+                    b.Property<DateTime>("Cust_Created_Date");
+
+                    b.Property<int>("Cust_Creator_ID");
+
+                    b.Property<DateTime>("Cust_Last_Updated");
+
+                    b.Property<int>("Cust_MasterID");
+
+                    b.Property<string>("Cust_Name");
+
+                    b.Property<string>("Cust_No");
+
+                    b.Property<string>("Cust_Status");
+
+                    b.Property<bool>("Cust_isActive");
+
+                    b.Property<bool>("Cust_isDeleted");
+
+                    b.HasKey("Cust_ID");
+
+                    b.ToTable("DMCust");
+                });
+
             modelBuilder.Entity("ExpenseProcessingSystem.Models.DMDeptModel", b =>
                 {
                     b.Property<int>("Dept_ID")
@@ -232,6 +296,8 @@ namespace ExpenseProcessingSystem.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("Dept_Approver_ID");
+
+                    b.Property<string>("Dept_Budget_Unit");
 
                     b.Property<string>("Dept_Code");
 
@@ -264,6 +330,8 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("Pending_Dept_Approver_ID");
 
+                    b.Property<string>("Pending_Dept_Budget_Unit");
+
                     b.Property<string>("Pending_Dept_Code");
 
                     b.Property<int>("Pending_Dept_Creator_ID");
@@ -285,39 +353,37 @@ namespace ExpenseProcessingSystem.Migrations
                     b.ToTable("DMDept_Pending");
                 });
 
-            modelBuilder.Entity("ExpenseProcessingSystem.Models.DMEWTModel", b =>
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.DMEmpModel", b =>
                 {
-                    b.Property<int>("EWT_ID")
+                    b.Property<int>("Emp_ID")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("EWT_ATC");
+                    b.Property<string>("Emp_Acc_No");
 
-                    b.Property<int>("EWT_Approver_ID");
+                    b.Property<int>("Emp_Approver_ID");
 
-                    b.Property<DateTime>("EWT_Created_Date");
+                    b.Property<DateTime>("Emp_Created_Date");
 
-                    b.Property<int>("EWT_Creator_ID");
+                    b.Property<int>("Emp_Creator_ID");
 
-                    b.Property<DateTime>("EWT_Last_Updated");
+                    b.Property<DateTime>("Emp_Last_Updated");
 
-                    b.Property<int>("EWT_MasterID");
+                    b.Property<int>("Emp_MasterID");
 
-                    b.Property<string>("EWT_Nature");
+                    b.Property<string>("Emp_Name");
 
-                    b.Property<string>("EWT_Status");
+                    b.Property<string>("Emp_Status");
 
-                    b.Property<int>("EWT_Tax_Rate");
+                    b.Property<string>("Emp_Type");
 
-                    b.Property<string>("EWT_Tax_Rate_Desc");
+                    b.Property<bool>("Emp_isActive");
 
-                    b.Property<bool>("EWT_isActive");
+                    b.Property<bool>("Emp_isDeleted");
 
-                    b.Property<bool>("EWT_isDeleted");
+                    b.HasKey("Emp_ID");
 
-                    b.HasKey("EWT_ID");
-
-                    b.ToTable("DMEWT");
+                    b.ToTable("DMEmp");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.DMFBTModel", b =>
@@ -355,76 +421,70 @@ namespace ExpenseProcessingSystem.Migrations
                     b.ToTable("DMFBT");
                 });
 
-            modelBuilder.Entity("ExpenseProcessingSystem.Models.DMPayeeModel", b =>
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.DMNonCashCategoryModel", b =>
                 {
-                    b.Property<int>("Payee_ID")
+                    b.Property<int>("NCC_ID")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Payee_Address");
+                    b.Property<int>("NCC_Approver_ID");
 
-                    b.Property<int>("Payee_Approver_ID");
+                    b.Property<DateTime>("NCC_Created_Date");
 
-                    b.Property<DateTime>("Payee_Created_Date");
+                    b.Property<int>("NCC_Creator_ID");
 
-                    b.Property<int>("Payee_Creator_ID");
+                    b.Property<DateTime>("NCC_Last_Updated");
 
-                    b.Property<DateTime>("Payee_Last_Updated");
+                    b.Property<int>("NCC_MasterID");
 
-                    b.Property<int>("Payee_MasterID");
+                    b.Property<string>("NCC_Name");
 
-                    b.Property<string>("Payee_Name");
+                    b.Property<string>("NCC_Pro_Forma");
 
-                    b.Property<int>("Payee_No");
+                    b.Property<string>("NCC_Status");
 
-                    b.Property<string>("Payee_Status");
+                    b.Property<bool>("NCC_isActive");
 
-                    b.Property<string>("Payee_TIN");
+                    b.Property<bool>("NCC_isDeleted");
 
-                    b.Property<string>("Payee_Type");
+                    b.HasKey("NCC_ID");
 
-                    b.Property<bool>("Payee_isActive");
-
-                    b.Property<bool>("Payee_isDeleted");
-
-                    b.HasKey("Payee_ID");
-
-                    b.ToTable("DMPayee");
+                    b.ToTable("DMNCC");
                 });
 
-            modelBuilder.Entity("ExpenseProcessingSystem.Models.DMPayeeModel_Pending", b =>
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.DMTRModel", b =>
                 {
-                    b.Property<int>("Pending_ID")
+                    b.Property<int>("TR_ID")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Pending_Payee_Address");
+                    b.Property<string>("TR_ATC");
 
-                    b.Property<int>("Pending_Payee_Approver_ID");
+                    b.Property<int>("TR_Approver_ID");
 
-                    b.Property<int>("Pending_Payee_Creator_ID");
+                    b.Property<DateTime>("TR_Created_Date");
 
-                    b.Property<DateTime>("Pending_Payee_Filed_Date");
+                    b.Property<int>("TR_Creator_ID");
 
-                    b.Property<bool>("Pending_Payee_IsDeleted");
+                    b.Property<DateTime>("TR_Last_Updated");
 
-                    b.Property<int>("Pending_Payee_MasterID");
+                    b.Property<int>("TR_MasterID");
 
-                    b.Property<string>("Pending_Payee_Name");
+                    b.Property<string>("TR_Nature");
 
-                    b.Property<int>("Pending_Payee_No");
+                    b.Property<string>("TR_Status");
 
-                    b.Property<string>("Pending_Payee_Status");
+                    b.Property<int>("TR_Tax_Rate");
 
-                    b.Property<string>("Pending_Payee_TIN");
+                    b.Property<string>("TR_WT_Title");
 
-                    b.Property<string>("Pending_Payee_Type");
+                    b.Property<bool>("TR_isActive");
 
-                    b.Property<bool>("Pending_Payee_isActive");
+                    b.Property<bool>("TR_isDeleted");
 
-                    b.HasKey("Pending_ID");
+                    b.HasKey("TR_ID");
 
-                    b.ToTable("DMPayee_Pending");
+                    b.ToTable("DMTR");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.DMVATModel", b =>
@@ -458,6 +518,147 @@ namespace ExpenseProcessingSystem.Migrations
                     b.ToTable("DMVAT");
                 });
 
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.DMVendorModel", b =>
+                {
+                    b.Property<int>("Vendor_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Vendor_Address");
+
+                    b.Property<int>("Vendor_Approver_ID");
+
+                    b.Property<DateTime>("Vendor_Created_Date");
+
+                    b.Property<int>("Vendor_Creator_ID");
+
+                    b.Property<DateTime>("Vendor_Last_Updated");
+
+                    b.Property<int>("Vendor_MasterID");
+
+                    b.Property<string>("Vendor_Name");
+
+                    b.Property<string>("Vendor_Status");
+
+                    b.Property<string>("Vendor_TIN");
+
+                    b.Property<bool>("Vendor_isActive");
+
+                    b.Property<bool>("Vendor_isDeleted");
+
+                    b.HasKey("Vendor_ID");
+
+                    b.ToTable("DMVendor");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.DMVendorModel_Pending", b =>
+                {
+                    b.Property<int>("Pending_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Pending_Vendor_Address");
+
+                    b.Property<int>("Pending_Vendor_Approver_ID");
+
+                    b.Property<int>("Pending_Vendor_Creator_ID");
+
+                    b.Property<DateTime>("Pending_Vendor_Filed_Date");
+
+                    b.Property<bool>("Pending_Vendor_IsDeleted");
+
+                    b.Property<int>("Pending_Vendor_MasterID");
+
+                    b.Property<string>("Pending_Vendor_Name");
+
+                    b.Property<string>("Pending_Vendor_Status");
+
+                    b.Property<string>("Pending_Vendor_TIN");
+
+                    b.Property<bool>("Pending_Vendor_isActive");
+
+                    b.HasKey("Pending_ID");
+
+                    b.ToTable("DMVendor_Pending");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.FileLocationModel", b =>
+                {
+                    b.Property<int>("FL_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("FL_Location");
+
+                    b.Property<string>("FL_Type");
+
+                    b.HasKey("FL_ID");
+
+                    b.ToTable("FileLocation");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.NotifModel", b =>
+                {
+                    b.Property<int>("Notif_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Notif_Application_ID");
+
+                    b.Property<int>("Notif_Apprvr_ID");
+
+                    b.Property<DateTime>("Notif_Date");
+
+                    b.Property<string>("Notif_Link_Address");
+
+                    b.Property<string>("Notif_Message");
+
+                    b.Property<bool>("Notif_Status");
+
+                    b.Property<string>("Notif_Type_Screen");
+
+                    b.Property<string>("Notif_Type_Status");
+
+                    b.Property<int>("Notif_User_ID");
+
+                    b.HasKey("Notif_ID");
+
+                    b.ToTable("Notif");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.Pending.DMBIRCertSignModel_Pending", b =>
+                {
+                    b.Property<int>("Pending_BCS_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Pending_BCS_Approver_ID");
+
+                    b.Property<int>("Pending_BCS_Creator_ID");
+
+                    b.Property<DateTime>("Pending_BCS_Filed_Date");
+
+                    b.Property<int>("Pending_BCS_MasterID");
+
+                    b.Property<string>("Pending_BCS_Name");
+
+                    b.Property<string>("Pending_BCS_Position");
+
+                    b.Property<string>("Pending_BCS_Signatures");
+
+                    b.Property<string>("Pending_BCS_Status");
+
+                    b.Property<int>("Pending_BCS_TIN");
+
+                    b.Property<bool>("Pending_BCS_isActive");
+
+                    b.Property<bool>("Pending_BCS_isDeleted");
+
+                    b.HasKey("Pending_BCS_ID");
+
+                    b.ToTable("DMBCS_Pending");
+                });
+
             modelBuilder.Entity("ExpenseProcessingSystem.Models.Pending.DMCurrencyModel_Pending", b =>
                 {
                     b.Property<int>("Pending_Curr_ID")
@@ -466,7 +667,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("Pending_Curr_Approver_ID");
 
-                    b.Property<string>("Pending_Curr_CCY_Code");
+                    b.Property<string>("Pending_Curr_CCY_ABBR");
 
                     b.Property<int>("Pending_Curr_Creator_ID");
 
@@ -487,37 +688,66 @@ namespace ExpenseProcessingSystem.Migrations
                     b.ToTable("DMCurrency_Pending");
                 });
 
-            modelBuilder.Entity("ExpenseProcessingSystem.Models.Pending.DMEWTModel_Pending", b =>
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.Pending.DMCustModel_Pending", b =>
                 {
-                    b.Property<int>("Pending_EWT_ID")
+                    b.Property<int>("Pending_Cust_ID")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Pending_EWT_ATC");
+                    b.Property<string>("Pending_Cust_Abbr");
 
-                    b.Property<int>("Pending_EWT_Approver_ID");
+                    b.Property<int>("Pending_Cust_Approver_ID");
 
-                    b.Property<int>("Pending_EWT_Creator_ID");
+                    b.Property<int>("Pending_Cust_Creator_ID");
 
-                    b.Property<DateTime>("Pending_EWT_Filed_Date");
+                    b.Property<DateTime>("Pending_Cust_Filed_Date");
 
-                    b.Property<int>("Pending_EWT_MasterID");
+                    b.Property<int>("Pending_Cust_MasterID");
 
-                    b.Property<string>("Pending_EWT_Nature");
+                    b.Property<string>("Pending_Cust_Name");
 
-                    b.Property<string>("Pending_EWT_Status");
+                    b.Property<string>("Pending_Cust_No");
 
-                    b.Property<int>("Pending_EWT_Tax_Rate");
+                    b.Property<string>("Pending_Cust_Status");
 
-                    b.Property<string>("Pending_EWT_Tax_Rate_Desc");
+                    b.Property<bool>("Pending_Cust_isActive");
 
-                    b.Property<bool>("Pending_EWT_isActive");
+                    b.Property<bool>("Pending_Cust_isDeleted");
 
-                    b.Property<bool>("Pending_EWT_isDeleted");
+                    b.HasKey("Pending_Cust_ID");
 
-                    b.HasKey("Pending_EWT_ID");
+                    b.ToTable("DMCust_Pending");
+                });
 
-                    b.ToTable("DMEWT_Pending");
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.Pending.DMEmpModel_Pending", b =>
+                {
+                    b.Property<int>("Pending_Emp_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Pending_Emp_Acc_No");
+
+                    b.Property<int>("Pending_Emp_Approver_ID");
+
+                    b.Property<int>("Pending_Emp_Creator_ID");
+
+                    b.Property<DateTime>("Pending_Emp_Filed_Date");
+
+                    b.Property<int>("Pending_Emp_MasterID");
+
+                    b.Property<string>("Pending_Emp_Name");
+
+                    b.Property<string>("Pending_Emp_Status");
+
+                    b.Property<string>("Pending_Emp_Type");
+
+                    b.Property<bool>("Pending_Emp_isActive");
+
+                    b.Property<bool>("Pending_Emp_isDeleted");
+
+                    b.HasKey("Pending_Emp_ID");
+
+                    b.ToTable("DMEmp_Pending");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.Pending.DMFBTModel_Pending", b =>
@@ -551,6 +781,68 @@ namespace ExpenseProcessingSystem.Migrations
                     b.HasKey("Pending_FBT_ID");
 
                     b.ToTable("DMFBT_Pending");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.Pending.DMNonCashCategoryModel_Pending", b =>
+                {
+                    b.Property<int>("Pending_NCC_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Pending_NCC_Approver_ID");
+
+                    b.Property<int>("Pending_NCC_Creator_ID");
+
+                    b.Property<DateTime>("Pending_NCC_Filed_Date");
+
+                    b.Property<int>("Pending_NCC_MasterID");
+
+                    b.Property<string>("Pending_NCC_Name");
+
+                    b.Property<string>("Pending_NCC_Pro_Forma");
+
+                    b.Property<string>("Pending_NCC_Status");
+
+                    b.Property<bool>("Pending_NCC_isActive");
+
+                    b.Property<bool>("Pending_NCC_isDeleted");
+
+                    b.HasKey("Pending_NCC_ID");
+
+                    b.ToTable("DMNCC_Pending");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.Pending.DMTRModel_Pending", b =>
+                {
+                    b.Property<int>("Pending_TR_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Pending_TR_ATC");
+
+                    b.Property<int>("Pending_TR_Approver_ID");
+
+                    b.Property<int>("Pending_TR_Creator_ID");
+
+                    b.Property<DateTime>("Pending_TR_Filed_Date");
+
+                    b.Property<int>("Pending_TR_MasterID");
+
+                    b.Property<string>("Pending_TR_Nature");
+
+                    b.Property<string>("Pending_TR_Status");
+
+                    b.Property<int>("Pending_TR_Tax_Rate");
+
+                    b.Property<string>("Pending_TR_WT_Title");
+
+                    b.Property<bool>("Pending_TR_isActive");
+
+                    b.Property<bool>("Pending_TR_isDeleted");
+
+                    b.HasKey("Pending_TR_ID");
+
+                    b.ToTable("DMTR_Pending");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.Pending.DMVATModel_Pending", b =>
@@ -598,41 +890,41 @@ namespace ExpenseProcessingSystem.Migrations
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.UserModel", b =>
                 {
-                    b.Property<int>("Acc_UserID")
+                    b.Property<int>("User_ID")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Acc_Approver_ID");
+                    b.Property<int>("User_Approver_ID");
 
-                    b.Property<string>("Acc_Comment");
+                    b.Property<string>("User_Comment");
 
-                    b.Property<DateTime>("Acc_Created_Date");
+                    b.Property<DateTime>("User_Created_Date");
 
-                    b.Property<int>("Acc_Creator_ID");
+                    b.Property<int>("User_Creator_ID");
 
-                    b.Property<int>("Acc_DeptID");
+                    b.Property<int>("User_DeptID");
 
-                    b.Property<string>("Acc_Email");
+                    b.Property<string>("User_Email");
 
-                    b.Property<string>("Acc_FName");
+                    b.Property<string>("User_FName");
 
-                    b.Property<bool>("Acc_InUse");
+                    b.Property<bool>("User_InUse");
 
-                    b.Property<string>("Acc_LName");
+                    b.Property<string>("User_LName");
 
-                    b.Property<DateTime>("Acc_Last_Updated");
+                    b.Property<DateTime>("User_Last_Updated");
 
-                    b.Property<string>("Acc_Password");
+                    b.Property<string>("User_Password");
 
-                    b.Property<string>("Acc_Role");
+                    b.Property<string>("User_Role");
 
-                    b.Property<string>("Acc_Status");
+                    b.Property<string>("User_Status");
 
-                    b.Property<string>("Acc_UserName");
+                    b.Property<string>("User_UserName");
 
-                    b.HasKey("Acc_UserID");
+                    b.HasKey("User_ID");
 
-                    b.ToTable("Account");
+                    b.ToTable("User");
                 });
 #pragma warning restore 612, 618
         }

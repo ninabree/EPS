@@ -41,7 +41,7 @@
             <tr>
                 <th></th>
                 <th id="Name"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CurrSortParm"]">Currency Name<p class="btn-xs glyphicon @ViewData["glyph-1"]"></p></a></th>
-                <th id="CCY_Code"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CurrCodeSortParm"]">CCY Code<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
+                <th id="CCY_ABBR"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CurrCodeSortParm"]">CCY Abbr<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
                 <th id="Creator_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CurrCreatorSortParm"]">Created By<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
                 <th id="Approver_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CurrApproverSortParm"]">Approved By<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
                 <th id="Approver_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CurrLastUpdatedSortParm"]">Last Updated Date<p class="btn-xs glyphicon @ViewData["glyph-5"]"></p></a></th>
@@ -56,7 +56,7 @@
                     <tr>
                         <td><input class="tbl-chk" id="@item.Curr_MasterID" type="checkbox" /></td>
                         <td>@Html.DisplayFor(modelItem => item.Curr_Name)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Curr_CCY_Code)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Curr_CCY_ABBR)</td>
                         <td>@Html.DisplayFor(modelItem => item.Curr_Creator_Name)</td>
                         <td>@Html.DisplayFor(modelItem => item.Curr_Approver_Name)</td>
                         <td>@Html.DisplayFor(modelItem => item.Curr_Last_Updated)</td>

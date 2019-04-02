@@ -15,8 +15,7 @@ namespace ExpenseProcessingSystem.Models
         public DateTime Check_Input_Date { get; set; }
         public string Check_Series_From { get; set; }
         public string Check_Series_To { get; set; }
-        public string Check_Type { get; set; }
-        public string Check_Name { get; set; }
+        public string Check_Bank_Info { get; set; }
         public int Check_Creator_ID { get; set; }
         public int Check_Approver_ID { get; set; }
         public DateTime Check_Created_Date { get; set; }

@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20190402070749_Add FileLocation Model.cs" />
+    <Compile Remove="Migrations\20190402070749_Add FileLocation Model.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="EPPlus.Core" Version="1.5.4" />
     <PackageReference Include="jQuery.UI" Version="1.12.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.6" />
@@ -41,7 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Views\Partial\DMPartial_Payee.cshtml">
+    <Content Update="Views\Partial\DMPartial_Vendor.cshtml">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
@@ -51,6 +56,11 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\uploads\NCC\" />
+    <Folder Include="wwwroot\uploads\BCS\" />
   </ItemGroup>
 
 </Project>
