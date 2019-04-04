@@ -15,6 +15,11 @@ namespace ExpenseProcessingSystem.ViewModels.NewRecord
     {
         public List<NewNCCViewModel> NewNCCVM { get; set; }
     }
+    public class NewNCCList2ViewModel
+    {
+        public List<string> NCC_Name_List { get; set; }
+        public List<IFormFile> NCC_Pro_Forma_List { get; set; }
+    }
     public class NewNCCViewModel
     {
         [Display(Name = "Non Cash Category Name")]

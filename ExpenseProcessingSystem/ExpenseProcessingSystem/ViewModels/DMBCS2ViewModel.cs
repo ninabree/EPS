@@ -21,7 +21,6 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "BCS Position")]
         public string BCS_Position { get; set; }
         [Display(Name = "BCS Signature")]
-        [NotNullValidations]
         public IFormFile BCS_Signatures { get; set; }
         public string BCS_Signatures_Name { get; set; }
         public int BCS_Creator_ID { get; set; }

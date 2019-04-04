@@ -6,10 +6,7 @@ using ExpenseProcessingSystem.ViewModels.NewRecord;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ExpenseProcessingSystem.Services.Controller_Services
 {
@@ -828,11 +825,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         }
         public NewNCCViewModel addNCC()
         {
-            //NewNCCListViewModel mod = new NewNCCListViewModel();
-            //List<NewNCCViewModel> vmList = new List<NewNCCViewModel>();
             NewNCCViewModel vm = new NewNCCViewModel();
-            //vmList.Add(vm);
-            //mod.NewNCCVM = vmList;
             return vm;
         }
         public NewBCSViewModel addBCS()
@@ -840,8 +833,6 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             NewBCSViewModel vm = new NewBCSViewModel();
             return vm;
         }
-
-
         // [Update Pending Entries]
         public List<DMVendorViewModel> editDeleteVendor(string[] IdsArr)
         {
@@ -1131,39 +1122,16 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                                         && x.NCC_isActive == true).Distinct().ToList();
             List<DMNCC2ViewModel> tempList = new List<DMNCC2ViewModel>();
 
-            DMNCC2ViewModel vm = new DMNCC2ViewModel();
-            //foreach (DMNonCashCategoryModel m in mList)
-            //{
-            //    foreach (string s in IdsArr)
-            //    {
-            //        if (m.NCC_MasterID == int.Parse(s))
-            //        {
-                        //byte[] byteArray = Encoding.UTF8.GetBytes(m.NCC_Pro_Forma);
-                        //MemoryStream stream = new MemoryStream(byteArray);
-                        //var ms = new MemoryStream();
-                        //try
-                        //{
-                        //    stream.FileStream.CopyTo(ms);
-                        //    return new FormFile(ms, 0, ms.Length);
-                        //}
-                        //finally
-                        //{
-                        //    ms.Dispose();
-                        //}
-                        vm = new DMNCC2ViewModel
-                        {
-                            NCC_MasterID = mList.First().NCC_MasterID,
-                            NCC_Name = mList.First().NCC_Name,
-                            NCC_Pro_Forma_Name = mList.First().NCC_Pro_Forma,
-                            NCC_Creator_ID = mList.First().NCC_Creator_ID,
-                            NCC_Created_Date = mList.First().NCC_Created_Date,
-                            NCC_Last_Updated = DateTime.Now,
-                            NCC_Status = mList.First().NCC_Status
-                        };
-                        //tempList.Add(vm);
-            //        }
-            //    }
-            //}
+            DMNCC2ViewModel vm = new DMNCC2ViewModel
+            {
+                NCC_MasterID = mList.First().NCC_MasterID,
+                NCC_Name = mList.First().NCC_Name,
+                NCC_Pro_Forma_Name = mList.First().NCC_Pro_Forma,
+                NCC_Creator_ID = mList.First().NCC_Creator_ID,
+                NCC_Created_Date = mList.First().NCC_Created_Date,
+                NCC_Last_Updated = DateTime.Now,
+                NCC_Status = mList.First().NCC_Status
+            };
             return vm;
         }
         public List<DMNCCViewModel> deleteNCC(string[] IdsArr)

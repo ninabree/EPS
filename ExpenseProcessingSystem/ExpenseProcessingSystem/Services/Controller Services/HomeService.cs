@@ -6,14 +6,11 @@ using ExpenseProcessingSystem.ViewModels.NewRecord;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-
 namespace ExpenseProcessingSystem.Services
 {
     public class HomeService
@@ -2006,7 +2003,7 @@ namespace ExpenseProcessingSystem.Services
 
             int masterIDMax = deptMax > pendingMax ? deptMax : pendingMax;
             var tmp = _hostingEnvironment.WebRootPath;
-            var uploads = Path.Combine(_hostingEnvironment.WebRootPath, "uploads\\NCC");
+            var uploads = Path.Combine(_hostingEnvironment.WebRootPath, _context.FileLocation.Where(x => x.FL_Type == "NCC").Select(x => x.FL_Location).FirstOrDefault());
            
             //save file to uploads folder
             FileService objFile = new FileService();
@@ -2039,20 +2036,25 @@ namespace ExpenseProcessingSystem.Services
                 DefaultIfEmpty(0).Max();
             var uploads = Path.Combine(_hostingEnvironment.WebRootPath, _context.FileLocation.Where(x=> x.FL_Type == "NCC").Select(x=>x.FL_Location).FirstOrDefault());
             int masterIDMax = deptMax > pendingMax ? deptMax : pendingMax;
-            
+            string strFilePath = _context.DMNCC.Where(x => x.NCC_MasterID == model.NCC_MasterID).Select(x => x.NCC_Pro_Forma).FirstOrDefault();
+            //if there is file uploaded
+            if (model.NCC_Pro_Forma != null)
+            {
                 FileService objFile = new FileService();
-                string strFilePath = objFile.SaveFile(model.NCC_Pro_Forma, uploads, model.NCC_Name);
-                DMNonCashCategoryModel_Pending m = new DMNonCashCategoryModel_Pending
-                {
-                    Pending_NCC_Name = model.NCC_Name,
-                    Pending_NCC_MasterID = model.NCC_MasterID,
-                    Pending_NCC_Pro_Forma = strFilePath,
-                    Pending_NCC_Creator_ID = int.Parse(_session.GetString("UserID")),
-                    Pending_NCC_Filed_Date = DateTime.Now,
-                    Pending_NCC_isDeleted = false,
-                    Pending_NCC_Status = "For Approval"
-                };
-                vmList.Add(m);
+                strFilePath = objFile.SaveFile(model.NCC_Pro_Forma, uploads, model.NCC_Name);
+            }
+           
+            DMNonCashCategoryModel_Pending m = new DMNonCashCategoryModel_Pending
+            {
+                Pending_NCC_Name = model.NCC_Name,
+                Pending_NCC_MasterID = model.NCC_MasterID,
+                Pending_NCC_Pro_Forma = strFilePath,
+                Pending_NCC_Creator_ID = int.Parse(_session.GetString("UserID")),
+                Pending_NCC_Filed_Date = DateTime.Now,
+                Pending_NCC_isDeleted = false,
+                Pending_NCC_Status = "For Approval"
+            };
+            vmList.Add(m);
 
             if (_modelState.IsValid)
             {
@@ -2103,8 +2105,7 @@ namespace ExpenseProcessingSystem.Services
                 DefaultIfEmpty(0).Max();
 
             int masterIDMax = deptMax > pendingMax ? deptMax : pendingMax;
-            var tmp = _hostingEnvironment.WebRootPath;
-            var uploads = Path.Combine(_hostingEnvironment.WebRootPath, "uploads\\BCS");
+            var uploads = Path.Combine(_hostingEnvironment.WebRootPath, _context.FileLocation.Where(x => x.FL_Type == "BCS").Select(x => x.FL_Location).FirstOrDefault());
             //save file to uploads folder
             FileService objFile = new FileService();
             string strFilePath = objFile.SaveFile(model.BCS_Signatures, uploads, model.BCS_Name);
@@ -2137,11 +2138,16 @@ namespace ExpenseProcessingSystem.Services
                DefaultIfEmpty(0).Max();
             var pendingMax = _context.DMBCS_Pending.Select(x => x.Pending_BCS_MasterID).
                 DefaultIfEmpty(0).Max();
-            var uploads = Path.Combine(_hostingEnvironment.WebRootPath, "uploads\\BCS");
+            var uploads = Path.Combine(_hostingEnvironment.WebRootPath, _context.FileLocation.Where(x => x.FL_Type == "BCS").Select(x => x.FL_Location).FirstOrDefault());
             int masterIDMax = deptMax > pendingMax ? deptMax : pendingMax;
+            string strFilePath = _context.DMBCS.Where(x => x.BCS_MasterID == model.BCS_MasterID).Select(x => x.BCS_Signatures).FirstOrDefault();
+            //if there is image uploaded
+            if (model.BCS_Signatures != null)
+            {
 
-            FileService objFile = new FileService();
-            string strFilePath = objFile.SaveFile(model.BCS_Signatures, uploads, model.BCS_Name);
+                FileService objFile = new FileService();
+                strFilePath = objFile.SaveFile(model.BCS_Signatures, uploads, model.BCS_Name);
+            }
             DMBIRCertSignModel_Pending m = new DMBIRCertSignModel_Pending
             {
                 Pending_BCS_Name = model.BCS_Name,

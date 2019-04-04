@@ -17,7 +17,6 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "Category Name")]
         public string NCC_Name { get; set; }
         [Display(Name = "Pro-Forma Entries")]
-        [NotNullValidations]
         public IFormFile NCC_Pro_Forma { get; set; }
         public string NCC_Pro_Forma_Name { get; set; }
         public int NCC_Creator_ID { get; set; }

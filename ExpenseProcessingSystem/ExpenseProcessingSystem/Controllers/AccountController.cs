@@ -25,11 +25,6 @@ namespace ExpenseProcessingSystem.Controllers
         [HttpGet]
         public ActionResult Login()
         {
-            //var tmp = (Request.Headers["x-requested-with"] == "XMLHttpRequest") ? "true" : "false";
-            //_session.SetString("isTimeout", tmp); 
-            ////{
-            ////    //return RedirectToAction("Login", "Userount");
-            ////}
             AccessViewModel accessVM = new AccessViewModel
             {
                 isLoggedIn = false,
