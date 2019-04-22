@@ -58,7 +58,7 @@ namespace ExpenseProcessingSystem.Controllers
                 {
                     //Set Session Info
                     _session.SetString("UserID", acc.User_ID.ToString());
-                    //Set Useress Info
+                    //Set User Access Info
                     _session.SetString("isLoggedIn", "true");
                     _session.SetString("accessType", acc.User_Role);
                     _session.SetString("isAdmin", acc.User_Role == "admin" ? "true" : "false");
