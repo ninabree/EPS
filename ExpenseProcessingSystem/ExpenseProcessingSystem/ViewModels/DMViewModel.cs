@@ -19,7 +19,6 @@ namespace ExpenseProcessingSystem.ViewModels
         public PaginatedList<DMCurrencyViewModel> Curr { get; set; }
         public PaginatedList<DMEmpViewModel> Emp { get; set; }
         public PaginatedList<DMCustViewModel> Cust { get; set; }
-        public PaginatedList<DMNCCViewModel> NCC { get; set; }
         public PaginatedList<DMBCSViewModel> BCS { get; set; }
     }
 }

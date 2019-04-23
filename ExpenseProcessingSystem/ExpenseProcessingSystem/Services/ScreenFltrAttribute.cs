@@ -93,6 +93,7 @@ namespace ExpenseProcessingSystem.Services
                     AF_Cust = ctx.Session.GetString("AF_Cust") ?? "",
                     AF_Div = ctx.Session.GetString("AF_Div") ?? "",
                     AF_Fund = ctx.Session.GetString("AF_Fund") ?? "",
+                    AF_FBT = ctx.Session.GetString("AF_FBT") ?? "",
                     AF_Creator_Name = ctx.Session.GetString("AF_Creator_Name") ?? "",
                     AF_Approver_Name = ctx.Session.GetString("AF_Approver_Name") ?? "",
                     AF_Status = ctx.Session.GetString("AF_Status") ?? ""
@@ -120,7 +121,6 @@ namespace ExpenseProcessingSystem.Services
                 FBTFiltersViewModel FF = new FBTFiltersViewModel
                 {
                     FF_Name = ctx.Session.GetString("FF_Name") ?? "",
-                    FF_Account = ctx.Session.GetString("FF_Account") ?? "",
                     FF_Formula = ctx.Session.GetString("FF_Formula") ?? "",
                     FF_Tax_Rate = int.Parse(ctx.Session.GetString("FF_Tax_Rate")?? "0"),
                     FF_Creator_Name = ctx.Session.GetString("FF_Creator_Name") ?? "",
@@ -136,6 +136,7 @@ namespace ExpenseProcessingSystem.Services
                 TRFiltersViewModel EF = new TRFiltersViewModel
                 {
                     EF_Nature = ctx.Session.GetString("EF_Nature") ?? "",
+                    EF_Nature_Income_Payment = ctx.Session.GetString("EF_Nature_Income_Payment") ?? "",
                     EF_ATC = ctx.Session.GetString("EF_ATC") ?? "",
                     EF_Tax_Rate_Desc = ctx.Session.GetString("EF_Tax_Rate_Desc") ?? "",
                     EF_Tax_Rate = int.Parse(ctx.Session.GetString("EF_Tax_Rate") ?? "0"),
@@ -188,20 +189,6 @@ namespace ExpenseProcessingSystem.Services
                     CUF_Status = ctx.Session.GetString("CUF_Status") ?? ""
                 };
                 filters.CUF = CUF;
-                controller.TempData["filters"] = filters;
-            }
-            if (actionName == "DMPartial_NCC")
-            {
-                DMFiltersViewModel filters = new DMFiltersViewModel();
-                NCCFiltersViewModel NF = new NCCFiltersViewModel
-                {
-                    NF_Name = ctx.Session.GetString("NF_Name") ?? "",
-                    NF_Pro_Forma = ctx.Session.GetString("NF_Pro_Forma") ?? "",
-                    NF_Creator_Name = ctx.Session.GetString("NF_Creator_Name") ?? "",
-                    NF_Approver_Name = ctx.Session.GetString("NF_Approver_Name") ?? "",
-                    NF_Status = ctx.Session.GetString("NF_Status") ?? ""
-                };
-                filters.NF = NF;
                 controller.TempData["filters"] = filters;
             }
             if (actionName == "DMPartial_BCS")

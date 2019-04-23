@@ -383,7 +383,6 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 mList = mList.Concat(new DMAccountModel[] {
                     new DMAccountModel
                     {
-                       // User_ID = m.Pending_User_MasterID,
                         Account_MasterID = m.Pending_Account_MasterID,
                         Account_Name = m.Pending_Account_Name,
                         Account_Code = m.Pending_Account_Code,
@@ -391,6 +390,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         Account_Cust = m.Pending_Account_Cust,
                         Account_Div = m.Pending_Account_Div,
                         Account_Fund = m.Pending_Account_Fund,
+                        Account_FBT_MasterID = m.Pending_Account_FBT_MasterID,
                         Account_Creator_ID = m.Pending_Account_Creator_ID,
                         Account_Approver_ID = m.Pending_Account_Approver_ID.Equals(null) ? 0 : m.Pending_Account_Approver_ID,
                         Account_Created_Date = m.Pending_Account_Filed_Date,
@@ -407,12 +407,18 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                               join c in _context.User on a.Account_Approver_ID equals c.User_ID
                               let ApproverName = c.User_LName + ", " + c.User_FName
                               select new { a.Account_ID, ApproverName }).ToList();
+            var fbtList = (from a in mList
+                              join d in _context.DMFBT on a.Account_FBT_MasterID equals d.FBT_MasterID
+                              select new { a.Account_FBT_MasterID, d.FBT_Name }).ToList();
+            //TEMP where clause until FBT is updated
+            var defaultFBT = _context.DMFBT.Where(x => x.FBT_MasterID == 1).Select(x=> x.FBT_Name).FirstOrDefault();
 
             List<DMAccountViewModel> vmList = new List<DMAccountViewModel>();
             foreach (DMAccountModel m in mList)
             {
                 var creator = creatorList.Where(a => a.Account_ID == m.Account_ID).Select(a => a.CreatorName).FirstOrDefault();
                 var approver = apprvrList.Where(a => a.Account_ID == m.Account_ID).Select(a => a.ApproverName).FirstOrDefault();
+                var fbt = fbtList.Where(a => a.Account_FBT_MasterID == m.Account_FBT_MasterID).Select(a => a.FBT_Name).FirstOrDefault();
                 DMAccountViewModel vm = new DMAccountViewModel
                 {
                     Account_MasterID = m.Account_MasterID,
@@ -422,6 +428,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     Account_Cust = m.Account_Cust,
                     Account_Div = m.Account_Div,
                     Account_Fund = m.Account_Fund,
+                    Account_FBT_Name = fbt ?? defaultFBT,
                     Account_Creator_Name = creator ?? "N/A",
                     Account_Approver_Name = approver ?? "",
                     Account_Created_Date = m.Account_Created_Date,
@@ -584,7 +591,6 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         FBT_MasterID = m.Pending_FBT_MasterID,
                         FBT_Name = m.Pending_FBT_Name,
                         FBT_Tax_Rate = m.Pending_FBT_Tax_Rate,
-                        FBT_Account = m.Pending_FBT_Account,
                         FBT_Formula = m.Pending_FBT_Formula,
                         FBT_Creator_ID = m.Pending_FBT_Creator_ID,
                         FBT_Approver_ID = m.Pending_FBT_Approver_ID.Equals(null) ? 0 : m.Pending_FBT_Approver_ID,
@@ -614,7 +620,6 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 {
                     FBT_MasterID = m.FBT_MasterID,
                     FBT_Name = m.FBT_Name,
-                    FBT_Account = m.FBT_Account,
                     FBT_Formula = m.FBT_Formula,
                     FBT_Tax_Rate = m.FBT_Tax_Rate,
                     FBT_Creator_Name = creator ?? "N/A",
@@ -686,6 +691,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         TR_Nature = m.Pending_TR_Nature,
                         TR_Tax_Rate = m.Pending_TR_Tax_Rate,
                         TR_ATC = m.Pending_TR_ATC,
+                        TR_Nature_Income_Payment = m.Pending_TR_Nature_Income_Payment,
                         TR_Creator_ID = m.Pending_TR_Creator_ID,
                         TR_Approver_ID = m.Pending_TR_Approver_ID.Equals(null) ? 0 : m.Pending_TR_Approver_ID,
                         TR_Created_Date = m.Pending_TR_Filed_Date,
@@ -717,6 +723,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     TR_Nature = m.TR_Nature,
                     TR_Tax_Rate = m.TR_Tax_Rate,
                     TR_ATC = m.TR_ATC,
+                    TR_Nature_Income_Payment = m.TR_Nature_Income_Payment,
                     TR_Creator_Name = creator ?? "N/A",
                     TR_Approver_Name = approver ?? "",
                     TR_Created_Date = m.TR_Created_Date,
@@ -1107,106 +1114,6 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     Cust_Created_Date = m.Cust_Created_Date,
                     Cust_Last_Updated = m.Cust_Last_Updated,
                     Cust_Status = m.Cust_Status
-                };
-                vmList.Add(vm);
-            }
-            return vmList;
-        }
-
-        public List<DMNCCViewModel> populateNCC(DMFiltersViewModel filters)
-        {
-            IQueryable<DMNonCashCategoryModel> mList = _context.DMNCC.Where(x => x.NCC_isDeleted == false && x.NCC_isActive == true).ToList().AsQueryable();
-            var pendingList = _context.DMNCC_Pending.ToList();
-            foreach (var m in pendingList)
-            {
-                mList = mList.Concat(new DMNonCashCategoryModel[] {
-                    new DMNonCashCategoryModel
-                    {
-                        NCC_MasterID = m.Pending_NCC_MasterID,
-                        NCC_Name = m.Pending_NCC_Name,
-                        NCC_Pro_Forma = m.Pending_NCC_Pro_Forma,
-                        NCC_Creator_ID = m.Pending_NCC_Creator_ID,
-                        NCC_Approver_ID = m.Pending_NCC_Approver_ID.Equals(null) ? 0 : m.Pending_NCC_Approver_ID,
-                        NCC_Created_Date = m.Pending_NCC_Filed_Date,
-                        NCC_Last_Updated = m.Pending_NCC_Filed_Date,
-                        NCC_Status = m.Pending_NCC_Status
-                    }
-                });
-            }
-            var properties = filters.NF.GetType().GetProperties();
-
-            //FILTER
-            foreach (var property in properties)
-            {
-                var propertyName = property.Name;
-                string[] split = propertyName.Split("_");
-                var toStr = property.GetValue(filters.NF).ToString();
-                string[] colArr = { "No", "Creator_ID", "Approver_ID" };
-                if (toStr != "")
-                {
-                    if (toStr != "0")
-                    {
-                        if (split[1] == "Creator" || split[1] == "Approver")
-                        {
-                            //get all userIDs of creator or approver that contains string
-                            var names = _context.User
-                              .Where(x => (x.User_FName.Contains(property.GetValue(filters.NF).ToString())
-                              || x.User_LName.Contains(property.GetValue(filters.NF).ToString())))
-                              .Select(x => x.User_ID).ToList();
-                            if (split[1] == "Approver")
-                            {
-                                mList = mList.Where(x => names.Contains(x.NCC_Approver_ID) && x.NCC_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                            else if (split[1] == "Creator")
-                            {
-                                mList = mList.Where(x => names.Contains(x.NCC_Creator_ID) && x.NCC_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                        }
-                        else // IF STRING VALUE
-                        {
-                            mList = mList.Where("NCC_" + split[1] + ".Contains(@0)", toStr)
-                                    .Select(e => e).AsQueryable();
-                        }
-                    }
-                }
-            }
-
-            var creatorList = (from a in mList
-                               join b in _context.User on a.NCC_Creator_ID equals b.User_ID
-                               let CreatorName = b.User_LName + ", " + b.User_FName
-                               select new
-                               {
-                                   a.NCC_ID,
-                                   CreatorName
-                               }).ToList();
-            var apprvrList = (from a in mList
-                              join c in _context.User on a.NCC_Approver_ID equals c.User_ID
-                              let ApproverName = c.User_LName + ", " + c.User_FName
-                              select new
-                              {
-                                  a.NCC_ID,
-                                  ApproverName
-                              }).ToList();
-
-            List<DMNCCViewModel> vmList = new List<DMNCCViewModel>();
-            FileService fs = new FileService();
-            foreach (DMNonCashCategoryModel m in mList)
-            {
-                var creator = creatorList.Where(a => a.NCC_ID == m.NCC_ID).Select(a => a.CreatorName).FirstOrDefault();
-                var approver = apprvrList.Where(a => a.NCC_ID == m.NCC_ID).Select(a => a.ApproverName).FirstOrDefault();
-                DMNCCViewModel vm = new DMNCCViewModel
-                {
-                    NCC_MasterID = m.NCC_MasterID,
-                    NCC_Name = m.NCC_Name,
-                    NCC_Pro_Forma = m.NCC_Pro_Forma,
-                    //NCC_Pro_Forma = fs.GetFormFile("C:\\Work\\Mizuho EPS\\eps_source\\ExpenseProcessingSystem\\ExpenseProcessingSystem\\wwwroot\\uploads", m.NCC_Pro_Forma),
-                    NCC_Creator_Name = creator ?? "N/A",
-                    NCC_Approver_Name = approver ?? "",
-                    NCC_Created_Date = m.NCC_Created_Date,
-                    NCC_Last_Updated = m.NCC_Last_Updated,
-                    NCC_Status = m.NCC_Status
                 };
                 vmList.Add(vm);
             }

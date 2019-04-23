@@ -129,12 +129,6 @@ C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\ob
 C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMAddCust_Pending.g.cshtml.cs
 C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMEditCust_Pending.g.cshtml.cs
 C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMDeleteCust_Pending.g.cshtml.cs
-C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Partial\DMPartial_NCC.g.cshtml.cs
-C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMAddNCC_Pending.g.cshtml.cs
-C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMApproveNCC.g.cshtml.cs
-C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMRejNCC.g.cshtml.cs
-C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMEditNCC_Pending.g.cshtml.cs
-C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMDeleteNCC_Pending.g.cshtml.cs
 C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMApproveBCS.g.cshtml.cs
 C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMRejBCS.g.cshtml.cs
 C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMAddBCS_Pending.g.cshtml.cs

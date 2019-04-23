@@ -358,35 +358,6 @@ namespace ExpenseProcessingSystem.Controllers
             }
             return View(vmList);
         }
-        //DM Non Cash Category
-        public IActionResult DMApproveNCC(string[] IdsArr)
-        {
-            var userId = HttpContext.Session.GetString("UserID");
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            List<DMNCCViewModel> vmList = new List<DMNCCViewModel>();
-            if (ModelState.IsValid)
-            {
-                vmList = _service.approveNCC(IdsArr);
-            }
-            return View(vmList);
-        }
-        public IActionResult DMRejNCC(string[] IdsArr)
-        {
-            var userId = HttpContext.Session.GetString("UserID");
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            List<DMNCCViewModel> vmList = new List<DMNCCViewModel>();
-            if (ModelState.IsValid)
-            {
-                vmList = _service.rejectNCC(IdsArr);
-            }
-            return View(vmList);
-        }
         //DM BIR Cert Signatory
         public IActionResult DMApproveBCS(string[] IdsArr)
         {
@@ -552,6 +523,7 @@ namespace ExpenseProcessingSystem.Controllers
             if (ModelState.IsValid)
             {
                 vmList = _service.editDeleteAccount(IdsArr);
+                ViewBag.fbtList = _service.getFbtSelectList();
             }
             return View(vmList);
         }
@@ -832,44 +804,6 @@ namespace ExpenseProcessingSystem.Controllers
             if (ModelState.IsValid)
             {
                 vmList = _service.editDeleteCust(IdsArr);
-            }
-            return View(vmList);
-        }
-        //DM Non Cash Category
-        public IActionResult DMAddNCC_Pending()
-        {
-            var userId = HttpContext.Session.GetString("UserID");
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            return View(_service.addNCC());
-        }
-        public IActionResult DMEditNCC_Pending(string[] IdsArr)
-        {
-            var userId = HttpContext.Session.GetString("UserID");
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            DMNCC2ViewModel vmList = new DMNCC2ViewModel();
-            if (ModelState.IsValid)
-            {
-                vmList = _service.editNCC(IdsArr);
-            }
-            return View(vmList);
-        }
-        public IActionResult DMDeleteNCC_Pending(string[] IdsArr)
-        {
-            var userId = HttpContext.Session.GetString("UserID");
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            List<DMNCCViewModel> vmList = new List<DMNCCViewModel>();
-            if (ModelState.IsValid)
-            {
-                vmList = _service.deleteNCC(IdsArr);
             }
             return View(vmList);
         }

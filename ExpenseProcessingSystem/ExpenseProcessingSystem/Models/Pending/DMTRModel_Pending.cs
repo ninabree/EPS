@@ -16,6 +16,7 @@ namespace ExpenseProcessingSystem.Models.Pending
         public string Pending_TR_Nature { get; set; }
         public int Pending_TR_Tax_Rate { get; set; }
         public string Pending_TR_ATC { get; set; }
+        public string Pending_TR_Nature_Income_Payment { get; set; }
         public int Pending_TR_Creator_ID { get; set; }
         public int Pending_TR_Approver_ID { get; set; }
         public DateTime Pending_TR_Filed_Date { get; set; }

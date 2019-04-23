@@ -14,8 +14,6 @@ namespace ExpenseProcessingSystem.ViewModels
         public int FBT_MasterID { get; set; }
         [Display(Name = "FBT Name")]
         public string FBT_Name { get; set; }
-        [Display(Name = "FBT Account")]
-        public string FBT_Account { get; set; }
         [Display(Name = "FBT Formula")]
         public string FBT_Formula { get; set; }
         [Display(Name = "FBT Tax Rate")]

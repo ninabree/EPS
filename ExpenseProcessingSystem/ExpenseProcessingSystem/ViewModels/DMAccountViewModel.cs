@@ -21,6 +21,9 @@ namespace ExpenseProcessingSystem.ViewModels
         public string Account_Div { get; set; }
         [Display(Name = "Account Fund")]
         public bool Account_Fund { get; set; }
+        [Display(Name = "Account FBT")]
+        public int Account_FBT_MasterID { get; set; }
+        public string Account_FBT_Name { get; set; }
         public int Account_Creator_ID { get; set; }
         public int Account_Approver_ID { get; set; }
         [Display(Name = "Creator Name")]

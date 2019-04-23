@@ -16,9 +16,6 @@ namespace ExpenseProcessingSystem.ViewModels.NewRecord
         [Display(Name = "FBT Name")]
         [NotNullValidations, TextValidation]
         public string FBT_Name { get; set; }
-        [Display(Name = "FBT Account")]
-        [NotNullValidations, TextValidation]
-        public string FBT_Account { get; set; }
         [Display(Name = "FBT Formula")]
         [NotNullValidations, TextValidation]
         public string FBT_Formula { get; set; }

@@ -10,8 +10,6 @@ namespace ExpenseProcessingSystem.ViewModels.Search_Filters
     {
         [Display(Name = "FBT Name")]
         public string FF_Name { get; set; }
-        [Display(Name = "FBT Account")]
-        public string FF_Account { get; set; }
         [Display(Name = "FBT Formula")]
         public string FF_Formula { get; set; }
         [Display(Name = "FBT Tax Rate")]

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 using ExpenseProcessingSystem.Data;
-using ExpenseProcessingSystem.Models;
 using ExpenseProcessingSystem.Services;
 using ExpenseProcessingSystem.Services.Controller_Services;
 using ExpenseProcessingSystem.Services.Excel_Services;
@@ -14,9 +12,7 @@ using ExpenseProcessingSystem.ViewModels.Search_Filters;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using OfficeOpenXml;
 
 namespace ExpenseProcessingSystem.Controllers
 {
@@ -134,6 +130,7 @@ namespace ExpenseProcessingSystem.Controllers
                     _session.SetString("AF_Cust", vm.DMFilters.AF.AF_Cust ?? "");
                     _session.SetString("AF_Div", vm.DMFilters.AF.AF_Div ?? "");
                     _session.SetString("AF_Fund", vm.DMFilters.AF.AF_Fund ?? "");
+                    _session.SetString("AF_FBT", vm.DMFilters.AF.AF_FBT ?? "0");
                     _session.SetString("AF_Creator_Name", vm.DMFilters.AF.AF_Creator_Name ?? "");
                     _session.SetString("AF_Approver_Name", vm.DMFilters.AF.AF_Approver_Name ?? "");
                     _session.SetString("AF_Status", vm.DMFilters.AF.AF_Status ?? "");
@@ -151,7 +148,6 @@ namespace ExpenseProcessingSystem.Controllers
                 {
                     //FBT
                     _session.SetString("FF_Name", vm.DMFilters.FF.FF_Name ?? "");
-                    _session.SetString("FF_Account", vm.DMFilters.FF.FF_Account ?? "");
                     _session.SetString("FF_Formula", vm.DMFilters.FF.FF_Formula ?? "");
                     _session.SetString("FF_Tax_Rate", vm.DMFilters.FF.FF_Tax_Rate.ToString() ?? "0");
                     _session.SetString("FF_Creator_Name", vm.DMFilters.FF.FF_Creator_Name ?? "");
@@ -162,6 +158,7 @@ namespace ExpenseProcessingSystem.Controllers
                 {
                     //TR
                     _session.SetString("EF_Nature", vm.DMFilters.EF.EF_Nature ?? "");
+                    _session.SetString("EF_Nature_Income_Payment", vm.DMFilters.EF.EF_Nature_Income_Payment ?? "");
                     _session.SetString("EF_Tax_Rate", vm.DMFilters.EF.EF_Tax_Rate.ToString() ?? "0");
                     _session.SetString("EF_ATC", vm.DMFilters.EF.EF_ATC ?? "");
                     _session.SetString("EF_Tax_Rate_Desc", vm.DMFilters.EF.EF_Tax_Rate_Desc ?? "");
@@ -197,15 +194,6 @@ namespace ExpenseProcessingSystem.Controllers
                     _session.SetString("CUF_Creator_Name", vm.DMFilters.CUF.CUF_Creator_Name ?? "");
                     _session.SetString("CUF_Approver_Name", vm.DMFilters.CUF.CUF_Approver_Name ?? "");
                     _session.SetString("CUF_Status", vm.DMFilters.CUF.CUF_Status ?? "");
-                }
-                else if (vm.DMFilters.NF != null)
-                {
-                    //Non Cash Category
-                    _session.SetString("NF_Name", vm.DMFilters.NF.NF_Name ?? "");
-                    _session.SetString("NF_Abbr", vm.DMFilters.NF.NF_Pro_Forma ?? "");
-                    _session.SetString("NF_Creator_Name", vm.DMFilters.NF.NF_Creator_Name ?? "");
-                    _session.SetString("NF_Approver_Name", vm.DMFilters.NF.NF_Approver_Name ?? "");
-                    _session.SetString("NF_Status", vm.DMFilters.NF.NF_Status ?? "");
                 }
                 else if (vm.DMFilters.BF != null)
                 {
@@ -693,39 +681,6 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Cust" });
-        }
-        //[* NON CASH CATEGORY *]
-        [HttpPost]
-        [ExportModelState]
-        public IActionResult ApproveNCC(List<DMNCCViewModel> model)
-        {
-            var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            if (ModelState.IsValid)
-            {
-                _service.approveNCC(model, userId);
-            }
-
-            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_NCC" });
-        }
-        [HttpPost]
-        [ExportModelState]
-        public IActionResult RejNCC(List<DMNCCViewModel> model)
-        {
-            var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            if (ModelState.IsValid)
-            {
-                _service.rejNCC(model, userId);
-            }
-
-            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_NCC" });
         }
         //[* BIR CERT SIGNATORY*]
         [HttpPost]
@@ -1251,52 +1206,6 @@ namespace ExpenseProcessingSystem.Controllers
             }
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Cust" });
         }
-        // [NON CASH CATEGORY]
-        [HttpPost]
-        [ExportModelState]
-        public IActionResult AddNCC_Pending(NewNCCViewModel model)
-        {
-            var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            if (ModelState.IsValid)
-            {
-                _service.addNCC_Pending(model, userId);
-            }
-            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_NCC" });
-        }
-        [HttpPost]
-        [ExportModelState]
-        public IActionResult EditNCC_Pending(DMNCC2ViewModel model)
-        {
-            var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            if (ModelState.IsValid)
-            {
-                _service.editNCC_Pending(model, userId);
-            }
-            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_NCC" });
-        }
-        [HttpPost]
-        [ExportModelState]
-        public IActionResult DeleteNCC_Pending(List<DMNCCViewModel> model)
-        {
-            var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            if (ModelState.IsValid)
-            {
-                _service.deleteNCC_Pending(model, userId);
-            }
-            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_NCC" });
-        }
         // [BIR CERT SIGNATORY]
         [HttpPost]
         [ExportModelState]
@@ -1397,11 +1306,11 @@ namespace ExpenseProcessingSystem.Controllers
             }
             return bmvmList;
         }
-        public void addNCC()
-        {
-            FileService fs = new FileService();
-            //fs.CreateFileAndFolder();
-            fs.CopyFileToLocation("00283_martin.nina.png");
-        }
+        //public void addNCC()
+        //{
+        //    FileService fs = new FileService();
+        //    //fs.CreateFileAndFolder();
+        //    fs.CopyFileToLocation("00283_martin.nina.png");
+        //}
     }
 }

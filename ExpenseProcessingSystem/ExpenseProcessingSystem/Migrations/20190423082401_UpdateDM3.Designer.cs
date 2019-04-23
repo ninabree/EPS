@@ -4,14 +4,16 @@ using ExpenseProcessingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    partial class EPSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190423082401_UpdateDM3")]
+    partial class UpdateDM3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -774,8 +776,6 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Pending_TR_Nature");
 
-                    b.Property<string>("Pending_TR_Nature_Income_Payment");
-
                     b.Property<string>("Pending_TR_Status");
 
                     b.Property<int>("Pending_TR_Tax_Rate");
@@ -785,6 +785,8 @@ namespace ExpenseProcessingSystem.Migrations
                     b.Property<bool>("Pending_TR_isActive");
 
                     b.Property<bool>("Pending_TR_isDeleted");
+
+                    b.Property<string>("TR_Nature_Income_Payment");
 
                     b.HasKey("Pending_TR_ID");
 

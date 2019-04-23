@@ -48,6 +48,16 @@ $('.table-add').click(function () {
         + '<span class="table-remove glyphicon glyphicon-remove"></span>'
         + '</td>'
         + '</tr>');
+    //ONLY WORKS IF JS IS INSIDE THE CSHTML FILE
+    //var model = @Html.Raw(Json.Serialize(Model.FbtList));
+    //var fbtModel = $.grep(model, function (obj) { return FBT_MasterID == obj.FBT_MasterID; })[0];
+    //var optionText = "";
+
+
+    //jQuery.each(fbtModel, function (index, item) {
+    //    optionText += '<option value="' + item.id + '">' + item.code + ' - ' + item.title + '</option>';
+    //});
+
     var newAccRow = $('<tr id="NewAccount-Tr-' + itemCount + '">'
         + '<td><input class="w-full" id="NewAccountVM_' + itemCount + '__Account_Name" name="NewAccountVM[' + itemCount + '].Account_Name" type="text" value=""></td>'
         + '<td><input class="w-full" id="NewAccountVM_' + itemCount + '__Account_Code" name="NewAccountVM[' + itemCount + '].Account_Code" type="text" value=""></td>'
@@ -55,6 +65,13 @@ $('.table-add').click(function () {
         + '<td><input class="w-full" id="NewAccountVM_' + itemCount + '__Account_Cust" name="NewAccountVM[' + itemCount + '].Account_Cust" type="text" value=""></td>'
         + '<td><input class="w-full" id="NewAccountVM_' + itemCount + '__Account_Div" name="NewAccountVM[' + itemCount + '].Account_Div" type="text" value=""></td>'
         + '<td><input class="w-full" data-val="true" data-val-required="The Account Fund field is required." id="NewAccountVM_' + itemCount + '__Account_Fund" name="NewAccountVM[' + itemCount + '].Account_Fund" type="checkbox" value="true"></td>'
+        + '<td colspan="2"><select class="w-full input" data-val="true" data-val-required="The Account FBT field is required." id="NewAccountVM_' + itemCount + '__Account_FBT_MasterID" name="NewAccountVM[' + itemCount + '].Account_FBT_MasterID"><option value="1">Sample FBT 1</option>'
+        //STATIC OPTION LIST
+        + '<option value="2">Sample FBT 2</option>'
+        + '<option value="3">Sample FBT 3</option>'
+        + '<option value="4">Sample FBT 4</option>'
+        + '</select>'
+        + '</td>'
         + '<td>'
         + '<span class="table-remove glyphicon glyphicon-remove"></span>'
         + '</td>'
@@ -79,6 +96,7 @@ $('.table-add').click(function () {
         + '<td><input class="w-full" id="NewTRVM_' + itemCount + '__TR_Nature" name="NewTRVM[' + itemCount + '].TR_Nature" type="text" value=""></td>'
         + '<td><input class="w-full" data-val="true" data-val-required="The Tax Rate field is required." id="NewTRVM_' + itemCount + '__TR_Tax_Rate" name="NewTRVM[' + itemCount + '].TR_Tax_Rate" type="text" value="0"></td>'
         + '<td><input class="w-full" id="NewTRVM_' + itemCount + '__TR_ATC" name="NewTRVM[' + itemCount + '].TR_ATC" type="text" value=""></td>'
+        + '<td><input class="w-full" id="NewTRVM_' + itemCount + '__TR_Nature_Income_Payment" name="NewTRVM[' + itemCount + '].TR_Nature_Income_Payment" type="text" value=""></td>'
         + '<td>'
         + '<span class="table-remove glyphicon glyphicon-remove"></span>'
         + '</td>'

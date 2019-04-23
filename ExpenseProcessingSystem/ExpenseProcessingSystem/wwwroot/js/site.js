@@ -85,8 +85,8 @@ $(document).ready(function () {
             if ((txtVal != stat) && (this.checked == true)) {
                 alert("Kindly check rows with the same status only.");
                 $('.rec').prop('disabled', true);
-            //when in BCS and NCC table, disable editing for more than one entry
-            } else if (chkCount >= 2 && stat == "Approved" && (tblName == "BIR Cert Signatory" || tblName == "Non-Cash Category")) {
+            //when in BCS table, disable editing for more than one entry
+            } else if (chkCount >= 2 && stat == "Approved" && (tblName == "BIR Cert Signatory")) {
                 $('.apprv-rec').prop('disabled', true);
                 $('.rej-rec').prop('disabled', true);
                 $('.add-rec').prop('disabled', false);

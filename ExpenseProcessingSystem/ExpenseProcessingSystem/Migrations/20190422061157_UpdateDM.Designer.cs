@@ -4,14 +4,16 @@ using ExpenseProcessingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    partial class EPSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190422061157_UpdateDM")]
+    partial class UpdateDM
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -102,8 +104,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.Property<string>("Pending_Account_Cust");
 
                     b.Property<string>("Pending_Account_Div");
-
-                    b.Property<int>("Pending_Account_FBT_MasterID");
 
                     b.Property<DateTime>("Pending_Account_Filed_Date");
 
@@ -395,8 +395,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.Property<int>("FBT_ID")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("FBT_Abbr");
 
                     b.Property<int>("FBT_Approver_ID");
 
@@ -731,6 +729,8 @@ namespace ExpenseProcessingSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Pending_FBT_Account");
+
                     b.Property<int>("Pending_FBT_Approver_ID");
 
                     b.Property<int>("Pending_FBT_Creator_ID");
@@ -773,8 +773,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.Property<int>("Pending_TR_MasterID");
 
                     b.Property<string>("Pending_TR_Nature");
-
-                    b.Property<string>("Pending_TR_Nature_Income_Payment");
 
                     b.Property<string>("Pending_TR_Status");
 

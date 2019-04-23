@@ -21,6 +21,8 @@ namespace ExpenseProcessingSystem.ViewModels.Search_Filters
         public string AF_Div { get; set; }
         [Display(Name = "Account Fund")]
         public string AF_Fund { get; set; }
+        [Display(Name = "Account FBT")]
+        public string AF_FBT { get; set; }
         [Display(Name = "Creator Name")]
         public string AF_Creator_Name { get; set; }
         [Display(Name = "Approver Name")]

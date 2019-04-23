@@ -4,14 +4,16 @@ using ExpenseProcessingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    partial class EPSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190422065605_UpdateDM2")]
+    partial class UpdateDM2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -396,8 +398,6 @@ namespace ExpenseProcessingSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("FBT_Abbr");
-
                     b.Property<int>("FBT_Approver_ID");
 
                     b.Property<DateTime>("FBT_Created_Date");
@@ -773,8 +773,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.Property<int>("Pending_TR_MasterID");
 
                     b.Property<string>("Pending_TR_Nature");
-
-                    b.Property<string>("Pending_TR_Nature_Income_Payment");
 
                     b.Property<string>("Pending_TR_Status");
 

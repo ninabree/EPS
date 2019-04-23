@@ -25,5 +25,8 @@ namespace ExpenseProcessingSystem.ViewModels.NewRecord
         [Display(Name = "ATC")]
         [NotNullValidations, TextValidation]
         public string TR_ATC { get; set; }
+        [Display(Name = "Nature of Income Payment")]
+        [NotNullValidations, TextValidation]
+        public string TR_Nature_Income_Payment { get; set; }
     }
 }
