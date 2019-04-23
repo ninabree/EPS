@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Net;
 using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Services;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +13,6 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
 using Serilog.Exceptions;
-using Serilog.Sinks.Email;
 
 namespace ExpenseProcessingSystem
 {
@@ -35,6 +31,7 @@ namespace ExpenseProcessingSystem
             .Enrich.WithEnvironmentUserName()
             .WriteTo.Debug()
             .WriteTo.File("C:\\Work\\Mizuho EPS\\eps_logs\\logs\\log.txt", LogEventLevel.Error, outputTemplate, rollingInterval: RollingInterval.Day, fileSizeLimitBytes: null, rollOnFileSizeLimit: true)
+            //EMAIL SINK TO SEND ERRORS TO CUSTOM EMAIL
             //.WriteTo.Email(new EmailConnectionInfo
             //    {
             //        FromEmail = "mizuho.eps@gmail.com", //temp, change to dynamic

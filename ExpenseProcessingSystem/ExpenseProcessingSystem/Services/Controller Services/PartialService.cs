@@ -23,7 +23,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             _httpContextAccessor = httpContextAccessor;
             _context = context;
         }
-        //-----------------------------------Populate-------------------------------------
+        //-----------------------------------Populate-------------------------------------//
         public List<DMVendorViewModel> populateVendor(DMFiltersViewModel filters)
         {
             IQueryable<DMVendorModel> mList = _context.DMVendor.Where(x=>x.Vendor_isDeleted == false && x.Vendor_isActive == true).ToList().AsQueryable();
@@ -276,6 +276,10 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                                 mList = mList.Where(x => names.Contains(x.Check_Creator_ID) && x.Check_isDeleted == false)
                                          .Select(e => e).AsQueryable();
                             }
+                        }else if (split[1] == "Input_Date")
+                        {
+                            mList = mList.Where("Check_" + split[1] + " = @0", toStr)
+                                   .Select(e => e).AsQueryable();
                         }
                         else // IF STRING VALUE
                         {

@@ -1,0 +1,29 @@
+Mizuho Meeting 2019/04/04
+Discussion:
+
+Platform: ASP.Net MVC Core ; SQL 2012
+Provide Bootcamp for C# MVC Core for 1 week
+Fetch data:
+	- GO Express - by batch - around 1 sec - no inquiry - for significant amount of entries - PUT
+	- Gwrite - as you type - longer than GO Express - 10 secs fall time - w/ inquiry - GET
+Seperate Login Cred for GBase/Gwrite - Like ACNAV
+Use active directory for reference in User Maintenance
+GO Express - If directly sent to Wishbone, convert to XML
+GWrite - simpler - Login Cred encripted, included
+inlcude session variable, GBase RACF ID (per user)
+GBase 4x locked out - up to 8 characters, alphanumeric, not case sensitive, no special characters.
+USER ID - 6 characters
+For G-write, when prompted for expired PW in Gbase - how to accomodate change PW in EPS
+For Gbase, no change PW.
+11/12 - DR CR
+1-1/1-2/2-1/2-2/3-1/3-2/4-1/4-2 - 4 sets
+Find return val - Trans No. for successfully posted entries.
+Errors, if any, will be in Trans No.
+GO Express, no view of message in return val, unlike GWrite.
+REF NO - 12 characters
+Per branch code, Ref No resets everyday.
+#1 in fields -> ID - Upon insert, by scope identity, you can retrieve ID for refference.
+Mizuho will resend diagram for the confirmation of closing of current Q&A.
+Recieve List of Error Codes from Mizuho.
+Create Doc (FSD) based on today's meeting and to be reviewed and approved by Mizuho technical dept.
+Create EPS fields to match the Gbase/GWrite fields.
