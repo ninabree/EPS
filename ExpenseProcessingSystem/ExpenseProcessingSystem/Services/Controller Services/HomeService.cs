@@ -6,6 +6,7 @@ using ExpenseProcessingSystem.ViewModels.NewRecord;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -2236,5 +2237,31 @@ namespace ExpenseProcessingSystem.Services
             _email.SendEmailAsync(email, subject, hmtlMessage);
             return true;
         }
+
+        //--------------------Expense Entries--------------------------------
+        //retrieve vendor list
+        public List<SelectList> getCheckEntrySystemVals()
+        {
+            List<SelectList> listOfLists = new List<SelectList>();
+
+            listOfLists.Add(new SelectList (_context.DMVendor.Where(x => x.Vendor_isActive == true).Select(q => new {q.Vendor_ID, q.Vendor_Name }),
+                                                "Vendor_ID", "Vendor_Name"));
+
+            listOfLists.Add(new SelectList(_context.DMDept.Where(x => x.Dept_isActive == true).Select(q => new { q.Dept_ID, q.Dept_Name }),
+                                                "Dept_ID", "Dept_Name"));
+
+            listOfLists.Add(new SelectList(_context.DMAccount.Where(x => x.Account_isActive == true).Select(q => new { q.Account_ID, q.Account_Name }),
+                                    "Account_ID", "Account_Name"));
+
+            listOfLists.Add(new SelectList(_context.DMCurrency.Where(x => x.Curr_isActive == true).Select(q => new { q.Curr_ID, q.Curr_Name }),
+                                    "Curr_ID", "Curr_Name"));
+
+            listOfLists.Add(new SelectList(_context.DMTR.Where(x => x.TR_isActive == true).Select(q => new { q.TR_ID, q.TR_Tax_Rate }),
+                        "TR_ID", "TR_Tax_Rate"));
+
+            return listOfLists;
+        }
+        //retrieve department lis
     }
+
 }

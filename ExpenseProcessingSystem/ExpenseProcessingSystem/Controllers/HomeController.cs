@@ -336,6 +336,32 @@ namespace ExpenseProcessingSystem.Controllers
         }
         public IActionResult Entry_CV()
         {
+            EntreeCVViewModelList viewModel = new EntreeCVViewModelList();
+            List<SelectList> listOfLists = _service.getCheckEntrySystemVals();
+            viewModel.systemValues.vendors = listOfLists[0];
+            viewModel.systemValues.dept = listOfLists[1];
+            viewModel.systemValues.acc = listOfLists[2];
+            viewModel.systemValues.currency = listOfLists[3];
+            viewModel.systemValues.ewt = listOfLists[4];
+            viewModel.expenseYear = "2019";
+            viewModel.expenseId = "0001";
+            viewModel.expenseDate = DateTime.Today;
+            viewModel.status = "stats lie";
+            viewModel.approver = "jimmy";
+            viewModel.verifier.Add("Crikey");
+            viewModel.verifier.Add("Mikey");
+            viewModel.verifier.Add("Winei");
+            //viewModel.EntreeCV = new List<EntreeCVViewModel>();
+            viewModel.EntreeCV.Add(new EntreeCVViewModel());
+            viewModel.EntreeCV.Add(new EntreeCVViewModel());
+            return View(viewModel);
+        }
+        public IActionResult Entry_NewCV(EntreeCVViewModelList entreeCVViewModelList)
+        {
+            foreach (var item in entreeCVViewModelList.EntreeCV)
+            {
+                var stuff = 0;
+            }
             return View();
         }
         public IActionResult Entry_DDV()
