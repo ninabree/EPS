@@ -923,5 +923,11 @@ namespace ExpenseProcessingSystem.Controllers
             ForgotPWViewModel vmList = new ForgotPWViewModel();
             return View(vmList);
         }
+        //_________________________//[Check Expense]//_____________________________
+        //Expense Amortization
+        public IActionResult ExpenseAmortization()
+        {
+            return PartialView();
+        }
     }
 }

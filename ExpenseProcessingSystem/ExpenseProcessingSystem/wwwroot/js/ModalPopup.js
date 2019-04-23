@@ -2,6 +2,11 @@
     /*//////////////////////////////////////////////////////////////////
     [ MODAL ]*/
     //set content to modal body and show dynamic modal
+    //ExpenseAmortization
+    $(".expenseAmortization").click(function (e) {
+        e.stopImmediatePropagation();
+        ModalPopup('Modal', 'ExpenseAmortization', 'Prepaid Expense Amortization Schedule');
+    });
     //LOGIN
     $("#forgot_PW").click(function (e) {
         e.stopImmediatePropagation();
