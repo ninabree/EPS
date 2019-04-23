@@ -221,10 +221,33 @@ namespace ExpenseProcessingSystem.Controllers
             }
             return View();
         }
+        //------------------------------------------------------------------
+        //[* REPORT *]
         public IActionResult Report()
         {
-            return View();
+            //Get list of report types from the constant data file:HomeReportTypesModel.cs
+            //uses in Dropdownlist(Report Type)
+            IEnumerable<HomeReportTypesModel> ReportTypes = ConstantData.ReportTypeData.GetReportTypeData();
+
+            //Pass list of report type and initial value for report sub type to ViewModel of Report
+            var reportViewModel = new HomeReportViewModel
+            {
+                ReportTypesList = ReportTypes,
+                //Initial value of sub type dropdownlist to avoid the nullexception.
+                ReportSubTypesList = new HomeReportSubTypesModel[]
+                {
+                    new HomeReportSubTypesModel
+                    {
+                    Id = 0,
+                    SubTypeName = null,
+                    ParentTypeId = 0
+                    }
+                }
+            };
+            //Return ViewModel
+            return View(reportViewModel);
         }
+
         [ImportModelState]
         public IActionResult BM(string sortOrder, string currentFilter, string searchString, int? page)
         {

@@ -1,7 +1,40 @@
-﻿
+﻿@model ExpenseProcessingSystem.ViewModels.HomeReportViewModel
+
 @{
     ViewData["Title"] = "Report";
 }
+
+@section Scripts {
+    Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+         $(document).ready(function () {
+             $("#ReportType").change(function () {
+                 var ReportType= $(this).val();
+                 $.getJSON('@Url.Action("GetReportSubType")', { ReportTypeID: ReportType }, function (data) {
+                     var select = $("#SubType");
+                     select.empty();
+                     select.append($('<option/>', {
+                         value: 0,
+                         text: "----Select Report Sub-Type----"
+                     }));
+                     $.each(data, function (index, itemData) {
+                         select.append($('<option/>', {
+                             value: itemData.Id,
+                             text: itemData.SubTypeName
+                         }));
+                     });
+
+                     if (data.length == 0) {
+                         select.attr("disabled", "disabled");
+                     } else {
+                         select.removeAttr("disabled");
+                     }
+                 });
+             });
+        });
+    </script>
+}
+
 <div class="m-t-10">
     <table class="table voucher-tbl">
         <col style="width:5%">
@@ -18,9 +51,13 @@
         <tr>
             <td></td>
             <td>Report Type</td>
-            <td colspan="2"><input class="input" /></td>
+            <td colspan="2">
+                @Html.DropDownListFor(m => m.ReportTypesList, new SelectList(Model.ReportTypesList, "Id", "TypeName"), "----Select Report Type----", new { @class = "dis-inline-block", id = "ReportType" })
+            </td>
             <td>Sub-Type</td>
-            <td colspan="2"><input class="input" /></td>
+            <td colspan="2">
+                @Html.DropDownListFor(m => m.ReportTypesList, new SelectList(Model.ReportSubTypesList, "Id", "SubTypeName"), "----Select Report Sub-Type----", new { @class = "dis-inline-block", id = "SubType", disabled = "disabled" })
+            </td>
             <td colspan="4"></td>
         </tr>
         <tr>
@@ -32,8 +69,8 @@
             <td colspan="1"><input class="input" type="date" /></td>
             <td>Month</td>
             <td colspan="1"><input class="input" type="date" /></td>
-        @*</tr>*@
-        @*<tr>*@
+            @*</tr>*@
+            @*<tr>*@
             <td><input type="radio" /></td>
             <td>Year</td>
             <td colspan="1"><input class="input" type="date" /></td>
@@ -47,7 +84,7 @@
             <td>To</td>
             <td colspan="1"><input class="input" /></td>
             @*</tr>
-        <tr>*@
+                <tr>*@
             <td><input type="radio" /></td>
             <td>Check No.</td>
             <td colspan="1"><input class="input" /></td>
@@ -77,11 +114,11 @@
             <td>Subject Name</td>
             <td colspan="2"><input class="input" /></td>
             <td colspan="1"></td>
-        @*</tr>
-        <tr>
-            <td colspan="10"></td>
-        </tr>
-        <tr>*@
+            @*</tr>
+                <tr>
+                    <td colspan="10"></td>
+                </tr>
+                <tr>*@
             <td>Save to File</td>
             <td colspan="2"><input class="input" /></td>
             <td>Browse</td>
