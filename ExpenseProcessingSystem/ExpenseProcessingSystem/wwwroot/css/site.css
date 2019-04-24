@@ -652,3 +652,24 @@ img#td-logo {
 .border-solid {
     border: 1px solid #777 !important;
 }
+
+.btncustomize {
+    font-family: HelveticaNeue;
+    font-size: 12px;
+    line-height: 1.7;
+    color: #666666;
+    margin: 0px;
+    transition: all 0.4s;
+    -webkit-transition: all 0.4s;
+    -o-transition: all 0.4s;
+    -moz-transition: all 0.4s;
+}
+
+    .btncustomize:focus {
+        outline: none !important;
+    }
+
+    .btncustomize:hover {
+        text-decoration: none;
+        color: #333333;
+    }

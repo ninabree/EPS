@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using ExpenseProcessingSystem.ConstantData;
 using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Models;
 using ExpenseProcessingSystem.Services;
@@ -227,8 +229,7 @@ namespace ExpenseProcessingSystem.Controllers
         {
             //Get list of report types from the constant data file:HomeReportTypesModel.cs
             //uses in Dropdownlist(Report Type)
-            IEnumerable<HomeReportTypesModel> ReportTypes = ConstantData.ReportTypeData.GetReportTypeData();
-
+            IEnumerable<HomeReportTypesModel> ReportTypes = ConstantData.HomeReportConstantValue.GetReportTypeData();
             //Pass list of report type and initial value for report sub type to ViewModel of Report
             var reportViewModel = new HomeReportViewModel
             {
@@ -242,11 +243,48 @@ namespace ExpenseProcessingSystem.Controllers
                     SubTypeName = null,
                     ParentTypeId = 0
                     }
-                }
+                },
+                MonthList = ConstantData.HomeReportConstantValue.GetMonthList(),
+                FileFormatList = ConstantData.HomeReportConstantValue.GetFileFormatList(),
+                YearList = ConstantData.HomeReportConstantValue.GetYearList(),
+                YearSemList = ConstantData.HomeReportConstantValue.GetYearList(),
+                SemesterList = ConstantData.HomeReportConstantValue.GetSemesterList()
             };
+
             //Return ViewModel
             return View(reportViewModel);
         }
+
+        //Populate the Report sub-type list to dropdownlist depends on the selected Report Type
+        [AcceptVerbs("GET")]
+        public JsonResult GetReportSubType(string ReportTypeID)
+        {
+            if (!string.IsNullOrWhiteSpace(ReportTypeID))
+            {
+                var ReportSubTypes = ConstantData.HomeReportConstantValue.GetReportSubTypeData().Where(m => m.ParentTypeId == Convert.ToInt32(ReportTypeID)).ToList();
+
+                return Json(ReportSubTypes);
+            }
+            return null;
+        }
+
+        public JsonResult GenerateFile(HomeReportViewModel model)
+        {
+            Debug.WriteLine("DEBUG STARTED");
+            Debug.WriteLine(model.ReportType);
+            Debug.WriteLine(model.ReportSubType);
+            Debug.WriteLine(model.Year);
+            Debug.WriteLine(model.Month);
+            Debug.WriteLine(model.YearSem);
+            Debug.WriteLine(model.Semester);
+            Debug.WriteLine(model.FileFormat);
+            Debug.WriteLine("DEBUG ENDED");
+
+            return Json(model);
+        }
+
+        //[* REPORT *]
+        //------------------------------------------------------------------
 
         [ImportModelState]
         public IActionResult BM(string sortOrder, string currentFilter, string searchString, int? page)

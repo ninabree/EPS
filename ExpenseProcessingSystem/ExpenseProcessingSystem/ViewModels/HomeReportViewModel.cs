@@ -1,6 +1,8 @@
-﻿using ExpenseProcessingSystem.Models;
+﻿using ExpenseProcessingSystem.ConstantData;
+using ExpenseProcessingSystem.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,17 +10,25 @@ namespace ExpenseProcessingSystem.ViewModels
 {
     public class HomeReportViewModel
     {
+        [Display(Name = "Report Type")]
         public IEnumerable<HomeReportTypesModel> ReportTypesList { get; set; }
 
+        [Display(Name = "Sub-Type")]
         public IEnumerable<HomeReportSubTypesModel> ReportSubTypesList { get; set; }
 
-        public int Year { get; set; }
+        [Display(Name = "File Format")]
+        public IEnumerable<FileFormatList> FileFormatList { get; set; }
 
-        public int Month { get; set; }
+        [Display(Name = "Month")]
+        public IEnumerable<MonthList> MonthList { get; set; }
 
-        public int YearSem { get; set; }
+        [Display(Name = "Year")]
+        public IEnumerable<YearList> YearList { get; set; }
 
-        public byte Semester { get; set; }
+        [Display(Name = "Year")]
+        public IEnumerable<YearList> YearSemList { get; set; }
+
+        public IEnumerable<SemesterList> SemesterList { get; set; }
 
         public DateTime PeriodFrom { get; set; }
 
@@ -28,6 +38,19 @@ namespace ExpenseProcessingSystem.ViewModels
 
         public string VoucherNo { get; set; }
 
-        public int MyProperty { get; set; }
+        public string ReportType { get; set; }
+
+        public string ReportSubType { get; set; }
+
+        public string FileFormat { get; set; }
+
+        public string Year { get; set; }
+
+        public string Month { get; set; }
+
+        public string YearSem { get; set; }
+
+        public string Semester { get; set; }
+
     }
 }
