@@ -209,10 +209,33 @@ namespace ExpenseProcessingSystem.Controllers
             }
             return View();
         }
+        //------------------------------------------------------------------
+        //[* REPORT *]
         public IActionResult Report()
         {
-            return View();
+            //Get list of report types from the constant data file:HomeReportTypesModel.cs
+            //uses in Dropdownlist(Report Type)
+            IEnumerable<HomeReportTypesModel> ReportTypes = ConstantData.ReportTypeData.GetReportTypeData();
+
+            //Pass list of report type and initial value for report sub type to ViewModel of Report
+            var reportViewModel = new HomeReportViewModel
+            {
+                ReportTypesList = ReportTypes,
+                //Initial value of sub type dropdownlist to avoid the nullexception.
+                ReportSubTypesList = new HomeReportSubTypesModel[]
+                {
+                    new HomeReportSubTypesModel
+                    {
+                    Id = 0,
+                    SubTypeName = null,
+                    ParentTypeId = 0
+                    }
+                }
+            };
+            //Return ViewModel
+            return View(reportViewModel);
         }
+
         [ImportModelState]
         public IActionResult BM(string sortOrder, string currentFilter, string searchString, int? page)
         {
@@ -301,6 +324,32 @@ namespace ExpenseProcessingSystem.Controllers
         }
         public IActionResult Entry_CV()
         {
+            EntreeCVViewModelList viewModel = new EntreeCVViewModelList();
+            List<SelectList> listOfLists = _service.getCheckEntrySystemVals();
+            viewModel.systemValues.vendors = listOfLists[0];
+            viewModel.systemValues.dept = listOfLists[1];
+            viewModel.systemValues.acc = listOfLists[2];
+            viewModel.systemValues.currency = listOfLists[3];
+            viewModel.systemValues.ewt = listOfLists[4];
+            viewModel.expenseYear = "2019";
+            viewModel.expenseId = "0001";
+            viewModel.expenseDate = DateTime.Today;
+            viewModel.status = "stats lie";
+            viewModel.approver = "jimmy";
+            viewModel.verifier.Add("Crikey");
+            viewModel.verifier.Add("Mikey");
+            viewModel.verifier.Add("Winei");
+            //viewModel.EntreeCV = new List<EntreeCVViewModel>();
+            viewModel.EntreeCV.Add(new EntreeCVViewModel());
+            viewModel.EntreeCV.Add(new EntreeCVViewModel());
+            return View(viewModel);
+        }
+        public IActionResult Entry_NewCV(EntreeCVViewModelList entreeCVViewModelList)
+        {
+            foreach (var item in entreeCVViewModelList.EntreeCV)
+            {
+                var stuff = 0;
+            }
             return View();
         }
         public IActionResult Entry_DDV()
