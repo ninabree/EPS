@@ -7,7 +7,7 @@ namespace ExpenseProcessingSystem.Models
 {
     public class HomeReportTypesModel
     {
-        public int Id { get; set; }
+        public byte Id { get; set; }
 
         public string TypeName { get; set; }
 
