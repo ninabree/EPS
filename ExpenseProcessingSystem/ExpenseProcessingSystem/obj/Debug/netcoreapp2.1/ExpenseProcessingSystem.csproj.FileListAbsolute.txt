@@ -276,3 +276,5 @@ C:\Users\gene.delacruz\Documents\__AAA.EPS\source\eps_source\ExpenseProcessingSy
 C:\Users\gene.delacruz\Documents\__AAA.EPS\source\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\ExpenseProcessingSystem.csproj.CopyComplete
 C:\Users\gene.delacruz\Documents\__AAA.EPS\source\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Shared\ModalPartial3.g.cshtml.cs
 C:\Users\gene.delacruz\Documents\__AAA.EPS\source\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\ExpenseAmortization.g.cshtml.cs
+C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\ExpenseAmortization.g.cshtml.cs
+C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Shared\ModalPartial3.g.cshtml.cs

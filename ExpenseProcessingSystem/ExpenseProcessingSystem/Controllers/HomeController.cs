@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using ExpenseProcessingSystem.Data;
+using ExpenseProcessingSystem.Models;
 using ExpenseProcessingSystem.Services;
 using ExpenseProcessingSystem.Services.Controller_Services;
 using ExpenseProcessingSystem.Services.Excel_Services;
@@ -12,6 +13,7 @@ using ExpenseProcessingSystem.ViewModels.Search_Filters;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseProcessingSystem.Controllers
@@ -1329,7 +1331,10 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-            return File(_excelData.GetDeptExcelData(), "application/ms-excel", $"Department.xlsx");
+            var dataName = "WTS";
+
+            //return File(_excelData.GetDeptExcelData(), "application/ms-excel", $"Department.xlsx");
+            return File(_excelData.GetWTSExcelData(), "application/ms-excel", $""+dataName+".xlsx");
         }
 
         //[* MISC *]

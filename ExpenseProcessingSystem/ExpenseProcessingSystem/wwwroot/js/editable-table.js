@@ -8,7 +8,7 @@ $(document).on('click', '.table-remove', function (e) {
 }); 
 $('.table-add').click(function () {
     var tblName = $('#dm-tbl').find(":selected").text();
-    var getDateTime = new Date();//$(this).closest('#NewCheckVM_0__Check_Input_Date').val()/* != "" ? $('NewCheckVM_0__Check_Input_Date').val() : ""*/;
+    var getDateTime = new Date();
     var getIsoDateTime = getDateTime.toISOString();
     //alert(getDateTime);
     //depends on chosen Master Data Table

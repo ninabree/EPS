@@ -88,6 +88,7 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
 
             //Populate Excel VM (of All DMVendor Entries)
             _context.DMVendor.ToList().ForEach(x => {
+
                 Row row = new Row();
                 List<string> rowData = new List<string>
                 {
@@ -133,6 +134,39 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     x.Dept_Approver_ID.ToString(),
                     x.Dept_Status,
                     x.Dept_isDeleted.ToString()
+                };
+                row.DataList = rowData;
+                rowList.Add(row);
+            });
+            excelVM.RowList = rowList;
+
+            return _excelService.Excel(colHeadrs, excelVM, worksheetName);
+        }
+        public byte[] GetWTSExcelData()
+        {
+            ExcelViewModel excelVM = new ExcelViewModel();
+            List<Row> rowList = new List<Row>();
+            string worksheetName = "Withholding Tax Summary Report";
+            //get column names in DB table
+            List<string> colHeadrs = typeof(HomeReportViewModel).GetProperties()
+                        .Select(property => property.Name)
+                        .ToList();
+
+            //Populate Excel VM (of All DMVendor Entries)
+            _context.DMVendor.ToList().ForEach(x => {
+                Row row = new Row();
+                List<string> rowData = new List<string>
+                {
+                    x.Vendor_ID.ToString(),
+                    x.Vendor_Name,
+                    x.Vendor_TIN,
+                    x.Vendor_Address,
+                    x.Vendor_Created_Date.ToString("MM/dd/yyyy"),
+                    x.Vendor_Creator_ID.ToString(),
+                    x.Vendor_Last_Updated.ToString("MM/dd/yyyy"),
+                    x.Vendor_Approver_ID.ToString(),
+                    x.Vendor_Status,
+                    x.Vendor_isDeleted.ToString()
                 };
                 row.DataList = rowData;
                 rowList.Add(row);
