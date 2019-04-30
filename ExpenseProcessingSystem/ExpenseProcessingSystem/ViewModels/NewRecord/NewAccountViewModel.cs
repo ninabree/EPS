@@ -10,6 +10,7 @@ namespace ExpenseProcessingSystem.ViewModels.NewRecord
     public class NewAccountListViewModel
     {
         public List<NewAccountViewModel> NewAccountVM { get; set; }
+        public List<DMFBTViewModel> FbtList = new List<DMFBTViewModel>();
     }
     public class NewAccountViewModel
     {
@@ -31,5 +32,8 @@ namespace ExpenseProcessingSystem.ViewModels.NewRecord
         [Display(Name = "Account Fund")]
         [NotNullValidations]
         public bool Account_Fund { get; set; }
+        [Display(Name = "Account FBT")]
+        [NotNullValidations]
+        public int Account_FBT_MasterID { get; set; }
     }
 }

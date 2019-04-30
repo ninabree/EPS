@@ -339,6 +339,16 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     viewData = "glyph-9";
                     vdInfo = "glyphicon-menu-up";
                     break;
+                case "acc_fbt":
+                    tempList = tempList.OrderBy(s => s.Account_FBT_MasterID);
+                    viewData = "glyph-11";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "acc_fbt_desc":
+                    tempList = tempList.OrderByDescending(s => s.Account_FBT_MasterID);
+                    viewData = "glyph-11";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
                 case "name":
                     tempList = tempList.OrderBy(s => s.Account_Name);
                     viewData = "glyph-1";
@@ -561,6 +571,16 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     viewData = "glyph-1";
                     vdInfo = "glyphicon-menu-up";
                     break;
+                case "dept_budget":
+                    tempList = tempList.OrderBy(s => s.Dept_Budget_Unit);
+                    viewData = "glyph-7";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "dept_budget_desc":
+                    tempList = tempList.OrderByDescending(s => s.Dept_Budget_Unit);
+                    viewData = "glyph-7";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
                 default:
                     tempList = tempList.OrderByDescending(x => x.Dept_Status == "For Approval" || x.Dept_Status == "For Approval (For Deletion)");
                     viewData = "glyph-6";
@@ -661,16 +681,6 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 case "fbt_stat":
                     tempList = tempList.OrderBy(x => x.FBT_Status == "For Approval" || x.FBT_Status == "For Approval (For Deletion)");
                     viewData = "glyph-8";
-                    vdInfo = "glyphicon-menu-up";
-                    break;
-                case "fbt_acc_":
-                    tempList = tempList.OrderBy(s => s.FBT_Account);
-                    viewData = "glyph-2";
-                    vdInfo = "glyphicon-menu-down";
-                    break;
-                case "fbt_acc_desc":
-                    tempList = tempList.OrderByDescending(s => s.FBT_Account);
-                    viewData = "glyph-2";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "fbt_formula":
@@ -827,6 +837,16 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 case "nature_desc":
                     tempList = tempList.OrderByDescending(s => s.TR_Nature);
                     viewData = "glyph-1";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "nature_inc_pay":
+                    tempList = tempList.OrderBy(s => s.TR_Nature_Income_Payment);
+                    viewData = "glyph-9";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "nature_inc_pay_desc":
+                    tempList = tempList.OrderByDescending(s => s.TR_Nature_Income_Payment);
+                    viewData = "glyph-9";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 default:
@@ -1185,82 +1205,6 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             };
             return vm;
         }
-        public SortViewModel SortData(List<DMNCCViewModel> list, string sortOrder)
-        {
-            var tempList = list.AsQueryable();
-            var viewData = "";
-            var vdInfo = "";
-            switch (sortOrder)
-            {
-                case "ncc_stat":
-                    tempList = tempList.OrderBy(x => x.NCC_Status == "For Approval" || x.NCC_Status == "For Approval (For Deletion)");
-                    viewData = "glyph-6";
-                    vdInfo = "glyphicon-menu-up";
-                    break;
-                case "ncc_code":
-                    tempList = tempList.OrderBy(s => s.NCC_Pro_Forma);
-                    viewData = "glyph-2";
-                    vdInfo = "glyphicon-menu-down";
-                    break;
-                case "ncc_code_desc":
-                    tempList = tempList.OrderByDescending(s => s.NCC_Pro_Forma);
-                    viewData = "glyph-2";
-                    vdInfo = "glyphicon-menu-up";
-                    break;
-                case "ncc_creatr":
-                    tempList = tempList.OrderBy(s => s.NCC_Creator_Name);
-                    viewData = "glyph-3";
-                    vdInfo = "glyphicon-menu-down";
-                    break;
-                case "ncc_creatr_desc":
-                    tempList = tempList.OrderByDescending(s => s.NCC_Creator_Name);
-                    viewData = "glyph-3";
-                    vdInfo = "glyphicon-menu-up";
-                    break;
-                case "ncc_approvr":
-                    tempList = tempList.OrderBy(s => s.NCC_Approver_Name);
-                    viewData = "glyph-4";
-                    vdInfo = "glyphicon-menu-down";
-                    break;
-                case "ncc_approvr_desc":
-                    tempList = tempList.OrderByDescending(s => s.NCC_Approver_Name);
-                    viewData = "glyph-4";
-                    vdInfo = "glyphicon-menu-up";
-                    break;
-                case "ncc_last_updte":
-                    tempList = tempList.OrderBy(s => s.NCC_Last_Updated);
-                    viewData = "glyph-5";
-                    vdInfo = "glyphicon-menu-down";
-                    break;
-                case "ncc_last_updte_desc":
-                    tempList = tempList.OrderByDescending(s => s.NCC_Last_Updated);
-                    viewData = "glyph-5";
-                    vdInfo = "glyphicon-menu-up";
-                    break;
-                case "name":
-                    tempList = tempList.OrderBy(s => s.NCC_Name);
-                    viewData = "glyph-1";
-                    vdInfo = "glyphicon-menu-down";
-                    break;
-                case "name_desc":
-                    tempList = tempList.OrderByDescending(s => s.NCC_Name);
-                    viewData = "glyph-1";
-                    vdInfo = "glyphicon-menu-up";
-                    break;
-                default:
-                    tempList = tempList.OrderByDescending(x => x.NCC_Status == "For Approval" || x.NCC_Status == "For Approval (For Deletion)");
-                    viewData = "glyph-6";
-                    vdInfo = "glyphicon-menu-down";
-                    break;
-            }
-            SortViewModel vm = new SortViewModel
-            {
-                list = tempList.Cast<dynamic>().ToList(),
-                viewData = viewData,
-                viewDataInfo = vdInfo
-            };
-            return vm;
-        }
         public SortViewModel SortData(List<DMBCSViewModel> list, string sortOrder)
         {
             var tempList = list.AsQueryable();
@@ -1346,6 +1290,72 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 default:
                     tempList = tempList.OrderByDescending(x => x.BCS_Status == "For Approval" || x.BCS_Status == "For Approval (For Deletion)");
                     viewData = "glyph-8";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+            }
+            SortViewModel vm = new SortViewModel
+            {
+                list = tempList.Cast<dynamic>().ToList(),
+                viewData = viewData,
+                viewDataInfo = vdInfo
+            };
+            return vm;
+        }
+        public SortViewModel SortData(List<HomeNotifViewModel> list, string sortOrder)
+        {
+            var tempList = list.AsQueryable();
+            var viewData = "";
+            var vdInfo = "";
+            switch (sortOrder)
+            {
+                case "notif_stat":
+                    tempList = tempList.OrderBy(x => x.Notif_Type_Status == "For Approval");
+                    viewData = "glyph-6";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "notif_app_id":
+                    tempList = tempList.OrderBy(s => s.Notif_Application_ID);
+                    viewData = "glyph-2";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "notif_app_id_desc":
+                    tempList = tempList.OrderByDescending(s => s.Notif_Application_ID);
+                    viewData = "glyph-2";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "notif_message":
+                    tempList = tempList.OrderBy(s => s.Notif_Message);
+                    viewData = "glyph-3";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "notif_message_desc":
+                    tempList = tempList.OrderByDescending(s => s.Notif_Message);
+                    viewData = "glyph-3";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "notif_approvr":
+                    tempList = tempList.OrderBy(s => s.Notif_Verifier_Approver);
+                    viewData = "glyph-4";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "notif_approvr_desc":
+                    tempList = tempList.OrderByDescending(s => s.Notif_Verifier_Approver);
+                    viewData = "glyph-4";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "notif_last_updte":
+                    tempList = tempList.OrderBy(s => s.Notif_Last_Updated);
+                    viewData = "glyph-5";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "notif_last_updte_desc":
+                    tempList = tempList.OrderByDescending(s => s.Notif_Last_Updated);
+                    viewData = "glyph-5";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                default:
+                    tempList = tempList.OrderByDescending(x => x.Notif_Type_Status == "For Approval");
+                    viewData = "glyph-6";
                     vdInfo = "glyphicon-menu-down";
                     break;
             }

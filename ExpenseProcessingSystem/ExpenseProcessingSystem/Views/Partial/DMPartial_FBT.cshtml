@@ -16,8 +16,6 @@
                     <tr>
                         <td>@Html.LabelFor(model => model.DMFilters.FF.FF_Name)</td>
                         <td>@Html.TextBoxFor(model => model.DMFilters.FF.FF_Name, new { @class = "input" })</td>
-                        <td>@Html.LabelFor(model => model.DMFilters.FF.FF_Account)</td>
-                        <td>@Html.TextBoxFor(model => model.DMFilters.FF.FF_Account, new { @class = "input" })</td>
                         <td>@Html.LabelFor(model => model.DMFilters.FF.FF_Formula)</td>
                         <td>@Html.TextBoxFor(model => model.DMFilters.FF.FF_Formula, new { @class = "input" })</td>
                         <td>@Html.LabelFor(model => model.DMFilters.FF.FF_Tax_Rate)</td>
@@ -45,7 +43,6 @@
             <tr>
                 <th></th>
                 <th id="Name"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["FBTSortParm"]">Tax Name<p class="btn-xs glyphicon @ViewData["glyph-1"]"></p></a></th>
-                <th id="Account"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["FBTAccountSortParm"]">Account<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
                 <th id="Formula"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["FBTFormulaSortParm"]">Formula<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
                 <th id="Tax_Rate"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["FBTRateSortParm"]">Tax Rate<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
                 <th id="Creator_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["FBTCreatorSortParm"]">Input By<p class="btn-xs glyphicon @ViewData["glyph-5"]"></p></a></th>
@@ -62,7 +59,6 @@
                     <tr>
                         <td><input class="tbl-chk" id="@item.FBT_MasterID" type="checkbox" /></td>
                         <td>@Html.DisplayFor(modelItem => item.FBT_Name)</td>
-                        <td>@Html.DisplayFor(modelItem => item.FBT_Account)</td>
                         <td>@Html.DisplayFor(modelItem => item.FBT_Formula)</td>
                         <td>@Html.DisplayFor(modelItem => item.FBT_Tax_Rate)</td>
                         <td>@Html.DisplayFor(modelItem => item.FBT_Creator_Name)</td>

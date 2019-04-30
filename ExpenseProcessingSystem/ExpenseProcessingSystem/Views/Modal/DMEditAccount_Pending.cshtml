@@ -18,6 +18,7 @@
                 <th>Cust</th>
                 <th>Div</th>
                 <th>Fund</th>
+                <th colspan="2">FBT</th>
                 <th>Status</th>
             </tr>
             @if (Model != null)
@@ -31,6 +32,16 @@
                         <td contenteditable="true">@Html.TextBoxFor(item => item[i].Account_Cust, new { @class = "w-full" })</td>
                         <td contenteditable="true">@Html.TextBoxFor(item => item[i].Account_Div, new { @class = "w-full" })</td>
                         <td contenteditable="true">@Html.CheckBoxFor(item => item[i].Account_Fund, new { @class = "w-full" })</td>
+                        <td colspan="2">
+                            @{
+                                List<SelectListItem> fbtList = (List<SelectListItem>)@ViewBag.FbtList;
+                                fbtList.Add(new SelectListItem {
+                                    Text = "--" + Model[i].Account_FBT_Name + "--", Value = Model[i].Account_FBT_MasterID + "", Selected = true });
+                            }
+                            @Html.DropDownListFor(item => item[i].Account_FBT_MasterID,
+                                                @fbtList,
+                                                new { @class = "w-full input" })
+                        </td>
                         <td contenteditable="false">@Html.TextBoxFor(item => item[i].Account_Status, new { @class = "w-full" })</td>
                         @Html.HiddenFor(item => item[i].Account_MasterID)
                     </tr>

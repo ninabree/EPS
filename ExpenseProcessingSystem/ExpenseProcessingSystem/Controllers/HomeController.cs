@@ -54,7 +54,81 @@ namespace ExpenseProcessingSystem.Controllers
             return _session.GetString("UserID");
         }
 
-        public IActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
+        public IActionResult Index(HomeIndexViewModel vm, string sortOrder, string currentFilter, string colName, string searchString, string page)
+        {
+            var userId = GetUserID();
+            int? pg = (page == null) ? 1 : int.Parse(page);
+
+            //check session
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //landing page for Admin User Types is User Maintenance
+            var role = _service.getUserRole(_session.GetString("UserID"));
+            if (role == "admin")
+            {
+                return RedirectToAction("UM");
+            }
+
+            //sort
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NotifTypeStatSortParm"] = String.IsNullOrEmpty(sortOrder) ? "notif_type_status" : "";
+            ViewData["NotifAppIDSortParm"] = sortOrder == "notif_app_id_desc" ? "notif_app_id" : "notif_app_id_desc";
+            ViewData["NotifMessageSortParm"] = sortOrder == "notif_message_desc" ? "notif_message" : "notif_message_desc";
+            ViewData["NotifApproverSortParm"] = sortOrder == "notif_approvr_desc" ? "notif_approvr" : "notif_approvr_desc";
+            ViewData["NotifLastUpdatedSortParm"] = sortOrder == "notif_last_updte_desc" ? "notif_last_updte" : "notif_last_updte_desc";
+
+            if (searchString != null) { pg = 1; }
+            else { searchString = currentFilter; }
+
+            ViewData["CurrentFilter"] = searchString;
+            FiltersViewModel filters = new FiltersViewModel();
+            if (TempData.ContainsKey("filters"))
+            {
+                filters = (FiltersViewModel)TempData["filters"];
+            }
+            FiltersViewModel filterVM = new FiltersViewModel();
+            if (vm.Filters != null)
+            {
+                if (vm.Filters.NotifFil != null)
+                {
+                    //Notifications
+                    _session.SetString("Notif_Last_Updated", vm.Filters.NotifFil.Notif_Last_Updated.ToShortDateString() ?? "");
+                    _session.SetString("NotifFil_Message", vm.Filters.NotifFil.NotifFil_Message ?? "");
+                    _session.SetString("NotifFil_Status", vm.Filters.NotifFil.NotifFil_Status ?? "");
+                    _session.SetString("NotifFil_Verifier_Approver_Name", vm.Filters.NotifFil.NotifFil_Verifier_Approver_Name ?? "");
+                }
+            }
+            //populate and sort
+            var sortedVals = _sortService.SortData(_service.populateNotif(filters), sortOrder);
+            ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
+
+            HomeIndexViewModel VM = new HomeIndexViewModel()
+            {
+                Filters = filters,
+                NotifList = PaginatedList<HomeNotifViewModel>.CreateAsync(
+                        (sortedVals.list).Cast<HomeNotifViewModel>().AsQueryable().AsNoTracking(), pg ?? 1, pageSize)
+            };
+            return View(VM);
+        }
+        public IActionResult Pending(string sortOrder, string currentFilter, string searchString, int? page)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var role = _service.getUserRole(_session.GetString("UserID"));
+            if (role == "admin")
+            {
+                return RedirectToAction("UM");
+            }
+            HomeIndexViewModel vm = new HomeIndexViewModel();
+            return View(vm);
+        }
+        public IActionResult History(string sortOrder, string currentFilter, string searchString, int? page)
         {
             var userId = GetUserID();
             if (userId == null)
@@ -117,6 +191,7 @@ namespace ExpenseProcessingSystem.Controllers
                     //Dept
                     _session.SetString("DF_Name", vm.DMFilters.DF.DF_Name ?? "");
                     _session.SetString("DF_Code", vm.DMFilters.DF.DF_Code ?? "");
+                    _session.SetString("DF_Budget_Unit", vm.DMFilters.DF.DF_Budget_Unit ?? "");
                     _session.SetString("DF_Creator_Name", vm.DMFilters.DF.DF_Creator_Name ?? "");
                     _session.SetString("DF_Approver_Name", vm.DMFilters.DF.DF_Approver_Name ?? "");
                     _session.SetString("DF_Status", vm.DMFilters.DF.DF_Status ?? "");
@@ -128,7 +203,7 @@ namespace ExpenseProcessingSystem.Controllers
                     _session.SetString("CKF_Series_From", vm.DMFilters.CKF.CKF_Series_From ?? "");
                     _session.SetString("CKF_Series_To", vm.DMFilters.CKF.CKF_Series_To ?? "");
                     _session.SetString("CKF_Name", vm.DMFilters.CKF.CKF_Name ?? "");
-                    _session.SetString("CKF_Type", vm.DMFilters.CKF.CKF_Type ?? "");
+                    _session.SetString("CKF_Bank_Info", vm.DMFilters.CKF.CKF_Bank_Info ?? "");
                     _session.SetString("CKF_Creator_Name", vm.DMFilters.CKF.CKF_Creator_Name ?? "");
                     _session.SetString("CKF_Approver_Name", vm.DMFilters.CKF.CKF_Approver_Name ?? "");
                     _session.SetString("CKF_Status", vm.DMFilters.CKF.CKF_Status ?? "");
@@ -142,6 +217,7 @@ namespace ExpenseProcessingSystem.Controllers
                     _session.SetString("AF_Cust", vm.DMFilters.AF.AF_Cust ?? "");
                     _session.SetString("AF_Div", vm.DMFilters.AF.AF_Div ?? "");
                     _session.SetString("AF_Fund", vm.DMFilters.AF.AF_Fund ?? "");
+                    _session.SetString("AF_FBT", vm.DMFilters.AF.AF_FBT ?? "0");
                     _session.SetString("AF_Creator_Name", vm.DMFilters.AF.AF_Creator_Name ?? "");
                     _session.SetString("AF_Approver_Name", vm.DMFilters.AF.AF_Approver_Name ?? "");
                     _session.SetString("AF_Status", vm.DMFilters.AF.AF_Status ?? "");
@@ -159,7 +235,6 @@ namespace ExpenseProcessingSystem.Controllers
                 {
                     //FBT
                     _session.SetString("FF_Name", vm.DMFilters.FF.FF_Name ?? "");
-                    _session.SetString("FF_Account", vm.DMFilters.FF.FF_Account ?? "");
                     _session.SetString("FF_Formula", vm.DMFilters.FF.FF_Formula ?? "");
                     _session.SetString("FF_Tax_Rate", vm.DMFilters.FF.FF_Tax_Rate.ToString() ?? "0");
                     _session.SetString("FF_Creator_Name", vm.DMFilters.FF.FF_Creator_Name ?? "");
@@ -170,6 +245,7 @@ namespace ExpenseProcessingSystem.Controllers
                 {
                     //TR
                     _session.SetString("EF_Nature", vm.DMFilters.EF.EF_Nature ?? "");
+                    _session.SetString("EF_Nature_Income_Payment", vm.DMFilters.EF.EF_Nature_Income_Payment ?? "");
                     _session.SetString("EF_Tax_Rate", vm.DMFilters.EF.EF_Tax_Rate.ToString() ?? "0");
                     _session.SetString("EF_ATC", vm.DMFilters.EF.EF_ATC ?? "");
                     _session.SetString("EF_Tax_Rate_Desc", vm.DMFilters.EF.EF_Tax_Rate_Desc ?? "");
@@ -205,15 +281,6 @@ namespace ExpenseProcessingSystem.Controllers
                     _session.SetString("CUF_Creator_Name", vm.DMFilters.CUF.CUF_Creator_Name ?? "");
                     _session.SetString("CUF_Approver_Name", vm.DMFilters.CUF.CUF_Approver_Name ?? "");
                     _session.SetString("CUF_Status", vm.DMFilters.CUF.CUF_Status ?? "");
-                }
-                else if (vm.DMFilters.NF != null)
-                {
-                    //Non Cash Category
-                    _session.SetString("NF_Name", vm.DMFilters.NF.NF_Name ?? "");
-                    _session.SetString("NF_Abbr", vm.DMFilters.NF.NF_Pro_Forma ?? "");
-                    _session.SetString("NF_Creator_Name", vm.DMFilters.NF.NF_Creator_Name ?? "");
-                    _session.SetString("NF_Approver_Name", vm.DMFilters.NF.NF_Approver_Name ?? "");
-                    _session.SetString("NF_Status", vm.DMFilters.NF.NF_Status ?? "");
                 }
                 else if (vm.DMFilters.BF != null)
                 {
@@ -838,39 +905,6 @@ namespace ExpenseProcessingSystem.Controllers
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Cust" });
         }
-        //[* NON CASH CATEGORY *]
-        [HttpPost]
-        [ExportModelState]
-        public IActionResult ApproveNCC(List<DMNCCViewModel> model)
-        {
-            var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            if (ModelState.IsValid)
-            {
-                _service.approveNCC(model, userId);
-            }
-
-            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_NCC" });
-        }
-        [HttpPost]
-        [ExportModelState]
-        public IActionResult RejNCC(List<DMNCCViewModel> model)
-        {
-            var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            if (ModelState.IsValid)
-            {
-                _service.rejNCC(model, userId);
-            }
-
-            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_NCC" });
-        }
         //[* BIR CERT SIGNATORY*]
         [HttpPost]
         [ExportModelState]
@@ -1395,52 +1429,6 @@ namespace ExpenseProcessingSystem.Controllers
             }
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Cust" });
         }
-        // [NON CASH CATEGORY]
-        [HttpPost]
-        [ExportModelState]
-        public IActionResult AddNCC_Pending(NewNCCViewModel model)
-        {
-            var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            if (ModelState.IsValid)
-            {
-                _service.addNCC_Pending(model, userId);
-            }
-            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_NCC" });
-        }
-        [HttpPost]
-        [ExportModelState]
-        public IActionResult EditNCC_Pending(DMNCC2ViewModel model)
-        {
-            var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            if (ModelState.IsValid)
-            {
-                _service.editNCC_Pending(model, userId);
-            }
-            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_NCC" });
-        }
-        [HttpPost]
-        [ExportModelState]
-        public IActionResult DeleteNCC_Pending(List<DMNCCViewModel> model)
-        {
-            var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            if (ModelState.IsValid)
-            {
-                _service.deleteNCC_Pending(model, userId);
-            }
-            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_NCC" });
-        }
         // [BIR CERT SIGNATORY]
         [HttpPost]
         [ExportModelState]
@@ -1515,7 +1503,10 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-            return File(_excelData.GetDeptExcelData(), "application/ms-excel", $"Department.xlsx");
+            var dataName = "WTS";
+
+            //return File(_excelData.GetDeptExcelData(), "application/ms-excel", $"Department.xlsx");
+            return File(_excelData.GetWTSExcelData(), "application/ms-excel", $""+dataName+".xlsx");
         }
 
         //[* MISC *]
@@ -1541,11 +1532,11 @@ namespace ExpenseProcessingSystem.Controllers
             }
             return bmvmList;
         }
-        public void addNCC()
-        {
-            FileService fs = new FileService();
-            //fs.CreateFileAndFolder();
-            fs.CopyFileToLocation("00283_martin.nina.png");
-        }
+        //public void addNCC()
+        //{
+        //    FileService fs = new FileService();
+        //    //fs.CreateFileAndFolder();
+        //    fs.CopyFileToLocation("00283_martin.nina.png");
+        //}
     }
 }

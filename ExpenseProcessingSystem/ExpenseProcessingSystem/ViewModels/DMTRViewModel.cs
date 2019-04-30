@@ -20,6 +20,8 @@ namespace ExpenseProcessingSystem.ViewModels
         public int TR_Tax_Rate { get; set; }
         [Display(Name = "ATC")]
         public string TR_ATC { get; set; }
+        [Display(Name = "Nature of Income Payment")]
+        public string TR_Nature_Income_Payment { get; set; }
         public int TR_Creator_ID { get; set; }
         public int TR_Approver_ID { get; set; }
         [Display(Name = "Creator Name")]

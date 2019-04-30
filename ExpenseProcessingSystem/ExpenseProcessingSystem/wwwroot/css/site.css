@@ -458,6 +458,12 @@ div.tabContent {
         overflow-y: auto;
         max-height: 67vh;
     }
+    div.tabContent > div.hometabContent {
+        margin-left: 5px;
+        min-height: 70vh;
+        overflow-y: auto;
+        max-height: 70vh;
+    }
 .report {
     height: 69vh !important;
     border: 1px solid #ccc;
@@ -494,19 +500,19 @@ div.tabContent {
 /*---------------------------------------
     [Tab Content - Home]
 */
-.tbl-cont > .tab-tbl {
+.tbl-cont > .tab-tbl, .hometabContent > div > .tab-tbl {
     font-family: HelveticaNeueLight;
     font-size: 10px;
 }
 
-    .tbl-cont > .tab-tbl > thead {
+    .tbl-cont > .tab-tbl > thead, .hometabContent > div > .tab-tbl > thead {
         background-color: #ddd;
         color: #000;
         font-size: 12px;
         font-family: HelveticaNeueLight;
     }
 
-        .tbl-cont > .tab-tbl > thead > tr > th {
+        .tbl-cont > .tab-tbl > thead > tr > th, .hometabContent > div > .tab-tbl > thead > tr > th{
             font-weight: 100;
             text-align: left;
         }

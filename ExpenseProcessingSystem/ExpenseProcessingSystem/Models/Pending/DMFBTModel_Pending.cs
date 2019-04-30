@@ -13,7 +13,6 @@ namespace ExpenseProcessingSystem.Models.Pending
         public int Pending_FBT_ID { get; set; }
         public int Pending_FBT_MasterID { get; set; }
         public string Pending_FBT_Name { get; set; }
-        public string Pending_FBT_Account { get; set; }
         public string Pending_FBT_Formula { get; set; }
         public int Pending_FBT_Tax_Rate { get; set; }
         public int Pending_FBT_Creator_ID { get; set; }

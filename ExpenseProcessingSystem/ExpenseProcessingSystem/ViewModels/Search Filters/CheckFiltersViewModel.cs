@@ -15,8 +15,8 @@ namespace ExpenseProcessingSystem.ViewModels.Search_Filters
         public string CKF_Series_From { get; set; }
         [Display(Name = "Series To")]
         public string CKF_Series_To { get; set; }
-        [Display(Name = "Type")]
-        public string CKF_Type { get; set; }
+        [Display(Name = "Bank Information")]
+        public string CKF_Bank_Info { get; set; }
         [Display(Name = "Name")]
         public string CKF_Name { get; set; }
         [Display(Name = "Check Creator Name")]

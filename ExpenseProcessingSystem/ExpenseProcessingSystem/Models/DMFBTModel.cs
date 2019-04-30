@@ -13,7 +13,7 @@ namespace ExpenseProcessingSystem.Models
         public int FBT_ID { get; set; }
         public int FBT_MasterID { get; set; }
         public string FBT_Name { get; set; }
-        public string FBT_Account { get; set; }
+        public string FBT_Abbr { get; set; }
         public string FBT_Formula { get; set; }
         public int FBT_Tax_Rate { get; set; }
         public int FBT_Creator_ID { get; set; }

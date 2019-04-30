@@ -1,0 +1,45 @@
+﻿@using ExpenseProcessingSystem.ViewModels
+@model HomeIndexViewModel
+<div class="tabContent">
+    @* MOVED ALL TO HISTORY *@
+    @*<div>
+        <div class="tab-tbl">Personal Pending Applications:</div>
+        <table class="table table-striped tab-tbl table-bordered">
+            <thead>
+                <tr>
+                    <th>Application ID</th>
+                    <th>Application Type</th>
+                    <th>Amount</th>
+                    <th>Payee</th>
+                    <th>Maker</th>
+                    <th>Verifier/s</th>
+                    <th>Date Submitted</th>
+                    <th>Last Updated Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>*@
+
+    @*//if approver or verifier account*@
+        <div>
+            <div class="tab-tbl">General Pending Applications:</div>
+            <table class="table table-striped tab-tbl table-bordered">
+                <thead>
+                    <tr>
+                        <th>Application ID</th>
+                        <th>Application Type</th>
+                        <th>Amount</th>
+                        <th>Payee</th>
+                        <th>Maker</th>
+                        <th>Verifier/s</th>
+                        <th>Date Submitted</th>
+                        <th>Last Updated Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+</div>

@@ -19,5 +19,8 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "Dept Code")]
         [NotNullValidations, TextValidation]
         public string Dept_Code { get; set; }
+        [Display(Name = "Dept Budget Unit")]
+        [NotNullValidations, TextValidation]
+        public string Dept_Budget_Unit { get; set; }
     }
 }

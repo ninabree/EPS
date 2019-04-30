@@ -91,10 +91,11 @@ namespace ExpenseProcessingSystem.Controllers
             ViewData["CurrentSort"] = sortOrder;
             ViewData["DeptStatusSortParm"] = String.IsNullOrEmpty(sortOrder) ? "dept_stat" : "";
             ViewData["DeptCodeSortParm"] = sortOrder == "dept_code_desc" ? "dept_code" : "dept_code_desc";
+            ViewData["DeptBudgetSortParm"] = sortOrder == "dept_budget_desc" ? "dept_budget" : "dept_budget_desc";
             ViewData["DeptCreatorSortParm"] = sortOrder == "dept_creatr_desc" ? "dept_creatr" : "dept_creatr_desc";
             ViewData["DeptApproverSortParm"] = sortOrder == "dept_approvr_desc" ? "dept_approvr" : "dept_approvr_desc";
             ViewData["DeptLastUpdatedSortParm"] = sortOrder == "dept_last_updte_desc" ? "dept_last_updte" : "dept_last_updte_desc";
-            ViewData["DeptSortParm"] = sortOrder == "name_desc" ? "name" : "name_desc";
+            ViewData["DeptSortParm"] = sortOrder == "name_desc" ? "name" : "name_desc"; 
 
             if (searchString != null) { pg = 1; }
             else { searchString = currentFilter; }
@@ -184,6 +185,7 @@ namespace ExpenseProcessingSystem.Controllers
             ViewData["AccountCustSortParm"] = sortOrder == "acc_cust_desc" ? "acc_cust" : "acc_cust_desc";
             ViewData["AccountDivSortParm"] = sortOrder == "acc_div_desc" ? "acc_div" : "acc_div_desc";
             ViewData["AccountFundSortParm"] = sortOrder == "acc_fund_desc" ? "acc_fund" : "acc_fund_desc";
+            ViewData["AccountFBTSortParm"] = sortOrder == "acc_fbt_desc" ? "acc_fbt" : "acc_fbt_desc";
             ViewData["AccountCreatorSortParm"] = sortOrder == "acc_creatr_desc" ? "acc_creatr" : "acc_creatr_desc";
             ViewData["AccountApproverSortParm"] = sortOrder == "acc_approvr_desc" ? "acc_approvr" : "acc_approvr_desc";
             ViewData["AccountLastUpdatedSortParm"] = sortOrder == "acc_last_updte_desc" ? "acc_last_updte" : "acc_last_updte_desc";
@@ -321,6 +323,7 @@ namespace ExpenseProcessingSystem.Controllers
             ViewData["TRApproverSortParm"] = sortOrder == "ewt_approvr_desc" ? "ewt_approvr" : "ewt_approvr_desc";
             ViewData["TRLastUpdatedSortParm"] = sortOrder == "ewt_last_updte_desc" ? "ewt_last_updte" : "ewt_last_updte_desc";
             ViewData["TRSortParm"] = sortOrder == "nature_desc" ? "nature" : "nature_desc";
+            ViewData["TRNatIncPaySortParm"] = sortOrder == "nature_inc_pay_desc" ? "nature_inc_pay" : "nature_inc_pay_desc";
 
             if (searchString != null) { pg = 1; }
             else { searchString = currentFilter; }
@@ -518,50 +521,7 @@ namespace ExpenseProcessingSystem.Controllers
             };
             return View(VM);
         }
-
-        [Route("/Partial/DMPartial_NCC/")]
-        public IActionResult DMPartial_NCC(string sortOrder, string currentFilter, string colName, string searchString, string page)
-        {
-            var userId = _session.GetString("UserID");
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-
-            int? pg = (page == null) ? 1 : int.Parse(page);
-            //set sort vals
-            ViewData["CurrentSort"] = sortOrder;
-            ViewData["NCCStatusSortParm"] = String.IsNullOrEmpty(sortOrder) ? "ncc_stat" : "";
-            ViewData["NCCCodeSortParm"] = sortOrder == "ncc_code_desc" ? "ncc_code" : "ncc_code_desc";
-            ViewData["NCCCreatorSortParm"] = sortOrder == "ncc_creatr_desc" ? "ncc_creatr" : "ncc_creatr_desc";
-            ViewData["NCCApproverSortParm"] = sortOrder == "ncc_approvr_desc" ? "ncc_approvr" : "ncc_approvr_desc";
-            ViewData["NCCLastUpdatedSortParm"] = sortOrder == "ncc_last_updte_desc" ? "ncc_last_updte" : "ncc_last_updte_desc";
-            ViewData["NCCSortParm"] = sortOrder == "name_desc" ? "name" : "name_desc";
-
-            if (searchString != null) { pg = 1; }
-            else { searchString = currentFilter; }
-
-            ViewData["CurrentFilter"] = searchString;
-            DMFiltersViewModel filters = new DMFiltersViewModel();
-            if (TempData.ContainsKey("filters"))
-            {
-                filters = (DMFiltersViewModel)TempData["filters"];
-            }
-
-            //populate and sort
-            var sortedVals = _sortService.SortData(_service.populateNCC(filters), sortOrder);
-            ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
-
-            //pagination
-            DMViewModel VM = new DMViewModel()
-            {
-                DMFilters = filters,
-                NCC = PaginatedList<DMNCCViewModel>.CreateAsync(
-                    (sortedVals.list).Cast<DMNCCViewModel>().AsQueryable().AsNoTracking(), pg ?? 1, pageSize)
-            };
-            return View(VM);
-        }
-
+        
         [Route("/Partial/DMPartial_BCS/")]
         public IActionResult DMPartial_BCS(string sortOrder, string currentFilter, string colName, string searchString, string page)
         {

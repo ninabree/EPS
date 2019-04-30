@@ -4,6 +4,7 @@ using ExpenseProcessingSystem.Models.Pending;
 using ExpenseProcessingSystem.ViewModels;
 using ExpenseProcessingSystem.ViewModels.NewRecord;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -96,6 +97,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             Dept_MasterID = m.Pending_Dept_MasterID,
                             Dept_Name = m.Pending_Dept_Name,
                             Dept_Code = m.Pending_Dept_Code,
+                            Dept_Budget_Unit = m.Pending_Dept_Budget_Unit,
                             Dept_Creator_ID = m.Pending_Dept_Creator_ID,
                             Dept_Approver_ID = m.Pending_Dept_Approver_ID.Equals(null) ? 0 : m.Pending_Dept_Approver_ID,
                             Dept_Created_Date = m.Pending_Dept_Filed_Date,
@@ -123,6 +125,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             Dept_MasterID = m.Pending_Dept_MasterID,
                             Dept_Name = m.Pending_Dept_Name,
                             Dept_Code = m.Pending_Dept_Code,
+                            Dept_Budget_Unit = m.Pending_Dept_Budget_Unit,
                             Dept_Creator_ID = m.Pending_Dept_Creator_ID,
                             Dept_Approver_ID = m.Pending_Dept_Approver_ID.Equals(null) ? 0 : m.Pending_Dept_Approver_ID,
                             Dept_Created_Date = m.Pending_Dept_Filed_Date,
@@ -199,7 +202,8 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         //[ Account ]
         public List<DMAccountViewModel> approveAccount(string[] IdsArr)
         {
-            List<DMAccountModel_Pending> pendingList = _context.DMAccount_Pending.Where(x => IdsArr.Contains(x.Pending_Account_MasterID.ToString())).Distinct().ToList();
+            List<DMAccountModel_Pending> pendingList = _context.DMAccount_Pending.Where(x => IdsArr.Contains(x.Pending_Account_MasterID.ToString()))
+                                                        .Distinct().ToList();
             List<DMAccountViewModel> tempList = new List<DMAccountViewModel>();
             foreach (DMAccountModel_Pending m in pendingList)
             {
@@ -210,6 +214,8 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         DMAccountViewModel vm = new DMAccountViewModel
                         {
                             Account_MasterID = m.Pending_Account_MasterID,
+                            Account_FBT_Name = _context.DMFBT.Where(x=> x.FBT_MasterID == m.Pending_Account_FBT_MasterID)
+                                            .Select(x=> x.FBT_Name).FirstOrDefault(),
                             Account_Name = m.Pending_Account_Name,
                             Account_Code = m.Pending_Account_Code,
                             Account_Cust = m.Pending_Account_Cust,
@@ -230,7 +236,8 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         }
         public List<DMAccountViewModel> rejectAccount(string[] IdsArr)
         {
-            List<DMAccountModel_Pending> pendingList = _context.DMAccount_Pending.Where(x => IdsArr.Contains(x.Pending_Account_MasterID.ToString())).Distinct().ToList();
+            List<DMAccountModel_Pending> pendingList = _context.DMAccount_Pending.Where(x => IdsArr.Contains(x.Pending_Account_MasterID.ToString()))
+                                                        .Distinct().ToList();
             List<DMAccountViewModel> tempList = new List<DMAccountViewModel>();
             foreach (DMAccountModel_Pending m in pendingList)
             {
@@ -241,6 +248,8 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         DMAccountViewModel vm = new DMAccountViewModel
                         {
                             Account_MasterID = m.Pending_Account_MasterID,
+                            Account_FBT_Name = _context.DMFBT.Where(x => x.FBT_MasterID == m.Pending_Account_FBT_MasterID)
+                                            .Select(x => x.FBT_Name).FirstOrDefault(),
                             Account_Name = m.Pending_Account_Name,
                             Account_Code = m.Pending_Account_Code,
                             Account_Cust = m.Pending_Account_Cust,
@@ -331,7 +340,6 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         {
                             FBT_MasterID = m.Pending_FBT_MasterID,
                             FBT_Name = m.Pending_FBT_Name,
-                            FBT_Account = m.Pending_FBT_Account,
                             FBT_Formula = m.Pending_FBT_Formula,
                             FBT_Tax_Rate = m.Pending_FBT_Tax_Rate,
                             FBT_Creator_ID = m.Pending_FBT_Creator_ID,
@@ -360,7 +368,6 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         {
                             FBT_MasterID = m.Pending_FBT_MasterID,
                             FBT_Name = m.Pending_FBT_Name,
-                            FBT_Account = m.Pending_FBT_Account,
                             FBT_Formula = m.Pending_FBT_Formula,
                             FBT_Tax_Rate = m.Pending_FBT_Tax_Rate,
                             FBT_Creator_ID = m.Pending_FBT_Creator_ID,
@@ -394,6 +401,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             TR_Nature = m.Pending_TR_Nature,
                             TR_Tax_Rate = m.Pending_TR_Tax_Rate,
                             TR_ATC = m.Pending_TR_ATC,
+                            TR_Nature_Income_Payment = m.Pending_TR_Nature_Income_Payment,
                             TR_Creator_ID = m.Pending_TR_Creator_ID,
                             TR_Approver_ID = m.Pending_TR_Approver_ID.Equals(null) ? 0 : m.Pending_TR_Approver_ID,
                             TR_Created_Date = m.Pending_TR_Filed_Date,
@@ -423,6 +431,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             TR_Nature = m.Pending_TR_Nature,
                             TR_Tax_Rate = m.Pending_TR_Tax_Rate,
                             TR_ATC = m.Pending_TR_ATC,
+                            TR_Nature_Income_Payment = m.Pending_TR_Nature_Income_Payment,
                             TR_Creator_ID = m.Pending_TR_Creator_ID,
                             TR_Approver_ID = m.Pending_TR_Approver_ID.Equals(null) ? 0 : m.Pending_TR_Approver_ID,
                             TR_Created_Date = m.Pending_TR_Filed_Date,
@@ -606,62 +615,6 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             return tempList;
         }
 
-        //[ Non Cash Category ]
-        public List<DMNCCViewModel> approveNCC(string[] IdsArr)
-        {
-            List<DMNonCashCategoryModel_Pending> pendingList = _context.DMNCC_Pending.Where(x => IdsArr.Contains(x.Pending_NCC_MasterID.ToString())).Distinct().ToList();
-            List<DMNCCViewModel> tempList = new List<DMNCCViewModel>();
-            foreach (DMNonCashCategoryModel_Pending m in pendingList)
-            {
-                foreach (string s in IdsArr)
-                {
-                    if (m.Pending_NCC_MasterID == int.Parse(s))
-                    {
-                        DMNCCViewModel vm = new DMNCCViewModel
-                        {
-                            NCC_MasterID = m.Pending_NCC_MasterID,
-                            NCC_Name = m.Pending_NCC_Name,
-                            NCC_Pro_Forma = m.Pending_NCC_Pro_Forma,
-                            NCC_Creator_ID = m.Pending_NCC_Creator_ID,
-                            NCC_Approver_ID = m.Pending_NCC_Approver_ID.Equals(null) ? 0 : m.Pending_NCC_Approver_ID,
-                            NCC_Created_Date = m.Pending_NCC_Filed_Date,
-                            NCC_Last_Updated = m.Pending_NCC_Filed_Date,
-                            NCC_Status = m.Pending_NCC_Status
-                        };
-                        tempList.Add(vm);
-                    }
-                }
-            }
-            return tempList;
-        }
-        public List<DMNCCViewModel> rejectNCC(string[] IdsArr)
-        {
-            List<DMNonCashCategoryModel_Pending> pendingList = _context.DMNCC_Pending.Where(x => IdsArr.Contains(x.Pending_NCC_MasterID.ToString())).Distinct().ToList();
-            List<DMNCCViewModel> tempList = new List<DMNCCViewModel>();
-            foreach (DMNonCashCategoryModel_Pending m in pendingList)
-            {
-                foreach (string s in IdsArr)
-                {
-                    if (m.Pending_NCC_MasterID == int.Parse(s))
-                    {
-                        DMNCCViewModel vm = new DMNCCViewModel
-                        {
-                            NCC_MasterID = m.Pending_NCC_MasterID,
-                            NCC_Name = m.Pending_NCC_Name,
-                            NCC_Pro_Forma = m.Pending_NCC_Pro_Forma,
-                            NCC_Creator_ID = m.Pending_NCC_Creator_ID,
-                            NCC_Approver_ID = m.Pending_NCC_Approver_ID.Equals(null) ? 0 : m.Pending_NCC_Approver_ID,
-                            NCC_Created_Date = m.Pending_NCC_Filed_Date,
-                            NCC_Last_Updated = m.Pending_NCC_Filed_Date,
-                            NCC_Status = m.Pending_NCC_Status
-                        };
-                        tempList.Add(vm);
-                    }
-                }
-            }
-            return tempList;
-        }
-
         //[ BIR Cert Signatory ]
         public List<DMBCSViewModel> approveBCS(string[] IdsArr)
         {
@@ -761,6 +714,16 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             NewAccountViewModel vm = new NewAccountViewModel();
             vmList.Add(vm);
             mod.NewAccountVM = vmList;
+            List<DMFBTViewModel> fbtList = new List<DMFBTViewModel>();
+            _context.DMFBT.Where(x => x.FBT_isDeleted == false && x.FBT_isActive == true).ToList().ForEach(x => {
+                DMFBTViewModel fvm = new DMFBTViewModel
+                {
+                    FBT_MasterID = x.FBT_MasterID,
+                    FBT_Name = x.FBT_Name
+                };
+                fbtList.Add(fvm);
+            });
+            mod.FbtList = fbtList;
             return mod;
         }
         public NewVATListViewModel addVAT()
@@ -823,11 +786,6 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             mod.NewCustVM = vmList;
             return mod;
         }
-        public NewNCCViewModel addNCC()
-        {
-            NewNCCViewModel vm = new NewNCCViewModel();
-            return vm;
-        }
         public NewBCSViewModel addBCS()
         {
             NewBCSViewModel vm = new NewBCSViewModel();
@@ -878,6 +836,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             Dept_MasterID = m.Dept_MasterID,
                             Dept_Name = m.Dept_Name,
                             Dept_Code = m.Dept_Code,
+                            Dept_Budget_Unit = m.Dept_Budget_Unit,
                             Dept_Creator_ID = m.Dept_Creator_ID,
                             Dept_Created_Date = m.Dept_Created_Date,
                             Dept_Last_Updated = DateTime.Now,
@@ -922,6 +881,12 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         {
             List<DMAccountModel> mList = _context.DMAccount.Where(x => IdsArr.Contains(x.Account_MasterID.ToString())
                                        && x.Account_isActive == true).Distinct().ToList();
+            var fbtList = (from a in mList
+                           join d in _context.DMFBT on a.Account_FBT_MasterID equals d.FBT_MasterID
+                           select new { a.Account_ID, d.FBT_Name, d.FBT_MasterID }).ToList();            
+            //TEMP where clause until FBT is updated
+            var defaultFBT = _context.DMFBT.Where(x => x.FBT_MasterID == 1).FirstOrDefault();
+
             List<DMAccountViewModel> tempList = new List<DMAccountViewModel>();
             foreach (DMAccountModel m in mList)
             {
@@ -929,10 +894,13 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 {
                     if (m.Account_MasterID == int.Parse(s))
                     {
+                        var fbt = fbtList.Where(a => a.Account_ID == m.Account_ID).FirstOrDefault();
                         DMAccountViewModel vm = new DMAccountViewModel
                         {
                             Account_MasterID = m.Account_MasterID,
                             Account_Name = m.Account_Name,
+                            Account_FBT_MasterID = (fbt == null) || (fbt.FBT_MasterID.Equals(0)) ? defaultFBT.FBT_MasterID : fbt.FBT_MasterID,
+                            Account_FBT_Name = (fbt == null) || (fbt.FBT_Name == null) ? defaultFBT.FBT_Name : fbt.FBT_Name,
                             Account_No = m.Account_No,
                             Account_Code = m.Account_Code,
                             Account_Cust = m.Account_Cust,
@@ -991,7 +959,6 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         {
                             FBT_MasterID = m.FBT_MasterID,
                             FBT_Name = m.FBT_Name,
-                            FBT_Account = m.FBT_Account,
                             FBT_Formula = m.FBT_Formula,
                             FBT_Tax_Rate = m.FBT_Tax_Rate,
                             FBT_Creator_ID = m.FBT_Creator_ID,
@@ -1023,6 +990,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             TR_Nature = m.TR_Nature,
                             TR_Tax_Rate = m.TR_Tax_Rate,
                             TR_ATC = m.TR_ATC,
+                            TR_Nature_Income_Payment = m.TR_Nature_Income_Payment,
                             TR_Creator_ID = m.TR_Creator_ID,
                             TR_Created_Date = m.TR_Created_Date,
                             TR_Last_Updated = DateTime.Now,
@@ -1116,53 +1084,6 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             }
             return tempList;
         }
-        public DMNCC2ViewModel editNCC(string[] IdsArr)
-        {
-            List<DMNonCashCategoryModel> mList = _context.DMNCC.Where(x => IdsArr.Contains(x.NCC_MasterID.ToString())
-                                        && x.NCC_isActive == true).Distinct().ToList();
-            List<DMNCC2ViewModel> tempList = new List<DMNCC2ViewModel>();
-
-            DMNCC2ViewModel vm = new DMNCC2ViewModel
-            {
-                NCC_MasterID = mList.First().NCC_MasterID,
-                NCC_Name = mList.First().NCC_Name,
-                NCC_Pro_Forma_Name = mList.First().NCC_Pro_Forma,
-                NCC_Creator_ID = mList.First().NCC_Creator_ID,
-                NCC_Created_Date = mList.First().NCC_Created_Date,
-                NCC_Last_Updated = DateTime.Now,
-                NCC_Status = mList.First().NCC_Status
-            };
-            return vm;
-        }
-        public List<DMNCCViewModel> deleteNCC(string[] IdsArr)
-        {
-            List<DMNonCashCategoryModel> mList = _context.DMNCC.Where(x => IdsArr.Contains(x.NCC_MasterID.ToString())
-                                        && x.NCC_isActive == true).Distinct().ToList();
-            List<DMNCCViewModel> tempList = new List<DMNCCViewModel>();
-
-            DMNCCViewModel vm = new DMNCCViewModel();
-            foreach (DMNonCashCategoryModel m in mList)
-            {
-                foreach (string s in IdsArr)
-                {
-                    if (m.NCC_MasterID == int.Parse(s))
-                    {
-                        vm = new DMNCCViewModel
-                        {
-                            NCC_MasterID = m.NCC_MasterID,
-                            NCC_Name = m.NCC_Name,
-                            NCC_Pro_Forma = m.NCC_Pro_Forma,
-                            NCC_Creator_ID = m.NCC_Creator_ID,
-                            NCC_Created_Date = m.NCC_Created_Date,
-                            NCC_Last_Updated = DateTime.Now,
-                            NCC_Status = m.NCC_Status
-                        };
-                        tempList.Add(vm);
-                    }
-                }
-            }
-            return tempList;
-        }
         public DMBCS2ViewModel editBCS(string[] IdsArr)
         {
             List<DMBIRCertSignModel> mList = _context.DMBCS.Where(x => IdsArr.Contains(x.BCS_MasterID.ToString())
@@ -1214,6 +1135,17 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 }
             }
             return tempList;
+        }
+
+        //-----------------------------------------------------------------
+        //Dropdown Select List
+        public List<SelectListItem> getFbtSelectList()
+        {
+            List<SelectListItem> fbtList = new List<SelectListItem>();
+            _context.DMFBT.Where(x => x.FBT_isDeleted == false && x.FBT_isActive == true).ToList().ForEach(x => {
+                fbtList.Add(new SelectListItem() { Text = x.FBT_Name, Value = x.FBT_MasterID + "" });
+            });
+            return fbtList;
         }
     }
 }

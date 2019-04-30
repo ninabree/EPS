@@ -30,7 +30,6 @@ namespace ExpenseProcessingSystem.Data
         public DbSet<BudgetModel> Budget { get; set; }
         public DbSet<DMEmpModel> DMEmp { get; set; }
         public DbSet<DMCustModel> DMCust { get; set; }
-        public DbSet<DMNonCashCategoryModel> DMNCC { get; set; }
         public DbSet<DMBIRCertSignModel> DMBCS { get; set; }
         public DbSet<SystemMessageModel> SystemMessageModels { get; set; }
 
@@ -45,11 +44,10 @@ namespace ExpenseProcessingSystem.Data
         public DbSet<DMCurrencyModel_Pending> DMCurrency_Pending { get; set; }
         public DbSet<DMEmpModel_Pending> DMEmp_Pending { get; set; }
         public DbSet<DMCustModel_Pending> DMCust_Pending { get; set; }
-        public DbSet<DMNonCashCategoryModel_Pending> DMNCC_Pending { get; set; }
         public DbSet<DMBIRCertSignModel_Pending> DMBCS_Pending { get; set; }
 
-        //NOTIF
-        public DbSet<NotifModel> Notif { get; set; }
+        //HOME
+        public DbSet<HomeNotifModel> HomeNotif { get; set; }
         //FILES
         public DbSet<FileLocationModel> FileLocation { get; set; }
     }
