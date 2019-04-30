@@ -338,7 +338,29 @@ using ExpenseProcessingSystem.ViewModels;
             Write(__tagHelperExecutionContext.Output);
             __tagHelperExecutionContext = __tagHelperScopeManager.End();
             EndContext();
-            BeginContext(1143, 87, true);
+            BeginContext(1142, 18, true);
+            WriteLiteral("\r\n                ");
+            EndContext();
+            BeginContext(1160, 57, false);
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "658b5de2144a4debbf5f48a5f4727cfc", async() => {
+                BeginContext(1190, 18, true);
+                WriteLiteral("BIR Cert Signatory");
+                EndContext();
+            }
+            );
+            __Microsoft_AspNetCore_Mvc_TagHelpers_OptionTagHelper = CreateTagHelper<global::Microsoft.AspNetCore.Mvc.TagHelpers.OptionTagHelper>();
+            __tagHelperExecutionContext.Add(__Microsoft_AspNetCore_Mvc_TagHelpers_OptionTagHelper);
+            __Microsoft_AspNetCore_Mvc_TagHelpers_OptionTagHelper.Value = (string)__tagHelperAttribute_12.Value;
+            __tagHelperExecutionContext.AddTagHelperAttribute(__tagHelperAttribute_12);
+            await __tagHelperRunner.RunAsync(__tagHelperExecutionContext);
+            if (!__tagHelperExecutionContext.Output.IsContentModified)
+            {
+                await __tagHelperExecutionContext.SetOutputContentAsync();
+            }
+            Write(__tagHelperExecutionContext.Output);
+            __tagHelperExecutionContext = __tagHelperScopeManager.End();
+            EndContext();
+            BeginContext(1217, 87, true);
             WriteLiteral("\r\n            </select>\r\n        </div>\r\n    </div>\r\n    <div id=\"partial-container\">\r\n");
             EndContext();
             BeginContext(1262, 80, true);

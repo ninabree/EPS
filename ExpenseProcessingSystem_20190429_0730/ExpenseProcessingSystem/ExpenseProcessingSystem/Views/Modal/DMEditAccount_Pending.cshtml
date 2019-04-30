@@ -1,0 +1,42 @@
+﻿
+@{
+    ViewData["Title"] = "DMEditAccount_Pending";
+    Layout = "~/Views/Shared/_ModalLayout.cshtml";
+}
+
+@using ExpenseProcessingSystem.ViewModels
+@model List<DMAccountViewModel>
+
+<div id="table" class="table-editable">
+    @using (Html.BeginForm("EditAccount_Pending", "Home", FormMethod.Post, new { @class = "validate-form", @id = "tsForm" }))
+    {
+        <table class="table table-bordered editable-th">
+            <tr>
+                <th>Account</th>
+                <th>Code</th>
+                <th>Number</th>
+                <th>Cust</th>
+                <th>Div</th>
+                <th>Fund</th>
+                <th>Status</th>
+            </tr>
+            @if (Model != null)
+            {
+                @for (int i = 0; i < Model.Count(); i++)
+                {
+                    <tr>
+                        <td contenteditable="true">@Html.TextBoxFor(item => item[i].Account_Name, new { @class = "w-full" })</td>
+                        <td contenteditable="true">@Html.TextBoxFor(item => item[i].Account_Code, new { @class = "w-full" })</td>
+                        <td contenteditable="true">@Html.TextBoxFor(item => item[i].Account_No, new { @class = "w-full" })</td>
+                        <td contenteditable="true">@Html.TextBoxFor(item => item[i].Account_Cust, new { @class = "w-full" })</td>
+                        <td contenteditable="true">@Html.TextBoxFor(item => item[i].Account_Div, new { @class = "w-full" })</td>
+                        <td contenteditable="true">@Html.CheckBoxFor(item => item[i].Account_Fund, new { @class = "w-full" })</td>
+                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].Account_Status, new { @class = "w-full" })</td>
+                        @Html.HiddenFor(item => item[i].Account_MasterID)
+                    </tr>
+                }
+            }
+        </table>
+    }
+</div>
+

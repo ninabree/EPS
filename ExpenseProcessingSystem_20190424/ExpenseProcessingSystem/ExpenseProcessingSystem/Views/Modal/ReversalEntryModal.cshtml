@@ -1,0 +1,24 @@
+﻿
+@{
+    ViewData["Title"] = "ReversalEntryModal";
+    Layout = "~/Views/Shared/_ModalLayout.cshtml";
+}
+
+<form action="/Home/ReverseEntry" class="validate-form" id="tsForm" method="post">
+    <table class="table">
+        <tbody>
+            <tr>
+                <td class="lbl"><label for="ReverseEntry_Date">Date</label></td>
+                <td class="inp"><input class="text-box single-line input" data-val="true" 
+                                       data-val-required="The Transaction Date field is required." 
+                                       id="ReverseEntry_Date" name="ReverseEntry.Date" type="date" value=""></td>
+                </tr>
+            <tr>
+                <td class="lbl"><label for="ReverseEntry_TransNo">Transaction No</label></td>
+                <td class="inp"><input class="text-box single-line input" id="ReverseEntry_TransNo" 
+                                       name="ReverseEntry.TransNo" type="text" value=""></td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+

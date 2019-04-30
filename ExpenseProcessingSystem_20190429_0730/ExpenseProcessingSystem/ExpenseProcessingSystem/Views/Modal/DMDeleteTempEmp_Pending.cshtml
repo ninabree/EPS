@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewData["Title"] = "DMDeleteTempEmp_Pending";
+    Layout = "~/Views/Shared/_ModalLayout.cshtml";
+}
+@using ExpenseProcessingSystem.ViewModels
+@model List<DMEmpViewModel>
+    <div id="table" class="table-editable">
+        @using (Html.BeginForm("DeleteEmp_Pending", "Home", FormMethod.Post, new { @class = "validate-form", @id = "tsForm" }))
+        {
+            <table class="table table-bordered editable-th">
+                <tr>
+                    <th>Employee Name</th>
+                    <th>Status</th>
+                </tr>
+                @if (Model != null)
+                {
+                    @for (int i = 0; i < Model.Count(); i++)
+                    {
+                        <tr>
+                            <td contenteditable="false">@Html.TextBoxFor(item => item[i].Emp_Name, new { @class = "w-full" })</td>
+                            <td contenteditable="false">@Html.TextBoxFor(item => item[i].Emp_Status, new { @class = "w-full" })</td>
+                            @Html.HiddenFor(item => item[i].Emp_MasterID)
+                            @Html.HiddenFor(item => item[i].Emp_Acc_No)
+                        </tr>
+                    }
+                }
+            </table>
+        }
+    </div>

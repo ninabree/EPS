@@ -1,0 +1,103 @@
+﻿
+@{
+    ViewData["Title"] = "DMPartial_Curr";
+    Layout = "~/Views/Shared/_ModalLayout.cshtml";
+}
+
+@using ExpenseProcessingSystem.ViewModels
+@model DMViewModel
+
+<div class="tbl-cont">
+    <form asp-action="DM" asp-controller="Home" method="get" id="search-frm">
+        <div class="form-actions no-color">
+            <p>
+                Find by:
+                <table class="table">
+                    <tr>
+                        <td>@Html.LabelFor(model => model.DMFilters.CF.CF_Name)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.CF.CF_Name, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.CF.CF_CCY_Code)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.CF.CF_CCY_Code, new { @class = "input" })</td>
+                        <td><input id="filterPartialName" name="partialName" value="DMPartial_Curr" type="hidden" /></td>
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(model => model.DMFilters.CF.CF_Creator_Name)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.CF.CF_Creator_Name, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.CF.CF_Approver_Name)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.CF.CF_Approver_Name, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.CF.CF_Status)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.CF.CF_Status, new { @class = "input" })</td>
+                        <td colspan="2" style="text-align: right;">
+                            <input type="submit" value="Search" class="btn btn-default" id="search-btn" />
+                            <input type="button" value="Back to Full List" id="full-list-btn" class="btn btn-default" />
+                        </td>
+                    </tr>
+                </table>
+            </p>
+        </div>
+    </form>
+    <table class="table table-striped tab-tbl">
+        <thead>
+            <tr>
+                <th></th>
+                <th id="Name"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CurrSortParm"]">Currency Name<p class="btn-xs glyphicon @ViewData["glyph-1"]"></p></a></th>
+                <th id="CCY_ABBR"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CurrCodeSortParm"]">CCY Abbr<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
+                <th id="Creator_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CurrCreatorSortParm"]">Created By<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
+                <th id="Approver_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CurrApproverSortParm"]">Approved By<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
+                <th id="Approver_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CurrLastUpdatedSortParm"]">Last Updated Date<p class="btn-xs glyphicon @ViewData["glyph-5"]"></p></a></th>
+                <th id="Status"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CurrStatusSortParm"]">Status<p class="btn-xs glyphicon @ViewData["glyph-6"]"></p></a></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Curr != null)
+            {
+                @foreach (var item in Model.Curr)
+                {
+                    <tr>
+                        <td><input class="tbl-chk" id="@item.Curr_MasterID" type="checkbox" /></td>
+                        <td>@Html.DisplayFor(modelItem => item.Curr_Name)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Curr_CCY_ABBR)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Curr_Creator_Name)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Curr_Approver_Name)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Curr_Last_Updated)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Curr_Status)</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    @{
+        var prevDisabled = !Model.Curr.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.Curr.HasNextPage ? "disabled" : "";
+    }
+    <a asp-action="DM"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-page="@(Model.Curr.PageIndex - 1)"
+       asp-controller="Home"
+       asp-route-partialName="@ViewData["Title"]"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left">
+    </a>
+    <input type="text" class="pagination-input" id="paginationInput" val="" />
+    <input type="text" class="pagination-input" value="of @(Model.Curr.TotalPages)" disabled />
+    <a asp-action="DM"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-controller="Home"
+       asp-route-partialName="@ViewData["Title"]"
+       asp-route-page="@(Model.Curr.PageIndex + 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right">
+    </a>
+    <div class="float-r m-r-10">
+        <button class="dis-inline-block tbl-btn btn add-rec rec" id="add_curr">Add</button>
+        <button class="dis-inline-block tbl-btn btn edit-rec rec" id="edit_curr">Edit</button>
+        <button class="dis-inline-block tbl-btn btn delete-rec rec" id="delete_curr">Delete</button>
+        @if (ViewBag.access.accessType == "approver")
+        {
+            <button class="dis-inline-block tbl-btn btn apprv-rec rec" id="apprv_curr">Approve</button>
+            <button class="dis-inline-block tbl-btn btn rej-rec rec" id="rej_curr">Reject</button>
+        }
+        <input type="hidden" value="@ViewData["Title"]" id="partialVal" />
+    </div>
+    @Html.Partial("ModalPartial")
+</div>

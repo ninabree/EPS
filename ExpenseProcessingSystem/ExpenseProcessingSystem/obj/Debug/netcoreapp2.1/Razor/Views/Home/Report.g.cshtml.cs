@@ -30,16 +30,30 @@ using ExpenseProcessingSystem;
             EndContext();
 #line 3 "C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\Views\Home\Report.cshtml"
   
-    ViewData["Title"] = "Report";
+	ViewData["Title"] = "Report";
 
 #line default
 #line hidden
-            BeginContext(107, 2, true);
+            BeginContext(104, 2, true);
             WriteLiteral("\r\n");
             EndContext();
             DefineSection("Scripts", async() => {
-                BeginContext(127, 193, true);
-                WriteLiteral("\r\n    <script type=\"text/javascript\">\r\n    $(document).ready(function () {\r\n        $(\"#ddlReportType\").change(function () {\r\n            var ReportType= $(this).val();\r\n            $.getJSON(\'");
+                BeginContext(124, 416, true);
+                WriteLiteral(@"
+	<script type=""text/javascript"">
+		$(document).ready(function () {
+			$(""#ddlReportType"").change(function () {
+				var ReportType = $(this).val();
+				var select = $(""#ddlSubType"");
+				if (ReportType == '') {
+					select.empty();
+					select.attr(""disabled"", ""disabled"");
+					select.append($('<option/>', {
+						value: 0,
+						text: ""----Select Report Sub-Type----""
+					}));
+				}
+				$.getJSON('");
                 EndContext();
                 BeginContext(321, 30, false);
 #line 12 "C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\Views\Home\Report.cshtml"
@@ -50,62 +64,66 @@ using ExpenseProcessingSystem;
                 EndContext();
                 BeginContext(351, 1933, true);
                 WriteLiteral(@"', { ReportTypeID: ReportType }, function (data) {
-                var select = $(""#ddlSubType"");
-                select.empty();
-                if (data.length == 0) {
-                    select.attr(""disabled"", ""disabled"");
-                    select.append($('<option/>', {
-                    value: 0,
-                    text: ""----Select Report Sub-Type----""
-                    }));
-                } else {
-                    select.removeAttr(""disabled"");
-                }
-                $.each(data, function (index, itemData) {
-                    select.append($('<option/>', {
-                    value: itemData.id,
-                    text: itemData.subTypeName
-                    }));
-                });
-            });
-        });
-    });
+					select.empty();
+					if (data.length == 0) {
+						select.attr(""disabled"", ""disabled"");
+						select.append($('<option/>', {
+						value: 0,
+						text: ""----Select Report Sub-Type----""
+						}));
+					} else {
+						select.removeAttr(""disabled"");
+					}
+					$.each(data, function (index, itemData) {
+						select.append($('<option/>', {
+						value: itemData.id,
+						text: itemData.subTypeName
+						}));
+					});
+				});
+			});
+		});
 
 
-    $(document).ready(function () {
-        $(""#btnGenerateFile"").click(function() {
-            var model = {
-                ""ReportType"": $('#ddlReportType').val(),
-                ""ReportSubType"": $('#ddlSubType').val(),
-      ");
-                WriteLiteral(@"          ""FileFormat"": $('#ddlFileFormat').val(),
-                ""Year"": $('#ddlYear').val(),
-                ""Month"": $('#ddlMonth').val(),
-                ""YearSem"": $('#ddlYearSem').val(),
-                ""Semester"": $('#radioSemester:checked').val()
-            }
-            $.post(""/Home/GenerateFile"", {model: model}, function (data) {
-                //$("".result"").html(data);
-                alert(data);
-            });
-            //$.ajax({
-            //    type: ""post"",
-            //    url: ""/Home/GenerateFile"",
-            //    data: model,
-            //    datatype: ""json"",
-            //    cache: false,
-            //    success: function(data) {
-            //        alert(data);
-            //    },
-            //    error: function(xhr) {
-            //        alert(""hey"");
-            //    }
-            //});
-        });
-    });
+		$(document).ready(function () {
+			$(""#btnGenerateFile"").click(function (e) {
+				e.preventDefault();
 
-    </script>
-");
+				//window.location = ""/Home/GenerateFilePreview?ReportType="" + $('#ddlReportType').val()
+				//		+ ""&ReportSubType="" + $('#ddlSubType').val()
+				//		+ ""&FileFormat="" + $('#ddlFileFormat').val()
+				//		+ ""&Year="" + $('#ddlYear').val()
+				//		+ ""&Month="" + $('#ddlMonth').val()
+				//		+ ""&YearSem="" + $('#ddlYearSem').val()
+				//                + ""Semester="" + $('#radioSemester:check");
+                WriteLiteral(@"ed').val();
+
+				window.location.href = ""/Home/GenerateFilePreview?ReportType="" + $('#ddlReportType').val()
+					+ ""&ReportSubType="" + $('#ddlSubType').val()
+					+ ""&FileFormat="" + $('#ddlFileFormat').val()
+					+ ""&Year="" + $('#ddlYear').val()
+					+ ""&Month="" + $('#ddlMonth').val()
+					+ ""&YearSem="" + $('#ddlYearSem').val()
+					+ ""Semester="" + $('#radioSemester:checked').val();
+
+			});
+		});
+
+		$(document).ready(function () {
+			$(""#btnGeneratePreview"").click(function (e) {
+				e.preventDefault();
+
+				$('#iframePreview').prop('src', ""/Home/GenerateFilePreview?ReportType="" + $('#ddlReportType').val()
+					+ ""&ReportSubType="" + $('#ddlSubType').val()
+					+ ""&FileFormat=3""
+					+ ""&Year="" + $('#ddlYear').val()
+					+ ""&Month="" + $('#ddlMonth').val()
+					+ ""&YearSem="" + $('#ddlYearSem').val()
+					+ ""Semester="" + $('#radioSemester:checked').val())
+
+				var dt = new Date();
+				var date_time = ('0' + (dt.getMonth() + 1)).slice(-2) + ""/"" + dt.getDate() + ""/"" + dt.getFullYear() + "" ");
+                WriteLiteral("\" + dt.getHours() + \":\" + dt.getMinutes() + \":\" + dt.getSeconds();\r\n\r\n\t\t\t\t$(\'#txtAsOfLabel\').text(\"As of \");\r\n\t\t\t\t$(\'#txtDatePreviewShow\').text(date_time);\r\n\t\t\t});\r\n\t\t});\r\n\t</script>\r\n");
                 EndContext();
             }
             );
@@ -115,23 +133,23 @@ using ExpenseProcessingSystem;
 
 #line default
 #line hidden
-            BeginContext(2317, 504, true);
-            WriteLiteral(@"    <div class=""m-t-10"">
-        <table class=""table voucher-tbl"">
-            <col style=""width:5%"">
-            <col style=""width:10%"">
-            <col style=""width:10%"">
-            <col style=""width:10%"">
-            <col style=""width:10%"">
-            <col style=""width:5%"">
-            <col style=""width:10%"">
-            <col style=""width:10%"">
-            <col style=""width:10%"">
-            <col style=""width:20%"">
+            BeginContext(2838, 372, true);
+            WriteLiteral(@"	<div class=""m-t-10"">
+		<table class=""table voucher-tbl"">
+			<col style=""width:5%"">
+			<col style=""width:10%"">
+			<col style=""width:10%"">
+			<col style=""width:10%"">
+			<col style=""width:10%"">
+			<col style=""width:5%"">
+			<col style=""width:10%"">
+			<col style=""width:10%"">
+			<col style=""width:10%"">
+			<col style=""width:20%"">
 
-            <tr>
-                <td></td>
-                <td>");
+			<tr>
+				<td></td>
+				<td>");
             EndContext();
             BeginContext(2822, 37, false);
 #line 85 "C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\Views\Home\Report.cshtml"
@@ -173,8 +191,18 @@ using ExpenseProcessingSystem;
             BeginContext(3465, 231, true);
             WriteLiteral("\r\n                </td>\r\n                <td colspan=\"4\"></td>\r\n            </tr>\r\n            <tr>\r\n                <td colspan=\"10\"></td>\r\n            </tr>\r\n            <tr>\r\n                <td>&#9679</td>\r\n                <td>");
             EndContext();
-            BeginContext(3697, 30, false);
-#line 100 "C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\Views\Home\Report.cshtml"
+            BeginContext(3905, 83, false);
+#line 119 "C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\Views\Home\Report.cshtml"
+               Write(Html.RadioButton("radioTimePeriod", "", false, new { id = "radioYearMonthOption" }));
+
+#line default
+#line hidden
+            EndContext();
+            BeginContext(3988, 15, true);
+            WriteLiteral("</td>\r\n\t\t\t\t<td>");
+            EndContext();
+            BeginContext(4004, 30, false);
+#line 120 "C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\Views\Home\Report.cshtml"
                Write(Html.LabelFor(m => m.YearList));
 
 #line default
@@ -210,8 +238,18 @@ using ExpenseProcessingSystem;
 #line default
 #line hidden
             EndContext();
-            BeginContext(4224, 78, true);
-            WriteLiteral("\r\n                </td>\r\n                <td>&#9679</td>\r\n                <td>");
+            BeginContext(4453, 21, true);
+            WriteLiteral("\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>");
+            EndContext();
+            BeginContext(4475, 81, false);
+#line 128 "C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\Views\Home\Report.cshtml"
+               Write(Html.RadioButton("radioTimePeriod", "", false, new { id = "radioYearSemOption" }));
+
+#line default
+#line hidden
+            EndContext();
+            BeginContext(4556, 15, true);
+            WriteLiteral("</td>\r\n\t\t\t\t<td>");
             EndContext();
             BeginContext(4303, 33, false);
 #line 109 "C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\Views\Home\Report.cshtml"
@@ -235,7 +273,7 @@ using ExpenseProcessingSystem;
             EndContext();
 #line 113 "C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\Views\Home\Report.cshtml"
                  foreach (var sem in Model.SemesterList)
-                {
+				{
 
 #line default
 #line hidden
@@ -267,45 +305,46 @@ using ExpenseProcessingSystem;
 
 #line default
 #line hidden
-            BeginContext(4800, 1674, true);
-            WriteLiteral(@"            </tr>
-            <tr>
-                <td>&#9679</td>
-                <td>Period</td>
-                <td colspan=""1""><input class=""input"" /></td>
-                <td>To</td>
-                <td colspan=""1""><input class=""input"" /></td>
-                <td>&#9679</td>
-                <td>Check No.</td>
-                <td colspan=""1""><input class=""input"" /></td>
-                <td colspan=""1""><input class=""input"" /></td>
-                <td rowspan=""2""><button class=""btn"" style=""width: 90%;"">Generate Preview</button></td>
-            </tr>
-            <tr>
-                <td>&#9679</td>
-                <td>Voucher No.</td>
-                <td colspan=""3""><input class=""input"" /></td>
-                <td></td>
-                <td colspan=""3""><input class=""input"" /></td>
-            </tr>
-            <tr>
-                <td>&#9679</td>
-                <td>Covered Tran No.</td>
-                <td colspan=""1"" style=""padding:0px""><input class=""input"" /></td>
-                <");
-            WriteLiteral(@"td colspan=""1"" style=""padding:0px""><input class=""input"" /></td>
-                <td colspan=""1"" style=""padding:0px""><input class=""input"" /></td>
-                <td></td>
-                <td colspan=""1"" style=""padding:0px""><input class=""input"" /></td>
-                <td colspan=""1"" style=""padding:0px""><input class=""input"" /></td>
-                <td colspan=""1"" style=""padding:0px""><input class=""input"" /></td>
-            </tr>
-            <tr>
-                <td>&#9679</td>
-                <td>Subject Name</td>
-                <td colspan=""2""><input class=""input"" /></td>
-                <td colspan=""1""></td>
-                <td>");
+            BeginContext(4979, 27, true);
+            WriteLiteral("\t\t\t</tr>\r\n\t\t\t<tr>\r\n\t\t\t\t<td>");
+            EndContext();
+            BeginContext(5007, 80, false);
+#line 139 "C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\Views\Home\Report.cshtml"
+               Write(Html.RadioButton("radioTimePeriod", "", false, new { id = "radioPeriodOption" }));
+
+#line default
+#line hidden
+            EndContext();
+            BeginContext(5087, 1245, true);
+            WriteLiteral(@"</td>
+				<td>Period</td>
+				<td colspan=""1""><input class=""input"" /></td>
+				<td>To</td>
+				<td colspan=""1""><input class=""input"" /></td>
+				<td>&#9679</td>
+				<td>Check No.</td>
+				<td colspan=""1""><input class=""input"" /></td>
+				<td colspan=""1""><input class=""input"" /></td>
+				<td rowspan=""2""><button class=""btn"" style=""width: 90%;"" id=""btnGeneratePreview"">Generate Preview</button></td>
+			</tr>
+			<tr>
+				<td>&#9679</td>
+				<td>Voucher No.</td>
+				<td colspan=""3""><input class=""input"" /></td>
+				<td></td>
+				<td colspan=""3""><input class=""input"" /></td>
+			</tr>
+			<tr>
+				<td>&#9679</td>
+				<td>Covered Tran No.</td>
+				<td colspan=""1"" style=""padding:0px""><input class=""input"" /></td>
+				<td colspan=""1"" style=""padding:0px""><input class=""input"" /></td>
+				<td colspan=""1"" style=""padding:0px""><input class=""input"" /></td>
+				<td></td>
+				<td colspan=""1"" style=""padding:0px""><input class=""input"" /></td>
+				<td colspan=""1"" style=""padding:0px""><input class=""input"" /></td>
+	");
+            WriteLiteral("\t\t\t<td colspan=\"1\" style=\"padding:0px\"><input class=\"input\" /></td>\r\n\t\t\t</tr>\r\n\t\t\t<tr>\r\n\t\t\t\t<td>&#9679</td>\r\n\t\t\t\t<td>Subject Name</td>\r\n\t\t\t\t<td colspan=\"2\"><input class=\"input\" /></td>\r\n\t\t\t\t<td colspan=\"1\"></td>\r\n\t\t\t\t<td>");
             EndContext();
             BeginContext(6475, 36, false);
 #line 153 "C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\Views\Home\Report.cshtml"
@@ -324,30 +363,33 @@ using ExpenseProcessingSystem;
 #line default
 #line hidden
             EndContext();
-            BeginContext(6754, 292, true);
-            WriteLiteral(@"
+            BeginContext(6585, 7, true);
+            WriteLiteral("\r\n\t\t\t\t\t");
+            EndContext();
+            BeginContext(6593, 48, false);
+#line 176 "C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\Views\Home\Report.cshtml"
+               Write(Html.ValidationMessageFor(m => m.FileFormatList));
 
-                </td>
-                <td rowspan=""2"">
-                    <button class=""btn"" style=""width: 90%;"" id=""btnGenerateFile"">Generate File</button>
-                </td>
-                <td></td>
-                <td></td>
-            </tr>
-        </table>
-    </div>
-");
+#line default
+#line hidden
+            EndContext();
+            BeginContext(6641, 197, true);
+            WriteLiteral("\r\n\t\t\t\t</td>\r\n\t\t\t\t<td rowspan=\"2\">\r\n\t\t\t\t\t<button class=\"btn\" style=\"width: 90%;\" id=\"btnGenerateFile\">Generate File</button>\r\n\t\t\t\t</td>\r\n\t\t\t\t<td></td>\r\n\t\t\t\t<td></td>\r\n\t\t\t</tr>\r\n\t\t</table>\r\n\t</div>\r\n");
             EndContext();
 #line 166 "C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\Views\Home\Report.cshtml"
 }
 
 #line default
 #line hidden
-            BeginContext(7049, 219, true);
-            WriteLiteral("\r\n<div id=\"tbl-lbl\">\r\n    <div id=\"tbl-lbl\"><p>Preview Report:</p></div>\r\n</div>\r\n<div class=\"tabContent\" style=\" background-color: #fafafa;\">\r\n    <div id=\"voucherPreview\" style=\"min-height: 50vh; max-height: 100%;\">\r\n");
-            EndContext();
-            BeginContext(7308, 16, true);
-            WriteLiteral("    </div>\r\n    ");
+            BeginContext(6841, 430, true);
+            WriteLiteral(@"<div id=""tbl-lbl"">
+	<div id=""tbl-lbl""><p>Preview Report: <text id=""txtAsOfLabel""></text><text id=""txtDatePreviewShow""></text></p></div>
+</div>
+<div class=""tabContent"" style="" background-color: #fafafa;"">
+	<div id=""voucherPreview"" style=""min-height: 50vh; max-height: 100%;"">
+		<iframe id=""iframePreview"" frameborder=""0"" src="""" style=""position: relative; min-height: 50vh; max-height: 100%; width: 100%;""></iframe>
+	</div>
+	");
             EndContext();
             BeginContext(7325, 28, false);
 #line 175 "C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\Views\Home\Report.cshtml"
@@ -358,6 +400,13 @@ Write(Html.Partial("ModalPartial"));
             EndContext();
             BeginContext(7353, 12, true);
             WriteLiteral("\r\n</div>\r\n\r\n");
+            EndContext();
+            BeginContext(7313, 23, false);
+#line 197 "C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\Views\Home\Report.cshtml"
+Write(Html.AntiForgeryToken());
+
+#line default
+#line hidden
             EndContext();
         }
         #pragma warning restore 1998

@@ -1,0 +1,121 @@
+﻿
+@{
+    ViewData["Title"] = "DMPartial_Acc";
+    Layout = "~/Views/Shared/_ModalLayout.cshtml";
+}
+
+@using ExpenseProcessingSystem.ViewModels
+@model DMViewModel
+
+<div class="tbl-cont">
+    <form asp-action="DM" asp-controller="Home" method="get" id="search-frm">
+        <div class="form-actions no-color">
+            <p>
+                Find by:
+                <table class="table">
+                    <tr>
+                        <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Name)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Name, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.AF.AF_No)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_No, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Cust)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Cust, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Div)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Div, new { @class = "input" })</td>
+                        <td><input id="filterPartialName" name="partialName" value="DMPartial_Acc" type="hidden" /></td>
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Fund)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Fund, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Creator_Name)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Creator_Name, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Approver_Name)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Approver_Name, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Status)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Status, new { @class = "input" })</td>
+                        <td colspan="2" style="text-align: right;">
+                            <input type="submit" value="Search" class="btn btn-default" id="search-btn" />
+                            <input type="button" value="Back to Full List" id="full-list-btn" class="btn btn-default" />
+                        </td>
+                    </tr>
+                </table>
+            </p>
+        </div>
+    </form>
+    <table class="table table-striped tab-tbl">
+        <thead>
+            <tr>
+                <th></th>
+                <th id="Name"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["AccountSortParm"]">Account Name<p class="btn-xs glyphicon @ViewData["glyph-1"]"></p></a></th>
+                <th id="Code"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["AccountCodeSortParm"]">Account Code<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
+                <th id="No"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["AccountNumberSortParm"]">Account Number<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
+                <th id="Cust"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["AccountCustSortParm"]">Cust<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
+                <th id="Div"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["AccountDivSortParm"]">Div<p class="btn-xs glyphicon @ViewData["glyph-5"]"></p></a></th>
+                <th id="Fund"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["AccountFundSortParm"]">Fund<p class="btn-xs glyphicon @ViewData["glyph-6"]"></p></a></th>
+                <th id="Creator_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["AccountCreatorSortParm"]">Input By<p class="btn-xs glyphicon @ViewData["glyph-7"]"></p></a></th>
+                <th id="Approver_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["AccountApproverSortParm"]">Approved By<p class="btn-xs glyphicon @ViewData["glyph-8"]"></p></a></th>
+                <th id="Last_Updated"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["AccountLastUpdatedSortParm"]">Last Updated<p class="btn-xs glyphicon @ViewData["glyph-9"]"></p></a></th>
+                <th id="Status"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["AccountStatusSortParm"]">Status<p class="btn-xs glyphicon @ViewData["glyph-10"]"></p></a></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Account.Count != 0)
+            {
+                @foreach (var item in Model.Account)
+                {
+                    <tr>
+                        <td><input class="tbl-chk" id="@item.Account_MasterID" type="checkbox" /></td>
+                        <td>@Html.DisplayFor(modelItem => item.Account_Name)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Account_Code)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Account_No)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Account_Cust)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Account_Div)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Account_Fund)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Account_Creator_Name)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Account_Approver_Name)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Account_Last_Updated)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Account_Status)</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr></tr>}
+        </tbody>
+    </table>
+    @{
+        var prevDisabled = !Model.Account.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.Account.HasNextPage ? "disabled" : "";
+    }
+
+    <a asp-action="DM"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-page="@(Model.Account.PageIndex - 1)"
+       asp-controller="Home"
+       asp-route-partialName="@ViewData["Title"]"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left">
+    </a>
+    <input type="text" class="pagination-input" id="paginationInput" val="" />
+    <input type="text" class="pagination-input" value="of @(Model.Account.TotalPages)" disabled />
+    <a asp-action="DM"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-controller="Home"
+       asp-route-partialName="@ViewData["Title"]"
+       asp-route-page="@(Model.Account.PageIndex + 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right">
+    </a>
+    <div class="float-r m-r-10">
+        <button class="dis-inline-block tbl-btn btn add-rec rec" id="add_account">Add</button>
+        <button class="dis-inline-block tbl-btn btn edit-rec rec" id="edit_account">Edit</button>
+        <button class="dis-inline-block tbl-btn btn delete-rec rec" id="delete_account">Delete</button>
+        @if (ViewBag.access.accessType == "approver")
+        {
+            <button class="dis-inline-block tbl-btn btn apprv-rec rec" id="apprv_account">Approve</button>
+            <button class="dis-inline-block tbl-btn btn rej-rec rec" id="rej_account">Reject</button>
+        }
+        <input type="hidden" value="@ViewData["Title"]" id="partialVal" />
+    </div>
+    @Html.Partial("ModalPartial")
+</div>

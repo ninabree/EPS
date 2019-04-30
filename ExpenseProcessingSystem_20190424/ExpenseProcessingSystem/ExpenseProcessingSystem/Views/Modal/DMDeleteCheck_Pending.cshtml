@@ -1,0 +1,36 @@
+﻿
+@{
+    ViewData["Title"] = "DMDeleteCheck_Pending";
+    Layout = "~/Views/Shared/_ModalLayout.cshtml";
+}
+
+@using ExpenseProcessingSystem.ViewModels
+@model List<DMCheckViewModel>
+<div id="table" class="table-editable">
+    @using (Html.BeginForm("DeleteCheck_Pending", "Home", FormMethod.Post, new { @class = "validate-form", @id = "tsForm" }))
+    {
+        <table class="table table-bordered editable-th">
+            <tr>
+                <th colspan="3">Check Input Date</th>
+                <th>Check Series From</th>
+                <th>Check Series To</th>
+                <th>Check Bank Information</th>
+                <th>Status</th>
+            </tr>
+            @if (Model != null)
+            {
+                @for (int i = 0; i < Model.Count(); i++)
+                {
+                    <tr>
+                        <td contenteditable="false" colspan="3">@Html.TextBoxFor(item => item[i].Check_Input_Date, new { @class = "h-20" })</td>
+                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].Check_Series_From, new { @class = "w-full" })</td>
+                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].Check_Series_To, new { @class = "w-full" })</td>
+                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].Check_Bank_Info, new { @class = "w-full" })</td>
+                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].Check_Status, new { @class = "w-full" })</td>
+                        @Html.HiddenFor(item => item[i].Check_MasterID)
+                    </tr>
+                }
+            }
+        </table>
+    }
+</div>

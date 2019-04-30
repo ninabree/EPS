@@ -1,0 +1,27 @@
+﻿
+@{
+    ViewData["Title"] = "DMAddTempEmp_Pending";
+    Layout = "~/Views/Shared/_ModalLayout.cshtml";
+}
+
+@using ExpenseProcessingSystem.ViewModels.NewRecord
+@model NewEmpListViewModel
+
+<div id="table" class="table-editable">
+    @using (Html.BeginForm("AddEmp_Pending", "Home", FormMethod.Post, new { @class = "validate-form", @id = "tsForm" }))
+    {
+        <table class="table table-bordered editable-th">
+            <tr>
+                <th>Employee Name</th>
+                <th></th>
+            </tr>
+            <tr id="NewEmp-Tr-0">
+                <td>@Html.TextBoxFor(m => m.NewEmpVM[0].Emp_Name, new { @class = "w-full" })</td>
+                <td>
+                    <span class="table-remove glyphicon glyphicon-remove"></span>
+                </td>
+                @Html.HiddenFor(m => m.NewEmpVM[0].Emp_Acc_No)
+            </tr>
+        </table>
+    }
+</div>
