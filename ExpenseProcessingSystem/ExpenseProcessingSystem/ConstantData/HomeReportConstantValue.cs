@@ -11,9 +11,22 @@ namespace ExpenseProcessingSystem.ConstantData
     {
         //========================================================================
         //Public constant values
-        public static readonly int SystemYearStarted = 2000;
 
-        
+        public const int SystemYearStarted = 2000;
+
+        //Alphalist of Payees Subject to Withholding Tax (Monthly)
+        public const string APSWT_M = "2";
+
+        //EXCEL, PDF, Preview format ID
+        public const string EXCELID = "1";
+        public const string PDFID = "2";
+        public const string PreviewID = "3";
+
+        //PDF Format name
+        public const string ReportLayoutFormatName = "ReportLayoutFormat/_ReportLayout_";
+
+        //PDF Footer foramt
+        public static readonly string PdfFooter1 = "--footer-left \" PAGE => [page] of [toPage] \" --footer-right \" Printed Date => " + DateTime.Today.ToShortDateString() + "\" --footer-font-size \"9\" --footer-spacing 3 --footer-font-name \"calibri light\"";
         //========================================================================
         //Public IEnumerable class constant values
 

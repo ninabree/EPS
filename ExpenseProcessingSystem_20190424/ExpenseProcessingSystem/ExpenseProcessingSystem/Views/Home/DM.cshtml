@@ -1,0 +1,137 @@
+﻿
+@{
+    ViewData["Title"] = "DM";
+}
+@using ExpenseProcessingSystem.ViewModels
+@model DMViewModel
+<div class="tab-content-cont m-t-10">
+    <div id="tbl-lbl">
+        <div class="dis-inline-block"><p>Data List Title:</p></div>
+        <div class="dis-inline-block">
+            <select id="dm-tbl">
+                <option value="DMPartial_Vendor">Vendor</option>
+                <option value="DMPartial_Check">Check</option>
+                <option value="DMPartial_Acc">Account</option>
+                <option value="DMPartial_Dept">Department</option>
+                <option value="DMPartial_VAT">Value Added Tax</option>
+                <option value="DMPartial_FBT">Fringe Benefit Tax</option>
+                <option value="DMPartial_TR">Tax Rates</option>
+                <option value="DMPartial_Curr">Currency</option>
+                <option value="DMPartial_RegEmp">Regular Employee</option>
+                <option value="DMPartial_TempEmp">Temporary Employee</option>
+                <option value="DMPartial_Cust">Customer</option>
+                <option value="DMPartial_NCC">Non-Cash Category</option>
+                <option value="DMPartial_BCS">BIR Cert Signatory</option>
+            </select>
+        </div>
+    </div>
+    <div id="partial-container">
+        @*validation message*@
+        <div id="ValidationSummary" style="display:none" class="">
+            @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
+        </div>
+    </div>
+    <input type="hidden" id="entryCheckTypes" />
+</div>
+
+<environment include="Development">
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+</environment>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var cont = $('#partial-container');
+        //var sel = $('select#dm-tbl select');
+        var sortOrder = '@ViewData["sortOrder"]';
+        var currentFilter = '@ViewData["currentFilter"]';
+        var searchString = '@ViewData["searchString"]';
+        var page = '@ViewData["page"]';
+        var partial = '@ViewData["partialName"]';
+        var colName = '@ViewData["colName"]';
+
+        initPartial();
+
+        function initPartial() {
+            $('select#dm-tbl option[value=' + partial + ']').attr('selected', 'selected');
+            $.ajax({
+                url: '/Partial/' + partial,
+                type: "Get",
+                data: { 'sortOrder': sortOrder, 'currentFilter': currentFilter, 'colName': colName, 'searchString': searchString, 'page': page },
+                async: true,
+                //processData: false,
+                datatype: "json",
+                cache: false,
+                success: function (data) {
+                    cont.empty();
+                    cont.html(data);
+                    isSearchDisabled()
+                }
+            });
+        }
+        //change content of partial view on select on change
+        $('select#dm-tbl').change(function () {
+            if (isSessionTimeout() != true) {
+                $('input#filterPartialName').val(this.value);
+                $.ajax({
+                    url: '/Partial/' + this.value,
+                    type: "Get",
+                    data: { sortOrder: sortOrder, currentFilter: currentFilter, searchString: searchString, page: page },
+                    //data: model,
+                    async: false,
+                    processData: false,
+                    datatype: "json",
+                    cache: false,
+                    success: function (data) {
+                        cont.empty();
+                        cont.html(data);
+                        isSearchDisabled()
+                    }
+                });
+            }
+        });
+        function isSessionTimeout() {
+            var tmp = false;
+            $.ajax({
+                url: '/Account/checkSession',
+                type: "POST",
+                dataType: 'json',
+                contentType: 'application/json',
+                async: false,
+                processData: false,
+                cache: false,
+                data: '{}',
+                success: function (data) {
+                    //FOR SESSION TIMEOUT CHECK
+                    if (data == true) {
+                        alert("Your session has timed out. Kindly re-login. Thank you.");
+                        tmp = true;
+                        location.href = "/Account/Login";
+                    }
+                },
+                error: function (xhr) {
+                    alert('error');
+                }
+            });
+            return tmp;
+        }
+        function isSearchDisabled() {
+            var noFilter = true;
+            $('input[id^= "DMFilters_"]').each(function (i, obj) {
+                if ($(this).val() == "") {
+                } else if ($(this).val() == "0") {
+                } else if ($(this).val() == "0001-01-01T00:00:00.000") {
+                } else {
+                    noFilter = false;
+                    return false;
+                }
+            });
+            //disable if no entries
+            if ($('.tab-tbl tbody tr').length <= 0 && noFilter) {
+                $('#search-btn').attr("disabled", "disabled");
+                $('#full-list-btn').attr("disabled", "disabled");
+            }else {
+                $('#search-btn').removeAttr("disabled");
+                $('#full-list-btn').removeAttr("disabled");
+            }
+        }
+    });
+</script>

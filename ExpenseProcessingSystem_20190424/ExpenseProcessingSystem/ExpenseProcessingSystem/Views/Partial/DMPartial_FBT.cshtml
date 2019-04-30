@@ -1,0 +1,113 @@
+﻿
+@{
+    ViewData["Title"] = "DMPartial_FBT";
+    Layout = "~/Views/Shared/_ModalLayout.cshtml";
+}
+
+@using ExpenseProcessingSystem.ViewModels
+@model DMViewModel
+
+<div class="tbl-cont">
+    <form asp-action="DM" asp-controller="Home" method="get" id="search-frm">
+        <div class="form-actions no-color">
+            <p>
+                Find by:
+                <table class="table">
+                    <tr>
+                        <td>@Html.LabelFor(model => model.DMFilters.FF.FF_Name)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.FF.FF_Name, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.FF.FF_Account)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.FF.FF_Account, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.FF.FF_Formula)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.FF.FF_Formula, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.FF.FF_Tax_Rate)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.FF.FF_Tax_Rate, new { @class = "input" })</td>
+                        <td><input id="filterPartialName" name="partialName" value="DMPartial_FBT" type="hidden" /></td>
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(model => model.DMFilters.FF.FF_Creator_Name)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.FF.FF_Creator_Name, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.FF.FF_Approver_Name)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.FF.FF_Approver_Name, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.FF.FF_Status)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.FF.FF_Status, new { @class = "input" })</td>
+                        <td colspan="2" style="text-align: right;">
+                            <input type="submit" value="Search" class="btn btn-default" id="search-btn" />
+                            <input type="button" value="Back to Full List" id="full-list-btn" class="btn btn-default" />
+                        </td>
+                    </tr>
+                </table>
+            </p>
+        </div>
+    </form>
+    <table class="table table-striped tab-tbl">
+        <thead>
+            <tr>
+                <th></th>
+                <th id="Name"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["FBTSortParm"]">Tax Name<p class="btn-xs glyphicon @ViewData["glyph-1"]"></p></a></th>
+                <th id="Account"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["FBTAccountSortParm"]">Account<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
+                <th id="Formula"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["FBTFormulaSortParm"]">Formula<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
+                <th id="Tax_Rate"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["FBTRateSortParm"]">Tax Rate<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
+                <th id="Creator_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["FBTCreatorSortParm"]">Input By<p class="btn-xs glyphicon @ViewData["glyph-5"]"></p></a></th>
+                <th id="Approver_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["FBTApproverSortParm"]">Approved By<p class="btn-xs glyphicon @ViewData["glyph-6"]"></p></a></th>
+                <th id="Last_Updated"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["FBTLastUpdatedSortParm"]">Last Updated<p class="btn-xs glyphicon @ViewData["glyph-7"]"></p></a></th>
+                <th id="Status"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["FBTStatusSortParm"]">Status<p class="btn-xs glyphicon @ViewData["glyph-8"]"></p></a></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.FBT != null)
+            {
+                @foreach (var item in Model.FBT)
+                {
+                    <tr>
+                        <td><input class="tbl-chk" id="@item.FBT_MasterID" type="checkbox" /></td>
+                        <td>@Html.DisplayFor(modelItem => item.FBT_Name)</td>
+                        <td>@Html.DisplayFor(modelItem => item.FBT_Account)</td>
+                        <td>@Html.DisplayFor(modelItem => item.FBT_Formula)</td>
+                        <td>@Html.DisplayFor(modelItem => item.FBT_Tax_Rate)</td>
+                        <td>@Html.DisplayFor(modelItem => item.FBT_Creator_Name)</td>
+                        <td>@Html.DisplayFor(modelItem => item.FBT_Approver_Name)</td>
+                        <td>@Html.DisplayFor(modelItem => item.FBT_Last_Updated)</td>
+                        <td>@Html.DisplayFor(modelItem => item.FBT_Status)</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    @{
+        var prevDisabled = !Model.FBT.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.FBT.HasNextPage ? "disabled" : "";
+    }
+
+    <a asp-action="DM"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-page="@(Model.FBT.PageIndex - 1)"
+       asp-controller="Home"
+       asp-route-partialName="@ViewData["Title"]"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left">
+    </a>
+    <input type="text" class="pagination-input" id="paginationInput" val="" />
+    <input type="text" class="pagination-input" value="of @(Model.FBT.TotalPages)" disabled />
+    <a asp-action="DM"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-controller="Home"
+       asp-route-partialName="@ViewData["Title"]"
+       asp-route-page="@(Model.FBT.PageIndex + 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right">
+    </a>
+    <div class="float-r m-r-10">
+
+        <button class="dis-inline-block tbl-btn btn add-rec rec" id="add_fBT">Add</button>
+        <button class="dis-inline-block tbl-btn btn edit-rec rec" id="edit_fBT">Edit</button>
+        <button class="dis-inline-block tbl-btn btn delete-rec rec" id="delete_fBT">Delete</button>
+        @if (ViewBag.access.accessType == "approver")
+        {
+            <button class="dis-inline-block tbl-btn btn apprv-rec rec" id="apprv_fBT">Approve</button>
+            <button class="dis-inline-block tbl-btn btn rej-rec rec" id="rej_fBT">Reject</button>
+        }
+        <input type="hidden" value="@ViewData["Title"]" id="partialVal" />
+    </div>
+    @Html.Partial("ModalPartial")
+</div>

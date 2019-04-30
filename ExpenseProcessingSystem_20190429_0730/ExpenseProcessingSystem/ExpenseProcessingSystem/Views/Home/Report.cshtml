@@ -1,0 +1,188 @@
+﻿@model ExpenseProcessingSystem.ViewModels.HomeReportViewModel
+
+@{
+    ViewData["Title"] = "Report";
+}
+
+@section Scripts {
+    <script type="text/javascript">
+		$(document).ready(function () {
+			$("#ddlReportType").change(function () {
+				var ReportType = $(this).val();
+				var select = $("#ddlSubType");
+				if (ReportType == '') {
+					select.empty();
+					select.attr("disabled", "disabled");
+					select.append($('<option/>', {
+						value: 0,
+						text: "----Select Report Sub-Type----"
+					}));
+				}
+				$.getJSON('@Url.Action("GetReportSubType")', { ReportTypeID: ReportType }, function (data) {
+					select.empty();
+					if (data.length == 0) {
+						select.attr("disabled", "disabled");
+						select.append($('<option/>', {
+						value: 0,
+						text: "----Select Report Sub-Type----"
+						}));
+					} else {
+						select.removeAttr("disabled");
+					}
+					$.each(data, function (index, itemData) {
+						select.append($('<option/>', {
+						value: itemData.id,
+						text: itemData.subTypeName
+						}));
+					});
+				});
+			});
+		});
+
+
+		$(document).ready(function () {
+			$("#btnGenerateFile").click(function (e) {
+				e.preventDefault();
+
+				window.location.href = "/Home/GenerateFilePreview?ReportType=" + $('#ddlReportType').val()
+						+ "&ReportSubType=" + $('#ddlSubType').val()
+						+ "&FileFormat=" + $('#ddlFileFormat').val()
+						+ "&Year=" + $('#ddlYear').val()
+						+ "&Month=" + $('#ddlMonth').val()
+						+ "&YearSem=" + $('#ddlYearSem').val()
+					+ "Semester=" + $('#radioSemester:checked').val();
+			});
+		});
+
+		$(document).ready(function () {
+			$("#btnGeneratePreview").click(function (e) {
+				e.preventDefault();
+
+				$('#iframePreview').prop('src', "/Home/GenerateFilePreview?ReportType=" + $('#ddlReportType').val()
+					+ "&ReportSubType=" + $('#ddlSubType').val()
+					+ "&FileFormat=3"
+					+ "&Year=" + $('#ddlYear').val()
+					+ "&Month=" + $('#ddlMonth').val()
+					+ "&YearSem=" + $('#ddlYearSem').val()
+					+ "Semester=" + $('#radioSemester:checked').val())
+
+                var dt = new Date();
+                var date_time = ('0' + (dt.getMonth() + 1)).slice(-2) + "/" + dt.getDate() + "/" + dt.getFullYear() + " " + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+
+                $('#txtAsOfLabel').text("As of ");
+                $('#txtDatePreviewShow').text(date_time);
+			});
+		});
+    </script>
+}
+
+@using (Html.BeginForm())
+{
+    <div class="m-t-10">
+        <table class="table voucher-tbl">
+            <col style="width:5%">
+            <col style="width:10%">
+            <col style="width:10%">
+            <col style="width:10%">
+            <col style="width:10%">
+            <col style="width:5%">
+            <col style="width:10%">
+            <col style="width:10%">
+            <col style="width:10%">
+            <col style="width:20%">
+
+            <tr>
+                <td></td>
+                <td>@Html.LabelFor(m => m.ReportTypesList)</td>
+                <td colspan="2">
+                    @Html.DropDownListFor(m => m.ReportTypesList, new SelectList(Model.ReportTypesList, "Id", "TypeName"), "----Select Report Type----", new { @class = "dis-inline-block", id = "ddlReportType" })
+                </td>
+                <td>@Html.LabelFor(m => m.ReportSubTypesList)</td>
+                <td colspan="2">
+                    @Html.DropDownListFor(m => m.ReportTypesList, new SelectList(Model.ReportSubTypesList, "Id", "SubTypeName"), "----Select Report Sub-Type----", new { @class = "dis-inline-block", id = "ddlSubType", disabled = "disabled" })
+                </td>
+                <td colspan="4"></td>
+            </tr>
+            <tr>
+                <td colspan="10"></td>
+            </tr>
+            <tr>
+                <td>@Html.RadioButton("radioTimePeriod", "", false, new { id = "radioYearMonthOption" })</td>
+                <td>@Html.LabelFor(m => m.YearList)</td>
+                <td>
+                    @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), "----Year----", new { @class = "dis-inline-block", id = "ddlYear" })
+                </td>
+                <td>@Html.LabelFor(m => m.MonthList)</td>
+                <td>
+                    @Html.DropDownListFor(m => m.MonthList, new SelectList(Model.MonthList, "MonthID", "MonthName"), "--Month--", new { @class = "dis-inline-block", id = "ddlMonth" })
+                </td>
+                <td>@Html.RadioButton("radioTimePeriod", "", false, new { id = "radioYearSemOption" })</td>
+                <td>@Html.LabelFor(m => m.YearSemList)</td>
+                <td>
+                    @Html.DropDownListFor(m => m.YearSemList, new SelectList(Model.YearSemList, "YearID", "YearID"), "----Year----", new { @class = "dis-inline-block", id = "ddlYearSem" })
+                </td>
+                @foreach (var sem in Model.SemesterList)
+                {
+                    <td>@Html.RadioButtonFor(m => m.YearSemList, sem.SemID, new { @id = "radioSemester" }) @sem.SemName</td>
+                }
+            </tr>
+            <tr>
+                <td>@Html.RadioButton("radioTimePeriod", "", false, new { id = "radioPeriodOption" })</td>
+                <td>Period</td>
+                <td colspan="1"><input class="input" /></td>
+                <td>To</td>
+                <td colspan="1"><input class="input" /></td>
+                <td>&#9679</td>
+                <td>Check No.</td>
+                <td colspan="1"><input class="input" /></td>
+                <td colspan="1"><input class="input" /></td>
+                <td rowspan="2"><button class="btn" style="width: 90%;" id="btnGeneratePreview">Generate Preview</button></td>
+            </tr>
+            <tr>
+                <td>&#9679</td>
+                <td>Voucher No.</td>
+                <td colspan="3"><input class="input" /></td>
+                <td></td>
+                <td colspan="3"><input class="input" /></td>
+            </tr>
+            <tr>
+                <td>&#9679</td>
+                <td>Covered Tran No.</td>
+                <td colspan="1" style="padding:0px"><input class="input" /></td>
+                <td colspan="1" style="padding:0px"><input class="input" /></td>
+                <td colspan="1" style="padding:0px"><input class="input" /></td>
+                <td></td>
+                <td colspan="1" style="padding:0px"><input class="input" /></td>
+                <td colspan="1" style="padding:0px"><input class="input" /></td>
+                <td colspan="1" style="padding:0px"><input class="input" /></td>
+            </tr>
+            <tr>
+                <td>&#9679</td>
+                <td>Subject Name</td>
+                <td colspan="2"><input class="input" /></td>
+                <td colspan="1"></td>
+                <td>@Html.LabelFor(m => m.FileFormatList)</td>
+                <td>
+                    @Html.DropDownListFor(m => m.FileFormatList, new SelectList(Model.FileFormatList, "FileFormatID", "FileFormatName"), "--File Format--", new { @class = "dis-inline-block", id = "ddlFileFormat" })
+                    @Html.ValidationMessageFor(m => m.FileFormatList)
+                </td>
+                <td rowspan="2">
+                    <button class="btn" style="width: 90%;" id="btnGenerateFile">Generate File</button>
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+}
+<div id="tbl-lbl">
+    <div id="tbl-lbl"><p>Preview Report: <text id="txtAsOfLabel"></text><text id="txtDatePreviewShow"></text></p></div>
+</div>
+<div class="tabContent" style=" background-color: #fafafa;">
+    <div id="voucherPreview" style="min-height: 50vh; max-height: 100%;">
+        <iframe id="iframePreview" frameborder="0" src="" style="position: relative; min-height: 50vh; max-height: 100%; width: 100%;"></iframe>
+    </div>
+    @Html.Partial("ModalPartial")
+</div>
+
+@Html.AntiForgeryToken()

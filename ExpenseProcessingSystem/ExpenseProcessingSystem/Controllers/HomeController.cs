@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
+﻿using DinkToPdf;
+using DinkToPdf.Contracts;
 using ExpenseProcessingSystem.ConstantData;
 using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Models;
@@ -14,11 +10,21 @@ using ExpenseProcessingSystem.ViewModels;
 using ExpenseProcessingSystem.ViewModels.NewRecord;
 using ExpenseProcessingSystem.ViewModels.Search_Filters;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using OfficeOpenXml;
+using Rotativa.AspNetCore;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ExpenseProcessingSystem.Controllers
 {
@@ -223,6 +229,7 @@ namespace ExpenseProcessingSystem.Controllers
             }
             return View();
         }
+
         //------------------------------------------------------------------
         //[* REPORT *]
         public IActionResult Report()
@@ -268,21 +275,80 @@ namespace ExpenseProcessingSystem.Controllers
             return null;
         }
 
-        public JsonResult GenerateFile(HomeReportViewModel model)
+        public IActionResult GenerateFilePreview(HomeReportViewModel model)
         {
-            Debug.WriteLine("DEBUG STARTED");
-            Debug.WriteLine(model.ReportType);
-            Debug.WriteLine(model.ReportSubType);
-            Debug.WriteLine(model.Year);
-            Debug.WriteLine(model.Month);
-            Debug.WriteLine(model.YearSem);
-            Debug.WriteLine(model.Semester);
-            Debug.WriteLine(model.FileFormat);
-            Debug.WriteLine("DEBUG ENDED");
+            string layoutName = "";
+            string fileName = "";
+            string dateNow= DateTime.Now.ToString("MM-dd-yyyy hh:mmtt");
+            string pdfFooterFormat = "";
 
-            return Json(model);
+            //Model for data retrieve from Database
+            IEnumerable<TEMP_HomeReportOutputModel> data = null;
+
+            //Assign variables and Data to corresponding Report Type
+            switch (model.ReportType)
+            {
+                //For Alphalist of Payees Subject to Withholding Tax (Monthly)
+                case ConstantData.HomeReportConstantValue.APSWT_M:
+
+                    fileName = "AlphalistOfPayeesSubjectToWithholdingTax_Monthly_" + dateNow;
+                    layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
+                    pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter1;
+                    //Get the necessary data from Database
+                    data = ConstantData.TEMP_HomeReportDummyData.GetTEMP_HomeReportOutputModelData();
+
+                    break;
+            }
+
+             if(model.FileFormat == ConstantData.HomeReportConstantValue.EXCELID)
+            {
+                string excelTemplateName = layoutName + ".xlsx";
+                string rootFolder = "wwwroot";
+                string sourcePath = "/ExcelTemplates/";
+                string destPath = "/ExcelTemplatesTempFolder/";
+                fileName = fileName + ".xlsx";
+                System.IO.File.Copy(rootFolder + sourcePath + excelTemplateName, rootFolder + destPath + fileName, true);
+                Debug.WriteLine("DEBUG1");
+                using (var package = new ExcelPackage(new FileInfo(Path.Combine(rootFolder + destPath + fileName))))
+                {
+                    ExcelWorkbook workBook = package.Workbook;
+                    ExcelWorksheet sheet = workBook.Worksheets.SingleOrDefault();
+
+                    sheet.Cells["A8"].Value = "AAA";
+                    sheet.Cells["B8"].Value = "BBB";
+                    sheet.Cells["C8"].Value = "CCC";
+
+                    package.Save();
+
+                    Debug.WriteLine("DEBUG2");
+                    return File(destPath + fileName, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+                }
+            }
+            else if (model.FileFormat == ConstantData.HomeReportConstantValue.PDFID)
+            {
+                fileName = fileName + ".pdf";
+                //Return PDF file
+                return OutputPDF(layoutName, data, fileName, pdfFooterFormat);
+            }else if (model.FileFormat == ConstantData.HomeReportConstantValue.PreviewID)
+            {
+                //Return Preview
+                return View(layoutName, data);
+            }
+
+                //Temporary return
+                return RedirectToAction("Report");
         }
 
+        public IActionResult OutputPDF(string LayoutName, IEnumerable<TEMP_HomeReportOutputModel> data, string fileName, string footerFormat)
+        {
+            return new ViewAsPdf(LayoutName, data)
+            {
+                FileName = fileName,
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape,
+                CustomSwitches = footerFormat,
+                PageSize = Rotativa.AspNetCore.Options.Size.A4
+            };
+        }
         //[* REPORT *]
         //------------------------------------------------------------------
 
@@ -368,7 +434,7 @@ namespace ExpenseProcessingSystem.Controllers
                 NewAcc = data.NewAcc,
                 RoleList = data.RoleList
             };
-                
+
             //pagination
             return View(mod);
         }
@@ -1445,7 +1511,7 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 _service.addUser(model, userId);
             }
-            
+
 
             return RedirectToAction("UM", "Home");
         }

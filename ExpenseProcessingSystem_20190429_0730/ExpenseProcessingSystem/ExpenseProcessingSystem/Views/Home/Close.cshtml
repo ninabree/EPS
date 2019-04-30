@@ -1,0 +1,121 @@
+﻿@{
+    ViewData["Title"] = "Close";
+}
+
+<div class="tab-content-cont m-t-10">
+    <div id="tbl-lbl"><p>Date:</p></div>
+    <div class="tbl-cont m-b-20">
+        <table class="table table-striped tab-tbl m-b-20">
+            <thead>
+                <tr>
+                    <th><a asp-action="Close" asp-route-sortOrder="@ViewData["AccountSortParm"]">Tran Type<p class="btn-xs glyphicon @ViewData["glyph-acc"]"></p></a></th>
+                    <th><a asp-action="Close" asp-route-sortOrder="@ViewData["TypeSortParm"]">GBase Tran#<p class="btn-xs glyphicon @ViewData["glyph-type"]"></p></a></th>
+                    <th>Express Tran#</th>
+                    <th>Particulars</th>
+                    <th>CCY</th>
+                    <th>Amount</th>
+                    <th>Tran Count</th>
+                    <th></th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <div class="tbl-controls m-t-20">
+            <button class="tbl-btn float-l">Close RBU</button>
+            <button class="tbl-btn float-l">Re-Open RBU</button>
+            <button class="tbl-btn float-l">Print RBU Balance</button>
+            <button class="tbl-btn float-r">Print RBU Proof sheet</button>
+        </div>
+
+        <div id="tbl-lbl">
+            <div class="dis-inline-block"><p>Status:</p></div>
+            <div class="dis-inline-block"><input class="input" /></div>
+        </div>
+
+    </div>
+    <div class="tbl-cont m-t-20 m-b-20">
+        <table class="table table-striped tab-tbl m-b-20">
+            <thead>
+                <tr>
+                    <th><a asp-action="Close" asp-route-sortOrder="@ViewData["AccountSortParm"]">Tran Type<p class="btn-xs glyphicon @ViewData["glyph-acc"]"></p></a></th>
+                    <th><a asp-action="Close" asp-route-sortOrder="@ViewData["TypeSortParm"]">GBase Tran#<p class="btn-xs glyphicon @ViewData["glyph-type"]"></p></a></th>
+                    <th>Express Tran#</th>
+                    <th>Particulars</th>
+                    <th>CCY</th>
+                    <th>Amount</th>
+                    <th>Tran Count</th>
+                    <th></th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+        <div class="tbl-controls m-t-20 m-b-20">
+            <button class="tbl-btn float-l">Close FCDU</button>
+            <button class="tbl-btn float-l">Re-Open FCDU</button>
+            <button class="tbl-btn float-l">Print FCDU Balance</button>
+            <button class="tbl-btn float-r">Print FCDU Proof sheet</button>
+        </div>
+
+        <div id="tbl-lbl">
+            <div class="dis-inline-block"><p>Status:</p></div>
+            <div class="dis-inline-block"><input class="input" /></div>
+        </div>
+    </div>
+    <hr class="dotted" />
+    <div id="tbl-lbl"><p>Petty Cash Balance:</p></div>
+    <table class="table" id="close-tbl">
+        <thead>
+            <tr>
+                <td width="18%"></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <p>Beginning Balance</p>
+                </td>
+                <td>
+                    <input class="input" />
+                </td>
+                <td>
+                    <button class="tbl-btn">Beginning Cash balance Confirmation</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>Cash-IN</p>
+                </td>
+                <td>
+                    <input class="input" />
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <p>Cash-OUT</p>
+                </td>
+                <td>
+                    <input class="input" />
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <p>Ending Balance</p>
+                </td>
+                <td>
+                    <input class="input" />
+                </td>
+                <td>
+                    <button class="tbl-btn">Petty Cash Breakdown</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

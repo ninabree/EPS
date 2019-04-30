@@ -1,0 +1,64 @@
+﻿
+@{
+    ViewData["Title"] = "BM";
+}
+@using ExpenseProcessingSystem.ViewModels
+@model PaginatedList<BMViewModel>
+<div class="tab-content-cont m-t-10">
+    <div class="tbl-cont">
+        <table class="table table-striped tab-tbl">
+            <thead>
+                <tr>
+                    <th><a asp-action="BM" asp-route-sortOrder="@ViewData["AccountSortParm"]">Account<p class="btn-xs glyphicon @ViewData["glyph-1"]"></p></a></th>
+                    <th><a asp-action="BM" asp-route-sortOrder="@ViewData["TypeSortParm"]">Type<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
+                    <th><a asp-action="BM" asp-route-sortOrder="@ViewData["BudgetSortParm"]">Budget<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
+                    <th><a asp-action="BM" asp-route-sortOrder="@ViewData["CurrBudgetSortParm"]">Current Budget<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
+                    <th><a asp-action="BM" asp-route-sortOrder="@ViewData["LastTransDateSortParm"]">Last Transaction Date<p class="btn-xs glyphicon @ViewData["glyph-5"]"></p></a></th>
+                    <th><a asp-action="BM" asp-route-sortOrder="@ViewData["LastBudgetApprvlSortParm"]">Last Budget Approval<p class="btn-xs glyphicon @ViewData["glyph-6"]"></p></a></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.BM_Account)</td>
+                        <td>@Html.DisplayFor(modelItem => item.BM_Type)</td>
+                        <td>@Html.DisplayFor(modelItem => item.BM_Budget)</td>
+                        <td>@Html.DisplayFor(modelItem => item.BM_Curr_Budget)</td>
+                        <td>@Html.DisplayFor(modelItem => item.BM_Last_Trans_Date)</td>
+                        <td>@Html.DisplayFor(modelItem => item.BM_Last_Budget_Approval)</td>
+                        <td><button class="btn adjust_btn" id="adjust_@item.BM_Id" style="font-size: 8px">Adjust</button></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @{
+            var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+            var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+        }
+
+        <a asp-action="BM"
+           asp-route-sortOrder="@ViewData["CurrentSort"]"
+           asp-route-page="@(Model.PageIndex - 1)"
+           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+           class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left">
+        </a>
+        <input type="text" class="pagination-input" id="paginationInput" val="" />
+        <input type="text" class="pagination-input" value="of @(Model.TotalPages)" disabled />
+        <a asp-action="BM"
+           asp-route-sortOrder="@ViewData["CurrentSort"]"
+           asp-route-page="@(Model.PageIndex + 1)"
+           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+           class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right">
+        </a>
+        <div class="float-r m-r-10">
+            <div class="tbl-btn">Update Budget</div>
+        </div>
+        @Html.Partial("ModalPartial")
+        @*validation message*@
+        <div id="ValidationSummary" style="display:none" class="">
+            @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
+        </div>
+    </div>
+</div>
