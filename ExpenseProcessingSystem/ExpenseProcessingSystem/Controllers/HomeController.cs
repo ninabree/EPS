@@ -234,6 +234,7 @@ namespace ExpenseProcessingSystem.Controllers
         //[* REPORT *]
         public IActionResult Report()
         {
+            Debug.WriteLine("DEBUG5");
             //Get list of report types from the constant data file:HomeReportTypesModel.cs
             //uses in Dropdownlist(Report Type)
             IEnumerable<HomeReportTypesModel> ReportTypes = ConstantData.HomeReportConstantValue.GetReportTypeData();
@@ -299,8 +300,9 @@ namespace ExpenseProcessingSystem.Controllers
 
                     break;
             }
-
-             if(model.FileFormat == ConstantData.HomeReportConstantValue.EXCELID)
+            Debug.WriteLine("DEBUG4");
+            Debug.WriteLine("DEBUG3");
+            if (model.FileFormat == ConstantData.HomeReportConstantValue.EXCELID)
             {
                 string excelTemplateName = layoutName + ".xlsx";
                 string rootFolder = "wwwroot";
@@ -309,20 +311,9 @@ namespace ExpenseProcessingSystem.Controllers
                 fileName = fileName + ".xlsx";
                 System.IO.File.Copy(rootFolder + sourcePath + excelTemplateName, rootFolder + destPath + fileName, true);
                 Debug.WriteLine("DEBUG1");
-                using (var package = new ExcelPackage(new FileInfo(Path.Combine(rootFolder + destPath + fileName))))
-                {
-                    ExcelWorkbook workBook = package.Workbook;
-                    ExcelWorksheet sheet = workBook.Worksheets.SingleOrDefault();
 
-                    sheet.Cells["A8"].Value = "AAA";
-                    sheet.Cells["B8"].Value = "BBB";
-                    sheet.Cells["C8"].Value = "CCC";
+                return File(destPath + fileName, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "EXCELEXCELEXCEL.xlsx");
 
-                    package.Save();
-
-                    Debug.WriteLine("DEBUG2");
-                    return File(destPath + fileName, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
-                }
             }
             else if (model.FileFormat == ConstantData.HomeReportConstantValue.PDFID)
             {
