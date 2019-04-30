@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using ExpenseProcessingSystem.Data;
@@ -44,7 +45,81 @@ namespace ExpenseProcessingSystem.Controllers
             return _session.GetString("UserID");
         }
 
-        public IActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
+        public IActionResult Index(HomeIndexViewModel vm, string sortOrder, string currentFilter, string colName, string searchString, string page)
+        {
+            var userId = GetUserID();
+            int? pg = (page == null) ? 1 : int.Parse(page);
+
+            //check session
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //landing page for Admin User Types is User Maintenance
+            var role = _service.getUserRole(_session.GetString("UserID"));
+            if (role == "admin")
+            {
+                return RedirectToAction("UM");
+            }
+
+            //sort
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NotifTypeStatSortParm"] = String.IsNullOrEmpty(sortOrder) ? "notif_type_status" : "";
+            ViewData["NotifAppIDSortParm"] = sortOrder == "notif_app_id_desc" ? "notif_app_id" : "notif_app_id_desc";
+            ViewData["NotifMessageSortParm"] = sortOrder == "notif_message_desc" ? "notif_message" : "notif_message_desc";
+            ViewData["NotifApproverSortParm"] = sortOrder == "notif_approvr_desc" ? "notif_approvr" : "notif_approvr_desc";
+            ViewData["NotifLastUpdatedSortParm"] = sortOrder == "notif_last_updte_desc" ? "notif_last_updte" : "notif_last_updte_desc";
+
+            if (searchString != null) { pg = 1; }
+            else { searchString = currentFilter; }
+
+            ViewData["CurrentFilter"] = searchString;
+            FiltersViewModel filters = new FiltersViewModel();
+            if (TempData.ContainsKey("filters"))
+            {
+                filters = (FiltersViewModel)TempData["filters"];
+            }
+            FiltersViewModel filterVM = new FiltersViewModel();
+            if (vm.Filters != null)
+            {
+                if (vm.Filters.NotifFil != null)
+                {
+                    //Notifications
+                    _session.SetString("Notif_Last_Updated", vm.Filters.NotifFil.Notif_Last_Updated.ToShortDateString() ?? "");
+                    _session.SetString("NotifFil_Message", vm.Filters.NotifFil.NotifFil_Message ?? "");
+                    _session.SetString("NotifFil_Status", vm.Filters.NotifFil.NotifFil_Status ?? "");
+                    _session.SetString("NotifFil_Verifier_Approver_Name", vm.Filters.NotifFil.NotifFil_Verifier_Approver_Name ?? "");
+                }
+            }
+            //populate and sort
+            var sortedVals = _sortService.SortData(_service.populateNotif(filters), sortOrder);
+            ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
+
+            HomeIndexViewModel VM = new HomeIndexViewModel()
+            {
+                Filters = filters,
+                NotifList = PaginatedList<HomeNotifViewModel>.CreateAsync(
+                        (sortedVals.list).Cast<HomeNotifViewModel>().AsQueryable().AsNoTracking(), pg ?? 1, pageSize)
+            };
+            return View(VM);
+        }
+        public IActionResult Pending(string sortOrder, string currentFilter, string searchString, int? page)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var role = _service.getUserRole(_session.GetString("UserID"));
+            if (role == "admin")
+            {
+                return RedirectToAction("UM");
+            }
+            HomeIndexViewModel vm = new HomeIndexViewModel();
+            return View(vm);
+        }
+        public IActionResult History(string sortOrder, string currentFilter, string searchString, int? page)
         {
             var userId = GetUserID();
             if (userId == null)
@@ -107,6 +182,7 @@ namespace ExpenseProcessingSystem.Controllers
                     //Dept
                     _session.SetString("DF_Name", vm.DMFilters.DF.DF_Name ?? "");
                     _session.SetString("DF_Code", vm.DMFilters.DF.DF_Code ?? "");
+                    _session.SetString("DF_Budget_Unit", vm.DMFilters.DF.DF_Budget_Unit ?? "");
                     _session.SetString("DF_Creator_Name", vm.DMFilters.DF.DF_Creator_Name ?? "");
                     _session.SetString("DF_Approver_Name", vm.DMFilters.DF.DF_Approver_Name ?? "");
                     _session.SetString("DF_Status", vm.DMFilters.DF.DF_Status ?? "");
@@ -118,7 +194,7 @@ namespace ExpenseProcessingSystem.Controllers
                     _session.SetString("CKF_Series_From", vm.DMFilters.CKF.CKF_Series_From ?? "");
                     _session.SetString("CKF_Series_To", vm.DMFilters.CKF.CKF_Series_To ?? "");
                     _session.SetString("CKF_Name", vm.DMFilters.CKF.CKF_Name ?? "");
-                    _session.SetString("CKF_Type", vm.DMFilters.CKF.CKF_Type ?? "");
+                    _session.SetString("CKF_Bank_Info", vm.DMFilters.CKF.CKF_Bank_Info ?? "");
                     _session.SetString("CKF_Creator_Name", vm.DMFilters.CKF.CKF_Creator_Name ?? "");
                     _session.SetString("CKF_Approver_Name", vm.DMFilters.CKF.CKF_Approver_Name ?? "");
                     _session.SetString("CKF_Status", vm.DMFilters.CKF.CKF_Status ?? "");
@@ -217,8 +293,7 @@ namespace ExpenseProcessingSystem.Controllers
         {
             //Get list of report types from the constant data file:HomeReportTypesModel.cs
             //uses in Dropdownlist(Report Type)
-            IEnumerable<HomeReportTypesModel> ReportTypes = ConstantData.ReportTypeData.GetReportTypeData();
-
+            IEnumerable<HomeReportTypesModel> ReportTypes = ConstantData.HomeReportConstantValue.GetReportTypeData();
             //Pass list of report type and initial value for report sub type to ViewModel of Report
             var reportViewModel = new HomeReportViewModel
             {
@@ -232,11 +307,51 @@ namespace ExpenseProcessingSystem.Controllers
                     SubTypeName = null,
                     ParentTypeId = 0
                     }
-                }
+                },
+                MonthList = ConstantData.HomeReportConstantValue.GetMonthList(),
+                FileFormatList = ConstantData.HomeReportConstantValue.GetFileFormatList(),
+                YearList = ConstantData.HomeReportConstantValue.GetYearList(),
+                YearSemList = ConstantData.HomeReportConstantValue.GetYearList(),
+                SemesterList = ConstantData.HomeReportConstantValue.GetSemesterList()
             };
+
             //Return ViewModel
             return View(reportViewModel);
         }
+
+        //Populate the Report sub-type list to dropdownlist depends on the selected Report Type
+        [AcceptVerbs("GET")]
+        public JsonResult GetReportSubType(string ReportTypeID)
+        {
+            if (!string.IsNullOrWhiteSpace(ReportTypeID))
+            {
+                var ReportSubTypes = ConstantData.HomeReportConstantValue.GetReportSubTypeData().Where(m => m.ParentTypeId == Convert.ToInt32(ReportTypeID)).ToList();
+
+                return Json(ReportSubTypes);
+            }
+            return null;
+        }
+
+        public IActionResult /*JsonResult*/ GenerateFile(HomeReportViewModel model)
+        {
+            //Debug.WriteLine("DEBUG STARTED");
+            //Debug.WriteLine(model.ReportType);
+            //Debug.WriteLine(model.ReportSubType);
+            //Debug.WriteLine(model.Year);
+            //Debug.WriteLine(model.Month);
+            //Debug.WriteLine(model.YearSem);
+            //Debug.WriteLine(model.Semester);
+            //Debug.WriteLine(model.FileFormat);
+            //Debug.WriteLine("DEBUG ENDED");
+
+            //Generate WTS w/ dummy data for testing
+            var dataName = "WTS";
+            return File(_excelData.GetWTSExcelData(), "application/ms-excel", $"WTS.xlsx");
+            //return Json(model);
+        }
+
+        //[* REPORT *]
+        //------------------------------------------------------------------
 
         [ImportModelState]
         public IActionResult BM(string sortOrder, string currentFilter, string searchString, int? page)

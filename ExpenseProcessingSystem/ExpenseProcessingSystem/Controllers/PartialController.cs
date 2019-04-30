@@ -91,10 +91,11 @@ namespace ExpenseProcessingSystem.Controllers
             ViewData["CurrentSort"] = sortOrder;
             ViewData["DeptStatusSortParm"] = String.IsNullOrEmpty(sortOrder) ? "dept_stat" : "";
             ViewData["DeptCodeSortParm"] = sortOrder == "dept_code_desc" ? "dept_code" : "dept_code_desc";
+            ViewData["DeptBudgetSortParm"] = sortOrder == "dept_budget_desc" ? "dept_budget" : "dept_budget_desc";
             ViewData["DeptCreatorSortParm"] = sortOrder == "dept_creatr_desc" ? "dept_creatr" : "dept_creatr_desc";
             ViewData["DeptApproverSortParm"] = sortOrder == "dept_approvr_desc" ? "dept_approvr" : "dept_approvr_desc";
             ViewData["DeptLastUpdatedSortParm"] = sortOrder == "dept_last_updte_desc" ? "dept_last_updte" : "dept_last_updte_desc";
-            ViewData["DeptSortParm"] = sortOrder == "name_desc" ? "name" : "name_desc";
+            ViewData["DeptSortParm"] = sortOrder == "name_desc" ? "name" : "name_desc"; 
 
             if (searchString != null) { pg = 1; }
             else { searchString = currentFilter; }

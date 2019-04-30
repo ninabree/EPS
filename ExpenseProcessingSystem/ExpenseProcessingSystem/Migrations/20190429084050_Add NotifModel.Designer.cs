@@ -4,14 +4,16 @@ using ExpenseProcessingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    partial class EPSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190429084050_Add NotifModel")]
+    partial class AddNotifModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -580,10 +582,6 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("Notif_Application_ID");
 
-                    b.Property<DateTime>("Notif_Created_Date");
-
-                    b.Property<DateTime>("Notif_Last_Updated");
-
                     b.Property<string>("Notif_Message");
 
                     b.Property<bool>("Notif_Status");
@@ -593,6 +591,10 @@ namespace ExpenseProcessingSystem.Migrations
                     b.Property<int>("Notif_User_ID");
 
                     b.Property<int>("Notif_Verifr_Apprvr_ID");
+
+                    b.Property<DateTime>("Vendor_Created_Date");
+
+                    b.Property<DateTime>("Vendor_Last_Updated");
 
                     b.HasKey("Notif_ID");
 
@@ -816,6 +818,31 @@ namespace ExpenseProcessingSystem.Migrations
                     b.HasKey("Pending_VAT_ID");
 
                     b.ToTable("DMVAT_Pending");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.Pending.HomeNotifModel_Pending", b =>
+                {
+                    b.Property<int>("Notif_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Notif_Application_ID");
+
+                    b.Property<DateTime>("Notif_Date_Filed");
+
+                    b.Property<string>("Notif_Message");
+
+                    b.Property<bool>("Notif_Status");
+
+                    b.Property<string>("Notif_Type_Status");
+
+                    b.Property<int>("Notif_User_ID");
+
+                    b.Property<int>("Notif_Verifr_Apprvr_ID");
+
+                    b.HasKey("Notif_ID");
+
+                    b.ToTable("HomeNotif_Pending");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.SystemMessageModel", b =>

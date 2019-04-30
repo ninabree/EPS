@@ -11,6 +11,7 @@ namespace ExpenseProcessingSystem.ViewModels.Reports
     }
     public class RepWTSViewModel
     {
+        public int WTS_ID { get; set; }
         public int WTS_Voucher_No { get; set; }
         public int WTS_Check_No { get; set; }
         public DateTime WTS_Val_Date { get; set; }

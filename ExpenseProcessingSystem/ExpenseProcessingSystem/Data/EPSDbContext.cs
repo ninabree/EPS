@@ -46,8 +46,8 @@ namespace ExpenseProcessingSystem.Data
         public DbSet<DMCustModel_Pending> DMCust_Pending { get; set; }
         public DbSet<DMBIRCertSignModel_Pending> DMBCS_Pending { get; set; }
 
-        //NOTIF
-        public DbSet<NotifModel> Notif { get; set; }
+        //HOME
+        public DbSet<HomeNotifModel> HomeNotif { get; set; }
         //FILES
         public DbSet<FileLocationModel> FileLocation { get; set; }
     }

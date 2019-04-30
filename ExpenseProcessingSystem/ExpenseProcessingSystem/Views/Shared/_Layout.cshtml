@@ -9,8 +9,9 @@
         (Context.Request.Path.ToString() == "/Home/Entry_NC") ? true :
         (Context.Request.Path.ToString() == "/Home/Entry_PCV") ? true :
         (Context.Request.Path.ToString() == "/Home/Entry_SS") ? true : false;
-    //var isAdmin = (ViewData["Access"].ToString() == "admin") ? true : false;
-    //ViewData["Access"] = "";
+    var isHome = (Context.Request.Path.ToString() == "/Home/Index") ? true :
+        (Context.Request.Path.ToString() == "/Home/Pending") ? true :
+        (Context.Request.Path.ToString() == "/Home/History") ? true : false;
 
 }
 <!DOCTYPE html>
@@ -71,6 +72,8 @@
             <div class="tabContent">
                 @if (isEntry)
                 {@Html.Partial("EntityTabsPartial")}
+                else if(isHome)
+                {@Html.Partial("HomeTabsPartial")}
                 @RenderBody()
             </div>
         </div>

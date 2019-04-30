@@ -97,6 +97,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             Dept_MasterID = m.Pending_Dept_MasterID,
                             Dept_Name = m.Pending_Dept_Name,
                             Dept_Code = m.Pending_Dept_Code,
+                            Dept_Budget_Unit = m.Pending_Dept_Budget_Unit,
                             Dept_Creator_ID = m.Pending_Dept_Creator_ID,
                             Dept_Approver_ID = m.Pending_Dept_Approver_ID.Equals(null) ? 0 : m.Pending_Dept_Approver_ID,
                             Dept_Created_Date = m.Pending_Dept_Filed_Date,
@@ -124,6 +125,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             Dept_MasterID = m.Pending_Dept_MasterID,
                             Dept_Name = m.Pending_Dept_Name,
                             Dept_Code = m.Pending_Dept_Code,
+                            Dept_Budget_Unit = m.Pending_Dept_Budget_Unit,
                             Dept_Creator_ID = m.Pending_Dept_Creator_ID,
                             Dept_Approver_ID = m.Pending_Dept_Approver_ID.Equals(null) ? 0 : m.Pending_Dept_Approver_ID,
                             Dept_Created_Date = m.Pending_Dept_Filed_Date,
@@ -834,6 +836,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             Dept_MasterID = m.Dept_MasterID,
                             Dept_Name = m.Dept_Name,
                             Dept_Code = m.Dept_Code,
+                            Dept_Budget_Unit = m.Dept_Budget_Unit,
                             Dept_Creator_ID = m.Dept_Creator_ID,
                             Dept_Created_Date = m.Dept_Created_Date,
                             Dept_Last_Updated = DateTime.Now,
@@ -1135,6 +1138,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         }
 
         //-----------------------------------------------------------------
+        //Dropdown Select List
         public List<SelectListItem> getFbtSelectList()
         {
             List<SelectListItem> fbtList = new List<SelectListItem>();

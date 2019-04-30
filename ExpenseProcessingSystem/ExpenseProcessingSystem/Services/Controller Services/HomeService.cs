@@ -12,6 +12,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Linq.Dynamic.Core;
+using System.Reflection;
+
 namespace ExpenseProcessingSystem.Services
 {
     public class HomeService
@@ -37,7 +40,76 @@ namespace ExpenseProcessingSystem.Services
             return data;
         }
 
-        //-------------------------POPULATE--------------------------
+        //-----------------------------------Populate-------------------------------------//
+        //[ Home ]
+        public List<HomeNotifViewModel> populateNotif(FiltersViewModel filters)
+        {
+            IQueryable<HomeNotifModel> mList = _context.HomeNotif.ToList().AsQueryable();
+            PropertyInfo[] properties = filters.NotifFil.GetType().GetProperties();
+
+            //FILTER
+            foreach (var property in properties)
+            {
+                var propertyName = property.Name;
+                string subStr = propertyName.Substring(propertyName.IndexOf('_') + 1);
+                var toStr = property.GetValue(filters.NotifFil).ToString();
+                string[] colArr = { "No", "Creator_ID", "Approver_ID" };
+                if (toStr != "")
+                {
+                    if (toStr != "0")
+                    {
+                        if (colArr.Contains(subStr)) // IF INT VAL
+                        {
+                            mList = mList.Where("Notif_" + subStr + " = @0 AND  Notif_isDeleted == @1", property.GetValue(filters.NotifFil), false)
+                                     .Select(e => e).AsQueryable();
+                        }
+                        else if (subStr == "Last_Updated")
+                        {
+                            mList = mList
+                               .Where(x => (x.Notif_Last_Updated.ToShortDateString() == property.GetValue(filters.NotifFil).ToString()))
+                              .Select(e => e).AsQueryable();
+                        }
+                        else // IF STRING VALUE
+                        {
+                            mList = mList.Where("Notif_" + subStr + ".Contains(@0) AND  Notif_isDeleted == @1", property.GetValue(filters.NotifFil).ToString(), false)
+                                    .Select(e => e).AsQueryable();
+                        }
+                    }
+                }
+            }
+
+            var creatorList = (from a in mList
+                               join b in _context.User on a.Notif_Verifr_Apprvr_ID equals b.User_ID
+                               let CreatorName = b.User_LName + ", " + b.User_FName
+                               select new
+                               { a.Notif_ID, CreatorName }).ToList();
+            var apprvrList = (from a in mList
+                              join c in _context.User on a.Notif_Verifr_Apprvr_ID equals c.User_ID
+                              let ApproverName = c.User_LName + ", " + c.User_FName
+                              select new
+                              { a.Notif_ID, ApproverName }).ToList();
+
+            //assign values
+            List<HomeNotifModel> mList2 = mList.ToList();
+            List<HomeNotifViewModel> vmList = new List<HomeNotifViewModel>();
+            foreach (HomeNotifModel m in mList2)
+            {
+                var creator = creatorList.Where(a => a.Notif_ID == m.Notif_ID).Select(a => a.CreatorName).FirstOrDefault();
+                var approver = apprvrList.Where(a => a.Notif_ID == m.Notif_ID).Select(a => a.ApproverName).FirstOrDefault();
+                HomeNotifViewModel vm = new HomeNotifViewModel
+                {
+                    Notif_Application_ID = m.Notif_Application_ID,
+                    Notif_Message = m.Notif_Message,
+                    Notif_Verifier_Approver = approver ?? "",
+                    Notif_Type_Status = m.Notif_Type_Status,
+                    Notif_Last_Updated = m.Notif_Last_Updated,
+                    Notif_Status = m.Notif_Status.ToString()
+                };
+                vmList.Add(vm);
+            }
+            return vmList;
+        }
+
         //[ User Maintenance ]
         public UserManagementViewModel2 populateUM()
         {
@@ -248,6 +320,7 @@ namespace ExpenseProcessingSystem.Services
                                    pp.Pending_Dept_MasterID,
                                    pp.Pending_Dept_Name,
                                    pp.Pending_Dept_Code,
+                                   pp.Pending_Dept_Budget_Unit,
                                    pp.Pending_Dept_isDeleted,
                                    pp.Pending_Dept_Creator_ID,
                                    pmCreatorID = pm.Dept_Creator_ID.ToString(),
@@ -272,6 +345,7 @@ namespace ExpenseProcessingSystem.Services
                     Dept_Name = pending.Pending_Dept_Name,
                     Dept_MasterID = pending.Pending_Dept_MasterID,
                     Dept_Code = pending.Pending_Dept_Code,
+                    Dept_Budget_Unit = pending.Pending_Dept_Budget_Unit,
                     Dept_Creator_ID = pending.pmCreatorID == null ? pending.Pending_Dept_Creator_ID : int.Parse(pending.pmCreatorID),
                     Dept_Approver_ID = int.Parse(_session.GetString("UserID")),
                     Dept_Created_Date = pending.pmCreateDate == null ? DateTime.Now : DateTime.Parse(pending.pmCreateDate),
@@ -1098,6 +1172,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Dept_Name = dm.Dept_Name,
                     Pending_Dept_MasterID = ++masterIDMax,
                     Pending_Dept_Code = dm.Dept_Code,
+                    Pending_Dept_Budget_Unit = dm.Dept_Budget_Unit,
                     Pending_Dept_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_Dept_Filed_Date = DateTime.Now,
                     Pending_Dept_isDeleted = false,
@@ -1129,6 +1204,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Dept_Name = dm.Dept_Name,
                     Pending_Dept_MasterID = dm.Dept_MasterID,
                     Pending_Dept_Code = dm.Dept_Code,
+                    Pending_Dept_Budget_Unit = dm.Dept_Budget_Unit,
                     Pending_Dept_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_Dept_Filed_Date = DateTime.Now,
                     Pending_Dept_isDeleted = false,
@@ -1160,6 +1236,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Dept_Name = dm.Dept_Name,
                     Pending_Dept_MasterID = dm.Dept_MasterID,
                     Pending_Dept_Code = dm.Dept_Code,
+                    Pending_Dept_Budget_Unit = dm.Dept_Budget_Unit,
                     Pending_Dept_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_Dept_Filed_Date = DateTime.Now,
                     Pending_Dept_isDeleted = true,

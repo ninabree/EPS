@@ -1,6 +1,7 @@
 ﻿using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.ViewModels;
 using ExpenseProcessingSystem.ViewModels.Search_Filters;
+using ExpenseProcessingSystem.ViewModels.Search_Filters.Home;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -31,8 +32,26 @@ namespace ExpenseProcessingSystem.Services
                 accessType = "",
                 isAdmin = false
             };
-            //FOR DM
+            var controllerName = (string)filterContext.RouteData.Values["controller"];
             var actionName = (string)filterContext.RouteData.Values["action"];
+
+            //FOR Home
+            if (actionName == "Index" && controllerName == "Home")
+            {
+                FiltersViewModel filters = new FiltersViewModel();
+                NotifFiltersViewModel NotifFil = new NotifFiltersViewModel();
+                NotifFil = new NotifFiltersViewModel
+                {
+                    Notif_Last_Updated = DateTime.Parse(ctx.Session.GetString("Notif_Last_Updated") ?? DateTime.Now.ToString()),
+                    NotifFil_Message = ctx.Session.GetString("NotifFil_Message") ?? "",
+                    NotifFil_Status = ctx.Session.GetString("NotifFil_Status") ?? "",
+                    NotifFil_Verifier_Approver_Name = ctx.Session.GetString("NotifFil_Verifier_Approver_Name") ?? ""
+                };
+                filters.NotifFil = NotifFil;
+                controller.TempData["filters"] = filters;
+            }
+            //FOR DM
+
             if (actionName == "DMPartial_Vendor")
             {
                 DMFiltersViewModel filters = new DMFiltersViewModel();
@@ -56,6 +75,7 @@ namespace ExpenseProcessingSystem.Services
                 {
                     DF_Name = ctx.Session.GetString("DF_Name") ?? "",
                     DF_Code = ctx.Session.GetString("DF_Code") ?? "",
+                    DF_Budget_Unit = ctx.Session.GetString("DF_Budget_Unit") ?? "",
                     DF_Creator_Name = ctx.Session.GetString("DF_Creator_Name") ?? "",
                     DF_Approver_Name = ctx.Session.GetString("DF_Approver_Name") ?? "",
                     DF_Status = ctx.Session.GetString("DF_Status") ?? ""
@@ -74,7 +94,7 @@ namespace ExpenseProcessingSystem.Services
                     CKF_Series_From = ctx.Session.GetString("CKF_Series_From") ?? "",
                     CKF_Series_To = ctx.Session.GetString("CKF_Series_To") ?? "",
                     CKF_Name = ctx.Session.GetString("CKF_Name") ?? "",
-                    CKF_Type = ctx.Session.GetString("CKF_Type") ?? "",
+                    CKF_Bank_Info = ctx.Session.GetString("CKF_Bank_Info") ?? "",
                     CKF_Creator_Name = ctx.Session.GetString("CKF_Creator_Name") ?? "",
                     CKF_Approver_Name = ctx.Session.GetString("CKF_Approver_Name") ?? "",
                     CKF_Status = ctx.Session.GetString("CKF_Status") ?? ""

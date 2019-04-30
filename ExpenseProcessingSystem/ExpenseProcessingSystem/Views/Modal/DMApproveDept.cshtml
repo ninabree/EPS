@@ -13,6 +13,7 @@
             <tr>
                 <th>Department Name</th>
                 <th>Department Code</th>
+                <th>Budget Unit</th>
                 <th>Status</th>
             </tr>
             @if (Model != null)
@@ -22,6 +23,7 @@
                     <tr>
                         <td contenteditable="false">@Html.TextBoxFor(item => item[i].Dept_Name, new { @class = "w-full" })</td>
                         <td contenteditable="false">@Html.TextBoxFor(item => item[i].Dept_Code, new { @class = "w-full" })</td>
+                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].Dept_Budget_Unit, new { @class = "w-full" })</td>
                         <td contenteditable="false">@Html.TextBoxFor(item => item[i].Dept_Status, new { @class = "w-full" })</td>
                         @Html.HiddenFor(item => item[i].Dept_MasterID)
                     </tr>

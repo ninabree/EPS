@@ -283,10 +283,16 @@ $(document).ready(function () {
             tabLinks[id].onclick = showTab;
             tabLinks[id].onfocus = function () { this.blur() };
             if (id == tabVal) tabLinks[id].className = 'selected';
+
+            //if any entry tab is clicked, 'Entry' tab is selected as well
             if ("/Home/Entry_CV" == tabVal || "/Home/Entry_DDV" == tabVal || "/Home/Entry_PCV" == tabVal || "/Home/Entry_NC" == tabVal ||
                 "/Home/Entry_SS" == tabVal) {
                 document.getElementById('entry').firstElementChild.className = 'selected';
-            };
+            }
+            //if any home tab is clicked, 'Home' tab is selected as well
+            else if ("/Home/Index" == tabVal || "/Home/Pending" == tabVal || "/Home/History" == tabVal || "/Home/Entry_NC" == tabVal) {
+                document.getElementById('home').firstElementChild.className = 'selected';
+            }
             i++;
         }
 

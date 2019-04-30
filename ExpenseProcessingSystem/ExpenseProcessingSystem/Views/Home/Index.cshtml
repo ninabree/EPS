@@ -3,68 +3,96 @@
 }
 @using ExpenseProcessingSystem.ViewModels
 @model HomeIndexViewModel
-<div class="tab-content-cont m-t-10">
-    @*<div style="height: 20px; margin: 15px 0px; background-color: blue">@ViewBag.access.isLoggedIn</div>
-    <div style="height: 20px; margin: 15px 0px; background-color: forestgreen">@ViewBag.access.isAdmin</div>
-    <div style="height: 20px; margin: 15px 0px; background-color: yellow">@ViewBag.access.accessType</div>*@
+<div class="tabContent hometabContent">
     <div>
-        <div class="tbl-cont" style="height: 150px; margin: 20px 0px; overflow-y: auto;">
-            <table class="table table-striped tab-tbl table-bordered" style="height: 150px">
-                <thead>
-                    <tr>
-                        <th>Application ID</th>
-                        <th>Message</th>
-                        <th>Date</th>
-                        <th>Approver/Verifier</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-    </div>
-    <div id="tbl-lbl"><p>Pending Applications:</p></div>
-    <div class="tbl-cont">
+        <form asp-action="Index" asp-controller="Home" method="get" id="search-frm">
+            <div class="form-actions no-color">
+                <p>
+                    Find by:
+                    <table class="table">
+                        <tr>
+                            <td>@Html.LabelFor(model => model.Filters.NotifFil.Notif_Last_Updated)</td>
+                            <td>@Html.EditorFor(model => model.Filters.NotifFil.Notif_Last_Updated, new { htmlAttributes = new { @class = "input h-20 w-97 fs-11 form -control" } })</td>
+                            <td>@Html.LabelFor(model => model.Filters.NotifFil.NotifFil_Message)</td>
+                            <td>@Html.TextBoxFor(model => model.Filters.NotifFil.NotifFil_Message, new { @class = "input" })</td>
+                            <td>@Html.LabelFor(model => model.Filters.NotifFil.NotifFil_Verifier_Approver_Name)</td>
+                            <td>@Html.TextBoxFor(model => model.Filters.NotifFil.NotifFil_Verifier_Approver_Name, new { @class = "input" })</td>
+                            <td>@Html.LabelFor(model => model.Filters.NotifFil.NotifFil_Status)</td>
+                            <td>@Html.TextBoxFor(model => model.Filters.NotifFil.NotifFil_Status, new { @class = "input" })</td>
+                            <td colspan="2" style="text-align: right;">
+                                <input type="submit" value="Search" class="btn btn-default" id="search-btn" />
+                                <input type="button" value="Back to Full List" id="full-list-btn" class="btn btn-default" />
+                            </td>
+                        </tr>
+                    </table>
+                </p>
+            </div>
+        </form>
+        <div class="tab-tbl">All Notification Records:</div>
         <table class="table table-striped tab-tbl table-bordered">
             <thead>
                 <tr>
-                    <th><a asp-action="Index" asp-route-sortOrder="@ViewData["IdSortParm"]">Application ID<p class="btn-xs glyphicon @ViewData["glyph-id"]"></p></a></th>
-                    <th>Type</th>
-                    <th>Amount</th>
-                    <th>Payee</th>
-                    <th>Maker</th>
-                    <th>Verifier</th>
-                    <th><a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]">Application Date<p class="btn-xs glyphicon @ViewData["glyph-appDate"]"></p></a></th>
-                    <th>Last Updated</th>
-                    <th>Status</th>
-                    <th></th>
+                    <th id="Application_ID"><a asp-action="Index" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["NotifAppIDSortParm"]">Application ID<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
+                    <th colspan="3" id="Message"><a asp-action="Index" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["NotifMessageSortParm"]">Notification Message<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
+                    <th id="Last_Updated"><a asp-action="Index" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["NotifLastUpdatedSortParm"]">Last Updated<p class="btn-xs glyphicon @ViewData["glyph-5"]"></p></a></th>
+                    <th id="Verifier_Approver"><a asp-action="Index" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["NotifApproverSortParm"]">Approved By<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
+                    <th id="Type_Status"><a asp-action="Index" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["NotifTypeStatSortParm"]">Status<p class="btn-xs glyphicon @ViewData["glyph-6"]"></p></a></th>
                 </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+                @if (Model.NotifList.Count != 0)
+                {
+                    @foreach (var item in Model.NotifList)
+                    {
+                <tr>
+                    @*<td><input class="tbl-chk" id="@item.NotifList_MasterID" type="checkbox" /></td>*@
+                    <td>@Html.DisplayFor(modelItem => item.Notif_Application_ID)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Notif_Message)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Notif_Last_Updated)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Notif_Last_Updated)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Notif_Verifier_Approver)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Notif_Type_Status)</td>
+                </tr>
+                    }
+                }
+                else
+                {
+                    <tr></tr>}
+            </tbody>
         </table>
-        @*@{
-                var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
-                var nextDisabled = !Model.HasNextPage ? "disabled" : "";
-            }
+        @{
+            var prevDisabled = !Model.NotifList.HasPreviousPage ? "disabled" : "";
+            var nextDisabled = !Model.NotifList.HasNextPage ? "disabled" : "";
+        }
 
-            <a asp-action="Index"
-                asp-route-sortOrder="@ViewData["CurrentSort"]"
-                asp-route-page="@(Model.PageIndex - 1)"
-                asp-route-currentFilter="@ViewData["CurrentFilter"]"
-                class="btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left">
-            </a>
-            <input type="text" class="pagination-input" id="paginationInput" val="" />
-            <input type="text" class="pagination-input" value="of @(Model.TotalPages)" disabled/>
-            <a asp-action="Index"
-                asp-route-sortOrder="@ViewData["CurrentSort"]"
-                asp-route-page="@(Model.PageIndex + 1)"
-                asp-route-currentFilter="@ViewData["CurrentFilter"]"
-                class="btn btn-xs btn-default @nextDisabled glyphicon glyphicon-menu-right">
-            </a>*@
+        <a asp-action="DM"
+           asp-route-sortOrder="@ViewData["CurrentSort"]"
+           asp-route-page="@(Model.NotifList.PageIndex - 1)"
+           asp-controller="Home"
+           asp-route-partialName="@ViewData["Title"]"
+           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+           class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left">
+        </a>
+        <input type="text" class="pagination-input" id="paginationInput" val="" />
+        <input type="text" class="pagination-input" value="of @(Model.NotifList.TotalPages)" disabled />
+        <a asp-action="DM"
+           asp-route-sortOrder="@ViewData["CurrentSort"]"
+           asp-controller="Home"
+           asp-route-partialName="@ViewData["Title"]"
+           asp-route-page="@(Model.NotifList.PageIndex + 1)"
+           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+           class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right">
+        </a>
+        <div class="float-r m-r-10">
+            <button class="dis-inline-block tbl-btn btn add-rec rec" id="add_account">Add</button>
+            <button class="dis-inline-block tbl-btn btn edit-rec rec" id="edit_account">Edit</button>
+            <button class="dis-inline-block tbl-btn btn delete-rec rec" id="delete_account">Delete</button>
+            @if (ViewBag.access.accessType == "approver")
+            {
+                <button class="dis-inline-block tbl-btn btn apprv-rec rec" id="apprv_account">Approve</button>
+                <button class="dis-inline-block tbl-btn btn rej-rec rec" id="rej_account">Reject</button>
+            }
+            <input type="hidden" value="@ViewData["Title"]" id="partialVal" />
+        </div>
+        @Html.Partial("ModalPartial")
     </div>
-</div>
-<environment include="Development">
-    <script src="~/lib/jquery/dist/jquery.js"></script>
-</environment>
-<script type="text/javascript">
-</script>
