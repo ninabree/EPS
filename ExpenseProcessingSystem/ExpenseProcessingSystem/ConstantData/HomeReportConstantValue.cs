@@ -23,8 +23,9 @@ namespace ExpenseProcessingSystem.ConstantData
         public const string PreviewID = "3";
 
         //PDF Format name
-        public const string ReportLayoutFormatName = "ReportLayoutFormat/_ReportLayout_";
+        public const string ReportLayoutFormatName = "_ReportLayout_";
 
+        public const string ReportPdfPrevLayoutPath = "ReportLayoutFormat/";
         //PDF Footer foramt
         public static readonly string PdfFooter1 = "--footer-left \" PAGE => [page] of [toPage] \" --footer-right \" Printed Date => " + DateTime.Today.ToShortDateString() + "\" --footer-font-size \"9\" --footer-spacing 3 --footer-font-name \"calibri light\"";
         //========================================================================
@@ -43,6 +44,21 @@ namespace ExpenseProcessingSystem.ConstantData
                 {
                     SemID = 2,
                     SemName = "2nd Semester"
+                }
+            };
+        }
+
+        public static IEnumerable<PeriodOption> GetPeriodOptionList()
+        {
+            return new PeriodOption[]
+            {
+                new PeriodOption
+                {
+                    PeriodOptionID = 1
+                },
+                new PeriodOption
+                {
+                    PeriodOptionID = 2
                 }
             };
         }
@@ -1284,6 +1300,11 @@ namespace ExpenseProcessingSystem.ConstantData
     {
         public byte SemID { get; set; }
         public string SemName { get; set; }
+    }
+
+    public class PeriodOption
+    {
+        public byte PeriodOptionID { get; set; }
     }
 
 }

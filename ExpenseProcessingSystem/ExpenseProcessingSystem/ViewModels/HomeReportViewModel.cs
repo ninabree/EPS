@@ -30,6 +30,8 @@ namespace ExpenseProcessingSystem.ViewModels
 
         public IEnumerable<SemesterList> SemesterList { get; set; }
 
+        public IEnumerable<PeriodOption> PeriodOptionList { get; set; }
+
         public DateTime PeriodFrom { get; set; }
 
         public DateTime PeriodTo { get; set; }
@@ -51,6 +53,8 @@ namespace ExpenseProcessingSystem.ViewModels
         public string YearSem { get; set; }
 
         public string Semester { get; set; }
+
+        public string PeriodOption { get; set; }
 
     }
 }

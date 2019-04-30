@@ -80,8 +80,4 @@
     <Folder Include="wwwroot\uploads\Temp\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="wwwroot\ExcelTemplates\_ReportLayout_2.xlsx" />
-  </ItemGroup>
-
 </Project>

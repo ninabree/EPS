@@ -9,7 +9,6 @@ C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSyste
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\bin\Debug\netcoreapp2.1\Accessibility.dll
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\bin\Debug\netcoreapp2.1\System.Deployment.dll
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\bin\Debug\netcoreapp2.1\System.Runtime.Serialization.Formatters.Soap.dll
-C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\ExpenseProcessingSystem.csprojAssemblyReference.cache
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\ExpenseProcessingSystem.Properties.Resources.resources
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\ExpenseProcessingSystem.csproj.GenerateResource.cache
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\ExpenseProcessingSystem.csproj.CoreCompileInputs.cache
@@ -31,7 +30,9 @@ C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSyste
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Home\Entry_NC.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Home\Entry_PCV.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Home\Entry_SS.g.cshtml.cs
+C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Home\History.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Home\Index.g.cshtml.cs
+C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Home\Pending.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Home\RedirectCont.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Home\Report.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Home\ReportLayoutFormat\_ReportLayout_2.g.cshtml.cs
@@ -44,7 +45,6 @@ C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSyste
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMAddCust_Pending.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMAddDept_Pending.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMAddFBT_Pending.g.cshtml.cs
-C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMAddNCC_Pending.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMAddRegEmp_Pending.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMAddTempEmp_Pending.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMAddTR_Pending.g.cshtml.cs
@@ -58,7 +58,6 @@ C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSyste
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMApproveCust.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMApproveDept.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMApproveFBT.g.cshtml.cs
-C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMApproveNCC.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMApproveRegEmp.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMApproveTempEmp.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMApproveTR.g.cshtml.cs
@@ -72,7 +71,6 @@ C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSyste
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMDeleteDept.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMDeleteDept_Pending.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMDeleteFBT_Pending.g.cshtml.cs
-C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMDeleteNCC_Pending.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMDeleteRegEmp_Pending.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMDeleteTempEmp_Pending.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMDeleteTR_Pending.g.cshtml.cs
@@ -87,7 +85,6 @@ C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSyste
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMEditDept.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMEditDept_Pending.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMEditFBT_Pending.g.cshtml.cs
-C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMEditNCC_Pending.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMEditRegEmp_Pending.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMEditTempEmp_Pending.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMEditTR_Pending.g.cshtml.cs
@@ -101,7 +98,6 @@ C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSyste
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMRejCust.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMRejDept.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMRejFBT.g.cshtml.cs
-C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMRejNCC.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMRejRegEmp.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMRejTempEmp.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Modal\DMRejTR.g.cshtml.cs
@@ -117,7 +113,6 @@ C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSyste
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Partial\DMPartial_Cust.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Partial\DMPartial_Dept.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Partial\DMPartial_FBT.g.cshtml.cs
-C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Partial\DMPartial_NCC.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Partial\DMPartial_RegEmp.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Partial\DMPartial_TempEmp.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Partial\DMPartial_TR.g.cshtml.cs
@@ -126,6 +121,8 @@ C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSyste
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Shared\CVPartial.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Shared\DDVPartial.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Shared\EntityTabsPartial.g.cshtml.cs
+C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Shared\HomePendingPartial.g.cshtml.cs
+C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Shared\HomeTabsPartial.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Shared\ModalPartial.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Shared\ModalPartial2.g.cshtml.cs
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Shared\ModalPartial3.g.cshtml.cs
@@ -144,3 +141,4 @@ C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSyste
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\ExpenseProcessingSystem.csproj.CopyComplete
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\ExpenseProcessingSystem.dll
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\ExpenseProcessingSystem.pdb
+C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\ExpenseProcessingSystem.csprojAssemblyReference.cache
