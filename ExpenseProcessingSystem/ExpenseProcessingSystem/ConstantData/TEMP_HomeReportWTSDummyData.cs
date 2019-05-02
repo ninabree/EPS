@@ -37,8 +37,8 @@ namespace ExpenseProcessingSystem.ConstantData
                     WTS_Entity = "Sample Entity",
                     WTS_Division = "Sample Division",
                     WTS_Inter_Amount = 4282.00,
-                    WTS_Inter_Rate = 0.42
-
+                    WTS_Inter_Rate = 0.42,
+                    WTS_TR_ID = 149
                 };
             }
             for (int runs = 0; runs < 30; runs++)
@@ -66,18 +66,19 @@ namespace ExpenseProcessingSystem.ConstantData
                     WTS_Entity = "Sample Entity",
                     WTS_Division = "Sample Division",
                     WTS_Inter_Amount = 4282.00,
-                    WTS_Inter_Rate = 0.42
-
+                    WTS_Inter_Rate = 0.42,
+                    WTS_TR_ID = 153
                 };
             }
             return rep;
         }
-        public static IEnumerable<RepWTSViewModel> GetTEMP_HomeReportWTSOutputModelData_Month(string _year, string _month, IEnumerable<RepWTSViewModel> data)
+        public static IEnumerable<RepWTSViewModel> GetTEMP_HomeReportWTSOutputModelData_Month(string _year, string _month, IEnumerable<RepWTSViewModel> data, string _subType)
         {
             return data.Where(x => x.WTS_Val_Date >= new DateTime(Convert.ToInt32(_year), Convert.ToInt32(_month), 1)
-                                && x.WTS_Val_Date <= new DateTime(Convert.ToInt32(_year), Convert.ToInt32(_month), 30));
+                                && x.WTS_Val_Date <= new DateTime(Convert.ToInt32(_year), Convert.ToInt32(_month), 30) 
+                                && x.WTS_TR_ID == Convert.ToInt32(_subType));
         }
-        public static IEnumerable<RepWTSViewModel> GetTEMP_HomeReportWTSOutputModelData_Semester(string _year, string _sem, IEnumerable<RepWTSViewModel> data)
+        public static IEnumerable<RepWTSViewModel> GetTEMP_HomeReportWTSOutputModelData_Semester(string _year, string _sem, IEnumerable<RepWTSViewModel> data, string _subType)
         {
             DateTime periodFrom = new DateTime();
             DateTime periodTo = new DateTime();
@@ -94,12 +95,14 @@ namespace ExpenseProcessingSystem.ConstantData
                     break;
             }
             return data.Where(x => x.WTS_Val_Date >= periodFrom
-                                && x.WTS_Val_Date <= periodTo);
+                                && x.WTS_Val_Date <= periodTo
+                                && x.WTS_TR_ID == Convert.ToInt32(_subType));
         }
-        public static IEnumerable<RepWTSViewModel> GetTEMP_HomeReportWTSOutputModelData_Period(DateTime _periodFrom, DateTime _periodTo, IEnumerable<RepWTSViewModel> data)
+        public static IEnumerable<RepWTSViewModel> GetTEMP_HomeReportWTSOutputModelData_Period(DateTime _periodFrom, DateTime _periodTo, IEnumerable<RepWTSViewModel> data, string _subType)
         {
             return data.Where(x => x.WTS_Val_Date >= _periodFrom
-                                && x.WTS_Val_Date <= _periodTo);
+                                && x.WTS_Val_Date <= _periodTo
+                                && x.WTS_TR_ID == Convert.ToInt32(_subType));
         }
     }
 }

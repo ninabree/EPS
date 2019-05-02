@@ -34,5 +34,7 @@ namespace ExpenseProcessingSystem.ViewModels.Reports
         public string WTS_Division { get; set; }
         public double WTS_Inter_Amount { get; set; }
         public double WTS_Inter_Rate { get; set; }
+        //TEMP VARIABLE - to test filter - originally from voucher no
+        public int WTS_TR_ID { get; set; }
     }
 }
