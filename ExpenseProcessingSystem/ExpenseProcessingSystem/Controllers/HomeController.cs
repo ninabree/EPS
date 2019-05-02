@@ -1,6 +1,4 @@
-﻿using DinkToPdf;
-using DinkToPdf.Contracts;
-using ExpenseProcessingSystem.ConstantData;
+﻿using ExpenseProcessingSystem.ConstantData;
 using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Models;
 using ExpenseProcessingSystem.Services;
@@ -63,12 +61,6 @@ namespace ExpenseProcessingSystem.Controllers
             if (userId == null)
             {
                 return RedirectToAction("Login", "Account");
-            }
-            //landing page for Admin User Types is User Maintenance
-            var role = _service.getUserRole(_session.GetString("UserID"));
-            if (role == "admin")
-            {
-                return RedirectToAction("UM");
             }
 
             //sort
@@ -346,7 +338,8 @@ namespace ExpenseProcessingSystem.Controllers
         {
             string layoutName = "";
             string fileName = "";
-            string dateNow= DateTime.Now.ToString("MM-dd-yyyy hh:mmtt");
+            //string datenow= datetime.now.tostring("mmddyyyy hhmmtt");
+            string dateNow = DateTime.Now.ToString("mmddyyy hmmtt");
             string pdfFooterFormat = "";
 
             //Model for data retrieve from Database
@@ -359,6 +352,18 @@ namespace ExpenseProcessingSystem.Controllers
                 case ConstantData.HomeReportConstantValue.APSWT_M:
 
                     fileName = "AlphalistOfPayeesSubjectToWithholdingTax_Monthly_" + dateNow;
+                    layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
+                    pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter1;
+                    //Get the necessary data from Database
+                    data = ConstantData.TEMP_HomeReportDummyData.GetTEMP_HomeReportOutputModelData();
+
+                    break;
+                case ConstantData.HomeReportConstantValue.WTS:
+                    if (model.)
+                    {
+
+                    }
+                    fileName = "WithholdingTaxSummary_" + dateNow;
                     layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
                     pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter1;
                     //Get the necessary data from Database

@@ -17,6 +17,9 @@ namespace ExpenseProcessingSystem.ConstantData
         //Alphalist of Payees Subject to Withholding Tax (Monthly)
         public const string APSWT_M = "2";
 
+        //Alphalist of Payees Subject to Withholding Tax (Monthly)
+        public const string WTS = "10";
+
         //EXCEL, PDF, Preview format ID
         public const string EXCELID = "1";
         public const string PDFID = "2";

@@ -13,7 +13,7 @@ namespace ExpenseProcessingSystem.Models
         public int VAT_ID { get; set; }
         public int VAT_MasterID { get; set; }
         public string VAT_Name { get; set; }
-        public string VAT_Rate { get; set; }
+        public float VAT_Rate { get; set; }
         public int VAT_Creator_ID { get; set; }
         public int VAT_Approver_ID { get; set; }
         public DateTime VAT_Created_Date { get; set; }

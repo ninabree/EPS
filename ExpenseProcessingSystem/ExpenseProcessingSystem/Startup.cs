@@ -1,7 +1,4 @@
 ﻿using System;
-using System.IO;
-using DinkToPdf;
-using DinkToPdf.Contracts;
 using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Services;
 using Microsoft.AspNetCore.Builder;
