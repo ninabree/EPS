@@ -18,6 +18,8 @@
                         <td>@Html.TextBoxFor(model => model.DMFilters.DF.DF_Name, new { @class = "input" })</td>
                         <td>@Html.LabelFor(model => model.DMFilters.DF.DF_Code)</td>
                         <td>@Html.TextBoxFor(model => model.DMFilters.DF.DF_Code, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.DF.DF_Budget_Unit)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.DF.DF_Budget_Unit, new { @class = "input" })</td>
                         <td><input id="filterPartialName" name="partialName" value="DMPartial_Dept" type="hidden" /></td>
                     </tr>
                     <tr>
@@ -43,6 +45,7 @@
                 <th></th>
                 <th id="Name"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["DeptSortParm"]">Department Name<p class="btn-xs glyphicon @ViewData["glyph-1"]"></p></a></th>
                 <th id="Code"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["DeptCodeSortParm"]">Department Code<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
+                <th id="Budget_Unit"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["DeptBudgetSortParm"]">Budget Unit<p class="btn-xs glyphicon @ViewData["glyph-7"]"></p></a></th>
                 <th id="Creator_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["DeptCreatorSortParm"]">Input By<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
                 <th id="Approver_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["DeptApproverSortParm"]">Approved By<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
                 <th id="Last_Updated"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["DeptLastUpdatedSortParm"]">Last Updated<p class="btn-xs glyphicon @ViewData["glyph-5"]"></p></a></th>
@@ -58,6 +61,7 @@
                         <td><input class="tbl-chk" id="@item.Dept_MasterID" type="checkbox" /></td>
                         <td>@Html.DisplayFor(modelItem => item.Dept_Name)</td>
                         <td>@Html.DisplayFor(modelItem => item.Dept_Code)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Dept_Budget_Unit)</td>
                         <td>@Html.DisplayFor(modelItem => item.Dept_Creator_Name)</td>
                         <td>@Html.DisplayFor(modelItem => item.Dept_Approver_Name)</td>
                         <td>@Html.DisplayFor(modelItem => item.Dept_Last_Updated)</td>

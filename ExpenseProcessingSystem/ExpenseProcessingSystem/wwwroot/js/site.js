@@ -85,8 +85,8 @@ $(document).ready(function () {
             if ((txtVal != stat) && (this.checked == true)) {
                 alert("Kindly check rows with the same status only.");
                 $('.rec').prop('disabled', true);
-            //when in BCS and NCC table, disable editing for more than one entry
-            } else if (chkCount >= 2 && stat == "Approved" && (tblName == "BIR Cert Signatory" || tblName == "Non-Cash Category")) {
+            //when in BCS table, disable editing for more than one entry
+            } else if (chkCount >= 2 && stat == "Approved" && (tblName == "BIR Cert Signatory")) {
                 $('.apprv-rec').prop('disabled', true);
                 $('.rej-rec').prop('disabled', true);
                 $('.add-rec').prop('disabled', false);
@@ -283,10 +283,16 @@ $(document).ready(function () {
             tabLinks[id].onclick = showTab;
             tabLinks[id].onfocus = function () { this.blur() };
             if (id == tabVal) tabLinks[id].className = 'selected';
+
+            //if any entry tab is clicked, 'Entry' tab is selected as well
             if ("/Home/Entry_CV" == tabVal || "/Home/Entry_DDV" == tabVal || "/Home/Entry_PCV" == tabVal || "/Home/Entry_NC" == tabVal ||
                 "/Home/Entry_SS" == tabVal) {
                 document.getElementById('entry').firstElementChild.className = 'selected';
-            };
+            }
+            //if any home tab is clicked, 'Home' tab is selected as well
+            else if ("/Home/Index" == tabVal || "/Home/Pending" == tabVal || "/Home/History" == tabVal || "/Home/Entry_NC" == tabVal) {
+                document.getElementById('home').firstElementChild.className = 'selected';
+            }
             i++;
         }
 

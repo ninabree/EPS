@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Globalization;
-using System.Linq;
+﻿using ExpenseProcessingSystem.ConstantData;
 using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Models;
 using ExpenseProcessingSystem.Services;
@@ -11,13 +7,24 @@ using ExpenseProcessingSystem.Services.Excel_Services;
 using ExpenseProcessingSystem.ViewModels;
 using ExpenseProcessingSystem.ViewModels.Entry;
 using ExpenseProcessingSystem.ViewModels.NewRecord;
+using ExpenseProcessingSystem.ViewModels.Reports;
 using ExpenseProcessingSystem.ViewModels.Search_Filters;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using OfficeOpenXml;
+using Rotativa.AspNetCore;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ExpenseProcessingSystem.Controllers
 {
@@ -47,7 +54,75 @@ namespace ExpenseProcessingSystem.Controllers
             return _session.GetString("UserID");
         }
 
-        public IActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
+        public IActionResult Index(HomeIndexViewModel vm, string sortOrder, string currentFilter, string colName, string searchString, string page)
+        {
+            var userId = GetUserID();
+            int? pg = (page == null) ? 1 : int.Parse(page);
+
+            //check session
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            //sort
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NotifTypeStatSortParm"] = String.IsNullOrEmpty(sortOrder) ? "notif_type_status" : "";
+            ViewData["NotifAppIDSortParm"] = sortOrder == "notif_app_id_desc" ? "notif_app_id" : "notif_app_id_desc";
+            ViewData["NotifMessageSortParm"] = sortOrder == "notif_message_desc" ? "notif_message" : "notif_message_desc";
+            ViewData["NotifApproverSortParm"] = sortOrder == "notif_approvr_desc" ? "notif_approvr" : "notif_approvr_desc";
+            ViewData["NotifLastUpdatedSortParm"] = sortOrder == "notif_last_updte_desc" ? "notif_last_updte" : "notif_last_updte_desc";
+
+            if (searchString != null) { pg = 1; }
+            else { searchString = currentFilter; }
+
+            ViewData["CurrentFilter"] = searchString;
+            FiltersViewModel filters = new FiltersViewModel();
+            if (TempData.ContainsKey("filters"))
+            {
+                filters = (FiltersViewModel)TempData["filters"];
+            }
+            FiltersViewModel filterVM = new FiltersViewModel();
+            if (vm.Filters != null)
+            {
+                if (vm.Filters.NotifFil != null)
+                {
+                    //Notifications
+                    _session.SetString("Notif_Last_Updated", vm.Filters.NotifFil.Notif_Last_Updated.ToShortDateString() ?? "");
+                    _session.SetString("NotifFil_Message", vm.Filters.NotifFil.NotifFil_Message ?? "");
+                    _session.SetString("NotifFil_Status", vm.Filters.NotifFil.NotifFil_Status ?? "");
+                    _session.SetString("NotifFil_Verifier_Approver_Name", vm.Filters.NotifFil.NotifFil_Verifier_Approver_Name ?? "");
+                }
+            }
+            //populate and sort
+            var sortedVals = _sortService.SortData(_service.populateNotif(filters), sortOrder);
+            ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
+
+            HomeIndexViewModel VM = new HomeIndexViewModel()
+            {
+                Filters = filters,
+                NotifList = PaginatedList<HomeNotifViewModel>.CreateAsync(
+                        (sortedVals.list).Cast<HomeNotifViewModel>().AsQueryable().AsNoTracking(), pg ?? 1, pageSize)
+            };
+            return View(VM);
+        }
+        public IActionResult Pending(string sortOrder, string currentFilter, string searchString, int? page)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var role = _service.getUserRole(_session.GetString("UserID"));
+            if (role == "admin")
+            {
+                return RedirectToAction("UM");
+            }
+            HomeIndexViewModel vm = new HomeIndexViewModel();
+            return View(vm);
+        }
+        public IActionResult History(string sortOrder, string currentFilter, string searchString, int? page)
         {
             var userId = GetUserID();
             if (userId == null)
@@ -110,6 +185,7 @@ namespace ExpenseProcessingSystem.Controllers
                     //Dept
                     _session.SetString("DF_Name", vm.DMFilters.DF.DF_Name ?? "");
                     _session.SetString("DF_Code", vm.DMFilters.DF.DF_Code ?? "");
+                    _session.SetString("DF_Budget_Unit", vm.DMFilters.DF.DF_Budget_Unit ?? "");
                     _session.SetString("DF_Creator_Name", vm.DMFilters.DF.DF_Creator_Name ?? "");
                     _session.SetString("DF_Approver_Name", vm.DMFilters.DF.DF_Approver_Name ?? "");
                     _session.SetString("DF_Status", vm.DMFilters.DF.DF_Status ?? "");
@@ -121,7 +197,7 @@ namespace ExpenseProcessingSystem.Controllers
                     _session.SetString("CKF_Series_From", vm.DMFilters.CKF.CKF_Series_From ?? "");
                     _session.SetString("CKF_Series_To", vm.DMFilters.CKF.CKF_Series_To ?? "");
                     _session.SetString("CKF_Name", vm.DMFilters.CKF.CKF_Name ?? "");
-                    _session.SetString("CKF_Type", vm.DMFilters.CKF.CKF_Type ?? "");
+                    _session.SetString("CKF_Bank_Info", vm.DMFilters.CKF.CKF_Bank_Info ?? "");
                     _session.SetString("CKF_Creator_Name", vm.DMFilters.CKF.CKF_Creator_Name ?? "");
                     _session.SetString("CKF_Approver_Name", vm.DMFilters.CKF.CKF_Approver_Name ?? "");
                     _session.SetString("CKF_Status", vm.DMFilters.CKF.CKF_Status ?? "");
@@ -135,6 +211,7 @@ namespace ExpenseProcessingSystem.Controllers
                     _session.SetString("AF_Cust", vm.DMFilters.AF.AF_Cust ?? "");
                     _session.SetString("AF_Div", vm.DMFilters.AF.AF_Div ?? "");
                     _session.SetString("AF_Fund", vm.DMFilters.AF.AF_Fund ?? "");
+                    _session.SetString("AF_FBT", vm.DMFilters.AF.AF_FBT ?? "0");
                     _session.SetString("AF_Creator_Name", vm.DMFilters.AF.AF_Creator_Name ?? "");
                     _session.SetString("AF_Approver_Name", vm.DMFilters.AF.AF_Approver_Name ?? "");
                     _session.SetString("AF_Status", vm.DMFilters.AF.AF_Status ?? "");
@@ -152,7 +229,6 @@ namespace ExpenseProcessingSystem.Controllers
                 {
                     //FBT
                     _session.SetString("FF_Name", vm.DMFilters.FF.FF_Name ?? "");
-                    _session.SetString("FF_Account", vm.DMFilters.FF.FF_Account ?? "");
                     _session.SetString("FF_Formula", vm.DMFilters.FF.FF_Formula ?? "");
                     _session.SetString("FF_Tax_Rate", vm.DMFilters.FF.FF_Tax_Rate.ToString() ?? "0");
                     _session.SetString("FF_Creator_Name", vm.DMFilters.FF.FF_Creator_Name ?? "");
@@ -163,6 +239,7 @@ namespace ExpenseProcessingSystem.Controllers
                 {
                     //TR
                     _session.SetString("EF_Nature", vm.DMFilters.EF.EF_Nature ?? "");
+                    _session.SetString("EF_Nature_Income_Payment", vm.DMFilters.EF.EF_Nature_Income_Payment ?? "");
                     _session.SetString("EF_Tax_Rate", vm.DMFilters.EF.EF_Tax_Rate.ToString() ?? "0");
                     _session.SetString("EF_ATC", vm.DMFilters.EF.EF_ATC ?? "");
                     _session.SetString("EF_Tax_Rate_Desc", vm.DMFilters.EF.EF_Tax_Rate_Desc ?? "");
@@ -199,15 +276,6 @@ namespace ExpenseProcessingSystem.Controllers
                     _session.SetString("CUF_Approver_Name", vm.DMFilters.CUF.CUF_Approver_Name ?? "");
                     _session.SetString("CUF_Status", vm.DMFilters.CUF.CUF_Status ?? "");
                 }
-                else if (vm.DMFilters.NF != null)
-                {
-                    //Non Cash Category
-                    _session.SetString("NF_Name", vm.DMFilters.NF.NF_Name ?? "");
-                    _session.SetString("NF_Abbr", vm.DMFilters.NF.NF_Pro_Forma ?? "");
-                    _session.SetString("NF_Creator_Name", vm.DMFilters.NF.NF_Creator_Name ?? "");
-                    _session.SetString("NF_Approver_Name", vm.DMFilters.NF.NF_Approver_Name ?? "");
-                    _session.SetString("NF_Status", vm.DMFilters.NF.NF_Status ?? "");
-                }
                 else if (vm.DMFilters.BF != null)
                 {
                     //Non Cash Category
@@ -222,10 +290,207 @@ namespace ExpenseProcessingSystem.Controllers
             }
             return View();
         }
+
+        //------------------------------------------------------------------
+        //[* REPORT *]
         public IActionResult Report()
         {
-            return View();
+            //Get list of report types from the constant data file:HomeReportTypesModel.cs
+            //uses in Dropdownlist(Report Type)
+            IEnumerable<HomeReportTypesModel> ReportTypes = ConstantData.HomeReportConstantValue.GetReportTypeData();
+            //Pass list of report type and initial value for report sub type to ViewModel of Report
+            var reportViewModel = new HomeReportViewModel
+            {
+                ReportTypesList = ReportTypes,
+                //Initial value of sub type dropdownlist to avoid the nullexception.
+                ReportSubTypesList = new HomeReportSubTypesModel[]
+                {
+                    new HomeReportSubTypesModel
+                    {
+                    Id = 0,
+                    SubTypeName = null,
+                    ParentTypeId = 0
+                    }
+                },
+                MonthList = ConstantData.HomeReportConstantValue.GetMonthList(),
+                FileFormatList = ConstantData.HomeReportConstantValue.GetFileFormatList(),
+                YearList = ConstantData.HomeReportConstantValue.GetYearList(),
+                YearSemList = ConstantData.HomeReportConstantValue.GetYearList(),
+                SemesterList = ConstantData.HomeReportConstantValue.GetSemesterList(),
+                PeriodOptionList = ConstantData.HomeReportConstantValue.GetPeriodOptionList()
+            };
+
+            //Return ViewModel
+            return View(reportViewModel);
         }
+
+        //Populate the Report sub-type list to dropdownlist depends on the selected Report Type
+        [AcceptVerbs("GET")]
+        public JsonResult GetReportSubType(string ReportTypeID)
+        {
+            if (!string.IsNullOrWhiteSpace(ReportTypeID))
+            {
+                var ReportSubTypes = ConstantData.HomeReportConstantValue.GetReportSubTypeData().Where(m => m.ParentTypeId == Convert.ToInt32(ReportTypeID)).ToList();
+
+                return Json(ReportSubTypes);
+            }
+            return null;
+        }
+
+        public IActionResult GenerateFilePreview(HomeReportViewModel model)
+        {
+            string layoutName = "";
+            string fileName = "";
+            //string datenow= datetime.now.tostring("mmddyyyy hhmmtt");
+            string dateNow = DateTime.Now.ToString("MMddyyyy");
+            string pdfFooterFormat = "";
+
+            //Model for data retrieve from Database
+            IEnumerable<TEMP_HomeReportOutputModel> data = null;
+            IEnumerable<RepWTSViewModel> VM = null;
+
+            //Assign variables and Data to corresponding Report Type
+            switch (model.ReportType)
+            {
+                //For Alphalist of Payees Subject to Withholding Tax (Monthly)
+                case ConstantData.HomeReportConstantValue.APSWT_M:
+
+                    fileName = "AlphalistOfPayeesSubjectToWithholdingTax_Monthly_" + dateNow;
+                    layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
+                    pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter1;
+                    //Get the necessary data from Database
+                    data = ConstantData.TEMP_HomeReportDummyData.GetTEMP_HomeReportOutputModelData();
+
+                    break;
+                case ConstantData.HomeReportConstantValue.WTS:
+                    fileName = "WithholdingTaxSummary_" + dateNow;
+                    layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
+                    pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter2;
+                    //Get the necessary data from Database
+                    switch (model.PeriodOption)
+                    {
+                        case "1":
+                            VM = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Month(model.Year, model.Month,
+                                    ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData());
+                            break;
+                        case "2":
+                            VM = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Semester(model.Year, model.Semester,
+                                    ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData());
+                            break;
+                        case "3":
+                            VM = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Period(model.PeriodFrom, model.PeriodTo,
+                                    ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData());
+                            break;
+                    }
+
+                    break;
+            }
+            Debug.WriteLine("DEBUG4");
+            if (model.FileFormat == ConstantData.HomeReportConstantValue.EXCELID)
+            {
+
+                string excelTemplateName = layoutName + ".xlsx";
+                string rootFolder = "wwwroot";
+                string sourcePath = "/ExcelTemplates/";
+                string destPath = "/ExcelTemplatesTempFolder/";
+                fileName = fileName + ".xlsx";
+                System.IO.File.Copy(rootFolder + sourcePath + excelTemplateName, rootFolder + destPath + fileName, true);
+
+                FileInfo templateFile = new FileInfo(rootFolder + sourcePath + excelTemplateName);
+                FileInfo newFile = new FileInfo(rootFolder + destPath + fileName);
+
+                using(ExcelPackage package = new ExcelPackage(newFile, templateFile))
+                {
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
+
+                    int lastRow = worksheet.Dimension.End.Row;
+
+                    switch (model.ReportType)
+                    {
+                        case ConstantData.HomeReportConstantValue.APSWT_M:
+                            foreach (var i in data)
+                            {
+                                lastRow += 1;
+                                worksheet.Cells["A" + lastRow].Value = i.Tin;
+                                worksheet.Cells["B" + lastRow].Value = i.Payee;
+                                worksheet.Cells["C" + lastRow].Value = i.ATC;
+                                worksheet.Cells["D" + lastRow].Value = i.NOIP;
+                                worksheet.Cells["E" + lastRow].Value = i.AOIP;
+                                worksheet.Cells["F" + lastRow].Value = i.RateOfTax;
+                                worksheet.Cells["G" + lastRow].Value = i.AOTW;
+                            }
+
+                            break;
+                        case ConstantData.HomeReportConstantValue.WTS:
+                            foreach (var i in VM)
+                            {
+                                lastRow += 1;
+                                worksheet.Cells["A" + lastRow].Value = i.WTS_Voucher_No;
+                                worksheet.Cells["B" + lastRow].Value = i.WTS_Check_No;
+                                worksheet.Cells["C" + lastRow].Value = i.WTS_Val_Date;
+                                worksheet.Cells["D" + lastRow].Value = i.WTS_Ref_No;
+                                worksheet.Cells["E" + lastRow].Value = i.WTS_Section;
+                                worksheet.Cells["F" + lastRow].Value = i.WTS_Remarks;
+                                worksheet.Cells["G" + lastRow].Value = i.WTS_Deb_Cred;
+                                worksheet.Cells["H" + lastRow].Value = i.WTS_Currency_ID;
+                                worksheet.Cells["I" + lastRow].Value = i.WTS_Amount;
+                                worksheet.Cells["J" + lastRow].Value = i.WTS_Cust;
+                                worksheet.Cells["K" + lastRow].Value = i.WTS_Acc_Code;
+                                worksheet.Cells["L" + lastRow].Value = i.WTS_Acc_No;
+                                worksheet.Cells["M" + lastRow].Value = i.WTS_Acc_Name;
+                                worksheet.Cells["N" + lastRow].Value = i.WTS_Exchange_Rate;
+                                worksheet.Cells["O" + lastRow].Value = i.WTS_Contra_Currency_ID;
+                                worksheet.Cells["P" + lastRow].Value = i.WTS_Fund;
+                                worksheet.Cells["Q" + lastRow].Value = i.WTS_Advice_Print;
+                                worksheet.Cells["R" + lastRow].Value = i.WTS_Details;
+                                worksheet.Cells["S" + lastRow].Value = i.WTS_Entity;
+                                worksheet.Cells["T" + lastRow].Value = i.WTS_Division;
+                                worksheet.Cells["U" + lastRow].Value = i.WTS_Inter_Amount;
+                                worksheet.Cells["v" + lastRow].Value = i.WTS_Inter_Rate;
+                            }
+
+                            break;
+                    }
+                    
+
+                    package.Save();
+
+                }
+                return File(destPath + fileName, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+
+            }
+            else if (model.FileFormat == ConstantData.HomeReportConstantValue.PDFID)
+            {
+                fileName = fileName + ".pdf";
+                //Return PDF file
+                return OutputPDF(ConstantData.HomeReportConstantValue.ReportPdfPrevLayoutPath, layoutName, VM, fileName, pdfFooterFormat);
+            }else if (model.FileFormat == ConstantData.HomeReportConstantValue.PreviewID)
+            {
+                string pdfLayoutFilePath = ConstantData.HomeReportConstantValue.ReportPdfPrevLayoutPath + layoutName;
+
+                //Return Preview
+                return View(pdfLayoutFilePath, VM);
+            }
+
+                //Temporary return
+                return RedirectToAction("Report");
+        }
+
+        public IActionResult OutputPDF(string layoutPath, string layoutName, IEnumerable<RepWTSViewModel> VM, string fileName, string footerFormat)
+        {
+            string pdfLayoutFilePath = layoutPath + layoutName;
+
+            return new ViewAsPdf(pdfLayoutFilePath, VM)
+            {
+                FileName = fileName,
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape,
+                CustomSwitches = footerFormat,
+                PageSize = Rotativa.AspNetCore.Options.Size.A4
+            };
+        }
+        //[* REPORT *]
+        //------------------------------------------------------------------
+
         [ImportModelState]
         public IActionResult BM(string sortOrder, string currentFilter, string searchString, int? page)
         {
@@ -308,7 +573,7 @@ namespace ExpenseProcessingSystem.Controllers
                 NewAcc = data.NewAcc,
                 RoleList = data.RoleList
             };
-                
+
             //pagination
             return View(mod);
         }
@@ -727,39 +992,6 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Cust" });
-        }
-        //[* NON CASH CATEGORY *]
-        [HttpPost]
-        [ExportModelState]
-        public IActionResult ApproveNCC(List<DMNCCViewModel> model)
-        {
-            var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            if (ModelState.IsValid)
-            {
-                _service.approveNCC(model, userId);
-            }
-
-            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_NCC" });
-        }
-        [HttpPost]
-        [ExportModelState]
-        public IActionResult RejNCC(List<DMNCCViewModel> model)
-        {
-            var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            if (ModelState.IsValid)
-            {
-                _service.rejNCC(model, userId);
-            }
-
-            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_NCC" });
         }
         //[* BIR CERT SIGNATORY*]
         [HttpPost]
@@ -1285,52 +1517,6 @@ namespace ExpenseProcessingSystem.Controllers
             }
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Cust" });
         }
-        // [NON CASH CATEGORY]
-        [HttpPost]
-        [ExportModelState]
-        public IActionResult AddNCC_Pending(NewNCCViewModel model)
-        {
-            var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            if (ModelState.IsValid)
-            {
-                _service.addNCC_Pending(model, userId);
-            }
-            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_NCC" });
-        }
-        [HttpPost]
-        [ExportModelState]
-        public IActionResult EditNCC_Pending(DMNCC2ViewModel model)
-        {
-            var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            if (ModelState.IsValid)
-            {
-                _service.editNCC_Pending(model, userId);
-            }
-            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_NCC" });
-        }
-        [HttpPost]
-        [ExportModelState]
-        public IActionResult DeleteNCC_Pending(List<DMNCCViewModel> model)
-        {
-            var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            if (ModelState.IsValid)
-            {
-                _service.deleteNCC_Pending(model, userId);
-            }
-            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_NCC" });
-        }
         // [BIR CERT SIGNATORY]
         [HttpPost]
         [ExportModelState]
@@ -1392,7 +1578,7 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 _service.addUser(model, userId);
             }
-            
+
 
             return RedirectToAction("UM", "Home");
         }
@@ -1405,7 +1591,10 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-            return File(_excelData.GetDeptExcelData(), "application/ms-excel", $"Department.xlsx");
+            var dataName = "WTS";
+
+            //return File(_excelData.GetDeptExcelData(), "application/ms-excel", $"Department.xlsx");
+            return File(_excelData.GetWTSExcelData(), "application/ms-excel", $""+dataName+".xlsx");
         }
 
         //[* MISC *]
@@ -1431,11 +1620,11 @@ namespace ExpenseProcessingSystem.Controllers
             }
             return bmvmList;
         }
-        public void addNCC()
-        {
-            FileService fs = new FileService();
-            //fs.CreateFileAndFolder();
-            fs.CopyFileToLocation("00283_martin.nina.png");
-        }
+        //public void addNCC()
+        //{
+        //    FileService fs = new FileService();
+        //    //fs.CreateFileAndFolder();
+        //    fs.CopyFileToLocation("00283_martin.nina.png");
+        //}
     }
 }

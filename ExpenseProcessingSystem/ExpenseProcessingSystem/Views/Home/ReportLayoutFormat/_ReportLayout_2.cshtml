@@ -1,0 +1,111 @@
+﻿@model IEnumerable<ExpenseProcessingSystem.Models.TEMP_HomeReportOutputModel>
+
+@{
+    Layout = null;
+}
+
+<style>
+    .table-PDF {
+        border-collapse: collapse;
+        border-width: 1px;
+        border-style: solid;
+        border-color: black;
+        margin-top: 20px;
+    }
+
+    thead {
+        display: table-header-group
+    }
+
+    tfoot {
+        display: table-row-group
+    }
+
+    .tr-PDF {
+        page-break-inside: avoid;
+        border-width: 1px;
+    }
+
+    .th-PDF {
+        border-width: 1px;
+        border-style: solid;
+        border-color: black;
+        font-weight: bold;
+    }
+
+    .td-PDF {
+        border-width: 1px;
+        border-style: solid;
+        border-color: black;
+    }
+</style>
+
+<table border="0" style="width:100%">
+    <tr>
+        <td style="font-weight:bold;padding-left:37%;font-size:large">MIZUHO BANK, LTD. - MANILA BRANCH</td>
+        <td style="text-align:right;font-size:small"> SCHEDULE 2.0</td>
+    </tr>
+    <tr>
+        <td colspan="2" style="font-weight:bold;text-align:center">25th Floor, The Zuellig Building, Makati Avenue corner Paseo de Roxas, Makati City 1225</td>
+    </tr>
+    <tr>
+        <td colspan="2" style="padding-top:10px;text-align:center">ALPHA LIST OF PAYEES SUBJECT TO EXPANDED WITHHOLDING TAX</td>
+    </tr>
+    <tr>
+        <td colspan="3">
+            <table align="center" style="margin-top:8px;width:20%">
+                <tr>
+                    <td style="font-size:small">MONTH COVERED:</td>
+                    <td style="font-size:small">December</td>
+                    <td style="font-size:small;text-align:center">-</td>
+                    <td style="font-size:small;text-align:right">2018</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<table class="table-PDF">
+    <thead>
+        <tr style="vertical-align:top" class="tr-PDF">
+            <th width="12.5%" class="th-PDF">TIN</th>
+            <th width="37.5%" class="th-PDF">PAYEE</th>
+            <th width="8%" class="th-PDF">ATC</th>
+            <th width="12%" class="th-PDF">NATURE OF INCOME PAYMENT</th>
+            <th width="10%" class="th-PDF">AMOUNT OF INCOME PAYMENT</th>
+            <th width="10%" class="th-PDF">RATE OF TAX</th>
+            <th width="10%" class="th-PDF">AMOUNT OF TAX WITHHELD</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+            {
+                <tr class="tr-PDF">
+                    <td style="text-align:center" class="td-PDF">@item.Tin</td>
+                    <td style="text-align:left" class="td-PDF">@item.Payee</td>
+                    <td style="text-align:center" class="td-PDF">@item.ATC</td>
+                    <td style="text-align:center" class="td-PDF">@item.NOIP</td>
+                    <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => item.AOIP)</td>
+                    <td style="text-align:center" class="td-PDF">@Html.DisplayFor(model => item.RateOfTax)</td>
+                    <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => item.AOTW)</td>
+                </tr>
+            }
+    </tbody>
+</table>
+<table style="border-collapse: collapse;margin-top:2px;width:100%">
+    <tr>
+        <td width="12.5%"></td>
+        <td width="37.5%"></td>
+        <td width="8%"></td>
+        <td width="12%" style="text-align:center">TOTAL ==></td>
+        <td width="10%" style="text-align:right" class="td-PDF">@Model.Sum(model => model.AOIP).ToString("#,##0.00#")</td>
+            <td width="10%"></td>
+            <td width="10%" style="text-align:right" class="td-PDF">@Model.Sum(x => x.AOTW).ToString("#,##0.00#")</td>
+    </tr>
+</table>
+
+<div style="margin-top:100px;text-align:center">
+    <text style="font-weight:bold">ALBERT ADVINCULA</text><br />
+    <text style="font-weight:bold">VP-Manager / Administration Department</text>
+    <hr width="400px" color="black" />
+</div>

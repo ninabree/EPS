@@ -9,7 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
+using Rotativa.AspNetCore;
 using Serilog;
 using Serilog.Events;
 using Serilog.Exceptions;
@@ -80,6 +82,7 @@ namespace ExpenseProcessingSystem
             //Add DB context.
             services.AddDbContext<EPSDbContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -109,6 +112,8 @@ namespace ExpenseProcessingSystem
                     name: "default",
                     template: "{controller=Account}/{action=Login}/{id?}");
             });
+
+            RotativaConfiguration.Setup(env);
         }
     }
 

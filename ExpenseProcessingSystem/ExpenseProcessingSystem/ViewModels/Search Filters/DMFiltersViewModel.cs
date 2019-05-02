@@ -17,7 +17,6 @@ namespace ExpenseProcessingSystem.ViewModels.Search_Filters
         public CurrFiltersViewModel CF { get; set; }
         public EmpFiltersViewModel EMF { get; set; }
         public CustFiltersViewModel CUF { get; set; }
-        public NCCFiltersViewModel NF { get; set; }
         public BCSFiltersViewModel BF { get; set; }
     }
 }

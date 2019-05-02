@@ -15,7 +15,8 @@ namespace ExpenseProcessingSystem.Models
         public string TR_WT_Title { get; set; }
         public string TR_Nature { get; set; }
         public string TR_ATC { get; set; }
-        public int TR_Tax_Rate { get; set; }
+        public string TR_Nature_Income_Payment { get; set; }
+        public float TR_Tax_Rate { get; set; }
         public int TR_Creator_ID { get; set; }
         public int TR_Approver_ID { get; set; }
         public DateTime TR_Created_Date { get; set; }

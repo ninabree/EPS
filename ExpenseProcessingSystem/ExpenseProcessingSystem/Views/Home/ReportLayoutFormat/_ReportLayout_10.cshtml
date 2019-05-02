@@ -1,0 +1,113 @@
+﻿@model IEnumerable<ExpenseProcessingSystem.ViewModels.Reports.RepWTSViewModel>
+
+@{
+    Layout = null;
+}
+
+<style>
+    .table-PDF {
+        border-collapse: collapse;
+        border-width: 1px;
+        border-style: solid;
+        border-color: black;
+        margin-top: 20px;
+    }
+
+    thead {
+        display: table-header-group
+    }
+
+    tfoot {
+        display: table-row-group
+    }
+
+    .tr-PDF {
+        page-break-inside: avoid;
+        border-width: 1px;
+    }
+
+    .th-PDF {
+        border-width: 1px;
+        border-style: solid;
+        border-color: black;
+        font-weight: bold;
+    }
+
+    .td-PDF {
+        border-width: 1px;
+        border-style: solid;
+        border-color: black;
+    }
+</style>
+
+<table border="0" style="width:100%">
+    <tr>
+        <td style="text-align:center;font-weight:bold;font-size:large">Withholding Taxes Summary Report</td>
+    </tr>
+    <tr>
+        <td style="text-align:center;font-size:small">-Data Coverage-</td>
+    </tr>
+</table>
+
+<table class="table-PDF">
+    <thead>
+        <tr style="vertical-align:top" class="tr-PDF">
+            <th class="th-PDF">Voucher Number</th>
+            <th class="th-PDF">Check Number</th>
+            <th class="th-PDF">Value Date</th>
+            <th class="th-PDF">Reference No.</th>
+            <th class="th-PDF">Section</th>
+            <th class="th-PDF">Remarks</th>
+            <th class="th-PDF">Debit/Credit</th>
+            <th class="th-PDF">Currency</th>
+            <th class="th-PDF">Amount</th>
+            <th class="th-PDF">Customer</th>
+            <th class="th-PDF">Account Code</th>
+            <th class="th-PDF">Account Number</th>
+            <th class="th-PDF">Account Name</th>
+            <th class="th-PDF">Exchange Rate</th>
+            <th class="th-PDF">Contra-Currency</th>
+            <th class="th-PDF">Fund</th>
+            <th class="th-PDF">Advice Print</th>
+            <th class="th-PDF">Details</th>
+            <th class="th-PDF">Entity</th>
+            <th class="th-PDF">Division</th>
+            <th class="th-PDF">Inter-Amount</th>
+            <th class="th-PDF">Inter-Rate</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr class="tr-PDF">
+                <td style="text-align:center" class="td-PDF">@item.WTS_Voucher_No</td>
+                <td style="text-align:left" class="td-PDF">@item.WTS_Check_No</td>
+                <td style="text-align:center" class="td-PDF">@item.WTS_Val_Date</td>
+                <td style="text-align:center" class="td-PDF">@item.WTS_Ref_No</td>
+                <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => item.WTS_Section)</td>
+                <td style="text-align:center" class="td-PDF">@Html.DisplayFor(model => item.WTS_Remarks)</td>
+                <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => item.WTS_Deb_Cred)</td>
+                <td style="text-align:center" class="td-PDF">@item.WTS_Currency_ID</td>
+                <td style="text-align:left" class="td-PDF">@item.WTS_Amount</td>
+                <td style="text-align:center" class="td-PDF">@item.WTS_Cust</td>
+                <td style="text-align:center" class="td-PDF">@item.WTS_Acc_Code</td>
+                <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => item.WTS_Acc_No)</td>
+                <td style="text-align:center" class="td-PDF">@Html.DisplayFor(model => item.WTS_Acc_Name)</td>
+                <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => item.WTS_Exchange_Rate)</td>
+                <td style="text-align:center" class="td-PDF">@item.WTS_Contra_Currency_ID</td>
+                <td style="text-align:left" class="td-PDF">@item.WTS_Fund</td>
+                <td style="text-align:center" class="td-PDF">@item.WTS_Advice_Print</td>
+                <td style="text-align:center" class="td-PDF">@item.WTS_Details</td>
+                <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => item.WTS_Entity)</td>
+                <td style="text-align:center" class="td-PDF">@Html.DisplayFor(model => item.WTS_Division)</td>
+                <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => item.WTS_Inter_Amount)</td>
+                <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => item.WTS_Inter_Rate)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div style="margin-top:100px;">
+    <div style="font-weight:bold; text-align: left; display: inline-block">Thursday, March 21, 2019 5:30:30 PM</div>
+    <div style="font-weight:bold; text-align: center; display: inline-block">Page 1</div>
+</div>

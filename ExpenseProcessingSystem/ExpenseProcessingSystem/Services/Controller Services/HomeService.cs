@@ -13,6 +13,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Linq.Dynamic.Core;
+using System.Reflection;
+
 namespace ExpenseProcessingSystem.Services
 {
     public class HomeService
@@ -38,7 +41,76 @@ namespace ExpenseProcessingSystem.Services
             return data;
         }
 
-        //-------------------------POPULATE--------------------------
+        //-----------------------------------Populate-------------------------------------//
+        //[ Home ]
+        public List<HomeNotifViewModel> populateNotif(FiltersViewModel filters)
+        {
+            IQueryable<HomeNotifModel> mList = _context.HomeNotif.ToList().AsQueryable();
+            PropertyInfo[] properties = filters.NotifFil.GetType().GetProperties();
+
+            //FILTER
+            foreach (var property in properties)
+            {
+                var propertyName = property.Name;
+                string subStr = propertyName.Substring(propertyName.IndexOf('_') + 1);
+                var toStr = property.GetValue(filters.NotifFil).ToString();
+                string[] colArr = { "No", "Creator_ID", "Approver_ID" };
+                if (toStr != "")
+                {
+                    if (toStr != "0")
+                    {
+                        if (colArr.Contains(subStr)) // IF INT VAL
+                        {
+                            mList = mList.Where("Notif_" + subStr + " = @0 AND  Notif_isDeleted == @1", property.GetValue(filters.NotifFil), false)
+                                     .Select(e => e).AsQueryable();
+                        }
+                        else if (subStr == "Last_Updated")
+                        {
+                            mList = mList
+                               .Where(x => (x.Notif_Last_Updated.ToShortDateString() == property.GetValue(filters.NotifFil).ToString()))
+                              .Select(e => e).AsQueryable();
+                        }
+                        else // IF STRING VALUE
+                        {
+                            mList = mList.Where("Notif_" + subStr + ".Contains(@0) AND  Notif_isDeleted == @1", property.GetValue(filters.NotifFil).ToString(), false)
+                                    .Select(e => e).AsQueryable();
+                        }
+                    }
+                }
+            }
+
+            var creatorList = (from a in mList
+                               join b in _context.User on a.Notif_Verifr_Apprvr_ID equals b.User_ID
+                               let CreatorName = b.User_LName + ", " + b.User_FName
+                               select new
+                               { a.Notif_ID, CreatorName }).ToList();
+            var apprvrList = (from a in mList
+                              join c in _context.User on a.Notif_Verifr_Apprvr_ID equals c.User_ID
+                              let ApproverName = c.User_LName + ", " + c.User_FName
+                              select new
+                              { a.Notif_ID, ApproverName }).ToList();
+
+            //assign values
+            List<HomeNotifModel> mList2 = mList.ToList();
+            List<HomeNotifViewModel> vmList = new List<HomeNotifViewModel>();
+            foreach (HomeNotifModel m in mList2)
+            {
+                var creator = creatorList.Where(a => a.Notif_ID == m.Notif_ID).Select(a => a.CreatorName).FirstOrDefault();
+                var approver = apprvrList.Where(a => a.Notif_ID == m.Notif_ID).Select(a => a.ApproverName).FirstOrDefault();
+                HomeNotifViewModel vm = new HomeNotifViewModel
+                {
+                    Notif_Application_ID = m.Notif_Application_ID,
+                    Notif_Message = m.Notif_Message,
+                    Notif_Verifier_Approver = approver ?? "",
+                    Notif_Type_Status = m.Notif_Type_Status,
+                    Notif_Last_Updated = m.Notif_Last_Updated,
+                    Notif_Status = m.Notif_Status.ToString()
+                };
+                vmList.Add(vm);
+            }
+            return vmList;
+        }
+
         //[ User Maintenance ]
         public UserManagementViewModel2 populateUM()
         {
@@ -249,6 +321,7 @@ namespace ExpenseProcessingSystem.Services
                                    pp.Pending_Dept_MasterID,
                                    pp.Pending_Dept_Name,
                                    pp.Pending_Dept_Code,
+                                   pp.Pending_Dept_Budget_Unit,
                                    pp.Pending_Dept_isDeleted,
                                    pp.Pending_Dept_Creator_ID,
                                    pmCreatorID = pm.Dept_Creator_ID.ToString(),
@@ -273,6 +346,7 @@ namespace ExpenseProcessingSystem.Services
                     Dept_Name = pending.Pending_Dept_Name,
                     Dept_MasterID = pending.Pending_Dept_MasterID,
                     Dept_Code = pending.Pending_Dept_Code,
+                    Dept_Budget_Unit = pending.Pending_Dept_Budget_Unit,
                     Dept_Creator_ID = pending.pmCreatorID == null ? pending.Pending_Dept_Creator_ID : int.Parse(pending.pmCreatorID),
                     Dept_Approver_ID = int.Parse(_session.GetString("UserID")),
                     Dept_Created_Date = pending.pmCreateDate == null ? DateTime.Now : DateTime.Parse(pending.pmCreateDate),
@@ -398,6 +472,7 @@ namespace ExpenseProcessingSystem.Services
                               {
                                   pp.Pending_Account_MasterID,
                                   pp.Pending_Account_Name,
+                                  pp.Pending_Account_FBT_MasterID,
                                   pp.Pending_Account_Code,
                                   pp.Pending_Account_No,
                                   pp.Pending_Account_Cust,
@@ -425,6 +500,7 @@ namespace ExpenseProcessingSystem.Services
                 {
                     Account_Name = pending.Pending_Account_Name,
                     Account_MasterID = pending.Pending_Account_MasterID,
+                    Account_FBT_MasterID = pending.Pending_Account_FBT_MasterID,
                     Account_Code = pending.Pending_Account_Code,
                     Account_Cust = pending.Pending_Account_Cust,
                     Account_Div = pending.Pending_Account_Div,
@@ -550,7 +626,6 @@ namespace ExpenseProcessingSystem.Services
                               {
                                   pp.Pending_FBT_MasterID,
                                   pp.Pending_FBT_Name,
-                                  pp.Pending_FBT_Account,
                                   pp.Pending_FBT_Formula,
                                   pp.Pending_FBT_Tax_Rate,
                                   pp.Pending_FBT_isDeleted,
@@ -575,7 +650,6 @@ namespace ExpenseProcessingSystem.Services
                 {
                     FBT_Name = pending.Pending_FBT_Name,
                     FBT_MasterID = pending.Pending_FBT_MasterID,
-                    FBT_Account = pending.Pending_FBT_Account,
                     FBT_Formula = pending.Pending_FBT_Formula,
                     FBT_Tax_Rate = pending.Pending_FBT_Tax_Rate,
                     FBT_Creator_ID = pending.pmCreatorID == null ? pending.Pending_FBT_Creator_ID : int.Parse(pending.pmCreatorID),
@@ -629,6 +703,7 @@ namespace ExpenseProcessingSystem.Services
                                   pp.Pending_TR_Nature,
                                   pp.Pending_TR_Tax_Rate,
                                   pp.Pending_TR_ATC,
+                                  pp.Pending_TR_Nature_Income_Payment,
                                   pp.Pending_TR_isDeleted,
                                   pp.Pending_TR_Creator_ID,
                                   pmCreatorID = pm.TR_Creator_ID.ToString(),
@@ -654,6 +729,7 @@ namespace ExpenseProcessingSystem.Services
                     TR_MasterID = pending.Pending_TR_MasterID,
                     TR_Tax_Rate = pending.Pending_TR_Tax_Rate,
                     TR_ATC = pending.Pending_TR_ATC,
+                    TR_Nature_Income_Payment = pending.Pending_TR_Nature_Income_Payment,
                     TR_Creator_ID = pending.pmCreatorID == null ? pending.Pending_TR_Creator_ID : int.Parse(pending.pmCreatorID),
                     TR_Approver_ID = int.Parse(_session.GetString("UserID")),
                     TR_Created_Date = pending.pmCreateDate == null ? DateTime.Now : DateTime.Parse(pending.pmCreateDate),
@@ -913,79 +989,6 @@ namespace ExpenseProcessingSystem.Services
             }
             return true;
         }
-        //[ Non Cash Category ]
-        public bool approveNCC(List<DMNCCViewModel> model, string userId)
-        {
-            List<int> intList = model.Select(c => c.NCC_MasterID).ToList();
-
-            var allPending = ((from pp in _context.DMNCC_Pending
-                               from pm in _context.DMNCC.Where(x => x.NCC_MasterID == pp.Pending_NCC_MasterID).DefaultIfEmpty()
-                               select new
-                               {
-                                   pp.Pending_NCC_MasterID,
-                                   pp.Pending_NCC_Name,
-                                   pp.Pending_NCC_Pro_Forma,
-                                   pp.Pending_NCC_isDeleted,
-                                   pp.Pending_NCC_Creator_ID,
-                                   pmCreatorID = pm.NCC_Creator_ID.ToString(),
-                                   pmCreateDate = pm.NCC_Created_Date.ToString(),
-                                   pp.Pending_NCC_isActive
-                               })).Where(x => intList.Contains(x.Pending_NCC_MasterID)).Distinct().ToList();
-
-            List<DMNonCashCategoryModel_Pending> toDelete = _context.DMNCC_Pending.Where(x => intList.Contains(x.Pending_NCC_MasterID)).ToList();
-
-            //get all records that currently exists in Master Data
-            List<DMNonCashCategoryModel> vmList = _context.DMNCC.
-                Where(x => intList.Contains(x.NCC_MasterID) && x.NCC_isActive == true).ToList();
-
-            //list for formatted records to be added
-            List<DMNonCashCategoryModel> addList = new List<DMNonCashCategoryModel>();
-
-            //add to master table newly approved records
-            allPending.ForEach(pending =>
-            {
-                DMNonCashCategoryModel m = new DMNonCashCategoryModel
-                {
-                    NCC_Name = pending.Pending_NCC_Name,
-                    NCC_MasterID = pending.Pending_NCC_MasterID,
-                    NCC_Pro_Forma = pending.Pending_NCC_Pro_Forma,
-                    NCC_Creator_ID = pending.pmCreatorID == null ? pending.Pending_NCC_Creator_ID : int.Parse(pending.pmCreatorID),
-                    NCC_Approver_ID = int.Parse(_session.GetString("UserID")),
-                    NCC_Created_Date = pending.pmCreateDate == null ? DateTime.Now : DateTime.Parse(pending.pmCreateDate),
-                    NCC_Last_Updated = DateTime.Now,
-                    NCC_Status = "Approved",
-                    NCC_isDeleted = pending.Pending_NCC_isDeleted,
-                    NCC_isActive = true
-                };
-                addList.Add(m);
-            });
-
-            //update existing records
-            vmList.ForEach(dm =>
-            {
-                dm.NCC_isActive = false;
-            });
-
-            if (_modelState.IsValid)
-            {
-                _context.DMNCC.AddRange(addList);
-                _context.DMNCC_Pending.RemoveRange(toDelete);
-                _context.SaveChanges();
-            }
-            return true;
-        }
-        public bool rejNCC(List<DMNCCViewModel> model, string userId)
-        {
-            List<int> intList = model.Select(c => c.NCC_MasterID).ToList();
-            List<DMNonCashCategoryModel_Pending> allPending = _context.DMNCC_Pending.Where(x => intList.Contains(x.Pending_NCC_MasterID)).ToList();
-
-            if (_modelState.IsValid)
-            {
-                _context.DMNCC_Pending.RemoveRange(allPending);
-                _context.SaveChanges();
-            }
-            return true;
-        }
         //[ BIR Cert Signatory ]
         public bool approveBCS(List<DMBCSViewModel> model, string userId)
         {
@@ -1170,6 +1173,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Dept_Name = dm.Dept_Name,
                     Pending_Dept_MasterID = ++masterIDMax,
                     Pending_Dept_Code = dm.Dept_Code,
+                    Pending_Dept_Budget_Unit = dm.Dept_Budget_Unit,
                     Pending_Dept_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_Dept_Filed_Date = DateTime.Now,
                     Pending_Dept_isDeleted = false,
@@ -1201,6 +1205,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Dept_Name = dm.Dept_Name,
                     Pending_Dept_MasterID = dm.Dept_MasterID,
                     Pending_Dept_Code = dm.Dept_Code,
+                    Pending_Dept_Budget_Unit = dm.Dept_Budget_Unit,
                     Pending_Dept_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_Dept_Filed_Date = DateTime.Now,
                     Pending_Dept_isDeleted = false,
@@ -1232,6 +1237,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Dept_Name = dm.Dept_Name,
                     Pending_Dept_MasterID = dm.Dept_MasterID,
                     Pending_Dept_Code = dm.Dept_Code,
+                    Pending_Dept_Budget_Unit = dm.Dept_Budget_Unit,
                     Pending_Dept_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_Dept_Filed_Date = DateTime.Now,
                     Pending_Dept_isDeleted = true,
@@ -1367,6 +1373,7 @@ namespace ExpenseProcessingSystem.Services
                 {
                     Pending_Account_Name = dm.Account_Name,
                     Pending_Account_MasterID = ++masterIDMax,
+                    Pending_Account_FBT_MasterID = dm.Account_FBT_MasterID,
                     Pending_Account_Code = dm.Account_Code,
                     Pending_Account_Cust = dm.Account_Cust,
                     Pending_Account_Div = dm.Account_Div,
@@ -1396,6 +1403,7 @@ namespace ExpenseProcessingSystem.Services
                 {
                     Pending_Account_Name = dm.Account_Name,
                     Pending_Account_MasterID = dm.Account_MasterID,
+                    Pending_Account_FBT_MasterID = dm.Account_FBT_MasterID,
                     Pending_Account_Code = dm.Account_Code,
                     Pending_Account_Cust = dm.Account_Cust,
                     Pending_Account_Div = dm.Account_Div,
@@ -1425,6 +1433,7 @@ namespace ExpenseProcessingSystem.Services
                 {
                     Pending_Account_Name = dm.Account_Name,
                     Pending_Account_MasterID = dm.Account_MasterID,
+                    Pending_Account_FBT_MasterID = dm.Account_FBT_MasterID,
                     Pending_Account_Code = dm.Account_Code,
                     Pending_Account_Cust = dm.Account_Cust,
                     Pending_Account_Div = dm.Account_Div,
@@ -1547,7 +1556,6 @@ namespace ExpenseProcessingSystem.Services
                 {
                     Pending_FBT_Name = dm.FBT_Name,
                     Pending_FBT_MasterID = ++masterIDMax,
-                    Pending_FBT_Account = dm.FBT_Account,
                     Pending_FBT_Formula = dm.FBT_Formula,
                     Pending_FBT_Tax_Rate = dm.FBT_Tax_Rate,
                     Pending_FBT_Creator_ID = int.Parse(_session.GetString("UserID")),
@@ -1574,7 +1582,6 @@ namespace ExpenseProcessingSystem.Services
                 {
                     Pending_FBT_Name = dm.FBT_Name,
                     Pending_FBT_MasterID = dm.FBT_MasterID,
-                    Pending_FBT_Account = dm.FBT_Account,
                     Pending_FBT_Formula = dm.FBT_Formula,
                     Pending_FBT_Tax_Rate = dm.FBT_Tax_Rate,
                     Pending_FBT_Creator_ID = int.Parse(_session.GetString("UserID")),
@@ -1601,7 +1608,6 @@ namespace ExpenseProcessingSystem.Services
                 {
                     Pending_FBT_Name = dm.FBT_Name,
                     Pending_FBT_MasterID = dm.FBT_MasterID,
-                    Pending_FBT_Account = dm.FBT_Account,
                     Pending_FBT_Formula = dm.FBT_Formula,
                     Pending_FBT_Tax_Rate = dm.FBT_Tax_Rate,
                     Pending_FBT_Creator_ID = int.Parse(_session.GetString("UserID")),
@@ -1640,6 +1646,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_TR_Tax_Rate = dm.TR_Tax_Rate,
                     Pending_TR_ATC = dm.TR_ATC,
                     Pending_TR_WT_Title = dm.TR_WT_Title,
+                    Pending_TR_Nature_Income_Payment = dm.TR_Nature_Income_Payment,
                     Pending_TR_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_TR_Filed_Date = DateTime.Now,
                     Pending_TR_isDeleted = false,
@@ -1667,6 +1674,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_TR_MasterID = dm.TR_MasterID,
                     Pending_TR_Tax_Rate = dm.TR_Tax_Rate,
                     Pending_TR_ATC = dm.TR_ATC,
+                    Pending_TR_Nature_Income_Payment = dm.TR_Nature_Income_Payment,
                     Pending_TR_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_TR_Filed_Date = DateTime.Now,
                     Pending_TR_isDeleted = false,
@@ -1694,6 +1702,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_TR_MasterID = dm.TR_MasterID,
                     Pending_TR_Tax_Rate = dm.TR_Tax_Rate,
                     Pending_TR_ATC = dm.TR_ATC,
+                    Pending_TR_Nature_Income_Payment = dm.TR_Nature_Income_Payment,
                     Pending_TR_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_TR_Filed_Date = DateTime.Now,
                     Pending_TR_isDeleted = true,
@@ -1989,109 +1998,6 @@ namespace ExpenseProcessingSystem.Services
             if (_modelState.IsValid)
             {
                 _context.DMCust_Pending.AddRange(vmList);
-                _context.SaveChanges();
-            }
-            return true;
-        }
-        //[ Non Cash Category ]
-        public bool addNCC_Pending(NewNCCViewModel model, string userId)
-        {
-            List<DMNonCashCategoryModel_Pending> vmList = new List<DMNonCashCategoryModel_Pending>();
-
-            var deptMax = _context.DMNCC.Select(x => x.NCC_MasterID).
-                DefaultIfEmpty(0).Max();
-            var pendingMax = _context.DMNCC_Pending.Select(x => x.Pending_NCC_MasterID).
-                DefaultIfEmpty(0).Max();
-
-            int masterIDMax = deptMax > pendingMax ? deptMax : pendingMax;
-            var tmp = _hostingEnvironment.WebRootPath;
-            var uploads = Path.Combine(_hostingEnvironment.WebRootPath, _context.FileLocation.Where(x => x.FL_Type == "NCC").Select(x => x.FL_Location).FirstOrDefault());
-           
-            //save file to uploads folder
-            FileService objFile = new FileService();
-            string strFilePath = objFile.SaveFile(model.NCC_Pro_Forma, uploads, model.NCC_Name);
-
-            DMNonCashCategoryModel_Pending m = new DMNonCashCategoryModel_Pending
-            {
-                Pending_NCC_Name = model.NCC_Name,
-                Pending_NCC_MasterID = ++masterIDMax,
-                Pending_NCC_Pro_Forma = strFilePath,
-                Pending_NCC_Creator_ID = int.Parse(_session.GetString("UserID")),
-                Pending_NCC_Filed_Date = DateTime.Now,
-                Pending_NCC_isDeleted = false,
-                Pending_NCC_Status = "For Approval"
-            };
-            vmList.Add(m);
-            if (_modelState.IsValid)
-            {
-                _context.DMNCC_Pending.AddRange(vmList);
-                _context.SaveChanges();
-            }
-            return true;
-        }
-        public bool editNCC_Pending(DMNCC2ViewModel model, string userId)
-        {
-            List<DMNonCashCategoryModel_Pending> vmList = new List<DMNonCashCategoryModel_Pending>();
-            var deptMax = _context.DMNCC.Select(x => x.NCC_MasterID).
-               DefaultIfEmpty(0).Max();
-            var pendingMax = _context.DMNCC_Pending.Select(x => x.Pending_NCC_MasterID).
-                DefaultIfEmpty(0).Max();
-            var uploads = Path.Combine(_hostingEnvironment.WebRootPath, _context.FileLocation.Where(x=> x.FL_Type == "NCC").Select(x=>x.FL_Location).FirstOrDefault());
-            int masterIDMax = deptMax > pendingMax ? deptMax : pendingMax;
-            string strFilePath = _context.DMNCC.Where(x => x.NCC_MasterID == model.NCC_MasterID).Select(x => x.NCC_Pro_Forma).FirstOrDefault();
-            //if there is file uploaded
-            if (model.NCC_Pro_Forma != null)
-            {
-                FileService objFile = new FileService();
-                strFilePath = objFile.SaveFile(model.NCC_Pro_Forma, uploads, model.NCC_Name);
-            }
-           
-            DMNonCashCategoryModel_Pending m = new DMNonCashCategoryModel_Pending
-            {
-                Pending_NCC_Name = model.NCC_Name,
-                Pending_NCC_MasterID = model.NCC_MasterID,
-                Pending_NCC_Pro_Forma = strFilePath,
-                Pending_NCC_Creator_ID = int.Parse(_session.GetString("UserID")),
-                Pending_NCC_Filed_Date = DateTime.Now,
-                Pending_NCC_isDeleted = false,
-                Pending_NCC_Status = "For Approval"
-            };
-            vmList.Add(m);
-
-            if (_modelState.IsValid)
-            {
-                _context.DMNCC_Pending.AddRange(vmList);
-                _context.SaveChanges();
-            }
-            return true;
-        }
-        public bool deleteNCC_Pending(List<DMNCCViewModel> model, string userId)
-        {
-            List<DMNonCashCategoryModel_Pending> vmList = new List<DMNonCashCategoryModel_Pending>();
-            var deptMax = _context.DMNCC.Select(x => x.NCC_MasterID).
-               DefaultIfEmpty(0).Max();
-            var pendingMax = _context.DMNCC_Pending.Select(x => x.Pending_NCC_MasterID).
-                DefaultIfEmpty(0).Max();
-
-            int masterIDMax = deptMax > pendingMax ? deptMax : pendingMax;
-            foreach (DMNCCViewModel dm in model)
-            {
-                DMNonCashCategoryModel_Pending m = new DMNonCashCategoryModel_Pending
-                {
-                    Pending_NCC_Name = dm.NCC_Name,
-                    Pending_NCC_MasterID = dm.NCC_MasterID,
-                    Pending_NCC_Pro_Forma = dm.NCC_Pro_Forma,
-                    Pending_NCC_Creator_ID = int.Parse(_session.GetString("UserID")),
-                    Pending_NCC_Filed_Date = DateTime.Now,
-                    Pending_NCC_isDeleted = true,
-                    Pending_NCC_Status = "For Approval (For Deletion)"
-                };
-                vmList.Add(m);
-            }
-
-            if (_modelState.IsValid)
-            {
-                _context.DMNCC_Pending.AddRange(vmList);
                 _context.SaveChanges();
             }
             return true;

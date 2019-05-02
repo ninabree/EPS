@@ -18,6 +18,7 @@
                 <th>Cust</th>
                 <th>Div</th>
                 <th>Fund</th>
+                <th colspan="2">FBT</th>
                 <th></th>
             </tr>
             <tr id="NewAccount-Tr-0">
@@ -27,6 +28,10 @@
                 <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_Cust, new { @class = "w-full" })</td>
                 <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_Div, new { @class = "w-full" })</td>
                 <td>@Html.CheckBoxFor(m => m.NewAccountVM[0].Account_Fund, new { @class = "w-full" })</td>
+                <td colspan="2">@Html.DropDownListFor(m => m.NewAccountVM[0].Account_FBT_MasterID,
+                                        new SelectList(Model.FbtList, "FBT_MasterID", "FBT_Name"),
+                                        new { @class = "w-full input" })
+                </td>
                 <td>
                     <span class="table-remove glyphicon glyphicon-remove"></span>
                 </td>

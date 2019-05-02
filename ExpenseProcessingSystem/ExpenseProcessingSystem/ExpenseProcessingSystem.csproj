@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\lib\jquery-ajax-unobstrusive\**" />
+    <Content Remove="wwwroot\lib\jquery-ajax-unobstrusive\**" />
+    <EmbeddedResource Remove="wwwroot\lib\jquery-ajax-unobstrusive\**" />
+    <None Remove="wwwroot\lib\jquery-ajax-unobstrusive\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Migrations\20190402070749_Add FileLocation Model.cs" />
     <Compile Remove="Migrations\20190402070749_Add FileLocation Model.Designer.cs" />
   </ItemGroup>
@@ -14,7 +21,11 @@
     <PackageReference Include="jQuery.UI" Version="1.12.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.6" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.jQuery.Unobtrusive.Ajax" Version="3.2.6" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.6" />
+    <PackageReference Include="Rotativa" Version="1.7.3" />
+    <PackageReference Include="rotativa.AspNetCore" Version="1.0.6" />
+    <PackageReference Include="RotativaHQ" Version="1.5.0" />
     <PackageReference Include="Selenium.WebDriver" Version="3.141.0" />
     <PackageReference Include="Serilog" Version="2.7.1" />
     <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
@@ -62,6 +73,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\ExcelTemplatesTempFolder\" />
     <Folder Include="wwwroot\uploads\NCC\" />
     <Folder Include="wwwroot\uploads\BCS\" />
     <Folder Include="wwwroot\uploads\Temp\" />

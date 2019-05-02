@@ -15,7 +15,7 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "VAT Name")]
         public string VAT_Name { get; set; }
         [Display(Name = "VAT Rate")]
-        public string VAT_Rate { get; set; }
+        public float VAT_Rate { get; set; }
         public int VAT_Creator_ID { get; set; }
         public int VAT_Approver_ID { get; set; }
         [Display(Name = "Creator Name")]

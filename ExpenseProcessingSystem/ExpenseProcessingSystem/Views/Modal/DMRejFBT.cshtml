@@ -11,7 +11,6 @@
         <table class="table table-bordered editable-th">
             <tr>
                 <th>FBT Name</th>
-                <th>Account</th>
                 <th>Formula</th>
                 <th>Tax rate</th>
                 <th>Status</th>
@@ -22,7 +21,6 @@
                 {
                     <tr>
                         <td contenteditable="false">@Html.TextBoxFor(item => item[i].FBT_Name, new { @class = "w-full" })</td>
-                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].FBT_Account, new { @class = "w-full" })</td>
                         <td contenteditable="false">@Html.TextBoxFor(item => item[i].FBT_Formula, new { @class = "w-full" })</td>
                         <td contenteditable="false">@Html.TextBoxFor(item => item[i].FBT_Tax_Rate, new { @class = "w-full" })</td>
                         <td contenteditable="false">@Html.TextBoxFor(item => item[i].FBT_Status, new { @class = "w-full" })</td>

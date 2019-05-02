@@ -17,6 +17,7 @@
                 <th>Cust</th>
                 <th>Div</th>
                 <th>Fund</th>
+                <th>FBT</th>
                 <th>Status</th>
             </tr>
             @if (Model != null)
@@ -30,8 +31,10 @@
                         <td contenteditable="false">@Html.TextBoxFor(item => item[i].Account_Cust, new { @class = "w-full" })</td>
                         <td contenteditable="false">@Html.TextBoxFor(item => item[i].Account_Div, new { @class = "w-full" })</td>
                         <td contenteditable="false">@Html.TextBoxFor(item => item[i].Account_Fund, new { @class = "w-full" })</td>
+                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].Account_FBT_Name, new { @class = "w-full" })</td>
                         <td contenteditable="false">@Html.TextBoxFor(item => item[i].Account_Status, new { @class = "w-full" })</td>
                         @Html.HiddenFor(item => item[i].Account_MasterID)
+                        @Html.HiddenFor(item => item[i].Account_FBT_MasterID)
                     </tr>
                 }
             }
