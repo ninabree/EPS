@@ -17,7 +17,7 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "Nature")]
         public string TR_Nature { get; set; }
         [Display(Name = "Tax Rate")]
-        public int TR_Tax_Rate { get; set; }
+        public float TR_Tax_Rate { get; set; }
         [Display(Name = "ATC")]
         public string TR_ATC { get; set; }
         [Display(Name = "Nature of Income Payment")]

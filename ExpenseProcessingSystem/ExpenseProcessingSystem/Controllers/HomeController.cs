@@ -6,6 +6,7 @@ using ExpenseProcessingSystem.Services.Controller_Services;
 using ExpenseProcessingSystem.Services.Excel_Services;
 using ExpenseProcessingSystem.ViewModels;
 using ExpenseProcessingSystem.ViewModels.NewRecord;
+using ExpenseProcessingSystem.ViewModels.Reports;
 using ExpenseProcessingSystem.ViewModels.Search_Filters;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server;
@@ -340,11 +341,12 @@ namespace ExpenseProcessingSystem.Controllers
             string layoutName = "";
             string fileName = "";
             //string datenow= datetime.now.tostring("mmddyyyy hhmmtt");
-            string dateNow = DateTime.Now.ToString("mmddyyy hmmtt");
+            string dateNow = DateTime.Now.ToString("MMddyyyy");
             string pdfFooterFormat = "";
 
             //Model for data retrieve from Database
             IEnumerable<TEMP_HomeReportOutputModel> data = null;
+            IEnumerable<RepWTSViewModel> VM = null;
 
             //Assign variables and Data to corresponding Report Type
             switch (model.ReportType)
@@ -360,15 +362,25 @@ namespace ExpenseProcessingSystem.Controllers
 
                     break;
                 case ConstantData.HomeReportConstantValue.WTS:
-                    if (model.)
-                    {
-
-                    }
                     fileName = "WithholdingTaxSummary_" + dateNow;
                     layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
-                    pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter1;
+                    pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter2;
                     //Get the necessary data from Database
-                    data = ConstantData.TEMP_HomeReportDummyData.GetTEMP_HomeReportOutputModelData();
+                    switch (model.PeriodOption)
+                    {
+                        case "1":
+                            VM = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Month(model.Year, model.Month,
+                                    ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData());
+                            break;
+                        case "2":
+                            VM = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Semester(model.Year, model.Semester,
+                                    ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData());
+                            break;
+                        case "3":
+                            VM = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Period(model.PeriodFrom, model.PeriodTo,
+                                    ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData());
+                            break;
+                    }
 
                     break;
             }
@@ -392,18 +404,53 @@ namespace ExpenseProcessingSystem.Controllers
 
                     int lastRow = worksheet.Dimension.End.Row;
 
-                    
-                    foreach(var i in data)
+                    switch (model.ReportType)
                     {
-                        lastRow += 1;
-                        worksheet.Cells["A" + lastRow].Value = i.Tin;
-                        worksheet.Cells["B" + lastRow].Value = i.Payee;
-                        worksheet.Cells["C" + lastRow].Value = i.ATC;
-                        worksheet.Cells["D" + lastRow].Value = i.NOIP;
-                        worksheet.Cells["E" + lastRow].Value = i.AOIP;
-                        worksheet.Cells["F" + lastRow].Value = i.RateOfTax;
-                        worksheet.Cells["G" + lastRow].Value = i.AOTW;
+                        case ConstantData.HomeReportConstantValue.APSWT_M:
+                            foreach (var i in data)
+                            {
+                                lastRow += 1;
+                                worksheet.Cells["A" + lastRow].Value = i.Tin;
+                                worksheet.Cells["B" + lastRow].Value = i.Payee;
+                                worksheet.Cells["C" + lastRow].Value = i.ATC;
+                                worksheet.Cells["D" + lastRow].Value = i.NOIP;
+                                worksheet.Cells["E" + lastRow].Value = i.AOIP;
+                                worksheet.Cells["F" + lastRow].Value = i.RateOfTax;
+                                worksheet.Cells["G" + lastRow].Value = i.AOTW;
+                            }
+
+                            break;
+                        case ConstantData.HomeReportConstantValue.WTS:
+                            foreach (var i in VM)
+                            {
+                                lastRow += 1;
+                                worksheet.Cells["A" + lastRow].Value = i.WTS_Voucher_No;
+                                worksheet.Cells["B" + lastRow].Value = i.WTS_Check_No;
+                                worksheet.Cells["C" + lastRow].Value = i.WTS_Val_Date;
+                                worksheet.Cells["D" + lastRow].Value = i.WTS_Ref_No;
+                                worksheet.Cells["E" + lastRow].Value = i.WTS_Section;
+                                worksheet.Cells["F" + lastRow].Value = i.WTS_Remarks;
+                                worksheet.Cells["G" + lastRow].Value = i.WTS_Deb_Cred;
+                                worksheet.Cells["H" + lastRow].Value = i.WTS_Currency_ID;
+                                worksheet.Cells["I" + lastRow].Value = i.WTS_Amount;
+                                worksheet.Cells["J" + lastRow].Value = i.WTS_Cust;
+                                worksheet.Cells["K" + lastRow].Value = i.WTS_Acc_Code;
+                                worksheet.Cells["L" + lastRow].Value = i.WTS_Acc_No;
+                                worksheet.Cells["M" + lastRow].Value = i.WTS_Acc_Name;
+                                worksheet.Cells["N" + lastRow].Value = i.WTS_Exchange_Rate;
+                                worksheet.Cells["O" + lastRow].Value = i.WTS_Contra_Currency_ID;
+                                worksheet.Cells["P" + lastRow].Value = i.WTS_Fund;
+                                worksheet.Cells["Q" + lastRow].Value = i.WTS_Advice_Print;
+                                worksheet.Cells["R" + lastRow].Value = i.WTS_Details;
+                                worksheet.Cells["S" + lastRow].Value = i.WTS_Entity;
+                                worksheet.Cells["T" + lastRow].Value = i.WTS_Division;
+                                worksheet.Cells["U" + lastRow].Value = i.WTS_Inter_Amount;
+                                worksheet.Cells["v" + lastRow].Value = i.WTS_Inter_Rate;
+                            }
+
+                            break;
                     }
+                    
 
                     package.Save();
 
@@ -415,24 +462,24 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 fileName = fileName + ".pdf";
                 //Return PDF file
-                return OutputPDF(ConstantData.HomeReportConstantValue.ReportPdfPrevLayoutPath, layoutName, data, fileName, pdfFooterFormat);
+                return OutputPDF(ConstantData.HomeReportConstantValue.ReportPdfPrevLayoutPath, layoutName, VM, fileName, pdfFooterFormat);
             }else if (model.FileFormat == ConstantData.HomeReportConstantValue.PreviewID)
             {
                 string pdfLayoutFilePath = ConstantData.HomeReportConstantValue.ReportPdfPrevLayoutPath + layoutName;
 
                 //Return Preview
-                return View(pdfLayoutFilePath, data);
+                return View(pdfLayoutFilePath, VM);
             }
 
                 //Temporary return
                 return RedirectToAction("Report");
         }
 
-        public IActionResult OutputPDF(string layoutPath, string layoutName, IEnumerable<TEMP_HomeReportOutputModel> data, string fileName, string footerFormat)
+        public IActionResult OutputPDF(string layoutPath, string layoutName, IEnumerable<RepWTSViewModel> VM, string fileName, string footerFormat)
         {
             string pdfLayoutFilePath = layoutPath + layoutName;
 
-            return new ViewAsPdf(pdfLayoutFilePath, data)
+            return new ViewAsPdf(pdfLayoutFilePath, VM)
             {
                 FileName = fileName,
                 PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape,

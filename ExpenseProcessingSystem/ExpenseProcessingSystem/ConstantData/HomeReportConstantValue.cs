@@ -31,6 +31,7 @@ namespace ExpenseProcessingSystem.ConstantData
         public const string ReportPdfPrevLayoutPath = "ReportLayoutFormat/";
         //PDF Footer foramt
         public static readonly string PdfFooter1 = "--footer-left \" PAGE => [page] of [toPage] \" --footer-right \" Printed Date => " + DateTime.Today.ToShortDateString() + "\" --footer-font-size \"9\" --footer-spacing 3 --footer-font-name \"calibri light\"";
+        public static readonly string PdfFooter2 = "";
         //========================================================================
         //Public IEnumerable class constant values
 
