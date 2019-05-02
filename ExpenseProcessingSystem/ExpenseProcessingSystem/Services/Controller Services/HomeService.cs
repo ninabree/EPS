@@ -2,6 +2,7 @@
 using ExpenseProcessingSystem.Models;
 using ExpenseProcessingSystem.Models.Pending;
 using ExpenseProcessingSystem.ViewModels;
+using ExpenseProcessingSystem.ViewModels.Entry;
 using ExpenseProcessingSystem.ViewModels.NewRecord;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -2250,9 +2251,6 @@ namespace ExpenseProcessingSystem.Services
             listOfLists.Add(new SelectList(_context.DMDept.Where(x => x.Dept_isActive == true).Select(q => new { q.Dept_ID, q.Dept_Name }),
                                                 "Dept_ID", "Dept_Name"));
 
-            listOfLists.Add(new SelectList(_context.DMAccount.Where(x => x.Account_isActive == true).Select(q => new { q.Account_ID, q.Account_Name }),
-                                    "Account_ID", "Account_Name"));
-
             listOfLists.Add(new SelectList(_context.DMCurrency.Where(x => x.Curr_isActive == true).Select(q => new { q.Curr_ID, q.Curr_Name }),
                                     "Curr_ID", "Curr_Name"));
 
@@ -2261,7 +2259,115 @@ namespace ExpenseProcessingSystem.Services
 
             return listOfLists;
         }
-        //retrieve department lis
+        //retrieve account details
+        public List<accDetails> getAccDetailsEntry()
+        {
+            List<accDetails> accDetails = new List<accDetails>();
+
+            var accDbDetails = _context.DMAccount.Where(x => x.Account_isActive == true).Select(q => new { q.Account_ID, q.Account_Name, q.Account_Code });
+
+            foreach (var detail in accDbDetails)
+            {
+                accDetails temp = new accDetails();
+                temp.accId = detail.Account_ID;
+                temp.accName = detail.Account_Name;
+                temp.accCode = detail.Account_Code;
+
+                accDetails.Add(temp);
+            }
+
+            return accDetails;
+        }
+        //save expense details
+        public bool addExpense_CV(EntryCVViewModelList entryModel,int userId)
+        {
+            float TotalDebit = 0;
+            float credEwtTotal = 0;
+            float credCashTotal = 0;
+
+            foreach(EntryCVViewModel cv in entryModel.EntryCV)
+            {
+                TotalDebit += cv.debitGross;
+                credEwtTotal += cv.credEwt;
+                credCashTotal += cv.credCash;
+            }
+
+            if (_modelState.IsValid)
+            {
+                List<ExpenseEntryDetailModel> expenseDtls = new List<ExpenseEntryDetailModel>();
+
+                foreach (EntryCVViewModel cv in entryModel.EntryCV)
+                {
+                    List<ExpenseEntryAmortizationModel> expenseAmor = new List<ExpenseEntryAmortizationModel>();
+                    List<ExpenseEntryGbaseDtl> expenseGbase = new List<ExpenseEntryGbaseDtl>();
+
+                    foreach (var amorSchedule in cv.amtDetails)
+                    {
+                        ExpenseEntryAmortizationModel amortization = new ExpenseEntryAmortizationModel
+                        {
+                            Amor_Sched_Date = amorSchedule.amtDate,
+                            Amor_Price = amorSchedule.amtAmount
+                        };
+
+                        expenseAmor.Add(amortization);
+                    }
+
+                    foreach (var gbaseRemark in cv.gBaseRemarksDetails)
+                    {
+                        ExpenseEntryGbaseDtl remarks = new ExpenseEntryGbaseDtl
+                        {
+                            GbaseDtl_Document_Type = gbaseRemark.docType,
+                            GbaseDtl_InvoiceNo = gbaseRemark.invNo,
+                            GbaseDtl_Description = gbaseRemark.desc,
+                            GbaseDtl_Amount = gbaseRemark.amount
+                        };
+
+                        expenseGbase.Add(remarks);
+                    }
+
+                    ExpenseEntryDetailModel expenseDetails = new ExpenseEntryDetailModel
+                    {
+                        ExpDtl_Gbase_Remarks = cv.GBaseRemarks,
+                        ExpDtl_Account = cv.account,
+                        ExpDtl_Fbt = cv.fbt,
+                        ExpDtl_Dept = cv.dept,
+                        ExpDtl_Vat = cv.vat,
+                        ExpDtl_Ewt = cv.ewt,
+                        ExpDtl_Ccy = cv.ccy,
+                        ExpDtl_Debit = cv.debitGross,
+                        ExpDtl_Credit_Ewt = cv.credEwt,
+                        ExpDtl_Credit_Cash = cv.credCash,
+                        ExpDtl_Amor_Month = cv.month,
+                        ExpDtl_Amor_Day = cv.day,
+                        ExpDtl_Amor_Duration = cv.duration,
+                        ExpenseEntryAmortizations = expenseAmor,
+                        ExpenseEntryGbaseDtls = expenseGbase
+                    };
+
+                    expenseDtls.Add(expenseDetails);
+                }
+
+                ExpenseEntryModel expenseEntry = new ExpenseEntryModel
+                {
+                    Expense_Date = entryModel.expenseDate,
+                    Expense_Payee = entryModel.vendor,
+                    Expense_Debit_Total = TotalDebit,
+                    Expense_Credit_Total = credEwtTotal + credCashTotal,
+                    Expense_Creator_ID = userId,
+                    Expense_Created_Date = DateTime.Now,
+                    Expense_Last_Updated = DateTime.Now,
+                    Expense_isDeleted = false,
+                    Expense_Status = 1,
+                    ExpenseEntryDetails = expenseDtls
+                };
+
+                _context.ExpenseEntry.Add(expenseEntry);
+                _context.SaveChanges();
+                return true;
+            }
+
+            return false;
+        }
     }
 
 }

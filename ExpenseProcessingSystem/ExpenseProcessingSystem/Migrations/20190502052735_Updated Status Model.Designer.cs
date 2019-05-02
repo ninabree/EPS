@@ -4,14 +4,16 @@ using ExpenseProcessingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    partial class EPSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190502052735_Updated Status Model")]
+    partial class UpdatedStatusModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -607,6 +609,8 @@ namespace ExpenseProcessingSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("ExpDt_Ccy");
+
                     b.Property<int>("ExpDtl_Account");
 
                     b.Property<int>("ExpDtl_Amor_Day");
@@ -614,8 +618,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.Property<int>("ExpDtl_Amor_Duration");
 
                     b.Property<int>("ExpDtl_Amor_Month");
-
-                    b.Property<int>("ExpDtl_Ccy");
 
                     b.Property<float>("ExpDtl_Credit_Cash");
 
@@ -631,7 +633,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("ExpDtl_Gbase_Remarks");
 
-                    b.Property<float>("ExpDtl_Vat");
+                    b.Property<int>("ExpDtl_Vat");
 
                     b.Property<int?>("ExpenseEntryModelExpense_ID");
 
@@ -650,7 +652,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int?>("ExpenseEntryDetailModelExpDtl_ID");
 
-                    b.Property<float>("GbaseDtl_Amount");
+                    b.Property<float>("GabseDtl_Amount");
 
                     b.Property<string>("GbaseDtl_Description");
 

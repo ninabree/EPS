@@ -11,7 +11,14 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         public SelectList vendors { get; set; }
         public SelectList ewt { get; set; }
         public SelectList dept { get; set; }
-        public SelectList acc { get; set; }
+        public List<accDetails> acc { get; set; }
         public SelectList currency { get; set; }
+    }
+
+    public class accDetails
+    {
+        public int accId { get; set; }
+        public string accName { get; set; }
+        public string accCode { get; set; }
     }
 }

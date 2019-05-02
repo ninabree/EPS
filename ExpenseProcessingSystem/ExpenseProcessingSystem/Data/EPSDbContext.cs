@@ -52,5 +52,13 @@ namespace ExpenseProcessingSystem.Data
         public DbSet<NotifModel> Notif { get; set; }
         //FILES
         public DbSet<FileLocationModel> FileLocation { get; set; }
+        //STATUS
+        public DbSet<StatusListModel> StatusList { get; set; }
+
+        //EXPENSE ENTRY TABLES
+        public DbSet<ExpenseEntryModel> ExpenseEntry { get; set; }
+        public DbSet<ExpenseEntryDetailModel> ExpenseEntryDetails { get; set; }
+        public DbSet<ExpenseEntryAmortizationModel> ExpenseEntryAmortizations { get; set; }
+        public DbSet<ExpenseEntryGbaseDtl> ExpenseEntryGbaseDtls { get; set; }
     }
 }

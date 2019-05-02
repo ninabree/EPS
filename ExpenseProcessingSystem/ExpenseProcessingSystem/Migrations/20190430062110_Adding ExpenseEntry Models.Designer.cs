@@ -4,14 +4,16 @@ using ExpenseProcessingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    partial class EPSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190430062110_Adding ExpenseEntry Models")]
+    partial class AddingExpenseEntryModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -582,30 +584,13 @@ namespace ExpenseProcessingSystem.Migrations
                     b.ToTable("DMVendor_Pending");
                 });
 
-            modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryAmortizationModel", b =>
-                {
-                    b.Property<int>("Amor_ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<float>("Amor_Price");
-
-                    b.Property<DateTime>("Amor_Sched_Date");
-
-                    b.Property<int?>("ExpenseEntryDetailModelExpDtl_ID");
-
-                    b.HasKey("Amor_ID");
-
-                    b.HasIndex("ExpenseEntryDetailModelExpDtl_ID");
-
-                    b.ToTable("ExpenseEntryAmortizations");
-                });
-
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel", b =>
                 {
                     b.Property<int>("ExpDtl_ID")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ExpDt_Ccy");
 
                     b.Property<int>("ExpDtl_Account");
 
@@ -614,8 +599,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.Property<int>("ExpDtl_Amor_Duration");
 
                     b.Property<int>("ExpDtl_Amor_Month");
-
-                    b.Property<int>("ExpDtl_Ccy");
 
                     b.Property<float>("ExpDtl_Credit_Cash");
 
@@ -627,11 +610,13 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("ExpDtl_Ewt");
 
+                    b.Property<int>("ExpDtl_Expense_ID");
+
                     b.Property<bool>("ExpDtl_Fbt");
 
                     b.Property<string>("ExpDtl_Gbase_Remarks");
 
-                    b.Property<float>("ExpDtl_Vat");
+                    b.Property<int>("ExpDtl_Vat");
 
                     b.Property<int?>("ExpenseEntryModelExpense_ID");
 
@@ -640,29 +625,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.HasIndex("ExpenseEntryModelExpense_ID");
 
                     b.ToTable("ExpenseEntryDetails");
-                });
-
-            modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryGbaseDtl", b =>
-                {
-                    b.Property<int>("GbaseDtl_ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("ExpenseEntryDetailModelExpDtl_ID");
-
-                    b.Property<float>("GbaseDtl_Amount");
-
-                    b.Property<string>("GbaseDtl_Description");
-
-                    b.Property<string>("GbaseDtl_Document_Type");
-
-                    b.Property<string>("GbaseDtl_InvoiceNo");
-
-                    b.HasKey("GbaseDtl_ID");
-
-                    b.HasIndex("ExpenseEntryDetailModelExpDtl_ID");
-
-                    b.ToTable("ExpenseEntryGbaseDtls");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryModel", b =>
@@ -996,19 +958,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.ToTable("DMVAT_Pending");
                 });
 
-            modelBuilder.Entity("ExpenseProcessingSystem.Models.StatusListModel", b =>
-                {
-                    b.Property<int>("Status_ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Status_Name");
-
-                    b.HasKey("Status_ID");
-
-                    b.ToTable("StatusList");
-                });
-
             modelBuilder.Entity("ExpenseProcessingSystem.Models.SystemMessageModel", b =>
                 {
                     b.Property<string>("Msg_Code")
@@ -1062,25 +1011,11 @@ namespace ExpenseProcessingSystem.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryAmortizationModel", b =>
-                {
-                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel")
-                        .WithMany("ExpenseEntryAmortizations")
-                        .HasForeignKey("ExpenseEntryDetailModelExpDtl_ID");
-                });
-
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel", b =>
                 {
                     b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryModel")
                         .WithMany("ExpenseEntryDetails")
                         .HasForeignKey("ExpenseEntryModelExpense_ID");
-                });
-
-            modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryGbaseDtl", b =>
-                {
-                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel")
-                        .WithMany("ExpenseEntryGbaseDtls")
-                        .HasForeignKey("ExpenseEntryDetailModelExpDtl_ID");
                 });
 #pragma warning restore 612, 618
         }
