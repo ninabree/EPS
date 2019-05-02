@@ -5,6 +5,7 @@ using ExpenseProcessingSystem.Services;
 using ExpenseProcessingSystem.Services.Controller_Services;
 using ExpenseProcessingSystem.Services.Excel_Services;
 using ExpenseProcessingSystem.ViewModels;
+using ExpenseProcessingSystem.ViewModels.Entry;
 using ExpenseProcessingSystem.ViewModels.NewRecord;
 using ExpenseProcessingSystem.ViewModels.Reports;
 using ExpenseProcessingSystem.ViewModels.Search_Filters;
@@ -575,36 +576,43 @@ namespace ExpenseProcessingSystem.Controllers
             //pagination
             return View(mod);
         }
+
+        //Expense Entry Block---------------------------------------------------------------------------------------
+
+        //Expense Entry Check Voucher Block=========================================================================
         public IActionResult Entry_CV()
         {
-            EntreeCVViewModelList viewModel = new EntreeCVViewModelList();
-            List<SelectList> listOfLists = _service.getCheckEntrySystemVals();
-            viewModel.systemValues.vendors = listOfLists[0];
-            viewModel.systemValues.dept = listOfLists[1];
-            viewModel.systemValues.acc = listOfLists[2];
-            viewModel.systemValues.currency = listOfLists[3];
-            viewModel.systemValues.ewt = listOfLists[4];
-            viewModel.expenseYear = "2019";
-            viewModel.expenseId = "0001";
+            EntryCVViewModelList viewModel = new EntryCVViewModelList();
+            List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
+            //listOfSysVals[0] = List of Vendors
+            //listOfSysVals[1] = List of Departments
+            //listOfSysVals[2] = List of Currency
+            //listOfSysVals[3] = List of TaxRate
+            viewModel.systemValues.vendors = listOfSysVals[0];
+            viewModel.systemValues.dept = listOfSysVals[1];
+            viewModel.systemValues.currency = listOfSysVals[2];
+            viewModel.systemValues.ewt = listOfSysVals[3];
+            viewModel.systemValues.acc = _service.getAccDetailsEntry();
+
+            viewModel.expenseYear = DateTime.Today.Year.ToString();
             viewModel.expenseDate = DateTime.Today;
-            viewModel.status = "stats lie";
-            viewModel.approver = "jimmy";
-            viewModel.verifier.Add("Crikey");
-            viewModel.verifier.Add("Mikey");
-            viewModel.verifier.Add("Winei");
-            //viewModel.EntreeCV = new List<EntreeCVViewModel>();
-            viewModel.EntreeCV.Add(new EntreeCVViewModel());
-            viewModel.EntreeCV.Add(new EntreeCVViewModel());
+   
+            viewModel.EntryCV.Add(new EntryCVViewModel());
             return View(viewModel);
         }
-        public IActionResult Entry_NewCV(EntreeCVViewModelList entreeCVViewModelList)
+        public IActionResult Entry_NewCV(EntryCVViewModelList EntryCVViewModelList)
         {
-            foreach (var item in entreeCVViewModelList.EntreeCV)
-            {
-                var stuff = 0;
-            }
-            return View();
+            _service.addExpense_CV(EntryCVViewModelList, 4);
+
+            List<SelectList> listOfLists = _service.getCheckEntrySystemVals();
+            EntryCVViewModelList.systemValues.vendors = listOfLists[0];
+            EntryCVViewModelList.systemValues.dept = listOfLists[1];
+            EntryCVViewModelList.systemValues.acc = _service.getAccDetailsEntry();
+            EntryCVViewModelList.systemValues.currency = listOfLists[2];
+            EntryCVViewModelList.systemValues.ewt = listOfLists[3];
+            return View("Entry_CV",EntryCVViewModelList);
         }
+        //Expense Entry Check Voucher Block End=========================================================================
         public IActionResult Entry_DDV()
         {
             return View();

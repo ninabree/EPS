@@ -8,6 +8,7 @@ using ExpenseProcessingSystem.Models;
 using ExpenseProcessingSystem.Services;
 using ExpenseProcessingSystem.Services.Controller_Services;
 using ExpenseProcessingSystem.ViewModels;
+using ExpenseProcessingSystem.ViewModels.Entry;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -859,8 +860,23 @@ namespace ExpenseProcessingSystem.Controllers
         }
         //_________________________//[Check Expense]//_____________________________
         //Expense Amortization
-        public IActionResult ExpenseAmortization()
+        public IActionResult EntryExpenseAmortization(string id, string vendor, string account, int month, int day, int duration)
         {
+            CVAmortizationViewModel model = new CVAmortizationViewModel();
+
+            model.id = id;
+            model.vendor = vendor;
+            model.account = account;
+            model.month = month;
+            model.day = day;
+            model.duration = duration;
+
+            return PartialView(model);
+        }
+
+        public IActionResult EntryGbaseRemarks(string[] IdsArr)
+        {
+            ViewBag.parentID = IdsArr[0];
             return PartialView();
         }
     }

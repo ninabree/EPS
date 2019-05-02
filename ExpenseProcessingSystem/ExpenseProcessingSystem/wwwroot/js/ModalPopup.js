@@ -2,12 +2,18 @@
     /*//////////////////////////////////////////////////////////////////
     [ MODAL ]*/
     //set content to modal body and show dynamic modal
-    //ExpenseAmortization
-    $(".expenseAmortization").click(function (e) {
-        e.stopImmediatePropagation();
-        ModalPopup('Modal', 'ExpenseAmortization', 'Prepaid Expense Amortization Schedule');
-    });
     //LOGIN
+
+    $("#inputTable").on("click", ".gRemarks", function (e) {
+        e.stopImmediatePropagation();
+        if (!isSessionTimeout()) {
+            var idsArr = Array();
+            var pNode = $(this.parentNode)[0].id;
+            idsArr.push(pNode);
+            ModalPopup2('Modal', 'EntryGbaseRemarks', 'Gbase Remarks', idsArr);
+        }
+    });
+
     $("#forgot_PW").click(function (e) {
         e.stopImmediatePropagation();
         ModalPopup('Modal', 'ForgotPW', 'Forgot Your Login Credentials?');
@@ -99,7 +105,7 @@
                 $('input.tbl-chk[type="checkbox"]:checked').each(function (i, v) {
                     idsArr.push($(v).attr('id'));
                 });
-                //controller name, method name, modal header
+                //controller name, method name, modal header    
                 ModalPopup2('Modal', 'DMDelete' + methodName + '_Pending', 'Confirm deletion of record/s?', idsArr);
             } else {
                 alert("No data record/s selected.");
@@ -189,15 +195,48 @@
                 modalDivHeader.find('h4').remove();
 
                 //set modal header title
-                modalDivFooter.find('#add_row_btn').remove();
                 modalDivHeader.append('<h4 class="modal-title">' + modalHeader + '</h4>');
                 modalDivBody.html(data);
+
+                if (method == 'EntryGbaseRemarks') {
+                    gbaseRemarksSet(idsArr[0])
+                    if ($("#add_row_btn").length <= 0) {
+                        modalDivFooter.append('<button type="button" id="add_row_btn" class="btn table-add">Add Row</button>');
+                    }
+                }
 
                 $('#myModal').modal('show');
             },
             error: function (xhr) {
                 alert('error');
             }
+
         });
+    }
+
+    function gbaseRemarksSet(id) {
+        var rowNo = id.substring(7);
+        var noOfItem = $("#" + id).find('input').length / 4;
+        var tblDiv = $("#table").find("table");
+
+        if (noOfItem > 0) {
+            tblDiv.find('tbody').find('tr').remove();
+
+            for (var i = 0; i < noOfItem; i++) {
+                var docuType = $("#" + id).find("#EntryCV_" + rowNo + "__gBaseRemarksDetails_" + i + "__docType").val();
+                var desc = $("#" + id).find("#EntryCV_" + rowNo + "__gBaseRemarksDetails_" + i + "__desc").val();
+                var invNo = $("#" + id).find("#EntryCV_" + rowNo + "__gBaseRemarksDetails_" + i + "__invNo").val();
+                var amount = $("#" + id).find("#EntryCV_" + rowNo + "__gBaseRemarksDetails_" + i + "__amount").val();
+
+                var newGbaseRemarksRow = $('<tr id="gRemarks-tr-' + i + '">'
+                    + '<td><input type="text" class="gDocuType" value="' + docuType + '" /></td>'
+                    + '<td><input type="text" class="gInvoiceNo" value="' + invNo + '" /></td>'
+                    + '<td><input type="text" class="gDescription" value="' + desc + '" /></td>'
+                    + '<td><input type="number" min="0" class="gAmount" style="width:100%" value="' + amount + '"  /></td>'
+                    + '<td><div class="flex-c"><span class="table-remove glyphicon glyphicon-remove"></span></div></td></tr>');
+
+                tblDiv.append(newGbaseRemarksRow);
+            }
+        }
     }
 }); 

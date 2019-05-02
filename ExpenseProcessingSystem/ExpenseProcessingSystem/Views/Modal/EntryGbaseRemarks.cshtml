@@ -1,0 +1,33 @@
+﻿@{Layout = "~/Views/Shared/_ModalLayout.cshtml";}
+<div id="gBaseRemarks" class="flex-c">
+    <div id="table">
+        <input type="hidden" id="parentId" value="@ViewBag.parentID" />
+        <table class="table table-bordered editable-th" id="gBaseTable">
+            <colgroup>
+                <col />
+                <col />
+                <col />
+                <col />
+                <col style="width:5%;" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <td>Document Type</td>
+                    <td>Invoice No.</td>
+                    <td>Descrption</td>
+                    <td>Amount</td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr id="gRemarks-tr-0">
+                    <td><input type="text" class="gDocuType" /></td>
+                    <td><input type="text" class="gInvoiceNo" /></td>
+                    <td><input type="text" class="gDescription" /></td>
+                    <td><input type="number" min="0" class="gAmount" style="width:100%" /></td>
+                    <td><div class="flex-c"><span class="table-remove glyphicon glyphicon-remove"></span></div>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

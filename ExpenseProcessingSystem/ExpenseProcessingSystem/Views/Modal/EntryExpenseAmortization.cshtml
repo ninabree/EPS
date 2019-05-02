@@ -1,0 +1,143 @@
+﻿@using ExpenseProcessingSystem.ViewModels.Entry
+@model CVAmortizationViewModel
+<div id="amortizationBody">
+    @Html.HiddenFor(x => Model.id, new { @id = "parentIdAmortization" })
+    <div>Vendor/Employee : <p class="dis-inline-block w-49">@Html.TextBoxFor(x => Model.vendor, new { @id = "reqVendor", @readonly = "readonly", @class="input" })</p></div>
+    <div>Account :<p class="dis-inline-block w-49">@Html.TextBoxFor(x=>Model.account,new { @id="reqAccount", @readonly = "readonly", @class = "input" })</p></div>
+    <div id="reqCalc" class="flex-sb">
+        <div class="dis-inline-block">
+            1st Month : <p class="dis-inline-block">
+                            <select id='reqMonth' class="input calcBody reqMonth">
+                                @if (Model.month == 0){
+                                    <option selected value='0'>Janaury</option>
+                                }else{
+                                    <option value='0'>Janaury</option>
+                                }
+                                @if (Model.month == 1){
+                                    <option selected value='1'>February</option>
+                                }else{
+                                    <option value='1'>February</option>
+                                }
+                                @if (Model.month == 2){
+                                    <option selected value='2'>March</option>
+                                }else{
+                                    <option value='2'>March</option>
+                                }
+                                @if (Model.month == 3){
+                                    <option selected value='3'>April</option>
+                                }else{
+                                    <option value='3'>April</option>
+                                }
+                                @if (Model.month == 4){
+                                    <option selected value='4'>May</option>
+                                }else{
+                                    <option value='4'>May</option>
+                                }
+                                @if (Model.month == 5){
+                                    <option selected value='5'>June</option>
+                                }else{
+                                    <option value='5'>June</option>
+                                }
+                                @if (Model.month == 6){
+                                    <option selected value='6'>July</option>
+                                }else{
+                                    <option value='6'>July</option>
+                                }
+                                @if (Model.month == 7){
+                                    <option selected value='7'>August</option>
+                                }else{
+                                    <option value='7'>August</option>
+                                }
+                                @if (Model.month == 8){
+                                    <option selected value='8'>September</option>
+                                }else{
+                                    <option value='8'>September</option>
+                                }
+                                @if (Model.month == 9){
+                                    <option selected value='9'>October</option>
+                                }else{
+                                    <option value='9'>October</option>
+                                }
+                                @if (Model.month == 10){
+                                    <option selected value='10'>November</option>
+                                }else{
+                                    <option value='10'>November</option>
+                                }
+                                @if (Model.month == 11){
+                                    <option selected value='11'>December</option>
+                                }else{
+                                    <option value='11'>December</option>
+                                }
+                            </select>
+            </p>
+        </div>
+        <div class="dis-inline-block">Day : <p class="dis-inline-block">@Html.TextBoxFor(x => Model.day, new { @class= "input calcBody", @type = "number", @id = "reqDay"})</p></div>
+        <div class="dis-inline-block">Duration : <p class="dis-inline-block">@Html.TextBoxFor(x => Model.duration, new { @class = "input calcBody", @type = "number", @id = "reqDuration" })</p></div>
+    </div>
+    <div class="flex-c">
+        <table id="modalTable" class="table table-bordered table-striped voucher-tbl w-70">
+            <colgroup>
+                <col />
+                <col />
+            </colgroup>
+            <thead>
+                <tr>
+                    <td>Date</td>
+                    <td>Amount</td>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+
+<script>
+    $(function () {
+        $("#reqCalc").on("change", ".calcBody", function (e) {
+            var tableRef = document.getElementById('modalTable').getElementsByTagName('tbody')[0];
+
+            var begMonth = $("#reqMonth").val();
+            var day = $("#reqDay").val();
+            var duration = Number($("#reqDuration").val());
+
+            var grossAmount = Number($("#" + $("#parentIdAmortization").val()).find(".txtGross").val());
+
+            $("#modalTable").find('tbody').empty();
+
+            tblBuilder(tableRef, begMonth, day, duration, grossAmount);
+        });
+
+        $(".modal-footer").on("click", "#saveBtn", function () {
+            var parentEntry = $("#" + $("#parentIdAmortization").val()).find("#req_" + $("#parentIdAmortization").val().substr(5));
+
+            var itemNo = $("#parentIdAmortization").val().substr(5);
+
+            var begMonth = $("#reqMonth").val();
+            var duration = Number($("#reqDuration").val());
+            var day = $("#reqDay").val();
+
+            var grossAmount = Number($("#" + $("#parentIdAmortization").val()).find(".txtGross").val());
+
+            parentEntry.empty();
+
+            var htmlTxt = "<a class='expenseAmortization glyphicon glyphicon-list-alt' href='#'></a>" +
+                "<input class='txtAmorMonth' data-val='true' data-val-required='The month field is required.' id='EntryCV_" + itemNo + "__month' name='EntryCV[" + itemNo + "].month' type='hidden' value=" + begMonth + ">" +
+                "<input class='txtAmorDay' data-val='true' data-val-required='The day field is required.' id='EntryCV_" + itemNo + "__day' name='EntryCV[" + itemNo + "].day' type='hidden' value='" + day + "'>" +
+                "<input class='txtAmorDuration' data-val='true' data-val-required='The duration field is required.' id='EntryCV_" + itemNo + "__duration' name='EntryCV[" + itemNo + "].duration' type='hidden' value='" + duration + "'>";
+
+            var Year = new Date().getFullYear();
+            var dvdAmount = roundNumber((grossAmount / duration), 2);
+
+            for (var i = 0; i < duration; i++){
+                var brkDate = new Date(Year, begMonth + i, day)
+                htmlTxt += "<input data-val='true' data-val-required='The amtDate field is required.' id='EntryCV_" + itemNo + "__amtDetails_" + i + "__amtDate' name='EntryCV[" + itemNo + "].amtDetails[" + i + "].amtDate' type='hidden' value='brkDate'>";
+                htmlTxt += "<input data-val='true' data-val-number='The field amtAmount must be a number.' data-val-required='The amtAmount field is required.' id='EntryCV_" + itemNo + "__amtDetails" + i + "__amtAmount' name='EntryCV[" + itemNo + "].amtDetails[" + i + "].amtAmount' type='hidden' value='" + dvdAmount + "'>";
+            }
+
+
+            parentEntry.append(htmlTxt);
+            $('#myModal').modal('hide');
+        });
+    });
+</script>
