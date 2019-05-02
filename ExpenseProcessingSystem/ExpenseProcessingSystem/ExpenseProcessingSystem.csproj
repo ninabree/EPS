@@ -22,7 +22,6 @@
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.6" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.jQuery.Unobtrusive.Ajax" Version="3.2.6" />
-    <PackageReference Include="Microsoft.Owin.Host.SystemWeb" Version="4.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.6" />
     <PackageReference Include="Rotativa" Version="1.7.3" />
     <PackageReference Include="rotativa.AspNetCore" Version="1.0.6" />
@@ -78,10 +77,6 @@
     <Folder Include="wwwroot\uploads\NCC\" />
     <Folder Include="wwwroot\uploads\BCS\" />
     <Folder Include="wwwroot\uploads\Temp\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\ExcelTemplates\_ReportLayout_2.xlsx" />
   </ItemGroup>
 
 </Project>

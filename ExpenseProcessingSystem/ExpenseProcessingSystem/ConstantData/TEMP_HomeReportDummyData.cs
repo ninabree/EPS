@@ -19,7 +19,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -30,7 +30,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -41,7 +41,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -52,7 +52,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -63,7 +63,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -74,7 +74,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -85,7 +85,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -96,7 +96,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -107,7 +107,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -118,7 +118,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -129,7 +129,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -140,7 +140,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -151,7 +151,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -162,7 +162,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -173,7 +173,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -184,7 +184,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -195,7 +195,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -206,7 +206,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -217,7 +217,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -228,7 +228,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -239,7 +239,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -250,7 +250,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -261,7 +261,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -272,7 +272,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -283,7 +283,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -294,7 +294,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -305,7 +305,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -316,7 +316,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -327,7 +327,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -338,7 +338,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -349,7 +349,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -360,7 +360,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -371,7 +371,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -382,7 +382,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -393,7 +393,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -404,7 +404,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -415,7 +415,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -426,7 +426,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -437,7 +437,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -448,7 +448,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -459,7 +459,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -470,7 +470,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -481,7 +481,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -492,7 +492,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -503,7 +503,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -514,7 +514,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -525,7 +525,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -536,7 +536,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -547,7 +547,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -558,7 +558,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -569,7 +569,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -580,7 +580,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -591,7 +591,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -602,7 +602,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -613,7 +613,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -624,7 +624,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -635,7 +635,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -646,7 +646,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -657,7 +657,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -668,7 +668,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -679,7 +679,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -691,7 +691,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -702,7 +702,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -713,7 +713,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -724,7 +724,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -735,7 +735,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -746,7 +746,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -757,7 +757,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -768,7 +768,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -779,7 +779,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -790,7 +790,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -801,7 +801,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -812,7 +812,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -823,7 +823,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -834,7 +834,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -845,7 +845,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -856,7 +856,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -867,7 +867,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -878,7 +878,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -889,7 +889,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -900,7 +900,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -911,7 +911,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -922,7 +922,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -933,7 +933,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -944,7 +944,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -955,7 +955,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -966,7 +966,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -977,7 +977,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -988,7 +988,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -999,7 +999,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1010,7 +1010,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1021,7 +1021,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1032,7 +1032,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1043,7 +1043,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1054,7 +1054,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1065,7 +1065,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1076,7 +1076,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1087,7 +1087,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1098,7 +1098,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1109,7 +1109,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1120,7 +1120,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1131,7 +1131,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1142,7 +1142,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1153,7 +1153,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1164,7 +1164,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1175,7 +1175,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1186,7 +1186,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1197,7 +1197,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1208,7 +1208,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1219,7 +1219,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1230,7 +1230,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1241,7 +1241,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1252,7 +1252,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1263,7 +1263,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1274,7 +1274,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1285,7 +1285,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1296,7 +1296,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1307,7 +1307,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1318,7 +1318,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1329,7 +1329,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1340,7 +1340,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1351,7 +1351,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1363,7 +1363,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1374,7 +1374,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1385,7 +1385,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1396,7 +1396,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1407,7 +1407,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1418,7 +1418,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1429,7 +1429,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1440,7 +1440,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1451,7 +1451,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1462,7 +1462,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1473,7 +1473,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1484,7 +1484,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1495,7 +1495,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1506,7 +1506,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1517,7 +1517,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1528,7 +1528,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1539,7 +1539,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1550,7 +1550,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1561,7 +1561,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1572,7 +1572,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1583,7 +1583,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1594,7 +1594,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1605,7 +1605,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1616,7 +1616,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1627,7 +1627,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1638,7 +1638,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1649,7 +1649,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1660,7 +1660,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1671,7 +1671,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1682,7 +1682,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1693,7 +1693,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1704,7 +1704,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1715,7 +1715,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1726,7 +1726,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1737,7 +1737,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1748,7 +1748,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1759,7 +1759,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1770,7 +1770,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1781,7 +1781,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1792,7 +1792,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1803,7 +1803,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1814,7 +1814,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1825,7 +1825,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1836,7 +1836,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1847,7 +1847,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1858,7 +1858,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1869,7 +1869,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1880,7 +1880,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1891,7 +1891,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1902,7 +1902,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1913,7 +1913,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1924,7 +1924,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1935,7 +1935,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1946,7 +1946,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1957,7 +1957,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1968,7 +1968,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1979,7 +1979,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -1990,7 +1990,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2001,7 +2001,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2012,7 +2012,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2023,7 +2023,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2035,7 +2035,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2046,7 +2046,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2057,7 +2057,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2068,7 +2068,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2079,7 +2079,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2090,7 +2090,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2101,7 +2101,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2112,7 +2112,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2123,7 +2123,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2134,7 +2134,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2145,7 +2145,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2156,7 +2156,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2167,7 +2167,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2178,7 +2178,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2189,7 +2189,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2200,7 +2200,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2211,7 +2211,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2222,7 +2222,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2233,7 +2233,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2244,7 +2244,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2255,7 +2255,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2266,7 +2266,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2277,7 +2277,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2288,7 +2288,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2299,7 +2299,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2310,7 +2310,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2321,7 +2321,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2332,7 +2332,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2343,7 +2343,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2354,7 +2354,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2365,7 +2365,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2376,7 +2376,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2387,7 +2387,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2398,7 +2398,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2409,7 +2409,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2420,7 +2420,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2431,7 +2431,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2442,7 +2442,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2453,7 +2453,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2464,7 +2464,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2475,7 +2475,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2486,7 +2486,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2497,7 +2497,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2508,7 +2508,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2519,7 +2519,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2530,7 +2530,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2541,7 +2541,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2552,7 +2552,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2563,7 +2563,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2574,7 +2574,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2585,7 +2585,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2596,7 +2596,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2607,7 +2607,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2618,7 +2618,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2629,7 +2629,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2640,7 +2640,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2651,7 +2651,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2662,7 +2662,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2673,7 +2673,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2684,7 +2684,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2695,7 +2695,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2707,7 +2707,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2718,7 +2718,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2729,7 +2729,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2740,7 +2740,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2751,7 +2751,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2762,7 +2762,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2773,7 +2773,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2784,7 +2784,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2795,7 +2795,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2806,7 +2806,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2817,7 +2817,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2828,7 +2828,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2839,7 +2839,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2850,7 +2850,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2861,7 +2861,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2872,7 +2872,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2883,7 +2883,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2894,7 +2894,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2905,7 +2905,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2916,7 +2916,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2927,7 +2927,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2938,7 +2938,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2949,7 +2949,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2960,7 +2960,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2971,7 +2971,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2982,7 +2982,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -2993,7 +2993,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3004,7 +3004,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3015,7 +3015,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3026,7 +3026,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3037,7 +3037,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3048,7 +3048,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3059,7 +3059,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3070,7 +3070,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3081,7 +3081,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3092,7 +3092,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3103,7 +3103,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3114,7 +3114,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3125,7 +3125,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3136,7 +3136,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3147,7 +3147,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3158,7 +3158,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3169,7 +3169,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3180,7 +3180,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3191,7 +3191,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3202,7 +3202,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3213,7 +3213,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3224,7 +3224,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3235,7 +3235,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3246,7 +3246,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3257,7 +3257,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3268,7 +3268,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3279,7 +3279,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3290,7 +3290,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3301,7 +3301,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3312,7 +3312,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3323,7 +3323,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3334,7 +3334,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3345,7 +3345,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3356,7 +3356,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3367,7 +3367,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3379,7 +3379,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3390,7 +3390,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3401,7 +3401,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3412,7 +3412,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3423,7 +3423,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3434,7 +3434,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3445,7 +3445,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3456,7 +3456,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3467,7 +3467,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3478,7 +3478,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3489,7 +3489,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3500,7 +3500,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3511,7 +3511,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3522,7 +3522,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3533,7 +3533,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3544,7 +3544,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3555,7 +3555,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3566,7 +3566,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3577,7 +3577,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3588,7 +3588,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3599,7 +3599,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3610,7 +3610,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3621,7 +3621,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3632,7 +3632,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3643,7 +3643,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3654,7 +3654,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3665,7 +3665,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3676,7 +3676,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3687,7 +3687,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3698,7 +3698,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3709,7 +3709,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3720,7 +3720,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3731,7 +3731,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3742,7 +3742,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3753,7 +3753,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3764,7 +3764,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3775,7 +3775,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3786,7 +3786,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3797,7 +3797,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3808,7 +3808,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3819,7 +3819,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3830,7 +3830,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3841,7 +3841,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3852,7 +3852,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3863,7 +3863,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3874,7 +3874,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3885,7 +3885,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3896,7 +3896,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3907,7 +3907,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3918,7 +3918,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3929,7 +3929,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3940,7 +3940,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3951,7 +3951,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3962,7 +3962,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3973,7 +3973,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3984,7 +3984,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -3995,7 +3995,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4006,7 +4006,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4017,7 +4017,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4028,7 +4028,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4039,7 +4039,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4051,7 +4051,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4062,7 +4062,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4073,7 +4073,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4084,7 +4084,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4095,7 +4095,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4106,7 +4106,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4117,7 +4117,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4128,7 +4128,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4139,7 +4139,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4150,7 +4150,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4161,7 +4161,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4172,7 +4172,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4183,7 +4183,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4194,7 +4194,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4205,7 +4205,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4216,7 +4216,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4227,7 +4227,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4238,7 +4238,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4249,7 +4249,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4260,7 +4260,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4271,7 +4271,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4282,7 +4282,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4293,7 +4293,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4304,7 +4304,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4315,7 +4315,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4326,7 +4326,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4337,7 +4337,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4348,7 +4348,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4359,7 +4359,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4370,7 +4370,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4381,7 +4381,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4392,7 +4392,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4403,7 +4403,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4414,7 +4414,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4425,7 +4425,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4436,7 +4436,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4447,7 +4447,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4458,7 +4458,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4469,7 +4469,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4480,7 +4480,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4491,7 +4491,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4502,7 +4502,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4513,7 +4513,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4524,7 +4524,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4535,7 +4535,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4546,7 +4546,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4557,7 +4557,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4568,7 +4568,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4579,7 +4579,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4590,7 +4590,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4601,7 +4601,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4612,7 +4612,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4623,7 +4623,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4634,7 +4634,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4645,7 +4645,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4656,7 +4656,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4667,7 +4667,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4678,7 +4678,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4689,7 +4689,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4700,7 +4700,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4711,7 +4711,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4723,7 +4723,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4734,7 +4734,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4745,7 +4745,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4756,7 +4756,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4767,7 +4767,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4778,7 +4778,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4789,7 +4789,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4800,7 +4800,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4811,7 +4811,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4822,7 +4822,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4833,7 +4833,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4844,7 +4844,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4855,7 +4855,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4866,7 +4866,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4877,7 +4877,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4888,7 +4888,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4899,7 +4899,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4910,7 +4910,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4921,7 +4921,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4932,7 +4932,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4943,7 +4943,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4954,7 +4954,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4965,7 +4965,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4976,7 +4976,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4987,7 +4987,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -4998,7 +4998,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5009,7 +5009,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5020,7 +5020,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5031,7 +5031,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5042,7 +5042,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5053,7 +5053,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5064,7 +5064,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5075,7 +5075,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5086,7 +5086,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5097,7 +5097,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5108,7 +5108,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5119,7 +5119,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5130,7 +5130,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5141,7 +5141,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5152,7 +5152,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5163,7 +5163,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5174,7 +5174,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5185,7 +5185,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5196,7 +5196,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5207,7 +5207,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5218,7 +5218,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5229,7 +5229,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5240,7 +5240,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5251,7 +5251,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5262,7 +5262,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5273,7 +5273,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5284,7 +5284,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5295,7 +5295,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5306,7 +5306,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5317,7 +5317,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5328,7 +5328,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5339,7 +5339,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5350,7 +5350,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5361,7 +5361,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5372,7 +5372,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5383,7 +5383,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5395,7 +5395,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5406,7 +5406,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5417,7 +5417,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5428,7 +5428,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5439,7 +5439,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5450,7 +5450,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5461,7 +5461,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5472,7 +5472,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5483,7 +5483,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5494,7 +5494,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5505,7 +5505,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5516,7 +5516,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5527,7 +5527,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5538,7 +5538,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5549,7 +5549,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5560,7 +5560,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5571,7 +5571,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5582,7 +5582,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5593,7 +5593,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5604,7 +5604,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5615,7 +5615,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5626,7 +5626,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5637,7 +5637,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5648,7 +5648,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5659,7 +5659,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5670,7 +5670,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5681,7 +5681,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5692,7 +5692,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5703,7 +5703,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5714,7 +5714,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5725,7 +5725,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5736,7 +5736,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5747,7 +5747,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5758,7 +5758,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5769,7 +5769,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5780,7 +5780,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5791,7 +5791,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5802,7 +5802,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5813,7 +5813,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5824,7 +5824,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5835,7 +5835,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5846,7 +5846,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5857,7 +5857,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5868,7 +5868,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5879,7 +5879,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5890,7 +5890,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5901,7 +5901,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5912,7 +5912,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5923,7 +5923,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5934,7 +5934,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5945,7 +5945,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5956,7 +5956,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5967,7 +5967,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5978,7 +5978,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -5989,7 +5989,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6000,7 +6000,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6011,7 +6011,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6022,7 +6022,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6033,7 +6033,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6044,7 +6044,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6055,7 +6055,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6067,7 +6067,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6078,7 +6078,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6089,7 +6089,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6100,7 +6100,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6111,7 +6111,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6122,7 +6122,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6133,7 +6133,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6144,7 +6144,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6155,7 +6155,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6166,7 +6166,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6177,7 +6177,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6188,7 +6188,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6199,7 +6199,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6210,7 +6210,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6221,7 +6221,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6232,7 +6232,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6243,7 +6243,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6254,7 +6254,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6265,7 +6265,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6276,7 +6276,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6287,7 +6287,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6298,7 +6298,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6309,7 +6309,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6320,7 +6320,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6331,7 +6331,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6342,7 +6342,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6353,7 +6353,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6364,7 +6364,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6375,7 +6375,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6386,7 +6386,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6397,7 +6397,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6408,7 +6408,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6419,7 +6419,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6430,7 +6430,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6441,7 +6441,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6452,7 +6452,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6463,7 +6463,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6474,7 +6474,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6485,7 +6485,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6496,7 +6496,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6507,7 +6507,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6518,7 +6518,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6529,7 +6529,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6540,7 +6540,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6551,7 +6551,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6562,7 +6562,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6573,7 +6573,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6584,7 +6584,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6595,7 +6595,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6606,7 +6606,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6617,7 +6617,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6628,7 +6628,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6639,7 +6639,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6650,7 +6650,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6661,7 +6661,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6672,7 +6672,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6683,7 +6683,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6694,7 +6694,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6705,7 +6705,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6716,7 +6716,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6727,7 +6727,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6739,7 +6739,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6750,7 +6750,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6761,7 +6761,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6772,7 +6772,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6783,7 +6783,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6794,7 +6794,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6805,7 +6805,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6816,7 +6816,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6827,7 +6827,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6838,7 +6838,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6849,7 +6849,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6860,7 +6860,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6871,7 +6871,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6882,7 +6882,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6893,7 +6893,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6904,7 +6904,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6915,7 +6915,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6926,7 +6926,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6937,7 +6937,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6948,7 +6948,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6959,7 +6959,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6970,7 +6970,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6981,7 +6981,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -6992,7 +6992,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7003,7 +7003,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7014,7 +7014,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7025,7 +7025,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7036,7 +7036,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7047,7 +7047,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7058,7 +7058,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7069,7 +7069,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7080,7 +7080,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7091,7 +7091,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7102,7 +7102,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7113,7 +7113,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7124,7 +7124,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7135,7 +7135,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7146,7 +7146,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7157,7 +7157,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7168,7 +7168,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7179,7 +7179,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7190,7 +7190,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7201,7 +7201,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7212,7 +7212,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7223,7 +7223,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7234,7 +7234,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7245,7 +7245,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7256,7 +7256,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7267,7 +7267,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7278,7 +7278,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7289,7 +7289,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7300,7 +7300,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7311,7 +7311,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7322,7 +7322,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7333,7 +7333,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7344,7 +7344,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7355,7 +7355,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7366,7 +7366,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7377,7 +7377,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7388,7 +7388,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7399,7 +7399,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7411,7 +7411,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7422,7 +7422,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7433,7 +7433,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7444,7 +7444,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7455,7 +7455,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7466,7 +7466,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7477,7 +7477,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7488,7 +7488,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7499,7 +7499,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7510,7 +7510,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7521,7 +7521,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7532,7 +7532,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7543,7 +7543,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7554,7 +7554,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7565,7 +7565,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7576,7 +7576,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7587,7 +7587,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7598,7 +7598,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7609,7 +7609,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7620,7 +7620,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7631,7 +7631,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7642,7 +7642,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7653,7 +7653,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7664,7 +7664,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7675,7 +7675,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7686,7 +7686,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7697,7 +7697,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7708,7 +7708,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7719,7 +7719,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7730,7 +7730,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7741,7 +7741,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7752,7 +7752,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7763,7 +7763,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7774,7 +7774,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7785,7 +7785,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7796,7 +7796,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7807,7 +7807,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7818,7 +7818,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7829,7 +7829,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7840,7 +7840,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7851,7 +7851,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7862,7 +7862,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7873,7 +7873,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7884,7 +7884,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7895,7 +7895,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7906,7 +7906,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7917,7 +7917,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7928,7 +7928,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7939,7 +7939,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7950,7 +7950,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7961,7 +7961,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7972,7 +7972,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7983,7 +7983,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -7994,7 +7994,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8005,7 +8005,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8016,7 +8016,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8027,7 +8027,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8038,7 +8038,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8049,7 +8049,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8060,7 +8060,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8071,7 +8071,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8083,7 +8083,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8094,7 +8094,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8105,7 +8105,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8116,7 +8116,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8127,7 +8127,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8138,7 +8138,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8149,7 +8149,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8160,7 +8160,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8171,7 +8171,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8182,7 +8182,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8193,7 +8193,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8204,7 +8204,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8215,7 +8215,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8226,7 +8226,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8237,7 +8237,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8248,7 +8248,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8259,7 +8259,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8270,7 +8270,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8281,7 +8281,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8292,7 +8292,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8303,7 +8303,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8314,7 +8314,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8325,7 +8325,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8336,7 +8336,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8347,7 +8347,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8358,7 +8358,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8369,7 +8369,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8380,7 +8380,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8391,7 +8391,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8402,7 +8402,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8413,7 +8413,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8424,7 +8424,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8435,7 +8435,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8446,7 +8446,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 },
@@ -8457,7 +8457,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     ATC = "WC160",
                     NOIP = "CONTRACTOR",
                     AOIP = 214100.00,
-                    RateOfTax = 2.00,
+                    RateOfTax = 0.02,
                     AOTW = 4282.00
 
                 }

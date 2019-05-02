@@ -314,7 +314,8 @@ namespace ExpenseProcessingSystem.Controllers
                 FileFormatList = ConstantData.HomeReportConstantValue.GetFileFormatList(),
                 YearList = ConstantData.HomeReportConstantValue.GetYearList(),
                 YearSemList = ConstantData.HomeReportConstantValue.GetYearList(),
-                SemesterList = ConstantData.HomeReportConstantValue.GetSemesterList()
+                SemesterList = ConstantData.HomeReportConstantValue.GetSemesterList(),
+                PeriodOptionList = ConstantData.HomeReportConstantValue.GetPeriodOptionList()
             };
 
             //Return ViewModel
@@ -371,49 +372,67 @@ namespace ExpenseProcessingSystem.Controllers
 
                     break;
             }
-
-             if(model.FileFormat == ConstantData.HomeReportConstantValue.EXCELID)
+            Debug.WriteLine("DEBUG4");
+            if (model.FileFormat == ConstantData.HomeReportConstantValue.EXCELID)
             {
+
                 string excelTemplateName = layoutName + ".xlsx";
                 string rootFolder = "wwwroot";
                 string sourcePath = "/ExcelTemplates/";
                 string destPath = "/ExcelTemplatesTempFolder/";
                 fileName = fileName + ".xlsx";
                 System.IO.File.Copy(rootFolder + sourcePath + excelTemplateName, rootFolder + destPath + fileName, true);
-                Debug.WriteLine("DEBUG1");
-                using (var package = new ExcelPackage(new FileInfo(Path.Combine(rootFolder + destPath + fileName))))
-                {
-                    ExcelWorkbook workBook = package.Workbook;
-                    ExcelWorksheet sheet = workBook.Worksheets.SingleOrDefault();
 
-                    sheet.Cells["A8"].Value = "AAA";
-                    sheet.Cells["B8"].Value = "BBB";
-                    sheet.Cells["C8"].Value = "CCC";
+                FileInfo templateFile = new FileInfo(rootFolder + sourcePath + excelTemplateName);
+                FileInfo newFile = new FileInfo(rootFolder + destPath + fileName);
+
+                using(ExcelPackage package = new ExcelPackage(newFile, templateFile))
+                {
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
+
+                    int lastRow = worksheet.Dimension.End.Row;
+
+                    
+                    foreach(var i in data)
+                    {
+                        lastRow += 1;
+                        worksheet.Cells["A" + lastRow].Value = i.Tin;
+                        worksheet.Cells["B" + lastRow].Value = i.Payee;
+                        worksheet.Cells["C" + lastRow].Value = i.ATC;
+                        worksheet.Cells["D" + lastRow].Value = i.NOIP;
+                        worksheet.Cells["E" + lastRow].Value = i.AOIP;
+                        worksheet.Cells["F" + lastRow].Value = i.RateOfTax;
+                        worksheet.Cells["G" + lastRow].Value = i.AOTW;
+                    }
 
                     package.Save();
 
-                    Debug.WriteLine("DEBUG2");
-                    return File(destPath + fileName, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
                 }
+                return File(destPath + fileName, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+
             }
             else if (model.FileFormat == ConstantData.HomeReportConstantValue.PDFID)
             {
                 fileName = fileName + ".pdf";
                 //Return PDF file
-                return OutputPDF(layoutName, data, fileName, pdfFooterFormat);
+                return OutputPDF(ConstantData.HomeReportConstantValue.ReportPdfPrevLayoutPath, layoutName, data, fileName, pdfFooterFormat);
             }else if (model.FileFormat == ConstantData.HomeReportConstantValue.PreviewID)
             {
+                string pdfLayoutFilePath = ConstantData.HomeReportConstantValue.ReportPdfPrevLayoutPath + layoutName;
+
                 //Return Preview
-                return View(layoutName, data);
+                return View(pdfLayoutFilePath, data);
             }
 
                 //Temporary return
                 return RedirectToAction("Report");
         }
 
-        public IActionResult OutputPDF(string LayoutName, IEnumerable<TEMP_HomeReportOutputModel> data, string fileName, string footerFormat)
+        public IActionResult OutputPDF(string layoutPath, string layoutName, IEnumerable<TEMP_HomeReportOutputModel> data, string fileName, string footerFormat)
         {
-            return new ViewAsPdf(LayoutName, data)
+            string pdfLayoutFilePath = layoutPath + layoutName;
+
+            return new ViewAsPdf(pdfLayoutFilePath, data)
             {
                 FileName = fileName,
                 PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape,
