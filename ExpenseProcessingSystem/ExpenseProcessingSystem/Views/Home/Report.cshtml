@@ -1,4 +1,4 @@
-﻿@model ExpenseProcessingSystem.ViewModels.HomeReportViewModel
+﻿@model ExpenseProcessingSystem.ViewModels.TEMP_HomeReportDataFilterViewModel
 
 @{
 	ViewData["Title"] = "Report";
@@ -43,16 +43,16 @@
 		$(document).ready(function () {
 			$("#btnGenerateFile").click(function (e) {
 				e.preventDefault();
-				window.location.href = "/Home/GenerateFilePreview?ReportType=" + $('#ddlReportType').val()
-                    + "&ReportSubType=" + $('#ddlSubType').val()
-					+ "&FileFormat=" + $('#ddlFileFormat').val()
-					+ "&Year=" + $('#ddlYear').val()
-					+ "&Month=" + $('#ddlMonth').val()
-					+ "&YearSem=" + $('#ddlYearSem').val()
-                    + "&Semester=" + $('#radioSemester:checked').val()
-                    + "&PeriodOption=" + $('#radioPeriodOption:checked').val()
-                    + "&PeriodFrom=" + $('#PeriodFrom').val()
-                    + "&PeriodTo=" + $('#PeriodTo').val();
+                window.location.href = "/Home/GenerateFilePreview?HomeReportFilter.ReportType=" + $('#ddlReportType').val()
+                    + "&HomeReportFilter.ReportSubType=" + $('#ddlSubType').val()
+                    + "&HomeReportFilter.FileFormat=" + $('#ddlFileFormat').val()
+                    + "&HomeReportFilter.Year=" + $('#ddlYear').val()
+                    + "&HomeReportFilter.Month=" + $('#ddlMonth').val()
+                    + "&HomeReportFilter.YearSem=" + $('#ddlYearSem').val()
+                    + "&HomeReportFilter.Semester=" + $('#radioSemester:checked').val()
+                    + "&HomeReportFilter.PeriodOption=" + $('#radioPeriodOption:checked').val()
+                    + "&HomeReportFilter.PeriodFrom=" + $('#PeriodFrom').val()
+                    + "&HomeReportFilter.PeriodTo=" + $('#PeriodTo').val();
 
 			});
 		});
@@ -61,16 +61,16 @@
 			$("#btnGeneratePreview").click(function (e) {
                 e.preventDefault();
                 
-				$('#iframePreview').prop('src', "/Home/GenerateFilePreview?ReportType=" + $('#ddlReportType').val()
-					+ "&ReportSubType=" + $('#ddlSubType').val()
-					+ "&FileFormat=3"
-                    + "&Year=" + $('#ddlYear').val()
-					+ "&Month=" + $('#ddlMonth').val()
-					+ "&YearSem=" + $('#ddlYearSem').val()
-                    + "&Semester=" + $('#radioSemester:checked').val()
-                    + "&PeriodOption=" + $('#radioPeriodOption:checked').val()
-                    + "&PeriodFrom=" + $('#PeriodFrom').val()
-                    + "&PeriodTo=" + $('#PeriodTo').val());
+                $('#iframePreview').prop('src', "/Home/GenerateFilePreview?HomeReportFilter.ReportType=" + $('#ddlReportType').val()
+                    + "&HomeReportFilter.ReportSubType=" + $('#ddlSubType').val()
+                    + "&HomeReportFilter.FileFormat=3"
+                    + "&HomeReportFilter.Year=" + $('#ddlYear').val()
+                    + "&HomeReportFilter.Month=" + $('#ddlMonth').val()
+                    + "&HomeReportFilter.YearSem=" + $('#ddlYearSem').val()
+                    + "&HomeReportFilter.Semester=" + $('#radioSemester:checked').val()
+                    + "&HomeReportFilter.PeriodOption=" + $('#radioPeriodOption:checked').val()
+                    + "&HomeReportFilter.PeriodFrom=" + $('#PeriodFrom').val()
+                    + "&HomeReportFilter.PeriodTo=" + $('#PeriodTo').val());
 
 				var dt = new Date();
 				var date_time = ('0' + (dt.getMonth() + 1)).slice(-2) + "/" + dt.getDate() + "/" + dt.getFullYear() + " " + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
@@ -99,13 +99,13 @@
 
 			<tr>
 				<td></td>
-				<td>@Html.LabelFor(m => m.ReportTypesList)</td>
+				<td>@Html.LabelFor(m => m.HomeReportFilter.ReportTypesList)</td>
 				<td colspan="2">
-					@Html.DropDownListFor(m => m.ReportTypesList, new SelectList(Model.ReportTypesList, "Id", "TypeName"), "----Select Report Type----", new { @class = "dis-inline-block", id = "ddlReportType" })
+					@Html.DropDownListFor(m => m.HomeReportFilter.ReportTypesList, new SelectList(Model.HomeReportFilter.ReportTypesList, "Id", "TypeName"), "----Select Report Type----", new { @class = "dis-inline-block", id = "ddlReportType" })
 				</td>
-				<td>@Html.LabelFor(m => m.ReportSubTypesList)</td>
+				<td>@Html.LabelFor(m => m.HomeReportFilter.ReportSubTypesList)</td>
 				<td colspan="2">
-					@Html.DropDownListFor(m => m.ReportTypesList, new SelectList(Model.ReportSubTypesList, "Id", "SubTypeName"), "----Select Report Sub-Type----", new { @class = "dis-inline-block", id = "ddlSubType", disabled = "disabled" })
+					@Html.DropDownListFor(m => m.HomeReportFilter.ReportTypesList, new SelectList(Model.HomeReportFilter.ReportSubTypesList, "Id", "SubTypeName"), "----Select Report Sub-Type----", new { @class = "dis-inline-block", id = "ddlSubType", disabled = "disabled" })
 				</td>
 				<td colspan="4"></td>
 			</tr>
@@ -114,30 +114,30 @@
 			</tr>
 			<tr>
 				<td>@Html.RadioButton("radioTimePeriod", "1", false, new { id = "radioPeriodOption" })</td>
-				<td>@Html.LabelFor(m => m.YearList)</td>
+				<td>@Html.LabelFor(m => m.HomeReportFilter.YearList)</td>
 				<td>
-					@Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), "----Year----", new { @class = "dis-inline-block", id = "ddlYear" })
+					@Html.DropDownListFor(m => m.HomeReportFilter.YearList, new SelectList(Model.HomeReportFilter.YearList, "YearID", "YearID"), "----Year----", new { @class = "dis-inline-block", id = "ddlYear" })
 				</td>
-				<td>@Html.LabelFor(m => m.MonthList)</td>
+				<td>@Html.LabelFor(m => m.HomeReportFilter.MonthList)</td>
 				<td>
-					@Html.DropDownListFor(m => m.MonthList, new SelectList(Model.MonthList, "MonthID", "MonthName"), "--Month--", new { @class = "dis-inline-block", id = "ddlMonth" })
+					@Html.DropDownListFor(m => m.HomeReportFilter.MonthList, new SelectList(Model.HomeReportFilter.MonthList, "MonthID", "MonthName"), "--Month--", new { @class = "dis-inline-block", id = "ddlMonth" })
 				</td>
 				<td>@Html.RadioButton("radioTimePeriod", "2", false, new { id = "radioPeriodOption" })</td>
-				<td>@Html.LabelFor(m => m.YearSemList)</td>
+				<td>@Html.LabelFor(m => m.HomeReportFilter.YearSemList)</td>
 				<td>
-					@Html.DropDownListFor(m => m.YearSemList, new SelectList(Model.YearSemList, "YearID", "YearID"), "----Year----", new { @class = "dis-inline-block", id = "ddlYearSem" })
+					@Html.DropDownListFor(m => m.HomeReportFilter.YearSemList, new SelectList(Model.HomeReportFilter.YearSemList, "YearID", "YearID"), "----Year----", new { @class = "dis-inline-block", id = "ddlYearSem" })
 				</td>
-				@foreach (var sem in Model.SemesterList)
+				@foreach (var sem in Model.HomeReportFilter.SemesterList)
 				{
-					<td>@Html.RadioButtonFor(m => m.YearSemList, sem.SemID, new { @id = "radioSemester" }) @sem.SemName</td>
+					<td>@Html.RadioButtonFor(m => m.HomeReportFilter.YearSemList, sem.SemID, new { @id = "radioSemester" }) @sem.SemName</td>
 				}
 			</tr>
 			<tr>
 				<td>@Html.RadioButton("radioTimePeriod", "3", false, new { id = "radioPeriodOption" })</td>
 				<td>Period</td>
-				<td colspan="1">@Html.EditorFor(m => m.PeriodFrom, new { htmlAttributes = new { @class = "input h-20 w-97 fs-11 form -control" } })</td>
+                <td colspan="1">@Html.EditorFor(m => m.HomeReportFilter.PeriodFrom, new { htmlAttributes = new { @class = "input h-20 w-97 fs-11 form -control" } })</td>
 				<td>To</td>
-				<td colspan="1">@Html.EditorFor(m => m.PeriodTo, new { htmlAttributes = new { @class = "input h-20 w-97 fs-11 form -control" } })</td>
+                <td colspan="1">@Html.EditorFor(m => m.HomeReportFilter.PeriodTo, new { htmlAttributes = new { @class = "input h-20 w-97 fs-11 form -control" } })</td>
 				<td>&#9679</td>
 				<td>Check No.</td>
 				<td colspan="1"><input class="input" /></td>
@@ -167,10 +167,10 @@
 				<td>Subject Name</td>
 				<td colspan="2"><input class="input" /></td>
 				<td colspan="1"></td>
-				<td>@Html.LabelFor(m => m.FileFormatList)</td>
+				<td>@Html.LabelFor(m => m.HomeReportFilter.FileFormatList)</td>
 				<td>
-					@Html.DropDownListFor(m => m.FileFormatList, new SelectList(Model.FileFormatList, "FileFormatID", "FileFormatName"), "--File Format--", new { @class = "dis-inline-block", id = "ddlFileFormat" })
-					@Html.ValidationMessageFor(m => m.FileFormatList)
+					@Html.DropDownListFor(m => m.HomeReportFilter.FileFormatList, new SelectList(Model.HomeReportFilter.FileFormatList, "FileFormatID", "FileFormatName"), "--File Format--", new { @class = "dis-inline-block", id = "ddlFileFormat" })
+					@Html.ValidationMessageFor(m => m.HomeReportFilter.FileFormatList)
 				</td>
 				<td rowspan="2">
 					<button class="btn" style="width: 90%;" id="btnGenerateFile">Generate File</button>

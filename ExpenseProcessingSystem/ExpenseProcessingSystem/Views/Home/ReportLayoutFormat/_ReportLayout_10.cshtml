@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ExpenseProcessingSystem.ViewModels.Reports.RepWTSViewModel>
+﻿@model ExpenseProcessingSystem.ViewModels.TEMP_HomeReportDataFilterViewModel
 
 @{
     Layout = null;
@@ -77,7 +77,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.HomeReportOutputWTS)
         {
             <tr class="tr-PDF">
                 <td style="text-align:center" class="td-PDF">@item.WTS_Voucher_No</td>

@@ -1,4 +1,5 @@
 ﻿using ExpenseProcessingSystem.Models;
+using ExpenseProcessingSystem.ViewModels.Reports;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,8 @@ namespace ExpenseProcessingSystem.ViewModels
         public IEnumerable<TEMP_HomeReportOutputAPSWT_MModel> HomeReportOutputAPSWT_M { get; set; }
 
         public IEnumerable<TEMP_HomeReportOutputAST1000_SModel> HomeReportOutputAST1000_S { get; set; }
+
+        public IEnumerable<RepWTSViewModel> HomeReportOutputWTS { get; set; }
 
         public HomeReportViewModel HomeReportFilter { get; set; }
     }
