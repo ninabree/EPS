@@ -381,6 +381,29 @@ namespace ExpenseProcessingSystem.Controllers
                         HomeReportFilter = model,
                     };
                     break;
+
+                case ConstantData.HomeReportConstantValue.WTS:
+                    fileName = "WithholdingTaxSummary_" + dateNow;
+                    layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
+                    pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter2;
+                    data = new TEMP_HomeReportDataFilterViewModel();
+                    //Get the necessary data from Database
+                    switch (model.PeriodOption)
+                    {
+                        case "1":
+                            data.HomeReportOutputWTS = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Month(model.Year, model.Month,
+                                    ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType);
+                            break;
+                        case "2":
+                            data.HomeReportOutputWTS = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Semester(model.YearSem, model.Semester,
+                                    ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType);
+                            break;
+                        case "3":
+                            data.HomeReportOutputWTS = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Period(model.PeriodFrom, model.PeriodTo,
+                                    ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType);
+                            break;
+                    }
+                    break;
             }
 
             if (model.FileFormat == ConstantData.HomeReportConstantValue.EXCELID)
@@ -411,9 +434,6 @@ namespace ExpenseProcessingSystem.Controllers
         {
             string pdfLayoutFilePath = layoutPath + layoutName;
             fileName = fileName + ".pdf";
-
-            Debug.WriteLine("DEBUG3:" + data.HomeReportFilter.Year);
-            Debug.WriteLine("DEBUG4:" + data.HomeReportFilter.Month);
 
             return new ViewAsPdf(pdfLayoutFilePath, data)
             {
