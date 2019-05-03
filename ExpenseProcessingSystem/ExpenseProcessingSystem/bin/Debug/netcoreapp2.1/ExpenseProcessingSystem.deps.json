@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.1",
-    "signature": "5e0033bc7f21fe9e9978b5e87e9493d3ae96aa2a"
+    "signature": "5a58cd4f97fed8d15a55797eb17a8f08b6498060"
   },
   "compilationOptions": {
     "defines": [
@@ -24,7 +24,6 @@
     ".NETCoreApp,Version=v2.1": {
       "ExpenseProcessingSystem/1.0.0": {
         "dependencies": {
-          "DinkToPdf": "1.0.8",
           "EPPlus.Core": "1.5.4",
           "Microsoft.AspNetCore.All": "2.1.6",
           "Microsoft.AspNetCore.App": "2.1.1",
@@ -67,26 +66,6 @@
         },
         "compile": {
           "lib/net45/AngleSharp.dll": {}
-        }
-      },
-      "DinkToPdf/1.0.8": {
-        "dependencies": {
-          "NETStandard.Library": "2.0.3",
-          "System.Collections.Concurrent": "4.3.0",
-          "System.Globalization": "4.3.0",
-          "System.Reflection.TypeExtensions": "4.5.1",
-          "System.Runtime": "4.3.0",
-          "System.Runtime.InteropServices": "4.3.0",
-          "System.Threading.Thread": "4.3.0"
-        },
-        "runtime": {
-          "lib/netstandard1.6/DinkToPdf.dll": {
-            "assemblyVersion": "1.0.8.0",
-            "fileVersion": "1.0.8.0"
-          }
-        },
-        "compile": {
-          "lib/netstandard1.6/DinkToPdf.dll": {}
         }
       },
       "EPPlus.Core/1.5.4": {
@@ -4922,13 +4901,6 @@
       "sha512": "sha512-xcLGPAP3aAVbFvVQDOv+G2BTVKwVsdx0SFYh9eIQzS6+fIPE+m/gJItj12zkrYa6c0Trjp2tu3b2Tfn5XeEGJg==",
       "path": "anglesharp/0.9.4",
       "hashPath": "anglesharp.0.9.4.nupkg.sha512"
-    },
-    "DinkToPdf/1.0.8": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-wJDlcNXjQ+OnBFwh3LBeAXgrXqlKl0RsgN60XpxEFbyqzdaG9ASb5HTXQjXQPaBguSCOrGZZESPnpcng34TEkw==",
-      "path": "dinktopdf/1.0.8",
-      "hashPath": "dinktopdf.1.0.8.nupkg.sha512"
     },
     "EPPlus.Core/1.5.4": {
       "type": "package",

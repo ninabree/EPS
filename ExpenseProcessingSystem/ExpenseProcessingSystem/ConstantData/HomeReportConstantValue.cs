@@ -17,6 +17,9 @@ namespace ExpenseProcessingSystem.ConstantData
         //Alphalist of Payees Subject to Withholding Tax (Monthly)
         public const string APSWT_M = "2";
 
+        //Alphalist of Suppliers by top 10000 corporation (Semestral)
+        public const string AST1000_S = "3";
+
         //Alphalist of Payees Subject to Withholding Tax (Monthly)
         public const string WTS = "10";
 
