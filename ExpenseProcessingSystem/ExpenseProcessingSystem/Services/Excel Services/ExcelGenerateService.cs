@@ -29,9 +29,12 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
 
                     ExcelAPSWT_M(newFile, templateFile, data);
                     break;
-            }
 
-            Debug.WriteLine("DEBUG1");
+                case ConstantData.HomeReportConstantValue.AST1000_S:
+
+                    ExcelAST1000_S(newFile, templateFile, data);
+                    break;
+            }
 
             return destPath + fileName;
         }
@@ -73,6 +76,48 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 worksheet.Cells["E" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
                 worksheet.Cells["G" + lastRow].Formula = "SUM(G" + dataStartRow + ":G" + dataEndRow + ")";
                 worksheet.Cells["G" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+
+                package.Save();
+            }
+        }
+
+        public void ExcelAST1000_S(FileInfo newFile, FileInfo templateFile, TEMP_HomeReportDataFilterViewModel data)
+        {
+            using (ExcelPackage package = new ExcelPackage(newFile, templateFile))
+            {
+                ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
+
+                int lastRow = worksheet.Dimension.End.Row;
+
+                if(data.HomeReportFilter.Semester == ConstantData.HomeReportConstantValue.SEM1)
+                {
+                    worksheet.Cells["A2"].Value = data.HomeReportFilter.Semester + "st Term " + data.HomeReportFilter.YearSem;
+                }
+                else
+                {
+                    worksheet.Cells["A2"].Value = data.HomeReportFilter.Semester + "nd Term " + data.HomeReportFilter.YearSem;
+                }
+
+                foreach (var i in data.HomeReportOutputAST1000_S)
+                {
+                    lastRow += 1;
+                    worksheet.Cells["A" + lastRow].Value = i.SeqNo;
+                    worksheet.Cells["A" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["B" + lastRow].Value = i.Tin;
+                    worksheet.Cells["B" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["C" + lastRow].Value = i.SupplierName;
+                    worksheet.Cells["C" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["D" + lastRow].Value = i.NOIP;
+                    worksheet.Cells["D" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["E" + lastRow].Value = i.ATC;
+                    worksheet.Cells["E" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["F" + lastRow].Value = i.TaxBase;
+                    worksheet.Cells["F" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["G" + lastRow].Value = i.RateOfTax;
+                    worksheet.Cells["G" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["H" + lastRow].Value = i.AOTW;
+                    worksheet.Cells["H" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                }
 
                 package.Save();
             }

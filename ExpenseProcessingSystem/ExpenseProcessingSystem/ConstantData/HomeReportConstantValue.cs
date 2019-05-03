@@ -28,6 +28,10 @@ namespace ExpenseProcessingSystem.ConstantData
         public const string PDFID = "2";
         public const string PreviewID = "3";
 
+        //Semester value
+        public const string SEM1 = "1";
+        public const string SEM2 = "2";
+
         //PDF Format name
         public const string ReportLayoutFormatName = "_ReportLayout_";
 
