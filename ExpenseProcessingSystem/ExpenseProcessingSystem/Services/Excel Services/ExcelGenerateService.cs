@@ -43,6 +43,8 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
 
                 int lastRow = worksheet.Dimension.End.Row;
+                int dataStartRow = worksheet.Dimension.End.Row + 1;
+                int dataEndRow = 0;
 
                 worksheet.Cells["C5"].Value = data.HomeReportFilter.Month + " - " + data.HomeReportFilter.Year;
 
@@ -64,6 +66,13 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     worksheet.Cells["G" + lastRow].Value = i.AOTW;
                     worksheet.Cells["G" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
                 }
+                dataEndRow = lastRow;
+                lastRow += 1;
+
+                worksheet.Cells["E" + lastRow].Formula = "SUM(E"+ dataStartRow + ":E" + dataEndRow + ")";
+                worksheet.Cells["E" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                worksheet.Cells["G" + lastRow].Formula = "SUM(G" + dataStartRow + ":G" + dataEndRow + ")";
+                worksheet.Cells["G" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
 
                 package.Save();
             }
