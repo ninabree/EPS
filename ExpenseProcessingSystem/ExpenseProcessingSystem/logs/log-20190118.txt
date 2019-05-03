@@ -1,0 +1,4 @@
+2019-01-18 13:14:37.676 +08:00 [Information] Hello, Serilog!
+2019-01-18 13:14:40.945 +08:00 [Information] Request starting HTTP/1.1 DEBUG http://localhost:1554/  0
+2019-01-18 13:14:40.945 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/  
+2019-01-18 13:14:41.170 +08:00 [Information] Request finished in 226.3599ms 200 

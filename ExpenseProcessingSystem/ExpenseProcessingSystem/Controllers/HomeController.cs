@@ -377,6 +377,19 @@ namespace ExpenseProcessingSystem.Controllers
                     //Get the necessary data from Database
                     data = new TEMP_HomeReportDataFilterViewModel
                     {
+                        case "1":
+                            VM = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Month(model.Year, model.Month,
+                                    ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType);
+                            break;
+                        case "2":
+                            VM = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Semester(model.YearSem, model.Semester,
+                                    ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType);
+                            break;
+                        case "3":
+                            VM = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Period(model.PeriodFrom, model.PeriodTo,
+                                    ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType);
+                            break;
+                    }
                         HomeReportOutputAST1000_S = ConstantData.TEMP_HomeReportDummyData.GetTEMP_HomeReportOutputModelDataAST1000_S(),
                         HomeReportFilter = model,
                     };
@@ -512,6 +525,10 @@ namespace ExpenseProcessingSystem.Controllers
             //pagination
             return View(mod);
         }
+
+        //Expense Entry Block---------------------------------------------------------------------------------------
+
+        //Expense Entry Check Voucher Block=========================================================================
         public IActionResult Entry_CV()
         {
             EntryCVViewModelList viewModel = new EntryCVViewModelList();

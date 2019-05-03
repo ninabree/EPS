@@ -43,31 +43,34 @@
 		$(document).ready(function () {
 			$("#btnGenerateFile").click(function (e) {
 				e.preventDefault();
-
 				window.location.href = "/Home/GenerateFilePreview?ReportType=" + $('#ddlReportType').val()
-					+ "&ReportSubType=" + $('#ddlSubType').val()
+                    + "&ReportSubType=" + $('#ddlSubType').val()
 					+ "&FileFormat=" + $('#ddlFileFormat').val()
 					+ "&Year=" + $('#ddlYear').val()
 					+ "&Month=" + $('#ddlMonth').val()
 					+ "&YearSem=" + $('#ddlYearSem').val()
-					+ "&Semester=" + $('#radioSemester:checked').val()
-					+ "&PeriodOption=" + $('#radioPeriodOption:checked').val();
+                    + "&Semester=" + $('#radioSemester:checked').val()
+                    + "&PeriodOption=" + $('#radioPeriodOption:checked').val()
+                    + "&PeriodFrom=" + $('#PeriodFrom').val()
+                    + "&PeriodTo=" + $('#PeriodTo').val();
 
 			});
 		});
 
 		$(document).ready(function () {
 			$("#btnGeneratePreview").click(function (e) {
-				e.preventDefault();
-
+                e.preventDefault();
+                
 				$('#iframePreview').prop('src', "/Home/GenerateFilePreview?ReportType=" + $('#ddlReportType').val()
 					+ "&ReportSubType=" + $('#ddlSubType').val()
 					+ "&FileFormat=3"
-					+ "&Year=" + $('#ddlYear').val()
+                    + "&Year=" + $('#ddlYear').val()
 					+ "&Month=" + $('#ddlMonth').val()
 					+ "&YearSem=" + $('#ddlYearSem').val()
-					+ "&Semester=" + $('#radioSemester:checked').val()
-					+ "&PeriodOption=" + $('#radioPeriodOption:checked').val());
+                    + "&Semester=" + $('#radioSemester:checked').val()
+                    + "&PeriodOption=" + $('#radioPeriodOption:checked').val()
+                    + "&PeriodFrom=" + $('#PeriodFrom').val()
+                    + "&PeriodTo=" + $('#PeriodTo').val());
 
 				var dt = new Date();
 				var date_time = ('0' + (dt.getMonth() + 1)).slice(-2) + "/" + dt.getDate() + "/" + dt.getFullYear() + " " + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
