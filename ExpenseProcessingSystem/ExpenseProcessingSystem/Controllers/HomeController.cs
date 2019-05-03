@@ -1,7 +1,4 @@
-﻿using DinkToPdf;
-using DinkToPdf.Contracts;
-using ExpenseProcessingSystem.ConstantData;
-using ExpenseProcessingSystem.Data;
+﻿using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Models;
 using ExpenseProcessingSystem.Services;
 using ExpenseProcessingSystem.Services.Controller_Services;
@@ -10,12 +7,10 @@ using ExpenseProcessingSystem.ViewModels;
 using ExpenseProcessingSystem.ViewModels.NewRecord;
 using ExpenseProcessingSystem.ViewModels.Search_Filters;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.FileProviders;
 using OfficeOpenXml;
 using Rotativa.AspNetCore;
 using System;
@@ -24,7 +19,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ExpenseProcessingSystem.Controllers
 {
@@ -352,7 +346,7 @@ namespace ExpenseProcessingSystem.Controllers
             string pdfFooterFormat = "";
 
             //Model for data retrieve from Database
-            IEnumerable<TEMP_HomeReportOutputModel> data = null;
+            TEMP_HomeReportDataFilterViewModel data = null;
 
             //Assign variables and Data to corresponding Report Type
             switch (model.ReportType)
@@ -363,53 +357,42 @@ namespace ExpenseProcessingSystem.Controllers
                     fileName = "AlphalistOfPayeesSubjectToWithholdingTax_Monthly_" + dateNow;
                     layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
                     pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter1;
-                    //Get the necessary data from Database
-                    data = ConstantData.TEMP_HomeReportDummyData.GetTEMP_HomeReportOutputModelData();
 
+                    model.Month = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID.ToString() == model.Month).Single().MonthName;
+
+                    //Get the necessary data from Database
+                    data = new TEMP_HomeReportDataFilterViewModel
+                    {
+                        HomeReportOutputAPSWT_M = ConstantData.TEMP_HomeReportDummyData.GetTEMP_HomeReportOutputModelDataAPSWT_M(),
+                        HomeReportFilter = model,
+                    };
+                    break;
+
+                //For Alphalist of Suppliers by top 10000 corporation (Semestral)
+                case ConstantData.HomeReportConstantValue.AST1000_S:
+                    fileName = "AlphalistOfSuppliersByTop10000Corporation_Semestral_" + dateNow;
+                    layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
+                    pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter2;
+
+                    //Get the necessary data from Database
+                    data = new TEMP_HomeReportDataFilterViewModel
+                    {
+                        HomeReportOutputAST1000_S = ConstantData.TEMP_HomeReportDummyData.GetTEMP_HomeReportOutputModelDataAST1000_S(),
+                        HomeReportFilter = model,
+                    };
                     break;
             }
-            Debug.WriteLine("DEBUG4");
+
             if (model.FileFormat == ConstantData.HomeReportConstantValue.EXCELID)
             {
-
-                string excelTemplateName = layoutName + ".xlsx";
-                string rootFolder = "wwwroot";
-                string sourcePath = "/ExcelTemplates/";
-                string destPath = "/ExcelTemplatesTempFolder/";
+                ExcelGenerateService excelGenerate = new ExcelGenerateService();
                 fileName = fileName + ".xlsx";
-                System.IO.File.Copy(rootFolder + sourcePath + excelTemplateName, rootFolder + destPath + fileName, true);
 
-                FileInfo templateFile = new FileInfo(rootFolder + sourcePath + excelTemplateName);
-                FileInfo newFile = new FileInfo(rootFolder + destPath + fileName);
-
-                using(ExcelPackage package = new ExcelPackage(newFile, templateFile))
-                {
-                    ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
-
-                    int lastRow = worksheet.Dimension.End.Row;
-
-                    
-                    foreach(var i in data)
-                    {
-                        lastRow += 1;
-                        worksheet.Cells["A" + lastRow].Value = i.Tin;
-                        worksheet.Cells["B" + lastRow].Value = i.Payee;
-                        worksheet.Cells["C" + lastRow].Value = i.ATC;
-                        worksheet.Cells["D" + lastRow].Value = i.NOIP;
-                        worksheet.Cells["E" + lastRow].Value = i.AOIP;
-                        worksheet.Cells["F" + lastRow].Value = i.RateOfTax;
-                        worksheet.Cells["G" + lastRow].Value = i.AOTW;
-                    }
-
-                    package.Save();
-
-                }
-                return File(destPath + fileName, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
-
+                //Return Excel file
+                return File(excelGenerate.ExcelGenerateData(layoutName, fileName, data), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
             }
             else if (model.FileFormat == ConstantData.HomeReportConstantValue.PDFID)
             {
-                fileName = fileName + ".pdf";
                 //Return PDF file
                 return OutputPDF(ConstantData.HomeReportConstantValue.ReportPdfPrevLayoutPath, layoutName, data, fileName, pdfFooterFormat);
             }else if (model.FileFormat == ConstantData.HomeReportConstantValue.PreviewID)
@@ -424,9 +407,13 @@ namespace ExpenseProcessingSystem.Controllers
                 return RedirectToAction("Report");
         }
 
-        public IActionResult OutputPDF(string layoutPath, string layoutName, IEnumerable<TEMP_HomeReportOutputModel> data, string fileName, string footerFormat)
+        public IActionResult OutputPDF(string layoutPath, string layoutName, TEMP_HomeReportDataFilterViewModel data, string fileName, string footerFormat)
         {
             string pdfLayoutFilePath = layoutPath + layoutName;
+            fileName = fileName + ".pdf";
+
+            Debug.WriteLine("DEBUG3:" + data.HomeReportFilter.Year);
+            Debug.WriteLine("DEBUG4:" + data.HomeReportFilter.Month);
 
             return new ViewAsPdf(pdfLayoutFilePath, data)
             {
