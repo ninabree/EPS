@@ -342,7 +342,7 @@ namespace ExpenseProcessingSystem.Controllers
             string layoutName = "";
             string fileName = "";
             //string datenow= datetime.now.tostring("mmddyyyy hhmmtt");
-            string dateNow = DateTime.Now.ToString("MMddyyyy");
+            string dateNow = DateTime.Now.ToString("ddd, dd MMM yyy HH’:’mm’:’ss tt");
             string pdfFooterFormat = "";
 
             //Model for data retrieve from Database
@@ -374,7 +374,7 @@ namespace ExpenseProcessingSystem.Controllers
                                     ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType);
                             break;
                         case "2":
-                            VM = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Semester(model.Year, model.Semester,
+                            VM = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Semester(model.YearSem, model.Semester,
                                     ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType);
                             break;
                         case "3":

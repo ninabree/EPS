@@ -86,12 +86,12 @@ namespace ExpenseProcessingSystem.ConstantData
             switch (_sem)
             {
                 case "1":
-                    periodFrom = DateTime.ParseExact("1/1/" + _year, "MM/dd/yyyy", ci);
-                    periodFrom = DateTime.ParseExact("6/1/" + _year, "MM/dd/yyyy", ci);
+                    periodFrom = DateTime.ParseExact("01/01/" + _year, "MM/dd/yyyy", ci);
+                    periodTo = DateTime.ParseExact("06/01/" + _year, "MM/dd/yyyy", ci);
                     break;
                 case "2":
-                    periodFrom = DateTime.ParseExact("7/1/" + _year, "MM/dd/yyyy", ci);
-                    periodFrom = DateTime.ParseExact("12/1/" + _year, "MM/dd/yyyy", ci);
+                    periodFrom = DateTime.ParseExact("07/01/" + _year, "MM/dd/yyyy", ci);
+                    periodTo = DateTime.ParseExact("12/01/" + _year, "MM/dd/yyyy", ci);
                     break;
             }
             return data.Where(x => x.WTS_Val_Date >= periodFrom
