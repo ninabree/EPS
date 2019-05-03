@@ -418,7 +418,8 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 //Return PDF file
                 return OutputPDF(ConstantData.HomeReportConstantValue.ReportPdfPrevLayoutPath, layoutName, data, fileName, pdfFooterFormat);
-            }else if (model.FileFormat == ConstantData.HomeReportConstantValue.PreviewID)
+            }
+            else if (model.FileFormat == ConstantData.HomeReportConstantValue.PreviewID)
             {
                 string pdfLayoutFilePath = ConstantData.HomeReportConstantValue.ReportPdfPrevLayoutPath + layoutName;
 
