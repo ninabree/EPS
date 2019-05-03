@@ -14,7 +14,7 @@ namespace ExpenseProcessingSystem.Models.Pending
         public int Pending_TR_MasterID { get; set; }
         public string Pending_TR_WT_Title { get; set; }
         public string Pending_TR_Nature { get; set; }
-        public int Pending_TR_Tax_Rate { get; set; }
+        public float Pending_TR_Tax_Rate { get; set; }
         public string Pending_TR_ATC { get; set; }
         public string Pending_TR_Nature_Income_Payment { get; set; }
         public int Pending_TR_Creator_ID { get; set; }

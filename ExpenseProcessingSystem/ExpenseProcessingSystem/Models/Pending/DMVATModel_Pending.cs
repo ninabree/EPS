@@ -13,7 +13,7 @@ namespace ExpenseProcessingSystem.Models.Pending
         public int Pending_VAT_ID { get; set; }
         public int Pending_VAT_MasterID { get; set; }
         public string Pending_VAT_Name { get; set; }
-        public string Pending_VAT_Rate { get; set; }
+        public float Pending_VAT_Rate { get; set; }
         public int Pending_VAT_Creator_ID { get; set; }
         public int Pending_VAT_Approver_ID { get; set; }
         public DateTime Pending_VAT_Filed_Date { get; set; }

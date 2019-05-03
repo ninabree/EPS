@@ -226,4 +226,47 @@ namespace ExpenseProcessingSystem.Services.Validations
             }
         }
     }
+    public class FalseValidation : ValidationAttribute
+    {
+        private readonly string _CheckBoxProperty;
+
+        public FalseValidation(string CheckBoxProperty)
+        {
+            _CheckBoxProperty = CheckBoxProperty;
+        }
+
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            var property = validationContext.ObjectType.GetProperty(_CheckBoxProperty);
+            var val = property.GetValue(validationContext.ObjectInstance, null);
+                return new ValidationResult(val as string);
+            /*
+            try
+            {
+                if (property == null)
+                {
+                    //public List<MsgListRec> MsgList { get; set; }
+                    var name = validationContext.DisplayName;
+                    if(int.Parse(value.ToString()) <= 0)
+                    {
+                        var msgSvc = new MsgService();
+                        return new ValidationResult("Please enter a valid value for" + name);
+                        //return new ValidationResult(msgSvc.GetMessage("E0001", name));
+                    }
+                }
+                return ValidationResult.Success;
+            }
+            catch (Exception ex)
+            {
+                //sample fatal error log
+                Log.Fatal(ex, "User: {user}, StackTrace : {trace}, Error Message: {message}", "[UserID]", ex.StackTrace, ex.Message);
+                return new ValidationResult("Invalid input");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
+            */
+        }
+    }
 }

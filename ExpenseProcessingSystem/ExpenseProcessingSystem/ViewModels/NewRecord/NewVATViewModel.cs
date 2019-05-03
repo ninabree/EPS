@@ -18,6 +18,6 @@ namespace ExpenseProcessingSystem.ViewModels.NewRecord
         public string VAT_Name { get; set; }
         [Display(Name = "VAT Rate")]
         [NotNullValidations, TextValidation]
-        public string VAT_Rate { get; set; }
+        public float VAT_Rate { get; set; }
     }
 }
