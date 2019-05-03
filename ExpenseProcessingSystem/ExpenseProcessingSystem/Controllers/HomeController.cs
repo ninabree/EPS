@@ -320,9 +320,9 @@ namespace ExpenseProcessingSystem.Controllers
                 SemesterList = ConstantData.HomeReportConstantValue.GetSemesterList(),
                 PeriodOptionList = ConstantData.HomeReportConstantValue.GetPeriodOptionList()
             };
-
+            TEMP_HomeReportDataFilterViewModel tempVM = new TEMP_HomeReportDataFilterViewModel { HomeReportFilter = reportViewModel};
             //Return ViewModel
-            return View(reportViewModel);
+            return View(tempVM);
         }
 
         //Populate the Report sub-type list to dropdownlist depends on the selected Report Type
@@ -338,7 +338,7 @@ namespace ExpenseProcessingSystem.Controllers
             return null;
         }
 
-        public IActionResult GenerateFilePreview(HomeReportViewModel model)
+        public IActionResult GenerateFilePreview(TEMP_HomeReportDataFilterViewModel model)
         {
             string layoutName = "";
             string fileName = "";
@@ -349,54 +349,63 @@ namespace ExpenseProcessingSystem.Controllers
             TEMP_HomeReportDataFilterViewModel data = null;
 
             //Assign variables and Data to corresponding Report Type
-            switch (model.ReportType)
+            switch (model.HomeReportFilter.ReportType)
             {
                 //For Alphalist of Payees Subject to Withholding Tax (Monthly)
                 case ConstantData.HomeReportConstantValue.APSWT_M:
 
                     fileName = "AlphalistOfPayeesSubjectToWithholdingTax_Monthly_" + dateNow;
-                    layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
+                    layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.HomeReportFilter.ReportType;
                     pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter1;
 
-                    model.Month = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID.ToString() == model.Month).Single().MonthName;
+                    model.HomeReportFilter.Month = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID.ToString() == model.HomeReportFilter.Month).Single().MonthName;
 
                     //Get the necessary data from Database
                     data = new TEMP_HomeReportDataFilterViewModel
                     {
                         HomeReportOutputAPSWT_M = ConstantData.TEMP_HomeReportDummyData.GetTEMP_HomeReportOutputModelDataAPSWT_M(),
-                        HomeReportFilter = model,
+                        HomeReportFilter = model.HomeReportFilter,
                     };
                     break;
-
+                    
                 //For Alphalist of Suppliers by top 10000 corporation (Semestral)
                 case ConstantData.HomeReportConstantValue.AST1000_S:
                     fileName = "AlphalistOfSuppliersByTop10000Corporation_Semestral_" + dateNow;
-                    layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
+                    layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.HomeReportFilter.ReportType;
                     pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter2;
 
                     //Get the necessary data from Database
                     data = new TEMP_HomeReportDataFilterViewModel
                     {
+                        HomeReportOutputAST1000_S = ConstantData.TEMP_HomeReportDummyData.GetTEMP_HomeReportOutputModelDataAST1000_S(),
+                        HomeReportFilter = model.HomeReportFilter,
+                    };
+                    break;
+                case ConstantData.HomeReportConstantValue.WTS:
+                    fileName = "WithholdingTaxSummary_" + dateNow;
+                    layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.HomeReportFilter.ReportType;
+                    pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter2;
+                    data = new TEMP_HomeReportDataFilterViewModel();
+                    //Get the necessary data from Database
+                    switch (model.HomeReportFilter.PeriodOption)
+                    {
                         case "1":
-                            VM = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Month(model.Year, model.Month,
-                                    ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType);
+                            data.HomeReportOutputWTS = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Month(model.HomeReportFilter.Year, model.HomeReportFilter.Month,
+                                    ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.HomeReportFilter.ReportSubType);
                             break;
                         case "2":
-                            VM = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Semester(model.YearSem, model.Semester,
-                                    ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType);
+                            data.HomeReportOutputWTS = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Semester(model.HomeReportFilter.YearSem, model.HomeReportFilter.Semester,
+                                    ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.HomeReportFilter.ReportSubType);
                             break;
                         case "3":
-                            VM = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Period(model.PeriodFrom, model.PeriodTo,
-                                    ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType);
+                            data.HomeReportOutputWTS = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Period(model.HomeReportFilter.PeriodFrom, model.HomeReportFilter.PeriodTo,
+                                    ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.HomeReportFilter.ReportSubType);
                             break;
                     }
-                        HomeReportOutputAST1000_S = ConstantData.TEMP_HomeReportDummyData.GetTEMP_HomeReportOutputModelDataAST1000_S(),
-                        HomeReportFilter = model,
-                    };
                     break;
             }
 
-            if (model.FileFormat == ConstantData.HomeReportConstantValue.EXCELID)
+            if (model.HomeReportFilter.FileFormat == ConstantData.HomeReportConstantValue.EXCELID)
             {
                 ExcelGenerateService excelGenerate = new ExcelGenerateService();
                 fileName = fileName + ".xlsx";
@@ -404,11 +413,11 @@ namespace ExpenseProcessingSystem.Controllers
                 //Return Excel file
                 return File(excelGenerate.ExcelGenerateData(layoutName, fileName, data), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
             }
-            else if (model.FileFormat == ConstantData.HomeReportConstantValue.PDFID)
+            else if (model.HomeReportFilter.FileFormat == ConstantData.HomeReportConstantValue.PDFID)
             {
                 //Return PDF file
                 return OutputPDF(ConstantData.HomeReportConstantValue.ReportPdfPrevLayoutPath, layoutName, data, fileName, pdfFooterFormat);
-            }else if (model.FileFormat == ConstantData.HomeReportConstantValue.PreviewID)
+            }else if (model.HomeReportFilter.FileFormat == ConstantData.HomeReportConstantValue.PreviewID)
             {
                 string pdfLayoutFilePath = ConstantData.HomeReportConstantValue.ReportPdfPrevLayoutPath + layoutName;
 
@@ -419,7 +428,6 @@ namespace ExpenseProcessingSystem.Controllers
                 //Temporary return
                 return RedirectToAction("Report");
         }
-
         public IActionResult OutputPDF(string layoutPath, string layoutName, TEMP_HomeReportDataFilterViewModel data, string fileName, string footerFormat)
         {
             string pdfLayoutFilePath = layoutPath + layoutName;
