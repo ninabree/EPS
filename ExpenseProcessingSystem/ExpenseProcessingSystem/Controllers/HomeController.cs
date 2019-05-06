@@ -597,22 +597,57 @@ namespace ExpenseProcessingSystem.Controllers
 
             viewModel.expenseYear = DateTime.Today.Year.ToString();
             viewModel.expenseDate = DateTime.Today;
-   
+            viewModel.vendor = 2;
             viewModel.EntryCV.Add(new EntryCVViewModel());
             return View(viewModel);
         }
-        public IActionResult Entry_NewCV(EntryCVViewModelList EntryCVViewModelList)
+        public IActionResult AddNewCV(EntryCVViewModelList EntryCVViewModelList)
         {
-            _service.addExpense_CV(EntryCVViewModelList, 4);
 
-            List<SelectList> listOfLists = _service.getCheckEntrySystemVals();
-            EntryCVViewModelList.systemValues.vendors = listOfLists[0];
-            EntryCVViewModelList.systemValues.dept = listOfLists[1];
-            EntryCVViewModelList.systemValues.acc = _service.getAccDetailsEntry();
-            EntryCVViewModelList.systemValues.currency = listOfLists[2];
-            EntryCVViewModelList.systemValues.ewt = listOfLists[3];
-            return View("Entry_CV",EntryCVViewModelList);
+            EntryCVViewModelList cvList = new EntryCVViewModelList();
+            int id = _service.addExpense_CV(EntryCVViewModelList, int.Parse(GetUserID()));
+            ModelState.Clear();
+            if (id > -1) {
+                cvList = _service.getExpense(id);
+                List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
+                //listOfSysVals[0] = List of Vendors
+                //listOfSysVals[1] = List of Departments
+                //listOfSysVals[2] = List of Currency
+                //listOfSysVals[3] = List of TaxRate
+                cvList.systemValues.vendors = listOfSysVals[0];
+                cvList.systemValues.dept = listOfSysVals[1];
+                cvList.systemValues.currency = listOfSysVals[2];
+                cvList.systemValues.ewt = listOfSysVals[3];
+                cvList.systemValues.acc = _service.getAccDetailsEntry();
+                ViewBag.Status = cvList.status;
+            }
+
+            return View("Entry_CV_ReadOnly", cvList);
         }
+        public IActionResult VerAppModCV(int entryID, string command)
+        {
+            EntryCVViewModelList cvList;
+            switch (command)
+            {
+                case "Modify": cvList =_service.getExpense(entryID);
+                    List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
+                    cvList.systemValues.vendors = listOfSysVals[0];
+                    cvList.systemValues.dept = listOfSysVals[1];
+                    cvList.systemValues.currency = listOfSysVals[2];
+                    cvList.systemValues.ewt = listOfSysVals[3];
+                    cvList.systemValues.acc = _service.getAccDetailsEntry();
+                    ViewBag.Status = cvList.status;
+                    return View("Entry_CV", cvList);
+                    break;
+                case "Approve": break;
+                case "Verify": break;
+                case "Reject": break;
+                default: break;
+            }
+
+            return View();
+        }
+
         //Expense Entry Check Voucher Block End=========================================================================
         public IActionResult Entry_DDV()
         {

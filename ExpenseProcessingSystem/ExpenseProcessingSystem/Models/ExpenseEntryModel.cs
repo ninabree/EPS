@@ -18,7 +18,8 @@ namespace ExpenseProcessingSystem.Models
         public int Expense_Payee { get; set; }
         public float Expense_Debit_Total { get; set; }
         public float Expense_Credit_Total { get; set; }
-        public int Expense_Verifier { get; set; }
+        public int Expense_Verifier_1 { get; set; }
+        public int Expense_Verifier_2 { get; set; }
         public int Expense_Approver { get; set; }
         public int Expense_Status { get; set; }
         public int Expense_Creator_ID { get; set; }

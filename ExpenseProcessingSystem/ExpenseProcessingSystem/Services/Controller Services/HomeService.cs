@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -2185,7 +2186,7 @@ namespace ExpenseProcessingSystem.Services
             return accDetails;
         }
         //save expense details
-        public bool addExpense_CV(EntryCVViewModelList entryModel,int userId)
+        public int addExpense_CV(EntryCVViewModelList entryModel,int userId)
         {
             float TotalDebit = 0;
             float credEwtTotal = 0;
@@ -2269,10 +2270,121 @@ namespace ExpenseProcessingSystem.Services
 
                 _context.ExpenseEntry.Add(expenseEntry);
                 _context.SaveChanges();
-                return true;
+                return expenseEntry.Expense_ID;
             }
 
-            return false;
+            return -1;
+        }
+        //retrieve expense details
+        public EntryCVViewModelList getExpense(int transID)
+        {
+            List<EntryCVViewModel> cvList = new List<EntryCVViewModel>();
+
+            var EntryDetails = (from e 
+                                in _context.ExpenseEntry
+                                where e.Expense_ID == transID
+                                select new { e,
+                                    ExpenseEntryDetails = from d
+                                                          in _context.ExpenseEntryDetails
+                                                          where d.ExpenseEntryModel.Expense_ID == e.Expense_ID
+                                                          select new { d ,
+                                                              ExpenseEntryGbaseDtls = from g
+                                                                                      in _context.ExpenseEntryGbaseDtls
+                                                                                      where g.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
+                                                                                      select g ,
+                                                              ExpenseEntryAmortizations = from a
+                                                                                          in _context.ExpenseEntryAmortizations
+                                                                                          where a.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
+                                                                                          select a
+                                                          }
+                                }).FirstOrDefault();
+
+            foreach (var dtl in EntryDetails.ExpenseEntryDetails)
+            {
+                List<amortizationSchedule> amtDetails = new List<amortizationSchedule>();
+                List<EntryGbaseRemarksViewModel> remarksDtl = new List<EntryGbaseRemarksViewModel>();
+
+                foreach (var amor in dtl.ExpenseEntryAmortizations)
+                {
+                    amortizationSchedule amorTemp = new amortizationSchedule() {
+                        amtDate = amor.Amor_Sched_Date,
+                        amtAmount = amor.Amor_Price
+                    };
+
+                    amtDetails.Add(amorTemp);
+                }
+
+                foreach (var gbase in dtl.ExpenseEntryGbaseDtls)
+                {
+                    EntryGbaseRemarksViewModel gbaseTemp = new EntryGbaseRemarksViewModel(){
+                        amount = gbase.GbaseDtl_Amount,
+                        desc = gbase.GbaseDtl_Description,
+                        docType = gbase.GbaseDtl_Document_Type,
+                        invNo = gbase.GbaseDtl_InvoiceNo
+                    };
+
+                    remarksDtl.Add(gbaseTemp);
+                }
+
+
+                EntryCVViewModel cvDtl = new EntryCVViewModel() {
+                    GBaseRemarks = dtl.d.ExpDtl_Gbase_Remarks,
+                    account = dtl.d.ExpDtl_Account,
+                    fbt = dtl.d.ExpDtl_Fbt,
+                    dept = dtl.d.ExpDtl_Dept,
+                    chkVat = (dtl.d.ExpDtl_Vat <= 0) ? false : true,
+                    vat = (dtl.d.ExpDtl_Vat <= 0) ? getVat() : dtl.d.ExpDtl_Vat,
+                    chkEwt = dtl.d.ExpDtl_isEwt,
+                    ewt = dtl.d.ExpDtl_isEwt ? 0 : dtl.d.ExpDtl_Ewt,
+                    ccy = dtl.d.ExpDtl_Ccy,
+                    debitGross = dtl.d.ExpDtl_Debit,
+                    credEwt = dtl.d.ExpDtl_Credit_Ewt,
+                    credCash = dtl.d.ExpDtl_Credit_Cash,
+                    month = dtl.d.ExpDtl_Amor_Month,
+                    day = dtl.d.ExpDtl_Amor_Day,
+                    duration = dtl.d.ExpDtl_Amor_Duration,
+                    amtDetails = amtDetails,
+                    gBaseRemarksDetails = remarksDtl
+                };
+
+                cvList.Add(cvDtl);
+            }
+
+            EntryCVViewModelList cvModel = new EntryCVViewModelList()
+            {
+                entryID = EntryDetails.e.Expense_ID,
+                expenseDate = EntryDetails.e.Expense_Date,
+                vendor = EntryDetails.e.Expense_Payee,
+                expenseYear = EntryDetails.e.Expense_Date.Year.ToString(),
+                expenseId = EntryDetails.e.Expense_Number,
+                checkNo = EntryDetails.e.Expense_CheckNo,
+                status = getStatus(EntryDetails.e.Expense_Status),
+                approver = (EntryDetails.e.Expense_Status == 1) ? "" : getUserName(EntryDetails.e.Expense_Approver),
+                verifier_1 = (EntryDetails.e.Expense_Status == 1) ? "" : getUserName(EntryDetails.e.Expense_Verifier_1),
+                verifier_2 = (EntryDetails.e.Expense_Status == 1) ? "" : getUserName(EntryDetails.e.Expense_Verifier_2),
+                maker = EntryDetails.e.Expense_Creator_ID,
+                EntryCV = cvList
+            };
+
+            return cvModel;
+        }
+        //get Status
+        public string getStatus(int id)
+        {
+            var status = _context.StatusList.SingleOrDefault(q => q.Status_ID == id);
+            return status.Status_Name;
+        }
+        //get userName
+        public string getUserName(int id)
+        {
+            var name = _context.User.SingleOrDefault(q => q.User_ID == id);
+            return name.User_UserName;
+        }
+        //get vart
+        public float getVat()
+        {
+            var vat = _context.DMVAT.SingleOrDefault(q => q.VAT_isActive == true);
+            return vat.VAT_Rate;
         }
     }
 
