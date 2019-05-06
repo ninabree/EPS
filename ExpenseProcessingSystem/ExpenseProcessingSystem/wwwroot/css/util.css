@@ -2281,7 +2281,7 @@
 .dis-inline-block {display: inline-block;}
 	.dis-inline-block[disabled] {
 		cursor: not-allowed;
-		background-color: slategray;
+		background-color: #A1A1A1;
 	}
 .dis-flex {
 	display: -webkit-box;
