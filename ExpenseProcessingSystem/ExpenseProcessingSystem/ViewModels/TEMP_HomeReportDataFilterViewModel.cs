@@ -15,6 +15,8 @@ namespace ExpenseProcessingSystem.ViewModels
 
         public IEnumerable<Temp_RepWTSViewModel> HomeReportOutputWTS { get; set; }
 
+        public IEnumerable<Temp_RepCSBViewModel> HomeReportOutputCSB { get; set; }
+
         public HomeReportViewModel HomeReportFilter { get; set; }
     }
 }

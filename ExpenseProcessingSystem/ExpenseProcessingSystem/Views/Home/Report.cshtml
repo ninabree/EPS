@@ -103,7 +103,21 @@
 					radioSemester1.removeAttr("disabled");
 					radioSemester2.removeAttr("disabled");
 					radioPeriod2.removeAttr("disabled");
-				}
+                } else if (ReportType == "10") {
+                    radioPeriod1.prop('checked', true);
+                    radioPeriod1.removeAttr("disabled");
+                    radioPeriod2.removeAttr("disabled");
+                    radioPeriod3.removeAttr("disabled");
+                    ddlYear.removeAttr("disabled");
+                    ddlMonth.removeAttr("disabled");
+                } else if (ReportType == "13") {
+                    radioPeriod1.prop('checked', true);
+                    radioPeriod1.removeAttr("disabled");
+                    radioPeriod2.removeAttr("disabled");
+                    radioPeriod3.removeAttr("disabled");
+                    ddlYear.removeAttr("disabled");
+                    ddlMonth.removeAttr("disabled");
+                }
 
 				if (ReportType != 0 || ReportType != '') {
 					btnGenerateFile.removeAttr("disabled");
@@ -147,7 +161,56 @@
 					+ "&PeriodFrom=" + $('#PeriodFrom').val()
 					+ "&PeriodTo=" + $('#PeriodTo').val();
 
-			});
+            });
+            $(".radioPeriodOption").change(function (e) {
+                // set fields
+                var radioPeriod1 = $('#radioPeriodOption1');
+                var radioPeriod2 = $('#radioPeriodOption2');
+                var radioPeriod3 = $('#radioPeriodOption3');
+                var ddlMonth = $('#ddlMonth');
+                var ddlYear = $('#ddlYear');
+                var ddlYearSem = $('#ddlYearSem');
+                var ddlFileFormat = $('#ddlFileFormat');
+                var radioSemester1 = $('#radioSemester1');
+                var radioSemester2 = $('#radioSemester2');
+                var dtPeriodFrom = $('#PeriodFrom');
+                var dtPeriodTo = $('#PeriodTo');
+
+                //Default fields filter
+
+                radioPeriod1.prop('checked', false);
+                radioPeriod2.prop('checked', false);
+                radioPeriod3.prop('checked', false);
+                radioSemester1.prop('checked', false);
+                radioSemester2.prop('checked', false);
+                ddlMonth.attr("disabled", "disabled");
+                ddlYear.attr("disabled", "disabled");
+                ddlYearSem.attr("disabled", "disabled");
+                ddlFileFormat.attr("disabled", "disabled");
+                radioSemester1.attr("disabled", "disabled");
+                radioSemester2.attr("disabled", "disabled");
+                dtPeriodFrom.attr("disabled", "disabled");
+                dtPeriodTo.attr("disabled", "disabled");
+
+                switch ($(this).val()) {
+                    case "1":
+                        radioPeriod1.prop('checked', 'checked');
+                        ddlYear.removeAttr("disabled");
+                        ddlMonth.removeAttr("disabled");
+                        break;
+                    case "2":
+                        radioPeriod2.prop('checked', 'checked');
+                        ddlYearSem.removeAttr("disabled");
+                        radioSemester1.removeAttr("disabled");
+                        radioSemester2.removeAttr("disabled");
+                        break;
+                    case "3":
+                        radioPeriod3.prop('checked', 'checked');
+                        dtPeriodFrom.removeAttr("disabled");
+                        dtPeriodTo.removeAttr("disabled");
+                        break;
+                }
+            });
 		});
 
 		$(document).ready(function () {

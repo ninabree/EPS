@@ -78,7 +78,7 @@ using ExpenseProcessingSystem.ViewModels;
             WriteLiteral("<div class=\"tab-content-cont m-t-10\">\r\n    <div id=\"tbl-lbl\">\r\n        <div class=\"dis-inline-block\"><p>Data List Title:</p></div>\r\n        <div class=\"dis-inline-block\">\r\n            <select id=\"dm-tbl\">\r\n                ");
             EndContext();
             BeginContext(325, 48, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "d6567e1e428b4259a6813fd43f51c5a8", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "7565eca5a9764b14821436e8211d91cb", async() => {
                 BeginContext(358, 6, true);
                 WriteLiteral("Vendor");
                 EndContext();
@@ -100,7 +100,7 @@ using ExpenseProcessingSystem.ViewModels;
             WriteLiteral("\r\n                ");
             EndContext();
             BeginContext(391, 46, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "ba386f4b19ac4a8fa52f35e0167df6f4", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "4a435cbc62f74d1aa5215dc315c38739", async() => {
                 BeginContext(423, 5, true);
                 WriteLiteral("Check");
                 EndContext();
@@ -122,7 +122,7 @@ using ExpenseProcessingSystem.ViewModels;
             WriteLiteral("\r\n                ");
             EndContext();
             BeginContext(455, 46, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "401827be0fd444d3b1bde5c70cbc27f1", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "abf2721d744449739f12722b44a2365d", async() => {
                 BeginContext(485, 7, true);
                 WriteLiteral("Account");
                 EndContext();
@@ -144,7 +144,7 @@ using ExpenseProcessingSystem.ViewModels;
             WriteLiteral("\r\n                ");
             EndContext();
             BeginContext(519, 50, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "e129834643834455a6e9c64a16e5b90a", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "bcc3db87a19248a5b53fc23e2773e1ba", async() => {
                 BeginContext(550, 10, true);
                 WriteLiteral("Department");
                 EndContext();
@@ -166,7 +166,7 @@ using ExpenseProcessingSystem.ViewModels;
             WriteLiteral("\r\n                ");
             EndContext();
             BeginContext(587, 54, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "348bb6017bc24d8ea167ee9777d13beb", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "d0a85a3a6c8344408f5e147fc6503992", async() => {
                 BeginContext(617, 15, true);
                 WriteLiteral("Value Added Tax");
                 EndContext();
@@ -188,7 +188,7 @@ using ExpenseProcessingSystem.ViewModels;
             WriteLiteral("\r\n                ");
             EndContext();
             BeginContext(659, 57, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "6e5955ae2a304702a830a6c7070bd291", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "64c212fbee4147a38832fb16d9b5ec90", async() => {
                 BeginContext(689, 18, true);
                 WriteLiteral("Fringe Benefit Tax");
                 EndContext();
@@ -210,7 +210,7 @@ using ExpenseProcessingSystem.ViewModels;
             WriteLiteral("\r\n                ");
             EndContext();
             BeginContext(734, 47, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "6854e53df3f047c696e1a20bd5c14c67", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "5d3bfd4f807a40df9c739519ad80f513", async() => {
                 BeginContext(763, 9, true);
                 WriteLiteral("Tax Rates");
                 EndContext();
@@ -232,7 +232,7 @@ using ExpenseProcessingSystem.ViewModels;
             WriteLiteral("\r\n                ");
             EndContext();
             BeginContext(799, 48, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "023703558a34479cbc4ad1e4c8d95b90", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "91c8e960e04c43fca3f14f1c040443be", async() => {
                 BeginContext(830, 8, true);
                 WriteLiteral("Currency");
                 EndContext();
@@ -254,7 +254,7 @@ using ExpenseProcessingSystem.ViewModels;
             WriteLiteral("\r\n                ");
             EndContext();
             BeginContext(865, 58, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "d6088ab91c1647699421c887ffcbd19f", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "02781c2697194401b08ab07e52de0c80", async() => {
                 BeginContext(898, 16, true);
                 WriteLiteral("Regular Employee");
                 EndContext();
@@ -276,7 +276,7 @@ using ExpenseProcessingSystem.ViewModels;
             WriteLiteral("\r\n                ");
             EndContext();
             BeginContext(941, 61, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "72028298d40548a48971c8b0574b9387", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "aba61ce08dc9403a81bcae35a3dd873c", async() => {
                 BeginContext(975, 18, true);
                 WriteLiteral("Temporary Employee");
                 EndContext();
@@ -298,7 +298,7 @@ using ExpenseProcessingSystem.ViewModels;
             WriteLiteral("\r\n                ");
             EndContext();
             BeginContext(1020, 48, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "e096e9e460c443a8b7183e43e605f960", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "03992dc17fdb4b94a6bda5fc14e3ab46", async() => {
                 BeginContext(1051, 8, true);
                 WriteLiteral("Customer");
                 EndContext();
@@ -320,7 +320,7 @@ using ExpenseProcessingSystem.ViewModels;
             WriteLiteral("\r\n                ");
             EndContext();
             BeginContext(1086, 57, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "63eb022d66d04fd283b0b8beb9c18b21", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "3fada8ddc36e46249a6765ef6e9ebd9e", async() => {
                 BeginContext(1116, 18, true);
                 WriteLiteral("BIR Cert Signatory");
                 EndContext();
@@ -355,12 +355,12 @@ using ExpenseProcessingSystem.ViewModels;
             WriteLiteral("\r\n        </div>\r\n    </div>\r\n    <input type=\"hidden\" id=\"entryCheckTypes\" />\r\n</div>\r\n\r\n");
             EndContext();
             BeginContext(1501, 108, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("environment", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "08d1a3ddc5b24750a5d6a610393f73e1", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("environment", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "b3f35dd66be74a0685053e3f6bf22545", async() => {
                 BeginContext(1536, 6, true);
                 WriteLiteral("\r\n    ");
                 EndContext();
                 BeginContext(1542, 51, false);
-                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("script", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "6abcfeb80fd644688178f7fd12499383", async() => {
+                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("script", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "ce512861de924d8f8189ce055ecd3b4c", async() => {
                 }
                 );
                 __Microsoft_AspNetCore_Mvc_Razor_TagHelpers_UrlResolutionTagHelper = CreateTagHelper<global::Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper>();

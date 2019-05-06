@@ -389,16 +389,13 @@ namespace ExpenseProcessingSystem.Controllers
                     switch (model.PeriodOption)
                     {
                         case "1":
-                            Debug.WriteLine("++++++++++++++" + model.ReportType);
                             data = new TEMP_HomeReportDataFilterViewModel
                             {
                                 HomeReportOutputWTS = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Month(model.Year, model.Month,
                                     ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType),
                                 HomeReportFilter = model
                             };
-                            Debug.WriteLine("++++++++++++++" + model.ReportType);
                             model.Month = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID.ToString() == model.Month).Single().MonthName;
-                            Debug.WriteLine("++++++++++++++" + model.ReportType);
                             break;
                         case "2":
                             data = new TEMP_HomeReportDataFilterViewModel
@@ -411,18 +408,55 @@ namespace ExpenseProcessingSystem.Controllers
                             model.Year = model.YearSem;
                             break;
                         case "3":
-                            Debug.WriteLine("++++++++++++++"+model.ReportType);
                             data = new TEMP_HomeReportDataFilterViewModel
                             {
                                 HomeReportOutputWTS = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Period(model.PeriodFrom, model.PeriodTo,
                                     ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType),
                                 HomeReportFilter = model
                             };
-                            Debug.WriteLine("++++++++++++++" + data.HomeReportFilter.ReportType);
 
                             model.Month = model.PeriodFrom.ToShortDateString();
                             model.Year = model.PeriodTo.ToShortDateString();
-                            Debug.WriteLine("++++++++++++++" + data.HomeReportFilter.ReportType);
+                            break;
+                    }
+                    break;
+                case ConstantData.HomeReportConstantValue.CSB:
+                    fileName = "GA_Computer_Suspense_Balance_Report_" + dateNow;
+                    layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
+                    pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter2;
+                    data = new TEMP_HomeReportDataFilterViewModel();
+                    //Get the necessary data from Database
+                    switch (model.PeriodOption)
+                    {
+                        case "1":
+                            data = new TEMP_HomeReportDataFilterViewModel
+                            {
+                                HomeReportOutputCSB = ConstantData.TEMP_HomeReportCSBDummyData.GetTEMP_HomeReportCSBOutputModelData_Month(model.Year, model.Month,
+                                    ConstantData.TEMP_HomeReportCSBDummyData.GetTEMP_HomeReportCSBOutputModelData().CSBList, model.ReportSubType),
+                                HomeReportFilter = model
+                            };
+                            model.Month = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID.ToString() == model.Month).Single().MonthName;
+                            break;
+                        case "2":
+                            data = new TEMP_HomeReportDataFilterViewModel
+                            {
+                                HomeReportOutputCSB = ConstantData.TEMP_HomeReportCSBDummyData.GetTEMP_HomeReportCSBOutputModelData_Semester(model.YearSem, model.Semester,
+                                    ConstantData.TEMP_HomeReportCSBDummyData.GetTEMP_HomeReportCSBOutputModelData().CSBList, model.ReportSubType),
+                                HomeReportFilter = model
+                            };
+                            model.Month = ConstantData.HomeReportConstantValue.GetSemesterList().Where(c => c.SemID.ToString() == model.Semester).Single().SemName;
+                            model.Year = model.YearSem;
+                            break;
+                        case "3":
+                            data = new TEMP_HomeReportDataFilterViewModel
+                            {
+                                HomeReportOutputCSB = ConstantData.TEMP_HomeReportCSBDummyData.GetTEMP_HomeReportCSBOutputModelData_Period(model.PeriodFrom, model.PeriodTo,
+                                    ConstantData.TEMP_HomeReportCSBDummyData.GetTEMP_HomeReportCSBOutputModelData().CSBList, model.ReportSubType),
+                                HomeReportFilter = model
+                            };
+
+                            model.Month = model.PeriodFrom.ToShortDateString();
+                            model.Year = model.PeriodTo.ToShortDateString();
                             break;
                     }
                     break;
