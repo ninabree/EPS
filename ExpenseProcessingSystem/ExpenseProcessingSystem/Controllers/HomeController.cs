@@ -293,6 +293,7 @@ namespace ExpenseProcessingSystem.Controllers
 
         //------------------------------------------------------------------
         //[* REPORT *]
+        //[ImportModelState]
         public IActionResult Report()
         {
             Debug.WriteLine("Try");
@@ -337,8 +338,14 @@ namespace ExpenseProcessingSystem.Controllers
             return null;
         }
 
+        //[ExportModelState]
         public IActionResult GenerateFilePreview(HomeReportViewModel model)
         {
+            //if (!ModelState.IsValid)
+            //{
+            //    return View("Report",model);
+            //    //return RedirectToAction("Index", "Error");
+            //}
             string layoutName = "";
             string fileName = "";
             string dateNow= DateTime.Now.ToString("MM-dd-yyyy_hhmmss");

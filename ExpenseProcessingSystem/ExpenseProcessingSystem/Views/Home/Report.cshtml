@@ -42,7 +42,7 @@
 				var txtCoveredTransNo6 = $('#txtCoveredTranNo6');
 				var txttxtSubjName = $('#txtSubjName');
 				var btnGenerateFile = $("#btnGenerateFile");
-				var btnGeneratePreview = $("#btnGeneratePreview");
+                var btnGeneratePreview = $("#btnGeneratePreview");
 
 				//Default fields filter
 
@@ -126,7 +126,7 @@
 				}
 
 				$.getJSON('@Url.Action("GetReportSubType")', { ReportTypeID: ReportType }, function (data) {
-					select.empty();
+                    select.empty();
 					if (data.length == 0) {
 						select.attr("disabled", "disabled");
 						select.append($('<option/>', {
@@ -140,7 +140,7 @@
 						select.append($('<option/>', {
 						value: itemData.id,
 						text: itemData.subTypeName
-						}));
+                        }));
 					});
 				});
 			});
@@ -216,7 +216,6 @@
 		$(document).ready(function () {
 			$("#btnGeneratePreview").click(function (e) {
 				e.preventDefault();
-				
 				$('#iframePreview').prop('src', "/Home/GenerateFilePreview?ReportType=" + $('#ddlReportType').val()
 					+ "&ReportSubType=" + $('#ddlSubType').val()
 					+ "&FileFormat=3"
@@ -225,8 +224,8 @@
 					+ "&YearSem=" + $('#ddlYearSem').val()
 					+ "&Semester=" + $('.radioSemester:checked').val()
 					+ "&PeriodOption=" + $('.radioPeriodOption:checked').val()
-					+ "&PeriodFrom=" + $('#PeriodFrom').val()
-					+ "&PeriodTo=" + $('#PeriodTo').val());
+                    + "&PeriodFrom=" + $('#PeriodFrom').val()
+                    + "&PeriodTo=" + $('#PeriodTo').val());
 
 				var dt = new Date();
 				var date_time = ('0' + (dt.getMonth() + 1)).slice(-2) + "/" + dt.getDate() + "/" + dt.getFullYear() + " " + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
@@ -342,10 +341,13 @@
 	<div id="tbl-lbl"><p>Preview Report: <text id="txtAsOfLabel"></text><text id="txtDatePreviewShow"></text></p></div>
 </div>
 <div class="tabContent" style=" background-color: #fafafa;">
-	<div id="voucherPreview" style="min-height: 50vh; max-height: 100%;">
-		<iframe id="iframePreview" frameborder="0" src="" style="position: relative; min-height: 50vh; max-height: 100%; width: 100%;"></iframe>
-	</div>
-	@Html.Partial("ModalPartial")
+    <div id="voucherPreview" style="min-height: 50vh; max-height: 100%;">
+        <iframe id="iframePreview" frameborder="0" src="" style="position: relative; min-height: 50vh; max-height: 100%; width: 100%;"></iframe>
+    </div>
+    @Html.Partial("ModalPartial")
+    <div id="ValidationSummary" style="display:none" class="">
+        @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
+    </div>
 </div>
 
 @Html.AntiForgeryToken()

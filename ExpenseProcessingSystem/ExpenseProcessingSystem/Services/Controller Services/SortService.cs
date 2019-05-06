@@ -93,7 +93,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             {
                 case "vendor_stat":
                     tempList = tempList.OrderBy(x => x.Vendor_Status == "For Approval" || x.Vendor_Status == "For Approval (For Deletion)");
-                    viewData = "glyph-8";
+                    viewData = "glyph-6";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "vendor_TIN":
@@ -118,22 +118,22 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     break;
                 case "vendor_creatr":
                     tempList = tempList.OrderBy(s => s.Vendor_Creator_Name);
-                    viewData = "glyph-6";
+                    viewData = "glyph-4";
                     vdInfo = "glyphicon-menu-down";
                     break;
                 case "vendor_creatr_desc":
                     tempList = tempList.OrderByDescending(s => s.Vendor_Creator_Name);
-                    viewData = "glyph-6";
+                    viewData = "glyph-4";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "vendor_approvr":
                     tempList = tempList.OrderBy(s => s.Vendor_Approver_Name);
-                    viewData = "glyph-7";
+                    viewData = "glyph-5";
                     vdInfo = "glyphicon-menu-down";
                     break;
                 case "vendor_approvr_desc":
                     tempList = tempList.OrderByDescending(s => s.Vendor_Approver_Name);
-                    viewData = "glyph-7";
+                    viewData = "glyph-5";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "name":
@@ -149,7 +149,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 default:
                     //tempList = tempList.OrderBy(s => s.Vendor_Name);
                     tempList = tempList.OrderByDescending(x => x.Vendor_Status == "For Approval" || x.Vendor_Status == "For Approval (For Deletion)");
-                    viewData = "glyph-8";
+                    viewData = "glyph-6";
                     vdInfo = "glyphicon-menu-down";
                     break;
             }

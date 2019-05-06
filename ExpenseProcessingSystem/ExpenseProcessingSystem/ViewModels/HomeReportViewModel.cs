@@ -1,5 +1,6 @@
 ﻿using ExpenseProcessingSystem.ConstantData;
 using ExpenseProcessingSystem.Models;
+using ExpenseProcessingSystem.Services.Validations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,6 +12,7 @@ namespace ExpenseProcessingSystem.ViewModels
     public class HomeReportViewModel
     {
         [Display(Name = "Report Type")]
+        //[ReportValidations]
         public IEnumerable<HomeReportTypesModel> ReportTypesList { get; set; }
 
         [Display(Name = "Sub-Type")]
@@ -55,6 +57,5 @@ namespace ExpenseProcessingSystem.ViewModels
         public string Semester { get; set; }
 
         public string PeriodOption { get; set; }
-
     }
 }
