@@ -155,7 +155,7 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     worksheet.Cells["F" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
                     worksheet.Cells["G" + lastRow].Value = i.WTS_Deb_Cred;
                     worksheet.Cells["G" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
-                    worksheet.Cells["H" + lastRow].Value = i.WTS_Currency_ID;
+                    worksheet.Cells["H" + lastRow].Value = i.WTS_Currency_Name;
                     worksheet.Cells["H" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
                     worksheet.Cells["I" + lastRow].Value = i.WTS_Amount;
                     worksheet.Cells["I" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
@@ -169,7 +169,7 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     worksheet.Cells["M" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
                     worksheet.Cells["N" + lastRow].Value = i.WTS_Exchange_Rate;
                     worksheet.Cells["N" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
-                    worksheet.Cells["O" + lastRow].Value = i.WTS_Contra_Currency_ID;
+                    worksheet.Cells["O" + lastRow].Value = i.WTS_Contra_Currency_Name;
                     worksheet.Cells["O" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
                     worksheet.Cells["P" + lastRow].Value = i.WTS_Fund;
                     worksheet.Cells["P" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);

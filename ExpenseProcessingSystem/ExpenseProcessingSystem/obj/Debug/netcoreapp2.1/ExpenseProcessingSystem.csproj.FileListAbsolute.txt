@@ -298,6 +298,7 @@ C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\bi
 C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\bin\Debug\netcoreapp2.1\Accessibility.dll
 C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\bin\Debug\netcoreapp2.1\System.Deployment.dll
 C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\bin\Debug\netcoreapp2.1\System.Runtime.Serialization.Formatters.Soap.dll
+C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\ExpenseProcessingSystem.csprojAssemblyReference.cache
 C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\ExpenseProcessingSystem.Properties.Resources.resources
 C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\ExpenseProcessingSystem.csproj.GenerateResource.cache
 C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\ExpenseProcessingSystem.csproj.CoreCompileInputs.cache
