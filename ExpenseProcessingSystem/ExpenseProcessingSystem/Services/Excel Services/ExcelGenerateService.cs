@@ -81,6 +81,14 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 worksheet.Cells["G" + lastRow].Formula = "SUM(G" + dataStartRow + ":G" + dataEndRow + ")";
                 worksheet.Cells["G" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
 
+                lastRow += 3;
+                worksheet.Cells["C" + lastRow].Value = "ALBERT ADVINCULA";
+                worksheet.Cells["C" + lastRow].Style.Font.Bold = true;
+                lastRow += 1;
+                worksheet.Cells["C" + lastRow].Value = "VP-Manager/ AdministrationDepartment";
+                worksheet.Cells["C" + lastRow].Style.Font.Bold = true;
+                worksheet.Cells["C" + lastRow].Style.Font.UnderLine = true;
+
                 package.Save();
             }
         }

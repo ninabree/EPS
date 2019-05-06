@@ -25,6 +25,7 @@
 				var ddlMonth = $('#ddlMonth');
 				var ddlYear = $('#ddlYear');
 				var ddlYearSem = $('#ddlYearSem');
+				var ddlFileFormat = $('#ddlFileFormat');
 				var radioSemester1 = $('#radioSemester1');
 				var radioSemester2 = $('#radioSemester2');
 				var dtPeriodFrom = $('#PeriodFrom');
@@ -40,8 +41,75 @@
 				var txtCoveredTransNo5 = $('#txtCoveredTranNo5');
 				var txtCoveredTransNo6 = $('#txtCoveredTranNo6');
 				var txttxtSubjName = $('#txtSubjName');
+				var btnGenerateFile = $("#btnGenerateFile");
+				var btnGeneratePreview = $("#btnGeneratePreview");
 
 				//Default fields filter
+
+				radioPeriod1.attr("disabled", "disabled");
+				radioPeriod2.attr("disabled", "disabled");
+				radioPeriod3.attr("disabled", "disabled");
+				ddlMonth.attr("disabled", "disabled");
+				ddlYear.attr("disabled", "disabled");
+				ddlYearSem.attr("disabled", "disabled");
+				ddlFileFormat.attr("disabled", "disabled");
+				radioSemester1.attr("disabled", "disabled");
+				radioSemester2.attr("disabled", "disabled");
+				dtPeriodFrom.attr("disabled", "disabled");
+				dtPeriodTo.attr("disabled", "disabled");
+				txtCheck1.attr("disabled", "disabled");
+				txtCheck2.attr("disabled", "disabled");
+				txtVoucher1.attr("disabled", "disabled");
+				txtVoucher2.attr("disabled", "disabled");
+				txtCoveredTransNo1.attr("disabled", "disabled");
+				txtCoveredTransNo2.attr("disabled", "disabled");
+				txtCoveredTransNo3.attr("disabled", "disabled");
+				txtCoveredTransNo4.attr("disabled", "disabled");
+				txtCoveredTransNo5.attr("disabled", "disabled");
+				txtCoveredTransNo6.attr("disabled", "disabled");
+				txttxtSubjName.attr("disabled", "disabled");
+				btnGenerateFile.attr("disabled", "disabled");
+				btnGeneratePreview.attr("disabled", "disabled");
+				radioPeriod1.prop('checked', false);
+				radioPeriod2.prop('checked', false);
+				radioPeriod3.prop('checked', false);
+				radioSemester1.prop('checked', false);
+				radioSemester2.prop('checked', false);
+				txtCheck1.text("");
+				txtCheck2.text("");
+				txtVoucher1.text("");
+				txtVoucher2.text("");
+				txtCoveredTransNo1.text("");
+				txtCoveredTransNo2.text("");
+				txtCoveredTransNo3.text("");
+				txtCoveredTransNo4.text("");
+				txtCoveredTransNo5.text("");
+				txtCoveredTransNo6.text("");
+				txttxtSubjName.text("");
+				ddlMonth.val('');
+				ddlYear.val('');
+				ddlYearSem.val('');
+				ddlFileFormat.val('');
+
+				if (ReportType == "2") {
+					radioPeriod1.prop('checked', true);
+					radioPeriod1.removeAttr("disabled");
+					ddlYear.removeAttr("disabled");
+					ddlMonth.removeAttr("disabled");
+
+				} else if (ReportType == "3") {
+					radioPeriod2.prop('checked', true);
+					ddlYearSem.removeAttr("disabled");
+					radioSemester1.removeAttr("disabled");
+					radioSemester2.removeAttr("disabled");
+					radioPeriod2.removeAttr("disabled");
+				}
+
+				if (ReportType != 0 || ReportType != '') {
+					btnGenerateFile.removeAttr("disabled");
+					btnGeneratePreview.removeAttr("disabled");
+					ddlFileFormat.removeAttr("disabled");
+				}
 
 				$.getJSON('@Url.Action("GetReportSubType")', { ReportTypeID: ReportType }, function (data) {
 					select.empty();
@@ -139,67 +207,67 @@
 				<td colspan="10"></td>
 			</tr>
 			<tr>
-				<td>@Html.RadioButton("radioTimePeriod", "1", false, new { id = "radioPeriodOption1", @class = "radioPeriodOption" })</td>
+				<td>@Html.RadioButton("radioTimePeriod", "1", false, new { id = "radioPeriodOption1", @class = "radioPeriodOption", disabled = "disabled" })</td>
 				<td>@Html.LabelFor(m => m.YearList)</td>
 				<td>
-					@Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), "----Year----", new { @class = "dis-inline-block", id = "ddlYear" })
+					@Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), "----Year----", new { @class = "dis-inline-block", id = "ddlYear", disabled = "disabled" })
 				</td>
 				<td>@Html.LabelFor(m => m.MonthList)</td>
 				<td>
-					@Html.DropDownListFor(m => m.MonthList, new SelectList(Model.MonthList, "MonthID", "MonthName"), "--Month--", new { @class = "dis-inline-block", id = "ddlMonth" })
+					@Html.DropDownListFor(m => m.MonthList, new SelectList(Model.MonthList, "MonthID", "MonthName"), "--Month--", new { @class = "dis-inline-block", id = "ddlMonth", disabled = "disabled" })
 				</td>
-				<td>@Html.RadioButton("radioTimePeriod", "2", false, new { id = "radioPeriodOption2", @class = "radioPeriodOption" })</td>
+				<td>@Html.RadioButton("radioTimePeriod", "2", false, new { id = "radioPeriodOption2", @class = "radioPeriodOption", disabled = "disabled" })</td>
 				<td>@Html.LabelFor(m => m.YearSemList)</td>
 				<td>
-					@Html.DropDownListFor(m => m.YearSemList, new SelectList(Model.YearSemList, "YearID", "YearID"), "----Year----", new { @class = "dis-inline-block", id = "ddlYearSem" })
+					@Html.DropDownListFor(m => m.YearSemList, new SelectList(Model.YearSemList, "YearID", "YearID"), "----Year----", new { @class = "dis-inline-block", id = "ddlYearSem", disabled = "disabled" })
 				</td>
 				@foreach (var sem in Model.SemesterList)
 				{
-					<td>@Html.RadioButtonFor(m => m.SemesterList, sem.SemID, new { @id = "radioSemester" + sem.SemID, @class="radioSemester" }) @sem.SemName</td>
+					<td>@Html.RadioButtonFor(m => m.SemesterList, sem.SemID, new { @id = "radioSemester" + sem.SemID, @class="radioSemester", disabled = "disabled" }) @sem.SemName</td>
 				}
 			</tr>
 			<tr>
-				<td>@Html.RadioButton("radioTimePeriod", "3", false, new { id = "radioPeriodOption3", @class = "radioPeriodOption" })</td>
+				<td>@Html.RadioButton("radioTimePeriod", "3", false, new { id = "radioPeriodOption3", @class = "radioPeriodOption", disabled = "disabled" })</td>
 				<td>Period</td>
-				<td colspan="1">@Html.EditorFor(m => m.PeriodFrom, new { htmlAttributes = new { @class = "input h-20 w-97 fs-11 form -control" } })</td>
+				<td colspan="1">@Html.EditorFor(m => m.PeriodFrom, new { htmlAttributes = new { @class = "input h-20 w-97 fs-11 form -control", @type = "date", disabled = "disabled" } })</td>
 				<td>To</td>
-				<td colspan="1">@Html.EditorFor(m => m.PeriodTo, new { htmlAttributes = new { @class = "input h-20 w-97 fs-11 form -control" } })</td>
+				<td colspan="1">@Html.EditorFor(m => m.PeriodTo, new { htmlAttributes = new { @class = "input h-20 w-97 fs-11 form -control", @type = "date", disabled = "disabled" } })</td>
 				<td>&#9679</td>
 				<td>Check No.</td>
-				<td colspan="1"><input class="input" id="txtCheck1"/></td>
-				<td colspan="1"><input class="input" id="txtCheck2" /></td>
-				<td rowspan="2"><button class="btn" style="width: 90%;" id="btnGeneratePreview">Generate Preview</button></td>
+				<td colspan="1"><input class="input" id="txtCheck1" disabled = "disabled" /></td>
+				<td colspan="1"><input class="input" id="txtCheck2" disabled = "disabled"  /></td>
+				<td rowspan="2"><button class="btn" style="width: 90%;" id="btnGeneratePreview" disabled = "disabled" >Generate Preview</button></td>
 			</tr>
 			<tr>
 				<td>&#9679</td>
 				<td>Voucher No.</td>
-				<td colspan="3"><input class="input" id="txtVoucher1" /></td>
+				<td colspan="3"><input class="input" id="txtVoucher1" disabled = "disabled"  /></td>
 				<td></td>
-				<td colspan="3"><input class="input" id="txtVoucher2" /></td>
+				<td colspan="3"><input class="input" id="txtVoucher2" disabled = "disabled"  /></td>
 			</tr>
 			<tr>
 				<td>&#9679</td>
 				<td>Covered Tran No.</td>
-				<td colspan="1" style="padding:0px"><input class="input" id="txtCoveredTranNo1" /></td>
-				<td colspan="1" style="padding:0px"><input class="input" id="txtCoveredTranNo2" /></td>
-				<td colspan="1" style="padding:0px"><input class="input" id="txtCoveredTranNo3" /></td>
+				<td colspan="1" style="padding:0px"><input class="input" id="txtCoveredTranNo1" disabled = "disabled" /></td>
+				<td colspan="1" style="padding:0px"><input class="input" id="txtCoveredTranNo2" disabled = "disabled" /></td>
+				<td colspan="1" style="padding:0px"><input class="input" id="txtCoveredTranNo3" disabled = "disabled" /></td>
 				<td></td>
-				<td colspan="1" style="padding:0px"><input class="input" id="txtCoveredTranNo4" /></td>
-				<td colspan="1" style="padding:0px"><input class="input" id="txtCoveredTranNo5" /></td>
-				<td colspan="1" style="padding:0px"><input class="input" id="txtCoveredTranNo6" /></td>
+				<td colspan="1" style="padding:0px"><input class="input" id="txtCoveredTranNo4" disabled = "disabled" /></td>
+				<td colspan="1" style="padding:0px"><input class="input" id="txtCoveredTranNo5" disabled = "disabled" /></td>
+				<td colspan="1" style="padding:0px"><input class="input" id="txtCoveredTranNo6" disabled = "disabled" /></td>
 			</tr>
 			<tr>
 				<td>&#9679</td>
 				<td>Subject Name</td>
-				<td colspan="2"><input class="input" id="txtSubjName" /></td>
+				<td colspan="2"><input class="input" id="txtSubjName" disabled = "disabled" /></td>
 				<td colspan="1"></td>
 				<td>@Html.LabelFor(m => m.FileFormatList)</td>
 				<td>
-					@Html.DropDownListFor(m => m.FileFormatList, new SelectList(Model.FileFormatList, "FileFormatID", "FileFormatName"), "--File Format--", new { @class = "dis-inline-block", id = "ddlFileFormat" })
+					@Html.DropDownListFor(m => m.FileFormatList, new SelectList(Model.FileFormatList, "FileFormatID", "FileFormatName"), "--File Format--", new { @class = "dis-inline-block", id = "ddlFileFormat", disabled = "disabled" })
 					@Html.ValidationMessageFor(m => m.FileFormatList)
 				</td>
 				<td rowspan="2">
-					<button class="btn" style="width: 90%;" id="btnGenerateFile">Generate File</button>
+					<button class="btn" style="width: 90%;" id="btnGenerateFile" disabled = "disabled">Generate File</button>
 				</td>
 				<td></td>
 				<td></td>
