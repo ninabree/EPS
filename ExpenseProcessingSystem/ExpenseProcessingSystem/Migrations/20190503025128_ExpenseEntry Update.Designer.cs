@@ -4,14 +4,16 @@ using ExpenseProcessingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    partial class EPSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190503025128_ExpenseEntry Update")]
+    partial class ExpenseEntryUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -608,8 +610,6 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<float>("ExpDtl_Vat");
 
-                    b.Property<bool>("ExpDtl_isEwt");
-
                     b.Property<int?>("ExpenseEntryModelExpense_ID");
 
                     b.HasKey("ExpDtl_ID");
@@ -1012,21 +1012,21 @@ namespace ExpenseProcessingSystem.Migrations
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryAmortizationModel", b =>
                 {
-                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel", "ExpenseEntryDetailModel")
+                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel")
                         .WithMany("ExpenseEntryAmortizations")
                         .HasForeignKey("ExpenseEntryDetailModelExpDtl_ID");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel", b =>
                 {
-                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryModel", "ExpenseEntryModel")
+                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryModel")
                         .WithMany("ExpenseEntryDetails")
                         .HasForeignKey("ExpenseEntryModelExpense_ID");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryGbaseDtl", b =>
                 {
-                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel", "ExpenseEntryDetailModel")
+                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel")
                         .WithMany("ExpenseEntryGbaseDtls")
                         .HasForeignKey("ExpenseEntryDetailModelExpDtl_ID");
                 });

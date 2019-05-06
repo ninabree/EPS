@@ -6,10 +6,10 @@
 @inject IJsonHelper Json;
 
 <div class="tabContent">
-    @using (Html.BeginForm("Entry_NewCV", "Home", FormMethod.Post, new { @class = "validate-form" }))
+    @using (Html.BeginForm("AddNewCV", "Home", FormMethod.Post, new { @class = "validate-form" }))
     {
         <div id="tbl-lbl" class="flex-sb">
-            <div class="dis-inline-block">Date: <p class="dis-inline-block">@Html.TextBoxFor(model => model.expenseDate, new { @readonly = "true", @class = "input w-15" })</p> </div>
+            <div class="dis-inline-block w-20">Date: <p class="dis-inline-block w-70">@Html.TextBoxFor(model => model.expenseDate, new { @readonly = "true", @class = "input w-97" })</p> </div>
             <div class="dis-inline-block"><p class="dis-inline-block">@Html.TextBoxFor(model => model.expenseYear, new { @readonly = "true", @class = "input" })</p> - <p class="dis-inline-block">@Html.TextBoxFor(model => model.expenseId, new { @readonly = "true", @class = "input" })</p></div>
             <div class="dis-inline-block float-r">Check No : <p class="dis-inline-block">@Html.TextBoxFor(model => model.checkNo, new { @readonly = "true", @class = "input" })</p></div>
         </div>
@@ -132,40 +132,41 @@
             @Html.Partial("CVPartial")
         </div>
         <div id="entry-status" class="m-t-10 m-b-10">
-            <div class="dis-inline-block"><label>Status:</label></div>
-            <div class="dis-inline-block">@Html.TextBoxFor(model => model.status, new { @readonly = "true", @class = "input" })</div>
+            <div class="dis-inline-block"><label>Status: </label></div>
+            <div class="dis-inline-block">@Html.TextBoxFor(x => x.status, new { @readonly = "true", @class = "input" })</div>
             <div class="dis-inline-block"><label>Approver:</label></div>
             <div class="dis-inline-block">@Html.TextBoxFor(model => model.approver, new { @readonly = "true", @class = "input" })</div>
             <div class="dis-inline-block"><label>Verifier:</label></div>
             <div class="dis-inline-block">
-                <p class="dis-inline-block">@Html.TextBoxFor(model => model.verifier, new { @readonly = "true", @class = "m-l-5 input" })</p>
+                <p class="dis-inline-block">@Html.TextBoxFor(model => model.verifier_1, new { @readonly = "true", @class = "m-l-5 input" })</p>
+                <p class="dis-inline-block">@Html.TextBoxFor(model => model.verifier_2, new { @readonly = "true", @class = "m-l-5 input" })</p>
             </div>
         </div>
         <div id="entry-controls" class="m-b-10">
             <div class="flex-sb">
                 <div>
                     <div class="dis-inline-block tbl-btn"><button>Save</button></div>
-                    <div class="dis-inline-block tbl-btn"><button>Delete</button></div>
-                    <div class="dis-inline-block tbl-btn"><button>Modify</button></div>
+                    <div class="dis-inline-block tbl-btn"><button disabled>Delete</button></div>
+                    <div class="dis-inline-block tbl-btn"><button disabled>Modify</button></div>
                 </div>
                 <div>
-                    <div class="dis-inline-block tbl-btn"><button id="reversal_entry">Create Reversal Entry</button></div>
+                    <div class="dis-inline-block tbl-btn"><button id="reversal_entry" disabled>Create Reversal Entry</button></div>
                 </div>
                 <div>
-                    <div class="dis-inline-block tbl-btn m-l-41"><button>Print Check</button></div>
+                    <div class="dis-inline-block tbl-btn m-l-41"><button disabled>Print Check</button></div>
                 </div>
 
             </div>
             <div class="flex-sb">
                 <div>
-                    <div class="dis-inline-block tbl-btn"><button>Approve/Verify</button></div>
-                    <div class="dis-inline-block tbl-btn"><button>Reject</button></div>
+                    <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
+                    <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
                 </div>
                 <div>
-                    <div class="dis-inline-block tbl-btn"><button>Delete GBase Post</button></div>
+                    <div class="dis-inline-block tbl-btn"><button disabled>Delete GBase Post</button></div>
                 </div>
                 <div>
-                    <div class="dis-inline-block tbl-btn"><button>Print BIR Certificate</button></div>
+                    <div class="dis-inline-block tbl-btn"><button disabled>Print BIR Certificate</button></div>
                 </div>
             </div>
         </div>
@@ -204,17 +205,6 @@
             $("#credCashTotal").val(cashSubTotal);
             $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
         });
-
-        $(".tabContent").keypress(
-            function (event) {
-                if (event.which == '13') {
-                    event.preventDefault();
-                    var $canfocus = $(':tabbable:visible')
-                    var index = $canfocus.index(document.activeElement) + 1;
-                    if (index >= $canfocus.length) index = 0;
-                    $canfocus.eq(index).focus();
-                }
-            });
 
         $("#addRow").click(function (e) {
             var itemCount = document.getElementById('inputTable').getElementsByTagName('tbody')[0].childElementCount - 2;
@@ -265,73 +255,6 @@
                 '<td id="req_' + itemCount + '"><a class="reqBtn glyphicon glyphicon-list-alt"></a></td>';
 
             newRow.innerHTML = htmlContent;
-        });
-
-        $("table").on("change","input.chkVat",function (e) {
-            var pNode = $(this.parentNode)[0].parentNode;
-
-            var itemNo = pNode.id; //jquery obj
-            var chkVatVal = $(this).is(':checked');
-            if (chkVatVal) {
-                $("#" + itemNo).find(".txtVat").attr("readonly",false);
-            } else {
-                $("#" + itemNo).find(".txtVat").attr("readonly",true);
-            }
-        });
-
-        $("table").on("change", "input.chkEwt", function (e) {
-            var pNode = $(this.parentNode)[0].parentNode;
-
-            var itemNo = pNode.id; //jquery obj
-            var chkEwtVal = $(this).is(':checked');
-            if (chkEwtVal) {
-                $("#" + itemNo).find(".txtEwt").attr("disabled", false);
-            } else {
-                $("#" + itemNo).find(".txtEwt").attr("disabled", true);
-            }
-        });
-
-        $("table").on("change", "input.txtGross", function (e) {
-            var pNode = $(this.parentNode)[0].parentNode;
-
-            var grossAmt = $(this).val();
-
-            var itemNo = pNode.id; //jquery obj
-            var chkEwtVal = $("#" + itemNo).find(".chkEwt").is(':checked');
-
-            if (chkEwtVal) {
-                var ewtAmount = grossAmt * (Number($("#" + itemNo).find(".txtEwt option:selected").text())/100);
-                $("#" + itemNo).find(".txtCredEwt").val(roundNumber(ewtAmount,2));
-                $("#" + itemNo).find(".txtCredCash").val(roundNumber((grossAmt - ewtAmount),2));
-            } else {
-                $("#" + itemNo).find(".txtCredEwt").val(0);
-                $("#" + itemNo).find(".txtCredCash").val(grossAmt);
-            }
-
-            var gross = $(".txtGross");
-            var credEwt = $(".txtCredEwt");
-            var credCash = $(".txtCredCash");
-
-            var grossTotal = 0;
-            var ewtSubTotal = 0;
-            var cashSubTotal = 0;
-
-            for (var i = 0; i < gross.length; i++) {
-                grossTotal += Number(gross[i].value);
-            }
-
-            for (var i = 0; i < credEwt.length; i++) {
-                ewtSubTotal += Number(credEwt[i].value);
-            }
-
-            for (var i = 0; i < credCash.length; i++) {
-                cashSubTotal += Number(credCash[i].value);
-            }
-
-            $("#grossTotal").val(grossTotal);
-            $("#credEwtTotal").val(ewtSubTotal);
-            $("#credCashTotal").val(cashSubTotal);
-            $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
         });
 
         //ExpenseAmortization
@@ -409,51 +332,9 @@
                 btnAttr.attr("class","reqBtn glyphicon glyphicon-list-alt");
             }
         });
-
-        $("#modalDiv").on("click", "#saveBtn", function (e) {
-            if ($("#parentIdAmortization").length) {
-                return;
-            }
-            var trs = $("#gBaseTable").find("tbody").find("tr");
-            var htmlText = "";
-
-            if (trs.length <= 0) {
-                alert("Can't submit empty form.");
-                return;
-            }
-
-            var rowNo = $("#parentId").val().substring(7);
-
-            for (var i = 0; i < trs.length; i++) {
-                var docuType = $("#" + trs[i].id).find(".gDocuType").val();
-                var invNo = $("#" + trs[i].id).find(".gInvoiceNo").val();
-                var desc = $("#" + trs[i].id).find(".gDescription").val();
-                var amount = $("#" + trs[i].id).find(".gAmount").val();
-
-                htmlText += '<input class="docType" id="EntryCV_' + rowNo + '__gBaseRemarksDetails_' + i + '__docType" name="EntryCV[' + rowNo + '].gBaseRemarksDetails[' + i + '].docType" type="hidden" value="' + docuType + '">';
-                htmlText += '<input class="desc" id="EntryCV_' + rowNo + '__gBaseRemarksDetails_' + i + '__desc" name="EntryCV[' + rowNo + '].gBaseRemarksDetails[' + i + '].desc" type="hidden" value="' + desc + '">';
-                htmlText += '<input class="invNo" id="EntryCV_' + rowNo + '__gBaseRemarksDetails_' + i + '__invNo" name="EntryCV[' + rowNo + '].gBaseRemarksDetails[' + i + '].invNo" type="hidden" value="' + invNo + '">';
-                htmlText += '<input class="amount" data-val="true" data-val-number="The field amount must be a number." data-val-required="The amount field is required." id="EntryCV_' + rowNo + '__gBaseRemarksDetails_' + i + '__amount" name="EntryCV[' + rowNo + '].gBaseRemarksDetails[' + i + '].amount" type="hidden" value="' + amount + '">';
-            }
-            $("#" + $("#parentId").val()).append(htmlText);
-            $('#myModal').modal('hide');
-        });
     });
 </script>
 <script type="text/javascript">
-    function roundNumber(num, scale) {
-        if (!("" + num).includes("e")) {
-            return +(Math.round(num + "e+" + scale) + "e-" + scale);
-        } else {
-            var arr = ("" + num).split("e");
-            var sig = ""
-            if (+arr[1] + scale > 0) {
-                sig = "+";
-            }
-            return +(Math.round(+arr[0] + "e" + sig + (+arr[1] + scale)) + "e-" + scale);
-        }
-    };
-
     function tblBuilder(tableRef, begMonth, day, duration, grossAmount) {
         var dvdAmount = roundNumber((grossAmount / duration), 2);
 
@@ -471,6 +352,20 @@
             cellAmount.innerHTML = dvdAmount;
         }
     };
+
+    function roundNumber(num, scale) {
+        if (!("" + num).includes("e")) {
+            return +(Math.round(num + "e+" + scale) + "e-" + scale);
+        } else {
+            var arr = ("" + num).split("e");
+            var sig = ""
+            if (+arr[1] + scale > 0) {
+                sig = "+";
+            }
+            return +(Math.round(+arr[0] + "e" + sig + (+arr[1] + scale)) + "e-" + scale);
+        }
+    };
 </script>
+<script type="text/javascript" src="~/js/EntryScripts.js"></script>
 
 
