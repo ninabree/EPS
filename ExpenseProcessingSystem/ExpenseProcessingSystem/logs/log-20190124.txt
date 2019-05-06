@@ -1,0 +1,129 @@
+2019-01-24 09:13:02.404 +08:00 [Information] Hello, Serilog!
+2019-01-24 09:13:05.144 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/  
+2019-01-24 09:13:05.773 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-24 09:13:05.822 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-24 09:13:05.839 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 4.6559ms.
+2019-01-24 09:13:05.949 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-24 09:13:06.521 +08:00 [Information] Executed ViewResult - view "Login" executed in 646.3014ms.
+2019-01-24 09:13:06.528 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 750.3738ms
+2019-01-24 09:13:06.606 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/jquery-ui/jquery-ui.css  
+2019-01-24 09:13:06.606 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-24 09:13:06.608 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/util.css  
+2019-01-24 09:13:06.645 +08:00 [Information] Request finished in 1533.6745ms 200 text/html; charset=utf-8
+2019-01-24 09:13:06.660 +08:00 [Information] The file "/css/site.css" was not modified
+2019-01-24 09:13:06.660 +08:00 [Information] The file "/lib/jquery-ui/jquery-ui.css" was not modified
+2019-01-24 09:13:06.660 +08:00 [Information] The file "/css/util.css" was not modified
+2019-01-24 09:13:06.672 +08:00 [Information] Request finished in 64.0045ms 304 text/css
+2019-01-24 09:13:06.672 +08:00 [Information] Request finished in 66.3402ms 304 text/css
+2019-01-24 09:13:06.672 +08:00 [Information] Request finished in 66.3629ms 304 text/css
+2019-01-24 09:13:06.924 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/jquery-ui/jquery-ui.js  
+2019-01-24 09:13:06.925 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/js/site.js?v=KGA0zAZ9h4HdQYU1rkqU89RxkDJMdQVpDOKM_-nZ28s  
+2019-01-24 09:13:06.925 +08:00 [Information] The file "/lib/jquery-ui/jquery-ui.js" was not modified
+2019-01-24 09:13:06.925 +08:00 [Information] Request finished in 1.949ms 304 application/javascript
+2019-01-24 09:13:06.925 +08:00 [Information] The file "/js/site.js" was not modified
+2019-01-24 09:13:06.926 +08:00 [Information] Request finished in 1.4253ms 304 application/javascript
+2019-01-24 09:23:04.109 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/ application/x-www-form-urlencoded 210
+2019-01-24 09:23:04.166 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-24 09:23:04.374 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" with arguments (["ExpenseProcessingSystem.ViewModels.LoginViewModel"]) - Validation state: Invalid
+2019-01-24 09:23:04.395 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 14.7396ms.
+2019-01-24 09:23:04.397 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-24 09:23:04.416 +08:00 [Information] Executed ViewResult - view "Login" executed in 20.6219ms.
+2019-01-24 09:23:04.417 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 249.8629ms
+2019-01-24 09:23:04.419 +08:00 [Information] Request finished in 310.0558ms 200 text/html; charset=utf-8
+2019-01-24 09:23:05.022 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/jquery-ui/images/ui-icons_444444_256x240.png  
+2019-01-24 09:23:05.023 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/jquery-ui/images/ui-icons_777777_256x240.png  
+2019-01-24 09:23:05.025 +08:00 [Information] The file "/lib/jquery-ui/images/ui-icons_777777_256x240.png" was not modified
+2019-01-24 09:23:05.025 +08:00 [Information] The file "/lib/jquery-ui/images/ui-icons_444444_256x240.png" was not modified
+2019-01-24 09:23:05.025 +08:00 [Information] Request finished in 1.9894ms 304 image/png
+2019-01-24 09:23:05.025 +08:00 [Information] Request finished in 3.3404ms 304 image/png
+2019-01-24 09:24:04.230 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/jquery-ui/images/ui-icons_555555_256x240.png  
+2019-01-24 09:24:04.257 +08:00 [Information] The file "/lib/jquery-ui/images/ui-icons_555555_256x240.png" was not modified
+2019-01-24 09:24:04.259 +08:00 [Information] Request finished in 29.0337ms 304 image/png
+2019-01-24 09:24:04.654 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/jquery-ui/images/ui-icons_ffffff_256x240.png  
+2019-01-24 09:24:04.656 +08:00 [Information] The file "/lib/jquery-ui/images/ui-icons_ffffff_256x240.png" was not modified
+2019-01-24 09:24:04.657 +08:00 [Information] Request finished in 3.3393ms 304 image/png
+2019-01-24 09:31:27.712 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/ application/x-www-form-urlencoded 210
+2019-01-24 09:31:27.721 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-24 09:31:27.724 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" with arguments (["ExpenseProcessingSystem.ViewModels.LoginViewModel"]) - Validation state: Invalid
+2019-01-24 09:31:27.769 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 44.6848ms.
+2019-01-24 09:31:27.770 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-24 09:31:27.771 +08:00 [Information] Executed ViewResult - view "Login" executed in 1.3608ms.
+2019-01-24 09:31:27.771 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 49.7757ms
+2019-01-24 09:31:27.772 +08:00 [Information] Request finished in 60.1736ms 200 text/html; charset=utf-8
+2019-01-24 09:31:28.849 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/favicon.ico  
+2019-01-24 09:31:28.873 +08:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\favicon.ico"'
+2019-01-24 09:31:28.873 +08:00 [Information] Request finished in 24.6047ms 200 image/x-icon
+2019-01-24 09:40:50.977 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/ application/x-www-form-urlencoded 210
+2019-01-24 09:40:50.987 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-24 09:40:50.988 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" with arguments (["ExpenseProcessingSystem.ViewModels.LoginViewModel"]) - Validation state: Invalid
+2019-01-24 09:40:51.015 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 26.4624ms.
+2019-01-24 09:40:51.015 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-24 09:40:51.017 +08:00 [Information] Executed ViewResult - view "Login" executed in 1.4321ms.
+2019-01-24 09:40:51.017 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 29.5117ms
+2019-01-24 09:40:51.017 +08:00 [Information] Request finished in 40.7296ms 200 text/html; charset=utf-8
+2019-01-24 09:40:51.979 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/favicon.ico  
+2019-01-24 09:40:51.988 +08:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\favicon.ico"'
+2019-01-24 09:40:51.998 +08:00 [Information] Request finished in 19.3121ms 200 image/x-icon
+2019-01-24 09:40:55.657 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/  
+2019-01-24 09:40:55.658 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-24 09:40:55.659 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-24 09:40:55.660 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.0166ms.
+2019-01-24 09:40:55.660 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-24 09:40:55.663 +08:00 [Information] Executed ViewResult - view "Login" executed in 2.4765ms.
+2019-01-24 09:40:55.663 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 4.475ms
+2019-01-24 09:40:55.664 +08:00 [Information] Request finished in 7.1034ms 200 text/html; charset=utf-8
+2019-01-24 09:54:31.092 +08:00 [Error] Hello, Serilog!
+2019-01-24 09:54:38.098 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/  
+2019-01-24 09:54:38.628 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-24 09:54:38.678 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-24 09:54:38.696 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 6.056ms.
+2019-01-24 09:54:38.809 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-24 09:54:39.391 +08:00 [Information] Executed ViewResult - view "Login" executed in 665.4187ms.
+2019-01-24 09:54:39.397 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 765.7636ms
+2019-01-24 09:54:39.496 +08:00 [Information] Request finished in 1413.7743ms 200 text/html; charset=utf-8
+2019-01-24 11:27:42.236 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/  
+2019-01-24 11:27:42.270 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-24 11:27:42.273 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" - Validation state: Valid
+2019-01-24 11:27:42.274 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 0.3904ms.
+2019-01-24 11:27:42.290 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-24 11:27:42.308 +08:00 [Information] Executed ViewResult - view "Login" executed in 33.1939ms.
+2019-01-24 11:27:42.309 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 38.3422ms
+2019-01-24 11:27:42.311 +08:00 [Information] Request finished in 77.0813ms 200 text/html; charset=utf-8
+2019-01-24 11:27:42.460 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/js/site.js?v=KGA0zAZ9h4HdQYU1rkqU89RxkDJMdQVpDOKM_-nZ28s  
+2019-01-24 11:27:42.469 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/css/site.css  
+2019-01-24 11:27:42.531 +08:00 [Information] The file "/js/site.js" was not modified
+2019-01-24 11:27:42.531 +08:00 [Information] The file "/css/site.css" was not modified
+2019-01-24 11:27:42.544 +08:00 [Information] Request finished in 75.2613ms 304 text/css
+2019-01-24 11:27:42.544 +08:00 [Information] Request finished in 84.9172ms 304 application/javascript
+2019-01-24 11:27:43.208 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/favicon.ico  
+2019-01-24 11:27:43.244 +08:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"C:\Work\Mizuho EPS\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\favicon.ico"'
+2019-01-24 11:27:43.246 +08:00 [Information] Request finished in 38.4555ms 200 image/x-icon
+2019-01-24 12:56:54.070 +08:00 [Information] Request starting HTTP/1.1 POST http://localhost:44343/ application/x-www-form-urlencoded 210
+2019-01-24 12:56:54.166 +08:00 [Information] Route matched with "{action = \"Login\", controller = \"Account\"}". Executing action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)"
+2019-01-24 12:56:54.374 +08:00 [Information] Executing action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" with arguments (["ExpenseProcessingSystem.ViewModels.LoginViewModel"]) - Validation state: Invalid
+2019-01-24 12:56:54.403 +08:00 [Information] Executed action method "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)", returned result "Microsoft.AspNetCore.Mvc.ViewResult" in 22.2319ms.
+2019-01-24 12:56:54.406 +08:00 [Information] Executing ViewResult, running view "Login".
+2019-01-24 12:56:54.416 +08:00 [Information] Executed ViewResult - view "Login" executed in 12.28ms.
+2019-01-24 12:56:54.416 +08:00 [Information] Executed action "ExpenseProcessingSystem.Controllers.AccountController.Login (ExpenseProcessingSystem)" in 249.7817ms
+2019-01-24 12:56:54.419 +08:00 [Information] Request finished in 351.1925ms 200 text/html; charset=utf-8
+2019-01-24 12:56:54.484 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/jquery-ui/jquery-ui.css  
+2019-01-24 12:56:54.486 +08:00 [Information] The file "/lib/jquery-ui/jquery-ui.css" was not modified
+2019-01-24 12:56:54.487 +08:00 [Information] Request finished in 2.5347ms 304 text/css
+2019-01-24 12:56:54.488 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/jquery-ui/jquery-ui.js  
+2019-01-24 12:56:54.489 +08:00 [Information] The file "/lib/jquery-ui/jquery-ui.js" was not modified
+2019-01-24 12:56:54.491 +08:00 [Information] Request finished in 2.9862ms 304 application/javascript
+2019-01-24 12:56:55.213 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/jquery-ui/images/ui-icons_444444_256x240.png  
+2019-01-24 12:56:55.214 +08:00 [Information] The file "/lib/jquery-ui/images/ui-icons_444444_256x240.png" was not modified
+2019-01-24 12:56:55.215 +08:00 [Information] Request finished in 2.4773ms 304 image/png
+2019-01-24 12:56:55.221 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/jquery-ui/images/ui-icons_777777_256x240.png  
+2019-01-24 12:56:55.226 +08:00 [Information] The file "/lib/jquery-ui/images/ui-icons_777777_256x240.png" was not modified
+2019-01-24 12:56:55.227 +08:00 [Information] Request finished in 5.7033ms 304 image/png
+2019-01-24 12:56:56.964 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/jquery-ui/images/ui-icons_555555_256x240.png  
+2019-01-24 12:56:56.972 +08:00 [Information] The file "/lib/jquery-ui/images/ui-icons_555555_256x240.png" was not modified
+2019-01-24 12:56:56.978 +08:00 [Information] Request finished in 13.463ms 304 image/png
+2019-01-24 12:56:57.249 +08:00 [Information] Request starting HTTP/1.1 GET http://localhost:44343/lib/jquery-ui/images/ui-icons_ffffff_256x240.png  
+2019-01-24 12:56:57.254 +08:00 [Information] The file "/lib/jquery-ui/images/ui-icons_ffffff_256x240.png" was not modified
+2019-01-24 12:56:57.259 +08:00 [Information] Request finished in 9.9251ms 304 image/png
+2019-01-24 15:57:56 [ERR] Hello, Serilog!
+2019-01-24 16:13:08 [ERR] Hello, Serilog!
+2019-01-24 16:13:08 [ERR] value

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ExpenseProcessingSystem.ViewModels.Reports.RepWTSViewModel>
+﻿@model ExpenseProcessingSystem.ViewModels.TEMP_HomeReportDataFilterViewModel
 
 @{
     Layout = null;
@@ -45,7 +45,17 @@
         <td style="text-align:center;font-weight:bold;font-size:large">Withholding Taxes Summary Report</td>
     </tr>
     <tr>
-        <td style="text-align:center;font-size:small">-Data Coverage-</td>
+        <td colspan="3">
+            <table align="center" style="margin-top:8px;width:15%;font-weight: bold;">
+                <tr>
+                    <td style="font-size:small"><</td>
+                    <td style="font-size:small">@Html.DisplayFor(Model => Model.HomeReportFilter.Month)</td>
+                    <td style="font-size:small;text-align:center">-</td>
+                    <td style="font-size:small;text-align:right">@Html.DisplayFor(Model => Model.HomeReportFilter.Year)</td>
+                    <td style="font-size:small">></td>
+                </tr>
+            </table>
+        </td>
     </tr>
 </table>
 
@@ -77,7 +87,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.HomeReportOutputWTS)
         {
             <tr class="tr-PDF">
                 <td style="text-align:center" class="td-PDF">@item.WTS_Voucher_No</td>
@@ -87,14 +97,14 @@
                 <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => item.WTS_Section)</td>
                 <td style="text-align:center" class="td-PDF">@Html.DisplayFor(model => item.WTS_Remarks)</td>
                 <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => item.WTS_Deb_Cred)</td>
-                <td style="text-align:center" class="td-PDF">@item.WTS_Currency_ID</td>
+                <td style="text-align:center" class="td-PDF">@item.WTS_Currency_Name</td>
                 <td style="text-align:left" class="td-PDF">@item.WTS_Amount</td>
                 <td style="text-align:center" class="td-PDF">@item.WTS_Cust</td>
                 <td style="text-align:center" class="td-PDF">@item.WTS_Acc_Code</td>
                 <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => item.WTS_Acc_No)</td>
                 <td style="text-align:center" class="td-PDF">@Html.DisplayFor(model => item.WTS_Acc_Name)</td>
                 <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => item.WTS_Exchange_Rate)</td>
-                <td style="text-align:center" class="td-PDF">@item.WTS_Contra_Currency_ID</td>
+                <td style="text-align:center" class="td-PDF">@item.WTS_Contra_Currency_Name</td>
                 <td style="text-align:left" class="td-PDF">@item.WTS_Fund</td>
                 <td style="text-align:center" class="td-PDF">@item.WTS_Advice_Print</td>
                 <td style="text-align:center" class="td-PDF">@item.WTS_Details</td>
@@ -107,7 +117,7 @@
     </tbody>
 </table>
 
-<div style="margin-top:100px;">
-    <div style="font-weight:bold; text-align: left; display: inline-block">Thursday, March 21, 2019 5:30:30 PM</div>
-    <div style="font-weight:bold; text-align: center; display: inline-block">Page 1</div>
-</div>
+@*<div style="margin-top:100px; text-align: center">
+    <div style="font-weight:bold; float: left; display: inline-block;">Thursday, March 21, 2019 5:30:30 PM</div>
+    <div style="font-weight:bold; display: inline-block">Page 1</div>
+</div>*@

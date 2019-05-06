@@ -119,6 +119,10 @@ input {
     border: 1px solid #ccc;
     border-radius: 2px;
 }
+    .input[disabled] {
+        cursor: not-allowed;
+        background-color: #A1A1A1;
+    }
 a.sidebar-link {
     width: 100%;
     background-color: inherit;
@@ -574,7 +578,10 @@ div.tabContent {
         background-color: #0a1b81;
         color: #fff;
     }
-
+    .btn[disabled] {
+        cursor: not-allowed;
+        background-color: #CFCFCF;
+    }
 #close-tbl > tbody > tr {
     height: 2px;
 }

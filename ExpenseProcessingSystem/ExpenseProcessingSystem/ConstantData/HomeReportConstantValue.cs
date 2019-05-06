@@ -17,13 +17,23 @@ namespace ExpenseProcessingSystem.ConstantData
         //Alphalist of Payees Subject to Withholding Tax (Monthly)
         public const string APSWT_M = "2";
 
-        //Alphalist of Payees Subject to Withholding Tax (Monthly)
+        //Alphalist of Suppliers by top 10000 corporation (Semestral)
+        public const string AST1000_S = "3";
+
+        //Alphalist of Payees Subject to Withholding Tax Summary
         public const string WTS = "10";
+
+        //Alphalist of Payees Subject to GA Computer Suspense Balance
+        public const string CSB = "13";
 
         //EXCEL, PDF, Preview format ID
         public const string EXCELID = "1";
         public const string PDFID = "2";
         public const string PreviewID = "3";
+
+        //Semester value
+        public const string SEM1 = "1";
+        public const string SEM2 = "2";
 
         //PDF Format name
         public const string ReportLayoutFormatName = "_ReportLayout_";
@@ -31,7 +41,8 @@ namespace ExpenseProcessingSystem.ConstantData
         public const string ReportPdfPrevLayoutPath = "ReportLayoutFormat/";
         //PDF Footer foramt
         public static readonly string PdfFooter1 = "--footer-left \" PAGE => [page] of [toPage] \" --footer-right \" Printed Date => " + DateTime.Today.ToShortDateString() + "\" --footer-font-size \"9\" --footer-spacing 3 --footer-font-name \"calibri light\"";
-        public static readonly string PdfFooter2 = "";
+        public static readonly string PdfFooter2 = "--footer-left \" " + DateTime.Now.ToString("dddd, MMMM dd,yyyy h:mm:sstt") + " \" --footer-center \" Page [page] \" --footer-font-size \"9\" --footer-spacing 3 --footer-font-name \"calibri light\"";
+
         //========================================================================
         //Public IEnumerable class constant values
 
