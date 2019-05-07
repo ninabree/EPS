@@ -38,6 +38,10 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
 
                     ExcelWTS(newFile, templateFile, data);
                     break;
+                case ConstantData.HomeReportConstantValue.CSB:
+
+                    ExcelCSB(newFile, templateFile, data);
+                    break;
             }
 
             return destPath + fileName;
@@ -163,7 +167,7 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     worksheet.Cells["F" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
                     worksheet.Cells["G" + lastRow].Value = i.WTS_Deb_Cred;
                     worksheet.Cells["G" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
-                    worksheet.Cells["H" + lastRow].Value = i.WTS_Currency_ID;
+                    worksheet.Cells["H" + lastRow].Value = i.WTS_Currency_Name;
                     worksheet.Cells["H" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
                     worksheet.Cells["I" + lastRow].Value = i.WTS_Amount;
                     worksheet.Cells["I" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
@@ -177,7 +181,7 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     worksheet.Cells["M" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
                     worksheet.Cells["N" + lastRow].Value = i.WTS_Exchange_Rate;
                     worksheet.Cells["N" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
-                    worksheet.Cells["O" + lastRow].Value = i.WTS_Contra_Currency_ID;
+                    worksheet.Cells["O" + lastRow].Value = i.WTS_Contra_Currency_Name;
                     worksheet.Cells["O" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
                     worksheet.Cells["P" + lastRow].Value = i.WTS_Fund;
                     worksheet.Cells["P" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
@@ -193,6 +197,39 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     worksheet.Cells["U" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
                     worksheet.Cells["V" + lastRow].Value = i.WTS_Inter_Rate;
                     worksheet.Cells["V" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                }
+                dataEndRow = lastRow;
+                package.Save();
+            }
+        }
+
+        public void ExcelCSB(FileInfo newFile, FileInfo templateFile, TEMP_HomeReportDataFilterViewModel data)
+        {
+            using (ExcelPackage package = new ExcelPackage(newFile, templateFile))
+            {
+                ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
+
+                int lastRow = worksheet.Dimension.End.Row;
+                int dataStartRow = worksheet.Dimension.End.Row + 1;
+                int dataEndRow = 0;
+
+                worksheet.Cells["B6"].Value = data.HomeReportFilter.Month + " - " + data.HomeReportFilter.Year;
+
+                foreach (var i in data.HomeReportOutputCSB)
+                {
+                    lastRow += 1;
+                    worksheet.Cells["A" + lastRow].Value = i.CSB_Date;
+                    worksheet.Cells["A" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["B" + lastRow].Value = i.CSB_Debit;
+                    worksheet.Cells["B" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["C" + lastRow].Value = i.CSB_Credit;
+                    worksheet.Cells["C" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["D" + lastRow].Value = i.CSB_Remarks;
+                    worksheet.Cells["D" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["E" + lastRow].Value = i.CSB_Ref_No;
+                    worksheet.Cells["E" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["F" + lastRow].Value = i.CSB_Balance;
+                    worksheet.Cells["F" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
                 }
                 dataEndRow = lastRow;
                 package.Save();

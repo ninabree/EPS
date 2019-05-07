@@ -46,15 +46,18 @@ namespace ExpenseProcessingSystem.ViewModels
 
     public class EntryCVViewModelList
     {
+        public int entryID { get; set; }
         public SysValViewModel systemValues { get; set; }
         public DateTime expenseDate { get; set; }
         public int vendor { get; set; }
         public string expenseYear { get; set; }
         public string expenseId { get; set; }
-        public int checkNo { get; set; }
+        public string checkNo { get; set; }
         public string status { get; set; }
         public string approver { get; set; }
-        public string verifier { get; set; }
+        public string verifier_1 { get; set; }
+        public string verifier_2 { get; set; }
+        public int maker { get; set; }
         public List<EntryCVViewModel> EntryCV { get; set; }
 
         public EntryCVViewModelList()

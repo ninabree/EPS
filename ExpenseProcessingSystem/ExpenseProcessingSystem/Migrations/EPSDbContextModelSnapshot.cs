@@ -606,6 +606,8 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<float>("ExpDtl_Vat");
 
+                    b.Property<bool>("ExpDtl_isEwt");
+
                     b.Property<int?>("ExpenseEntryModelExpense_ID");
 
                     b.HasKey("ExpDtl_ID");
@@ -668,7 +670,9 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("Expense_Status");
 
-                    b.Property<int>("Expense_Verifier");
+                    b.Property<int>("Expense_Verifier_1");
+
+                    b.Property<int>("Expense_Verifier_2");
 
                     b.Property<bool>("Expense_isDeleted");
 
@@ -1006,21 +1010,21 @@ namespace ExpenseProcessingSystem.Migrations
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryAmortizationModel", b =>
                 {
-                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel")
+                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel", "ExpenseEntryDetailModel")
                         .WithMany("ExpenseEntryAmortizations")
                         .HasForeignKey("ExpenseEntryDetailModelExpDtl_ID");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel", b =>
                 {
-                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryModel")
+                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryModel", "ExpenseEntryModel")
                         .WithMany("ExpenseEntryDetails")
                         .HasForeignKey("ExpenseEntryModelExpense_ID");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryGbaseDtl", b =>
                 {
-                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel")
+                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel", "ExpenseEntryDetailModel")
                         .WithMany("ExpenseEntryGbaseDtls")
                         .HasForeignKey("ExpenseEntryDetailModelExpDtl_ID");
                 });

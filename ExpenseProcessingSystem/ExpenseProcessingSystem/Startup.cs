@@ -78,7 +78,7 @@ namespace ExpenseProcessingSystem
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddHttpContextAccessor();
             services.AddDistributedMemoryCache();
-
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             //Add DB context.
             services.AddDbContext<EPSDbContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));

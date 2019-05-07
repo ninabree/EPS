@@ -29,8 +29,28 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             IQueryable<DMVendorModel> mList = _context.DMVendor.Where(x=>x.Vendor_isDeleted == false && x.Vendor_isActive == true).ToList().AsQueryable();
             var properties = filters.PF.GetType().GetProperties();
 
+            var pendingList = _context.DMVendor_Pending.ToList();
+            foreach (var m in pendingList)
+            {
+                mList = mList.Concat(new DMVendorModel[] {
+                    new DMVendorModel
+                    {
+                       // Vendor_ID = m.Pending_Vendor_MasterID,
+                        Vendor_MasterID = m.Pending_Vendor_MasterID,
+                        Vendor_Name = m.Pending_Vendor_Name,
+                        Vendor_TIN = m.Pending_Vendor_TIN,
+                        Vendor_Address = m.Pending_Vendor_Address,
+                        Vendor_Creator_ID = m.Pending_Vendor_Creator_ID,
+                        Vendor_Approver_ID = m.Pending_Vendor_Approver_ID.Equals(null) ? 0 : m.Pending_Vendor_Approver_ID,
+                        Vendor_Created_Date = m.Pending_Vendor_Filed_Date,
+                        Vendor_Last_Updated = m.Pending_Vendor_Filed_Date,
+                        Vendor_Status = m.Pending_Vendor_Status
+                    }
+                });
+            }
+
             //FILTER
-            foreach(var property in properties)
+            foreach (var property in properties)
             {
                 var propertyName = property.Name;
                 string[] split = propertyName.Split("_");
@@ -69,25 +89,6 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         }
                     }
                 }
-            }
-            var pendingList = _context.DMVendor_Pending.ToList();
-            foreach (var m in pendingList)
-            {
-                mList = mList.Concat(new DMVendorModel[] {
-                    new DMVendorModel
-                    {
-                       // Vendor_ID = m.Pending_Vendor_MasterID,
-                        Vendor_MasterID = m.Pending_Vendor_MasterID,
-                        Vendor_Name = m.Pending_Vendor_Name,
-                        Vendor_TIN = m.Pending_Vendor_TIN,
-                        Vendor_Address = m.Pending_Vendor_Address,
-                        Vendor_Creator_ID = m.Pending_Vendor_Creator_ID,
-                        Vendor_Approver_ID = m.Pending_Vendor_Approver_ID.Equals(null) ? 0 : m.Pending_Vendor_Approver_ID,
-                        Vendor_Created_Date = m.Pending_Vendor_Filed_Date,
-                        Vendor_Last_Updated = m.Pending_Vendor_Filed_Date,
-                        Vendor_Status = m.Pending_Vendor_Status
-                    }
-                });
             }
 
             var creatorList = (from a in mList

@@ -20,8 +20,11 @@ namespace ExpenseProcessingSystem.ConstantData
         //Alphalist of Suppliers by top 10000 corporation (Semestral)
         public const string AST1000_S = "3";
 
-        //Alphalist of Payees Subject to Withholding Tax (Monthly)
+        //Alphalist of Payees Subject to Withholding Tax Summary
         public const string WTS = "10";
+
+        //Alphalist of Payees Subject to GA Computer Suspense Balance
+        public const string CSB = "13";
 
         //EXCEL, PDF, Preview format ID
         public const string EXCELID = "1";
