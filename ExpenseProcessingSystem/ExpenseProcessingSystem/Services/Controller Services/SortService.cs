@@ -8,70 +8,80 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
 {
     public class SortService
     {
-        public SortViewModel SortData(List<BMViewModel> list, string sortOrder)
+        public SortViewModel SortData(IEnumerable<BMViewModel> list, string sortOrder)
         {
             var tempList = list.AsQueryable();
             var viewData = "";
             var vdInfo = "";
             switch (sortOrder)
             {
-                case "acc_desc":
-                    tempList = tempList.OrderByDescending(s => s.BM_Account);
+                case "acc_code":
+                    tempList = tempList.OrderByDescending(s => s.BM_Acc_Code);
                     viewData = "glyph-1";
                     vdInfo = "glyphicon-menu-up";
                     break;
-                case "type":
-                    tempList = tempList.OrderBy(s => s.BM_Type);
+                case "acc_group":
+                    tempList = tempList.OrderBy(s => s.BM_Acc_Group);
                     viewData = "glyph-2";
                     vdInfo = "glyphicon-menu-down";
                     break;
-                case "type_desc":
-                    tempList = tempList.OrderByDescending(s => s.BM_Type);
+                case "acc_group_desc":
+                    tempList = tempList.OrderByDescending(s => s.BM_Acc_Group);
                     viewData = "glyph-2";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "gbase_acc":
+                    tempList = tempList.OrderBy(s => s.BM_Acc_GBase);
+                    viewData = "glyph-3";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "gbase_acc_desc":
+                    tempList = tempList.OrderByDescending(s => s.BM_Acc_GBase);
+                    viewData = "glyph-3";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "budget":
-                    tempList = tempList.OrderBy(s => s.BM_Budget);
-                    viewData = "glyph-3";
+                    tempList = tempList.OrderBy(s => s.BM_Budget_Amount);
+                    viewData = "glyph-4";
                     vdInfo = "glyphicon-menu-down";
                     break;
                 case "budget_desc":
-                    tempList = tempList.OrderByDescending(s => s.BM_Budget);
-                    viewData = "glyph-3";
+                    tempList = tempList.OrderByDescending(s => s.BM_Budget_Amount);
+                    viewData = "glyph-4";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "curr_budget":
-                    tempList = tempList.OrderBy(s => s.BM_Curr_Budget);
-                    viewData = "glyph-4";
+                    tempList = tempList.OrderBy(s => s.BM_Budget_Current);
+                    viewData = "glyph-5";
                     vdInfo = "glyphicon-menu-down";
                     break;
                 case "curr_budget_desc":
-                    tempList = tempList.OrderByDescending(s => s.BM_Curr_Budget);
-                    viewData = "glyph-4";
-                    vdInfo = "glyphicon-menu-up";
-                    break;
-                case "last_trans_date":
-                    tempList = tempList.OrderBy(s => s.BM_Last_Trans_Date);
-                    viewData = "glyph-5";
-                    vdInfo = "glyphicon-menu-down";
-                    break;
-                case "last_trans_date_desc":
-                    tempList = tempList.OrderByDescending(s => s.BM_Last_Trans_Date);
+                    tempList = tempList.OrderByDescending(s => s.BM_Budget_Current);
                     viewData = "glyph-5";
                     vdInfo = "glyphicon-menu-up";
                     break;
-                case "last_budget_apprvl":
-                    tempList = tempList.OrderBy(s => s.BM_Last_Budget_Approval);
+                case "approval_id":
+                    tempList = tempList.OrderBy(s => s.BM_Budget_Approver_ID);
                     viewData = "glyph-6";
                     vdInfo = "glyphicon-menu-down";
                     break;
-                case "last_budget_apprvl_desc":
-                    tempList = tempList.OrderByDescending(s => s.BM_Last_Budget_Approval);
+                case "approval_id_desc":
+                    tempList = tempList.OrderByDescending(s => s.BM_Budget_Approver_ID);
                     viewData = "glyph-6";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "last_budget_approval":
+                    tempList = tempList.OrderBy(s => s.BM_Last_Budget_Approved);
+                    viewData = "glyph-7";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "last_budget_approval_desc":
+                    tempList = tempList.OrderByDescending(s => s.BM_Last_Budget_Approved);
+                    viewData = "glyph-7";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 default:
-                    tempList = tempList.OrderBy(s => s.BM_Account);
+                    tempList = tempList.OrderBy(s => s.BM_Acc_Code);
                     viewData = "glyph-1";
                     vdInfo = "glyphicon-menu-down";
                     break;

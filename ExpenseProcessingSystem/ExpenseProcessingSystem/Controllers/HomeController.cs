@@ -295,7 +295,11 @@ namespace ExpenseProcessingSystem.Controllers
         //[* REPORT *]
         public IActionResult Report()
         {
-            Debug.WriteLine("Try");
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
             //Get list of report types from the constant data file:HomeReportTypesModel.cs
             //uses in Dropdownlist(Report Type)
             IEnumerable<HomeReportTypesModel> ReportTypes = ConstantData.HomeReportConstantValue.GetReportTypeData();
@@ -468,6 +472,8 @@ namespace ExpenseProcessingSystem.Controllers
         //[* REPORT *]
         //------------------------------------------------------------------
 
+        //------------------------------------------------------------------
+        //[* BUDGET MONITORING *]
         [ImportModelState]
         public IActionResult BM(string sortOrder, string currentFilter, string searchString, int? page)
         {
@@ -479,12 +485,13 @@ namespace ExpenseProcessingSystem.Controllers
 
             //set sort vals
             ViewData["CurrentSort"] = sortOrder;
-            ViewData["AccountSortParm"] = String.IsNullOrEmpty(sortOrder) ? "acc_desc" : "";
-            ViewData["TypeSortParm"] = sortOrder == "type_desc" ? "type" : "type_desc";
+            ViewData["AccountCodeSortParm"] = String.IsNullOrEmpty(sortOrder) ? "acc_code" : "";
+            ViewData["AccountGroupSortParm"] = sortOrder == "acc_group_desc" ? "acc_group" : "acc_group_desc";
+            ViewData["GBaseAccountCodeSortParm"] = sortOrder == "gbase_acc_desc" ? "gbase_acc" : "gbase_acc_desc";
             ViewData["BudgetSortParm"] = sortOrder == "budget_desc" ? "budget" : "budget_desc";
-            ViewData["CurrBudgetSortParm"] = sortOrder == "curr_budget_desc" ? "curr_budget" : "curr_budget_desc";
-            ViewData["LastTransDateSortParm"] = sortOrder == "last_trans_date_desc" ? "last_trans_date" : "last_trans_date_desc";
-            ViewData["LastBudgetApprvlSortParm"] = sortOrder == "last_budget_apprvl_desc" ? "last_budget_apprvl" : "last_budget_apprvl_desc";
+            ViewData["CurrentBudgetSortParm"] = sortOrder == "curr_budget_desc" ? "curr_budget" : "curr_budget_desc";
+            ViewData["ApproverIDSortParm"] = sortOrder == "approval_id_desc" ? "approval_id" : "approval_id_desc";
+            ViewData["LastBudgetApprovalSortParm"] = sortOrder == "last_budget_approval_desc" ? "last_budget_approval" : "last_budget_approval_desc";
 
             if (searchString != null)
             {
@@ -497,13 +504,17 @@ namespace ExpenseProcessingSystem.Controllers
             ViewData["CurrentFilter"] = searchString;
 
             //populate and sort
-            var sortedVals = _sortService.SortData(PopulateBM(), sortOrder);
+            var sortedVals = _sortService.SortData(_service.PopulateBM(), sortOrder);
             ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
 
             //pagination
             return View(PaginatedList<BMViewModel>.CreateAsync(
                 (sortedVals.list).Cast<BMViewModel>().AsQueryable().AsNoTracking(), page ?? 1, pageSize));
         }
+
+        //[* BUDGET MONITORING *]
+        //------------------------------------------------------------------
+
         [ImportModelState]
         public IActionResult UM(string sortOrder, string currentFilter, string searchString, int? page)
         {
@@ -1574,28 +1585,7 @@ namespace ExpenseProcessingSystem.Controllers
         }
 
         //[* MISC *]
-        public List<BMViewModel> PopulateBM()
-        {
-            List<BMViewModel> bmvmList = new List<BMViewModel>();
-            for (var i = 1; i <= 40; i++)
-            {
-                BMViewModel bmvm = new BMViewModel
-                {
-                    BM_Id = i,
-                    BM_Creator_ID = i + 100,
-                    BM_Approver_ID = i + 200,
-                    BM_Account = "Account_" + i,
-                    BM_Type = "Sample_Type_" + i,
-                    BM_Budget = i + 100,
-                    BM_Curr_Budget = i + 110,
-                    BM_Last_Trans_Date = DateTime.Parse("1/12/2017", CultureInfo.GetCultureInfo("en-GB"))
-                            .Add(DateTime.Now.TimeOfDay),
-                    BM_Last_Budget_Approval = "Sample"
-                };
-                bmvmList.Add(bmvm);
-            }
-            return bmvmList;
-        }
+
         //public void addNCC()
         //{
         //    FileService fs = new FileService();
