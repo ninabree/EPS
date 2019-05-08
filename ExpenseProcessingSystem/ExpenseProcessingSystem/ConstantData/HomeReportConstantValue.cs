@@ -16,22 +16,22 @@ namespace ExpenseProcessingSystem.ConstantData
 
         public static readonly string DateToday = DateTime.Today.ToLongDateString();
         //Alphalist of Payees Subject to Withholding Tax (Monthly)
-        public const string APSWT_M = "2";
+        public const int APSWT_M = 2;
 
         //Alphalist of Suppliers by top 10000 corporation (Semestral)
-        public const string AST1000_S = "3";
+        public const int AST1000_S = 3;
 
         //Alphalist of Payees Subject to Withholding Tax Summary
-        public const string WTS = "10";
+        public const int WTS = 10;
 
         //EXCEL, PDF, Preview format ID
-        public const string EXCELID = "1";
-        public const string PDFID = "2";
-        public const string PreviewID = "3";
+        public const int EXCELID = 1;
+        public const int PDFID = 2;
+        public const int PreviewID = 3;
 
         //Semester value
-        public const string SEM1 = "1";
-        public const string SEM2 = "2";
+        public const int SEM1 = 1;
+        public const int SEM2 = 2;
 
         //PDF Format name
         public const string ReportLayoutFormatName = "_ReportLayout_";
@@ -1282,13 +1282,13 @@ namespace ExpenseProcessingSystem.ConstantData
     //Public classes
     public class MonthList
     {
-        public byte MonthID { get; set; }
+        public int MonthID { get; set; }
         public string MonthName { get; set; }
     }
 
     public class FileFormatList
     {
-        public byte FileFormatID { get; set; }
+        public int FileFormatID { get; set; }
         public string FileFormatName { get; set; }
     }
 
@@ -1299,13 +1299,13 @@ namespace ExpenseProcessingSystem.ConstantData
 
     public class SemesterList
     {
-        public byte SemID { get; set; }
+        public int SemID { get; set; }
         public string SemName { get; set; }
     }
 
     public class PeriodOption
     {
-        public byte PeriodOptionID { get; set; }
+        public int PeriodOptionID { get; set; }
     }
 
 }

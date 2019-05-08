@@ -47,7 +47,7 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 int dataStartRow = worksheet.Dimension.End.Row + 1;
                 int dataEndRow = 0;
 
-                worksheet.Cells["C5"].Value = data.HomeReportFilter.Month + " - " + data.HomeReportFilter.Year;
+                worksheet.Cells["C5"].Value = data.HomeReportFilter.MonthName + " - " + data.HomeReportFilter.Year;
 
                 foreach (var i in data.HomeReportOutputAPSWT_M)
                 {
@@ -137,8 +137,20 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 int lastRow = worksheet.Dimension.End.Row;
                 int dataStartRow = worksheet.Dimension.End.Row + 1;
                 int dataEndRow = 0;
-
-                worksheet.Cells["J2"].Value = data.HomeReportFilter.Month + " - " + data.HomeReportFilter.Year;
+                var cellVal = "";
+                switch (data.HomeReportFilter.PeriodOption)
+                {
+                    case 1:
+                        cellVal = data.HomeReportFilter.MonthName + " - " + data.HomeReportFilter.Year;
+                        break;
+                    case 2:
+                        cellVal = data.HomeReportFilter.SemesterName + " - " + data.HomeReportFilter.YearSem;
+                        break;
+                    case 3:
+                        cellVal = data.HomeReportFilter.PeriodFrom + " - " + data.HomeReportFilter.PeriodTo;
+                        break;
+                }
+                worksheet.Cells["J2"].Value = cellVal;
 
                 foreach (var i in data.HomeReportOutputWTS)
                 {
