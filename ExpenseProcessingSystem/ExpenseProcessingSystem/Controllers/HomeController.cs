@@ -328,8 +328,6 @@ namespace ExpenseProcessingSystem.Controllers
                 PeriodTo = Convert.ToDateTime(ConstantData.HomeReportConstantValue.DateToday)
             };
 
-            Debug.WriteLine("DEBUG:++++" + DateTime.Today.Month);
-
             //Return ViewModel
             return View(reportViewModel);
         }
@@ -368,7 +366,7 @@ namespace ExpenseProcessingSystem.Controllers
                     layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
                     pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter1;
 
-                    model.Month = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID.ToString() == model.Month).Single().MonthName;
+                    model.MonthName = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName;
 
                     //Get the necessary data from Database
                     data = new TEMP_HomeReportDataFilterViewModel
@@ -399,75 +397,31 @@ namespace ExpenseProcessingSystem.Controllers
                     //Get the necessary data from Database
                     switch (model.PeriodOption)
                     {
-                        case "1":
+                        case 1:
                             data = new TEMP_HomeReportDataFilterViewModel
                             {
                                 HomeReportOutputWTS = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Month(model.Year, model.Month,
                                     ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType),
                                 HomeReportFilter = model
                             };
-                            model.Month = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID.ToString() == model.Month).Single().MonthName;
+                            model.MonthName = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName;
                             break;
-                        case "2":
+                        case 2:
                             data = new TEMP_HomeReportDataFilterViewModel
                             {
                                 HomeReportOutputWTS = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Semester(model.YearSem, model.Semester,
                                     ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType),
                                 HomeReportFilter = model
                             };
-                            model.Month = ConstantData.HomeReportConstantValue.GetSemesterList().Where(c => c.SemID.ToString() == model.Semester).Single().SemName;
-                            model.Year = model.YearSem;
+                            model.SemesterName = ConstantData.HomeReportConstantValue.GetSemesterList().Where(c => c.SemID == model.Semester).Single().SemName;
                             break;
-                        case "3":
+                        case 3:
                             data = new TEMP_HomeReportDataFilterViewModel
                             {
                                 HomeReportOutputWTS = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Period(model.PeriodFrom, model.PeriodTo,
                                     ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType),
                                 HomeReportFilter = model
                             };
-
-                            model.Month = model.PeriodFrom.ToShortDateString();
-                            model.Year = model.PeriodTo.ToShortDateString();
-                            break;
-                    }
-                    break;
-                case ConstantData.HomeReportConstantValue.CSB:
-                    fileName = "GA_Computer_Suspense_Balance_Report_" + dateNow;
-                    layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
-                    pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter2;
-                    data = new TEMP_HomeReportDataFilterViewModel();
-                    //Get the necessary data from Database
-                    switch (model.PeriodOption)
-                    {
-                        case "1":
-                            data = new TEMP_HomeReportDataFilterViewModel
-                            {
-                                HomeReportOutputCSB = ConstantData.TEMP_HomeReportCSBDummyData.GetTEMP_HomeReportCSBOutputModelData_Month(model.Year, model.Month,
-                                    ConstantData.TEMP_HomeReportCSBDummyData.GetTEMP_HomeReportCSBOutputModelData().CSBList, model.ReportSubType),
-                                HomeReportFilter = model
-                            };
-                            model.Month = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID.ToString() == model.Month).Single().MonthName;
-                            break;
-                        case "2":
-                            data = new TEMP_HomeReportDataFilterViewModel
-                            {
-                                HomeReportOutputCSB = ConstantData.TEMP_HomeReportCSBDummyData.GetTEMP_HomeReportCSBOutputModelData_Semester(model.YearSem, model.Semester,
-                                    ConstantData.TEMP_HomeReportCSBDummyData.GetTEMP_HomeReportCSBOutputModelData().CSBList, model.ReportSubType),
-                                HomeReportFilter = model
-                            };
-                            model.Month = ConstantData.HomeReportConstantValue.GetSemesterList().Where(c => c.SemID.ToString() == model.Semester).Single().SemName;
-                            model.Year = model.YearSem;
-                            break;
-                        case "3":
-                            data = new TEMP_HomeReportDataFilterViewModel
-                            {
-                                HomeReportOutputCSB = ConstantData.TEMP_HomeReportCSBDummyData.GetTEMP_HomeReportCSBOutputModelData_Period(model.PeriodFrom, model.PeriodTo,
-                                    ConstantData.TEMP_HomeReportCSBDummyData.GetTEMP_HomeReportCSBOutputModelData().CSBList, model.ReportSubType),
-                                HomeReportFilter = model
-                            };
-
-                            model.Month = model.PeriodFrom.ToShortDateString();
-                            model.Year = model.PeriodTo.ToShortDateString();
                             break;
                     }
                     break;
@@ -1690,32 +1644,21 @@ namespace ExpenseProcessingSystem.Controllers
         {
             List<String> errors = new List<String>();
 
-            if (!string.IsNullOrEmpty(model.ReportType))
+            if (model.ReportType==0)
             {
                 switch (model.PeriodOption)
                 {
-                    case "1":
-                        if (string.IsNullOrEmpty(model.Year))
-                        {
-                            errors.Add("Year input is required");
-                        }
-                        if (string.IsNullOrEmpty(model.Month))
-                        {
-                            errors.Add("Month input is required");
-                        }
+                    case 1:
+
                         break;
 
-                    case "2":
-                        if (string.IsNullOrEmpty(model.YearSem))
-                        {
-                            errors.Add("Semestral Year input is required");
-                        }
-                        if (string.IsNullOrEmpty(model.Semester))
+                    case 2:
+                        if (model.Semester == 0)
                         {
                             errors.Add("Semester input is required");
                         }
                         break;
-                    case "3":
+                    case 3:
                         if (model.PeriodFrom == DateTime.MinValue)
                         {
                             errors.Add("Period From input is required");

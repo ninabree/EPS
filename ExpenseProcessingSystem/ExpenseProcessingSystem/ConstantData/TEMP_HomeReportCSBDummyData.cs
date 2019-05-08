@@ -42,23 +42,23 @@ namespace ExpenseProcessingSystem.ConstantData
             vmList.CSBList = list;
             return vmList;
         }
-        public static List<Temp_RepCSBViewModel> GetTEMP_HomeReportCSBOutputModelData_Month(string _year, string _month, List<Temp_RepCSBViewModel> data, string _subType)
+        public static List<Temp_RepCSBViewModel> GetTEMP_HomeReportCSBOutputModelData_Month(int _year, int _month, List<Temp_RepCSBViewModel> data, int _subType)
         {
             return data.Where(x => x.CSB_Date >= new DateTime(Convert.ToInt32(_year), Convert.ToInt32(_month), 1)
                                 && x.CSB_Date <= new DateTime(Convert.ToInt32(_year), Convert.ToInt32(_month), 30)).ToList();
         }
-        public static List<Temp_RepCSBViewModel> GetTEMP_HomeReportCSBOutputModelData_Semester(string _year, string _sem, List<Temp_RepCSBViewModel> data, string _subType)
+        public static List<Temp_RepCSBViewModel> GetTEMP_HomeReportCSBOutputModelData_Semester(int _year, int _sem, List<Temp_RepCSBViewModel> data, int _subType)
         {
             DateTime periodFrom = new DateTime();
             DateTime periodTo = new DateTime();
             CultureInfo ci = CultureInfo.InvariantCulture;
             switch (_sem)
             {
-                case "1":
+                case 1:
                     periodFrom = DateTime.ParseExact("01/01/" + _year, "MM/dd/yyyy", ci);
                     periodTo = DateTime.ParseExact("06/01/" + _year, "MM/dd/yyyy", ci);
                     break;
-                case "2":
+                case 2:
                     periodFrom = DateTime.ParseExact("07/01/" + _year, "MM/dd/yyyy", ci);
                     periodTo = DateTime.ParseExact("12/01/" + _year, "MM/dd/yyyy", ci);
                     break;
@@ -66,7 +66,7 @@ namespace ExpenseProcessingSystem.ConstantData
             return data.Where(x => x.CSB_Date >= periodFrom
                                 && x.CSB_Date <= periodTo).ToList();
         }
-        public static List<Temp_RepCSBViewModel> GetTEMP_HomeReportCSBOutputModelData_Period(DateTime _periodFrom, DateTime _periodTo, List<Temp_RepCSBViewModel> data, string _subType)
+        public static List<Temp_RepCSBViewModel> GetTEMP_HomeReportCSBOutputModelData_Period(DateTime _periodFrom, DateTime _periodTo, List<Temp_RepCSBViewModel> data, int _subType)
         {
             return data.Where(x => x.CSB_Date >= _periodFrom
                                 && x.CSB_Date <= _periodTo).ToList();

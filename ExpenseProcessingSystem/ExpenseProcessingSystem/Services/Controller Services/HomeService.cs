@@ -2151,8 +2151,8 @@ namespace ExpenseProcessingSystem.Services
                     BM_Last_Budget_Approved = i.Budget_Last_Approval_Date,
                     BM_Budget_isDeleted = i.Budget_isDeleted,
                     BM_Acc_Code = i.Account_Code,
-                    BM_Acc_Group = i.Account_Name,
-                    BM_Acc_GBase = "N/A"
+                    BM_Acc_Group = "N/A",
+                    BM_Acc_GBase = i.Account_Name
                 });
             };
 
