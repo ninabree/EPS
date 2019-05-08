@@ -18,11 +18,6 @@ namespace ExpenseProcessingSystem.Services.Validations
                 var name = validationContext.DisplayName;
                 if (!string.IsNullOrEmpty(data.ReportType))
                 {
-                    //var isSubTypeRequired = data.ReportSubTypesList.Where(x => x.ParentTypeId.Equals(data.ReportType)).Count() > 0;
-                    //if (!string.IsNullOrEmpty(data.ReportSubType) && data.isSubRequired)
-                    //{
-                    //    return new ValidationResult("Report Sub-Type is required");
-                    //}
                     switch (data.PeriodOption)
                     {
                         case "1":

@@ -293,7 +293,7 @@ namespace ExpenseProcessingSystem.Controllers
 
         //------------------------------------------------------------------
         //[* REPORT *]
-        //[ImportModelState]
+        [ImportModelState]
         public IActionResult Report()
         {
             //Get list of report types from the constant data file:HomeReportTypesModel.cs
@@ -338,14 +338,15 @@ namespace ExpenseProcessingSystem.Controllers
             return null;
         }
 
-        //[ExportModelState]
+        [ExportModelState]
         public IActionResult GenerateFilePreview(HomeReportViewModel model)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return View("Report",model);
-            //    //return RedirectToAction("Index", "Error");
-            //}
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("ErrorPage", model);
+                //return View("ErrorPage", model);
+                //return RedirectToAction("Report", model); //working
+            }
             string layoutName = "";
             string fileName = "";
             string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmss");
@@ -419,46 +420,6 @@ namespace ExpenseProcessingSystem.Controllers
                             {
                                 HomeReportOutputWTS = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Period(model.PeriodFrom, model.PeriodTo,
                                     ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType),
-                                HomeReportFilter = model
-                            };
-
-                            model.Month = model.PeriodFrom.ToShortDateString();
-                            model.Year = model.PeriodTo.ToShortDateString();
-                            break;
-                    }
-                    break;
-                case ConstantData.HomeReportConstantValue.CSB:
-                    fileName = "GA_Computer_Suspense_Balance_Report_" + dateNow;
-                    layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
-                    pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter2;
-                    data = new TEMP_HomeReportDataFilterViewModel();
-                    //Get the necessary data from Database
-                    switch (model.PeriodOption)
-                    {
-                        case "1":
-                            data = new TEMP_HomeReportDataFilterViewModel
-                            {
-                                HomeReportOutputCSB = ConstantData.TEMP_HomeReportCSBDummyData.GetTEMP_HomeReportCSBOutputModelData_Month(model.Year, model.Month,
-                                    ConstantData.TEMP_HomeReportCSBDummyData.GetTEMP_HomeReportCSBOutputModelData().CSBList, model.ReportSubType),
-                                HomeReportFilter = model
-                            };
-                            model.Month = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID.ToString() == model.Month).Single().MonthName;
-                            break;
-                        case "2":
-                            data = new TEMP_HomeReportDataFilterViewModel
-                            {
-                                HomeReportOutputCSB = ConstantData.TEMP_HomeReportCSBDummyData.GetTEMP_HomeReportCSBOutputModelData_Semester(model.YearSem, model.Semester,
-                                    ConstantData.TEMP_HomeReportCSBDummyData.GetTEMP_HomeReportCSBOutputModelData().CSBList, model.ReportSubType),
-                                HomeReportFilter = model
-                            };
-                            model.Month = ConstantData.HomeReportConstantValue.GetSemesterList().Where(c => c.SemID.ToString() == model.Semester).Single().SemName;
-                            model.Year = model.YearSem;
-                            break;
-                        case "3":
-                            data = new TEMP_HomeReportDataFilterViewModel
-                            {
-                                HomeReportOutputCSB = ConstantData.TEMP_HomeReportCSBDummyData.GetTEMP_HomeReportCSBOutputModelData_Period(model.PeriodFrom, model.PeriodTo,
-                                    ConstantData.TEMP_HomeReportCSBDummyData.GetTEMP_HomeReportCSBOutputModelData().CSBList, model.ReportSubType),
                                 HomeReportFilter = model
                             };
 
@@ -628,7 +589,7 @@ namespace ExpenseProcessingSystem.Controllers
 
             viewModel.expenseYear = DateTime.Today.Year.ToString();
             viewModel.expenseDate = DateTime.Today;
-            viewModel.vendor = 2;
+            //viewModel.vendor = 2;
             viewModel.EntryCV.Add(new EntryCVViewModel());
             return View(viewModel);
         }

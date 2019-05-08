@@ -162,6 +162,8 @@
 					+ "&PeriodTo=" + $('#PeriodTo').val();
 
             });
+
+            //enable disable fields when radio button value is changed
             $(".radioPeriodOption").change(function (e) {
                 // set fields
                 var radioPeriod1 = $('#radioPeriodOption1');
@@ -215,7 +217,60 @@
 
 		$(document).ready(function () {
 			$("#btnGeneratePreview").click(function (e) {
-				e.preventDefault();
+                e.preventDefault();
+                //var myData = {
+                //    ReportType: $('#ddlReportType').val(),
+                //    ReportSubType: $('#ddlSubType').val(),
+                //    FileFormat: "3",
+                //    Year: $('#ddlYear').val(),
+                //    Month: $('#ddlMonth').val(),
+                //    YearSem: $('#ddlYearSem').val(),
+                //    Semester: $('.radioSemester:checked').val()
+                //}
+                //$.ajax({
+                //    url: '/Home/ReportRedirect',
+                //    type: "POST",
+                //    dataType: 'json',
+                //    contentType: 'application/json',
+                //    async: false,
+                //    processData: false,
+                //    cache: false,
+                //    data: myData,
+                //    success: function (data) {
+                //        alert(data);
+                //        //if (data) {
+                //        //    $('#iframePreview').prop('src', "/Home/GenerateFilePreview?ReportType=" + $('#ddlReportType').val()
+                //        //        + "&ReportSubType=" + $('#ddlSubType').val()
+                //        //        + "&FileFormat=3"
+                //        //        + "&Year=" + $('#ddlYear').val()
+                //        //        + "&Month=" + $('#ddlMonth').val()
+                //        //        + "&YearSem=" + $('#ddlYearSem').val()
+                //        //        + "&Semester=" + $('.radioSemester:checked').val()
+                //        //        + "&PeriodOption=" + $('.radioPeriodOption:checked').val()
+                //        //        + "&PeriodFrom=" + $('#PeriodFrom').val()
+                //        //        + "&PeriodTo=" + $('#PeriodTo').val());
+                //        //}
+                //    },
+                //    error: function (xhr) {
+                //        location.reload();
+                //    }
+                //});
+                //$.post("/Home/GenerateFilePreview", {
+                   
+                //}, function (data) {
+                //    alert("Data Loaded: " + data);
+                //    $('#iframePreview').prop(data);
+                //}).done(function () {
+                //    alert("second success");
+                //})
+                //.fail(function (e) {
+                //    //alert(e);
+                //    location.reload();
+                //})
+                //.always(function () {
+                //    alert("finished");
+                //});
+
 				$('#iframePreview').prop('src', "/Home/GenerateFilePreview?ReportType=" + $('#ddlReportType').val()
 					+ "&ReportSubType=" + $('#ddlSubType').val()
 					+ "&FileFormat=3"
@@ -256,14 +311,14 @@
 			<tr>
 				<td></td>
 				<td>@Html.LabelFor(m => m.ReportTypesList)</td>
-				<td colspan="2">
-					@Html.DropDownListFor(m => m.ReportTypesList, new SelectList(Model.ReportTypesList, "Id", "TypeName"), "----Select Report Type----", new { @class = "dis-inline-block", id = "ddlReportType" })
+				<td colspan="3">
+					@Html.DropDownListFor(m => m.ReportTypesList, new SelectList(Model.ReportTypesList, "Id", "TypeName"), "----Select Report Type----", new { @class = "dis-inline-block w-full", id = "ddlReportType" })
 				</td>
+                <td></td>
 				<td>@Html.LabelFor(m => m.ReportSubTypesList)</td>
-				<td colspan="2">
-					@Html.DropDownListFor(m => m.ReportTypesList, new SelectList(Model.ReportSubTypesList, "Id", "SubTypeName"), "----Select Report Sub-Type----", new { @class = "dis-inline-block", id = "ddlSubType", disabled = "disabled" })
+				<td colspan="3">
+					@Html.DropDownListFor(m => m.ReportTypesList, new SelectList(Model.ReportSubTypesList, "Id", "SubTypeName"), "----Select Report Sub-Type----", new { @class = "dis-inline-block w-half", id = "ddlSubType", disabled = "disabled" })
 				</td>
-				<td colspan="4"></td>
 			</tr>
 			<tr>
 				<td colspan="10"></td>
