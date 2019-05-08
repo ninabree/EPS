@@ -13,5 +13,13 @@ namespace ExpenseProcessingSystem.Models
         public int AccountGroup_ID { get; set; }
         public int AccountGroup_MasterID { get; set; }
         public string AccountGroup_Name { get; set; }
+        public string AccountGroup_Code { get; set; }
+        public int AccountGroup_Creator_ID { get; set; }
+        public int AccountGroup_Approver_ID { get; set; }
+        public DateTime AccountGroup_Created_Date { get; set; }
+        public DateTime AccountGroup_Last_Updated { get; set; }
+        public string AccountGroup_Status { get; set; }
+        public bool AccountGroup_isDeleted { get; set; }
+        public bool AccountGroup_isActive { get; set; }
     }
 }

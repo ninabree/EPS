@@ -18,5 +18,6 @@ namespace ExpenseProcessingSystem.ViewModels.Search_Filters
         public EmpFiltersViewModel EMF { get; set; }
         public CustFiltersViewModel CUF { get; set; }
         public BCSFiltersViewModel BF { get; set; }
+        //public BCSFiltersViewModel BF { get; set; }
     }
 }
