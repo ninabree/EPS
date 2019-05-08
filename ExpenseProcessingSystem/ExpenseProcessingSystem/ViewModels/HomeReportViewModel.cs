@@ -34,8 +34,10 @@ namespace ExpenseProcessingSystem.ViewModels
 
         public IEnumerable<PeriodOption> PeriodOptionList { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime PeriodFrom { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime PeriodTo { get; set; }
 
         public string CheckNo { get; set; }
@@ -57,5 +59,8 @@ namespace ExpenseProcessingSystem.ViewModels
         public string Semester { get; set; }
 
         public string PeriodOption { get; set; }
+
+        public int CurrentMonth { get { return DateTime.Today.Month; } }
+
     }
 }

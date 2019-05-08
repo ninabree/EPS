@@ -14,6 +14,7 @@ namespace ExpenseProcessingSystem.ConstantData
 
         public const int SystemYearStarted = 2000;
 
+        public static readonly string DateToday = DateTime.Today.ToLongDateString();
         //Alphalist of Payees Subject to Withholding Tax (Monthly)
         public const string APSWT_M = "2";
 

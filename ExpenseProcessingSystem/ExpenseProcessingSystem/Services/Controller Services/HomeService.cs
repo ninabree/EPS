@@ -2112,29 +2112,55 @@ namespace ExpenseProcessingSystem.Services
             return true;
         }
 
-        //MISC
+        // [Budget Monitoring]
         public List<BMViewModel> PopulateBM()
         {
             List<BMViewModel> bmvmList = new List<BMViewModel>();
-            for (var i = 1; i <= 40; i++)
+            //var dbBudget = _context.Budget.ToList();
+            var dbBudget = (from a in _context.Budget
+                            join b in _context.DMAccount on a.Acc_ID equals b.Account_No
+                            join c in _context.User on a.Budget_Approver_ID equals c.User_UserName
+                            where b.Account_isActive == true && b.Account_isDeleted == false &&
+                            c.User_InUse == true
+                            select new
+                            {
+                                a.Budget_ID,
+                                a.Budget_Amount,
+                                a.Budget_Current,
+                                a.Budget_Status,
+                                a.Budget_isDeleted,
+                                a.Budget_Last_Approval_Date,
+                                a.Budget_Approver_ID,
+                                b.Account_No,
+                                b.Account_Name,
+                                b.Account_Code,
+                                c.User_FName,
+                                c.User_LName
+                            }).ToList();
+
+            foreach (var i in dbBudget)
             {
-                BMViewModel bmvm = new BMViewModel
+                bmvmList.Add(new BMViewModel()
                 {
-                    BM_Id = i,
-                    BM_Creator_ID = i + 100,
-                    BM_Approver_ID = i + 200,
-                    BM_Account = "Account_" + i,
-                    BM_Type = "Sample_Type_" + i,
-                    BM_Budget = i + 100,
-                    BM_Curr_Budget = i + 110,
-                    BM_Last_Trans_Date = DateTime.Parse("1/12/2017", CultureInfo.GetCultureInfo("en-GB"))
-                            .Add(DateTime.Now.TimeOfDay),
-                    BM_Last_Budget_Approval = "Sample"
-                };
-                bmvmList.Add(bmvm);
-            }
+                    BM_Budget_ID = i.Budget_ID,
+                    BM_Acc_ID = i.Account_No,
+                    BM_Budget_Amount = i.Budget_Amount,
+                    BM_Budget_Current = i.Budget_Current,
+                    BM_Budget_Approver_ID = i.Budget_Approver_ID,
+                    BM_Budget_Status = i.Budget_Status,
+                    BM_Last_Budget_Approved = i.Budget_Last_Approval_Date,
+                    BM_Budget_isDeleted = i.Budget_isDeleted,
+                    BM_Acc_Code = i.Account_Code,
+                    BM_Acc_Group = i.Account_Name,
+                    BM_Acc_GBase = "N/A"
+                });
+            };
+
             return bmvmList;
         }
+
+        //MISC
+
         //--------------------TEMP LOCATION-->MOVE TO ACCOUNT SERVICE-----------------------
         public bool sendEmail(ForgotPWViewModel model)
         {
