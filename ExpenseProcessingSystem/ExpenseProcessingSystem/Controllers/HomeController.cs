@@ -594,7 +594,7 @@ namespace ExpenseProcessingSystem.Controllers
 
             viewModel.expenseYear = DateTime.Today.Year.ToString();
             viewModel.expenseDate = DateTime.Today;
-            viewModel.vendor = 2;
+            //viewModel.vendor = 2;
             viewModel.EntryCV.Add(new EntryCVViewModel());
             return View(viewModel);
         }

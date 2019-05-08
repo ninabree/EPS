@@ -11,6 +11,7 @@ namespace ExpenseProcessingSystem.Models
         public int Vendor_MasterID { get; set; }
         public string Vendor_Name { get; set; }
         public string Vendor_TIN { get; set; }
+        public int Vendor_Zip { get; set; }
         public string Vendor_Address { get; set; }
         public int Vendor_Creator_ID { get; set; }
         public int Vendor_Approver_ID { get; set; }

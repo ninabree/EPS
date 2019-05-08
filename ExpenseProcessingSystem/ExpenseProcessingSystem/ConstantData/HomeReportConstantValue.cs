@@ -24,9 +24,6 @@ namespace ExpenseProcessingSystem.ConstantData
         //Alphalist of Payees Subject to Withholding Tax Summary
         public const int WTS = 10;
 
-        //Alphalist of Payees Subject to GA Computer Suspense Balance
-        public const int CSB = 13;
-
         //EXCEL, PDF, Preview format ID
         public const int EXCELID = 1;
         public const int PDFID = 2;
@@ -242,12 +239,6 @@ namespace ExpenseProcessingSystem.ConstantData
                 {
                     Id = 12,
                     TypeName = "Prepaid Amortization Schedule",
-                    SubTypeAvail = true
-                },
-                new HomeReportTypesModel
-                {
-                    Id = 13,
-                    TypeName = "GA Computer Suspense Balance Report",
                     SubTypeAvail = true
                 }
             };
@@ -1282,12 +1273,6 @@ namespace ExpenseProcessingSystem.ConstantData
                     Id = 171,
                     SubTypeName = "BBI",
                     ParentTypeId = 12
-                },
-                new HomeReportSubTypesModel
-                {
-                    Id = 172,
-                    SubTypeName = "Computer Suspense Account under section 10 only",
-                    ParentTypeId = 13
                 }
             };
         }

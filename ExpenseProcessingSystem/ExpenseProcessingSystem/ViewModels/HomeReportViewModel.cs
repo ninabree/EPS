@@ -12,7 +12,7 @@ namespace ExpenseProcessingSystem.ViewModels
     public class HomeReportViewModel
     {
         [Display(Name = "Report Type")]
-        //[ReportValidations]
+        [ReportValidations]
         public IEnumerable<HomeReportTypesModel> ReportTypesList { get; set; }
 
         [Display(Name = "Sub-Type")]

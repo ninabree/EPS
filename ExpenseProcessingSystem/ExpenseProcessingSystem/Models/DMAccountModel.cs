@@ -13,6 +13,7 @@ namespace ExpenseProcessingSystem.Models
         public int Account_ID { get; set; }
         public int Account_MasterID { get; set; }
         public int Account_FBT_MasterID { get; set; }
+        public int Account_Group_ID { get; set; }
         public string Account_Name { get; set; }
         public string Account_Code { get; set; }
         public string Account_No { get; set; }
