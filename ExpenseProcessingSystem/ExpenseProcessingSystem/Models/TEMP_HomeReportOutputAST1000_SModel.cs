@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ExpenseProcessingSystem.Models
 {
-    public class TEMP_HomeReportOutputAST1000_SModel
+    public class TEMP_HomeReportOutputAST1000Model
     {
         public int SeqNo { get; set; }
 

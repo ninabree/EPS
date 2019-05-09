@@ -11,7 +11,7 @@ namespace ExpenseProcessingSystem.ViewModels
     {
         public IEnumerable<TEMP_HomeReportOutputAPSWT_MModel> HomeReportOutputAPSWT_M { get; set; }
 
-        public IEnumerable<TEMP_HomeReportOutputAST1000_SModel> HomeReportOutputAST1000_S { get; set; }
+        public IEnumerable<TEMP_HomeReportOutputAST1000Model> HomeReportOutputAST1000 { get; set; }
 
         public IEnumerable<Temp_RepWTSViewModel> HomeReportOutputWTS { get; set; }
 

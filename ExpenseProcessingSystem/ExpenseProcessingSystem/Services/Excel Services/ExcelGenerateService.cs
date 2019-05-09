@@ -1,5 +1,6 @@
 ﻿using ExpenseProcessingSystem.ViewModels;
 using OfficeOpenXml;
+using OfficeOpenXml.Style;
 using System.IO;
 
 namespace ExpenseProcessingSystem.Services.Excel_Services
@@ -25,8 +26,9 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     break;
 
                 case ConstantData.HomeReportConstantValue.AST1000_S:
+                case ConstantData.HomeReportConstantValue.AST1000_A:
 
-                    ExcelAST1000_S(newFile, templateFile, data);
+                    ExcelAST1000(newFile, templateFile, data);
                     break;
                 case ConstantData.HomeReportConstantValue.WTS:
 
@@ -78,33 +80,48 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 lastRow += 3;
                 worksheet.Cells["C" + lastRow].Value = "ALBERT ADVINCULA";
                 worksheet.Cells["C" + lastRow].Style.Font.Bold = true;
+                worksheet.Cells["C" + lastRow].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                 lastRow += 1;
                 worksheet.Cells["C" + lastRow].Value = "VP-Manager/ AdministrationDepartment";
                 worksheet.Cells["C" + lastRow].Style.Font.Bold = true;
                 worksheet.Cells["C" + lastRow].Style.Font.UnderLine = true;
+                worksheet.Cells["C" + lastRow].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
                 package.Save();
             }
         }
 
-        public void ExcelAST1000_S(FileInfo newFile, FileInfo templateFile, TEMP_HomeReportDataFilterViewModel data)
+        public void ExcelAST1000(FileInfo newFile, FileInfo templateFile, TEMP_HomeReportDataFilterViewModel data)
         {
             using (ExcelPackage package = new ExcelPackage(newFile, templateFile))
             {
                 ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
 
                 int lastRow = worksheet.Dimension.End.Row;
+                int dataStartRow = worksheet.Dimension.End.Row + 1;
+                int dataEndRow = 0;
+                string timePeriod = "";
 
-                if(data.HomeReportFilter.Semester == ConstantData.HomeReportConstantValue.SEM1)
+                if(data.HomeReportFilter.ReportType == ConstantData.HomeReportConstantValue.AST1000_S)
                 {
-                    worksheet.Cells["A2"].Value = data.HomeReportFilter.Semester + "st Term " + data.HomeReportFilter.YearSem;
-                }
-                else
+                    if (data.HomeReportFilter.Semester == ConstantData.HomeReportConstantValue.SEM1)
+                    {
+                        timePeriod = data.HomeReportFilter.Semester + "st Term " + data.HomeReportFilter.YearSem;
+                    }
+                    else
+                    {
+                        timePeriod = data.HomeReportFilter.Semester + "nd Term " + data.HomeReportFilter.YearSem;
+                    }
+                }else if(data.HomeReportFilter.ReportType == ConstantData.HomeReportConstantValue.AST1000_A)
                 {
-                    worksheet.Cells["A2"].Value = data.HomeReportFilter.Semester + "nd Term " + data.HomeReportFilter.YearSem;
+                    timePeriod = "Year " + data.HomeReportFilter.Year;
+                    
                 }
 
-                foreach (var i in data.HomeReportOutputAST1000_S)
+                worksheet.Cells["A2"].Value = timePeriod;
+                worksheet.Cells["A2"].Style.Font.UnderLine = true;
+
+                foreach (var i in data.HomeReportOutputAST1000)
                 {
                     lastRow += 1;
                     worksheet.Cells["A" + lastRow].Value = i.SeqNo;
@@ -125,9 +142,35 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     worksheet.Cells["H" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
                 }
 
+                dataEndRow = lastRow;
+                lastRow += 1;
+
+                worksheet.Cells["A" + lastRow].Value = "***End of Report***";
+                worksheet.Cells["A" + lastRow].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                worksheet.Cells["E" + lastRow].Value = "TOTAL =>";
+                worksheet.Cells["E" + lastRow].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                worksheet.Cells["F" + lastRow].Formula = "SUM(F" + dataStartRow + ":F" + dataEndRow + ")";
+                worksheet.Cells["F" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                worksheet.Cells["H" + lastRow].Formula = "SUM(H" + dataStartRow + ":H" + dataEndRow + ")";
+                worksheet.Cells["H" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+
+                lastRow += 3;
+                worksheet.Cells["F" + lastRow].Value = "ALBERT ADVINCULA";
+                worksheet.Cells["F" + lastRow].Style.Font.Bold = true;
+                worksheet.Cells["E" + lastRow].Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Medium;
+                worksheet.Cells["F" + lastRow].Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Medium;
+                worksheet.Cells["G" + lastRow].Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Medium;
+                worksheet.Cells["F" + lastRow].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                lastRow += 1;
+                worksheet.Cells["F" + lastRow].Value = "VP-Manager/ AdministrationDepartment";
+                worksheet.Cells["F" + lastRow].Style.Font.Bold = true;
+                worksheet.Cells["F" + lastRow].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
                 package.Save();
             }
         }
+
+
         public void ExcelWTS(FileInfo newFile, FileInfo templateFile, TEMP_HomeReportDataFilterViewModel data)
         {
             using (ExcelPackage package = new ExcelPackage(newFile, templateFile))

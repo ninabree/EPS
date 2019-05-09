@@ -350,7 +350,7 @@ namespace ExpenseProcessingSystem.Controllers
         {
             string layoutName = "";
             string fileName = "";
-            string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmss");
+            string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmsstt");
             string pdfFooterFormat = "";
 
             //Model for data retrieve from Database
@@ -385,10 +385,25 @@ namespace ExpenseProcessingSystem.Controllers
                     //Get the necessary data from Database
                     data = new TEMP_HomeReportDataFilterViewModel
                     {
-                        HomeReportOutputAST1000_S = ConstantData.TEMP_HomeReportDummyData.GetTEMP_HomeReportOutputModelDataAST1000_S(),
+                        HomeReportOutputAST1000 = ConstantData.TEMP_HomeReportDummyData.GetTEMP_HomeReportOutputModelDataAST1000(),
                         HomeReportFilter = model,
                     };
                     break;
+
+                //For Alphalist of Suppliers by top 10000 corporation (Annual)
+                case ConstantData.HomeReportConstantValue.AST1000_A:
+                    fileName = "AlphalistOfSuppliersByTop10000Corporation_Annual_" + dateNow;
+                    layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
+                    pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter2;
+
+                    //Get the necessary data from Database
+                    data = new TEMP_HomeReportDataFilterViewModel
+                    {
+                        HomeReportOutputAST1000 = ConstantData.TEMP_HomeReportDummyData.GetTEMP_HomeReportOutputModelDataAST1000(),
+                        HomeReportFilter = model,
+                    };
+                    break;
+
                 case ConstantData.HomeReportConstantValue.WTS:
                     fileName = "WithholdingTaxSummary_" + dateNow;
                     layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
@@ -1644,7 +1659,7 @@ namespace ExpenseProcessingSystem.Controllers
         {
             List<String> errors = new List<String>();
 
-            if (model.ReportType==0)
+            if (model.ReportType != 0)
             {
                 switch (model.PeriodOption)
                 {
