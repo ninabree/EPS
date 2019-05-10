@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace ExpenseProcessingSystem.ViewModels
 {
-    public class TEMP_HomeReportDataFilterViewModel
+    public class HomeReportDataFilterViewModel
     {
-        public IEnumerable<TEMP_HomeReportOutputAPSWT_MModel> HomeReportOutputAPSWT_M { get; set; }
+        public IEnumerable<HomeReportOutputAPSWT_MModel> HomeReportOutputAPSWT_M { get; set; }
 
-        public IEnumerable<TEMP_HomeReportOutputAST1000Model> HomeReportOutputAST1000 { get; set; }
+        public IEnumerable<HomeReportOutputAST1000Model> HomeReportOutputAST1000 { get; set; }
 
         public IEnumerable<Temp_RepWTSViewModel> HomeReportOutputWTS { get; set; }
 

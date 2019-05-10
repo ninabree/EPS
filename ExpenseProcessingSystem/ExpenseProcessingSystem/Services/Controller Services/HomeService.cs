@@ -2159,6 +2159,89 @@ namespace ExpenseProcessingSystem.Services
             return bmvmList;
         }
 
+        // [Report]
+        public IEnumerable<HomeReportOutputAPSWT_MModel> GetAPSWT_MData(int month, int year)
+        {
+            int[] status = { 3, 4 };
+
+            var dbAPSWT_M = (from vendor in _context.DMVendor
+                                join expense in _context.ExpenseEntry on vendor.Vendor_ID equals expense.Expense_Payee
+                                join expEntryDetl in _context.ExpenseEntryDetails on  expense.Expense_ID equals expEntryDetl.ExpenseEntryModel.Expense_ID
+                                join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
+                                where status.Contains(expense.Expense_Status)
+                                && expense.Expense_Last_Updated.Month == month
+                                && expense.Expense_Last_Updated.Year == year
+                             orderby vendor.Vendor_Name
+            select new HomeReportOutputAPSWT_MModel
+                            {
+                                Tin = vendor.Vendor_TIN,
+                                Payee = vendor.Vendor_Name,
+                                ATC = tr.TR_ATC,
+                                NOIP =  tr.TR_Nature,
+                                AOIP = expEntryDetl.ExpDtl_Credit_Cash,
+                                RateOfTax = tr.TR_Tax_Rate,
+                                AOTW = expEntryDetl.ExpDtl_Credit_Ewt
+                            }).ToList();
+
+            return dbAPSWT_M;
+        }
+
+        public IEnumerable<HomeReportOutputAST1000Model> GetAST1000_SData(int yearSem, int semester)
+        {
+            int[] status = { 3, 4 };
+            float[] taxRateConsider = { 0.01f, 0.02f };
+            int[] semesterRange = (semester == 1) ? new int[] { 4, 5, 6, 7, 8, 9 } : new int[] { 10, 11, 12, 1, 2, 3 };
+
+            var dbAST1000_S = (from vendor in _context.DMVendor
+                             join expense in _context.ExpenseEntry on vendor.Vendor_ID equals expense.Expense_Payee
+                             join expEntryDetl in _context.ExpenseEntryDetails on expense.Expense_ID equals expEntryDetl.ExpenseEntryModel.Expense_ID
+                             join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
+                             where status.Contains(expense.Expense_Status)
+                             && semesterRange.Contains(expense.Expense_Last_Updated.Month)
+                             && expense.Expense_Last_Updated.Year == yearSem
+                             && taxRateConsider.Contains(tr.TR_Tax_Rate)
+                               orderby vendor.Vendor_Name
+                             select new HomeReportOutputAST1000Model
+                             {
+                                 Tin = vendor.Vendor_TIN,
+                                 SupplierName = vendor.Vendor_Name,
+                                 ATC = tr.TR_ATC,
+                                 NOIP = tr.TR_Nature,
+                                 TaxBase = expEntryDetl.ExpDtl_Credit_Cash,
+                                 RateOfTax = tr.TR_Tax_Rate,
+                                 AOTW = expEntryDetl.ExpDtl_Credit_Ewt
+                             }).ToList();
+
+            return dbAST1000_S;
+        }
+
+        public IEnumerable<HomeReportOutputAST1000Model> GetAST1000_AData(int year)
+        {
+            int[] status = { 3, 4 };
+            float[] taxRateConsider = { 0.01f, 0.02f };
+
+            var dbAST1000_A = (from vendor in _context.DMVendor
+                            join expense in _context.ExpenseEntry on vendor.Vendor_ID equals expense.Expense_Payee
+                            join expEntryDetl in _context.ExpenseEntryDetails on expense.Expense_ID equals expEntryDetl.ExpenseEntryModel.Expense_ID
+                            join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
+                            where status.Contains(expense.Expense_Status)
+                            && expense.Expense_Last_Updated.Year == year
+                            && taxRateConsider.Contains(tr.TR_Tax_Rate)
+                               orderby vendor.Vendor_Name
+                               select new HomeReportOutputAST1000Model
+                               {
+                                   Tin = vendor.Vendor_TIN,
+                                   SupplierName = vendor.Vendor_Name,
+                                   ATC = tr.TR_ATC,
+                                   NOIP = tr.TR_Nature,
+                                   TaxBase = expEntryDetl.ExpDtl_Credit_Cash,
+                                   RateOfTax = tr.TR_Tax_Rate,
+                                   AOTW = expEntryDetl.ExpDtl_Credit_Ewt
+                               }).ToList();
+
+            return dbAST1000_A;
+        }
+
         //MISC
 
         //--------------------TEMP LOCATION-->MOVE TO ACCOUNT SERVICE-----------------------

@@ -7,7 +7,7 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
 {
     public class ExcelGenerateService
     {
-        public string ExcelGenerateData(string layoutName, string fileName, TEMP_HomeReportDataFilterViewModel data)
+        public string ExcelGenerateData(string layoutName, string fileName, HomeReportDataFilterViewModel data)
         {
             string excelTemplateName = layoutName + ".xlsx";
             string rootFolder = "wwwroot";
@@ -39,7 +39,7 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
             return destPath + fileName;
         }
 
-        public void ExcelAPSWT_M(FileInfo newFile, FileInfo templateFile, TEMP_HomeReportDataFilterViewModel data)
+        public void ExcelAPSWT_M(FileInfo newFile, FileInfo templateFile, HomeReportDataFilterViewModel data)
         {
             using (ExcelPackage package = new ExcelPackage(newFile, templateFile))
             {
@@ -91,7 +91,7 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
             }
         }
 
-        public void ExcelAST1000(FileInfo newFile, FileInfo templateFile, TEMP_HomeReportDataFilterViewModel data)
+        public void ExcelAST1000(FileInfo newFile, FileInfo templateFile, HomeReportDataFilterViewModel data)
         {
             using (ExcelPackage package = new ExcelPackage(newFile, templateFile))
             {
@@ -171,7 +171,7 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
         }
 
 
-        public void ExcelWTS(FileInfo newFile, FileInfo templateFile, TEMP_HomeReportDataFilterViewModel data)
+        public void ExcelWTS(FileInfo newFile, FileInfo templateFile, HomeReportDataFilterViewModel data)
         {
             using (ExcelPackage package = new ExcelPackage(newFile, templateFile))
             {

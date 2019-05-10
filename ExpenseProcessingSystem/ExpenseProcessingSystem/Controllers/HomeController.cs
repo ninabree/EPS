@@ -354,7 +354,7 @@ namespace ExpenseProcessingSystem.Controllers
             string pdfFooterFormat = "";
 
             //Model for data retrieve from Database
-            TEMP_HomeReportDataFilterViewModel data = null;
+            HomeReportDataFilterViewModel data = null;
 
             //Assign variables and Data to corresponding Report Type
             switch (model.ReportType)
@@ -369,9 +369,9 @@ namespace ExpenseProcessingSystem.Controllers
                     model.MonthName = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName;
 
                     //Get the necessary data from Database
-                    data = new TEMP_HomeReportDataFilterViewModel
+                    data = new HomeReportDataFilterViewModel
                     {
-                        HomeReportOutputAPSWT_M = ConstantData.TEMP_HomeReportDummyData.GetTEMP_HomeReportOutputModelDataAPSWT_M(),
+                        HomeReportOutputAPSWT_M = _service.GetAPSWT_MData(model.Month, model.Year),
                         HomeReportFilter = model,
                     };
                     break;
@@ -383,9 +383,9 @@ namespace ExpenseProcessingSystem.Controllers
                     pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter2;
 
                     //Get the necessary data from Database
-                    data = new TEMP_HomeReportDataFilterViewModel
+                    data = new HomeReportDataFilterViewModel
                     {
-                        HomeReportOutputAST1000 = ConstantData.TEMP_HomeReportDummyData.GetTEMP_HomeReportOutputModelDataAST1000(),
+                        HomeReportOutputAST1000 = _service.GetAST1000_SData(model.YearSem, model.Semester),
                         HomeReportFilter = model,
                     };
                     break;
@@ -397,9 +397,9 @@ namespace ExpenseProcessingSystem.Controllers
                     pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter2;
 
                     //Get the necessary data from Database
-                    data = new TEMP_HomeReportDataFilterViewModel
+                    data = new HomeReportDataFilterViewModel
                     {
-                        HomeReportOutputAST1000 = ConstantData.TEMP_HomeReportDummyData.GetTEMP_HomeReportOutputModelDataAST1000(),
+                        HomeReportOutputAST1000 = _service.GetAST1000_AData(model.Year),
                         HomeReportFilter = model,
                     };
                     break;
@@ -408,12 +408,12 @@ namespace ExpenseProcessingSystem.Controllers
                     fileName = "WithholdingTaxSummary_" + dateNow;
                     layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
                     pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter2;
-                    data = new TEMP_HomeReportDataFilterViewModel();
+                    data = new HomeReportDataFilterViewModel();
                     //Get the necessary data from Database
                     switch (model.PeriodOption)
                     {
                         case 1:
-                            data = new TEMP_HomeReportDataFilterViewModel
+                            data = new HomeReportDataFilterViewModel
                             {
                                 HomeReportOutputWTS = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Month(model.Year, model.Month,
                                     ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType),
@@ -422,7 +422,7 @@ namespace ExpenseProcessingSystem.Controllers
                             model.MonthName = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName;
                             break;
                         case 2:
-                            data = new TEMP_HomeReportDataFilterViewModel
+                            data = new HomeReportDataFilterViewModel
                             {
                                 HomeReportOutputWTS = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Semester(model.YearSem, model.Semester,
                                     ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType),
@@ -431,7 +431,7 @@ namespace ExpenseProcessingSystem.Controllers
                             model.SemesterName = ConstantData.HomeReportConstantValue.GetSemesterList().Where(c => c.SemID == model.Semester).Single().SemName;
                             break;
                         case 3:
-                            data = new TEMP_HomeReportDataFilterViewModel
+                            data = new HomeReportDataFilterViewModel
                             {
                                 HomeReportOutputWTS = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Period(model.PeriodFrom, model.PeriodTo,
                                     ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType),
@@ -467,7 +467,7 @@ namespace ExpenseProcessingSystem.Controllers
             return View("Report");
         }
 
-        public IActionResult OutputPDF(string layoutPath, string layoutName, TEMP_HomeReportDataFilterViewModel data, string fileName, string footerFormat)
+        public IActionResult OutputPDF(string layoutPath, string layoutName, HomeReportDataFilterViewModel data, string fileName, string footerFormat)
         {
             string pdfLayoutFilePath = layoutPath + layoutName;
             fileName = fileName + ".pdf";

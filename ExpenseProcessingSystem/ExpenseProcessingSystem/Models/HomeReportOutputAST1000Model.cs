@@ -6,18 +6,20 @@ using System.Threading.Tasks;
 
 namespace ExpenseProcessingSystem.Models
 {
-    public class TEMP_HomeReportOutputAPSWT_MModel
+    public class HomeReportOutputAST1000Model
     {
+        public int SeqNo { get; set; }
+
         public string Tin { get; set; }
 
-        public string Payee { get; set; }
-
-        public string ATC { get; set; }
+        public string SupplierName { get; set; }
 
         public string NOIP { get; set; }
 
+        public string ATC { get; set; }
+
         [DisplayFormat(DataFormatString = "{0:#,##0.00#}", ApplyFormatInEditMode = true)]
-        public double AOIP { get; set; }
+        public double TaxBase { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:P2}", ApplyFormatInEditMode = true)]
         public double RateOfTax { get; set; }
