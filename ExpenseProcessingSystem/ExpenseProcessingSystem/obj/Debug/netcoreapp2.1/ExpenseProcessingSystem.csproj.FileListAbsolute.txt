@@ -284,3 +284,5 @@ C:\Users\gene.delacruz\Documents\__AAA.EPS\source\eps_source\ExpenseProcessingSy
 C:\Users\gene.delacruz\Documents\__AAA.EPS\source\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Shared\HomePendingPartial.g.cshtml.cs
 C:\Users\gene.delacruz\Documents\__AAA.EPS\source\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Shared\HomeTabsPartial.g.cshtml.cs
 C:\Users\gene.delacruz\Documents\__AAA.EPS\source\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Home\Entry_CV_ReadOnly.g.cshtml.cs
+C:\Users\gene.delacruz\Documents\__AAA.EPS\source\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Home\ReportLayoutFormat\_ReportLayout_13.g.cshtml.cs
+C:\Users\gene.delacruz\Documents\__AAA.EPS\source\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Home\ReportLayoutFormat\_ReportLayout_3.g.cshtml.cs
