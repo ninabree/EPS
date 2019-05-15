@@ -1,5 +1,6 @@
 ﻿using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Models;
+using ExpenseProcessingSystem.ConstantData;
 using ExpenseProcessingSystem.Models.Pending;
 using ExpenseProcessingSystem.ViewModels;
 using ExpenseProcessingSystem.ViewModels.Entry;
@@ -44,6 +45,7 @@ namespace ExpenseProcessingSystem.Services
 
         //-----------------------------------Populate-------------------------------------//
         //[ Home ]
+        //[Notification]
         public List<HomeNotifViewModel> populateNotif(FiltersViewModel filters)
         {
             IQueryable<HomeNotifModel> mList = _context.HomeNotif.ToList().AsQueryable();
@@ -111,7 +113,42 @@ namespace ExpenseProcessingSystem.Services
             }
             return vmList;
         }
+        //Pending
+        public List<ApplicationsViewModel> getPending(int userID)
+        {
+            List<ApplicationsViewModel> pendingList = new List<ApplicationsViewModel>();
 
+            var dbPending = from p in _context.ExpenseEntry
+                            where (p.Expense_Status == GlobalSystemValues.STATUS_PENDING
+                            || p.Expense_Status == GlobalSystemValues.STATUS_NEW
+                            || p.Expense_Status == GlobalSystemValues.STATUS_EDIT
+                            || p.Expense_Status == GlobalSystemValues.STATUS_DELETE)
+                            && p.Expense_Creator_ID != userID
+                            select new { p.Expense_ID, p.Expense_Type, p.Expense_Debit_Total, p.Expense_Payee,
+                                        p.Expense_Creator_ID, p.Expense_Verifier_1, p.Expense_Verifier_2,
+                                        p.Expense_Last_Updated,p.Expense_Date,p.Expense_Status};
+
+            foreach(var item in dbPending)
+            {
+                ApplicationsViewModel tempPending = new ApplicationsViewModel
+                {
+                    App_ID = item.Expense_ID,
+                    App_Type = GlobalSystemValues.getApplicationType(item.Expense_Type),
+                    App_Amount = item.Expense_Debit_Total,
+                    App_Payee = getVendorName(item.Expense_Payee),
+                    App_Maker = getUserName(item.Expense_Creator_ID),
+                    App_Verifier_ID_List = new List<string> { getUserName(item.Expense_Verifier_1),
+                                                              getUserName(item.Expense_Verifier_2)},
+                    App_Date = item.Expense_Date,
+                    App_Last_Updated = item.Expense_Last_Updated,
+                    App_Status = getStatus(item.Expense_Status)
+                };
+
+                pendingList.Add(tempPending);
+            }
+
+            return pendingList;
+        }
         //[ User Maintenance ]
         public UserManagementViewModel2 populateUM()
         {
@@ -2364,6 +2401,89 @@ namespace ExpenseProcessingSystem.Services
             return bmvmList;
         }
 
+        // [Report]
+        public IEnumerable<HomeReportOutputAPSWT_MModel> GetAPSWT_MData(int month, int year)
+        {
+            int[] status = { 3, 4 };
+
+            var dbAPSWT_M = (from vendor in _context.DMVendor
+                                join expense in _context.ExpenseEntry on vendor.Vendor_ID equals expense.Expense_Payee
+                                join expEntryDetl in _context.ExpenseEntryDetails on  expense.Expense_ID equals expEntryDetl.ExpenseEntryModel.Expense_ID
+                                join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
+                                where status.Contains(expense.Expense_Status)
+                                && expense.Expense_Last_Updated.Month == month
+                                && expense.Expense_Last_Updated.Year == year
+                             orderby vendor.Vendor_Name
+            select new HomeReportOutputAPSWT_MModel
+                            {
+                                Tin = vendor.Vendor_TIN,
+                                Payee = vendor.Vendor_Name,
+                                ATC = tr.TR_ATC,
+                                NOIP =  tr.TR_Nature,
+                                AOIP = expEntryDetl.ExpDtl_Credit_Cash,
+                                RateOfTax = tr.TR_Tax_Rate,
+                                AOTW = expEntryDetl.ExpDtl_Credit_Ewt
+                            }).ToList();
+
+            return dbAPSWT_M;
+        }
+
+        public IEnumerable<HomeReportOutputAST1000Model> GetAST1000_SData(int yearSem, int semester)
+        {
+            int[] status = { 3, 4 };
+            float[] taxRateConsider = { 0.01f, 0.02f };
+            int[] semesterRange = (semester == 1) ? new int[] { 4, 5, 6, 7, 8, 9 } : new int[] { 10, 11, 12, 1, 2, 3 };
+
+            var dbAST1000_S = (from vendor in _context.DMVendor
+                             join expense in _context.ExpenseEntry on vendor.Vendor_ID equals expense.Expense_Payee
+                             join expEntryDetl in _context.ExpenseEntryDetails on expense.Expense_ID equals expEntryDetl.ExpenseEntryModel.Expense_ID
+                             join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
+                             where status.Contains(expense.Expense_Status)
+                             && semesterRange.Contains(expense.Expense_Last_Updated.Month)
+                             && expense.Expense_Last_Updated.Year == yearSem
+                             && taxRateConsider.Contains(tr.TR_Tax_Rate)
+                               orderby vendor.Vendor_Name
+                             select new HomeReportOutputAST1000Model
+                             {
+                                 Tin = vendor.Vendor_TIN,
+                                 SupplierName = vendor.Vendor_Name,
+                                 ATC = tr.TR_ATC,
+                                 NOIP = tr.TR_Nature,
+                                 TaxBase = expEntryDetl.ExpDtl_Credit_Cash,
+                                 RateOfTax = tr.TR_Tax_Rate,
+                                 AOTW = expEntryDetl.ExpDtl_Credit_Ewt
+                             }).ToList();
+
+            return dbAST1000_S;
+        }
+
+        public IEnumerable<HomeReportOutputAST1000Model> GetAST1000_AData(int year)
+        {
+            int[] status = { 3, 4 };
+            float[] taxRateConsider = { 0.01f, 0.02f };
+
+            var dbAST1000_A = (from vendor in _context.DMVendor
+                            join expense in _context.ExpenseEntry on vendor.Vendor_ID equals expense.Expense_Payee
+                            join expEntryDetl in _context.ExpenseEntryDetails on expense.Expense_ID equals expEntryDetl.ExpenseEntryModel.Expense_ID
+                            join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
+                            where status.Contains(expense.Expense_Status)
+                            && expense.Expense_Last_Updated.Year == year
+                            && taxRateConsider.Contains(tr.TR_Tax_Rate)
+                               orderby vendor.Vendor_Name
+                               select new HomeReportOutputAST1000Model
+                               {
+                                   Tin = vendor.Vendor_TIN,
+                                   SupplierName = vendor.Vendor_Name,
+                                   ATC = tr.TR_ATC,
+                                   NOIP = tr.TR_Nature,
+                                   TaxBase = expEntryDetl.ExpDtl_Credit_Cash,
+                                   RateOfTax = tr.TR_Tax_Rate,
+                                   AOTW = expEntryDetl.ExpDtl_Credit_Ewt
+                               }).ToList();
+
+            return dbAST1000_A;
+        }
+
         //MISC
 
         //--------------------TEMP LOCATION-->MOVE TO ACCOUNT SERVICE-----------------------
@@ -2616,6 +2736,13 @@ namespace ExpenseProcessingSystem.Services
         {
             var vat = _context.DMVAT.SingleOrDefault(q => q.VAT_isActive == true);
             return vat.VAT_Rate;
+        }
+
+        public string getVendorName(int vendorID)
+        {
+            var vendor = _context.DMVendor.SingleOrDefault(x => x.Vendor_ID == vendorID);
+
+            return vendor.Vendor_Name;
         }
     }
 

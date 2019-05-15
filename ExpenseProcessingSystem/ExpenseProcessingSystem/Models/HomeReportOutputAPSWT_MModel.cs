@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ExpenseProcessingSystem.Models
 {
-    public class TEMP_HomeReportOutputAPSWT_MModel
+    public class HomeReportOutputAPSWT_MModel
     {
         public string Tin { get; set; }
 

@@ -1,4 +1,4 @@
-﻿@model ExpenseProcessingSystem.ViewModels.TEMP_HomeReportDataFilterViewModel
+﻿@model ExpenseProcessingSystem.ViewModels.HomeReportDataFilterViewModel
 
 @{
     Layout = null;
@@ -38,6 +38,7 @@
         border-style: solid;
         border-color: black;
     }
+
 </style>
 
 <table border="0" style="width:100%">
@@ -80,31 +81,31 @@
     <tbody>
         @foreach (var i in Model.HomeReportOutputAPSWT_M)
         {
-                <tr class="tr-PDF">
-                    <td style="text-align:center" class="td-PDF">@i.Tin</td>
-                    <td style="text-align:left" class="td-PDF">@i.Payee</td>
-                    <td style="text-align:center" class="td-PDF">@i.ATC</td>
-                    <td style="text-align:center" class="td-PDF">@i.NOIP</td>
-                    <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => i.AOIP)</td>
-                    <td style="text-align:center" class="td-PDF">@Html.DisplayFor(model => i.RateOfTax)</td>
-                    <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => i.AOTW)</td>
-                </tr>
+            <tr class="tr-PDF">
+                <td style="text-align:center" class="td-PDF">@i.Tin</td>
+                <td style="text-align:left" class="td-PDF">@i.Payee</td>
+                <td style="text-align:center" class="td-PDF">@i.ATC</td>
+                <td style="text-align:center" class="td-PDF">@i.NOIP</td>
+                <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => i.AOIP)</td>
+                <td style="text-align:center" class="td-PDF">@Html.DisplayFor(model => i.RateOfTax)</td>
+                <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => i.AOTW)</td>
+            </tr>
         }
     </tbody>
 </table>
 <table style="border-collapse: collapse;margin-top:2px;width:100%">
     <tr>
-        <td width="12.5%"></td>
-        <td width="37.5%"></td>
-        <td width="8%"></td>
-        <td width="12%" style="text-align:center">TOTAL ==></td>
-        <td width="10%" style="text-align:right" class="td-PDF">@Model.HomeReportOutputAPSWT_M.Sum(model => model.AOIP).ToString("#,##0.00#")</td>
-            <td width="10%"></td>
-            <td width="10%" style="text-align:right" class="td-PDF">@Model.HomeReportOutputAPSWT_M.Sum(x => x.AOTW).ToString("#,##0.00#")</td>
+        <th width="12.5%"></th>
+        <th width="37.5%"></th>
+        <th width="8%"></th>
+        <th width="12%" style="text-align:center">TOTAL ==></th>
+        <th width="10%" style="text-align:right" class="td-PDF">@Model.HomeReportOutputAPSWT_M.Sum(model => model.AOIP).ToString("#,##0.00#")</th>
+        <th width="10%"></th>
+        <th width="10%" style="text-align:right" class="td-PDF">@Model.HomeReportOutputAPSWT_M.Sum(x => x.AOTW).ToString("#,##0.00#")</th>
     </tr>
 </table>
 
-<div style="margin-top:100px;text-align:center">
+<div style="margin-top:5%;text-align:center">
     <text style="font-weight:bold">ALBERT ADVINCULA</text><br />
     <text style="font-weight:bold">VP-Manager / Administration Department</text>
     <hr width="400px" color="black" />

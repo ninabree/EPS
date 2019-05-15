@@ -65,6 +65,8 @@ namespace ExpenseProcessingSystem.ViewModels
 
         public int CurrentMonth { get { return DateTime.Today.Month; } }
 
-        
+        public int CurrentSemester { get { return ConstantData.HomeReportConstantValue.GetCurrentSemester(); } }
+
+
     }
 }

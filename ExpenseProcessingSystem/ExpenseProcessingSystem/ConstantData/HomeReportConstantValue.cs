@@ -18,9 +18,12 @@ namespace ExpenseProcessingSystem.ConstantData
         //Alphalist of Payees Subject to Withholding Tax (Monthly)
         public const int APSWT_M = 2;
 
-        //Alphalist of Suppliers by top 10000 corporation (Semestral)
+        //Alphalist of Suppliers by top 10000 corporations (Semestral)
         public const int AST1000_S = 3;
 
+        //Alphalist of Suppliers by top 10000 corporations (Annual)
+        public const int AST1000_A = 4;
+        
         //Alphalist of Payees Subject to Withholding Tax Summary
         public const int WTS = 10;
 
@@ -171,6 +174,15 @@ namespace ExpenseProcessingSystem.ConstantData
             };
         }
 
+        public static int GetCurrentSemester()
+        {
+            int currentSem = 2;
+
+            if (DateTime.Today.Month >= 4 && DateTime.Today.Month <= 9)
+                currentSem = 1;
+
+            return currentSem;
+        }
         public static IEnumerable<HomeReportTypesModel> GetReportTypeData()
         {
             return new HomeReportTypesModel[]

@@ -219,9 +219,9 @@
             var newRow = tableRef.insertRow(itemCount);
             newRow.id = "item_" + itemCount
 
-            var htmlContent = '<td class="p-b-1 p-t-1"><div class="flex-sb" id="remark_' + itemCount + '">' +
+            var htmlContent = '<td class="p-b-1 p-t-1"><div class="flex-sb">' +
                 '<input class="input100 w-80" id="EntryCV_' + itemCount + '__GBaseRemarks" name="EntryCV[' + itemCount + '].GBaseRemarks" type="text" value="">' +
-                '<a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a></div></td>' +
+                '<div id="remark_' + itemCount + '"><a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a></div></div></td>' +
                 '<td><select class="input100 txtAcc" id="EntryCV_' + itemCount + '__account" name="EntryCV[' + itemCount + '].account">';
 
             for (var i = 0; i < acc.length; i++) {
