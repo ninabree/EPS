@@ -19,7 +19,7 @@ namespace ExpenseProcessingSystem.Models
         public int Pending_Check_Creator_ID { get; set; }
         public int Pending_Check_Approver_ID { get; set; }
         public DateTime Pending_Check_Filed_Date { get; set; }
-        public string Pending_Check_Status { get; set; }
+        public int Pending_Check_Status_ID { get; set; }
         public bool Pending_Check_isDeleted { get; set; }
         public bool Pending_Check_isActive { get; set; }
     }

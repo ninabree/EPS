@@ -45,9 +45,9 @@
             <tr>
                 <th></th>
                 <th id="Name"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["BCSSortParm"]">Employee Name<p class="btn-xs glyphicon @ViewData["glyph-1"]"></p></a></th>
-                <th id="TIN"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData[" Title"]" asp-route-sortOrder="@ViewData[" BCSTINSortParm"]"> Pro-Forma Entries<p class="btn-xs glyphicon @ViewData[" glyph-2"]"></p></a></th>
-                <th id="Position"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["BCSPosSortParm"]"> Pro-Forma Entries<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
-                <th id="Signatures"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["BCSSignSortParm"]"> Pro-Forma Entries<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
+                <th id="TIN"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["BCSTINSortParm"]">Employee TIN<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
+                <th id="Position"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["BCSPosSortParm"]"> Position<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
+                <th colspan="3" id="Signatures"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["BCSSignSortParm"]"> Pro-Forma Entries<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
                 <th id="Creator_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["BCSCreatorSortParm"]">Input By<p class="btn-xs glyphicon @ViewData["glyph-5"]"></p></a></th>
                 <th id="Approver_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["BCSApproverSortParm"]">Approved By<p class="btn-xs glyphicon @ViewData["glyph-6"]"></p></a></th>
                 <th id="Last_Updated"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["BCSLastUpdatedSortParm"]">Last Updated<p class="btn-xs glyphicon @ViewData["glyph-7"]"></p></a></th>
@@ -64,7 +64,7 @@
                         <td>@Html.DisplayFor(modelItem => item.BCS_Name)</td>
                         <td>@Html.DisplayFor(modelItem => item.BCS_TIN)</td>
                         <td>@Html.DisplayFor(modelItem => item.BCS_Position)</td>
-                        <td>@Html.DisplayFor(modelItem => item.BCS_Signatures)</td>
+                        <td colspan="3">@Html.DisplayFor(modelItem => item.BCS_Signatures)</td>
                         <td>@Html.DisplayFor(modelItem => item.BCS_Creator_Name)</td>
                         <td>@Html.DisplayFor(modelItem => item.BCS_Approver_Name)</td>
                         <td>@Html.DisplayFor(modelItem => item.BCS_Last_Updated)</td>

@@ -18,7 +18,7 @@ namespace ExpenseProcessingSystem.Models
         public int VAT_Approver_ID { get; set; }
         public DateTime VAT_Created_Date { get; set; }
         public DateTime VAT_Last_Updated { get; set; }
-        public string VAT_Status { get; set; }
+        public int VAT_Status_ID { get; set; }
         public bool VAT_isDeleted { get; set; }
         public bool VAT_isActive { get; set; }
     }

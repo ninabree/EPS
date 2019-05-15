@@ -13,6 +13,7 @@ namespace ExpenseProcessingSystem.Models
         public int Pending_Account_ID { get; set; }
         public int Pending_Account_MasterID { get; set; }
         public int Pending_Account_FBT_MasterID { get; set; }
+        public int Pending_Account_Group_MasterID { get; set; }
         public string Pending_Account_Name { get; set; }
         public string Pending_Account_Code { get; set; }
         public string Pending_Account_No { get; set; }
@@ -22,7 +23,7 @@ namespace ExpenseProcessingSystem.Models
         public int Pending_Account_Creator_ID { get; set; }
         public int Pending_Account_Approver_ID { get; set; }
         public DateTime Pending_Account_Filed_Date { get; set; }
-        public string Pending_Account_Status { get; set; }
+        public int Pending_Account_Status_ID { get; set; }
         public bool Pending_Account_isDeleted { get; set; }
         public bool Pending_Account_isActive { get; set; }
     }

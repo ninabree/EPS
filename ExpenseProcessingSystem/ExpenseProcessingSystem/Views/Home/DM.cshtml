@@ -12,6 +12,7 @@
                 <option value="DMPartial_Vendor">Vendor</option>
                 <option value="DMPartial_Check">Check</option>
                 <option value="DMPartial_Acc">Account</option>
+                <option value="DMPartial_AccGroup">Account Group</option>
                 <option value="DMPartial_Dept">Department</option>
                 <option value="DMPartial_VAT">Value Added Tax</option>
                 <option value="DMPartial_FBT">Fringe Benefit Tax</option>
@@ -48,6 +49,21 @@
         var colName = '@ViewData["colName"]';
 
         initPartial();
+        
+        //$(document).on("submit", ".addVendorForm", function (e) {
+        //    alert("!!!");
+        //    $('.trChk:checked').each(function () {
+        //        alert($(this).next('input[type="hidden"]').val());
+        //    });
+        //    $('.vatChk:checked').each(function () {
+        //        alert($(this).next('input[type="hidden"]').val());
+        //    });
+        //    return true;
+        //});
+        //function submitForm() {
+        //    alert("!!!!");
+        //    $("tsForm").submit();
+        //}
 
         function initPartial() {
             $('select#dm-tbl option[value=' + partial + ']').attr('selected', 'selected');

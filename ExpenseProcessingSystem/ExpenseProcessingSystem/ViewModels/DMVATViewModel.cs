@@ -27,6 +27,7 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "VAT Last Updated")]
         public DateTime VAT_Last_Updated { get; set; }
         [Display(Name = "VAT Status")]
+        public int VAT_Status_ID { get; set; }
         public string VAT_Status { get; set; }
         public bool VAT_isDeleted { get; set; }
     }

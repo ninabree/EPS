@@ -10,8 +10,8 @@ namespace ExpenseProcessingSystem.ViewModels.Search_Filters
     {
         [Display(Name = "Currency Name")]
         public string CF_Name { get; set; }
-        [Display(Name = "Currency CCY Code")]
-        public string CF_CCY_Code { get; set; }
+        [Display(Name = "Currency CCY ABBR")]
+        public string CF_CCY_ABBR { get; set; }
         [Display(Name = "Creator Name")]
         public string CF_Creator_Name { get; set; }
         [Display(Name = "Approver Name")]

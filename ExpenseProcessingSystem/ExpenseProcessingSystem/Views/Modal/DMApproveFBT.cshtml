@@ -5,7 +5,7 @@
 }
 @using ExpenseProcessingSystem.ViewModels
 @model List<DMFBTViewModel>
-<div id="table" class="table-editable">
+<div id="table" class="">
     @using (Html.BeginForm("ApproveFBT", "Home", FormMethod.Post, new { @class = "validate-form", @id = "tsForm" }))
     {
         <table class="table table-bordered editable-th">
@@ -20,10 +20,10 @@
                 @for (int i = 0; i < Model.Count(); i++)
                 {
                     <tr>
-                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].FBT_Name, new { @class = "w-full" })</td>
-                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].FBT_Formula, new { @class = "w-full" })</td>
-                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].FBT_Tax_Rate, new { @class = "w-full" })</td>
-                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].FBT_Status, new { @class = "w-full" })</td>
+                        <td>@Html.TextBoxFor(item => item[i].FBT_Name, new { @class = "w-full", @readonly = "readonly" })</td>
+                        <td>@Html.TextBoxFor(item => item[i].FBT_Formula, new { @class = "w-full", @readonly = "readonly" })</td>
+                        <td>@Html.TextBoxFor(item => item[i].FBT_Tax_Rate, new { @class = "w-full", @readonly = "readonly" })</td>
+                        <td>@Html.TextBoxFor(item => item[i].FBT_Status, new { @class = "w-full", @readonly = "readonly" })</td>
                         @Html.HiddenFor(item => item[i].FBT_MasterID)
                     </tr>
                 }

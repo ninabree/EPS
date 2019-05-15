@@ -17,7 +17,7 @@ namespace ExpenseProcessingSystem.Models
         public int Vendor_Approver_ID { get; set; }
         public DateTime Vendor_Created_Date { get; set; }
         public DateTime Vendor_Last_Updated { get; set; }
-        public string Vendor_Status { get; set; }
+        public int Vendor_Status_ID { get; set; }
         public bool Vendor_isDeleted { get; set; }
         public bool Vendor_isActive { get; set; }
     }

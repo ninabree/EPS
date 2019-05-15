@@ -17,7 +17,7 @@ namespace ExpenseProcessingSystem.Models.Pending
         public int Pending_AccountGroup_Creator_ID { get; set; }
         public int Pending_AccountGroup_Approver_ID { get; set; }
         public DateTime Pending_AccountGroup_Filed_Date { get; set; }
-        public string Pending_AccountGroup_Status { get; set; }
+        public int Pending_AccountGroup_Status_ID { get; set; }
         public bool Pending_AccountGroup_isDeleted { get; set; }
         public bool Pending_AccountGroup_isActive { get; set; }
     }

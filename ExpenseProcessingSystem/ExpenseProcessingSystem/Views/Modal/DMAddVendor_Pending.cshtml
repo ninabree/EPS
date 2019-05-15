@@ -7,22 +7,50 @@
 @using ExpenseProcessingSystem.ViewModels
 @model NewVendorListViewModel
 
-<div id="table" class="table-editable">
-    @using (Html.BeginForm("AddVendor_Pending", "Home", FormMethod.Post, new { @class = "validate-form", @id = "tsForm" }))
+<div id="table" class="">
+    @using (Html.BeginForm("AddVendor_Pending", "Home", FormMethod.Post, new { @class = "validate-form addVendorForm", @id = "tsForm" }))
     {
         <table class="table table-bordered editable-th">
             <tr>
                 <th>Vendor</th>
                 <th>TIN</th>
                 <th>Address</th>
-                <th>Status</th>
+                <th colspan="2">Tax Rate/s</th>
+                <th colspan="2">VAT/s</th>
+                <th></th>
             </tr>
             <tr id="NewVendor-Tr-0">
                 <td>@Html.TextBoxFor(m => m.NewVendorVM[0].Vendor_Name, new { @class = "w-full" })</td>
                 <td>@Html.TextBoxFor(m => m.NewVendorVM[0].Vendor_TIN, new { @class = "w-full" })</td>
                 <td>@Html.TextBoxFor(m => m.NewVendorVM[0].Vendor_Address, new { @class = "w-full" })</td>
+                <td colspan="2">
+                    @if (Model.Vendor_Tax_Rates.Count > 0)
+                    {
+                        @foreach (var trName in Model.Vendor_Tax_Rates)
+                        {
+                            <label>
+                                @Html.CheckBox(trName.TR_WT_Title, new { @id = "chk" + trName.TR_MasterID, @class = "trChk", value = trName.TR_MasterID })
+                                @trName.TR_WT_Title.ToString()
+                            </label>
+                        }
+                    }
+                </td>
+                <td colspan="2">
+                    @if (Model.Vendor_VAT.Count > 0)
+                    {
+                        @foreach (var vatName in Model.Vendor_VAT)
+                        {
+                            <label>
+                                @Html.CheckBox(vatName.VAT_Name, new { @id = "chk1", @class = "vatChk", value = vatName.VAT_MasterID })
+                                @vatName.VAT_Name.ToString()
+                            </label>
+                        }
+                    }
+                </td>
                 <td>
                     <span class="table-remove glyphicon glyphicon-remove"></span>
+                    @Html.HiddenFor(m => m.NewVendorVM[0].Vendor_Tax_Rates_ID)
+                    @Html.HiddenFor(m => m.NewVendorVM[0].Vendor_VAT_ID)
                 </td>
             </tr>
         </table>

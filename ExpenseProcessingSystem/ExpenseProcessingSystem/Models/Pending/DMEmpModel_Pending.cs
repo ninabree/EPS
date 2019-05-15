@@ -18,7 +18,7 @@ namespace ExpenseProcessingSystem.Models.Pending
         public int Pending_Emp_Creator_ID { get; set; }
         public int Pending_Emp_Approver_ID { get; set; }
         public DateTime Pending_Emp_Filed_Date { get; set; }
-        public string Pending_Emp_Status { get; set; }
+        public int Pending_Emp_Status_ID { get; set; }
         public bool Pending_Emp_isDeleted { get; set; }
         public bool Pending_Emp_isActive { get; set; }
     }

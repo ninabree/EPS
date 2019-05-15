@@ -9,7 +9,7 @@ $(document).ready(function () {
     var $pageInput = $('#paginationInput');
     $pageInput.data("value", $pageInput.val());
 
-    //disable approve/reject button upon initial load
+    //disable approve/reject button upon initial load in DM
     $('.apprv-rec').prop('disabled', true);
     $('.rej-rec').prop('disabled', true);
 
@@ -71,6 +71,8 @@ $(document).ready(function () {
     //enables/disables controls in DM depending on entry status
     $('input.tbl-chk').change(function (e) {
         e.stopImmediatePropagation();
+        //disable all buttons
+        defaultDisableAll();
         //get column # of status per table
         var count = $('#partial-container div div table thead tr th').length - 2;
         var stat = $(this).parent().siblings(":eq(" + count + ")").text();
@@ -85,14 +87,14 @@ $(document).ready(function () {
             if ((txtVal != stat) && (this.checked == true)) {
                 alert("Kindly check rows with the same status only.");
                 $('.rec').prop('disabled', true);
-            //when in BCS table, disable editing for more than one entry
+                //when in BCS table, disable editing for more than one entry
             } else if (chkCount >= 2 && stat == "Approved" && (tblName == "BIR Cert Signatory")) {
                 $('.apprv-rec').prop('disabled', true);
                 $('.rej-rec').prop('disabled', true);
                 $('.add-rec').prop('disabled', false);
                 $('.edit-rec').prop('disabled', true);
                 $('.delete-rec').prop('disabled', false);
-            //when unselecting all checkboxes, enable only add edit delete
+                //when unselecting all checkboxes, enable only add edit delete
             } else if (this.checked == false && chkCount <= 0) {
                 $('.apprv-rec').prop('disabled', true);
                 $('.rej-rec').prop('disabled', true);
@@ -104,55 +106,19 @@ $(document).ready(function () {
                 //get status of currently checked checkbox
                 stat = $('input.tbl-chk[type="checkbox"]:checked').parent().siblings(":eq(" + count + ")").text();
                 //format only avail buttons per status
-                switch (stat) {
-                    case "For Approval":
-                        $('.apprv-rec').prop('disabled', false);
-                        $('.rej-rec').prop('disabled', false);
-                        $('.add-rec').prop('disabled', true);
-                        $('.edit-rec').prop('disabled', true);
-                        $('.delete-rec').prop('disabled', true);
-                        break;
-                    case "For Approval (For Deletion)":
-                        $('.apprv-rec').prop('disabled', false);
-                        $('.rej-rec').prop('disabled', false);
-                        $('.add-rec').prop('disabled', true);
-                        $('.edit-rec').prop('disabled', true);
-                        $('.delete-rec').prop('disabled', true);
-                        break;
-                    case "Approved":
-                        $('.apprv-rec').prop('disabled', true);
-                        $('.rej-rec').prop('disabled', true);
-                        $('.add-rec').prop('disabled', false);
-                        $('.edit-rec').prop('disabled', false);
-                        $('.delete-rec').prop('disabled', false);
-                        break;
+                if (stat == "Approved") {
+                    defaultApproved();
+                } else {
+                    defaultForApproval();
                 }
             }
         } else {
             $('input#entryCheckTypes').val(stat);
             //format only avail buttons for clicked checkbox 
-            switch (stat) {
-                case "For Approval":
-                    $('.apprv-rec').prop('disabled', false);
-                    $('.rej-rec').prop('disabled', false);
-                    $('.add-rec').prop('disabled', true);
-                    $('.edit-rec').prop('disabled', true);
-                    $('.delete-rec').prop('disabled', true);
-                    break;
-                case "For Approval (For Deletion)":
-                    $('.apprv-rec').prop('disabled', false);
-                    $('.rej-rec').prop('disabled', false);
-                    $('.add-rec').prop('disabled', true);
-                    $('.edit-rec').prop('disabled', true);
-                    $('.delete-rec').prop('disabled', true);
-                    break;
-                case "Approved":
-                    $('.apprv-rec').prop('disabled', true);
-                    $('.rej-rec').prop('disabled', true);
-                    $('.add-rec').prop('disabled', false);
-                    $('.edit-rec').prop('disabled', false);
-                    $('.delete-rec').prop('disabled', false);
-                    break;
+            if (stat == "Approved") {
+                defaultApproved();
+            } else {
+                defaultForApproval();
             }
         }
     });
@@ -243,6 +209,30 @@ $(document).ready(function () {
     init();
     /*//////////////////////////////////////////////////////////////////
     [ Functions ]*/
+
+    //default buttons in DM
+    function defaultDisableAll() {
+        $('.apprv-rec').prop('disabled', true);
+        $('.rej-rec').prop('disabled', true);
+        $('.add-rec').prop('disabled', true);
+        $('.edit-rec').prop('disabled', true);
+        $('.delete-rec').prop('disabled', true);
+    }
+    function defaultDM() {
+        $('.add-rec').prop('disabled', false);
+        $('.edit-rec').prop('disabled', false);
+        $('.delete-rec').prop('disabled', false);
+    }
+    function defaultForApproval() {
+        $('.apprv-rec').prop('disabled', false);
+        $('.rej-rec').prop('disabled', false);
+    }
+    function defaultApproved() {
+        $('.add-rec').prop('disabled', false);
+        $('.edit-rec').prop('disabled', false);
+        $('.delete-rec').prop('disabled', false);
+    }
+    ///////////////////////////////////////////////////////////////////
     function populateCol() {
         $('#dm-col').find('option').remove();
         //get all tbale header values and populate the column header combo box

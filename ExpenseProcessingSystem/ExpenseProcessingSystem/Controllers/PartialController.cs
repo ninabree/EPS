@@ -135,9 +135,8 @@ namespace ExpenseProcessingSystem.Controllers
             ViewData["CurrentSort"] = sortOrder;
             ViewData["CheckStatusSortParm"] = String.IsNullOrEmpty(sortOrder) ? "chk_stat" : "";
             ViewData["CheckSeriesFromSortParm"] = sortOrder == "chk_serires_from_desc" ? "chk_serires_from" : "chk_serires_from_desc";
-            ViewData["CheckSeriresToSortParm"] = sortOrder == "chk_serires_to_desc" ? "chk_serires_to" : "chk_serires_to_desc";
-            ViewData["CheckTypeSortParm"] = sortOrder == "chk_type_desc" ? "chk_type" : "chk_type_desc";
-            ViewData["CheckNameSortParm"] = sortOrder == "chk_name_desc" ? "chk_name" : "chk_name_desc";
+            ViewData["CheckSeriesToSortParm"] = sortOrder == "chk_serires_to_desc" ? "chk_serires_to" : "chk_serires_to_desc";
+            ViewData["CheckBankSortParm"] = sortOrder == "chk_bank_desc" ? "chk_bank" : "chk_bank_desc";
             ViewData["CheckCreatorSortParm"] = sortOrder == "chk_creatr_desc" ? "chk_creatr" : "chk_creatr_desc";
             ViewData["CheckApproverSortParm"] = sortOrder == "chk_approvr_desc" ? "chk_approvr" : "chk_approvr_desc";
             ViewData["CheckLastUpdatedSortParm"] = sortOrder == "chk_last_updte_desc" ? "chk_last_updte" : "chk_last_updte_desc";
@@ -156,7 +155,10 @@ namespace ExpenseProcessingSystem.Controllers
             //populate and sort
             var sortedVals = _sortService.SortData(_service.populateCheck(filters), sortOrder);
             ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
-
+            if (filters.CKF.CKF_Input_Date == new DateTime())
+            {
+                filters.CKF.CKF_Input_Date = DateTime.Now;
+            }
             //pagination
             DMViewModel VM = new DMViewModel()
             {
@@ -189,6 +191,7 @@ namespace ExpenseProcessingSystem.Controllers
             ViewData["AccountCreatorSortParm"] = sortOrder == "acc_creatr_desc" ? "acc_creatr" : "acc_creatr_desc";
             ViewData["AccountApproverSortParm"] = sortOrder == "acc_approvr_desc" ? "acc_approvr" : "acc_approvr_desc";
             ViewData["AccountLastUpdatedSortParm"] = sortOrder == "acc_last_updte_desc" ? "acc_last_updte" : "acc_last_updte_desc";
+            ViewData["AccountGrpSortParm"] = sortOrder == "acc_grp_desc" ? "acc_grp" : "acc_grp_desc";
             ViewData["AccountSortParm"] = sortOrder == "name_desc" ? "name" : "name_desc";
 
             if (searchString != null) { pg = 1; }
@@ -315,15 +318,15 @@ namespace ExpenseProcessingSystem.Controllers
             int? pg = (page == null) ? 1 : int.Parse(page);
             //set sort vals
             ViewData["CurrentSort"] = sortOrder;
-            ViewData["TRStatusSortParm"] = String.IsNullOrEmpty(sortOrder) ? "ewt_stat" : "";
-            ViewData["TRTaxRateSortParm"] = sortOrder == "ewt_tax_desc" ? "ewt_tax" : "ewt_tax_desc";
-            ViewData["TRATCSortParm"] = sortOrder == "ewt_atc_desc" ? "ewt_atc" : "ewt_atc_desc";
-            ViewData["TRTaxRateDescSortParm"] = sortOrder == "ewt_tax_descrp_desc" ? "ewt_tax_descrp" : "ewt_tax_descrp_desc";
-            ViewData["TRCreatorSortParm"] = sortOrder == "ewt_creatr_desc" ? "ewt_creatr" : "ewt_creatr_desc";
-            ViewData["TRApproverSortParm"] = sortOrder == "ewt_approvr_desc" ? "ewt_approvr" : "ewt_approvr_desc";
-            ViewData["TRLastUpdatedSortParm"] = sortOrder == "ewt_last_updte_desc" ? "ewt_last_updte" : "ewt_last_updte_desc";
+            ViewData["TRStatusSortParm"] = String.IsNullOrEmpty(sortOrder) ? "tr_stat" : "";
+            ViewData["TRTaxRateSortParm"] = sortOrder == "tr_tax_desc" ? "tr_tax" : "tr_tax_desc";
+            ViewData["TRIncomeSortParm"] = sortOrder == "tr_income_desc" ? "tr_income" : "tr_income_desc";
+            ViewData["TRATCSortParm"] = sortOrder == "tr_atc_desc" ? "tr_atc" : "tr_atc_desc";
+            ViewData["TRWTTileSortParm"] = sortOrder == "tr_title_desc" ? "tr_title" : "tr_title_desc";
+            ViewData["TRCreatorSortParm"] = sortOrder == "tr_creatr_desc" ? "tr_creatr" : "tr_creatr_desc";
+            ViewData["TRApproverSortParm"] = sortOrder == "tr_approvr_desc" ? "tr_approvr" : "tr_approvr_desc";
+            ViewData["TRLastUpdteSortParm"] = sortOrder == "tr_last_updte_desc" ? "tr_last_updte" : "tr_last_updte_desc";
             ViewData["TRSortParm"] = sortOrder == "nature_desc" ? "nature" : "nature_desc";
-            ViewData["TRNatIncPaySortParm"] = sortOrder == "nature_inc_pay_desc" ? "nature_inc_pay" : "nature_inc_pay_desc";
 
             if (searchString != null) { pg = 1; }
             else { searchString = currentFilter; }
@@ -405,7 +408,7 @@ namespace ExpenseProcessingSystem.Controllers
             //set sort vals
             ViewData["CurrentSort"] = sortOrder;
             ViewData["RegEmpStatusSortParm"] = String.IsNullOrEmpty(sortOrder) ? "regemp_stat" : "";
-            ViewData["RegEmpNoSortParm"] = sortOrder == "regemp_no_desc" ? "regemp_no" : "regemp_no_desc";
+            ViewData["RegEmpCodeSortParm"] = sortOrder == "regemp_no_desc" ? "regemp_no" : "regemp_no_desc";
             ViewData["RegEmpCreatorSortParm"] = sortOrder == "regemp_creatr_desc" ? "regemp_creatr" : "regemp_creatr_desc";
             ViewData["RegEmpApproverSortParm"] = sortOrder == "regemp_approvr_desc" ? "regemp_approvr" : "regemp_approvr_desc";
             ViewData["RegEmpLastUpdatedSortParm"] = sortOrder == "regemp_last_updte_desc" ? "regemp_last_updte" : "regemp_last_updte_desc";
@@ -448,7 +451,6 @@ namespace ExpenseProcessingSystem.Controllers
             //set sort vals
             ViewData["CurrentSort"] = sortOrder;
             ViewData["TempEmpStatusSortParm"] = String.IsNullOrEmpty(sortOrder) ? "tempemp_stat" : "";
-            //ViewData["TempEmpNoSortParm"] = sortOrder == "tempemp_no_desc" ? "tempemp_no" : "tempemp_no_desc";
             ViewData["TempEmpCreatorSortParm"] = sortOrder == "tempemp_creatr_desc" ? "tempemp_creatr" : "tempemp_creatr_desc";
             ViewData["TempEmpApproverSortParm"] = sortOrder == "tempemp_approvr_desc" ? "tempemp_approvr" : "tempemp_approvr_desc";
             ViewData["TempEmpLastUpdatedSortParm"] = sortOrder == "tempemp_last_updte_desc" ? "tempemp_last_updte" : "tempemp_last_updte_desc";
@@ -563,6 +565,49 @@ namespace ExpenseProcessingSystem.Controllers
                 DMFilters = filters,
                 BCS = PaginatedList<DMBCSViewModel>.CreateAsync(
                     (sortedVals.list).Cast<DMBCSViewModel>().AsQueryable().AsNoTracking(), pg ?? 1, pageSize)
+            };
+            return View(VM);
+        }
+
+        [Route("/Partial/DMPartial_AccGroup/")]
+        public IActionResult DMPartial_AccGroup(string sortOrder, string currentFilter, string colName, string searchString, string page)
+        {
+            var userId = _session.GetString("UserID");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            int? pg = (page == null) ? 1 : int.Parse(page);
+            //set sort vals
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["AGStatusSortParm"] = String.IsNullOrEmpty(sortOrder) ? "ag_stat" : "";
+            ViewData["AGCodeSortParm"] = sortOrder == "ag_code_desc" ? "ag_code" : "ag_code_desc";
+            ViewData["AGCreatorSortParm"] = sortOrder == "ag_creatr_desc" ? "ag_creatr" : "ag_creatr_desc";
+            ViewData["AGApproverSortParm"] = sortOrder == "ag_approvr_desc" ? "ag_approvr" : "ag_approvr_desc";
+            ViewData["AGLastUpdatedSortParm"] = sortOrder == "ag_last_updte_desc" ? "ag_last_updte" : "ag_last_updte_desc";
+            ViewData["AGSortParm"] = sortOrder == "name_desc" ? "name" : "name_desc";
+
+            if (searchString != null) { pg = 1; }
+            else { searchString = currentFilter; }
+
+            ViewData["CurrentFilter"] = searchString;
+            DMFiltersViewModel filters = new DMFiltersViewModel();
+            if (TempData.ContainsKey("filters"))
+            {
+                filters = (DMFiltersViewModel)TempData["filters"];
+            }
+
+            //populate and sort
+            var sortedVals = _sortService.SortData(_service.populateAG(filters), sortOrder);
+            ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
+
+            //pagination
+            DMViewModel VM = new DMViewModel()
+            {
+                DMFilters = filters,
+                AccountGroup = PaginatedList<DMAccountGroupViewModel>.CreateAsync(
+                    (sortedVals.list).Cast<DMAccountGroupViewModel>().AsQueryable().AsNoTracking(), pg ?? 1, pageSize)
             };
             return View(VM);
         }

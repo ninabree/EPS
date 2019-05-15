@@ -14,6 +14,7 @@ namespace ExpenseProcessingSystem.ViewModels
         public int Check_ID { get; set; }
         public int Check_MasterID { get; set; }
         [Display(Name = "Input Date")]
+        [DataType(DataType.Date)]
         public DateTime Check_Input_Date { get; set; }
         [Display(Name = "Series From")]
         public string Check_Series_From { get; set; }
@@ -28,9 +29,12 @@ namespace ExpenseProcessingSystem.ViewModels
         public string Check_Creator_Name { get; set; }
         [Display(Name = "Approved By")]
         public string Check_Approver_Name { get; set; }
+        [DataType(DataType.Date)]
         public DateTime Check_Created_Date { get; set; }
+        [DataType(DataType.Date)]
         public DateTime Check_Last_Updated { get; set; }
         [Display(Name = "Status")]
+        public int Check_Status_ID { get; set; }
         public string Check_Status { get; set; }
         public bool Check_isDeleted { get; set; }
     }

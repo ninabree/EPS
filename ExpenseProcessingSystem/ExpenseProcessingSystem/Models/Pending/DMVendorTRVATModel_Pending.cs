@@ -14,6 +14,6 @@ namespace ExpenseProcessingSystem.Models.Pending
         public int Pending_VTV_Vendor_ID { get; set; }
         public int Pending_VTV_TR_ID { get; set; }
         public int Pending_VTV_VAT_ID { get; set; }
-        public string Pending_VTV_Status { get; set; }
+        public int Pending_VTV_Status_ID { get; set; }
     }
 }
