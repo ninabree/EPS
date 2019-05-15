@@ -298,8 +298,14 @@ namespace ExpenseProcessingSystem.Controllers
 
         //------------------------------------------------------------------
         //[* REPORT *]
+        //[ImportModelState]
         public IActionResult Report()
         {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
             //Get list of report types from the constant data file:HomeReportTypesModel.cs
             //uses in Dropdownlist(Report Type)
             IEnumerable<HomeReportTypesModel> ReportTypes = ConstantData.HomeReportConstantValue.GetReportTypeData();
@@ -322,7 +328,9 @@ namespace ExpenseProcessingSystem.Controllers
                 YearList = ConstantData.HomeReportConstantValue.GetYearList(),
                 YearSemList = ConstantData.HomeReportConstantValue.GetYearList(),
                 SemesterList = ConstantData.HomeReportConstantValue.GetSemesterList(),
-                PeriodOptionList = ConstantData.HomeReportConstantValue.GetPeriodOptionList()
+                PeriodOptionList = ConstantData.HomeReportConstantValue.GetPeriodOptionList(),
+                PeriodFrom = Convert.ToDateTime(ConstantData.HomeReportConstantValue.DateToday),
+                PeriodTo = Convert.ToDateTime(ConstantData.HomeReportConstantValue.DateToday)
             };
 
             //Return ViewModel
@@ -342,15 +350,16 @@ namespace ExpenseProcessingSystem.Controllers
             return null;
         }
 
+        //[ExportModelState]
         public IActionResult GenerateFilePreview(HomeReportViewModel model)
         {
             string layoutName = "";
             string fileName = "";
-            string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmss");
+            string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmsstt");
             string pdfFooterFormat = "";
 
             //Model for data retrieve from Database
-            TEMP_HomeReportDataFilterViewModel data = null;
+            HomeReportDataFilterViewModel data = null;
 
             //Assign variables and Data to corresponding Report Type
             switch (model.ReportType)
@@ -362,12 +371,12 @@ namespace ExpenseProcessingSystem.Controllers
                     layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
                     pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter1;
 
-                    model.Month = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID.ToString() == model.Month).Single().MonthName;
+                    model.MonthName = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName;
 
                     //Get the necessary data from Database
-                    data = new TEMP_HomeReportDataFilterViewModel
+                    data = new HomeReportDataFilterViewModel
                     {
-                        HomeReportOutputAPSWT_M = ConstantData.TEMP_HomeReportDummyData.GetTEMP_HomeReportOutputModelDataAPSWT_M(),
+                        HomeReportOutputAPSWT_M = _service.GetAPSWT_MData(model.Month, model.Year),
                         HomeReportFilter = model,
                     };
                     break;
@@ -379,89 +388,60 @@ namespace ExpenseProcessingSystem.Controllers
                     pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter2;
 
                     //Get the necessary data from Database
-                    data = new TEMP_HomeReportDataFilterViewModel
+                    data = new HomeReportDataFilterViewModel
                     {
-                        HomeReportOutputAST1000_S = ConstantData.TEMP_HomeReportDummyData.GetTEMP_HomeReportOutputModelDataAST1000_S(),
+                        HomeReportOutputAST1000 = _service.GetAST1000_SData(model.YearSem, model.Semester),
                         HomeReportFilter = model,
                     };
                     break;
+
+                //For Alphalist of Suppliers by top 10000 corporation (Annual)
+                case ConstantData.HomeReportConstantValue.AST1000_A:
+                    fileName = "AlphalistOfSuppliersByTop10000Corporation_Annual_" + dateNow;
+                    layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
+                    pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter2;
+
+                    //Get the necessary data from Database
+                    data = new HomeReportDataFilterViewModel
+                    {
+                        HomeReportOutputAST1000 = _service.GetAST1000_AData(model.Year),
+                        HomeReportFilter = model,
+                    };
+                    break;
+
                 case ConstantData.HomeReportConstantValue.WTS:
                     fileName = "WithholdingTaxSummary_" + dateNow;
                     layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
                     pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter2;
-                    data = new TEMP_HomeReportDataFilterViewModel();
+                    data = new HomeReportDataFilterViewModel();
                     //Get the necessary data from Database
                     switch (model.PeriodOption)
                     {
-                        case "1":
-                            data = new TEMP_HomeReportDataFilterViewModel
+                        case 1:
+                            data = new HomeReportDataFilterViewModel
                             {
                                 HomeReportOutputWTS = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Month(model.Year, model.Month,
                                     ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType),
                                 HomeReportFilter = model
                             };
-                            model.Month = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID.ToString() == model.Month).Single().MonthName;
+                            model.MonthName = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName;
                             break;
-                        case "2":
-                            data = new TEMP_HomeReportDataFilterViewModel
+                        case 2:
+                            data = new HomeReportDataFilterViewModel
                             {
                                 HomeReportOutputWTS = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Semester(model.YearSem, model.Semester,
                                     ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType),
                                 HomeReportFilter = model
                             };
-                            model.Month = ConstantData.HomeReportConstantValue.GetSemesterList().Where(c => c.SemID.ToString() == model.Semester).Single().SemName;
-                            model.Year = model.YearSem;
+                            model.SemesterName = ConstantData.HomeReportConstantValue.GetSemesterList().Where(c => c.SemID == model.Semester).Single().SemName;
                             break;
-                        case "3":
-                            data = new TEMP_HomeReportDataFilterViewModel
+                        case 3:
+                            data = new HomeReportDataFilterViewModel
                             {
                                 HomeReportOutputWTS = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Period(model.PeriodFrom, model.PeriodTo,
                                     ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType),
                                 HomeReportFilter = model
                             };
-
-                            model.Month = model.PeriodFrom.ToShortDateString();
-                            model.Year = model.PeriodTo.ToShortDateString();
-                            break;
-                    }
-                    break;
-                case ConstantData.HomeReportConstantValue.CSB:
-                    fileName = "GA_Computer_Suspense_Balance_Report_" + dateNow;
-                    layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
-                    pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter2;
-                    data = new TEMP_HomeReportDataFilterViewModel();
-                    //Get the necessary data from Database
-                    switch (model.PeriodOption)
-                    {
-                        case "1":
-                            data = new TEMP_HomeReportDataFilterViewModel
-                            {
-                                HomeReportOutputCSB = ConstantData.TEMP_HomeReportCSBDummyData.GetTEMP_HomeReportCSBOutputModelData_Month(model.Year, model.Month,
-                                    ConstantData.TEMP_HomeReportCSBDummyData.GetTEMP_HomeReportCSBOutputModelData().CSBList, model.ReportSubType),
-                                HomeReportFilter = model
-                            };
-                            model.Month = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID.ToString() == model.Month).Single().MonthName;
-                            break;
-                        case "2":
-                            data = new TEMP_HomeReportDataFilterViewModel
-                            {
-                                HomeReportOutputCSB = ConstantData.TEMP_HomeReportCSBDummyData.GetTEMP_HomeReportCSBOutputModelData_Semester(model.YearSem, model.Semester,
-                                    ConstantData.TEMP_HomeReportCSBDummyData.GetTEMP_HomeReportCSBOutputModelData().CSBList, model.ReportSubType),
-                                HomeReportFilter = model
-                            };
-                            model.Month = ConstantData.HomeReportConstantValue.GetSemesterList().Where(c => c.SemID.ToString() == model.Semester).Single().SemName;
-                            model.Year = model.YearSem;
-                            break;
-                        case "3":
-                            data = new TEMP_HomeReportDataFilterViewModel
-                            {
-                                HomeReportOutputCSB = ConstantData.TEMP_HomeReportCSBDummyData.GetTEMP_HomeReportCSBOutputModelData_Period(model.PeriodFrom, model.PeriodTo,
-                                    ConstantData.TEMP_HomeReportCSBDummyData.GetTEMP_HomeReportCSBOutputModelData().CSBList, model.ReportSubType),
-                                HomeReportFilter = model
-                            };
-
-                            model.Month = model.PeriodFrom.ToShortDateString();
-                            model.Year = model.PeriodTo.ToShortDateString();
                             break;
                     }
                     break;
@@ -489,9 +469,10 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             //Temporary return
-            return RedirectToAction("Report");
+            return View("Report");
         }
-        public IActionResult OutputPDF(string layoutPath, string layoutName, TEMP_HomeReportDataFilterViewModel data, string fileName, string footerFormat)
+
+        public IActionResult OutputPDF(string layoutPath, string layoutName, HomeReportDataFilterViewModel data, string fileName, string footerFormat)
         {
             string pdfLayoutFilePath = layoutPath + layoutName;
             fileName = fileName + ".pdf";
@@ -520,6 +501,8 @@ namespace ExpenseProcessingSystem.Controllers
         //[* REPORT *]
         //------------------------------------------------------------------
 
+        //------------------------------------------------------------------
+        //[* BUDGET MONITORING *]
         [ImportModelState]
         public IActionResult BM(string sortOrder, string currentFilter, string searchString, int? page)
         {
@@ -531,12 +514,13 @@ namespace ExpenseProcessingSystem.Controllers
 
             //set sort vals
             ViewData["CurrentSort"] = sortOrder;
-            ViewData["AccountSortParm"] = String.IsNullOrEmpty(sortOrder) ? "acc_desc" : "";
-            ViewData["TypeSortParm"] = sortOrder == "type_desc" ? "type" : "type_desc";
+            ViewData["AccountCodeSortParm"] = String.IsNullOrEmpty(sortOrder) ? "acc_code" : "";
+            ViewData["AccountGroupSortParm"] = sortOrder == "acc_group_desc" ? "acc_group" : "acc_group_desc";
+            ViewData["GBaseAccountCodeSortParm"] = sortOrder == "gbase_acc_desc" ? "gbase_acc" : "gbase_acc_desc";
             ViewData["BudgetSortParm"] = sortOrder == "budget_desc" ? "budget" : "budget_desc";
-            ViewData["CurrBudgetSortParm"] = sortOrder == "curr_budget_desc" ? "curr_budget" : "curr_budget_desc";
-            ViewData["LastTransDateSortParm"] = sortOrder == "last_trans_date_desc" ? "last_trans_date" : "last_trans_date_desc";
-            ViewData["LastBudgetApprvlSortParm"] = sortOrder == "last_budget_apprvl_desc" ? "last_budget_apprvl" : "last_budget_apprvl_desc";
+            ViewData["CurrentBudgetSortParm"] = sortOrder == "curr_budget_desc" ? "curr_budget" : "curr_budget_desc";
+            ViewData["ApproverIDSortParm"] = sortOrder == "approval_id_desc" ? "approval_id" : "approval_id_desc";
+            ViewData["LastBudgetApprovalSortParm"] = sortOrder == "last_budget_approval_desc" ? "last_budget_approval" : "last_budget_approval_desc";
 
             if (searchString != null)
             {
@@ -549,13 +533,17 @@ namespace ExpenseProcessingSystem.Controllers
             ViewData["CurrentFilter"] = searchString;
 
             //populate and sort
-            var sortedVals = _sortService.SortData(PopulateBM(), sortOrder);
+            var sortedVals = _sortService.SortData(_service.PopulateBM(), sortOrder);
             ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
 
             //pagination
             return View(PaginatedList<BMViewModel>.CreateAsync(
                 (sortedVals.list).Cast<BMViewModel>().AsQueryable().AsNoTracking(), page ?? 1, pageSize));
         }
+
+        //[* BUDGET MONITORING *]
+        //------------------------------------------------------------------
+
         [ImportModelState]
         public IActionResult UM(string sortOrder, string currentFilter, string searchString, int? page)
         {
@@ -638,7 +626,7 @@ namespace ExpenseProcessingSystem.Controllers
 
             viewModel.expenseYear = DateTime.Today.Year.ToString();
             viewModel.expenseDate = DateTime.Today;
-            viewModel.vendor = 2;
+            //viewModel.vendor = 2;
             viewModel.EntryCV.Add(new EntryCVViewModel());
             return View(viewModel);
         }
@@ -1697,33 +1685,62 @@ namespace ExpenseProcessingSystem.Controllers
         }
 
         //[* MISC *]
-        public List<BMViewModel> PopulateBM()
-        {
-            List<BMViewModel> bmvmList = new List<BMViewModel>();
-            for (var i = 1; i <= 40; i++)
-            {
-                BMViewModel bmvm = new BMViewModel
-                {
-                    BM_Id = i,
-                    BM_Creator_ID = i + 100,
-                    BM_Approver_ID = i + 200,
-                    BM_Account = "Account_" + i,
-                    BM_Type = "Sample_Type_" + i,
-                    BM_Budget = i + 100,
-                    BM_Curr_Budget = i + 110,
-                    BM_Last_Trans_Date = DateTime.Parse("1/12/2017", CultureInfo.GetCultureInfo("en-GB"))
-                            .Add(DateTime.Now.TimeOfDay),
-                    BM_Last_Budget_Approval = "Sample"
-                };
-                bmvmList.Add(bmvm);
-            }
-            return bmvmList;
-        }
+
         //public void addNCC()
         //{
         //    FileService fs = new FileService();
         //    //fs.CreateFileAndFolder();
         //    fs.CopyFileToLocation("00283_martin.nina.png");
         //}
+
+        [HttpPost]
+        //[ExportModelState]
+        public IActionResult HomeReportValidation(HomeReportViewModel model)
+        {
+            List<String> errors = new List<String>();
+
+            if (model.ReportType != 0)
+            {
+                switch (model.PeriodOption)
+                {
+                    case 1:
+
+                        break;
+
+                    case 2:
+                        if (model.Semester == 0)
+                        {
+                            errors.Add("Semester input is required");
+                        }
+                        break;
+                    case 3:
+                        if (model.PeriodFrom == DateTime.MinValue)
+                        {
+                            errors.Add("Period From input is required");
+                        }
+                        if (model.PeriodTo == DateTime.MinValue)
+                        {
+                            errors.Add("Period To input is required");
+                        }
+                        break;
+                }
+            }
+
+            string errorFlag = "Valid";
+
+            if(errors.Count > 0)
+            {
+                errorFlag = "Invalid";
+            }
+
+            var data = new JsonDataResult { Message = errorFlag, Items = errors };
+            return Json(data);
+        }
+
+        public class JsonDataResult
+        {
+            public string Message { get; set; }
+            public List<String> Items = new List<String>();
+        }
     }
 }

@@ -3,12 +3,10 @@ using ExpenseProcessingSystem.Models;
 using ExpenseProcessingSystem.ViewModels;
 using ExpenseProcessingSystem.ViewModels.Search_Filters;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Threading.Tasks;
 
 namespace ExpenseProcessingSystem.Services.Controller_Services
 {
@@ -29,54 +27,12 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             IQueryable<DMVendorModel> mList = _context.DMVendor.Where(x=>x.Vendor_isDeleted == false && x.Vendor_isActive == true).ToList().AsQueryable();
             var properties = filters.PF.GetType().GetProperties();
 
-            //FILTER
-            foreach(var property in properties)
-            {
-                var propertyName = property.Name;
-                string[] split = propertyName.Split("_");
-                var toStr = property.GetValue(filters.PF).ToString();
-                string[] colArr = { "No", "Creator_ID", "Approver_ID" };
-                if (toStr != "")
-                {
-                    if (toStr != "0")
-                    {
-                        if (colArr.Contains(split[1])) // IF INT VAL
-                        {
-                            mList = mList.Where("Vendor_" + split[1] + " = @0 AND  Vendor_isDeleted == @1", property.GetValue(filters.PF), false)
-                                     .Select(e => e).AsQueryable();
-                        }else if (split[1] == "Creator" || split[1] == "Approver")
-                        {
-                            //get all userIDs of creator or approver that contains string
-                            var names = _context.User
-                              .Where(x => (x.User_FName.Contains(property.GetValue(filters.PF).ToString())
-                              || x.User_LName.Contains(property.GetValue(filters.PF).ToString())))
-                              .Select(x => x.User_ID).ToList();
-                            if (split[1] == "Approver")
-                            {
-                                mList = mList.Where(x => names.Contains(x.Vendor_Approver_ID) && x.Vendor_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }else if (split[1] == "Creator")
-                            {
-                                mList = mList.Where(x=> names.Contains(x.Vendor_Creator_ID) &&  x.Vendor_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                           
-                        }
-                        else // IF STRING VALUE
-                        {
-                            mList = mList.Where("Vendor_"+split[1]+ ".Contains(@0) AND  Vendor_isDeleted == @1", property.GetValue(filters.PF).ToString(), false)
-                                    .Select(e => e).AsQueryable();
-                        }
-                    }
-                }
-            }
             var pendingList = _context.DMVendor_Pending.ToList();
             foreach (var m in pendingList)
             {
                 mList = mList.Concat(new DMVendorModel[] {
                     new DMVendorModel
                     {
-                       // Vendor_ID = m.Pending_Vendor_MasterID,
                         Vendor_MasterID = m.Pending_Vendor_MasterID,
                         Vendor_Name = m.Pending_Vendor_Name,
                         Vendor_TIN = m.Pending_Vendor_TIN,
@@ -88,6 +44,48 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         Vendor_Status = m.Pending_Vendor_Status
                     }
                 });
+            }
+
+            //FILTER
+            foreach (var property in properties)
+            {
+                var propertyName = property.Name;
+                var subStr = propertyName.Substring(propertyName.IndexOf("_")+1);
+                var toStr = property.GetValue(filters.PF).ToString();
+                string[] colArr = { "No", "Creator_ID", "Approver_ID" };
+                if (toStr != "")
+                {
+                    if (toStr != "0")
+                    {
+                        if (colArr.Contains(subStr)) // IF INT VAL
+                        {
+                            mList = mList.Where("Vendor_" + subStr + " = @0 AND  Vendor_isDeleted == @1", property.GetValue(filters.PF), false)
+                                     .Select(e => e).AsQueryable();
+                        }else if (subStr == "Creator" || subStr == "Approver")
+                        {
+                            //get all userIDs of creator or approver that contains string
+                            var names = _context.User
+                              .Where(x => (x.User_FName.Contains(property.GetValue(filters.PF).ToString())
+                              || x.User_LName.Contains(property.GetValue(filters.PF).ToString())))
+                              .Select(x => x.User_ID).ToList();
+                            if (subStr == "Approver")
+                            {
+                                mList = mList.Where(x => names.Contains(x.Vendor_Approver_ID) && x.Vendor_isDeleted == false)
+                                         .Select(e => e).AsQueryable();
+                            }else if (subStr == "Creator")
+                            {
+                                mList = mList.Where(x=> names.Contains(x.Vendor_Creator_ID) &&  x.Vendor_isDeleted == false)
+                                         .Select(e => e).AsQueryable();
+                            }
+                           
+                        }
+                        else // IF STRING VALUE
+                        {
+                            mList = mList.Where("Vendor_"+subStr+ ".Contains(@0) AND  Vendor_isDeleted == @1", property.GetValue(filters.PF).ToString(), false)
+                                    .Select(e => e).AsQueryable();
+                        }
+                    }
+                }
             }
 
             var creatorList = (from a in mList
@@ -244,39 +242,38 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             foreach (var property in properties)
             {
                 var propertyName = property.Name;
-                string[] split = propertyName.Split("_");
-                split[1] = propertyName.Substring(propertyName.IndexOf("_")+1);
+                var subStr = propertyName.Substring(propertyName.IndexOf("_")+1);
                 var toStr = property.GetValue(filters.CKF).ToString();
                 string[] colArr = { "No", "Creator_ID", "Approver_ID" };
                 if (toStr != "")
                 {
                     if (toStr != "0" && toStr != "0001/01/01 0:00:00")
                     {
-                        if (split[1] == "Creator_Name" || split[1] == "Approver_Name")
+                        if (subStr == "Creator_Name" || subStr == "Approver_Name")
                         {
                             //get all userIDs of creator or approver that contains string
                             var names = _context.User
                               .Where(x => (x.User_FName.Contains(property.GetValue(filters.CKF).ToString())
                               || x.User_LName.Contains(property.GetValue(filters.CKF).ToString())))
                               .Select(x => x.User_ID).ToList();
-                            if (split[1] == "Approver")
+                            if (subStr == "Approver")
                             {
                                 mList = mList.Where(x => names.Contains(x.Check_Approver_ID) && x.Check_isDeleted == false)
                                          .Select(e => e).AsQueryable();
                             }
-                            else if (split[1] == "Creator")
+                            else if (subStr == "Creator")
                             {
                                 mList = mList.Where(x => names.Contains(x.Check_Creator_ID) && x.Check_isDeleted == false)
                                          .Select(e => e).AsQueryable();
                             }
-                        }else if (split[1] == "Input_Date")
+                        }else if (subStr == "Input_Date")
                         {
-                            mList = mList.Where("Check_" + split[1] + " = @0", toStr)
+                            mList = mList.Where("Check_" + subStr + " = @0", toStr)
                                    .Select(e => e).AsQueryable();
                         }
                         else // IF STRING VALUE
                         {
-                            mList = mList.Where("Check_" + split[1] + ".Contains(@0)", toStr)
+                            mList = mList.Where("Check_" + subStr + ".Contains(@0)", toStr)
                                     .Select(e => e).AsQueryable();
                         }
                     }
@@ -328,57 +325,6 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             IQueryable<DMAccountModel> mList = _context.DMAccount.Where(x => x.Account_isDeleted == false && x.Account_isActive == true).ToList().AsQueryable();
             var properties = filters.AF.GetType().GetProperties();
 
-            //FILTER
-            foreach (var property in properties)
-            {
-                var propertyName = property.Name;
-                string[] split = propertyName.Split("_");
-                var toStr = property.GetValue(filters.AF).ToString();
-                string[] colArr = { "No", "Creator_ID", "Approver_ID" };
-                if (toStr != "")
-                {
-                    if (toStr != "0")
-                    {
-                        if (colArr.Contains(split[1])) // IF INT VAL
-                        {
-                            mList = mList.Where("Account_" + split[1] + " = @0 AND  Account_isDeleted == @1", property.GetValue(filters.AF), false)
-                                     .Select(e => e).AsQueryable();
-                        }
-                        else if (split[1] == "Creator" || split[1] == "Approver")
-                        {
-                            //get all userIDs of creator or approver that contains string
-                            var names = _context.User
-                              .Where(x => (x.User_FName.Contains(property.GetValue(filters.AF).ToString())
-                              || x.User_LName.Contains(property.GetValue(filters.AF).ToString())))
-                              .Select(x => x.User_ID).ToList();
-                            if (split[1] == "Approver")
-                            {
-                                mList = mList.Where(x => names.Contains(x.Account_Approver_ID) && x.Account_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                            else if (split[1] == "Creator")
-                            {
-                                mList = mList.Where(x => names.Contains(x.Account_Creator_ID) && x.Account_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                        }
-                        else if (split[1] == "FBT")
-                        {
-                            //get all userIDs of creator or approver that contains string
-                            var names = _context.DMFBT
-                              .Where(x => (x.FBT_Name.Contains(property.GetValue(filters.AF).ToString())))
-                              .Select(x => x.FBT_MasterID).ToList();
-                            mList = mList.Where(x => names.Contains(x.Account_FBT_MasterID) && x.Account_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                        }
-                        else // IF STRING VALUE
-                        {
-                            mList = mList.Where("Account_" + split[1] + ".Contains(@0) AND  Account_isDeleted == @1", property.GetValue(filters.AF).ToString(), false)
-                                    .Select(e => e).AsQueryable();
-                        }
-                    }
-                }
-            }
             var pendingList = _context.DMAccount_Pending.ToList();
             foreach (var m in pendingList)
             {
@@ -400,6 +346,57 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         Account_Status = m.Pending_Account_Status
                     }
                 });
+            }
+            //FILTER
+            foreach (var property in properties)
+            {
+                var propertyName = property.Name;
+                var subStr = propertyName.Substring(propertyName.IndexOf("_")+1);
+                var toStr = property.GetValue(filters.AF).ToString();
+                string[] colArr = { "No", "Creator_ID", "Approver_ID" };
+                if (toStr != "")
+                {
+                    if (toStr != "0")
+                    {
+                        if (colArr.Contains(subStr)) // IF INT VAL
+                        {
+                            mList = mList.Where("Account_" + subStr + " = @0 AND  Account_isDeleted == @1", property.GetValue(filters.AF), false)
+                                     .Select(e => e).AsQueryable();
+                        }
+                        else if (subStr == "Creator" || subStr == "Approver")
+                        {
+                            //get all userIDs of creator or approver that contains string
+                            var names = _context.User
+                              .Where(x => (x.User_FName.Contains(property.GetValue(filters.AF).ToString())
+                              || x.User_LName.Contains(property.GetValue(filters.AF).ToString())))
+                              .Select(x => x.User_ID).ToList();
+                            if (subStr == "Approver")
+                            {
+                                mList = mList.Where(x => names.Contains(x.Account_Approver_ID) && x.Account_isDeleted == false)
+                                         .Select(e => e).AsQueryable();
+                            }
+                            else if (subStr == "Creator")
+                            {
+                                mList = mList.Where(x => names.Contains(x.Account_Creator_ID) && x.Account_isDeleted == false)
+                                         .Select(e => e).AsQueryable();
+                            }
+                        }
+                        else if (subStr == "FBT")
+                        {
+                            //get all userIDs of creator or approver that contains string
+                            var names = _context.DMFBT
+                              .Where(x => (x.FBT_Name.Contains(property.GetValue(filters.AF).ToString())))
+                              .Select(x => x.FBT_MasterID).ToList();
+                            mList = mList.Where(x => names.Contains(x.Account_FBT_MasterID) && x.Account_isDeleted == false)
+                                         .Select(e => e).AsQueryable();
+                        }
+                        else // IF STRING VALUE
+                        {
+                            mList = mList.Where("Account_" + subStr + ".Contains(@0) AND  Account_isDeleted == @1", property.GetValue(filters.AF).ToString(), false)
+                                    .Select(e => e).AsQueryable();
+                        }
+                    }
+                }
             }
             var creatorList = (from a in mList
                                join b in _context.User on a.Account_Creator_ID equals b.User_ID
@@ -447,48 +444,6 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             IQueryable<DMVATModel> mList = _context.DMVAT.Where(x => x.VAT_isDeleted == false && x.VAT_isActive == true).ToList().AsQueryable();
             var properties = filters.VF.GetType().GetProperties();
 
-            //FILTER
-            foreach (var property in properties)
-            {
-                var propertyName = property.Name;
-                string[] split = propertyName.Split("_");
-                var toStr = property.GetValue(filters.VF).ToString();
-                string[] colArr = { "No", "Creator_ID", "Approver_ID" };
-                if (toStr != "")
-                {
-                    if (toStr != "0")
-                    {
-                        if (colArr.Contains(split[1])) // IF INT VAL
-                        {
-                            mList = mList.Where("VAT_" + split[1] + " = @0 AND  VAT_isDeleted == @1", property.GetValue(filters.VF), false)
-                                     .Select(e => e).AsQueryable();
-                        }
-                        else if (split[1] == "Creator" || split[1] == "Approver")
-                        {
-                            //get all userIDs of creator or approver that contains string
-                            var names = _context.User
-                              .Where(x => (x.User_FName.Contains(property.GetValue(filters.VF).ToString())
-                              || x.User_LName.Contains(property.GetValue(filters.VF).ToString())))
-                              .Select(x => x.User_ID).ToList();
-                            if (split[1] == "Approver")
-                            {
-                                mList = mList.Where(x => names.Contains(x.VAT_Approver_ID) && x.VAT_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                            else if (split[1] == "Creator")
-                            {
-                                mList = mList.Where(x => names.Contains(x.VAT_Creator_ID) && x.VAT_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                        }
-                        else // IF STRING VALUE
-                        {
-                            mList = mList.Where("VAT_" + split[1] + ".Contains(@0) AND  VAT_isDeleted == @1", property.GetValue(filters.VF).ToString(), false)
-                                    .Select(e => e).AsQueryable();
-                        }
-                    }
-                }
-            }
             var pendingList = _context.DMVAT_Pending.ToList();
             foreach (var m in pendingList)
             {
@@ -506,6 +461,48 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         VAT_Status = m.Pending_VAT_Status
                     }
                 });
+            }
+            //FILTER
+            foreach (var property in properties)
+            {
+                var propertyName = property.Name;
+                var subStr = propertyName.Substring(propertyName.IndexOf("_")+1);
+                var toStr = property.GetValue(filters.VF).ToString();
+                string[] colArr = { "No", "Creator_ID", "Approver_ID" };
+                if (toStr != "")
+                {
+                    if (toStr != "0")
+                    {
+                        if (colArr.Contains(subStr)) // IF INT VAL
+                        {
+                            mList = mList.Where("VAT_" + subStr + " = @0 AND  VAT_isDeleted == @1", property.GetValue(filters.VF), false)
+                                     .Select(e => e).AsQueryable();
+                        }
+                        else if (subStr == "Creator" || subStr == "Approver")
+                        {
+                            //get all userIDs of creator or approver that contains string
+                            var names = _context.User
+                              .Where(x => (x.User_FName.Contains(property.GetValue(filters.VF).ToString())
+                              || x.User_LName.Contains(property.GetValue(filters.VF).ToString())))
+                              .Select(x => x.User_ID).ToList();
+                            if (subStr == "Approver")
+                            {
+                                mList = mList.Where(x => names.Contains(x.VAT_Approver_ID) && x.VAT_isDeleted == false)
+                                         .Select(e => e).AsQueryable();
+                            }
+                            else if (subStr == "Creator")
+                            {
+                                mList = mList.Where(x => names.Contains(x.VAT_Creator_ID) && x.VAT_isDeleted == false)
+                                         .Select(e => e).AsQueryable();
+                            }
+                        }
+                        else // IF STRING VALUE
+                        {
+                            mList = mList.Where("VAT_" + subStr + ".Contains(@0) AND  VAT_isDeleted == @1", property.GetValue(filters.VF).ToString(), false)
+                                    .Select(e => e).AsQueryable();
+                        }
+                    }
+                }
             }
             var creatorList = (from a in mList
                                join b in _context.User on a.VAT_Creator_ID equals b.User_ID
@@ -542,48 +539,6 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             IQueryable<DMFBTModel> mList = _context.DMFBT.Where(x => x.FBT_isDeleted == false && x.FBT_isActive == true).ToList().AsQueryable();
             var properties = filters.FF.GetType().GetProperties();
 
-            //FILTER
-            foreach (var property in properties)
-            {
-                var propertyName = property.Name;
-                string[] split = propertyName.Split("_");
-                var toStr = property.GetValue(filters.FF).ToString();
-                string[] colArr = { "Tax_Rate", "Creator_ID", "Approver_ID" };
-                if (toStr != "")
-                {
-                    if (toStr != "0")
-                    {
-                        if (colArr.Contains(split[1])) // IF INT VAL
-                        {
-                            mList = mList.Where("FBT_" + split[1] + " = @0 AND  FBT_isDeleted == @1", property.GetValue(filters.FF), false)
-                                     .Select(e => e).AsQueryable();
-                        }
-                        else if (split[1] == "Creator" || split[1] == "Approver")
-                        {
-                            //get all userIDs of creator or approver that contains string
-                            var names = _context.User
-                              .Where(x => (x.User_FName.Contains(property.GetValue(filters.FF).ToString())
-                              || x.User_LName.Contains(property.GetValue(filters.FF).ToString())))
-                              .Select(x => x.User_ID).ToList();
-                            if (split[1] == "Approver")
-                            {
-                                mList = mList.Where(x => names.Contains(x.FBT_Approver_ID) && x.FBT_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                            else if (split[1] == "Creator")
-                            {
-                                mList = mList.Where(x => names.Contains(x.FBT_Creator_ID) && x.FBT_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                        }
-                        else // IF STRING VALUE
-                        {
-                            mList = mList.Where("FBT_" + split[1] + ".Contains(@0) AND  FBT_isDeleted == @1", property.GetValue(filters.FF).ToString(), false)
-                                    .Select(e => e).AsQueryable();
-                        }
-                    }
-                }
-            }
             var pendingList = _context.DMFBT_Pending.ToList();
             foreach (var m in pendingList)
             {
@@ -601,6 +556,48 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         FBT_Status = m.Pending_FBT_Status
                     }
                 });
+            }
+            //FILTER
+            foreach (var property in properties)
+            {
+                var propertyName = property.Name;
+                var subStr = propertyName.Substring(propertyName.IndexOf("_")+1);
+                var toStr = property.GetValue(filters.FF).ToString();
+                string[] colArr = { "Tax_Rate", "Creator_ID", "Approver_ID" };
+                if (toStr != "")
+                {
+                    if (toStr != "0")
+                    {
+                        if (colArr.Contains(subStr)) // IF INT VAL
+                        {
+                            mList = mList.Where("FBT_" + subStr + " = @0 AND  FBT_isDeleted == @1", property.GetValue(filters.FF), false)
+                                     .Select(e => e).AsQueryable();
+                        }
+                        else if (subStr == "Creator" || subStr == "Approver")
+                        {
+                            //get all userIDs of creator or approver that contains string
+                            var names = _context.User
+                              .Where(x => (x.User_FName.Contains(property.GetValue(filters.FF).ToString())
+                              || x.User_LName.Contains(property.GetValue(filters.FF).ToString())))
+                              .Select(x => x.User_ID).ToList();
+                            if (subStr == "Approver")
+                            {
+                                mList = mList.Where(x => names.Contains(x.FBT_Approver_ID) && x.FBT_isDeleted == false)
+                                         .Select(e => e).AsQueryable();
+                            }
+                            else if (subStr == "Creator")
+                            {
+                                mList = mList.Where(x => names.Contains(x.FBT_Creator_ID) && x.FBT_isDeleted == false)
+                                         .Select(e => e).AsQueryable();
+                            }
+                        }
+                        else // IF STRING VALUE
+                        {
+                            mList = mList.Where("FBT_" + subStr + ".Contains(@0) AND  FBT_isDeleted == @1", property.GetValue(filters.FF).ToString(), false)
+                                    .Select(e => e).AsQueryable();
+                        }
+                    }
+                }
             }
             var creatorList = (from a in mList
                                join b in _context.User on a.FBT_Creator_ID equals b.User_ID
@@ -640,48 +637,6 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             IQueryable<DMTRModel> mList = _context.DMTR.Where(x => x.TR_isDeleted == false && x.TR_isActive == true).ToList().AsQueryable();
             var properties = filters.EF.GetType().GetProperties();
 
-            //FILTER
-            foreach (var property in properties)
-            {
-                var propertyName = property.Name;
-                string[] split = propertyName.Split("_");
-                var toStr = property.GetValue(filters.EF).ToString();
-                string[] colArr = { "Tax_Rate", "Creator_ID", "Approver_ID" };
-                if (toStr != "")
-                {
-                    if (toStr != "0")
-                    {
-                        if (colArr.Contains(split[1])) // IF INT VAL
-                        {
-                            mList = mList.Where("TR_" + split[1] + " = @0 AND  TR_isDeleted == @1", property.GetValue(filters.EF), false)
-                                     .Select(e => e).AsQueryable();
-                        }
-                        else if (split[1] == "Creator" || split[1] == "Approver")
-                        {
-                            //get all userIDs of creator or approver that contains string
-                            var names = _context.User
-                              .Where(x => (x.User_FName.Contains(property.GetValue(filters.EF).ToString())
-                              || x.User_LName.Contains(property.GetValue(filters.EF).ToString())))
-                              .Select(x => x.User_ID).ToList();
-                            if (split[1] == "Approver")
-                            {
-                                mList = mList.Where(x => names.Contains(x.TR_Approver_ID) && x.TR_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                            else if (split[1] == "Creator")
-                            {
-                                mList = mList.Where(x => names.Contains(x.TR_Creator_ID) && x.TR_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                        }
-                        else // IF STRING VALUE
-                        {
-                            mList = mList.Where("TR_" + split[1] + ".Contains(@0) AND  TR_isDeleted == @1", property.GetValue(filters.EF).ToString(), false)
-                                    .Select(e => e).AsQueryable();
-                        }
-                    }
-                }
-            }
             var pendingList = _context.DMTR_Pending.ToList();
             foreach (var m in pendingList)
             {
@@ -701,6 +656,48 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         TR_Status = m.Pending_TR_Status
                     }
                 });
+            }
+            //FILTER
+            foreach (var property in properties)
+            {
+                var propertyName = property.Name;
+                var subStr = propertyName.Substring(propertyName.IndexOf("_")+1);
+                var toStr = property.GetValue(filters.EF).ToString();
+                string[] colArr = { "Tax_Rate", "Creator_ID", "Approver_ID" };
+                if (toStr != "")
+                {
+                    if (toStr != "0")
+                    {
+                        if (colArr.Contains(subStr)) // IF INT VAL
+                        {
+                            mList = mList.Where("TR_" + subStr + " = @0 AND  TR_isDeleted == @1", property.GetValue(filters.EF), false)
+                                     .Select(e => e).AsQueryable();
+                        }
+                        else if (subStr == "Creator" || subStr == "Approver")
+                        {
+                            //get all userIDs of creator or approver that contains string
+                            var names = _context.User
+                              .Where(x => (x.User_FName.Contains(property.GetValue(filters.EF).ToString())
+                              || x.User_LName.Contains(property.GetValue(filters.EF).ToString())))
+                              .Select(x => x.User_ID).ToList();
+                            if (subStr == "Approver")
+                            {
+                                mList = mList.Where(x => names.Contains(x.TR_Approver_ID) && x.TR_isDeleted == false)
+                                         .Select(e => e).AsQueryable();
+                            }
+                            else if (subStr == "Creator")
+                            {
+                                mList = mList.Where(x => names.Contains(x.TR_Creator_ID) && x.TR_isDeleted == false)
+                                         .Select(e => e).AsQueryable();
+                            }
+                        }
+                        else // IF STRING VALUE
+                        {
+                            mList = mList.Where("TR_" + subStr + ".Contains(@0) AND  TR_isDeleted == @1", property.GetValue(filters.EF).ToString(), false)
+                                    .Select(e => e).AsQueryable();
+                        }
+                    }
+                }
             }
             var creatorList = (from a in mList
                                join b in _context.User on a.TR_Creator_ID equals b.User_ID
@@ -742,48 +739,6 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             IQueryable<DMCurrencyModel> mList = _context.DMCurrency.Where(x => x.Curr_isDeleted == false && x.Curr_isActive == true).ToList().AsQueryable();
             var properties = filters.CF.GetType().GetProperties();
 
-            //FILTER
-            foreach (var property in properties)
-            {
-                var propertyName = property.Name;
-                string[] split = propertyName.Split("_");
-                var toStr = property.GetValue(filters.CF).ToString();
-                string[] colArr = { "No", "Creator_ID", "Approver_ID" };
-                if (toStr != "")
-                {
-                    if (toStr != "0")
-                    {
-                        if (colArr.Contains(split[1])) // IF INT VAL
-                        {
-                            mList = mList.Where("Curr_" + split[1] + " = @0 AND  Curr_isDeleted == @1", property.GetValue(filters.CF), false)
-                                     .Select(e => e).AsQueryable();
-                        }
-                        else if (split[1] == "Creator" || split[1] == "Approver")
-                        {
-                            //get all userIDs of creator or approver that contains string
-                            var names = _context.User
-                              .Where(x => (x.User_FName.Contains(property.GetValue(filters.CF).ToString())
-                              || x.User_LName.Contains(property.GetValue(filters.CF).ToString())))
-                              .Select(x => x.User_ID).ToList();
-                            if (split[1] == "Approver")
-                            {
-                                mList = mList.Where(x => names.Contains(x.Curr_Approver_ID) && x.Curr_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                            else if (split[1] == "Creator")
-                            {
-                                mList = mList.Where(x => names.Contains(x.Curr_Creator_ID) && x.Curr_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                        }
-                        else // IF STRING VALUE
-                        {
-                            mList = mList.Where("Curr_" + split[1] + ".Contains(@0) AND  Curr_isDeleted == @1", property.GetValue(filters.CF).ToString(), false)
-                                    .Select(e => e).AsQueryable();
-                        }
-                    }
-                }
-            }
             var pendingList = _context.DMCurrency_Pending.ToList();
             foreach (var m in pendingList)
             {
@@ -801,6 +756,48 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         Curr_Status = m.Pending_Curr_Status
                     }
                 });
+            }
+            //FILTER
+            foreach (var property in properties)
+            {
+                var propertyName = property.Name;
+                var subStr = propertyName.Substring(propertyName.IndexOf("_")+1);
+                var toStr = property.GetValue(filters.CF).ToString();
+                string[] colArr = { "No", "Creator_ID", "Approver_ID" };
+                if (toStr != "")
+                {
+                    if (toStr != "0")
+                    {
+                        if (colArr.Contains(subStr)) // IF INT VAL
+                        {
+                            mList = mList.Where("Curr_" + subStr + " = @0 AND  Curr_isDeleted == @1", property.GetValue(filters.CF), false)
+                                     .Select(e => e).AsQueryable();
+                        }
+                        else if (subStr == "Creator" || subStr == "Approver")
+                        {
+                            //get all userIDs of creator or approver that contains string
+                            var names = _context.User
+                              .Where(x => (x.User_FName.Contains(property.GetValue(filters.CF).ToString())
+                              || x.User_LName.Contains(property.GetValue(filters.CF).ToString())))
+                              .Select(x => x.User_ID).ToList();
+                            if (subStr == "Approver")
+                            {
+                                mList = mList.Where(x => names.Contains(x.Curr_Approver_ID) && x.Curr_isDeleted == false)
+                                         .Select(e => e).AsQueryable();
+                            }
+                            else if (subStr == "Creator")
+                            {
+                                mList = mList.Where(x => names.Contains(x.Curr_Creator_ID) && x.Curr_isDeleted == false)
+                                         .Select(e => e).AsQueryable();
+                            }
+                        }
+                        else // IF STRING VALUE
+                        {
+                            mList = mList.Where("Curr_" + subStr + ".Contains(@0) AND  Curr_isDeleted == @1", property.GetValue(filters.CF).ToString(), false)
+                                    .Select(e => e).AsQueryable();
+                        }
+                    }
+                }
             }
             var creatorList = (from a in mList
                                join b in _context.User on a.Curr_Creator_ID equals b.User_ID
@@ -867,26 +864,26 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             foreach (var property in properties)
             {
                 var propertyName = property.Name;
-                string[] split = propertyName.Split("_");
+                var subStr = propertyName.Substring(propertyName.IndexOf("_")+1);
                 var toStr = property.GetValue(filters.EMF).ToString();
                 string[] colArr = { "Creator_ID", "Approver_ID" };
                 if (toStr != "")
                 {
                     if (toStr != "0")
                     {
-                        if (split[1] == "Creator" || split[1] == "Approver")
+                        if (subStr == "Creator" || subStr == "Approver")
                         {
                             //get all userIDs of creator or approver that contains string
                             var names = _context.User
                               .Where(x => (x.User_FName.Contains(property.GetValue(filters.EMF).ToString())
                               || x.User_LName.Contains(property.GetValue(filters.EMF).ToString())))
                               .Select(x => x.User_ID).ToList();
-                            if (split[1] == "Approver")
+                            if (subStr == "Approver")
                             {
                                 mList = mList.Where(x => names.Contains(x.Emp_Approver_ID) && x.Emp_isDeleted == false)
                                          .Select(e => e).AsQueryable();
                             }
-                            else if (split[1] == "Creator")
+                            else if (subStr == "Creator")
                             {
                                 mList = mList.Where(x => names.Contains(x.Emp_Creator_ID) && x.Emp_isDeleted == false)
                                          .Select(e => e).AsQueryable();
@@ -894,7 +891,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         }
                         else // IF STRING VALUE
                         {
-                            mList = mList.Where("Emp_" + split[1] + ".Contains(@0)", toStr)
+                            mList = mList.Where("Emp_" + subStr + ".Contains(@0)", toStr)
                                     .Select(e => e).AsQueryable();
                         }
                     }
@@ -958,26 +955,26 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             foreach (var property in properties)
             {
                 var propertyName = property.Name;
-                string[] split = propertyName.Split("_");
+                var subStr = propertyName.Substring(propertyName.IndexOf("_")+1);
                 var toStr = property.GetValue(filters.EMF).ToString();
                 string[] colArr = { "Creator_ID", "Approver_ID" };
                 if (toStr != "")
                 {
                     if (toStr != "0")
                     {
-                        if (split[1] == "Creator" || split[1] == "Approver")
+                        if (subStr == "Creator" || subStr == "Approver")
                         {
                             //get all userIDs of creator or approver that contains string
                             var names = _context.User
                               .Where(x => (x.User_FName.Contains(property.GetValue(filters.EMF).ToString())
                               || x.User_LName.Contains(property.GetValue(filters.EMF).ToString())))
                               .Select(x => x.User_ID).ToList();
-                            if (split[1] == "Approver")
+                            if (subStr == "Approver")
                             {
                                 mList = mList.Where(x => names.Contains(x.Emp_Approver_ID) && x.Emp_isDeleted == false)
                                          .Select(e => e).AsQueryable();
                             }
-                            else if (split[1] == "Creator")
+                            else if (subStr == "Creator")
                             {
                                 mList = mList.Where(x => names.Contains(x.Emp_Creator_ID) && x.Emp_isDeleted == false)
                                          .Select(e => e).AsQueryable();
@@ -985,7 +982,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         }
                         else // IF STRING VALUE
                         {
-                            mList = mList.Where("Emp_" + split[1] + ".Contains(@0)", toStr)
+                            mList = mList.Where("Emp_" + subStr + ".Contains(@0)", toStr)
                                     .Select(e => e).AsQueryable();
                         }
                     }
@@ -1049,26 +1046,26 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             foreach (var property in properties)
             {
                 var propertyName = property.Name;
-                string[] split = propertyName.Split("_");
+                var subStr = propertyName.Substring(propertyName.IndexOf("_")+1);
                 var toStr = property.GetValue(filters.CUF).ToString();
                 string[] colArr = { "Creator_ID", "Approver_ID" };
                 if (toStr != "")
                 {
                     if (toStr != "0")
                     {
-                        if (split[1] == "Creator" || split[1] == "Approver")
+                        if (subStr == "Creator" || subStr == "Approver")
                         {
                             //get all userIDs of creator or approver that contains string
                             var names = _context.User
                               .Where(x => (x.User_FName.Contains(property.GetValue(filters.CUF).ToString())
                               || x.User_LName.Contains(property.GetValue(filters.CUF).ToString())))
                               .Select(x => x.User_ID).ToList();
-                            if (split[1] == "Approver")
+                            if (subStr == "Approver")
                             {
                                 mList = mList.Where(x => names.Contains(x.Cust_Approver_ID) && x.Cust_isDeleted == false)
                                          .Select(e => e).AsQueryable();
                             }
-                            else if (split[1] == "Creator")
+                            else if (subStr == "Creator")
                             {
                                 mList = mList.Where(x => names.Contains(x.Cust_Creator_ID) && x.Cust_isDeleted == false)
                                          .Select(e => e).AsQueryable();
@@ -1076,7 +1073,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         }
                         else // IF STRING VALUE
                         {
-                            mList = mList.Where("Cust_" + split[1] + ".Contains(@0)", toStr)
+                            mList = mList.Where("Cust_" + subStr + ".Contains(@0)", toStr)
                                     .Select(e => e).AsQueryable();
                         }
                     }
@@ -1150,26 +1147,26 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             foreach (var property in properties)
             {
                 var propertyName = property.Name;
-                string[] split = propertyName.Split("_");
+                var subStr = propertyName.Substring(propertyName.IndexOf("_")+1);
                 var toStr = property.GetValue(filters.BF).ToString();
                 string[] colArr = { "No", "Creator_ID", "Approver_ID" };
                 if (toStr != "")
                 {
                     if (toStr != "0")
                     {
-                        if (split[1] == "Creator" || split[1] == "Approver")
+                        if (subStr == "Creator" || subStr == "Approver")
                         {
                             //get all userIDs of creator or approver that contains string
                             var names = _context.User
                               .Where(x => (x.User_FName.Contains(property.GetValue(filters.BF).ToString())
                               || x.User_LName.Contains(property.GetValue(filters.BF).ToString())))
                               .Select(x => x.User_ID).ToList();
-                            if (split[1] == "Approver")
+                            if (subStr == "Approver")
                             {
                                 mList = mList.Where(x => names.Contains(x.BCS_Approver_ID) && x.BCS_isDeleted == false)
                                          .Select(e => e).AsQueryable();
                             }
-                            else if (split[1] == "Creator")
+                            else if (subStr == "Creator")
                             {
                                 mList = mList.Where(x => names.Contains(x.BCS_Creator_ID) && x.BCS_isDeleted == false)
                                          .Select(e => e).AsQueryable();
@@ -1177,7 +1174,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         }
                         else // IF STRING VALUE
                         {
-                            mList = mList.Where("BCS_" + split[1] + ".Contains(@0)", toStr)
+                            mList = mList.Where("BCS_" + subStr + ".Contains(@0)", toStr)
                                     .Select(e => e).AsQueryable();
                         }
                     }

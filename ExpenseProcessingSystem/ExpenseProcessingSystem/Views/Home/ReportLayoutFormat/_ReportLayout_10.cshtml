@@ -1,4 +1,4 @@
-﻿@model ExpenseProcessingSystem.ViewModels.TEMP_HomeReportDataFilterViewModel
+﻿@model ExpenseProcessingSystem.ViewModels.HomeReportDataFilterViewModel
 
 @{
     Layout = null;
@@ -49,7 +49,7 @@
             <table align="center" style="margin-top:8px;width:15%;font-weight: bold;">
                 <tr>
                     <td style="font-size:small"><</td>
-                    <td style="font-size:small">@Html.DisplayFor(Model => Model.HomeReportFilter.Month)</td>
+                    <td style="font-size:small">@Html.DisplayFor(Model => Model.HomeReportFilter.MonthName)</td>
                     <td style="font-size:small;text-align:center">-</td>
                     <td style="font-size:small;text-align:right">@Html.DisplayFor(Model => Model.HomeReportFilter.Year)</td>
                     <td style="font-size:small">></td>

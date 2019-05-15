@@ -74,24 +74,24 @@ namespace ExpenseProcessingSystem.ConstantData
             }
             return rep;
         }
-        public static IEnumerable<Temp_RepWTSViewModel> GetTEMP_HomeReportWTSOutputModelData_Month(string _year, string _month, IEnumerable<Temp_RepWTSViewModel> data, string _subType)
+        public static IEnumerable<Temp_RepWTSViewModel> GetTEMP_HomeReportWTSOutputModelData_Month(int _year, int _month, IEnumerable<Temp_RepWTSViewModel> data, int _subType)
         {
             return data.Where(x => x.WTS_Val_Date >= new DateTime(Convert.ToInt32(_year), Convert.ToInt32(_month), 1)
                                 && x.WTS_Val_Date <= new DateTime(Convert.ToInt32(_year), Convert.ToInt32(_month), 30) 
                                 && x.WTS_TR_ID == Convert.ToInt32(_subType));
         }
-        public static IEnumerable<Temp_RepWTSViewModel> GetTEMP_HomeReportWTSOutputModelData_Semester(string _year, string _sem, IEnumerable<Temp_RepWTSViewModel> data, string _subType)
+        public static IEnumerable<Temp_RepWTSViewModel> GetTEMP_HomeReportWTSOutputModelData_Semester(int _year, int _sem, IEnumerable<Temp_RepWTSViewModel> data, int _subType)
         {
             DateTime periodFrom = new DateTime();
             DateTime periodTo = new DateTime();
             CultureInfo ci = CultureInfo.InvariantCulture;
             switch (_sem)
             {
-                case "1":
+                case 1:
                     periodFrom = DateTime.ParseExact("01/01/" + _year, "MM/dd/yyyy", ci);
                     periodTo = DateTime.ParseExact("06/01/" + _year, "MM/dd/yyyy", ci);
                     break;
-                case "2":
+                case 2:
                     periodFrom = DateTime.ParseExact("07/01/" + _year, "MM/dd/yyyy", ci);
                     periodTo = DateTime.ParseExact("12/01/" + _year, "MM/dd/yyyy", ci);
                     break;
@@ -100,11 +100,16 @@ namespace ExpenseProcessingSystem.ConstantData
                                 && x.WTS_Val_Date <= periodTo
                                 && x.WTS_TR_ID == Convert.ToInt32(_subType));
         }
-        public static IEnumerable<Temp_RepWTSViewModel> GetTEMP_HomeReportWTSOutputModelData_Period(DateTime _periodFrom, DateTime _periodTo, IEnumerable<Temp_RepWTSViewModel> data, string _subType)
+        public static IEnumerable<Temp_RepWTSViewModel> GetTEMP_HomeReportWTSOutputModelData_Period(DateTime _periodFrom, DateTime _periodTo, IEnumerable<Temp_RepWTSViewModel> data, int _subType)
         {
             return data.Where(x => x.WTS_Val_Date >= _periodFrom
                                 && x.WTS_Val_Date <= _periodTo
                                 && x.WTS_TR_ID == Convert.ToInt32(_subType));
+        }
+
+        internal static IEnumerable<Temp_RepWTSViewModel> GetTEMP_HomeReportWTSOutputModelData_Month(int year, byte month, IEnumerable<Temp_RepWTSViewModel> enumerable, int reportSubType)
+        {
+            throw new NotImplementedException();
         }
     }
 }

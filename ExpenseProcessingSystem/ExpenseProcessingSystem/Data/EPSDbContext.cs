@@ -32,6 +32,8 @@ namespace ExpenseProcessingSystem.Data
         public DbSet<DMCustModel> DMCust { get; set; }
         public DbSet<DMBIRCertSignModel> DMBCS { get; set; }
         public DbSet<SystemMessageModel> SystemMessageModels { get; set; }
+        public DbSet<DMVendorTRVATModel> DMVendorTRVAT { get; set; }
+        public DbSet<DMAccountGroupModel> DMAccountGroup { get; set; }
 
         //PENDING ENTRY TABLES
         public DbSet<DMVendorModel_Pending> DMVendor_Pending { get; set; }
@@ -45,6 +47,8 @@ namespace ExpenseProcessingSystem.Data
         public DbSet<DMEmpModel_Pending> DMEmp_Pending { get; set; }
         public DbSet<DMCustModel_Pending> DMCust_Pending { get; set; }
         public DbSet<DMBIRCertSignModel_Pending> DMBCS_Pending { get; set; }
+        public DbSet<DMVendorTRVATModel_Pending> DMVendorTRVAT_Pending { get; set; }
+        public DbSet<DMAccountGroupModel_Pending> DMAccountGroup_Pending { get; set; }
 
         //HOME
         public DbSet<HomeNotifModel> HomeNotif { get; set; }

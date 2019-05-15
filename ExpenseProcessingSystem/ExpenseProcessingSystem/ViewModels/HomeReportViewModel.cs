@@ -1,5 +1,6 @@
 ﻿using ExpenseProcessingSystem.ConstantData;
 using ExpenseProcessingSystem.Models;
+using ExpenseProcessingSystem.Services.Validations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -32,29 +33,40 @@ namespace ExpenseProcessingSystem.ViewModels
 
         public IEnumerable<PeriodOption> PeriodOptionList { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime PeriodFrom { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime PeriodTo { get; set; }
 
         public string CheckNo { get; set; }
 
         public string VoucherNo { get; set; }
 
-        public string ReportType { get; set; }
+        public int ReportType { get; set; }
 
-        public string ReportSubType { get; set; }
+        public int ReportSubType { get; set; }
 
-        public string FileFormat { get; set; }
+        public int FileFormat { get; set; }
 
-        public string Year { get; set; }
+        public int Year { get; set; }
 
-        public string Month { get; set; }
+        public int Month { get; set; }
 
-        public string YearSem { get; set; }
+        public string MonthName { get; set; }
 
-        public string Semester { get; set; }
+        public string SemesterName { get; set; }
 
-        public string PeriodOption { get; set; }
+        public int YearSem { get; set; }
+
+        public int Semester { get; set; }
+
+        public int PeriodOption { get; set; }
+
+        public int CurrentMonth { get { return DateTime.Today.Month; } }
+
+        public int CurrentSemester { get { return ConstantData.HomeReportConstantValue.GetCurrentSemester(); } }
+
 
     }
 }

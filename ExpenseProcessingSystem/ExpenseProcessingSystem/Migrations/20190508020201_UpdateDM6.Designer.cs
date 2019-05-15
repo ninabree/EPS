@@ -4,14 +4,16 @@ using ExpenseProcessingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    partial class EPSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190508020201_UpdateDM6")]
+    partial class UpdateDM6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,17 +27,19 @@ namespace ExpenseProcessingSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Acc_ID");
+                    b.Property<string>("Budget_Acc_ID");
 
-                    b.Property<double>("Budget_Amount");
+                    b.Property<string>("Budget_Amount");
 
-                    b.Property<string>("Budget_Approver_ID");
+                    b.Property<int>("Budget_Approver_ID");
 
-                    b.Property<double>("Budget_Current");
+                    b.Property<DateTime>("Budget_Created_Date");
 
-                    b.Property<DateTime>("Budget_Last_Approval_Date");
+                    b.Property<int>("Budget_Creator_ID");
 
-                    b.Property<byte>("Budget_Status");
+                    b.Property<DateTime>("Budget_Last_Updated");
+
+                    b.Property<string>("Budget_Status");
 
                     b.Property<bool>("Budget_isDeleted");
 
@@ -50,25 +54,9 @@ namespace ExpenseProcessingSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AccountGroup_Approver_ID");
-
-                    b.Property<string>("AccountGroup_Code");
-
-                    b.Property<DateTime>("AccountGroup_Created_Date");
-
-                    b.Property<int>("AccountGroup_Creator_ID");
-
-                    b.Property<DateTime>("AccountGroup_Last_Updated");
-
                     b.Property<int>("AccountGroup_MasterID");
 
                     b.Property<string>("AccountGroup_Name");
-
-                    b.Property<string>("AccountGroup_Status");
-
-                    b.Property<bool>("AccountGroup_isActive");
-
-                    b.Property<bool>("AccountGroup_isDeleted");
 
                     b.HasKey("AccountGroup_ID");
 
@@ -775,35 +763,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.ToTable("HomeNotif");
                 });
 
-            modelBuilder.Entity("ExpenseProcessingSystem.Models.Pending.DMAccountGroupModel_Pending", b =>
-                {
-                    b.Property<int>("Pending_AccountGroup_ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("Pending_AccountGroup_Approver_ID");
-
-                    b.Property<string>("Pending_AccountGroup_Code");
-
-                    b.Property<int>("Pending_AccountGroup_Creator_ID");
-
-                    b.Property<DateTime>("Pending_AccountGroup_Filed_Date");
-
-                    b.Property<int>("Pending_AccountGroup_MasterID");
-
-                    b.Property<string>("Pending_AccountGroup_Name");
-
-                    b.Property<string>("Pending_AccountGroup_Status");
-
-                    b.Property<bool>("Pending_AccountGroup_isActive");
-
-                    b.Property<bool>("Pending_AccountGroup_isDeleted");
-
-                    b.HasKey("Pending_AccountGroup_ID");
-
-                    b.ToTable("DMAccountGroup_Pending");
-                });
-
             modelBuilder.Entity("ExpenseProcessingSystem.Models.Pending.DMBIRCertSignModel_Pending", b =>
                 {
                     b.Property<int>("Pending_BCS_ID")
@@ -1021,25 +980,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.HasKey("Pending_VAT_ID");
 
                     b.ToTable("DMVAT_Pending");
-                });
-
-            modelBuilder.Entity("ExpenseProcessingSystem.Models.Pending.DMVendorTRVATModel_Pending", b =>
-                {
-                    b.Property<int>("Pending_VTV_ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Pending_VTV_Status");
-
-                    b.Property<int>("Pending_VTV_TR_ID");
-
-                    b.Property<int>("Pending_VTV_VAT_ID");
-
-                    b.Property<int>("Pending_VTV_Vendor_ID");
-
-                    b.HasKey("Pending_VTV_ID");
-
-                    b.ToTable("DMVendorTRVAT_Pending");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.StatusListModel", b =>
