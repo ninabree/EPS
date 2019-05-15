@@ -1,5 +1,6 @@
 ﻿using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Models;
+using ExpenseProcessingSystem.ConstantData;
 using ExpenseProcessingSystem.Models.Pending;
 using ExpenseProcessingSystem.ViewModels;
 using ExpenseProcessingSystem.ViewModels.Entry;
@@ -44,6 +45,7 @@ namespace ExpenseProcessingSystem.Services
 
         //-----------------------------------Populate-------------------------------------//
         //[ Home ]
+        //[Notification]
         public List<HomeNotifViewModel> populateNotif(FiltersViewModel filters)
         {
             IQueryable<HomeNotifModel> mList = _context.HomeNotif.ToList().AsQueryable();
@@ -111,7 +113,42 @@ namespace ExpenseProcessingSystem.Services
             }
             return vmList;
         }
+        //Pending
+        public List<ApplicationsViewModel> getPending(int userID)
+        {
+            List<ApplicationsViewModel> pendingList = new List<ApplicationsViewModel>();
 
+            var dbPending = from p in _context.ExpenseEntry
+                            where (p.Expense_Status == GlobalSystemValues.STATUS_PENDING
+                            || p.Expense_Status == GlobalSystemValues.STATUS_NEW
+                            || p.Expense_Status == GlobalSystemValues.STATUS_EDIT
+                            || p.Expense_Status == GlobalSystemValues.STATUS_DELETE)
+                            && p.Expense_Creator_ID != userID
+                            select new { p.Expense_ID, p.Expense_Type, p.Expense_Debit_Total, p.Expense_Payee,
+                                        p.Expense_Creator_ID, p.Expense_Verifier_1, p.Expense_Verifier_2,
+                                        p.Expense_Last_Updated,p.Expense_Date,p.Expense_Status};
+
+            foreach(var item in dbPending)
+            {
+                ApplicationsViewModel tempPending = new ApplicationsViewModel
+                {
+                    App_ID = item.Expense_ID,
+                    App_Type = GlobalSystemValues.getApplicationType(item.Expense_Type),
+                    App_Amount = item.Expense_Debit_Total,
+                    App_Payee = getVendorName(item.Expense_Payee),
+                    App_Maker = getUserName(item.Expense_Creator_ID),
+                    App_Verifier_ID_List = new List<string> { getUserName(item.Expense_Verifier_1),
+                                                              getUserName(item.Expense_Verifier_2)},
+                    App_Date = item.Expense_Date,
+                    App_Last_Updated = item.Expense_Last_Updated,
+                    App_Status = getStatus(item.Expense_Status)
+                };
+
+                pendingList.Add(tempPending);
+            }
+
+            return pendingList;
+        }
         //[ User Maintenance ]
         public UserManagementViewModel2 populateUM()
         {
@@ -2385,6 +2422,13 @@ namespace ExpenseProcessingSystem.Services
         {
             var vat = _context.DMVAT.SingleOrDefault(q => q.VAT_isActive == true);
             return vat.VAT_Rate;
+        }
+
+        public string getVendorName(int vendorID)
+        {
+            var vendor = _context.DMVendor.SingleOrDefault(x => x.Vendor_ID == vendorID);
+
+            return vendor.Vendor_Name;
         }
     }
 

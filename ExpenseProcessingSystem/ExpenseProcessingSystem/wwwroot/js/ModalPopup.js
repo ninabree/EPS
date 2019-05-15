@@ -216,7 +216,7 @@
 
     function gbaseRemarksSet(id) {
         var rowNo = id.substring(7);
-        var noOfItem = $("#" + id).find('input').length / 4;
+        var noOfItem = ($("#" + id).find('input').length)/ 4;
         var tblDiv = $("#table").find("table");
 
         if (noOfItem > 0) {

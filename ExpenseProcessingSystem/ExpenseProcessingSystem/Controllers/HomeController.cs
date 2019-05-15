@@ -5,7 +5,6 @@ using ExpenseProcessingSystem.Services;
 using ExpenseProcessingSystem.Services.Controller_Services;
 using ExpenseProcessingSystem.Services.Excel_Services;
 using ExpenseProcessingSystem.ViewModels;
-using ExpenseProcessingSystem.ViewModels.Entry;
 using ExpenseProcessingSystem.ViewModels.NewRecord;
 using ExpenseProcessingSystem.ViewModels.Reports;
 using ExpenseProcessingSystem.ViewModels.Search_Filters;
@@ -38,7 +37,7 @@ namespace ExpenseProcessingSystem.Controllers
         private HomeService _service;
         private SortService _sortService;
         private ExcelData _excelData;
-        private readonly IHostingEnvironment _hostingEnvironment;
+        //private readonly IHostingEnvironment _hostingEnvironment;
 
         public HomeController(IHttpContextAccessor httpContextAccessor, EPSDbContext context, IHostingEnvironment hostingEnvironment)
         {
@@ -54,6 +53,7 @@ namespace ExpenseProcessingSystem.Controllers
             return _session.GetString("UserID");
         }
 
+        //Home Screen Block---------------------------------------------------------------------------------------
         public IActionResult Index(HomeIndexViewModel vm, string sortOrder, string currentFilter, string colName, string searchString, string page)
         {
             var userId = GetUserID();
@@ -115,11 +115,14 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             var role = _service.getUserRole(_session.GetString("UserID"));
-            if (role == "admin")
+            if (role == GlobalSystemValues.ROLE_ADMIN)
             {
                 return RedirectToAction("UM");
             }
             HomeIndexViewModel vm = new HomeIndexViewModel();
+
+            vm.GeneralPendingList.AddRange(_service.getPending(int.Parse(userId)));
+
             return View(vm);
         }
         public IActionResult History(string sortOrder, string currentFilter, string searchString, int? page)
@@ -138,6 +141,8 @@ namespace ExpenseProcessingSystem.Controllers
             HomeIndexViewModel vm = new HomeIndexViewModel();
             return View(vm);
         }
+        //Home Screen Block End-----------------------------------------------------------------------------------
+
         public IActionResult Entry()
         {
             return View();
@@ -607,16 +612,28 @@ namespace ExpenseProcessingSystem.Controllers
         //Expense Entry Check Voucher Block=========================================================================
         public IActionResult Entry_CV()
         {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var role = _service.getUserRole(_session.GetString("UserID"));
+            if (role == GlobalSystemValues.ROLE_ADMIN)
+            {
+                return RedirectToAction("UM");
+            }
+
             EntryCVViewModelList viewModel = new EntryCVViewModelList();
             List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
             //listOfSysVals[0] = List of Vendors
             //listOfSysVals[1] = List of Departments
             //listOfSysVals[2] = List of Currency
             //listOfSysVals[3] = List of TaxRate
-            viewModel.systemValues.vendors = listOfSysVals[0];
-            viewModel.systemValues.dept = listOfSysVals[1];
-            viewModel.systemValues.currency = listOfSysVals[2];
-            viewModel.systemValues.ewt = listOfSysVals[3];
+            viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
+            viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
+            viewModel.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
+            viewModel.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
             viewModel.systemValues.acc = _service.getAccDetailsEntry();
 
             viewModel.expenseYear = DateTime.Today.Year.ToString();
@@ -627,6 +644,17 @@ namespace ExpenseProcessingSystem.Controllers
         }
         public IActionResult AddNewCV(EntryCVViewModelList EntryCVViewModelList)
         {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var role = _service.getUserRole(_session.GetString("UserID"));
+            if (role == GlobalSystemValues.ROLE_ADMIN)
+            {
+                return RedirectToAction("UM");
+            }
 
             EntryCVViewModelList cvList = new EntryCVViewModelList();
             int id = _service.addExpense_CV(EntryCVViewModelList, int.Parse(GetUserID()));
@@ -650,6 +678,18 @@ namespace ExpenseProcessingSystem.Controllers
         }
         public IActionResult VerAppModCV(int entryID, string command)
         {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var role = _service.getUserRole(_session.GetString("UserID"));
+            if (role == GlobalSystemValues.ROLE_ADMIN)
+            {
+                return RedirectToAction("UM");
+            }
+
             EntryCVViewModelList cvList;
             switch (command)
             {

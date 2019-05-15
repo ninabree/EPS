@@ -167,8 +167,8 @@
             </div>
             <div class="flex-sb">
                 <div>
-                    <div class="dis-inline-block tbl-btn"><button>Approve/Verify</button></div>
-                    <div class="dis-inline-block tbl-btn"><button>Reject</button></div>
+                    <div class="dis-inline-block tbl-btn"><button value="@HttpContextAccessor.HttpContext.Session.GetString("accessType")" name="command">Approve/Verify</button></div>
+                    <div class="dis-inline-block tbl-btn"><button value="Reject" name="command">Reject</button></div>
                 </div>
                 <div>
                     <div class="dis-inline-block tbl-btn"><button disabled>Delete GBase Post</button></div>

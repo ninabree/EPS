@@ -14,6 +14,7 @@ namespace ExpenseProcessingSystem.Models
         public DateTime Expense_Date { get; set; }
         public string Expense_Number { get; set; }
         public int Expense_CheckId { get; set; }
+        public int Expense_Type { get; set; }
         public string Expense_CheckNo { get; set; }
         public int Expense_Payee { get; set; }
         public float Expense_Debit_Total { get; set; }
