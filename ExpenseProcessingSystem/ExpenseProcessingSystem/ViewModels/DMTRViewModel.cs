@@ -33,6 +33,7 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "Last Updated")]
         public DateTime TR_Last_Updated { get; set; }
         [Display(Name = "Status")]
+        public int TR_Status_ID { get; set; }
         public string TR_Status { get; set; }
         public bool TR_isDeleted { get; set; }
     }

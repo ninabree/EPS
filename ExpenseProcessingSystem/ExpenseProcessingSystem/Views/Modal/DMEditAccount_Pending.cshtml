@@ -7,7 +7,7 @@
 @using ExpenseProcessingSystem.ViewModels
 @model List<DMAccountViewModel>
 
-<div id="table" class="table-editable">
+<div id="table" class="">
     @using (Html.BeginForm("EditAccount_Pending", "Home", FormMethod.Post, new { @class = "validate-form", @id = "tsForm" }))
     {
         <table class="table table-bordered editable-th">
@@ -19,6 +19,7 @@
                 <th>Div</th>
                 <th>Fund</th>
                 <th colspan="2">FBT</th>
+                <th colspan="2">Account Group</th>
                 <th>Status</th>
             </tr>
             @if (Model != null)
@@ -26,23 +27,43 @@
                 @for (int i = 0; i < Model.Count(); i++)
                 {
                     <tr>
-                        <td contenteditable="true">@Html.TextBoxFor(item => item[i].Account_Name, new { @class = "w-full" })</td>
-                        <td contenteditable="true">@Html.TextBoxFor(item => item[i].Account_Code, new { @class = "w-full" })</td>
-                        <td contenteditable="true">@Html.TextBoxFor(item => item[i].Account_No, new { @class = "w-full" })</td>
-                        <td contenteditable="true">@Html.TextBoxFor(item => item[i].Account_Cust, new { @class = "w-full" })</td>
-                        <td contenteditable="true">@Html.TextBoxFor(item => item[i].Account_Div, new { @class = "w-full" })</td>
-                        <td contenteditable="true">@Html.CheckBoxFor(item => item[i].Account_Fund, new { @class = "w-full" })</td>
+                        <td>@Html.TextBoxFor(item => item[i].Account_Name, new { @class = "w-full" })</td>
+                        <td>@Html.TextBoxFor(item => item[i].Account_Code, new { @class = "w-full" })</td>
+                        <td>@Html.TextBoxFor(item => item[i].Account_No, new { @class = "w-full" })</td>
+                        <td>@Html.TextBoxFor(item => item[i].Account_Cust, new { @class = "w-full" })</td>
+                        <td>@Html.TextBoxFor(item => item[i].Account_Div, new { @class = "w-full" })</td>
+                        <td>@Html.CheckBoxFor(item => item[i].Account_Fund, new { @class = "w-full" })</td>
                         <td colspan="2">
                             @{
-                                List<SelectListItem> fbtList = (List<SelectListItem>)@ViewBag.FbtList;
-                                fbtList.Add(new SelectListItem {
-                                    Text = "--" + Model[i].Account_FBT_Name + "--", Value = Model[i].Account_FBT_MasterID + "", Selected = true });
+                                List<SelectListItem> fbtList = new List<SelectListItem>();
+                                fbtList.Add(new SelectListItem
+                                {
+                                    Text = "--" + Model[i].Account_FBT_Name + "--",
+                                    Value = Model[i].Account_FBT_MasterID + "",
+                                    Selected = true
+                                });
+                                fbtList = (List<SelectListItem>)@ViewBag.fbtList;
                             }
                             @Html.DropDownListFor(item => item[i].Account_FBT_MasterID,
                                                 @fbtList,
                                                 new { @class = "w-full input" })
                         </td>
-                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].Account_Status, new { @class = "w-full" })</td>
+                        <td colspan="2">
+                            @{
+                                List<SelectListItem> grpList = new List<SelectListItem>();
+                                grpList.Add(new SelectListItem
+                                {
+                                    Text = "--" + Model[i].Account_Group_Name + "--",
+                                    Value = Model[i].Account_Group_MasterID + "",
+                                    Selected = true
+                                });
+                                grpList = (List<SelectListItem>)@ViewBag.grpList;
+                            }
+                            @Html.DropDownListFor(item => item[i].Account_Group_MasterID,
+                                                grpList,
+                                                new { @class = "w-full input" })
+                        </td>
+                        <td>@Html.TextBoxFor(item => item[i].Account_Status, new { @class = "w-full", @readonly = "readonly" })</td>
                         @Html.HiddenFor(item => item[i].Account_MasterID)
                     </tr>
                 }

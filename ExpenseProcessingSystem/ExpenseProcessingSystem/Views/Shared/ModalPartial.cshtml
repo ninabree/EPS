@@ -12,10 +12,33 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn float-r" data-dismiss="modal">Close</button>
-                    @*<button class="btn float-r" type="submit" form="tsForm">Submit</button>*@
-                    <button class="btn float-r" id="saveBtn" onclick="$('#tsForm').submit();">Submit</button>
+                    <button class="btn float-r" id="btnVendorAdd" type="submit" form="tsForm">Submit</button>
+                    @*<button class="btn float-r" id="saveBtn" onclick="$('#tsForm').submit();">Submit</button>*@
                 </div>
             </div>
         </div>
     </div>
 </div>
+<environment include="Development">
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+</environment>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(document).on("click", "#btnVendorAdd", function (e) {
+            var hiddenTR = $('#NewVendorVM_0__Vendor_Tax_Rates_ID');
+            var hiddenVAT = $('#NewVendorVM_0__Vendor_VAT_ID');
+            //var arrTR = [];
+            //var arrVAT = [];
+            var arrTR = "";
+            var arrVAT = "";
+            $('.trChk:checked').each(function () {
+                arrTR += ($(this).val())+",";
+            });
+            $('.vatChk:checked').each(function () {
+                arrVAT += ($(this).val()) + ",";
+            });
+            hiddenTR.val(arrTR);
+            hiddenVAT.val(arrVAT);
+        });
+    });
+</script>

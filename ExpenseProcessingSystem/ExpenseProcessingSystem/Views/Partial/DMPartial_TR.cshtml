@@ -14,25 +14,25 @@
                 Find by:
                 <table class="table">
                     <tr>
-                        <td>@Html.LabelFor(model => model.DMFilters.EF.EF_Nature)</td>
-                        <td>@Html.TextBoxFor(model => model.DMFilters.EF.EF_Nature, new { @class = "input" })</td>
-                        <td>@Html.LabelFor(model => model.DMFilters.EF.EF_Tax_Rate)</td>
-                        <td>@Html.TextBoxFor(model => model.DMFilters.EF.EF_Tax_Rate, new { @class = "input" })</td>
-                        <td>@Html.LabelFor(model => model.DMFilters.EF.EF_ATC)</td>
-                        <td>@Html.TextBoxFor(model => model.DMFilters.EF.EF_ATC, new { @class = "input" })</td>
-                        <td>@Html.LabelFor(model => model.DMFilters.EF.EF_Tax_Rate_Desc)</td>
-                        <td>@Html.TextBoxFor(model => model.DMFilters.EF.EF_Tax_Rate_Desc, new { @class = "input" })</td>
-                        <td>@Html.LabelFor(model => model.DMFilters.EF.EF_Nature_Income_Payment)</td>
-                        <td>@Html.TextBoxFor(model => model.DMFilters.EF.EF_Nature_Income_Payment, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.TF.TR_WT_Title)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.TF.TR_WT_Title, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.TF.TR_Nature)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.TF.TR_Nature, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.TF.TR_Tax_Rate)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.TF.TR_Tax_Rate, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.TF.TR_ATC)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.TF.TR_ATC, new { @class = "input" })</td>
                         <td><input id="filterPartialName" name="partialName" value="DMPartial_TR" type="hidden" /></td>
                     </tr>
                     <tr>
-                        <td>@Html.LabelFor(model => model.DMFilters.EF.EF_Creator_Name)</td>
-                        <td>@Html.TextBoxFor(model => model.DMFilters.EF.EF_Creator_Name, new { @class = "input" })</td>
-                        <td>@Html.LabelFor(model => model.DMFilters.EF.EF_Approver_Name)</td>
-                        <td>@Html.TextBoxFor(model => model.DMFilters.EF.EF_Approver_Name, new { @class = "input" })</td>
-                        <td>@Html.LabelFor(model => model.DMFilters.EF.EF_Status)</td>
-                        <td>@Html.TextBoxFor(model => model.DMFilters.EF.EF_Status, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.TF.TR_Nature_Income_Payment)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.TF.TR_Nature_Income_Payment, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.TF.TR_Creator_Name)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.TF.TR_Creator_Name, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.TF.TR_Approver_Name)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.TF.TR_Approver_Name, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.TF.TR_Status)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.TF.TR_Status, new { @class = "input" })</td>
                         <td colspan="2" style="text-align: right;">
                             <input type="submit" value="Search" class="btn btn-default" id="search-btn" />
                             <input type="button" value="Back to Full List" id="full-list-btn" class="btn btn-default" />
@@ -47,14 +47,14 @@
             <tr>
                 <th></th>
                 <th id="WT_Title"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["TRWTTileSortParm"]">Withholding Tax Title<p class="btn-xs glyphicon @ViewData["glyph-1"]"></p></a></th>
-                <th id="Nature"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["TRSortParm"]">TR Nature<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
+                <th id="Nature"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["TRSortParm"]">Nature<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
                 <th id="Tax_Rate"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["TRTaxRateSortParm"]">Tax Rate<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
                 <th id="ATC"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["TRATCSortParm"]">ATC<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
-                <th id="Nature_Income_Payment"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["TRSortParm"]">Nature of Income Payment<p class="btn-xs glyphicon @ViewData["glyph-9"]"></p></a></th>
-                <th id="Creator_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["TRCreatorSortParm"]">Created By<p class="btn-xs glyphicon @ViewData["glyph-5"]"></p></a></th>
-                <th id="Approver_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["TRApproverSortParm"]">Approved By<p class="btn-xs glyphicon @ViewData["glyph-6"]"></p></a></th>
-                <th id="Approver_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["TRLastUpdteSortParm"]">Last Updated Date<p class="btn-xs glyphicon @ViewData["glyph-7"]"></p></a></th>
-                <th id="Status"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["TRStatusSortParm"]">Status<p class="btn-xs glyphicon @ViewData["glyph-8"]"></p></a></th>
+                <th id="Nature_Income_Payment"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["TRIncomeSortParm"]">Nature of Income Payment<p class="btn-xs glyphicon @ViewData["glyph-5"]"></p></a></th>
+                <th id="Creator_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["TRCreatorSortParm"]">Created By<p class="btn-xs glyphicon @ViewData["glyph-6"]"></p></a></th>
+                <th id="Approver_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["TRApproverSortParm"]">Approved By<p class="btn-xs glyphicon @ViewData["glyph-7"]"></p></a></th>
+                <th id="Last_Updated"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["TRLastUpdteSortParm"]">Last Updated Date<p class="btn-xs glyphicon @ViewData["glyph-8"]"></p></a></th>
+                <th id="Status"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["TRStatusSortParm"]">Status<p class="btn-xs glyphicon @ViewData["glyph-9"]"></p></a></th>
             </tr>
         </thead>
         <tbody>

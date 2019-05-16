@@ -20,7 +20,7 @@ namespace ExpenseProcessingSystem.Models
         public int Check_Approver_ID { get; set; }
         public DateTime Check_Created_Date { get; set; }
         public DateTime Check_Last_Updated { get; set; }
-        public string Check_Status { get; set; }
+        public int Check_Status_ID { get; set; }
         public bool Check_isDeleted { get; set; }
         public bool Check_isActive { get; set; }
     }

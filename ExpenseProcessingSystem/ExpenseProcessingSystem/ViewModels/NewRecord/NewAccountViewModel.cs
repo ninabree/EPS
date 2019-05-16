@@ -1,16 +1,15 @@
 ﻿using ExpenseProcessingSystem.Services.Validations;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ExpenseProcessingSystem.ViewModels.NewRecord
 {
     public class NewAccountListViewModel
     {
         public List<NewAccountViewModel> NewAccountVM { get; set; }
-        public List<DMFBTViewModel> FbtList = new List<DMFBTViewModel>();
+        public List<SelectListItem> FbtList = new List<SelectListItem>();
+        public List<SelectListItem> AccGrp = new List<SelectListItem>();
     }
     public class NewAccountViewModel
     {
@@ -21,7 +20,7 @@ namespace ExpenseProcessingSystem.ViewModels.NewRecord
         [NotNullValidations, TextValidation]
         public string Account_Code { get; set; }
         [Display(Name = "Account No")]
-        [NotNullValidations, IntegerValidation]
+        [NotNullValidations]
         public string Account_No { get; set; }
         [Display(Name = "Account Cust")]
         [NotNullValidations, TextValidation]
@@ -35,5 +34,7 @@ namespace ExpenseProcessingSystem.ViewModels.NewRecord
         [Display(Name = "Account FBT")]
         [NotNullValidations]
         public int Account_FBT_MasterID { get; set; }
+        [Display(Name = "Account Group")]
+        public int Account_Group_MasterID { get; set; }
     }
 }

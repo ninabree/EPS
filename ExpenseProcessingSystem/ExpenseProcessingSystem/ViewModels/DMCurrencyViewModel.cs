@@ -27,6 +27,7 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "Currency Last Updated")]
         public DateTime Curr_Last_Updated { get; set; }
         [Display(Name = "Currency Status")]
+        public int Curr_Status_ID { get; set; }
         public string Curr_Status { get; set; }
         public bool Curr_isDeleted { get; set; }
     }

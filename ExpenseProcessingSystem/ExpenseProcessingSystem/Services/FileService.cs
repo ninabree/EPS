@@ -184,7 +184,7 @@ namespace ExpenseProcessingSystem.Services
             if (BuildUniqeName)
             {
                 string strUniqName = GetUniqueName(name, strFileName);
-                fileName = strUniqName;
+                fileName = strUniqName + fileExtension;
             }
             else
             {
@@ -194,9 +194,13 @@ namespace ExpenseProcessingSystem.Services
         }
         public string GetUniqueName(string preFix, string fileName)
         {
-            var tmp = fileName.LastIndexOf("\\");
-            var tmp2 = fileName.Substring(tmp + 1);
-            return preFix + "_" + tmp2;
+            string uName = preFix + "_" + DateTime.Now.ToString();
+            return uName
+                .Replace("/", "_")
+                .Replace(":", "_")
+                .Replace(" ", string.Empty)
+                .Replace("PM", string.Empty)
+                .Replace("AM", string.Empty);
         }
         public string GetFileExtension(IFormFile file)
         {

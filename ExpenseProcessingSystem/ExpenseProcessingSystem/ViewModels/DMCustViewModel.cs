@@ -29,6 +29,7 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "Customer Last Updated")]
         public DateTime Cust_Last_Updated { get; set; }
         [Display(Name = "Customer Status")]
+        public int Cust_Status_ID { get; set; }
         public string Cust_Status { get; set; }
         public bool Cust_isDeleted { get; set; }
         public bool Cust_isActive { get; set; }

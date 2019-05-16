@@ -18,7 +18,7 @@ namespace ExpenseProcessingSystem.Models
         public int Curr_Approver_ID { get; set; }
         public DateTime Curr_Created_Date { get; set; }
         public DateTime Curr_Last_Updated { get; set; }
-        public string Curr_Status { get; set; }
+        public int Curr_Status_ID { get; set; }
         public bool Curr_isDeleted { get; set; }
         public bool Curr_isActive { get; set; }
     }

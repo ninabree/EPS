@@ -29,6 +29,7 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "FBT Last Updated")]
         public DateTime FBT_Last_Updated { get; set; }
         [Display(Name = "FBT Status")]
+        public int FBT_Status_ID { get; set; }
         public string FBT_Status { get; set; }
         public bool FBT_isDeleted { get; set; }
     }

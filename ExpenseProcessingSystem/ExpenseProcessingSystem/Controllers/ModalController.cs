@@ -156,6 +156,35 @@ namespace ExpenseProcessingSystem.Controllers
             }
             return View(vmList);
         }
+        //DM Account Group
+        public IActionResult DMApproveAccountGroup(string[] IdsArr)
+        {
+            var userId = HttpContext.Session.GetString("UserID");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            List<DMAccountGroupViewModel> vmList = new List<DMAccountGroupViewModel>();
+            if (ModelState.IsValid)
+            {
+                vmList = _service.approveAccountGroup(IdsArr);
+            }
+            return View(vmList);
+        }
+        public IActionResult DMRejAccountGroup(string[] IdsArr)
+        {
+            var userId = HttpContext.Session.GetString("UserID");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            List<DMAccountGroupViewModel> vmList = new List<DMAccountGroupViewModel>();
+            if (ModelState.IsValid)
+            {
+                vmList = _service.rejectAccountGroup(IdsArr);
+            }
+            return View(vmList);
+        }
         //DM VAT
         public IActionResult DMApproveVAT(string[] IdsArr)
         {
@@ -525,6 +554,7 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 vmList = _service.editDeleteAccount(IdsArr);
                 ViewBag.fbtList = _service.getFbtSelectList();
+                ViewBag.grpList = _service.getAccGroupSelectList();
             }
             return View(vmList);
         }
@@ -539,6 +569,45 @@ namespace ExpenseProcessingSystem.Controllers
             if (ModelState.IsValid)
             {
                 vmList = _service.editDeleteAccount(IdsArr);
+            }
+            return View(vmList);
+        }
+        //DM Account Group
+        public IActionResult DMAddAccountGroup_Pending()
+        {
+            var userId = HttpContext.Session.GetString("UserID");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            return View(_service.addAccountGroup());
+        }
+        public IActionResult DMEditAccountGroup_Pending(string[] IdsArr)
+        {
+            var userId = HttpContext.Session.GetString("UserID");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            List<DMAccountGroupViewModel> vmList = new List<DMAccountGroupViewModel>();
+            if (ModelState.IsValid)
+            {
+                vmList = _service.editDeleteAccountGroup(IdsArr);
+                ViewBag.fbtList = _service.getFbtSelectList();
+            }
+            return View(vmList);
+        }
+        public IActionResult DMDeleteAccountGroup_Pending(string[] IdsArr)
+        {
+            var userId = HttpContext.Session.GetString("UserID");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            List<DMAccountGroupViewModel> vmList = new List<DMAccountGroupViewModel>();
+            if (ModelState.IsValid)
+            {
+                vmList = _service.editDeleteAccountGroup(IdsArr);
             }
             return View(vmList);
         }

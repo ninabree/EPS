@@ -20,8 +20,8 @@ namespace ExpenseProcessingSystem.ViewModels.NewRecord
         [NotNullValidations, TextValidation]
         public string TR_Nature { get; set; }
         [Display(Name = "Tax Rate")]
-        [NotNullValidations, IntegerValidation]
-        public int TR_Tax_Rate { get; set; }
+        [NotNullValidations]
+        public float TR_Tax_Rate { get; set; }
         [Display(Name = "ATC")]
         [NotNullValidations, TextValidation]
         public string TR_ATC { get; set; }

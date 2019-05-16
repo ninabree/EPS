@@ -16,7 +16,7 @@ namespace ExpenseProcessingSystem.Models
         public int Cust_Approver_ID { get; set; }
         public DateTime Cust_Created_Date { get; set; }
         public DateTime Cust_Last_Updated { get; set; }
-        public string Cust_Status { get; set; }
+        public int Cust_Status_ID { get; set; }
         public bool Cust_isDeleted { get; set; }
         public bool Cust_isActive { get; set; }
     }

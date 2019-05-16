@@ -18,7 +18,7 @@ namespace ExpenseProcessingSystem.Models
         public int AccountGroup_Approver_ID { get; set; }
         public DateTime AccountGroup_Created_Date { get; set; }
         public DateTime AccountGroup_Last_Updated { get; set; }
-        public string AccountGroup_Status { get; set; }
+        public int AccountGroup_Status_ID { get; set; }
         public bool AccountGroup_isDeleted { get; set; }
         public bool AccountGroup_isActive { get; set; }
     }

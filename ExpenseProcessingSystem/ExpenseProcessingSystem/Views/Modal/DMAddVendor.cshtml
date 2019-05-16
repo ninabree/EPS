@@ -6,7 +6,7 @@
 @using ExpenseProcessingSystem.ViewModels
 @model NewVendorListViewModel
 
-<div id="table" class="table-editable">
+<div id="table" class="">
     @using (Html.BeginForm("AddVendor", "Home", FormMethod.Post, new { @class = "validate-form", @id = "tsForm" }))
     {
         <table class="table table-bordered editable-th">

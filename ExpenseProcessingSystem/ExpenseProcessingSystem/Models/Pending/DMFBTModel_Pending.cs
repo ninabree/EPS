@@ -18,7 +18,7 @@ namespace ExpenseProcessingSystem.Models.Pending
         public int Pending_FBT_Creator_ID { get; set; }
         public int Pending_FBT_Approver_ID { get; set; }
         public DateTime Pending_FBT_Filed_Date { get; set; }
-        public string Pending_FBT_Status { get; set; }
+        public int Pending_FBT_Status_ID { get; set; }
         public bool Pending_FBT_isDeleted { get; set; }
         public bool Pending_FBT_isActive { get; set; }
     }

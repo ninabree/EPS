@@ -24,6 +24,9 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "Account FBT")]
         public int Account_FBT_MasterID { get; set; }
         public string Account_FBT_Name { get; set; }
+        [Display(Name = "Account Group")]
+        public int Account_Group_MasterID { get; set; }
+        public string Account_Group_Name { get; set; }
         public int Account_Creator_ID { get; set; }
         public int Account_Approver_ID { get; set; }
         [Display(Name = "Creator Name")]
@@ -31,10 +34,13 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "Approver Name")]
         public string Account_Approver_Name { get; set; }
         [Display(Name = "Account Created Date")]
+        [DataType(DataType.Date)]
         public DateTime Account_Created_Date { get; set; }
         [Display(Name = "Account Last Updated Date")]
+        [DataType(DataType.Date)]
         public DateTime Account_Last_Updated { get; set; }
         [Display(Name = "Account Status")]
+        public int Account_Status_ID { get; set; }
         public string Account_Status { get; set; }
         public bool Account_isDeleted { get; set; }
     }

@@ -7,7 +7,7 @@
 @using ExpenseProcessingSystem.ViewModels.NewRecord
 @model NewCustListViewModel
 
-<div id="table" class="table-editable">
+<div id="table" class="">
     @using (Html.BeginForm("AddCust_Pending", "Home", FormMethod.Post, new { @class = "validate-form", @id = "tsForm" }))
     {
         <table class="table table-bordered editable-th">

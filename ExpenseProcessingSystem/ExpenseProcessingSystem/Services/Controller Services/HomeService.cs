@@ -315,7 +315,7 @@ namespace ExpenseProcessingSystem.Services
                     Vendor_Approver_ID = int.Parse(_session.GetString("UserID")),
                     Vendor_Created_Date = pending.pmCreateDate == null ? DateTime.Now : DateTime.Parse(pending.pmCreateDate),
                     Vendor_Last_Updated = DateTime.Now,
-                    Vendor_Status = "Approved",
+                    Vendor_Status_ID = 3,
                     Vendor_isDeleted = pending.Pending_Vendor_IsDeleted,
                     Vendor_isActive = true
                 };
@@ -389,7 +389,7 @@ namespace ExpenseProcessingSystem.Services
                     Dept_Approver_ID = int.Parse(_session.GetString("UserID")),
                     Dept_Created_Date = pending.pmCreateDate == null ? DateTime.Now : DateTime.Parse(pending.pmCreateDate),
                     Dept_Last_Updated = DateTime.Now,
-                    Dept_Status = "Approved",
+                    Dept_Status_ID = 3,
                     Dept_isDeleted = pending.Pending_Dept_isDeleted,
                     Dept_isActive = true
                 };
@@ -466,7 +466,7 @@ namespace ExpenseProcessingSystem.Services
                     Check_Approver_ID = int.Parse(_session.GetString("UserID")),
                     Check_Created_Date = pending.pmCreateDate == null ? DateTime.Now : DateTime.Parse(pending.pmCreateDate),
                     Check_Last_Updated = DateTime.Now,
-                    Check_Status = "Approved",
+                    Check_Status_ID = 3,
                     Check_isDeleted = pending.Pending_Check_isDeleted,
                     Check_isActive = true
                 };
@@ -511,6 +511,7 @@ namespace ExpenseProcessingSystem.Services
                                   pp.Pending_Account_MasterID,
                                   pp.Pending_Account_Name,
                                   pp.Pending_Account_FBT_MasterID,
+                                  pp.Pending_Account_Group_MasterID,
                                   pp.Pending_Account_Code,
                                   pp.Pending_Account_No,
                                   pp.Pending_Account_Cust,
@@ -539,6 +540,7 @@ namespace ExpenseProcessingSystem.Services
                     Account_Name = pending.Pending_Account_Name,
                     Account_MasterID = pending.Pending_Account_MasterID,
                     Account_FBT_MasterID = pending.Pending_Account_FBT_MasterID,
+                    Account_Group_MasterID = pending.Pending_Account_Group_MasterID,
                     Account_Code = pending.Pending_Account_Code,
                     Account_Cust = pending.Pending_Account_Cust,
                     Account_Div = pending.Pending_Account_Div,
@@ -548,7 +550,7 @@ namespace ExpenseProcessingSystem.Services
                     Account_Approver_ID = int.Parse(_session.GetString("UserID")),
                     Account_Created_Date = pending.pmCreateDate == null ? DateTime.Now : DateTime.Parse(pending.pmCreateDate),
                     Account_Last_Updated = DateTime.Now,
-                    Account_Status = "Approved",
+                    Account_Status_ID = 3,
                     Account_isDeleted = pending.Pending_Account_isDeleted,
                     Account_isActive = true
                 };
@@ -577,6 +579,78 @@ namespace ExpenseProcessingSystem.Services
             if (_modelState.IsValid)
             {
                 _context.DMAccount_Pending.RemoveRange(allPending);
+                _context.SaveChanges();
+            }
+            return true;
+        }
+        //[ ACCOUNT GROUP ]
+        public bool approveAccountGroup(List<DMAccountGroupViewModel> model, string userId)
+        {
+            List<int> intList = model.Select(c => c.AccountGroup_MasterID).ToList();
+
+            var allPending = (from pp in _context.DMAccountGroup_Pending
+                              from pm in _context.DMAccountGroup.Where(x => x.AccountGroup_MasterID == pp.Pending_AccountGroup_MasterID).DefaultIfEmpty()
+                              select new
+                              {
+                                  pp.Pending_AccountGroup_MasterID,
+                                  pp.Pending_AccountGroup_Name,
+                                  pp.Pending_AccountGroup_Code,
+                                  pp.Pending_AccountGroup_isDeleted,
+                                  pp.Pending_AccountGroup_Creator_ID,
+                                  pmCreatorID = pm.AccountGroup_Creator_ID.ToString(),
+                                  pmCreateDate = pm.AccountGroup_Created_Date.ToString()
+                              }).Where(x => intList.Contains(x.Pending_AccountGroup_MasterID)).ToList();
+
+            List<DMAccountGroupModel_Pending> toDelete = _context.DMAccountGroup_Pending.Where(x => intList.Contains(x.Pending_AccountGroup_MasterID)).ToList();
+
+            //get all records that currently exists in Master Data
+            List<DMAccountGroupModel> vmList = _context.DMAccountGroup.
+                Where(x => intList.Contains(x.AccountGroup_MasterID) && x.AccountGroup_isActive == true).ToList();
+
+            //list for formatted records to be added
+            List<DMAccountGroupModel> addList = new List<DMAccountGroupModel>();
+
+            //add to master table newly approved records
+            allPending.ForEach(pending =>
+            {
+                DMAccountGroupModel m = new DMAccountGroupModel
+                {
+                    AccountGroup_Name = pending.Pending_AccountGroup_Name,
+                    AccountGroup_MasterID = pending.Pending_AccountGroup_MasterID,
+                    AccountGroup_Code = pending.Pending_AccountGroup_Code,
+                    AccountGroup_Creator_ID = pending.pmCreatorID == null ? pending.Pending_AccountGroup_Creator_ID : int.Parse(pending.pmCreatorID),
+                    AccountGroup_Approver_ID = int.Parse(_session.GetString("UserID")),
+                    AccountGroup_Created_Date = pending.pmCreateDate == null ? DateTime.Now : DateTime.Parse(pending.pmCreateDate),
+                    AccountGroup_Last_Updated = DateTime.Now,
+                    AccountGroup_Status_ID = 3,
+                    AccountGroup_isDeleted = pending.Pending_AccountGroup_isDeleted,
+                    AccountGroup_isActive = true
+                };
+                addList.Add(m);
+            });
+
+            //update existing records
+            vmList.ForEach(dm =>
+            {
+                dm.AccountGroup_isActive = false;
+            });
+
+            if (_modelState.IsValid)
+            {
+                _context.DMAccountGroup.AddRange(addList);
+                _context.DMAccountGroup_Pending.RemoveRange(toDelete);
+                _context.SaveChanges();
+            }
+            return true;
+        }
+        public bool rejAccountGroup(List<DMAccountGroupViewModel> model, string userId)
+        {
+            List<int> intList = model.Select(c => c.AccountGroup_MasterID).ToList();
+            List<DMAccountGroupModel_Pending> allPending = _context.DMAccountGroup_Pending.Where(x => intList.Contains(x.Pending_AccountGroup_MasterID)).ToList();
+
+            if (_modelState.IsValid)
+            {
+                _context.DMAccountGroup_Pending.RemoveRange(allPending);
                 _context.SaveChanges();
             }
             return true;
@@ -620,7 +694,7 @@ namespace ExpenseProcessingSystem.Services
                     VAT_Approver_ID = int.Parse(_session.GetString("UserID")),
                     VAT_Created_Date = pending.pmCreateDate == null ? DateTime.Now : DateTime.Parse(pending.pmCreateDate),
                     VAT_Last_Updated = DateTime.Now,
-                    VAT_Status = "Approved",
+                    VAT_Status_ID = 3,
                     VAT_isDeleted = pending.Pending_VAT_isDeleted,
                     VAT_isActive = true
                 };
@@ -694,7 +768,7 @@ namespace ExpenseProcessingSystem.Services
                     FBT_Approver_ID = int.Parse(_session.GetString("UserID")),
                     FBT_Created_Date = pending.pmCreateDate == null ? DateTime.Now : DateTime.Parse(pending.pmCreateDate),
                     FBT_Last_Updated = DateTime.Now,
-                    FBT_Status = "Approved",
+                    FBT_Status_ID = 3,
                     FBT_isDeleted = pending.Pending_FBT_isDeleted,
                     FBT_isActive = true
                 };
@@ -772,7 +846,7 @@ namespace ExpenseProcessingSystem.Services
                     TR_Approver_ID = int.Parse(_session.GetString("UserID")),
                     TR_Created_Date = pending.pmCreateDate == null ? DateTime.Now : DateTime.Parse(pending.pmCreateDate),
                     TR_Last_Updated = DateTime.Now,
-                    TR_Status = "Approved",
+                    TR_Status_ID = 3,
                     TR_isDeleted = pending.Pending_TR_isDeleted,
                     TR_isActive = true
                 };
@@ -844,7 +918,7 @@ namespace ExpenseProcessingSystem.Services
                     Curr_Approver_ID = int.Parse(_session.GetString("UserID")),
                     Curr_Created_Date = pending.pmCreateDate == null ? DateTime.Now : DateTime.Parse(pending.pmCreateDate),
                     Curr_Last_Updated = DateTime.Now,
-                    Curr_Status = "Approved",
+                    Curr_Status_ID = 3,
                     Curr_isDeleted = pending.Pending_Curr_isDeleted,
                     Curr_isActive = true
                 };
@@ -919,7 +993,7 @@ namespace ExpenseProcessingSystem.Services
                     Emp_Approver_ID = int.Parse(_session.GetString("UserID")),
                     Emp_Created_Date = pending.pmCreateDate == null ? DateTime.Now : DateTime.Parse(pending.pmCreateDate),
                     Emp_Last_Updated = DateTime.Now,
-                    Emp_Status = "Approved",
+                    Emp_Status_ID = 3,
                     Emp_isDeleted = pending.Pending_Emp_isDeleted,
                     Emp_isActive = true
                 };
@@ -994,7 +1068,7 @@ namespace ExpenseProcessingSystem.Services
                     Cust_Approver_ID = int.Parse(_session.GetString("UserID")),
                     Cust_Created_Date = pending.pmCreateDate == null ? DateTime.Now : DateTime.Parse(pending.pmCreateDate),
                     Cust_Last_Updated = DateTime.Now,
-                    Cust_Status = "Approved",
+                    Cust_Status_ID = 3,
                     Cust_isDeleted = pending.Pending_Cust_isDeleted,
                     Cust_isActive = true
                 };
@@ -1071,7 +1145,7 @@ namespace ExpenseProcessingSystem.Services
                     BCS_Approver_ID = int.Parse(_session.GetString("UserID")),
                     BCS_Created_Date = pending.pmCreateDate == null ? DateTime.Now : DateTime.Parse(pending.pmCreateDate),
                     BCS_Last_Updated = DateTime.Now,
-                    BCS_Status = "Approved",
+                    BCS_Status_ID = 3,
                     BCS_isDeleted = pending.Pending_BCS_isDeleted,
                     BCS_isActive = true
                 };
@@ -1128,14 +1202,58 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Vendor_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_Vendor_Filed_Date = DateTime.Now,
                     Pending_Vendor_IsDeleted = false,
-                    Pending_Vendor_Status = "For Approval"
+                    Pending_Vendor_Status_ID = 7
                 };
                 vmList.Add(m);
             }
-
+            DMVendorTRVATModel_Pending tmp = new DMVendorTRVATModel_Pending();
+            List<DMVendorTRVATModel_Pending> tmpList = new List<DMVendorTRVATModel_Pending>();
             if (_modelState.IsValid)
             {
                 _context.DMVendor_Pending.AddRange(vmList);
+                _context.SaveChanges();
+                var i = 0;
+                vmList.Select(p => p.Pending_Vendor_MasterID)
+                    .ToList()
+                    .ForEach(x =>
+                    {
+                        if (model.NewVendorVM[i].Vendor_Tax_Rates_ID != null)
+                        {
+
+                            List<string> trIds = model.NewVendorVM[i].Vendor_Tax_Rates_ID.Split(',').ToList();
+                            trIds.ForEach(tr =>
+                            {
+                                if (tr != "")
+                                {
+                                    tmp = new DMVendorTRVATModel_Pending()
+                                    {
+                                        Pending_VTV_Vendor_ID = x,
+                                        Pending_VTV_TR_ID = int.Parse(tr)
+                                    };
+                                    tmpList.Add(tmp);
+                                }
+                            });
+                        }
+                        if (model.NewVendorVM[i].Vendor_VAT_ID != null)
+                        {
+                            List<string> vatIds = model.NewVendorVM[i].Vendor_VAT_ID.Split(',').ToList();
+                            vatIds.ForEach(vat =>
+                            {
+                                if (vat != "")
+                                {
+                                    tmp = new DMVendorTRVATModel_Pending()
+                                    {
+                                        Pending_VTV_Vendor_ID = x,
+                                        Pending_VTV_VAT_ID = int.Parse(vat)
+                                    };
+                                    tmpList.Add(tmp);
+                                }
+                            });
+                        }
+                        i++;
+                    });
+
+                _context.DMVendorTRVAT_Pending.AddRange(tmpList);
                 _context.SaveChanges();
             }
             return true;
@@ -1154,7 +1272,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Vendor_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_Vendor_Filed_Date = DateTime.Now,
                     Pending_Vendor_IsDeleted = false,
-                    Pending_Vendor_Status = "For Approval"
+                    Pending_Vendor_Status_ID = 8
                 };
                 vmList.Add(m);
             }
@@ -1180,7 +1298,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Vendor_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_Vendor_Filed_Date = DateTime.Now,
                     Pending_Vendor_IsDeleted = true,
-                    Pending_Vendor_Status = "For Approval (For Deletion)"
+                    Pending_Vendor_Status_ID = 9
                 };
                 vmList.Add(m);
             }
@@ -1215,7 +1333,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Dept_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_Dept_Filed_Date = DateTime.Now,
                     Pending_Dept_isDeleted = false,
-                    Pending_Dept_Status = "For Approval"
+                    Pending_Dept_Status_ID = 7
                 };
                 vmList.Add(m);
             }
@@ -1247,7 +1365,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Dept_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_Dept_Filed_Date = DateTime.Now,
                     Pending_Dept_isDeleted = false,
-                    Pending_Dept_Status = "For Approval"
+                    Pending_Dept_Status_ID = 8
                 };
                 vmList.Add(m);
             }
@@ -1279,7 +1397,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Dept_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_Dept_Filed_Date = DateTime.Now,
                     Pending_Dept_isDeleted = true,
-                    Pending_Dept_Status = "For Approval (For Deletion)"
+                    Pending_Dept_Status_ID = 9
                 };
                 vmList.Add(m);
             }
@@ -1315,7 +1433,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Check_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_Check_Filed_Date = DateTime.Now,
                     Pending_Check_isDeleted = false,
-                    Pending_Check_Status = "For Approval"
+                    Pending_Check_Status_ID = 7
                 };
                 vmList.Add(m);
             }
@@ -1348,7 +1466,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Check_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_Check_Filed_Date = DateTime.Now,
                     Pending_Check_isDeleted = false,
-                    Pending_Check_Status = "For Approval"
+                    Pending_Check_Status_ID = 8
                 };
                 vmList.Add(m);
             }
@@ -1381,7 +1499,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Check_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_Check_Filed_Date = DateTime.Now,
                     Pending_Check_isDeleted = true,
-                    Pending_Check_Status = "For Approval (For Deletion)"
+                    Pending_Check_Status_ID = 9
                 };
                 vmList.Add(m);
             }
@@ -1412,6 +1530,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Account_Name = dm.Account_Name,
                     Pending_Account_MasterID = ++masterIDMax,
                     Pending_Account_FBT_MasterID = dm.Account_FBT_MasterID,
+                    Pending_Account_Group_MasterID = dm.Account_Group_MasterID,
                     Pending_Account_Code = dm.Account_Code,
                     Pending_Account_Cust = dm.Account_Cust,
                     Pending_Account_Div = dm.Account_Div,
@@ -1420,7 +1539,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Account_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_Account_Filed_Date = DateTime.Now,
                     Pending_Account_isDeleted = false,
-                    Pending_Account_Status = "For Approval"
+                    Pending_Account_Status_ID = 7
                 };
                 vmList.Add(m);
             }
@@ -1442,6 +1561,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Account_Name = dm.Account_Name,
                     Pending_Account_MasterID = dm.Account_MasterID,
                     Pending_Account_FBT_MasterID = dm.Account_FBT_MasterID,
+                    Pending_Account_Group_MasterID = dm.Account_Group_MasterID,
                     Pending_Account_Code = dm.Account_Code,
                     Pending_Account_Cust = dm.Account_Cust,
                     Pending_Account_Div = dm.Account_Div,
@@ -1450,7 +1570,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Account_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_Account_Filed_Date = DateTime.Now,
                     Pending_Account_isDeleted = false,
-                    Pending_Account_Status = "For Approval"
+                    Pending_Account_Status_ID = 8
                 };
                 vmList.Add(m);
             }
@@ -1472,6 +1592,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Account_Name = dm.Account_Name,
                     Pending_Account_MasterID = dm.Account_MasterID,
                     Pending_Account_FBT_MasterID = dm.Account_FBT_MasterID,
+                    Pending_Account_Group_MasterID = dm.Account_Group_MasterID,
                     Pending_Account_Code = dm.Account_Code,
                     Pending_Account_Cust = dm.Account_Cust,
                     Pending_Account_Div = dm.Account_Div,
@@ -1480,7 +1601,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Account_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_Account_Filed_Date = DateTime.Now,
                     Pending_Account_isDeleted = true,
-                    Pending_Account_Status = "For Approval (For Deletion)"
+                    Pending_Account_Status_ID = 9
                 };
                 vmList.Add(m);
             }
@@ -1488,6 +1609,90 @@ namespace ExpenseProcessingSystem.Services
             if (_modelState.IsValid)
             {
                 _context.DMAccount_Pending.AddRange(vmList);
+                _context.SaveChanges();
+            }
+            return true;
+        }
+        //[ ACCOUNT GROUP ]
+        public bool addAccountGroup_Pending(NewAccountGroupListViewModel model, string userId)
+        {
+            List<DMAccountGroupModel_Pending> vmList = new List<DMAccountGroupModel_Pending>();
+
+            var payeeMax = _context.DMAccountGroup.Select(x => x.AccountGroup_MasterID).
+                DefaultIfEmpty(0).Max();
+            var pendingMax = _context.DMAccountGroup_Pending.Select(x => x.Pending_AccountGroup_MasterID).
+                DefaultIfEmpty(0).Max();
+
+            int masterIDMax = payeeMax > pendingMax ? payeeMax : pendingMax;
+
+            foreach (NewAccountGroupViewModel dm in model.NewAccountGroupVM)
+            {
+                DMAccountGroupModel_Pending m = new DMAccountGroupModel_Pending
+                {
+                    Pending_AccountGroup_Name = dm.AccountGroup_Name,
+                    Pending_AccountGroup_MasterID = ++masterIDMax,
+                    Pending_AccountGroup_Code = dm.AccountGroup_Code,
+                    Pending_AccountGroup_Creator_ID = int.Parse(_session.GetString("UserID")),
+                    Pending_AccountGroup_Filed_Date = DateTime.Now,
+                    Pending_AccountGroup_isDeleted = false,
+                    Pending_AccountGroup_Status_ID = 7
+                };
+                vmList.Add(m);
+            }
+
+            if (_modelState.IsValid)
+            {
+                _context.DMAccountGroup_Pending.AddRange(vmList);
+                _context.SaveChanges();
+            }
+            return true;
+        }
+        public bool editAccountGroup_Pending(List<DMAccountGroupViewModel> model, string userId)
+        {
+            List<DMAccountGroupModel_Pending> vmList = new List<DMAccountGroupModel_Pending>();
+            foreach (DMAccountGroupViewModel dm in model)
+            {
+                DMAccountGroupModel_Pending m = new DMAccountGroupModel_Pending
+                {
+                    Pending_AccountGroup_Name = dm.AccountGroup_Name,
+                    Pending_AccountGroup_MasterID = dm.AccountGroup_MasterID,
+                    Pending_AccountGroup_Code = dm.AccountGroup_Code,
+                    Pending_AccountGroup_Creator_ID = int.Parse(_session.GetString("UserID")),
+                    Pending_AccountGroup_Filed_Date = DateTime.Now,
+                    Pending_AccountGroup_isDeleted = false,
+                    Pending_AccountGroup_Status_ID = 8
+                };
+                vmList.Add(m);
+            }
+
+            if (_modelState.IsValid)
+            {
+                _context.DMAccountGroup_Pending.AddRange(vmList);
+                _context.SaveChanges();
+            }
+            return true;
+        }
+        public bool deleteAccountGroup_Pending(List<DMAccountGroupViewModel> model, string userId)
+        {
+            List<DMAccountGroupModel_Pending> vmList = new List<DMAccountGroupModel_Pending>();
+            foreach (DMAccountGroupViewModel dm in model)
+            {
+                DMAccountGroupModel_Pending m = new DMAccountGroupModel_Pending
+                {
+                    Pending_AccountGroup_Name = dm.AccountGroup_Name,
+                    Pending_AccountGroup_MasterID = dm.AccountGroup_MasterID,
+                    Pending_AccountGroup_Code = dm.AccountGroup_Code,
+                    Pending_AccountGroup_Creator_ID = int.Parse(_session.GetString("UserID")),
+                    Pending_AccountGroup_Filed_Date = DateTime.Now,
+                    Pending_AccountGroup_isDeleted = true,
+                    Pending_AccountGroup_Status_ID = 9
+                };
+                vmList.Add(m);
+            }
+
+            if (_modelState.IsValid)
+            {
+                _context.DMAccountGroup_Pending.AddRange(vmList);
                 _context.SaveChanges();
             }
             return true;
@@ -1514,7 +1719,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_VAT_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_VAT_Filed_Date = DateTime.Now,
                     Pending_VAT_isDeleted = false,
-                    Pending_VAT_Status = "For Approval"
+                    Pending_VAT_Status_ID = 7
                 };
                 vmList.Add(m);
             }
@@ -1539,7 +1744,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_VAT_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_VAT_Filed_Date = DateTime.Now,
                     Pending_VAT_isDeleted = false,
-                    Pending_VAT_Status = "For Approval"
+                    Pending_VAT_Status_ID = 8
                 };
                 vmList.Add(m);
             }
@@ -1564,7 +1769,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_VAT_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_VAT_Filed_Date = DateTime.Now,
                     Pending_VAT_isDeleted = true,
-                    Pending_VAT_Status = "For Approval (For Deletion)"
+                    Pending_VAT_Status_ID = 9
                 };
                 vmList.Add(m);
             }
@@ -1599,7 +1804,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_FBT_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_FBT_Filed_Date = DateTime.Now,
                     Pending_FBT_isDeleted = false,
-                    Pending_FBT_Status = "For Approval"
+                    Pending_FBT_Status_ID = 7
                 };
                 vmList.Add(m);
             }
@@ -1625,7 +1830,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_FBT_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_FBT_Filed_Date = DateTime.Now,
                     Pending_FBT_isDeleted = false,
-                    Pending_FBT_Status = "For Approval"
+                    Pending_FBT_Status_ID = 8
                 };
                 vmList.Add(m);
             }
@@ -1651,7 +1856,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_FBT_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_FBT_Filed_Date = DateTime.Now,
                     Pending_FBT_isDeleted = true,
-                    Pending_FBT_Status = "For Approval (For Deletion)"
+                    Pending_FBT_Status_ID = 9
                 };
                 vmList.Add(m);
             }
@@ -1688,7 +1893,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_TR_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_TR_Filed_Date = DateTime.Now,
                     Pending_TR_isDeleted = false,
-                    Pending_TR_Status = "For Approval"
+                    Pending_TR_Status_ID = 7
                 };
                 vmList.Add(m);
             }
@@ -1716,7 +1921,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_TR_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_TR_Filed_Date = DateTime.Now,
                     Pending_TR_isDeleted = false,
-                    Pending_TR_Status = "For Approval"
+                    Pending_TR_Status_ID = 8
                 };
                 vmList.Add(m);
             }
@@ -1744,7 +1949,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_TR_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_TR_Filed_Date = DateTime.Now,
                     Pending_TR_isDeleted = true,
-                    Pending_TR_Status = "For Approval (For Deletion)"
+                    Pending_TR_Status_ID = 9
                 };
                 vmList.Add(m);
             }
@@ -1778,7 +1983,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Curr_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_Curr_Filed_Date = DateTime.Now,
                     Pending_Curr_isDeleted = false,
-                    Pending_Curr_Status = "For Approval"
+                    Pending_Curr_Status_ID = 7
                 };
                 vmList.Add(m);
             }
@@ -1803,7 +2008,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Curr_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_Curr_Filed_Date = DateTime.Now,
                     Pending_Curr_isDeleted = false,
-                    Pending_Curr_Status = "For Approval"
+                    Pending_Curr_Status_ID = 8
                 };
                 vmList.Add(m);
             }
@@ -1828,7 +2033,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Curr_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_Curr_Filed_Date = DateTime.Now,
                     Pending_Curr_isDeleted = true,
-                    Pending_Curr_Status = "For Approval (For Deletion)"
+                    Pending_Curr_Status_ID = 9
                 };
                 vmList.Add(m);
             }
@@ -1863,7 +2068,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Emp_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_Emp_Filed_Date = DateTime.Now,
                     Pending_Emp_isDeleted = false,
-                    Pending_Emp_Status = "For Approval"
+                    Pending_Emp_Status_ID = 7
                 };
                 vmList.Add(m);
             }
@@ -1896,7 +2101,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Emp_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_Emp_Filed_Date = DateTime.Now,
                     Pending_Emp_isDeleted = false,
-                    Pending_Emp_Status = "For Approval"
+                    Pending_Emp_Status_ID = 8
                 };
                 vmList.Add(m);
             }
@@ -1929,7 +2134,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Emp_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_Emp_Filed_Date = DateTime.Now,
                     Pending_Emp_isDeleted = true,
-                    Pending_Emp_Status = "For Approval (For Deletion)"
+                    Pending_Emp_Status_ID = 9
                 };
                 vmList.Add(m);
             }
@@ -1964,7 +2169,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Cust_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_Cust_Filed_Date = DateTime.Now,
                     Pending_Cust_isDeleted = false,
-                    Pending_Cust_Status = "For Approval"
+                    Pending_Cust_Status_ID = 7
                 };
                 vmList.Add(m);
             }
@@ -1996,7 +2201,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Cust_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_Cust_Filed_Date = DateTime.Now,
                     Pending_Cust_isDeleted = false,
-                    Pending_Cust_Status = "For Approval"
+                    Pending_Cust_Status_ID = 8
                 };
                 vmList.Add(m);
             }
@@ -2028,7 +2233,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Cust_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_Cust_Filed_Date = DateTime.Now,
                     Pending_Cust_isDeleted = true,
-                    Pending_Cust_Status = "For Approval (For Deletion)"
+                    Pending_Cust_Status_ID = 9
                 };
                 vmList.Add(m);
             }
@@ -2066,7 +2271,7 @@ namespace ExpenseProcessingSystem.Services
                 Pending_BCS_Creator_ID = int.Parse(_session.GetString("UserID")),
                 Pending_BCS_Filed_Date = DateTime.Now,
                 Pending_BCS_isDeleted = false,
-                Pending_BCS_Status = "For Approval"
+                Pending_BCS_Status_ID = 7
             };
             vmList.Add(m);
 
@@ -2104,7 +2309,7 @@ namespace ExpenseProcessingSystem.Services
                 Pending_BCS_Creator_ID = int.Parse(_session.GetString("UserID")),
                 Pending_BCS_Filed_Date = DateTime.Now,
                 Pending_BCS_isDeleted = false,
-                Pending_BCS_Status = "For Approval"
+                Pending_BCS_Status_ID = 8
             };
             vmList.Add(m);
 
@@ -2136,7 +2341,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_BCS_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_BCS_Filed_Date = DateTime.Now,
                     Pending_BCS_isDeleted = true,
-                    Pending_BCS_Status = "For Approval (For Deletion)"
+                    Pending_BCS_Status_ID = 9
                 };
                 vmList.Add(m);
             }

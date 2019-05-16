@@ -35,6 +35,33 @@ namespace ExpenseProcessingSystem.Services.Validations
             }
         }
     }
+    public class TINLengthValidation : ValidationAttribute
+    {
+        readonly int TINLength = 12;
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            try
+            {
+                //check if valid TIN length
+                string val = Convert.ToString(value);
+                if (val.Length < TINLength)
+                    return new ValidationResult("Minimum length should be " + TINLength);
+                if (val.Length > TINLength)
+                    return new ValidationResult("Maximum length should be " + TINLength);
+                return ValidationResult.Success;
+            }
+            catch (Exception ex)
+            {
+                //sample fatal error log
+                Log.Fatal(ex, "User: {user}, StackTrace : {trace}, Error Message: {message}", "[UserID]", ex.StackTrace, ex.Message);
+                return new ValidationResult("Invalid input");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
+        }
+    }
     public class EmailValidation : ValidationAttribute
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
@@ -99,13 +126,16 @@ namespace ExpenseProcessingSystem.Services.Validations
         {
             try
             {
+                Regex isInt = new Regex(@"^[0-9]+$");
                 var name = validationContext.DisplayName;
                 if (!(value.Equals(0)))
                 {
-                    if (!(int.TryParse(Convert.ToString(value, CultureInfo.InvariantCulture)
-                          , System.Globalization.NumberStyles.Any
-                          , NumberFormatInfo.InvariantInfo
-                          , out var number)))
+                    //if (!(int.TryParse(Convert.ToString(value, CultureInfo.InvariantCulture)
+                    //      , System.Globalization.NumberStyles.Any
+                    //      , NumberFormatInfo.InvariantInfo
+                    //      , out var number)))
+                    //{
+                    if (!isInt.IsMatch(value.ToString()))
                     {
                         return new ValidationResult(name + " has an invalid 'numeric' input");
                     }
