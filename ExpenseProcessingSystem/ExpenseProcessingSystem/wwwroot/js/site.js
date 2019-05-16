@@ -8,11 +8,26 @@ $(document).ready(function () {
 
     var $pageInput = $('#paginationInput');
     $pageInput.data("value", $pageInput.val());
+    ////DM ON LOAD
 
     //disable approve/reject button upon initial load in DM
-    $('.apprv-rec').prop('disabled', true);
-    $('.rej-rec').prop('disabled', true);
+    defaultDisableAll();
+    $('input#entryCheckTypes').val("");
+    //get column # of status per table
+    var countDoc = $('#partial-container div div table thead tr th').length - 2;
+    var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
+    var remainingCheckStatDoc = $('input.tbl-chk[type="checkbox"]:checked').parent().siblings(":eq(" + countDoc + ")").text();
 
+    if (chkCount <= 0) {
+        defaultApproved();
+    } else {
+        if (remainingCheckStatDoc == "Approved") {
+            defaultApproved();
+        } else {
+            defaultForApproval();
+        }
+    }
+    /////END DM ON LOAD
     $('#um').find('a').click(function () {
         ClearValidations();
     });
@@ -77,46 +92,63 @@ $(document).ready(function () {
         var count = $('#partial-container div div table thead tr th').length - 2;
         var stat = $(this).parent().siblings(":eq(" + count + ")").text();
         var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
+        var remainingCheckStat = $('input.tbl-chk[type="checkbox"]:checked').parent().siblings(":eq(" + count + ")").text();
         //to check if entries are of same status
         var txtVal = $('input#entryCheckTypes').val();
         //get table name
         var tblName = $('#dm-tbl').find(":selected").text();
-
         //if there is no previously checked box
         if (txtVal != "") {
-            //when selected two different type of entries, disable all
-            if ((txtVal != stat) && (this.checked == true)) {
-                alert("Kindly check rows with the same status only.");
-                $('.rec').prop('disabled', true);
-                //when in BCS table, disable editing for more than one entry
-            } else if (chkCount >= 2 && stat == "Approved" && (tblName == "BIR Cert Signatory")) {
-                $('.apprv-rec').prop('disabled', true);
-                $('.rej-rec').prop('disabled', true);
-                $('.add-rec').prop('disabled', false);
-                $('.edit-rec').prop('disabled', true);
-                $('.delete-rec').prop('disabled', false);
-                //when unselecting all checkboxes, enable only add edit delete
-            } else if (this.checked == false && chkCount <= 0) {
-                $('.apprv-rec').prop('disabled', true);
-                $('.rej-rec').prop('disabled', true);
-                $('.add-rec').prop('disabled', false);
-                $('.edit-rec').prop('disabled', false);
-                $('.delete-rec').prop('disabled', false);
-                $('input#entryCheckTypes').val("");
-            } else {
-                //get status of currently checked checkbox
-                stat = $('input.tbl-chk[type="checkbox"]:checked').parent().siblings(":eq(" + count + ")").text();
-                //format only avail buttons per status
-                if (stat == "Approved") {
+            // if change is to uncheck or check the element
+            if (this.checked == true) {
+                if (txtVal == stat) {
+                    //In BCS, only one row can be selected for edit
+                    if (chkCount >= 2 && stat == "Approved" && (tblName == "BIR Cert Signatory")) {
+                        $('.apprv-rec').prop('disabled', true);
+                        $('.rej-rec').prop('disabled', true);
+                        $('.add-rec').prop('disabled', false);
+                        $('.edit-rec').prop('disabled', true);
+                        $('.delete-rec').prop('disabled', false);
+                    }
+                    else if (stat == "Approved") {
+                        defaultApproved();
+                    } else {
+                        defaultForApproval();
+                    }
+                }
+                else if (remainingCheckStat == stat) {
+                    if (remainingCheckStat == "Approved") {
+                        defaultApproved();
+                    } else {
+                        defaultForApproval();
+                    }
+                }else {
+                    alert("Kindly check rows with the same status only.");
+                    $('.rec').prop('disabled', true);
+                }
+            }
+            //if this element is unchecked
+            else
+            {
+                //if no element selected
+                if (chkCount <= 0) {
+                    $('input#entryCheckTypes').val("");
                     defaultApproved();
-                } else {
-                    defaultForApproval();
+                }
+                //if there is remaining, filter btns according to stat of other selected elements
+                else
+                {
+                    if (remainingCheckStat == "Approved") {
+                        defaultApproved();
+                    } else {
+                        defaultForApproval();
+                    }
                 }
             }
         } else {
             $('input#entryCheckTypes').val(stat);
             //format only avail buttons for clicked checkbox 
-            if (stat == "Approved") {
+            if (remainingCheckStat == "Approved") {
                 defaultApproved();
             } else {
                 defaultForApproval();
