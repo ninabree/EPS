@@ -5,7 +5,7 @@
 }
 @using ExpenseProcessingSystem.ViewModels
 @model DMBCS2ViewModel
-<div id="table" class="table-editable">
+<div id="table" class="">
     @using (Html.BeginForm("EditBCS_Pending", "Home", FormMethod.Post, new { @class = "validate-form", @id = "tsForm", enctype = "multipart/form-data" }))
     {
         <table class="table table-bordered editable-th">
@@ -19,14 +19,14 @@
             @if (Model != null)
             {
                 <tr>
-                    <td contenteditable="true">@Html.TextBoxFor(item => item.BCS_Name, new { @class = "w-full" })</td>
-                    <td contenteditable="true">@Html.TextBoxFor(item => item.BCS_TIN, new { @class = "w-full" })</td>
-                    <td contenteditable="true">@Html.TextBoxFor(item => item.BCS_Position, new { @class = "w-full" })</td>
-                    <td contenteditable="true" colspan="3">
+                    <td>@Html.TextBoxFor(item => item.BCS_Name, new { @class = "w-full" })</td>
+                    <td>@Html.TextBoxFor(item => item.BCS_TIN, new { @class = "w-full" })</td>
+                    <td>@Html.TextBoxFor(item => item.BCS_Position, new { @class = "w-full" })</td>
+                    <td colspan="3">
                         @Html.TextBoxFor(item => item.BCS_Signatures_Name, new { @class = "w-full" })
                         <input type="file" asp-for="BCS_Signatures">
                     </td>
-                    <td contenteditable="false">@Html.TextBoxFor(item => item.BCS_Status, new { @class = "w-full" })</td>
+                    <td>@Html.TextBoxFor(item => item.BCS_Status, new { @class = "w-full", @readonly = "readonly" })</td>
                     @Html.HiddenFor(item => item.BCS_MasterID)
                 </tr>
             }

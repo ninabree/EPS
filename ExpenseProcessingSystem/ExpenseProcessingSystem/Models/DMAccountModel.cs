@@ -13,7 +13,7 @@ namespace ExpenseProcessingSystem.Models
         public int Account_ID { get; set; }
         public int Account_MasterID { get; set; }
         public int Account_FBT_MasterID { get; set; }
-        public int Account_Group_ID { get; set; }
+        public int Account_Group_MasterID { get; set; }
         public string Account_Name { get; set; }
         public string Account_Code { get; set; }
         public string Account_No { get; set; }
@@ -24,7 +24,7 @@ namespace ExpenseProcessingSystem.Models
         public int Account_Approver_ID { get; set; }
         public DateTime Account_Created_Date { get; set; }
         public DateTime Account_Last_Updated { get; set; }
-        public string Account_Status { get; set; }
+        public int Account_Status_ID { get; set; }
         public bool Account_isDeleted { get; set; }
         public bool Account_isActive { get; set; }
     }

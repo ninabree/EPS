@@ -13,13 +13,13 @@ namespace ExpenseProcessingSystem.Models.Pending
         public int Pending_BCS_ID { get; set; }
         public int Pending_BCS_MasterID { get; set; }
         public string Pending_BCS_Name { get; set; }
-        public int Pending_BCS_TIN { get; set; }
+        public string Pending_BCS_TIN { get; set; }
         public string Pending_BCS_Position { get; set; }
         public string Pending_BCS_Signatures { get; set; }
         public int Pending_BCS_Creator_ID { get; set; }
         public int Pending_BCS_Approver_ID { get; set; }
         public DateTime Pending_BCS_Filed_Date { get; set; }
-        public string Pending_BCS_Status { get; set; }
+        public int Pending_BCS_Status_ID { get; set; }
         public bool Pending_BCS_isDeleted { get; set; }
         public bool Pending_BCS_isActive { get; set; }
     }

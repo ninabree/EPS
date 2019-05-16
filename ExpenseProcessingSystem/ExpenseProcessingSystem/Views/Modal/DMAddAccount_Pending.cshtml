@@ -7,7 +7,7 @@
 @using ExpenseProcessingSystem.ViewModels.NewRecord
 @model NewAccountListViewModel
 
-<div id="table" class="table-editable">
+<div id="table" class="">
     @using (Html.BeginForm("AddAccount_Pending", "Home", FormMethod.Post, new { @class = "validate-form", @id = "tsForm" }))
     {
         <table class="table table-bordered editable-th">
@@ -19,6 +19,7 @@
                 <th>Div</th>
                 <th>Fund</th>
                 <th colspan="2">FBT</th>
+                <th colspan="2">Account Group</th>
                 <th></th>
             </tr>
             <tr id="NewAccount-Tr-0">
@@ -28,9 +29,15 @@
                 <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_Cust, new { @class = "w-full" })</td>
                 <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_Div, new { @class = "w-full" })</td>
                 <td>@Html.CheckBoxFor(m => m.NewAccountVM[0].Account_Fund, new { @class = "w-full" })</td>
-                <td colspan="2">@Html.DropDownListFor(m => m.NewAccountVM[0].Account_FBT_MasterID,
-                                        new SelectList(Model.FbtList, "FBT_MasterID", "FBT_Name"),
-                                        new { @class = "w-full input" })
+                <td colspan="2">
+                    @Html.DropDownListFor(m => m.NewAccountVM[0].Account_FBT_MasterID,
+                    Model.FbtList,
+                    new { @class = "w-full input" })
+                </td>
+                <td colspan="2">
+                    @Html.DropDownListFor(m => m.NewAccountVM[0].Account_Group_MasterID,
+                    Model.AccGrp,
+                    new { @class = "w-full input" })
                 </td>
                 <td>
                     <span class="table-remove glyphicon glyphicon-remove"></span>

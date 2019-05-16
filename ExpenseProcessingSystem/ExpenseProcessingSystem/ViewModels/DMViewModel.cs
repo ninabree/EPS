@@ -20,5 +20,6 @@ namespace ExpenseProcessingSystem.ViewModels
         public PaginatedList<DMEmpViewModel> Emp { get; set; }
         public PaginatedList<DMCustViewModel> Cust { get; set; }
         public PaginatedList<DMBCSViewModel> BCS { get; set; }
+        public PaginatedList<DMAccountGroupViewModel> AccountGroup { get; set; }
     }
 }

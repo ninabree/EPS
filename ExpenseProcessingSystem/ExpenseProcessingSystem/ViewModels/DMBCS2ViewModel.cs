@@ -17,7 +17,7 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "BCS Name")]
         public string BCS_Name { get; set; }
         [Display(Name = "BCS TIN")]
-        public int BCS_TIN { get; set; }
+        public string BCS_TIN { get; set; }
         [Display(Name = "BCS Position")]
         public string BCS_Position { get; set; }
         [Display(Name = "BCS Signature")]
@@ -34,6 +34,7 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "BCS Last Updated")]
         public DateTime BCS_Last_Updated { get; set; }
         [Display(Name = "BCS Status")]
+        public int BCS_Status_ID { get; set; }
         public string BCS_Status { get; set; }
         public bool BCS_isDeleted { get; set; }
         public bool BCS_isActive { get; set; }

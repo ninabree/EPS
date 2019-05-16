@@ -21,7 +21,7 @@ namespace ExpenseProcessingSystem.Models
         public int TR_Approver_ID { get; set; }
         public DateTime TR_Created_Date { get; set; }
         public DateTime TR_Last_Updated { get; set; }
-        public string TR_Status { get; set; }
+        public int TR_Status_ID { get; set; }
         public bool TR_isDeleted { get; set; }
         public bool TR_isActive { get; set; }
     }

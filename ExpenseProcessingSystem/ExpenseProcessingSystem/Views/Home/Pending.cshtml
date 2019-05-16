@@ -1,34 +1,21 @@
 ﻿@using ExpenseProcessingSystem.ViewModels
 @model HomeIndexViewModel
 <div class="tabContent">
-    @* MOVED ALL TO HISTORY *@
-    @*<div>
-        <div class="tab-tbl">Personal Pending Applications:</div>
-        <table class="table table-striped tab-tbl table-bordered">
-            <thead>
-                <tr>
-                    <th>Application ID</th>
-                    <th>Application Type</th>
-                    <th>Amount</th>
-                    <th>Payee</th>
-                    <th>Maker</th>
-                    <th>Verifier/s</th>
-                    <th>Date Submitted</th>
-                    <th>Last Updated Date</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>*@
-
-    @*//if approver or verifier account*@
         <div>
             <div class="tab-tbl">General Pending Applications:</div>
             <table class="table table-striped tab-tbl table-bordered">
+                <colgroup>
+                    <col />
+                    <col />
+                    <col />
+                    <col />
+                    <col />
+                    <col />
+                    <col />
+                    <col />
+                </colgroup>
                 <thead>
                     <tr>
-                        <th>Application ID</th>
                         <th>Application Type</th>
                         <th>Amount</th>
                         <th>Payee</th>
@@ -39,7 +26,22 @@
                         <th>Status</th>
                     </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody>
+                    @foreach (ApplicationsViewModel item in Model.GeneralPendingList)
+                    {
+                    <tr>
+                        <td>@Html.DisplayFor(model => item.App_Type)</td>
+                        <td>@Html.DisplayFor(model => item.App_Amount)</td>
+                        <td>@Html.DisplayFor(model => item.App_Payee)</td>
+                        <td>@Html.DisplayFor(model => item.App_Maker)</td>
+                        <td>@foreach (string ver in item.App_Verifier_ID_List) {
+                            Html.DisplayFor(model => ver);}</td>
+                        <td>@Html.DisplayFor(model => item.App_Date)</td>
+                        <td>@Html.DisplayFor(model => item.App_Last_Updated)</td>
+                        <td>@Html.DisplayFor(model => item.App_Status)</td>
+                    </tr>
+                    }
+                </tbody>
             </table>
         </div>
 </div>

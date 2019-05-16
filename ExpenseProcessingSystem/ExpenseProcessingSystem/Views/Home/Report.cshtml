@@ -361,9 +361,9 @@
 			<tr>
 				<td>@Html.RadioButton("radioTimePeriod", "3", false, new { id = "radioPeriodOption3", @class = "radioPeriodOption", disabled = "disabled" })</td>
 				<td>Period</td>
-				<td colspan="1">@Html.EditorFor(m => m.PeriodFrom, new { htmlAttributes = new { @class = "input h-20 w-97 fs-11 form -control", @type = "date", disabled = "disabled", @Value = DateTime.Today } })</td>
+				<td colspan="1">@Html.EditorFor(m => m.PeriodFrom, new { htmlAttributes = new { @class = "input h-20 w-97 fs-11 form-control", @type = "date", disabled = "disabled", @Value = DateTime.Today } })</td>
 				<td>To</td>
-				<td colspan="1">@Html.EditorFor(m => m.PeriodTo, new { htmlAttributes = new { @class = "input h-20 w-97 fs-11 form -control", @type = "date", disabled = "disabled", @Value = DateTime.Today } })</td>
+				<td colspan="1">@Html.EditorFor(m => m.PeriodTo, new { htmlAttributes = new { @class = "input h-20 w-97 fs-11 form-control", @type = "date", disabled = "disabled", @Value = DateTime.Today } })</td>
 				<td>&#9679</td>
 				<td>Check No.</td>
 				<td colspan="1"><input class="input" id="txtCheck1" disabled="disabled" /></td>

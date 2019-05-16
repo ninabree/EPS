@@ -17,7 +17,7 @@ namespace ExpenseProcessingSystem.Models.Pending
         public int Pending_VAT_Creator_ID { get; set; }
         public int Pending_VAT_Approver_ID { get; set; }
         public DateTime Pending_VAT_Filed_Date { get; set; }
-        public string Pending_VAT_Status { get; set; }
+        public int Pending_VAT_Status_ID { get; set; }
         public bool Pending_VAT_isDeleted { get; set; }
         public bool Pending_VAT_isActive { get; set; }
     }

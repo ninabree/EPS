@@ -40,7 +40,7 @@ namespace ExpenseProcessingSystem.ViewModels
         public double App_Amount { get; set; }
         public string App_Payee { get; set; }
         public string App_Maker { get; set; }
-        public List<int> App_Verifier_ID_List { get; set; }
+        public List<string> App_Verifier_ID_List { get; set; }
         public DateTime App_Date { get; set; }
         public DateTime App_Last_Updated { get; set; }
         public string App_Status { get; set; }

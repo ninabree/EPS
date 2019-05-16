@@ -15,7 +15,7 @@
                 <table class="table">
                     <tr>
                         <td>@Html.LabelFor(model => model.DMFilters.CKF.CKF_Input_Date)</td>
-                        <td colspan="3">@Html.EditorFor(model => model.DMFilters.CKF.CKF_Input_Date, new { htmlAttributes = new { @class = "input h-20 w-97 fs-11 form -control", @type = "date" } })</td>
+                        <td>@Html.EditorFor(m => m.DMFilters.CKF.CKF_Input_Date, new { htmlAttributes = new { @class = "input h-20 w-97 fs-11 form-control", @type = "date", @Value = DateTime.Today } })</td>
                         <td>@Html.LabelFor(model => model.DMFilters.CKF.CKF_Series_From)</td>
                         <td>@Html.TextBoxFor(model => model.DMFilters.CKF.CKF_Series_From, new { @class = "input" })</td>
                         <td>@Html.LabelFor(model => model.DMFilters.CKF.CKF_Series_To)</td>
@@ -41,18 +41,17 @@
         </div>
     </form>
     <table class="table table-striped tab-tbl">
-        User_FBT
         <thead>
             <tr>
                 <th></th>
                 <th id="Input_Date"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CheckSortParm"]">Input Date<p class="btn-xs glyphicon @ViewData["glyph-1"]"></p></a></th>
                 <th id="Series_From"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CheckSeriesFromSortParm"]">Series From<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
-                <th id="Series_To"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CheckSeriresToSortParm"]">Series To<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
+                <th id="Series_To"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CheckSeriesToSortParm"]">Series To<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
                 <th id="Bank_Info"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CheckBankSortParm"]">Bank Information<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
-                <th id="Creator_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CheckCreatorSortParm"]">Input By<p class="btn-xs glyphicon @ViewData["glyph-6"]"></p></a></th>
-                <th id="Approver_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CheckApproverSortParm"]">Approved By<p class="btn-xs glyphicon @ViewData["glyph-7"]"></p></a></th>
-                <th id="Last_Updated"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CheckLastUpdatedSortParm"]">Last Updated<p class="btn-xs glyphicon @ViewData["glyph-8"]"></p></a></th>
-                <th id="Status"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CheckStatusSortParm"]">Status<p class="btn-xs glyphicon @ViewData["glyph-9"]"></p></a></th>
+                <th id="Creator_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CheckCreatorSortParm"]">Input By<p class="btn-xs glyphicon @ViewData["glyph-5"]"></p></a></th>
+                <th id="Approver_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CheckApproverSortParm"]">Approved By<p class="btn-xs glyphicon @ViewData["glyph-6"]"></p></a></th>
+                <th id="Last_Updated"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CheckLastUpdatedSortParm"]">Last Updated<p class="btn-xs glyphicon @ViewData["glyph-7"]"></p></a></th>
+                <th id="Status_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CheckStatusSortParm"]">Status<p class="btn-xs glyphicon @ViewData["glyph-8"]"></p></a></th>
             </tr>
         </thead>
         <tbody>

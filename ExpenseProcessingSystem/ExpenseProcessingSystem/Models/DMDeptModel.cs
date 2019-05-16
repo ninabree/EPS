@@ -19,7 +19,7 @@ namespace ExpenseProcessingSystem.Models
         public int Dept_Approver_ID { get; set; }
         public DateTime Dept_Created_Date { get; set; }
         public DateTime Dept_Last_Updated { get; set; }
-        public string Dept_Status { get; set; }
+        public int Dept_Status_ID { get; set; }
         public bool Dept_isDeleted { get; set; }
         public bool Dept_isActive { get; set; }
     }

@@ -19,7 +19,7 @@ namespace ExpenseProcessingSystem.Models.Pending
         public List<int> Pending_App_Verifier_ID { get; set; }
         public int Pending_App_Approver_ID { get; set; }
         public DateTime Pending_App_Filed_Date { get; set; }
-        public string Pending_App_Status { get; set; }
+        public int Pending_App_Status_ID { get; set; }
         public bool Pending_App_IsDeleted { get; set; }
     }
 }

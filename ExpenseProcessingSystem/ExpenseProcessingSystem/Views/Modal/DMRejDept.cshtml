@@ -5,7 +5,7 @@
 }
 @using ExpenseProcessingSystem.ViewModels
 @model List<DMDeptViewModel>
-<div id="table" class="table-editable">
+<div id="table" class="">
     @using (Html.BeginForm("RejDept", "Home", FormMethod.Post, new { @class = "validate-form", @id = "tsForm" }))
     {
         <table class="table table-bordered editable-th">
@@ -15,15 +15,15 @@
                 <th>Budget Unit</th>
                 <th>Status</th>
             </tr>
-            @if (Model.Count() != 0)
+            @if (Model != null)
             {
                 @for (int i = 0; i < Model.Count(); i++)
                 {
                     <tr>
-                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].Dept_Name, new { @class = "w-full" })</td>
-                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].Dept_Code, new { @class = "w-full" })</td>
-                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].Dept_Budget_Unit, new { @class = "w-full" })</td>
-                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].Dept_Status, new { @class = "w-full" })</td>
+                        <td>@Html.TextBoxFor(item => item[i].Dept_Name, new { @class = "w-full", @readonly = "readonly" })</td>
+                        <td>@Html.TextBoxFor(item => item[i].Dept_Code, new { @class = "w-full", @readonly = "readonly" })</td>
+                        <td>@Html.TextBoxFor(item => item[i].Dept_Budget_Unit, new { @class = "w-full", @readonly = "readonly" })</td>
+                        <td>@Html.TextBoxFor(item => item[i].Dept_Status, new { @class = "w-full", @readonly = "readonly" })</td>
                         @Html.HiddenFor(item => item[i].Dept_MasterID)
                     </tr>
                 }

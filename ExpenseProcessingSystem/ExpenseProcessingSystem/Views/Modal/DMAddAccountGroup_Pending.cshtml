@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewData["Title"] = "DMAddAccountGroupGroup_Pending";
+    Layout = "~/Views/Shared/_ModalLayout.cshtml";
+}
+
+@using ExpenseProcessingSystem.ViewModels.NewRecord
+@model NewAccountGroupListViewModel
+
+<div id="table" class="">
+    @using (Html.BeginForm("AddAccountGroup_Pending", "Home", FormMethod.Post, new { @class = "validate-form", @id = "tsForm" }))
+    {
+        <table class="table table-bordered editable-th">
+            <tr>
+                <th>Account Group Name</th>
+                <th>Account Group Code</th>
+                <th></th>
+            </tr>
+            <tr id="NewAccountGroup-Tr-0">
+                <td>@Html.TextBoxFor(m => m.NewAccountGroupVM[0].AccountGroup_Name, new { @class = "w-full" })</td>
+                <td>@Html.TextBoxFor(m => m.NewAccountGroupVM[0].AccountGroup_Code, new { @class = "w-full" })</td>
+            <td>
+                <span class="table-remove glyphicon glyphicon-remove"></span>
+            </td>
+        </tr>
+    </table>
+}
+</div>

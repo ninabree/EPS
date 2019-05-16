@@ -112,7 +112,7 @@ namespace ExpenseProcessingSystem.Services
                     AF_No = int.Parse(ctx.Session.GetString("AF_No") ?? "0"),
                     AF_Cust = ctx.Session.GetString("AF_Cust") ?? "",
                     AF_Div = ctx.Session.GetString("AF_Div") ?? "",
-                    AF_Fund = ctx.Session.GetString("AF_Fund") ?? "",
+                    AF_Group = ctx.Session.GetString("AF_Group") ?? "",
                     AF_FBT = ctx.Session.GetString("AF_FBT") ?? "",
                     AF_Creator_Name = ctx.Session.GetString("AF_Creator_Name") ?? "",
                     AF_Approver_Name = ctx.Session.GetString("AF_Approver_Name") ?? "",
@@ -153,18 +153,18 @@ namespace ExpenseProcessingSystem.Services
             if (actionName == "DMPartial_TR")
             {
                 DMFiltersViewModel filters = new DMFiltersViewModel();
-                TRFiltersViewModel EF = new TRFiltersViewModel
+                TRFiltersViewModel TF = new TRFiltersViewModel
                 {
-                    EF_Nature = ctx.Session.GetString("EF_Nature") ?? "",
-                    EF_Nature_Income_Payment = ctx.Session.GetString("EF_Nature_Income_Payment") ?? "",
-                    EF_ATC = ctx.Session.GetString("EF_ATC") ?? "",
-                    EF_Tax_Rate_Desc = ctx.Session.GetString("EF_Tax_Rate_Desc") ?? "",
-                    EF_Tax_Rate = int.Parse(ctx.Session.GetString("EF_Tax_Rate") ?? "0"),
-                    EF_Creator_Name = ctx.Session.GetString("EF_Creator_Name") ?? "",
-                    EF_Approver_Name = ctx.Session.GetString("EF_Approver_Name") ?? "",
-                    EF_Status = ctx.Session.GetString("EF_Status") ?? ""
+                    TR_WT_Title = ctx.Session.GetString("TR_WT_Title") ?? "",
+                    TR_Nature = ctx.Session.GetString("TR_Nature") ?? "",
+                    TR_Nature_Income_Payment = ctx.Session.GetString("TR_Nature_Income_Payment") ?? "",
+                    TR_ATC = ctx.Session.GetString("TR_ATC") ?? "",
+                    TR_Tax_Rate = int.Parse(ctx.Session.GetString("TR_Tax_Rate") ?? "0"),
+                    TR_Creator_Name = ctx.Session.GetString("TR_Creator_Name") ?? "",
+                    TR_Approver_Name = ctx.Session.GetString("TR_Approver_Name") ?? "",
+                    TR_Status = ctx.Session.GetString("TR_Status") ?? ""
                 };
-                filters.EF = EF;
+                filters.TF = TF;
                 controller.TempData["filters"] = filters;
             }
             if (actionName == "DMPartial_Curr")
@@ -173,7 +173,7 @@ namespace ExpenseProcessingSystem.Services
                 CurrFiltersViewModel CF = new CurrFiltersViewModel
                 {
                     CF_Name = ctx.Session.GetString("CF_Name") ?? "",
-                    CF_CCY_Code = ctx.Session.GetString("CF_CCY_Code") ?? "",
+                    CF_CCY_ABBR = ctx.Session.GetString("CF_CCY_ABBR") ?? "",
                     CF_Creator_Name = ctx.Session.GetString("CF_Creator_Name") ?? "",
                     CF_Approver_Name = ctx.Session.GetString("CF_Approver_Name") ?? "",
                     CF_Status = ctx.Session.GetString("CF_Status") ?? ""
@@ -217,7 +217,7 @@ namespace ExpenseProcessingSystem.Services
                 BCSFiltersViewModel BF = new BCSFiltersViewModel
                 {
                     BF_Name = ctx.Session.GetString("BF_Name") ?? "",
-                    BF_TIN = int.Parse(ctx.Session.GetString("BF_TIN") ?? "0"),
+                    BF_TIN = ctx.Session.GetString("BF_TIN") ?? "",
                     BF_Position = ctx.Session.GetString("BF_Position") ?? "",
                     BF_Status = ctx.Session.GetString("BF_Status") ?? "",
                     BF_Creator_Name = ctx.Session.GetString("BF_Creator_Name") ?? "",
@@ -225,6 +225,20 @@ namespace ExpenseProcessingSystem.Services
                     BF_Signatures = ctx.Session.GetString("BF_Signatures") ?? ""
                 };
                 filters.BF = BF;
+                controller.TempData["filters"] = filters;
+            }
+            if (actionName == "DMPartial_AccGroup")
+            {
+                DMFiltersViewModel filters = new DMFiltersViewModel();
+                AccGroupFiltersViewModel AGF = new AccGroupFiltersViewModel
+                {
+                    AGF_Name = ctx.Session.GetString("AGF_Name") ?? "",
+                    AGF_Code = ctx.Session.GetString("AGF_Code") ?? "",
+                    AGF_Creator_Name = ctx.Session.GetString("AGF_Creator_Name") ?? "",
+                    AGF_Approver_Name = ctx.Session.GetString("AGF_Approver_Name") ?? "",
+                    AGF_Status = ctx.Session.GetString("AGF_Status") ?? ""
+                };
+                filters.AGF = AGF;
                 controller.TempData["filters"] = filters;
             }
 

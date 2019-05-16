@@ -11,7 +11,7 @@ namespace ExpenseProcessingSystem.ViewModels.Search_Filters
         [Display(Name = "BCS Name")]
         public string BF_Name { get; set; }
         [Display(Name = "BCS TIN")]
-        public int BF_TIN { get; set; }
+        public string BF_TIN { get; set; }
         [Display(Name = "BCS Position")]
         public string BF_Position { get; set; }
         [Display(Name = "BCS Signature")]

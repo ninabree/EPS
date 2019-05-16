@@ -16,7 +16,7 @@ namespace ExpenseProcessingSystem.Models
         public int Emp_Approver_ID { get; set; }
         public DateTime Emp_Created_Date { get; set; }
         public DateTime Emp_Last_Updated { get; set; }
-        public string Emp_Status { get; set; }
+        public int Emp_Status_ID { get; set; }
         public bool Emp_isDeleted { get; set; }
         public bool Emp_isActive { get; set; }
     }

@@ -26,6 +26,7 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "Employee Last Updated")]
         public DateTime Emp_Last_Updated { get; set; }
         [Display(Name = "Employee Status")]
+        public int Emp_Status_ID { get; set; }
         public string Emp_Status { get; set; }
         public bool Emp_isDeleted { get; set; }
         public bool Emp_isActive { get; set; }

@@ -20,7 +20,7 @@ namespace ExpenseProcessingSystem.Models
         public int FBT_Approver_ID { get; set; }
         public DateTime FBT_Created_Date { get; set; }
         public DateTime FBT_Last_Updated { get; set; }
-        public string FBT_Status { get; set; }
+        public int FBT_Status_ID { get; set; }
         public bool FBT_isDeleted { get; set; }
         public bool FBT_isActive { get; set; }
     }

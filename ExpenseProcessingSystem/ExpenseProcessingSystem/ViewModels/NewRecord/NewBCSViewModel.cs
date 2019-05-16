@@ -18,8 +18,8 @@ namespace ExpenseProcessingSystem.ViewModels.NewRecord
         [NotNullValidations, TextValidation]
         public string BCS_Name { get; set; }
         [Display(Name = "BCS TIN")]
-        [NotNullValidations, TextValidation]
-        public int BCS_TIN { get; set; }
+        [NotNullValidations, TINLengthValidation]
+        public string BCS_TIN { get; set; }
         [Display(Name = "BCS Position")]
         [NotNullValidations, TextValidation]
         public string BCS_Position { get; set; }

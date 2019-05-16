@@ -5,7 +5,7 @@
 }
 @using ExpenseProcessingSystem.ViewModels
 @model List<DMVATViewModel>
-<div id="table" class="table-editable">
+<div id="table" class="">
     @using (Html.BeginForm("ApproveVAT", "Home", FormMethod.Post, new { @class = "validate-form", @id = "tsForm" }))
     {
         <table class="table table-bordered editable-th">
@@ -19,9 +19,9 @@
                 @for (int i = 0; i < Model.Count(); i++)
                 {
                     <tr>
-                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].VAT_Name, new { @class = "w-full" })</td>
-                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].VAT_Rate, new { @class = "w-full" })</td>
-                        <td contenteditable="false">@Html.TextBoxFor(item => item[i].VAT_Status, new { @class = "w-full" })</td>
+                        <td>@Html.TextBoxFor(item => item[i].VAT_Name, new { @class = "w-full", @readonly = "readonly" })</td>
+                        <td>@Html.TextBoxFor(item => item[i].VAT_Rate, new { @class = "w-full", @readonly = "readonly" })</td>
+                        <td>@Html.TextBoxFor(item => item[i].VAT_Status, new { @class = "w-full", @readonly = "readonly" })</td>
                         @Html.HiddenFor(item => item[i].VAT_MasterID)
                     </tr>
                 }

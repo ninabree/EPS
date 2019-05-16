@@ -18,7 +18,7 @@ namespace ExpenseProcessingSystem.Models
         public int Pending_Dept_Creator_ID { get; set; }
         public int Pending_Dept_Approver_ID { get; set; }
         public DateTime Pending_Dept_Filed_Date { get; set; }
-        public string Pending_Dept_Status { get; set; }
+        public int Pending_Dept_Status_ID { get; set; }
         public bool Pending_Dept_isDeleted { get; set; }
         public bool Pending_Dept_isActive { get; set; }
     }

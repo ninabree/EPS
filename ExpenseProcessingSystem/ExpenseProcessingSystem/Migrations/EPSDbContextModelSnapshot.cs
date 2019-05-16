@@ -64,7 +64,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("AccountGroup_Name");
 
-                    b.Property<string>("AccountGroup_Status");
+                    b.Property<int>("AccountGroup_Status_ID");
 
                     b.Property<bool>("AccountGroup_isActive");
 
@@ -97,7 +97,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<bool>("Account_Fund");
 
-                    b.Property<int>("Account_Group_ID");
+                    b.Property<int>("Account_Group_MasterID");
 
                     b.Property<DateTime>("Account_Last_Updated");
 
@@ -107,7 +107,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Account_No");
 
-                    b.Property<string>("Account_Status");
+                    b.Property<int>("Account_Status_ID");
 
                     b.Property<bool>("Account_isActive");
 
@@ -140,13 +140,15 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<bool>("Pending_Account_Fund");
 
+                    b.Property<int>("Pending_Account_Group_MasterID");
+
                     b.Property<int>("Pending_Account_MasterID");
 
                     b.Property<string>("Pending_Account_Name");
 
                     b.Property<string>("Pending_Account_No");
 
-                    b.Property<string>("Pending_Account_Status");
+                    b.Property<int>("Pending_Account_Status_ID");
 
                     b.Property<bool>("Pending_Account_isActive");
 
@@ -179,9 +181,9 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("BCS_Signatures");
 
-                    b.Property<string>("BCS_Status");
+                    b.Property<int>("BCS_Status_ID");
 
-                    b.Property<int>("BCS_TIN");
+                    b.Property<string>("BCS_TIN");
 
                     b.Property<bool>("BCS_isActive");
 
@@ -216,7 +218,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Check_Series_To");
 
-                    b.Property<string>("Check_Status");
+                    b.Property<int>("Check_Status_ID");
 
                     b.Property<bool>("Check_isActive");
 
@@ -249,7 +251,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Pending_Check_Series_To");
 
-                    b.Property<string>("Pending_Check_Status");
+                    b.Property<int>("Pending_Check_Status_ID");
 
                     b.Property<bool>("Pending_Check_isActive");
 
@@ -280,7 +282,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Curr_Name");
 
-                    b.Property<string>("Curr_Status");
+                    b.Property<int>("Curr_Status_ID");
 
                     b.Property<bool>("Curr_isActive");
 
@@ -313,7 +315,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Cust_No");
 
-                    b.Property<string>("Cust_Status");
+                    b.Property<int>("Cust_Status_ID");
 
                     b.Property<bool>("Cust_isActive");
 
@@ -346,7 +348,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Dept_Name");
 
-                    b.Property<string>("Dept_Status");
+                    b.Property<int>("Dept_Status_ID");
 
                     b.Property<bool>("Dept_isActive");
 
@@ -377,7 +379,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Pending_Dept_Name");
 
-                    b.Property<string>("Pending_Dept_Status");
+                    b.Property<int>("Pending_Dept_Status_ID");
 
                     b.Property<bool>("Pending_Dept_isActive");
 
@@ -408,7 +410,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Emp_Name");
 
-                    b.Property<string>("Emp_Status");
+                    b.Property<int>("Emp_Status_ID");
 
                     b.Property<string>("Emp_Type");
 
@@ -443,7 +445,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("FBT_Name");
 
-                    b.Property<string>("FBT_Status");
+                    b.Property<int>("FBT_Status_ID");
 
                     b.Property<float>("FBT_Tax_Rate");
 
@@ -478,7 +480,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("TR_Nature_Income_Payment");
 
-                    b.Property<string>("TR_Status");
+                    b.Property<int>("TR_Status_ID");
 
                     b.Property<float>("TR_Tax_Rate");
 
@@ -513,7 +515,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<float>("VAT_Rate");
 
-                    b.Property<string>("VAT_Status");
+                    b.Property<int>("VAT_Status_ID");
 
                     b.Property<bool>("VAT_isActive");
 
@@ -544,7 +546,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Vendor_Name");
 
-                    b.Property<string>("Vendor_Status");
+                    b.Property<int>("Vendor_Status_ID");
 
                     b.Property<string>("Vendor_TIN");
 
@@ -579,7 +581,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Pending_Vendor_Name");
 
-                    b.Property<string>("Pending_Vendor_Status");
+                    b.Property<int>("Pending_Vendor_Status_ID");
 
                     b.Property<string>("Pending_Vendor_TIN");
 
@@ -793,7 +795,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Pending_AccountGroup_Name");
 
-                    b.Property<string>("Pending_AccountGroup_Status");
+                    b.Property<int>("Pending_AccountGroup_Status_ID");
 
                     b.Property<bool>("Pending_AccountGroup_isActive");
 
@@ -824,9 +826,9 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Pending_BCS_Signatures");
 
-                    b.Property<string>("Pending_BCS_Status");
+                    b.Property<int>("Pending_BCS_Status_ID");
 
-                    b.Property<int>("Pending_BCS_TIN");
+                    b.Property<string>("Pending_BCS_TIN");
 
                     b.Property<bool>("Pending_BCS_isActive");
 
@@ -855,7 +857,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Pending_Curr_Name");
 
-                    b.Property<string>("Pending_Curr_Status");
+                    b.Property<int>("Pending_Curr_Status_ID");
 
                     b.Property<bool>("Pending_Curr_isActive");
 
@@ -886,7 +888,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Pending_Cust_No");
 
-                    b.Property<string>("Pending_Cust_Status");
+                    b.Property<int>("Pending_Cust_Status_ID");
 
                     b.Property<bool>("Pending_Cust_isActive");
 
@@ -915,7 +917,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Pending_Emp_Name");
 
-                    b.Property<string>("Pending_Emp_Status");
+                    b.Property<int>("Pending_Emp_Status_ID");
 
                     b.Property<string>("Pending_Emp_Type");
 
@@ -946,7 +948,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Pending_FBT_Name");
 
-                    b.Property<string>("Pending_FBT_Status");
+                    b.Property<int>("Pending_FBT_Status_ID");
 
                     b.Property<float>("Pending_FBT_Tax_Rate");
 
@@ -979,7 +981,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Pending_TR_Nature_Income_Payment");
 
-                    b.Property<string>("Pending_TR_Status");
+                    b.Property<int>("Pending_TR_Status_ID");
 
                     b.Property<float>("Pending_TR_Tax_Rate");
 
@@ -1012,7 +1014,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<float>("Pending_VAT_Rate");
 
-                    b.Property<string>("Pending_VAT_Status");
+                    b.Property<int>("Pending_VAT_Status_ID");
 
                     b.Property<bool>("Pending_VAT_isActive");
 
@@ -1029,7 +1031,7 @@ namespace ExpenseProcessingSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Pending_VTV_Status");
+                    b.Property<int>("Pending_VTV_Status_ID");
 
                     b.Property<int>("Pending_VTV_TR_ID");
 

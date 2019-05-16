@@ -5,7 +5,6 @@ using ExpenseProcessingSystem.Services;
 using ExpenseProcessingSystem.Services.Controller_Services;
 using ExpenseProcessingSystem.Services.Excel_Services;
 using ExpenseProcessingSystem.ViewModels;
-using ExpenseProcessingSystem.ViewModels.Entry;
 using ExpenseProcessingSystem.ViewModels.NewRecord;
 using ExpenseProcessingSystem.ViewModels.Reports;
 using ExpenseProcessingSystem.ViewModels.Search_Filters;
@@ -37,8 +36,8 @@ namespace ExpenseProcessingSystem.Controllers
         private ISession _session => _httpContextAccessor.HttpContext.Session;
         private HomeService _service;
         private SortService _sortService;
-        private ExcelData _excelData;
-        private readonly IHostingEnvironment _hostingEnvironment;
+        //private ExcelData _excelData;
+        //private readonly IHostingEnvironment _hostingEnvironment;
 
         public HomeController(IHttpContextAccessor httpContextAccessor, EPSDbContext context, IHostingEnvironment hostingEnvironment)
         {
@@ -46,7 +45,7 @@ namespace ExpenseProcessingSystem.Controllers
             _context = context;
             _service = new HomeService(_httpContextAccessor, _context, this.ModelState, hostingEnvironment);
             _sortService = new SortService();
-            _excelData = new ExcelData(_httpContextAccessor, _context);
+            //_excelData = new ExcelData(_httpContextAccessor, _context);
         }
 
         private string GetUserID()
@@ -54,6 +53,7 @@ namespace ExpenseProcessingSystem.Controllers
             return _session.GetString("UserID");
         }
 
+        //Home Screen Block---------------------------------------------------------------------------------------
         public IActionResult Index(HomeIndexViewModel vm, string sortOrder, string currentFilter, string colName, string searchString, string page)
         {
             var userId = GetUserID();
@@ -115,11 +115,14 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             var role = _service.getUserRole(_session.GetString("UserID"));
-            if (role == "admin")
+            if (role == GlobalSystemValues.ROLE_ADMIN)
             {
                 return RedirectToAction("UM");
             }
             HomeIndexViewModel vm = new HomeIndexViewModel();
+
+            vm.GeneralPendingList.AddRange(_service.getPending(int.Parse(userId)));
+
             return View(vm);
         }
         public IActionResult History(string sortOrder, string currentFilter, string searchString, int? page)
@@ -138,6 +141,8 @@ namespace ExpenseProcessingSystem.Controllers
             HomeIndexViewModel vm = new HomeIndexViewModel();
             return View(vm);
         }
+        //Home Screen Block End-----------------------------------------------------------------------------------
+
         public IActionResult Entry()
         {
             return View();
@@ -210,7 +215,7 @@ namespace ExpenseProcessingSystem.Controllers
                     _session.SetString("AF_No", vm.DMFilters.AF.AF_No.ToString() ?? "0");
                     _session.SetString("AF_Cust", vm.DMFilters.AF.AF_Cust ?? "");
                     _session.SetString("AF_Div", vm.DMFilters.AF.AF_Div ?? "");
-                    _session.SetString("AF_Fund", vm.DMFilters.AF.AF_Fund ?? "");
+                    _session.SetString("AF_Group", vm.DMFilters.AF.AF_Group ?? "");
                     _session.SetString("AF_FBT", vm.DMFilters.AF.AF_FBT ?? "0");
                     _session.SetString("AF_Creator_Name", vm.DMFilters.AF.AF_Creator_Name ?? "");
                     _session.SetString("AF_Approver_Name", vm.DMFilters.AF.AF_Approver_Name ?? "");
@@ -235,23 +240,23 @@ namespace ExpenseProcessingSystem.Controllers
                     _session.SetString("FF_Approver_Name", vm.DMFilters.FF.FF_Approver_Name ?? "");
                     _session.SetString("FF_Status", vm.DMFilters.FF.FF_Status ?? "");
                 }
-                else if (vm.DMFilters.EF != null)
+                else if (vm.DMFilters.TF != null)
                 {
                     //TR
-                    _session.SetString("EF_Nature", vm.DMFilters.EF.EF_Nature ?? "");
-                    _session.SetString("EF_Nature_Income_Payment", vm.DMFilters.EF.EF_Nature_Income_Payment ?? "");
-                    _session.SetString("EF_Tax_Rate", vm.DMFilters.EF.EF_Tax_Rate.ToString() ?? "0");
-                    _session.SetString("EF_ATC", vm.DMFilters.EF.EF_ATC ?? "");
-                    _session.SetString("EF_Tax_Rate_Desc", vm.DMFilters.EF.EF_Tax_Rate_Desc ?? "");
-                    _session.SetString("EF_Creator_Name", vm.DMFilters.EF.EF_Creator_Name ?? "");
-                    _session.SetString("EF_Approver_Name", vm.DMFilters.EF.EF_Approver_Name ?? "");
-                    _session.SetString("EF_Status", vm.DMFilters.EF.EF_Status ?? "");
+                    _session.SetString("TR_WT_Title", vm.DMFilters.TF.TR_WT_Title ?? "");
+                    _session.SetString("TR_Nature", vm.DMFilters.TF.TR_Nature ?? "");
+                    _session.SetString("TR_Nature_Income_Payment", vm.DMFilters.TF.TR_Nature_Income_Payment ?? "");
+                    _session.SetString("TR_Tax_Rate", vm.DMFilters.TF.TR_Tax_Rate.ToString() ?? "0");
+                    _session.SetString("TR_ATC", vm.DMFilters.TF.TR_ATC ?? "");
+                    _session.SetString("TR_Creator_Name", vm.DMFilters.TF.TR_Creator_Name ?? "");
+                    _session.SetString("TR_Approver_Name", vm.DMFilters.TF.TR_Approver_Name ?? "");
+                    _session.SetString("TR_Status", vm.DMFilters.TF.TR_Status ?? "");
                 }
                 else if (vm.DMFilters.CF != null)
                 {
                     //Currency
                     _session.SetString("CF_Name", vm.DMFilters.CF.CF_Name ?? "");
-                    _session.SetString("CF_CCY_Code", vm.DMFilters.CF.CF_CCY_Code ?? "");
+                    _session.SetString("CF_CCY_ABBR", vm.DMFilters.CF.CF_CCY_ABBR ?? "");
                     _session.SetString("CF_Creator_Name", vm.DMFilters.CF.CF_Creator_Name ?? "");
                     _session.SetString("CF_Approver_Name", vm.DMFilters.CF.CF_Approver_Name ?? "");
                     _session.SetString("CF_Status", vm.DMFilters.CF.CF_Status ?? "");
@@ -280,12 +285,21 @@ namespace ExpenseProcessingSystem.Controllers
                 {
                     //Non Cash Category
                     _session.SetString("BF_Name", vm.DMFilters.BF.BF_Name ?? "");
-                    _session.SetString("BF_TIN", vm.DMFilters.BF.BF_TIN.ToString() ?? "");
+                    _session.SetString("BF_TIN", vm.DMFilters.BF.BF_TIN ?? "");
                     _session.SetString("BF_Position", vm.DMFilters.BF.BF_Position ?? "");
                     _session.SetString("BF_Signatures", vm.DMFilters.BF.BF_Signatures ?? "");
                     _session.SetString("BF_Creator_Name", vm.DMFilters.BF.BF_Creator_Name ?? "");
                     _session.SetString("BF_Approver_Name", vm.DMFilters.BF.BF_Approver_Name ?? "");
                     _session.SetString("BF_Status", vm.DMFilters.BF.BF_Status ?? "");
+                }
+                else if (vm.DMFilters.AGF != null)
+                {
+                    //Account Group
+                    _session.SetString("AGF_Name", vm.DMFilters.AGF.AGF_Name ?? "");
+                    _session.SetString("AGF_Code", vm.DMFilters.AGF.AGF_Code ?? "");
+                    _session.SetString("AGF_Creator_Name", vm.DMFilters.AGF.AGF_Creator_Name ?? "");
+                    _session.SetString("AGF_Approver_Name", vm.DMFilters.AGF.AGF_Approver_Name ?? "");
+                    _session.SetString("AGF_Status", vm.DMFilters.AGF.AGF_Status ?? "");
                 }
             }
             return View();
@@ -609,16 +623,28 @@ namespace ExpenseProcessingSystem.Controllers
         //Expense Entry Check Voucher Block=========================================================================
         public IActionResult Entry_CV()
         {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var role = _service.getUserRole(_session.GetString("UserID"));
+            if (role == GlobalSystemValues.ROLE_ADMIN)
+            {
+                return RedirectToAction("UM");
+            }
+
             EntryCVViewModelList viewModel = new EntryCVViewModelList();
             List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
             //listOfSysVals[0] = List of Vendors
             //listOfSysVals[1] = List of Departments
             //listOfSysVals[2] = List of Currency
             //listOfSysVals[3] = List of TaxRate
-            viewModel.systemValues.vendors = listOfSysVals[0];
-            viewModel.systemValues.dept = listOfSysVals[1];
-            viewModel.systemValues.currency = listOfSysVals[2];
-            viewModel.systemValues.ewt = listOfSysVals[3];
+            viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
+            viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
+            viewModel.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
+            viewModel.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
             viewModel.systemValues.acc = _service.getAccDetailsEntry();
 
             viewModel.expenseYear = DateTime.Today.Year.ToString();
@@ -629,6 +655,17 @@ namespace ExpenseProcessingSystem.Controllers
         }
         public IActionResult AddNewCV(EntryCVViewModelList EntryCVViewModelList)
         {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var role = _service.getUserRole(_session.GetString("UserID"));
+            if (role == GlobalSystemValues.ROLE_ADMIN)
+            {
+                return RedirectToAction("UM");
+            }
 
             EntryCVViewModelList cvList = new EntryCVViewModelList();
             int id = _service.addExpense_CV(EntryCVViewModelList, int.Parse(GetUserID()));
@@ -652,6 +689,18 @@ namespace ExpenseProcessingSystem.Controllers
         }
         public IActionResult VerAppModCV(int entryID, string command)
         {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var role = _service.getUserRole(_session.GetString("UserID"));
+            if (role == GlobalSystemValues.ROLE_ADMIN)
+            {
+                return RedirectToAction("UM");
+            }
+
             EntryCVViewModelList cvList;
             switch (command)
             {
@@ -1642,20 +1691,6 @@ namespace ExpenseProcessingSystem.Controllers
 
 
             return RedirectToAction("UM", "Home");
-        }
-
-        //[* EXCEL *]
-        public IActionResult Excel()
-        {
-            var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            var dataName = "WTS";
-
-            //return File(_excelData.GetDeptExcelData(), "application/ms-excel", $"Department.xlsx");
-            return File(_excelData.GetWTSExcelData(), "application/ms-excel", $""+dataName+".xlsx");
         }
 
         //[* MISC *]
