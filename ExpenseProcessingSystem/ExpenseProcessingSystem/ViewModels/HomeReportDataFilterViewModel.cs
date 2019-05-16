@@ -13,6 +13,8 @@ namespace ExpenseProcessingSystem.ViewModels
 
         public IEnumerable<HomeReportOutputAST1000Model> HomeReportOutputAST1000 { get; set; }
 
+        public IEnumerable<HomeReportActualBudgetModel> HomeReportOutputActualBudget { get; set; }
+
         public IEnumerable<Temp_RepWTSViewModel> HomeReportOutputWTS { get; set; }
 
         public IEnumerable<Temp_RepCSBViewModel> HomeReportOutputCSB { get; set; }

@@ -404,6 +404,20 @@ namespace ExpenseProcessingSystem.Controllers
                     };
                     break;
 
+                //For Actual Budget Report
+                case ConstantData.HomeReportConstantValue.ActualBudgetReport:
+                    fileName = "ActualBudgetReport_" + dateNow;
+                    layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
+                    pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter2;
+
+                    //Get the necessary data from Database
+                    data = new HomeReportDataFilterViewModel
+                    {
+                        HomeReportOutputActualBudget = GetDummyActualBudgetData(),
+                        HomeReportFilter = model,
+                    };
+                    break;
+
                 case ConstantData.HomeReportConstantValue.WTS:
                     fileName = "WithholdingTaxSummary_" + dateNow;
                     layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
@@ -1701,6 +1715,24 @@ namespace ExpenseProcessingSystem.Controllers
         {
             public string Message { get; set; }
             public List<String> Items = new List<String>();
+        }
+
+        public IEnumerable<HomeReportActualBudgetModel> GetDummyActualBudgetData()
+        {
+            IEnumerable<HomeReportActualBudgetModel> actualBudgetData = null;
+
+            int filterYear = 2019;
+            int filterMonth = 5;
+            int termYear = 2019;
+            int termMonth = 4;
+            //https://codereview.stackexchange.com/questions/196894/loop-months-between-a-time-span-yyyy-mm-and-yyyy-mm
+
+            var accountCategory = ConstantData.TEMP_HomeReportActualBudgetReportDummyData.GetAcountCategory().OrderBy(c => c.AccountID);
+            var budgetMonitoring = ConstantData.TEMP_HomeReportActualBudgetReportDummyData.GetBudgetMonitoringData().Where(c => c.TermOfBudget.Year == termYear && c.TermOfBudget.Month == termMonth);
+            var expensesOfFilterYearMonth = ConstantData.TEMP_HomeReportActualBudgetReportDummyData.GetExpenseData().Where(c => c.DateReflected.Year == filterYear && c.DateReflected.Month == filterMonth).OrderBy(c => c.DateReflected);
+            //var expensesOfTermMonthToBeforeFilterMonth = ConstantData.TEMP_HomeReportActualBudgetReportDummyData.GetExpenseData().Where(c => c.DateReflected.Year == filterYear && (c.DateReflected.Month == filterMonth)).OrderBy(c => c.DateReflected);
+
+            return actualBudgetData;
         }
     }
 }
