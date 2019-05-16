@@ -103,7 +103,7 @@
 					radioSemester2.prop('checked', true);
 				}
 
-				if (ReportType == "2") {
+                if (ReportType == "2" || ReportType == "5") {
 					radioPeriod1.prop('checked', true);
 					radioPeriod1.removeAttr("disabled");
 					ddlYear.removeAttr("disabled");
@@ -138,27 +138,27 @@
 				if (ReportType != 0 || ReportType != '') {
 					btnGenerateFile.removeAttr("disabled");
 					btnGeneratePreview.removeAttr("disabled");
-					ddlFileFormat.removeAttr("disabled");
-				}
+                    ddlFileFormat.removeAttr("disabled");
 
-				$.getJSON('@Url.Action("GetReportSubType")', { ReportTypeID: ReportType }, function (data) {
-					select.empty();
-					if (data.length == 0) {
-						select.attr("disabled", "disabled");
-						select.append($('<option/>', {
-						value: 0,
-						text: "----Select Report Sub-Type----"
-						}));
-					} else {
-						select.removeAttr("disabled");
-					}
-					$.each(data, function (index, itemData) {
-						select.append($('<option/>', {
-						value: itemData.id,
-						text: itemData.subTypeName
-						}));
-					});
-				});
+                    $.getJSON('@Url.Action("GetReportSubType")', { ReportTypeID: ReportType }, function (data) {
+					    select.empty();
+					    if (data.length == 0) {
+						    select.attr("disabled", "disabled");
+						    select.append($('<option/>', {
+						    value: 0,
+						    text: "----Select Report Sub-Type----"
+						    }));
+					    } else {
+						    select.removeAttr("disabled");
+					    }
+					    $.each(data, function (index, itemData) {
+						    select.append($('<option/>', {
+						    value: itemData.id,
+						    text: itemData.subTypeName
+						    }));
+					    });
+				    });
+				}
 			});
 
 			$(".radioPeriodOption").change(function () {

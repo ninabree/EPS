@@ -1,6 +1,7 @@
 ﻿using ExpenseProcessingSystem.ViewModels;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
+using System.Drawing;
 using System.IO;
 
 namespace ExpenseProcessingSystem.Services.Excel_Services
@@ -29,6 +30,10 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 case ConstantData.HomeReportConstantValue.AST1000_A:
 
                     ExcelAST1000(newFile, templateFile, data);
+                    break;
+                case ConstantData.HomeReportConstantValue.ActualBudgetReport:
+
+                        ExcelActualBudget(newFile, templateFile, data);
                     break;
                 case ConstantData.HomeReportConstantValue.WTS:
 
@@ -170,7 +175,68 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
             }
         }
 
+        public void ExcelActualBudget(FileInfo newFile, FileInfo templateFile, HomeReportDataFilterViewModel data)
+        {
+            using (ExcelPackage package = new ExcelPackage(newFile, templateFile))
+            {
+                ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
 
+                int lastRow = worksheet.Dimension.End.Row + 1;
+
+                worksheet.Cells["A2"].Value = data.HomeReportFilter.MonthName + " " + data.HomeReportFilter.Year;
+
+                foreach (var i in data.HomeReportOutputActualBudget)
+                {
+                    worksheet.Cells["A" + lastRow + ":F" + lastRow].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells["A" + lastRow + ":F" + lastRow].Style.Fill.BackgroundColor.SetColor(Color.White);
+                    worksheet.Cells["A" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+
+                    if (i.Category == "BREAK")
+                    {
+                        worksheet.Cells["A" + lastRow + ":F" + lastRow].Merge = true;
+                        worksheet.Cells["A" + lastRow].Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#484f4f"));
+                        worksheet.Cells["A" + lastRow].Style.Font.Color.SetColor(Color.White);
+                    }
+                    else if (!string.IsNullOrEmpty(i.Category))
+                    {
+                        worksheet.Cells["A" + lastRow].Value = i.ValueDate;
+                        worksheet.Cells["A" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                        worksheet.Cells["A" + lastRow].Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#c8c3cc"));
+                        worksheet.Cells["B" + lastRow].Value = i.Category;
+                        worksheet.Cells["B" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                        worksheet.Cells["B" + lastRow].Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#c8c3cc"));
+                        worksheet.Cells["C" + lastRow].Value = i.Remarks;
+                        worksheet.Cells["C" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                        worksheet.Cells["C" + lastRow].Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#c8c3cc"));
+                        worksheet.Cells["D" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                        worksheet.Cells["D" + lastRow].Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#c8c3cc"));
+                        worksheet.Cells["E" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                        worksheet.Cells["E" + lastRow].Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#c8c3cc"));
+                        worksheet.Cells["F" + lastRow].Value = i.BudgetBalance;
+                        worksheet.Cells["F" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                        worksheet.Cells["F" + lastRow].Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#c8c3cc"));
+                    }
+                    else
+                    {
+                        worksheet.Cells["A" + lastRow].Value = i.ValueDate;
+                        worksheet.Cells["A" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                        worksheet.Cells["B" + lastRow].Value = i.Category;
+                        worksheet.Cells["B" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                        worksheet.Cells["C" + lastRow].Value = i.Remarks;
+                        worksheet.Cells["C" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                        worksheet.Cells["D" + lastRow].Value = i.Department;
+                        worksheet.Cells["D" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                        worksheet.Cells["E" + lastRow].Value = i.ExpenseAmount;
+                        worksheet.Cells["E" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                        worksheet.Cells["F" + lastRow].Value = i.BudgetBalance;
+                        worksheet.Cells["F" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                    }
+                    lastRow += 1;
+                }
+
+                package.Save();
+            }
+        }
         public void ExcelWTS(FileInfo newFile, FileInfo templateFile, HomeReportDataFilterViewModel data)
         {
             using (ExcelPackage package = new ExcelPackage(newFile, templateFile))

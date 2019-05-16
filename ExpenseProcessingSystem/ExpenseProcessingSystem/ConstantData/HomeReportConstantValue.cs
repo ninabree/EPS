@@ -23,7 +23,10 @@ namespace ExpenseProcessingSystem.ConstantData
 
         //Alphalist of Suppliers by top 10000 corporations (Annual)
         public const int AST1000_A = 4;
-        
+
+        //Actual Budget Report
+        public const int ActualBudgetReport = 5;
+
         //Alphalist of Payees Subject to Withholding Tax Summary
         public const int WTS = 10;
 

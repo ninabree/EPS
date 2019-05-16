@@ -24,6 +24,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using static System.Console;
 
 namespace ExpenseProcessingSystem.Controllers
 {
@@ -414,6 +415,22 @@ namespace ExpenseProcessingSystem.Controllers
                     data = new HomeReportDataFilterViewModel
                     {
                         HomeReportOutputAST1000 = _service.GetAST1000_AData(model.Year),
+                        HomeReportFilter = model,
+                    };
+                    break;
+
+                //For Actual Budget Report
+                case ConstantData.HomeReportConstantValue.ActualBudgetReport:
+                    fileName = "ActualBudgetReport_" + dateNow;
+                    layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
+                    pdfFooterFormat = String.Empty;
+
+                    model.MonthName = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName;
+
+                    //Get the necessary data from Database
+                    data = new HomeReportDataFilterViewModel
+                    {
+                        HomeReportOutputActualBudget = GetDummyActualBudgetData(),
                         HomeReportFilter = model,
                     };
                     break;
@@ -1736,6 +1753,103 @@ namespace ExpenseProcessingSystem.Controllers
         {
             public string Message { get; set; }
             public List<String> Items = new List<String>();
+        }
+
+        public IEnumerable<HomeReportActualBudgetModel> GetDummyActualBudgetData()
+        {
+            List<HomeReportActualBudgetModel> actualBudgetData = new List<HomeReportActualBudgetModel>();
+
+            int filterYear = 2019;  //Filter value from screen
+            int filterMonth = 6;    //Filter value from screen
+            int termYear = 2019;    //Create logic to get term year
+            int termMonth = 4;      //Create logic to get term month
+            double budgetBalance;
+            double totalExpenseThisTermToPrevMonthend;
+            double subTotal;
+            string format = "yyyy-M";
+            var accountCategory = ConstantData.TEMP_HomeReportActualBudgetReportDummyData.GetAcountCategory().OrderBy(c => c.AccountID);
+
+            DateTime startDT;
+            DateTime endDT;
+
+            foreach(var a in accountCategory)
+            {
+                startDT = DateTime.ParseExact(termYear + "-" + termMonth, format, CultureInfo.InvariantCulture);
+                endDT = DateTime.ParseExact(filterYear + "-" + filterMonth, format, CultureInfo.InvariantCulture);
+                subTotal = 0.00;
+                totalExpenseThisTermToPrevMonthend = 0.00;
+
+                //Get current Budget of selected term
+                var budgetMonitoringData = ConstantData.TEMP_HomeReportActualBudgetReportDummyData.GetBudgetMonitoringData().Where(c => c.AccountID == a.AccountID && c.TermOfBudget.Year == termYear && c.TermOfBudget.Month == termMonth).SingleOrDefault();
+                budgetBalance = (budgetMonitoringData == null) ? 0.00 : budgetMonitoringData.BudgetAmount;
+                    
+                actualBudgetData.Add(new HomeReportActualBudgetModel()
+                {
+                    Category = a.Account_Category,
+                    BudgetBalance = budgetBalance,
+                    Remarks = "Budget Amount - This Term",
+                    ValueDate = DateTime.Parse(termYear + "/" + termMonth)
+                });
+
+                //Get total expense of selected term to Prev monthend
+                while (startDT < endDT)
+                {
+                    var expensesOfTermMonthToBeforeFilterMonth = ConstantData.TEMP_HomeReportActualBudgetReportDummyData.GetExpenseData().Where(c => c.AccountID == a.AccountID && c.DateReflected.Year == startDT.Year && c.DateReflected.Month == startDT.Month);
+
+                    foreach (var i in expensesOfTermMonthToBeforeFilterMonth)
+                    {
+                        totalExpenseThisTermToPrevMonthend += i.ExpenseAmount;
+                    }
+                    startDT = startDT.AddMonths(1);
+                }
+                budgetBalance -= totalExpenseThisTermToPrevMonthend;
+
+                actualBudgetData.Add(new HomeReportActualBudgetModel()
+                {
+                    BudgetBalance = budgetBalance,
+                    ExpenseAmount = totalExpenseThisTermToPrevMonthend,
+                    Remarks = "Total Expenses - This Term to Prev Monthend",
+                    ValueDate = endDT.AddDays(-1)
+                });
+
+                //Get all expenses of selected month and year
+                var expensesOfFilterYearMonth = ConstantData.TEMP_HomeReportActualBudgetReportDummyData.GetExpenseData().Where(c => c.AccountID == a.AccountID && c.DateReflected.Year == filterYear && c.DateReflected.Month == filterMonth).OrderBy(c => c.DateReflected);
+
+                foreach(var i in expensesOfFilterYearMonth)
+                {
+                    budgetBalance -= i.ExpenseAmount;
+                    subTotal += i.ExpenseAmount;
+
+                    actualBudgetData.Add(new HomeReportActualBudgetModel()
+                    {
+                        BudgetBalance = budgetBalance,
+                        ExpenseAmount = i.ExpenseAmount,
+                        Remarks = i.Remarks,
+                        Department = i.Department,
+                        ValueDate = i.DateReflected
+                    });
+                }
+
+                //Add Sub-Total to List
+                if(subTotal != 0)
+                {
+                    actualBudgetData.Add(new HomeReportActualBudgetModel()
+                    {
+                        BudgetBalance = budgetBalance,
+                        ExpenseAmount = subTotal,
+                        Remarks = "Sub-total",
+                        ValueDate = endDT.AddMonths(1).AddDays(-1)
+                    });
+                }
+
+                //Insert break or seperation row
+                actualBudgetData.Add(new HomeReportActualBudgetModel()
+                {
+                    Category = "BREAK"
+                });
+            }
+
+            return actualBudgetData;
         }
     }
 }
