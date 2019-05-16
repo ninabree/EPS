@@ -683,6 +683,14 @@ namespace ExpenseProcessingSystem.ConstantData
                     },
                     new Expense
                     {
+                        AccountID = 13,
+                        Remarks = "Remark529",
+                        Department = "Department530",
+                        ExpenseAmount = 1531,
+                        DateReflected = DateTime.Parse("2019/06/08 11:15:00")
+                    },
+                    new Expense
+                    {
                         AccountID = 1,
                         Remarks = "Remark537",
                         Department = "Department538",
@@ -771,6 +779,14 @@ namespace ExpenseProcessingSystem.ConstantData
                     },
                     new Expense
                     {
+                        AccountID = 8,
+                        Remarks = "Remark617",
+                        Department = "Department618",
+                        ExpenseAmount = 1619,
+                        DateReflected = DateTime.Parse("2019/06/08 18:35:00")
+                    },
+                    new Expense
+                    {
                         AccountID = 9,
                         Remarks = "Remark625",
                         Department = "Department626",
@@ -792,6 +808,110 @@ namespace ExpenseProcessingSystem.ConstantData
                         Department = "Department642",
                         ExpenseAmount = 1643,
                         DateReflected = DateTime.Parse("2019/05/08 20:35:00")
+                    },
+                    new Expense
+                    {
+                        AccountID = 9,
+                        Remarks = "Remark641",
+                        Department = "Department642",
+                        ExpenseAmount = 1643,
+                        DateReflected = DateTime.Parse("2019/06/08 20:35:00")
+                    },
+                    new Expense
+                    {
+                        AccountID = 20,
+                        Remarks = "Remark999",
+                        Department = "Department999",
+                        ExpenseAmount = 9999,
+                        DateReflected = DateTime.Parse("2019/07/08 20:35:00")
+                    },
+                    new Expense
+                    {
+                        AccountID = 20,
+                        Remarks = "Remark999",
+                        Department = "Department999",
+                        ExpenseAmount = 9999,
+                        DateReflected = DateTime.Parse("2019/07/08 20:35:00")
+                    },
+                    new Expense
+                    {
+                        AccountID = 20,
+                        Remarks = "Remark999",
+                        Department = "Department999",
+                        ExpenseAmount = 9999,
+                        DateReflected = DateTime.Parse("2019/07/08 20:35:00")
+                    },
+                    new Expense
+                    {
+                        AccountID = 20,
+                        Remarks = "Remark999",
+                        Department = "Department999",
+                        ExpenseAmount = 9999,
+                        DateReflected = DateTime.Parse("2019/08/08 20:35:00")
+                    },
+                    new Expense
+                    {
+                        AccountID = 20,
+                        Remarks = "Remark999",
+                        Department = "Department999",
+                        ExpenseAmount = 9999,
+                        DateReflected = DateTime.Parse("2019/09/08 20:35:00")
+                    },
+                    new Expense
+                    {
+                        AccountID = 20,
+                        Remarks = "Remark999",
+                        Department = "Department999",
+                        ExpenseAmount = 9999,
+                        DateReflected = DateTime.Parse("2019/10/08 20:35:00")
+                    },
+                    new Expense
+                    {
+                        AccountID = 20,
+                        Remarks = "Remark999",
+                        Department = "Department999",
+                        ExpenseAmount = 9999,
+                        DateReflected = DateTime.Parse("2019/10/08 20:35:00")
+                    },
+                    new Expense
+                    {
+                        AccountID = 20,
+                        Remarks = "Remark999",
+                        Department = "Department999",
+                        ExpenseAmount = 9999,
+                        DateReflected = DateTime.Parse("2019/11/08 20:35:00")
+                    },
+                    new Expense
+                    {
+                        AccountID = 20,
+                        Remarks = "Remark999",
+                        Department = "Department999",
+                        ExpenseAmount = 9999,
+                        DateReflected = DateTime.Parse("2020/01/08 20:35:00")
+                    },
+                    new Expense
+                    {
+                        AccountID = 20,
+                        Remarks = "Remark999",
+                        Department = "Department999",
+                        ExpenseAmount = 9999,
+                        DateReflected = DateTime.Parse("2020/02/08 20:35:00")
+                    },
+                    new Expense
+                    {
+                        AccountID = 20,
+                        Remarks = "Remark999",
+                        Department = "Department999",
+                        ExpenseAmount = 9999,
+                        DateReflected = DateTime.Parse("2020/02/28 20:35:00")
+                    },
+                    new Expense
+                    {
+                        AccountID = 20,
+                        Remarks = "Remark999",
+                        Department = "Department999",
+                        ExpenseAmount = 9999,
+                        DateReflected = DateTime.Parse("2020/03/08 20:35:00")
                     }
             };
         }
@@ -806,6 +926,14 @@ namespace ExpenseProcessingSystem.ConstantData
                     BudgetAmount = 1000000,
                     Remarks = "Reset due to Fiscal Year",
                     TermOfBudget = DateTime.Parse("2019/04/01 12:00:00"),
+                    Last_Updated_Date = DateTime.Parse("2019/04/01 12:00:00")
+                },
+                new BudgetMonitoring
+                {
+                    AccountID = 1,
+                    BudgetAmount = 2000000,
+                    Remarks = "Reset due to Fiscal Year",
+                    TermOfBudget = DateTime.Parse("2019/10/01 12:00:00"),
                     Last_Updated_Date = DateTime.Parse("2019/04/01 12:00:00")
                 },
                 new BudgetMonitoring
@@ -930,6 +1058,14 @@ namespace ExpenseProcessingSystem.ConstantData
                 },
                 new BudgetMonitoring
                 {
+                    AccountID = 16,
+                    BudgetAmount = 2000000,
+                    Remarks = "Reset due to Fiscal Year",
+                    TermOfBudget = DateTime.Parse("2019/10/01 12:00:00"),
+                    Last_Updated_Date = DateTime.Parse("2019/04/01 12:00:00")
+                },
+                new BudgetMonitoring
+                {
                     AccountID = 17,
                     BudgetAmount = 1000000,
                     Remarks = "Reset due to Fiscal Year",
@@ -959,6 +1095,14 @@ namespace ExpenseProcessingSystem.ConstantData
                     Remarks = "Reset due to Fiscal Year",
                     TermOfBudget = DateTime.Parse("2019/04/01 12:00:00"),
                     Last_Updated_Date = DateTime.Parse("2019/04/01 12:00:00")
+                },
+                new BudgetMonitoring
+                {
+                    AccountID = 20,
+                    BudgetAmount = 2000000,
+                    Remarks = "Reset due to Fiscal Year",
+                    TermOfBudget = DateTime.Parse("2019/10/01 12:00:00"),
+                    Last_Updated_Date = DateTime.Parse("2019/10/01 12:00:00")
                 },
                 new BudgetMonitoring
                 {
