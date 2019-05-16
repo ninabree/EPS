@@ -81,6 +81,7 @@ $(document).ready(function () {
         var txtVal = $('input#entryCheckTypes').val();
         //get table name
         var tblName = $('#dm-tbl').find(":selected").text();
+
         //if there is no previously checked box
         if (txtVal != "") {
             //when selected two different type of entries, disable all

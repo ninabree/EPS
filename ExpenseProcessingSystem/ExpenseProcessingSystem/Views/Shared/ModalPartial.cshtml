@@ -12,7 +12,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn float-r" data-dismiss="modal">Close</button>
-                    <button class="btn float-r" id="btnVendorAdd" type="submit" form="tsForm">Submit</button>
+                    <button class="btn float-r" id="btnVendor" type="submit" form="tsForm">Submit</button>
                     @*<button class="btn float-r" id="saveBtn" onclick="$('#tsForm').submit();">Submit</button>*@
                 </div>
             </div>
@@ -24,11 +24,15 @@
 </environment>
 <script type="text/javascript">
     $(document).ready(function () {
-        $(document).on("click", "#btnVendorAdd", function (e) {
+        $(document).on("click", "#btnVendor", function (e) {
+            //New
             var hiddenTR = $('#NewVendorVM_0__Vendor_Tax_Rates_ID');
             var hiddenVAT = $('#NewVendorVM_0__Vendor_VAT_ID');
-            //var arrTR = [];
-            //var arrVAT = [];
+
+            // for edit
+            var hiddenTREdit = $('#z0__Vendor_Tax_Rates_ID');
+            var hiddenVATEdit = $('#z0__Vendor_VAT_ID');
+
             var arrTR = "";
             var arrVAT = "";
             $('.trChk:checked').each(function () {
@@ -39,6 +43,8 @@
             });
             hiddenTR.val(arrTR);
             hiddenVAT.val(arrVAT);
+            hiddenTREdit.val(arrTR);
+            hiddenVATEdit.val(arrVAT);
         });
     });
 </script>

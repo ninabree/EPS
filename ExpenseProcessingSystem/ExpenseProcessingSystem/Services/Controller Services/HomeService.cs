@@ -291,16 +291,29 @@ namespace ExpenseProcessingSystem.Services
                                          pp.Pending_Vendor_Creator_ID,
                                          pmCreatorID = pm.Vendor_Creator_ID.ToString(),
                                          pmCreateDate = pm.Vendor_Created_Date.ToString()
-                             }).Where(x => intList.Contains(x.Pending_Vendor_MasterID)).ToList();
+                             }).Where(x => intList.Contains(x.Pending_Vendor_MasterID)).Distinct().ToList();
+            var allVTVPending = (from pp in _context.DMVendorTRVAT_Pending
+                              from pm in _context.DMVendorTRVAT.Where(x => x.VTV_ID == pp.Pending_VTV_ID).DefaultIfEmpty()
+                              select new
+                              {
+                                  pp.Pending_VTV_ID,
+                                  pp.Pending_VTV_Vendor_ID,
+                                  pp.Pending_VTV_TR_ID,
+                                  pp.Pending_VTV_VAT_ID
+                              }).Where(x => intList.Contains(x.Pending_VTV_Vendor_ID)).ToList();
 
             List<DMVendorModel_Pending> toDelete = _context.DMVendor_Pending.Where(x=> intList.Contains(x.Pending_Vendor_MasterID)).ToList();
-            
+            List<DMVendorTRVATModel_Pending> toVTVDelete = _context.DMVendorTRVAT_Pending.Where(x => intList.Contains(x.Pending_VTV_Vendor_ID)).ToList();
+
             //get all records that currently exists in Master Data
             List<DMVendorModel> vmList = _context.DMVendor.
                 Where(x => intList.Contains(x.Vendor_MasterID) && x.Vendor_isActive == true).ToList();
-            
+            List<DMVendorTRVATModel> vmVTVList = _context.DMVendorTRVAT.
+                Where(x => intList.Contains(x.VTV_Vendor_ID)).ToList();
+
             //list for formatted records to be added
             List<DMVendorModel> addList = new List<DMVendorModel>();
+            List<DMVendorTRVATModel> addVTVList = new List<DMVendorTRVATModel>();
 
             //add to master table newly approved records
             allPending.ForEach(pending =>
@@ -321,6 +334,16 @@ namespace ExpenseProcessingSystem.Services
                 };
                 addList.Add(m);
             });
+            allVTVPending.ForEach(pending =>
+            {
+                DMVendorTRVATModel m = new DMVendorTRVATModel
+                {
+                    VTV_TR_ID = pending.Pending_VTV_TR_ID,
+                    VTV_VAT_ID = pending.Pending_VTV_VAT_ID,
+                    VTV_Vendor_ID = pending.Pending_VTV_Vendor_ID
+                };
+                addVTVList.Add(m);
+            });
             //update existing records
             vmList.ForEach(dm =>
             {
@@ -331,6 +354,9 @@ namespace ExpenseProcessingSystem.Services
             {
                 _context.DMVendor.AddRange(addList);
                 _context.DMVendor_Pending.RemoveRange(toDelete);
+                _context.DMVendorTRVAT.RemoveRange(vmVTVList);
+                _context.DMVendorTRVAT.AddRange(addVTVList);
+                _context.DMVendorTRVAT_Pending.RemoveRange(toVTVDelete);
                 _context.SaveChanges();
             }
             return true;
@@ -1277,9 +1303,54 @@ namespace ExpenseProcessingSystem.Services
                 vmList.Add(m);
             }
 
+            DMVendorTRVATModel_Pending tmp = new DMVendorTRVATModel_Pending();
+            List<DMVendorTRVATModel_Pending> tmpList = new List<DMVendorTRVATModel_Pending>();
             if (_modelState.IsValid)
             {
                 _context.DMVendor_Pending.AddRange(vmList);
+                _context.SaveChanges();
+                var i = 0;
+                vmList.Select(p => p.Pending_Vendor_MasterID)
+                    .ToList()
+                    .ForEach(x =>
+                    {
+                        if (model[i].Vendor_Tax_Rates_ID != null)
+                        {
+
+                            List<string> trIds = model[i].Vendor_Tax_Rates_ID.Split(',').ToList();
+                            trIds.ForEach(tr =>
+                            {
+                                if (tr != "")
+                                {
+                                    tmp = new DMVendorTRVATModel_Pending()
+                                    {
+                                        Pending_VTV_Vendor_ID = x,
+                                        Pending_VTV_TR_ID = int.Parse(tr)
+                                    };
+                                    tmpList.Add(tmp);
+                                }
+                            });
+                        }
+                        if (model[i].Vendor_VAT_ID != null)
+                        {
+                            List<string> vatIds = model[i].Vendor_VAT_ID.Split(',').ToList();
+                            vatIds.ForEach(vat =>
+                            {
+                                if (vat != "")
+                                {
+                                    tmp = new DMVendorTRVATModel_Pending()
+                                    {
+                                        Pending_VTV_Vendor_ID = x,
+                                        Pending_VTV_VAT_ID = int.Parse(vat)
+                                    };
+                                    tmpList.Add(tmp);
+                                }
+                            });
+                        }
+                        i++;
+                    });
+
+                _context.DMVendorTRVAT_Pending.AddRange(tmpList);
                 _context.SaveChanges();
             }
             return true;
@@ -1287,6 +1358,7 @@ namespace ExpenseProcessingSystem.Services
         public bool deleteVendor_Pending(List<DMVendorViewModel> model, string userId)
         {
             List<DMVendorModel_Pending> vmList = new List<DMVendorModel_Pending>();
+            List<DMVendorTRVATModel_Pending> vtvList = new List<DMVendorTRVATModel_Pending>();
             foreach (DMVendorViewModel dm in model)
             {
                 DMVendorModel_Pending m = new DMVendorModel_Pending
@@ -1302,10 +1374,37 @@ namespace ExpenseProcessingSystem.Services
                 };
                 vmList.Add(m);
             }
+            DMVendorTRVATModel_Pending tmp = new DMVendorTRVATModel_Pending();
+            model.Select(x => x.Vendor_MasterID)
+                .ToList()
+                .ForEach(x => {
+                     _context.DMVendorTRVAT.Where(tr => tr.VTV_Vendor_ID == x).ToList()
+                    .ForEach(val => {
+                        if (val.VTV_TR_ID != 0)
+                        {
+                            tmp = new DMVendorTRVATModel_Pending()
+                            {
+                                Pending_VTV_Vendor_ID = x,
+                                Pending_VTV_TR_ID = val.VTV_TR_ID
+                            };
+                            vtvList.Add(tmp);
+                        }
+                        if (val.VTV_VAT_ID != 0)
+                        {
+                            tmp = new DMVendorTRVATModel_Pending()
+                            {
+                                Pending_VTV_Vendor_ID = x,
+                                Pending_VTV_VAT_ID = val.VTV_VAT_ID
+                            };
+                            vtvList.Add(tmp);
+                        }
+                    });
+                });
 
             if (_modelState.IsValid)
             {
                 _context.DMVendor_Pending.AddRange(vmList);
+                _context.DMVendorTRVAT_Pending.AddRange(vtvList);
                 _context.SaveChanges();
             }
             return true;

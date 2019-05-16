@@ -439,6 +439,8 @@ namespace ExpenseProcessingSystem.Controllers
             if (ModelState.IsValid)
             {
                 vmList = _service.editDeleteVendor(IdsArr);
+                ViewBag.trList = _service.getTRList();
+                ViewBag.vatList = _service.getVATList();
             }
             return View(vmList);
         }
