@@ -50,7 +50,7 @@
     });
 
     $(".rej-rec").click(function (e) {
-        e.stopImmediatePropagation();
+        //e.stopImmediatePropagation();
         if (!isSessionTimeout()) {
             var methodName = getMethodName(this.id);
             var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;

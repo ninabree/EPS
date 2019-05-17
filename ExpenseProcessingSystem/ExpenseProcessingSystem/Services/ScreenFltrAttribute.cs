@@ -263,6 +263,7 @@ namespace ExpenseProcessingSystem.Services
                     isLoggedIn = bool.Parse(ctx.Session.GetString("isLoggedIn"))
                 };
                 controller.ViewBag.access = accessVM;
+                controller.ViewBag.userID = ctx.Session.GetString("UserID");
             }
         }
     }

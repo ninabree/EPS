@@ -58,15 +58,20 @@
                 @foreach (var item in Model.Vendor)
                 {
                     <tr>
+                        @*@if(@item.Vendor_Creator_ID.ToString() == @ViewBag.userID){
+                        <td><input class="tbl-chk" id="@item.Vendor_MasterID" type="checkbox" disabled/></td>
+                        }else{
+                        <td><input class="tbl-chk" id="@item.Vendor_MasterID" type="checkbox" /></td>
+                        }*@
                         <td><input class="tbl-chk" id="@item.Vendor_MasterID" type="checkbox" /></td>
                         <td>@Html.DisplayFor(modelItem => item.Vendor_Name)</td>
                         <td>@Html.DisplayFor(modelItem => item.Vendor_TIN)</td>
                         <td>@Html.DisplayFor(modelItem => item.Vendor_Address)</td>
                         <td colspan="3">
-                            @if (item.Vendor_Tax_Rate.Count > 0)
+                            @if (item.Vendor_Tax_Rates.Count > 0)
                             {
-                                var last = item.Vendor_Tax_Rate.Last();
-                                @foreach (var trName in item.Vendor_Tax_Rate)
+                                var last = item.Vendor_Tax_Rates.Last();
+                                @foreach (var trName in item.Vendor_Tax_Rates)
                                 {
                                     if (trName.Equals(last))
                                     {
@@ -99,11 +104,10 @@
                         </td>
                         <td>@Html.DisplayFor(modelItem => item.Vendor_Creator_Name)</td>
                         <td>@Html.DisplayFor(modelItem => item.Vendor_Approver_Name)</td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Vendor_Status)
-                            @Html.HiddenFor(modelItem => item.Vendor_Tax_Rate_ID)
-                            @Html.HiddenFor(modelItem => item.Vendor_VAT_ID)
-                        </td>
+                        <td>@Html.DisplayFor(modelItem => item.Vendor_Status)</td>
+
+                        @Html.HiddenFor(modelItem => item.Vendor_Tax_Rates_ID)
+                        @Html.HiddenFor(modelItem => item.Vendor_VAT_ID)
                     </tr>
                 }
             }
