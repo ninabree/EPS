@@ -427,11 +427,13 @@ namespace ExpenseProcessingSystem.Controllers
 
                     model.MonthName = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName;
 
+                    IEnumerable<HomeReportActualBudgetModel> testtest = _service.GetActualReportData(model.Month, model.Year);
+
                     //Get the necessary data from Database
                     data = new HomeReportDataFilterViewModel
                     {
-                        HomeReportOutputActualBudget = GetDummyActualBudgetData(),
-                        HomeReportFilter = model,
+                        HomeReportOutputActualBudget = _service.GetActualReportData(model.Month, model.Year),
+                        HomeReportFilter = model
                     };
                     break;
 

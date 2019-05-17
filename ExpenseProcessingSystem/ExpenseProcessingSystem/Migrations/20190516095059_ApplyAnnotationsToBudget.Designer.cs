@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    [Migration("20190507001235_ApplyAnnotationsToBudget")]
+    [Migration("20190516095059_ApplyAnnotationsToBudget")]
     partial class ApplyAnnotationsToBudget
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,7 +27,7 @@ namespace ExpenseProcessingSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Acc_ID");
+                    b.Property<int>("AccountGroup_MasterID");
 
                     b.Property<double>("Budget_Amount");
 
@@ -44,6 +44,37 @@ namespace ExpenseProcessingSystem.Migrations
                     b.HasKey("Budget_ID");
 
                     b.ToTable("Budget");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.DMAccountGroupModel", b =>
+                {
+                    b.Property<int>("AccountGroup_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AccountGroup_Approver_ID");
+
+                    b.Property<string>("AccountGroup_Code");
+
+                    b.Property<DateTime>("AccountGroup_Created_Date");
+
+                    b.Property<int>("AccountGroup_Creator_ID");
+
+                    b.Property<DateTime>("AccountGroup_Last_Updated");
+
+                    b.Property<int>("AccountGroup_MasterID");
+
+                    b.Property<string>("AccountGroup_Name");
+
+                    b.Property<int>("AccountGroup_Status_ID");
+
+                    b.Property<bool>("AccountGroup_isActive");
+
+                    b.Property<bool>("AccountGroup_isDeleted");
+
+                    b.HasKey("AccountGroup_ID");
+
+                    b.ToTable("DMAccountGroup");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.DMAccountModel", b =>
@@ -68,6 +99,8 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<bool>("Account_Fund");
 
+                    b.Property<int>("Account_Group_MasterID");
+
                     b.Property<DateTime>("Account_Last_Updated");
 
                     b.Property<int>("Account_MasterID");
@@ -76,7 +109,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Account_No");
 
-                    b.Property<string>("Account_Status");
+                    b.Property<int>("Account_Status_ID");
 
                     b.Property<bool>("Account_isActive");
 
@@ -109,13 +142,15 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<bool>("Pending_Account_Fund");
 
+                    b.Property<int>("Pending_Account_Group_MasterID");
+
                     b.Property<int>("Pending_Account_MasterID");
 
                     b.Property<string>("Pending_Account_Name");
 
                     b.Property<string>("Pending_Account_No");
 
-                    b.Property<string>("Pending_Account_Status");
+                    b.Property<int>("Pending_Account_Status_ID");
 
                     b.Property<bool>("Pending_Account_isActive");
 
@@ -148,9 +183,9 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("BCS_Signatures");
 
-                    b.Property<string>("BCS_Status");
+                    b.Property<int>("BCS_Status_ID");
 
-                    b.Property<int>("BCS_TIN");
+                    b.Property<string>("BCS_TIN");
 
                     b.Property<bool>("BCS_isActive");
 
@@ -185,7 +220,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Check_Series_To");
 
-                    b.Property<string>("Check_Status");
+                    b.Property<int>("Check_Status_ID");
 
                     b.Property<bool>("Check_isActive");
 
@@ -218,7 +253,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Pending_Check_Series_To");
 
-                    b.Property<string>("Pending_Check_Status");
+                    b.Property<int>("Pending_Check_Status_ID");
 
                     b.Property<bool>("Pending_Check_isActive");
 
@@ -249,7 +284,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Curr_Name");
 
-                    b.Property<string>("Curr_Status");
+                    b.Property<int>("Curr_Status_ID");
 
                     b.Property<bool>("Curr_isActive");
 
@@ -282,7 +317,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Cust_No");
 
-                    b.Property<string>("Cust_Status");
+                    b.Property<int>("Cust_Status_ID");
 
                     b.Property<bool>("Cust_isActive");
 
@@ -315,7 +350,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Dept_Name");
 
-                    b.Property<string>("Dept_Status");
+                    b.Property<int>("Dept_Status_ID");
 
                     b.Property<bool>("Dept_isActive");
 
@@ -346,7 +381,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Pending_Dept_Name");
 
-                    b.Property<string>("Pending_Dept_Status");
+                    b.Property<int>("Pending_Dept_Status_ID");
 
                     b.Property<bool>("Pending_Dept_isActive");
 
@@ -377,7 +412,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Emp_Name");
 
-                    b.Property<string>("Emp_Status");
+                    b.Property<int>("Emp_Status_ID");
 
                     b.Property<string>("Emp_Type");
 
@@ -412,7 +447,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("FBT_Name");
 
-                    b.Property<string>("FBT_Status");
+                    b.Property<int>("FBT_Status_ID");
 
                     b.Property<float>("FBT_Tax_Rate");
 
@@ -447,7 +482,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("TR_Nature_Income_Payment");
 
-                    b.Property<string>("TR_Status");
+                    b.Property<int>("TR_Status_ID");
 
                     b.Property<float>("TR_Tax_Rate");
 
@@ -482,7 +517,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<float>("VAT_Rate");
 
-                    b.Property<string>("VAT_Status");
+                    b.Property<int>("VAT_Status_ID");
 
                     b.Property<bool>("VAT_isActive");
 
@@ -513,9 +548,11 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Vendor_Name");
 
-                    b.Property<string>("Vendor_Status");
+                    b.Property<int>("Vendor_Status_ID");
 
                     b.Property<string>("Vendor_TIN");
+
+                    b.Property<int>("Vendor_Zip");
 
                     b.Property<bool>("Vendor_isActive");
 
@@ -546,7 +583,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Pending_Vendor_Name");
 
-                    b.Property<string>("Pending_Vendor_Status");
+                    b.Property<int>("Pending_Vendor_Status_ID");
 
                     b.Property<string>("Pending_Vendor_TIN");
 
@@ -555,6 +592,23 @@ namespace ExpenseProcessingSystem.Migrations
                     b.HasKey("Pending_ID");
 
                     b.ToTable("DMVendor_Pending");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.DMVendorTRVATModel", b =>
+                {
+                    b.Property<int>("VTV_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("VTV_TR_ID");
+
+                    b.Property<int>("VTV_VAT_ID");
+
+                    b.Property<int>("VTV_Vendor_ID");
+
+                    b.HasKey("VTV_ID");
+
+                    b.ToTable("DMVendorTRVAT");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryAmortizationModel", b =>
@@ -607,6 +661,8 @@ namespace ExpenseProcessingSystem.Migrations
                     b.Property<string>("ExpDtl_Gbase_Remarks");
 
                     b.Property<float>("ExpDtl_Vat");
+
+                    b.Property<bool>("ExpDtl_isEwt");
 
                     b.Property<int?>("ExpenseEntryModelExpense_ID");
 
@@ -670,7 +726,11 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("Expense_Status");
 
-                    b.Property<int>("Expense_Verifier");
+                    b.Property<int>("Expense_Type");
+
+                    b.Property<int>("Expense_Verifier_1");
+
+                    b.Property<int>("Expense_Verifier_2");
 
                     b.Property<bool>("Expense_isDeleted");
 
@@ -721,6 +781,35 @@ namespace ExpenseProcessingSystem.Migrations
                     b.ToTable("HomeNotif");
                 });
 
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.Pending.DMAccountGroupModel_Pending", b =>
+                {
+                    b.Property<int>("Pending_AccountGroup_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Pending_AccountGroup_Approver_ID");
+
+                    b.Property<string>("Pending_AccountGroup_Code");
+
+                    b.Property<int>("Pending_AccountGroup_Creator_ID");
+
+                    b.Property<DateTime>("Pending_AccountGroup_Filed_Date");
+
+                    b.Property<int>("Pending_AccountGroup_MasterID");
+
+                    b.Property<string>("Pending_AccountGroup_Name");
+
+                    b.Property<int>("Pending_AccountGroup_Status_ID");
+
+                    b.Property<bool>("Pending_AccountGroup_isActive");
+
+                    b.Property<bool>("Pending_AccountGroup_isDeleted");
+
+                    b.HasKey("Pending_AccountGroup_ID");
+
+                    b.ToTable("DMAccountGroup_Pending");
+                });
+
             modelBuilder.Entity("ExpenseProcessingSystem.Models.Pending.DMBIRCertSignModel_Pending", b =>
                 {
                     b.Property<int>("Pending_BCS_ID")
@@ -741,9 +830,9 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Pending_BCS_Signatures");
 
-                    b.Property<string>("Pending_BCS_Status");
+                    b.Property<int>("Pending_BCS_Status_ID");
 
-                    b.Property<int>("Pending_BCS_TIN");
+                    b.Property<string>("Pending_BCS_TIN");
 
                     b.Property<bool>("Pending_BCS_isActive");
 
@@ -772,7 +861,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Pending_Curr_Name");
 
-                    b.Property<string>("Pending_Curr_Status");
+                    b.Property<int>("Pending_Curr_Status_ID");
 
                     b.Property<bool>("Pending_Curr_isActive");
 
@@ -803,7 +892,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Pending_Cust_No");
 
-                    b.Property<string>("Pending_Cust_Status");
+                    b.Property<int>("Pending_Cust_Status_ID");
 
                     b.Property<bool>("Pending_Cust_isActive");
 
@@ -832,7 +921,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Pending_Emp_Name");
 
-                    b.Property<string>("Pending_Emp_Status");
+                    b.Property<int>("Pending_Emp_Status_ID");
 
                     b.Property<string>("Pending_Emp_Type");
 
@@ -863,7 +952,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Pending_FBT_Name");
 
-                    b.Property<string>("Pending_FBT_Status");
+                    b.Property<int>("Pending_FBT_Status_ID");
 
                     b.Property<float>("Pending_FBT_Tax_Rate");
 
@@ -896,7 +985,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Pending_TR_Nature_Income_Payment");
 
-                    b.Property<string>("Pending_TR_Status");
+                    b.Property<int>("Pending_TR_Status_ID");
 
                     b.Property<float>("Pending_TR_Tax_Rate");
 
@@ -929,7 +1018,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<float>("Pending_VAT_Rate");
 
-                    b.Property<string>("Pending_VAT_Status");
+                    b.Property<int>("Pending_VAT_Status_ID");
 
                     b.Property<bool>("Pending_VAT_isActive");
 
@@ -938,6 +1027,25 @@ namespace ExpenseProcessingSystem.Migrations
                     b.HasKey("Pending_VAT_ID");
 
                     b.ToTable("DMVAT_Pending");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.Pending.DMVendorTRVATModel_Pending", b =>
+                {
+                    b.Property<int>("Pending_VTV_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Pending_VTV_Status_ID");
+
+                    b.Property<int>("Pending_VTV_TR_ID");
+
+                    b.Property<int>("Pending_VTV_VAT_ID");
+
+                    b.Property<int>("Pending_VTV_Vendor_ID");
+
+                    b.HasKey("Pending_VTV_ID");
+
+                    b.ToTable("DMVendorTRVAT_Pending");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.StatusListModel", b =>
@@ -1008,21 +1116,21 @@ namespace ExpenseProcessingSystem.Migrations
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryAmortizationModel", b =>
                 {
-                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel")
+                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel", "ExpenseEntryDetailModel")
                         .WithMany("ExpenseEntryAmortizations")
                         .HasForeignKey("ExpenseEntryDetailModelExpDtl_ID");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel", b =>
                 {
-                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryModel")
+                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryModel", "ExpenseEntryModel")
                         .WithMany("ExpenseEntryDetails")
                         .HasForeignKey("ExpenseEntryModelExpense_ID");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryGbaseDtl", b =>
                 {
-                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel")
+                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel", "ExpenseEntryDetailModel")
                         .WithMany("ExpenseEntryGbaseDtls")
                         .HasForeignKey("ExpenseEntryDetailModelExpDtl_ID");
                 });

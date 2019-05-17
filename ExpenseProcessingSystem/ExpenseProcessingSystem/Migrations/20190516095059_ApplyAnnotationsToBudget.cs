@@ -6,21 +6,21 @@ namespace ExpenseProcessingSystem.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<string>(
-                name: "Budget_Approver_ID",
-                table: "Budget",
-                nullable: true,
-                oldClrType: typeof(int));
-        }
-
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
             migrationBuilder.AlterColumn<int>(
-                name: "Budget_Approver_ID",
+                name: "AccountGroup_MasterID",
                 table: "Budget",
                 nullable: false,
                 oldClrType: typeof(string),
                 oldNullable: true);
+        }
+
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.AlterColumn<string>(
+                name: "AccountGroup_MasterID",
+                table: "Budget",
+                nullable: true,
+                oldClrType: typeof(int));
         }
     }
 }
