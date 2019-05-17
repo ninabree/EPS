@@ -308,7 +308,6 @@ C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSyste
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\bin\Debug\netcoreapp2.1\Accessibility.dll
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\bin\Debug\netcoreapp2.1\System.Deployment.dll
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\bin\Debug\netcoreapp2.1\System.Runtime.Serialization.Formatters.Soap.dll
-C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\ExpenseProcessingSystem.csprojAssemblyReference.cache
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\ExpenseProcessingSystem.Properties.Resources.resources
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\ExpenseProcessingSystem.csproj.GenerateResource.cache
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\ExpenseProcessingSystem.csproj.CoreCompileInputs.cache
@@ -453,3 +452,4 @@ C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSyste
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\ExpenseProcessingSystem.dll
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\ExpenseProcessingSystem.pdb
 C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Home\ReportLayoutFormat\_ReportLayout_5.g.cshtml.cs
+C:\Users\akio.fujiwara\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\obj\Debug\netcoreapp2.1\ExpenseProcessingSystem.csprojAssemblyReference.cache

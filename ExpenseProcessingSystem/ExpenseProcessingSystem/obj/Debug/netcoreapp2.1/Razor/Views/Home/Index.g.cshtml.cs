@@ -66,7 +66,7 @@ using ExpenseProcessingSystem.ViewModels;
             WriteLiteral("<div class=\"tabContent hometabContent\">\r\n    <div>\r\n        ");
             EndContext();
             BeginContext(171, 1737, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "f2b7e3d61aa54bbfb8f8d8ee97488b7b", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "c3030ef095c04cd79e440da7c9d7b03f", async() => {
                 BeginContext(247, 207, true);
                 WriteLiteral("\r\n            <div class=\"form-actions no-color\">\r\n                <p>\r\n                    Find by:\r\n                    <table class=\"table\">\r\n                        <tr>\r\n                            <td>");
                 EndContext();
@@ -184,7 +184,7 @@ using ExpenseProcessingSystem.ViewModels;
             WriteLiteral("\r\n        <div class=\"tab-tbl\">All Notification Records:</div>\r\n        <table class=\"table table-striped tab-tbl table-bordered\">\r\n            <thead>\r\n                <tr>\r\n                    <th id=\"Application_ID\">");
             EndContext();
             BeginContext(2127, 212, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "181133c6ddf94a9f8c8305422a9ed837", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "b405fa143d5346199a9527b2e85a566b", async() => {
                 BeginContext(2268, 16, true);
                 WriteLiteral("Application ID<p");
                 EndContext();
@@ -242,7 +242,7 @@ WriteAttributeValue(" ", 2308, ViewData["glyph-2"], 2309, 20, false);
             WriteLiteral("</th>\r\n                    <th colspan=\"3\" id=\"Message\">");
             EndContext();
             BeginContext(2395, 220, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "eaa1fb9add23401e883bfc0193e9c9ee", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "5272d072c0c34ae9a3edd213c686aa84", async() => {
                 BeginContext(2538, 22, true);
                 WriteLiteral("Notification Message<p");
                 EndContext();
@@ -300,7 +300,7 @@ WriteAttributeValue(" ", 2584, ViewData["glyph-3"], 2585, 20, false);
             WriteLiteral("</th>\r\n                    <th id=\"Last_Updated\">");
             EndContext();
             BeginContext(2664, 216, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "51b1ae1ff5a44bc7bc7ff2f419361b9f", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "67909ef6e4b74baa894cf10f8aed67e7", async() => {
                 BeginContext(2811, 14, true);
                 WriteLiteral("Last Updated<p");
                 EndContext();
@@ -358,7 +358,7 @@ WriteAttributeValue(" ", 2849, ViewData["glyph-5"], 2850, 20, false);
             WriteLiteral("</th>\r\n                    <th id=\"Verifier_Approver\">");
             EndContext();
             BeginContext(2934, 212, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "e85c823fcb0a444c89690069d9735870", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "e4b4e364574b47e18b3ad2522e9ea45d", async() => {
                 BeginContext(3078, 13, true);
                 WriteLiteral("Approved By<p");
                 EndContext();
@@ -416,7 +416,7 @@ WriteAttributeValue(" ", 3115, ViewData["glyph-4"], 3116, 20, false);
             WriteLiteral("</th>\r\n                    <th id=\"Type_Status\">");
             EndContext();
             BeginContext(3194, 207, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "d2f420173d514e08b119cc46997da7a3", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "9c874a0906454837b532eb508a938bd8", async() => {
                 BeginContext(3338, 8, true);
                 WriteLiteral("Status<p");
                 EndContext();
@@ -588,7 +588,7 @@ WriteAttributeValue(" ", 3370, ViewData["glyph-6"], 3371, 20, false);
             WriteLiteral("\r\n        ");
             EndContext();
             BeginContext(4640, 410, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "414247d412e142d8844d1acf624661fc", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "2c0340ebca4c423cb431476410bc7a82", async() => {
                 BeginContext(5036, 10, true);
                 WriteLiteral("\r\n        ");
                 EndContext();
@@ -676,7 +676,7 @@ WriteAttributeValue(" ", 5197, Model.NotifList.TotalPages, 5198, 29, false);
             WriteLiteral(" disabled />\r\n        ");
             EndContext();
             BeginContext(5250, 404, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "e242c569de8e4caaa458f9b9ec887896", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "ed49b8f921e04affa4c007517e4f0b42", async() => {
                 BeginContext(5640, 10, true);
                 WriteLiteral("\r\n        ");
                 EndContext();

@@ -11,7 +11,7 @@ namespace ExpenseProcessingSystem.Models
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Budget_ID { get; set; }
-        public string Acc_ID { get; set; }
+        public int Budget_AccountGroup_MasterID { get; set; }
         public double Budget_Amount { get; set; }
         public double Budget_Current { get; set; }
         public string Budget_Approver_ID { get; set; }

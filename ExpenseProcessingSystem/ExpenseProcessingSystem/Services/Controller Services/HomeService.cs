@@ -2360,7 +2360,7 @@ namespace ExpenseProcessingSystem.Services
             List<BMViewModel> bmvmList = new List<BMViewModel>();
             //var dbBudget = _context.Budget.ToList();
             var dbBudget = (from a in _context.Budget
-                            join b in _context.DMAccount on a.Acc_ID equals b.Account_No
+                            join b in _context.DMAccount on a.Budget_AccountGroup_MasterID equals b.Account_Group_MasterID
                             join c in _context.User on a.Budget_Approver_ID equals c.User_UserName
                             where b.Account_isActive == true && b.Account_isDeleted == false &&
                             c.User_InUse == true
@@ -2484,6 +2484,168 @@ namespace ExpenseProcessingSystem.Services
             return dbAST1000_A;
         }
 
+        public IEnumerable<HomeReportActualBudgetModel> GetActualReportData(int filterMonth, int filterYear)
+        {
+            List<HomeReportActualBudgetModel> actualBudgetData = new List<HomeReportActualBudgetModel>();
+
+            DateTime startOfTerm = GetSelectedYearMonthOfTerm(filterMonth, filterYear);
+            DateTime startDT;
+            DateTime endDT;
+            int termYear = startOfTerm.Year;
+            int termMonth = startOfTerm.Month;
+            double budgetBalance;
+            double totalExpenseThisTermToPrevMonthend;
+            double subTotal;
+            string format = "yyyy-M";
+
+            //Get all account group category with budget from DB
+            var accountCategory = (from budget in _context.Budget
+                                   join accgroup in _context.DMAccountGroup on budget.Budget_AccountGroup_MasterID equals accgroup.AccountGroup_MasterID
+                                   where accgroup.AccountGroup_isActive == true
+                                   && accgroup.AccountGroup_isDeleted == false
+                                   orderby accgroup.AccountGroup_MasterID
+                                   select new
+                                   {
+                                       startOfTerm,
+                                       accgroup.AccountGroup_Name,
+                                       accgroup.AccountGroup_MasterID,
+                                       Remarks = "Budget Amount - This Term",
+                                       budget.Budget_Amount
+                                   }).ToList();
+
+            //Get all expenses amount data between start of term date and last day of before filter month, year from DB
+            var expOfPrevMonthsList = (from expDtl in _context.ExpenseEntryDetails
+                                       join acc in _context.DMAccount on expDtl.ExpDtl_Account equals acc.Account_MasterID
+                                       join accgroup in _context.DMAccountGroup on acc.Account_Group_MasterID equals accgroup.AccountGroup_MasterID
+                                       join exp in _context.ExpenseEntry on expDtl.ExpenseEntryModel.Expense_ID equals exp.Expense_ID
+                                       join dept in _context.DMDept on expDtl.ExpDtl_Dept equals dept.Dept_ID
+                                       where exp.Expense_Last_Updated.Date >= startOfTerm.Date
+                                       && exp.Expense_Last_Updated.Date <= DateTime.ParseExact(filterYear + "-" + filterMonth, format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1)
+                                       orderby exp.Expense_Last_Updated
+                                       select new
+                                       {
+                                           exp.Expense_Last_Updated,
+                                           accgroup.AccountGroup_MasterID,
+                                           accgroup.AccountGroup_Name,
+                                           expDtl.ExpDtl_Gbase_Remarks,
+                                           dept.Dept_Name,
+                                           expDtl.ExpDtl_Credit_Cash
+                                       }).ToList();
+
+            //foreach(var i in expOfPrevMonthsList)
+            //{
+            //    Debug.WriteLine("{0,20}{1,40}{2,40}{3,40}{4,40}{5,40}",
+            //        i.Expense_Last_Updated,
+            //        i.AccountGroup_MasterID,
+            //        i.AccountGroup_Name,
+            //        i.ExpDtl_Gbase_Remarks,
+            //        i.Dept_Name,
+            //        i.ExpDtl_Credit_Cash);
+            //}
+
+            foreach (var a in accountCategory)
+            {
+                startDT = DateTime.ParseExact(termYear + "-" + termMonth, format, CultureInfo.InvariantCulture);
+                endDT = DateTime.ParseExact(filterYear + "-" + filterMonth, format, CultureInfo.InvariantCulture);
+                subTotal = 0.00;
+                totalExpenseThisTermToPrevMonthend = 0.00;
+
+                budgetBalance = a.Budget_Amount;
+
+                actualBudgetData.Add(new HomeReportActualBudgetModel()
+                {
+                    Category = a.AccountGroup_Name,
+                    BudgetBalance = budgetBalance,
+                    Remarks = a.Remarks,
+                    ValueDate = a.startOfTerm
+                });
+
+                //Get total expenses from start of term to Prev monthend of selected month, year
+
+                var expensesOfTermMonthToBeforeFilterMonth = expOfPrevMonthsList.Where(c => c.AccountGroup_MasterID == a.AccountGroup_MasterID && c.Expense_Last_Updated.Date >= startOfTerm.Date
+                                       && c.Expense_Last_Updated.Date <= DateTime.ParseExact(filterYear + "-" + filterMonth, format, CultureInfo.InvariantCulture).AddDays(-1));
+
+                foreach (var i in expensesOfTermMonthToBeforeFilterMonth)
+                {
+                    totalExpenseThisTermToPrevMonthend += i.ExpDtl_Credit_Cash;
+                    //Debug.WriteLine(i.AccountGroup_Name + " : " + i.ExpDtl_Credit_Cash + " - " + totalExpenseThisTermToPrevMonthend);
+                }
+
+                budgetBalance -= totalExpenseThisTermToPrevMonthend;
+
+                actualBudgetData.Add(new HomeReportActualBudgetModel()
+                {
+                    BudgetBalance = budgetBalance,
+                    ExpenseAmount = totalExpenseThisTermToPrevMonthend,
+                    Remarks = "Total Expenses - This Term to Prev Monthend",
+                    ValueDate = endDT.AddDays(-1)
+                });
+
+                //Get all expenses of selected month and year
+                var expensesOfFilterYearMonth = expOfPrevMonthsList.Where(c => c.AccountGroup_MasterID == a.AccountGroup_MasterID 
+                && c.Expense_Last_Updated.Month == filterMonth && c.Expense_Last_Updated.Year == filterYear);
+
+                foreach (var i in expensesOfFilterYearMonth)
+                {
+                    budgetBalance -= i.ExpDtl_Credit_Cash;
+                    subTotal += i.ExpDtl_Credit_Cash;
+
+                    actualBudgetData.Add(new HomeReportActualBudgetModel()
+                    {
+                        BudgetBalance = budgetBalance,
+                        ExpenseAmount = i.ExpDtl_Credit_Cash,
+                        Remarks = i.ExpDtl_Gbase_Remarks,
+                        Department = i.Dept_Name,
+                        ValueDate = i.Expense_Last_Updated
+                    });
+                }
+
+                //Add Sub-Total to List
+                if (subTotal != 0)
+                {
+                    actualBudgetData.Add(new HomeReportActualBudgetModel()
+                    {
+                        BudgetBalance = budgetBalance,
+                        ExpenseAmount = subTotal,
+                        Remarks = "Sub-total",
+                        ValueDate = endDT.AddMonths(1).AddDays(-1)
+                    });
+                }
+
+                //Insert break or seperation of row
+                actualBudgetData.Add(new HomeReportActualBudgetModel()
+                {
+                    Category = "BREAK"
+                });
+            }
+
+            return actualBudgetData;
+        }
+
+        public DateTime GetSelectedYearMonthOfTerm(int month, int year)
+        {
+            int[] firstTermMonths = { 4, 5, 6, 7, 8, 9};
+            int[] secodnTermNextYearMonths = { 1, 2, 3};
+            DateTime startOfTermDate;
+
+            if (firstTermMonths.Contains(month))
+            {
+                startOfTermDate = DateTime.ParseExact(year + "-04-01", "yyyy-M-dd", CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                if (secodnTermNextYearMonths.Contains(month))
+                {
+                    startOfTermDate = DateTime.ParseExact((year - 1) + "-10-01", "yyyy-M-dd", CultureInfo.InvariantCulture);
+                }
+                else
+                {
+                    startOfTermDate = DateTime.ParseExact(year + "-10-01", "yyyy-M-dd", CultureInfo.InvariantCulture);
+
+                }
+            }
+            return startOfTermDate;
+        }
         //MISC
 
         //--------------------TEMP LOCATION-->MOVE TO ACCOUNT SERVICE-----------------------

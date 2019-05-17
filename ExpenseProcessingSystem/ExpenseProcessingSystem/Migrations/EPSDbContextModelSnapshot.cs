@@ -15,7 +15,7 @@ namespace ExpenseProcessingSystem.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.0-rtm-35687")
+                .HasAnnotation("ProductVersion", "2.1.8-servicing-32085")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -25,7 +25,7 @@ namespace ExpenseProcessingSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Acc_ID");
+                    b.Property<int>("AccountGroup_MasterID");
 
                     b.Property<double>("Budget_Amount");
 
@@ -723,6 +723,8 @@ namespace ExpenseProcessingSystem.Migrations
                     b.Property<int>("Expense_Payee");
 
                     b.Property<int>("Expense_Status");
+
+                    b.Property<int>("Expense_Type");
 
                     b.Property<int>("Expense_Verifier_1");
 
