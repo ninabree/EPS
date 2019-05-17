@@ -26,12 +26,7 @@ namespace ExpenseProcessingSystem.Services
             HttpContext ctx = filterContext.HttpContext;
             var controller = filterContext.Controller as Controller;
 
-            AccessViewModel accessVM = new AccessViewModel
-            {
-                isLoggedIn = false,
-                accessType = "",
-                isAdmin = false
-            };
+            AccessViewModel accessVM = new AccessViewModel();
             var controllerName = (string)filterContext.RouteData.Values["controller"];
             var actionName = (string)filterContext.RouteData.Values["action"];
 
@@ -260,10 +255,10 @@ namespace ExpenseProcessingSystem.Services
                 accessVM = new AccessViewModel {
                     accessType = ctx.Session.GetString("accessType") as String,
                     isAdmin = bool.Parse(ctx.Session.GetString("isAdmin")),
-                    isLoggedIn = bool.Parse(ctx.Session.GetString("isLoggedIn"))
+                    isLoggedIn = bool.Parse(ctx.Session.GetString("isLoggedIn")),
+                    userId = ctx.Session.GetString("UserID")
                 };
                 controller.ViewBag.access = accessVM;
-                controller.ViewBag.userID = ctx.Session.GetString("UserID");
             }
         }
     }

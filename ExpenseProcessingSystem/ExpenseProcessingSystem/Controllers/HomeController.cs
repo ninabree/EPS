@@ -907,6 +907,38 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Acc" });
+        }//[* ACCOUNT GROUP *]
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult ApproveAccountGroup(List<DMAccountGroupViewModel> model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.approveAccountGroup(model, userId);
+            }
+
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_AccGroup" });
+        }
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult RejAccountGroup(List<DMAccountGroupViewModel> model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.rejAccountGroup(model, userId);
+            }
+
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_AccGroup" });
         }
         //[* VAT *]
         [HttpPost]
@@ -1335,6 +1367,55 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Acc" });
+        }
+        // [ACCOUNT Group]
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult AddAccountGroup_Pending(NewAccountGroupListViewModel model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.addAccountGroup_Pending(model, userId);
+            }
+
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_AccGroup" });
+        }
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult EditAccountGroup_Pending(List<DMAccountGroupViewModel> model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.editAccountGroup_Pending(model, userId);
+            }
+
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_AccGroup" });
+        }
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult DeleteAccountGroup_Pending(List<DMAccountGroupViewModel> model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.deleteAccountGroup_Pending(model, userId);
+            }
+
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_AccGroup" });
         }
         // [VAT]
         [HttpPost]

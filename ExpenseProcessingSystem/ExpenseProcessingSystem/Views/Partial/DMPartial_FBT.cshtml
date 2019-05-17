@@ -57,7 +57,10 @@
                 @foreach (var item in Model.FBT)
                 {
                     <tr>
-                        <td><input class="tbl-chk" id="@item.FBT_MasterID" type="checkbox" /></td>
+                        <td>
+                            <input class="tbl-chk" id="@item.FBT_MasterID" type="checkbox" />
+                            @Html.HiddenFor(modelItem => item.FBT_Creator_ID)
+                        </td>
                         <td>@Html.DisplayFor(modelItem => item.FBT_Name)</td>
                         <td>@Html.DisplayFor(modelItem => item.FBT_Formula)</td>
                         <td>@Html.DisplayFor(modelItem => item.FBT_Tax_Rate)</td>
