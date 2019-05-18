@@ -97,61 +97,91 @@ $(document).ready(function () {
         var txtVal = $('input#entryCheckTypes').val();
         //get table name
         var tblName = $('#dm-tbl').find(":selected").text();
-        //if there is no previously checked box
-        if (txtVal != "") {
-            // if change is to uncheck or check the element
-            if (this.checked == true) {
-                if (txtVal == stat) {
-                    //In BCS, only one row can be selected for edit
-                    if (chkCount >= 2 && stat == "Approved" && (tblName == "BIR Cert Signatory")) {
-                        $('.apprv-rec').prop('disabled', true);
-                        $('.rej-rec').prop('disabled', true);
-                        $('.add-rec').prop('disabled', false);
-                        $('.edit-rec').prop('disabled', true);
-                        $('.delete-rec').prop('disabled', false);
-                    }
-                    else if (stat == "Approved") {
-                        defaultApproved();
-                    } else {
-                        defaultForApproval();
-                    }
-                }
-                else if (remainingCheckStat == stat) {
-                    if (remainingCheckStat == "Approved") {
-                        defaultApproved();
-                    } else {
-                        defaultForApproval();
-                    }
-                }else {
-                    alert("Kindly check rows with the same status only.");
-                    $('.rec').prop('disabled', true);
-                }
+
+        var creatorId = $(this).siblings("input[type='hidden']").val();
+        var userId = $("#UI").val();
+        //check if all selected chkboxs have same statuses
+        var isSameStat = true;
+        var firstChk = $('input.tbl-chk[type="checkbox"]:checked').first().parent().siblings(":eq(" + count + ")").text()
+        $('input.tbl-chk[type="checkbox"]:checked').each(function (index) {
+            if ($(this).parent().siblings(":eq(" + count + ")").text() != firstChk) {
+                isSameStat = false;
+                return false;
             }
-            //if this element is unchecked
-            else
-            {
-                //if no element selected
-                if (chkCount <= 0) {
-                    $('input#entryCheckTypes').val("");
-                    defaultApproved();
-                }
-                //if there is remaining, filter btns according to stat of other selected elements
-                else
-                {
-                    if (remainingCheckStat == "Approved") {
-                        defaultApproved();
-                    } else {
-                        defaultForApproval();
-                    }
-                }
+        });
+
+        if (!isSameStat && chkCount <= 2) {
+            alert("Kindly check rows with the same status only.");
+            $('.rec').prop('disabled', true);
+        }
+        else if (creatorId == userId) {
+            if (stat != "Approved") {
+                defaultOnlyAdd();
+            } else {
+                defaultApproved();
+            }
+            if (this.checked == false && chkCount <= 0) {
+                defaultApproved();
             }
         } else {
-            $('input#entryCheckTypes').val(stat);
-            //format only avail buttons for clicked checkbox 
-            if (remainingCheckStat == "Approved") {
-                defaultApproved();
+            //if there is no previously checked box
+            if (txtVal != "") {
+                $('input#entryCheckTypes').val(stat);
+                // if change is to uncheck or check the element
+                if (this.checked == true) {
+                    if (!isSameStat) {
+                        alert("Kindly check rows with the same status only.");
+                        $('.rec').prop('disabled', true);
+                    }
+                    else if (txtVal == stat) {
+                        //In BCS, only one row can be selected for edit
+                        if (chkCount >= 2 && stat == "Approved" && (tblName == "BIR Cert Signatory")) {
+                            $('.apprv-rec').prop('disabled', true);
+                            $('.rej-rec').prop('disabled', true);
+                            $('.add-rec').prop('disabled', false);
+                            $('.edit-rec').prop('disabled', true);
+                            $('.delete-rec').prop('disabled', false);
+                        }
+                        else if (stat == "Approved") {
+                            defaultApproved();
+                        } else {
+                            defaultForApproval();
+                        }
+                    }
+                    else if (remainingCheckStat == stat) {
+                        if (remainingCheckStat == "Approved") {
+                            defaultApproved();
+                        } else {
+                            defaultForApproval();
+                        }
+                    } else {
+                        $('.rec').prop('disabled', true);
+                    }
+                }
+                //if this element is unchecked
+                else {
+                    //if no element selected
+                    if (chkCount <= 0) {
+                        $('input#entryCheckTypes').val("");
+                        defaultApproved();
+                    }
+                    //if there is remaining, filter btns according to stat of other selected elements
+                    else {
+                        if (remainingCheckStat == "Approved") {
+                            defaultApproved();
+                        } else {
+                            defaultForApproval();
+                        }
+                    }
+                }
             } else {
-                defaultForApproval();
+                $('input#entryCheckTypes').val(stat);
+                //format only avail buttons for clicked checkbox 
+                if (remainingCheckStat == "Approved") {
+                    defaultApproved();
+                } else {
+                    defaultForApproval();
+                }
             }
         }
     });
@@ -264,6 +294,8 @@ $(document).ready(function () {
         $('.add-rec').prop('disabled', false);
         $('.edit-rec').prop('disabled', false);
         $('.delete-rec').prop('disabled', false);
+    } function defaultOnlyAdd() {
+        $('.add-rec').prop('disabled', false);
     }
     ///////////////////////////////////////////////////////////////////
     function populateCol() {

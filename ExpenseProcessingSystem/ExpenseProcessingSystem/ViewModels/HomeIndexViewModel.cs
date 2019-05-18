@@ -61,5 +61,6 @@ namespace ExpenseProcessingSystem.ViewModels
         public bool isLoggedIn { get; set; }
         public bool isAdmin { get; set; }
         public string accessType { get; set; }
+        public string userId { get; set; }
     }
 }

@@ -54,7 +54,10 @@
                 @foreach (var item in Model.Curr)
                 {
                     <tr>
-                        <td><input class="tbl-chk" id="@item.Curr_MasterID" type="checkbox" /></td>
+                        <td>
+                            <input class="tbl-chk" id="@item.Curr_MasterID" type="checkbox" />
+                            @Html.HiddenFor(modelItem => item.Curr_Creator_ID)
+                        </td>
                         <td>@Html.DisplayFor(modelItem => item.Curr_Name)</td>
                         <td>@Html.DisplayFor(modelItem => item.Curr_CCY_ABBR)</td>
                         <td>@Html.DisplayFor(modelItem => item.Curr_Creator_Name)</td>
