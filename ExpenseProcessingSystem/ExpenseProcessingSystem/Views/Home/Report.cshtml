@@ -103,7 +103,7 @@
 					radioSemester2.prop('checked', true);
 				}
 
-                if (ReportType == "2" || ReportType == "5") {
+				if (ReportType == "2" || ReportType == "5") {
 					radioPeriod1.prop('checked', true);
 					radioPeriod1.removeAttr("disabled");
 					ddlYear.removeAttr("disabled");
@@ -138,26 +138,26 @@
 				if (ReportType != 0 || ReportType != '') {
 					btnGenerateFile.removeAttr("disabled");
 					btnGeneratePreview.removeAttr("disabled");
-                    ddlFileFormat.removeAttr("disabled");
+					ddlFileFormat.removeAttr("disabled");
 
-                    $.getJSON('@Url.Action("GetReportSubType")', { ReportTypeID: ReportType }, function (data) {
-					    select.empty();
-					    if (data.length == 0) {
-						    select.attr("disabled", "disabled");
-						    select.append($('<option/>', {
-						    value: 0,
-						    text: "----Select Report Sub-Type----"
-						    }));
-					    } else {
-						    select.removeAttr("disabled");
-					    }
-					    $.each(data, function (index, itemData) {
-						    select.append($('<option/>', {
-						    value: itemData.id,
-						    text: itemData.subTypeName
-						    }));
-					    });
-				    });
+					$.getJSON('@Url.Action("GetReportSubType")', { ReportTypeID: ReportType }, function (data) {
+						select.empty();
+						if (data.length == 0) {
+							select.attr("disabled", "disabled");
+							select.append($('<option/>', {
+							value: 0,
+							text: "----Select Report Sub-Type----"
+							}));
+						} else {
+							select.removeAttr("disabled");
+						}
+						$.each(data, function (index, itemData) {
+							select.append($('<option/>', {
+							value: itemData.id,
+							text: itemData.subTypeName
+							}));
+						});
+					});
 				}
 			});
 
@@ -306,18 +306,18 @@
 {
 	<div class="m-t-10">
 		<table class="table voucher-tbl">
-            <colgroup>
-                <col style="width:5%">
-                <col style="width:10%">
-                <col style="width:10%">
-                <col style="width:10%">
-                <col style="width:10%">
-                <col style="width:5%">
-                <col style="width:10%">
-                <col style="width:10%">
-                <col style="width:10%">
-                <col style="width:20%">
-            </colgroup>
+			<colgroup>
+				<col style="width:5%">
+				<col style="width:10%">
+				<col style="width:10%">
+				<col style="width:10%">
+				<col style="width:10%">
+				<col style="width:5%">
+				<col style="width:10%">
+				<col style="width:10%">
+				<col style="width:10%">
+				<col style="width:20%">
+			</colgroup>
 			<tr>
 				<td></td>
 				<td>@Html.LabelFor(m => m.ReportTypesList)</td>
@@ -361,9 +361,9 @@
 			<tr>
 				<td>@Html.RadioButton("radioTimePeriod", "3", false, new { id = "radioPeriodOption3", @class = "radioPeriodOption", disabled = "disabled" })</td>
 				<td>Period</td>
-				<td colspan="1">@Html.EditorFor(m => m.PeriodFrom, new { htmlAttributes = new { @class = "input h-20 w-97 fs-11 form-control", @type = "date", disabled = "disabled", @Value = DateTime.Today } })</td>
+				<td colspan="1">@Html.EditorFor(m => m.PeriodFrom, new { htmlAttributes = new { @class = "input h-20 w-97 fs-11 form-control", @type = "date", disabled = "disabled"} })</td>
 				<td>To</td>
-				<td colspan="1">@Html.EditorFor(m => m.PeriodTo, new { htmlAttributes = new { @class = "input h-20 w-97 fs-11 form-control", @type = "date", disabled = "disabled", @Value = DateTime.Today } })</td>
+				<td colspan="1">@Html.EditorFor(m => m.PeriodTo, new { htmlAttributes = new { @class = "input h-20 w-97 fs-11 form-control", @type = "date", disabled = "disabled"} })</td>
 				<td>&#9679</td>
 				<td>Check No.</td>
 				<td colspan="1"><input class="input" id="txtCheck1" disabled="disabled" /></td>
