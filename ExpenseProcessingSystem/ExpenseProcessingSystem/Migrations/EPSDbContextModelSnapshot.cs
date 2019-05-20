@@ -25,7 +25,7 @@ namespace ExpenseProcessingSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Acc_ID");
+                    b.Property<int>("AccountGroup_MasterID");
 
                     b.Property<double>("Budget_Amount");
 

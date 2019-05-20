@@ -1,0 +1,114 @@
+﻿@model ExpenseProcessingSystem.ViewModels.HomeReportDataFilterViewModel
+
+@{
+    Layout = null;
+}
+
+<style>
+    .table-PDF {
+        border-collapse: collapse;
+        border-width: 1px;
+        border-style: solid;
+        border-color: black;
+        margin-top: 20px;
+        width: 100%;
+    }
+
+    thead {
+        display: table-header-group
+    }
+
+    tfoot {
+        display: table-row-group
+    }
+
+    .tr-PDF {
+        page-break-inside: avoid;
+        border-width: 1px;
+    }
+
+    .tr-PDF-Budget {
+        page-break-inside: avoid;
+        border-width: 1px;
+        background-color: #c8c3cc;
+    }
+
+    .tr-PDF-BREAK {
+        page-break-inside: avoid;
+        border-width: 1px;
+        background-color: #484f4f;
+    }
+
+    .th-PDF {
+        border-width: 1px;
+        border-style: solid;
+        border-color: black;
+        font-weight: bold;
+        background-color: #563f46;
+        color:white;
+    }
+
+    .td-PDF {
+        border-width: 1px;
+        border-style: solid;
+        border-color: black;
+    }
+</style>
+
+<table border="0" style="width:100%">
+    <tr>
+        <td style="font-weight:bold;font-size:x-large">ACTUAL BUDGET - GENERAL EXPENSE</td>
+    </tr>
+    <tr>
+        <td style="font-weight:bold;font-size:large">
+            @Html.DisplayFor(Model => Model.HomeReportFilter.MonthName)
+            @Html.DisplayFor(Model => Model.HomeReportFilter.Year)
+        </td>
+    </tr>
+</table>
+
+<table class="table-PDF">
+    <thead>
+        <tr style="vertical-align:top" class="tr-PDF">
+            <th width="10%" class="th-PDF" style="text-align:center">VALUE DATE</th>
+            <th width="20%" class="th-PDF" style="text-align:left">CATEGORY</th>
+            <th width="25%" class="th-PDF" style="text-align:left">REMARKS</th>
+            <th width="15%" class="th-PDF" style="text-align:center">DEPARTMENT</th>
+            <th width="15%" class="th-PDF" style="text-align:right">AMOUNT</th>
+            <th width="15%" class="th-PDF" style="text-align:right">BUDGET BALANCE</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var i in Model.HomeReportOutputActualBudget)
+        {
+            if (i.Category == "BREAK")
+            {
+                <tr class="tr-PDF-BREAK">
+                    <td colspan="6">&nbsp;</td>
+                </tr>
+            }
+            else if (!string.IsNullOrEmpty(i.Category))
+            {
+                <tr class="tr-PDF-Budget">
+                    <td style="text-align:center" class="td-PDF">@Html.DisplayFor(model => i.ValueDate)</td>
+                    <td style="text-align:left" class="td-PDF">@i.Category</td>
+                    <td style="text-align:left" class="td-PDF">@i.Remarks</td>
+                    <td style="text-align:center" class="td-PDF"></td>
+                    <td style="text-align:right" class="td-PDF"></td>
+                    <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => i.BudgetBalance)</td>
+                </tr>
+            }
+            else
+            {
+                <tr class="tr-PDF">
+                    <td style="text-align:center" class="td-PDF">@Html.DisplayFor(model => i.ValueDate)</td>
+                    <td style="text-align:left" class="td-PDF">@i.Category</td>
+                    <td style="text-align:left" class="td-PDF">@i.Remarks</td>
+                    <td style="text-align:center" class="td-PDF">@i.Department</td>
+                    <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => i.ExpenseAmount)</td>
+                    <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => i.BudgetBalance)</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

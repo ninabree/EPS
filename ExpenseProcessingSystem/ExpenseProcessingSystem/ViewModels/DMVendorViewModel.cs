@@ -23,11 +23,11 @@ namespace ExpenseProcessingSystem.ViewModels
         [NotNullValidations, TextValidation]
         public string Vendor_Address { get; set; }
         [Display(Name = "Tax Rate/s")]
-        public List<string> Vendor_Tax_Rate { get; set; }
-        public List<int> Vendor_Tax_Rate_ID { get; set; }
+        public List<string> Vendor_Tax_Rates { get; set; }
+        public string Vendor_Tax_Rates_ID { get; set; }
         [Display(Name = "VAT/s")]
         public List<string> Vendor_VAT { get; set; }
-        public List<int> Vendor_VAT_ID { get; set; }
+        public string Vendor_VAT_ID { get; set; }
         public int Vendor_Creator_ID { get; set; }
         public int Vendor_Approver_ID { get; set; }
         [Display(Name = "Vendor Created")]

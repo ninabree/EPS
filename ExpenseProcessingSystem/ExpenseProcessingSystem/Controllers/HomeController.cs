@@ -1,6 +1,7 @@
 ﻿using ExpenseProcessingSystem.ConstantData;
 using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Models;
+using ExpenseProcessingSystem.Resources;
 using ExpenseProcessingSystem.Services;
 using ExpenseProcessingSystem.Services.Controller_Services;
 using ExpenseProcessingSystem.Services.Excel_Services;
@@ -9,21 +10,19 @@ using ExpenseProcessingSystem.ViewModels.NewRecord;
 using ExpenseProcessingSystem.ViewModels.Reports;
 using ExpenseProcessingSystem.ViewModels.Search_Filters;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Localization;
 using OfficeOpenXml;
 using Rotativa.AspNetCore;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
+using ExpenseProcessingSystem.ViewModels.Entry;
 
 namespace ExpenseProcessingSystem.Controllers
 {
@@ -36,16 +35,27 @@ namespace ExpenseProcessingSystem.Controllers
         private ISession _session => _httpContextAccessor.HttpContext.Session;
         private HomeService _service;
         private SortService _sortService;
-        //private ExcelData _excelData;
-        //private readonly IHostingEnvironment _hostingEnvironment;
+        //to access resources
+        private readonly IStringLocalizer<HomeController> _localizer;
 
-        public HomeController(IHttpContextAccessor httpContextAccessor, EPSDbContext context, IHostingEnvironment hostingEnvironment)
+
+        public HomeController(IHttpContextAccessor httpContextAccessor, EPSDbContext context, IHostingEnvironment hostingEnvironment, IStringLocalizer<HomeController> localizer)
         {
+            _localizer = localizer;
             _httpContextAccessor = httpContextAccessor;
             _context = context;
             _service = new HomeService(_httpContextAccessor, _context, this.ModelState, hostingEnvironment);
             _sortService = new SortService();
-            //_excelData = new ExcelData(_httpContextAccessor, _context);
+        }
+        public ReportHeaderViewModel GetHeaderInfo()
+        {
+            ReportHeaderViewModel headerVM = new ReportHeaderViewModel {
+                Header_Name = ReportResource.Branch_Title,
+                Header_TIN = ReportResource.Branch_TIN,
+                Header_Logo = ReportResource.Branch_Logo,
+                Header_Address = ReportResource.Branch_Address,
+            };
+            return headerVM;
         }
 
         private string GetUserID()
@@ -301,7 +311,6 @@ namespace ExpenseProcessingSystem.Controllers
 
         //------------------------------------------------------------------
         //[* REPORT *]
-        //[ImportModelState]
         public IActionResult Report()
         {
             var userId = GetUserID();
@@ -400,15 +409,35 @@ namespace ExpenseProcessingSystem.Controllers
 
                 //For Alphalist of Suppliers by top 10000 corporation (Annual)
                 case ConstantData.HomeReportConstantValue.AST1000_A:
-                    fileName = "AlphalistOfSuppliersByTop10000Corporation_Annual_" + dateNow;
+                    fileName = "AlphalistOfSuppliersByTop10000Corporation_" + dateNow;
                     layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
                     pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter2;
+                    model.MonthName = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName;
+                    model.MonthNameTo = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName;
 
                     //Get the necessary data from Database
                     data = new HomeReportDataFilterViewModel
                     {
-                        HomeReportOutputAST1000 = _service.GetAST1000_AData(model.Year),
+                        HomeReportOutputAST1000 = _service.GetAST1000_AData(model.Year, model.Month, model.YearTo, model.MonthTo),
                         HomeReportFilter = model,
+                    };
+                    break;
+
+                //For Actual Budget Report
+                case ConstantData.HomeReportConstantValue.ActualBudgetReport:
+                    fileName = "ActualBudgetReport_" + dateNow;
+                    layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
+                    pdfFooterFormat = String.Empty;
+
+                    model.MonthName = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName;
+
+                    IEnumerable<HomeReportActualBudgetModel> testtest = _service.GetActualReportData(model.Month, model.Year);
+
+                    //Get the necessary data from Database
+                    data = new HomeReportDataFilterViewModel
+                    {
+                        HomeReportOutputActualBudget = _service.GetActualReportData(model.Month, model.Year),
+                        HomeReportFilter = model
                     };
                     break;
 
@@ -721,14 +750,74 @@ namespace ExpenseProcessingSystem.Controllers
         {
             return View();
         }
+
+        //------------------------------------------------------------------
+        //[* Entry Petty Cash *]
         public IActionResult Entry_PCV()
         {
-            return View();
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var role = _service.getUserRole(_session.GetString("UserID"));
+            if (role == GlobalSystemValues.ROLE_ADMIN)
+            {
+                return RedirectToAction("UM");
+            }
+
+            EntryCVViewModelList viewModel = new EntryCVViewModelList();
+            List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
+
+            viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
+            viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
+            viewModel.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
+            viewModel.systemValues.acc = _service.getAccDetailsEntry();
+
+            viewModel.expenseYear = DateTime.Today.Year.ToString();
+            viewModel.expenseDate = DateTime.Today;
+
+            viewModel.EntryCV.Add(new EntryCVViewModel());
+            return View(viewModel);
         }
+        //[* Entry Petty Cash *]
+        //------------------------------------------------------------------
+
+        //------------------------------------------------------------------
+        //[* Entry Cash Advance(SS) *]
         public IActionResult Entry_SS()
         {
-            return View();
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var role = _service.getUserRole(_session.GetString("UserID"));
+            if (role == GlobalSystemValues.ROLE_ADMIN)
+            {
+                return RedirectToAction("UM");
+            }
+
+            EntryCVViewModelList viewModel = new EntryCVViewModelList();
+            List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
+
+            viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
+            viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
+            viewModel.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
+            viewModel.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
+            viewModel.systemValues.acc = _service.getAccDetailsEntry();
+
+            viewModel.expenseYear = DateTime.Today.Year.ToString();
+            viewModel.expenseDate = DateTime.Today;
+
+            viewModel.EntryCV.Add(new EntryCVViewModel());
+            return View(viewModel);
         }
+        //[* Entry Cash Advance(SS) *]
+        //------------------------------------------------------------------
+
         public IActionResult Entry_NC()
         {
             return View();
@@ -1700,9 +1789,29 @@ namespace ExpenseProcessingSystem.Controllers
         public IActionResult HomeReportValidation(HomeReportViewModel model)
         {
             List<String> errors = new List<String>();
+            string format = "yyyy-M";
+            DateTime fromDate = DateTime.ParseExact(model.Year + "-" + model.Month, format, CultureInfo.InvariantCulture);
+            DateTime toDate = DateTime.ParseExact(model.YearTo + "-" + model.MonthTo, format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
+
 
             if (model.ReportType != 0)
             {
+                switch (model.ReportType)
+                {
+                    case ConstantData.HomeReportConstantValue.AST1000_S:
+                        if (fromDate > toDate)
+                        {
+                            errors.Add("Year,Month(TO) must be later than Year,Month(FROM)");
+                        }
+                        break;
+                    case ConstantData.HomeReportConstantValue.AST1000_A:
+                        if (fromDate > toDate)
+                        {
+                            errors.Add("Year,Month(TO) must be later than Year,Month(FROM)");
+                        }
+                        break;
+                }
+
                 switch (model.PeriodOption)
                 {
                     case 1:
@@ -1710,10 +1819,7 @@ namespace ExpenseProcessingSystem.Controllers
                         break;
 
                     case 2:
-                        if (model.Semester == 0)
-                        {
-                            errors.Add("Semester input is required");
-                        }
+
                         break;
                     case 3:
                         if (model.PeriodFrom == DateTime.MinValue)
@@ -1743,6 +1849,103 @@ namespace ExpenseProcessingSystem.Controllers
         {
             public string Message { get; set; }
             public List<String> Items = new List<String>();
+        }
+
+        public IEnumerable<HomeReportActualBudgetModel> GetDummyActualBudgetData()
+        {
+            List<HomeReportActualBudgetModel> actualBudgetData = new List<HomeReportActualBudgetModel>();
+
+            int filterYear = 2019;  //Filter value from screen
+            int filterMonth = 6;    //Filter value from screen
+            int termYear = 2019;    //Create logic to get term year
+            int termMonth = 4;      //Create logic to get term month
+            double budgetBalance;
+            double totalExpenseThisTermToPrevMonthend;
+            double subTotal;
+            string format = "yyyy-M";
+            var accountCategory = ConstantData.TEMP_HomeReportActualBudgetReportDummyData.GetAcountCategory().OrderBy(c => c.AccountID);
+
+            DateTime startDT;
+            DateTime endDT;
+
+            foreach(var a in accountCategory)
+            {
+                startDT = DateTime.ParseExact(termYear + "-" + termMonth, format, CultureInfo.InvariantCulture);
+                endDT = DateTime.ParseExact(filterYear + "-" + filterMonth, format, CultureInfo.InvariantCulture);
+                subTotal = 0.00;
+                totalExpenseThisTermToPrevMonthend = 0.00;
+
+                //Get current Budget of selected term
+                var budgetMonitoringData = ConstantData.TEMP_HomeReportActualBudgetReportDummyData.GetBudgetMonitoringData().Where(c => c.AccountID == a.AccountID && c.TermOfBudget.Year == termYear && c.TermOfBudget.Month == termMonth).SingleOrDefault();
+                budgetBalance = (budgetMonitoringData == null) ? 0.00 : budgetMonitoringData.BudgetAmount;
+                    
+                actualBudgetData.Add(new HomeReportActualBudgetModel()
+                {
+                    Category = a.Account_Category,
+                    BudgetBalance = budgetBalance,
+                    Remarks = "Budget Amount - This Term",
+                    ValueDate = DateTime.Parse(termYear + "/" + termMonth)
+                });
+
+                //Get total expense of selected term to Prev monthend
+                while (startDT < endDT)
+                {
+                    var expensesOfTermMonthToBeforeFilterMonth = ConstantData.TEMP_HomeReportActualBudgetReportDummyData.GetExpenseData().Where(c => c.AccountID == a.AccountID && c.DateReflected.Year == startDT.Year && c.DateReflected.Month == startDT.Month);
+
+                    foreach (var i in expensesOfTermMonthToBeforeFilterMonth)
+                    {
+                        totalExpenseThisTermToPrevMonthend += i.ExpenseAmount;
+                    }
+                    startDT = startDT.AddMonths(1);
+                }
+                budgetBalance -= totalExpenseThisTermToPrevMonthend;
+
+                actualBudgetData.Add(new HomeReportActualBudgetModel()
+                {
+                    BudgetBalance = budgetBalance,
+                    ExpenseAmount = totalExpenseThisTermToPrevMonthend,
+                    Remarks = "Total Expenses - This Term to Prev Monthend",
+                    ValueDate = endDT.AddDays(-1)
+                });
+
+                //Get all expenses of selected month and year
+                var expensesOfFilterYearMonth = ConstantData.TEMP_HomeReportActualBudgetReportDummyData.GetExpenseData().Where(c => c.AccountID == a.AccountID && c.DateReflected.Year == filterYear && c.DateReflected.Month == filterMonth).OrderBy(c => c.DateReflected);
+
+                foreach(var i in expensesOfFilterYearMonth)
+                {
+                    budgetBalance -= i.ExpenseAmount;
+                    subTotal += i.ExpenseAmount;
+
+                    actualBudgetData.Add(new HomeReportActualBudgetModel()
+                    {
+                        BudgetBalance = budgetBalance,
+                        ExpenseAmount = i.ExpenseAmount,
+                        Remarks = i.Remarks,
+                        Department = i.Department,
+                        ValueDate = i.DateReflected
+                    });
+                }
+
+                //Add Sub-Total to List
+                if(subTotal != 0)
+                {
+                    actualBudgetData.Add(new HomeReportActualBudgetModel()
+                    {
+                        BudgetBalance = budgetBalance,
+                        ExpenseAmount = subTotal,
+                        Remarks = "Sub-total",
+                        ValueDate = endDT.AddMonths(1).AddDays(-1)
+                    });
+                }
+
+                //Insert break or seperation row
+                actualBudgetData.Add(new HomeReportActualBudgetModel()
+                {
+                    Category = "BREAK"
+                });
+            }
+
+            return actualBudgetData;
         }
     }
 }

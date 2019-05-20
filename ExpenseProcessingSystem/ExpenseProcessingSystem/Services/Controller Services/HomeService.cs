@@ -307,16 +307,29 @@ namespace ExpenseProcessingSystem.Services
                                          pp.Pending_Vendor_Creator_ID,
                                          pmCreatorID = pm.Vendor_Creator_ID.ToString(),
                                          pmCreateDate = pm.Vendor_Created_Date.ToString()
-                             }).Where(x => intList.Contains(x.Pending_Vendor_MasterID)).ToList();
+                             }).Where(x => intList.Contains(x.Pending_Vendor_MasterID)).Distinct().ToList();
+            var allVTVPending = (from pp in _context.DMVendorTRVAT_Pending
+                              from pm in _context.DMVendorTRVAT.Where(x => x.VTV_ID == pp.Pending_VTV_ID).DefaultIfEmpty()
+                              select new
+                              {
+                                  pp.Pending_VTV_ID,
+                                  pp.Pending_VTV_Vendor_ID,
+                                  pp.Pending_VTV_TR_ID,
+                                  pp.Pending_VTV_VAT_ID
+                              }).Where(x => intList.Contains(x.Pending_VTV_Vendor_ID)).ToList();
 
             List<DMVendorModel_Pending> toDelete = _context.DMVendor_Pending.Where(x=> intList.Contains(x.Pending_Vendor_MasterID)).ToList();
-            
+            List<DMVendorTRVATModel_Pending> toVTVDelete = _context.DMVendorTRVAT_Pending.Where(x => intList.Contains(x.Pending_VTV_Vendor_ID)).ToList();
+
             //get all records that currently exists in Master Data
             List<DMVendorModel> vmList = _context.DMVendor.
                 Where(x => intList.Contains(x.Vendor_MasterID) && x.Vendor_isActive == true).ToList();
-            
+            List<DMVendorTRVATModel> vmVTVList = _context.DMVendorTRVAT.
+                Where(x => intList.Contains(x.VTV_Vendor_ID)).ToList();
+
             //list for formatted records to be added
             List<DMVendorModel> addList = new List<DMVendorModel>();
+            List<DMVendorTRVATModel> addVTVList = new List<DMVendorTRVATModel>();
 
             //add to master table newly approved records
             allPending.ForEach(pending =>
@@ -337,6 +350,16 @@ namespace ExpenseProcessingSystem.Services
                 };
                 addList.Add(m);
             });
+            allVTVPending.ForEach(pending =>
+            {
+                DMVendorTRVATModel m = new DMVendorTRVATModel
+                {
+                    VTV_TR_ID = pending.Pending_VTV_TR_ID,
+                    VTV_VAT_ID = pending.Pending_VTV_VAT_ID,
+                    VTV_Vendor_ID = pending.Pending_VTV_Vendor_ID
+                };
+                addVTVList.Add(m);
+            });
             //update existing records
             vmList.ForEach(dm =>
             {
@@ -347,6 +370,9 @@ namespace ExpenseProcessingSystem.Services
             {
                 _context.DMVendor.AddRange(addList);
                 _context.DMVendor_Pending.RemoveRange(toDelete);
+                _context.DMVendorTRVAT.RemoveRange(vmVTVList);
+                _context.DMVendorTRVAT.AddRange(addVTVList);
+                _context.DMVendorTRVAT_Pending.RemoveRange(toVTVDelete);
                 _context.SaveChanges();
             }
             return true;
@@ -1293,9 +1319,54 @@ namespace ExpenseProcessingSystem.Services
                 vmList.Add(m);
             }
 
+            DMVendorTRVATModel_Pending tmp = new DMVendorTRVATModel_Pending();
+            List<DMVendorTRVATModel_Pending> tmpList = new List<DMVendorTRVATModel_Pending>();
             if (_modelState.IsValid)
             {
                 _context.DMVendor_Pending.AddRange(vmList);
+                _context.SaveChanges();
+                var i = 0;
+                vmList.Select(p => p.Pending_Vendor_MasterID)
+                    .ToList()
+                    .ForEach(x =>
+                    {
+                        if (model[i].Vendor_Tax_Rates_ID != null)
+                        {
+
+                            List<string> trIds = model[i].Vendor_Tax_Rates_ID.Split(',').ToList();
+                            trIds.ForEach(tr =>
+                            {
+                                if (tr != "")
+                                {
+                                    tmp = new DMVendorTRVATModel_Pending()
+                                    {
+                                        Pending_VTV_Vendor_ID = x,
+                                        Pending_VTV_TR_ID = int.Parse(tr)
+                                    };
+                                    tmpList.Add(tmp);
+                                }
+                            });
+                        }
+                        if (model[i].Vendor_VAT_ID != null)
+                        {
+                            List<string> vatIds = model[i].Vendor_VAT_ID.Split(',').ToList();
+                            vatIds.ForEach(vat =>
+                            {
+                                if (vat != "")
+                                {
+                                    tmp = new DMVendorTRVATModel_Pending()
+                                    {
+                                        Pending_VTV_Vendor_ID = x,
+                                        Pending_VTV_VAT_ID = int.Parse(vat)
+                                    };
+                                    tmpList.Add(tmp);
+                                }
+                            });
+                        }
+                        i++;
+                    });
+
+                _context.DMVendorTRVAT_Pending.AddRange(tmpList);
                 _context.SaveChanges();
             }
             return true;
@@ -1303,6 +1374,7 @@ namespace ExpenseProcessingSystem.Services
         public bool deleteVendor_Pending(List<DMVendorViewModel> model, string userId)
         {
             List<DMVendorModel_Pending> vmList = new List<DMVendorModel_Pending>();
+            List<DMVendorTRVATModel_Pending> vtvList = new List<DMVendorTRVATModel_Pending>();
             foreach (DMVendorViewModel dm in model)
             {
                 DMVendorModel_Pending m = new DMVendorModel_Pending
@@ -1318,10 +1390,37 @@ namespace ExpenseProcessingSystem.Services
                 };
                 vmList.Add(m);
             }
+            DMVendorTRVATModel_Pending tmp = new DMVendorTRVATModel_Pending();
+            model.Select(x => x.Vendor_MasterID)
+                .ToList()
+                .ForEach(x => {
+                     _context.DMVendorTRVAT.Where(tr => tr.VTV_Vendor_ID == x).ToList()
+                    .ForEach(val => {
+                        if (val.VTV_TR_ID != 0)
+                        {
+                            tmp = new DMVendorTRVATModel_Pending()
+                            {
+                                Pending_VTV_Vendor_ID = x,
+                                Pending_VTV_TR_ID = val.VTV_TR_ID
+                            };
+                            vtvList.Add(tmp);
+                        }
+                        if (val.VTV_VAT_ID != 0)
+                        {
+                            tmp = new DMVendorTRVATModel_Pending()
+                            {
+                                Pending_VTV_Vendor_ID = x,
+                                Pending_VTV_VAT_ID = val.VTV_VAT_ID
+                            };
+                            vtvList.Add(tmp);
+                        }
+                    });
+                });
 
             if (_modelState.IsValid)
             {
                 _context.DMVendor_Pending.AddRange(vmList);
+                _context.DMVendorTRVAT_Pending.AddRange(vtvList);
                 _context.SaveChanges();
             }
             return true;
@@ -2376,7 +2475,7 @@ namespace ExpenseProcessingSystem.Services
             List<BMViewModel> bmvmList = new List<BMViewModel>();
             //var dbBudget = _context.Budget.ToList();
             var dbBudget = (from a in _context.Budget
-                            join b in _context.DMAccount on a.Acc_ID equals b.Account_No
+                            join b in _context.DMAccount on a.Budget_AccountGroup_MasterID equals b.Account_Group_MasterID
                             join c in _context.User on a.Budget_Approver_ID equals c.User_UserName
                             where b.Account_isActive == true && b.Account_isDeleted == false &&
                             c.User_InUse == true
@@ -2473,17 +2572,21 @@ namespace ExpenseProcessingSystem.Services
             return dbAST1000_S;
         }
 
-        public IEnumerable<HomeReportOutputAST1000Model> GetAST1000_AData(int year)
+        public IEnumerable<HomeReportOutputAST1000Model> GetAST1000_AData(int year, int month, int yearTo, int monthTo)
         {
             int[] status = { 3, 4 };
             float[] taxRateConsider = { 0.01f, 0.02f };
+            string format = "yyyy-M";
+            DateTime fromDate = DateTime.ParseExact(year + "-" + month, format, CultureInfo.InvariantCulture);
+            DateTime toDate = DateTime.ParseExact(yearTo + "-" + monthTo, format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
 
             var dbAST1000_A = (from vendor in _context.DMVendor
                             join expense in _context.ExpenseEntry on vendor.Vendor_ID equals expense.Expense_Payee
                             join expEntryDetl in _context.ExpenseEntryDetails on expense.Expense_ID equals expEntryDetl.ExpenseEntryModel.Expense_ID
                             join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
                             where status.Contains(expense.Expense_Status)
-                            && expense.Expense_Last_Updated.Year == year
+                            && expense.Expense_Last_Updated.Date >= fromDate.Date
+                            && expense.Expense_Last_Updated.Date <= toDate.Date
                             && taxRateConsider.Contains(tr.TR_Tax_Rate)
                                orderby vendor.Vendor_Name
                                select new HomeReportOutputAST1000Model
@@ -2498,6 +2601,183 @@ namespace ExpenseProcessingSystem.Services
                                }).ToList();
 
             return dbAST1000_A;
+        }
+
+        public IEnumerable<HomeReportActualBudgetModel> GetActualReportData(int filterMonth, int filterYear)
+        {
+            List<HomeReportActualBudgetModel> actualBudgetData = new List<HomeReportActualBudgetModel>();
+
+            DateTime startOfTerm = GetSelectedYearMonthOfTerm(filterMonth, filterYear);
+            DateTime startDT;
+            DateTime endDT;
+            int termYear = startOfTerm.Year;
+            int termMonth = startOfTerm.Month;
+            double budgetBalance;
+            double totalExpenseThisTermToPrevMonthend;
+            double subTotal;
+            string format = "yyyy-M";
+
+            //Get all account group category with budget from DB
+            var accountCategory = (from budget in _context.Budget
+                                   join accgroup in _context.DMAccountGroup on budget.Budget_AccountGroup_MasterID equals accgroup.AccountGroup_MasterID
+                                   where accgroup.AccountGroup_isActive == true
+                                   && accgroup.AccountGroup_isDeleted == false
+                                   orderby accgroup.AccountGroup_MasterID
+                                   select new
+                                   {
+                                       startOfTerm,
+                                       accgroup.AccountGroup_Name,
+                                       accgroup.AccountGroup_MasterID,
+                                       Remarks = "Budget Amount - This Term",
+                                       budget.Budget_Amount
+                                   }).ToList();
+
+            //Get all expenses amount data between start of term date and last day of before filter month, year from DB
+            var expOfPrevMonthsList = (from expDtl in _context.ExpenseEntryDetails
+                                       join acc in _context.DMAccount on expDtl.ExpDtl_Account equals acc.Account_MasterID
+                                       join accgroup in _context.DMAccountGroup on acc.Account_Group_MasterID equals accgroup.AccountGroup_MasterID
+                                       join exp in _context.ExpenseEntry on expDtl.ExpenseEntryModel.Expense_ID equals exp.Expense_ID
+                                       join dept in _context.DMDept on expDtl.ExpDtl_Dept equals dept.Dept_ID
+                                       where exp.Expense_Last_Updated.Date >= startOfTerm.Date
+                                       && exp.Expense_Last_Updated.Date <= DateTime.ParseExact(filterYear + "-" + filterMonth, format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1)
+                                       orderby exp.Expense_Last_Updated
+                                       select new
+                                       {
+                                           exp.Expense_Last_Updated,
+                                           accgroup.AccountGroup_MasterID,
+                                           accgroup.AccountGroup_Name,
+                                           expDtl.ExpDtl_Gbase_Remarks,
+                                           dept.Dept_Name,
+                                           expDtl.ExpDtl_Credit_Cash
+                                       }).ToList();
+
+            foreach (var a in accountCategory)
+            {
+                startDT = DateTime.ParseExact(termYear + "-" + termMonth, format, CultureInfo.InvariantCulture);
+                endDT = DateTime.ParseExact(filterYear + "-" + filterMonth, format, CultureInfo.InvariantCulture);
+                subTotal = 0.00;
+                totalExpenseThisTermToPrevMonthend = 0.00;
+
+                budgetBalance = a.Budget_Amount;
+
+                actualBudgetData.Add(new HomeReportActualBudgetModel()
+                {
+                    Category = a.AccountGroup_Name,
+                    BudgetBalance = budgetBalance,
+                    Remarks = a.Remarks,
+                    ValueDate = a.startOfTerm
+                });
+
+                //Get total expenses from start of term to Prev monthend of selected month, year
+
+                var expensesOfTermMonthToBeforeFilterMonth = expOfPrevMonthsList.Where(c => c.AccountGroup_MasterID == a.AccountGroup_MasterID && c.Expense_Last_Updated.Date >= startOfTerm.Date
+                                       && c.Expense_Last_Updated.Date <= endDT.AddDays(-1));
+
+                foreach (var i in expensesOfTermMonthToBeforeFilterMonth)
+                {
+                    totalExpenseThisTermToPrevMonthend += i.ExpDtl_Credit_Cash;
+                    //Debug.WriteLine(i.AccountGroup_Name + " : " + i.ExpDtl_Credit_Cash + " - " + totalExpenseThisTermToPrevMonthend);
+                }
+
+                budgetBalance -= totalExpenseThisTermToPrevMonthend;
+
+                actualBudgetData.Add(new HomeReportActualBudgetModel()
+                {
+                    BudgetBalance = budgetBalance,
+                    ExpenseAmount = totalExpenseThisTermToPrevMonthend,
+                    Remarks = "Total Expenses - This Term to Prev Monthend",
+                    ValueDate = endDT.AddDays(-1)
+                });
+
+                //Get all expenses of selected month and year
+                var expensesOfFilterYearMonth = expOfPrevMonthsList.Where(c => c.AccountGroup_MasterID == a.AccountGroup_MasterID 
+                && c.Expense_Last_Updated.Month == filterMonth && c.Expense_Last_Updated.Year == filterYear);
+
+                foreach (var i in expensesOfFilterYearMonth)
+                {
+                    budgetBalance -= i.ExpDtl_Credit_Cash;
+                    subTotal += i.ExpDtl_Credit_Cash;
+
+                    actualBudgetData.Add(new HomeReportActualBudgetModel()
+                    {
+                        BudgetBalance = budgetBalance,
+                        ExpenseAmount = i.ExpDtl_Credit_Cash,
+                        Remarks = i.ExpDtl_Gbase_Remarks,
+                        Department = i.Dept_Name,
+                        ValueDate = i.Expense_Last_Updated
+                    });
+                }
+
+                //Add Sub-Total to List
+                if (subTotal != 0)
+                {
+                    actualBudgetData.Add(new HomeReportActualBudgetModel()
+                    {
+                        BudgetBalance = budgetBalance,
+                        ExpenseAmount = subTotal,
+                        Remarks = "Sub-total",
+                        ValueDate = endDT.AddMonths(1).AddDays(-1)
+                    });
+                }
+
+                //Insert break or seperation of row
+                actualBudgetData.Add(new HomeReportActualBudgetModel()
+                {
+                    Category = "BREAK"
+                });
+            }
+
+            return actualBudgetData;
+        }
+
+        public DateTime GetSelectedYearMonthOfTerm(int month, int year)
+        {
+            int[] firstTermMonths = { 4, 5, 6, 7, 8, 9};
+            int[] secodnTermNextYearMonths = { 1, 2, 3};
+            DateTime startOfTermDate;
+
+            if (firstTermMonths.Contains(month))
+            {
+                startOfTermDate = DateTime.ParseExact(year + "-04-01", "yyyy-M-dd", CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                if (secodnTermNextYearMonths.Contains(month))
+                {
+                    startOfTermDate = DateTime.ParseExact((year - 1) + "-10-01", "yyyy-M-dd", CultureInfo.InvariantCulture);
+                }
+                else
+                {
+                    startOfTermDate = DateTime.ParseExact(year + "-10-01", "yyyy-M-dd", CultureInfo.InvariantCulture);
+
+                }
+            }
+            return startOfTermDate;
+        }
+        
+        // [Entry Petty Cash Voucher]
+        public IEnumerable<DMVendorModel> PopulateVendorList()
+        {
+            return _context.DMVendor.Where(db => db.Vendor_isActive == true 
+                && db.Vendor_isDeleted == false).OrderBy(db => db.Vendor_Name).ToList();
+        }
+
+        public IEnumerable<DMAccountModel> PopulateAccountList()
+        {
+            return _context.DMAccount.Where(db => db.Account_isActive == true
+                && db.Account_isDeleted == false).OrderBy(db => db.Account_Name).ToList();
+        }
+
+        public IEnumerable<DMDeptModel> PopulateDepartmentList()
+        {
+            return _context.DMDept.Where(db => db.Dept_isActive == true
+                && db.Dept_isDeleted == false).OrderBy(db => db.Dept_Name).ToList();
+        }
+
+        public IEnumerable<DMTRModel> PopulateTaxRateList()
+        {
+            return _context.DMTR.Where(db => db.TR_isActive == true
+                && db.TR_isDeleted == false).OrderBy(db => db.TR_Tax_Rate).ToList();
         }
 
         //MISC

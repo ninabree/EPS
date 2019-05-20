@@ -120,7 +120,6 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             //                    }).ToList();
 
             var trList = (from a in _context.DMVendorTRVAT
-                          join b in _context.DMVendor on a.VTV_Vendor_ID equals b.Vendor_ID
                           join c in _context.DMTR on a.VTV_TR_ID equals c.TR_MasterID
                           where mListIDs.Contains(a.VTV_Vendor_ID) && c.TR_isActive == true
                           select new { a.VTV_Vendor_ID, c.TR_ID, c.TR_Tax_Rate, c.TR_WT_Title }).ToList();
@@ -131,7 +130,6 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                                  select new { a.Pending_VTV_Vendor_ID, c.TR_ID, c.TR_Tax_Rate, c.TR_WT_Title }).ToList();
 
             var vatList = (from a in _context.DMVendorTRVAT
-                          join b in _context.DMVendor on a.VTV_Vendor_ID equals b.Vendor_ID
                           join d in _context.DMVAT on a.VTV_VAT_ID equals d.VAT_MasterID
                            where mListIDs.Contains(a.VTV_Vendor_ID) && d.VAT_isActive == true
                            select new { a.VTV_Vendor_ID, d.VAT_ID, d.VAT_Rate, d.VAT_Name }).ToList();
@@ -143,7 +141,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
 
             var statusList = (from a in mList
                               join c in _context.StatusList on a.Vendor_Status_ID equals c.Status_ID
-                              select new { a.Vendor_MasterID, c.Status_Name }).ToList();
+                              select new { a.Vendor_ID, a.Vendor_MasterID, c.Status_Name }).ToList();
             //assign values
             List<DMVendorModel> mList2 = mList.ToList();
             List <DMVendorViewModel> vmList = new List<DMVendorViewModel>();
@@ -157,20 +155,24 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     Vendor_Address = m.Vendor_Address,
                     Vendor_Creator_Name = userList.Where(a => a.Vendor_MasterID == m.Vendor_MasterID).Select(a => a.CreatorName).FirstOrDefault() ?? "N/A",
                     Vendor_Approver_Name = userList.Where(a => a.Vendor_MasterID == m.Vendor_MasterID).Select(a => a.ApproverName).FirstOrDefault() ?? "",
-                    Vendor_Tax_Rate = trList.Where(x => x.VTV_Vendor_ID == m.Vendor_MasterID).Select(x => (x.TR_Tax_Rate * 100) + "% - " + x.TR_WT_Title).ToList(),
-                    Vendor_Tax_Rate_ID = trList.Where(x => x.VTV_Vendor_ID == m.Vendor_MasterID).Select(x => x.TR_ID).ToList(),
-                    Vendor_VAT = vatList.Where(x => x.VTV_Vendor_ID == m.Vendor_MasterID).Select(x => (x.VAT_Rate * 100) + "% - " + x.VAT_Name).ToList(),
-                    Vendor_VAT_ID = vatList.Where(x => x.VTV_Vendor_ID == m.Vendor_MasterID).Select(x => x.VAT_ID).ToList(),
                     Vendor_Created_Date = m.Vendor_Created_Date,
                     Vendor_Last_Updated = m.Vendor_Last_Updated,
+                    Vendor_Tax_Rates = new List<string>(),
+                    Vendor_VAT = new List<string>(),
                     Vendor_Status_ID = m.Vendor_Status_ID,
-                    Vendor_Status = statusList.Where(a => a.Vendor_MasterID == m.Vendor_MasterID).Select(a => a.Status_Name).FirstOrDefault() ?? "N/A"
+                    Vendor_Status = statusList.Where(a => a.Vendor_ID == m.Vendor_ID).Select(a => a.Status_Name).FirstOrDefault() ?? "N/A"
                 };
-                //add values from pending VTV List
-                vm.Vendor_Tax_Rate.AddRange(trpendingList.Where(x => x.Pending_VTV_Vendor_ID == m.Vendor_MasterID).Select(x => (x.TR_Tax_Rate * 100) + "% - " + x.TR_WT_Title).ToList());
-                vm.Vendor_Tax_Rate_ID.AddRange(trpendingList.Where(x => x.Pending_VTV_Vendor_ID == m.Vendor_MasterID).Select(x => x.TR_ID).ToList());
-                vm.Vendor_VAT.AddRange(vatpendingList.Where(x => x.Pending_VTV_Vendor_ID == m.Vendor_MasterID).Select(x => (x.VAT_Rate * 100) + "% - " + x.VAT_Name).ToList());
-                vm.Vendor_VAT_ID.AddRange(vatpendingList.Where(x => x.Pending_VTV_Vendor_ID == m.Vendor_MasterID).Select(x => x.VAT_ID).ToList());
+                //temp -- in case the entry is an Approved record
+                if (vm.Vendor_Status_ID != 3)
+                {
+                    //add values from pending VTV List
+                    vm.Vendor_Tax_Rates.AddRange(trpendingList.Where(x => x.Pending_VTV_Vendor_ID == m.Vendor_MasterID).Select(x => (x.TR_Tax_Rate * 100) + "% - " + x.TR_WT_Title).ToList());
+                    vm.Vendor_VAT.AddRange(vatpendingList.Where(x => x.Pending_VTV_Vendor_ID == m.Vendor_MasterID).Select(x => (x.VAT_Rate * 100) + "% - " + x.VAT_Name).ToList());
+                }
+                else {
+                    vm.Vendor_Tax_Rates = trList.Where(x => x.VTV_Vendor_ID == m.Vendor_MasterID).Select(x => (x.TR_Tax_Rate * 100) + "% - " + x.TR_WT_Title).ToList();
+                    vm.Vendor_VAT = vatList.Where(x => x.VTV_Vendor_ID == m.Vendor_MasterID).Select(x => (x.VAT_Rate * 100) + "% - " + x.VAT_Name).ToList();
+                }
                 vmList.Add(vm);
             }
             return vmList;

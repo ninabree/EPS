@@ -2,6 +2,8 @@
 @{
     ViewData["Title"] = "DMDeleteVendor_Pending";
     Layout = "~/Views/Shared/_ModalLayout.cshtml";
+    List<DMTRViewModel> trList = (List<DMTRViewModel>)ViewBag.trList;
+    List<DMVATViewModel> vatList = (List<DMVATViewModel>)ViewBag.vatList;
 }
 @using ExpenseProcessingSystem.ViewModels
 @model List<DMVendorViewModel>
@@ -14,6 +16,8 @@
                 <th>Vendor</th>
                 <th>TIN</th>
                 <th>Address</th>
+                <th colspan="3">Tax Rates</th>
+                <th colspan="3">VATs</th>
                 <th>Status</th>
             </tr>
             @if (Model != null)
@@ -24,6 +28,41 @@
                         <td>@Html.TextBoxFor(item => item[i].Vendor_Name, new { @class = "w-full", @readonly = "readonly" })</td>
                         <td>@Html.TextBoxFor(item => item[i].Vendor_TIN, new { @class = "w-full", @readonly = "readonly" })</td>
                         <td>@Html.TextBoxFor(item => item[i].Vendor_Address, new { @class = "w-full", @readonly = "readonly" })</td>
+                        <td colspan="3">
+                            @if (Model[i].Vendor_Tax_Rates.Count > 0)
+                            {
+                                var last = Model[i].Vendor_Tax_Rates.Last();
+                                @foreach (var trName in Model[i].Vendor_Tax_Rates)
+                                {
+                                    if (trName.Equals(last))
+                                    {
+                                        @(trName)
+                                    }
+                                    else
+                                    {
+                                        @(trName + ", ")
+                                    }
+
+                                }
+                            }
+                        </td>
+                        <td colspan="3">
+                            @if (Model[i].Vendor_VAT.Count > 0)
+                            {
+                                var last = Model[i].Vendor_VAT.Last();
+                                @foreach (var vatName in Model[i].Vendor_VAT)
+                                {
+                                    if (vatName.Equals(last))
+                                    {
+                                        @(vatName)
+                                    }
+                                    else
+                                    {
+                                        @(vatName + ", ")
+                                    }
+                                }
+                            }
+                        </td>
                         <td>@Html.TextBoxFor(item => item[i].Vendor_Status, new { @class = "w-full", @readonly = "readonly" })</td>
                         @Html.HiddenFor(item => item[i].Vendor_MasterID)
                     </tr>

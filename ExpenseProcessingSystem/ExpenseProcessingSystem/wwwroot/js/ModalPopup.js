@@ -50,7 +50,7 @@
     });
 
     $(".rej-rec").click(function (e) {
-        e.stopImmediatePropagation();
+        //e.stopImmediatePropagation();
         if (!isSessionTimeout()) {
             var methodName = getMethodName(this.id);
             var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
@@ -167,7 +167,7 @@
                 modalDivBody.addClass("p-l-15 p-r-15");
                 modalDivFooter.find('#add_row_btn').remove();
                 //when in BCS and NCC, NO add row btn
-                if (tblName != "BIR Cert Signatory" && tblName != "Non-Cash Category")
+                if (tblName != "BIR Cert Signatory")
                 {
                     modalDivFooter.append('<button type="button" id="add_row_btn" class="btn table-add">Add Row</button>');
                 }

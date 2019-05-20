@@ -27,6 +27,16 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         public List<DMVendorViewModel> approveVendor(string[] IdsArr)
         {
             List<DMVendorModel_Pending> pendingList = _context.DMVendor_Pending.Where(x => IdsArr.Contains(x.Pending_Vendor_MasterID.ToString())).Distinct().ToList();
+
+            var trList = (from a in _context.DMVendorTRVAT_Pending
+                          join c in _context.DMTR on a.Pending_VTV_TR_ID equals c.TR_MasterID
+                          where IdsArr.Contains(a.Pending_VTV_Vendor_ID.ToString()) && c.TR_isActive == true
+                          select new { a.Pending_VTV_Vendor_ID, c.TR_ID, c.TR_Tax_Rate, c.TR_WT_Title }).ToList();
+
+            var vatList = (from a in _context.DMVendorTRVAT_Pending
+                           join d in _context.DMVAT on a.Pending_VTV_VAT_ID equals d.VAT_MasterID
+                           where IdsArr.Contains(a.Pending_VTV_Vendor_ID.ToString()) && d.VAT_isActive == true
+                           select new { a.Pending_VTV_Vendor_ID, d.VAT_ID, d.VAT_Rate, d.VAT_Name }).ToList();
             var statList = (from a in pendingList
                             join d in _context.StatusList on a.Pending_Vendor_Status_ID equals d.Status_ID
                             select new { a.Pending_ID, d.Status_Name }).ToList();
@@ -47,7 +57,9 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             Vendor_Approver_ID = m.Pending_Vendor_Approver_ID.Equals(null) ? 0 : m.Pending_Vendor_Approver_ID,
                             Vendor_Created_Date = m.Pending_Vendor_Filed_Date,
                             Vendor_Last_Updated = m.Pending_Vendor_Filed_Date,
-                            Vendor_Status = statList.Where(a => a.Pending_ID == m.Pending_ID).Select(x => x.Status_Name).FirstOrDefault() ?? "N/A"
+                            Vendor_Status = statList.Where(a => a.Pending_ID == m.Pending_ID).Select(x => x.Status_Name).FirstOrDefault() ?? "N/A",
+                            Vendor_Tax_Rates = trList.Where(x => x.Pending_VTV_Vendor_ID == m.Pending_Vendor_MasterID).Select(x => (x.TR_Tax_Rate * 100) + "% - " + x.TR_WT_Title).ToList(),
+                            Vendor_VAT = vatList.Where(x => x.Pending_VTV_Vendor_ID == m.Pending_Vendor_MasterID).Select(x => (x.VAT_Rate * 100) + "% - " + x.VAT_Name).ToList()
                         };
                         tempList.Add(vm);
                     }
@@ -58,6 +70,16 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         public List<DMVendorViewModel> rejectVendor(string[] IdsArr)
         {
             List<DMVendorModel_Pending> pendingList = _context.DMVendor_Pending.Where(x => IdsArr.Contains(x.Pending_Vendor_MasterID.ToString())).Distinct().ToList();
+
+            var trList = (from a in _context.DMVendorTRVAT_Pending
+                          join c in _context.DMTR on a.Pending_VTV_TR_ID equals c.TR_MasterID
+                          where IdsArr.Contains(a.Pending_VTV_Vendor_ID.ToString()) && c.TR_isActive == true
+                          select new { a.Pending_VTV_Vendor_ID, c.TR_ID, c.TR_Tax_Rate, c.TR_WT_Title }).ToList();
+
+            var vatList = (from a in _context.DMVendorTRVAT_Pending
+                           join d in _context.DMVAT on a.Pending_VTV_VAT_ID equals d.VAT_MasterID
+                           where IdsArr.Contains(a.Pending_VTV_Vendor_ID.ToString()) && d.VAT_isActive == true
+                           select new { a.Pending_VTV_Vendor_ID, d.VAT_ID, d.VAT_Rate, d.VAT_Name }).ToList();
             var statList = (from a in pendingList
                             join d in _context.StatusList on a.Pending_Vendor_Status_ID equals d.Status_ID
                             select new { a.Pending_ID, d.Status_Name }).ToList();
@@ -78,9 +100,11 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             Vendor_Approver_ID = m.Pending_Vendor_Approver_ID.Equals(null) ? 0 : m.Pending_Vendor_Approver_ID,
                             Vendor_Created_Date = m.Pending_Vendor_Filed_Date,
                             Vendor_Last_Updated = m.Pending_Vendor_Filed_Date,
-                            Vendor_Status = statList.Where(a => a.Pending_ID == m.Pending_ID).Select(x => x.Status_Name).FirstOrDefault() ?? "N/A"
+                            Vendor_Status = statList.Where(a => a.Pending_ID == m.Pending_ID).Select(x => x.Status_Name).FirstOrDefault() ?? "N/A",
+                            Vendor_Tax_Rates = trList.Where(x => x.Pending_VTV_Vendor_ID == m.Pending_Vendor_MasterID).Select(x => (x.TR_Tax_Rate * 100) + "% - " + x.TR_WT_Title).ToList(),
+                            Vendor_VAT = vatList.Where(x => x.Pending_VTV_Vendor_ID == m.Pending_Vendor_MasterID).Select(x => (x.VAT_Rate * 100) + "% - " + x.VAT_Name).ToList()
                         };
-                        tempList.Add(vm);
+                    tempList.Add(vm);
                     }
                 }
             }
@@ -933,6 +957,19 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         {
             List<DMVendorModel> mList = _context.DMVendor.Where(x => IdsArr.Contains(x.Vendor_MasterID.ToString()) 
                                        && x.Vendor_isActive == true).Distinct().ToList();
+            var trList = (from a in _context.DMVendorTRVAT
+                          join c in _context.DMTR on a.VTV_TR_ID equals c.TR_MasterID
+                          where IdsArr.Contains(a.VTV_Vendor_ID.ToString()) && c.TR_isActive == true
+                          select new { a.VTV_Vendor_ID, c.TR_ID, c.TR_Tax_Rate, c.TR_WT_Title }).ToList();
+
+            var vatList = (from a in _context.DMVendorTRVAT
+                           join d in _context.DMVAT on a.VTV_VAT_ID equals d.VAT_MasterID
+                           where IdsArr.Contains(a.VTV_Vendor_ID.ToString()) && d.VAT_isActive == true
+                           select new { a.VTV_Vendor_ID, d.VAT_ID, d.VAT_Rate, d.VAT_Name }).ToList();
+            var statList = (from a in mList
+                            join d in _context.StatusList on a.Vendor_Status_ID equals d.Status_ID
+                            select new { a.Vendor_ID, d.Status_Name }).ToList();
+
             List<DMVendorViewModel> tempList = new List<DMVendorViewModel>();
             foreach (DMVendorModel m in mList)
             {
@@ -949,7 +986,10 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             Vendor_Creator_ID = m.Vendor_Creator_ID,
                             Vendor_Created_Date = m.Vendor_Created_Date,
                             Vendor_Last_Updated = DateTime.Now,
-                            Vendor_Status_ID = m.Vendor_Status_ID
+                            Vendor_Status_ID = m.Vendor_Status_ID,
+                            Vendor_Status = statList.Where(a => a.Vendor_ID == m.Vendor_ID).Select(x => x.Status_Name).FirstOrDefault() ?? "N/A",
+                            Vendor_Tax_Rates = trList.Where(x => x.VTV_Vendor_ID == m.Vendor_MasterID).Select(x => (x.TR_Tax_Rate * 100) + "% - " + x.TR_WT_Title).ToList(),
+                            Vendor_VAT = vatList.Where(x => x.VTV_Vendor_ID == m.Vendor_MasterID).Select(x => (x.VAT_Rate * 100) + "% - " + x.VAT_Name).ToList()
                         };
                         tempList.Add(vm);
                     }
@@ -1367,7 +1407,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         {
             List<DMTRViewModel> grpList = new List<DMTRViewModel>();
             _context.DMTR.Where(x => x.TR_isDeleted == false && x.TR_isActive == true).ToList().ForEach(x => {
-                grpList.Add(new DMTRViewModel() { TR_WT_Title = x.TR_WT_Title, TR_MasterID = x.TR_MasterID });
+                grpList.Add(new DMTRViewModel() { TR_WT_Title = (x.TR_Tax_Rate * 100) + "% - " + x.TR_WT_Title, TR_MasterID = x.TR_MasterID });
             });
             return grpList;
         }
@@ -1375,7 +1415,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         {
             List<DMVATViewModel> grpList = new List<DMVATViewModel>();
             _context.DMVAT.Where(x => x.VAT_isDeleted == false && x.VAT_isActive == true).ToList().ForEach(x => {
-                grpList.Add(new DMVATViewModel() { VAT_Name = x.VAT_Name, VAT_MasterID = x.VAT_MasterID });
+                grpList.Add(new DMVATViewModel() { VAT_Name = (x.VAT_Rate * 100) + "% - " + x.VAT_Name, VAT_MasterID = x.VAT_MasterID });
             });
             return grpList;
         }
