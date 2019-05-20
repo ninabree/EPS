@@ -117,4 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Branch_Address" xml:space="preserve">
+    <value>25th Floor, The Zuellig Building, Makati Avenue corner Paseo de Roxas, Makati City</value>
+  </data>
+  <data name="Branch_Logo" xml:space="preserve">
+    <value>Sample path</value>
+  </data>
+  <data name="Branch_TIN" xml:space="preserve">
+    <value>004-669-467-000</value>
+  </data>
+  <data name="Branch_Title" xml:space="preserve">
+    <value>Mizuho Bank, LTD. - Manila Branch</value>
+  </data>
 </root>

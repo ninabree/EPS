@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Globalization;
 using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -33,25 +35,6 @@ namespace ExpenseProcessingSystem
             .Enrich.WithEnvironmentUserName()
             .WriteTo.Debug()
             .WriteTo.File("C:\\Work\\Mizuho EPS\\eps_logs\\logs\\log.txt", LogEventLevel.Error, outputTemplate, rollingInterval: RollingInterval.Day, fileSizeLimitBytes: null, rollOnFileSizeLimit: true)
-            //EMAIL SINK TO SEND ERRORS TO CUSTOM EMAIL
-            //.WriteTo.Email(new EmailConnectionInfo
-            //    {
-            //        FromEmail = "mizuho.eps@gmail.com", //temp, change to dynamic
-            //        ToEmail = "mizuho.eps@gmail.com", //temp, change to dynamic -> login user's email
-            //        MailServer = "smtp.gmail.com",
-            //        NetworkCredentials = new NetworkCredential
-            //        {
-            //            UserName = "mizuho.eps@gmail.com", //temp, change to dynamic
-            //            Password = "mizuhoeps2019" //temp, change to dynamic
-            //        },
-            //        EnableSsl = true,
-            //        Port = 465,
-            //        EmailSubject = "[EPS] Log Error"
-            //},
-            //    outputTemplate: outputTemplate,
-            //    batchPostingLimit: 10
-            //    , restrictedToMinimumLevel: LogEventLevel.Fatal
-            //)
             .CreateLogger();
 
             Configuration = configuration;
@@ -63,6 +46,23 @@ namespace ExpenseProcessingSystem
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //-------------------------FOR RESOURCE FILE-------------------------
+            services.AddLocalization(o => o.ResourcesPath = "Resources");
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedCultures = new[]
+                {
+                    new CultureInfo("en-US"),
+                    new CultureInfo("en-GB"),
+                    new CultureInfo("de-DE")
+                };
+
+                options.DefaultRequestCulture = new RequestCulture("en-US","en-US");
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+            });
+            //-------------------------FOR RESOURCE FILE-------------------------
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
