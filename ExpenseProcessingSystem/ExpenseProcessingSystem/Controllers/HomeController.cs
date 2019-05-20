@@ -373,7 +373,8 @@ namespace ExpenseProcessingSystem.Controllers
         {
             string layoutName = "";
             string fileName = "";
-            string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmsstt");
+            //string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmsstt"); // ORIGINAL
+            string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmss");
             string pdfFooterFormat = "";
 
             //Model for data retrieve from Database
@@ -462,16 +463,10 @@ namespace ExpenseProcessingSystem.Controllers
                                     ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType),
                                 HomeReportFilter = model
                             };
-                            model.MonthName = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName;
-                            break;
-                        case 2:
-                            data = new HomeReportDataFilterViewModel
-                            {
-                                HomeReportOutputWTS = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Semester(model.YearSem, model.Semester,
-                                    ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType),
-                                HomeReportFilter = model
-                            };
-                            model.SemesterName = ConstantData.HomeReportConstantValue.GetSemesterList().Where(c => c.SemID == model.Semester).Single().SemName;
+                            model.ReportFrom = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName
+                                                + " " + model.Year;
+                            model.ReportTo = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.MonthTo).Single().MonthName
+                                                + " " + model.YearTo;
                             break;
                         case 3:
                             data = new HomeReportDataFilterViewModel
@@ -480,6 +475,8 @@ namespace ExpenseProcessingSystem.Controllers
                                     ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType),
                                 HomeReportFilter = model
                             };
+                            model.ReportFrom = model.PeriodFrom.ToShortDateString();
+                            model.ReportTo = model.PeriodTo.ToShortDateString();
                             break;
                     }
                     break;
@@ -523,19 +520,7 @@ namespace ExpenseProcessingSystem.Controllers
                 PageSize = Rotativa.AspNetCore.Options.Size.A4
             };
         }
-
-        public IActionResult OutputPDF(string layoutPath, string layoutName, IEnumerable<RepWTSViewModel> VM, string fileName, string footerFormat)
-        {
-            string pdfLayoutFilePath = layoutPath + layoutName;
-
-            return new ViewAsPdf(pdfLayoutFilePath, VM)
-            {
-                FileName = fileName,
-                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape,
-                CustomSwitches = footerFormat,
-                PageSize = Rotativa.AspNetCore.Options.Size.A4
-            };
-        }
+        
         //[* REPORT *]
         //------------------------------------------------------------------
 

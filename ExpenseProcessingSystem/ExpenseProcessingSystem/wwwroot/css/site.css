@@ -121,7 +121,7 @@ input {
 }
     .input[disabled] {
         cursor: not-allowed;
-        background-color: #A1A1A1;
+        background-color: #ccc;
     }
 a.sidebar-link {
     width: 100%;

@@ -247,18 +247,7 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 int dataStartRow = worksheet.Dimension.End.Row + 1;
                 int dataEndRow = 0;
                 var cellVal = "";
-                switch (data.HomeReportFilter.PeriodOption)
-                {
-                    case 1:
-                        cellVal = data.HomeReportFilter.MonthName + " - " + data.HomeReportFilter.Year;
-                        break;
-                    case 2:
-                        cellVal = data.HomeReportFilter.SemesterName + " - " + data.HomeReportFilter.YearSem;
-                        break;
-                    case 3:
-                        cellVal = data.HomeReportFilter.PeriodFrom + " - " + data.HomeReportFilter.PeriodTo;
-                        break;
-                }
+                cellVal = data.HomeReportFilter.ReportFrom + " - " + data.HomeReportFilter.ReportTo;
                 worksheet.Cells["J2"].Value = cellVal;
 
                 foreach (var i in data.HomeReportOutputWTS)
