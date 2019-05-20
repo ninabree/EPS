@@ -1,6 +1,7 @@
 ﻿using ExpenseProcessingSystem.ConstantData;
 using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Models;
+using ExpenseProcessingSystem.Resources;
 using ExpenseProcessingSystem.Services;
 using ExpenseProcessingSystem.Services.Controller_Services;
 using ExpenseProcessingSystem.Services.Excel_Services;
@@ -15,6 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Localization;
 using OfficeOpenXml;
 using Rotativa.AspNetCore;
 using System;
@@ -37,16 +39,27 @@ namespace ExpenseProcessingSystem.Controllers
         private ISession _session => _httpContextAccessor.HttpContext.Session;
         private HomeService _service;
         private SortService _sortService;
-        //private ExcelData _excelData;
-        //private readonly IHostingEnvironment _hostingEnvironment;
+        //to access resources
+        private readonly IStringLocalizer<HomeController> _localizer;
 
-        public HomeController(IHttpContextAccessor httpContextAccessor, EPSDbContext context, IHostingEnvironment hostingEnvironment)
+
+        public HomeController(IHttpContextAccessor httpContextAccessor, EPSDbContext context, IHostingEnvironment hostingEnvironment, IStringLocalizer<HomeController> localizer)
         {
+            _localizer = localizer;
             _httpContextAccessor = httpContextAccessor;
             _context = context;
             _service = new HomeService(_httpContextAccessor, _context, this.ModelState, hostingEnvironment);
             _sortService = new SortService();
-            //_excelData = new ExcelData(_httpContextAccessor, _context);
+        }
+        public ReportHeaderViewModel GetHeaderInfo()
+        {
+            ReportHeaderViewModel headerVM = new ReportHeaderViewModel {
+                Header_Name = ReportResource.Branch_Title,
+                Header_TIN = ReportResource.Branch_TIN,
+                Header_Logo = ReportResource.Branch_Logo,
+                Header_Address = ReportResource.Branch_Address,
+            };
+            return headerVM;
         }
 
         private string GetUserID()
