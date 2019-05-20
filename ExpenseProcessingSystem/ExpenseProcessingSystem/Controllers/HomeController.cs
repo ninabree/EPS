@@ -375,6 +375,12 @@ namespace ExpenseProcessingSystem.Controllers
             string fileName = "";
             string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmsstt");
             string pdfFooterFormat = "";
+            ReportHeaderViewModel headerVM = new ReportHeaderViewModel();
+
+            headerVM.Header_Logo = "";
+            headerVM.Header_Name = "Mizuho Bank Ltd., Manila Branch";
+            headerVM.Header_TIN = "004-669-467-000";
+            headerVM.Header_Address = "25th Floor, The Zuellig Building, Makati Avenue corner Paseo de Roxas, Makati City";
 
             //Model for data retrieve from Database
             HomeReportDataFilterViewModel data = null;
@@ -396,6 +402,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         HomeReportOutputAPSWT_M = _service.GetAPSWT_MData(model.Month, model.Year),
                         HomeReportFilter = model,
+                        ReportHeaderVM = headerVM
                     };
                     break;
 
