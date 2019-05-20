@@ -17,7 +17,7 @@ namespace ExpenseProcessingSystem.ViewModels
     {
         public NotifFiltersViewModel NotifFil { get; set; }
         //public PendingPerFiltersViewModel PersPendFil { get; set; }
-        //public PendingGenFiltersViewModel GenPendFil { get; set; }
+        public PendingGenFiltersViewModel GenPendFil { get; set; }
         //public HistoryFiltersViewModel HistoryFil { get; set; }
     }
     public class AppHistoryViewModel
@@ -44,6 +44,7 @@ namespace ExpenseProcessingSystem.ViewModels
         public DateTime App_Date { get; set; }
         public DateTime App_Last_Updated { get; set; }
         public string App_Status { get; set; }
+        public string App_Link { get; set; }
     }
     public class HomeNotifViewModel
     {

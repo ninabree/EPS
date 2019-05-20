@@ -106,22 +106,16 @@ namespace ExpenseProcessingSystem.Controllers
             };
             return View(VM);
         }
+
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
         public IActionResult Pending(string sortOrder, string currentFilter, string searchString, int? page)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
 
-            var role = _service.getUserRole(_session.GetString("UserID"));
-            if (role == GlobalSystemValues.ROLE_ADMIN)
-            {
-                return RedirectToAction("UM");
-            }
             HomeIndexViewModel vm = new HomeIndexViewModel();
 
-            vm.GeneralPendingList.AddRange(_service.getPending(int.Parse(userId)));
+            vm.GeneralPendingList = _service.getPending(int.Parse(userId));
 
             return View(vm);
         }
@@ -607,26 +601,14 @@ namespace ExpenseProcessingSystem.Controllers
         //Expense Entry Block---------------------------------------------------------------------------------------
 
         //Expense Entry Check Voucher Block=========================================================================
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
         public IActionResult Entry_CV()
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-
-            var role = _service.getUserRole(_session.GetString("UserID"));
-            if (role == GlobalSystemValues.ROLE_ADMIN)
-            {
-                return RedirectToAction("UM");
-            }
 
             EntryCVViewModelList viewModel = new EntryCVViewModelList();
             List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
-            //listOfSysVals[0] = List of Vendors
-            //listOfSysVals[1] = List of Departments
-            //listOfSysVals[2] = List of Currency
-            //listOfSysVals[3] = List of TaxRate
             viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
             viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
             viewModel.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
@@ -639,74 +621,99 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.EntryCV.Add(new EntryCVViewModel());
             return View(viewModel);
         }
+
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
         public IActionResult AddNewCV(EntryCVViewModelList EntryCVViewModelList)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-
-            var role = _service.getUserRole(_session.GetString("UserID"));
-            if (role == GlobalSystemValues.ROLE_ADMIN)
-            {
-                return RedirectToAction("UM");
-            }
 
             EntryCVViewModelList cvList = new EntryCVViewModelList();
-            int id = _service.addExpense_CV(EntryCVViewModelList, int.Parse(GetUserID()));
+            int id = _service.addExpense_CV(EntryCVViewModelList, int.Parse(GetUserID()),GlobalSystemValues.TYPE_CV);
             ModelState.Clear();
             if (id > -1) {
                 cvList = _service.getExpense(id);
                 List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
-                //listOfSysVals[0] = List of Vendors
-                //listOfSysVals[1] = List of Departments
-                //listOfSysVals[2] = List of Currency
-                //listOfSysVals[3] = List of TaxRate
-                cvList.systemValues.vendors = listOfSysVals[0];
-                cvList.systemValues.dept = listOfSysVals[1];
-                cvList.systemValues.currency = listOfSysVals[2];
-                cvList.systemValues.ewt = listOfSysVals[3];
+                cvList.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
+                cvList.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
+                cvList.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
+                cvList.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
                 cvList.systemValues.acc = _service.getAccDetailsEntry();
                 ViewBag.Status = cvList.status;
             }
 
             return View("Entry_CV_ReadOnly", cvList);
         }
+
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
         public IActionResult VerAppModCV(int entryID, string command)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
 
-            var role = _service.getUserRole(_session.GetString("UserID"));
-            if (role == GlobalSystemValues.ROLE_ADMIN)
-            {
-                return RedirectToAction("UM");
-            }
-
+            string viewLink = "Entry_CV";
             EntryCVViewModelList cvList;
+
             switch (command)
             {
-                case "Modify": cvList =_service.getExpense(entryID);
-                    List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
-                    cvList.systemValues.vendors = listOfSysVals[0];
-                    cvList.systemValues.dept = listOfSysVals[1];
-                    cvList.systemValues.currency = listOfSysVals[2];
-                    cvList.systemValues.ewt = listOfSysVals[3];
-                    cvList.systemValues.acc = _service.getAccDetailsEntry();
-                    ViewBag.Status = cvList.status;
-                    return View("Entry_CV", cvList);
+                case "Modify":
+                    viewLink = "Entry_CV";
                     break;
-                case "Approve": break;
-                case "Verify": break;
+                case "approver":
+                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_APPROVED))
+                    {
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Entry_CV_ReadOnly";
+                    break;
+                case "verifier":
+                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_VERIFIED))
+                    {
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Entry_CV_ReadOnly";
+                    break;
                 case "Reject": break;
-                default: break;
+                default:
+                    break;
             }
 
-            return View();
+            cvList = _service.getExpense(entryID);
+
+            List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
+            cvList.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
+            cvList.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
+            cvList.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
+            cvList.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
+            cvList.systemValues.acc = _service.getAccDetailsEntry();
+
+            return View(viewLink, cvList);
+        }
+
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
+        public IActionResult View_CV(int entryID)
+        {
+            var userId = GetUserID();
+
+            EntryCVViewModelList cvList;
+            cvList = _service.getExpense(entryID);
+            List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
+            cvList.systemValues.vendors = listOfSysVals[0];
+            cvList.systemValues.dept = listOfSysVals[1];
+            cvList.systemValues.currency = listOfSysVals[2];
+            cvList.systemValues.ewt = listOfSysVals[3];
+            cvList.systemValues.acc = _service.getAccDetailsEntry();
+
+            return View("Entry_CV_ReadOnly", cvList);
         }
 
         //Expense Entry Check Voucher Block End=========================================================================

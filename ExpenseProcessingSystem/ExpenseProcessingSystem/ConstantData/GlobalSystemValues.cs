@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -39,6 +40,7 @@ namespace ExpenseProcessingSystem.ConstantData
         //Static value for application types used for checking application type
         //i.e: displaying pending applications
         //Example : [Expense.Type = TYPE_CV] instead of [Expense.Type = 1]
+        public static readonly int TYPE_DM = 0;
         public static readonly int TYPE_CV = 1;
         public static readonly int TYPE_DDV = 2;
         public static readonly int TYPE_SS = 3;
@@ -49,6 +51,7 @@ namespace ExpenseProcessingSystem.ConstantData
         {
             switch (appType)
             {
+                case 0: return "Data Maintenance";
                 case 1: return "Check";
                 case 2: return "Direct Deposit";
                 case 3: return "Suspense Sundry";

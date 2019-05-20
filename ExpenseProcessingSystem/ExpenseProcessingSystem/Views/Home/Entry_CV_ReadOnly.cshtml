@@ -2,6 +2,7 @@
     ViewData["Title"] = "Entry_CV";
 }
 @using ExpenseProcessingSystem.ViewModels
+@using ExpenseProcessingSystem.ConstantData
 @model EntryCVViewModelList
 
 @using Microsoft.AspNetCore.Http
@@ -167,7 +168,21 @@
             </div>
             <div class="flex-sb">
                 <div>
-                    <div class="dis-inline-block tbl-btn"><button value="@HttpContextAccessor.HttpContext.Session.GetString("accessType")" name="command">Approve/Verify</button></div>
+                    @if (HttpContextAccessor.HttpContext.Session.GetString("accessType") == GlobalSystemValues.ROLE_MAKER)
+                    {
+                        <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
+                    }
+                    else
+                    {
+                        if (Model.statusID == GlobalSystemValues.STATUS_APPROVED)
+                        {
+                            <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
+                        }
+                        else
+                        {
+                            <div class="dis-inline-block tbl-btn"><button value="@HttpContextAccessor.HttpContext.Session.GetString("accessType")" name="command">Approve/Verify</button></div>
+                        }
+                    }
                     <div class="dis-inline-block tbl-btn"><button value="Reject" name="command">Reject</button></div>
                 </div>
                 <div>
@@ -185,3 +200,14 @@
 </div>
 
 <script type="text/javascript" src="~/js/EntryScripts.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $(window).on("load", function () {
+            if (@ViewBag.Success == 1) {
+                alert("Entry Approved");
+            } else if (@ViewBag.Success == 0){
+                alert("Entry Failed");
+            }
+        });
+    });
+</script>
