@@ -121,7 +121,7 @@
     <value>25th Floor, The Zuellig Building, Makati Avenue corner Paseo de Roxas, Makati City</value>
   </data>
   <data name="Branch_Logo" xml:space="preserve">
-    <value>Sample path</value>
+    <value>~/images/mizuho-logo-2.png</value>
   </data>
   <data name="Branch_TIN" xml:space="preserve">
     <value>004-669-467-000</value>

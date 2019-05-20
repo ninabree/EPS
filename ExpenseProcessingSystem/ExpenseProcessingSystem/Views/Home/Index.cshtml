@@ -83,16 +83,5 @@
            asp-route-currentFilter="@ViewData["CurrentFilter"]"
            class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right">
         </a>
-        <div class="float-r m-r-10">
-            <button class="dis-inline-block tbl-btn btn add-rec rec" id="add_account">Add</button>
-            <button class="dis-inline-block tbl-btn btn edit-rec rec" id="edit_account">Edit</button>
-            <button class="dis-inline-block tbl-btn btn delete-rec rec" id="delete_account">Delete</button>
-            @if (ViewBag.access.accessType == "approver")
-            {
-                <button class="dis-inline-block tbl-btn btn apprv-rec rec" id="apprv_account">Approve</button>
-                <button class="dis-inline-block tbl-btn btn rej-rec rec" id="rej_account">Reject</button>
-            }
-            <input type="hidden" value="@ViewData["Title"]" id="partialVal" />
-        </div>
         @Html.Partial("ModalPartial")
     </div>

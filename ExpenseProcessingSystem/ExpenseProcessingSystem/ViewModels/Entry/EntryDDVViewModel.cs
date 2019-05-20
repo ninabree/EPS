@@ -1,24 +1,24 @@
 ﻿using ExpenseProcessingSystem.Services.Validations;
-using ExpenseProcessingSystem.ViewModels.Entry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ExpenseProcessingSystem.ViewModels
+namespace ExpenseProcessingSystem.ViewModels.Entry
 {
-    public class EntryCVViewModel
+    public class EntryDDVViewModel
     {
         [NotNullValidations]
         public string GBaseRemarks { get; set; }
         public int account { get; set; }
+        public bool inter_entity { get; set; }
         public bool fbt { get; set; }
         public int dept { get; set; }
         public bool chkVat { get; set; }
         [IntegerValidation]
         public float vat { get; set; }
         public bool chkEwt { get; set; }
-        [IntegerValidation,FalseValidation("chkEwt")]
+        [IntegerValidation, FalseValidation("chkEwt")]
         public int ewt { get; set; }
         public int ccy { get; set; }
         public float debitGross { get; set; }
@@ -31,20 +31,14 @@ namespace ExpenseProcessingSystem.ViewModels
         public List<EntryGbaseRemarksViewModel> gBaseRemarksDetails { get; set; }
 
 
-        public EntryCVViewModel()
+        public EntryDDVViewModel()
         {
             gBaseRemarksDetails = new List<EntryGbaseRemarksViewModel>();
             amtDetails = new List<amortizationSchedule>();
         }
-    }
 
-    public class amortizationSchedule
-    {
-        public DateTime amtDate { get; set; }
-        public float amtAmount { get; set; }
     }
-
-    public class EntryCVViewModelList
+    public class EntryDDVViewModelList
     {
         public int entryID { get; set; }
         public SysValViewModel systemValues { get; set; }
@@ -59,12 +53,12 @@ namespace ExpenseProcessingSystem.ViewModels
         public string verifier_1 { get; set; }
         public string verifier_2 { get; set; }
         public int maker { get; set; }
-        public List<EntryCVViewModel> EntryCV { get; set; }
+        public List<EntryDDVViewModel> EntryDDV { get; set; }
 
-        public EntryCVViewModelList()
+        public EntryDDVViewModelList()
         {
             systemValues = new SysValViewModel();
-            EntryCV = new List<EntryCVViewModel>();
+            EntryDDV = new List<EntryDDVViewModel>();
         }
     }
 }

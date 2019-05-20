@@ -1,47 +1,91 @@
 ﻿@using ExpenseProcessingSystem.ViewModels
 @model HomeIndexViewModel
 <div class="tabContent">
-        <div>
-            <div class="tab-tbl">General Pending Applications:</div>
-            <table class="table table-striped tab-tbl table-bordered">
-                <colgroup>
-                    <col />
-                    <col />
-                    <col />
-                    <col />
-                    <col />
-                    <col />
-                    <col />
-                    <col />
-                </colgroup>
-                <thead>
-                    <tr>
-                        <th>Application Type</th>
-                        <th>Amount</th>
-                        <th>Payee</th>
-                        <th>Maker</th>
-                        <th>Verifier/s</th>
-                        <th>Date Submitted</th>
-                        <th>Last Updated Date</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (ApplicationsViewModel item in Model.GeneralPendingList)
-                    {
-                    <tr>
+    <div class="flex-c p-t-10">
+        <table class="table table-striped tab-tbl table-bordered table-hover w-97">
+            <colgroup>
+                <col style="width:7%" />
+                <col style="width:10%" />
+                <col style="width:30%" />
+                <col style="width:8%" />
+                <col style="width:8%" />
+                <col style="width:12%" />
+                <col style="width:12%" />
+                <col style="width:10%" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th><a asp-action="Index" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["NotifAppIDSortParm"]">Application Type<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
+                    <th>Amount</th>
+                    <th>Payee</th>
+                    <th>Maker</th>
+                    <th>Verifier/s</th>
+                    <th>Date Submitted</th>
+                    <th>Last Updated Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (ApplicationsViewModel item in Model.GeneralPendingList)
+                {
+                    <tr data-href="@String.Concat(item.App_Link,"/",item.App_ID)">
                         <td>@Html.DisplayFor(model => item.App_Type)</td>
                         <td>@Html.DisplayFor(model => item.App_Amount)</td>
                         <td>@Html.DisplayFor(model => item.App_Payee)</td>
                         <td>@Html.DisplayFor(model => item.App_Maker)</td>
-                        <td>@foreach (string ver in item.App_Verifier_ID_List) {
-                            Html.DisplayFor(model => ver);}</td>
+                        <td>
+                            @foreach (string ver in item.App_Verifier_ID_List)
+                            {
+                                Html.DisplayFor(model => ver);
+                            }
+                        </td>
                         <td>@Html.DisplayFor(model => item.App_Date)</td>
                         <td>@Html.DisplayFor(model => item.App_Last_Updated)</td>
                         <td>@Html.DisplayFor(model => item.App_Status)</td>
                     </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                }
+            </tbody>
+        </table>
+        @using (Html.BeginForm("", "Home", FormMethod.Post, new { @class = "validate-form", @id = "pendingForm" }))
+        {
+            <input id="entryID" type="hidden" name="entryID" value="" />
+        }
+    </div>
+    @{
+        var prevDisabled = !Model.GeneralPendingList.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.GeneralPendingList.HasNextPage ? "disabled" : "";
+    }
+    <a asp-action="DM"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-page="@(Model.GeneralPendingList.PageIndex - 1)"
+       asp-controller="Home"
+       asp-route-partialName="@ViewData["Title"]"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left">
+    </a>
+    <input type="text" class="pagination-input" id="paginationInput" val="" />
+    <input type="text" class="pagination-input" value="of @(Model.GeneralPendingList.TotalPages)" disabled />
+    <a asp-action="DM"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-controller="Home"
+       asp-route-partialName="@ViewData["Title"]"
+       asp-route-page="@(Model.GeneralPendingList.PageIndex + 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right">
+    </a>
 </div>
+
+<script type="text/javascript">
+    $(function () {
+        $('*[data-href]').on('click', function () {
+            var form = $("#pendingForm")
+            var hrefString = $(this).data("href").split("/");
+            var link = hrefString[0];
+            var entryID = hrefString[1];
+
+            $("#entryID").val(entryID);
+            form.attr("action", "/Home/" + link)
+            form.submit();
+        });
+    });
+</script>

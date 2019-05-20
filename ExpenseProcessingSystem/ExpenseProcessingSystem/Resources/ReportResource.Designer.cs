@@ -70,7 +70,7 @@ namespace ExpenseProcessingSystem.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sample path.
+        ///   Looks up a localized string similar to ~/images/mizuho-logo-2.png.
         /// </summary>
         internal static string Branch_Logo {
             get {
