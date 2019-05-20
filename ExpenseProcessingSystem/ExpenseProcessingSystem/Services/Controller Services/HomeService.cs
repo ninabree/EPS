@@ -2745,6 +2745,32 @@ namespace ExpenseProcessingSystem.Services
             }
             return startOfTermDate;
         }
+        
+        // [Entry Petty Cash Voucher]
+        public IEnumerable<DMVendorModel> PopulateVendorList()
+        {
+            return _context.DMVendor.Where(db => db.Vendor_isActive == true 
+                && db.Vendor_isDeleted == false).OrderBy(db => db.Vendor_Name).ToList();
+        }
+
+        public IEnumerable<DMAccountModel> PopulateAccountList()
+        {
+            return _context.DMAccount.Where(db => db.Account_isActive == true
+                && db.Account_isDeleted == false).OrderBy(db => db.Account_Name).ToList();
+        }
+
+        public IEnumerable<DMDeptModel> PopulateDepartmentList()
+        {
+            return _context.DMDept.Where(db => db.Dept_isActive == true
+                && db.Dept_isDeleted == false).OrderBy(db => db.Dept_Name).ToList();
+        }
+
+        public IEnumerable<DMTRModel> PopulateTaxRateList()
+        {
+            return _context.DMTR.Where(db => db.TR_isActive == true
+                && db.TR_isDeleted == false).OrderBy(db => db.TR_Tax_Rate).ToList();
+        }
+
         //MISC
 
         //--------------------TEMP LOCATION-->MOVE TO ACCOUNT SERVICE-----------------------

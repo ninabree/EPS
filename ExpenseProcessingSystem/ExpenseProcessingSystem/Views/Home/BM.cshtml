@@ -3,7 +3,10 @@
     ViewData["Title"] = "BM";
 }
 @using ExpenseProcessingSystem.ViewModels
+
 @model PaginatedList<BMViewModel>
+
+
 <div class="tab-content-cont m-t-10">
     <div class="tbl-cont">
         <table class="table table-striped tab-tbl">
@@ -21,15 +24,15 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                <tr>
-                    <td>@Html.DisplayFor(modelItem => item.BM_Acc_Code)</td>
-                    <td>@Html.DisplayFor(modelItem => item.BM_Acc_Group)</td>
-                    <td>@Html.DisplayFor(modelItem => item.BM_Acc_GBase)</td>
-                    <td>@Html.DisplayFor(modelItem => item.BM_Budget_Amount)</td>
-                    <td>@Html.DisplayFor(modelItem => item.BM_Budget_Current)</td>
-                    <td>@Html.DisplayFor(modelItem => item.BM_Budget_Approver_ID)</td>
-                    <td>@Html.DisplayFor(modelItem => item.BM_Last_Budget_Approved)</td>
-                </tr>
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.BM_Acc_Code)</td>
+                        <td>@Html.DisplayFor(modelItem => item.BM_Acc_Group)</td>
+                        <td>@Html.DisplayFor(modelItem => item.BM_Acc_GBase)</td>
+                        <td>@Html.DisplayFor(modelItem => item.BM_Budget_Amount)</td>
+                        <td>@Html.DisplayFor(modelItem => item.BM_Budget_Current)</td>
+                        <td>@Html.DisplayFor(modelItem => item.BM_Budget_Approver_ID)</td>
+                        <td>@Html.DisplayFor(modelItem => item.BM_Last_Budget_Approved)</td>
+                    </tr>
                 }
             </tbody>
         </table>

@@ -10,7 +10,6 @@ using ExpenseProcessingSystem.ViewModels.NewRecord;
 using ExpenseProcessingSystem.ViewModels.Reports;
 using ExpenseProcessingSystem.ViewModels.Search_Filters;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -21,12 +20,9 @@ using OfficeOpenXml;
 using Rotativa.AspNetCore;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using static System.Console;
+using ExpenseProcessingSystem.ViewModels.Entry;
 
 namespace ExpenseProcessingSystem.Controllers
 {
@@ -321,7 +317,6 @@ namespace ExpenseProcessingSystem.Controllers
 
         //------------------------------------------------------------------
         //[* REPORT *]
-        //[ImportModelState]
         public IActionResult Report()
         {
             var userId = GetUserID();
@@ -746,14 +741,74 @@ namespace ExpenseProcessingSystem.Controllers
         {
             return View();
         }
+
+        //------------------------------------------------------------------
+        //[* Entry Petty Cash *]
         public IActionResult Entry_PCV()
         {
-            return View();
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var role = _service.getUserRole(_session.GetString("UserID"));
+            if (role == GlobalSystemValues.ROLE_ADMIN)
+            {
+                return RedirectToAction("UM");
+            }
+
+            EntryCVViewModelList viewModel = new EntryCVViewModelList();
+            List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
+
+            viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
+            viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
+            viewModel.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
+            viewModel.systemValues.acc = _service.getAccDetailsEntry();
+
+            viewModel.expenseYear = DateTime.Today.Year.ToString();
+            viewModel.expenseDate = DateTime.Today;
+
+            viewModel.EntryCV.Add(new EntryCVViewModel());
+            return View(viewModel);
         }
+        //[* Entry Petty Cash *]
+        //------------------------------------------------------------------
+
+        //------------------------------------------------------------------
+        //[* Entry Cash Advance(SS) *]
         public IActionResult Entry_SS()
         {
-            return View();
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var role = _service.getUserRole(_session.GetString("UserID"));
+            if (role == GlobalSystemValues.ROLE_ADMIN)
+            {
+                return RedirectToAction("UM");
+            }
+
+            EntryCVViewModelList viewModel = new EntryCVViewModelList();
+            List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
+
+            viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
+            viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
+            viewModel.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
+            viewModel.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
+            viewModel.systemValues.acc = _service.getAccDetailsEntry();
+
+            viewModel.expenseYear = DateTime.Today.Year.ToString();
+            viewModel.expenseDate = DateTime.Today;
+
+            viewModel.EntryCV.Add(new EntryCVViewModel());
+            return View(viewModel);
         }
+        //[* Entry Cash Advance(SS) *]
+        //------------------------------------------------------------------
+
         public IActionResult Entry_NC()
         {
             return View();
