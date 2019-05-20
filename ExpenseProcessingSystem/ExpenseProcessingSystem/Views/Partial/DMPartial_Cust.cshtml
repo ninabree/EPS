@@ -58,10 +58,7 @@
                 @foreach (var item in Model.Cust)
                 {
                     <tr>
-                        <td>
-                            <input class="tbl-chk" id="@item.Cust_MasterID" type="checkbox" />
-                            @Html.HiddenFor(modelItem => item.Cust_Creator_ID)
-                        </td>
+                        <td><input class="tbl-chk" id="@item.Cust_MasterID" type="checkbox" /></td>
                         <td>@Html.DisplayFor(modelItem => item.Cust_Name)</td>
                         <td>@Html.DisplayFor(modelItem => item.Cust_Abbr)</td>
                         <td>@Html.DisplayFor(modelItem => item.Cust_No)</td>

@@ -60,10 +60,7 @@
                 @foreach (var item in Model.BCS)
                 {
                     <tr>
-                        <td>
-                            <input class="tbl-chk" id="@item.BCS_MasterID" type="checkbox" />
-                            @Html.HiddenFor(modelItem => item.BCS_Creator_ID)
-                        </td>
+                        <td><input class="tbl-chk" id="@item.BCS_MasterID" type="checkbox" /></td>
                         <td>@Html.DisplayFor(modelItem => item.BCS_Name)</td>
                         <td>@Html.DisplayFor(modelItem => item.BCS_TIN)</td>
                         <td>@Html.DisplayFor(modelItem => item.BCS_Position)</td>
