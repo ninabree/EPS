@@ -26,6 +26,13 @@
     src: url('../lib/fonts/helveticaneue/Helvetica Neu Bold.ttf');
 }
 
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+    background-color: #c9ddff !important;
+}
+
+[data-href] {
+    cursor: pointer;
+}
 /*//////////////////////////////////////////////////////////////////
 [ RESTYLE TAG ]*/
 
@@ -686,3 +693,4 @@ img#td-logo {
         text-decoration: none;
         color: #333333;
     }
+

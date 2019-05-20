@@ -53,6 +53,7 @@ namespace ExpenseProcessingSystem.ViewModels
         public string expenseYear { get; set; }
         public string expenseId { get; set; }
         public string checkNo { get; set; }
+        public int statusID { get; set; }
         public string status { get; set; }
         public string approver { get; set; }
         public string verifier_1 { get; set; }

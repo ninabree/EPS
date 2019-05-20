@@ -114,7 +114,7 @@ namespace ExpenseProcessingSystem.Services
             return vmList;
         }
         //Pending
-        public List<ApplicationsViewModel> getPending(int userID)
+        public PaginatedList<ApplicationsViewModel> getPending(int userID)
         {
             List<ApplicationsViewModel> pendingList = new List<ApplicationsViewModel>();
 
@@ -130,6 +130,20 @@ namespace ExpenseProcessingSystem.Services
 
             foreach(var item in dbPending)
             {
+
+                string ver1 = item.Expense_Verifier_1 == 0 ? null : getUserName(item.Expense_Verifier_1);
+                string ver2 = item.Expense_Verifier_2 == 0 ? null : getUserName(item.Expense_Verifier_2);
+                var linktionary = new Dictionary<int, string>
+                {
+                    {0,"Data Maintenance" },
+                    {GlobalSystemValues.TYPE_CV,"View_CV"},
+                    {GlobalSystemValues.TYPE_DDV,"View_DDV"},
+                    {GlobalSystemValues.TYPE_NC,"View_NC"},
+                    {GlobalSystemValues.TYPE_PC,"View_PC"},
+                    {GlobalSystemValues.TYPE_SS,"View_SS"},
+                };
+
+
                 ApplicationsViewModel tempPending = new ApplicationsViewModel
                 {
                     App_ID = item.Expense_ID,
@@ -137,17 +151,19 @@ namespace ExpenseProcessingSystem.Services
                     App_Amount = item.Expense_Debit_Total,
                     App_Payee = getVendorName(item.Expense_Payee),
                     App_Maker = getUserName(item.Expense_Creator_ID),
-                    App_Verifier_ID_List = new List<string> { getUserName(item.Expense_Verifier_1),
-                                                              getUserName(item.Expense_Verifier_2)},
+                    App_Verifier_ID_List = new List<string> { ver1, ver2 },
                     App_Date = item.Expense_Date,
                     App_Last_Updated = item.Expense_Last_Updated,
-                    App_Status = getStatus(item.Expense_Status)
+                    App_Status = getStatus(item.Expense_Status),
+                    App_Link = linktionary[item.Expense_Type]
                 };
 
                 pendingList.Add(tempPending);
             }
 
-            return pendingList;
+            PaginatedList<ApplicationsViewModel> pgPendingList = new PaginatedList<ApplicationsViewModel>(pendingList,pendingList.Count,1,10);
+
+            return pgPendingList;
         }
         //[ User Maintenance ]
         public UserManagementViewModel2 populateUM()
@@ -2778,6 +2794,8 @@ namespace ExpenseProcessingSystem.Services
         }
 
         //--------------------Expense Entries--------------------------------
+
+        //============[Retrieve System Values]=============================
         //retrieve vendor list
         public List<SelectList> getCheckEntrySystemVals()
         {
@@ -2816,8 +2834,53 @@ namespace ExpenseProcessingSystem.Services
 
             return accDetails;
         }
+        //get Status
+        public string getStatus(int id)
+        {
+            var status = _context.StatusList.SingleOrDefault(q => q.Status_ID == id);
+            return status.Status_Name;
+        }
+        //get userName
+        public string getUserName(int id)
+        {
+            var name = _context.User.SingleOrDefault(q => q.User_ID == id);
+
+            if (name == null)
+            {
+                return null;
+            }
+
+            return name.User_UserName;
+        }
+        //get vat
+        public float getVat()
+        {
+            var vat = _context.DMVAT.FirstOrDefault(q => q.VAT_isActive == true);
+
+            if (vat == null)
+            {
+                return 0;
+            }
+
+            return vat.VAT_Rate;
+        }
+        //get vendor
+        public string getVendorName(int vendorID)
+        {
+            var vendor = _context.DMVendor.SingleOrDefault(x => x.Vendor_ID == vendorID);
+
+            if (vendor == null)
+            {
+                return null;
+            }
+
+            return vendor.Vendor_Name;
+        }
+        //============[End Retrieve System Values]========================
+
+        //============[Access Entry Tables]===============================
         //save expense details
-        public int addExpense_CV(EntryCVViewModelList entryModel,int userId)
+        public int addExpense_CV(EntryCVViewModelList entryModel,int userId,int expenseType)
         {
             float TotalDebit = 0;
             float credEwtTotal = 0;
@@ -2887,6 +2950,7 @@ namespace ExpenseProcessingSystem.Services
 
                 ExpenseEntryModel expenseEntry = new ExpenseEntryModel
                 {
+                    Expense_Type = expenseType,
                     Expense_Date = entryModel.expenseDate,
                     Expense_Payee = entryModel.vendor,
                     Expense_Debit_Total = TotalDebit,
@@ -2990,6 +3054,7 @@ namespace ExpenseProcessingSystem.Services
                 expenseId = EntryDetails.e.Expense_Number,
                 checkNo = EntryDetails.e.Expense_CheckNo,
                 status = getStatus(EntryDetails.e.Expense_Status),
+                statusID = EntryDetails.e.Expense_Status,
                 approver = (EntryDetails.e.Expense_Status == 1) ? "" : getUserName(EntryDetails.e.Expense_Approver),
                 verifier_1 = (EntryDetails.e.Expense_Status == 1) ? "" : getUserName(EntryDetails.e.Expense_Verifier_1),
                 verifier_2 = (EntryDetails.e.Expense_Status == 1) ? "" : getUserName(EntryDetails.e.Expense_Verifier_2),
@@ -2999,31 +3064,25 @@ namespace ExpenseProcessingSystem.Services
 
             return cvModel;
         }
-        //get Status
-        public string getStatus(int id)
+        //update status of entry
+        public bool updateExpenseStatus(int transID, int status)
         {
-            var status = _context.StatusList.SingleOrDefault(q => q.Status_ID == id);
-            return status.Status_Name;
-        }
-        //get userName
-        public string getUserName(int id)
-        {
-            var name = _context.User.SingleOrDefault(q => q.User_ID == id);
-            return name.User_UserName;
-        }
-        //get vart
-        public float getVat()
-        {
-            var vat = _context.DMVAT.SingleOrDefault(q => q.VAT_isActive == true);
-            return vat.VAT_Rate;
-        }
+            ExpenseEntryModel m = new ExpenseEntryModel
+            {
+                Expense_ID = transID,
+                Expense_Status = status
+            };
 
-        public string getVendorName(int vendorID)
-        {
-            var vendor = _context.DMVendor.SingleOrDefault(x => x.Vendor_ID == vendorID);
-
-            return vendor.Vendor_Name;
+            if (_modelState.IsValid)
+            {
+                _context.ExpenseEntry.Update(m);
+                _context.SaveChanges();
+            }
+            else { return false; }
+            return true;
         }
+        ////============[End Access Entry Tables]=========================
+
     }
 
 }
