@@ -33,6 +33,7 @@ $(document).ready(function () {
         var tblName = $('#dm-tbl').find(":selected").text();
         var getDateTime = new Date();//$(this).closest('#NewCheckVM_0__Check_Input_Date').val()/* != "" ? $('NewCheckVM_0__Check_Input_Date').val() : ""*/;
         var getIsoDateTime = getDateTime.toISOString();
+        //alert(getDateTime);
         //depends on chosen Master Data Table
         var itemCount = tblName == "Vendor" ? ($("[id^='NewVendor-Tr']").length) :
             tblName == "Department" ? ($("[id^='NewDept-Tr']").length) :
@@ -43,47 +44,34 @@ $(document).ready(function () {
             tblName == "Tax Rates" ? ($("[id^='NewTR-Tr']").length) :
             tblName == "Currency" ? ($("[id^='NewCurr-Tr']").length) :
             tblName == "Account Group" ? ($("[id^='NewAccountGroup-Tr']").length) :
-            tblName == "Regular Employee" ? ($("[id^='NewEmp-Tr']").length) :
-            tblName == "Temporary Employee" ? ($("[id^='NewEmp-Tr']").length) :
-            tblName == "Customer" ? ($("[id^='NewCust-Tr']").length) :
             tblName == "" ? ($("[id^='gRemarks-tr']").length) : 0;
 
         //ROW TEMPLATES
-        var newVendorRow = $('<tr id="NewVendor-Tr-0">'
+        var newVendorRow = $('<tr id="NewVendor-Tr-' + itemCount + '">'
             + '<td><input class="w-full" id="NewVendorVM_' + itemCount + '__Vendor_Name" name="NewVendorVM[' + itemCount + '].Vendor_Name" type="text" value=""></td>'
             + '<td><input class="w-full" id="NewVendorVM_' + itemCount + '__Vendor_TIN" name="NewVendorVM[' + itemCount + '].Vendor_TIN" type="text" value=""></td>'
             + '<td><input class="w-full" id="NewVendorVM_' + itemCount + '__Vendor_Address" name="NewVendorVM[' + itemCount + '].Vendor_Address" type="text" value=""></td>'
-            +'<td colspan="2"><label><input class="trChk" id="chk6" name="5% - Rent" type="checkbox" value="6">5% - Rent</label>'
-            +'<label><input class="trChk" id="chk7" name="30% - Final Tax" type="checkbox" value="7">30% - Final Tax</label>'
-            +'<label><input class="trChk" id="chk8" name="20% - Service (Corp)" type="checkbox" value="8">20% - Service (Corp)</label>'
-            +'</td>'
-            +'<td colspan="2"><label><input class="vatChk" id="chk1" name="1200% - VAT" type="checkbox" value="1">1200% - VAT</label>'
-            +'<label><input class="vatChk" id="chk1" name="1000% - VAT" type="checkbox" value="2">1000% - VAT</label>'
-            +'</td>'
-            +'<td>'
-            +'<span class="table-remove glyphicon glyphicon-remove"></span>'
-            + '<input id="NewVendorVM_' + itemCount + '__Vendor_Tax_Rates_ID" name="NewVendorVM[' + itemCount + '].Vendor_Tax_Rates_ID" type="hidden" value="">'
-            + '<input id="NewVendorVM_' + itemCount + '__Vendor_VAT_ID" name="NewVendorVM[' + itemCount + '].Vendor_VAT_ID" type="hidden" value="">'
-            +'</td>'
-            +'</tr>');
+            + '<td>'
+            + '<span class="table-remove glyphicon glyphicon-remove"></span>'
+            + '</td>'
+            + '</tr>');
 
-        var newDeptRow = $('<tr id="NewDept-Tr-' + itemCount + '">'
-            + '<td><input class="w-full" id="NewDeptVM_' + itemCount + '__Dept_Name" name="NewDeptVM[' + itemCount + '].Dept_Name" type="text" value=""></td>'
-            + '<td><input class="w-full" id="NewDeptVM_' + itemCount + '__Dept_Code" name="NewDeptVM[' + itemCount + '].Dept_Code" type="text" value=""></td>'
-            + '<td><input class="w-full" id="NewDeptVM_' + itemCount + '__Dept_Budget_Unit" name="NewDeptVM[' + itemCount + '].Dept_Budget_Unit" type="text" value=""></td>'
-            + '<td>'
-            + '<span class="table-remove glyphicon glyphicon-remove"></span>'
-            + '</td>'
-            + '</tr>');
-        var newCheckRow = $('<tr id="NewCheck-Tr-' + itemCount + '">'
-            + '<td><input class="h-20 form-control text-box single-line" data-val="true" data-val-required="The Input Date field is required." id="NewCheckVM_' + itemCount + '__Check_Input_Date" name="NewCheckVM[' + itemCount + '].Check_Input_Date" class="check-datetime" type="date" value="' + getDateTime + '"></td>'
-            + '<td><input class="w-full" id="NewCheckVM_' + itemCount + '__Check_Series_From" name="NewCheckVM[' + itemCount + '].Check_Series_From" type="text" value=""></td>'
-            + '<td><input class="w-full" id="NewCheckVM_' + itemCount + '__Check_Series_To" name="NewCheckVM[' + itemCount + '].Check_Series_To" type="text" value=""></td>'
-            + '<td><input class="w-full" id="NewCheckVM_' + itemCount + '__Check_Bank_Info" name="NewCheckVM[' + itemCount + '].Check_Bank_Info" type="text" value=""></td>'
-            + '<td>'
-            + '<span class="table-remove glyphicon glyphicon-remove"></span>'
-            + '</td>'
-            + '</tr>');
+    var newDeptRow = $('<tr id="NewDept-Tr-' + itemCount + '">'
+        + '<td><input class="w-full" id="NewDeptVM_' + itemCount + '__Dept_Name" name="NewDeptVM[' + itemCount + '].Dept_Name" type="text" value=""></td>'
+        + '<td><input class="w-full" id="NewDeptVM_' + itemCount + '__Dept_Code" name="NewDeptVM[' + itemCount + '].Dept_Code" type="text" value=""></td>'
+        + '<td>'
+        + '<span class="table-remove glyphicon glyphicon-remove"></span>'
+        + '</td>'
+        + '</tr>');
+    var newCheckRow = $('<tr id="NewCheck-Tr-' + itemCount + '">'
+        + '<td colspan = "3"><input class="h-20 form-control text-box single-line" data-val="true" data-val-required="The Input Date field is required." id="NewCheckVM_' + itemCount + '__Check_Input_Date" name="NewCheckVM[' + itemCount + '].Check_Input_Date" class="check-datetime" type="datetime-local" value="' + getDateTime + '"></td>'
+        + '<td><input class="w-full" id="NewCheckVM_' + itemCount + '__Check_Series_From" name="NewCheckVM[' + itemCount + '].Check_Series_From" type="text" value=""></td>'
+        + '<td><input class="w-full" id="NewCheckVM_' + itemCount + '__Check_Series_To" name="NewCheckVM[' + itemCount + '].Check_Series_To" type="text" value=""></td>'
+        + '<td><input class="w-full" id="NewCheckVM_' + itemCount + '__Check_Bank_Info" name="NewCheckVM[' + itemCount + '].Check_Bank_Info" type="text" value=""></td>'
+        + '<td>'
+        + '<span class="table-remove glyphicon glyphicon-remove"></span>'
+        + '</td>'
+        + '</tr>');
         //ONLY WORKS IF JS IS INSIDE THE CSHTML FILE
         //var model = @Html.Raw(Json.Serialize(Model.FbtList));
         //var fbtModel = $.grep(model, function (obj) { return FBT_MasterID == obj.FBT_MasterID; })[0];
@@ -108,31 +96,6 @@ $(document).ready(function () {
             + '<option value="4">Sample FBT 4</option>'
             + '</select>'
             + '</td>'
-            + '<td colspan="2">'
-            + '<select class= "w-full input" data - val="true" data - val - required="The Account Group field is required." id = "NewAccountVM_' + itemCount + '__Account_Group_MasterID" name = "NewAccountVM[' + itemCount + '].Account_Group_MasterID" > <option value="2">Welfare</option>'
-            + '<option value="3">Official Residence Rent</option>'
-            + '<option value="4">Official Residence Repair</option>'
-            + '<option value="5">Office Maintence</option>'
-            + '<option value="6">Water Fuel Electricity</option>'
-            + '<option value="7">Fitting</option>'
-            + '<option value="8">Paper &amp; Printing</option>'
-            + '<option value="9">Books Newspaper</option>'
-            + '<option value="10">Telegraph, Telephone</option>'
-            + '<option value="11">Other Office Equipment</option>'
-            + '<option value="12">Machine Maintenance</option>'
-            + '<option value="13">Relocation</option>'
-            + '<option value="14">Travel to Other Countries</option>'
-            + '<option value="15">Other Travel</option>'
-            + '<option value="16">Traffic</option>'
-            + '<option value="17">Automobile</option>'
-            + '<option value="18">Advetisement</option>'
-            + '<option value="19">Entertainment</option>'
-            + '<option value="20">Membership</option>'
-            + '<option value="21">Insurance</option>'
-            + '<option value="22">Consignment</option>'
-            + '<option value="23">Sundries</option>'
-            + '</select>'
-            + '</td >'
             + '<td>'
             + '<span class="table-remove glyphicon glyphicon-remove"></span>'
             + '</td>'
@@ -145,6 +108,7 @@ $(document).ready(function () {
             + '</tr>');
         var newFbtRow = $('<tr id="NewFBT-Tr-' + itemCount + '">'
             + '<td><input class="w-full" id="NewFBTVM_' + itemCount + '__FBT_Name" name="NewFBTVM[' + itemCount + '].FBT_Name" type="text" value=""></td>'
+            + '<td><input class="w-full" id="NewFBTVM_' + itemCount + '__FBT_Account" name="NewFBTVM[' + itemCount + '].FBT_Account" type="text" value=""></td>'
             + '<td><input class="w-full" id="NewFBTVM_' + itemCount + '__FBT_Formula" name="NewFBTVM[' + itemCount + '].FBT_Formula" type="text" value=""></td>'
             + '<td><input class="w-full" data-val="true" data-val-required="The FBT Tax Rate field is required." id="NewFBTVM_' + itemCount + '__FBT_Tax_Rate" name="NewFBTVM[' + itemCount + '].FBT_Tax_Rate" type="text" value="0"></td>'
             + '<td>'
@@ -184,29 +148,6 @@ $(document).ready(function () {
             + '<td><input type="number" min="0" class="gAmount" style="width:100%"  /></td>'
             + '<td><div class="flex-c"><span class="table-remove glyphicon glyphicon-remove"></span></div></td></tr>');
 
-        var newRegEmpRow = $('<tr id="NewEmp-Tr-' + itemCount + '">'
-            + '<td><input class="w-full" id="NewEmpVM_' + itemCount + '__Emp_Name" name="NewEmpVM[' + itemCount + '].Emp_Name" type="text" value=""></td>'
-            + '<td><input class="w-full" id="NewEmpVM_' + itemCount + '__Emp_Acc_No" name="NewEmpVM[' + itemCount + '].Emp_Acc_No" type="text" value=""></td>'
-            + '<td>'
-            + '<span class="table-remove glyphicon glyphicon-remove"></span>'
-            + '</td>'
-            + '</tr>');
-        var newTempEmpRow = $('<tr id="NewEmp-Tr-' + itemCount + '">'
-            + '<td><input class="w-full" id="NewEmpVM_' + itemCount + '__Emp_Name" name="NewEmpVM[' + itemCount + '].Emp_Name" type="text" value=""></td>'
-            + '<td>'
-            + '<span class="table-remove glyphicon glyphicon-remove"></span>'
-            + '</td>'
-            + '</tr>');
-
-        var newCustRow = $('<tr id="NewCust-Tr-' + itemCount + '">'
-            + '<td><input class="w-full" id="NewCustVM_' + itemCount + '__Cust_Name" name="NewCustVM[' + itemCount + '].Cust_Name" type="text" value=""></td>'
-            + '<td><input class="w-full" id="NewCustVM_' + itemCount + '__Cust_Abbr" name="NewCustVM[' + itemCount + '].Cust_Abbr" type="text" value=""></td>'
-            + '<td><input class="w-full" id="NewCustVM_' + itemCount + '__Cust_No" name="NewCustVM[' + itemCount + '].Cust_No" type="text" value=""></td>'
-            + '<td>'
-            + '<span class="table-remove glyphicon glyphicon-remove"></span>'
-            + '</td>'
-            + '</tr>');
-
         var $clone = tblName == "Vendor" ? newVendorRow :
             tblName == "Department" ? newDeptRow :
             tblName == "Check" ? newCheckRow :
@@ -216,9 +157,6 @@ $(document).ready(function () {
             tblName == "Tax Rates" ? newTrRow :
             tblName == "Currency" ? newCurrRow :
             tblName == "Account Group" ? newAccGroupRow :
-            tblName == "Regular Employee" ? newRegEmpRow :
-            tblName == "Temporary Employee" ? newTempEmpRow :
-            tblName == "Customer" ? newCustRow :
             tblName == "" ? newGbaseRemarksRow : $('');
 
         $TABLE.find('table').append($clone);

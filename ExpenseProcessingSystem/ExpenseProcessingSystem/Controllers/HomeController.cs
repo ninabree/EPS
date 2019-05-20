@@ -415,14 +415,16 @@ namespace ExpenseProcessingSystem.Controllers
 
                 //For Alphalist of Suppliers by top 10000 corporation (Annual)
                 case ConstantData.HomeReportConstantValue.AST1000_A:
-                    fileName = "AlphalistOfSuppliersByTop10000Corporation_Annual_" + dateNow;
+                    fileName = "AlphalistOfSuppliersByTop10000Corporation_" + dateNow;
                     layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
                     pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter2;
+                    model.MonthName = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName;
+                    model.MonthNameTo = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName;
 
                     //Get the necessary data from Database
                     data = new HomeReportDataFilterViewModel
                     {
-                        HomeReportOutputAST1000 = _service.GetAST1000_AData(model.Year),
+                        HomeReportOutputAST1000 = _service.GetAST1000_AData(model.Year, model.Month, model.YearTo, model.MonthTo),
                         HomeReportFilter = model,
                     };
                     break;
@@ -977,38 +979,6 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Acc" });
-        }//[* ACCOUNT GROUP *]
-        [HttpPost]
-        [ExportModelState]
-        public IActionResult ApproveAccountGroup(List<DMAccountGroupViewModel> model)
-        {
-            var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            if (ModelState.IsValid)
-            {
-                _service.approveAccountGroup(model, userId);
-            }
-
-            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_AccGroup" });
-        }
-        [HttpPost]
-        [ExportModelState]
-        public IActionResult RejAccountGroup(List<DMAccountGroupViewModel> model)
-        {
-            var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            if (ModelState.IsValid)
-            {
-                _service.rejAccountGroup(model, userId);
-            }
-
-            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_AccGroup" });
         }
         //[* VAT *]
         [HttpPost]
@@ -1438,55 +1408,6 @@ namespace ExpenseProcessingSystem.Controllers
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Acc" });
         }
-        // [ACCOUNT Group]
-        [HttpPost]
-        [ExportModelState]
-        public IActionResult AddAccountGroup_Pending(NewAccountGroupListViewModel model)
-        {
-            var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            if (ModelState.IsValid)
-            {
-                _service.addAccountGroup_Pending(model, userId);
-            }
-
-            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_AccGroup" });
-        }
-        [HttpPost]
-        [ExportModelState]
-        public IActionResult EditAccountGroup_Pending(List<DMAccountGroupViewModel> model)
-        {
-            var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            if (ModelState.IsValid)
-            {
-                _service.editAccountGroup_Pending(model, userId);
-            }
-
-            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_AccGroup" });
-        }
-        [HttpPost]
-        [ExportModelState]
-        public IActionResult DeleteAccountGroup_Pending(List<DMAccountGroupViewModel> model)
-        {
-            var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            if (ModelState.IsValid)
-            {
-                _service.deleteAccountGroup_Pending(model, userId);
-            }
-
-            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_AccGroup" });
-        }
         // [VAT]
         [HttpPost]
         [ExportModelState]
@@ -1861,9 +1782,29 @@ namespace ExpenseProcessingSystem.Controllers
         public IActionResult HomeReportValidation(HomeReportViewModel model)
         {
             List<String> errors = new List<String>();
+            string format = "yyyy-M";
+            DateTime fromDate = DateTime.ParseExact(model.Year + "-" + model.Month, format, CultureInfo.InvariantCulture);
+            DateTime toDate = DateTime.ParseExact(model.YearTo + "-" + model.MonthTo, format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
+
 
             if (model.ReportType != 0)
             {
+                switch (model.ReportType)
+                {
+                    case ConstantData.HomeReportConstantValue.AST1000_S:
+                        if (fromDate > toDate)
+                        {
+                            errors.Add("Year,Month(TO) must be later than Year,Month(FROM)");
+                        }
+                        break;
+                    case ConstantData.HomeReportConstantValue.AST1000_A:
+                        if (fromDate > toDate)
+                        {
+                            errors.Add("Year,Month(TO) must be later than Year,Month(FROM)");
+                        }
+                        break;
+                }
+
                 switch (model.PeriodOption)
                 {
                     case 1:
@@ -1871,10 +1812,7 @@ namespace ExpenseProcessingSystem.Controllers
                         break;
 
                     case 2:
-                        if (model.Semester == 0)
-                        {
-                            errors.Add("Semester input is required");
-                        }
+
                         break;
                     case 3:
                         if (model.PeriodFrom == DateTime.MinValue)

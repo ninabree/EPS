@@ -53,7 +53,13 @@ namespace ExpenseProcessingSystem.ViewModels
 
         public int Month { get; set; }
 
+        public int YearTo { get; set; }
+
+        public int MonthTo { get; set; }
+
         public string MonthName { get; set; }
+
+        public string MonthNameTo { get; set; }
 
         public string SemesterName { get; set; }
 

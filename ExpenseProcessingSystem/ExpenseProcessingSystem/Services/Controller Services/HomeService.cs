@@ -2556,17 +2556,21 @@ namespace ExpenseProcessingSystem.Services
             return dbAST1000_S;
         }
 
-        public IEnumerable<HomeReportOutputAST1000Model> GetAST1000_AData(int year)
+        public IEnumerable<HomeReportOutputAST1000Model> GetAST1000_AData(int year, int month, int yearTo, int monthTo)
         {
             int[] status = { 3, 4 };
             float[] taxRateConsider = { 0.01f, 0.02f };
+            string format = "yyyy-M";
+            DateTime fromDate = DateTime.ParseExact(year + "-" + month, format, CultureInfo.InvariantCulture);
+            DateTime toDate = DateTime.ParseExact(yearTo + "-" + monthTo, format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
 
             var dbAST1000_A = (from vendor in _context.DMVendor
                             join expense in _context.ExpenseEntry on vendor.Vendor_ID equals expense.Expense_Payee
                             join expEntryDetl in _context.ExpenseEntryDetails on expense.Expense_ID equals expEntryDetl.ExpenseEntryModel.Expense_ID
                             join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
                             where status.Contains(expense.Expense_Status)
-                            && expense.Expense_Last_Updated.Year == year
+                            && expense.Expense_Last_Updated.Date >= fromDate.Date
+                            && expense.Expense_Last_Updated.Date <= toDate.Date
                             && taxRateConsider.Contains(tr.TR_Tax_Rate)
                                orderby vendor.Vendor_Name
                                select new HomeReportOutputAST1000Model
@@ -2631,17 +2635,6 @@ namespace ExpenseProcessingSystem.Services
                                            expDtl.ExpDtl_Credit_Cash
                                        }).ToList();
 
-            //foreach(var i in expOfPrevMonthsList)
-            //{
-            //    Debug.WriteLine("{0,20}{1,40}{2,40}{3,40}{4,40}{5,40}",
-            //        i.Expense_Last_Updated,
-            //        i.AccountGroup_MasterID,
-            //        i.AccountGroup_Name,
-            //        i.ExpDtl_Gbase_Remarks,
-            //        i.Dept_Name,
-            //        i.ExpDtl_Credit_Cash);
-            //}
-
             foreach (var a in accountCategory)
             {
                 startDT = DateTime.ParseExact(termYear + "-" + termMonth, format, CultureInfo.InvariantCulture);
@@ -2662,7 +2655,7 @@ namespace ExpenseProcessingSystem.Services
                 //Get total expenses from start of term to Prev monthend of selected month, year
 
                 var expensesOfTermMonthToBeforeFilterMonth = expOfPrevMonthsList.Where(c => c.AccountGroup_MasterID == a.AccountGroup_MasterID && c.Expense_Last_Updated.Date >= startOfTerm.Date
-                                       && c.Expense_Last_Updated.Date <= DateTime.ParseExact(filterYear + "-" + filterMonth, format, CultureInfo.InvariantCulture).AddDays(-1));
+                                       && c.Expense_Last_Updated.Date <= endDT.AddDays(-1));
 
                 foreach (var i in expensesOfTermMonthToBeforeFilterMonth)
                 {

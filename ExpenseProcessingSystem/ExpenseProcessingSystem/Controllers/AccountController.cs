@@ -25,7 +25,12 @@ namespace ExpenseProcessingSystem.Controllers
         [HttpGet]
         public ActionResult Login()
         {
-            AccessViewModel accessVM = new AccessViewModel();
+            AccessViewModel accessVM = new AccessViewModel
+            {
+                isLoggedIn = false,
+                accessType = "",
+                isAdmin = false
+            };
             ViewBag.access = accessVM;
             LoginViewModel lvm = new LoginViewModel();
             return View(lvm);
@@ -34,7 +39,12 @@ namespace ExpenseProcessingSystem.Controllers
         [HttpPost]
         public ActionResult Login(LoginViewModel model)
         {
-            AccessViewModel accessVM = new AccessViewModel();
+            AccessViewModel accessVM = new AccessViewModel
+            {
+                isLoggedIn = false,
+                accessType = "",
+                isAdmin = false
+            };
             ViewBag.access = accessVM;
             if (!ModelState.IsValid)
             {

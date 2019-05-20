@@ -63,10 +63,7 @@
                 @foreach (var item in Model.TR)
                 {
                     <tr>
-                        <td>
-                            <input class="tbl-chk" id="@item.TR_MasterID" type="checkbox" />
-                            @Html.HiddenFor(modelItem => item.TR_Creator_ID)
-                        </td>
+                        <td><input class="tbl-chk" id="@item.TR_MasterID" type="checkbox" /></td>
                         <td>@Html.DisplayFor(modelItem => item.TR_WT_Title)</td>
                         <td>@Html.DisplayFor(modelItem => item.TR_Nature)</td>
                         <td>@Html.DisplayFor(modelItem => item.TR_Tax_Rate)</td>
