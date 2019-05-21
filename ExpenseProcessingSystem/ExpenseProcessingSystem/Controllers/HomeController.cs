@@ -637,7 +637,7 @@ namespace ExpenseProcessingSystem.Controllers
             var userId = GetUserID();
 
             EntryCVViewModelList viewModel = new EntryCVViewModelList();
-            List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
+            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
             viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
             viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
             viewModel.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
@@ -662,7 +662,7 @@ namespace ExpenseProcessingSystem.Controllers
             ModelState.Clear();
             if (id > -1) {
                 cvList = _service.getExpense(id);
-                List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
+                List<SelectList> listOfSysVals = _service.getEntrySystemVals();
                 cvList.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
                 cvList.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
                 cvList.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
@@ -717,7 +717,7 @@ namespace ExpenseProcessingSystem.Controllers
 
             cvList = _service.getExpense(entryID);
 
-            List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
+            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
             cvList.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
             cvList.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
             cvList.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
@@ -735,7 +735,7 @@ namespace ExpenseProcessingSystem.Controllers
 
             EntryCVViewModelList cvList;
             cvList = _service.getExpense(entryID);
-            List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
+            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
             cvList.systemValues.vendors = listOfSysVals[0];
             cvList.systemValues.dept = listOfSysVals[1];
             cvList.systemValues.currency = listOfSysVals[2];
@@ -768,7 +768,7 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             EntryCVViewModelList viewModel = new EntryCVViewModelList();
-            List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
+            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
 
             viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
             viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
@@ -801,7 +801,7 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             EntryCVViewModelList viewModel = new EntryCVViewModelList();
-            List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
+            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
 
             viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
             viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
