@@ -2,158 +2,373 @@
 @{
     ViewData["Title"] = "Entry_DDV";
 }
+@using ExpenseProcessingSystem.ViewModels.Entry
+@model EntryDDVViewModelList
+@inject IJsonHelper Json;
 
 <div class="tabContent">
-    <div id="tbl-lbl">
-        <div class="dis-inline-block"><p>Date:</p></div>
-        <div class="dis-inline-block"><input class="input" disabled /></div>
-        <div class="dis-inline-block"><input class="input" type="datetime" disabled /></div>
-    </div>
-    <div id="tbl-lbl">
-        <div class="dis-inline-block"><p>Payee:</p></div>
-        <div class="dis-inline-block">
-            <select>
-                <option value="">Yoshikazu Yamada</option>
-            </select>
+    @using (Html.BeginForm("AddNewDDV", "Home", FormMethod.Post, new { @class = "validate-form" }))
+    {
+        <div id="tbl-lbl" class="flex-sb">
+            <div class="dis-inline-block w-20">Date: <p class="dis-inline-block w-70">@Html.TextBoxFor(model => model.expenseDate, new { @readonly = "true", @class = "input w-97" })</p> </div>
+            <div class="dis-inline-block"><p class="dis-inline-block">@Html.TextBoxFor(model => model.expenseYear, new { @readonly = "true", @class = "input" })</p> - <p class="dis-inline-block">@Html.TextBoxFor(model => model.expenseId, new { @readonly = "true", @class = "input" })</p></div>
+            <div class="dis-inline-block float-r">@*Check No : <p class="dis-inline-block">@Html.TextBoxFor(model => model.checkNo, new { @readonly = "true", @class = "input" })</p>*@</div>
         </div>
-    </div>
-    <div>
-        <table class="table table-bordered table-striped voucher-tbl">
-            <thead>
-                <col />
-                <col />
-                <col />
-                <col />
-                <col />
-                <col />
-                <colgroup span="2"></colgroup>
-                <colgroup span="2"></colgroup>
-                <col />
-                <col />
-                <colgroup span="2"></colgroup>
-                <col />
-                <tr>
-                    <th rowspan="2"></th>
-                    <th rowspan="2">GBase Remarks</th>
-                    <th rowspan="2">Account</th>
-                    <th rowspan="2">Inter-Entity</th>
-                    <th rowspan="2">FBT</th>
-                    <th rowspan="2">Dept</th>
-                    <th rowspan="2" colspan="2">VAT</th>
-                    <th rowspan="2" colspan="2">TR</th>
-                    <th rowspan="2">CCY</th>
-                    <th colspan="1" scope="colgroup">Debit</th>
-                    <th colspan="2" scope="colgroup">Credit</th>
-                    <th rowspan="2"></th>
-                </tr>
-                <tr>
-                    <th scope="col">Gross Amount</th>
-                    <th scope="col">TR Amount</th>
-                    <th scope="col">Cash</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td style="border:none" rowspan="2"><p class="float-r glyphicon glyphicon-plus"></p></td>
-                    <td style="border:none" rowspan="2"></td>
-                    <td style="border:none" rowspan="2"></td>
-                    <td style="border:none" rowspan="2"></td>
-                    <td style="border:none" rowspan="2"></td>
-                    <td style="border:none" rowspan="2"></td>
-                    <td style="border:none" rowspan="2"></td>
-                    <td style="border:none" rowspan="2"></td>
-                    <td style="border:none" rowspan="2"></td>
-                    <td style="border:none" rowspan="2"></td>
-                    <td style="border:none">SUBTOTAL</td>
-                    <td rowspan="2"></td>
-                    <td colspan="1"></td>
-                    <td colspan="1"></td>
-                    <td style="border:none" rowspan="2"></td>
-                </tr>
-                <tr>
-                    <td style="border:none; background-color: #f2f2f2">TOTAL</td>
-                    <td colspan="2"></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div id="voucherPreview">
         <div id="tbl-lbl">
-            <div class="dis-inline-block"><p>Preview of Voucher:</p></div>
+            <div class="dis-inline-block"><p>Payee:</p></div>
+            <div class="dis-inline-block">
+                @Html.DropDownListFor(m => m.vendor, new SelectList(Model.systemValues.vendors, "Value", "Text", Model.systemValues.vendors.SelectedValue), new { @id = "vendorName" })
+            </div>
         </div>
-        @Html.Partial("DDVPartial")
-    </div>
-    <div id="entry-status" class="m-t-10 m-b-10">
-        <div class="dis-inline-block"><label>Status:</label></div>
-        <div class="dis-inline-block"><input class="input" /></div>
-        <div class="dis-inline-block"><label>Approver:</label></div>
-        <div class="dis-inline-block"><input class="input" /></div>
-        <div class="dis-inline-block"><label>Verifier:</label></div>
-        <div class="dis-inline-block"><input class="input" /></div>
-    </div>
-    <div id="entry-controls" class="m-b-10">
-        <div class="dis-inline-block tbl-btn"><button>Save</button></div>
-        <div class="dis-inline-block tbl-btn"><button>Delete</button></div>
-        <div class="dis-inline-block tbl-btn"><button>Modify</button></div>
-        <div class="dis-inline-block tbl-btn"><button id="reversal_entry">Create Reversal Entry</button></div>
-        <div class="dis-inline-block tbl-btn"><button>Delete GBase Post</button></div>
-        <div class="float-r">
-            <div class="dis-inline-block tbl-btn"><button>Print LOI</button></div>
-            <div class="dis-inline-block tbl-btn"><button>Print BIR Certificate</button></div>
+        <div class="flex-c">
+            <table class="table table-bordered table-striped voucher-tbl w-97" id="inputTable">
+                <colgroup>
+                    <col style="width:20%;" />
+                    <col style="width:12%;" />
+                    <col style="width:3%;" />
+                    <col style="width:3%;" />
+                    <col style="width:10%" />
+                    <col style="width:2%;" />
+                    <col style="width:5%;" />
+                    <col style="width:2%;" />
+                    <col style="width:5%;" />
+                    <col style="width:7%;" />
+                    <col style="width:10%;" />
+                    <col style="width:10%;" />
+                    <col style="width:10%;" />
+                    <col style="width:2%;" />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th rowspan="2">Gbase Remarks</th>
+                        <th rowspan="2">Account</th>
+                        <th rowspan="2">Inter-Entity</th>
+                        <th rowspan="2">FBT</th>
+                        <th rowspan="2">Department</th>
+                        <th colspan="2" rowspan="2">VAT</th>
+                        <th colspan="2" rowspan="2">EWT</th>
+                        <th rowspan="2">Currency</th>
+                        <th>Debit</th>
+                        <th colspan="2">Credit</th>
+                    </tr>
+                    <tr>
+                        <th scope="col">Gross Amount</th>
+                        <th scope="col">EWT Amount</th>
+                        <th scope="col">Cash</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.EntryDDV.Count; i++)
+                    {
+                        <tr id="item_@i">
+                            <td class="p-b-1 p-t-1">
+                                <div class="flex-sb">
+                                    @Html.TextBoxFor(x => Model.EntryDDV[i].GBaseRemarks, new { @class = "input100 w-80" })
+                                    <div id="remark_@i">
+                                        <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
+                                        @for (int y = 0; y < Model.EntryDDV[i].gBaseRemarksDetails.Count(); y++)
+                                        {
+                                            @Html.HiddenFor(x => Model.EntryDDV[i].gBaseRemarksDetails[y].docType);
+                                            @Html.HiddenFor(x => Model.EntryDDV[i].gBaseRemarksDetails[y].desc);
+                                            @Html.HiddenFor(x => Model.EntryDDV[i].gBaseRemarksDetails[y].invNo);
+                                            @Html.HiddenFor(x => Model.EntryDDV[i].gBaseRemarksDetails[y].amount);
+                                        }
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <select id="@Html.IdFor(x => Model.EntryDDV[i].account)" class="input100 txtAcc" name="@Html.NameFor(x => Model.EntryDDV[i].account)">
+                                    @foreach (var groepModel in Model.systemValues.acc)
+                                    {
+                                        <option value="@groepModel.accId" class="@groepModel.accCode">@groepModel.accName</option>
+                                    }
+                                </select>
+                            </td>
+                            <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryDDV[i].inter_entity)</td>
+                            <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryDDV[i].fbt)</td>
+                            <td>
+                                @Html.DropDownListFor(x => Model.EntryDDV[i].dept, new SelectList(Model.systemValues.dept, "Value", "Text", Model.systemValues.dept.SelectedValue), new { @class = "input100" })
+                            </td>
+                            <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryDDV[i].chkVat, new { @class = "chkVat" })</td>
+                            <td>@Html.TextBoxFor(x => Model.EntryDDV[i].vat, new { @class = "input100 txtVat", @readonly = "true" })</td>
+                            <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryDDV[i].chkEwt, new { @class = "chkEwt" })</td>
+                            <td>
+                                @Html.DropDownListFor(x => Model.EntryDDV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt", @disabled = "true" })
+                            </td>
+                            <td>
+                                @Html.DropDownListFor(x => Model.EntryDDV[i].ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100" })
+                            </td>
+                            <td>@Html.TextBoxFor(x => Model.EntryDDV[i].debitGross, new { @class = "input100 txtGross", @type = "number", @min = "0" })</td>
+                            <td>@Html.TextBoxFor(x => Model.EntryDDV[i].credEwt, new { @class = "input100 txtCredEwt", @readonly = "readonly" })</td>
+                            <td>@Html.TextBoxFor(x => Model.EntryDDV[i].credCash, new { @class = "input100 txtCredCash", @readonly = "readonly" })</td>
+                            <td id="req_@i">
+                                <a class="reqBtn glyphicon glyphicon-list-alt"></a>
+                                @Html.HiddenFor(x => Model.EntryDDV[i].month, new { @class = "txtAmorMonth" })
+                                @Html.HiddenFor(x => Model.EntryDDV[i].day, new { @class = "txtAmorDay" })
+                                @Html.HiddenFor(x => Model.EntryDDV[i].duration, new { @class = "txtAmorDuration" })
+                                @for (int y = 0; y < Model.EntryDDV[i].amtDetails.Count(); y++)
+                                {
+                                    @Html.HiddenFor(x => Model.EntryDDV[i].amtDetails[y].amtDate);
+                                    @Html.HiddenFor(x => Model.EntryDDV[i].amtDetails[y].amtAmount);
+                                }
+                            </td>
+                        </tr>
+                    }
+
+                    <tr>
+                        <td style="border:none; background-color:#f2f2f2" rowspan="2"><a id="addRow" href="#" class="glyphicon glyphicon-plus"></a></td>
+                        <td colspan="9" style="text-align:right; border:none; background-color:#f2f2f2">Subtotal : </td>
+                        <td rowspan="2"><div class="flex-c"><input type="text" class="input100" readonly id="grossTotal" /></div></td>
+                        <td><input type="text" readonly class="input100" id="credEwtTotal" /></td>
+                        <td><input type="text" readonly class="input100" id="credCashTotal" /></td>
+                    </tr>
+                    <tr>
+                        <td colspan="9" style="text-align:right; border:none; background-color:#f2f2f2 ">Total : </td>
+                        <td colspan="2"><div class="flex-c"><input type="text" class="input100" readonly id="credTotal" /></div></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-    </div>
+        <div id="voucherPreview" class="border-solid">
+            <div id="tbl-lbl">
+                <div class="dis-inline-block"><p>Preview of Voucher:</p></div>
+            </div>
+            @Html.Partial("DDVPartial")
+        </div>
+        <div id="entry-status" class="m-t-10 m-b-10">
+            <div class="dis-inline-block"><label>Status: </label></div>
+            <div class="dis-inline-block">@Html.TextBoxFor(x => x.status, new { @readonly = "true", @class = "input" })</div>
+            <div class="dis-inline-block"><label>Approver:</label></div>
+            <div class="dis-inline-block">@Html.TextBoxFor(model => model.approver, new { @readonly = "true", @class = "input" })</div>
+            <div class="dis-inline-block"><label>Verifier:</label></div>
+            <div class="dis-inline-block">
+                <p class="dis-inline-block">@Html.TextBoxFor(model => model.verifier_1, new { @readonly = "true", @class = "m-l-5 input" })</p>
+                <p class="dis-inline-block">@Html.TextBoxFor(model => model.verifier_2, new { @readonly = "true", @class = "m-l-5 input" })</p>
+            </div>
+        </div>
+        <div id="entry-controls" class="m-b-10">
+            <div class="flex-sb">
+                <div>
+                    <div class="dis-inline-block tbl-btn"><button>Save</button></div>
+                    <div class="dis-inline-block tbl-btn"><button disabled>Delete</button></div>
+                    <div class="dis-inline-block tbl-btn"><button disabled>Modify</button></div>
+                </div>
+                <div>
+                    <div class="dis-inline-block tbl-btn"><button id="reversal_entry" disabled>Create Reversal Entry</button></div>
+                </div>
+                <div>
+                    <div class="dis-inline-block tbl-btn m-l-41"><button disabled>Print LOI</button></div>
+                </div>
+
+            </div>
+            <div class="flex-sb">
+                <div>
+                    <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
+                    <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
+                </div>
+                <div>
+                    <div class="dis-inline-block tbl-btn"><button disabled>Delete GBase Post</button></div>
+                </div>
+                <div>
+                    <div class="dis-inline-block tbl-btn"><button disabled>Print BIR Certificate</button></div>
+                </div>
+            </div>
+        </div>
+    }
 
     @Html.Partial("ModalPartial")
 </div>
+
+<script>
+    $(function () {
+        $(window).on("load", function () {
+            var gross = $(".txtGross");
+            var credEwt = $(".txtCredEwt");
+            var credCash = $(".txtCredCash");
+
+            var grossTotal = 0;
+            var ewtSubTotal = 0;
+            var cashSubTotal = 0;
+
+            for (var i = 0; i < gross.length; i++) {
+                grossTotal += Number(gross[i].value);
+            }
+
+            for (var i = 0; i < credEwt.length; i++) {
+                ewtSubTotal += Number(credEwt[i].value);
+            }
+
+            for (var i = 0; i < credCash.length; i++) {
+                cashSubTotal += Number(credCash[i].value);
+            }
+
+            $("#grossTotal").val(grossTotal);
+            $("#credEwtTotal").val(ewtSubTotal);
+            $("#credCashTotal").val(cashSubTotal);
+            $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
+        });
+
+        $("#addRow").click(function (e) {
+            var itemCount = document.getElementById('inputTable').getElementsByTagName('tbody')[0].childElementCount - 2;
+            var tableRef = document.getElementById('inputTable').getElementsByTagName('tbody')[0];
+
+            var acc = @Html.Raw(Json.Serialize(Model.systemValues.acc));
+            var dept = @Html.Raw(Json.Serialize(Model.systemValues.dept));
+            var curr = @Html.Raw(Json.Serialize(Model.systemValues.currency));
+            var ewt = @Html.Raw(Json.Serialize(Model.systemValues.ewt));
+
+            // Insert a row in the table at the last row
+            var newRow = tableRef.insertRow(itemCount);
+            newRow.id = "item_" + itemCount
+
+            var htmlContent = '<td class="p-b-1 p-t-1"><div class="flex-sb">' +
+                '<input class="input100 w-80" id="EntryDDV_' + itemCount + '__GBaseRemarks" name="EntryDDV[' + itemCount + '].GBaseRemarks" type="text" value="">' +
+                '<div id="remark_' + itemCount + '"><a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a></div></div></td>' +
+                '<td><select class="input100 txtAcc" id="EntryDDV_' + itemCount + '__account" name="EntryDDV[' + itemCount + '].account">';
+
+            for (var i = 0; i < acc.length; i++) {
+                htmlContent += '<option value="' + acc[i]["accId"] + '" class="' + acc[i]["accCode"] + '">' + acc[i]["accName"] + '</option>';
+            }
+
+            htmlContent += '</select></td>' +
+                '<td style="text-align:center"><input data-val="true" data-val-required="The inter_entity field is required." id="EntryDDV_' + itemCount + '__inter_entity" name="EntryDDV[' + itemCount + '].inter_entity" type="checkbox" value="true"></td>' +
+                '<td style="text-align:center"><input data-val="true" data-val-required="The fbt field is required." id="EntryDDV_' + itemCount + '__fbt" name="EntryDDV[' + itemCount + '].fbt" type="checkbox" value="true"></td>' +
+                '<td><select class="input100" id="EntryDDV_' + itemCount + '__dept" name="EntryDDV[' + itemCount + '].dept">';
+            for (var i = 0; i < dept.length; i++) {
+                htmlContent += '<option value="' + dept[i]["value"] + '">' + dept[i]["text"] + '</option>';
+            }
+
+            htmlContent += '</select></td>' +
+                '<td style="text-align:center"><input class="chkVat" data-val="true" data-val-required="The chkVat field is required." id="EntryDDV_' + itemCount + '__chkVat" name="EntryDDV[' + itemCount + '].chkVat" type="checkbox" value="true"></td>' +
+                '<td><input class="input100 txtVat" data-val="true" data-val-number="The field vat must be a number." data-val-required="The vat field is required." id="EntryDDV_' + itemCount + '__vat" name="EntryDDV[' + itemCount + '].vat" readonly="true" type="text" value="0"></td>' +
+                '<td style="text-align:center"><input class="chkEwt" data-val="true" data-val-required="The chkEwt field is required." id="EntryDDV_' + itemCount + '__chkEwt" name="EntryDDV[' + itemCount + '].chkEwt" type="checkbox" value="true"></td>' +
+                '<td><select class="input100 txtEwt" data-val="true" data-val-required="The ewt field is required." id="EntryDDV_' + itemCount + '__ewt" name="EntryDDV[' + itemCount + '].ewt" disabled="disabled">';
+            for (var i = 0; i < ewt.length; i++) {
+                htmlContent += '<option value="' + ewt[i]["value"] + '">' + ewt[i]["text"] + '</option>';
+            }
+            htmlContent += '</select></td>' +
+                '<td><select class="input100" data-val="true" data-val-required="The ccy field is required." id="EntryDDV_' + itemCount + '__ccy" name="EntryDDV[' + itemCount + '].ccy">';
+            for (var i = 0; i < curr.length; i++) {
+                htmlContent += '<option value="' + curr[i]["value"] + '">' + curr[i]["text"] + '</option>';
+            }
+            htmlContent += '</select></td>' +
+                '<td><input class="input100 txtGross" data-val="true" data-val-number="The field debitGross must be a number." data-val-required="The debitGross field is required." id="EntryDDV_' + itemCount + '__debitGross" name="EntryDDV[' + itemCount + '].debitGross" type="number" min="0" value="0"></td>' +
+                '<td><input class="input100  txtCredEwt" data-val="true" data-val-number="The field credEwt must be a number." data-val-required="The credEwt field is required." id="EntryDDV_' + itemCount + '__credEwt" name="EntryDDV[' + itemCount + '].credEwt" type="text" readonly="true" value="0"></td>' +
+                '<td><input class="input100 txtCredCash" data-val="true" data-val-number="The field credCash must be a number." data-val-required="The credCash field is required." id="EntryDDV_' + itemCount + '__credCash" name="EntryDDV[' + itemCount + '].credCash" type="text" readonly="true" value="0"></td>' +
+                '<td id="req_' + itemCount + '"><a class="reqBtn glyphicon glyphicon-list-alt"></a></td>';
+
+            newRow.innerHTML = htmlContent;
+        });
+
+        //ExpenseAmortization
+        $("table").on("click", ".expenseAmortization", function (e) {
+            e.stopImmediatePropagation();
+
+            var pNode = $(this.parentNode)[0].parentNode;
+
+            var id = pNode.id;
+            var month;
+            var day;
+            var duration;
+
+            if ($("#" + id).find(".txtAmorMonth").val() != null) {
+                month = $("#" + id).find(".txtAmorMonth").val();
+            } else {
+                month = 1;
+            }
+            if ($("#" + id).find(".txtAmorDay").val() != null) {
+                day = $("#" + id).find(".txtAmorDay").val();
+            } else {
+                day = 1;
+            }
+            if ($("#" + id).find(".txtAmorDuration").val() != null) {
+                duration = $("#" + id).find(".txtAmorDuration").val();
+            } else {
+                duration = 1;
+            }
+
+            var modalDivBody = $('.modal-body');
+            var modalDivFooter = $('.modal-footer').find("#add_row_btn").remove();;
+
+            if ($('.modal-header').find(".modal-title")[0] == null) {
+                $('.modal-header').append('<h4 class="modal-title">Prepaid Expense Amortization Schedule</h4>');
+            }
+
+            var vendor = $("#vendorName option:selected").text();
+            var account = $("#" + pNode.id).find(".txtAcc option:selected").text()
+
+            modalDivBody.load("@Url.Action("EntryExpenseAmortization", "Modal")", {
+                "id": id,
+                "vendor": vendor,
+                "account": account,
+                "month": month,
+                "day": day,
+                "duration": duration
+            }, function (response, status, xhr) {
+                if (status == "error") {
+                    alert("Something went wrong.");
+                } else {
+                    if ($("#parentIdAmortization") != null) {
+                        var tableRef = document.getElementById('modalTable').getElementsByTagName('tbody')[0];
+                        //var tableRef = $("#modalTable").children("tbody");
+                        var grossAmount = Number($("#" + id).find(".txtGross").val());
+
+                        tblBuilder(tableRef, month, day, duration, grossAmount);
+                    }
+                }
+            });
+
+            $('#myModal').modal('show');
+        });
+
+        $("table").on("change", ".txtAcc", function (e) {
+
+            var pNode = String($(this.parentNode)[0].parentNode.id);
+            var accCode = $(this).find("option:selected").attr("class");
+            var btnAttr = $("#" + pNode).find("#req_" + pNode.substring(5)).find(".reqBtn");
+
+            if (accCode == "13265" || accCode == "13281") {
+                btnAttr.attr("href", "#");
+                btnAttr.attr("class", "expenseAmortization reqBtn glyphicon glyphicon-list-alt");
+            } else {
+                btnAttr.removeAttr("href");
+                btnAttr.attr("class","reqBtn glyphicon glyphicon-list-alt");
+            }
+        });
+    });
+</script>
+<script type="text/javascript">
+    function tblBuilder(tableRef, begMonth, day, duration, grossAmount) {
+        var dvdAmount = roundNumber((grossAmount / duration), 2);
+
+        var now = new Date();
+        var Year = now.getFullYear();
+
+        for (var i = 0; i < duration; i++) {
+            var newRow = tableRef.insertRow(i);
+            var cellDate = newRow.insertCell(0);
+            var cellAmount = newRow.insertCell(1);
+
+            var month = Number(begMonth) + Number(i);
+
+            cellDate.innerHTML = new Date(Year, month, day).toDateString();
+            cellAmount.innerHTML = dvdAmount;
+        }
+    };
+
+    function roundNumber(num, scale) {
+        if (!("" + num).includes("e")) {
+            return +(Math.round(num + "e+" + scale) + "e-" + scale);
+        } else {
+            var arr = ("" + num).split("e");
+            var sig = ""
+            if (+arr[1] + scale > 0) {
+                sig = "+";
+            }
+            return +(Math.round(+arr[0] + "e" + sig + (+arr[1] + scale)) + "e-" + scale);
+        }
+    };
+</script>
+<script type="text/javascript" src="~/js/EntryScripts.js"></script>
+
 

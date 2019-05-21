@@ -64,16 +64,10 @@ namespace ExpenseProcessingSystem.Controllers
         }
 
         //Home Screen Block---------------------------------------------------------------------------------------
+        [OnlineUserCheck]
         public IActionResult Index(HomeIndexViewModel vm, string sortOrder, string currentFilter, string colName, string searchString, string page)
         {
-            var userId = GetUserID();
             int? pg = (page == null) ? 1 : int.Parse(page);
-
-            //check session
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
 
             //sort
             ViewData["CurrentSort"] = sortOrder;
@@ -129,15 +123,10 @@ namespace ExpenseProcessingSystem.Controllers
 
             return View(vm);
         }
+        [OnlineUserCheck]
         public IActionResult History(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-
-            var role = _service.getUserRole(_session.GetString("UserID"));
+            var role = _service.getUserRole(GetUserID());
             if (role == "admin")
             {
                 return RedirectToAction("UM");
@@ -151,22 +140,15 @@ namespace ExpenseProcessingSystem.Controllers
         {
             return View();
         }
+        [OnlineUserCheck]
         public IActionResult Close(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             return View();
         }
+        [OnlineUserCheck]
         [ImportModelState]
         public IActionResult DM(DMViewModel vm, string sortOrder, string currentFilter, string tblName, string colName, string searchString, int? page, string partialName)
         {
-            if (GetUserID() == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             ViewData["sortOrder"] = sortOrder;
             ViewData["currentFilter"] = searchString;
             ViewData["tblName"] = tblName;
@@ -311,13 +293,9 @@ namespace ExpenseProcessingSystem.Controllers
 
         //------------------------------------------------------------------
         //[* REPORT *]
+        [OnlineUserCheck]
         public IActionResult Report()
         {
-            var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             //Get list of report types from the constant data file:HomeReportTypesModel.cs
             //uses in Dropdownlist(Report Type)
             IEnumerable<HomeReportTypesModel> ReportTypes = ConstantData.HomeReportConstantValue.GetReportTypeData();
@@ -367,8 +345,15 @@ namespace ExpenseProcessingSystem.Controllers
         {
             string layoutName = "";
             string fileName = "";
-            string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmsstt");
+            //string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmsstt"); // ORIGINAL
+            string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmss");
             string pdfFooterFormat = "";
+            ReportHeaderViewModel headerVM = new ReportHeaderViewModel();
+
+            headerVM.Header_Logo = "";
+            headerVM.Header_Name = "Mizuho Bank Ltd., Manila Branch";
+            headerVM.Header_TIN = "004-669-467-000";
+            headerVM.Header_Address = "25th Floor, The Zuellig Building, Makati Avenue corner Paseo de Roxas, Makati City";
 
             //Model for data retrieve from Database
             HomeReportDataFilterViewModel data = null;
@@ -390,6 +375,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         HomeReportOutputAPSWT_M = _service.GetAPSWT_MData(model.Month, model.Year),
                         HomeReportFilter = model,
+                        ReportHeaderVM = headerVM
                     };
                     break;
 
@@ -456,16 +442,10 @@ namespace ExpenseProcessingSystem.Controllers
                                     ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType),
                                 HomeReportFilter = model
                             };
-                            model.MonthName = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName;
-                            break;
-                        case 2:
-                            data = new HomeReportDataFilterViewModel
-                            {
-                                HomeReportOutputWTS = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Semester(model.YearSem, model.Semester,
-                                    ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType),
-                                HomeReportFilter = model
-                            };
-                            model.SemesterName = ConstantData.HomeReportConstantValue.GetSemesterList().Where(c => c.SemID == model.Semester).Single().SemName;
+                            model.ReportFrom = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName
+                                                + " " + model.Year;
+                            model.ReportTo = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.MonthTo).Single().MonthName
+                                                + " " + model.YearTo;
                             break;
                         case 3:
                             data = new HomeReportDataFilterViewModel
@@ -474,6 +454,8 @@ namespace ExpenseProcessingSystem.Controllers
                                     ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType),
                                 HomeReportFilter = model
                             };
+                            model.ReportFrom = model.PeriodFrom.ToShortDateString();
+                            model.ReportTo = model.PeriodTo.ToShortDateString();
                             break;
                     }
                     break;
@@ -518,32 +500,15 @@ namespace ExpenseProcessingSystem.Controllers
             };
         }
 
-        public IActionResult OutputPDF(string layoutPath, string layoutName, IEnumerable<RepWTSViewModel> VM, string fileName, string footerFormat)
-        {
-            string pdfLayoutFilePath = layoutPath + layoutName;
-
-            return new ViewAsPdf(pdfLayoutFilePath, VM)
-            {
-                FileName = fileName,
-                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape,
-                CustomSwitches = footerFormat,
-                PageSize = Rotativa.AspNetCore.Options.Size.A4
-            };
-        }
         //[* REPORT *]
         //------------------------------------------------------------------
 
         //------------------------------------------------------------------
         //[* BUDGET MONITORING *]
+        [OnlineUserCheck]
         [ImportModelState]
         public IActionResult BM(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-
             //set sort vals
             ViewData["CurrentSort"] = sortOrder;
             ViewData["AccountCodeSortParm"] = String.IsNullOrEmpty(sortOrder) ? "acc_code" : "";
@@ -576,15 +541,10 @@ namespace ExpenseProcessingSystem.Controllers
         //[* BUDGET MONITORING *]
         //------------------------------------------------------------------
 
+        [OnlineUserCheck]
         [ImportModelState]
         public IActionResult UM(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-
             //set sort vals
             ViewData["CurrentSort"] = sortOrder;
             ViewData["UserSortParm"] = String.IsNullOrEmpty(sortOrder) ? "user_desc" : "";
@@ -746,21 +706,33 @@ namespace ExpenseProcessingSystem.Controllers
         }
 
         //Expense Entry Check Voucher Block End=========================================================================
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
         public IActionResult Entry_DDV()
         {
-            return View();
+            var userId = GetUserID();
+
+            EntryDDVViewModelList viewModel = new EntryDDVViewModelList();
+            List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
+            viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
+            viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
+            viewModel.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
+            viewModel.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
+            viewModel.systemValues.acc = _service.getAccDetailsEntry();
+
+            viewModel.expenseYear = DateTime.Today.Year.ToString();
+            viewModel.expenseDate = DateTime.Today;
+            //viewModel.vendor = 2;
+            viewModel.EntryDDV.Add(new EntryDDVViewModel());
+            return View(viewModel);
+            //return View();
         }
 
         //------------------------------------------------------------------
         //[* Entry Petty Cash *]
+        [OnlineUserCheck]
         public IActionResult Entry_PCV()
         {
-            var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-
             var role = _service.getUserRole(_session.GetString("UserID"));
             if (role == GlobalSystemValues.ROLE_ADMIN)
             {
@@ -786,14 +758,9 @@ namespace ExpenseProcessingSystem.Controllers
 
         //------------------------------------------------------------------
         //[* Entry Cash Advance(SS) *]
+        [OnlineUserCheck]
         public IActionResult Entry_SS()
         {
-            var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-
             var role = _service.getUserRole(_session.GetString("UserID"));
             if (role == GlobalSystemValues.ROLE_ADMIN)
             {
@@ -838,13 +805,9 @@ namespace ExpenseProcessingSystem.Controllers
         //[* ACCOUNT *]
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult SendEmail(ForgotPWViewModel model)
         {
-            var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.sendEmail(model);
@@ -858,13 +821,10 @@ namespace ExpenseProcessingSystem.Controllers
         //[* PAYEE *]
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult ApproveVendor(List<DMVendorViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.approveVendor(model, userId);
@@ -872,15 +832,12 @@ namespace ExpenseProcessingSystem.Controllers
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Vendor" });
         }
+        [OnlineUserCheck]
         [HttpPost]
         [ExportModelState]
         public IActionResult RejVendor(List<DMVendorViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.rejVendor(model, userId);
@@ -891,13 +848,10 @@ namespace ExpenseProcessingSystem.Controllers
         //[* DEPARTMENT *]
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult ApproveDept(List<DMDeptViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.approveDept(model, userId);
@@ -907,13 +861,10 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult RejDept(List<DMDeptViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.rejDept(model, userId);
@@ -924,13 +875,10 @@ namespace ExpenseProcessingSystem.Controllers
         //[* CHECK *]
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult ApproveCheck(List<DMCheckViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.approveCheck(model, userId);
@@ -940,13 +888,10 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult RejCheck(List<DMCheckViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.rejCheck(model, userId);
@@ -957,13 +902,10 @@ namespace ExpenseProcessingSystem.Controllers
         //[* ACCOUNT *]
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult ApproveAccount(List<DMAccountViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.approveAccount(model, userId);
@@ -973,13 +915,10 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult RejAccount(List<DMAccountViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.rejAccount(model, userId);
@@ -990,13 +929,10 @@ namespace ExpenseProcessingSystem.Controllers
         //[* VAT *]
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult ApproveVAT(List<DMVATViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.approveVAT(model, userId);
@@ -1006,13 +942,10 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult RejVAT(List<DMVATViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.rejVAT(model, userId);
@@ -1023,13 +956,10 @@ namespace ExpenseProcessingSystem.Controllers
         //[* FBT *]
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult ApproveFBT(List<DMFBTViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.approveFBT(model, userId);
@@ -1039,13 +969,10 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult RejFBT(List<DMFBTViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.rejFBT(model, userId);
@@ -1056,13 +983,10 @@ namespace ExpenseProcessingSystem.Controllers
         //[* TR *]
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult ApproveTR(List<DMTRViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.approveTR(model, userId);
@@ -1072,13 +996,10 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult RejTR(List<DMTRViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.rejTR(model, userId);
@@ -1089,13 +1010,10 @@ namespace ExpenseProcessingSystem.Controllers
         //[* Currency *]
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult ApproveCurr(List<DMCurrencyViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.approveCurr(model, userId);
@@ -1105,13 +1023,10 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult RejCurr(List<DMCurrencyViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.rejCurr(model, userId);
@@ -1122,13 +1037,10 @@ namespace ExpenseProcessingSystem.Controllers
         //[* Employee *]
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult ApproveEmp(List<DMEmpViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.approveEmp(model, userId);
@@ -1138,13 +1050,10 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult RejEmp(List<DMEmpViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.rejEmp(model, userId);
@@ -1155,13 +1064,10 @@ namespace ExpenseProcessingSystem.Controllers
         //[* CUSTOMER *]
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult ApproveCust(List<DMCustViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.approveCust(model, userId);
@@ -1171,30 +1077,23 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult RejCust(List<DMCustViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.rejCust(model, userId);
             }
-
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Cust" });
         }
         //[* BIR CERT SIGNATORY*]
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult ApproveBCS(List<DMBCSViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.approveBCS(model, userId);
@@ -1204,13 +1103,10 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult RejBCS(List<DMBCSViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.rejBCS(model, userId);
@@ -1222,13 +1118,10 @@ namespace ExpenseProcessingSystem.Controllers
         // [PAYEE]
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult AddVendor_Pending(NewVendorListViewModel model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.addVendor_Pending(model, userId);
@@ -1238,13 +1131,10 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult EditVendor_Pending(List<DMVendorViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.editVendor_Pending(model, userId);
@@ -1254,13 +1144,10 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult DeleteVendor_Pending(List<DMVendorViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.deleteVendor_Pending(model, userId);
@@ -1271,13 +1158,10 @@ namespace ExpenseProcessingSystem.Controllers
         // [DEPARTMENT]
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult AddDept_Pending(NewDeptListViewModel model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.addDept_Pending(model, userId);
@@ -1287,13 +1171,10 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult EditDept_Pending(List<DMDeptViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.editDept_Pending(model, userId);
@@ -1303,13 +1184,10 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult DeleteDept_Pending(List<DMDeptViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.deleteDept_Pending(model, userId);
@@ -1320,13 +1198,10 @@ namespace ExpenseProcessingSystem.Controllers
         // [CHECK]
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult AddCheck_Pending(NewCheckListViewModel model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.addCheck_Pending(model, userId);
@@ -1336,13 +1211,10 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult EditCheck_Pending(List<DMCheckViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.editCheck_Pending(model, userId);
@@ -1352,13 +1224,10 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult DeleteCheck_Pending(List<DMCheckViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.deleteCheck_Pending(model, userId);
@@ -1369,13 +1238,10 @@ namespace ExpenseProcessingSystem.Controllers
         // [ACCOUNT]
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult AddAccount_Pending(NewAccountListViewModel model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.addAccount_Pending(model, userId);
@@ -1385,13 +1251,10 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult EditAccount_Pending(List<DMAccountViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.editAccount_Pending(model, userId);
@@ -1401,13 +1264,10 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult DeleteAccount_Pending(List<DMAccountViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.deleteAccount_Pending(model, userId);
@@ -1418,13 +1278,10 @@ namespace ExpenseProcessingSystem.Controllers
         // [VAT]
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult AddVAT_Pending(NewVATListViewModel model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.addVAT_Pending(model, userId);
@@ -1434,13 +1291,10 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult EditVAT_Pending(List<DMVATViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.editVAT_Pending(model, userId);
@@ -1450,13 +1304,10 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult DeleteVAT_Pending(List<DMVATViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.deleteVAT_Pending(model, userId);
@@ -1467,13 +1318,10 @@ namespace ExpenseProcessingSystem.Controllers
         // [FBT]
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult AddFBT_Pending(NewFBTListViewModel model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.addFBT_Pending(model, userId);
@@ -1483,13 +1331,10 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult EditFBT_Pending(List<DMFBTViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.editFBT_Pending(model, userId);
@@ -1499,13 +1344,10 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult DeleteFBT_Pending(List<DMFBTViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.deleteFBT_Pending(model, userId);
@@ -1516,13 +1358,10 @@ namespace ExpenseProcessingSystem.Controllers
         // [TR]
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult AddTR_Pending(NewTRListViewModel model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.addTR_Pending(model, userId);
@@ -1532,13 +1371,10 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult EditTR_Pending(List<DMTRViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.editTR_Pending(model, userId);
@@ -1548,13 +1384,10 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult DeleteTR_Pending(List<DMTRViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.deleteTR_Pending(model, userId);
@@ -1565,13 +1398,10 @@ namespace ExpenseProcessingSystem.Controllers
         // [Curr]
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult AddCurr_Pending(NewCurrListViewModel model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.addCurr_Pending(model, userId);
@@ -1581,13 +1411,10 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult EditCurr_Pending(List<DMCurrencyViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.editCurr_Pending(model, userId);
@@ -1597,13 +1424,10 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult DeleteCurr_Pending(List<DMCurrencyViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.deleteCurr_Pending(model, userId);
@@ -1614,13 +1438,10 @@ namespace ExpenseProcessingSystem.Controllers
         // [EMPLOYEE]
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult AddEmp_Pending(NewEmpListViewModel model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.addEmp_Pending(model, userId);
@@ -1631,13 +1452,10 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult EditEmp_Pending(List<DMEmpViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.editEmp_Pending(model, userId);
@@ -1648,13 +1466,10 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult DeleteEmp_Pending(List<DMEmpViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.deleteEmp_Pending(model, userId);
@@ -1666,13 +1481,10 @@ namespace ExpenseProcessingSystem.Controllers
         // [CUSTOMER]
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult AddCust_Pending(NewCustListViewModel model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.addCust_Pending(model, userId);
@@ -1681,13 +1493,10 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult EditCust_Pending(List<DMCustViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.editCust_Pending(model, userId);
@@ -1696,13 +1505,10 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult DeleteCust_Pending(List<DMCustViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.deleteCust_Pending(model, userId);
@@ -1712,13 +1518,10 @@ namespace ExpenseProcessingSystem.Controllers
         // [BIR CERT SIGNATORY]
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult AddBCS_Pending(NewBCSViewModel model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.addBCS_Pending(model, userId);
@@ -1727,13 +1530,10 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult EditBCS_Pending(DMBCS2ViewModel model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.editBCS_Pending(model, userId);
@@ -1742,13 +1542,10 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult DeleteBCS_Pending(List<DMBCSViewModel> model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.deleteBCS_Pending(model, userId);
@@ -1759,13 +1556,10 @@ namespace ExpenseProcessingSystem.Controllers
         //[* USER *]
         [HttpPost]
         [ExportModelState]
+        [OnlineUserCheck]
         public IActionResult AddEditUser(UserManagementViewModel model)
         {
             var userId = GetUserID();
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
                 _service.addUser(model, userId);

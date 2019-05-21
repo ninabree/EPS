@@ -73,6 +73,8 @@ namespace ExpenseProcessingSystem.ViewModels
 
         public int CurrentSemester { get { return ConstantData.HomeReportConstantValue.GetCurrentSemester(); } }
 
+        public string ReportFrom { get; set; }
 
+        public string ReportTo { get; set; }
     }
 }

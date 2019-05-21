@@ -136,10 +136,11 @@
                 } else if (ReportType == "10") {
                     radioPeriod1.prop('checked', true);
                     radioPeriod1.removeAttr("disabled");
-                    radioPeriod2.removeAttr("disabled");
                     radioPeriod3.removeAttr("disabled");
                     ddlYear.removeAttr("disabled");
                     ddlMonth.removeAttr("disabled");
+                    ddlMonthTo.removeAttr("disabled");
+                    ddlYearTo.removeAttr("disabled");
                 } else if (ReportType == "13") {
                     radioPeriod1.prop('checked', true);
                     radioPeriod1.removeAttr("disabled");
@@ -198,11 +199,8 @@
                     case "1":
                         ddlYear.removeAttr("disabled");
                         ddlMonth.removeAttr("disabled");
-                        break;
-                    case "2":
-                        //ddlYearSem.removeAttr("disabled");
-                        //radioSemester1.removeAttr("disabled");
-                        //radioSemester2.removeAttr("disabled");
+                        ddlYearTo.removeAttr("disabled");
+                        ddlMonthTo.removeAttr("disabled");
                         break;
                     case "3":
                         dtPeriodFrom.removeAttr("disabled");
@@ -332,15 +330,15 @@
         <table class="table voucher-tbl">
             <colgroup>
                 <col style="width:5%">
-                <col style="width:10%">
-                <col style="width:10%">
-                <col style="width:10%">
-                <col style="width:10%">
+                <col style="width:7%">
+                <col style="width:13%">
+                <col style="width:13%">
+                <col style="width:13%">
                 <col style="width:5%">
-                <col style="width:10%">
-                <col style="width:10%">
-                <col style="width:10%">
-                <col style="width:20%">
+                <col style="width:5%">
+                <col style="width:13%">
+                <col style="width:13%">
+                <col style="width:13%">
             </colgroup>
             <tr>
                 <td></td>
@@ -363,64 +361,53 @@
                 </td>
             </tr>
             <tr>
-                <td>@Html.RadioButton("radioTimePeriod", "1", false, new { id = "radioPeriodOption1", @class = "radioPeriodOption", disabled = "disabled" }) From:</td>
-                <td>@Html.LabelFor(m => m.YearList)</td>
+                <td>@Html.RadioButton("radioTimePeriod", "1", false, new { id = "radioPeriodOption1", @class = "radioPeriodOption", disabled = "disabled" })</td>
+                <td> From:</td>
                 <td>
-                    @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block", id = "ddlYear", disabled = "disabled" })
+                    @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-49", id = "ddlYear", disabled = "disabled" })
+                    @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-49", id = "ddlMonth", disabled = "disabled" })
                 </td>
-                <td>@Html.LabelFor(m => m.MonthList)</td>
+                <td style="text-align: right"> To:</td>
                 <td>
-                    @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block", id = "ddlMonth", disabled = "disabled" })
+                    @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-49", id = "ddlYearTo", disabled = "disabled" })
+                    @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-49", id = "ddlMonthTo", disabled = "disabled" })
                 </td>
-                <td>@Html.RadioButton("radioTimePeriod", "2", false, new { id = "radioPeriodOption2", @class = "radioPeriodOption", disabled = "disabled" }) To:</td>
-                <td>@Html.LabelFor(m => m.YearSemList)</td>
-                <td>
-                    @*@Html.DropDownListFor(m => m.YearSemList, new SelectList(Model.YearSemList, "YearID", "YearID"), null, new { @class = "dis-inline-block", id = "ddlYearSem", disabled = "disabled" })*@
-                    @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block", id = "ddlYearTo", disabled = "disabled" })
-                </td>
-                @*@foreach (var sem in Model.SemesterList)
-                {
-                    <td>@Html.RadioButtonFor(m => m.CurrentSemester, sem.SemID, new { @id = "radioSemester" + sem.SemID, @class = "radioSemester", disabled = "disabled" }) @sem.SemName</td>
-                }*@
-                <td>
-                    @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block", id = "ddlMonthTo", disabled = "disabled" })
-                </td>
+                <td>@Html.RadioButton("radioTimePeriod", "3", false, new { id = "radioPeriodOption3", @class = "radioPeriodOption", disabled = "disabled" })</td>
+                <td>Period From:</td>
+                <td>@Html.EditorFor(m => m.PeriodFrom, new { htmlAttributes = new { @class = "input h-20 fs-11 form-control", @type = "date", disabled = "disabled" } })</td>
+                <td style="text-align: right">Period To: </td>
+                <td>@Html.EditorFor(m => m.PeriodTo, new { htmlAttributes = new { @class = "input h-20 fs-11 form-control", @type = "date", disabled = "disabled" } })</td>
             </tr>
             <tr>
-                <td>@Html.RadioButton("radioTimePeriod", "3", false, new { id = "radioPeriodOption3", @class = "radioPeriodOption", disabled = "disabled" })</td>
-                <td>Period</td>
-                <td colspan="1">@Html.EditorFor(m => m.PeriodFrom, new { htmlAttributes = new { @class = "input h-20 w-97 fs-11 form-control", @type = "date", disabled = "disabled"} })</td>
-                <td>To</td>
-                <td colspan="1">@Html.EditorFor(m => m.PeriodTo, new { htmlAttributes = new { @class = "input h-20 w-97 fs-11 form-control", @type = "date", disabled = "disabled"} })</td>
                 <td>&#9679</td>
                 <td>Check No.</td>
-                <td colspan="1"><input class="input" id="txtCheck1" disabled="disabled" /></td>
-                <td colspan="1"><input class="input" id="txtCheck2" disabled="disabled" /></td>
-                <td rowspan="2"><button class="btn" style="width: 90%;" id="btnGeneratePreview" disabled="disabled">Generate Preview</button></td>
-            </tr>
+                <td colspan="3"><input class="input" id="txtCheck1" disabled="disabled" /></td>
+                <td colspan="2"></td>
+                <td colspan="3"><input class="input" id="txtCheck2" disabled="disabled" /></td>
+                </tr>
             <tr>
                 <td>&#9679</td>
                 <td>Voucher No.</td>
                 <td colspan="3"><input class="input" id="txtVoucher1" disabled="disabled" /></td>
-                <td></td>
+                <td colspan="2"></td>
                 <td colspan="3"><input class="input" id="txtVoucher2" disabled="disabled" /></td>
             </tr>
             <tr>
                 <td>&#9679</td>
                 <td>Covered Tran No.</td>
-                <td colspan="1" style="padding:0px"><input class="input" id="txtCoveredTranNo1" disabled="disabled" /></td>
-                <td colspan="1" style="padding:0px"><input class="input" id="txtCoveredTranNo2" disabled="disabled" /></td>
-                <td colspan="1" style="padding:0px"><input class="input" id="txtCoveredTranNo3" disabled="disabled" /></td>
-                <td></td>
-                <td colspan="1" style="padding:0px"><input class="input" id="txtCoveredTranNo4" disabled="disabled" /></td>
-                <td colspan="1" style="padding:0px"><input class="input" id="txtCoveredTranNo5" disabled="disabled" /></td>
-                <td colspan="1" style="padding:0px"><input class="input" id="txtCoveredTranNo6" disabled="disabled" /></td>
+                <td colspan="1"><input class="input" id="txtCoveredTranNo1" disabled="disabled" /></td>
+                <td colspan="1"><input class="input" id="txtCoveredTranNo2" disabled="disabled" /></td>
+                <td colspan="1"><input class="input" id="txtCoveredTranNo3" disabled="disabled" /></td>
+                <td colspan="2"></td>
+                <td colspan="1"><input class="input" id="txtCoveredTranNo4" disabled="disabled" /></td>
+                <td colspan="1"><input class="input" id="txtCoveredTranNo5" disabled="disabled" /></td>
+                <td colspan="1"><input class="input" id="txtCoveredTranNo6" disabled="disabled" /></td>
             </tr>
             <tr>
                 <td>&#9679</td>
                 <td>Subject Name</td>
                 <td colspan="2"><input class="input" id="txtSubjName" disabled="disabled" /></td>
-                <td colspan="1"></td>
+                <td colspan="2"></td>
                 <td>@Html.LabelFor(m => m.FileFormatList)</td>
                 <td>
                     @Html.DropDownListFor(m => m.FileFormatList, new SelectList(Model.FileFormatList, "FileFormatID", "FileFormatName"), null, new { @class = "dis-inline-block", id = "ddlFileFormat", disabled = "disabled" })
@@ -429,8 +416,7 @@
                 <td rowspan="2">
                     <button class="btn" style="width: 90%;" id="btnGenerateFile" disabled="disabled">Generate File</button>
                 </td>
-                <td></td>
-                <td></td>
+                <td rowspan="2"><button class="btn" style="width:97%;" id="btnGeneratePreview" disabled="disabled">Generate Preview</button></td>
             </tr>
         </table>
     </div>
