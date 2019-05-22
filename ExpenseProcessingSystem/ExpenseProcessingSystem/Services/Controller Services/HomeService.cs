@@ -2800,7 +2800,7 @@ namespace ExpenseProcessingSystem.Services
 
         //============[Retrieve System Values]=============================
         //retrieve vendor list
-        public List<SelectList> getCheckEntrySystemVals()
+        public List<SelectList> getEntrySystemVals()
         {
             List<SelectList> listOfLists = new List<SelectList>();
 
@@ -3181,12 +3181,12 @@ namespace ExpenseProcessingSystem.Services
             ExpenseEntryModel m = new ExpenseEntryModel
             {
                 Expense_ID = transID,
-                Expense_Status = status
             };
 
             if (_modelState.IsValid)
             {
-                _context.ExpenseEntry.Update(m);
+                _context.ExpenseEntry.Attach(m);
+                m.Expense_Status = status;
                 _context.SaveChanges();
             }
             else { return false; }

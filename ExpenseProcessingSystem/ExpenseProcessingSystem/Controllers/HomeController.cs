@@ -348,6 +348,12 @@ namespace ExpenseProcessingSystem.Controllers
             //string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmsstt"); // ORIGINAL
             string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmss");
             string pdfFooterFormat = "";
+            ReportHeaderViewModel headerVM = new ReportHeaderViewModel();
+
+            headerVM.Header_Logo = "";
+            headerVM.Header_Name = "Mizuho Bank Ltd., Manila Branch";
+            headerVM.Header_TIN = "004-669-467-000";
+            headerVM.Header_Address = "25th Floor, The Zuellig Building, Makati Avenue corner Paseo de Roxas, Makati City";
 
             //Model for data retrieve from Database
             HomeReportDataFilterViewModel data = null;
@@ -369,6 +375,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         HomeReportOutputAPSWT_M = _service.GetAPSWT_MData(model.Month, model.Year),
                         HomeReportFilter = model,
+                        ReportHeaderVM = headerVM
                     };
                     break;
 
@@ -590,7 +597,7 @@ namespace ExpenseProcessingSystem.Controllers
             var userId = GetUserID();
 
             EntryCVViewModelList viewModel = new EntryCVViewModelList();
-            List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
+            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
             viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
             viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
             viewModel.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
@@ -615,7 +622,7 @@ namespace ExpenseProcessingSystem.Controllers
             ModelState.Clear();
             if (id > -1) {
                 cvList = _service.getExpense(id);
-                List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
+                List<SelectList> listOfSysVals = _service.getEntrySystemVals();
                 cvList.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
                 cvList.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
                 cvList.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
@@ -670,7 +677,7 @@ namespace ExpenseProcessingSystem.Controllers
 
             cvList = _service.getExpense(entryID);
 
-            List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
+            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
             cvList.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
             cvList.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
             cvList.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
@@ -688,7 +695,7 @@ namespace ExpenseProcessingSystem.Controllers
 
             EntryCVViewModelList cvList;
             cvList = _service.getExpense(entryID);
-            List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
+            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
             cvList.systemValues.vendors = listOfSysVals[0];
             cvList.systemValues.dept = listOfSysVals[1];
             cvList.systemValues.currency = listOfSysVals[2];
@@ -754,7 +761,7 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             EntryCVViewModelList viewModel = new EntryCVViewModelList();
-            List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
+            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
 
             viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
             viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
@@ -782,7 +789,7 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             EntryCVViewModelList viewModel = new EntryCVViewModelList();
-            List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
+            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
 
             viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
             viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
