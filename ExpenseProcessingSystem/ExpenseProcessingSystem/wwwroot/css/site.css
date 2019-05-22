@@ -121,7 +121,7 @@ input {
     font-size: 10px;
     color: #333;
     line-height: 1.2;
-    height: 17px;
+    /*height: 17px;*/
     width: 90%;
     border: 1px solid #ccc;
     border-radius: 2px;

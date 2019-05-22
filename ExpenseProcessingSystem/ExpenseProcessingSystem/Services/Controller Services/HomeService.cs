@@ -17,6 +17,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Reflection;
+using ExpenseProcessingSystem.Services.Controller_Services;
 
 namespace ExpenseProcessingSystem.Services
 {
@@ -27,6 +28,7 @@ namespace ExpenseProcessingSystem.Services
         private readonly EPSDbContext _context;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
         private readonly IHostingEnvironment _hostingEnvironment;
+        private ModalService _modalservice;
 
         private ModelStateDictionary _modelState;
         public HomeService(IHttpContextAccessor httpContextAccessor, EPSDbContext context, ModelStateDictionary modelState, IHostingEnvironment hostingEnvironment)
@@ -35,6 +37,7 @@ namespace ExpenseProcessingSystem.Services
             _context = context;
             _modelState = modelState;
             _hostingEnvironment = hostingEnvironment;
+            _modalservice = new ModalService(_httpContextAccessor, _context);
         }
         public string getUserRole(string id)
         {
@@ -3064,6 +3067,114 @@ namespace ExpenseProcessingSystem.Services
 
             return cvModel;
         }
+        // [RETRIEVE DDV EXPENSE DETAILS]
+        public EntryDDVViewModelList getExpenseDDV(int transID)
+        {
+            List<EntryDDVViewModel> ddvList = new List<EntryDDVViewModel>();
+
+            var EntryDetails = (from e
+                                in _context.ExpenseEntry
+                                where e.Expense_ID == transID
+                                select new
+                                {
+                                    e,
+                                    ExpenseEntryDetails = from d
+                                                          in _context.ExpenseEntryDetails
+                                                          where d.ExpenseEntryModel.Expense_ID == e.Expense_ID
+                                                          select new
+                                                          {
+                                                              d,
+                                                              ExpenseEntryGbaseDtls = from g
+                                                                                      in _context.ExpenseEntryGbaseDtls
+                                                                                      where g.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
+                                                                                      select g,
+                                                              ExpenseEntryInterEntity = from a
+                                                                                          in _context.ExpenseEntryInterEntity
+                                                                                          where a.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
+                                                                                          select a
+                                                          }
+                                }).FirstOrDefault();
+
+            foreach (var dtl in EntryDetails.ExpenseEntryDetails)
+            {
+                List<DDVInterEntityViewModel> interDetails = new List<DDVInterEntityViewModel>();
+                List<EntryGbaseRemarksViewModel> remarksDtl = new List<EntryGbaseRemarksViewModel>();
+
+                foreach (ExpenseEntryInterEntityModel inter in dtl.ExpenseEntryInterEntity)
+                {
+                    DDVInterEntityViewModel interDetailsVM = new DDVInterEntityViewModel()
+                    {
+                        Inter_ID = inter.Inter_ID,
+                        Inter_Particular_Title = inter.Inter_Particular_Title,
+                        Inter_Currency1_ABBR = inter.Inter_Currency1_ABBR,
+                        Inter_Currency1_Amount = inter.Inter_Currency1_Amount,
+                        Inter_Currency2_ABBR = inter.Inter_Currency2_ABBR,
+                        Inter_Currency2_Amount = inter.Inter_Currency2_Amount,
+                        Inter_Rate = inter.Inter_Rate.ToString(),
+                        Inter_Particular1 = _modalservice.PopulateParticular1(inter.Inter_Particular_Title, inter.Inter_Currency1_ABBR, inter.Inter_Currency1_Amount, inter.Inter_Currency2_Amount, double.Parse(inter.Inter_Rate)),
+                        Inter_Particular2 = _modalservice.PopulateParticular2(inter.Inter_Currency1_ABBR, inter.Inter_Currency2_ABBR, inter.Inter_Currency2_Amount, double.Parse(inter.Inter_Rate)),
+                        Inter_Particular3 = _modalservice.PopulateParticular3(inter.Inter_Currency2_ABBR, inter.Inter_Currency2_Amount)
+                    };
+
+                    interDetails.Add(interDetailsVM);
+                }
+
+                foreach (var gbase in dtl.ExpenseEntryGbaseDtls)
+                {
+                    EntryGbaseRemarksViewModel gbaseTemp = new EntryGbaseRemarksViewModel()
+                    {
+                        amount = gbase.GbaseDtl_Amount,
+                        desc = gbase.GbaseDtl_Description,
+                        docType = gbase.GbaseDtl_Document_Type,
+                        invNo = gbase.GbaseDtl_InvoiceNo
+                    };
+
+                    remarksDtl.Add(gbaseTemp);
+                }
+
+
+                EntryDDVViewModel ddvDtl = new EntryDDVViewModel()
+                {
+                    GBaseRemarks = dtl.d.ExpDtl_Gbase_Remarks,
+                    account = dtl.d.ExpDtl_Account,
+                    inter_entity = dtl.d.ExpDtl_Inter_Entity,
+                    fbt = dtl.d.ExpDtl_Fbt,
+                    dept = dtl.d.ExpDtl_Dept,
+                    chkVat = (dtl.d.ExpDtl_Vat <= 0) ? false : true,
+                    vat = (dtl.d.ExpDtl_Vat <= 0) ? getVat() : dtl.d.ExpDtl_Vat,
+                    chkEwt = dtl.d.ExpDtl_isEwt,
+                    ewt = dtl.d.ExpDtl_isEwt ? 0 : dtl.d.ExpDtl_Ewt,
+                    ccy = dtl.d.ExpDtl_Ccy,
+                    debitGross = dtl.d.ExpDtl_Debit,
+                    credEwt = dtl.d.ExpDtl_Credit_Ewt,
+                    credCash = dtl.d.ExpDtl_Credit_Cash,
+                    ewtPayorName = dtl.d.ExpDtl_Ewt_Payor_Name,
+                    interDetails = interDetails,
+                    gBaseRemarksDetails = remarksDtl
+                };
+
+                ddvList.Add(ddvDtl);
+            }
+
+            EntryDDVViewModelList ddvModel = new EntryDDVViewModelList()
+            {
+                entryID = EntryDetails.e.Expense_ID,
+                expenseDate = EntryDetails.e.Expense_Date,
+                vendor = EntryDetails.e.Expense_Payee,
+                expenseYear = EntryDetails.e.Expense_Date.Year.ToString(),
+                expenseId = EntryDetails.e.Expense_Number,
+                checkNo = EntryDetails.e.Expense_CheckNo,
+                status = getStatus(EntryDetails.e.Expense_Status),
+                statusID = EntryDetails.e.Expense_Status,
+                approver = (EntryDetails.e.Expense_Status == 1) ? "" : getUserName(EntryDetails.e.Expense_Approver),
+                verifier_1 = (EntryDetails.e.Expense_Status == 1) ? "" : getUserName(EntryDetails.e.Expense_Verifier_1),
+                verifier_2 = (EntryDetails.e.Expense_Status == 1) ? "" : getUserName(EntryDetails.e.Expense_Verifier_2),
+                maker = EntryDetails.e.Expense_Creator_ID,
+                EntryDDV = ddvList
+            };
+
+            return ddvModel;
+        }
         //update status of entry
         public bool updateExpenseStatus(int transID, int status)
         {
@@ -3080,6 +3191,99 @@ namespace ExpenseProcessingSystem.Services
             }
             else { return false; }
             return true;
+        }
+        public int addExpense_DDV(EntryDDVViewModelList entryModel, int userId, int expenseType)
+        {
+            float TotalDebit = 0;
+            float credEwtTotal = 0;
+            float credCashTotal = 0;
+
+            foreach (EntryDDVViewModel cv in entryModel.EntryDDV)
+            {
+                TotalDebit += cv.debitGross;
+                credEwtTotal += cv.credEwt;
+                credCashTotal += cv.credCash;
+            }
+
+            if (_modelState.IsValid)
+            {
+                List<ExpenseEntryDetailModel> expenseDtls = new List<ExpenseEntryDetailModel>();
+
+                foreach (EntryDDVViewModel ddv in entryModel.EntryDDV)
+                {
+                    List<ExpenseEntryInterEntityModel> expenseInter = new List<ExpenseEntryInterEntityModel>();
+                    List<ExpenseEntryGbaseDtl> expenseGbase = new List<ExpenseEntryGbaseDtl>();
+
+                    foreach (var interDetails in ddv.interDetails)
+                    {
+                        ExpenseEntryInterEntityModel interEntity = new ExpenseEntryInterEntityModel
+                        {
+                            Inter_Particular_Title = interDetails.Inter_Particular_Title,
+                            Inter_Currency1_ABBR = interDetails.Inter_Currency1_ABBR,
+                            Inter_Currency1_Amount = interDetails.Inter_Currency1_Amount,
+                            Inter_Currency2_ABBR = interDetails.Inter_Currency2_ABBR,
+                            Inter_Currency2_Amount = interDetails.Inter_Currency2_Amount,
+                            Inter_Rate = interDetails.Inter_Rate
+                        };
+
+                        expenseInter.Add(interEntity);
+                    }
+
+                    foreach (var gbaseRemark in ddv.gBaseRemarksDetails)
+                    {
+                        ExpenseEntryGbaseDtl remarks = new ExpenseEntryGbaseDtl
+                        {
+                            GbaseDtl_Document_Type = gbaseRemark.docType,
+                            GbaseDtl_InvoiceNo = gbaseRemark.invNo,
+                            GbaseDtl_Description = gbaseRemark.desc,
+                            GbaseDtl_Amount = gbaseRemark.amount
+                        };
+
+                        expenseGbase.Add(remarks);
+                    }
+
+                    ExpenseEntryDetailModel expenseDetails = new ExpenseEntryDetailModel
+                    {
+                        ExpDtl_Gbase_Remarks = ddv.GBaseRemarks,
+                        ExpDtl_Account = ddv.account,
+                        ExpDtl_Inter_Entity = ddv.inter_entity,
+                        ExpDtl_Fbt = ddv.fbt,
+                        ExpDtl_Dept = ddv.dept,
+                        ExpDtl_Vat = ddv.vat,
+                        ExpDtl_Ewt = ddv.ewt,
+                        ExpDtl_Ccy = ddv.ccy,
+                        ExpDtl_Debit = ddv.debitGross,
+                        ExpDtl_Credit_Ewt = ddv.credEwt,
+                        ExpDtl_Credit_Cash = ddv.credCash,
+                        ExpDtl_Ewt_Payor_Name = ddv.ewtPayorName,
+                        ExpenseEntryInterEntity = expenseInter,
+                        ExpenseEntryGbaseDtls = expenseGbase
+                    };
+
+                    expenseDtls.Add(expenseDetails);
+                }
+
+                ExpenseEntryModel expenseEntry = new ExpenseEntryModel
+                {
+                    Expense_Type = expenseType,
+                    Expense_Date = entryModel.expenseDate,
+                    Expense_Payee = entryModel.vendor,
+                    Expense_Debit_Total = TotalDebit,
+                    Expense_Credit_Total = credEwtTotal + credCashTotal,
+                    Expense_Creator_ID = userId,
+                    Expense_Created_Date = DateTime.Now,
+                    Expense_Last_Updated = DateTime.Now,
+                    Expense_isDeleted = false,
+                    Expense_Status = 1,
+                    ExpenseEntryDetails = expenseDtls
+                };
+
+                _context.ExpenseEntry.Add(expenseEntry);
+                _context.SaveChanges();
+                return expenseEntry.Expense_ID;
+            }
+
+            return -1;
         }
         ////============[End Access Entry Tables]=========================
 

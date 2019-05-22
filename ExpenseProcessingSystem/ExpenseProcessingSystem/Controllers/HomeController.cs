@@ -699,6 +699,8 @@ namespace ExpenseProcessingSystem.Controllers
         }
 
         //Expense Entry Check Voucher Block End=========================================================================
+        //------------------------------------------------------------------
+        //[* Entry Direct Deposit *]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         public IActionResult Entry_DDV()
@@ -716,11 +718,30 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.expenseYear = DateTime.Today.Year.ToString();
             viewModel.expenseDate = DateTime.Today;
             //viewModel.vendor = 2;
-            viewModel.EntryDDV.Add(new EntryDDVViewModel());
+            viewModel.EntryDDV.Add(new EntryDDVViewModel { interDetails = new List<DDVInterEntityViewModel> { new DDVInterEntityViewModel()} });
             return View(viewModel);
-            //return View();
         }
+        public IActionResult AddNewDDV(EntryDDVViewModelList EntryDDVViewModelList)
+        {
+            var userId = GetUserID();
 
+            EntryDDVViewModelList ddvList = new EntryDDVViewModelList();
+            int id = _service.addExpense_DDV(EntryDDVViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_CV);
+            ModelState.Clear();
+            if (id > -1)
+            {
+                ddvList = _service.getExpenseDDV(id);
+                List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
+                ddvList.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
+                ddvList.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
+                ddvList.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
+                ddvList.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
+                ddvList.systemValues.acc = _service.getAccDetailsEntry();
+                ViewBag.Status = ddvList.status;
+            }
+
+            return View("Entry_DDV_ReadOnly", ddvList);
+        }
         //------------------------------------------------------------------
         //[* Entry Petty Cash *]
         [OnlineUserCheck]
