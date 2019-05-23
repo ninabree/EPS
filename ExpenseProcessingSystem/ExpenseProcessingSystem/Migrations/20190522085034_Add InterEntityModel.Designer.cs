@@ -4,18 +4,20 @@ using ExpenseProcessingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    partial class EPSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190522085034_Add InterEntityModel")]
+    partial class AddInterEntityModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
+                .HasAnnotation("ProductVersion", "2.2.0-rtm-35687")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -628,27 +630,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.ToTable("ExpenseEntryAmortizations");
                 });
 
-            modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryCashBreakdownModel", b =>
-                {
-                    b.Property<int>("CashBreak_ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<double>("CashBreak_Amount");
-
-                    b.Property<double>("CashBreak_Denimination");
-
-                    b.Property<double>("CashBreak_NoPcs");
-
-                    b.Property<int?>("ExpenseEntryDetailModelExpDtl_ID");
-
-                    b.HasKey("CashBreak_ID");
-
-                    b.HasIndex("ExpenseEntryDetailModelExpDtl_ID");
-
-                    b.ToTable("ExpenseEntryCashBreakdown");
-                });
-
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel", b =>
                 {
                     b.Property<int>("ExpDtl_ID")
@@ -1167,13 +1148,6 @@ namespace ExpenseProcessingSystem.Migrations
                 {
                     b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel", "ExpenseEntryDetailModel")
                         .WithMany("ExpenseEntryAmortizations")
-                        .HasForeignKey("ExpenseEntryDetailModelExpDtl_ID");
-                });
-
-            modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryCashBreakdownModel", b =>
-                {
-                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel", "ExpenseEntryDetailModel")
-                        .WithMany("ExpenseEntryCashBreakdowns")
                         .HasForeignKey("ExpenseEntryDetailModelExpDtl_ID");
                 });
 

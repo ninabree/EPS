@@ -1,0 +1,178 @@
+﻿
+@{
+    ViewData["Title"] = "EntryExpenseInterEntity";
+    Layout = "~/Views/Shared/_ModalLayout.cshtml";
+}
+@using ExpenseProcessingSystem.ViewModels.Entry
+@model DDVInterEntityViewModel
+
+@Html.HiddenFor(x => Model.Inter_ID, new { @id = "parentIdInterEntity" })
+<table class="table voucher-tbl table-bordered">
+    <tr>
+        <td colspan="3"><label>Exchange Rate:</label></td>
+        <td colspan="1">@Html.TextBoxFor(m => m.Inter_Rate, new { @class = "w-full" })</td>
+        <td colspan="12"></td>
+    </tr>
+    <tr>
+        <td colspan="3"><label>PhP Amount</label></td>
+        <td colspan="1" id="curr1-abbr">@Html.DisplayFor(m => m.Inter_Currency1_ABBR)</td>
+        <td colspan="4">@Html.TextBoxFor(m => m.Inter_Currency1_Amount)</td>
+        <td colspan="8"></td>
+    </tr>
+    <tr>
+        <td colspan="3"><label>USD Amount</label></td>
+        <td colspan="1" id="curr2-abbr">@Html.DisplayFor(m => m.Inter_Currency2_ABBR)</td>
+        <td colspan="4">@Html.TextBoxFor(m => m.Inter_Currency2_Amount)</td>
+        <td colspan="8"></td>
+    </tr>
+    <tr>
+        <td colspan="16"></td>
+    </tr>
+    <tr>
+        <td colspan="3"><label>Particular</label></td>
+        <td colspan="5"><label>Account</label></td>
+        <td colspan="1"><label>CCY</label></td>
+        <td colspan="1"><label>Inter-Rate</label></td>
+        <td colspan="2"><label>Debit</label></td>
+        <td colspan="1"><label>CCY</label></td>
+        <td colspan="1"><label>Inter-Rate</label></td>
+        <td colspan="2"><label>Credit</label></td>
+    </tr>
+    @if (Model.Inter_Particular1.Count > 0)
+    {
+        var rowCount = Model.Inter_Particular1.Count;
+        <tr>
+            <td rowspan=@rowCount colspan="3"> @Html.DisplayFor(m => @Model.Inter_Particular_Title) </td>
+            <td colspan="5">@Html.DisplayFor(m => m.Inter_Particular1[0].Particular_Account_Name)</td>
+            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency1_ABBR)</td>
+            <td colspan="1"></td>
+            <td colspan="2" id="par1-0">@Html.DisplayFor(m => m.Inter_Particular1[0].Particular_Debit_Amount)</td>
+            <td colspan="4"></td>
+        </tr>
+        <tr>
+            <td colspan="5">@Html.DisplayFor(m => m.Inter_Particular1[1].Particular_Account_Name)</td>
+            <td colspan="4"></td>
+            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency1_ABBR)</td>
+            <td colspan="1"></td>
+            <td colspan="2" id="par1-1">@Html.DisplayFor(m => m.Inter_Particular1[1].Particular_Credit_Amount)</td>
+        </tr>
+        <tr>
+            <td colspan="5">@Html.DisplayFor(m => m.Inter_Particular1[2].Particular_Account_Name)</td>
+            <td colspan="4"></td>
+            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency1_ABBR)</td>
+            <td colspan="1"></td>
+            <td colspan="2" id="par1-2">@Html.DisplayFor(m => m.Inter_Particular1[2].Particular_Credit_Amount)</td>
+        </tr>
+        <tr></tr>
+    }
+    @if (Model.Inter_Particular2.Count > 0)
+    {
+        var rowCount = Model.Inter_Particular2.Count;
+        <tr>
+            <td rowspan=@rowCount colspan="3"> @Html.DisplayFor(m => @Model.Inter_Particular_Title) </td>
+            <td colspan="5">@Html.DisplayFor(m => m.Inter_Particular2[0].Particular_Account_Name)</td>
+            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency1_ABBR)</td>
+            <td colspan="1"></td>
+            <td colspan="2" id="par2-0">@Html.DisplayFor(m => m.Inter_Particular2[0].Particular_Debit_Amount)</td>
+            <td colspan="4"></td>
+        </tr>
+        <tr>
+            <td colspan="5">@Html.DisplayFor(m => m.Inter_Particular2[1].Particular_Account_Name)</td>
+            <td colspan="4"></td>
+            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency2_ABBR)</td>
+            <td colspan="1" id="par2-0-1">@Html.DisplayFor(m => m.Inter_Rate)</td>
+            <td colspan="2" id="par2-1">@Html.DisplayFor(m => m.Inter_Particular2[1].Particular_Credit_Amount)</td>
+        </tr>
+        <tr></tr>
+    }
+    @if (Model.Inter_Particular3.Count > 0)
+    {
+        var rowCount = Model.Inter_Particular3.Count;
+        <tr>
+            <td rowspan=@rowCount colspan="3"> @Html.DisplayFor(m => @Model.Inter_Particular_Title) </td>
+            <td colspan="5">@Html.DisplayFor(m => m.Inter_Particular3[0].Particular_Account_Name)</td>
+            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency2_ABBR)</td>
+            <td colspan="1"></td>
+            <td colspan="2" id="par3-0">@Html.DisplayFor(m => m.Inter_Particular3[0].Particular_Debit_Amount)</td>
+            <td colspan="4"></td>
+        </tr>
+        <tr>
+            <td colspan="5">@Html.DisplayFor(m => m.Inter_Particular3[1].Particular_Account_Name)</td>
+            <td colspan="4"></td>
+            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency2_ABBR)</td>
+            <td colspan="1"></td>
+            <td colspan="2" id="par3-1">@Html.DisplayFor(m => m.Inter_Particular3[1].Particular_Credit_Amount)</td>
+        </tr>
+    }
+    <tr></tr>
+    <tr></tr>
+</table>
+
+<script>
+    $(function () {
+        var curr1 = $("table").find("#Inter_Currency1_Amount").val();
+        var curr2 = $("table").find("#Inter_Currency2_Amount").val();
+        UpdateParticulars(curr1, curr2);
+        $("input#Inter_Currency1_Amount").on("change", function (e) {
+            e.stopImmediatePropagation();
+            var curr1 = $("table").find("#Inter_Currency1_Amount").val();
+            var curr2 = $("table").find("#Inter_Currency2_Amount").val();
+            if ((curr1 != 0) && (curr2 != 0)) {
+                UpdateParticulars(curr1, curr2);
+            }
+        });
+        $("input#Inter_Currency2_Amount").on("change", function (e) {
+            e.stopImmediatePropagation();
+            var curr1 = $("table").find("#Inter_Currency1_Amount").val();
+            var curr2 = $("table").find("#Inter_Currency2_Amount").val();
+            if ((curr1 != 0) && (curr2 != 0)) {
+                UpdateParticulars(curr1, curr2);
+            }
+        });
+        $("input#Inter_Rate").on("change", function (e) {
+            e.stopImmediatePropagation();
+            var curr1 = $("table").find("#Inter_Currency1_Amount").val();
+            var curr2 = $("table").find("#Inter_Currency2_Amount").val();
+            if ((curr1 != 0) && (curr2 != 0)) {
+                UpdateParticulars(curr1, curr2);
+            }
+        });
+        $(".modal-footer").on("click", "#saveBtn", function () {
+            var itemNo = $("#parentIdInterEntity").val().substr(5);
+
+            var rate = $("table").find("#Inter_Rate").val();
+            var curr1Abbr = $("#curr1-abbr").text();
+            var curr1Amt = $("table").find("#Inter_Currency1_Amount").val();
+            var curr2Abbr = $("#curr2-abbr").text();
+            var curr2Amt = $("table").find("#Inter_Currency2_Amount").val();
+
+            $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Currency1_ABBR").val(curr1Abbr);
+            $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Currency1_Amount").val(curr1Amt);
+            $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Currency2_ABBR").val(curr2Abbr);
+            $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Currency2_Amount").val(curr2Amt);
+            $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Rate").val(rate);
+
+            $('#myModal').modal('hide');
+            alert($("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Currency1_ABBR").val());
+        });
+
+        function UpdateParticulars(curr1, curr2) {
+            var rate = $("table").find("#Inter_Rate").val();
+            if ($.isNumeric(curr1) && $.isNumeric(curr2)) {
+                var parCredit = parseFloat(curr2) * parseFloat(rate);
+                var parDebit = parseFloat(curr1) + parseFloat(parCredit);
+                $("#par1-0").text(parDebit);
+                $("#par1-1").text(parCredit);
+                $("#par1-2").text(curr1);
+                $("#par2-0").text(parCredit);
+                $("#par2-1").text(curr2);
+                $("#par3-0").text(curr2);
+                $("#par3-1").text(curr2);
+                $("#par2-0-1").text(rate);
+            } else {
+                alert(curr1 + " - " + curr2 + " - Invalid amount/s provided.");
+            }
+
+        }
+    });
+</script>
