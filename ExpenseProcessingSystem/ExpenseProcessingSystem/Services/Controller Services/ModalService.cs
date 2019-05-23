@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace ExpenseProcessingSystem.Services.Controller_Services
@@ -1418,6 +1419,11 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 grpList.Add(new DMVATViewModel() { VAT_Name = (x.VAT_Rate * 100) + "% - " + x.VAT_Name, VAT_MasterID = x.VAT_MasterID });
             });
             return grpList;
+        }
+
+        public string GetAccountName(string id)
+        {
+            return _context.DMAccount.Where(db => db.Account_MasterID == Int64.Parse(id)).Single().Account_Name;
         }
     }
 }

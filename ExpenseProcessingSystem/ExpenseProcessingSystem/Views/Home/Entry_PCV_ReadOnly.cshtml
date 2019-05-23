@@ -1,0 +1,255 @@
+﻿@{
+    ViewData["Title"] = "Entry_PCV";
+}
+
+@using ExpenseProcessingSystem.ViewModels
+@using ExpenseProcessingSystem.ConstantData
+@model EntryCVViewModelList
+
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+@using (Html.BeginForm("VerAppModCV", "Home", FormMethod.Post, new { @class = "validate-form" }))
+{
+    <div class="tabContent">
+
+        <div id="tbl-lbl">
+            <div class="dis-inline-block"><p>Date:</p></div>
+            <div class="dis-inline-block">
+                @Html.TextBoxFor(model => model.expenseDate, new { @readonly = "true", @class = "input w-97" })
+            </div>
+        </div>
+        <div id="tbl-lbl">
+            <div class="dis-inline-block"><p>Payee:</p></div>
+            <div class="dis-inline-block">
+                @Html.DropDownListFor(m => m.vendor, new SelectList(Model.systemValues.vendors, "Value", "Text", Model.systemValues.vendors.SelectedValue), new { @disabled = "true" })
+            </div>
+        </div>
+        <div class="flex-c">
+            <table class="table table-bordered table-striped voucher-tbl w-97" id="inputTable">
+                <colgroup>
+                    <col style="width:22%;" />
+                    <col style="width:15%;" />
+                    <col style="width:3%;" />
+                    <col style="width:10%" />
+                    <col style="width:2%;" />
+                    <col style="width:7%;" />
+                    <col style="width:2%;" />
+                    <col style="width:7%;" />
+                    <col style="width:10%;" />
+                    <col style="width:10%;" />
+                    <col style="width:10%;" />
+                    <col style="width:2%;" />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th rowspan="2">GBase Remarks</th>
+                        <th rowspan="2">Account</th>
+                        <th rowspan="2">FBT</th>
+                        <th rowspan="2">Dept</th>
+                        <th rowspan="2" colspan="2">VAT</th>
+                        <th rowspan="2" colspan="2">TR</th>
+                        <th colspan="1">Debit</th>
+                        <th colspan="2">Credit</th>
+                    </tr>
+                    <tr>
+                        <th scope="col">Gross Amount</th>
+                        <th scope="col">TR Amount</th>
+                        <th scope="col">Cash</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.EntryCV.Count; i++)
+                    {
+                        <tr id="item_@i">
+                            <td class="p-b-1 p-t-1">
+                                <div class="flex-sb">
+                                    <input value="@Model.EntryCV[i].GBaseRemarks" class="input100 w-80" disabled="disabled" />
+                                    <div id="remark_@i">
+                                        <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
+                                        @for (int y = 0; y < Model.EntryCV[i].gBaseRemarksDetails.Count(); y++)
+                                        {
+                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].docType);
+                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].desc);
+                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].invNo);
+                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].amount);
+                                        }
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                @Html.DropDownListFor(x => Model.EntryCV[i].account, new SelectList(Model.systemValues.acc, "accId", "accName"), new { @class = "input100 txtAcc", disabled = "disabled" })
+                            </td>
+                            <td style="text-align:center">@Html.DisplayFor(x => Model.EntryCV[i].fbt)</td>
+                            <td>@Html.DropDownListFor(x => Model.EntryCV[i].dept, new SelectList(Model.systemValues.dept, "Value", "Text", Model.systemValues.dept.SelectedValue), new { @class = "input100", disabled = "disabled" })</td>
+                            <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].chkVat, new { @class = "chkVat", disabled = "disabled" })</td>
+                            <td><input value="@Model.EntryCV[i].vat" class="input100" disabled /></td>
+                            <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].chkEwt, new { @class = "chkEwt", disabled = "disabled" })</td>
+                            <td>@Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt", disabled = "disabled" })</td>
+                            <td><input value="@Model.EntryCV[i].debitGross" class="input100" disabled /></td>
+                            <td><input value="@Model.EntryCV[i].credEwt" class="input100" disabled /></td>
+                            <td><input value="@Model.EntryCV[i].credCash" class="input100" disabled /></td>
+
+                            <td id="req_@i">
+                                @if (Model.EntryCV[i].amtDetails.Count > 0)
+                                {
+                                    <a class="reqBtn glyphicon glyphicon-list-alt"></a>
+                                    @Html.HiddenFor(x => Model.EntryCV[i].month, new { @class = "txtAmorMonth" })
+                                    @Html.HiddenFor(x => Model.EntryCV[i].day, new { @class = "txtAmorDay" })
+                                    @Html.HiddenFor(x => Model.EntryCV[i].duration, new { @class = "txtAmorDuration" })
+                                    @for (int y = 0; y < Model.EntryCV[i].amtDetails.Count(); y++)
+                                    {
+                                        @Html.HiddenFor(x => Model.EntryCV[i].amtDetails[y].amtDate);
+                                        @Html.HiddenFor(x => Model.EntryCV[i].amtDetails[y].amtAmount);
+                                    }
+                                }
+                                else
+                                {
+                                    <a class="reqBtn glyphicon glyphicon-list-alt"></a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td style="border:none; background-color:#f2f2f2" rowspan="2"><a id="addRow" href="#" class="glyphicon glyphicon-plus"></a></td>
+                        <td style="border:none; background-color:#f2f2f2" rowspan="2"></td>
+                        <td style="border:none; background-color:#f2f2f2" rowspan="2"></td>
+                        <td style="border:none; background-color:#f2f2f2" rowspan="2"></td>
+                        <td style="border:none; background-color:#f2f2f2" rowspan="2"></td>
+                        <td style="border:none; background-color:#f2f2f2;text-align:right" colspan="3">Sub-total:</td>
+                        <td rowspan="2"><input type="text" class="input100" readonly id="grossTotal" /></td>
+                        <td><input type="text" readonly class="input100" id="credEwtTotal" /></td>
+                        <td><input type="text" readonly class="input100" id="credCashTotal" /></td>
+                    </tr>
+                    <tr>
+                        <td style="border:none; background-color: #f2f2f2;text-align:right" colspan="3">Total:</td>
+                        <td colspan="2"><div class="flex-c"><input type="text" class="input100" readonly id="credTotal" /></div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="voucherPreview">
+            <div id="tbl-lbl">
+                <div class="dis-inline-block"><p>Preview of Voucher:</p></div>
+            </div>
+            @Html.Partial("PCVPartial")
+        </div>
+        <div id="entry-status" class="m-t-10 m-b-10">
+            <div class="dis-inline-block"><label>Status: </label></div>
+            <div class="dis-inline-block">@Html.TextBoxFor(x => x.status, new { @readonly = "true", @class = "input" })</div>
+            <div class="dis-inline-block"><label>Approver:</label></div>
+            <div class="dis-inline-block">@Html.TextBoxFor(model => model.approver, new { @readonly = "true", @class = "input" })</div>
+            <div class="dis-inline-block"><label>Verifier:</label></div>
+            <div class="dis-inline-block">
+                <p class="dis-inline-block">@Html.TextBoxFor(model => model.verifier_1, new { @readonly = "true", @class = "m-l-5 input" })</p>
+                <p class="dis-inline-block">@Html.TextBoxFor(model => model.verifier_2, new { @readonly = "true", @class = "m-l-5 input" })</p>
+            </div>
+        </div>
+        <div id="entry-controls" class="m-b-10">
+            @Html.HiddenFor(x => Model.entryID)
+            <div class="flex-sb">
+                <div>
+                    <div class="dis-inline-block tbl-btn"><button disabled>Save</button></div>
+
+                    @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker)
+                    {
+                        <div class="dis-inline-block tbl-btn"><button>Delete</button></div>
+                        <div class="dis-inline-block tbl-btn"><button value="Modify" name="command">Modify</button></div>
+                    }
+                    else
+                    {
+                        <div class="dis-inline-block tbl-btn"><button disabled>Delete</button></div>
+                        <div class="dis-inline-block tbl-btn"><button disabled>Modify</button></div>
+                    }
+                </div>
+                <div>
+                    <div class="dis-inline-block tbl-btn"><button id="reversal_entry" disabled>Create Reversal Entry</button></div>
+                </div>
+                <div>
+                    <div class="dis-inline-block tbl-btn m-l-41"><button disabled>Print Check</button></div>
+                </div>
+
+            </div>
+            <div class="flex-sb">
+                <div>
+                    @if (HttpContextAccessor.HttpContext.Session.GetString("accessType") == GlobalSystemValues.ROLE_MAKER)
+                    {
+                        <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
+                    }
+                    else
+                    {
+                        if (Model.statusID == GlobalSystemValues.STATUS_APPROVED)
+                        {
+                            <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
+                        }
+                        else
+                        {
+                            <div class="dis-inline-block tbl-btn"><button value="@HttpContextAccessor.HttpContext.Session.GetString("accessType")" name="command">Approve/Verify</button></div>
+                        }
+                    }
+                    <div class="dis-inline-block tbl-btn"><button value="Reject" name="command">Reject</button></div>
+                </div>
+                <div>
+                    <div class="dis-inline-block tbl-btn"><button disabled>Delete GBase Post</button></div>
+                </div>
+                <div>
+                    <div class="dis-inline-block tbl-btn"><button disabled>Print BIR Certificate</button></div>
+                </div>
+            </div>
+
+        </div>
+        <div id="modalDiv">
+            @Html.Partial("ModalPartial")
+        </div>
+    </div>
+}
+<script type="text/javascript" src="~/js/EntryScripts.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $(window).on("load", function () {
+            @*if (@ViewBag.Success == 1) {
+                alert("Entry Approved");
+            } else if (@ViewBag.Success == 0){
+                alert("Entry Failed");
+            }*@
+            var gross = $(".txtGross");
+            var credEwt = $(".txtCredEwt");
+            var credCash = $(".txtCredCash");
+
+            var grossTotal = 0;
+            var ewtSubTotal = 0;
+            var cashSubTotal = 0;
+
+            for (var i = 0; i < gross.length; i++) {
+                grossTotal += Number(gross[i].value);
+            }
+
+            for (var i = 0; i < credEwt.length; i++) {
+                ewtSubTotal += Number(credEwt[i].value);
+            }
+
+            for (var i = 0; i < credCash.length; i++) {
+                cashSubTotal += Number(credCash[i].value);
+            }
+
+            $("#grossTotal").val(grossTotal);
+            $("#credEwtTotal").val(ewtSubTotal);
+            $("#credCashTotal").val(cashSubTotal);
+            $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
+        });
+    });
+</script>
+<script type="text/javascript">
+    function roundNumber(num, scale) {
+        if (!("" + num).includes("e")) {
+            return +(Math.round(num + "e+" + scale) + "e-" + scale);
+        } else {
+            var arr = ("" + num).split("e");
+            var sig = ""
+            if (+arr[1] + scale > 0) {
+                sig = "+";
+            }
+            return +(Math.round(+arr[0] + "e" + sig + (+arr[1] + scale)) + "e-" + scale);
+        }
+    };
+</script>

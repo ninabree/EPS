@@ -2801,17 +2801,17 @@ namespace ExpenseProcessingSystem.Services
         {
             List<SelectList> listOfLists = new List<SelectList>();
 
-            listOfLists.Add(new SelectList (_context.DMVendor.Where(x => x.Vendor_isActive == true).Select(q => new {q.Vendor_ID, q.Vendor_Name }),
-                                                "Vendor_ID", "Vendor_Name"));
+            listOfLists.Add(new SelectList (_context.DMVendor.Where(x => x.Vendor_isActive == true && x.Vendor_isDeleted == false).Select(q => new {q.Vendor_MasterID, q.Vendor_Name }),
+                                                "Vendor_MasterID", "Vendor_Name"));
 
-            listOfLists.Add(new SelectList(_context.DMDept.Where(x => x.Dept_isActive == true).Select(q => new { q.Dept_ID, q.Dept_Name }),
-                                                "Dept_ID", "Dept_Name"));
+            listOfLists.Add(new SelectList(_context.DMDept.Where(x => x.Dept_isActive == true && x.Dept_isDeleted == false).Select(q => new { q.Dept_MasterID, q.Dept_Name }),
+                                                "Dept_MasterID", "Dept_Name"));
 
-            listOfLists.Add(new SelectList(_context.DMCurrency.Where(x => x.Curr_isActive == true).Select(q => new { q.Curr_ID, q.Curr_Name }),
-                                    "Curr_ID", "Curr_Name"));
+            listOfLists.Add(new SelectList(_context.DMCurrency.Where(x => x.Curr_isActive == true && x.Curr_isDeleted == false).Select(q => new { q.Curr_MasterID, q.Curr_Name }),
+                                    "Curr_MasterID", "Curr_Name"));
 
-            listOfLists.Add(new SelectList(_context.DMTR.Where(x => x.TR_isActive == true).Select(q => new { q.TR_ID, q.TR_Tax_Rate }),
-                        "TR_ID", "TR_Tax_Rate"));
+            listOfLists.Add(new SelectList(_context.DMTR.Where(x => x.TR_isActive == true && x.TR_isDeleted == false).Select(q => new { q.TR_MasterID, q.TR_Tax_Rate }),
+                        "TR_MasterID", "TR_Tax_Rate"));
 
             return listOfLists;
         }
@@ -2820,12 +2820,12 @@ namespace ExpenseProcessingSystem.Services
         {
             List<accDetails> accDetails = new List<accDetails>();
 
-            var accDbDetails = _context.DMAccount.Where(x => x.Account_isActive == true).Select(q => new { q.Account_ID, q.Account_Name, q.Account_Code });
+            var accDbDetails = _context.DMAccount.Where(x => x.Account_isActive == true).Select(q => new { q.Account_MasterID, q.Account_Name, q.Account_Code });
 
             foreach (var detail in accDbDetails)
             {
                 accDetails temp = new accDetails();
-                temp.accId = detail.Account_ID;
+                temp.accId = detail.Account_MasterID;
                 temp.accName = detail.Account_Name;
                 temp.accCode = detail.Account_Code;
 
@@ -2900,17 +2900,33 @@ namespace ExpenseProcessingSystem.Services
                 foreach (EntryCVViewModel cv in entryModel.EntryCV)
                 {
                     List<ExpenseEntryAmortizationModel> expenseAmor = new List<ExpenseEntryAmortizationModel>();
+                    List<ExpenseEntryCashBreakdownModel> expenseCashBreakdown = new List<ExpenseEntryCashBreakdownModel>();
                     List<ExpenseEntryGbaseDtl> expenseGbase = new List<ExpenseEntryGbaseDtl>();
 
-                    foreach (var amorSchedule in cv.amtDetails)
+                    if(expenseType == GlobalSystemValues.TYPE_CV)
                     {
-                        ExpenseEntryAmortizationModel amortization = new ExpenseEntryAmortizationModel
+                        foreach (var amorSchedule in cv.amtDetails)
                         {
-                            Amor_Sched_Date = amorSchedule.amtDate,
-                            Amor_Price = amorSchedule.amtAmount
-                        };
+                            ExpenseEntryAmortizationModel amortization = new ExpenseEntryAmortizationModel
+                            {
+                                Amor_Sched_Date = amorSchedule.amtDate,
+                                Amor_Price = amorSchedule.amtAmount
+                            };
 
-                        expenseAmor.Add(amortization);
+                            expenseAmor.Add(amortization);
+                        }
+                    }
+                    else if(expenseType == GlobalSystemValues.TYPE_PC)
+                    {
+                        foreach (var cashbd in cv.cashBreakdown)
+                        {
+                            expenseCashBreakdown.Add(new ExpenseEntryCashBreakdownModel
+                            {
+                                CashBreak_Denimination = cashbd.cashDenimination,
+                                CashBreak_NoPcs = cashbd.cashNoPC,
+                                CashBreak_Amount = cashbd.cashAmount
+                            });
+                        }
                     }
 
                     foreach (var gbaseRemark in cv.gBaseRemarksDetails)
@@ -2922,7 +2938,6 @@ namespace ExpenseProcessingSystem.Services
                             GbaseDtl_Description = gbaseRemark.desc,
                             GbaseDtl_Amount = gbaseRemark.amount
                         };
-
                         expenseGbase.Add(remarks);
                     }
 
@@ -2936,15 +2951,16 @@ namespace ExpenseProcessingSystem.Services
                         ExpDtl_Ewt = cv.ewt,
                         ExpDtl_Ccy = cv.ccy,
                         ExpDtl_Debit = cv.debitGross,
+                        ExpDtl_isEwt = cv.chkEwt,
                         ExpDtl_Credit_Ewt = cv.credEwt,
                         ExpDtl_Credit_Cash = cv.credCash,
                         ExpDtl_Amor_Month = cv.month,
                         ExpDtl_Amor_Day = cv.day,
                         ExpDtl_Amor_Duration = cv.duration,
                         ExpenseEntryAmortizations = expenseAmor,
-                        ExpenseEntryGbaseDtls = expenseGbase
+                        ExpenseEntryGbaseDtls = expenseGbase,
+                        ExpenseEntryCashBreakdowns = expenseCashBreakdown
                     };
-
                     expenseDtls.Add(expenseDetails);
                 }
 
@@ -2967,7 +2983,6 @@ namespace ExpenseProcessingSystem.Services
                 _context.SaveChanges();
                 return expenseEntry.Expense_ID;
             }
-
             return -1;
         }
         //retrieve expense details
@@ -3030,7 +3045,7 @@ namespace ExpenseProcessingSystem.Services
                     chkVat = (dtl.d.ExpDtl_Vat <= 0) ? false : true,
                     vat = (dtl.d.ExpDtl_Vat <= 0) ? getVat() : dtl.d.ExpDtl_Vat,
                     chkEwt = dtl.d.ExpDtl_isEwt,
-                    ewt = dtl.d.ExpDtl_isEwt ? 0 : dtl.d.ExpDtl_Ewt,
+                    ewt = dtl.d.ExpDtl_Ewt,
                     ccy = dtl.d.ExpDtl_Ccy,
                     debitGross = dtl.d.ExpDtl_Debit,
                     credEwt = dtl.d.ExpDtl_Credit_Ewt,

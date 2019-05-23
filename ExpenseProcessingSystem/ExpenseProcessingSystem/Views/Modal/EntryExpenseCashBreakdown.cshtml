@@ -1,0 +1,148 @@
+﻿@using ExpenseProcessingSystem.ViewModels.Entry
+@model PCVCashBreakdownViewModel
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>EntryExpenseCashBreakdown</title>
+    </head>
+    <body>
+        <div id="cashBreakdownBody">
+            @Html.HiddenFor(x => Model.id, new { @id = "parentIdPCVTable" })
+            <div>Vendor/Employee : <p class="dis-inline-block w-49">@Html.TextBoxFor(x => Model.vendor, new { @id = "reqVendor", @readonly = "readonly", @class = "input" })</p></div>
+            <div>Account :<p class="dis-inline-block w-49">@Html.TextBoxFor(x => Model.accountName, new { @id = "reqAccount", @readonly = "readonly", @class = "input" })</p></div>
+            <div>Amount :<p class="dis-inline-block w-49">@Html.TextBoxFor(x => Model.amount, new { @id = "reqAmount", @readonly = "readonly", @class = "input" })</p></div>
+            <div class="flex-c">
+                <table id="modalTable" class="cashBreakdowntable table-bordered table-striped voucher-tbl w-70">
+                    <colgroup>
+                        <col />
+                        <col />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th style="text-align:center">Denimination</th>
+                            <th style="text-align:center">No. of Pcs.</th>
+                            <th style="text-align:center">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int a = 0; a < Model.cashBreakdown.Count(); a++)
+                        {
+                            <tr id="cashbreakdownid_@a">
+                                <td>@Html.TextBoxFor(x => Model.cashBreakdown[a].CashBreak_Denimination, new { @class = "input100 txtDenimination", @type = "number", @readonly = "true", @style = "text-align:center" })</td>
+                                <td>@Html.TextBoxFor(x => Model.cashBreakdown[a].CashBreak_NoPcs, new { @class = "input100 txtNoPCS", @type = "number", @min = "0", @style = "text-align:center" })</td>
+                                <td>@Html.TextBoxFor(x => Model.cashBreakdown[a].CashBreak_Amount, new { @class = "input100 txtAmount", @type = "number", @style = "text-align:center", @readonly = "true" })</td>
+                            </tr>
+                        }
+                        <tr>
+                            <td colspan="2" style="text-align:right">Total:</td>
+                            <td><input type="number" class="input100 cashBDAmountTotal" style="text-align:center" value="0" readonly="readonly" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>
+<script>
+    $(document).ready(function () {
+        if ($("#" + $("#parentIdPCVTable").val()).find(".hiddenItem").val() == "1") {
+            var ret = $('#parentIdPCVTable').val().replace('item_', '');
+            var trs = $(".cashBreakdowntable").find("tbody").find("tr");
+
+            for (var count = 0; count < trs.length - 1; count++) {
+                $("#" + trs[count].id).find('.txtNoPCS').val($("#EntryCV_" + ret + "__cashBreakdown_" + count + "__cashNoPC").val());
+                $("#" + trs[count].id).find('.txtAmount').val($("#EntryCV_" + ret + "__cashBreakdown_" + count + "__cashAmount").val());
+            }
+        }
+    });
+
+    $(function () {
+        $("table").on("change", "input.txtNoPCS", function (e) {
+            var cashBDModalpNode = $(this.parentNode)[0].parentNode;
+
+            var cashBDModalitemNo = cashBDModalpNode.id; //jquery obj
+
+            var txtDenimination = $("#" + cashBDModalitemNo).find('.txtDenimination').val();
+            var txtNoPCS = $("#" + cashBDModalitemNo).find('.txtNoPCS').val();
+
+            $("#" + cashBDModalitemNo).find('.txtAmount').val(round(parseFloat(txtDenimination) * parseFloat(txtNoPCS), 2));
+
+            var amountTotal = 0;
+            var trs = $(".cashBreakdowntable").find("tbody").find("tr");
+
+            for (var count = 0; count < trs.length - 1; count++) {
+                var subTotal = parseFloat($("#" + trs[count].id).find('.txtNoPCS').val()) * parseFloat($("#" + trs[count].id).find('.txtDenimination').val());
+                amountTotal = parseFloat(amountTotal) + parseFloat(subTotal);
+            }
+
+            $(".cashBDAmountTotal").val(round(amountTotal, 2));
+        });
+
+        $(".modal-footer").on("click", "#btnVendor", function (e) {
+            e.stopImmediatePropagation();
+
+            if ($(".cashBDAmountTotal").val() != $("#reqAmount").val()) {
+                alert("Amount does not matched.");
+                return false;
+            }
+
+            var ret = $('#parentIdPCVTable').val().replace('item_', '');
+            var trs = $(".cashBreakdowntable").find("tbody").find("tr");
+
+            $('#divCashBD_' + ret).empty();
+
+            for (var count = 0; count < trs.length - 1; count++) {
+                var denim = $("#" + trs[count].id).find('.txtDenimination').val();
+                var pcs = $("#" + trs[count].id).find('.txtNoPCS').val();
+                var amount = $("#" + trs[count].id).find('.txtAmount').val();
+
+                $('#divCashBD_' + ret).append($('<input/>', {
+                    id: 'EntryCV_' + ret + '__cashBreakdown_' + count + '__cashDenimination',
+                    type: 'hidden',
+                    name: 'EntryCV[' + ret + '].cashBreakdown[' + count + '].cashDenimination',
+                    value: denim
+                }));
+                $('#divCashBD_' + ret).append($('<input/>', {
+                    id: 'EntryCV_' + ret + '__cashBreakdown_' + count + '__cashNoPC',
+                    type: 'hidden',
+                    name: 'EntryCV[' + ret + '].cashBreakdown[' + count + '].cashNoPC',
+                    value: pcs
+                }));
+                $('#divCashBD_' + ret).append($('<input/>', {
+                    id: 'EntryCV_' + ret + '__cashBreakdown_' + count + '__cashAmount',
+                    type: 'hidden',
+                    name: 'EntryCV[' + ret + '].cashBreakdown[' + count + '].cashAmount',
+                    value: amount
+                }));
+            }
+
+            if ($(".cashBDAmountTotal").val() == 0) {
+                $("#" + $("#parentIdPCVTable").val()).find(".hiddenItem").val(0);
+            } else {
+                $("#" + $("#parentIdPCVTable").val()).find(".hiddenItem").val(1);
+            }
+            $('#myModal').modal('hide');
+        });
+
+        function round(value, exp) {
+            if (typeof exp === 'undefined' || +exp === 0)
+                return Math.round(value);
+
+            value = +value;
+            exp = +exp;
+
+            if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0))
+                return NaN;
+
+            // Shift
+            value = value.toString().split('e');
+            value = Math.round(+(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp)));
+
+            // Shift back
+            value = value.toString().split('e');
+            return +(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp));
+        }
+    });
+</script>

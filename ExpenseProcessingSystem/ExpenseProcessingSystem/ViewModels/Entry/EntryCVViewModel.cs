@@ -2,6 +2,7 @@
 using ExpenseProcessingSystem.ViewModels.Entry;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,7 +10,8 @@ namespace ExpenseProcessingSystem.ViewModels
 {
     public class EntryCVViewModel
     {
-        [NotNullValidations]
+        [NotNullValidations, TextValidation]
+        [Display(Name = "GBase Remarks")]
         public string GBaseRemarks { get; set; }
         public int account { get; set; }
         public bool fbt { get; set; }
@@ -18,7 +20,7 @@ namespace ExpenseProcessingSystem.ViewModels
         [IntegerValidation]
         public float vat { get; set; }
         public bool chkEwt { get; set; }
-        [IntegerValidation,FalseValidation("chkEwt")]
+        //[IntegerValidation,FalseValidation("chkEwt")]
         public int ewt { get; set; }
         public int ccy { get; set; }
         public float debitGross { get; set; }
@@ -27,14 +29,19 @@ namespace ExpenseProcessingSystem.ViewModels
         public int month { get; set; }
         public int day { get; set; }
         public int duration { get; set; }
+        public int modalInputFlag { get; set; }
         public List<amortizationSchedule> amtDetails { get; set; }
         public List<EntryGbaseRemarksViewModel> gBaseRemarksDetails { get; set; }
+        [NotNullValidations]
+        [Display(Name = "Cash Breakdown")]
+        public List<CashBreakdown> cashBreakdown { get; set; }
 
 
         public EntryCVViewModel()
         {
             gBaseRemarksDetails = new List<EntryGbaseRemarksViewModel>();
             amtDetails = new List<amortizationSchedule>();
+            cashBreakdown = new List<CashBreakdown>();
         }
     }
 
@@ -44,6 +51,12 @@ namespace ExpenseProcessingSystem.ViewModels
         public float amtAmount { get; set; }
     }
 
+    public class CashBreakdown
+    {
+        public double cashDenimination { get; set; }
+        public double cashNoPC { get; set; }
+        public double cashAmount { get; set; }
+    }
     public class EntryCVViewModelList
     {
         public int entryID { get; set; }

@@ -29,5 +29,6 @@ namespace ExpenseProcessingSystem.Models
 
         public ICollection<ExpenseEntryGbaseDtl> ExpenseEntryGbaseDtls { get; set; }
         public ICollection<ExpenseEntryAmortizationModel> ExpenseEntryAmortizations { get; set; }
+        public ICollection<ExpenseEntryCashBreakdownModel> ExpenseEntryCashBreakdowns { get; set; }
     }
 }
