@@ -178,6 +178,9 @@
     @Html.Partial("ModalPartial")
 </div>
 
+<div id="ValidationSummary" style="display: none" class="">
+    @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
+</div>
 <script>
     $(function () {
         $(window).on("load", function () {
@@ -329,7 +332,7 @@
                 //    }
                 //}
             });
-            
+
             $('#myModal').modal('show');
         });
 
@@ -353,7 +356,7 @@
                     alert("Something went wrong.");
                 }
             });
-            
+
             $('#myModal').modal('show');
         });
 

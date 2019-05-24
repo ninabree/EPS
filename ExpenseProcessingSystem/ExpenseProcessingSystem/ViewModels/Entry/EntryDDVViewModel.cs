@@ -1,6 +1,7 @@
 ﻿using ExpenseProcessingSystem.Services.Validations;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,26 +9,51 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
 {
     public class EntryDDVViewModel
     {
-        [NotNullValidations]
+        [NotNullValidations, TextValidation]
+        [Display(Name = "GBase Remarks")]
         public string GBaseRemarks { get; set; }
+        [NotNullValidations]
+        [Display(Name = "Account")]
         public int account { get; set; }
+        [NotNullValidations]
+        [Display(Name = "Inter Entity")]
         public bool inter_entity { get; set; }
+        [NotNullValidations]
+        [Display(Name = "FBT")]
         public bool fbt { get; set; }
+        [NotNullValidations]
+        [Display(Name = "Department")]
         public int dept { get; set; }
+        public string dept_Name { get; set; }
+        [NotNullValidations]
+        [Display(Name = "VAT Checkbox")]
         public bool chkVat { get; set; }
-        [IntegerValidation]
+        [NotNullValidations, IntegerValidation]
+        [Display(Name = "VAT")]
         public float vat { get; set; }
+        [NotNullValidations]
+        [Display(Name = "EWT Checkbox")]
         public bool chkEwt { get; set; }
-        [IntegerValidation, FalseValidation("chkEwt")]
+        [IntegerValidation]
+        [Display(Name = "EWT")]
         public int ewt { get; set; }
+        [NotNullValidations]
+        [Display(Name = "Currency")]
         public int ccy { get; set; }
+        [NotNullValidations, AmountValidation]
+        [Display(Name = "Debit - Gross Amount")]
         public float debitGross { get; set; }
+        [NotNullValidations]
+        [Display(Name = "Credit - EWT Amount")]
         public float credEwt { get; set; }
+        [NotNullValidations, AmountValidation]
+        [Display(Name = "Credit - Cash")]
         public float credCash { get; set; }
+        [FalseValidation("chkEwt"), TextValidation]
+        [Display(Name = "EWT - Tax Payor's Name")]
         public string ewtPayorName { get; set; }
         public List<DDVInterEntityViewModel> interDetails { get; set; }
         public List<EntryGbaseRemarksViewModel> gBaseRemarksDetails { get; set; }
-
 
         public EntryDDVViewModel()
         {

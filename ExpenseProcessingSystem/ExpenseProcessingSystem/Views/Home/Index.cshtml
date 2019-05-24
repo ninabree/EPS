@@ -65,7 +65,7 @@
             var nextDisabled = !Model.NotifList.HasNextPage ? "disabled" : "";
         }
 
-        <a asp-action="DM"
+        <a asp-action="Index"
            asp-route-sortOrder="@ViewData["CurrentSort"]"
            asp-route-page="@(Model.NotifList.PageIndex - 1)"
            asp-controller="Home"
@@ -75,7 +75,7 @@
         </a>
         <input type="text" class="pagination-input" id="paginationInput" val="" />
         <input type="text" class="pagination-input" value="of @(Model.NotifList.TotalPages)" disabled />
-        <a asp-action="DM"
+        <a asp-action="Index"
            asp-route-sortOrder="@ViewData["CurrentSort"]"
            asp-controller="Home"
            asp-route-partialName="@ViewData["Title"]"

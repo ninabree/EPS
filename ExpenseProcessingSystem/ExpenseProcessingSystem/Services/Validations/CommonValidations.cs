@@ -161,7 +161,7 @@ namespace ExpenseProcessingSystem.Services.Validations
             try
             {
                 var name = validationContext.DisplayName;
-                if (value == null)
+                if (value != null)
                 {
                     if (!(DateTime.TryParse(value.ToString(), out DateTime temp)))
                     {
@@ -256,6 +256,44 @@ namespace ExpenseProcessingSystem.Services.Validations
             }
         }
     }
+    public class AmountValidation : ValidationAttribute
+    {
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            try
+            {
+                if (!(value == null || value.Equals(0)))
+                {
+                    var name = validationContext.DisplayName;
+                    if (value != null)
+                    {
+                        if (!(float.TryParse(value.ToString(), out float temp)))
+                        {
+                            return new ValidationResult(name + " is an invalid 'numeric' input.");
+                        }
+                        else
+                        {
+                            if (temp == 0)
+                            {
+                                return new ValidationResult(name + " cannot be less than the value of one (1).");
+                            }
+                        }
+                    }
+                }
+                return ValidationResult.Success;
+            }
+            catch (Exception ex)
+            {
+                //sample fatal error log
+                Log.Fatal(ex, "User: {user}, StackTrace : {trace}, Error Message: {message}", "[UserID]", ex.StackTrace, ex.Message);
+                return new ValidationResult("Invalid input");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
+        }
+    }
     public class FalseValidation : ValidationAttribute
     {
         private readonly string _CheckBoxProperty;
@@ -267,9 +305,27 @@ namespace ExpenseProcessingSystem.Services.Validations
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
+            var name = validationContext.DisplayName;
             var property = validationContext.ObjectType.GetProperty(_CheckBoxProperty);
             var val = property.GetValue(validationContext.ObjectInstance, null);
-                return new ValidationResult(val as string);
+            if ((Boolean)val && value != null)
+            {
+                if (!(int.TryParse(value.ToString(), out int temp)))
+                {
+                    if (temp == 0)
+                    {
+                        return new ValidationResult(name + " cannot be less than the value of one (1).");
+                    }
+                }
+                else if(value.ToString() == "")
+                {
+                    return new ValidationResult(name + " is  empty");
+                }
+            }else if((Boolean)val && value == null)
+            {
+                return new ValidationResult(name + " is  empty");
+            }
+            return ValidationResult.Success;
             /*
             try
             {
