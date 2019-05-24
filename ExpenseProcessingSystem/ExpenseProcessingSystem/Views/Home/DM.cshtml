@@ -34,9 +34,9 @@
     <input type="hidden" id="entryCheckTypes" />
 </div>
 
-<environment include="Development">
-    <script src="~/lib/jquery/dist/jquery.js"></script>
-</environment>
+@*<environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+    </environment>*@
 <script type="text/javascript">
     $(document).ready(function () {
         var cont = $('#partial-container');
@@ -49,7 +49,7 @@
         var colName = '@ViewData["colName"]';
 
         initPartial();
-        
+
         //$(document).on("submit", ".addVendorForm", function (e) {
         //    alert("!!!");
         //    $('.trChk:checked').each(function () {

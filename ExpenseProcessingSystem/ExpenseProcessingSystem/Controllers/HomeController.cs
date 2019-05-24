@@ -713,7 +713,7 @@ namespace ExpenseProcessingSystem.Controllers
             var userId = GetUserID();
 
             EntryDDVViewModelList viewModel = new EntryDDVViewModelList();
-            List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
+            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
             viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
             viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
             viewModel.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];

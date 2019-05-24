@@ -80,9 +80,9 @@ namespace ExpenseProcessingSystem
             services.AddDistributedMemoryCache();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             //Add DB context.
-            services.AddDbContext<EPSDbContext>(options =>
-               options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
+            services.AddDbContext<EPSDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<GOExpressContext>(options => options.UseSqlServer(Configuration.GetConnectionString("GOExpressConnection")));
+            services.AddDbContext<GoWriteContext>(options => options.UseSqlServer(Configuration.GetConnectionString("GoWriteConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -12,37 +12,9 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn float-r" data-dismiss="modal">Close</button>
-                    <button class="btn float-r" id="btnVendor" type="submit" form="tsForm">Submit</button>
-                    @*<button class="btn float-r" id="saveBtn" onclick="$('#tsForm').submit();">Submit</button>*@
+                    <button class="btn float-r" id="saveBtn" onclick="$('#tsForm').submit();">Submit</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        $(document).on("click", "#btnVendor", function (e) {
-            //New
-            var hiddenTR = $('#NewVendorVM_0__Vendor_Tax_Rates_ID');
-            var hiddenVAT = $('#NewVendorVM_0__Vendor_VAT_ID');
-
-            // for edit
-            var hiddenTREdit = $('#z0__Vendor_Tax_Rates_ID');
-            var hiddenVATEdit = $('#z0__Vendor_VAT_ID');
-
-            var arrTR = "";
-            var arrVAT = "";
-            $('.trChk:checked').each(function () {
-                arrTR += ($(this).val())+",";
-            });
-            $('.vatChk:checked').each(function () {
-                arrVAT += ($(this).val()) + ",";
-            });
-            hiddenTR.val(arrTR);
-            hiddenVAT.val(arrVAT);
-            hiddenTREdit.val(arrTR);
-            hiddenVATEdit.val(arrVAT);
-        });
-    });
-</script>
