@@ -1,0 +1,26 @@
+﻿
+@{
+    ViewData["Title"] = "EntryExpenseEWT";
+    Layout = "~/Views/Shared/_ModalLayout.cshtml";
+    var val = (string)ViewBag.taxpayor;
+}
+<table class="table voucher-tbl table-bordered">
+    <tr>
+        <td colspan="1"><label>Tax Payor's Name</label></td>
+        <td colspan="3" id="taxPayorsName">@Html.TextBox("taxPayor", @val, new { id ="txtPayor", @class= "input" })</td>
+    </tr>
+</table>
+
+<script>
+    $(function () {
+        $(".modal-footer").on("click", "#saveBtn", function () {
+            var itemNo = $("#parentIdInterEntity").val().substr(5);
+
+            var val = $("table").find("#txtPayor").val();
+
+            $("#EntryDDV_" + itemNo + "__ewtPayorName").val(val);
+
+            $('#myModal').modal('hide');
+        });
+    });
+</script>

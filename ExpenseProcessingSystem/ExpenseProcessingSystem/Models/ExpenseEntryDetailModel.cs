@@ -13,6 +13,7 @@ namespace ExpenseProcessingSystem.Models
         public int ExpDtl_ID { get; set; }
         public string ExpDtl_Gbase_Remarks { get; set; }
         public int ExpDtl_Account { get; set; }
+        public bool ExpDtl_Inter_Entity { get; set; }
         public bool ExpDtl_Fbt { get; set; }
         public int ExpDtl_Dept { get; set; }
         public float ExpDtl_Vat { get; set; }
@@ -25,9 +26,12 @@ namespace ExpenseProcessingSystem.Models
         public int ExpDtl_Amor_Month { get; set; }
         public int ExpDtl_Amor_Day { get; set; }
         public int ExpDtl_Amor_Duration { get; set; }
+        public string ExpDtl_Ewt_Payor_Name { get; set; }
         public ExpenseEntryModel ExpenseEntryModel { get; set; }
 
         public ICollection<ExpenseEntryGbaseDtl> ExpenseEntryGbaseDtls { get; set; }
         public ICollection<ExpenseEntryAmortizationModel> ExpenseEntryAmortizations { get; set; }
+        public ICollection<ExpenseEntryCashBreakdownModel> ExpenseEntryCashBreakdowns { get; set; }
+        public ICollection<ExpenseEntryInterEntityModel> ExpenseEntryInterEntity { get; set; }
     }
 }

@@ -37,6 +37,11 @@ namespace ExpenseProcessingSystem
             .WriteTo.File("C:\\Work\\Mizuho EPS\\eps_logs\\logs\\log.txt", LogEventLevel.Error, outputTemplate, rollingInterval: RollingInterval.Day, fileSizeLimitBytes: null, rollOnFileSizeLimit: true)
             .CreateLogger();
 
+            //-------------------------FOR RESOURCE FILE-------------------------
+
+
+            //-------------------------FOR RESOURCE FILE-------------------------
+
             Configuration = configuration;
             Setting.ConnectionString = Configuration.GetConnectionString("DefaultConnection");
         }

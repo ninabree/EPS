@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using ExpenseProcessingSystem.ConstantData;
 using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Models;
 using ExpenseProcessingSystem.Services;
@@ -11,6 +13,7 @@ using ExpenseProcessingSystem.ViewModels;
 using ExpenseProcessingSystem.ViewModels.Entry;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static ExpenseProcessingSystem.ConstantData.DeniminationValues;
 
 namespace ExpenseProcessingSystem.Controllers
 {
@@ -944,11 +947,66 @@ namespace ExpenseProcessingSystem.Controllers
 
             return PartialView(model);
         }
+        public IActionResult EntryExpenseInterEntity(string id, string interRate, string account, string remarksTitle, string Curr1Abbr, string Curr1Amt, string Curr2Abbr, string Curr2Amt)
+        {
+            InterEntityParticular par = new InterEntityParticular();
+            double InterRate = interRate != null ? int.Parse(interRate) * 1.0 : 1.0;
+            string remarks = remarksTitle + " " + ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == DateTime.Now.Month).Single().MonthName + " " + DateTime.Now.Year;
+
+            List<InterEntityParticular> parList1 = _service.PopulateParticular1(account, Curr1Abbr, Curr1Amt, Curr2Amt, InterRate);
+            List<InterEntityParticular> parList2 = _service.PopulateParticular2(Curr1Abbr, Curr2Abbr, Curr2Amt, InterRate);
+            List<InterEntityParticular> parList3 = _service.PopulateParticular3(Curr2Abbr, Curr2Amt);
+
+            DDVInterEntityViewModel model = new DDVInterEntityViewModel
+            {
+                Inter_ID = id,
+                Inter_Particular_Title = remarks,
+                Inter_Currency1_ABBR = Curr1Abbr,
+                Inter_Currency1_Amount = Curr1Amt,
+                Inter_Currency2_ABBR = Curr2Abbr,
+                Inter_Currency2_Amount = Curr2Amt,
+                Inter_Rate = InterRate.ToString(),
+                Inter_Particular1 = parList1,
+                Inter_Particular2 = parList2,
+                Inter_Particular3 = parList3
+            };
+            return PartialView(model);
+        }
+        //_________________________//[Petty Cash Expense]//_____________________________
+        //Expense Cash Breakdown
+        public IActionResult EntryExpenseCashBreakdown(string id, string vendor, string account, double amount)
+        {
+            PCVCashBreakdownViewModel model = new PCVCashBreakdownViewModel();
+
+            model.id = id;
+            model.vendor = vendor;
+            model.accountName = _service.GetAccountName(account);
+            model.amount = amount;
+            model.cashBreakdown = new List<ExpenseEntryCashBreakdownModel>();
+
+
+            foreach (var i in DeniminationValues.GetDeniminationList())
+            {
+                model.cashBreakdown.Add(
+                    new ExpenseEntryCashBreakdownModel
+                    {
+                        CashBreak_Denimination = i.CashBreak_Denimination
+                    });
+            }
+
+            return PartialView(model);
+        }
 
         public IActionResult EntryGbaseRemarks(string[] IdsArr)
         {
             ViewBag.parentID = IdsArr[0];
             return PartialView();
         }
+        public IActionResult EntryExpenseEWT(string id, string taxpayor)
+        {
+            ViewBag.taxpayor = taxpayor;
+            return PartialView();
+        }
+
     }
 }

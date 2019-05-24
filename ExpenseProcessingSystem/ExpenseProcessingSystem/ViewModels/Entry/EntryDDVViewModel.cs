@@ -24,17 +24,15 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         public float debitGross { get; set; }
         public float credEwt { get; set; }
         public float credCash { get; set; }
-        public int month { get; set; }
-        public int day { get; set; }
-        public int duration { get; set; }
-        public List<amortizationSchedule> amtDetails { get; set; }
+        public string ewtPayorName { get; set; }
+        public List<DDVInterEntityViewModel> interDetails { get; set; }
         public List<EntryGbaseRemarksViewModel> gBaseRemarksDetails { get; set; }
 
 
         public EntryDDVViewModel()
         {
             gBaseRemarksDetails = new List<EntryGbaseRemarksViewModel>();
-            amtDetails = new List<amortizationSchedule>();
+            interDetails = new List<DDVInterEntityViewModel>();
         }
 
     }
