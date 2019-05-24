@@ -739,7 +739,7 @@ namespace ExpenseProcessingSystem.Controllers
             if (id > -1)
             {
                 ddvList = _service.getExpenseDDV(id);
-                List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
+                List<SelectList> listOfSysVals = _service.getEntrySystemVals();
                 ddvList.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
                 ddvList.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
                 ddvList.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
@@ -759,7 +759,7 @@ namespace ExpenseProcessingSystem.Controllers
             var userId = GetUserID();
 
             EntryCVViewModelList viewModel = new EntryCVViewModelList();
-            List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
+            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
             viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
             viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
             viewModel.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
@@ -775,7 +775,7 @@ namespace ExpenseProcessingSystem.Controllers
 
         public EntryCVViewModelList PopulateEntryCV(EntryCVViewModelList viewModel)
         {
-            List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
+            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
             viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
             viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
             viewModel.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
@@ -806,7 +806,7 @@ namespace ExpenseProcessingSystem.Controllers
             if (id > -1)
             {
                 pcList = _service.getExpense(id);
-                List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
+                List<SelectList> listOfSysVals = _service.getEntrySystemVals();
                 pcList.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
                 pcList.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
                 pcList.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
@@ -860,7 +860,7 @@ namespace ExpenseProcessingSystem.Controllers
 
             pcvList = _service.getExpense(entryID);
 
-            List<SelectList> listOfSysVals = _service.getCheckEntrySystemVals();
+            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
             pcvList.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
             pcvList.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
             pcvList.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
