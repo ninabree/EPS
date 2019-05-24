@@ -199,7 +199,10 @@
                 modalDivBody.html(data);
 
                 if (method == 'EntryGbaseRemarks') {
+                    $("#saveBtn").addClass("gBaseSaveBtn");
+
                     gbaseRemarksSet(idsArr[0])
+
                     if ($("#add_row_btn").length <= 0) {
                         modalDivFooter.append('<button type="button" id="add_row_btn" class="btn table-add">Add Row</button>');
                     }

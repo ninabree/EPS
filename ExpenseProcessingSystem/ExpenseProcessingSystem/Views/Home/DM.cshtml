@@ -34,13 +34,11 @@
     <input type="hidden" id="entryCheckTypes" />
 </div>
 
-<environment include="Development">
-    <script src="~/lib/jquery/dist/jquery.js"></script>
-</environment>
+
 <script type="text/javascript">
     $(document).ready(function () {
         var cont = $('#partial-container');
-        //var sel = $('select#dm-tbl select');
+
         var sortOrder = '@ViewData["sortOrder"]';
         var currentFilter = '@ViewData["currentFilter"]';
         var searchString = '@ViewData["searchString"]';
@@ -49,21 +47,6 @@
         var colName = '@ViewData["colName"]';
 
         initPartial();
-        
-        //$(document).on("submit", ".addVendorForm", function (e) {
-        //    alert("!!!");
-        //    $('.trChk:checked').each(function () {
-        //        alert($(this).next('input[type="hidden"]').val());
-        //    });
-        //    $('.vatChk:checked').each(function () {
-        //        alert($(this).next('input[type="hidden"]').val());
-        //    });
-        //    return true;
-        //});
-        //function submitForm() {
-        //    alert("!!!!");
-        //    $("tsForm").submit();
-        //}
 
         function initPartial() {
             $('select#dm-tbl option[value=' + partial + ']').attr('selected', 'selected');

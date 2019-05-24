@@ -2797,24 +2797,32 @@ namespace ExpenseProcessingSystem.Services
         }
 
         //--------------------Expense Entries--------------------------------
+        public void SaveToGBase()
+        {
 
+        }
+
+        public void SaveToGBaseFBT()
+        {
+
+        }
         //============[Retrieve System Values]=============================
         //retrieve vendor list
         public List<SelectList> getEntrySystemVals()
         {
             List<SelectList> listOfLists = new List<SelectList>();
 
-            listOfLists.Add(new SelectList (_context.DMVendor.Where(x => x.Vendor_isActive == true && x.Vendor_isDeleted == false).Select(q => new {q.Vendor_MasterID, q.Vendor_Name }),
-                                                "Vendor_MasterID", "Vendor_Name"));
+            listOfLists.Add(new SelectList (_context.DMVendor.Where(x => x.Vendor_isActive == true && x.Vendor_isDeleted == false).Select(q => new {q.Vendor_ID, q.Vendor_Name }),
+                                                "Vendor_ID", "Vendor_Name"));
 
-            listOfLists.Add(new SelectList(_context.DMDept.Where(x => x.Dept_isActive == true && x.Dept_isDeleted == false).Select(q => new { q.Dept_MasterID, q.Dept_Name }),
-                                                "Dept_MasterID", "Dept_Name"));
+            listOfLists.Add(new SelectList(_context.DMDept.Where(x => x.Dept_isActive == true && x.Dept_isDeleted == false).Select(q => new { q.Dept_ID, q.Dept_Name }),
+                                                "Dept_ID", "Dept_Name"));
 
-            listOfLists.Add(new SelectList(_context.DMCurrency.Where(x => x.Curr_isActive == true && x.Curr_isDeleted == false).Select(q => new { q.Curr_MasterID, q.Curr_Name }),
-                                    "Curr_MasterID", "Curr_Name"));
+            listOfLists.Add(new SelectList(_context.DMCurrency.Where(x => x.Curr_isActive == true && x.Curr_isDeleted == false).Select(q => new { q.Curr_ID, q.Curr_Name }),
+                                    "Curr_ID", "Curr_Name"));
 
-            listOfLists.Add(new SelectList(_context.DMTR.Where(x => x.TR_isActive == true && x.TR_isDeleted == false).Select(q => new { q.TR_MasterID, q.TR_Tax_Rate }),
-                        "TR_MasterID", "TR_Tax_Rate"));
+            listOfLists.Add(new SelectList(_context.DMTR.Where(x => x.TR_isActive == true && x.TR_isDeleted == false).Select(q => new { q.TR_ID, q.TR_Tax_Rate }),
+                        "TR_ID", "TR_Tax_Rate"));
 
             return listOfLists;
         }
@@ -2823,12 +2831,12 @@ namespace ExpenseProcessingSystem.Services
         {
             List<accDetails> accDetails = new List<accDetails>();
 
-            var accDbDetails = _context.DMAccount.Where(x => x.Account_isActive == true).Select(q => new { q.Account_MasterID, q.Account_Name, q.Account_Code });
+            var accDbDetails = _context.DMAccount.Where(x => x.Account_isActive == true).Select(q => new { q.Account_ID, q.Account_Name, q.Account_Code });
 
             foreach (var detail in accDbDetails)
             {
                 accDetails temp = new accDetails();
-                temp.accId = detail.Account_MasterID;
+                temp.accId = detail.Account_ID;
                 temp.accName = detail.Account_Name;
                 temp.accCode = detail.Account_Code;
 
@@ -3132,21 +3140,21 @@ namespace ExpenseProcessingSystem.Services
             {
                 List<DDVInterEntityViewModel> interDetails = new List<DDVInterEntityViewModel>();
                 List<EntryGbaseRemarksViewModel> remarksDtl = new List<EntryGbaseRemarksViewModel>();
-
+                DDVInterEntityViewModel interDetailsVM = new DDVInterEntityViewModel();
                 foreach (ExpenseEntryInterEntityModel inter in dtl.ExpenseEntryInterEntity)
                 {
-                    DDVInterEntityViewModel interDetailsVM = new DDVInterEntityViewModel()
+                    interDetailsVM = new DDVInterEntityViewModel()
                     {
                         Inter_ID = inter.Inter_ID,
-                        Inter_Particular_Title = inter.Inter_Particular_Title,
-                        Inter_Currency1_ABBR = inter.Inter_Currency1_ABBR,
-                        Inter_Currency1_Amount = inter.Inter_Currency1_Amount,
-                        Inter_Currency2_ABBR = inter.Inter_Currency2_ABBR,
-                        Inter_Currency2_Amount = inter.Inter_Currency2_Amount,
-                        Inter_Rate = inter.Inter_Rate.ToString(),
-                        Inter_Particular1 = _modalservice.PopulateParticular1(inter.Inter_Particular_Title, inter.Inter_Currency1_ABBR, inter.Inter_Currency1_Amount, inter.Inter_Currency2_Amount, double.Parse(inter.Inter_Rate)),
-                        Inter_Particular2 = _modalservice.PopulateParticular2(inter.Inter_Currency1_ABBR, inter.Inter_Currency2_ABBR, inter.Inter_Currency2_Amount, double.Parse(inter.Inter_Rate)),
-                        Inter_Particular3 = _modalservice.PopulateParticular3(inter.Inter_Currency2_ABBR, inter.Inter_Currency2_Amount)
+                        Inter_Particular_Title = inter.Inter_Particular_Title ?? "",
+                        Inter_Currency1_ABBR = inter.Inter_Currency1_ABBR ?? "",
+                        Inter_Currency1_Amount = inter.Inter_Currency1_Amount ?? "0",
+                        Inter_Currency2_ABBR = inter.Inter_Currency2_ABBR ?? "",
+                        Inter_Currency2_Amount = inter.Inter_Currency2_Amount ?? "0",
+                        Inter_Rate = inter.Inter_Rate ?? "1",
+                        Inter_Particular1 = _modalservice.PopulateParticular1(inter.Inter_Particular_Title ?? "", inter.Inter_Currency1_ABBR ?? "", inter.Inter_Currency1_Amount ?? "0", inter.Inter_Currency2_Amount ?? "0", double.Parse(inter.Inter_Rate ?? "1")),
+                        Inter_Particular2 = _modalservice.PopulateParticular2(inter.Inter_Currency1_ABBR ?? "", inter.Inter_Currency2_ABBR ?? "", inter.Inter_Currency2_Amount ?? "0", double.Parse(inter.Inter_Rate ?? "1")),
+                        Inter_Particular3 = _modalservice.PopulateParticular3(inter.Inter_Currency2_ABBR ?? "", inter.Inter_Currency2_Amount ?? "0")
                     };
 
                     interDetails.Add(interDetailsVM);
@@ -3173,6 +3181,7 @@ namespace ExpenseProcessingSystem.Services
                     inter_entity = dtl.d.ExpDtl_Inter_Entity,
                     fbt = dtl.d.ExpDtl_Fbt,
                     dept = dtl.d.ExpDtl_Dept,
+                    dept_Name = _context.DMDept.Where(x=> x.Dept_MasterID == dtl.d.ExpDtl_Dept && x.Dept_isActive == true).Select(x=> x.Dept_Name).FirstOrDefault(),
                     chkVat = (dtl.d.ExpDtl_Vat <= 0) ? false : true,
                     vat = (dtl.d.ExpDtl_Vat <= 0) ? getVat() : dtl.d.ExpDtl_Vat,
                     chkEwt = dtl.d.ExpDtl_isEwt,

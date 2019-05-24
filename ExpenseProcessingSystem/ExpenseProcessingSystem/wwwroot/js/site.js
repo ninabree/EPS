@@ -5,6 +5,7 @@ $(document).ready(function () {
     populateCol();
     var tabLinks = new Array();
     var contentDivs = new Array();
+    $('.tbl-btn:has(button[disabled])').addClass('btnDisabled');
 
     var $pageInput = $('#paginationInput');
     $pageInput.data("value", $pageInput.val());

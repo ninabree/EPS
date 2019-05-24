@@ -10,7 +10,10 @@
                 $canfocus.eq(index).focus();
             }
         });
-
+    //$(".modal-footer").on("click", "button.gBaseSaveBtn", function (e) {
+    //    e.stopImmediatePropagation();
+    //    alert();
+    //});
     $("table").on("change", "input.chkVat", function (e) {
         var pNode = $(this.parentNode)[0].parentNode;
 
@@ -77,7 +80,7 @@
         $("#credCashTotal").val(cashSubTotal);
         $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
     });
-
+    
     $("#modalDiv").on("click", "#saveBtn", function (e) {
         if ($("#parentIdAmortization").length) {
             return;
@@ -87,13 +90,20 @@
         }
         var trs = $("#gBaseTable").find("tbody").find("tr");
         var htmlText = "";
-
-        if (trs.length <= 0) {
-            alert("Can't submit empty form.");
+        if ($(this).hasClass("btn float-r gBaseSaveBtn")) {
+            //to stop form submit if incomplete
+            if (!checkFormComplete(trs, "GBase Remarks")) {
+                return;
+            }
+        }
+        if ($("#parentIdAmortization").length) {
             return;
         }
 
+        parent.find(":hidden").remove();
+
         var rowNo = $("#parentId").val().substring(7);
+
 
         for (var i = 0; i < trs.length; i++) {
             var docuType = $("#" + trs[i].id).find(".gDocuType").val();
@@ -111,6 +121,25 @@
     });
 
     /////--------------------functions--------------------------------
-
-
+    function checkFormComplete(trs, formName) {
+        var isComplete = true;
+        if (trs.length <= 0) {
+            alert("Can't submit empty form.");
+            return;
+        } else {
+            $(trs).each(function (i, obj) {
+                $(obj).find("input").each(function (i, val) {
+                    if ($(val).val() == "") {
+                        isComplete = false;
+                        alert(formName + " entries should not be empty.");
+                        return false;
+                    }
+                });
+                if (!isComplete) {
+                    return false;
+                }
+            });
+        }
+        return isComplete;
+    }
 });

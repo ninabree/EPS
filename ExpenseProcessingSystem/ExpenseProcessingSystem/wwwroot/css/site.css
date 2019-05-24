@@ -589,6 +589,13 @@ div.tabContent {
         cursor: not-allowed;
         background-color: #CFCFCF;
     }
+.btnDisabled {
+    border-color: #CFCFCF;
+}
+    .btnDisabled:hover {
+        background: transparent;
+        color: #333;
+    }
 #close-tbl > tbody > tr {
     height: 2px;
 }

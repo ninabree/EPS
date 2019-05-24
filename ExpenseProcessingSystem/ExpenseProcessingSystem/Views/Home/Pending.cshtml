@@ -55,7 +55,7 @@
         var prevDisabled = !Model.GeneralPendingList.HasPreviousPage ? "disabled" : "";
         var nextDisabled = !Model.GeneralPendingList.HasNextPage ? "disabled" : "";
     }
-    <a asp-action="DM"
+    <a asp-action="Pending"
        asp-route-sortOrder="@ViewData["CurrentSort"]"
        asp-route-page="@(Model.GeneralPendingList.PageIndex - 1)"
        asp-controller="Home"
@@ -65,7 +65,7 @@
     </a>
     <input type="text" class="pagination-input" id="paginationInput" val="" />
     <input type="text" class="pagination-input" value="of @(Model.GeneralPendingList.TotalPages)" disabled />
-    <a asp-action="DM"
+    <a asp-action="Pending"
        asp-route-sortOrder="@ViewData["CurrentSort"]"
        asp-controller="Home"
        asp-route-partialName="@ViewData["Title"]"

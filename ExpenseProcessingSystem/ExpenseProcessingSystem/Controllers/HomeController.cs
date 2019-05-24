@@ -593,11 +593,20 @@ namespace ExpenseProcessingSystem.Controllers
         //Expense Entry Check Voucher Block=========================================================================
         [OnlineUserCheck]
         [NonAdminRoleCheck]
+        [ImportModelState]
         public IActionResult Entry_CV()
         {
             var userId = GetUserID();
+            //var modelState = ModelState;
 
             EntryCVViewModelList viewModel = new EntryCVViewModelList();
+            viewModel = PopulateEntry((EntryCVViewModelList)viewModel);
+            //viewModel.vendor = 2;
+            viewModel.EntryCV.Add(new EntryCVViewModel());
+            return View(viewModel);
+        }
+        public dynamic PopulateEntry(dynamic viewModel)
+        {
             List<SelectList> listOfSysVals = _service.getEntrySystemVals();
             viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
             viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
@@ -607,16 +616,20 @@ namespace ExpenseProcessingSystem.Controllers
 
             viewModel.expenseYear = DateTime.Today.Year.ToString();
             viewModel.expenseDate = DateTime.Today;
-            //viewModel.vendor = 2;
-            viewModel.EntryCV.Add(new EntryCVViewModel());
-            return View(viewModel);
+
+            return viewModel;
         }
 
         [OnlineUserCheck]
         [NonAdminRoleCheck]
+        [ExportModelState]
         public IActionResult AddNewCV(EntryCVViewModelList EntryCVViewModelList)
         {
             var userId = GetUserID();
+            if (!ModelState.IsValid)
+            {
+                return View("Entry_CV", PopulateEntry((EntryCVViewModelList)EntryCVViewModelList));
+            }
 
             EntryCVViewModelList cvList = new EntryCVViewModelList();
             int id = _service.addExpense_CV(EntryCVViewModelList, int.Parse(GetUserID()),GlobalSystemValues.TYPE_CV);
@@ -652,6 +665,13 @@ namespace ExpenseProcessingSystem.Controllers
                 case "approver":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_APPROVED))
                     {
+                        _service.SaveToGBase();
+                        var expDtls = _context.ExpenseEntry.Where(x => x.Expense_ID == entryID).Select(x => x.ExpenseEntryDetails).FirstOrDefault();
+                        var isFbt = expDtls.Select(x => x.ExpDtl_Fbt).FirstOrDefault() == true;
+                        if (isFbt)
+                        {
+                            _service.SaveToGBaseFBT();
+                        }
                         ViewBag.Success = 1;
                     }
                     else
@@ -732,6 +752,10 @@ namespace ExpenseProcessingSystem.Controllers
         public IActionResult AddNewDDV(EntryDDVViewModelList EntryDDVViewModelList)
         {
             var userId = GetUserID();
+            if (!ModelState.IsValid)
+            {
+                return View("Entry_DDV", PopulateEntry((EntryDDVViewModelList)EntryDDVViewModelList));
+            }
 
             EntryDDVViewModelList ddvList = new EntryDDVViewModelList();
             int id = _service.addExpense_DDV(EntryDDVViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_CV);
@@ -903,7 +927,21 @@ namespace ExpenseProcessingSystem.Controllers
 
         public IActionResult Entry_NC()
         {
-            return View();
+            var userId = GetUserID();
+
+            EntryCVViewModelList viewModel = new EntryCVViewModelList();
+            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
+            viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
+            viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
+            viewModel.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
+            viewModel.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
+            viewModel.systemValues.acc = _service.getAccDetailsEntry();
+
+            viewModel.expenseYear = DateTime.Today.Year.ToString();
+            viewModel.expenseDate = DateTime.Today;
+            //viewModel.vendor = 2;
+            viewModel.EntryCV.Add(new EntryCVViewModel());
+            return View(viewModel);
         }
 
         [HttpPost]

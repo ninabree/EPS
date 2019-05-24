@@ -80,7 +80,7 @@
                         <td><input value="@Model.EntryDDV[i].account" class="input100" disabled /></td>
                         <td style="text-align:center">@Html.DisplayFor(x => Model.EntryDDV[i].inter_entity)</td>
                         <td style="text-align:center">@Html.DisplayFor(x => Model.EntryDDV[i].fbt)</td>
-                        <td><input value="@Model.EntryDDV[i].dept" class="input100" disabled /></td>
+                        <td><input id="@Model.EntryDDV[i].dept" value="@Model.EntryDDV[i].dept_Name" class="input100" disabled /></td>
                         <td style="text-align:center">@Html.DisplayFor(x => Model.EntryDDV[i].chkVat, new { @class = "chkVat" })</td>
                         <td><input value="@Model.EntryDDV[i].vat" class="input100" disabled /></td>
                         <td style="text-align:center">@Html.DisplayFor(x => Model.EntryDDV[i].chkEwt, new { @class = "chkEwt" })</td>

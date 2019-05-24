@@ -74,10 +74,19 @@
                                 </div>
                             </td>
                             <td>
+                                @*@Html.DropDownListFor(x => Model.EntryCV[i].account, new SelectList(Model.systemValues.acc, "accId", "accName", Model.systemValues.acc.Where(x=> x.accId == Model.EntryCV[i].account)), new { @class = "input100 txtAcc" })*@
                                 <select id="@Html.IdFor(x => Model.EntryCV[i].account)" class="input100 txtAcc" name="@Html.NameFor(x => Model.EntryCV[i].account)">
                                     @foreach (var groepModel in Model.systemValues.acc)
                                     {
-                                        <option value="@groepModel.accId" class="@groepModel.accCode">@groepModel.accName</option>
+                                        if (@groepModel.accId == @Model.EntryCV[0].account)
+                                        {
+                                            <option value="@groepModel.accId" class="@groepModel.accCode" selected>@groepModel.accName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@groepModel.accId" class="@groepModel.accCode">@groepModel.accName</option>
+                                        }
+
                                     }
                                 </select>
                             </td>
@@ -171,11 +180,21 @@
             </div>
         </div>
     }
+    @*@if (Html.ViewData.ModelState.IsValid)
+    {
+        <p style="height: 100px; color: green"> VALID</p>
+    }
+    else
+    {
+        <p style="height: 100px; color: red"> INVALID</p>
+    }*@
+    <div id="ValidationSummary" style="display: none" class="">
+        @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
+    </div>
+    <div id="modalDiv">
+        @Html.Partial("ModalPartial")
+    </div>
 
-        <div id="modalDiv">
-            @Html.Partial("ModalPartial")
-        </div>
-    
 </div>
 <script>
     $(function () {
@@ -323,7 +342,7 @@
             var pNode = String($(this.parentNode)[0].parentNode.id);
             var accCode = $(this).find("option:selected").attr("class");
             var btnAttr = $("#" + pNode).find("#req_" + pNode.substring(5)).find(".reqBtn");
-
+            //if (accCode == "21") {
             if (accCode == "13265" || accCode == "13281") {
                 btnAttr.attr("href", "#");
                 btnAttr.attr("class", "expenseAmortization reqBtn glyphicon glyphicon-list-alt");

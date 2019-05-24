@@ -13,21 +13,44 @@ namespace ExpenseProcessingSystem.ViewModels
         [NotNullValidations, TextValidation]
         [Display(Name = "GBase Remarks")]
         public string GBaseRemarks { get; set; }
+        [NotNullValidations]
+        [Display(Name = "Account")]
         public int account { get; set; }
+        [NotNullValidations]
+        [Display(Name = "FBT")]
         public bool fbt { get; set; }
+        [NotNullValidations]
+        [Display(Name = "Department")]
         public int dept { get; set; }
+        [NotNullValidations]
+        [Display(Name = "VAT Checkbox")]
         public bool chkVat { get; set; }
-        [IntegerValidation]
+        [NotNullValidations,IntegerValidation]
+        [Display(Name = "VAT")]
         public float vat { get; set; }
+        [NotNullValidations]
+        [Display(Name = "EWT Checkbox")]
         public bool chkEwt { get; set; }
-        //[IntegerValidation,FalseValidation("chkEwt")]
+        [IntegerValidation]
+        [Display(Name = "EWT")]
         public int ewt { get; set; }
+        [NotNullValidations]
+        [Display(Name = "Currency")]
         public int ccy { get; set; }
+        [NotNullValidations, AmountValidation]
+        [Display(Name = "Debit - Gross Amount")]
         public float debitGross { get; set; }
+        [NotNullValidations]
+        [Display(Name = "Credit - EWT Amount")]
         public float credEwt { get; set; }
+        [NotNullValidations, AmountValidation]
+        [Display(Name = "Credit - Cash")]
         public float credCash { get; set; }
+        [Display(Name = "Month")]
         public int month { get; set; }
+        [Display(Name = "Day")]
         public int day { get; set; }
+        [Display(Name = "Duration")]
         public int duration { get; set; }
         public int modalInputFlag { get; set; }
         public List<amortizationSchedule> amtDetails { get; set; }
