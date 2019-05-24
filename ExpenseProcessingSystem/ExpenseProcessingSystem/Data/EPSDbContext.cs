@@ -63,5 +63,6 @@ namespace ExpenseProcessingSystem.Data
         public DbSet<ExpenseEntryAmortizationModel> ExpenseEntryAmortizations { get; set; }
         public DbSet<ExpenseEntryInterEntityModel> ExpenseEntryInterEntity { get; set; }
         public DbSet<ExpenseEntryGbaseDtl> ExpenseEntryGbaseDtls { get; set; }
+        public DbSet<ExpenseEntryCashBreakdownModel> ExpenseEntryCashBreakdown { get; set; }
     }
 }

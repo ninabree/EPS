@@ -2911,17 +2911,33 @@ namespace ExpenseProcessingSystem.Services
                 foreach (EntryCVViewModel cv in entryModel.EntryCV)
                 {
                     List<ExpenseEntryAmortizationModel> expenseAmor = new List<ExpenseEntryAmortizationModel>();
+                    List<ExpenseEntryCashBreakdownModel> expenseCashBreakdown = new List<ExpenseEntryCashBreakdownModel>();
                     List<ExpenseEntryGbaseDtl> expenseGbase = new List<ExpenseEntryGbaseDtl>();
 
-                    foreach (var amorSchedule in cv.amtDetails)
+                    if(expenseType == GlobalSystemValues.TYPE_CV)
                     {
-                        ExpenseEntryAmortizationModel amortization = new ExpenseEntryAmortizationModel
+                        foreach (var amorSchedule in cv.amtDetails)
                         {
-                            Amor_Sched_Date = amorSchedule.amtDate,
-                            Amor_Price = amorSchedule.amtAmount
-                        };
+                            ExpenseEntryAmortizationModel amortization = new ExpenseEntryAmortizationModel
+                            {
+                                Amor_Sched_Date = amorSchedule.amtDate,
+                                Amor_Price = amorSchedule.amtAmount
+                            };
 
-                        expenseAmor.Add(amortization);
+                            expenseAmor.Add(amortization);
+                        }
+                    }
+                    else if(expenseType == GlobalSystemValues.TYPE_PC)
+                    {
+                        foreach (var cashbd in cv.cashBreakdown)
+                        {
+                            expenseCashBreakdown.Add(new ExpenseEntryCashBreakdownModel
+                            {
+                                CashBreak_Denimination = cashbd.cashDenimination,
+                                CashBreak_NoPcs = cashbd.cashNoPC,
+                                CashBreak_Amount = cashbd.cashAmount
+                            });
+                        }
                     }
 
                     foreach (var gbaseRemark in cv.gBaseRemarksDetails)
@@ -2933,7 +2949,6 @@ namespace ExpenseProcessingSystem.Services
                             GbaseDtl_Description = gbaseRemark.desc,
                             GbaseDtl_Amount = gbaseRemark.amount
                         };
-
                         expenseGbase.Add(remarks);
                     }
 
@@ -2947,15 +2962,16 @@ namespace ExpenseProcessingSystem.Services
                         ExpDtl_Ewt = cv.ewt,
                         ExpDtl_Ccy = cv.ccy,
                         ExpDtl_Debit = cv.debitGross,
+                        ExpDtl_isEwt = cv.chkEwt,
                         ExpDtl_Credit_Ewt = cv.credEwt,
                         ExpDtl_Credit_Cash = cv.credCash,
                         ExpDtl_Amor_Month = cv.month,
                         ExpDtl_Amor_Day = cv.day,
                         ExpDtl_Amor_Duration = cv.duration,
                         ExpenseEntryAmortizations = expenseAmor,
-                        ExpenseEntryGbaseDtls = expenseGbase
+                        ExpenseEntryGbaseDtls = expenseGbase,
+                        ExpenseEntryCashBreakdowns = expenseCashBreakdown
                     };
-
                     expenseDtls.Add(expenseDetails);
                 }
 
@@ -2978,7 +2994,6 @@ namespace ExpenseProcessingSystem.Services
                 _context.SaveChanges();
                 return expenseEntry.Expense_ID;
             }
-
             return -1;
         }
         //retrieve expense details
@@ -3041,7 +3056,7 @@ namespace ExpenseProcessingSystem.Services
                     chkVat = (dtl.d.ExpDtl_Vat <= 0) ? false : true,
                     vat = (dtl.d.ExpDtl_Vat <= 0) ? getVat() : dtl.d.ExpDtl_Vat,
                     chkEwt = dtl.d.ExpDtl_isEwt,
-                    ewt = dtl.d.ExpDtl_isEwt ? 0 : dtl.d.ExpDtl_Ewt,
+                    ewt = dtl.d.ExpDtl_Ewt,
                     ccy = dtl.d.ExpDtl_Ccy,
                     debitGross = dtl.d.ExpDtl_Debit,
                     credEwt = dtl.d.ExpDtl_Credit_Ewt,

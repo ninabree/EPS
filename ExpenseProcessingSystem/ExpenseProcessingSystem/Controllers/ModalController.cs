@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using ExpenseProcessingSystem.ConstantData;
 using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Models;
 using ExpenseProcessingSystem.Services;
@@ -11,6 +13,7 @@ using ExpenseProcessingSystem.ViewModels;
 using ExpenseProcessingSystem.ViewModels.Entry;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static ExpenseProcessingSystem.ConstantData.DeniminationValues;
 
 namespace ExpenseProcessingSystem.Controllers
 {
@@ -969,6 +972,31 @@ namespace ExpenseProcessingSystem.Controllers
             };
             return PartialView(model);
         }
+        //_________________________//[Petty Cash Expense]//_____________________________
+        //Expense Cash Breakdown
+        public IActionResult EntryExpenseCashBreakdown(string id, string vendor, string account, double amount)
+        {
+            PCVCashBreakdownViewModel model = new PCVCashBreakdownViewModel();
+
+            model.id = id;
+            model.vendor = vendor;
+            model.accountName = _service.GetAccountName(account);
+            model.amount = amount;
+            model.cashBreakdown = new List<ExpenseEntryCashBreakdownModel>();
+
+
+            foreach (var i in DeniminationValues.GetDeniminationList())
+            {
+                model.cashBreakdown.Add(
+                    new ExpenseEntryCashBreakdownModel
+                    {
+                        CashBreak_Denimination = i.CashBreak_Denimination
+                    });
+            }
+
+            return PartialView(model);
+        }
+
         public IActionResult EntryGbaseRemarks(string[] IdsArr)
         {
             ViewBag.parentID = IdsArr[0];

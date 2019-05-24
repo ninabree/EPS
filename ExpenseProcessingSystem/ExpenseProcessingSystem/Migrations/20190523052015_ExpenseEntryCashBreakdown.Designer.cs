@@ -4,14 +4,16 @@ using ExpenseProcessingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    partial class EPSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190523052015_ExpenseEntryCashBreakdown")]
+    partial class ExpenseEntryCashBreakdown
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -634,11 +636,11 @@ namespace ExpenseProcessingSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<double>("CashBreak_Amount");
+                    b.Property<float>("CashBreak_Amount");
 
                     b.Property<double>("CashBreak_Denimination");
 
-                    b.Property<double>("CashBreak_NoPcs");
+                    b.Property<float>("CashBreak_NoPcs");
 
                     b.Property<int?>("ExpenseEntryDetailModelExpDtl_ID");
 
@@ -675,13 +677,9 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("ExpDtl_Ewt");
 
-                    b.Property<string>("ExpDtl_Ewt_Payor_Name");
-
                     b.Property<bool>("ExpDtl_Fbt");
 
                     b.Property<string>("ExpDtl_Gbase_Remarks");
-
-                    b.Property<bool>("ExpDtl_Inter_Entity");
 
                     b.Property<float>("ExpDtl_Vat");
 
@@ -717,32 +715,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.HasIndex("ExpenseEntryDetailModelExpDtl_ID");
 
                     b.ToTable("ExpenseEntryGbaseDtls");
-                });
-
-            modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryInterEntityModel", b =>
-                {
-                    b.Property<string>("Inter_ID")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int?>("ExpenseEntryDetailModelExpDtl_ID");
-
-                    b.Property<string>("Inter_Currency1_ABBR");
-
-                    b.Property<string>("Inter_Currency1_Amount");
-
-                    b.Property<string>("Inter_Currency2_ABBR");
-
-                    b.Property<string>("Inter_Currency2_Amount");
-
-                    b.Property<string>("Inter_Particular_Title");
-
-                    b.Property<string>("Inter_Rate");
-
-                    b.HasKey("Inter_ID");
-
-                    b.HasIndex("ExpenseEntryDetailModelExpDtl_ID");
-
-                    b.ToTable("ExpenseEntryInterEntity");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryModel", b =>
@@ -1173,7 +1145,7 @@ namespace ExpenseProcessingSystem.Migrations
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryCashBreakdownModel", b =>
                 {
                     b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel", "ExpenseEntryDetailModel")
-                        .WithMany("ExpenseEntryCashBreakdowns")
+                        .WithMany()
                         .HasForeignKey("ExpenseEntryDetailModelExpDtl_ID");
                 });
 
@@ -1188,13 +1160,6 @@ namespace ExpenseProcessingSystem.Migrations
                 {
                     b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel", "ExpenseEntryDetailModel")
                         .WithMany("ExpenseEntryGbaseDtls")
-                        .HasForeignKey("ExpenseEntryDetailModelExpDtl_ID");
-                });
-
-            modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryInterEntityModel", b =>
-                {
-                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel", "ExpenseEntryDetailModel")
-                        .WithMany("ExpenseEntryInterEntity")
                         .HasForeignKey("ExpenseEntryDetailModelExpDtl_ID");
                 });
 #pragma warning restore 612, 618

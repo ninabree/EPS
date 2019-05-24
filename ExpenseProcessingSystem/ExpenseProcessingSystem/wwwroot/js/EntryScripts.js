@@ -82,6 +82,12 @@
     });
     
     $("#modalDiv").on("click", "#saveBtn", function (e) {
+        if ($("#parentIdAmortization").length) {
+            return;
+        }
+
+        var parent = $("#"+$("#parentId").val());
+
         var trs = $("#gBaseTable").find("tbody").find("tr");
         var htmlText = "";
         if ($(this).hasClass("btn float-r gBaseSaveBtn")) {
@@ -94,7 +100,10 @@
             return;
         }
 
+        parent.find(":hidden").remove();
+
         var rowNo = $("#parentId").val().substring(7);
+
 
         for (var i = 0; i < trs.length; i++) {
             var docuType = $("#" + trs[i].id).find(".gDocuType").val();

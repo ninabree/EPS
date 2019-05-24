@@ -52,14 +52,19 @@ namespace ExpenseProcessingSystem.ViewModels
         public int day { get; set; }
         [Display(Name = "Duration")]
         public int duration { get; set; }
+        public int modalInputFlag { get; set; }
         public List<amortizationSchedule> amtDetails { get; set; }
         public List<EntryGbaseRemarksViewModel> gBaseRemarksDetails { get; set; }
+        [NotNullValidations]
+        [Display(Name = "Cash Breakdown")]
+        public List<CashBreakdown> cashBreakdown { get; set; }
 
 
         public EntryCVViewModel()
         {
             gBaseRemarksDetails = new List<EntryGbaseRemarksViewModel>();
             amtDetails = new List<amortizationSchedule>();
+            cashBreakdown = new List<CashBreakdown>();
         }
     }
 
@@ -69,6 +74,12 @@ namespace ExpenseProcessingSystem.ViewModels
         public float amtAmount { get; set; }
     }
 
+    public class CashBreakdown
+    {
+        public double cashDenimination { get; set; }
+        public double cashNoPC { get; set; }
+        public double cashAmount { get; set; }
+    }
     public class EntryCVViewModelList
     {
         public int entryID { get; set; }
