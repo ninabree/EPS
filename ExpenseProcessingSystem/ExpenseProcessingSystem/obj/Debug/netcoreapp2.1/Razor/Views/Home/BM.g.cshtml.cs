@@ -66,7 +66,7 @@ using ExpenseProcessingSystem.ViewModels;
             WriteLiteral("\r\n\r\n<div class=\"tab-content-cont m-t-10\">\r\n    <div class=\"tbl-cont\">\r\n        <table class=\"table table-striped tab-tbl\">\r\n            <thead>\r\n                <tr>\r\n                    <th>");
             EndContext();
             BeginContext(311, 143, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "022e06e5d1d1453d8b0291fce0379670", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "2dee14d496fc4bdbad3ce67f9725794f", async() => {
                 BeginContext(385, 14, true);
                 WriteLiteral("Account Code<p");
                 EndContext();
@@ -113,7 +113,7 @@ WriteAttributeValue(" ", 423, ViewData["glyph-1"], 424, 20, false);
             WriteLiteral("</th>\r\n                    <th>");
             EndContext();
             BeginContext(485, 145, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "097f2a328372414f8f43b53c71e01934", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "e27e9f1d7bee4482bddfab28e56b7939", async() => {
                 BeginContext(560, 15, true);
                 WriteLiteral("Account Group<p");
                 EndContext();
@@ -160,7 +160,7 @@ WriteAttributeValue(" ", 599, ViewData["glyph-2"], 600, 20, false);
             WriteLiteral("</th>\r\n                    <th>");
             EndContext();
             BeginContext(661, 151, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "2472f3c6c19244edb6d30db84db44a22", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "944f530c326b4e21ad2c7a72eae281f2", async() => {
                 BeginContext(740, 17, true);
                 WriteLiteral("G-Base Accounts<p");
                 EndContext();
@@ -207,7 +207,7 @@ WriteAttributeValue(" ", 781, ViewData["glyph-3"], 782, 20, false);
             WriteLiteral("</th>\r\n                    <th>");
             EndContext();
             BeginContext(843, 132, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "a5603031d68b4c1290112ff80e8497d9", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "32726e02a2924a2ab475c3e91c7b3920", async() => {
                 BeginContext(912, 8, true);
                 WriteLiteral("Budget<p");
                 EndContext();
@@ -254,7 +254,7 @@ WriteAttributeValue(" ", 944, ViewData["glyph-4"], 945, 20, false);
             WriteLiteral("</th>\r\n                    <th>");
             EndContext();
             BeginContext(1006, 147, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "abf1aea7996c4f7fbe2652d632ac6026", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "806680bc7df0466fa40d20cf1f6e9241", async() => {
                 BeginContext(1082, 16, true);
                 WriteLiteral("Current Budget<p");
                 EndContext();
@@ -301,7 +301,7 @@ WriteAttributeValue(" ", 1122, ViewData["glyph-5"], 1123, 20, false);
             WriteLiteral("</th>\r\n                    <th>");
             EndContext();
             BeginContext(1184, 138, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "e28b3952dde94262b0594c1bd4979cc2", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "d4fb5dda4ffd4ff68dd906d98a2c99d2", async() => {
                 BeginContext(1257, 10, true);
                 WriteLiteral("Approver<p");
                 EndContext();
@@ -348,7 +348,7 @@ WriteAttributeValue(" ", 1291, ViewData["glyph-6"], 1292, 20, false);
             WriteLiteral("</th>\r\n                    <th>");
             EndContext();
             BeginContext(1353, 158, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "6c7ca86832a74dd0ac0e9173c89fa9f8", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "2c10fbe43c87412b97a14efd5924c3b8", async() => {
                 BeginContext(1434, 22, true);
                 WriteLiteral("Last Budget Approved<p");
                 EndContext();
@@ -493,7 +493,7 @@ WriteAttributeValue(" ", 1480, ViewData["glyph-7"], 1481, 20, false);
             WriteLiteral("\r\n        ");
             EndContext();
             BeginContext(2547, 311, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "c093678e057842a78fd5043cce45f232", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "4f205bd49a3b478099f1638049c2dac5", async() => {
                 BeginContext(2844, 10, true);
                 WriteLiteral("\r\n        ");
                 EndContext();
@@ -570,7 +570,7 @@ WriteAttributeValue(" ", 3005, Model.TotalPages, 3006, 19, false);
             WriteLiteral(" disabled />\r\n        ");
             EndContext();
             BeginContext(3048, 305, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "7ba396138951406e99fcc468b8db1000", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "2eece00048244241b99e88c318c0dc42", async() => {
                 BeginContext(3339, 10, true);
                 WriteLiteral("\r\n        ");
                 EndContext();

@@ -105,7 +105,7 @@
                             </td>
                             <td id="req_@i">
                                 <a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#"></a>
-                                @Html.HiddenFor(x => Model.EntryCV[i].modalInputFlag, new { @class= "hiddenItem" })
+                                @Html.HiddenFor(x => Model.EntryCV[i].modalInputFlag, new { @class = "hiddenItem" })
                                 <div id="divCashBD_@i">
                                     @for (int y = 0; y < Model.EntryCV[i].cashBreakdown.Count(); y++)
                                     {
@@ -160,7 +160,9 @@
             </div>
         </div>
     }
-    @Html.Partial("ModalPartial")
+    <div id="modalDiv">
+        @Html.Partial("ModalPartial")
+    </div>
 </div>
 @*validation message*@
 <div id="ValidationSummary" style="display:none" class="">
