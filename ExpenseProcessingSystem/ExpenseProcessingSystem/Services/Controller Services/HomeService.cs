@@ -2845,6 +2845,25 @@ namespace ExpenseProcessingSystem.Services
 
             return accDetails;
         }
+
+        public List<accDetails> getAccDetailsEntry(int account)
+        {
+            List<accDetails> accDetails = new List<accDetails>();
+
+            var accDbDetails = _context.DMAccount.Where(x => x.Account_ID == account).Select(q => new { q.Account_ID, q.Account_Name, q.Account_Code });
+
+            foreach (var detail in accDbDetails)
+            {
+                accDetails temp = new accDetails();
+                temp.accId = detail.Account_ID;
+                temp.accName = detail.Account_Name;
+                temp.accCode = detail.Account_Code;
+
+                accDetails.Add(temp);
+            }
+
+            return accDetails;
+        }
         //get Status
         public string getStatus(int id)
         {
