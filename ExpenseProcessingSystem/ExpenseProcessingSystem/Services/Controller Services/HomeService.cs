@@ -3035,7 +3035,11 @@ namespace ExpenseProcessingSystem.Services
                                                               ExpenseEntryAmortizations = from a
                                                                                           in _context.ExpenseEntryAmortizations
                                                                                           where a.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
-                                                                                          select a
+                                                                                          select a,
+                                                              ExpenseEntryCashBreakdownModel = (from c
+                                                                                               in _context.ExpenseEntryCashBreakdown
+                                                                                               where c.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
+                                                                                               select c).OrderByDescending(db => db.ExpenseEntryDetailModel.ExpDtl_ID).OrderByDescending(db => db.CashBreak_Denimination)
                                                           }
                                 }).FirstOrDefault();
 
@@ -3043,6 +3047,7 @@ namespace ExpenseProcessingSystem.Services
             {
                 List<amortizationSchedule> amtDetails = new List<amortizationSchedule>();
                 List<EntryGbaseRemarksViewModel> remarksDtl = new List<EntryGbaseRemarksViewModel>();
+                List<CashBreakdown> cashBreakdown = new List<CashBreakdown>();
 
                 foreach (var amor in dtl.ExpenseEntryAmortizations)
                 {
@@ -3066,6 +3071,17 @@ namespace ExpenseProcessingSystem.Services
                     remarksDtl.Add(gbaseTemp);
                 }
 
+                foreach (var cashbd in dtl.ExpenseEntryCashBreakdownModel)
+                {
+                    CashBreakdown cashbdTemp = new CashBreakdown()
+                    {
+                        cashDenimination = cashbd.CashBreak_Denimination,
+                        cashNoPC = cashbd.CashBreak_NoPcs,
+                        cashAmount = cashbd.CashBreak_Amount
+                    };
+
+                    cashBreakdown.Add(cashbdTemp);
+                }
 
                 EntryCVViewModel cvDtl = new EntryCVViewModel() {
                     GBaseRemarks = dtl.d.ExpDtl_Gbase_Remarks,
@@ -3084,7 +3100,9 @@ namespace ExpenseProcessingSystem.Services
                     day = dtl.d.ExpDtl_Amor_Day,
                     duration = dtl.d.ExpDtl_Amor_Duration,
                     amtDetails = amtDetails,
-                    gBaseRemarksDetails = remarksDtl
+                    gBaseRemarksDetails = remarksDtl,
+                    cashBreakdown = cashBreakdown,
+                    modalInputFlag = 1
                 };
 
                 cvList.Add(cvDtl);

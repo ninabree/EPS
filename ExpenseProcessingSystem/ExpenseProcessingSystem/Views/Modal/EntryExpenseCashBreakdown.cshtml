@@ -50,11 +50,21 @@
         if ($("#" + $("#parentIdPCVTable").val()).find(".hiddenItem").val() == "1") {
             var ret = $('#parentIdPCVTable').val().replace('item_', '');
             var trs = $(".cashBreakdowntable").find("tbody").find("tr");
+            var amountTotal = 0;
 
             for (var count = 0; count < trs.length - 1; count++) {
                 $("#" + trs[count].id).find('.txtNoPCS').val($("#EntryCV_" + ret + "__cashBreakdown_" + count + "__cashNoPC").val());
                 $("#" + trs[count].id).find('.txtAmount').val($("#EntryCV_" + ret + "__cashBreakdown_" + count + "__cashAmount").val());
+
+                amountTotal = parseFloat(amountTotal) + parseFloat($("#EntryCV_" + ret + "__cashBreakdown_" + count + "__cashAmount").val());
+
+                if ($("#item_" + ret).find(".txtgbaseRemarks").prop('disabled')) {
+                    $("#" + trs[count].id).find('.txtNoPCS').attr("readonly", "readonly");
+                    $("#saveBtn").attr("disabled", "disabled");
+                }
             }
+            $(".cashBDAmountTotal").val(round(amountTotal, 2));
+            alert($(".cashBDAmountTotal").val());
         }
     });
 
@@ -80,11 +90,13 @@
             $(".cashBDAmountTotal").val(round(amountTotal, 2));
         });
 
-        $(".modal-footer").on("click", "#btnVendor", function (e) {
+        $(".modal-footer").on("click", "#saveBtn", function (e) {
+            if ($("#gBaseRemarks").length) {
+                return;
+            }
             e.stopImmediatePropagation();
-
             if ($(".cashBDAmountTotal").val() != $("#reqAmount").val()) {
-                alert("Amount does not matched.");
+                alert("Amount do not match.");
                 return false;
             }
 

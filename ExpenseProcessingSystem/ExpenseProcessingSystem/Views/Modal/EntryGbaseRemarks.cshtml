@@ -31,3 +31,21 @@
         </table>
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        var idNum = $("#parentId").val().replace('remark_', '');
+        var trs = $("#gBaseTable").find("tbody").find("tr");
+        if ($("#item_" + idNum).find(".txtgbaseRemarks").prop('disabled')) {
+            for (var count = 0; count <= trs.length - 1; count++) {
+                $("#gRemarks-tr-" + count).find(".gDocuType").attr("readonly", "readonly");
+                $("#gRemarks-tr-" + count).find(".gInvoiceNo").attr("readonly", "readonly");
+                $("#gRemarks-tr-" + count).find(".gDescription").attr("readonly", "readonly");
+                $("#gRemarks-tr-" + count).find(".gAmount").attr("readonly", "readonly");
+                $("#gRemarks-tr-" + count).find(".flex-c").find(".table-remove").css("pointer-events", "none");
+            }
+            $("#add_row_btn").attr("disabled", "disabled");
+            $("#saveBtn").attr("disabled", "disabled");
+        }
+    });
+</script>

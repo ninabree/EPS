@@ -85,9 +85,9 @@
         if ($("#parentIdAmortization").length) {
             return;
         }
-
-        var parent = $("#"+$("#parentId").val());
-
+        if ($("#parentIdPCVTable").length) {
+            return;
+        }
         var trs = $("#gBaseTable").find("tbody").find("tr");
         var htmlText = "";
         if ($(this).hasClass("btn float-r gBaseSaveBtn")) {

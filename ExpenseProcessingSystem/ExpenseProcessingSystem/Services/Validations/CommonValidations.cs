@@ -355,4 +355,41 @@ namespace ExpenseProcessingSystem.Services.Validations
             */
         }
     }
+    public class EmptyCashBreakdown : ValidationAttribute
+    {
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            Console.WriteLine("EMPTYCASHBREAKDOWN ENTERED+++++++++++++++++++++++++++++");
+            try
+            {
+                int flag = 0;
+                List<CashBreakdown> data = value as List<CashBreakdown>;
+                foreach(var i in data)
+                {
+                    if (i.cashNoPC != 0 && i.cashAmount != 0)
+                    {
+                        Console.WriteLine("IF STATEMENT ENTERED+++++++++++++++++++++++++++++");
+                        flag = 1;
+                        break;
+                    }
+                }
+
+                if (flag == 0)
+                {
+                    Console.WriteLine("INVALID FLAG=0+++++++++++++++++++++++++++++");
+                    return new ValidationResult("Must fill up the Cash Breakdown list.");
+                }
+                else
+                {
+                    Console.WriteLine("VALID FLAG=1+++++++++++++++++++++++++++++");
+                    return ValidationResult.Success;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "User: {user}, StackTrace : {trace}, Error Message: {message}", "[UserID]", ex.StackTrace, ex.Message);
+                return new ValidationResult("Invalid input");
+            }
+        }
+    }
 }

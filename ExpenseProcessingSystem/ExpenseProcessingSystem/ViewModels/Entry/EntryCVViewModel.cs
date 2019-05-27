@@ -55,7 +55,7 @@ namespace ExpenseProcessingSystem.ViewModels
         public int modalInputFlag { get; set; }
         public List<amortizationSchedule> amtDetails { get; set; }
         public List<EntryGbaseRemarksViewModel> gBaseRemarksDetails { get; set; }
-        [NotNullValidations]
+        [EmptyCashBreakdown]
         [Display(Name = "Cash Breakdown")]
         public List<CashBreakdown> cashBreakdown { get; set; }
 
