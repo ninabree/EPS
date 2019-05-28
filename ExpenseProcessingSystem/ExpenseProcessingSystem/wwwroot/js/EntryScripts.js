@@ -85,8 +85,11 @@
         if ($("#parentIdAmortization").length) {
             return;
         }
+        if ($("#parentIdPCVTable").length) {
+            return;
+        }
 
-        var parent = $("#"+$("#parentId").val());
+        var parent = $("#" + $("#parentId").val());
 
         var trs = $("#gBaseTable").find("tbody").find("tr");
         var htmlText = "";
@@ -96,14 +99,10 @@
                 return;
             }
         }
-        if ($("#parentIdAmortization").length) {
-            return;
-        }
 
         parent.find(":hidden").remove();
 
         var rowNo = $("#parentId").val().substring(7);
-
 
         for (var i = 0; i < trs.length; i++) {
             var docuType = $("#" + trs[i].id).find(".gDocuType").val();

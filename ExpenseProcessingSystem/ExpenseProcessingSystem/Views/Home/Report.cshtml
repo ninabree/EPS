@@ -15,10 +15,7 @@
             var ddlYear = $('#ddlYear');
             var ddlMonthTo = $('#ddlMonthTo');
             var ddlYearTo = $('#ddlYearTo');
-            //var ddlYearSem = $('#ddlYearSem');
             var ddlFileFormat = $('#ddlFileFormat');
-            //var radioSemester1 = $('#radioSemester1');
-            //var radioSemester2 = $('#radioSemester2');
             var dtPeriodFrom = $('#PeriodFrom');
             var dtPeriodTo = $('#PeriodTo');
             var txtCheck1 = $('#txtCheck1');
@@ -60,10 +57,7 @@
                 ddlYear.attr("disabled", "disabled");
                 ddlMonthTo.attr("disabled", "disabled");
                 ddlYearTo.attr("disabled", "disabled");
-                //ddlYearSem.attr("disabled", "disabled");
                 ddlFileFormat.attr("disabled", "disabled");
-                //radioSemester1.attr("disabled", "disabled");
-                //radioSemester2.attr("disabled", "disabled");
                 dtPeriodFrom.attr("disabled", "disabled");
                 dtPeriodTo.attr("disabled", "disabled");
                 txtCheck1.attr("disabled", "disabled");
@@ -97,17 +91,10 @@
                 ddlYear.val(dt.getFullYear());
                 ddlMonthTo.val(dt.getMonth() + 1);
                 ddlYearTo.val(dt.getFullYear());
-                //ddlYearSem.val(dt.getFullYear());
                 ddlFileFormat.val('1');
                 lblValidation.hide();
                 dtPeriodFrom.val(today);
                 dtPeriodTo.val(today);
-
-                if (currentSem = 1) {
-                    //radioSemester1.prop('checked', true);
-                } else {
-                    //radioSemester2.prop('checked', true);
-                }
 
                 if (ReportType == "2" || ReportType == "5") {
                     radioPeriod1.prop('checked', true);
@@ -122,9 +109,6 @@
                     ddlMonthTo.removeAttr("disabled");
                     ddlYearTo.removeAttr("disabled");
                     radioPeriod1.removeAttr("disabled");
-                    //ddlYearSem.removeAttr("disabled");
-                    //radioSemester1.removeAttr("disabled");
-                    //radioSemester2.removeAttr("disabled");
                     radioPeriod2.removeAttr("disabled");
                 } else if (ReportType == "4") {
                     radioPeriod1.prop('checked', true);
@@ -179,19 +163,10 @@
             $(".radioPeriodOption").change(function () {
 
                 //Default fields filter
-                if (currentSem = 1) {
-                    //radioSemester1.prop('checked', true);
-                } else {
-                    //radioSemester2.prop('checked', true);
-                }
-
                 ddlMonth.attr("disabled", "disabled");
                 ddlYear.attr("disabled", "disabled");
                 ddlMonthTo.attr("disabled", "disabled");
                 ddlYearTo.attr("disabled", "disabled");
-                //ddlYearSem.attr("disabled", "disabled");
-                //radioSemester1.attr("disabled", "disabled");
-                //radioSemester2.attr("disabled", "disabled");
                 dtPeriodFrom.attr("disabled", "disabled");
                 dtPeriodTo.attr("disabled", "disabled");
 
@@ -226,8 +201,6 @@
                         Month: $('#ddlMonth').val(),
                         YearTo: $('#ddlYearTo').val(),
                         MonthTo: $('#ddlMonthTo').val(),
-                        //YearSem: $('#ddlYearSem').val(),
-                        //Semester: $('.radioSemester:checked').val(),
                         PeriodOption: $('.radioPeriodOption:checked').val(),
                         PeriodFrom: $('#PeriodFrom').val(),
                         PeriodTo: $('#PeriodTo').val()
@@ -250,8 +223,6 @@
                                 + "&Month=" + $('#ddlMonth').val()
                                 + "&YearTo=" + $('#ddlYearTo').val()
                                 + "&MonthTo=" + $('#ddlMonthTo').val()
-                                //+ "&YearSem=" + $('#ddlYearSem').val()
-                                //+ "&Semester=" + $('.radioSemester:checked').val()
                                 + "&PeriodOption=" + $('.radioPeriodOption:checked').val()
                                 + "&PeriodFrom=" + $('#PeriodFrom').val()
                                 + "&PeriodTo=" + $('#PeriodTo').val()
@@ -279,8 +250,6 @@
                         Month: $('#ddlMonth').val(),
                         YearTo: $('#ddlYearTo').val(),
                         MonthTo: $('#ddlMonthTo').val(),
-                        //YearSem: $('#ddlYearSem').val(),
-                        //Semester: $('.radioSemester:checked').val(),
                         PeriodOption: $('.radioPeriodOption:checked').val(),
                         PeriodFrom: $('#PeriodFrom').val(),
                         PeriodTo: $('#PeriodTo').val()
@@ -303,8 +272,6 @@
                                 + "&Month=" + $('#ddlMonth').val()
                                 + "&YearTo=" + $('#ddlYearTo').val()
                                 + "&MonthTo=" + $('#ddlMonthTo').val()
-                                //+ "&YearSem=" + $('#ddlYearSem').val()
-                                //+ "&Semester=" + $('.radioSemester:checked').val()
                                 + "&PeriodOption=" + $('.radioPeriodOption:checked').val()
                                 + "&PeriodFrom=" + $('#PeriodFrom').val()
                                 + "&PeriodTo=" + $('#PeriodTo').val());

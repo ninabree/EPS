@@ -356,6 +356,52 @@ namespace ExpenseProcessingSystem.Services.Validations
             */
         }
     }
+    public class EmptyCashBreakdown : ValidationAttribute
+    {
+        private readonly string _CheckBoxProperty;
+
+        public EmptyCashBreakdown(string CheckBoxProperty)
+        {
+            _CheckBoxProperty = CheckBoxProperty;
+        }
+
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            var property = validationContext.ObjectType.GetProperty(_CheckBoxProperty);
+            var val = property.GetValue(validationContext.ObjectInstance, null);
+
+            if((string)val != "PCV")
+                return ValidationResult.Success;
+
+            try
+                {
+                    int flag = 0;
+                    List<CashBreakdown> data = value as List<CashBreakdown>;
+                    foreach (var i in data)
+                    {
+                        if (i.cashNoPC != 0 && i.cashAmount != 0)
+                        {
+                            flag = 1;
+                            break;
+                        }
+                    }
+
+                    if (flag == 0)
+                    {
+                        return new ValidationResult("Must fill up the Cash Breakdown list.");
+                    }
+                    else
+                    {
+                        return ValidationResult.Success;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Fatal(ex, "User: {user}, StackTrace : {trace}, Error Message: {message}", "[UserID]", ex.StackTrace, ex.Message);
+                    return new ValidationResult("Invalid input");
+                }
+        }
+    }
     public class ListValidation : ValidationAttribute
     {
         private readonly string _CheckBoxProperty;

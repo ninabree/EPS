@@ -18,6 +18,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Reflection;
 using ExpenseProcessingSystem.Services.Controller_Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseProcessingSystem.Services
 {
@@ -123,6 +124,7 @@ namespace ExpenseProcessingSystem.Services
 
             var dbPending = from p in _context.ExpenseEntry
                             where (p.Expense_Status == GlobalSystemValues.STATUS_PENDING
+                            || p.Expense_Status == GlobalSystemValues.STATUS_VERIFIED
                             || p.Expense_Status == GlobalSystemValues.STATUS_NEW
                             || p.Expense_Status == GlobalSystemValues.STATUS_EDIT
                             || p.Expense_Status == GlobalSystemValues.STATUS_DELETE)
@@ -142,7 +144,7 @@ namespace ExpenseProcessingSystem.Services
                     {GlobalSystemValues.TYPE_CV,"View_CV"},
                     {GlobalSystemValues.TYPE_DDV,"View_DDV"},
                     {GlobalSystemValues.TYPE_NC,"View_NC"},
-                    {GlobalSystemValues.TYPE_PC,"View_PC"},
+                    {GlobalSystemValues.TYPE_PC,"View_PCV"},
                     {GlobalSystemValues.TYPE_SS,"View_SS"},
                 };
 
@@ -2847,6 +2849,25 @@ namespace ExpenseProcessingSystem.Services
 
             return accDetails;
         }
+
+        public List<accDetails> getAccDetailsEntry(int account)
+        {
+            List<accDetails> accDetails = new List<accDetails>();
+
+            var accDbDetails = _context.DMAccount.Where(x => x.Account_ID == account).Select(q => new { q.Account_ID, q.Account_Name, q.Account_Code });
+
+            foreach (var detail in accDbDetails)
+            {
+                accDetails temp = new accDetails();
+                temp.accId = detail.Account_ID;
+                temp.accName = detail.Account_Name;
+                temp.accCode = detail.Account_Code;
+
+                accDetails.Add(temp);
+            }
+
+            return accDetails;
+        }
         //get Status
         public string getStatus(int id)
         {
@@ -2985,7 +3006,7 @@ namespace ExpenseProcessingSystem.Services
                     Expense_Debit_Total = TotalDebit,
                     Expense_Credit_Total = credEwtTotal + credCashTotal,
                     Expense_Creator_ID = userId,
-                    Expense_Created_Date = DateTime.Now,
+                    Expense_Created_Date = (entryModel.entryID == 0 ) ? DateTime.Now : entryModel.createdDate,
                     Expense_Last_Updated = DateTime.Now,
                     Expense_isDeleted = false,
                     Expense_Status = 1,
@@ -2998,6 +3019,7 @@ namespace ExpenseProcessingSystem.Services
             }
             return -1;
         }
+
         //retrieve expense details
         public EntryCVViewModelList getExpense(int transID)
         {
@@ -3018,7 +3040,11 @@ namespace ExpenseProcessingSystem.Services
                                                               ExpenseEntryAmortizations = from a
                                                                                           in _context.ExpenseEntryAmortizations
                                                                                           where a.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
-                                                                                          select a
+                                                                                          select a,
+                                                              ExpenseEntryCashBreakdown = (from c
+                                                                                               in _context.ExpenseEntryCashBreakdown
+                                                                                               where c.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
+                                                                                               select c).OrderByDescending(db => db.ExpenseEntryDetailModel.ExpDtl_ID).OrderByDescending(db => db.CashBreak_Denimination)
                                                           }
                                 }).FirstOrDefault();
 
@@ -3026,6 +3052,7 @@ namespace ExpenseProcessingSystem.Services
             {
                 List<amortizationSchedule> amtDetails = new List<amortizationSchedule>();
                 List<EntryGbaseRemarksViewModel> remarksDtl = new List<EntryGbaseRemarksViewModel>();
+                List<CashBreakdown> cashBreakdown = new List<CashBreakdown>();
 
                 foreach (var amor in dtl.ExpenseEntryAmortizations)
                 {
@@ -3049,6 +3076,17 @@ namespace ExpenseProcessingSystem.Services
                     remarksDtl.Add(gbaseTemp);
                 }
 
+                foreach (var cashbd in dtl.ExpenseEntryCashBreakdown)
+                {
+                    CashBreakdown cashbdTemp = new CashBreakdown()
+                    {
+                        cashDenimination = cashbd.CashBreak_Denimination,
+                        cashNoPC = cashbd.CashBreak_NoPcs,
+                        cashAmount = cashbd.CashBreak_Amount
+                    };
+
+                    cashBreakdown.Add(cashbdTemp);
+                }
 
                 EntryCVViewModel cvDtl = new EntryCVViewModel() {
                     GBaseRemarks = dtl.d.ExpDtl_Gbase_Remarks,
@@ -3067,9 +3105,10 @@ namespace ExpenseProcessingSystem.Services
                     day = dtl.d.ExpDtl_Amor_Day,
                     duration = dtl.d.ExpDtl_Amor_Duration,
                     amtDetails = amtDetails,
-                    gBaseRemarksDetails = remarksDtl
+                    gBaseRemarksDetails = remarksDtl,
+                    cashBreakdown = cashBreakdown,
+                    modalInputFlag = 1
                 };
-
                 cvList.Add(cvDtl);
             }
 
@@ -3087,6 +3126,7 @@ namespace ExpenseProcessingSystem.Services
                 verifier_1 = (EntryDetails.e.Expense_Status == 1) ? "" : getUserName(EntryDetails.e.Expense_Verifier_1),
                 verifier_2 = (EntryDetails.e.Expense_Status == 1) ? "" : getUserName(EntryDetails.e.Expense_Verifier_2),
                 maker = EntryDetails.e.Expense_Creator_ID,
+                createdDate = EntryDetails.e.Expense_Created_Date,
                 EntryCV = cvList
             };
 
@@ -3201,8 +3241,9 @@ namespace ExpenseProcessingSystem.Services
 
             return ddvModel;
         }
+
         //update status of entry
-        public bool updateExpenseStatus(int transID, int status)
+        public bool updateExpenseStatus(int transID, int status, int userid)
         {
             ExpenseEntryModel m = new ExpenseEntryModel
             {
@@ -3211,13 +3252,61 @@ namespace ExpenseProcessingSystem.Services
 
             if (_modelState.IsValid)
             {
-                _context.ExpenseEntry.Attach(m);
-                m.Expense_Status = status;
+                //_context.ExpenseEntry.Attach(m);
+                ExpenseEntryModel dbExpenseEntry = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == transID);
+
+                if (status == GlobalSystemValues.STATUS_VERIFIED)
+                    dbExpenseEntry.Expense_Verifier_1 = userid;
+
+                if (status == GlobalSystemValues.STATUS_APPROVED)
+                { 
+                    dbExpenseEntry.Expense_Approver = userid;
+                    if (GlobalSystemValues.STATUS_PENDING == GetCurrentEntryStatus(dbExpenseEntry.Expense_ID))
+                    {
+                        dbExpenseEntry.Expense_Verifier_1 = userid;
+                    }
+                }
+                dbExpenseEntry.Expense_Status = status;
+                dbExpenseEntry.Expense_Last_Updated = DateTime.Now;
+
+                //m.Expense_Status = status;
+                //m.Expense_Last_Updated = DateTime.Now;
+
                 _context.SaveChanges();
             }
             else { return false; }
             return true;
         }
+
+        //Delete expense entry
+        public bool deleteExpenseEntry(int expense_ID)
+        {
+            var entry = _context.ExpenseEntry.Where(x => x.Expense_ID == expense_ID).First();
+            var entryDtl = _context.ExpenseEntryDetails.Where(x => x.ExpenseEntryModel.Expense_ID == expense_ID).ToList();
+            foreach (var i in entryDtl)
+            {
+                _context.ExpenseEntryAmortizations.RemoveRange(_context.ExpenseEntryAmortizations
+                    .Where(x => x.ExpenseEntryDetailModel.ExpDtl_ID == i.ExpDtl_ID));
+                _context.ExpenseEntryCashBreakdown.RemoveRange(_context.ExpenseEntryCashBreakdown
+                    .Where(x => x.ExpenseEntryDetailModel.ExpDtl_ID == i.ExpDtl_ID));
+                _context.ExpenseEntryGbaseDtls.RemoveRange(_context.ExpenseEntryGbaseDtls
+                    .Where(x => x.ExpenseEntryDetailModel.ExpDtl_ID == i.ExpDtl_ID));
+            }
+
+            _context.ExpenseEntryDetails.RemoveRange(_context.ExpenseEntryDetails
+                .Where(x => x.ExpenseEntryModel.Expense_ID == entry.Expense_ID));
+            _context.ExpenseEntry.RemoveRange(_context.ExpenseEntry.Where(x => x.Expense_ID == expense_ID));
+           
+            _context.SaveChanges();
+
+            return true;
+        }
+
+        public int GetCurrentEntryStatus(int expense_ID)
+        {
+            return _context.ExpenseEntry.Where(db => db.Expense_ID == expense_ID).SingleOrDefault().Expense_Status;
+        }
+
         public int addExpense_DDV(EntryDDVViewModelList entryModel, int userId, int expenseType)
         {
             float TotalDebit = 0;
@@ -3311,6 +3400,7 @@ namespace ExpenseProcessingSystem.Services
 
             return -1;
         }
+
         ////============[End Access Entry Tables]=========================
 
     }
