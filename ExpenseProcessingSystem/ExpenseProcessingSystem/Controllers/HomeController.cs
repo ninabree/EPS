@@ -705,6 +705,11 @@ namespace ExpenseProcessingSystem.Controllers
             cvList.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
             cvList.systemValues.acc = _service.getAccDetailsEntry();
 
+            foreach(var acc in cvList.EntryCV)
+            {
+                cvList.systemValues.acc.AddRange(_service.getAccDetailsEntry(acc.account));
+            }
+
             return View(viewLink, cvList);
         }
 
