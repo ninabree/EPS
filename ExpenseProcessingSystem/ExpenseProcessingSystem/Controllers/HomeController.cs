@@ -703,14 +703,9 @@ namespace ExpenseProcessingSystem.Controllers
 
             cvList = _service.getExpense(entryID);
 
-            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
-            cvList.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
-            cvList.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
-            cvList.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
-            cvList.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
-            cvList.systemValues.acc = _service.getAccDetailsEntry();
+            cvList = PopulateEntry((EntryCVViewModelList)cvList);
 
-            foreach(var acc in cvList.EntryCV)
+            foreach (var acc in cvList.EntryCV)
             {
                 cvList.systemValues.acc.AddRange(_service.getAccDetailsEntry(acc.account));
             }
