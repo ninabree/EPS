@@ -1,4 +1,5 @@
 ﻿using ExpenseProcessingSystem.ViewModels;
+using ExpenseProcessingSystem.ViewModels.Entry;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -353,6 +354,37 @@ namespace ExpenseProcessingSystem.Services.Validations
                 Log.CloseAndFlush();
             }
             */
+        }
+    }
+    public class ListValidation : ValidationAttribute
+    {
+        private readonly string _CheckBoxProperty;
+
+        public ListValidation(string CheckBoxProperty)
+        {
+            _CheckBoxProperty = CheckBoxProperty;
+        }
+
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            var property = validationContext.ObjectType.GetProperty(_CheckBoxProperty);
+            var val = property.GetValue(validationContext.ObjectInstance, null);
+
+            var name = validationContext.DisplayName;
+            var data = (EntryDDVViewModel)validationContext.ObjectInstance;
+
+            if ((Boolean)val)
+            {
+                foreach (var dtl in data.interDetails)
+                {
+                    if ((dtl.Inter_Currency1_ABBR == null) || (dtl.Inter_Currency2_ABBR == null) ||
+                        (dtl.Inter_Currency1_Amount == null) || (dtl.Inter_Currency2_Amount == null))
+                    {
+                        return new ValidationResult(name + " is Required. Kindly fill-up the required form.");
+                    }
+                }
+            }
+            return ValidationResult.Success;
         }
     }
 }

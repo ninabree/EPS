@@ -2,13 +2,19 @@
 @{
     ViewData["Title"] = "Entry_NC";
 }
-@using ExpenseProcessingSystem.ViewModels
-@model EntryCVViewModelList
+@using ExpenseProcessingSystem.ViewModels.Entry
+@model EntryNCViewModelList
 @inject IJsonHelper Json;
 
 <div class="tabContent">
-    @using (Html.BeginForm("AddNewCV", "Home", FormMethod.Post, new { @class = "validate-form" }))
+    @using (Html.BeginForm("AddNewNC", "Home", FormMethod.Post, new { @class = "validate-form" }))
     {
+        <div id="tbl-lbl">
+            <div class="dis-inline-block"><p>Category of Entries:</p></div>
+            <div class="dis-inline-block">
+                @Html.DropDownListFor(m => m.category_of_entry, Model.systemValues.category_of_entries, new { id = "categoryName" })
+            </div>
+        </div>
         <div id="tbl-lbl" class="flex-sb">
             <div class="dis-inline-block w-20">Date: <p class="dis-inline-block w-70">@Html.TextBoxFor(model => model.expenseDate, new { @readonly = "true", @class = "input w-97" })</p> </div>
         </div>
@@ -34,26 +40,26 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (int i = 0; i < Model.EntryCV.Count; i++)
+                    @for (int i = 0; i < Model.EntryNC.Count; i++)
                     {
                         <tr id="item_@i">
                             <td class="p-b-1 p-t-1">
                                 <div class="flex-sb">
-                                    @Html.TextBoxFor(x => Model.EntryCV[i].GBaseRemarks, new { @class = "input100 w-80" })
+                                    @Html.TextBoxFor(x => Model.EntryNC[i].GBaseRemarks, new { @class = "input100 w-80" })
                                     <div id="remark_@i">
                                         <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
-                                        @for (int y = 0; y < Model.EntryCV[i].gBaseRemarksDetails.Count(); y++)
+                                        @*@for (int y = 0; y < Model.EntryNC[i].gBaseRemarksDetails.Count(); y++)
                                         {
-                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].docType);
-                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].desc);
-                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].invNo);
-                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].amount);
-                                        }
+                                            @Html.HiddenFor(x => Model.EntryNC[i].gBaseRemarksDetails[y].docType);
+                                            @Html.HiddenFor(x => Model.EntryNC[i].gBaseRemarksDetails[y].desc);
+                                            @Html.HiddenFor(x => Model.EntryNC[i].gBaseRemarksDetails[y].invNo);
+                                            @Html.HiddenFor(x => Model.EntryNC[i].gBaseRemarksDetails[y].amount);
+                                        }*@
                                     </div>
                                 </div>
                             </td>
                             <td>
-                                <select id="@Html.IdFor(x => Model.EntryCV[i].account)" class="input100 txtAcc" name="@Html.NameFor(x => Model.EntryCV[i].account)">
+                                <select id="@Html.IdFor(x => Model.EntryNC[i].account)" class="input100 txtAcc" name="@Html.NameFor(x => Model.EntryNC[i].account)">
                                     @foreach (var groepModel in Model.systemValues.acc)
                                     {
                                         <option value="@groepModel.accId" class="@groepModel.accCode">@groepModel.accName</option>
@@ -61,19 +67,19 @@
                                 </select>
                             </td>
                             <td>
-                                @Html.DropDownListFor(x => Model.EntryCV[i].ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100" })
+                                @Html.DropDownListFor(x => Model.EntryNC[i].ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100" })
                             </td>
-                            <td>@Html.TextBoxFor(x => Model.EntryCV[i].debitGross, new { @class = "input100 txtGross", @type = "number", @min = "0" })</td>
+                            <td>@Html.TextBoxFor(x => Model.EntryNC[i].debitGross, new { @class = "input100 txtGross", @type = "number", @min = "0" })</td>
                             <td id="req_@i">
                                 <a class="reqBtn glyphicon glyphicon-list-alt"></a>
-                                @*@Html.HiddenFor(x => Model.EntryCV[i].month, new { @class = "txtAmorMonth" })
-                                @Html.HiddenFor(x => Model.EntryCV[i].day, new { @class = "txtAmorDay" })
-                                @Html.HiddenFor(x => Model.EntryCV[i].duration, new { @class = "txtAmorDuration" })
-                                @for (int y = 0; y < Model.EntryCV[i].amtDetails.Count(); y++)
-                                {
-                                    @Html.HiddenFor(x => Model.EntryCV[i].amtDetails[y].amtDate);
-                                    @Html.HiddenFor(x => Model.EntryCV[i].amtDetails[y].amtAmount);
-                                }*@
+                                @*@Html.HiddenFor(x => Model.EntryNC[i].month, new { @class = "txtAmorMonth" })
+                                    @Html.HiddenFor(x => Model.EntryNC[i].day, new { @class = "txtAmorDay" })
+                                    @Html.HiddenFor(x => Model.EntryNC[i].duration, new { @class = "txtAmorDuration" })
+                                    @for (int y = 0; y < Model.EntryNC[i].amtDetails.Count(); y++)
+                                    {
+                                        @Html.HiddenFor(x => Model.EntryNC[i].amtDetails[y].amtDate);
+                                        @Html.HiddenFor(x => Model.EntryNC[i].amtDetails[y].amtAmount);
+                                    }*@
                             </td>
                         </tr>
                     }
@@ -162,21 +168,21 @@
             newRow.id = "item_" + itemCount
 
             var htmlContent = '<td class="p-b-1 p-t-1"><div class="flex-sb">' +
-                '<input class="input100 w-80" id="EntryCV_' + itemCount + '__GBaseRemarks" name="EntryCV[' + itemCount + '].GBaseRemarks" type="text" value="">' +
+                '<input class="input100 w-80" id="EntryNC_' + itemCount + '__GBaseRemarks" name="EntryNC[' + itemCount + '].GBaseRemarks" type="text" value="">' +
                 '<div id="remark_' + itemCount + '"><a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a></div></div></td>' +
-                '<td><select class="input100 txtAcc" id="EntryCV_' + itemCount + '__account" name="EntryCV[' + itemCount + '].account">';
+                '<td><select class="input100 txtAcc" id="EntryNC_' + itemCount + '__account" name="EntryNC[' + itemCount + '].account">';
 
             for (var i = 0; i < acc.length; i++) {
                 htmlContent += '<option value="' + acc[i]["accId"] + '" class="' + acc[i]["accCode"] + '">' + acc[i]["accName"] + '</option>';
             }
             
             htmlContent += '</select></td>' +
-                '<td><select class="input100" data-val="true" data-val-required="The ccy field is required." id="EntryCV_' + itemCount + '__ccy" name="EntryCV[' + itemCount + '].ccy">';
+                '<td><select class="input100" data-val="true" data-val-required="The ccy field is required." id="EntryNC_' + itemCount + '__ccy" name="EntryNC[' + itemCount + '].ccy">';
             for (var i = 0; i < curr.length; i++) {
                 htmlContent += '<option value="' + curr[i]["value"] + '">' + curr[i]["text"] + '</option>';
             }
             htmlContent += '</select></td>' +
-                '<td><input class="input100 txtGross" data-val="true" data-val-number="The field debitGross must be a number." data-val-required="The debitGross field is required." id="EntryCV_' + itemCount + '__debitGross" name="EntryCV[' + itemCount + '].debitGross" type="number" min="0" value="0"></td>' +
+                '<td><input class="input100 txtGross" data-val="true" data-val-number="The field debitGross must be a number." data-val-required="The debitGross field is required." id="EntryNC_' + itemCount + '__debitGross" name="EntryNC[' + itemCount + '].debitGross" type="number" min="0" value="0"></td>' +
                 '<td id="req_' + itemCount + '"><a class="reqBtn glyphicon glyphicon-list-alt"></a></td>';
 
             newRow.innerHTML = htmlContent;

@@ -597,27 +597,12 @@ namespace ExpenseProcessingSystem.Controllers
         public IActionResult Entry_CV()
         {
             var userId = GetUserID();
-            //var modelState = ModelState;
 
             EntryCVViewModelList viewModel = new EntryCVViewModelList();
             viewModel = PopulateEntry((EntryCVViewModelList)viewModel);
             //viewModel.vendor = 2;
             viewModel.EntryCV.Add(new EntryCVViewModel());
             return View(viewModel);
-        }
-        public dynamic PopulateEntry(dynamic viewModel)
-        {
-            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
-            viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
-            viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
-            viewModel.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
-            viewModel.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
-            viewModel.systemValues.acc = _service.getAccDetailsEntry();
-
-            viewModel.expenseYear = DateTime.Today.Year.ToString();
-            viewModel.expenseDate = DateTime.Today;
-
-            return viewModel;
         }
 
         [OnlineUserCheck]
@@ -736,15 +721,7 @@ namespace ExpenseProcessingSystem.Controllers
             var userId = GetUserID();
 
             EntryDDVViewModelList viewModel = new EntryDDVViewModelList();
-            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
-            viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
-            viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
-            viewModel.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
-            viewModel.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
-            viewModel.systemValues.acc = _service.getAccDetailsEntry();
-
-            viewModel.expenseYear = DateTime.Today.Year.ToString();
-            viewModel.expenseDate = DateTime.Today;
+            viewModel = PopulateEntry((EntryDDVViewModelList)viewModel);
             //viewModel.vendor = 2;
             viewModel.EntryDDV.Add(new EntryDDVViewModel { interDetails = new List<DDVInterEntityViewModel> { new DDVInterEntityViewModel()} });
             return View(viewModel);
@@ -929,18 +906,9 @@ namespace ExpenseProcessingSystem.Controllers
         {
             var userId = GetUserID();
 
-            EntryCVViewModelList viewModel = new EntryCVViewModelList();
-            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
-            viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
-            viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
-            viewModel.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
-            viewModel.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
-            viewModel.systemValues.acc = _service.getAccDetailsEntry();
-
-            viewModel.expenseYear = DateTime.Today.Year.ToString();
-            viewModel.expenseDate = DateTime.Today;
-            //viewModel.vendor = 2;
-            viewModel.EntryCV.Add(new EntryCVViewModel());
+            EntryNCViewModelList viewModel = new EntryNCViewModelList();
+            viewModel = PopulateEntry(viewModel);
+            viewModel.EntryNC.Add(new EntryNCViewModel());
             return View(viewModel);
         }
 
@@ -1894,6 +1862,25 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             return actualBudgetData;
+        }
+
+        public dynamic PopulateEntry(dynamic viewModel)
+        {
+            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
+            viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
+            viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
+            viewModel.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
+            viewModel.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
+            viewModel.systemValues.acc = _service.getAccDetailsEntry();
+            viewModel.systemValues.category_of_entries = listOfSysVals[GlobalSystemValues.SELECT_LIST_CATEGORY];
+
+            if (viewModel.GetType() != typeof(EntryNCViewModelList))
+            {
+                viewModel.expenseYear = DateTime.Today.Year.ToString();
+                viewModel.expenseDate = DateTime.Today;
+            }
+
+            return viewModel;
         }
     }
 }

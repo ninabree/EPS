@@ -183,7 +183,13 @@
 </div>
 <script>
     $(function () {
-        $(window).on("load", function () {
+        //alert();
+        //TriggerInterEntity();
+        //$(document).on("load", function () {
+        //    alert();
+        //});
+        $(document).on("load", function () {
+            alert();
             var gross = $(".txtGross");
             var credEwt = $(".txtCredEwt");
             var credCash = $(".txtCredCash");
@@ -208,6 +214,7 @@
             $("#credEwtTotal").val(ewtSubTotal);
             $("#credCashTotal").val(cashSubTotal);
             $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
+            TriggerInterEntity();
         });
 
         $("#addRow").click(function (e) {
@@ -322,15 +329,6 @@
                 if (status == "error") {
                     alert("Something went wrong.");
                 }
-                //else {
-                //    if ($("#parentIdAmortization") != null) {
-                //        var tableRef = document.getElementById('modalTable').getElementsByTagName('tbody')[0];
-                //        //var tableRef = $("#modalTable").children("tbody");
-                //        var grossAmount = Number($("#" + id).find(".txtGross").val());
-
-                //        tblBuilder(tableRef, month, day, duration, grossAmount);
-                //    }
-                //}
             });
 
             $('#myModal').modal('show');
@@ -387,6 +385,9 @@
                 btnAttr.attr("class", "reqBtn glyphicon glyphicon-list-alt");
             }
         });
+
+        
+        //.parent().siblings(":eq(" + countDoc + ")")
     });
 </script>
 <script type="text/javascript">
@@ -407,7 +408,21 @@
             cellAmount.innerHTML = dvdAmount;
         }
     };
-
+    function TriggerInterEntity() {
+        alert();
+        $("input.chkInter").each(function (i, val) {
+            alert(i + " --- " + val.val());
+            var btnAttr = $(val).siblings(":eq(14)").find(".reqBtn");
+            alert(btnAttr);
+            if (val.checked == true) {
+                btnAttr.attr("href", "#");
+                btnAttr.attr("class", "expenseInterEntity");
+            } else {
+                btnAttr.removeAttr("href");
+                btnAttr.removeAttr("class", "expenseInterEntity");
+            }
+        });
+        }
     function roundNumber(num, scale) {
         if (!("" + num).includes("e")) {
             return +(Math.round(num + "e+" + scale) + "e-" + scale);

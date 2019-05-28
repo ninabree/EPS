@@ -2824,6 +2824,8 @@ namespace ExpenseProcessingSystem.Services
             listOfLists.Add(new SelectList(_context.DMTR.Where(x => x.TR_isActive == true && x.TR_isDeleted == false).Select(q => new { q.TR_ID, q.TR_Tax_Rate }),
                         "TR_ID", "TR_Tax_Rate"));
 
+            listOfLists.Add(GlobalSystemValues.NC_CATEGORIES_SELECT);
+
             return listOfLists;
         }
         //retrieve account details

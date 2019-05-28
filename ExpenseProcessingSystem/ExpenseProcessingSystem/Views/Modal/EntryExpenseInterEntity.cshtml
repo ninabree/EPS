@@ -152,8 +152,8 @@
             $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Currency2_Amount").val(curr2Amt);
             $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Rate").val(rate);
 
+            $('.modal-body').empty();
             $('#myModal').modal('hide');
-            alert($("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Currency1_ABBR").val());
         });
 
         function UpdateParticulars(curr1, curr2) {
