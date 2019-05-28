@@ -6,6 +6,7 @@
 @inject IJsonHelper Json;
 
 <div class="tabContent">
+    
     @using (Html.BeginForm("AddNewCV", "Home", FormMethod.Post, new { @class = "validate-form" }))
     {
         <div id="tbl-lbl" class="flex-sb">
@@ -57,67 +58,69 @@
                 <tbody>
                     @for (int i = 0; i < Model.EntryCV.Count; i++)
                     {
-                        <tr id="item_@i">
-                            <td class="p-b-1 p-t-1">
-                                <div class="flex-sb">
-                                    @Html.TextBoxFor(x => Model.EntryCV[i].GBaseRemarks, new { @class = "input100 w-80" })
-                                    <div id="remark_@i">
-                                        <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
-                                        @for (int y = 0; y < Model.EntryCV[i].gBaseRemarksDetails.Count(); y++)
-                                        {
-                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].docType);
-                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].desc);
-                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].invNo);
-                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].amount);
-                                        }
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                @*@Html.DropDownListFor(x => Model.EntryCV[i].account, new SelectList(Model.systemValues.acc, "accId", "accName", Model.systemValues.acc.Where(x=> x.accId == Model.EntryCV[i].account)), new { @class = "input100 txtAcc" })*@
-                                <select id="@Html.IdFor(x => Model.EntryCV[i].account)" class="input100 txtAcc" name="@Html.NameFor(x => Model.EntryCV[i].account)">
-                                    @foreach (var groepModel in Model.systemValues.acc)
+                    <tr id="item_@i">
+                        <td class="p-b-1 p-t-1">
+                            <div class="flex-sb">
+                                @Html.TextBoxFor(x => Model.EntryCV[i].GBaseRemarks, new { @class = "input100 w-80" })
+                                <div id="remark_@i">
+                                    <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
+                                    @for (int y = 0; y < Model.EntryCV[i].gBaseRemarksDetails.Count(); y++)
                                     {
-                                        if (@groepModel.accId == @Model.EntryCV[0].account)
-                                        {
-                                            <option value="@groepModel.accId" class="@groepModel.accCode" selected>@groepModel.accName</option>
-                                        }
-                                        else
-                                        {
-                                            <option value="@groepModel.accId" class="@groepModel.accCode">@groepModel.accName</option>
-                                        }
-
+                                        @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].docType);
+                                        @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].desc);
+                                        @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].invNo);
+                                        @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].amount);
                                     }
-                                </select>
-                            </td>
-                            <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].fbt)</td>
-                            <td>
-                                @Html.DropDownListFor(x => Model.EntryCV[i].dept, new SelectList(Model.systemValues.dept, "Value", "Text", Model.systemValues.dept.SelectedValue), new { @class = "input100" })
-                            </td>
-                            <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].chkVat, new { @class = "chkVat" })</td>
-                            <td>@Html.TextBoxFor(x => Model.EntryCV[i].vat, new { @class = "input100 txtVat", @readonly = "true" })</td>
-                            <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].chkEwt, new { @class = "chkEwt" })</td>
-                            <td>
-                                @Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt", @disabled = "true" })
-                            </td>
-                            <td>
-                                @Html.DropDownListFor(x => Model.EntryCV[i].ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100" })
-                            </td>
-                            <td>@Html.TextBoxFor(x => Model.EntryCV[i].debitGross, new { @class = "input100 txtGross", @type = "number", @min = "0" })</td>
-                            <td>@Html.TextBoxFor(x => Model.EntryCV[i].credEwt, new { @class = "input100 txtCredEwt", @readonly = "readonly" })</td>
-                            <td>@Html.TextBoxFor(x => Model.EntryCV[i].credCash, new { @class = "input100 txtCredCash", @readonly = "readonly" })</td>
-                            <td id="req_@i">
-                                <a class="reqBtn glyphicon glyphicon-list-alt"></a>
-                                @Html.HiddenFor(x => Model.EntryCV[i].month, new { @class = "txtAmorMonth" })
-                                @Html.HiddenFor(x => Model.EntryCV[i].day, new { @class = "txtAmorDay" })
-                                @Html.HiddenFor(x => Model.EntryCV[i].duration, new { @class = "txtAmorDuration" })
-                                @for (int y = 0; y < Model.EntryCV[i].amtDetails.Count(); y++)
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            @*@Html.DropDownListFor(x => Model.EntryCV[i].account, new SelectList(Model.systemValues.acc, "accId", "accName", Model.systemValues.acc.Where(x=> x.accId == Model.EntryCV[i].account)), new { @class = "input100 txtAcc" })*@
+                            <select id="@Html.IdFor(x => Model.EntryCV[i].account)" class="input100 txtAcc" name="@Html.NameFor(x => Model.EntryCV[i].account)">
+                                @foreach (var groepModel in Model.systemValues.acc)
                                 {
-                                    @Html.HiddenFor(x => Model.EntryCV[i].amtDetails[y].amtDate);
-                                    @Html.HiddenFor(x => Model.EntryCV[i].amtDetails[y].amtAmount);
+                                    if (@groepModel.accId == @Model.EntryCV[0].account)
+                                    {
+                                        <option value="@groepModel.accId" class="@groepModel.accCode" selected>@groepModel.accName</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@groepModel.accId" class="@groepModel.accCode">@groepModel.accName</option>
+                                    }
+
                                 }
-                            </td>
-                        </tr>
+                            </select>
+                        </td>
+                        <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].fbt)</td>
+                        <td>
+                            @Html.DropDownListFor(x => Model.EntryCV[i].dept, new SelectList(Model.systemValues.dept, "Value", "Text", Model.systemValues.dept.SelectedValue), new { @class = "input100 txtDept" })
+                        </td>
+                        <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].chkVat, new { @class = "chkVat comVar" })</td>
+                        <td>
+                            @Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.systemValues.vat.SelectedValue), new { @class = "input100 txtVat comVar", @disabled = "true" })
+                        </td>
+                        <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].chkEwt, new { @class = "chkEwt comVar" })</td>
+                        <td>
+                            @Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt comVar", @disabled = "true" })
+                        </td>
+                        <td>
+                            @Html.DropDownListFor(x => Model.EntryCV[i].ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100" })
+                        </td>
+                        <td>@Html.TextBoxFor(x => Model.EntryCV[i].debitGross, new { @class = "input100 txtGross", @readonly = "readonly" })</td>
+                        <td>@Html.TextBoxFor(x => Model.EntryCV[i].credEwt, new { @class = "input100 txtCredEwt", @readonly = "readonly" })</td>
+                        <td>@Html.TextBoxFor(x => Model.EntryCV[i].credCash, new { @class = "input100 txtCredCash", @readonly = "readonly" })</td>
+                        <td id="req_@i">
+                            <a class="reqBtn glyphicon glyphicon-list-alt"></a>
+                            @Html.HiddenFor(x => Model.EntryCV[i].month, new { @class = "txtAmorMonth" })
+                            @Html.HiddenFor(x => Model.EntryCV[i].day, new { @class = "txtAmorDay" })
+                            @Html.HiddenFor(x => Model.EntryCV[i].duration, new { @class = "txtAmorDuration" })
+                            @for (int y = 0; y < Model.EntryCV[i].amtDetails.Count(); y++)
+                            {
+                                @Html.HiddenFor(x => Model.EntryCV[i].amtDetails[y].amtDate);
+                                @Html.HiddenFor(x => Model.EntryCV[i].amtDetails[y].amtAmount);
+                            }
+                        </td>
+                    </tr>
                     }
 
                     <tr>
@@ -192,7 +195,7 @@
         @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
     </div>
     <div id="modalDiv">
-        @Html.Partial("ModalPartial")
+        @Html.Partial("ModalGbase")
     </div>
 
 </div>
@@ -229,51 +232,14 @@
             var itemCount = document.getElementById('inputTable').getElementsByTagName('tbody')[0].childElementCount - 2;
             var tableRef = document.getElementById('inputTable').getElementsByTagName('tbody')[0];
 
-            var acc = @Html.Raw(Json.Serialize(Model.systemValues.acc));
-            var dept = @Html.Raw(Json.Serialize(Model.systemValues.dept));
-            var curr = @Html.Raw(Json.Serialize(Model.systemValues.currency));
-            var ewt = @Html.Raw(Json.Serialize(Model.systemValues.ewt));
 
+            var $trClone = $("#item_" + (itemCount - 1)).clone().attr("id","item_" + itemCount);
+
+            
+
+            $trClone.insertAfter($("#inputTable > tbody").find("#item_" + (itemCount - 1)));
             // Insert a row in the table at the last row
-            var newRow = tableRef.insertRow(itemCount);
-            newRow.id = "item_" + itemCount
-
-            var htmlContent = '<td class="p-b-1 p-t-1"><div class="flex-sb">' +
-                '<input class="input100 w-80" id="EntryCV_' + itemCount + '__GBaseRemarks" name="EntryCV[' + itemCount + '].GBaseRemarks" type="text" value="">' +
-                '<div id="remark_' + itemCount + '"><a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a></div></div></td>' +
-                '<td><select class="input100 txtAcc" id="EntryCV_' + itemCount + '__account" name="EntryCV[' + itemCount + '].account">';
-
-            for (var i = 0; i < acc.length; i++) {
-                htmlContent += '<option value="' + acc[i]["accId"] + '" class="' + acc[i]["accCode"] + '">' + acc[i]["accName"] + '</option>';
-            }
-
-            htmlContent += '</select></td>' +
-                '<td style="text-align:center"><input data-val="true" data-val-required="The fbt field is required." id="EntryCV_' + itemCount + '__fbt" name="EntryCV[' + itemCount + '].fbt" type="checkbox" value="true"></td>' +
-                '<td><select class="input100" id="EntryCV_' + itemCount + '__dept" name="EntryCV[' + itemCount + '].dept">';
-            for (var i = 0; i < dept.length; i++) {
-                htmlContent += '<option value="' + dept[i]["value"] + '">' + dept[i]["text"] + '</option>';
-            }
-
-            htmlContent += '</select></td>' +
-                '<td style="text-align:center"><input class="chkVat" data-val="true" data-val-required="The chkVat field is required." id="EntryCV_' + itemCount + '__chkVat" name="EntryCV[' + itemCount + '].chkVat" type="checkbox" value="true"></td>' +
-                '<td><input class="input100 txtVat" data-val="true" data-val-number="The field vat must be a number." data-val-required="The vat field is required." id="EntryCV_' + itemCount + '__vat" name="EntryCV[' + itemCount + '].vat" readonly="true" type="text" value="0"></td>' +
-                '<td style="text-align:center"><input class="chkEwt" data-val="true" data-val-required="The chkEwt field is required." id="EntryCV_' + itemCount + '__chkEwt" name="EntryCV[' + itemCount + '].chkEwt" type="checkbox" value="true"></td>' +
-                '<td><select class="input100 txtEwt" data-val="true" data-val-required="The ewt field is required." id="EntryCV_' + itemCount + '__ewt" name="EntryCV[' + itemCount + '].ewt" disabled="disabled">';
-            for (var i = 0; i < ewt.length; i++) {
-                htmlContent += '<option value="' + ewt[i]["value"] + '">' + ewt[i]["text"] + '</option>';
-            }
-            htmlContent += '</select></td>' +
-                '<td><select class="input100" data-val="true" data-val-required="The ccy field is required." id="EntryCV_' + itemCount + '__ccy" name="EntryCV[' + itemCount + '].ccy">';
-            for (var i = 0; i < curr.length; i++) {
-                htmlContent += '<option value="' + curr[i]["value"] + '">' + curr[i]["text"] + '</option>';
-            }
-            htmlContent += '</select></td>' +
-                '<td><input class="input100 txtGross" data-val="true" data-val-number="The field debitGross must be a number." data-val-required="The debitGross field is required." id="EntryCV_' + itemCount + '__debitGross" name="EntryCV[' + itemCount + '].debitGross" type="number" min="0" value="0"></td>' +
-                '<td><input class="input100  txtCredEwt" data-val="true" data-val-number="The field credEwt must be a number." data-val-required="The credEwt field is required." id="EntryCV_' + itemCount + '__credEwt" name="EntryCV[' + itemCount + '].credEwt" type="text" readonly="true" value="0"></td>' +
-                '<td><input class="input100 txtCredCash" data-val="true" data-val-number="The field credCash must be a number." data-val-required="The credCash field is required." id="EntryCV_' + itemCount + '__credCash" name="EntryCV[' + itemCount + '].credCash" type="text" readonly="true" value="0"></td>' +
-                '<td id="req_' + itemCount + '"><a class="reqBtn glyphicon glyphicon-list-alt"></a></td>';
-
-            newRow.innerHTML = htmlContent;
+           
         });
 
         //ExpenseAmortization
@@ -388,3 +354,60 @@
 <script type="text/javascript" src="~/js/EntryScripts.js"></script>
 
 
+<div class="hidden">
+    <table id="templateTable">
+        <thead></thead>
+        <tbody>
+            <tr id="rowTemplate">
+                <td class="p-b-1 p-t-1">
+                    <div class="flex-sb">
+                        @Html.TextBoxFor(x => Model.EntryCV[0].GBaseRemarks,"" ,new { @class = "input100 w-80" })
+                        <div id="remark_">
+                            <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <select id="@Html.IdFor(x => Model.EntryCV[0].account)" class="input100 txtAcc" name="@Html.NameFor(x => Model.EntryCV[0].account)">
+                        @foreach (var groepModel in Model.systemValues.acc)
+                        {
+                            if (@groepModel.accId == @Model.EntryCV[0].account)
+                            {
+                                <option value="@groepModel.accId" class="@groepModel.accCode" selected>@groepModel.accName</option>
+                            }
+                            else
+                            {
+                                <option value="@groepModel.accId" class="@groepModel.accCode">@groepModel.accName</option>
+                            }
+
+                        }
+                    </select>
+                </td>
+                <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[0].fbt)</td>
+                <td>
+                    @Html.DropDownListFor(x => Model.EntryCV[0].dept, new SelectList(Model.systemValues.dept, "Value", "Text", Model.systemValues.dept.SelectedValue), new { @class = "input100 txtDept" })
+                </td>
+                <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[0].chkVat, new { @class = "chkVat comVar" })</td>
+                <td>
+                    @Html.DropDownListFor(x => Model.EntryCV[0].vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.systemValues.vat.SelectedValue), new { @class = "input100 txtVat comVar", @disabled = "true" })
+                </td>
+                <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[0].chkEwt, new { @class = "chkEwt comVar" })</td>
+                <td>
+                    @Html.DropDownListFor(x => Model.EntryCV[0].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt comVar", @disabled = "true" })
+                </td>
+                <td>
+                    @Html.DropDownListFor(x => Model.EntryCV[0].ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100" })
+                </td>
+                <td>@Html.TextBoxFor(x => Model.EntryCV[0].debitGross, new { @class = "input100 txtGross", @readonly = "readonly" })</td>
+                <td>@Html.TextBoxFor(x => Model.EntryCV[0].credEwt, new { @class = "input100 txtCredEwt", @readonly = "readonly" })</td>
+                <td>@Html.TextBoxFor(x => Model.EntryCV[0].credCash, new { @class = "input100 txtCredCash", @readonly = "readonly" })</td>
+                <td id="req_">
+                    <a class="reqBtn glyphicon glyphicon-list-alt"></a>
+                    @Html.HiddenFor(x => Model.EntryCV[0].month, new { @class = "txtAmorMonth" })
+                    @Html.HiddenFor(x => Model.EntryCV[0].day, new { @class = "txtAmorDay" })
+                    @Html.HiddenFor(x => Model.EntryCV[0].duration, new { @class = "txtAmorDuration" })
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

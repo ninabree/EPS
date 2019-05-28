@@ -30,7 +30,7 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         public bool chkVat { get; set; }
         [NotNullValidations, IntegerValidation]
         [Display(Name = "VAT")]
-        public float vat { get; set; }
+        public int vat { get; set; }
         [NotNullValidations]
         [Display(Name = "EWT Checkbox")]
         public bool chkEwt { get; set; }

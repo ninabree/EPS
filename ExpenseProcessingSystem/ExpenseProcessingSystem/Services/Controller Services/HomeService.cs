@@ -2882,7 +2882,7 @@ namespace ExpenseProcessingSystem.Services
 
             return name.User_UserName;
         }
-        //get vat
+        //get vat value
         public float getVat()
         {
             var vat = _context.DMVAT.FirstOrDefault(q => q.VAT_isActive == true);
@@ -2893,6 +2893,32 @@ namespace ExpenseProcessingSystem.Services
             }
 
             return vat.VAT_Rate;
+        }
+        //get Tax Rate list for specific user
+        public SelectList getVendorTaxRate(int vendorID)
+        {
+            var vendorMasterID = _context.DMVendor.Where(x => x.Vendor_ID == vendorID).Select(id => id.Vendor_MasterID).FirstOrDefault();
+            var vendorTRIDList = _context.DMVendorTRVAT.Where(x => x.VTV_Vendor_ID == vendorMasterID 
+                                                                && x.VTV_TR_ID > 0)
+                                                       .Select(q => q.VTV_TR_ID).ToList();
+
+            var select = new SelectList(_context.DMTR.Where(x => vendorTRIDList.Contains(x.TR_ID)).Select(q => new { q.TR_ID, q.TR_Tax_Rate }),
+                        "TR_ID", "TR_Tax_Rate");
+
+            return select;
+        }
+        //get Vat list for specific user
+        public SelectList getVendorVat(int vendorID)
+        {
+            var vendorMasterID = _context.DMVendor.Where(x => x.Vendor_ID == vendorID).Select(id => id.Vendor_MasterID).FirstOrDefault();
+            var vendorVatIDList = _context.DMVendorTRVAT.Where(x => x.VTV_Vendor_ID == vendorMasterID
+                                                                && x.VTV_VAT_ID > 0)
+                                                       .Select(q => q.VTV_VAT_ID).ToList();
+
+            var select = new SelectList(_context.DMVAT.Where(x => vendorVatIDList.Contains(x.VAT_ID)).Select(q => new { q.VAT_ID, q.VAT_Rate }),
+                        "VAT_ID", "VAT_Rate");
+
+            return select;
         }
         //get vendor
         public string getVendorName(int vendorID)
@@ -3089,7 +3115,7 @@ namespace ExpenseProcessingSystem.Services
                     fbt = dtl.d.ExpDtl_Fbt,
                     dept = dtl.d.ExpDtl_Dept,
                     chkVat = (dtl.d.ExpDtl_Vat <= 0) ? false : true,
-                    vat = (dtl.d.ExpDtl_Vat <= 0) ? getVat() : dtl.d.ExpDtl_Vat,
+                    vat = dtl.d.ExpDtl_Vat,
                     chkEwt = dtl.d.ExpDtl_isEwt,
                     ewt = dtl.d.ExpDtl_Ewt,
                     ccy = dtl.d.ExpDtl_Ccy,
@@ -3202,7 +3228,7 @@ namespace ExpenseProcessingSystem.Services
                     dept = dtl.d.ExpDtl_Dept,
                     dept_Name = _context.DMDept.Where(x=> x.Dept_MasterID == dtl.d.ExpDtl_Dept && x.Dept_isActive == true).Select(x=> x.Dept_Name).FirstOrDefault(),
                     chkVat = (dtl.d.ExpDtl_Vat <= 0) ? false : true,
-                    vat = (dtl.d.ExpDtl_Vat <= 0) ? getVat() : dtl.d.ExpDtl_Vat,
+                    vat = dtl.d.ExpDtl_Vat,
                     chkEwt = dtl.d.ExpDtl_isEwt,
                     ewt = dtl.d.ExpDtl_isEwt ? 0 : dtl.d.ExpDtl_Ewt,
                     ccy = dtl.d.ExpDtl_Ccy,

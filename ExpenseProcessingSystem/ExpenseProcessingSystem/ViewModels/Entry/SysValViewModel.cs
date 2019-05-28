@@ -10,6 +10,7 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
     {
         public SelectList vendors { get; set; }
         public SelectList ewt { get; set; }
+        public SelectList vat { get; set; }
         public SelectList dept { get; set; }
         public List<accDetails> acc { get; set; }
         public SelectList currency { get; set; }

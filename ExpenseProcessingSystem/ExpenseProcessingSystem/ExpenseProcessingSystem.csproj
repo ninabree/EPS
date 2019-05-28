@@ -75,6 +75,9 @@
     <Content Update="Views\Partial\DMPartial_Vendor.cshtml">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
+    <Content Update="Views\Shared\ModalGBase.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Shared\ModalPartial3.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>

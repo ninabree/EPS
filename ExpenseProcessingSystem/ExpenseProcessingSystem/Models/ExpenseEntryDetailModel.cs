@@ -16,7 +16,7 @@ namespace ExpenseProcessingSystem.Models
         public bool ExpDtl_Inter_Entity { get; set; }
         public bool ExpDtl_Fbt { get; set; }
         public int ExpDtl_Dept { get; set; }
-        public float ExpDtl_Vat { get; set; }
+        public int ExpDtl_Vat { get; set; }
         public bool ExpDtl_isEwt { get; set; }
         public int ExpDtl_Ewt { get; set; }
         public int ExpDtl_Ccy { get; set; }

@@ -25,9 +25,8 @@ namespace ExpenseProcessingSystem.ViewModels
         [NotNullValidations]
         [Display(Name = "VAT Checkbox")]
         public bool chkVat { get; set; }
-        [NotNullValidations,IntegerValidation]
         [Display(Name = "VAT")]
-        public float vat { get; set; }
+        public int vat { get; set; }
         [NotNullValidations]
         [Display(Name = "EWT Checkbox")]
         public bool chkEwt { get; set; }
@@ -55,7 +54,6 @@ namespace ExpenseProcessingSystem.ViewModels
         public int modalInputFlag { get; set; }
         public List<amortizationSchedule> amtDetails { get; set; }
         public List<EntryGbaseRemarksViewModel> gBaseRemarksDetails { get; set; }
-        [EmptyCashBreakdown]
         [Display(Name = "Cash Breakdown")]
         public List<CashBreakdown> cashBreakdown { get; set; }
 

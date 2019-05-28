@@ -611,7 +611,11 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
             viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
             viewModel.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
-            viewModel.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
+
+            int firstId = int.Parse(listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR].First().Value);
+
+            viewModel.systemValues.ewt = _service.getVendorTaxRate(firstId);
+            viewModel.systemValues.vat = _service.getVendorVat(firstId);
             viewModel.systemValues.acc = _service.getAccDetailsEntry();
 
             viewModel.expenseYear = DateTime.Today.Year.ToString();
@@ -695,6 +699,8 @@ namespace ExpenseProcessingSystem.Controllers
                 default:
                     break;
             }
+
+            ModelState.Clear();
 
             cvList = _service.getExpense(entryID);
 
@@ -1899,6 +1905,13 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             return actualBudgetData;
+        }
+
+        public JsonResult getVendorTRList(int vendorID)
+        {
+            var trList = _service.getVendorTaxRate(vendorID);
+
+            return Json(trList.ToList());
         }
     }
 }
