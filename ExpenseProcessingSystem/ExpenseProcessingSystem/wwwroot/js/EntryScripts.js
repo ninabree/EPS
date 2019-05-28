@@ -157,10 +157,16 @@
             cashSubTotal += Number(credCash[i].value);
         }
 
+        if ($(".hiddenScreencode").val() == "PCV")
+            if ($("#grossTotal").val() != grossTotal)
+                $("input.txtGross").trigger("change");
+
         $("#grossTotal").val(grossTotal);
         $("#credEwtTotal").val(ewtSubTotal);
         $("#credCashTotal").val(cashSubTotal);
         $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
+
+
     }
 
 });

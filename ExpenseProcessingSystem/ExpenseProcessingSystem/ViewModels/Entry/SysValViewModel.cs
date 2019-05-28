@@ -23,4 +23,11 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         public string accName { get; set; }
         public string accCode { get; set; }
     }
+
+    public class vatDetails
+    {
+        public int vatId { get; set; }
+        public string vatName { get; set; }
+        public double vatRate { get; set; }
+    }
 }

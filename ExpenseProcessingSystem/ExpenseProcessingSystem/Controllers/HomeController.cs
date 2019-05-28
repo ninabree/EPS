@@ -788,14 +788,7 @@ namespace ExpenseProcessingSystem.Controllers
             var userId = GetUserID();
 
             EntryCVViewModelList viewModel = new EntryCVViewModelList();
-            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
-            viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
-            viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
-            viewModel.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
-            viewModel.systemValues.acc = _service.getAccDetailsEntry();
-
-            viewModel.expenseYear = DateTime.Today.Year.ToString();
-            viewModel.expenseDate = Convert.ToDateTime(HomeReportConstantValue.DateToday);
+            viewModel = PopulateEntry((EntryCVViewModelList)viewModel);
 
             viewModel.EntryCV.Add(new EntryCVViewModel { screenCode = "PCV"});
 
@@ -926,12 +919,13 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             pcvList = _service.getExpense(entryID);
-            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
-            pcvList.systemValues.vendors = listOfSysVals[0];
-            pcvList.systemValues.dept = listOfSysVals[1];
-            pcvList.systemValues.currency = listOfSysVals[2];
-            pcvList.systemValues.ewt = listOfSysVals[3];
-            pcvList.systemValues.acc = _service.getAccDetailsEntry();
+
+            pcvList = PopulateEntry((EntryCVViewModelList)pcvList);
+
+            foreach (var acc in pcvList.EntryCV)
+            {
+                pcvList.systemValues.acc.AddRange(_service.getAccDetailsEntry(acc.account));
+            }
 
             return View(viewLink, pcvList);
         }
