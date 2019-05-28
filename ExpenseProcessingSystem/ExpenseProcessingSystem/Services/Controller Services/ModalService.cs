@@ -1489,7 +1489,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
 
         public string GetAccountName(string id)
         {
-            return _context.DMAccount.Where(db => db.Account_MasterID == Int64.Parse(id)).Single().Account_Name;
+            return _context.DMAccount.Where(db => db.Account_ID == Int64.Parse(id)).Single().Account_Name;
         }
     }
 }
