@@ -1005,6 +1005,7 @@ namespace ExpenseProcessingSystem.Controllers
         public IActionResult EntryExpenseEWT(string id, string taxpayor)
         {
             ViewBag.taxpayor = taxpayor;
+            ViewBag.id = id;
             return PartialView();
         }
 

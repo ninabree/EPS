@@ -12,7 +12,16 @@
         <div id="tbl-lbl">
             <div class="dis-inline-block"><p>Date:</p></div>
             <div class="dis-inline-block">
-                @Html.TextBoxFor(model => model.expenseDate, new { @readonly = "true", @class = "input w-97" })
+                @Html.EditorFor(m => m.expenseDate, new { htmlAttributes = new { @class = "input w-97", @type = "date", @readonly = "readonly" } })
+            </div>
+            <div class="dis-inline-block" style="float:right">
+                <p class="dis-inline-block">
+                    @Html.TextBoxFor(model => model.expenseYear, new { @readonly = "true", @class = "input" })
+                </p>
+                -
+                <p class="dis-inline-block">
+                    @Html.TextBoxFor(model => model.expenseId, new { @readonly = "true", @class = "input" })
+                </p>
             </div>
         </div>
         <div id="tbl-lbl">
@@ -106,6 +115,7 @@
                             <td id="req_@i">
                                 <a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#"></a>
                                 @Html.HiddenFor(x => Model.EntryCV[i].modalInputFlag, new { @class = "hiddenItem" })
+                                @Html.HiddenFor(x => Model.EntryCV[i].screenCode)
                                 <div id="divCashBD_@i">
                                     @for (int y = 0; y < Model.EntryCV[i].cashBreakdown.Count(); y++)
                                     {
@@ -141,24 +151,32 @@
             </div>
             @Html.Partial("PCVPartial")
         </div>
-        <div id="entry-status" class="m-t-10 m-b-10">
-            <div class="dis-inline-block"><label>Status:</label></div>
-            <div class="dis-inline-block"><input class="input" /></div>
-            <div class="dis-inline-block"><label>Approver:</label></div>
-            <div class="dis-inline-block"><input class="input" /></div>
-            <div class="dis-inline-block"><label>Verifier:</label></div>
-            <div class="dis-inline-block"><input class="input" /></div>
-        </div>
         <div id="entry-controls" class="m-b-10">
-            <div class="dis-inline-block tbl-btn"><button>Save</button></div>
-            <div class="dis-inline-block tbl-btn"><button>Delete</button></div>
-            <div class="dis-inline-block tbl-btn"><button>Modify</button></div>
-            <div class="dis-inline-block tbl-btn"><button id="reversal_entry">Create Reversal Entry</button></div>
-            <div class="dis-inline-block tbl-btn"><button>Delete GBase Post</button></div>
-            <div class="float-r">
-                <div class="dis-inline-block tbl-btn"><button>Print BIR Certificate</button></div>
+            <div class="flex-sb">
+                <div>
+                    <div class="dis-inline-block tbl-btn"><button>Save</button></div>
+                    <div class="dis-inline-block tbl-btn"><button disabled>Delete</button></div>
+                    <div class="dis-inline-block tbl-btn"><button disabled>Modify</button></div>
+                </div>
+                <div>
+                    <div class="dis-inline-block tbl-btn"><button id="reversal_entry" disabled>Create Reversal Entry</button></div>
+                </div>
+            </div>
+            <div class="flex-sb">
+                <div>
+                    <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
+                    <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
+                </div>
+                <div>
+                    <div class="dis-inline-block tbl-btn"><button disabled>Delete GBase Post</button></div>
+                </div>
+                <div>
+                    <div class="dis-inline-block tbl-btn"><button disabled>Print BIR Certificate</button></div>
+                </div>
             </div>
         </div>
+        @Html.HiddenFor(x => Model.entryID);
+        @Html.HiddenFor(x => Model.createdDate);
     }
     <div id="modalDiv">
         @Html.Partial("ModalPartial")
@@ -238,7 +256,7 @@ $(function () {
             '<td><input class="input100 txtGross" data-val="true" data-val-number="The field debitGross must be a number." data-val-required="The debitGross field is required." id="EntryCV_' + itemCount + '__debitGross" name="EntryCV[' + itemCount + '].debitGross" type="number" min="0" value="0"></td>' +
             '<td><input class="input100  txtCredEwt" data-val="true" data-val-number="The field credEwt must be a number." data-val-required="The credEwt field is required." id="EntryCV_' + itemCount + '__credEwt" name="EntryCV[' + itemCount + '].credEwt" type="text" readonly="true" value="0"></td>' +
             '<td><input class="input100 txtCredCash" data-val="true" data-val-number="The field credCash must be a number." data-val-required="The credCash field is required." id="EntryCV_' + itemCount + '__credCash" name="EntryCV[' + itemCount + '].credCash" type="text" readonly="true" value="0"></td>' +
-            '<td id="req_' + itemCount + '"><a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#"></a><input class="hiddenItem" data-val="true" data-val-required="The modalInputFlag field is required." id="EntryCV_' + itemCount + '__modalInputFlag" name="EntryCV[' + itemCount + '].modalInputFlag" type="hidden" value="0"><div id="divCashBD_' + itemCount + '"></div></td>';
+            '<td id="req_' + itemCount + '"><a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#"></a><input class="hiddenItem" data-val="true" data-val-required="The modalInputFlag field is required." id="EntryCV_' + itemCount + '__modalInputFlag" name="EntryCV[' + itemCount + '].modalInputFlag" type="hidden" value="0"><input id="EntryCV_0__screenCode" name="EntryCV[' + itemCount + '].screenCode" type="hidden" value="PCV"><div id="divCashBD_' + itemCount + '"></div></td>';
 
         newRow.innerHTML = htmlContent;
     });
@@ -308,5 +326,24 @@ $(function () {
             return +(Math.round(+arr[0] + "e" + sig + (+arr[1] + scale)) + "e-" + scale);
         }
     };
+
+    function round(value, exp) {
+        if (typeof exp === 'undefined' || +exp === 0)
+            return Math.round(value);
+
+        value = +value;
+        exp = +exp;
+
+        if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0))
+            return NaN;
+
+        // Shift
+        value = value.toString().split('e');
+        value = Math.round(+(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp)));
+
+        // Shift back
+        value = value.toString().split('e');
+        return +(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp));
+    }
 </script>
 <script type="text/javascript" src="~/js/EntryScripts.js"></script>

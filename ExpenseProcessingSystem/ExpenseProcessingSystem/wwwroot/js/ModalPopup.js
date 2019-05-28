@@ -174,6 +174,8 @@
                 modalDivBody.html(data);
 
                 $('#myModal').modal('show');
+                //$("[aria-describedby='validationSummary']").remove();
+                //$("div.ui-dialog.ui-corner-all.ui-widget.ui-widget-content.ui-front.msg_dlg.ui-draggable.ui-resizable").remove();
             },
             error: function (xhr) {
                     alert(xhr);

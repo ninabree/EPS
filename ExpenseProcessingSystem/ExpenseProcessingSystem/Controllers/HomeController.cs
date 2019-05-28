@@ -597,7 +597,6 @@ namespace ExpenseProcessingSystem.Controllers
         public IActionResult Entry_CV()
         {
             var userId = GetUserID();
-            //var modelState = ModelState;
 
             EntryCVViewModelList viewModel = new EntryCVViewModelList();
             viewModel = PopulateEntry((EntryCVViewModelList)viewModel);
@@ -636,7 +635,7 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             EntryCVViewModelList cvList = new EntryCVViewModelList();
-            int id = _service.addExpense_CV(EntryCVViewModelList, int.Parse(GetUserID()),GlobalSystemValues.TYPE_CV);
+            int id = _service.addExpense_CV(EntryCVViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_CV);
             ModelState.Clear();
             if (id > -1) {
                 cvList = _service.getExpense(id);
@@ -667,7 +666,7 @@ namespace ExpenseProcessingSystem.Controllers
                     viewLink = "Entry_CV";
                     break;
                 case "approver":
-                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_APPROVED))
+                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_APPROVED, int.Parse(GetUserID())))
                     {
                         _service.SaveToGBase();
                         var expDtls = _context.ExpenseEntry.Where(x => x.Expense_ID == entryID).Select(x => x.ExpenseEntryDetails).FirstOrDefault();
@@ -685,7 +684,7 @@ namespace ExpenseProcessingSystem.Controllers
                     viewLink = "Entry_CV_ReadOnly";
                     break;
                 case "verifier":
-                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_VERIFIED))
+                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_VERIFIED, int.Parse(GetUserID())))
                     {
                         ViewBag.Success = 1;
                     }
@@ -801,9 +800,9 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.systemValues.acc = _service.getAccDetailsEntry();
 
             viewModel.expenseYear = DateTime.Today.Year.ToString();
-            viewModel.expenseDate = DateTime.Today;
+            viewModel.expenseDate = Convert.ToDateTime(HomeReportConstantValue.DateToday);
 
-            viewModel.EntryCV.Add(new EntryCVViewModel());
+            viewModel.EntryCV.Add(new EntryCVViewModel { screenCode = "PCV"});
 
             return View(viewModel);
         }
@@ -835,21 +834,37 @@ namespace ExpenseProcessingSystem.Controllers
                 return View("Entry_PCV", PopulateEntryCV(EntryCVViewModelList));
             }
 
-            EntryCVViewModelList pcList = new EntryCVViewModelList();
-            int id = _service.addExpense_CV(EntryCVViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_PC);
-            ModelState.Clear();
-            if (id > -1)
+            EntryCVViewModelList pcvList = new EntryCVViewModelList();
+
+            int id = 0;
+            if (EntryCVViewModelList.entryID == 0)
             {
-                pcList = _service.getExpense(id);
-                List<SelectList> listOfSysVals = _service.getEntrySystemVals();
-                pcList.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
-                pcList.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
-                pcList.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
-                pcList.systemValues.acc = _service.getAccDetailsEntry();
-                ViewBag.Status = pcList.status;
+                id = _service.addExpense_CV(EntryCVViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_PC);
+            }
+            else
+            {
+                if (_service.deleteExpenseEntry(EntryCVViewModelList.entryID))
+                {
+                    id = _service.addExpense_CV(EntryCVViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_PC);
+                } 
             }
 
-            return View("Entry_PCV_ReadOnly", pcList);
+            ModelState.Clear();
+
+            //if (id > -1)
+            //{
+            //    pcvList = _service.getExpense(id);
+            //    List<SelectList> listOfSysVals = _service.getEntrySystemVals();
+            //    pcvList.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
+            //    pcvList.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
+            //    pcvList.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
+            //    pcvList.systemValues.acc = _service.getAccDetailsEntry();
+            //    ViewBag.Status = pcvList.status;
+            //}
+
+            //return View("Entry_PCV_ReadOnly", pcvList);
+
+            return RedirectToAction("View_PCV", "Home", new { entryID = id });
         }
 
         [OnlineUserCheck]
@@ -867,7 +882,7 @@ namespace ExpenseProcessingSystem.Controllers
                     viewLink = "Entry_PCV";
                     break;
                 case "approver":
-                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_APPROVED))
+                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_APPROVED, int.Parse(GetUserID())))
                     {
                         ViewBag.Success = 1;
                     }
@@ -878,7 +893,7 @@ namespace ExpenseProcessingSystem.Controllers
                     viewLink = "Entry_PCV_ReadOnly";
                     break;
                 case "verifier":
-                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_VERIFIED))
+                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_VERIFIED, int.Parse(GetUserID())))
                     {
                         ViewBag.Success = 1;
                     }
@@ -888,21 +903,60 @@ namespace ExpenseProcessingSystem.Controllers
                     }
                     viewLink = "Entry_PCV_ReadOnly";
                     break;
-                case "Reject": break;
+                case "Delete":
+                    if (_service.deleteExpenseEntry(entryID))
+                    {
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    return RedirectToAction("Index", "Home");
+
+                case "Reject":
+                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REJECTED, int.Parse(GetUserID())))
+                    {
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Entry_PCV_ReadOnly";
+                    break;
+
                 default:
                     break;
             }
 
             pcvList = _service.getExpense(entryID);
-
             List<SelectList> listOfSysVals = _service.getEntrySystemVals();
-            pcvList.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
-            pcvList.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
-            pcvList.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
-            pcvList.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
+            pcvList.systemValues.vendors = listOfSysVals[0];
+            pcvList.systemValues.dept = listOfSysVals[1];
+            pcvList.systemValues.currency = listOfSysVals[2];
+            pcvList.systemValues.ewt = listOfSysVals[3];
             pcvList.systemValues.acc = _service.getAccDetailsEntry();
 
             return View(viewLink, pcvList);
+        }
+
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
+        public IActionResult View_PCV(int entryID)
+        {
+            var userId = GetUserID();
+
+            EntryCVViewModelList cvList;
+            cvList = _service.getExpense(entryID);
+            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
+            cvList.systemValues.vendors = listOfSysVals[0];
+            cvList.systemValues.dept = listOfSysVals[1];
+            cvList.systemValues.currency = listOfSysVals[2];
+            cvList.systemValues.ewt = listOfSysVals[3];
+            cvList.systemValues.acc = _service.getAccDetailsEntry();
+
+            return View("Entry_PCV_ReadOnly", cvList);
         }
         //[* Entry Petty Cash *]
         //------------------------------------------------------------------
@@ -940,18 +994,9 @@ namespace ExpenseProcessingSystem.Controllers
         {
             var userId = GetUserID();
 
-            EntryCVViewModelList viewModel = new EntryCVViewModelList();
-            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
-            viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
-            viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
-            viewModel.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
-            viewModel.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
-            viewModel.systemValues.acc = _service.getAccDetailsEntry();
-
-            viewModel.expenseYear = DateTime.Today.Year.ToString();
-            viewModel.expenseDate = DateTime.Today;
-            //viewModel.vendor = 2;
-            viewModel.EntryCV.Add(new EntryCVViewModel());
+            EntryNCViewModelList viewModel = new EntryNCViewModelList();
+            viewModel = PopulateEntry(viewModel);
+            viewModel.EntryNC.Add(new EntryNCViewModel());
             return View(viewModel);
         }
 

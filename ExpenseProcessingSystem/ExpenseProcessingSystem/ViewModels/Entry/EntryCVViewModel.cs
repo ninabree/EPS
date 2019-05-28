@@ -33,7 +33,6 @@ namespace ExpenseProcessingSystem.ViewModels
         [IntegerValidation]
         [Display(Name = "EWT")]
         public int ewt { get; set; }
-        [NotNullValidations]
         [Display(Name = "Currency")]
         public int ccy { get; set; }
         [NotNullValidations, AmountValidation]
@@ -52,8 +51,10 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "Duration")]
         public int duration { get; set; }
         public int modalInputFlag { get; set; }
+        public string screenCode { get; set; }
         public List<amortizationSchedule> amtDetails { get; set; }
         public List<EntryGbaseRemarksViewModel> gBaseRemarksDetails { get; set; }
+        [EmptyCashBreakdown("screenCode")]
         [Display(Name = "Cash Breakdown")]
         public List<CashBreakdown> cashBreakdown { get; set; }
 
@@ -82,6 +83,7 @@ namespace ExpenseProcessingSystem.ViewModels
     {
         public int entryID { get; set; }
         public SysValViewModel systemValues { get; set; }
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime expenseDate { get; set; }
         public int vendor { get; set; }
         public string expenseYear { get; set; }
@@ -93,6 +95,7 @@ namespace ExpenseProcessingSystem.ViewModels
         public string verifier_1 { get; set; }
         public string verifier_2 { get; set; }
         public int maker { get; set; }
+        public DateTime createdDate { get; set; }
         public List<EntryCVViewModel> EntryCV { get; set; }
 
         public EntryCVViewModelList()

@@ -8,6 +8,7 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
 {
     public class SysValViewModel
     {
+        public SelectList category_of_entries { get; set; }
         public SelectList vendors { get; set; }
         public SelectList ewt { get; set; }
         public SelectList vat { get; set; }

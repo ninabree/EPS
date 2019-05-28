@@ -1,17 +1,11 @@
 ﻿@using Microsoft.AspNetCore.Http;
+@using ExpenseProcessingSystem.ConstantData;
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @{
     var req = Context.Request.Path.ToString();
-    var isLoggedin = (Context.Request.Path.ToString() == "/Account/Login") ? false : (Context.Request.Path.ToString() == "/") ? false : true;
-    var isEntry = (Context.Request.Path.ToString() == "/Home/Entry") ? true :
-        (Context.Request.Path.ToString() == "/Home/Entry_CV") ? true :
-        (Context.Request.Path.ToString() == "/Home/Entry_DDV") ? true :
-        (Context.Request.Path.ToString() == "/Home/Entry_NC") ? true :
-        (Context.Request.Path.ToString() == "/Home/Entry_PCV") ? true :
-        (Context.Request.Path.ToString() == "/Home/Entry_SS") ? true : false;
-    var isHome = (Context.Request.Path.ToString() == "/Home/Index") ? true :
-        (Context.Request.Path.ToString() == "/Home/Pending") ? true :
-        (Context.Request.Path.ToString() == "/Home/History") ? true : false;
+    var isLoggedin = (Context.Request.Path.ToString() == GlobalSystemValues.ACCOUNT_LOGIN) ? false : (Context.Request.Path.ToString() == "/") ? false : true;
+    var isEntry = (GlobalSystemValues.ENTRY_VALS.Contains(Context.Request.Path.ToString())) ? true : false;
+    var isHome = (GlobalSystemValues.HOME_VALS.Contains(Context.Request.Path.ToString())) ? true : false;
 
 }
 <!DOCTYPE html>

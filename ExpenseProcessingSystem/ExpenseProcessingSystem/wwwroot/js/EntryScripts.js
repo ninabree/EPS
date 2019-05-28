@@ -50,6 +50,42 @@
     $("#modalDiv").on("click", "#saveGbase", function (e) {
         var parent = $("#" + $("#parentId").val());
 
+        var gross = $(".txtGross");
+        var credEwt = $(".txtCredEwt");
+        var credCash = $(".txtCredCash");
+
+        var grossTotal = 0;
+        var ewtSubTotal = 0;
+        var cashSubTotal = 0;
+
+        for (var i = 0; i < gross.length; i++) {
+            grossTotal += Number(gross[i].value);
+        }
+
+        for (var i = 0; i < credEwt.length; i++) {
+            ewtSubTotal += Number(credEwt[i].value);
+        }
+
+        for (var i = 0; i < credCash.length; i++) {
+            cashSubTotal += Number(credCash[i].value);
+        }
+
+        $("#grossTotal").val(grossTotal);
+        $("#credEwtTotal").val(ewtSubTotal);
+        $("#credCashTotal").val(cashSubTotal);
+        $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
+    });
+    
+    $("#modalDiv").on("click", "#saveBtn", function (e) {
+        if ($("#parentIdAmortization").length) {
+            return;
+        }
+        if ($("#parentIdPCVTable").length) {
+            return;
+        }
+
+        var parent = $("#" + $("#parentId").val());
+
         var trs = $("#gBaseTable").find("tbody").find("tr");
         var htmlText = "";
 
@@ -63,7 +99,6 @@
         parent.find(":hidden").remove();
 
         var rowNo = $("#parentId").val().substring(7);
-
 
         for (var i = 0; i < trs.length; i++) {
             var docuType = $("#" + trs[i].id).find(".gDocuType").val();
