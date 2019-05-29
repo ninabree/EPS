@@ -12,7 +12,7 @@
         <div id="tbl-lbl" class="flex-sb">
             <div class="dis-inline-block w-20">Date: <p class="dis-inline-block w-70">@Html.TextBoxFor(model => model.expenseDate, new { @readonly = "true", @class = "input w-97" })</p> </div>
             <div class="dis-inline-block"><p class="dis-inline-block">@Html.TextBoxFor(model => model.expenseYear, new { @readonly = "true", @class = "input" })</p> - <p class="dis-inline-block">@Html.TextBoxFor(model => model.expenseId, new { @readonly = "true", @class = "input" })</p></div>
-            <div class="dis-inline-block float-r">@*Check No : <p class="dis-inline-block">@Html.TextBoxFor(model => model.checkNo, new { @readonly = "true", @class = "input" })</p>*@</div>
+            <div class="dis-inline-block float-r"></div>
         </div>
         <div id="tbl-lbl">
             <div class="dis-inline-block"><p>Payee:</p></div>
@@ -63,7 +63,7 @@
                         <tr id="item_@i">
                             <td class="p-b-1 p-t-1">
                                 <div class="flex-sb">
-                                    @Html.TextBoxFor(x => Model.EntryDDV[i].GBaseRemarks, new { @class = "input100 w-80 gbaseRemarks" })
+                                    @Html.TextBoxFor(x => Model.EntryDDV[i].GBaseRemarks, new { @class = "input100 w-80" })
                                     <div id="remark_@i">
                                         <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
                                         @for (int y = 0; y < Model.EntryDDV[i].gBaseRemarksDetails.Count(); y++)
@@ -80,25 +80,34 @@
                                 <select id="@Html.IdFor(x => Model.EntryDDV[i].account)" class="input100 txtAcc" name="@Html.NameFor(x => Model.EntryDDV[i].account)">
                                     @foreach (var groepModel in Model.systemValues.acc)
                                     {
-                                        <option value="@groepModel.accId" class="@groepModel.accCode">@groepModel.accName</option>
+                                        if (@groepModel.accId == @Model.EntryDDV[0].account)
+                                        {
+                                            <option value="@groepModel.accId" class="@groepModel.accCode" selected>@groepModel.accName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@groepModel.accId" class="@groepModel.accCode">@groepModel.accName</option>
+                                        }
                                     }
                                 </select>
                             </td>
                             <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryDDV[i].inter_entity, new { @class = "chkInter" })</td>
                             <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryDDV[i].fbt)</td>
                             <td>
-                                @Html.DropDownListFor(x => Model.EntryDDV[i].dept, new SelectList(Model.systemValues.dept, "Value", "Text", Model.systemValues.dept.SelectedValue), new { @class = "input100" })
+                                @Html.DropDownListFor(x => Model.EntryDDV[i].dept, new SelectList(Model.systemValues.dept, "Value", "Text", Model.systemValues.dept.SelectedValue), new { @class = "input100 txtDept" })
                             </td>
-                            <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryDDV[i].chkVat, new { @class = "chkVat" })</td>
-                            <td>@Html.TextBoxFor(x => Model.EntryDDV[i].vat, new { @class = "input100 txtVat", @readonly = "true" })</td>
-                            <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryDDV[i].chkEwt, new { @class = "chkEwt" })</td>
+                            <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryDDV[i].chkVat, new { @class = "chkVat comVar" })</td>
                             <td>
-                                @Html.DropDownListFor(x => Model.EntryDDV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt", @disabled = "true" })
+                                @Html.DropDownListFor(x => Model.EntryDDV[i].vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.systemValues.vat.SelectedValue), new { @class = "input100 txtVat comVar", @disabled = "true" })
+                            </td>
+                            <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryDDV[i].chkEwt, new { @class = "chkEwt comVar" })</td>
+                            <td>
+                                @Html.DropDownListFor(x => Model.EntryDDV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt comVar", @disabled = "true" })
                             </td>
                             <td>
                                 @Html.DropDownListFor(x => Model.EntryDDV[i].ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100" })
                             </td>
-                            <td>@Html.TextBoxFor(x => Model.EntryDDV[i].debitGross, new { @class = "input100 txtGross", @type = "number", @min = "0" })</td>
+                            <td>@Html.TextBoxFor(x => Model.EntryDDV[i].debitGross, new { @class = "input100 txtGross", @readonly = "readonly" })</td>
                             <td>@Html.TextBoxFor(x => Model.EntryDDV[i].credEwt, new { @class = "input100 txtCredEwt", @readonly = "readonly" })</td>
                             <td>@Html.TextBoxFor(x => Model.EntryDDV[i].credCash, new { @class = "input100 txtCredCash", @readonly = "readonly" })</td>
                             <td id="req_@i">
@@ -108,12 +117,11 @@
                                 @Html.HiddenFor(x => Model.EntryDDV[i].interDetails[0].Inter_Currency2_ABBR, new { @class = "txtCurr2Abbr" })
                                 @Html.HiddenFor(x => Model.EntryDDV[i].interDetails[0].Inter_Currency2_Amount, new { @class = "txtCurr2Amt" })
                                 @Html.HiddenFor(x => Model.EntryDDV[i].interDetails[0].Inter_Rate, new { @class = "txtInterRate" })
-                                @Html.HiddenFor(x => Model.EntryDDV[i].ewtPayorName, new { @class = "txtPayor" })                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails[0].Inter_Rate, new { @class = "txtInterRate" })
-
+                                @Html.HiddenFor(x => Model.EntryDDV[i].ewtPayorName, new { @class = "txtPayor" })
+                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails[0].Inter_Rate, new { @class = "txtInterRate" })
                             </td>
                         </tr>
                     }
-
                     <tr>
                         <td style="border:none; background-color:#f2f2f2" rowspan="2"><a id="addRow" href="#" class="glyphicon glyphicon-plus"></a></td>
                         <td colspan="9" style="text-align:right; border:none; background-color:#f2f2f2">Subtotal : </td>
@@ -175,21 +183,16 @@
         </div>
     }
 
-    @Html.Partial("ModalPartial")
-</div>
-
-<div id="ValidationSummary" style="display: none" class="">
-    @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
+    <div id="modalDiv">
+        @Html.Partial("ModalGbase")
+    </div>
+    <div id="ValidationSummary" style="display: none" class="">
+        @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
+    </div>
 </div>
 <script>
     $(function () {
-        //alert();
-        //TriggerInterEntity();
-        //$(document).on("load", function () {
-        //    alert();
-        //});
-        $(document).on("load", function () {
-            alert();
+        $(window).on("load", function () {
             var gross = $(".txtGross");
             var credEwt = $(".txtCredEwt");
             var credCash = $(".txtCredCash");
@@ -214,7 +217,6 @@
             $("#credEwtTotal").val(ewtSubTotal);
             $("#credCashTotal").val(cashSubTotal);
             $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
-            TriggerInterEntity();
         });
 
         $("#addRow").click(function (e) {
@@ -248,10 +250,10 @@
             }
 
             htmlContent += '</select></td>' +
-                '<td style="text-align:center"><input class="chkVat" data-val="true" data-val-required="The chkVat field is required." id="EntryDDV_' + itemCount + '__chkVat" name="EntryDDV[' + itemCount + '].chkVat" type="checkbox" value="true"></td>' +
-                '<td><input class="input100 txtVat" data-val="true" data-val-number="The field vat must be a number." data-val-required="The vat field is required." id="EntryDDV_' + itemCount + '__vat" name="EntryDDV[' + itemCount + '].vat" readonly="true" type="text" value="0"></td>' +
-                '<td style="text-align:center"><input class="chkEwt" data-val="true" data-val-required="The chkEwt field is required." id="EntryDDV_' + itemCount + '__chkEwt" name="EntryDDV[' + itemCount + '].chkEwt" type="checkbox" value="true"></td>' +
-                '<td><select class="input100 txtEwt" data-val="true" data-val-required="The ewt field is required." id="EntryDDV_' + itemCount + '__ewt" name="EntryDDV[' + itemCount + '].ewt" disabled="disabled">';
+                '<td style="text-align:center"><input class="chkVat comVar" data-val="true" data-val-required="The chkVat field is required." id="EntryDDV_' + itemCount + '__chkVat" name="EntryDDV[' + itemCount + '].chkVat" type="checkbox" value="true"></td>' +
+                '<td><input class="input100 txtVat comVar" data-val="true" data-val-number="The field vat must be a number." data-val-required="The vat field is required." id="EntryDDV_' + itemCount + '__vat" name="EntryDDV[' + itemCount + '].vat" readonly="true" type="text" value="0"></td>' +
+                '<td style="text-align:center"><input class="chkEwt comVar" data-val="true" data-val-required="The chkEwt field is required." id="EntryDDV_' + itemCount + '__chkEwt" name="EntryDDV[' + itemCount + '].chkEwt" type="checkbox" value="true"></td>' +
+                '<td><select class="input100 txtEwt  comVar" data-val="true" data-val-required="The ewt field is required." id="EntryDDV_' + itemCount + '__ewt" name="EntryDDV[' + itemCount + '].ewt" disabled="disabled">';
             for (var i = 0; i < ewt.length; i++) {
                 htmlContent += '<option value="' + ewt[i]["value"] + '">' + ewt[i]["text"] + '</option>';
             }
@@ -409,7 +411,6 @@
         }
     };
     function TriggerInterEntity() {
-        alert();
         $("input.chkInter").each(function (i, val) {
             alert(i + " --- " + val.val());
             var btnAttr = $(val).siblings(":eq(14)").find(".reqBtn");
@@ -422,7 +423,7 @@
                 btnAttr.removeAttr("class", "expenseInterEntity");
             }
         });
-        }
+     }
     function roundNumber(num, scale) {
         if (!("" + num).includes("e")) {
             return +(Math.round(num + "e+" + scale) + "e-" + scale);
@@ -437,5 +438,3 @@
     };
 </script>
 <script type="text/javascript" src="~/js/EntryScripts.js"></script>
-
-
