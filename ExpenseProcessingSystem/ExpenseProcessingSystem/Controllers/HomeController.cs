@@ -936,16 +936,18 @@ namespace ExpenseProcessingSystem.Controllers
         {
             var userId = GetUserID();
 
-            EntryCVViewModelList cvList;
-            cvList = _service.getExpense(entryID);
+            EntryCVViewModelList pcvList = _service.getExpense(entryID);
             List<SelectList> listOfSysVals = _service.getEntrySystemVals();
-            cvList.systemValues.vendors = listOfSysVals[0];
-            cvList.systemValues.dept = listOfSysVals[1];
-            cvList.systemValues.currency = listOfSysVals[2];
-            cvList.systemValues.ewt = listOfSysVals[3];
-            cvList.systemValues.acc = _service.getAccDetailsEntry();
+            pcvList.systemValues.vendors = listOfSysVals[0];
+            pcvList.systemValues.dept = listOfSysVals[1];
+            pcvList.systemValues.currency = listOfSysVals[2];
+            int firstId = int.Parse(listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR].First().Value);
 
-            return View("Entry_PCV_ReadOnly", cvList);
+            pcvList.systemValues.ewt = _service.getVendorTaxRate(firstId);
+            pcvList.systemValues.vat = _service.getVendorVat(firstId);
+            pcvList.systemValues.acc = _service.getAccDetailsEntry();
+
+            return View("Entry_PCV_ReadOnly", pcvList);
         }
         //[* Entry Petty Cash *]
         //------------------------------------------------------------------
@@ -953,27 +955,16 @@ namespace ExpenseProcessingSystem.Controllers
         //------------------------------------------------------------------
         //[* Entry Cash Advance(SS) *]
         [OnlineUserCheck]
+        [ImportModelState]
         public IActionResult Entry_SS()
         {
-            var role = _service.getUserRole(_session.GetString("UserID"));
-            if (role == GlobalSystemValues.ROLE_ADMIN)
-            {
-                return RedirectToAction("UM");
-            }
+            var userId = GetUserID();
 
             EntryCVViewModelList viewModel = new EntryCVViewModelList();
-            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
+            viewModel = PopulateEntry((EntryCVViewModelList)viewModel);
 
-            viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
-            viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
-            viewModel.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
-            viewModel.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
-            viewModel.systemValues.acc = _service.getAccDetailsEntry();
+            viewModel.EntryCV.Add(new EntryCVViewModel { screenCode = "SS" });
 
-            viewModel.expenseYear = DateTime.Today.Year.ToString();
-            viewModel.expenseDate = DateTime.Today;
-
-            viewModel.EntryCV.Add(new EntryCVViewModel());
             return View(viewModel);
         }
         //[* Entry Cash Advance(SS) *]

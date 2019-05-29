@@ -75,8 +75,7 @@
         }
         $("#" + $("#parentId").val()).append(htmlText);
         $('#myModal').modal('hide');
-        +
-            +        computeValues($("#item_" + rowNo)[0]);
+        computeValues($("#item_" + rowNo)[0]);
     });
 
     /////--------------------functions--------------------------------
