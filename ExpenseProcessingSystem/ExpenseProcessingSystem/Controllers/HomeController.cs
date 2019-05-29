@@ -1947,11 +1947,20 @@ namespace ExpenseProcessingSystem.Controllers
             return actualBudgetData;
         }
 
+        [HttpPost]
         public JsonResult getVendorTRList(int vendorID)
         {
             var trList = _service.getVendorTaxRate(vendorID);
 
             return Json(trList.ToList());
+        }
+
+        [HttpPost]
+        public JsonResult getVendorVatList(int vendorID)
+        {
+            var vatList = _service.getVendorVat(vendorID);
+
+            return Json(vatList.ToList());
         }
     }
 }

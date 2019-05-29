@@ -79,6 +79,41 @@
             +        computeValues($("#item_" + rowNo)[0]);
     });
 
+    $("#vendorName").on("change", function (e) {
+        var vendorId = { vendorID: $("#vendorName").val() };
+
+        var vat;
+        var ewt;
+
+
+        ajaxCall("/Home/getVendorVatList", vendorId)
+            .done(function (vatData) {
+                if (vatData.length) {
+                    ajaxCall("/Home/getVendorTRList", vendorId)
+                        .done(function (ewtData) {
+                            if (ewtData.length) {
+                                $(".txtVat").empty();
+                                $(".txtEwt").empty();
+
+                                for (var i = 0; i < vatData.length; i++) {
+                                    var option = $("<option></option>").attr("value", vatData[i].value).text(vatData[i].text);
+                                    $(".txtVat").append(option);
+                                }
+
+                                for (var i = 0; i < ewtData.length; i++) {
+                                    var option = $("<option></option>").attr("value", ewtData[i].value).text(ewtData[i].text);
+                                    $(".txtEwt").append(option);
+                                }
+                            } else {
+                                alert("oops something went wrong!");
+                            }
+                        });
+                } else {
+                    alert("oops something went wrong!");
+                }
+            });
+    });
+
     /////--------------------functions--------------------------------
     function checkFormComplete(trs, formName) {
         var isComplete = true;
@@ -132,9 +167,6 @@
             var vatAmount = grossAmt * (Number($("#" + itemNo).find(".txtVat option:selected").text()) / 100);
             $("#" + itemNo).find(".txtCredEwt").val(roundNumber(vatAmount, 2));
             $("#" + itemNo).find(".txtCredCash").val(roundNumber((grossAmt - vatAmount), 2));
-        } else {
-            $("#" + itemNo).find(".txtCredEwt").val(0);
-            $("#" + itemNo).find(".txtCredCash").val(grossAmt);
         }
 
         var gross = $(".txtGross");
@@ -163,4 +195,11 @@
         $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
     }
 
+    function ajaxCall(url, data) {
+        return $.ajax({
+            url: url,
+            type: "POST",
+            data: data,
+        });
+    }
 });
