@@ -15,6 +15,7 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         [NotNullValidations]
         [Display(Name = "Account")]
         public int account { get; set; }
+        public string account_Name { get; set; }
         [NotNullValidations]
         [Display(Name = "Inter Entity")]
         public bool inter_entity { get; set; }
@@ -40,6 +41,7 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         [NotNullValidations]
         [Display(Name = "Currency")]
         public int ccy { get; set; }
+        public string ccy_Name { get; set; }
         [NotNullValidations, AmountValidation]
         [Display(Name = "Debit - Gross Amount")]
         public float debitGross { get; set; }

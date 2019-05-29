@@ -137,7 +137,7 @@
                 UpdateParticulars(curr1, curr2);
             }
         });
-        $(".modal-footer").on("click", "#saveBtn", function () {
+        $(".modal-footer2").on("click", "#saveBtnEntry", function () {
             var itemNo = $("#parentIdInterEntity").val().substr(5);
 
             var rate = $("table").find("#Inter_Rate").val();
@@ -152,8 +152,8 @@
             $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Currency2_Amount").val(curr2Amt);
             $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Rate").val(rate);
 
-            $('.modal-body').empty();
-            $('#myModal').modal('hide');
+            $('.modal-body2').empty();
+            $('.myModal2').modal('hide');
         });
 
         function UpdateParticulars(curr1, curr2) {

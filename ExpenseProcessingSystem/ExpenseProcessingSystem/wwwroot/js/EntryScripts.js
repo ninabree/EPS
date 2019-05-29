@@ -44,34 +44,38 @@
     });
 
     document.addEventListener("change", computeFunction, false);
-    
+
     $("#modalDiv").on("click", "#saveGbase", function (e) {
         var parent = $("#" + $("#parentId").val());
 
         var trs = $("#gBaseTable").find("tbody").find("tr");
         var htmlText = "";
-
-        if ($(this).hasClass("btn float-r gBaseSaveBtn")) {
-            //to stop form submit if incomplete
-            if (!checkFormComplete(trs, "GBase Remarks")) {
-                return;
-            }
+        
+        //to stop form submit if incomplete
+        if (!checkFormComplete(trs, "GBase Remarks")) {
+            return;
         }
 
         parent.find(":hidden").remove();
 
         var rowNo = $("#parentId").val().substring(7);
-
+        var isDDV = $("li#ddv").find("a").hasClass("selected");
         for (var i = 0; i < trs.length; i++) {
             var docuType = $("#" + trs[i].id).find(".gDocuType").val();
             var invNo = $("#" + trs[i].id).find(".gInvoiceNo").val();
             var desc = $("#" + trs[i].id).find(".gDescription").val();
             var amount = $("#" + trs[i].id).find(".gAmount").val();
-
-            htmlText += '<input class="docType" id="EntryCV_' + rowNo + '__gBaseRemarksDetails_' + i + '__docType" name="EntryCV[' + rowNo + '].gBaseRemarksDetails[' + i + '].docType" type="hidden" value="' + docuType + '">';
-            htmlText += '<input class="desc" id="EntryCV_' + rowNo + '__gBaseRemarksDetails_' + i + '__desc" name="EntryCV[' + rowNo + '].gBaseRemarksDetails[' + i + '].desc" type="hidden" value="' + desc + '">';
-            htmlText += '<input class="invNo" id="EntryCV_' + rowNo + '__gBaseRemarksDetails_' + i + '__invNo" name="EntryCV[' + rowNo + '].gBaseRemarksDetails[' + i + '].invNo" type="hidden" value="' + invNo + '">';
-            htmlText += '<input class="amount" data-val="true" data-val-number="The field amount must be a number." data-val-required="The amount field is required." id="EntryCV_' + rowNo + '__gBaseRemarksDetails_' + i + '__amount" name="EntryCV[' + rowNo + '].gBaseRemarksDetails[' + i + '].amount" type="hidden" value="' + amount + '">';
+            if (isDDV) {
+                htmlText += '<input class="docType" id="EntryDDV_' + rowNo + '__gBaseRemarksDetails_' + i + '__docType" name="EntryDDV[' + rowNo + '].gBaseRemarksDetails[' + i + '].docType" type="hidden" value="' + docuType + '">';
+                htmlText += '<input class="desc" id="EntryDDV_' + rowNo + '__gBaseRemarksDetails_' + i + '__desc" name="EntryDDV[' + rowNo + '].gBaseRemarksDetails[' + i + '].desc" type="hidden" value="' + desc + '">';
+                htmlText += '<input class="invNo" id="EntryDDV_' + rowNo + '__gBaseRemarksDetails_' + i + '__invNo" name="EntryDDV[' + rowNo + '].gBaseRemarksDetails[' + i + '].invNo" type="hidden" value="' + invNo + '">';
+                htmlText += '<input class="amount" data-val="true" data-val-number="The field amount must be a number." data-val-required="The amount field is required." id="EntryDDV_' + rowNo + '__gBaseRemarksDetails_' + i + '__amount" name="EntryDDV[' + rowNo + '].gBaseRemarksDetails[' + i + '].amount" type="hidden" value="' + amount + '">';
+            } else {
+                htmlText += '<input class="docType" id="EntryCV_' + rowNo + '__gBaseRemarksDetails_' + i + '__docType" name="EntryCV[' + rowNo + '].gBaseRemarksDetails[' + i + '].docType" type="hidden" value="' + docuType + '">';
+                htmlText += '<input class="desc" id="EntryCV_' + rowNo + '__gBaseRemarksDetails_' + i + '__desc" name="EntryCV[' + rowNo + '].gBaseRemarksDetails[' + i + '].desc" type="hidden" value="' + desc + '">';
+                htmlText += '<input class="invNo" id="EntryCV_' + rowNo + '__gBaseRemarksDetails_' + i + '__invNo" name="EntryCV[' + rowNo + '].gBaseRemarksDetails[' + i + '].invNo" type="hidden" value="' + invNo + '">';
+                htmlText += '<input class="amount" data-val="true" data-val-number="The field amount must be a number." data-val-required="The amount field is required." id="EntryCV_' + rowNo + '__gBaseRemarksDetails_' + i + '__amount" name="EntryCV[' + rowNo + '].gBaseRemarksDetails[' + i + '].amount" type="hidden" value="' + amount + '">';
+            }
         }
         $("#" + $("#parentId").val()).append(htmlText);
         $('#myModal').modal('hide');

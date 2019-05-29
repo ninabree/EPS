@@ -3228,10 +3228,11 @@ namespace ExpenseProcessingSystem.Services
                 {
                     GBaseRemarks = dtl.d.ExpDtl_Gbase_Remarks,
                     account = dtl.d.ExpDtl_Account,
+                    account_Name = _context.DMAccount.Where(x => x.Account_ID == dtl.d.ExpDtl_Account && x.Account_isActive == true).Select(x => x.Account_Name).FirstOrDefault(),
                     inter_entity = dtl.d.ExpDtl_Inter_Entity,
                     fbt = dtl.d.ExpDtl_Fbt,
                     dept = dtl.d.ExpDtl_Dept,
-                    dept_Name = _context.DMDept.Where(x=> x.Dept_MasterID == dtl.d.ExpDtl_Dept && x.Dept_isActive == true).Select(x=> x.Dept_Name).FirstOrDefault(),
+                    dept_Name = _context.DMDept.Where(x=> x.Dept_ID == dtl.d.ExpDtl_Dept && x.Dept_isActive == true).Select(x=> x.Dept_Name).FirstOrDefault(),
                     chkVat = (dtl.d.ExpDtl_Vat <= 0) ? false : true,
                     vat = dtl.d.ExpDtl_Vat,
                     chkEwt = dtl.d.ExpDtl_isEwt,

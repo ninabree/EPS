@@ -77,7 +77,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td><input value="@Model.EntryDDV[i].account" class="input100" disabled /></td>
+                        <td><input value="@Model.EntryDDV[i].account_Name" class="input100" disabled /></td>
                         <td style="text-align:center">@Html.DisplayFor(x => Model.EntryDDV[i].inter_entity)</td>
                         <td style="text-align:center">@Html.DisplayFor(x => Model.EntryDDV[i].fbt)</td>
                         <td><input id="@Model.EntryDDV[i].dept" value="@Model.EntryDDV[i].dept_Name" class="input100" disabled /></td>
@@ -85,7 +85,7 @@
                         <td><input value="@Model.EntryDDV[i].vat" class="input100" disabled /></td>
                         <td style="text-align:center">@Html.DisplayFor(x => Model.EntryDDV[i].chkEwt, new { @class = "chkEwt" })</td>
                         <td><input value="@Model.EntryDDV[i].ewt" class="input100" disabled /></td>
-                        <td><input value="@Model.EntryDDV[i].ccy" class="input100" disabled /></td>
+                        <td><input value="@Model.EntryDDV[i].ccy_Name" class="input100" disabled /></td>
                         <td><input value="@Model.EntryDDV[i].debitGross" class="input100" disabled /></td>
                         <td><input value="@Model.EntryDDV[i].credEwt" class="input100" disabled /></td>
                         <td><input value="@Model.EntryDDV[i].credCash" class="input100" disabled /></td>
@@ -141,7 +141,7 @@
         </div>
     </div>
     <div id="entry-controls" class="m-b-10">
-        @using (Html.BeginForm("VerAppModCV", "Home", FormMethod.Post, new { @class = "validate-form" }))
+        @using (Html.BeginForm("VerAppModDDV", "Home", FormMethod.Post, new { @class = "validate-form" }))
         {
             @Html.HiddenFor(x => Model.entryID)
             <div class="flex-sb">

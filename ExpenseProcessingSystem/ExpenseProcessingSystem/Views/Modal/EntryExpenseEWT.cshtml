@@ -3,7 +3,7 @@
     ViewData["Title"] = "EntryExpenseEWT";
     Layout = "~/Views/Shared/_ModalLayout.cshtml";
     var val = (string)ViewBag.taxpayor;
-    var idNo = (string)ViewBag.id;
+    var idNo = (string)ViewBag.id ?? "0";
 }
 @Html.Hidden("EwtTaxPayorName", @idNo, new { @id = "parentIdEwt" })
 <table class="table voucher-tbl table-bordered">
@@ -14,14 +14,14 @@
 </table>
 <script>
     $(function () {
-        $(".modal-footer").on("click", "#saveBtn", function () {
+        $(".modal-footer2").on("click", "#saveBtnEntry", function () {
             var itemNo = $("#parentIdEwt").val().substr(5);
             var val = $("table").find("#txtPayor").val();
 
             $("#EntryDDV_" + itemNo + "__ewtPayorName").val(val);
 
-            $('.modal-body').empty();
-            $('#myModal').modal('hide');
+            $('.modal-body2').empty();
+            $('.myModal2').modal('hide');
         });
     });
 </script>
