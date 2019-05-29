@@ -57,13 +57,13 @@
                         <th rowspan="2">FBT</th>
                         <th rowspan="2">Dept</th>
                         <th rowspan="2" colspan="2">VAT</th>
-                        <th rowspan="2" colspan="2">TR</th>
+                        <th rowspan="2" colspan="2">EWT</th>
                         <th colspan="1">Debit</th>
                         <th colspan="2">Credit</th>
                     </tr>
                     <tr>
                         <th scope="col">Gross Amount</th>
-                        <th scope="col">TR Amount</th>
+                        <th scope="col">EWT Amount</th>
                         <th scope="col">Cash</th>
                     </tr>
                 </thead>
@@ -92,7 +92,10 @@
                             <td style="text-align:center">@Html.DisplayFor(x => Model.EntryCV[i].fbt)</td>
                             <td>@Html.DropDownListFor(x => Model.EntryCV[i].dept, new SelectList(Model.systemValues.dept, "Value", "Text", Model.systemValues.dept.SelectedValue), new { @class = "input100", disabled = "disabled" })</td>
                             <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].chkVat, new { @class = "chkVat", disabled = "disabled" })</td>
-                            <td><input value="@Model.EntryCV[i].vat" class="input100" disabled /></td>
+                            <td>
+                                @*<input value="@Model.EntryCV[i].vat" class="input100" disabled />*@
+                                @Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.systemValues.vat.SelectedValue), new { @class = "input100 txtVat", @disabled = "true" })
+                            </td>
                             <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].chkEwt, new { @class = "chkEwt", disabled = "disabled" })</td>
                             <td>@Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt", disabled = "disabled" })</td>
                             <td><input value="@Model.EntryCV[i].debitGross" class="input100 txtGross" disabled /></td>
