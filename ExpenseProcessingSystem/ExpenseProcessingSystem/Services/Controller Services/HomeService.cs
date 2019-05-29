@@ -2976,7 +2976,7 @@ namespace ExpenseProcessingSystem.Services
                             expenseAmor.Add(amortization);
                         }
                     }
-                    else if(expenseType == GlobalSystemValues.TYPE_PC)
+                    else if(expenseType == GlobalSystemValues.TYPE_PC || expenseType == GlobalSystemValues.TYPE_SS)
                     {
                         foreach (var cashbd in cv.cashBreakdown)
                         {
@@ -3014,6 +3014,7 @@ namespace ExpenseProcessingSystem.Services
                         ExpDtl_isEwt = cv.chkEwt,
                         ExpDtl_Credit_Ewt = cv.credEwt,
                         ExpDtl_Credit_Cash = cv.credCash,
+                        ExpDtl_SS_Payee = cv.dtlSSPayee,
                         ExpDtl_Amor_Month = cv.month,
                         ExpDtl_Amor_Day = cv.day,
                         ExpDtl_Amor_Duration = cv.duration,
@@ -3127,6 +3128,7 @@ namespace ExpenseProcessingSystem.Services
                     debitGross = dtl.d.ExpDtl_Debit,
                     credEwt = dtl.d.ExpDtl_Credit_Ewt,
                     credCash = dtl.d.ExpDtl_Credit_Cash,
+                    dtlSSPayee = dtl.d.ExpDtl_SS_Payee,
                     month = dtl.d.ExpDtl_Amor_Month,
                     day = dtl.d.ExpDtl_Amor_Day,
                     duration = dtl.d.ExpDtl_Amor_Duration,
@@ -3431,5 +3433,7 @@ namespace ExpenseProcessingSystem.Services
         ////============[End Access Entry Tables]=========================
 
     }
+
+
 
 }

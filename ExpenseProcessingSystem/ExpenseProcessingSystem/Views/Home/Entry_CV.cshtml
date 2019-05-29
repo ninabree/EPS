@@ -226,6 +226,25 @@
             $("#credEwtTotal").val(ewtSubTotal);
             $("#credCashTotal").val(cashSubTotal);
             $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
+
+            var rowTemplate = $("#rowTemplate")
+
+            $(rowTemplate).find("#template_duration").removeAttr("data-val-required");
+            $(rowTemplate).find("#template_GBaseRemarks").removeAttr("data-val-required");
+            $(rowTemplate).find("#template_account").removeAttr("data-val-required");
+            $(rowTemplate).find("#template_fbt").removeAttr("data-val-required");
+            $(rowTemplate).find("#template_dept").removeAttr("data-val-required");
+            $(rowTemplate).find("#template_chkVat").removeAttr("data-val-required");
+            $(rowTemplate).find("#template_vat").removeAttr("data-val-required");
+            $(rowTemplate).find("#template_chkEwt").removeAttr("data-val-required");
+            $(rowTemplate).find("#template_ewt").removeAttr("data-val-required");
+            $(rowTemplate).find("#template_ccy").removeAttr("data-val-required");
+            $(rowTemplate).find("#template_debitGross").removeAttr("data-val-required");
+            $(rowTemplate).find("#template_credEwt").removeAttr("data-val-required");
+            $(rowTemplate).find("#template_credCash").removeAttr("data-val-required");
+            $(rowTemplate).find("#template_month").removeAttr("data-val-required");
+            $(rowTemplate).find("#template_day").removeAttr("data-val-required");
+
         });
 
         $("#addRow").click(function (e) {
@@ -233,13 +252,58 @@
             var tableRef = document.getElementById('inputTable').getElementsByTagName('tbody')[0];
 
 
-            var $trClone = $("#item_" + (itemCount - 1)).clone().attr("id","item_" + itemCount);
+            var trClone = $("#rowTemplate").clone().attr("id","item_" + itemCount);
 
-            
+            //Gbase Remarks
+            $(trClone).find("#template_GBaseRemarks").attr("name", "EntryCV[" + itemCount + "].GBaseRemarks");
+            $(trClone).find("#template_GBaseRemarks").attr("id", "EntryCV_" + itemCount + "__GBaseRemarks");
+            $(trClone).find("#remark_").attr("id", "remark_" + itemCount);
+            //Account
+            $(trClone).find("#template_account").attr("name", "EntryCV[" + itemCount + "].account");
+            $(trClone).find("#template_account").attr("id", "EntryCV_" + itemCount + "__account");
+            //FBT
+            $(trClone).find("#template_fbt").attr("name", "EntryCV[" + itemCount + "].fbt");
+            $(trClone).find("#template_fbt").attr("id", "EntryCV_" + itemCount + "__fbt");
+            //Department
+            $(trClone).find("#template_dept").attr("name", "EntryCV[" + itemCount + "].dept");
+            $(trClone).find("#template_dept").attr("id", "EntryCV_" + itemCount + "__dept");
+            //Vat Checkbox
+            $(trClone).find("#template_chkVat").attr("name", "EntryCV[" + itemCount + "].chkVat");
+            $(trClone).find("#template_chkVat").attr("id", "EntryCV_" + itemCount + "__chkVat");
+            //Vat
+            $(trClone).find("#template_vat").attr("name", "EntryCV[" + itemCount + "].vat");
+            $(trClone).find("#template_vat").attr("id", "EntryCV_" + itemCount + "__vat");
+            //EWT Checkbox
+            $(trClone).find("#template_chkEwt").attr("name", "EntryCV[" + itemCount + "].chkEwt");
+            $(trClone).find("#template_chkEwt").attr("id", "EntryCV_" + itemCount + "__chkEwt");
+            //EWT
+            $(trClone).find("#template_ewt").attr("name", "EntryCV[" + itemCount + "].ewt");
+            $(trClone).find("#template_ewt").attr("id", "EntryCV_" + itemCount + "__ewt");
+            //Currency
+            $(trClone).find("#template_ccy").attr("name", "EntryCV[" + itemCount + "].ccy");
+            $(trClone).find("#template_ccy").attr("id", "EntryCV_" + itemCount + "__ccy");
+            //Debit Gross
+            $(trClone).find("#template_debitGross").attr("name", "EntryCV[" + itemCount + "].debitGross");
+            $(trClone).find("#template_debitGross").attr("id", "EntryCV_" + itemCount + "__debitGross");
+            //Credit EWT
+            $(trClone).find("#template_credEwt").attr("name", "EntryCV[" + itemCount + "].credEwt");
+            $(trClone).find("#template_credEwt").attr("id", "EntryCV_" + itemCount + "__credEwt");
+            //Credit Cash
+            $(trClone).find("#template_credCash").attr("name", "EntryCV[" + itemCount + "].credCash");
+            $(trClone).find("#template_credCash").attr("id", "EntryCV_" + itemCount + "__credCash");
+            //Requirement button
+            $(trClone).find("#req_").attr("id", "req_" + itemCount);
+            //Month
+            $(trClone).find("#template_month").attr("name", "EntryCV[" + itemCount + "].month");
+            $(trClone).find("#template_month").attr("id", "EntryCV_" + itemCount + "__month");
+            //Day
+            $(trClone).find("#template_day").attr("name", "EntryCV[" + itemCount + "].day");
+            $(trClone).find("#template_day").attr("id", "EntryCV_" + itemCount + "__day");
+            //Duration
+            $(trClone).find("#template_duration").attr("name", "EntryCV[" + itemCount + "].duration");
+            $(trClone).find("#template_duration").attr("id", "EntryCV_" + itemCount + "__duration");
 
-            $trClone.insertAfter($("#inputTable > tbody").find("#item_" + (itemCount - 1)));
-            // Insert a row in the table at the last row
-           
+            $(trClone).insertAfter($("#inputTable > tbody").find("#item_" + (itemCount - 1)));
         });
 
         //ExpenseAmortization
@@ -361,17 +425,17 @@
             <tr id="rowTemplate">
                 <td class="p-b-1 p-t-1">
                     <div class="flex-sb">
-                        @Html.TextBoxFor(x => Model.EntryCV[0].GBaseRemarks,"" ,new { @class = "input100 w-80" })
+                        @Html.TextBoxFor(x => Model.template.GBaseRemarks,new { @class = "input100 w-80", @value = "" })
                         <div id="remark_">
                             <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
                         </div>
                     </div>
                 </td>
                 <td>
-                    <select id="@Html.IdFor(x => Model.EntryCV[0].account)" class="input100 txtAcc" name="@Html.NameFor(x => Model.EntryCV[0].account)">
+                    <select id="@Html.IdFor(x => Model.template.account)" class="input100 txtAcc" name="@Html.NameFor(x => Model.template.account)">
                         @foreach (var groepModel in Model.systemValues.acc)
                         {
-                            if (@groepModel.accId == @Model.EntryCV[0].account)
+                            if (Model.systemValues.acc.IndexOf(groepModel) == 0)
                             {
                                 <option value="@groepModel.accId" class="@groepModel.accCode" selected>@groepModel.accName</option>
                             }
@@ -383,29 +447,29 @@
                         }
                     </select>
                 </td>
-                <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[0].fbt)</td>
+                <td style="text-align:center">@Html.CheckBoxFor(x => Model.template.fbt)</td>
                 <td>
-                    @Html.DropDownListFor(x => Model.EntryCV[0].dept, new SelectList(Model.systemValues.dept, "Value", "Text", Model.systemValues.dept.SelectedValue), new { @class = "input100 txtDept" })
+                    @Html.DropDownListFor(x => Model.template.dept, new SelectList(Model.systemValues.dept, "Value", "Text", Model.systemValues.dept.SelectedValue), new { @class = "input100 txtDept" })
                 </td>
-                <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[0].chkVat, new { @class = "chkVat comVar" })</td>
+                <td style="text-align:center">@Html.CheckBoxFor(x => Model.template.chkVat, new { @class = "chkVat comVar" })</td>
                 <td>
-                    @Html.DropDownListFor(x => Model.EntryCV[0].vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.systemValues.vat.SelectedValue), new { @class = "input100 txtVat comVar", @disabled = "true" })
+                    @Html.DropDownListFor(x => Model.template.vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.systemValues.vat.SelectedValue), new { @class = "input100 txtVat comVar", @disabled = "true" })
                 </td>
-                <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[0].chkEwt, new { @class = "chkEwt comVar" })</td>
+                <td style="text-align:center">@Html.CheckBoxFor(x => Model.template.chkEwt, new { @class = "chkEwt comVar" })</td>
                 <td>
-                    @Html.DropDownListFor(x => Model.EntryCV[0].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt comVar", @disabled = "true" })
+                    @Html.DropDownListFor(x => Model.template.ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt comVar", @disabled = "true" })
                 </td>
                 <td>
-                    @Html.DropDownListFor(x => Model.EntryCV[0].ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100" })
+                    @Html.DropDownListFor(x => Model.template.ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100" })
                 </td>
-                <td>@Html.TextBoxFor(x => Model.EntryCV[0].debitGross, new { @class = "input100 txtGross", @readonly = "readonly" })</td>
-                <td>@Html.TextBoxFor(x => Model.EntryCV[0].credEwt, new { @class = "input100 txtCredEwt", @readonly = "readonly" })</td>
-                <td>@Html.TextBoxFor(x => Model.EntryCV[0].credCash, new { @class = "input100 txtCredCash", @readonly = "readonly" })</td>
+                <td>@Html.TextBoxFor(x => Model.template.debitGross, new { @class = "input100 txtGross", @readonly = "readonly" })</td>
+                <td>@Html.TextBoxFor(x => Model.template.credEwt, new { @class = "input100 txtCredEwt", @readonly = "readonly" })</td>
+                <td>@Html.TextBoxFor(x => Model.template.credCash, new { @class = "input100 txtCredCash", @readonly = "readonly" })</td>
                 <td id="req_">
                     <a class="reqBtn glyphicon glyphicon-list-alt"></a>
-                    @Html.HiddenFor(x => Model.EntryCV[0].month, new { @class = "txtAmorMonth" })
-                    @Html.HiddenFor(x => Model.EntryCV[0].day, new { @class = "txtAmorDay" })
-                    @Html.HiddenFor(x => Model.EntryCV[0].duration, new { @class = "txtAmorDuration" })
+                    @Html.HiddenFor(x => Model.template.month, new { @class = "txtAmorMonth" })
+                    @Html.HiddenFor(x => Model.template.day, new { @class = "txtAmorDay" })
+                    @Html.HiddenFor(x => Model.template.duration, new { @class = "txtAmorDuration" })
                 </td>
             </tr>
         </tbody>
