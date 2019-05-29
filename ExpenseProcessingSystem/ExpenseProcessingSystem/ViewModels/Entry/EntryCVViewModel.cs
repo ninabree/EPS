@@ -44,6 +44,7 @@ namespace ExpenseProcessingSystem.ViewModels
         [NotNullValidations, AmountValidation]
         [Display(Name = "Credit - Cash")]
         public float credCash { get; set; }
+        public string dtlPayee { get; set; }
         [Display(Name = "Month")]
         public int month { get; set; }
         [Display(Name = "Day")]

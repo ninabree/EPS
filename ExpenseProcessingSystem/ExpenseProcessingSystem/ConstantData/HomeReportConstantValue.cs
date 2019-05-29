@@ -199,13 +199,13 @@ namespace ExpenseProcessingSystem.ConstantData
                 new HomeReportTypesModel
                 {
                     Id = 3,
-                    TypeName = "Alphalist of Suppliers by top 10000 corporation (Semestral)",
+                    TypeName = "Alphalist of Suppliers by top 10000 corporation (1%, 2%)",
                     SubTypeAvail = false
                 },
                 new HomeReportTypesModel
                 {
                     Id = 4,
-                    TypeName = "Alphalist of Suppliers by top 10000 corporation",
+                    TypeName = "Alphalist of Suppliers by top 10000 corporation (All rate of taxes)",
                     SubTypeAvail = false
                 },
                 new HomeReportTypesModel

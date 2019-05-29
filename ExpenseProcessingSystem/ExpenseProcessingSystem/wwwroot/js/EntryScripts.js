@@ -75,8 +75,7 @@
         }
         $("#" + $("#parentId").val()).append(htmlText);
         $('#myModal').modal('hide');
-        +
-            +        computeValues($("#item_" + rowNo)[0]);
+        computeValues($("#item_" + rowNo)[0]);
     });
 
     $("#vendorName").on("change", function (e) {
@@ -188,7 +187,9 @@
         for (var i = 0; i < credCash.length; i++) {
             cashSubTotal += Number(credCash[i].value);
         }
-
+        if ($(".hiddenScreencode").val() == "PCV")
+            if ($("#grossTotal").val() != grossTotal)
+                $("input.txtGross").trigger("change");
         $("#grossTotal").val(grossTotal);
         $("#credEwtTotal").val(ewtSubTotal);
         $("#credCashTotal").val(cashSubTotal);

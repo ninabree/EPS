@@ -53,13 +53,13 @@
                         <th rowspan="2">FBT</th>
                         <th rowspan="2">Dept</th>
                         <th rowspan="2" colspan="2">VAT</th>
-                        <th rowspan="2" colspan="2">TR</th>
+                        <th rowspan="2" colspan="2">EWT</th>
                         <th colspan="1">Debit</th>
                         <th colspan="2">Credit</th>
                     </tr>
                     <tr>
                         <th scope="col">Gross Amount</th>
-                        <th scope="col">TR Amount</th>
+                        <th scope="col">EWT Amount</th>
                         <th scope="col">Cash</th>
                     </tr>
                 </thead>
@@ -92,30 +92,31 @@
                                 @Html.DropDownListFor(x => Model.EntryCV[i].dept, new SelectList(Model.systemValues.dept, "Value", "Text", Model.systemValues.dept.SelectedValue), new { @class = "input100" })
                             </td>
                             <td style="text-align:center">
-                                @Html.CheckBoxFor(x => Model.EntryCV[i].chkVat, new { @class = "chkVat" })
+                                @Html.CheckBoxFor(x => Model.EntryCV[i].chkVat, new { @class = "chkVat comVar" })
                             </td>
                             <td>
-                                @Html.TextBoxFor(x => Model.EntryCV[i].vat, new { @class = "input100 txtVat", @readonly = "true" })
+                                @*@Html.TextBoxFor(x => Model.EntryCV[i].vat, new { @class = "input100 txtVat", @readonly = "true" })*@
+                                @Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.systemValues.vat.SelectedValue), new { @class = "input100 txtVat comVar", @disabled = "true" })
                             </td>
                             <td style="text-align:center">
-                                @Html.CheckBoxFor(x => Model.EntryCV[i].chkEwt, new { @class = "chkEwt" })
+                                @Html.CheckBoxFor(x => Model.EntryCV[i].chkEwt, new { @class = "chkEwt comVar" })
                             </td>
                             <td>
-                                @Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt", @disabled = "true" })
+                                @Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt comVar", @disabled = "true" })
                             </td>
                             <td>
-                                @Html.TextBoxFor(x => Model.EntryCV[i].debitGross, new { @class = "input100 txtGross", @type = "number", @min = "0" })
+                                @Html.TextBoxFor(x => Model.EntryCV[i].debitGross, new { @class = "input100 txtGross", @type = "number", @min = "0", @readonly = "readonly" })
                             </td>
                             <td>
-                                @Html.TextBoxFor(x => Model.EntryCV[i].credEwt, new { @class = "input100 txtCredEwt", @readonly = "readonly" })
+                                @Html.TextBoxFor(x => Model.EntryCV[i].credEwt, new { @class = "input100 txtCredEwt", @type = "number", @min = "0", @readonly = "readonly" })
                             </td>
                             <td>
-                                @Html.TextBoxFor(x => Model.EntryCV[i].credCash, new { @class = "input100 txtCredCash", @readonly = "readonly" })
+                                @Html.TextBoxFor(x => Model.EntryCV[i].credCash, new { @class = "input100 txtCredCash", @type = "number", @min = "0", @readonly = "readonly" })
                             </td>
                             <td id="req_@i">
                                 <a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#"></a>
                                 @Html.HiddenFor(x => Model.EntryCV[i].modalInputFlag, new { @class = "hiddenItem" })
-                                @Html.HiddenFor(x => Model.EntryCV[i].screenCode)
+                                @Html.HiddenFor(x => Model.EntryCV[i].screenCode, new { @class = "hiddenScreencode" })
                                 <div id="divCashBD_@i">
                                     @for (int y = 0; y < Model.EntryCV[i].cashBreakdown.Count(); y++)
                                     {
@@ -179,7 +180,7 @@
         @Html.HiddenFor(x => Model.createdDate);
     }
     <div id="modalDiv">
-        @Html.Partial("ModalPartial")
+        @Html.Partial("ModalGBase")
     </div>
 </div>
 @*validation message*@
@@ -223,6 +224,7 @@ $(function () {
         var dept = @Html.Raw(Json.Serialize(Model.systemValues.dept));
         var curr = @Html.Raw(Json.Serialize(Model.systemValues.currency));
         var ewt = @Html.Raw(Json.Serialize(Model.systemValues.ewt));
+        var vat = @Html.Raw(Json.Serialize(Model.systemValues.vat));
 
         // Insert a row in the table at the last row
         var newRow = tableRef.insertRow(itemCount);
@@ -245,17 +247,22 @@ $(function () {
         }
 
         htmlContent += '</select></td>' +
-            '<td style="text-align:center"><input class="chkVat" data-val="true" data-val-required="The chkVat field is required." id="EntryCV_' + itemCount + '__chkVat" name="EntryCV[' + itemCount + '].chkVat" type="checkbox" value="true"></td>' +
-            '<td><input class="input100 txtVat" data-val="true" data-val-number="The field vat must be a number." data-val-required="The vat field is required." id="EntryCV_' + itemCount + '__vat" name="EntryCV[' + itemCount + '].vat" readonly="true" type="text" value="0"></td>' +
-            '<td style="text-align:center"><input class="chkEwt" data-val="true" data-val-required="The chkEwt field is required." id="EntryCV_' + itemCount + '__chkEwt" name="EntryCV[' + itemCount + '].chkEwt" type="checkbox" value="true"></td>' +
-            '<td><select class="input100 txtEwt" data-val="true" data-val-required="The ewt field is required." id="EntryCV_' + itemCount + '__ewt" name="EntryCV[' + itemCount + '].ewt" disabled="disabled">';
+            '<td style="text-align:center"><input class="chkVat comVar" data-val="true" data-val-required="The chkVat field is required." id="EntryCV_' + itemCount + '__chkVat" name="EntryCV[' + itemCount + '].chkVat" type="checkbox" value="true"></td>' +
+            //'<td><input class="input100 txtVat" data-val="true" data-val-number="The field vat must be a number." data-val-required="The vat field is required." id="EntryCV_' + itemCount + '__vat" name="EntryCV[' + itemCount + '].vat" readonly="true" type="text" value="0"></td>' +
+            '<td><select class="input100 txtVat comVar" data-val="true" data-val-required="The vat field is required." id="EntryCV_' + itemCount + '__vat" name="EntryCV[' + itemCount + '].vat" disabled="disabled">';
+        for (var i = 0; i < vat.length; i++) {
+            htmlContent += '<option value="' + vat[i]["value"] + '">' + vat[i]["text"] + '</option>';
+        }
+        htmlContent += '</select></td>' +
+            '<td style="text-align:center"><input class="chkEwt comVar" data-val="true" data-val-required="The chkEwt field is required." id="EntryCV_' + itemCount + '__chkEwt" name="EntryCV[' + itemCount + '].chkEwt" type="checkbox" value="true"></td>' +
+            '<td><select class="input100 txtEwt comVar" data-val="true" data-val-required="The ewt field is required." id="EntryCV_' + itemCount + '__ewt" name="EntryCV[' + itemCount + '].ewt" disabled="disabled">';
         for (var i = 0; i < ewt.length; i++) {
             htmlContent += '<option value="' + ewt[i]["value"] + '">' + ewt[i]["text"] + '</option>';
         }
         htmlContent += '</select></td>' +
-            '<td><input class="input100 txtGross" data-val="true" data-val-number="The field debitGross must be a number." data-val-required="The debitGross field is required." id="EntryCV_' + itemCount + '__debitGross" name="EntryCV[' + itemCount + '].debitGross" type="number" min="0" value="0"></td>' +
-            '<td><input class="input100  txtCredEwt" data-val="true" data-val-number="The field credEwt must be a number." data-val-required="The credEwt field is required." id="EntryCV_' + itemCount + '__credEwt" name="EntryCV[' + itemCount + '].credEwt" type="text" readonly="true" value="0"></td>' +
-            '<td><input class="input100 txtCredCash" data-val="true" data-val-number="The field credCash must be a number." data-val-required="The credCash field is required." id="EntryCV_' + itemCount + '__credCash" name="EntryCV[' + itemCount + '].credCash" type="text" readonly="true" value="0"></td>' +
+            '<td><input class="input100 txtGross" data-val="true" data-val-number="The field debitGross must be a number." data-val-required="The debitGross field is required." id="EntryCV_' + itemCount + '__debitGross" name="EntryCV[' + itemCount + '].debitGross" type="number" readonly="true" min="0" value="0"></td>' +
+            '<td><input class="input100  txtCredEwt" data-val="true" data-val-number="The field credEwt must be a number." data-val-required="The credEwt field is required." id="EntryCV_' + itemCount + '__credEwt" name="EntryCV[' + itemCount + '].credEwt" type="number" readonly="true" min="0" value="0"></td>' +
+            '<td><input class="input100 txtCredCash" data-val="true" data-val-number="The field credCash must be a number." data-val-required="The credCash field is required." id="EntryCV_' + itemCount + '__credCash" name="EntryCV[' + itemCount + '].credCash" type="number" readonly="true" min="0" value="0"></td>' +
             '<td id="req_' + itemCount + '"><a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#"></a><input class="hiddenItem" data-val="true" data-val-required="The modalInputFlag field is required." id="EntryCV_' + itemCount + '__modalInputFlag" name="EntryCV[' + itemCount + '].modalInputFlag" type="hidden" value="0"><input id="EntryCV_0__screenCode" name="EntryCV[' + itemCount + '].screenCode" type="hidden" value="PCV"><div id="divCashBD_' + itemCount + '"></div></td>';
 
         newRow.innerHTML = htmlContent;
@@ -292,6 +299,17 @@ $(function () {
         });
 
         $('#myModal').modal('show');
+    });
+
+    //Reset Cash breakdown when Gross amount changed
+    $("table").on("change", "input.txtGross", function (e) {
+        var pNode = $(this.parentNode)[0].parentNode;
+
+        var itemNo = pNode.id; //jquery obj
+        var ret = itemNo.replace('item_', '');
+        $('#divCashBD_' + ret).empty();
+        $('#EntryCV_' + ret + '__modalInputFlag').val(0);
+        
     });
 });
 </script>
