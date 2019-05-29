@@ -44,8 +44,8 @@
                 $("#gRemarks-tr-" + count).find(".gAmount").attr("readonly", "readonly");
                 $("#gRemarks-tr-" + count).find(".flex-c").find(".table-remove").css("pointer-events", "none");
             }
-            $("#add_row_btn").attr("disabled", "disabled");
-            $("#saveGbase").attr("disabled", "disabled");
+            $("#add_row_btn").css("pointer-events", "none");
+            $("#saveGbase").css("pointer-events", "none");
         }
     });
 </script>

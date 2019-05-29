@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using ExpenseProcessingSystem.Services.Controller_Services;
 
 namespace ExpenseProcessingSystem.Services.Validations
 {
@@ -359,47 +360,47 @@ namespace ExpenseProcessingSystem.Services.Validations
     public class EmptyCashBreakdown : ValidationAttribute
     {
         private readonly string _CheckBoxProperty;
+        private readonly string _CheckBoxProperty2;
 
-        public EmptyCashBreakdown(string CheckBoxProperty)
+        public EmptyCashBreakdown(string CheckBoxProperty, string CheckBoxProperty2)
         {
             _CheckBoxProperty = CheckBoxProperty;
+            _CheckBoxProperty2 = CheckBoxProperty2;
         }
+
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var property = validationContext.ObjectType.GetProperty(_CheckBoxProperty);
-            var val = property.GetValue(validationContext.ObjectInstance, null);
+            var val = validationContext.ObjectType.GetProperty(_CheckBoxProperty).GetValue(validationContext.ObjectInstance, null);
+            var val2 = validationContext.ObjectType.GetProperty(_CheckBoxProperty2).GetValue(validationContext.ObjectInstance, null);
 
-            if((string)val != "PCV")
+            if ((string)val != "PCV" && (string)val != "SS")
                 return ValidationResult.Success;
 
-            try
-                {
-                    int flag = 0;
-                    List<CashBreakdown> data = value as List<CashBreakdown>;
-                    foreach (var i in data)
-                    {
-                        if (i.cashNoPC != 0 && i.cashAmount != 0)
-                        {
-                            flag = 1;
-                            break;
-                        }
-                    }
+            if ((string)val == "SS" && (string)val2 != "PHP")
+                return ValidationResult.Success;
 
-                    if (flag == 0)
-                    {
-                        return new ValidationResult("Must fill up the Cash Breakdown list.");
-                    }
-                    else
-                    {
-                        return ValidationResult.Success;
-                    }
-                }
-                catch (Exception ex)
+            int flag = 0;
+            List<CashBreakdown> data = value as List<CashBreakdown>;
+            foreach (var i in data)
+            {
+                if (i.cashNoPC != 0 && i.cashAmount != 0)
                 {
-                    Log.Fatal(ex, "User: {user}, StackTrace : {trace}, Error Message: {message}", "[UserID]", ex.StackTrace, ex.Message);
-                    return new ValidationResult("Invalid input");
+                    flag = 1;
+                    break;
                 }
+            }
+
+            if (flag == 0)
+            {
+                if ((string)val == "SS")
+                    return new ValidationResult("All PHP currency item/s must fill up the Cash Breakdown list.");
+
+                if((string)val == "PCV")
+                    return new ValidationResult("Must fill up the Cash Breakdown list.");
+            }
+
+            return ValidationResult.Success;
         }
     }
     public class ListValidation : ValidationAttribute

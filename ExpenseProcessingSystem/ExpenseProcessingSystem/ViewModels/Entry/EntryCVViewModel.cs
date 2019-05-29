@@ -44,7 +44,7 @@ namespace ExpenseProcessingSystem.ViewModels
         [NotNullValidations, AmountValidation]
         [Display(Name = "Credit - Cash")]
         public float credCash { get; set; }
-        public string dtlPayee { get; set; }
+        public int dtlSSPayee { get; set; }
         [Display(Name = "Month")]
         public int month { get; set; }
         [Display(Name = "Day")]
@@ -53,9 +53,10 @@ namespace ExpenseProcessingSystem.ViewModels
         public int duration { get; set; }
         public int modalInputFlag { get; set; }
         public string screenCode { get; set; }
+        public string ccyAbbrev { get; set; }
         public List<amortizationSchedule> amtDetails { get; set; }
         public List<EntryGbaseRemarksViewModel> gBaseRemarksDetails { get; set; }
-        [EmptyCashBreakdown("screenCode")]
+        [EmptyCashBreakdown("screenCode", "ccyAbbrev")]
         [Display(Name = "Cash Breakdown")]
         public List<CashBreakdown> cashBreakdown { get; set; }
 

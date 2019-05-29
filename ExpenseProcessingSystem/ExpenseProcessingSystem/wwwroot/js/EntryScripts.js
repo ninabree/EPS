@@ -46,6 +46,12 @@
     document.addEventListener("change", computeFunction, false);
     
     $("#modalDiv").on("click", "#saveGbase", function (e) {
+        if ($("#parentIdAmortization").length) {
+            return;
+        }
+        if ($("#parentIdPCVSSTable").length) {
+            return;
+        }
         var parent = $("#" + $("#parentId").val());
 
         var trs = $("#gBaseTable").find("tbody").find("tr");
@@ -156,7 +162,7 @@
             cashSubTotal += Number(credCash[i].value);
         }
 
-        if ($(".hiddenScreencode").val() == "PCV")
+        if ($(".hiddenScreencode").val() == "PCV" || $(".hiddenScreencode").val() == "SS")
             if ($("#grossTotal").val() != grossTotal)
                 $("input.txtGross").trigger("change");
 

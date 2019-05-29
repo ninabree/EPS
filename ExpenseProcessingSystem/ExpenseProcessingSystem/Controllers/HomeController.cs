@@ -604,6 +604,7 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.EntryCV.Add(new EntryCVViewModel());
             return View(viewModel);
         }
+
         public dynamic PopulateEntry(dynamic viewModel)
         {
             List<SelectList> listOfSysVals = _service.getEntrySystemVals();
@@ -819,7 +820,7 @@ namespace ExpenseProcessingSystem.Controllers
 
             if (!ModelState.IsValid)
             {
-                return View("Entry_PCV", PopulateEntryCV(EntryCVViewModelList));
+                return View("Entry_PCV", PopulateEntry((EntryCVViewModelList)EntryCVViewModelList));
             }
 
             EntryCVViewModelList pcvList = new EntryCVViewModelList();
@@ -967,6 +968,147 @@ namespace ExpenseProcessingSystem.Controllers
 
             return View(viewModel);
         }
+
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
+        [ExportModelState]
+        public IActionResult AddNewSS(EntryCVViewModelList EntryCVViewModelList)
+        {
+            var userId = GetUserID();
+
+            if (!ModelState.IsValid)
+            {
+                return View("Entry_SS", PopulateEntry((EntryCVViewModelList)EntryCVViewModelList));
+            }
+
+            //EntryCVViewModelList ssList = new EntryCVViewModelList();
+
+            int id = 0;
+            if (EntryCVViewModelList.entryID == 0)
+            {
+                id = _service.addExpense_CV(EntryCVViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_SS);
+            }
+            else
+            {
+                if (_service.deleteExpenseEntry(EntryCVViewModelList.entryID))
+                {
+                    id = _service.addExpense_CV(EntryCVViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_SS);
+                }
+            }
+
+            ModelState.Clear();
+
+            //if (id > -1)
+            //{
+            //    pcvList = _service.getExpense(id);
+            //    List<SelectList> listOfSysVals = _service.getEntrySystemVals();
+            //    pcvList.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
+            //    pcvList.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
+            //    pcvList.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
+            //    pcvList.systemValues.acc = _service.getAccDetailsEntry();
+            //    ViewBag.Status = pcvList.status;
+            //}
+
+            //return View("Entry_PCV_ReadOnly", pcvList);
+
+            return RedirectToAction("View_SS", "Home", new { entryID = id });
+        }
+
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
+        public IActionResult VerAppModSS(int entryID, string command)
+        {
+            var userId = GetUserID();
+
+            string viewLink = "Entry_SS";
+            EntryCVViewModelList ssList;
+
+            switch (command)
+            {
+                case "Modify":
+                    viewLink = "Entry_SS";
+                    break;
+                case "approver":
+                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_APPROVED, int.Parse(GetUserID())))
+                    {
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Entry_SS_ReadOnly";
+                    break;
+                case "verifier":
+                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_VERIFIED, int.Parse(GetUserID())))
+                    {
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Entry_SS_ReadOnly";
+                    break;
+                case "Delete":
+                    if (_service.deleteExpenseEntry(entryID))
+                    {
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    return RedirectToAction("Index", "Home");
+
+                case "Reject":
+                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REJECTED, int.Parse(GetUserID())))
+                    {
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Entry_SS_ReadOnly";
+                    break;
+
+                default:
+                    break;
+            }
+
+            ssList = _service.getExpense(entryID);
+
+            ssList = PopulateEntry((EntryCVViewModelList)ssList);
+
+            foreach (var acc in ssList.EntryCV)
+            {
+                ssList.systemValues.acc.AddRange(_service.getAccDetailsEntry(acc.account));
+            }
+
+            return View(viewLink, ssList);
+        }
+
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
+        public IActionResult View_SS(int entryID)
+        {
+            var userId = GetUserID();
+
+            EntryCVViewModelList ssList = _service.getExpense(entryID);
+            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
+            ssList.systemValues.vendors = listOfSysVals[0];
+            ssList.systemValues.dept = listOfSysVals[1];
+            ssList.systemValues.currency = listOfSysVals[2];
+            int firstId = int.Parse(listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR].First().Value);
+
+            ssList.systemValues.ewt = _service.getVendorTaxRate(firstId);
+            ssList.systemValues.vat = _service.getVendorVat(firstId);
+            ssList.systemValues.acc = _service.getAccDetailsEntry();
+
+            return View("Entry_SS_ReadOnly", ssList);
+        }
+
         //[* Entry Cash Advance(SS) *]
         //------------------------------------------------------------------
 
