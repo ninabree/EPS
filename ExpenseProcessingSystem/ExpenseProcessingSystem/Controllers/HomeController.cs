@@ -742,17 +742,8 @@ namespace ExpenseProcessingSystem.Controllers
             var userId = GetUserID();
 
             EntryDDVViewModelList viewModel = new EntryDDVViewModelList();
-            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
-            viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
-            viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
-            viewModel.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
-            viewModel.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
-            viewModel.systemValues.acc = _service.getAccDetailsEntry();
-
-            viewModel.expenseYear = DateTime.Today.Year.ToString();
-            viewModel.expenseDate = DateTime.Today;
-            //viewModel.vendor = 2;
-            viewModel.EntryDDV.Add(new EntryDDVViewModel { interDetails = new List<DDVInterEntityViewModel> { new DDVInterEntityViewModel()} });
+            viewModel = PopulateEntry((EntryDDVViewModelList)viewModel);
+            viewModel.EntryDDV.Add(new EntryDDVViewModel { interDetails = new List<DDVInterEntityViewModel> { new DDVInterEntityViewModel() } });
             return View(viewModel);
         }
         public IActionResult AddNewDDV(EntryDDVViewModelList EntryDDVViewModelList)
@@ -2074,11 +2065,20 @@ namespace ExpenseProcessingSystem.Controllers
             return actualBudgetData;
         }
 
+        [HttpPost]
         public JsonResult getVendorTRList(int vendorID)
         {
             var trList = _service.getVendorTaxRate(vendorID);
 
             return Json(trList.ToList());
+        }
+
+        [HttpPost]
+        public JsonResult getVendorVatList(int vendorID)
+        {
+            var vatList = _service.getVendorVat(vendorID);
+
+            return Json(vatList.ToList());
         }
     }
 }

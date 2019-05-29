@@ -99,11 +99,58 @@ namespace ExpenseProcessingSystem.ViewModels
         public int maker { get; set; }
         public DateTime createdDate { get; set; }
         public List<EntryCVViewModel> EntryCV { get; set; }
+        public temp template { get; set; }
 
         public EntryCVViewModelList()
         {
             systemValues = new SysValViewModel();
             EntryCV = new List<EntryCVViewModel>();
+            template = new temp();
+        }
+    }
+
+    public class temp
+    {
+        [Display(Name = "GBase Remarks")]
+        public string GBaseRemarks { get; set; }
+        [Display(Name = "Account")]
+        public int account { get; set; }
+        [Display(Name = "FBT")]
+        public bool fbt { get; set; }
+        [Display(Name = "Department")]
+        public int dept { get; set; }
+        [Display(Name = "VAT Checkbox")]
+        public bool chkVat { get; set; }
+        [Display(Name = "VAT")]
+        public int vat { get; set; }
+        [Display(Name = "EWT Checkbox")]
+        public bool chkEwt { get; set; }
+        [Display(Name = "EWT")]
+        public int ewt { get; set; }
+        [Display(Name = "Currency")]
+        public int ccy { get; set; }
+        [Display(Name = "Debit - Gross Amount")]
+        public float debitGross { get; set; }
+        [Display(Name = "Credit - EWT Amount")]
+        public float credEwt { get; set; }
+        [Display(Name = "Credit - Cash")]
+        public float credCash { get; set; }
+        [Display(Name = "Month")]
+        public int month { get; set; }
+        [Display(Name = "Day")]
+        public int day { get; set; }
+        [Display(Name = "Duration")]
+        public int duration { get; set; }
+        public int modalInputFlag { get; set; }
+        public string screenCode { get; set; }
+        public List<amortizationSchedule> amtDetails { get; set; }
+        public List<EntryGbaseRemarksViewModel> gBaseRemarksDetails { get; set; }
+
+
+        public temp()
+        {
+            gBaseRemarksDetails = new List<EntryGbaseRemarksViewModel>();
+            amtDetails = new List<amortizationSchedule>();
         }
     }
 }
