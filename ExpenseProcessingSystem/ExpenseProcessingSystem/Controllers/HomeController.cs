@@ -913,10 +913,10 @@ namespace ExpenseProcessingSystem.Controllers
             pcvList = _service.getExpense(entryID);
 
             pcvList = PopulateEntry((EntryCVViewModelList)pcvList);
-
-            foreach (var acc in pcvList.EntryCV)
+            foreach (var i in pcvList.EntryCV)
             {
-                pcvList.systemValues.acc.AddRange(_service.getAccDetailsEntry(acc.account));
+                pcvList.systemValues.acc.AddRange(_service.getAccDetailsEntry(i.account));
+                i.screenCode = "PCV";
             }
 
             return View(viewLink, pcvList);
@@ -1069,12 +1069,12 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             ssList = _service.getExpense(entryID);
-
             ssList = PopulateEntry((EntryCVViewModelList)ssList);
 
-            foreach (var acc in ssList.EntryCV)
+            foreach (var i in ssList.EntryCV)
             {
-                ssList.systemValues.acc.AddRange(_service.getAccDetailsEntry(acc.account));
+                ssList.systemValues.acc.AddRange(_service.getAccDetailsEntry(i.account));
+                i.screenCode = "SS";
             }
 
             return View(viewLink, ssList);

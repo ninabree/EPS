@@ -144,12 +144,21 @@
 
     function computeValues(parent) {
         var pNode = parent;
-
+        
         var amounts = $("#" + pNode.id + " .amount");
         var grossAmt = 0;
-
+        var origGrossAmt = $("#" + pNode.id + " .txtGross").val();
         for (var i = 0; i < amounts.length; i++) {
             grossAmt += Number(amounts[i].value);
+        }
+
+        //For PCS,SS - resetting of Cash breakdown list.
+        if ($(".hiddenScreencode").val() == "PCV" || $(".hiddenScreencode").val() == "SS") {
+            if (origGrossAmt != grossAmt) {
+                var ret = pNode.id.replace('item_', '');
+                $('#divCashBD_' + ret).empty();
+                $('#EntryCV_' + ret + '__modalInputFlag').val(0);
+            }
         }
 
         $("#" + pNode.id + " .txtGross").attr("value", grossAmt);
@@ -194,9 +203,6 @@
             cashSubTotal += Number(credCash[i].value);
         }
 
-        if ($(".hiddenScreencode").val() == "PCV" || $(".hiddenScreencode").val() == "SS")
-            if ($("#grossTotal").val() != grossTotal)
-                $("input.txtGross").trigger("change");
         $("#grossTotal").val(grossTotal);
         $("#credEwtTotal").val(ewtSubTotal);
         $("#credCashTotal").val(cashSubTotal);

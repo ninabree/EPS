@@ -2976,7 +2976,18 @@ namespace ExpenseProcessingSystem.Services
                             expenseAmor.Add(amortization);
                         }
                     }
-                    else if(expenseType == GlobalSystemValues.TYPE_PC || expenseType == GlobalSystemValues.TYPE_SS)
+                    else if(expenseType == GlobalSystemValues.TYPE_PC)
+                    {
+                        foreach (var cashbd in cv.cashBreakdown)
+                        {
+                            expenseCashBreakdown.Add(new ExpenseEntryCashBreakdownModel
+                            {
+                                CashBreak_Denimination = cashbd.cashDenimination,
+                                CashBreak_NoPcs = cashbd.cashNoPC,
+                                CashBreak_Amount = cashbd.cashAmount
+                            });
+                        }
+                    }else if(expenseType == GlobalSystemValues.TYPE_SS && cv.ccyAbbrev == "PHP")
                     {
                         foreach (var cashbd in cv.cashBreakdown)
                         {
@@ -3135,7 +3146,7 @@ namespace ExpenseProcessingSystem.Services
                     amtDetails = amtDetails,
                     gBaseRemarksDetails = remarksDtl,
                     cashBreakdown = cashBreakdown,
-                    modalInputFlag = 1
+                    modalInputFlag = (cashBreakdown == null || cashBreakdown.Count == 0) ? 0 : 1
                 };
                 cvList.Add(cvDtl);
             }
