@@ -186,12 +186,20 @@
     <div id="modalDiv">
         @Html.Partial("ModalGbase")
     </div>
+    @Html.Partial("ModalPartial2")
     <div id="ValidationSummary" style="display: none" class="">
         @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
     </div>
 </div>
 <script>
     $(function () {
+
+        var myModal2 = $('.myModal2');
+        var modalDiv2 = $(myModal2).find('div div');
+        var modalDivHeader2 = $(modalDiv2).find('.modal-header2');
+        var modalDivBody2 = $(modalDiv2).find('.modal-body2');
+        var modalDivFooter2 = $(modalDiv2).find('.modal-footer2');
+
         $(window).on("load", function () {
             var gross = $(".txtGross");
             var credEwt = $(".txtCredEwt");
@@ -312,13 +320,15 @@
             var remarksTitle = $("#" + pNode.id).find(".gbaseRemarks").val()
             var account = $("#" + pNode.id).find(".txtAcc option:selected").text()
 
-            var modalDivBody = $('.modal-body');
-            var modalDivFooter = $('.modal-footer').find("#add_row_btn").remove();;
+            //remove prev contents
+            modalDivBody2.empty();
+            modalDivHeader2.find('h4').remove();
+            modalDivFooter2.find("#add_row_btn").remove();
 
-            if ($('.modal-header').find(".modal-title")[0] == null) {
-                $('.modal-header').append('<h4 class="modal-title">Inter-Entity</h4>');
-            }
-            modalDivBody.load("@Url.Action("EntryExpenseInterEntity", "Modal")", {
+            //set modal header title
+            modalDivHeader2.append('<h4 class="modal-title">Inter-Entity</h4>');
+            //set modal body content
+            modalDivBody2.load("@Url.Action("EntryExpenseInterEntity", "Modal")", {
                 "id": id,
                 "interRate": interRate,
                 "account": account,
@@ -333,7 +343,7 @@
                 }
             });
 
-            $('#myModal').modal('show');
+            $(myModal2).modal('show');
         });
 
         //Inter Entity
@@ -341,14 +351,15 @@
             e.stopImmediatePropagation();
             var pNode = $(this.parentNode)[0].parentNode;
             var taxpayor = $("#" + pNode.id).find(".txtPayor").val()
-            var modalDivBody = $('.modal-body');
-            var modalDivFooter = $('.modal-footer').find("#add_row_btn").remove();
 
-            if ($('.modal-header').find(".modal-title")[0] == null) {
-                $('.modal-header').append('<h4 class="modal-title">Inter-Entity</h4>');
-            }
+            //remove prev contents
+            modalDivBody2.empty();
+            modalDivHeader2.find('h4').remove();
+            modalDivFooter2.find("#add_row_btn").remove();
 
-            modalDivBody.load("@Url.Action("EntryExpenseEWT", "Modal")", {
+            //set modal header title
+            modalDivHeader2.append('<h4 class="modal-title">EWT Information</h4>');
+            modalDivBody2.load("@Url.Action("EntryExpenseEWT", "Modal")", {
                 "id": pNode.id,
                 "taxpayor": taxpayor
             }, function (response, status, xhr) {
@@ -357,7 +368,7 @@
                 }
             });
 
-            $('#myModal').modal('show');
+            $(myModal2).modal('show');
         });
 
         $("table").on("change", "input.chkInter", function (e) {

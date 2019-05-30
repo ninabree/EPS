@@ -737,39 +737,103 @@ namespace ExpenseProcessingSystem.Controllers
         //[* Entry Direct Deposit *]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
-        public IActionResult Entry_DDV()
+        [ImportModelState]
+        public IActionResult Entry_DDV(EntryDDVViewModelList viewModel)
         {
             var userId = GetUserID();
-
-            EntryDDVViewModelList viewModel = new EntryDDVViewModelList();
+            if (viewModel.EntryDDV.Count <= 0)
+            {
+               viewModel = new EntryDDVViewModelList();
+               viewModel.EntryDDV.Add(new EntryDDVViewModel { interDetails = new List<DDVInterEntityViewModel> { new DDVInterEntityViewModel() } });
+            }
             viewModel = PopulateEntry((EntryDDVViewModelList)viewModel);
-            viewModel.EntryDDV.Add(new EntryDDVViewModel { interDetails = new List<DDVInterEntityViewModel> { new DDVInterEntityViewModel() } });
             return View(viewModel);
         }
+        [ExportModelState]
         public IActionResult AddNewDDV(EntryDDVViewModelList EntryDDVViewModelList)
         {
             var userId = GetUserID();
             if (!ModelState.IsValid)
             {
-                return View("Entry_DDV", PopulateEntry((EntryDDVViewModelList)EntryDDVViewModelList));
+                return RedirectToAction("Entry_DDV", EntryDDVViewModelList);
             }
 
             EntryDDVViewModelList ddvList = new EntryDDVViewModelList();
-            int id = _service.addExpense_DDV(EntryDDVViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_CV);
+            int id = _service.addExpense_DDV(EntryDDVViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_DDV);
             ModelState.Clear();
-            if (id > -1)
-            {
-                ddvList = _service.getExpenseDDV(id);
-                List<SelectList> listOfSysVals = _service.getEntrySystemVals();
-                ddvList.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
-                ddvList.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
-                ddvList.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
-                ddvList.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
-                ddvList.systemValues.acc = _service.getAccDetailsEntry();
-                ViewBag.Status = ddvList.status;
-            }
+            return RedirectToAction("View_DDV", "Home", new { entryID = id });
+        }
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
+        public IActionResult View_DDV(int entryID)
+        {
+            var userId = GetUserID();
+
+            EntryDDVViewModelList ddvList = _service.getExpenseDDV(entryID);
+            ddvList = PopulateEntry((EntryDDVViewModelList)ddvList);
 
             return View("Entry_DDV_ReadOnly", ddvList);
+        }
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
+        public IActionResult VerAppModDDV(int entryID, string command)
+        {
+            var userId = GetUserID();
+
+            string viewLink = "Entry_DDV";
+            EntryDDVViewModelList ddvList;
+
+            switch (command)
+            {
+                case "Modify":
+                    viewLink = "Entry_DDV";
+                    break;
+                case "approver":
+                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_APPROVED, int.Parse(GetUserID())))
+                    {
+                        _service.SaveToGBase();
+                        var expDtls = _context.ExpenseEntry.Where(x => x.Expense_ID == entryID).Select(x => x.ExpenseEntryDetails).FirstOrDefault();
+                        var isFbt = expDtls.Select(x => x.ExpDtl_Fbt).FirstOrDefault() == true;
+                        if (isFbt)
+                        {
+                            _service.SaveToGBaseFBT();
+                        }
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Entry_DDV_ReadOnly";
+                    break;
+                case "verifier":
+                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_VERIFIED, int.Parse(GetUserID())))
+                    {
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Entry_DDV_ReadOnly";
+                    break;
+                case "Reject": break;
+                default:
+                    break;
+            }
+
+            ModelState.Clear();
+
+            ddvList = _service.getExpenseDDV(entryID);
+
+            ddvList = PopulateEntry((EntryDDVViewModelList)ddvList);
+
+            foreach (var acc in ddvList.EntryDDV)
+            {
+                ddvList.systemValues.acc.AddRange(_service.getAccDetailsEntry(acc.account));
+            }
+
+            return View(viewLink, ddvList);
         }
         //------------------------------------------------------------------
         //[* Entry Petty Cash *]
