@@ -851,21 +851,6 @@ namespace ExpenseProcessingSystem.Controllers
             return View(viewModel);
         }
 
-        public EntryCVViewModelList PopulateEntryCV(EntryCVViewModelList viewModel)
-        {
-            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
-            viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
-            viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
-            viewModel.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
-            viewModel.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
-            viewModel.systemValues.acc = _service.getAccDetailsEntry();
-
-            viewModel.expenseYear = DateTime.Today.Year.ToString();
-            viewModel.expenseDate = DateTime.Today;
-
-            return viewModel;
-        }
-
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         [ExportModelState]
@@ -1002,6 +987,10 @@ namespace ExpenseProcessingSystem.Controllers
             pcvList.systemValues.ewt = _service.getVendorTaxRate(firstId);
             pcvList.systemValues.vat = _service.getVendorVat(firstId);
             pcvList.systemValues.acc = _service.getAccDetailsEntry();
+            foreach (var i in pcvList.EntryCV)
+            {
+                i.screenCode = "PCV";
+            }
 
             return View("Entry_PCV_ReadOnly", pcvList);
         }
@@ -1160,6 +1149,10 @@ namespace ExpenseProcessingSystem.Controllers
             ssList.systemValues.ewt = _service.getVendorTaxRate(firstId);
             ssList.systemValues.vat = _service.getVendorVat(firstId);
             ssList.systemValues.acc = _service.getAccDetailsEntry();
+            foreach(var i in ssList.EntryCV)
+            {
+                i.screenCode = "SS";
+            }
 
             return View("Entry_SS_ReadOnly", ssList);
         }
@@ -1186,6 +1179,21 @@ namespace ExpenseProcessingSystem.Controllers
         public IActionResult RedirectCont2(string Cont, string Method, string[] IdsArr)
         {
             return RedirectToAction(Method, Cont, new { IdsArr = IdsArr });
+        }
+
+        public EntryCVViewModelList PopulateEntryCV(EntryCVViewModelList viewModel)
+        {
+            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
+            viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
+            viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
+            viewModel.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
+            viewModel.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
+            viewModel.systemValues.acc = _service.getAccDetailsEntry();
+
+            viewModel.expenseYear = DateTime.Today.Year.ToString();
+            viewModel.expenseDate = DateTime.Today;
+
+            return viewModel;
         }
 
         //------------------------------------------------------------------

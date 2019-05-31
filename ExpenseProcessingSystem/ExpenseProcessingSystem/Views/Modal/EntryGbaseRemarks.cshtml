@@ -2,6 +2,12 @@
 <div id="gBaseRemarks" class="flex-c">
     <div id="table">
         <input type="hidden" id="parentId" value="@ViewBag.parentID" />
+        <div id="divPayee_SS" style="display:none;">
+            Payee :
+            <p class="dis-inline-block w-49">
+                <input class="input" id="payee_SS" name="vendor" readonly="readonly" type="text" value="">
+            </p>
+        </div>
         <table class="table table-bordered editable-th" id="gBaseTable">
             <colgroup>
                 <col />
@@ -25,7 +31,7 @@
                     <td><input type="text" class="gInvoiceNo" /></td>
                     <td><input type="text" class="gDescription" /></td>
                     <td><input type="number" min="0" class="gAmount" style="width:100%" /></td>
-                    <td><div class="flex-c"><span class="table-remove glyphicon glyphicon-remove"></span></div>
+                    <td><div class="flex-c"></div>
                 </tr>
             </tbody>
         </table>
@@ -46,6 +52,11 @@
             }
             $("#add_row_btn").css("pointer-events", "none");
             $("#saveGbase").css("pointer-events", "none");
+        }
+
+        if ($('#EntryCV_' + idNum + '__screenCode').val() == "SS") {
+            $('#payee_SS').val($("#item_" + idNum).find(".txtPayee option:selected").text());
+            $('#divPayee_SS').show();
         }
     });
 </script>

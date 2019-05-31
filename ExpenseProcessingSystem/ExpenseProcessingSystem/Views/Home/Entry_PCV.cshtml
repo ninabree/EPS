@@ -279,7 +279,8 @@ $(function () {
             "id": id,
             "vendor": $("#vendorName option:selected").text(),
             "account": $("#" + pNode.id).find(".txtAcc option:selected").text(),
-            "amount": $("#" + pNode.id).find(".txtGross").val()
+            "amount": $("#" + pNode.id).find(".txtGross").val(),
+            "screencode": $("#" + pNode.id).find(".hiddenScreencode").val()
         }, function (response, status, xhr) {
             if (status == "error") {
                 alert("Something went wrong.");

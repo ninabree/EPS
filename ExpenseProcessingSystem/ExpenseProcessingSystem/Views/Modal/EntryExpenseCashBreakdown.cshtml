@@ -10,7 +10,7 @@
     <body>
         <div id="cashBreakdownBody">
             @Html.HiddenFor(x => Model.id, new { @id = "parentIdPCVSSTable" })
-            <div id="divVendor">Vendor/Employee : <p class="dis-inline-block w-49">@Html.TextBoxFor(x => Model.vendor, new { @id = "reqVendor", @readonly = "readonly", @class = "input" })</p></div>
+            <div id="divVendor">@if (Model.screencode != "SS") {<text>Vendor/Employee :</text> }else{<text>Payee :</text>} <p class="dis-inline-block w-49">@Html.TextBoxFor(x => Model.vendor, new { @id = "reqVendor", @readonly = "readonly", @class = "input" })</p></div>
             <div>Account :<p class="dis-inline-block w-49">@Html.TextBoxFor(x => Model.accountName, new { @id = "reqAccount", @readonly = "readonly", @class = "input" })</p></div>
             <div>Amount :<p class="dis-inline-block w-49">@Html.TextBoxFor(x => Model.amount, new { @id = "reqAmount", @readonly = "readonly", @class = "input" })</p></div>
             <div class="flex-c">
@@ -65,9 +65,7 @@
             }
             $(".cashBDAmountTotal").val(round(amountTotal, 2));
         }
-        //if ($(".hiddenScreencode").val() == "SS") {
-        //    $('#divVendor').css("display", "none");
-        //}
+
         $(function () {
             $("table").on("change", "input.txtNoPCS", function (e) {
                 var cashBDModalpNode = $(this.parentNode)[0].parentNode;

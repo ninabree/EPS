@@ -184,9 +184,6 @@
         var trs = $("#inputTable").find("tbody").find("tr");
         for (var cnt = 0; cnt < trs.length - 2; cnt++) {
             reqBtnDisable(cnt); 
-            //if ($("#divCashBD_" + cnt).has("input").length == 0) {
-            //    $('EntryCV_' + cnt + '__modalInputFlag').val(0);
-            //};
         }
 
         $(function () {
@@ -299,7 +296,8 @@
                     "id": id,
                     "vendor": $("#" + pNode.id).find(".txtPayee option:selected").text(),
                     "account": $("#" + pNode.id).find(".txtAcc option:selected").text(),
-                    "amount": $("#" + pNode.id).find(".txtGross").val()
+                    "amount": $("#" + pNode.id).find(".txtGross").val(),
+                    "screencode": $("#" + pNode.id).find(".hiddenScreencode").val()
                 }, function (response, status, xhr) {
                     if (status == "error") {
                         alert("Something went wrong.");
