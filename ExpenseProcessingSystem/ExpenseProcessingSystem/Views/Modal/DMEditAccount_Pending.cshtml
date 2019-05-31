@@ -20,6 +20,7 @@
                 <th>Fund</th>
                 <th colspan="2">FBT</th>
                 <th colspan="2">Account Group</th>
+                <th colspan="2">Currency</th>
                 <th>Status</th>
             </tr>
             @if (Model != null)
@@ -61,6 +62,21 @@
                             }
                             @Html.DropDownListFor(item => item[i].Account_Group_MasterID,
                                                 grpList,
+                                                new { @class = "w-full input" })
+                        </td>
+                        <td colspan="2">
+                            @{
+                                List<SelectListItem> currList = new List<SelectListItem>();
+                                currList.Add(new SelectListItem
+                                {
+                                    Text = "--" + Model[i].Account_Currency_Name + "--",
+                                    Value = Model[i].Account_Currency_MasterID + "",
+                                    Selected = true
+                                });
+                                currList = (List<SelectListItem>)@ViewBag.currList;
+                            }
+                            @Html.DropDownListFor(item => item[i].Account_Currency_MasterID,
+                                                currList,
                                                 new { @class = "w-full input" })
                         </td>
                         <td>@Html.TextBoxFor(item => item[i].Account_Status, new { @class = "w-full", @readonly = "readonly" })</td>

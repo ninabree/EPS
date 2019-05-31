@@ -264,7 +264,11 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             Account_FBT_Name = _context.DMFBT.Where(x => x.FBT_MasterID == m.Pending_Account_FBT_MasterID)
                                             .Select(x => x.FBT_Name).FirstOrDefault(),
                             Account_Group_Name = _context.DMAccountGroup.Where(x => x.AccountGroup_MasterID == m.Pending_Account_Group_MasterID)
+                                            .Where(x => x.AccountGroup_isActive == true)
                                             .Select(x => x.AccountGroup_Name).FirstOrDefault(),
+                            Account_Currency_Name = _context.DMCurrency.Where(x => x.Curr_MasterID == m.Pending_Account_Currency_MasterID)
+                                            .Where(x => x.Curr_isActive == true)
+                                            .Select(x => x.Curr_Name).FirstOrDefault(),
                             Account_Name = m.Pending_Account_Name,
                             Account_Code = m.Pending_Account_Code,
                             Account_Cust = m.Pending_Account_Cust,
@@ -303,7 +307,11 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             Account_FBT_Name = _context.DMFBT.Where(x => x.FBT_MasterID == m.Pending_Account_FBT_MasterID)
                                             .Select(x => x.FBT_Name).FirstOrDefault(),
                             Account_Group_Name = _context.DMAccountGroup.Where(x => x.AccountGroup_MasterID == m.Pending_Account_Group_MasterID)
+                                            .Where(x => x.AccountGroup_isActive == true)
                                             .Select(x => x.AccountGroup_Name).FirstOrDefault(),
+                            Account_Currency_Name = _context.DMCurrency.Where(x => x.Curr_MasterID == m.Pending_Account_Currency_MasterID)
+                                            .Where(x=> x.Curr_isActive == true)
+                                            .Select(x => x.Curr_Name).FirstOrDefault(),
                             Account_Name = m.Pending_Account_Name,
                             Account_Code = m.Pending_Account_Code,
                             Account_Cust = m.Pending_Account_Cust,
@@ -878,6 +886,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             mod.NewAccountVM = vmList;
             mod.FbtList = getFbtSelectList();
             mod.AccGrp = getAccGroupSelectList();
+            mod.CurrList = getCurrencySelectList();
             return mod;
         }
         public NewAccountGroupListViewModel addAccountGroup()
@@ -1071,8 +1080,12 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                            join d in _context.DMFBT on a.Account_FBT_MasterID equals d.FBT_MasterID
                            select new { a.Account_ID, d.FBT_Name, d.FBT_MasterID }).ToList();
             var groupList = (from a in mList
-                           join d in _context.DMAccountGroup on a.Account_Group_MasterID equals d.AccountGroup_MasterID
+                             join d in _context.DMAccountGroup on a.Account_Group_MasterID equals d.AccountGroup_MasterID
                              select new { a.Account_ID, d.AccountGroup_Name, d.AccountGroup_MasterID }).ToList();
+            var currList = (from a in mList
+                             join d in _context.DMCurrency on a.Account_Currency_MasterID equals d.Curr_MasterID
+                            where d.Curr_isActive == true
+                            select new { a.Account_ID, d.Curr_Name, d.Curr_MasterID }).ToList();
             var statList = (from a in mList
                             join d in _context.StatusList on a.Account_Status_ID equals d.Status_ID
                             select new { a.Account_ID, d.Status_Name }).ToList();
@@ -1088,6 +1101,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     {
                         var fbt = fbtList.Where(a => a.Account_ID == m.Account_ID).FirstOrDefault();
                         var group = groupList.Where(a => a.Account_ID == m.Account_ID).FirstOrDefault();
+                        var curr = currList.Where(a => a.Account_ID == m.Account_ID).FirstOrDefault();
                         DMAccountViewModel vm = new DMAccountViewModel
                         {
                             Account_MasterID = m.Account_MasterID,
@@ -1101,6 +1115,8 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             Account_Fund = m.Account_Fund,
                             Account_Group_MasterID = (group == null) || (group.AccountGroup_MasterID.Equals(0)) ? 0 : group.AccountGroup_MasterID,
                             Account_Group_Name = groupList.Where(a => a.Account_ID == m.Account_ID).Select(x=> x.AccountGroup_Name).FirstOrDefault() ?? "",
+                            Account_Currency_MasterID = (curr == null) || (curr.Curr_MasterID.Equals(0)) ? 0 : curr.Curr_MasterID,
+                            Account_Currency_Name = currList.Where(a => a.Account_ID == m.Account_ID).Select(x => x.Curr_Name).FirstOrDefault() ?? "",
                             Account_Creator_ID = m.Account_Creator_ID,
                             Account_Created_Date = m.Account_Created_Date,
                             Account_Last_Updated = DateTime.Now,
@@ -1403,6 +1419,14 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 grpList.Add(new SelectListItem() { Text = x.AccountGroup_Name, Value = x.AccountGroup_MasterID + "" });
             });
             return grpList;
+        }
+        public List<SelectListItem> getCurrencySelectList()
+        {
+            List<SelectListItem> currList = new List<SelectListItem>();
+            _context.DMCurrency.Where(x => x.Curr_isDeleted == false && x.Curr_isActive == true).ToList().ForEach(x => {
+                currList.Add(new SelectListItem() { Text = x.Curr_Name, Value = x.Curr_MasterID + "" });
+            });
+            return currList;
         }
 
         public List<DMTRViewModel> getTRList()
