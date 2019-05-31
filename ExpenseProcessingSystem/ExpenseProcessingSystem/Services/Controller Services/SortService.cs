@@ -380,6 +380,16 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     viewData = "glyph-12";
                     vdInfo = "glyphicon-menu-up";
                     break;
+                case "acc_curr":
+                    tempList = tempList.OrderBy(s => s.Account_Currency_Name);
+                    viewData = "glyph-13";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "acc_curr_desc":
+                    tempList = tempList.OrderByDescending(s => s.Account_Currency_Name);
+                    viewData = "glyph-13";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
                 case "name":
                     tempList = tempList.OrderBy(s => s.Account_Name);
                     viewData = "glyph-1";

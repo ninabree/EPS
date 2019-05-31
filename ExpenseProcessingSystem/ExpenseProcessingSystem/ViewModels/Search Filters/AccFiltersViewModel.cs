@@ -21,6 +21,8 @@ namespace ExpenseProcessingSystem.ViewModels.Search_Filters
         public string AF_Div { get; set; }
         [Display(Name = "Account Group")]
         public string AF_Group { get; set; }
+        [Display(Name = "Account Currency")]
+        public string AF_Currency { get; set; }
         [Display(Name = "Account FBT")]
         public string AF_FBT { get; set; }
         [Display(Name = "Creator Name")]

@@ -560,6 +560,7 @@ namespace ExpenseProcessingSystem.Controllers
                 vmList = _service.editDeleteAccount(IdsArr);
                 ViewBag.fbtList = _service.getFbtSelectList();
                 ViewBag.grpList = _service.getAccGroupSelectList();
+                ViewBag.currList = _service.getCurrencySelectList();
             }
             return View(vmList);
         }

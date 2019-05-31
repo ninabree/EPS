@@ -27,6 +27,9 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "Account Group")]
         public int Account_Group_MasterID { get; set; }
         public string Account_Group_Name { get; set; }
+        [Display(Name = "Account Currency")]
+        public int Account_Currency_MasterID { get; set; }
+        public string Account_Currency_Name { get; set; }
         public int Account_Creator_ID { get; set; }
         public int Account_Approver_ID { get; set; }
         [Display(Name = "Creator Name")]

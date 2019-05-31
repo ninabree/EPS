@@ -10,6 +10,7 @@ namespace ExpenseProcessingSystem.ViewModels.NewRecord
         public List<NewAccountViewModel> NewAccountVM { get; set; }
         public List<SelectListItem> FbtList = new List<SelectListItem>();
         public List<SelectListItem> AccGrp = new List<SelectListItem>();
+        public List<SelectListItem> CurrList = new List<SelectListItem>();
     }
     public class NewAccountViewModel
     {
@@ -36,5 +37,7 @@ namespace ExpenseProcessingSystem.ViewModels.NewRecord
         public int Account_FBT_MasterID { get; set; }
         [Display(Name = "Account Group")]
         public int Account_Group_MasterID { get; set; }
+        [Display(Name = "Account Currency")]
+        public int Account_Currency_MasterID { get; set; }
     }
 }

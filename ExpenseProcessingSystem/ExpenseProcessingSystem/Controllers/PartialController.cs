@@ -192,6 +192,7 @@ namespace ExpenseProcessingSystem.Controllers
             ViewData["AccountApproverSortParm"] = sortOrder == "acc_approvr_desc" ? "acc_approvr" : "acc_approvr_desc";
             ViewData["AccountLastUpdatedSortParm"] = sortOrder == "acc_last_updte_desc" ? "acc_last_updte" : "acc_last_updte_desc";
             ViewData["AccountGrpSortParm"] = sortOrder == "acc_grp_desc" ? "acc_grp" : "acc_grp_desc";
+            ViewData["AccountCurrencySortParm"] = sortOrder == "acc_curr_desc" ? "acc_curr" : "acc_curr_desc";
             ViewData["AccountSortParm"] = sortOrder == "name_desc" ? "name" : "name_desc";
 
             if (searchString != null) { pg = 1; }
