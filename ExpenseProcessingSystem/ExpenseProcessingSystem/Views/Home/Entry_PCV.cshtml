@@ -146,12 +146,6 @@
                 </tbody>
             </table>
         </div>
-        <div id="voucherPreview">
-            <div id="tbl-lbl">
-                <div class="dis-inline-block"><p>Preview of Voucher:</p></div>
-            </div>
-            @Html.Partial("PCVPartial")
-        </div>
         <div id="entry-controls" class="m-b-10">
             <div class="flex-sb">
                 <div>
@@ -284,8 +278,9 @@ $(function () {
         modalDivBody.load("@Url.Action("EntryExpenseCashBreakdown", "Modal")", {
             "id": id,
             "vendor": $("#vendorName option:selected").text(),
-            "account": $("#" + pNode.id).find(".txtAcc").val(),
-            "amount": $("#" + pNode.id).find(".txtGross").val()
+            "account": $("#" + pNode.id).find(".txtAcc option:selected").text(),
+            "amount": $("#" + pNode.id).find(".txtGross").val(),
+            "screencode": $("#" + pNode.id).find(".hiddenScreencode").val()
         }, function (response, status, xhr) {
             if (status == "error") {
                 alert("Something went wrong.");

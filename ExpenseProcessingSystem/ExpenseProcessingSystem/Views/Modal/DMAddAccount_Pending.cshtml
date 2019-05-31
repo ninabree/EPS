@@ -20,6 +20,7 @@
                 <th>Fund</th>
                 <th colspan="2">FBT</th>
                 <th colspan="2">Account Group</th>
+                <th colspan="2">Currency</th>
                 <th></th>
             </tr>
             <tr id="NewAccount-Tr-0">
@@ -37,6 +38,11 @@
                 <td colspan="2">
                     @Html.DropDownListFor(m => m.NewAccountVM[0].Account_Group_MasterID,
                     Model.AccGrp,
+                    new { @class = "w-full input" })
+                </td>
+                <td colspan="2">
+                    @Html.DropDownListFor(m => m.NewAccountVM[0].Account_Currency_MasterID,
+                    Model.CurrList,
                     new { @class = "w-full input" })
                 </td>
                 <td>

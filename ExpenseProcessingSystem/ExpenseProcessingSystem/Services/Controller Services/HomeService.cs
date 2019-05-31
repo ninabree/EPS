@@ -559,6 +559,7 @@ namespace ExpenseProcessingSystem.Services
                                   pp.Pending_Account_Name,
                                   pp.Pending_Account_FBT_MasterID,
                                   pp.Pending_Account_Group_MasterID,
+                                  pp.Pending_Account_Currency_MasterID,
                                   pp.Pending_Account_Code,
                                   pp.Pending_Account_No,
                                   pp.Pending_Account_Cust,
@@ -588,6 +589,7 @@ namespace ExpenseProcessingSystem.Services
                     Account_MasterID = pending.Pending_Account_MasterID,
                     Account_FBT_MasterID = pending.Pending_Account_FBT_MasterID,
                     Account_Group_MasterID = pending.Pending_Account_Group_MasterID,
+                    Account_Currency_MasterID = pending.Pending_Account_Currency_MasterID,
                     Account_Code = pending.Pending_Account_Code,
                     Account_Cust = pending.Pending_Account_Cust,
                     Account_Div = pending.Pending_Account_Div,
@@ -1651,6 +1653,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Account_MasterID = ++masterIDMax,
                     Pending_Account_FBT_MasterID = dm.Account_FBT_MasterID,
                     Pending_Account_Group_MasterID = dm.Account_Group_MasterID,
+                    Pending_Account_Currency_MasterID = dm.Account_Currency_MasterID,
                     Pending_Account_Code = dm.Account_Code,
                     Pending_Account_Cust = dm.Account_Cust,
                     Pending_Account_Div = dm.Account_Div,
@@ -1682,6 +1685,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Account_MasterID = dm.Account_MasterID,
                     Pending_Account_FBT_MasterID = dm.Account_FBT_MasterID,
                     Pending_Account_Group_MasterID = dm.Account_Group_MasterID,
+                    Pending_Account_Currency_MasterID = dm.Account_Currency_MasterID,
                     Pending_Account_Code = dm.Account_Code,
                     Pending_Account_Cust = dm.Account_Cust,
                     Pending_Account_Div = dm.Account_Div,
@@ -1713,6 +1717,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Account_MasterID = dm.Account_MasterID,
                     Pending_Account_FBT_MasterID = dm.Account_FBT_MasterID,
                     Pending_Account_Group_MasterID = dm.Account_Group_MasterID,
+                    Pending_Account_Currency_MasterID = dm.Account_Currency_MasterID,
                     Pending_Account_Code = dm.Account_Code,
                     Pending_Account_Cust = dm.Account_Cust,
                     Pending_Account_Div = dm.Account_Div,
@@ -2976,7 +2981,18 @@ namespace ExpenseProcessingSystem.Services
                             expenseAmor.Add(amortization);
                         }
                     }
-                    else if(expenseType == GlobalSystemValues.TYPE_PC || expenseType == GlobalSystemValues.TYPE_SS)
+                    else if(expenseType == GlobalSystemValues.TYPE_PC)
+                    {
+                        foreach (var cashbd in cv.cashBreakdown)
+                        {
+                            expenseCashBreakdown.Add(new ExpenseEntryCashBreakdownModel
+                            {
+                                CashBreak_Denimination = cashbd.cashDenimination,
+                                CashBreak_NoPcs = cashbd.cashNoPC,
+                                CashBreak_Amount = cashbd.cashAmount
+                            });
+                        }
+                    }else if(expenseType == GlobalSystemValues.TYPE_SS && cv.ccyAbbrev == "PHP")
                     {
                         foreach (var cashbd in cv.cashBreakdown)
                         {
@@ -3135,7 +3151,7 @@ namespace ExpenseProcessingSystem.Services
                     amtDetails = amtDetails,
                     gBaseRemarksDetails = remarksDtl,
                     cashBreakdown = cashBreakdown,
-                    modalInputFlag = 1
+                    modalInputFlag = (cashBreakdown == null || cashBreakdown.Count == 0) ? 0 : 1
                 };
                 cvList.Add(cvDtl);
             }

@@ -408,6 +408,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         Account_Fund = m.Pending_Account_Fund,
                         Account_FBT_MasterID = m.Pending_Account_FBT_MasterID,
                         Account_Group_MasterID = m.Pending_Account_Group_MasterID,
+                        Account_Currency_MasterID = m.Pending_Account_Currency_MasterID,
                         Account_Creator_ID = m.Pending_Account_Creator_ID,
                         Account_Approver_ID = m.Pending_Account_Approver_ID.Equals(null) ? 0 : m.Pending_Account_Approver_ID,
                         Account_Created_Date = m.Pending_Account_Filed_Date,
@@ -432,7 +433,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             mList = mList.Where("Account_" + subStr + " = @0 AND  Account_isDeleted == @1", property.GetValue(filters.AF), false)
                                      .Select(e => e).AsQueryable();
                         }
-                        else if (subStr == "Creator_Name" || subStr == "Approver_Name" || subStr == "Status" || subStr == "Group")
+                        else if (subStr == "Creator_Name" || subStr == "Approver_Name" || subStr == "Status" || subStr == "Group" || subStr == "Currency")
                         {
                             //get all userIDs of creator or approver that contains string
                             var names = _context.User
@@ -447,6 +448,10 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             var grp = _context.DMAccountGroup
                               .Where(x => (x.AccountGroup_Name.Contains(property.GetValue(filters.AF).ToString())))
                               .Select(x => x.AccountGroup_MasterID).ToList();
+                            //get all currenct IDs that contains string
+                            var curr = _context.DMCurrency
+                              .Where(x => (x.Curr_Name.Contains(property.GetValue(filters.AF).ToString())))
+                              .Select(x => x.Curr_MasterID).ToList();
                             if (subStr == "Approver_Name")
                             {
                                 mList = mList.Where(x => names.Contains(x.Account_Approver_ID) && x.Account_isDeleted == false)
@@ -465,6 +470,11 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             else if (subStr == "Group")
                             {
                                 mList = mList.Where(x => grp.Contains(x.Account_Group_MasterID) && x.Account_isDeleted == false)
+                                         .Select(e => e).AsQueryable();
+                            }
+                            else if (subStr == "Currency")
+                            {
+                                mList = mList.Where(x => curr.Contains(x.Account_Currency_MasterID) && x.Account_isDeleted == false)
                                          .Select(e => e).AsQueryable();
                             }
                         }
@@ -499,6 +509,10 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             var groupList = (from a in mList
                            join d in _context.DMAccountGroup on a.Account_Group_MasterID equals d.AccountGroup_MasterID
                              select new { a.Account_ID, d.AccountGroup_Name }).ToList();
+            var currList = (from a in mList
+                             join d in _context.DMCurrency on a.Account_Currency_MasterID equals d.Curr_MasterID
+                            where d.Curr_isActive == true
+                             select new { a.Account_ID, d.Curr_Name }).ToList();
             var statList = (from a in mList
                              join d in _context.StatusList on a.Account_Status_ID equals d.Status_ID
                              select new { a.Account_ID, d.Status_Name }).ToList();
@@ -524,6 +538,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     Account_Created_Date = m.Account_Created_Date,
                     Account_Last_Updated = m.Account_Last_Updated,
                     Account_Status_ID = m.Account_Status_ID,
+                    Account_Currency_Name = currList.Where(a => a.Account_ID == m.Account_ID).Select(a => a.Curr_Name).FirstOrDefault() ?? "",
                     Account_Status = statList.Where(a => a.Account_ID == m.Account_ID).Select(a => a.Status_Name).FirstOrDefault() ?? "N/A"
                 };
                 vmList.Add(vm);

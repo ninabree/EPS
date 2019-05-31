@@ -113,6 +113,7 @@ namespace ExpenseProcessingSystem.Services
                     AF_Cust = ctx.Session.GetString("AF_Cust") ?? "",
                     AF_Div = ctx.Session.GetString("AF_Div") ?? "",
                     AF_Group = ctx.Session.GetString("AF_Group") ?? "",
+                    AF_Currency = ctx.Session.GetString("AF_Currency") ?? "",
                     AF_FBT = ctx.Session.GetString("AF_FBT") ?? "",
                     AF_Creator_Name = ctx.Session.GetString("AF_Creator_Name") ?? "",
                     AF_Approver_Name = ctx.Session.GetString("AF_Approver_Name") ?? "",

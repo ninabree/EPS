@@ -120,6 +120,7 @@
                             <td id="req_@i">
                                 <a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#"></a>
                                 @Html.HiddenFor(x => Model.EntryCV[i].modalInputFlag, new { @class = "hiddenItem" })
+                                @Html.HiddenFor(x => Model.EntryCV[i].screenCode, new { @class = "hiddenScreencode" })
                                 <div id="divCashBD_@i">
                                     @for (int y = 0; y < Model.EntryCV[i].cashBreakdown.Count(); y++)
                                     {
@@ -148,12 +149,6 @@
                     </tr>
                 </tbody>
             </table>
-        </div>
-        <div id="voucherPreview">
-            <div id="tbl-lbl">
-                <div class="dis-inline-block"><p>Preview of Voucher:</p></div>
-            </div>
-            @Html.Partial("PCVPartial")
         </div>
         <div id="entry-status" class="m-t-10 m-b-10">
             <div class="dis-inline-block"><label>Status: </label></div>
@@ -231,7 +226,7 @@
             </div>
         </div>
         <div id="modalDiv">
-            @Html.Partial("ModalPartial")
+            @Html.Partial("ModalGBase")
         </div>
     </div>
 }
@@ -286,8 +281,9 @@
             modalDivBody.load("@Url.Action("EntryExpenseCashBreakdown", "Modal")", {
                 "id": id,
                 "vendor": $("#vendor option:selected").text(),
-                "account": $("#" + pNode.id).find(".txtAcc").val(),
-                "amount": $("#" + pNode.id).find(".txtGross").val()
+                "account": $("#" + pNode.id).find(".txtAcc option:selected").text(),
+                "amount": $("#" + pNode.id).find(".txtGross").val(),
+                "screencode": $("#" + pNode.id).find(".hiddenScreencode").val()
             }, function (response, status, xhr) {
                 if (status == "error") {
                     alert("Something went wrong.");

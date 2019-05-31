@@ -560,6 +560,7 @@ namespace ExpenseProcessingSystem.Controllers
                 vmList = _service.editDeleteAccount(IdsArr);
                 ViewBag.fbtList = _service.getFbtSelectList();
                 ViewBag.grpList = _service.getAccGroupSelectList();
+                ViewBag.currList = _service.getCurrencySelectList();
             }
             return View(vmList);
         }
@@ -972,16 +973,17 @@ namespace ExpenseProcessingSystem.Controllers
             };
             return PartialView(model);
         }
-        //_________________________//[Petty Cash Expense]//_____________________________
+        //_________________________//[Petty Cash/Cash Advance(Suspense sundry) Expense]//_____________________________
         //Expense Cash Breakdown
-        public IActionResult EntryExpenseCashBreakdown(string id, string vendor, string account, double amount)
+        public IActionResult EntryExpenseCashBreakdown(string id, string vendor, string account, double amount, string screencode)
         {
             PCVCashBreakdownViewModel model = new PCVCashBreakdownViewModel();
 
             model.id = id;
             model.vendor = vendor;
-            model.accountName = _service.GetAccountName(account);
+            model.accountName = account;
             model.amount = amount;
+            model.screencode = screencode;
             model.cashBreakdown = new List<ExpenseEntryCashBreakdownModel>();
 
 
@@ -1002,6 +1004,7 @@ namespace ExpenseProcessingSystem.Controllers
             ViewBag.parentID = IdsArr[0];
             return PartialView();
         }
+
         public IActionResult EntryExpenseEWT(string id, string taxpayor)
         {
             ViewBag.taxpayor = taxpayor;
