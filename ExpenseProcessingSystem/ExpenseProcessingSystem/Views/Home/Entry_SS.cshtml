@@ -143,12 +143,6 @@
                 </tbody>
             </table>
         </div>
-        <div id="voucherPreview" class="border-solid">
-            <div id="tbl-lbl">
-                <div class="dis-inline-block"><p>Preview of Voucher:</p></div>
-            </div>
-            @Html.Partial("SSPartial")
-        </div>
         <div id="entry-controls" class="m-b-10">
             <div class="flex-sb">
                 <div>
@@ -190,6 +184,9 @@
         var trs = $("#inputTable").find("tbody").find("tr");
         for (var cnt = 0; cnt < trs.length - 2; cnt++) {
             reqBtnDisable(cnt); 
+            //if ($("#divCashBD_" + cnt).has("input").length == 0) {
+            //    $('EntryCV_' + cnt + '__modalInputFlag').val(0);
+            //};
         }
 
         $(function () {
@@ -300,8 +297,8 @@
 
                 modalDivBody.load("@Url.Action("EntryExpenseCashBreakdown", "Modal")", {
                     "id": id,
-                    "vendor": $("#vendorName option:selected").text(),
-                    "account": $("#" + pNode.id).find(".txtAcc").val(),
+                    "vendor": $("#" + pNode.id).find(".txtPayee option:selected").text(),
+                    "account": $("#" + pNode.id).find(".txtAcc option:selected").text(),
                     "amount": $("#" + pNode.id).find(".txtGross").val()
                 }, function (response, status, xhr) {
                     if (status == "error") {
@@ -316,17 +313,6 @@
                 });
 
                 $('#myModal').modal('show');
-            });
-
-            //Reset Cash breakdown when Gross amount changed
-            $("table").on("change", "input.txtGross", function (e) {
-                var pNode = $(this.parentNode)[0].parentNode;
-
-                var itemNo = pNode.id; //jquery obj
-                var ret = itemNo.replace('item_', '');
-                $('#divCashBD_' + ret).empty();
-                $('#EntryCV_' + ret + '__modalInputFlag').val(0);
-        
             });
 
             //Enable Cash breakdown button if currency = PHP, disable if not.
@@ -387,7 +373,7 @@
     };
 
     function reqBtnDisable(idx){
-        if ($('#EntryCV_' + idx + '__ccy').find(':selected').text() != "PHP") {
+        if ($('#EntryCV_' + idx + '__ccy option:selected').text() != "PHP") {
             $('#req_' + idx).find('.reqBtn').css("pointer-events", "none");
             $('#req_' + idx).find('.hiddenCcyAbbrev').val("");
         } else {

@@ -981,7 +981,7 @@ namespace ExpenseProcessingSystem.Controllers
 
             model.id = id;
             model.vendor = vendor;
-            model.accountName = _service.GetAccountName(account);
+            model.accountName = account;
             model.amount = amount;
             model.cashBreakdown = new List<ExpenseEntryCashBreakdownModel>();
 
