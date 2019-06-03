@@ -7,6 +7,7 @@
 @inject IJsonHelper Json;
 
 <div class="tabContent">
+    <input id="_screen" type="hidden" value="nc" />
     @using (Html.BeginForm("AddNewNC", "Home", FormMethod.Post, new { @class = "validate-form" }))
     {
         <div id="tbl-lbl">
@@ -49,12 +50,12 @@
                                     <div id="remark_@i">
                                         <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
                                         @*@for (int y = 0; y < Model.EntryNC[i].gBaseRemarksDetails.Count(); y++)
-                                        {
-                                            @Html.HiddenFor(x => Model.EntryNC[i].gBaseRemarksDetails[y].docType);
-                                            @Html.HiddenFor(x => Model.EntryNC[i].gBaseRemarksDetails[y].desc);
-                                            @Html.HiddenFor(x => Model.EntryNC[i].gBaseRemarksDetails[y].invNo);
-                                            @Html.HiddenFor(x => Model.EntryNC[i].gBaseRemarksDetails[y].amount);
-                                        }*@
+                                            {
+                                                @Html.HiddenFor(x => Model.EntryNC[i].gBaseRemarksDetails[y].docType);
+                                                @Html.HiddenFor(x => Model.EntryNC[i].gBaseRemarksDetails[y].desc);
+                                                @Html.HiddenFor(x => Model.EntryNC[i].gBaseRemarksDetails[y].invNo);
+                                                @Html.HiddenFor(x => Model.EntryNC[i].gBaseRemarksDetails[y].amount);
+                                            }*@
                                     </div>
                                 </div>
                             </td>

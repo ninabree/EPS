@@ -9,6 +9,7 @@
 @using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor HttpContextAccessor
 
+<input id="_screen" type="hidden" value="cv" />
 @using (Html.BeginForm("VerAppModPCV", "Home", FormMethod.Post, new { @class = "validate-form" }))
 {
     <div class="tabContent">
@@ -120,6 +121,7 @@
                             <td id="req_@i">
                                 <a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#"></a>
                                 @Html.HiddenFor(x => Model.EntryCV[i].modalInputFlag, new { @class = "hiddenItem" })
+                                @Html.HiddenFor(x => Model.EntryCV[i].screenCode, new { @class = "hiddenScreencode" })
                                 <div id="divCashBD_@i">
                                     @for (int y = 0; y < Model.EntryCV[i].cashBreakdown.Count(); y++)
                                     {
@@ -225,7 +227,7 @@
             </div>
         </div>
         <div id="modalDiv">
-            @Html.Partial("ModalPartial")
+            @Html.Partial("ModalGBase")
         </div>
     </div>
 }
@@ -280,8 +282,9 @@
             modalDivBody.load("@Url.Action("EntryExpenseCashBreakdown", "Modal")", {
                 "id": id,
                 "vendor": $("#vendor option:selected").text(),
-                "account": $("#" + pNode.id).find(".txtAcc").val(),
-                "amount": $("#" + pNode.id).find(".txtGross").val()
+                "account": $("#" + pNode.id).find(".txtAcc option:selected").text(),
+                "amount": $("#" + pNode.id).find(".txtGross").val(),
+                "screencode": $("#" + pNode.id).find(".hiddenScreencode").val()
             }, function (response, status, xhr) {
                 if (status == "error") {
                     alert("Something went wrong.");

@@ -14,6 +14,7 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         public string account { get; set; }
         public string accountName { get; set; }
         public double amount { get; set; }
+        public string screencode { get; set; }
         public List<ExpenseEntryCashBreakdownModel> cashBreakdown { get; set; }
     }
 }

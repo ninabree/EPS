@@ -979,9 +979,9 @@ namespace ExpenseProcessingSystem.Controllers
             };
             return PartialView(model);
         }
-        //_________________________//[Petty Cash Expense]//_____________________________
+        //_________________________//[Petty Cash/Cash Advance(Suspense sundry) Expense]//_____________________________
         //Expense Cash Breakdown
-        public IActionResult EntryExpenseCashBreakdown(string id, string vendor, string account, double amount)
+        public IActionResult EntryExpenseCashBreakdown(string id, string vendor, string account, double amount, string screencode)
         {
             PCVCashBreakdownViewModel model = new PCVCashBreakdownViewModel();
 
@@ -989,6 +989,7 @@ namespace ExpenseProcessingSystem.Controllers
             model.vendor = vendor;
             model.accountName = account;
             model.amount = amount;
+            model.screencode = screencode;
             model.cashBreakdown = new List<ExpenseEntryCashBreakdownModel>();
 
 
@@ -1009,6 +1010,7 @@ namespace ExpenseProcessingSystem.Controllers
             ViewBag.parentID = IdsArr[0];
             return PartialView();
         }
+
         public IActionResult EntryExpenseEWT(string id, string taxpayor)
         {
             ViewBag.taxpayor = taxpayor;

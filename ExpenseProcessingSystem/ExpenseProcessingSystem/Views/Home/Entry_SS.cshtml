@@ -7,6 +7,7 @@
 }
 
 <div class="tabContent">
+    <input id="_screen" type="hidden" value="cv" />
     @using (Html.BeginForm("AddNewSS", "Home", FormMethod.Post, new { @class = "validate-form" }))
     {
         <div id="tbl-lbl">
@@ -116,7 +117,7 @@
                                 <a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#"></a>
                                 @Html.HiddenFor(x => Model.EntryCV[i].modalInputFlag, new { @class = "hiddenItem" })
                                 @Html.HiddenFor(x => Model.EntryCV[i].screenCode, new { @class = "hiddenScreencode" })
-                                @Html.HiddenFor(x => Model.EntryCV[i].ccyAbbrev, new { @class = "hiddenCcyAbbrev"})
+                                @Html.HiddenFor(x => Model.EntryCV[i].ccyAbbrev, new { @class = "hiddenCcyAbbrev" })
                                 <div id="divCashBD_@i">
                                     @for (int y = 0; y < Model.EntryCV[i].cashBreakdown.Count(); y++)
                                     {
@@ -184,9 +185,6 @@
         var trs = $("#inputTable").find("tbody").find("tr");
         for (var cnt = 0; cnt < trs.length - 2; cnt++) {
             reqBtnDisable(cnt); 
-            //if ($("#divCashBD_" + cnt).has("input").length == 0) {
-            //    $('EntryCV_' + cnt + '__modalInputFlag').val(0);
-            //};
         }
 
         $(function () {
@@ -299,7 +297,8 @@
                     "id": id,
                     "vendor": $("#" + pNode.id).find(".txtPayee option:selected").text(),
                     "account": $("#" + pNode.id).find(".txtAcc option:selected").text(),
-                    "amount": $("#" + pNode.id).find(".txtGross").val()
+                    "amount": $("#" + pNode.id).find(".txtGross").val(),
+                    "screencode": $("#" + pNode.id).find(".hiddenScreencode").val()
                 }, function (response, status, xhr) {
                     if (status == "error") {
                         alert("Something went wrong.");
