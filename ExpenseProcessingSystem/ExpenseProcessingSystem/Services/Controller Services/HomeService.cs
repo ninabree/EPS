@@ -2911,7 +2911,10 @@ namespace ExpenseProcessingSystem.Services
                                                                 && x.VTV_TR_ID > 0)
                                                        .Select(q => q.VTV_TR_ID).ToList();
 
-            var select = new SelectList(_context.DMTR.Where(x => vendorTRIDList.Contains(x.TR_ID)).Select(q => new { q.TR_ID, TR_Tax_Rate = (q.TR_Tax_Rate * 100) }),
+            var select = new SelectList(_context.DMTR.Where(x => vendorTRIDList.Contains(x.TR_MasterID) 
+                                                            && x.TR_isActive == true
+                                                            && x.TR_isDeleted == false)
+                                                     .Select(q => new { q.TR_ID, TR_Tax_Rate = (q.TR_Tax_Rate * 100) }),
                         "TR_ID", "TR_Tax_Rate");
 
             return select;
@@ -2924,7 +2927,10 @@ namespace ExpenseProcessingSystem.Services
                                                                 && x.VTV_VAT_ID > 0)
                                                        .Select(q => q.VTV_VAT_ID).ToList();
 
-            var select = new SelectList(_context.DMVAT.Where(x => vendorVatIDList.Contains(x.VAT_ID)).Select(q => new { q.VAT_ID, VAT_Rate = (q.VAT_Rate * 100) }),
+            var select = new SelectList(_context.DMVAT.Where(x => vendorVatIDList.Contains(x.VAT_ID)
+                                                             && x.VAT_isActive == true
+                                                             && x.VAT_isDeleted == false)
+                                                      .Select(q => new { q.VAT_ID, VAT_Rate = (q.VAT_Rate * 100) }),
                         "VAT_ID", "VAT_Rate");
 
             return select;
