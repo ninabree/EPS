@@ -6,24 +6,41 @@
 @using ExpenseProcessingSystem.ViewModels.Entry
 @model DDVInterEntityViewModel
 
-@Html.HiddenFor(x => Model.Inter_ID, new { @id = "parentIdInterEntity" })
+@Html.HiddenFor(x => Model.Inter_ID, new { @id = "parentIdInter" })
 <table class="table voucher-tbl table-bordered">
     <tr>
         <td colspan="3"><label>Exchange Rate:</label></td>
-        <td colspan="1">@Html.TextBoxFor(m => m.Inter_Rate, new { @class = "w-full" })</td>
-        <td colspan="12"></td>
+        <td colspan="2">@Html.TextBoxFor(m => m.Inter_Rate, new { @class = "w-full" })</td>
+        <td colspan="11"></td>
     </tr>
     <tr>
         <td colspan="3"><label>PhP Amount</label></td>
-        <td colspan="1" id="curr1-abbr">@Html.DisplayFor(m => m.Inter_Currency1_ABBR)</td>
+        <td colspan="2" id="curr1-abbr">
+            @Html.DisplayFor(m => m.Inter_Currency1_ABBR_Name)
+            @Html.HiddenFor(m=> m.Inter_Currency1_ABBR_ID)
+        </td>
         <td colspan="4">@Html.TextBoxFor(m => m.Inter_Currency1_Amount)</td>
-        <td colspan="8"></td>
+        <td colspan="7"></td>
     </tr>
     <tr>
-        <td colspan="3"><label>USD Amount</label></td>
-        <td colspan="1" id="curr2-abbr">@Html.DisplayFor(m => m.Inter_Currency2_ABBR)</td>
+        <td colspan="3"><label id="curr2-lbl">USD Amount</label></td>
+        <td colspan="2" id="curr2-abbr">
+            <select id="@Html.IdFor(x => Model.Inter_Currency2_ABBR_ID)" class="input100 txtAcc" name="@Html.NameFor(x => Model.Inter_Currency2_ABBR_ID)">
+                @foreach (var groepModel in Model.CurrencyList)
+                {
+                    if (@groepModel.Value == @Model.Inter_Currency2_ABBR_ID)
+                    {
+                        <option value="@groepModel.Value" selected>@groepModel.Text</option>
+                    }
+                    else
+                    {
+                        <option value="@groepModel.Value" >@groepModel.Text</option>
+                    }
+                }
+            </select>
+        </td>
         <td colspan="4">@Html.TextBoxFor(m => m.Inter_Currency2_Amount)</td>
-        <td colspan="8"></td>
+        <td colspan="7">@Html.HiddenFor(m => m.Inter_Debit_Amount)</td>
     </tr>
     <tr>
         <td colspan="16"></td>
@@ -44,7 +61,7 @@
         <tr>
             <td rowspan=@rowCount colspan="3"> @Html.DisplayFor(m => @Model.Inter_Particular_Title) </td>
             <td colspan="5">@Html.DisplayFor(m => m.Inter_Particular1[0].Particular_Account_Name)</td>
-            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency1_ABBR)</td>
+            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency1_ABBR_Name)</td>
             <td colspan="1"></td>
             <td colspan="2" id="par1-0">@Html.DisplayFor(m => m.Inter_Particular1[0].Particular_Debit_Amount)</td>
             <td colspan="4"></td>
@@ -52,14 +69,14 @@
         <tr>
             <td colspan="5">@Html.DisplayFor(m => m.Inter_Particular1[1].Particular_Account_Name)</td>
             <td colspan="4"></td>
-            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency1_ABBR)</td>
+            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency1_ABBR_Name)</td>
             <td colspan="1"></td>
             <td colspan="2" id="par1-1">@Html.DisplayFor(m => m.Inter_Particular1[1].Particular_Credit_Amount)</td>
         </tr>
         <tr>
             <td colspan="5">@Html.DisplayFor(m => m.Inter_Particular1[2].Particular_Account_Name)</td>
             <td colspan="4"></td>
-            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency1_ABBR)</td>
+            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency1_ABBR_Name)</td>
             <td colspan="1"></td>
             <td colspan="2" id="par1-2">@Html.DisplayFor(m => m.Inter_Particular1[2].Particular_Credit_Amount)</td>
         </tr>
@@ -71,7 +88,7 @@
         <tr>
             <td rowspan=@rowCount colspan="3"> @Html.DisplayFor(m => @Model.Inter_Particular_Title) </td>
             <td colspan="5">@Html.DisplayFor(m => m.Inter_Particular2[0].Particular_Account_Name)</td>
-            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency1_ABBR)</td>
+            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency1_ABBR_Name)</td>
             <td colspan="1"></td>
             <td colspan="2" id="par2-0">@Html.DisplayFor(m => m.Inter_Particular2[0].Particular_Debit_Amount)</td>
             <td colspan="4"></td>
@@ -79,7 +96,7 @@
         <tr>
             <td colspan="5">@Html.DisplayFor(m => m.Inter_Particular2[1].Particular_Account_Name)</td>
             <td colspan="4"></td>
-            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency2_ABBR)</td>
+            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency2_ABBR_Name)</td>
             <td colspan="1" id="par2-0-1">@Html.DisplayFor(m => m.Inter_Rate)</td>
             <td colspan="2" id="par2-1">@Html.DisplayFor(m => m.Inter_Particular2[1].Particular_Credit_Amount)</td>
         </tr>
@@ -91,7 +108,7 @@
         <tr>
             <td rowspan=@rowCount colspan="3"> @Html.DisplayFor(m => @Model.Inter_Particular_Title) </td>
             <td colspan="5">@Html.DisplayFor(m => m.Inter_Particular3[0].Particular_Account_Name)</td>
-            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency2_ABBR)</td>
+            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency2_ABBR_Name)</td>
             <td colspan="1"></td>
             <td colspan="2" id="par3-0">@Html.DisplayFor(m => m.Inter_Particular3[0].Particular_Debit_Amount)</td>
             <td colspan="4"></td>
@@ -99,7 +116,7 @@
         <tr>
             <td colspan="5">@Html.DisplayFor(m => m.Inter_Particular3[1].Particular_Account_Name)</td>
             <td colspan="4"></td>
-            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency2_ABBR)</td>
+            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency2_ABBR_Name)</td>
             <td colspan="1"></td>
             <td colspan="2" id="par3-1">@Html.DisplayFor(m => m.Inter_Particular3[1].Particular_Credit_Amount)</td>
         </tr>
@@ -111,56 +128,76 @@
 <script>
     $(function () {
         var curr1 = $("table").find("#Inter_Currency1_Amount").val();
-        var curr2 = $("table").find("#Inter_Currency2_Amount").val();
-        UpdateParticulars(curr1, curr2);
+        var deb = $("table").find(".txtGross").val();
+        if (curr1 != 0) {
+            UpdateParticulars(curr1, deb);
+        }
         $("input#Inter_Currency1_Amount").on("change", function (e) {
             e.stopImmediatePropagation();
             var curr1 = $("table").find("#Inter_Currency1_Amount").val();
-            var curr2 = $("table").find("#Inter_Currency2_Amount").val();
-            if ((curr1 != 0) && (curr2 != 0)) {
-                UpdateParticulars(curr1, curr2);
+            var deb = $("table").find(".txtGross").val();
+            if ((curr1 != 0)) {
+                UpdateParticulars(curr1,deb);
             }
         });
         $("input#Inter_Currency2_Amount").on("change", function (e) {
             e.stopImmediatePropagation();
             var curr1 = $("table").find("#Inter_Currency1_Amount").val();
-            var curr2 = $("table").find("#Inter_Currency2_Amount").val();
-            if ((curr1 != 0) && (curr2 != 0)) {
-                UpdateParticulars(curr1, curr2);
+            var deb = $("table").find(".txtGross").val();
+            if ((curr1 != 0)) {
+                UpdateParticulars(curr1, deb);
             }
         });
         $("input#Inter_Rate").on("change", function (e) {
             e.stopImmediatePropagation();
             var curr1 = $("table").find("#Inter_Currency1_Amount").val();
-            var curr2 = $("table").find("#Inter_Currency2_Amount").val();
-            if ((curr1 != 0) && (curr2 != 0)) {
-                UpdateParticulars(curr1, curr2);
+            var deb = $("table").find(".txtGross").val();
+            if ((curr1 != 0)) {
+                UpdateParticulars(curr1, deb);
             }
         });
         $(".modal-footer2").on("click", "#saveBtnEntry", function () {
-            var itemNo = $("#parentIdInterEntity").val().substr(5);
+            if ($(this).parent().siblings().find('h4.modal-title', this).text() == "Inter-Entity") {
+                var itemNo = $("#parentIdInter").val().substr(5);
+                var rate = $("table").find("#Inter_Rate").val();
+                var curr1AbbrID = $("#curr1-abbr").find("input#Inter_Currency1_ABBR_ID").val();
+                var curr1Amt = $("table").find("#Inter_Currency1_Amount").val();
+                var curr2AbbrID = $("#curr2-abbr").find("#Inter_Currency2_ABBR_ID option:selected").val();
+                var curr2Amt = $("table").find("#Inter_Currency2_Amount").val();
+                alert(curr1AbbrID);
+                alert(curr1Amt);
+                alert(curr2AbbrID);
+                alert(curr2Amt);
+                $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Currency1_ABBR_ID").val(curr1AbbrID);
+                $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Currency1_Amount").val(curr1Amt);
+                $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Currency2_ABBR_ID").val(curr2AbbrID);
+                $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Currency2_Amount").val(curr2Amt);
+                $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Rate").val(rate);
 
-            var rate = $("table").find("#Inter_Rate").val();
-            var curr1Abbr = $("#curr1-abbr").text();
-            var curr1Amt = $("table").find("#Inter_Currency1_Amount").val();
-            var curr2Abbr = $("#curr2-abbr").text();
-            var curr2Amt = $("table").find("#Inter_Currency2_Amount").val();
-
-            $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Currency1_ABBR").val(curr1Abbr);
-            $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Currency1_Amount").val(curr1Amt);
-            $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Currency2_ABBR").val(curr2Abbr);
-            $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Currency2_Amount").val(curr2Amt);
-            $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Rate").val(rate);
-
-            $('.modal-body2').empty();
-            $('.myModal2').modal('hide');
+                $('.modal-body2').empty();
+                $('.myModal2').modal('hide');
+            }
         });
 
-        function UpdateParticulars(curr1, curr2) {
+        function UpdateParticulars(curr1, deb) {
             var rate = $("table").find("#Inter_Rate").val();
-            if ($.isNumeric(curr1) && $.isNumeric(curr2)) {
-                var parCredit = parseFloat(curr2) * parseFloat(rate);
-                var parDebit = parseFloat(curr1) + parseFloat(parCredit);
+            if (!($.isNumeric(curr1) && $.isNumeric(deb) && $.isNumeric(rate))) {
+                alert("Invalid amount/s provided.");
+            } else if (($.isNumeric(curr1) && $.isNumeric(deb) && $.isNumeric(rate)) && (parseFloat(curr1) > parseFloat(deb))) {
+                alert("Invalid amount/s provided. - First amount cannot be higher than Debit Gross Amount value.");
+                $("#Inter_Currency2_Amount").val(0);
+                $("#par1-0").text(0);
+                $("#par1-1").text(0);
+                $("#par1-2").text(0);
+                $("#par2-0").text(0);
+                $("#par2-1").text(0);
+                $("#par3-0").text(0);
+                $("#par3-1").text(0);
+            } else {
+                var curr2 = ((deb - parseFloat(curr1)) / rate).toFixed(2);
+                var parCredit = (parseFloat(curr2) * parseFloat(rate)).toFixed(2);
+                var parDebit = (parseFloat(curr1) + parseFloat(parCredit)).toFixed(2);
+                $("#Inter_Currency2_Amount").val(curr2);
                 $("#par1-0").text(parDebit);
                 $("#par1-1").text(parCredit);
                 $("#par1-2").text(curr1);
@@ -169,10 +206,7 @@
                 $("#par3-0").text(curr2);
                 $("#par3-1").text(curr2);
                 $("#par2-0-1").text(rate);
-            } else {
-                alert(curr1 + " - " + curr2 + " - Invalid amount/s provided.");
             }
-
         }
     });
 </script>

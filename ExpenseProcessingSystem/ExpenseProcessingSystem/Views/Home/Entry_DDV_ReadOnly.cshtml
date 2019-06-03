@@ -82,9 +82,9 @@
                         <td style="text-align:center">@Html.DisplayFor(x => Model.EntryDDV[i].fbt)</td>
                         <td><input id="@Model.EntryDDV[i].dept" value="@Model.EntryDDV[i].dept_Name" class="input100" disabled /></td>
                         <td style="text-align:center">@Html.DisplayFor(x => Model.EntryDDV[i].chkVat, new { @class = "chkVat" })</td>
-                        <td><input value="@Model.EntryDDV[i].vat" class="input100" disabled /></td>
+                        <td><input value="@Model.EntryDDV[i].vat_Name" class="input100" disabled /></td>
                         <td style="text-align:center">@Html.DisplayFor(x => Model.EntryDDV[i].chkEwt, new { @class = "chkEwt" })</td>
-                        <td><input value="@Model.EntryDDV[i].ewt" class="input100" disabled /></td>
+                        <td><input value="@Model.EntryDDV[i].ewt_Name" class="input100" disabled /></td>
                         <td><input value="@Model.EntryDDV[i].ccy_Name" class="input100" disabled /></td>
                         <td><input value="@Model.EntryDDV[i].debitGross" class="input100" disabled /></td>
                         <td><input value="@Model.EntryDDV[i].credEwt" class="input100" disabled /></td>
@@ -93,9 +93,10 @@
                             @if (Model.EntryDDV[i].interDetails.Count > 0)
                             {
                                 <a class="expenseInterEntity reqBtn glyphicon glyphicon-list-alt" href="#"></a>
-                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails[0].Inter_Currency1_ABBR, new { @class = "txtCurr1Abbr" })
+                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails[0].Inter_Currency1_ABBR_ID, new { @class = "txtCurr1Abbr" })
+                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails[0].Inter_Currency1_ABBR_Name, new { @class = "txtCurr1Abbr" })
                                 @Html.HiddenFor(x => Model.EntryDDV[i].interDetails[0].Inter_Currency1_Amount, new { @class = "txtCurr1Amt" })
-                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails[0].Inter_Currency2_ABBR, new { @class = "txtCurr2Abbr" })
+                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails[0].Inter_Currency2_ABBR_Name, new { @class = "txtCurr2Abbr" })
                                 @Html.HiddenFor(x => Model.EntryDDV[i].interDetails[0].Inter_Currency2_Amount, new { @class = "txtCurr2Amt" })
                                 @Html.HiddenFor(x => Model.EntryDDV[i].interDetails[0].Inter_Rate, new { @class = "txtInterRate" })
                                 @Html.HiddenFor(x => Model.EntryDDV[i].ewtPayorName, new { @class = "txtPayor" })

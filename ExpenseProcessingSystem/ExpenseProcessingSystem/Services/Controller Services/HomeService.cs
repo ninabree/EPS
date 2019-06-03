@@ -3215,9 +3215,13 @@ namespace ExpenseProcessingSystem.Services
                     {
                         Inter_ID = inter.Inter_ID,
                         Inter_Particular_Title = inter.Inter_Particular_Title ?? "",
-                        Inter_Currency1_ABBR = inter.Inter_Currency1_ABBR ?? "",
+                        Inter_Currency1_ABBR_ID = inter.Inter_Currency1_ABBR,
+                        Inter_Currency1_ABBR_Name = _context.DMCurrency.Where(x=> x.Curr_MasterID == int.Parse(inter.Inter_Currency1_ABBR) && 
+                                                    x.Curr_isDeleted == false && x.Curr_isActive == true).Select(x=> x.Curr_Name).FirstOrDefault() ?? "",
                         Inter_Currency1_Amount = inter.Inter_Currency1_Amount ?? "0",
-                        Inter_Currency2_ABBR = inter.Inter_Currency2_ABBR ?? "",
+                        Inter_Currency2_ABBR_ID = inter.Inter_Currency2_ABBR,
+                        Inter_Currency2_ABBR_Name = _context.DMCurrency.Where(x => x.Curr_MasterID == int.Parse(inter.Inter_Currency2_ABBR) &&
+                                                    x.Curr_isDeleted == false && x.Curr_isActive == true).Select(x => x.Curr_Name).FirstOrDefault() ?? "",
                         Inter_Currency2_Amount = inter.Inter_Currency2_Amount ?? "0",
                         Inter_Rate = inter.Inter_Rate ?? "1",
                         Inter_Particular1 = _modalservice.PopulateParticular1(inter.Inter_Particular_Title ?? "", inter.Inter_Currency1_ABBR ?? "", inter.Inter_Currency1_Amount ?? "0", inter.Inter_Currency2_Amount ?? "0", double.Parse(inter.Inter_Rate ?? "1")),
@@ -3253,9 +3257,12 @@ namespace ExpenseProcessingSystem.Services
                     dept_Name = _context.DMDept.Where(x=> x.Dept_ID == dtl.d.ExpDtl_Dept && x.Dept_isActive == true).Select(x=> x.Dept_Name).FirstOrDefault(),
                     chkVat = (dtl.d.ExpDtl_Vat <= 0) ? false : true,
                     vat = dtl.d.ExpDtl_Vat,
+                    vat_Name = _context.DMVAT.Where(x => x.VAT_ID == dtl.d.ExpDtl_Vat && x.VAT_isActive == true).Select(x => x.VAT_Name).FirstOrDefault(),
                     chkEwt = dtl.d.ExpDtl_isEwt,
                     ewt = dtl.d.ExpDtl_isEwt ? 0 : dtl.d.ExpDtl_Ewt,
+                    ewt_Name = _context.DMTR.Where(x => x.TR_ID == dtl.d.ExpDtl_Ewt && x.TR_isActive == true).Select(x => x.TR_Tax_Rate.ToString()).FirstOrDefault(),
                     ccy = dtl.d.ExpDtl_Ccy,
+                    ccy_Name = _context.DMCurrency.Where(x => x.Curr_ID == dtl.d.ExpDtl_Ccy && x.Curr_isActive == true).Select(x => x.Curr_CCY_ABBR).FirstOrDefault(),
                     debitGross = dtl.d.ExpDtl_Debit,
                     credEwt = dtl.d.ExpDtl_Credit_Ewt,
                     credCash = dtl.d.ExpDtl_Credit_Cash,
@@ -3379,9 +3386,9 @@ namespace ExpenseProcessingSystem.Services
                         ExpenseEntryInterEntityModel interEntity = new ExpenseEntryInterEntityModel
                         {
                             Inter_Particular_Title = interDetails.Inter_Particular_Title,
-                            Inter_Currency1_ABBR = interDetails.Inter_Currency1_ABBR,
+                            Inter_Currency1_ABBR = interDetails.Inter_Currency1_ABBR_ID,
                             Inter_Currency1_Amount = interDetails.Inter_Currency1_Amount,
-                            Inter_Currency2_ABBR = interDetails.Inter_Currency2_ABBR,
+                            Inter_Currency2_ABBR = interDetails.Inter_Currency2_ABBR_ID,
                             Inter_Currency2_Amount = interDetails.Inter_Currency2_Amount,
                             Inter_Rate = interDetails.Inter_Rate
                         };
