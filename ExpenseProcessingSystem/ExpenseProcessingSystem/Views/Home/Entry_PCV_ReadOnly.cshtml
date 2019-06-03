@@ -9,6 +9,7 @@
 @using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor HttpContextAccessor
 
+<input id="_screen" type="hidden" value="cv" />
 @using (Html.BeginForm("VerAppModPCV", "Home", FormMethod.Post, new { @class = "validate-form" }))
 {
     <div class="tabContent">

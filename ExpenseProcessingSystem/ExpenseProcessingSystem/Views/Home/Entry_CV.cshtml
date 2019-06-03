@@ -6,7 +6,7 @@
 @inject IJsonHelper Json;
 
 <div class="tabContent">
-    
+    <input id="_screen" type="hidden" value="cv" />
     @using (Html.BeginForm("AddNewCV", "Home", FormMethod.Post, new { @class = "validate-form" }))
     {
         <div id="tbl-lbl" class="flex-sb">

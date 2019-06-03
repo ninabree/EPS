@@ -169,22 +169,25 @@
 
         var itemNo = pNode.id; //jquery obj
         var chkEwtVal = $("#" + itemNo).find(".chkEwt").is(':checked');
-
+        var vatable = $("#" + itemNo).find(".chkVat").is(':checked');
         if (chkEwtVal) {
-            var ewtAmount = grossAmt * (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100);
-            $("#" + itemNo).find(".txtCredEwt").val(roundNumber(ewtAmount, 2));
-            $("#" + itemNo).find(".txtCredCash").val(roundNumber((grossAmt - ewtAmount), 2));
+            if (vatable) {
+                var vatRate = (Number($("#" + itemNo).find(".txtVat option:selected").text()) / 100);
+                var ewtRate = (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100);
+                var netVat = roundNumber(grossAmt / (1 + vatRate),2);
+                var ewt = roundNumber(netVat * ewtRate,2);
+                var netEwt = grossAmt - ewt;
+
+                $("#" + itemNo).find(".txtCredEwt").val(ewt);
+                $("#" + itemNo).find(".txtCredCash").val(netEwt);
+            } else {
+                var ewtAmount = grossAmt * (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100);
+                $("#" + itemNo).find(".txtCredEwt").val(roundNumber(ewtAmount, 2));
+                $("#" + itemNo).find(".txtCredCash").val(roundNumber((grossAmt - ewtAmount), 2));
+            }
         } else {
             $("#" + itemNo).find(".txtCredEwt").val(0);
             $("#" + itemNo).find(".txtCredCash").val(grossAmt);
-        }
-
-        var chkVatVal = $("#" + itemNo).find(".chkVat").is(':checked');
-
-        if (chkVatVal) {
-            var vatAmount = grossAmt * (Number($("#" + itemNo).find(".txtVat option:selected").text()) / 100);
-            $("#" + itemNo).find(".txtCredEwt").val(roundNumber(vatAmount, 2));
-            $("#" + itemNo).find(".txtCredCash").val(roundNumber((grossAmt - vatAmount), 2));
         }
 
         var gross = $(".txtGross");
