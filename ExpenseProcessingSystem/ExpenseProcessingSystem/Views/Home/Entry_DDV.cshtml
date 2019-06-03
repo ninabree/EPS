@@ -25,7 +25,7 @@
             <table class="table table-bordered table-striped voucher-tbl w-97" id="inputTable">
                 <colgroup>
                     <col style="width:20%;" />
-                    <col style="width:12%;" />
+                    <col style="width:9%;" />
                     <col style="width:3%;" />
                     <col style="width:3%;" />
                     <col style="width:10%" />
@@ -33,6 +33,7 @@
                     <col style="width:5%;" />
                     <col style="width:2%;" />
                     <col style="width:5%;" />
+                    <col style="width:3%;" />
                     <col style="width:7%;" />
                     <col style="width:10%;" />
                     <col style="width:10%;" />
@@ -47,10 +48,11 @@
                         <th rowspan="2">FBT</th>
                         <th rowspan="2">Department</th>
                         <th colspan="2" rowspan="2">VAT</th>
-                        <th colspan="2" rowspan="2">EWT</th>
+                        <th colspan="3" rowspan="2">EWT</th>
                         <th rowspan="2">Currency</th>
                         <th>Debit</th>
                         <th colspan="2">Credit</th>
+                        <th rowspan="2"></th>
                     </tr>
                     <tr>
                         <th scope="col">Gross Amount</th>
@@ -105,6 +107,7 @@
                             <td>
                                 @Html.DropDownListFor(x => Model.EntryDDV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt comVar", @disabled = "true" })
                             </td>
+                            <td style="text-align:center"><a class="reqEWTBtn glyphicon glyphicon-list-alt"></a></td>
                             <td>
                                 @Html.DropDownListFor(x => Model.EntryDDV[i].ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100" })
                             </td>
@@ -113,9 +116,11 @@
                             <td>@Html.TextBoxFor(x => Model.EntryDDV[i].credCash, new { @class = "input100 txtCredCash", @readonly = "readonly" })</td>
                             <td id="req_@i">
                                 <a class="reqBtn glyphicon glyphicon-list-alt"></a>
-                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails[0].Inter_Currency1_ABBR, new { @class = "txtCurr1Abbr" })
+                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails[0].Inter_Currency1_ABBR_ID, new { @class = "txtCurr1AbbrID" })
+                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails[0].Inter_Currency1_ABBR_Name, new { @class = "txtCurr1Abbr" })
                                 @Html.HiddenFor(x => Model.EntryDDV[i].interDetails[0].Inter_Currency1_Amount, new { @class = "txtCurr1Amt" })
-                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails[0].Inter_Currency2_ABBR, new { @class = "txtCurr2Abbr" })
+                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails[0].Inter_Currency2_ABBR_ID, new { @class = "txtCurr2AbbrID" })
+                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails[0].Inter_Currency2_ABBR_Name, new { @class = "txtCurr2Abbr" })
                                 @Html.HiddenFor(x => Model.EntryDDV[i].interDetails[0].Inter_Currency2_Amount, new { @class = "txtCurr2Amt" })
                                 @Html.HiddenFor(x => Model.EntryDDV[i].interDetails[0].Inter_Rate, new { @class = "txtInterRate" })
                                 @Html.HiddenFor(x => Model.EntryDDV[i].ewtPayorName, new { @class = "txtPayor" })
@@ -292,65 +297,84 @@
             e.stopImmediatePropagation();
             var pNode = $(this.parentNode)[0].parentNode;
             var id = pNode.id;
-            var curr1_Abbr;
-            var curr1_Amt;
-            var curr2_Abbr;
-            var curr2_Amt;
-
-            if ($("#" + id).find(".txtCurr1Abbr").val() != "") {
-                curr1_Abbr = $("#" + id).find(".txtCurr1Abbr").val();
+            var debitVal = $("#" + id).find(".txtGross").val();
+            if (debitVal == 0) {
+                alert("Please supply values to GBase Remarks Form first.");
             } else {
-                curr1_Abbr = "PhP";
-            }
-            if ($("#" + id).find(".txtCurr1Amt").val() != "") {
-                curr1_Amt = $("#" + id).find(".txtCurr1Amt").val();
-            } else {
-                curr1_Amt = "0";
-            }
-            if ($("#" + id).find(".txtCurr2Abbr").val() != "") {
-                curr2_Abbr = $("#" + id).find(".txtCurr2Abbr").val();
-            } else {
-                curr2_Abbr = "USD";
-            }
-            if ($("#" + id).find(".txtCurr2Amt").val() != "") {
-                curr2_Amt = $("#" + id).find(".txtCurr2Amt").val();
-            } else {
-                curr2_Amt = "0";
-            }
-            var interRate = $("#" + pNode.id).find(".txtInterRate").val()
-            var remarksTitle = $("#" + pNode.id).find(".gbaseRemarks").val()
-            var account = $("#" + pNode.id).find(".txtAcc option:selected").text()
-
-            //remove prev contents
-            modalDivBody2.empty();
-            modalDivHeader2.find('h4').remove();
-            modalDivFooter2.find("#add_row_btn").remove();
-
-            //set modal header title
-            modalDivHeader2.append('<h4 class="modal-title">Inter-Entity</h4>');
-            //set modal body content
-            modalDivBody2.load("@Url.Action("EntryExpenseInterEntity", "Modal")", {
-                "id": id,
-                "interRate": interRate,
-                "account": account,
-                "remarksTitle": remarksTitle,
-                "Curr1Abbr": curr1_Abbr,
-                "Curr1Amt": curr1_Amt,
-                "Curr2Abbr": curr2_Abbr,
-                "Curr2Amt": curr2_Amt
-            }, function (response, status, xhr) {
-                if (status == "error") {
-                    alert("Something went wrong.");
+                var curr1_Abbr_ID;
+                var curr1_Abbr_Name;
+                var curr1_Amt;
+                var curr2_Abbr_ID;
+                var curr2_Abbr_Name;
+                var curr2_Amt;
+                if ($("#" + id).find("select[id$='__ccy']  option:selected").val() != "") {
+                    curr1_Abbr_ID = $("#" + id).find("select[id$='__ccy']  option:selected").val() + "";
+                    curr1_Abbr_Name = $("#" + id).find("select[id$='__ccy']  option:selected").text();
                 }
-            });
+                else if ($("#" + id).find(".txtCurr1Abbr").val() != "") {
+                    curr1_Abbr = $("#" + id).find(".txtCurr1Abbr").val();
+                } else {
+                    curr1_Abbr = "PhP";
+                }
+                if ($("#" + id).find(".txtCurr1Amt").val() != "") {
+                    curr1_Amt = $("#" + id).find(".txtCurr1Amt").val();
+                } else {
+                    curr1_Amt = "0";
+                }
+                if ($("#" + id).find(".txtCurr2AbbrID").val() != "") {
+                    curr2_Abbr_ID = $("#" + id).find(".txtCurr2AbbrID").val() + "";
+                } else {
+                    curr2_Abbr_ID = "NAN";
+                }
+                if ($("#" + id).find(".txtCurr2Abbr").val() != "") {
+                    curr2_Abbr_Name = $("#" + id).find(".txtCurr2Abbr").val();
+                } else {
+                    curr2_Abbr_Name = "USD";
+                }
+                if ($("#" + id).find(".txtCurr2Amt").val() != "") {
+                    curr2_Amt = $("#" + id).find(".txtCurr2Amt").val();
+                } else {
+                    curr2_Amt = "0";
+                }
+                var interRate = $("#" + pNode.id).find(".txtInterRate").val()
+                var remarksTitle = $("#" + pNode.id).find(".gbaseRemarks").val()
+                var account = $("#" + pNode.id).find(".txtAcc option:selected").text()
 
-            $(myModal2).modal('show');
+                //remove prev contents
+                modalDivBody2.empty();
+                modalDivHeader2.find('h4').remove();
+                modalDivFooter2.find("#add_row_btn").remove();
+
+                //set modal header title
+                modalDivHeader2.append('<h4 class="modal-title">Inter-Entity</h4>');
+                //set modal body content
+                modalDivBody2.load("@Url.Action("EntryExpenseInterEntity", "Modal")", {
+                    "id": id,
+                    "interRate": interRate,
+                    "account": account,
+                    "remarksTitle": remarksTitle,
+                    "Curr1AbbrID": curr1_Abbr_ID,
+                    "Curr1AbbrName": curr1_Abbr_Name,
+                    "Curr1Amt": curr1_Amt,
+                    "Curr2AbbrID": curr2_Abbr_ID,
+                    "Curr2AbbrName": curr2_Abbr_Name,
+                    "Curr2Amt": curr2_Amt,
+                    "DebitVal": debitVal
+                }, function (response, status, xhr) {
+                    if (status == "error") {
+                        alert("Something went wrong.");
+                    }
+                });
+
+                $(myModal2).modal('show');
+            }
         });
 
-        //Inter Entity
+        //EWT
         $("table").on("click", ".expenseEWT", function (e) {
             e.stopImmediatePropagation();
             var pNode = $(this.parentNode)[0].parentNode;
+            alert(pNode.id);
             var taxpayor = $("#" + pNode.id).find(".txtPayor").val()
 
             //remove prev contents
@@ -389,19 +413,16 @@
         $("table").on("change", "input.chkEwt", function (e) {
 
             var pNode = String($(this.parentNode)[0].parentNode.id);
-            var btnAttr = $("#" + pNode).find("#req_" + pNode.substring(5)).find(".reqBtn");
+            var btnAttr = $("#" + pNode).find(".reqEWTBtn");
 
             if (this.checked == true) {
                 btnAttr.attr("href", "#");
-                btnAttr.attr("class", "expenseEWT reqBtn glyphicon glyphicon-list-alt");
+                btnAttr.addClass("expenseEWT");
             } else {
                 btnAttr.removeAttr("href");
-                btnAttr.attr("class", "reqBtn glyphicon glyphicon-list-alt");
+                btnAttr.removeClass("expenseEWT");
             }
         });
-
-        
-        //.parent().siblings(":eq(" + countDoc + ")")
     });
 </script>
 <script type="text/javascript">
@@ -450,3 +471,140 @@
     };
 </script>
 <script type="text/javascript" src="~/js/EntryScripts.js"></script>
+<div class="hidden">
+    <table id="templateTable">
+        <thead></thead>
+        <tbody>
+            <tr id="rowTemplate">
+                <td class="p-b-1 p-t-1">
+                    <div class="flex-sb">
+                        <input class="input100 w-80" id="template_GBaseRemarks" name="template.GBaseRemarks" type="text" value="">
+                        <div id="remark_">
+                            <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <select id="template_account" class="input100 txtAcc" name="template.account">
+                        <option value="370" class="10110" selected="">OFFICE EQUIPMENT RENT</option>
+                        <option value="371" class="10194">OFFICE EQUIPMENT RENT OTHERS</option>
+                        <option value="372" class="09305">COMPUTER LINES</option>
+                        <option value="373" class="14300">MEETING</option>
+                        <option value="374" class="03113">COMPANY HOUSING</option>
+                        <option value="375" class="17112">OUTSOURCED SYSTEM</option>
+                        <option value="376" class="13265">Office Rent</option>
+                        <option value="377" class="13265">Company House Rent</option>
+                        <option value="378" class="13265">Office Repair</option>
+                        <option value="379" class="03197">Welfare-Others</option>
+                        <option value="380" class="18249">Market Research</option>
+                        <option value="381" class="08113">Credit Research</option>
+                        <option value="382" class="08197">Books &amp; Newspapers</option>
+                        <option value="383" class="08121">Market Information</option>
+                        <option value="384" class="07222">Paper &amp; Printing Computer Form</option>
+                        <option value="385" class="07298">Paper &amp; Printings</option>
+                        <option value="386" class="07159">Consumables</option>
+                        <option value="387" class="07125">Computer Consumables</option>
+                        <option value="388" class="7117">Equipment</option>
+                        <option value="389" class="06137">Oil</option>
+                        <option value="390" class="06137">Gas</option>
+                        <option value="391" class="06145">Water</option>
+                        <option value="392" class="06111">Electricity</option>
+                        <option value="393" class="05393">Office Maintenance</option>
+                        <option value="394" class="05319">Office Cleaning</option>
+                        <option value="395" class="05204">House Repair</option>
+                        <option value="396" class="05107">Office Repair</option>
+                        <option value="397" class="04305">Common Service Fee</option>
+                        <option value="398" class="04208">Company House Rent</option>
+                        <option value="399" class="04119">Office Rent</option>
+                        <option value="400" class="03155">Welfare-Home Leave</option>
+                        <option value="401" class="03139">Welfare-Medicine</option>
+                        <option value="402" class="09127">Postage-International</option>
+                        <option value="403" class="09119">Postage-Domestic</option>
+                        <option value="404" class="13320">Motor Vehicle-Lease</option>
+                        <option value="405" class="15217">Membership-BAP</option>
+                        <option value="406" class="14407">Office Functions</option>
+                        <option value="407" class="15102">Donations</option>
+                        <option value="408" class="14229">Entertainment</option>
+                        <option value="409" class="14211">Gift</option>
+                        <option value="410" class="14198">Advertising-Others</option>
+                        <option value="411" class="14114">Advertising-Newspaper</option>
+                        <option value="412" class="09290">Tel/Fax</option>
+                        <option value="413" class="10217">Equipment Maintenance</option>
+                        <option value="414" class="10225">Equipment Repair</option>
+                        <option value="415" class="11108">Training &amp; Education</option>
+                        <option value="416" class="12112">Appointment Travel</option>
+                        <option value="417" class="12138">Educational Travel</option>
+                        <option value="418" class="12120">Conference Travel</option>
+                        <option value="419" class="12146">International Travel</option>
+                        <option value="420" class="12196">Domestic Travel</option>
+                        <option value="421" class="13100">Shipping</option>
+                        <option value="422" class="13215">Transportation-Taxi</option>
+                        <option value="423" class="13299">Transportation-Others</option>
+                        <option value="424" class="13312">Motor Vehicle-Fuel</option>
+                        <option value="425" class="13396">Motor Vehicle-Others</option>
+                        <option value="426" class="09240">Swift/Telex</option>
+                        <option value="427" class="16116">Deposit Insurance</option>
+                        <option value="428" class="15283">Membership-Others</option>
+                        <option value="429" class="16158">Computer Insurance</option>
+                        <option value="430" class="10110">Rental-Computer</option>
+                        <option value="431" class="14300">Meeting</option>
+                        <option value="432" class="03113">Welfare-GM House</option>
+                        <option value="433" class="18299">Sundry-Others</option>
+                        <option value="434" class="18257">Sundry-Recruitment</option>
+                        <option value="435" class="18215">Sundry-Pro/Consultant</option>
+                        <option value="436" class="17112">Outsource-System</option>
+                        <option value="437" class="17308">Outsource-Security</option>
+                        <option value="438" class="17201">Outsource-Driver/Messenger</option>
+                        <option value="439" class="17196">Outsource-Others</option>
+                        <option value="440" class="17120">Outsource-Clerical</option>
+                        <option value="441" class="16190">Other Insurance</option>
+                        <option value="442" class="16132">Cash Insurance</option>
+                        <option value="443" class="16124">Car Insurance</option>
+                        <option value="444" class="09305">Cable</option>
+                        <option value="445" class="10194">Rental-Others</option>
+                        <option value="447" class="XX1000">Sample Account 2</option>
+                    </select>
+                </td>
+                <td style="text-align:center"><input data-val="true" data-val-required="The FBT field is required." id="template_fbt" name="template.fbt" type="checkbox" value="true"><input name="template.fbt" type="hidden" value="false"></td>
+                <td>
+                    <select class="input100 txtDept" data-val="true" data-val-required="The Department field is required." id="template_dept" name="template.dept">
+                        <option value="15">MANAGEMENT</option>
+                        <option value="16">TREASURY</option>
+                        <option value="17">JCBD &amp; AMD</option>
+                        <option value="18">CFD &amp; PDBPD</option>
+                        <option value="19">CDD TRD LTOD</option>
+                    </select>
+                </td>
+                <td style="text-align:center"><input class="chkVat comVar" data-val="true" data-val-required="The VAT Checkbox field is required." id="template_chkVat" name="template.chkVat" type="checkbox" value="true"><input name="template.chkVat" type="hidden" value="false"></td>
+                <td>
+                    <select class="input100 txtVat comVar" data-val="true" data-val-required="The VAT field is required." disabled="true" id="template_vat" name="template.vat">
+                        <option value="1">12</option>
+                    </select>
+                </td>
+                <td style="text-align:center"><input class="chkEwt comVar" data-val="true" data-val-required="The EWT Checkbox field is required." id="template_chkEwt" name="template.chkEwt" type="checkbox" value="true"><input name="template.chkEwt" type="hidden" value="false"></td>
+                <td>
+                    <select class="input100 txtEwt comVar" data-val="true" data-val-required="The EWT field is required." disabled="true" id="template_ewt" name="template.ewt">
+                        <option value="6">0.14</option>
+                        <option value="7">0.15</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="input100" data-val="true" data-val-required="The Currency field is required." id="template_ccy" name="template.ccy">
+                        <option value="8">PHP</option>
+                        <option value="9">USD</option>
+                        <option value="10">JPY</option>
+                    </select>
+                </td>
+                <td><input class="input100 txtGross" data-val="true" data-val-number="The field Debit - Gross Amount must be a number." data-val-required="The Debit - Gross Amount field is required." id="template_debitGross" name="template.debitGross" readonly="readonly" type="text" value="0"></td>
+                <td><input class="input100 txtCredEwt" data-val="true" data-val-number="The field Credit - EWT Amount must be a number." data-val-required="The Credit - EWT Amount field is required." id="template_credEwt" name="template.credEwt" readonly="readonly" type="text" value="0"></td>
+                <td><input class="input100 txtCredCash" data-val="true" data-val-number="The field Credit - Cash must be a number." data-val-required="The Credit - Cash field is required." id="template_credCash" name="template.credCash" readonly="readonly" type="text" value="0"></td>
+                <td id="req_">
+                    <a class="reqBtn glyphicon glyphicon-list-alt"></a>
+                    <input class="txtAmorMonth" data-val="true" data-val-required="The Month field is required." id="template_month" name="template.month" type="hidden" value="0">
+                    <input class="txtAmorDay" data-val="true" data-val-required="The Day field is required." id="template_day" name="template.day" type="hidden" value="0">
+                    <input class="txtAmorDuration" data-val="true" data-val-required="The Duration field is required." id="template_duration" name="template.duration" type="hidden" value="0">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -5,6 +5,7 @@ namespace ExpenseProcessingSystem.Models
 {
     public class ExpenseEntryInterEntityModel
     {
+        //Currency ABBRS are masterIDs
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Inter_ID { get; set; }
         public string Inter_Particular_Title { get; set; }
