@@ -28,9 +28,9 @@
                     {
                         @foreach (var trName in Model.Vendor_Tax_Rates)
                         {
-                            <label>
+                            <label id="lbl">
                                 @Html.CheckBox(trName.TR_WT_Title, new { @id = "chk" + trName.TR_MasterID, @class = "trChk", value = trName.TR_MasterID })
-                                @trName.TR_WT_Title.ToString()
+                                <label>@trName.TR_WT_Title.ToString()</label>
                             </label>
                         }
                     }
@@ -40,9 +40,9 @@
                     {
                         @foreach (var vatName in Model.Vendor_VAT)
                         {
-                            <label>
-                                @Html.CheckBox(vatName.VAT_Name, new { @id = "chk1", @class = "vatChk", value = vatName.VAT_MasterID })
-                                @vatName.VAT_Name.ToString()
+                            <label id="lbl">
+                                @Html.CheckBox(vatName.VAT_Name, new { @id = "chk", @class = "vatChk", value = vatName.VAT_MasterID })
+                                <label>@vatName.VAT_Name.ToString()</label>
                             </label>
                         }
                     }

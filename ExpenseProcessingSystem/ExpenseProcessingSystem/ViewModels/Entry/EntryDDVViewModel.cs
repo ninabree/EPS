@@ -29,15 +29,16 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         [NotNullValidations]
         [Display(Name = "VAT Checkbox")]
         public bool chkVat { get; set; }
-        [NotNullValidations, IntegerValidation]
         [Display(Name = "VAT")]
         public int vat { get; set; }
+        public string vat_Name { get; set; }
         [NotNullValidations]
         [Display(Name = "EWT Checkbox")]
         public bool chkEwt { get; set; }
         [IntegerValidation]
         [Display(Name = "EWT")]
         public int ewt { get; set; }
+        public string ewt_Name { get; set; }
         [NotNullValidations]
         [Display(Name = "Currency")]
         public int ccy { get; set; }

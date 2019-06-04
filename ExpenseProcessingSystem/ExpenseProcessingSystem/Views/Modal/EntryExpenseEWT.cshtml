@@ -5,7 +5,7 @@
     var val = (string)ViewBag.taxpayor;
     var idNo = (string)ViewBag.id ?? "0";
 }
-@Html.Hidden("EwtTaxPayorName", @idNo, new { @id = "parentIdEwt" })
+@Html.Hidden("EwtTaxPayorName", @idNo, new { @id = "parentIdEWT" })
 <table class="table voucher-tbl table-bordered">
     <tr>
         <td colspan="1"><label>Tax Payor's Name</label></td>
@@ -15,13 +15,21 @@
 <script>
     $(function () {
         $(".modal-footer2").on("click", "#saveBtnEntry", function () {
-            var itemNo = $("#parentIdEwt").val().substr(5);
-            var val = $("table").find("#txtPayor").val();
+            //var modalBody = $(this).parent().siblings().find('.modal-body2');
+            if ($(this).parent().siblings().find('h4.modal-title', this).text() == "EWT Information") {
+                var itemNo = $("#parentIdEWT").val().substr(5);
+                var val = $("table").find("#txtPayor").val();
+                alert(val);
 
-            $("#EntryDDV_" + itemNo + "__ewtPayorName").val(val);
+                $("#EntryDDV_" + itemNo + "__ewtPayorName").val(val);
+                alert($("#EntryDDV_" + itemNo + "__ewtPayorName").val());
 
-            $('.modal-body2').empty();
-            $('.myModal2').modal('hide');
+                $('.modal-body2').empty();
+                $('.myModal2').modal('hide');
+            } else {
+                alert($(this).parent().siblings().find('h4.modal-title', this).text());
+                alert("Error: EWT Form");
+            }
         });
     });
 </script>

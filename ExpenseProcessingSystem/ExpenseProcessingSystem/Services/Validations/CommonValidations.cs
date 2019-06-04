@@ -312,49 +312,22 @@ namespace ExpenseProcessingSystem.Services.Validations
             var val = property.GetValue(validationContext.ObjectInstance, null);
             if ((Boolean)val && value != null)
             {
-                if (!(int.TryParse(value.ToString(), out int temp)))
+                if (value.ToString() == "")
                 {
-                    if (temp == 0)
+                    return new ValidationResult(name + " is  empty");
+                }
+                else if (!(int.TryParse(value.ToString(), out int temp)))
+                {
+                    if (value.GetType() != typeof(string) && temp == 0)
                     {
                         return new ValidationResult(name + " cannot be less than the value of one (1).");
                     }
-                }
-                else if(value.ToString() == "")
-                {
-                    return new ValidationResult(name + " is  empty");
                 }
             }else if((Boolean)val && value == null)
             {
                 return new ValidationResult(name + " is  empty");
             }
             return ValidationResult.Success;
-            /*
-            try
-            {
-                if (property == null)
-                {
-                    //public List<MsgListRec> MsgList { get; set; }
-                    var name = validationContext.DisplayName;
-                    if(int.Parse(value.ToString()) <= 0)
-                    {
-                        var msgSvc = new MsgService();
-                        return new ValidationResult("Please enter a valid value for" + name);
-                        //return new ValidationResult(msgSvc.GetMessage("E0001", name));
-                    }
-                }
-                return ValidationResult.Success;
-            }
-            catch (Exception ex)
-            {
-                //sample fatal error log
-                Log.Fatal(ex, "User: {user}, StackTrace : {trace}, Error Message: {message}", "[UserID]", ex.StackTrace, ex.Message);
-                return new ValidationResult("Invalid input");
-            }
-            finally
-            {
-                Log.CloseAndFlush();
-            }
-            */
         }
     }
     public class EmptyCashBreakdown : ValidationAttribute
@@ -424,7 +397,7 @@ namespace ExpenseProcessingSystem.Services.Validations
             {
                 foreach (var dtl in data.interDetails)
                 {
-                    if ((dtl.Inter_Currency1_ABBR == null) || (dtl.Inter_Currency2_ABBR == null) ||
+                    if ((dtl.Inter_Currency1_ABBR_ID == null) || (dtl.Inter_Currency2_ABBR_ID == null) ||
                         (dtl.Inter_Currency1_Amount == null) || (dtl.Inter_Currency2_Amount == null))
                     {
                         return new ValidationResult(name + " is Required. Kindly fill-up the required form.");

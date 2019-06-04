@@ -9,7 +9,7 @@
 @inject IHttpContextAccessor HttpContextAccessor
 
 <div class="tabContent">
-
+    <input id="_screen" type="hidden" value="cv"/>
     <div id="tbl-lbl" class="flex-sb">
         <div class="dis-inline-block w-20">Date: <p class="dis-inline-block w-70">@Html.TextBoxFor(model => model.expenseDate, new { @readonly = "true", @class = "input w-97" })</p> </div>
         <div class="dis-inline-block"><p class="dis-inline-block">@Html.TextBoxFor(model => model.expenseYear, new { @readonly = "true", @class = "input" })</p> - <p class="dis-inline-block">@Html.TextBoxFor(model => model.expenseId, new { @readonly = "true", @class = "input" })</p></div>

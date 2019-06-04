@@ -7,6 +7,7 @@
 }
 
 <div class="tabContent">
+    <input id="_screen" type="hidden" value="cv" />
     @using (Html.BeginForm("AddNewSS", "Home", FormMethod.Post, new { @class = "validate-form" }))
     {
         <div id="tbl-lbl">
@@ -116,7 +117,7 @@
                                 <a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#"></a>
                                 @Html.HiddenFor(x => Model.EntryCV[i].modalInputFlag, new { @class = "hiddenItem" })
                                 @Html.HiddenFor(x => Model.EntryCV[i].screenCode, new { @class = "hiddenScreencode" })
-                                @Html.HiddenFor(x => Model.EntryCV[i].ccyAbbrev, new { @class = "hiddenCcyAbbrev"})
+                                @Html.HiddenFor(x => Model.EntryCV[i].ccyAbbrev, new { @class = "hiddenCcyAbbrev" })
                                 <div id="divCashBD_@i">
                                     @for (int y = 0; y < Model.EntryCV[i].cashBreakdown.Count(); y++)
                                     {

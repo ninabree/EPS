@@ -9,8 +9,9 @@
         if (!isSessionTimeout()) {
             var idsArr = Array();
             var pNode = $(this.parentNode)[0].id;
+            var screen = $("#_screen").val();
             idsArr.push(pNode);
-            ModalPopup2('Modal', 'EntryGbaseRemarks', 'Gbase Remarks', idsArr);
+            ModalPopup2('Modal', 'EntryGbaseRemarks', 'Gbase Remarks', idsArr, screen);
         }
     });
 
@@ -182,7 +183,7 @@
                 }
         });
     }
-    function ModalPopup2(modal, method, modalHeader, idsArr) {
+    function ModalPopup2(modal, method, modalHeader, idsArr, screen) {
         var modalDivBody = $('.modal-body');
         var modalDivHeader = $('.modal-header');
         var modalDivFooter = $('.modal-footer');
@@ -203,7 +204,7 @@
                 if (method == 'EntryGbaseRemarks') {
                     $("#saveBtn").addClass("gBaseSaveBtn");
 
-                    gbaseRemarksSet(idsArr[0])
+                    gbaseRemarksSet(idsArr[0], screen)
 
                     if ($("#add_row_btn").length <= 0) {
                         modalDivFooter.append('<button type="button" id="add_row_btn" class="btn table-add">Add Row</button>');
@@ -219,19 +220,21 @@
         });
     }
 
-    function gbaseRemarksSet(id) {
+    function gbaseRemarksSet(id, screen) {
         var rowNo = id.substring(7);
         var noOfItem = ($("#" + id).find('input').length)/ 4;
         var tblDiv = $("#table").find("table");
+
+        var screenCode = { cv: "#EntryCV_", ddv: "#EntryDDV_"};
 
         if (noOfItem > 0) {
             tblDiv.find('tbody').find('tr').remove();
 
             for (var i = 0; i < noOfItem; i++) {
-                var docuType = $("#" + id).find("#EntryCV_" + rowNo + "__gBaseRemarksDetails_" + i + "__docType").val();
-                var desc = $("#" + id).find("#EntryCV_" + rowNo + "__gBaseRemarksDetails_" + i + "__desc").val();
-                var invNo = $("#" + id).find("#EntryCV_" + rowNo + "__gBaseRemarksDetails_" + i + "__invNo").val();
-                var amount = $("#" + id).find("#EntryCV_" + rowNo + "__gBaseRemarksDetails_" + i + "__amount").val();
+                var docuType = $("#" + id).find(screenCode[screen] + rowNo + "__gBaseRemarksDetails_" + i + "__docType").val();
+                var desc = $("#" + id).find(screenCode[screen] + rowNo + "__gBaseRemarksDetails_" + i + "__desc").val();
+                var invNo = $("#" + id).find(screenCode[screen] + rowNo + "__gBaseRemarksDetails_" + i + "__invNo").val();
+                var amount = $("#" + id).find(screenCode[screen] + rowNo + "__gBaseRemarksDetails_" + i + "__amount").val();
 
                 var newGbaseRemarksRow = $('<tr id="gRemarks-tr-' + i + '">'
                     + '<td><input type="text" class="gDocuType" value="' + docuType + '" /></td>'
