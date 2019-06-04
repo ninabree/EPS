@@ -1,0 +1,85 @@
+﻿@model ExpenseProcessingSystem.ViewModels.BMViewModel
+
+@{
+    ViewData["Title"] = "BudgetRegistrationModal";
+    Layout = "~/Views/Shared/_ModalLayout.cshtml";
+}
+@using (Html.BeginForm("RegisterNewBudget", "Modal", FormMethod.Post, new { @id = "tsForm" }))
+{
+    <div style="margin-left:10%;margin-right:10%">
+        <table class="table" style="width:100%">
+            <colgroup>
+                <col style="width:30%">
+                <col style="width:70%">
+            </colgroup>
+            <thead>
+
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="p-l-150">Account : </td>
+                    <td>
+                        @Html.DropDownListFor(x => x.BM_Acc_Master_ID, new SelectList(Model.BM_AccountList, "Account_MasterID", "Account_Name"), new { @class = "input100 w-80 ddlAccList" })
+                    </td>
+                </tr>
+                <tr>
+                    <td>Current Budget : </td>
+                    <td>
+                        @Html.TextBoxFor(x => Model.BM_Budget_Current, "{0:#,##0.00#}", new { @class = "input100 w-80 txtCurrBudget", @readonly = "readonly" })
+                    </td>
+                </tr>
+                <tr>
+                    <td>New Budget : </td>
+                    <td>
+                        @Html.TextBoxFor(x => Model.BM_Budget_Amount, new { @class = "input100 w-80 txtNewBudget", @type = "Number" })
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+}
+
+<script>
+    $(function () {
+        $(".txtNewBudget").change(function () {
+            $('.txtNewBudget').val(round($('.txtNewBudget').val(), 2));
+        });
+
+        $(".ddlAccList").change(function () {
+            $.getJSON('@Url.Action("GetCurrentBudget", "Modal")', { accountMasterID: $('.ddlAccList').val() }, function (data) {
+                $('.txtCurrBudget').val(addCommas(data.toFixed(2)));
+	        });
+        });
+
+        function round(value, exp) {
+            if (typeof exp === 'undefined' || +exp === 0)
+                return Math.round(value);
+
+            value = +value;
+            exp = +exp;
+
+            if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0))
+                return NaN;
+
+            // Shift
+            value = value.toString().split('e');
+            value = Math.round(+(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp)));
+
+            // Shift back
+            value = value.toString().split('e');
+            return +(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp));
+        }
+
+        function addCommas(nStr) {
+            nStr += '';
+            x = nStr.split('.');
+            x1 = x[0];
+            x2 = x.length > 1 ? '.' + x[1] : '';
+            var rgx = /(\d+)(\d{3})/;
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + ',' + '$2');
+            }
+            return x1 + x2;
+        }
+    });
+</script>

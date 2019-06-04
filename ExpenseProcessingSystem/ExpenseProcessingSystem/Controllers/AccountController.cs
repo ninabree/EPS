@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Services;
 using ExpenseProcessingSystem.ViewModels;
+using System.DirectoryServices.AccountManagement;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
@@ -50,8 +51,50 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 return View(model);
             }
+            //START OF LDAP LOGIN
+            //string svcUsername = "jam.ferrer";
+            //string domain = "JPI.Local";
+            //string svcPwd = "testldap";
+            // check if user is existing in Active Directory
+            //using (PrincipalContext context = new PrincipalContext(ContextType.Domain, domain, svcUsername, svcPwd))
+            //{
+            //    using (UserPrincipal user = UserPrincipal.FindByIdentity(context, userToFind))
+            //    {
+            //        if (user != null)
+            //        {
+            //            //Set Session Info
+            //            _session.SetString("UserID", model.User_UserName);
+            //            //Set User Access Info
+            //            _session.SetString("isLoggedIn", "true");
+            //            _session.SetString("accessType", "admin");
+            //            _session.SetString("isAdmin", "admin" == "admin" ? "true" : "false");
 
-            var acc = _context.User.Where(x => x.User_UserName == model.User_UserName).Where(x=> x.User_InUse == true).Select(x => x).FirstOrDefault();
+            //            Log.Information("User Logged In");
+            //            return RedirectToAction("Index", "Home");
+            //        }
+            //    }
+            //}
+            // validate the user's username & password in Active Directory
+            //using (var context = new PrincipalContext(ContextType.Domain, domain, svcUsername, svcPwd))
+            //{
+            //    //Username and password for authentication.
+            //    bool rslt = context.ValidateCredentials(model.User_UserName, model.User_Password);
+            //    if (rslt)
+            //    {
+            //        //Set Session Info
+            //        _session.SetString("UserID", model.User_UserName);
+            //        //Set User Access Info
+            //        _session.SetString("isLoggedIn", "true");
+            //        _session.SetString("accessType", "admin");
+            //        _session.SetString("isAdmin", "admin" == "admin" ? "true" : "false");
+
+            //        Log.Information("User Logged In");
+            //        return RedirectToAction("Index", "Home");
+            //    }
+            //}
+            //END OF LDAP LOGIN
+
+            var acc = _context.User.Where(x => x.User_UserName == model.User_UserName).Where(x => x.User_InUse == true).Select(x => x).FirstOrDefault();
             if (acc != null)
             {
                 if (CryptoTools.getHashPasswd("PLACEHOLDER", model.User_UserName, model.User_Password) == acc.User_Password)
@@ -62,7 +105,7 @@ namespace ExpenseProcessingSystem.Controllers
                     _session.SetString("isLoggedIn", "true");
                     _session.SetString("accessType", acc.User_Role);
                     _session.SetString("isAdmin", acc.User_Role == "admin" ? "true" : "false");
-                    
+
                     Log.Information("User Logged In");
                     return RedirectToAction("Index", "Home");
                 }

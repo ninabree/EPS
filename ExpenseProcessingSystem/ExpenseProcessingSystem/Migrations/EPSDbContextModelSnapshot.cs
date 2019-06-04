@@ -15,7 +15,7 @@ namespace ExpenseProcessingSystem.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.0-rtm-35687")
+                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -27,15 +27,19 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("Budget_AccountGroup_MasterID");
 
+                    b.Property<int>("Budget_Account_MasterID");
+
                     b.Property<double>("Budget_Amount");
 
-                    b.Property<string>("Budget_Approver_ID");
+                    b.Property<int>("Budget_Creator_ID");
 
-                    b.Property<double>("Budget_Current");
+                    b.Property<DateTime>("Budget_Date_Registered");
 
-                    b.Property<DateTime>("Budget_Last_Approval_Date");
+                    b.Property<string>("Budget_GBase_Budget_Code");
 
-                    b.Property<byte>("Budget_Status");
+                    b.Property<string>("Budget_ISPS_Account_Name");
+
+                    b.Property<bool>("Budget_IsActive");
 
                     b.Property<bool>("Budget_isDeleted");
 

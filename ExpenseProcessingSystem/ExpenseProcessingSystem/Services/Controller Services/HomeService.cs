@@ -2488,25 +2488,23 @@ namespace ExpenseProcessingSystem.Services
         {
             List<BMViewModel> bmvmList = new List<BMViewModel>();
             //var dbBudget = _context.Budget.ToList();
-            var dbBudget = (from a in _context.Budget
-                            join b in _context.DMAccount on a.Budget_AccountGroup_MasterID equals b.Account_Group_MasterID
-                            join c in _context.User on a.Budget_Approver_ID equals c.User_UserName
-                            where b.Account_isActive == true && b.Account_isDeleted == false &&
-                            c.User_InUse == true
+            var dbBudget = (from bud in _context.Budget
+                            join accGrp in _context.DMAccountGroup on bud.Budget_AccountGroup_MasterID equals accGrp.AccountGroup_MasterID
+                            join acc in _context.DMAccount on bud.Budget_Account_MasterID equals acc.Account_MasterID
+                            join user in _context.User on bud.Budget_Creator_ID equals user.User_ID
+                            where bud.Budget_IsActive == true && bud.Budget_isDeleted == false &&
+                            accGrp.AccountGroup_isActive == true && accGrp.AccountGroup_isDeleted == false &&
+                            acc.Account_isActive == true && acc.Account_isDeleted == false
                             select new
                             {
-                                a.Budget_ID,
-                                a.Budget_Amount,
-                                a.Budget_Current,
-                                a.Budget_Status,
-                                a.Budget_isDeleted,
-                                a.Budget_Last_Approval_Date,
-                                a.Budget_Approver_ID,
-                                b.Account_No,
-                                b.Account_Name,
-                                b.Account_Code,
-                                c.User_FName,
-                                c.User_LName
+                                bud.Budget_ID,
+                                accGrp.AccountGroup_Name,
+                                acc.Account_Name,
+                                bud.Budget_ISPS_Account_Name,
+                                bud.Budget_GBase_Budget_Code,
+                                acc.Account_No,
+                                bud.Budget_Amount,
+                                bud.Budget_Date_Registered
                             }).ToList();
 
             foreach (var i in dbBudget)
@@ -2514,16 +2512,13 @@ namespace ExpenseProcessingSystem.Services
                 bmvmList.Add(new BMViewModel()
                 {
                     BM_Budget_ID = i.Budget_ID,
-                    BM_Acc_ID = i.Account_No,
+                    BM_Acc_Group_Name = i.AccountGroup_Name,
+                    BM_Acc_Name = i.Account_Name,
+                    BM_ISPS_Acc_Name = i.Budget_ISPS_Account_Name,
+                    BM_GBase_Code = i.Budget_GBase_Budget_Code,
+                    BM_Acc_Num = i.Account_No,
                     BM_Budget_Amount = i.Budget_Amount,
-                    BM_Budget_Current = i.Budget_Current,
-                    BM_Budget_Approver_ID = i.Budget_Approver_ID,
-                    BM_Budget_Status = i.Budget_Status,
-                    BM_Last_Budget_Approved = i.Budget_Last_Approval_Date,
-                    BM_Budget_isDeleted = i.Budget_isDeleted,
-                    BM_Acc_Code = i.Account_Code,
-                    BM_Acc_Group = "N/A",
-                    BM_Acc_GBase = i.Account_Name
+                    BM_Date_Registered = i.Budget_Date_Registered
                 });
             };
 
@@ -2913,7 +2908,10 @@ namespace ExpenseProcessingSystem.Services
                                                                 && x.VTV_TR_ID > 0)
                                                        .Select(q => q.VTV_TR_ID).ToList();
 
-            var select = new SelectList(_context.DMTR.Where(x => vendorTRIDList.Contains(x.TR_ID)).Select(q => new { q.TR_ID, TR_Tax_Rate = (q.TR_Tax_Rate * 100) }),
+            var select = new SelectList(_context.DMTR.Where(x => vendorTRIDList.Contains(x.TR_MasterID) 
+                                                            && x.TR_isActive == true
+                                                            && x.TR_isDeleted == false)
+                                                     .Select(q => new { q.TR_ID, TR_Tax_Rate = (q.TR_Tax_Rate * 100) }),
                         "TR_ID", "TR_Tax_Rate");
 
             return select;
@@ -2926,7 +2924,10 @@ namespace ExpenseProcessingSystem.Services
                                                                 && x.VTV_VAT_ID > 0)
                                                        .Select(q => q.VTV_VAT_ID).ToList();
 
-            var select = new SelectList(_context.DMVAT.Where(x => vendorVatIDList.Contains(x.VAT_ID)).Select(q => new { q.VAT_ID, VAT_Rate = (q.VAT_Rate * 100) }),
+            var select = new SelectList(_context.DMVAT.Where(x => vendorVatIDList.Contains(x.VAT_ID)
+                                                             && x.VAT_isActive == true
+                                                             && x.VAT_isDeleted == false)
+                                                      .Select(q => new { q.VAT_ID, VAT_Rate = (q.VAT_Rate * 100) }),
                         "VAT_ID", "VAT_Rate");
 
             return select;

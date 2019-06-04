@@ -7,7 +7,7 @@ namespace ExpenseProcessingSystem.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<int>(
-                name: "AccountGroup_MasterID",
+                name: "Budget_Creator_ID",
                 table: "Budget",
                 nullable: false,
                 oldClrType: typeof(string),
@@ -17,7 +17,7 @@ namespace ExpenseProcessingSystem.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "AccountGroup_MasterID",
+                name: "Budget_Creator_ID",
                 table: "Budget",
                 nullable: true,
                 oldClrType: typeof(int));

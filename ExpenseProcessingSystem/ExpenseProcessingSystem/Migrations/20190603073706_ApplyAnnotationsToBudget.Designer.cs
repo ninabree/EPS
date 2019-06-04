@@ -10,14 +10,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    [Migration("20190516095059_ApplyAnnotationsToBudget")]
+    [Migration("20190603073706_ApplyAnnotationsToBudget")]
     partial class ApplyAnnotationsToBudget
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.8-servicing-32085")
+                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -27,17 +27,21 @@ namespace ExpenseProcessingSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AccountGroup_MasterID");
+                    b.Property<int>("Budget_AccountGroup_MasterID");
+
+                    b.Property<int>("Budget_Account_MasterID");
 
                     b.Property<double>("Budget_Amount");
 
-                    b.Property<string>("Budget_Approver_ID");
+                    b.Property<int>("Budget_Creator_ID");
 
-                    b.Property<double>("Budget_Current");
+                    b.Property<DateTime>("Budget_Date_Registered");
 
-                    b.Property<DateTime>("Budget_Last_Approval_Date");
+                    b.Property<string>("Budget_GBase_Budget_Code");
 
-                    b.Property<byte>("Budget_Status");
+                    b.Property<string>("Budget_ISPS_Account_Name");
+
+                    b.Property<bool>("Budget_IsActive");
 
                     b.Property<bool>("Budget_isDeleted");
 
@@ -91,6 +95,8 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("Account_Creator_ID");
 
+                    b.Property<int>("Account_Currency_MasterID");
+
                     b.Property<string>("Account_Cust");
 
                     b.Property<string>("Account_Div");
@@ -131,6 +137,8 @@ namespace ExpenseProcessingSystem.Migrations
                     b.Property<string>("Pending_Account_Code");
 
                     b.Property<int>("Pending_Account_Creator_ID");
+
+                    b.Property<int>("Pending_Account_Currency_MasterID");
 
                     b.Property<string>("Pending_Account_Cust");
 
@@ -630,6 +638,27 @@ namespace ExpenseProcessingSystem.Migrations
                     b.ToTable("ExpenseEntryAmortizations");
                 });
 
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryCashBreakdownModel", b =>
+                {
+                    b.Property<int>("CashBreak_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double>("CashBreak_Amount");
+
+                    b.Property<double>("CashBreak_Denimination");
+
+                    b.Property<double>("CashBreak_NoPcs");
+
+                    b.Property<int?>("ExpenseEntryDetailModelExpDtl_ID");
+
+                    b.HasKey("CashBreak_ID");
+
+                    b.HasIndex("ExpenseEntryDetailModelExpDtl_ID");
+
+                    b.ToTable("ExpenseEntryCashBreakdown");
+                });
+
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel", b =>
                 {
                     b.Property<int>("ExpDtl_ID")
@@ -656,11 +685,17 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("ExpDtl_Ewt");
 
+                    b.Property<string>("ExpDtl_Ewt_Payor_Name");
+
                     b.Property<bool>("ExpDtl_Fbt");
 
                     b.Property<string>("ExpDtl_Gbase_Remarks");
 
-                    b.Property<float>("ExpDtl_Vat");
+                    b.Property<bool>("ExpDtl_Inter_Entity");
+
+                    b.Property<int>("ExpDtl_SS_Payee");
+
+                    b.Property<int>("ExpDtl_Vat");
 
                     b.Property<bool>("ExpDtl_isEwt");
 
@@ -694,6 +729,32 @@ namespace ExpenseProcessingSystem.Migrations
                     b.HasIndex("ExpenseEntryDetailModelExpDtl_ID");
 
                     b.ToTable("ExpenseEntryGbaseDtls");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryInterEntityModel", b =>
+                {
+                    b.Property<string>("Inter_ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("ExpenseEntryDetailModelExpDtl_ID");
+
+                    b.Property<string>("Inter_Currency1_ABBR");
+
+                    b.Property<string>("Inter_Currency1_Amount");
+
+                    b.Property<string>("Inter_Currency2_ABBR");
+
+                    b.Property<string>("Inter_Currency2_Amount");
+
+                    b.Property<string>("Inter_Particular_Title");
+
+                    b.Property<string>("Inter_Rate");
+
+                    b.HasKey("Inter_ID");
+
+                    b.HasIndex("ExpenseEntryDetailModelExpDtl_ID");
+
+                    b.ToTable("ExpenseEntryInterEntity");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryModel", b =>
@@ -1121,6 +1182,13 @@ namespace ExpenseProcessingSystem.Migrations
                         .HasForeignKey("ExpenseEntryDetailModelExpDtl_ID");
                 });
 
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryCashBreakdownModel", b =>
+                {
+                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel", "ExpenseEntryDetailModel")
+                        .WithMany("ExpenseEntryCashBreakdowns")
+                        .HasForeignKey("ExpenseEntryDetailModelExpDtl_ID");
+                });
+
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel", b =>
                 {
                     b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryModel", "ExpenseEntryModel")
@@ -1132,6 +1200,13 @@ namespace ExpenseProcessingSystem.Migrations
                 {
                     b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel", "ExpenseEntryDetailModel")
                         .WithMany("ExpenseEntryGbaseDtls")
+                        .HasForeignKey("ExpenseEntryDetailModelExpDtl_ID");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryInterEntityModel", b =>
+                {
+                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel", "ExpenseEntryDetailModel")
+                        .WithMany("ExpenseEntryInterEntity")
                         .HasForeignKey("ExpenseEntryDetailModelExpDtl_ID");
                 });
 #pragma warning restore 612, 618
