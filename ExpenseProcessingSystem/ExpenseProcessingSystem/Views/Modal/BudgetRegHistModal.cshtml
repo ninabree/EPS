@@ -1,0 +1,101 @@
+﻿@model ExpenseProcessingSystem.ViewModels.BMRegHistViewModel
+    
+@{
+    ViewData["Title"] = "BudgetRegHistModal";
+    Layout = "~/Views/Shared/_ModalLayout.cshtml";
+}
+<div style="text-align:right;" id="divDDLYear">
+    @Html.DropDownListFor(m => m.Year, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "ddlYear dis-inline-block w-49", @style="width:10%" })
+</div>
+<div style="max-height:400px;overflow-y: scroll">
+    <table class="table table-striped tab-tbl" style="width:100%">
+        <colgroup>
+            <col style="width:25%" />
+            <col style="width:15%" />
+            <col style="width:20%" />
+            <col style="width:20%" />
+            <col style="width:20%" />
+        </colgroup>
+        <thead>
+            <tr>
+                <td>
+                    <text>Account Name</text>
+                </td>
+                <td>
+                    <text>G-Base Budget Code</text>
+                </td>
+                <td style="text-align:right">
+                    <text>Budget Registered</text>
+                </td>
+                <td style="text-align:center">
+                    <text>Date Registered</text>
+                </td>
+                <td>
+                    <text>Registered By</text>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.BMVM.Count() != 0)
+            {
+                foreach (var i in Model.BMVM)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(x => i.BM_Acc_Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(x => i.BM_GBase_Code)
+                        </td>
+                        <td style="text-align:right">
+                            @Html.DisplayFor(x => i.BM_Budget_Amount)
+                        </td>
+                        <td style="text-align:center">
+                            @Html.DisplayFor(x => i.BM_Date_Registered)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(x => i.BM_Creator_Name)
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" style="text-align:center">No record found</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#saveBtnEntry').css('display', 'none');
+
+        $("#divDDLYear").on("change", ".ddlYear", function (e) {
+            alert($(this).val());
+        });
+
+        $(".ddlYear").change(function () {
+            var modalDivBody = $('.modal-body');
+
+            if ($('.modal-header').find(".modal-title")[0] == null) {
+                $('.modal-header').append('<h4 class="modal-title">History of Budget Registration</h4>');
+            }
+
+             modalDivBody.load("@Url.Action("BudgetRegHistModal", "Modal")", {
+                 year: $(".ddlYear :selected").text().substr(4, 4)
+            }, function (response, status, xhr) {
+                if (status == "error") {
+                    alert("Something went wrong.");
+                } else {
+
+                }
+            });
+
+            //$('.myModal2').modal('show');
+        });
+            
+    });
+</script>

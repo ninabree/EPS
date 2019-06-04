@@ -6,6 +6,7 @@ using ExpenseProcessingSystem.ViewModels.Entry;
 using ExpenseProcessingSystem.ViewModels.NewRecord;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -1513,7 +1514,96 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
 
         public string GetAccountName(string id)
         {
-            return _context.DMAccount.Where(db => db.Account_ID == Int64.Parse(id)).Single().Account_Name;
+            return _context.DMAccount.Where(x => x.Account_ID == Int64.Parse(id)).Single().Account_Name;
+        }
+
+        //[ Budget Monitoring ]
+        public void AddNewBudget(BMViewModel vm, int userid)
+        {
+            var currentBudgetInfo = _context.Budget.Where(x => x.Budget_Account_MasterID == vm.BM_Acc_Master_ID 
+                                    && x.Budget_IsActive == true && x.Budget_isDeleted == false).DefaultIfEmpty(
+                                    new BudgetModel { Budget_ID = 0 }).FirstOrDefault();
+
+            if(currentBudgetInfo.Budget_ID != 0)
+            {
+                currentBudgetInfo.Budget_IsActive = false;
+                currentBudgetInfo.Budget_isDeleted = true;
+                _context.Entry(currentBudgetInfo).State = EntityState.Modified;
+                _context.SaveChanges();
+            }
+
+            //Get Account information.
+            var accountInfo = _context.DMAccount.Where(x => x.Account_MasterID == vm.BM_Acc_Master_ID && x.Account_isActive == true
+                                && x.Account_isDeleted == false).FirstOrDefault();
+
+            _context.Budget.Add(new BudgetModel {
+                Budget_AccountGroup_MasterID = accountInfo.Account_Group_MasterID,
+                Budget_Account_MasterID = accountInfo.Account_MasterID,
+                Budget_GBase_Budget_Code = "09XXXX(ModalService)",
+                Budget_ISPS_Account_Name = "ISPS Account Name(ModalService)",
+                Budget_Amount = vm.BM_Budget_Amount,
+                Budget_Creator_ID = userid,
+                Budget_IsActive = true,
+                Budget_isDeleted = false,
+                Budget_Date_Registered = DateTime.Now
+            });
+            _context.SaveChanges();
+        }
+
+        public IEnumerable<DMAccountModel> GetAccountList()
+        {
+            return _context.DMAccount.Where(x => x.Account_isActive == true && x.Account_isDeleted == false).ToList().OrderBy(x => x.Account_Name);
+        }
+
+        public double GetCurrentBudget(int accountMasterID)
+        {
+            return _context.Budget.Where(x => x.Budget_Account_MasterID == accountMasterID
+            && x.Budget_IsActive == true && x.Budget_isDeleted == false).DefaultIfEmpty(
+                new BudgetModel { Budget_Amount = 0.00 }).First().Budget_Amount;
+        }
+
+        public IEnumerable<BMViewModel> PopulateBudgetRegHist(int? year)
+        {
+            List<BMViewModel> bmvmList = new List<BMViewModel>();
+            //var dbBudget = _context.Budget.ToList();
+            var dbBudget = (from bud in _context.Budget
+                            join accGrp in _context.DMAccountGroup on bud.Budget_AccountGroup_MasterID equals accGrp.AccountGroup_MasterID
+                            join acc in _context.DMAccount on bud.Budget_Account_MasterID equals acc.Account_MasterID
+                            join user in _context.User on bud.Budget_Creator_ID equals user.User_ID
+                            where accGrp.AccountGroup_isActive == true && accGrp.AccountGroup_isDeleted == false &&
+                            acc.Account_isActive == true && acc.Account_isDeleted == false &&
+                            bud.Budget_Date_Registered.Year == year
+                            select new
+                            {
+                                bud.Budget_ID,
+                                accGrp.AccountGroup_Name,
+                                acc.Account_Name,
+                                bud.Budget_ISPS_Account_Name,
+                                bud.Budget_GBase_Budget_Code,
+                                acc.Account_No,
+                                bud.Budget_Amount,
+                                bud.Budget_Date_Registered,
+                                user.User_LName,
+                                user.User_FName
+                            }).ToList().OrderByDescending(x => x.Budget_Date_Registered);
+
+            foreach (var i in dbBudget)
+            {
+                bmvmList.Add(new BMViewModel()
+                {
+                    BM_Budget_ID = i.Budget_ID,
+                    BM_Acc_Group_Name = i.AccountGroup_Name,
+                    BM_Acc_Name = i.Account_Name,
+                    BM_ISPS_Acc_Name = i.Budget_ISPS_Account_Name,
+                    BM_GBase_Code = i.Budget_GBase_Budget_Code,
+                    BM_Acc_Num = i.Account_No,
+                    BM_Budget_Amount = i.Budget_Amount,
+                    BM_Date_Registered = i.Budget_Date_Registered,
+                    BM_Creator_Name = i.User_LName + ", " + i.User_FName
+                });
+            };
+
+            return bmvmList;
         }
     }
 }

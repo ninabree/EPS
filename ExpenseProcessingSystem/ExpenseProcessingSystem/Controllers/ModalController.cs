@@ -36,10 +36,63 @@ namespace ExpenseProcessingSystem.Controllers
         {
             return View();
         }
-        //BM
-        public IActionResult BudgetAdjustmentModal()
+
+        //[ Budget Monitoring ]
+        //Open Budget registration screen
+        public IActionResult BudgetRegistrationModal()
         {
-            return View();
+            var accountList = _service.GetAccountList();
+
+            return View(new BMViewModel {
+                BM_Budget_Current = _service.GetCurrentBudget(accountList.First().Account_MasterID),
+                BM_AccountList = accountList
+            });
+        }
+
+        //Open history of Budget Registration screen
+        public IActionResult BudgetRegHistModal(int? year)
+        {
+            BMRegHistViewModel vm = new BMRegHistViewModel {
+                BMVM = _service.PopulateBudgetRegHist(DateTime.Now.Year),
+                YearList = ConstantData.HomeReportConstantValue.GetYearList()
+            };
+
+            
+
+            if (year.HasValue)
+            {
+                return View(new BMRegHistViewModel
+                {
+                    BMVM = _service.PopulateBudgetRegHist(year),
+                    Year = year.GetValueOrDefault(),
+                    YearList = ConstantData.HomeReportConstantValue.GetYearList()
+                });
+            }
+            else
+            {
+                return View(new BMRegHistViewModel
+                {
+                    BMVM = _service.PopulateBudgetRegHist(DateTime.Now.Year),
+                    YearList = ConstantData.HomeReportConstantValue.GetYearList()
+                });
+            }
+        }
+
+        //Get current budget of selected account in Budget Registration pop up screen.
+        [AcceptVerbs("GET")]
+        public JsonResult GetCurrentBudget(int accountMasterID)
+        {
+            return Json(_service.GetCurrentBudget(accountMasterID));
+        }
+
+        //Register new budget from Budget Monitoring screen
+        public IActionResult RegisterNewBudget(BMViewModel vm)
+        {
+            var userId = GetUserID();
+
+            _service.AddNewBudget(vm, int.Parse(GetUserID()));
+
+            return RedirectToAction("BM", "Home");
         }
 
         // [FOR APPROVAL]
@@ -1012,5 +1065,9 @@ namespace ExpenseProcessingSystem.Controllers
             return PartialView();
         }
 
+        private string GetUserID()
+        {
+            return _session.GetString("UserID");
+        }
     }
 }
