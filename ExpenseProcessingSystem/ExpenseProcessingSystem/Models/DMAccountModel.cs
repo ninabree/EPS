@@ -16,6 +16,7 @@ namespace ExpenseProcessingSystem.Models
         public int Account_Group_MasterID { get; set; }
         public int Account_Currency_MasterID { get; set; }
         public string Account_Name { get; set; }
+        public string Account_Budget_Code { get; set; }
         public string Account_Code { get; set; }
         public string Account_No { get; set; }
         public string Account_Cust { get; set; }

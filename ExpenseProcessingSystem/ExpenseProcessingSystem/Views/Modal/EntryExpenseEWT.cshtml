@@ -5,11 +5,28 @@
     var val = (string)ViewBag.taxpayor;
     var idNo = (string)ViewBag.id ?? "0";
 }
-@Html.Hidden("EwtTaxPayorName", @idNo, new { @id = "parentIdEWT" })
+@using ExpenseProcessingSystem.ViewModels.Entry
+@model DDVEWTViewModel
+@Html.Hidden("EwtTaxPayorName", Model.table_ID, new { @id = "parentIdEWT" })
 <table class="table voucher-tbl table-bordered">
     <tr>
         <td colspan="1"><label>Tax Payor's Name</label></td>
-        <td colspan="3" id="taxPayorsName">@Html.TextBox("taxPayor", @val, new { id = "txtPayor", @class = "input" })</td>
+        <td colspan="3" id="taxPayorsName">
+            @*@Html.TextBox("taxPayor", Model.tax_payor, new { id = "txtPayor", @class = "input" })*@
+            <select id="@Html.IdFor(x => Model.tax_payor)" class="input100 txtAcc" name="@Html.NameFor(x => Model.tax_payor)">
+                @foreach (var groepModel in Model.vendor_list)
+                {
+                    if (@groepModel.Value == @Model.tax_payor)
+                    {
+                        <option value="@groepModel.Value" selected>@groepModel.Text</option>
+                    }
+                    else
+                    {
+                        <option value="@groepModel.Value">@groepModel.Text</option>
+                    }
+                }
+            </select>
+        </td>
     </tr>
 </table>
 <script>
@@ -18,12 +35,9 @@
             //var modalBody = $(this).parent().siblings().find('.modal-body2');
             if ($(this).parent().siblings().find('h4.modal-title', this).text() == "EWT Information") {
                 var itemNo = $("#parentIdEWT").val().substr(5);
-                var val = $("table").find("#txtPayor").val();
+                var val = $("table").find("#tax_payor option:selected").val();
                 alert(val);
-
                 $("#EntryDDV_" + itemNo + "__ewtPayorName").val(val);
-                alert($("#EntryDDV_" + itemNo + "__ewtPayorName").val());
-
                 $('.modal-body2').empty();
                 $('.myModal2').modal('hide');
             } else {

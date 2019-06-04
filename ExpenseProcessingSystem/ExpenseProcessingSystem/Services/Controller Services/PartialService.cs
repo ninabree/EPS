@@ -1,8 +1,10 @@
 ﻿using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Models;
 using ExpenseProcessingSystem.ViewModels;
+using ExpenseProcessingSystem.ViewModels.Entry;
 using ExpenseProcessingSystem.ViewModels.Search_Filters;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +23,126 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             _httpContextAccessor = httpContextAccessor;
             _context = context;
         }
-        //-----------------------------------Populate-------------------------------------//
+
+        //----------------------------------- [[ Populate Non Cash ]] -------------------------------------////
+        // [RETRIEVE NC EXPENSE DETAILS]
+        public EntryNCViewModelList getExpenseNC(int transID)
+        {
+            List<EntryNCViewModel> ncList = new List<EntryNCViewModel>();
+
+            var EntryDetails = (from e
+                                in _context.ExpenseEntry
+                                where e.Expense_ID == transID
+                                select new
+                                {
+                                    e,
+                                    ExpenseEntryNCModel = from d
+                                                          in _context.ExpenseEntryNonCash
+                                                          where d.ExpenseEntryModel.Expense_ID == e.Expense_ID
+                                                          select new
+                                                          {
+                                                              d,
+                                                              ExpenseEntryNCDtlModel = from g
+                                                                                      in _context.ExpenseEntryNonCashDetails
+                                                                                    where g.ExpenseEntryNCModel.ExpNC_ID == d.ExpNC_ID
+                                                                                       select new
+                                                                                       {
+                                                                                           g,
+                                                                                           ExpenseEntryNCDtlAccModel = from a
+                                                                                                                       in _context.ExpenseEntryNonCashDetailAccounts
+                                                                                                                       where a.ExpenseEntryNCModel.ExpNCDtl_ID == g.ExpNCDtl_ID
+                                                                                                                       select a
+                                                                                       }
+
+                                                          }
+                                }).FirstOrDefault();
+
+            foreach (var nc in EntryDetails.ExpenseEntryNCModel)
+            {
+
+                
+                //NC Details
+                List<ExpenseEntryNCDtlViewModel> ncDtlList = new List<ExpenseEntryNCDtlViewModel>();
+                ExpenseEntryNCDtlViewModel ncDtlVM = new ExpenseEntryNCDtlViewModel();
+                //NC Detail Accounts
+                List<ExpenseEntryNCDtlAccViewModel> ncDtlAccList = new List<ExpenseEntryNCDtlAccViewModel>();
+                ExpenseEntryNCDtlAccViewModel ncDtlAccVM = new ExpenseEntryNCDtlAccViewModel();
+
+                foreach (var ncDtl in nc.ExpenseEntryNCDtlModel)
+                {
+                    foreach (var ncDtlAcc in ncDtl.ExpenseEntryNCDtlAccModel)
+                    {
+                        ncDtlAccVM = new ExpenseEntryNCDtlAccViewModel()
+                        {
+                            ExpNCDtlAcc_Acc_ID = ncDtlAcc.ExpNCDtlAcc_Acc_ID,
+                            ExpNCDtlAcc_Acc_Name = ncDtlAcc.ExpNCDtlAcc_Acc_Name,
+                            ExpNCDtlAcc_Curr_ID = ncDtlAcc.ExpNCDtlAcc_Curr_ID,
+                            ExpNCDtlAcc_Curr_Name = _context.DMCurrency.Where(x=> x.Curr_ID == ncDtlAcc.ExpNCDtlAcc_Curr_ID).Select(x=> x.Curr_Name).FirstOrDefault(),
+                            ExpNCDtlAcc_Inter_Rate = ncDtlAcc.ExpNCDtlAcc_Inter_Rate,
+                            ExpNCDtlAcc_Amount = ncDtlAcc.ExpNCDtlAcc_Amount,
+                            ExpNCDtlAcc_Type_ID = ncDtlAcc.ExpNCDtlAcc_Type_ID
+                        };
+                        ncDtlAccList.Add(ncDtlAccVM);
+                    }
+
+                    ncDtlVM = new ExpenseEntryNCDtlViewModel()
+                    {
+                        ExpNCDtl_Remarks_Desc = ncDtl.g.ExpNCDtl_Remarks_Desc,
+                        ExpNCDtl_Remarks_Period_From = ncDtl.g.ExpNCDtl_Remarks_Period_From,
+                        ExpNCDtl_Remarks_Period_To = ncDtl.g.ExpNCDtl_Remarks_Period_To,
+                        ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>()
+                    };
+                    if (ncDtlVM.ExpenseEntryNCDtlAccs.Count <= 0)
+                    {
+                        ncDtlVM.ExpenseEntryNCDtlAccs = ncDtlAccList;
+                    }
+                    ncDtlList.Add(ncDtlVM);
+                }
+
+
+                EntryNCViewModel ncVM = new EntryNCViewModel()
+                {
+                    NC_Category_ID = nc.d.ExpNC_Category_ID,
+                    ExpenseEntryNCDtls = ncDtlList
+                };
+
+                ncList.Add(ncVM);
+            }
+
+            EntryNCViewModelList ncModel = new EntryNCViewModelList()
+            {
+                entryID = EntryDetails.e.Expense_ID,
+                expenseDate = EntryDetails.e.Expense_Date,
+                status = getStatus(EntryDetails.e.Expense_Status),
+                statusID = EntryDetails.e.Expense_Status,
+                approver = (EntryDetails.e.Expense_Status == 1) ? "" : getUserName(EntryDetails.e.Expense_Approver),
+                verifier_1 = (EntryDetails.e.Expense_Status == 1) ? "" : getUserName(EntryDetails.e.Expense_Verifier_1),
+                verifier_2 = (EntryDetails.e.Expense_Status == 1) ? "" : getUserName(EntryDetails.e.Expense_Verifier_2),
+                maker = EntryDetails.e.Expense_Creator_ID,
+                EntryNC = ncList
+            };
+
+            return ncModel;
+        }
+        //get Status
+        public string getStatus(int id)
+        {
+            var status = _context.StatusList.SingleOrDefault(q => q.Status_ID == id);
+            return status.Status_Name;
+        }
+        //get userName
+        public string getUserName(int id)
+        {
+            var name = _context.User.SingleOrDefault(q => q.User_ID == id);
+
+            if (name == null)
+            {
+                return null;
+            }
+
+            return name.User_UserName;
+        }
+        //----------------------------------- [[ Populate DM ]] -------------------------------------//
         public List<DMVendorViewModel> populateVendor(DMFiltersViewModel filters)
         {
             IQueryable<DMVendorModel> mList = _context.DMVendor.Where(x=>x.Vendor_isDeleted == false && x.Vendor_isActive == true).ToList().AsQueryable();

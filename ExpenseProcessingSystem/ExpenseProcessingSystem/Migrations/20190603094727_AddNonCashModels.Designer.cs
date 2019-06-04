@@ -4,14 +4,16 @@ using ExpenseProcessingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    partial class EPSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190603094727_AddNonCashModels")]
+    partial class AddNonCashModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,8 +85,6 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("Account_Approver_ID");
 
-                    b.Property<string>("Account_Budget_Code");
-
                     b.Property<string>("Account_Code");
 
                     b.Property<DateTime>("Account_Created_Date");
@@ -129,8 +129,6 @@ namespace ExpenseProcessingSystem.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("Pending_Account_Approver_ID");
-
-                    b.Property<string>("Pending_Account_Budget_Code");
 
                     b.Property<string>("Pending_Account_Code");
 
@@ -839,9 +837,13 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int?>("ExpenseEntryNCModelExpNC_ID");
 
+                    b.Property<int?>("ExpenseEntryNCModelExpense_ID");
+
                     b.HasKey("ExpNCDtl_ID");
 
                     b.HasIndex("ExpenseEntryNCModelExpNC_ID");
+
+                    b.HasIndex("ExpenseEntryNCModelExpense_ID");
 
                     b.ToTable("ExpenseEntryNonCashDetails");
                 });
@@ -1282,9 +1284,13 @@ namespace ExpenseProcessingSystem.Migrations
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryNCDtlModel", b =>
                 {
-                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryNCModel", "ExpenseEntryNCModel")
+                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryNCModel")
                         .WithMany("ExpenseEntryNCDtls")
                         .HasForeignKey("ExpenseEntryNCModelExpNC_ID");
+
+                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryModel", "ExpenseEntryNCModel")
+                        .WithMany()
+                        .HasForeignKey("ExpenseEntryNCModelExpense_ID");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryNCModel", b =>

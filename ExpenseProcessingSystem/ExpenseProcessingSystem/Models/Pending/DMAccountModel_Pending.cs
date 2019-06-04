@@ -17,6 +17,7 @@ namespace ExpenseProcessingSystem.Models
         public int Pending_Account_Currency_MasterID { get; set; }
         public string Pending_Account_Name { get; set; }
         public string Pending_Account_Code { get; set; }
+        public string Pending_Account_Budget_Code { get; set; }
         public string Pending_Account_No { get; set; }
         public string Pending_Account_Cust { get; set; }
         public string Pending_Account_Div { get; set; }

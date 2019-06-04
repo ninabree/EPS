@@ -20,6 +20,9 @@ namespace ExpenseProcessingSystem.ViewModels.NewRecord
         [Display(Name = "Account Code")]
         [NotNullValidations, TextValidation]
         public string Account_Code { get; set; }
+        [Display(Name = "Account Budget Code")]
+        [NotNullValidations, TextValidation]
+        public string Account_Budget_Code { get; set; }
         [Display(Name = "Account No")]
         [NotNullValidations]
         public string Account_No { get; set; }

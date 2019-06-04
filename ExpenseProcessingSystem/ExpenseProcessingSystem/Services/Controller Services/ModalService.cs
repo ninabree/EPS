@@ -271,6 +271,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                                             .Select(x => x.Curr_Name).FirstOrDefault(),
                             Account_Name = m.Pending_Account_Name,
                             Account_Code = m.Pending_Account_Code,
+                            Account_Budget_Code = m.Pending_Account_Budget_Code,
                             Account_Cust = m.Pending_Account_Cust,
                             Account_Div = m.Pending_Account_Div,
                             Account_Fund = m.Pending_Account_Fund,
@@ -314,6 +315,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                                             .Select(x => x.Curr_Name).FirstOrDefault(),
                             Account_Name = m.Pending_Account_Name,
                             Account_Code = m.Pending_Account_Code,
+                            Account_Budget_Code = m.Pending_Account_Budget_Code,
                             Account_Cust = m.Pending_Account_Cust,
                             Account_Div = m.Pending_Account_Div,
                             Account_Fund = m.Pending_Account_Fund,
@@ -1110,6 +1112,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             Account_FBT_Name = (fbt == null) || (fbt.FBT_Name == null) ? defaultFBT.FBT_Name : fbt.FBT_Name,
                             Account_No = m.Account_No,
                             Account_Code = m.Account_Code,
+                            Account_Budget_Code = m.Account_Budget_Code,
                             Account_Cust = m.Account_Cust,
                             Account_Div = m.Account_Div,
                             Account_Fund = m.Account_Fund,
@@ -1429,6 +1432,14 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             return currList;
         }
 
+        public List<SelectListItem> getVendorSelectList()
+        {
+            List<SelectListItem> venList = new List<SelectListItem>();
+            _context.DMVendor.Where(x => x.Vendor_isDeleted == false && x.Vendor_isActive == true).ToList().ForEach(x => {
+                venList.Add(new SelectListItem() { Text = x.Vendor_Name, Value = x.Vendor_ID + "" });
+            });
+            return venList;
+        }
         public List<DMTRViewModel> getTRList()
         {
             List<DMTRViewModel> grpList = new List<DMTRViewModel>();

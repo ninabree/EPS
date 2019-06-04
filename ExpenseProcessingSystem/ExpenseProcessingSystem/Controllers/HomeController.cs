@@ -618,8 +618,13 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.systemValues.vat = _service.getVendorVat(firstId);
             viewModel.systemValues.acc = _service.getAccDetailsEntry();
 
-            viewModel.expenseYear = DateTime.Today.Year.ToString();
-            viewModel.expenseDate = DateTime.Today;
+            //for NC
+
+            if (viewModel.GetType() != typeof(EntryNCViewModelList))
+            {
+                viewModel.expenseYear = DateTime.Today.Year.ToString();
+                viewModel.expenseDate = DateTime.Today;
+            }
 
             return viewModel;
         }
@@ -1160,13 +1165,18 @@ namespace ExpenseProcessingSystem.Controllers
         //[* Entry Cash Advance(SS) *]
         //------------------------------------------------------------------
 
-        public IActionResult Entry_NC()
+        public IActionResult Entry_NC(EntryNCViewModelList viewModel, string partialName)
         {
             var userId = GetUserID();
-
-            EntryNCViewModelList viewModel = new EntryNCViewModelList();
-            viewModel = PopulateEntry(viewModel);
-            viewModel.EntryNC.Add(new EntryNCViewModel());
+            if(viewModel.EntryNC == null)
+            {
+                viewModel = new EntryNCViewModelList();
+            }
+            //viewModel = PopulateEntry(viewModel);
+            //viewModel.EntryNC.Add(new EntryNCViewModel());
+            
+            ViewData["partialName"] = partialName ?? GlobalSystemValues.NC_LS_PAYROLL.ToString();
+            viewModel.category_of_entry = GlobalSystemValues.NC_CATEGORIES_SELECT;
             return View(viewModel);
         }
 

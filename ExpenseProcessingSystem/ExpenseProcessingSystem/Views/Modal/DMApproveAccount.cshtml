@@ -11,7 +11,8 @@
         <table class="table table-bordered editable-th">
             <tr>
                 <th>Account</th>
-                <th>Code</th>
+                <th>Account Code</th>
+                <th>Budget Code</th>
                 <th>Number</th>
                 <th>Cust</th>
                 <th>Div</th>
@@ -28,6 +29,7 @@
                     <tr>
                         <td>@Html.TextBoxFor(item => item[i].Account_Name, new { @class = "w-full", @readonly = "readonly" })</td>
                         <td>@Html.TextBoxFor(item => item[i].Account_Code, new { @class = "w-full", @readonly = "readonly" })</td>
+                        <td>@Html.TextBoxFor(item => item[i].Account_Budget_Code, new { @class = "w-full", @readonly = "readonly" })</td>
                         <td>@Html.TextBoxFor(item => item[i].Account_No, new { @class = "w-full", @readonly = "readonly" })</td>
                         <td>@Html.TextBoxFor(item => item[i].Account_Cust, new { @class = "w-full", @readonly = "readonly" })</td>
                         <td>@Html.TextBoxFor(item => item[i].Account_Div, new { @class = "w-full", @readonly = "readonly" })</td>

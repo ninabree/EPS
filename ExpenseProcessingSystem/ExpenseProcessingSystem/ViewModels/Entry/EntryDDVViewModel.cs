@@ -39,6 +39,7 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         [Display(Name = "EWT")]
         public int ewt { get; set; }
         public string ewt_Name { get; set; }
+        public string ewt_Payor_Name { get; set; }
         [NotNullValidations]
         [Display(Name = "Currency")]
         public int ccy { get; set; }

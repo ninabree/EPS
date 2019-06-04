@@ -1,61 +1,78 @@
-﻿<table class="table voucher-tbl" style="background-color: #fafafa">
+﻿
+@{ 
+    Layout = null;
+}
+@using ExpenseProcessingSystem.ViewModels.Entry
+@model EntryNCViewModelList
+<div>
+    <table class="table voucher-tbl" style="background-color: #fafafa">
 
-    <colgroup span="2"></colgroup>
-    <col />
-    <col />
-    <col />
-    <col />
-    <col />
-    <col />
+        <colgroup span="2"></colgroup>
+        <col />
+        <col />
+        <col />
+        <col />
+        <col />
+        <col />
 
-    <thead>
+        <thead>
+            <tr>
+                <th rowspan="1" colspan="2">Sample Header</th>
+                <th rowspan="2">Sample Header</th>
+                <th rowspan="2">Sample Header</th>
+                <th rowspan="2">Sample Header</th>
+                <th rowspan="2">Sample Header</th>
+                <th rowspan="2">Sample Header</th>
+                <th rowspan="2">Sample Header</th>
+            </tr>
+            <tr>
+                <th colspan="1">Sample Header</th>
+                <th colspan="1">Sample Header</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Sample</td>
+                <td>Sample</td>
+                <td>Sample</td>
+                <td>Sample</td>
+                <td>Sample</td>
+                <td>Sample</td>
+                <td>Sample</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table voucher-tbl m-t-20" style="background-color: #fafafa; border: 2px solid #ccc !important">
+        <col style="width:14.3%">
+        <col style="width:14.3%">
+        <col style="width:14.3%">
+        <col style="width:14.3%">
+        <col style="width:14.3%">
+        <col style="width:14.3%">
+        <col style="width:14.3%">
+
         <tr>
-            <th rowspan="1" colspan="2">Remarks</th>
-            <th rowspan="2">Account</th>
-            <th rowspan="2">INTER-RATE</th>
-            <th rowspan="2">CCY</th>
-            <th rowspan="2">Debit</th>
-            <th rowspan="2"></th>
-            <th rowspan="2">Credit</th>
+            <td colspan="5"></td>
+            <td colspan="1"></td>
+            <td colspan="1"></td>
         </tr>
         <tr>
-            <th colspan="1">Description</th>
-            <th colspan="1">Period</th>
+            <td colspan="1"></td>
+            <td colspan="1"></td>
+            <td colspan="1"></td>
+            <td colspan="1"></td>
+            <td colspan="1"></td>
+            <td colspan="1" class="border-solid"></td>
+            <td colspan="1" class="border-solid"></td>
         </tr>
-    </thead>
-    <tbody>
-    </tbody>
-</table>
-
-<table class="table voucher-tbl m-t-20" style="background-color: #fafafa; border: 2px solid #ccc !important">
-    <col style="width:14.3%">
-    <col style="width:14.3%">
-    <col style="width:14.3%">
-    <col style="width:14.3%">
-    <col style="width:14.3%">
-    <col style="width:14.3%">
-    <col style="width:14.3%">
-
-    <tr>
-        <td colspan="5"></td>
-        <td colspan="1">Debit</td>
-        <td colspan="1">Credit</td>
-    </tr>
-    <tr>
-        <td colspan="1">Balance Checker</td>
-        <td colspan="1"></td>
-        <td colspan="1"></td>
-        <td colspan="1"></td>
-        <td colspan="1"></td>
-        <td colspan="1" class="border-solid">-</td>
-        <td colspan="1" class="border-solid">-</td>
-    </tr>
-    <tr>
-        <td colspan="1">Total</td>
-        <td colspan="1"></td>
-        <td colspan="1"></td>
-        <td colspan="1"></td>
-        <td colspan="1"></td>
-        <td colspan="2" class="border-solid">-</td>
-    </tr>
-</table>
+        <tr>
+            <td colspan="1"></td>
+            <td colspan="1"></td>
+            <td colspan="1"></td>
+            <td colspan="1"></td>
+            <td colspan="1"></td>
+            <td colspan="2" class="border-solid"></td>
+        </tr>
+    </table>
+</div>
