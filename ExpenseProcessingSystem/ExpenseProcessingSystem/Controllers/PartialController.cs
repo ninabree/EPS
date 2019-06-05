@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using ExpenseProcessingSystem.ConstantData;
 using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Models;
 using ExpenseProcessingSystem.Services;
 using ExpenseProcessingSystem.Services.Controller_Services;
 using ExpenseProcessingSystem.ViewModels;
+using ExpenseProcessingSystem.ViewModels.Entry;
 using ExpenseProcessingSystem.ViewModels.Search_Filters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseProcessingSystem.Controllers
@@ -32,6 +35,45 @@ namespace ExpenseProcessingSystem.Controllers
             _sortService = new SortService();
         }
 
+
+        // -------------------------------------- [[ NON CASH ]] --------------------------------------
+        // [[ Local Payroll ]]
+        [OnlineUserCheck]
+        [Route("//Partial/NC_Partial_1/")]
+        public IActionResult NC_Partial_1 (string entryID)
+        {
+            var userId = _session.GetString("UserID");
+            EntryNCViewModelList viewModel = new EntryNCViewModelList();
+            if (entryID != null)
+            {
+                viewModel = _service.getExpenseNC(int.Parse(entryID));
+            } else
+            {
+                viewModel.EntryNC.Add(
+                    new EntryNCViewModel
+                    {
+                        ExpenseEntryNCDtls = new List<ExpenseEntryNCDtlViewModel>
+                        {
+                            new ExpenseEntryNCDtlViewModel
+                            {
+                                ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
+                                {
+                                    new ExpenseEntryNCDtlAccViewModel()
+                                }
+                            }
+                        } 
+                    });
+            }
+            viewModel = PopulateEntryNC(viewModel);
+            return View("NCPartial", viewModel);
+        }
+
+        public EntryNCViewModelList PopulateEntryNC(EntryNCViewModelList viewModel)
+        {
+            viewModel.category_of_entry = GlobalSystemValues.NC_CATEGORIES_SELECT;
+            return viewModel;
+        }
+        // -------------------------------------- [[ DATA MAINTENANCE ]] --------------------------------------
         [Route("/Partial/DMPartial_Vendor/")]
         public IActionResult DMPartial_Vendor(string sortOrder, string currentFilter, string colName, string searchString, string page)
         {

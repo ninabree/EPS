@@ -127,8 +127,7 @@ namespace ExpenseProcessingSystem.ConstantData
             GlobalSystemValues.NC_ADJUSTMENTS,
             GlobalSystemValues.NC_ADVANCE_EXPENSE_HO_REVERSAL
         };
-        public static readonly SelectList NC_CATEGORIES_SELECT = new SelectList(new[] 
-            {
+        public static readonly List<SelectListItem> NC_CATEGORIES_SELECT = new List<SelectListItem> {
                 new SelectListItem { Text = "LS PAYROLL", Value = NC_CATEGORIES[0].ToString(), Selected = true },
                 new SelectListItem { Text = "TAX REMITTANCE", Value = NC_CATEGORIES[1].ToString(), Selected = false },
                 new SelectListItem { Text = "MONTHLY ROSS BILL", Value = NC_CATEGORIES[2].ToString(), Selected = false },
@@ -141,6 +140,6 @@ namespace ExpenseProcessingSystem.ConstantData
                 new SelectListItem { Text = "DOLLAR PAYMENT", Value = NC_CATEGORIES[9].ToString(), Selected = false },
                 new SelectListItem { Text = "ADJUSTMENTS", Value = NC_CATEGORIES[10].ToString(), Selected = false },
                 new SelectListItem { Text = "ADVANCE EXPENSE HO REVERSAL", Value = NC_CATEGORIES[11].ToString(), Selected = false }
-            }, "Value", "Text");
+        };
     }
 }

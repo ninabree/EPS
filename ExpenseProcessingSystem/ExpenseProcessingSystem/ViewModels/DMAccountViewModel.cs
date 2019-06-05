@@ -13,6 +13,8 @@ namespace ExpenseProcessingSystem.ViewModels
         public string Account_Name { get; set; }
         [Display(Name = "Account Code")]
         public string Account_Code { get; set; }
+        [Display(Name = "Account Budget Code")]
+        public string Account_Budget_Code { get; set; }
         [Display(Name = "Account No")]
         public string Account_No { get; set; }
         [Display(Name = "Account Cust")]

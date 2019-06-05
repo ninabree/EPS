@@ -374,7 +374,6 @@
         $("table").on("click", ".expenseEWT", function (e) {
             e.stopImmediatePropagation();
             var pNode = $(this.parentNode)[0].parentNode;
-            alert(pNode.id);
             var taxpayor = $("#" + pNode.id).find(".txtPayor").val()
 
             //remove prev contents
@@ -445,9 +444,7 @@
     };
     function TriggerInterEntity() {
         $("input.chkInter").each(function (i, val) {
-            alert(i + " --- " + val.val());
             var btnAttr = $(val).siblings(":eq(14)").find(".reqBtn");
-            alert(btnAttr);
             if (val.checked == true) {
                 btnAttr.attr("href", "#");
                 btnAttr.attr("class", "expenseInterEntity");

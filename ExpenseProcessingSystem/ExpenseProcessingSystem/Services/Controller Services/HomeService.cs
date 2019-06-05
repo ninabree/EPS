@@ -561,6 +561,7 @@ namespace ExpenseProcessingSystem.Services
                                   pp.Pending_Account_Group_MasterID,
                                   pp.Pending_Account_Currency_MasterID,
                                   pp.Pending_Account_Code,
+                                  pp.Pending_Account_Budget_Code,
                                   pp.Pending_Account_No,
                                   pp.Pending_Account_Cust,
                                   pp.Pending_Account_Div,
@@ -591,6 +592,7 @@ namespace ExpenseProcessingSystem.Services
                     Account_Group_MasterID = pending.Pending_Account_Group_MasterID,
                     Account_Currency_MasterID = pending.Pending_Account_Currency_MasterID,
                     Account_Code = pending.Pending_Account_Code,
+                    Account_Budget_Code = pending.Pending_Account_Budget_Code,
                     Account_Cust = pending.Pending_Account_Cust,
                     Account_Div = pending.Pending_Account_Div,
                     Account_Fund = pending.Pending_Account_Fund,
@@ -1655,6 +1657,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Account_Group_MasterID = dm.Account_Group_MasterID,
                     Pending_Account_Currency_MasterID = dm.Account_Currency_MasterID,
                     Pending_Account_Code = dm.Account_Code,
+                    Pending_Account_Budget_Code = dm.Account_Budget_Code,
                     Pending_Account_Cust = dm.Account_Cust,
                     Pending_Account_Div = dm.Account_Div,
                     Pending_Account_Fund = dm.Account_Fund,
@@ -1687,6 +1690,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Account_Group_MasterID = dm.Account_Group_MasterID,
                     Pending_Account_Currency_MasterID = dm.Account_Currency_MasterID,
                     Pending_Account_Code = dm.Account_Code,
+                    Pending_Account_Budget_Code = dm.Account_Budget_Code,
                     Pending_Account_Cust = dm.Account_Cust,
                     Pending_Account_Div = dm.Account_Div,
                     Pending_Account_Fund = dm.Account_Fund,
@@ -2824,8 +2828,6 @@ namespace ExpenseProcessingSystem.Services
             listOfLists.Add(new SelectList(_context.DMTR.Where(x => x.TR_isActive == true && x.TR_isDeleted == false).Select(q => new { q.TR_ID, q.TR_Tax_Rate }),
                         "TR_ID", "TR_Tax_Rate"));
 
-            listOfLists.Add(GlobalSystemValues.NC_CATEGORIES_SELECT);
-
             return listOfLists;
         }
         //retrieve account details
@@ -3215,19 +3217,26 @@ namespace ExpenseProcessingSystem.Services
                         Inter_ID = inter.Inter_ID,
                         Inter_Particular_Title = inter.Inter_Particular_Title ?? "",
                         Inter_Currency1_ABBR_ID = inter.Inter_Currency1_ABBR,
-                        Inter_Currency1_ABBR_Name = _context.DMCurrency.Where(x=> x.Curr_MasterID == int.Parse(inter.Inter_Currency1_ABBR) && 
-                                                    x.Curr_isDeleted == false && x.Curr_isActive == true).Select(x=> x.Curr_Name).FirstOrDefault() ?? "",
+                        Inter_Currency1_ABBR_Name = "",
                         Inter_Currency1_Amount = inter.Inter_Currency1_Amount ?? "0",
                         Inter_Currency2_ABBR_ID = inter.Inter_Currency2_ABBR,
-                        Inter_Currency2_ABBR_Name = _context.DMCurrency.Where(x => x.Curr_MasterID == int.Parse(inter.Inter_Currency2_ABBR) &&
-                                                    x.Curr_isDeleted == false && x.Curr_isActive == true).Select(x => x.Curr_Name).FirstOrDefault() ?? "",
+                        Inter_Currency2_ABBR_Name = "",
                         Inter_Currency2_Amount = inter.Inter_Currency2_Amount ?? "0",
                         Inter_Rate = inter.Inter_Rate ?? "1",
                         Inter_Particular1 = _modalservice.PopulateParticular1(inter.Inter_Particular_Title ?? "", inter.Inter_Currency1_ABBR ?? "", inter.Inter_Currency1_Amount ?? "0", inter.Inter_Currency2_Amount ?? "0", double.Parse(inter.Inter_Rate ?? "1")),
                         Inter_Particular2 = _modalservice.PopulateParticular2(inter.Inter_Currency1_ABBR ?? "", inter.Inter_Currency2_ABBR ?? "", inter.Inter_Currency2_Amount ?? "0", double.Parse(inter.Inter_Rate ?? "1")),
                         Inter_Particular3 = _modalservice.PopulateParticular3(inter.Inter_Currency2_ABBR ?? "", inter.Inter_Currency2_Amount ?? "0")
                     };
-
+                    if (interDetailsVM.Inter_Currency1_ABBR_ID != null)
+                    {
+                        interDetailsVM.Inter_Currency1_ABBR_Name = _context.DMCurrency.Where(x => x.Curr_MasterID == int.Parse(inter.Inter_Currency1_ABBR) &&
+                                                       x.Curr_isDeleted == false && x.Curr_isActive == true).Select(x => x.Curr_Name).FirstOrDefault() ?? "";
+                    }
+                    if (interDetailsVM.Inter_Currency2_ABBR_ID != null)
+                    {
+                        interDetailsVM.Inter_Currency2_ABBR_Name = _context.DMCurrency.Where(x => x.Curr_MasterID == int.Parse(inter.Inter_Currency2_ABBR) &&
+                                                    x.Curr_isDeleted == false && x.Curr_isActive == true).Select(x => x.Curr_Name).FirstOrDefault() ?? "";
+                    }
                     interDetails.Add(interDetailsVM);
                 }
 
@@ -3259,7 +3268,8 @@ namespace ExpenseProcessingSystem.Services
                     vat_Name = _context.DMVAT.Where(x => x.VAT_ID == dtl.d.ExpDtl_Vat && x.VAT_isActive == true).Select(x => x.VAT_Name).FirstOrDefault(),
                     chkEwt = dtl.d.ExpDtl_isEwt,
                     ewt = dtl.d.ExpDtl_isEwt ? 0 : dtl.d.ExpDtl_Ewt,
-                    ewt_Name = _context.DMTR.Where(x => x.TR_ID == dtl.d.ExpDtl_Ewt && x.TR_isActive == true).Select(x => x.TR_Tax_Rate.ToString()).FirstOrDefault(),
+                    ewt_Name = _context.DMTR.Where(x => x.TR_ID == dtl.d.ExpDtl_Ewt).Select(x => x.TR_Tax_Rate.ToString()).FirstOrDefault(),
+                    ewt_Payor_Name = _context.DMTR.Where(x => x.TR_ID == int.Parse(dtl.d.ExpDtl_Ewt_Payor_Name)).Select(x => x.TR_Tax_Rate.ToString()).FirstOrDefault(),
                     ccy = dtl.d.ExpDtl_Ccy,
                     ccy_Name = _context.DMCurrency.Where(x => x.Curr_ID == dtl.d.ExpDtl_Ccy && x.Curr_isActive == true).Select(x => x.Curr_CCY_ABBR).FirstOrDefault(),
                     debitGross = dtl.d.ExpDtl_Debit,

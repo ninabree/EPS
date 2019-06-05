@@ -1067,9 +1067,13 @@ namespace ExpenseProcessingSystem.Controllers
 
         public IActionResult EntryExpenseEWT(string id, string taxpayor)
         {
-            ViewBag.taxpayor = taxpayor;
-            ViewBag.id = id;
-            return PartialView();
+            var venList = _service.getVendorSelectList();
+            DDVEWTViewModel model = new DDVEWTViewModel {
+                table_ID = id,
+                tax_payor = taxpayor ?? venList.Select(x => x.Value).FirstOrDefault(),
+                vendor_list = venList
+            };
+            return PartialView(model);
         }
 
         private string GetUserID()

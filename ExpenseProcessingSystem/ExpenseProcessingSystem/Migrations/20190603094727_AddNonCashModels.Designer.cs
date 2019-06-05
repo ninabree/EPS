@@ -4,18 +4,20 @@ using ExpenseProcessingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    partial class EPSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190603094727_AddNonCashModels")]
+    partial class AddNonCashModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
+                .HasAnnotation("ProductVersion", "2.2.0-rtm-35687")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -27,19 +29,15 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("Budget_AccountGroup_MasterID");
 
-                    b.Property<int>("Budget_Account_MasterID");
-
                     b.Property<double>("Budget_Amount");
 
-                    b.Property<int>("Budget_Creator_ID");
+                    b.Property<string>("Budget_Approver_ID");
 
-                    b.Property<DateTime>("Budget_Date_Registered");
+                    b.Property<double>("Budget_Current");
 
-                    b.Property<string>("Budget_GBase_Budget_Code");
+                    b.Property<DateTime>("Budget_Last_Approval_Date");
 
-                    b.Property<string>("Budget_ISPS_Account_Name");
-
-                    b.Property<bool>("Budget_IsActive");
+                    b.Property<byte>("Budget_Status");
 
                     b.Property<bool>("Budget_isDeleted");
 
@@ -87,8 +85,6 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("Account_Approver_ID");
 
-                    b.Property<string>("Account_Budget_Code");
-
                     b.Property<string>("Account_Code");
 
                     b.Property<DateTime>("Account_Created_Date");
@@ -133,8 +129,6 @@ namespace ExpenseProcessingSystem.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("Pending_Account_Approver_ID");
-
-                    b.Property<string>("Pending_Account_Budget_Code");
 
                     b.Property<string>("Pending_Account_Code");
 
@@ -843,9 +837,13 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int?>("ExpenseEntryNCModelExpNC_ID");
 
+                    b.Property<int?>("ExpenseEntryNCModelExpense_ID");
+
                     b.HasKey("ExpNCDtl_ID");
 
                     b.HasIndex("ExpenseEntryNCModelExpNC_ID");
+
+                    b.HasIndex("ExpenseEntryNCModelExpense_ID");
 
                     b.ToTable("ExpenseEntryNonCashDetails");
                 });
@@ -1286,9 +1284,13 @@ namespace ExpenseProcessingSystem.Migrations
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryNCDtlModel", b =>
                 {
-                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryNCModel", "ExpenseEntryNCModel")
+                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryNCModel")
                         .WithMany("ExpenseEntryNCDtls")
                         .HasForeignKey("ExpenseEntryNCModelExpNC_ID");
+
+                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryModel", "ExpenseEntryNCModel")
+                        .WithMany()
+                        .HasForeignKey("ExpenseEntryNCModelExpense_ID");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryNCModel", b =>

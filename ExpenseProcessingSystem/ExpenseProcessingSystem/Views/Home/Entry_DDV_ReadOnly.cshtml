@@ -84,7 +84,7 @@
                         <td><input id="@Model.EntryDDV[i].dept" value="@Model.EntryDDV[i].dept_Name" class="input100" disabled /></td>
                         <td style="text-align:center">@Html.DisplayFor(x => Model.EntryDDV[i].chkVat, new { @class = "chkVat" })</td>
                         <td><input value="@Model.EntryDDV[i].vat_Name" class="input100" disabled /></td>
-                        <td style="text-align:center">@Html.DisplayFor(x => Model.EntryDDV[i].chkEwt, new { @class = "chkEwt" })</td>
+                        <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryDDV[i].chkEwt, new { @class = "chkEwt", @disabled = "disabled" })</td>
                         <td><input value="@Model.EntryDDV[i].ewt_Name" class="input100" disabled /></td>
                         <td><input value="@Model.EntryDDV[i].ccy_Name" class="input100" disabled /></td>
                         <td><input value="@Model.EntryDDV[i].debitGross" class="input100" disabled /></td>
