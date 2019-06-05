@@ -4,22 +4,26 @@
     ViewData["Title"] = "BudgetRegHistModal";
     Layout = "~/Views/Shared/_ModalLayout.cshtml";
 }
-<div style="text-align:right;" id="divDDLYear">
-    @Html.DropDownListFor(m => m.Year, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "ddlYear dis-inline-block w-49", @style="width:10%" })
+<div id="divDDLYear">
+    @Html.DropDownListFor(m => m.Year, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "ddlYear input100", @style="width:10%;height:10%" })
 </div>
-<div style="max-height:400px;overflow-y: scroll">
+<div style="height:450px;overflow-y: scroll">
     <table class="table table-striped tab-tbl" style="width:100%">
         <colgroup>
-            <col style="width:25%" />
-            <col style="width:15%" />
             <col style="width:20%" />
+            <col style="width:14%" />
+            <col style="width:10%" />
+            <col style="width:18%" />
             <col style="width:20%" />
-            <col style="width:20%" />
+            <col style="width:18%" />
         </colgroup>
         <thead>
             <tr>
                 <td>
                     <text>Account Name</text>
+                </td>
+                <td>
+                    <text>Account Number</text>
                 </td>
                 <td>
                     <text>G-Base Budget Code</text>
@@ -45,6 +49,9 @@
                             @Html.DisplayFor(x => i.BM_Acc_Name)
                         </td>
                         <td>
+                            @Html.DisplayFor(x => i.BM_Acc_Num)
+                        </td>
+                        <td>
                             @Html.DisplayFor(x => i.BM_GBase_Code)
                         </td>
                         <td style="text-align:right">
@@ -62,7 +69,7 @@
             else
             {
                 <tr>
-                    <td colspan="5" style="text-align:center">No record found</td>
+                    <td colspan="6" style="text-align:center">No record found</td>
                 </tr>
             }
         </tbody>

@@ -13,7 +13,6 @@ namespace ExpenseProcessingSystem.ViewModels
 
         public string BM_Acc_Group_Name { get; set; }
         public string BM_Acc_Name { get; set; }
-        public string BM_ISPS_Acc_Name { get; set; }
         public string BM_GBase_Code { get; set; }
         public string BM_Acc_Num { get; set; }
         [DisplayFormat(DataFormatString = "{0:#,##0.00#}", ApplyFormatInEditMode = true)]
@@ -23,7 +22,7 @@ namespace ExpenseProcessingSystem.ViewModels
         [DisplayFormat(DataFormatString = "{0:#,##0.00#}", ApplyFormatInEditMode = true)]
         public double BM_Budget_Current { get; set; }
 
-        public IEnumerable<DMAccountModel> BM_AccountList { get; set; }
+        public int BM_Account_MasterID { get; set; }
 
         public string BM_Creator_Name { get; set; }
 

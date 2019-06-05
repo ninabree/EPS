@@ -513,7 +513,6 @@ namespace ExpenseProcessingSystem.Controllers
             ViewData["CurrentSort"] = sortOrder;
             ViewData["AccountMappingSortParm"] = String.IsNullOrEmpty(sortOrder) ? "acc_mapping" : "";
             ViewData["AccountNameSortParm"] = sortOrder == "acc_name_desc" ? "acc_name" : "acc_name_desc";
-            ViewData["ISPSAccNameSortParm"] = sortOrder == "isps_acc_name_desc" ? "isps_acc_name" : "isps_acc_name_desc";
             ViewData["GBaseBudgetCodeSortParm"] = sortOrder == "gbase_budget_code_desc" ? "gbase_budget_code" : "gbase_budget_code_desc";
             ViewData["AccountNumberSortParm"] = sortOrder == "acc_num_desc" ? "acc_num" : "acc_num_desc";
             ViewData["BudgetSortParm"] = sortOrder == "budget_desc" ? "budget" : "budget_desc";

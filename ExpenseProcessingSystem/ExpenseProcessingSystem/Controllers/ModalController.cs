@@ -42,24 +42,25 @@ namespace ExpenseProcessingSystem.Controllers
         //Open Budget registration screen
         public IActionResult BudgetRegistrationModal()
         {
-            var accountList = _service.GetAccountList();
+            var accountList = _service.GetAccountListForBudgetMonitoring();
+            List<BMViewModel> vm = new List<BMViewModel>();
 
-            return View(new BMViewModel {
-                BM_Budget_Current = _service.GetCurrentBudget(accountList.First().Account_MasterID),
-                BM_AccountList = accountList
-            });
+            foreach(var i in accountList)
+            {
+                vm.Add(new BMViewModel {
+                    BM_Account_MasterID = i.Account_MasterID,
+                    BM_Acc_Name = i.Account_Name,
+                    BM_Acc_Num = i.Account_No,
+                    BM_Budget_Current = _service.GetCurrentBudget(i.Account_MasterID)
+                });
+            }
+
+            return View(vm);
         }
 
         //Open history of Budget Registration screen
         public IActionResult BudgetRegHistModal(int? year)
         {
-            BMRegHistViewModel vm = new BMRegHistViewModel {
-                BMVM = _service.PopulateBudgetRegHist(DateTime.Now.Year),
-                YearList = ConstantData.HomeReportConstantValue.GetYearList()
-            };
-
-            
-
             if (year.HasValue)
             {
                 return View(new BMRegHistViewModel
