@@ -10,17 +10,21 @@
 <table class="table voucher-tbl table-bordered">
     <tr>
         <td colspan="3"><label>Exchange Rate:</label></td>
-        <td colspan="2">@Html.TextBoxFor(m => m.Inter_Rate, new { @class = "w-full" })</td>
+        <td colspan="2">@Html.TextBoxFor(m => m.Inter_Rate, new { @class = "w-full changeable" })</td>
         <td colspan="11"></td>
     </tr>
     <tr>
         <td colspan="3"><label>PhP Amount</label></td>
         <td colspan="2" id="curr1-abbr">
             @Html.DisplayFor(m => m.Inter_Currency1_ABBR_Name)
-            @Html.HiddenFor(m=> m.Inter_Currency1_ABBR_ID)
+            @Html.HiddenFor(m => m.Inter_Currency1_ABBR_ID)
         </td>
-        <td colspan="4">@Html.TextBoxFor(m => m.Inter_Currency1_Amount)</td>
-        <td colspan="7"></td>
+        <td colspan="4">@Html.TextBoxFor(m => m.Inter_Currency1_Amount, new { @class = "changeable" })</td>
+        <td colspan="3">
+            @Html.CheckBoxFor(model => model.Inter_Check1, new { @class = "convertChk changeable" })
+            Convert from <label id="convertCurr1">@Model.Inter_Currency2_ABBR_Name</label>
+        </td>
+        <td colspan="4"><input type="number" id="convertAmt1" class="changeable" value="@Model.Inter_Convert1_Amount" /></td>
     </tr>
     <tr>
         <td colspan="3"><label id="curr2-lbl">USD Amount</label></td>
@@ -34,13 +38,17 @@
                     }
                     else
                     {
-                        <option value="@groepModel.Value" >@groepModel.Text</option>
+                        <option value="@groepModel.Value">@groepModel.Text</option>
                     }
                 }
             </select>
         </td>
-        <td colspan="4">@Html.TextBoxFor(m => m.Inter_Currency2_Amount)</td>
-        <td colspan="7">@Html.HiddenFor(m => m.Inter_Debit_Amount)</td>
+        <td colspan="4">@Html.TextBoxFor(m => m.Inter_Currency2_Amount, new { @class = "changeable" })</td>
+        <td colspan="3">
+            @Html.CheckBoxFor(model => model.Inter_Check2, new { @class = "convertChk changeable" })
+            Convert from <label id="convertCurr2">@Model.Inter_Currency1_ABBR_Name</label>
+        </td>
+        <td colspan="4"><input type="number" id="convertAmt2" value="@Model.Inter_Convert2_Amount" class="changeable" /></td>
     </tr>
     <tr>
         <td colspan="16"></td>
@@ -123,86 +131,242 @@
     }
     <tr></tr>
     <tr></tr>
+
 </table>
 
+@*<script type="text/javascript" src="~/js/EntryScripts.js"></script>*@
 <script>
     $(function () {
-        var curr1 = $("table").find("#Inter_Currency1_Amount").val();
-        var deb = $("table").find(".txtGross").val();
-        if (curr1 != 0) {
-            UpdateParticulars(curr1, deb);
+        //set fields
+        var curr1Amt = $("table").find("#Inter_Currency1_Amount");
+        var curr2Amt = $("table").find("#Inter_Currency2_Amount");
+        var chk1 = $("table").find("#Inter_Check1");
+        var chk2 = $("table").find("#Inter_Check2");
+        var conv1Amt = $("table").find("#convertAmt1");
+        var conv2Amt = $("table").find("#convertAmt2");
+
+        //set fields to default
+        //defaultSet();
+        //defaultVals();
+        //var isChk1 = false;
+        //var isChk2 = false;
+
+        var curr1Val = $(curr1Amt).val();
+        var curr2Val = $(curr2Amt).val();
+        isChk();
+        var conv1Val = $(conv1Amt).val();
+        var conv2Val = $(conv2Amt).val();
+        if ((curr1Val != 0) && isChk2 && (conv2Val != 0)) {
+            UpdateParticulars1(curr1Val, conv2Val);
         }
-        $("input#Inter_Currency1_Amount").on("change", function (e) {
+        else if ((curr2Val != 0) && isChk1 && (conv1Val != 0)) {
+            UpdateParticulars2(curr2Val, conv1Val);
+        } else {
+            defaultInter();
+        }
+        defaultCheck();
+
+        $(".convertChk").on("change", function (e) {
             e.stopImmediatePropagation();
-            var curr1 = $("table").find("#Inter_Currency1_Amount").val();
-            var deb = $("table").find(".txtGross").val();
-            if ((curr1 != 0)) {
-                UpdateParticulars(curr1,deb);
+            defaultSet();
+            if ($(this).is(':checked') && $(this).attr("id") == "Inter_Check1") {
+                disable1();
+            } else if ($(this).is(':checked') && $(this).attr("id") == "Inter_Check2") {
+                disable2();
+            } else {
+                defaultVals();
+                defaultInter();
             }
         });
-        $("input#Inter_Currency2_Amount").on("change", function (e) {
+        $(".changeable").on("change", function (e) {
             e.stopImmediatePropagation();
-            var curr1 = $("table").find("#Inter_Currency1_Amount").val();
-            var deb = $("table").find(".txtGross").val();
-            if ((curr1 != 0)) {
-                UpdateParticulars(curr1, deb);
+            var curr1Val = $(curr1Amt).val();
+            var curr2Val = $(curr2Amt).val();
+            isChk();
+            var conv1Val = $(conv1Amt).val();
+            var conv2Val = $(conv2Amt).val();
+            if ((curr1Val != 0) && isChk2 && (conv2Val != 0)) {
+                UpdateParticulars1(curr1Val, conv2Val);
             }
-        });
-        $("input#Inter_Rate").on("change", function (e) {
-            e.stopImmediatePropagation();
-            var curr1 = $("table").find("#Inter_Currency1_Amount").val();
-            var deb = $("table").find(".txtGross").val();
-            if ((curr1 != 0)) {
-                UpdateParticulars(curr1, deb);
+            else if ((curr2Val != 0) && isChk1 && (conv1Val != 0)) {
+                UpdateParticulars2(curr2Val, conv1Val);
             }
         });
         $(".modal-footer2").on("click", "#saveBtnEntry", function () {
             if ($(this).parent().siblings().find('h4.modal-title', this).text() == "Inter-Entity") {
                 var itemNo = $("#parentIdInter").val().substr(5);
-                var rate = $("table").find("#Inter_Rate").val();
-                var curr1AbbrID = $("#curr1-abbr").find("input#Inter_Currency1_ABBR_ID").val();
-                var curr1Amt = $("table").find("#Inter_Currency1_Amount").val();
-                var curr2AbbrID = $("#curr2-abbr").find("#Inter_Currency2_ABBR_ID option:selected").val();
-                var curr2Amt = $("table").find("#Inter_Currency2_Amount").val();
-                $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Currency1_ABBR_ID").val(curr1AbbrID);
-                $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Currency1_Amount").val(curr1Amt);
-                $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Currency2_ABBR_ID").val(curr2AbbrID);
-                $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Currency2_Amount").val(curr2Amt);
-                $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Rate").val(rate);
+                isChk();
+
+                $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Currency1_ABBR_ID").val($("#curr1-abbr").find("input#Inter_Currency1_ABBR_ID").val());
+                $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Currency2_ABBR_ID").val($("#curr2-abbr").find("#Inter_Currency2_ABBR_ID option:selected").val());
+                $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Currency1_Amount").val($(curr1Amt).val());
+                $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Currency2_Amount").val($(curr2Amt).val());
+                $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Convert1_Amount").val($(conv1Amt).val());
+                $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Convert2_Amount").val($(conv2Amt).val());
+                $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Check1").val(isChk1);
+                $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Check2").val(isChk2);
+                $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Rate").val($("table").find("#Inter_Rate").val());
+                $("#EntryDDV_" + itemNo + "__debitGross").val($("#par1-0").text());
 
                 $('.modal-body2').empty();
+
+                //trigger recomputation of debit and credit
+                //$(document).trigger("change");
+                computeValuesDDV($("#item_" + itemNo)[0]);
+
+
                 $('.myModal2').modal('hide');
             }
         });
+        // ---------------------- [[ FUNCTIONS ]] ----------------------
 
-        function UpdateParticulars(curr1, deb) {
-            var rate = $("table").find("#Inter_Rate").val();
-            if (!($.isNumeric(curr1) && $.isNumeric(deb) && $.isNumeric(rate))) {
-                alert("Invalid amount/s provided.");
-            } else if (($.isNumeric(curr1) && $.isNumeric(deb) && $.isNumeric(rate)) && (parseFloat(curr1) > parseFloat(deb))) {
-                alert("Invalid amount/s provided. - First amount cannot be higher than Debit Gross Amount value.");
-                $("#Inter_Currency2_Amount").val(0);
-                $("#par1-0").text(0);
-                $("#par1-1").text(0);
-                $("#par1-2").text(0);
-                $("#par2-0").text(0);
-                $("#par2-1").text(0);
-                $("#par3-0").text(0);
-                $("#par3-1").text(0);
+        function isChk() {
+            isChk1 = $(chk1).is(":checked");
+            isChk2 = $(chk2).is(":checked");
+        }
+        function defaultInter() {
+            $("#par1-0").text(0);
+            $("#par1-1").text(0);
+            $("#par1-2").text(0);
+            $("#par2-0").text(0);
+            $("#par2-1").text(0);
+            $("#par3-0").text(0);
+            $("#par3-1").text(0);
+            $("#par2-0-1").text(1);
+        }
+        function defaultSet() {
+            //set default availability
+            $(curr1Amt).removeAttr('disabled');
+            $(curr2Amt).removeAttr('disabled');
+            $(chk1).removeAttr('disabled');
+            $(chk2).removeAttr('disabled');
+            $(conv1Amt).attr('disabled', 'true');
+            $(conv2Amt).attr('disabled', 'true');
+        }
+        function defaultVals() {
+            //set default values
+            $(curr1Amt).val(0);
+            $(curr2Amt).val(0);
+            $(chk1).prop("checked", false);
+            $(chk2).prop("checked", false);
+            $(conv1Amt).val(0);
+            $(conv2Amt).val(0);
+        }
+        function disable1() {
+            $(curr1Amt).attr('disabled', 'true');
+            $(chk2).attr('disabled', 'true');
+            $(conv1Amt).removeAttr('disabled');
+        }
+        function disable2() {
+            $(curr2Amt).attr('disabled', 'true');
+            $(chk1).attr('disabled', 'true');
+            $(conv2Amt).removeAttr('disabled');
+        }
+
+        function defaultCheck() {
+            defaultSet();
+            if ($("#Inter_Check1").is(':checked')) {
+                disable1();
+            } else if ($("#Inter_Check2").is(':checked')) {
+                disable2();
             } else {
-                var curr2 = ((deb - parseFloat(curr1)) / rate).toFixed(2);
+                defaultVals();
+            }
+        }
+        function UpdateParticulars1(currVal, convVal) {
+            var rate = $("table").find("#Inter_Rate").val();
+            if (!($.isNumeric(currVal) && $.isNumeric(convVal) && $.isNumeric(rate))) {
+                alert("Invalid amount/s provided.");
+            } else {
+                currVal = parseFloat(currVal).toFixed(2);
+                var curr2 = (parseFloat(convVal) / parseFloat(rate)).toFixed(2);
                 var parCredit = (parseFloat(curr2) * parseFloat(rate)).toFixed(2);
-                var parDebit = (parseFloat(curr1) + parseFloat(parCredit)).toFixed(2);
-                $("#Inter_Currency2_Amount").val(curr2);
+                var parDebit = (parseFloat(currVal) + parseFloat(parCredit)).toFixed(2);
+                $(curr2Amt).val(curr2);
                 $("#par1-0").text(parDebit);
                 $("#par1-1").text(parCredit);
-                $("#par1-2").text(curr1);
+                $("#par1-2").text(currVal);
                 $("#par2-0").text(parCredit);
                 $("#par2-1").text(curr2);
                 $("#par3-0").text(curr2);
                 $("#par3-1").text(curr2);
                 $("#par2-0-1").text(rate);
             }
+        }
+        function UpdateParticulars2(currVal, convVal) {
+            var rate = $("table").find("#Inter_Rate").val();
+            if (!($.isNumeric(currVal) && $.isNumeric(convVal) && $.isNumeric(rate))) {
+                alert("Invalid amount/s provided.");
+            } else {
+                var curr2 = (parseFloat(convVal) * parseFloat(rate)).toFixed(2);
+                var parCredit = (parseFloat(currVal) * parseFloat(rate)).toFixed(2);
+                var parDebit = (parseFloat(curr2) + parseFloat(parCredit)).toFixed(2);
+                $(curr1Amt).val(curr2);
+                $("#par1-0").text(parDebit);
+                $("#par1-1").text(parCredit);
+                $("#par1-2").text(curr2);
+                $("#par2-0").text(parCredit);
+                $("#par2-1").text(currVal);
+                $("#par3-0").text(currVal);
+                $("#par3-1").text(currVal);
+                $("#par2-0-1").text(rate);
+            }
+        }
+        //TEMP FIX
+        function computeValuesDDV(parent) {
+            var pNode = parent;
+            
+            var grossAmt = $("#" + pNode.id + " .txtGross").val();
+            
+            $("#" + pNode.id + " .txtGross").attr("value", grossAmt);
+
+            var itemNo = pNode.id; //jquery obj
+            var chkEwtVal = $("#" + itemNo).find(".chkEwt").is(':checked');
+            var vatable = $("#" + itemNo).find(".chkVat").is(':checked');
+            if (chkEwtVal) {
+                if (vatable) {
+                    var vatRate = (Number($("#" + itemNo).find(".txtVat option:selected").text()) / 100);
+                    var ewtRate = (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100);
+                    var netVat = roundNumber(grossAmt / (1 + vatRate), 2);
+                    var ewt = roundNumber(netVat * ewtRate, 2);
+                    var netEwt = grossAmt - ewt;
+
+                    $("#" + itemNo).find(".txtCredEwt").val(ewt);
+                    $("#" + itemNo).find(".txtCredCash").val(netEwt);
+                } else {
+                    var ewtAmount = grossAmt * (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100);
+                    $("#" + itemNo).find(".txtCredEwt").val(roundNumber(ewtAmount, 2));
+                    $("#" + itemNo).find(".txtCredCash").val(roundNumber((grossAmt - ewtAmount), 2));
+                }
+            } else {
+                $("#" + itemNo).find(".txtCredEwt").val(0);
+                $("#" + itemNo).find(".txtCredCash").val(grossAmt);
+            }
+
+            var gross = $(".txtGross");
+            var credEwt = $(".txtCredEwt");
+            var credCash = $(".txtCredCash");
+
+            var grossTotal = 0;
+            var ewtSubTotal = 0;
+            var cashSubTotal = 0;
+
+            for (var i = 0; i < gross.length; i++) {
+                grossTotal += Number(gross[i].value);
+            }
+
+            for (var i = 0; i < credEwt.length; i++) {
+                ewtSubTotal += Number(credEwt[i].value);
+            }
+
+            for (var i = 0; i < credCash.length; i++) {
+                cashSubTotal += Number(credCash[i].value);
+            }
+
+            $("#grossTotal").val(grossTotal);
+            $("#credEwtTotal").val(ewtSubTotal);
+            $("#credCashTotal").val(cashSubTotal);
+            $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
         }
     });
 </script>

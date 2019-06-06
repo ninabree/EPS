@@ -37,6 +37,8 @@
     @if (ViewBag.access.isLoggedIn)
     {
         <div id="homepage-tabs" class="m-t-30 m-l-25 m-r-25">
+            <input type="hidden" value="@ViewBag.userID" id="UI" />
+
             <ul id="tabs">
 
                 @if (!ViewBag.access.isAdmin)

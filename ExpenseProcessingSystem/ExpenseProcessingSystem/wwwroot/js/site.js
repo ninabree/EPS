@@ -99,7 +99,7 @@ $(document).ready(function () {
         //get table name
         var tblName = $('#dm-tbl').find(":selected").text();
 
-        var creatorId = $(this).siblings("input[type='hidden']").val();
+        var creatorId = $(this).parent().find("#item_Vendor_Creator_ID").val();
         var userId = $("#UI").val();
         //check if all selected chkboxs have same statuses
         var isSameStat = true;
@@ -110,6 +110,7 @@ $(document).ready(function () {
                 return false;
             }
         });
+        alert(creatorId + "<-- creator === user --> " + userId);
 
         if (!isSameStat && chkCount <= 2) {
             alert("Kindly check rows with the same status only.");

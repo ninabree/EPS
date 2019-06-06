@@ -277,6 +277,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     Vendor_Creator_Name = userList.Where(a => a.Vendor_MasterID == m.Vendor_MasterID).Select(a => a.CreatorName).FirstOrDefault() ?? "N/A",
                     Vendor_Approver_Name = userList.Where(a => a.Vendor_MasterID == m.Vendor_MasterID).Select(a => a.ApproverName).FirstOrDefault() ?? "",
                     Vendor_Created_Date = m.Vendor_Created_Date,
+                    Vendor_Creator_ID = m.Vendor_Creator_ID,
                     Vendor_Last_Updated = m.Vendor_Last_Updated,
                     Vendor_Tax_Rates = new List<string>(),
                     Vendor_VAT = new List<string>(),
@@ -661,6 +662,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     Account_Created_Date = m.Account_Created_Date,
                     Account_Last_Updated = m.Account_Last_Updated,
                     Account_Status_ID = m.Account_Status_ID,
+                    Account_Creator_ID = m.Account_Creator_ID,
                     Account_Currency_Name = currList.Where(a => a.Account_ID == m.Account_ID).Select(a => a.Curr_Name).FirstOrDefault() ?? "",
                     Account_Status = statList.Where(a => a.Account_ID == m.Account_ID).Select(a => a.Status_Name).FirstOrDefault() ?? "N/A"
                 };
