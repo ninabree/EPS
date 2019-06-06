@@ -141,7 +141,7 @@
             <div id="tbl-lbl">
                 <div class="dis-inline-block"><p>Preview of Voucher:</p></div>
             </div>
-            @Html.Partial("CVPartial")
+            <iframe id="iframePreview" frameborder="0" src="" style="position: relative; min-height: 50vh; max-height: 100%; width: 100%;"></iframe>
         </div>
         <div id="entry-status" class="m-t-10 m-b-10">
             <div class="dis-inline-block"><label>Status: </label></div>
@@ -245,6 +245,7 @@
             $(rowTemplate).find("#template_month").removeAttr("data-val-required");
             $(rowTemplate).find("#template_day").removeAttr("data-val-required");
 
+            $('#iframePreview').prop('src', "/Home/GenerateVoucher");
         });
 
         $("#addRow").click(function (e) {
