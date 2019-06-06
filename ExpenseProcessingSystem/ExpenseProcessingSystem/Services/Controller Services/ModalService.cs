@@ -1550,8 +1550,6 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             _context.Budget.Add(new BudgetModel {
                 Budget_AccountGroup_MasterID = accountInfo.Account_Group_MasterID,
                 Budget_Account_MasterID = accountInfo.Account_MasterID,
-                Budget_GBase_Budget_Code = "09XXXX(ModalService)",
-                Budget_ISPS_Account_Name = "ISPS Account Name(ModalService)",
                 Budget_Amount = vm.BM_Budget_Amount,
                 Budget_Creator_ID = userid,
                 Budget_IsActive = true,
@@ -1561,9 +1559,10 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             _context.SaveChanges();
         }
 
-        public IEnumerable<DMAccountModel> GetAccountList()
+        public IEnumerable<DMAccountModel> GetAccountListForBudgetMonitoring()
         {
-            return _context.DMAccount.Where(x => x.Account_isActive == true && x.Account_isDeleted == false).ToList().OrderBy(x => x.Account_Name);
+            return _context.DMAccount.Where(x => x.Account_Fund == true && x.Account_isActive == true 
+                                            && x.Account_isDeleted == false).ToList().OrderBy(x => x.Account_Name);
         }
 
         public double GetCurrentBudget(int accountMasterID)
@@ -1582,14 +1581,13 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             join acc in _context.DMAccount on bud.Budget_Account_MasterID equals acc.Account_MasterID
                             join user in _context.User on bud.Budget_Creator_ID equals user.User_ID
                             where accGrp.AccountGroup_isActive == true && accGrp.AccountGroup_isDeleted == false &&
-                            acc.Account_isActive == true && acc.Account_isDeleted == false &&
+                            acc.Account_isActive == true && acc.Account_isDeleted == false && acc.Account_Fund == true &&
                             bud.Budget_Date_Registered.Year == year
                             select new
                             {
                                 bud.Budget_ID,
                                 accGrp.AccountGroup_Name,
                                 acc.Account_Name,
-                                bud.Budget_ISPS_Account_Name,
                                 bud.Budget_GBase_Budget_Code,
                                 acc.Account_No,
                                 bud.Budget_Amount,
@@ -1605,7 +1603,6 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     BM_Budget_ID = i.Budget_ID,
                     BM_Acc_Group_Name = i.AccountGroup_Name,
                     BM_Acc_Name = i.Account_Name,
-                    BM_ISPS_Acc_Name = i.Budget_ISPS_Account_Name,
                     BM_GBase_Code = i.Budget_GBase_Budget_Code,
                     BM_Acc_Num = i.Account_No,
                     BM_Budget_Amount = i.Budget_Amount,
