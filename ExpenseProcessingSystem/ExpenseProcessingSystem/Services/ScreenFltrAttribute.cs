@@ -109,6 +109,7 @@ namespace ExpenseProcessingSystem.Services
                 {
                     AF_Name = ctx.Session.GetString("AF_Name") ?? "",
                     AF_Code = ctx.Session.GetString("AF_Code") ?? "",
+                    AF_Budget_Code = ctx.Session.GetString("AF_Budget_Code") ?? "",
                     AF_No = int.Parse(ctx.Session.GetString("AF_No") ?? "0"),
                     AF_Cust = ctx.Session.GetString("AF_Cust") ?? "",
                     AF_Div = ctx.Session.GetString("AF_Div") ?? "",
