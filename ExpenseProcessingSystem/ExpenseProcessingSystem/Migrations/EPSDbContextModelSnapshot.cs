@@ -25,7 +25,7 @@ namespace ExpenseProcessingSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Budget_AccountGroup_MasterID");
+                    b.Property<int>("Budget_Account_ID");
 
                     b.Property<int>("Budget_Account_MasterID");
 
@@ -34,10 +34,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.Property<int>("Budget_Creator_ID");
 
                     b.Property<DateTime>("Budget_Date_Registered");
-
-                    b.Property<string>("Budget_GBase_Budget_Code");
-
-                    b.Property<string>("Budget_ISPS_Account_Name");
 
                     b.Property<bool>("Budget_IsActive");
 

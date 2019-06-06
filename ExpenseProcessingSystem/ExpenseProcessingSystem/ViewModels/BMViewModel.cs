@@ -22,11 +22,11 @@ namespace ExpenseProcessingSystem.ViewModels
         [DisplayFormat(DataFormatString = "{0:#,##0.00#}", ApplyFormatInEditMode = true)]
         public double BM_Budget_Current { get; set; }
 
+        public int BM_Account_ID { get; set; }
         public int BM_Account_MasterID { get; set; }
 
         public string BM_Creator_Name { get; set; }
 
-        public int BM_Acc_Master_ID { get; set; }
         public string BM_Acc_Code { get; set; }
         public bool BM_Acc_IsActive { get; set; }
         public string BM_Acc_Group{ get; set; }

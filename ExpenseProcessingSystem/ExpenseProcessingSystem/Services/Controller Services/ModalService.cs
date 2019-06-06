@@ -1529,33 +1529,40 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         }
 
         //[ Budget Monitoring ]
-        public void AddNewBudget(BMViewModel vm, int userid)
+        public void AddNewBudget(List<BMViewModel> vmList, int userid)
         {
-            var currentBudgetInfo = _context.Budget.Where(x => x.Budget_Account_MasterID == vm.BM_Acc_Master_ID 
-                                    && x.Budget_IsActive == true && x.Budget_isDeleted == false).DefaultIfEmpty(
-                                    new BudgetModel { Budget_ID = 0 }).FirstOrDefault();
+            //Get all current budget information.
+            var allCurrBudgetInfo = _context.Budget.Where(x => x.Budget_IsActive == true && x.Budget_isDeleted == false).ToList();
+            //Get all "Fund == True" account information.
+            var allAccountInfo = _context.DMAccount.Where(x => x.Account_isActive == true && x.Account_isDeleted == false
+                                                        && x.Account_Fund == true ).ToList();
 
-            if(currentBudgetInfo.Budget_ID != 0)
-            {
-                currentBudgetInfo.Budget_IsActive = false;
-                currentBudgetInfo.Budget_isDeleted = true;
-                _context.Entry(currentBudgetInfo).State = EntityState.Modified;
+            //Change IsActive and IsDeleted status of all current budget information
+            if(allCurrBudgetInfo.Count() != 0) { 
+                foreach (var i in allCurrBudgetInfo)
+                {
+                    i.Budget_IsActive = false;
+                    i.Budget_isDeleted = true;
+                    _context.Entry(i).State = EntityState.Modified;
+                }
                 _context.SaveChanges();
             }
 
-            //Get Account information.
-            var accountInfo = _context.DMAccount.Where(x => x.Account_MasterID == vm.BM_Acc_Master_ID && x.Account_isActive == true
-                                && x.Account_isDeleted == false).FirstOrDefault();
-
-            _context.Budget.Add(new BudgetModel {
-                Budget_AccountGroup_MasterID = accountInfo.Account_Group_MasterID,
-                Budget_Account_MasterID = accountInfo.Account_MasterID,
-                Budget_Amount = vm.BM_Budget_Amount,
-                Budget_Creator_ID = userid,
-                Budget_IsActive = true,
-                Budget_isDeleted = false,
-                Budget_Date_Registered = DateTime.Now
-            });
+            //Add all new budget information.
+            foreach(var i in vmList)
+            {
+                _context.Budget.Add(new BudgetModel
+                {
+                    Budget_Account_ID = i.BM_Account_ID,
+                    Budget_Account_MasterID = i.BM_Account_MasterID,
+                    Budget_Amount = i.BM_Budget_Amount,
+                    Budget_Creator_ID = userid,
+                    Budget_IsActive = true,
+                    Budget_isDeleted = false,
+                    Budget_Date_Registered = DateTime.Now
+                });
+            }
+            
             _context.SaveChanges();
         }
 
@@ -1575,26 +1582,25 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         public IEnumerable<BMViewModel> PopulateBudgetRegHist(int? year)
         {
             List<BMViewModel> bmvmList = new List<BMViewModel>();
-            //var dbBudget = _context.Budget.ToList();
+
             var dbBudget = (from bud in _context.Budget
-                            join accGrp in _context.DMAccountGroup on bud.Budget_AccountGroup_MasterID equals accGrp.AccountGroup_MasterID
-                            join acc in _context.DMAccount on bud.Budget_Account_MasterID equals acc.Account_MasterID
+                            join acc in _context.DMAccount on bud.Budget_Account_ID equals acc.Account_ID
+                            join accGrp in _context.DMAccountGroup on acc.Account_Group_MasterID equals accGrp.AccountGroup_MasterID
                             join user in _context.User on bud.Budget_Creator_ID equals user.User_ID
                             where accGrp.AccountGroup_isActive == true && accGrp.AccountGroup_isDeleted == false &&
-                            acc.Account_isActive == true && acc.Account_isDeleted == false && acc.Account_Fund == true &&
-                            bud.Budget_Date_Registered.Year == year
+                            acc.Account_Fund == true && bud.Budget_Date_Registered.Year == year
                             select new
                             {
                                 bud.Budget_ID,
                                 accGrp.AccountGroup_Name,
                                 acc.Account_Name,
-                                bud.Budget_GBase_Budget_Code,
+                                acc.Account_Budget_Code,
                                 acc.Account_No,
                                 bud.Budget_Amount,
                                 bud.Budget_Date_Registered,
                                 user.User_LName,
                                 user.User_FName
-                            }).ToList().OrderByDescending(x => x.Budget_Date_Registered);
+                            }).ToList().OrderByDescending(x => x.Budget_Date_Registered).ThenBy(x => x.Account_Name);
 
             foreach (var i in dbBudget)
             {
@@ -1603,7 +1609,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     BM_Budget_ID = i.Budget_ID,
                     BM_Acc_Group_Name = i.AccountGroup_Name,
                     BM_Acc_Name = i.Account_Name,
-                    BM_GBase_Code = i.Budget_GBase_Budget_Code,
+                    BM_GBase_Code = i.Account_Budget_Code,
                     BM_Acc_Num = i.Account_No,
                     BM_Budget_Amount = i.Budget_Amount,
                     BM_Date_Registered = i.Budget_Date_Registered,
