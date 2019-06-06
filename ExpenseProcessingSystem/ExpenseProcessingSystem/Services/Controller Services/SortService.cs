@@ -274,10 +274,20 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     tempList = tempList.OrderBy(s => s.Account_Code);
                     viewData = "glyph-2";
                     vdInfo = "glyphicon-menu-down";
-                    break;
+                    break; 
                 case "acc_code_desc":
                     tempList = tempList.OrderByDescending(s => s.Account_Code);
                     viewData = "glyph-2";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "acc_budget_code":
+                    tempList = tempList.OrderBy(s => s.Account_Budget_Code);
+                    viewData = "glyph-14";
+                    vdInfo = "glyphicon-menu-down";
+                    break; 
+                case "acc_budget_code_desc":
+                    tempList = tempList.OrderByDescending(s => s.Account_Budget_Code);
+                    viewData = "glyph-14";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "acc_no":

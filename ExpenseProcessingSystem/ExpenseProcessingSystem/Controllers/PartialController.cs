@@ -225,6 +225,7 @@ namespace ExpenseProcessingSystem.Controllers
             ViewData["CurrentSort"] = sortOrder;
             ViewData["AccountStatusSortParm"] = String.IsNullOrEmpty(sortOrder) ? "acc_stat" : "";
             ViewData["AccountCodeSortParm"] = sortOrder == "acc_code_desc" ? "acc_code" : "acc_code_desc";
+            ViewData["AccountBudgetCodeSortParm"] = sortOrder == "acc_budget_code_desc" ? "acc_budget_code" : "acc_budget_code_desc";
             ViewData["AccountNumberSortParm"] = sortOrder == "acc_no_desc" ? "acc_no" : "acc_no_desc";
             ViewData["AccountCustSortParm"] = sortOrder == "acc_cust_desc" ? "acc_cust" : "acc_cust_desc";
             ViewData["AccountDivSortParm"] = sortOrder == "acc_div_desc" ? "acc_div" : "acc_div_desc";

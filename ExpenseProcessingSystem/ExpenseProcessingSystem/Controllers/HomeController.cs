@@ -199,6 +199,7 @@ namespace ExpenseProcessingSystem.Controllers
                     //Account
                     _session.SetString("AF_Name", vm.DMFilters.AF.AF_Name ?? "");
                     _session.SetString("AF_Code", vm.DMFilters.AF.AF_Code ?? "");
+                    _session.SetString("AF_Budget_Code", vm.DMFilters.AF.AF_Budget_Code ?? "");
                     _session.SetString("AF_No", vm.DMFilters.AF.AF_No.ToString() ?? "0");
                     _session.SetString("AF_Cust", vm.DMFilters.AF.AF_Cust ?? "");
                     _session.SetString("AF_Div", vm.DMFilters.AF.AF_Div ?? "");
