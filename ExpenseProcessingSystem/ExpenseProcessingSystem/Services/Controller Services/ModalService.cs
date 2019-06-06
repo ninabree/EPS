@@ -6,6 +6,7 @@ using ExpenseProcessingSystem.ViewModels.Entry;
 using ExpenseProcessingSystem.ViewModels.NewRecord;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -271,6 +272,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                                             .Select(x => x.Curr_Name).FirstOrDefault(),
                             Account_Name = m.Pending_Account_Name,
                             Account_Code = m.Pending_Account_Code,
+                            Account_Budget_Code = m.Pending_Account_Budget_Code,
                             Account_Cust = m.Pending_Account_Cust,
                             Account_Div = m.Pending_Account_Div,
                             Account_Fund = m.Pending_Account_Fund,
@@ -314,6 +316,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                                             .Select(x => x.Curr_Name).FirstOrDefault(),
                             Account_Name = m.Pending_Account_Name,
                             Account_Code = m.Pending_Account_Code,
+                            Account_Budget_Code = m.Pending_Account_Budget_Code,
                             Account_Cust = m.Pending_Account_Cust,
                             Account_Div = m.Pending_Account_Div,
                             Account_Fund = m.Pending_Account_Fund,
@@ -1110,6 +1113,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             Account_FBT_Name = (fbt == null) || (fbt.FBT_Name == null) ? defaultFBT.FBT_Name : fbt.FBT_Name,
                             Account_No = m.Account_No,
                             Account_Code = m.Account_Code,
+                            Account_Budget_Code = m.Account_Budget_Code,
                             Account_Cust = m.Account_Cust,
                             Account_Div = m.Account_Div,
                             Account_Fund = m.Account_Fund,
@@ -1429,6 +1433,14 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             return currList;
         }
 
+        public List<SelectListItem> getVendorSelectList()
+        {
+            List<SelectListItem> venList = new List<SelectListItem>();
+            _context.DMVendor.Where(x => x.Vendor_isDeleted == false && x.Vendor_isActive == true).ToList().ForEach(x => {
+                venList.Add(new SelectListItem() { Text = x.Vendor_Name, Value = x.Vendor_ID + "" });
+            });
+            return venList;
+        }
         public List<DMTRViewModel> getTRList()
         {
             List<DMTRViewModel> grpList = new List<DMTRViewModel>();
@@ -1513,7 +1525,99 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
 
         public string GetAccountName(string id)
         {
-            return _context.DMAccount.Where(db => db.Account_ID == Int64.Parse(id)).Single().Account_Name;
+            return _context.DMAccount.Where(x => x.Account_ID == Int64.Parse(id)).Single().Account_Name;
+        }
+
+        //[ Budget Monitoring ]
+        public void AddNewBudget(List<BMViewModel> vmList, int userid)
+        {
+            //Get all current budget information.
+            var allCurrBudgetInfo = _context.Budget.Where(x => x.Budget_IsActive == true && x.Budget_isDeleted == false).ToList();
+            //Get all "Fund == True" account information.
+            var allAccountInfo = _context.DMAccount.Where(x => x.Account_isActive == true && x.Account_isDeleted == false
+                                                        && x.Account_Fund == true ).ToList();
+
+            //Change IsActive and IsDeleted status of all current budget information
+            if(allCurrBudgetInfo.Count() != 0) { 
+                foreach (var i in allCurrBudgetInfo)
+                {
+                    i.Budget_IsActive = false;
+                    i.Budget_isDeleted = true;
+                    _context.Entry(i).State = EntityState.Modified;
+                }
+                _context.SaveChanges();
+            }
+
+            //Add all new budget information.
+            foreach(var i in vmList)
+            {
+                _context.Budget.Add(new BudgetModel
+                {
+                    Budget_Account_ID = i.BM_Account_ID,
+                    Budget_Account_MasterID = i.BM_Account_MasterID,
+                    Budget_Amount = i.BM_Budget_Amount,
+                    Budget_Creator_ID = userid,
+                    Budget_IsActive = true,
+                    Budget_isDeleted = false,
+                    Budget_Date_Registered = DateTime.Now
+                });
+            }
+            
+            _context.SaveChanges();
+        }
+
+        public IEnumerable<DMAccountModel> GetAccountListForBudgetMonitoring()
+        {
+            return _context.DMAccount.Where(x => x.Account_Fund == true && x.Account_isActive == true 
+                                            && x.Account_isDeleted == false).ToList().OrderBy(x => x.Account_Name);
+        }
+
+        public double GetCurrentBudget(int accountMasterID)
+        {
+            return _context.Budget.Where(x => x.Budget_Account_MasterID == accountMasterID
+            && x.Budget_IsActive == true && x.Budget_isDeleted == false).DefaultIfEmpty(
+                new BudgetModel { Budget_Amount = 0.00 }).First().Budget_Amount;
+        }
+
+        public IEnumerable<BMViewModel> PopulateBudgetRegHist(int? year)
+        {
+            List<BMViewModel> bmvmList = new List<BMViewModel>();
+
+            var dbBudget = (from bud in _context.Budget
+                            join acc in _context.DMAccount on bud.Budget_Account_ID equals acc.Account_ID
+                            join accGrp in _context.DMAccountGroup on acc.Account_Group_MasterID equals accGrp.AccountGroup_MasterID
+                            join user in _context.User on bud.Budget_Creator_ID equals user.User_ID
+                            where accGrp.AccountGroup_isActive == true && accGrp.AccountGroup_isDeleted == false &&
+                            acc.Account_Fund == true && bud.Budget_Date_Registered.Year == year
+                            select new
+                            {
+                                bud.Budget_ID,
+                                accGrp.AccountGroup_Name,
+                                acc.Account_Name,
+                                acc.Account_Budget_Code,
+                                acc.Account_No,
+                                bud.Budget_Amount,
+                                bud.Budget_Date_Registered,
+                                user.User_LName,
+                                user.User_FName
+                            }).ToList().OrderByDescending(x => x.Budget_Date_Registered).ThenBy(x => x.Account_Name);
+
+            foreach (var i in dbBudget)
+            {
+                bmvmList.Add(new BMViewModel()
+                {
+                    BM_Budget_ID = i.Budget_ID,
+                    BM_Acc_Group_Name = i.AccountGroup_Name,
+                    BM_Acc_Name = i.Account_Name,
+                    BM_GBase_Code = i.Account_Budget_Code,
+                    BM_Acc_Num = i.Account_No,
+                    BM_Budget_Amount = i.Budget_Amount,
+                    BM_Date_Registered = i.Budget_Date_Registered,
+                    BM_Creator_Name = i.User_LName + ", " + i.User_FName
+                });
+            };
+
+            return bmvmList;
         }
     }
 }

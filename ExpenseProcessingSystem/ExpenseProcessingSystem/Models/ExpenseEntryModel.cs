@@ -29,5 +29,6 @@ namespace ExpenseProcessingSystem.Models
         public bool Expense_isDeleted { get; set; }
 
         public ICollection<ExpenseEntryDetailModel> ExpenseEntryDetails { get; set; }
+        public ICollection<ExpenseEntryNCModel> ExpenseEntryNC { get; set; }
     }
 }

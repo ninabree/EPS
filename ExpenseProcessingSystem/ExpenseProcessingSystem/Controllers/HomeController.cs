@@ -199,6 +199,7 @@ namespace ExpenseProcessingSystem.Controllers
                     //Account
                     _session.SetString("AF_Name", vm.DMFilters.AF.AF_Name ?? "");
                     _session.SetString("AF_Code", vm.DMFilters.AF.AF_Code ?? "");
+                    _session.SetString("AF_Budget_Code", vm.DMFilters.AF.AF_Budget_Code ?? "");
                     _session.SetString("AF_No", vm.DMFilters.AF.AF_No.ToString() ?? "0");
                     _session.SetString("AF_Cust", vm.DMFilters.AF.AF_Cust ?? "");
                     _session.SetString("AF_Div", vm.DMFilters.AF.AF_Div ?? "");
@@ -334,9 +335,8 @@ namespace ExpenseProcessingSystem.Controllers
         {
             if (!string.IsNullOrWhiteSpace(ReportTypeID))
             {
-                var ReportSubTypes = ConstantData.HomeReportConstantValue.GetReportSubTypeData().Where(m => m.ParentTypeId == Convert.ToInt32(ReportTypeID)).ToList();
-
-                return Json(ReportSubTypes);
+                return Json(ConstantData.HomeReportConstantValue.GetReportSubTypeData()
+                    .Where(m => m.ParentTypeId == Convert.ToInt32(ReportTypeID)).ToList());
             }
             return null;
         }
@@ -512,13 +512,12 @@ namespace ExpenseProcessingSystem.Controllers
         {
             //set sort vals
             ViewData["CurrentSort"] = sortOrder;
-            ViewData["AccountCodeSortParm"] = String.IsNullOrEmpty(sortOrder) ? "acc_code" : "";
-            ViewData["AccountGroupSortParm"] = sortOrder == "acc_group_desc" ? "acc_group" : "acc_group_desc";
-            ViewData["GBaseAccountCodeSortParm"] = sortOrder == "gbase_acc_desc" ? "gbase_acc" : "gbase_acc_desc";
+            ViewData["AccountMappingSortParm"] = String.IsNullOrEmpty(sortOrder) ? "acc_mapping" : "";
+            ViewData["AccountNameSortParm"] = sortOrder == "acc_name_desc" ? "acc_name" : "acc_name_desc";
+            ViewData["GBaseBudgetCodeSortParm"] = sortOrder == "gbase_budget_code_desc" ? "gbase_budget_code" : "gbase_budget_code_desc";
+            ViewData["AccountNumberSortParm"] = sortOrder == "acc_num_desc" ? "acc_num" : "acc_num_desc";
             ViewData["BudgetSortParm"] = sortOrder == "budget_desc" ? "budget" : "budget_desc";
-            ViewData["CurrentBudgetSortParm"] = sortOrder == "curr_budget_desc" ? "curr_budget" : "curr_budget_desc";
-            ViewData["ApproverIDSortParm"] = sortOrder == "approval_id_desc" ? "approval_id" : "approval_id_desc";
-            ViewData["LastBudgetApprovalSortParm"] = sortOrder == "last_budget_approval_desc" ? "last_budget_approval" : "last_budget_approval_desc";
+            ViewData["DateRegisteredSortParm"] = sortOrder == "date_registered_desc" ? "date_registered" : "date_registered_desc";
 
             if (searchString != null)
             {
@@ -618,8 +617,13 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.systemValues.vat = _service.getVendorVat(firstId);
             viewModel.systemValues.acc = _service.getAccDetailsEntry();
 
-            viewModel.expenseYear = DateTime.Today.Year.ToString();
-            viewModel.expenseDate = DateTime.Today;
+            //for NC
+
+            if (viewModel.GetType() != typeof(EntryNCViewModelList))
+            {
+                viewModel.expenseYear = DateTime.Today.Year.ToString();
+                viewModel.expenseDate = DateTime.Today;
+            }
 
             return viewModel;
         }
@@ -1160,13 +1164,18 @@ namespace ExpenseProcessingSystem.Controllers
         //[* Entry Cash Advance(SS) *]
         //------------------------------------------------------------------
 
-        public IActionResult Entry_NC()
+        public IActionResult Entry_NC(EntryNCViewModelList viewModel, string partialName)
         {
             var userId = GetUserID();
-
-            EntryNCViewModelList viewModel = new EntryNCViewModelList();
-            viewModel = PopulateEntry(viewModel);
-            viewModel.EntryNC.Add(new EntryNCViewModel());
+            if(viewModel.EntryNC == null)
+            {
+                viewModel = new EntryNCViewModelList();
+            }
+            //viewModel = PopulateEntry(viewModel);
+            //viewModel.EntryNC.Add(new EntryNCViewModel());
+            
+            ViewData["partialName"] = partialName ?? GlobalSystemValues.NC_LS_PAYROLL.ToString();
+            viewModel.category_of_entry = GlobalSystemValues.NC_CATEGORIES_SELECT;
             return View(viewModel);
         }
 

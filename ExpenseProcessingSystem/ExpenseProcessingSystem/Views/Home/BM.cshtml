@@ -12,26 +12,24 @@
         <table class="table table-striped tab-tbl">
             <thead>
                 <tr>
-                    <th><a asp-action="BM" asp-route-sortOrder="@ViewData["AccountCodeSortParm"]">Account Code<p class="btn-xs glyphicon @ViewData["glyph-1"]"></p></a></th>
-                    <th><a asp-action="BM" asp-route-sortOrder="@ViewData["AccountGroupSortParm"]">Account Group<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
-                    <th><a asp-action="BM" asp-route-sortOrder="@ViewData["GBaseAccountCodeSortParm"]">G-Base Accounts<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
-                    <th><a asp-action="BM" asp-route-sortOrder="@ViewData["BudgetSortParm"]">Budget<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
-                    <th><a asp-action="BM" asp-route-sortOrder="@ViewData["CurrentBudgetSortParm"]">Current Budget<p class="btn-xs glyphicon @ViewData["glyph-5"]"></p></a></th>
-                    <th><a asp-action="BM" asp-route-sortOrder="@ViewData["ApproverIDSortParm"]">Approver<p class="btn-xs glyphicon @ViewData["glyph-6"]"></p></a></th>
-                    <th><a asp-action="BM" asp-route-sortOrder="@ViewData["LastBudgetApprovalSortParm"]">Last Budget Approved<p class="btn-xs glyphicon @ViewData["glyph-7"]"></p></a></th>
+                    <th><a asp-action="BM" asp-route-sortOrder="@ViewData["AccountMappingSortParm"]">Account Mapping<p class="btn-xs glyphicon @ViewData["glyph-1"]"></p></a></th>
+                    <th><a asp-action="BM" asp-route-sortOrder="@ViewData["AccountNameSortParm"]">Account Name<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
+                    <th style="text-align:center"><a asp-action="BM" asp-route-sortOrder="@ViewData["GBaseBudgetCodeSortParm"]">G-Base Budget Code<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
+                    <th style="text-align:center"><a asp-action="BM" asp-route-sortOrder="@ViewData["AccountNumberSortParm"]">Account Number<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
+                    <th style="text-align:right"><a asp-action="BM" asp-route-sortOrder="@ViewData["BudgetSortParm"]">Budget<p class="btn-xs glyphicon @ViewData["glyph-5"]"></p></a></th>
+                    <th style="text-align:center"><a asp-action="BM" asp-route-sortOrder="@ViewData["DateRegisteredSortParm"]">Date Registered<p class="btn-xs glyphicon @ViewData["glyph-6"]"></p></a></th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td>@Html.DisplayFor(modelItem => item.BM_Acc_Code)</td>
-                        <td>@Html.DisplayFor(modelItem => item.BM_Acc_Group)</td>
-                        <td>@Html.DisplayFor(modelItem => item.BM_Acc_GBase)</td>
-                        <td>@Html.DisplayFor(modelItem => item.BM_Budget_Amount)</td>
-                        <td>@Html.DisplayFor(modelItem => item.BM_Budget_Current)</td>
-                        <td>@Html.DisplayFor(modelItem => item.BM_Budget_Approver_ID)</td>
-                        <td>@Html.DisplayFor(modelItem => item.BM_Last_Budget_Approved)</td>
+                        <td>@Html.DisplayFor(modelItem => item.BM_Acc_Group_Name)</td>
+                        <td>@Html.DisplayFor(modelItem => item.BM_Acc_Name)</td>
+                        <td style="text-align:center">@Html.DisplayFor(modelItem => item.BM_GBase_Code)</td>
+                        <td style="text-align:center">@Html.DisplayFor(modelItem => item.BM_Acc_Num)</td>
+                        <td style="text-align:right">@Html.DisplayFor(modelItem => item.BM_Budget_Amount)</td>
+                        <td style="text-align:center">@Html.DisplayFor(modelItem => item.BM_Date_Registered)</td>
                     </tr>
                 }
             </tbody>
@@ -55,13 +53,65 @@
            asp-route-currentFilter="@ViewData["CurrentFilter"]"
            class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right">
         </a>
-        <div class="float-r m-r-10">
-            <div class="tbl-btn">Update Budget</div>
+        <div class="float-r m-r-10 divBtn">
+            <a class="tbl-btn btnBudgetReg" href="#">Budget Registration</a>
+            <a class="tbl-btn btnBudgetRegHist" href="#">History of Budget Registration</a>
         </div>
-        @Html.Partial("ModalPartial")
+        <div id="modalDiv2">
+            @Html.Partial("ModalPartial2")
+        </div>
         @*validation message*@
         <div id="ValidationSummary" style="display:none" class="">
             @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
         </div>
     </div>
 </div>
+<script>
+    $(function () {
+        //Budget registration modal
+        $(".divBtn").on("click", ".btnBudgetReg", function (e) {
+            e.stopImmediatePropagation();
+
+            var modalDivBody = $('.modal-body');
+
+            if ($('.modal-header').find(".modal-title")[0] == null) {
+                $('.modal-header').append('<h4 class="modal-title">Budget Registration</h4>');
+            }
+
+            modalDivBody.load("@Url.Action("BudgetRegistrationModal", "Modal")", {
+
+            }, function (response, status, xhr) {
+                if (status == "error") {
+                    alert("Something went wrong.");
+                } else {
+
+                }
+            });
+
+            $('.myModal2').modal('show');
+        });
+
+        //History of budget registration modal
+        $(".divBtn").on("click", ".btnBudgetRegHist", function (e) {
+            e.stopImmediatePropagation();
+
+            var modalDivBody = $('.modal-body');
+
+            if ($('.modal-header').find(".modal-title")[0] == null) {
+                $('.modal-header').append('<h4 class="modal-title">History of Budget Registration</h4>');
+            }
+
+            modalDivBody.load("@Url.Action("BudgetRegHistModal", "Modal")", {
+
+            }, function (response, status, xhr) {
+                if (status == "error") {
+                    alert("Something went wrong.");
+                } else {
+
+                }
+            });
+
+            $('.myModal2').modal('show');
+        });
+    });
+</script>

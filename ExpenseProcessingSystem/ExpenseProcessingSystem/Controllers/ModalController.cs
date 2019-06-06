@@ -37,10 +37,59 @@ namespace ExpenseProcessingSystem.Controllers
         {
             return View();
         }
-        //BM
-        public IActionResult BudgetAdjustmentModal()
+
+        //[ Budget Monitoring ]
+        //Open Budget registration screen
+        public IActionResult BudgetRegistrationModal()
         {
-            return View();
+            var accountList = _service.GetAccountListForBudgetMonitoring();
+            List<BMViewModel> vm = new List<BMViewModel>();
+
+            foreach(var i in accountList)
+            {
+                vm.Add(new BMViewModel {
+                    BM_Account_ID = i.Account_ID,
+                    BM_Account_MasterID = i.Account_MasterID,
+                    BM_Acc_Name = i.Account_Name,
+                    BM_Acc_Num = i.Account_No,
+                    BM_GBase_Code = i.Account_Budget_Code,
+                    BM_Budget_Current = _service.GetCurrentBudget(i.Account_MasterID)
+                });
+            }
+
+            return View(vm);
+        }
+
+        //Open history of Budget Registration screen
+        public IActionResult BudgetRegHistModal(int? year)
+        {
+            if (year.HasValue)
+            {
+                return View(new BMRegHistViewModel
+                {
+                    BMVM = _service.PopulateBudgetRegHist(year),
+                    Year = year.GetValueOrDefault(),
+                    YearList = ConstantData.HomeReportConstantValue.GetYearList()
+                });
+            }
+            else
+            {
+                return View(new BMRegHistViewModel
+                {
+                    BMVM = _service.PopulateBudgetRegHist(DateTime.Now.Year),
+                    YearList = ConstantData.HomeReportConstantValue.GetYearList()
+                });
+            }
+        }
+
+        //Register new budget from Budget Monitoring screen
+        public IActionResult RegisterNewBudget(List<BMViewModel> vmList)
+        {
+            var userId = GetUserID();
+
+            _service.AddNewBudget(vmList, int.Parse(GetUserID()));
+
+            return RedirectToAction("BM", "Home");
         }
 
         // [FOR APPROVAL]
@@ -1013,10 +1062,18 @@ namespace ExpenseProcessingSystem.Controllers
 
         public IActionResult EntryExpenseEWT(string id, string taxpayor)
         {
-            ViewBag.taxpayor = taxpayor;
-            ViewBag.id = id;
-            return PartialView();
+            var venList = _service.getVendorSelectList();
+            DDVEWTViewModel model = new DDVEWTViewModel {
+                table_ID = id,
+                tax_payor = taxpayor ?? venList.Select(x => x.Value).FirstOrDefault(),
+                vendor_list = venList
+            };
+            return PartialView(model);
         }
 
+        private string GetUserID()
+        {
+            return _session.GetString("UserID");
+        }
     }
 }
