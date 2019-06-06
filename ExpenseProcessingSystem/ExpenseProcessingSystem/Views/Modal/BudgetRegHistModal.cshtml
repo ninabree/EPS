@@ -9,14 +9,6 @@
 </div>
 <div style="height:450px;overflow-y: scroll">
     <table class="table table-striped tab-tbl" style="width:100%">
-        <colgroup>
-            <col style="width:20%" />
-            <col style="width:14%" />
-            <col style="width:10%" />
-            <col style="width:18%" />
-            <col style="width:20%" />
-            <col style="width:18%" />
-        </colgroup>
         <thead>
             <tr>
                 <td>
@@ -80,10 +72,6 @@
     $(document).ready(function () {
         $('#saveBtnEntry').css('display', 'none');
 
-        $("#divDDLYear").on("change", ".ddlYear", function (e) {
-            alert($(this).val());
-        });
-
         $(".ddlYear").change(function () {
             var modalDivBody = $('.modal-body');
 
@@ -92,7 +80,7 @@
             }
 
              modalDivBody.load("@Url.Action("BudgetRegHistModal", "Modal")", {
-                 year: $(".ddlYear :selected").text().substr(4, 4)
+                 year: $(this).val()
             }, function (response, status, xhr) {
                 if (status == "error") {
                     alert("Something went wrong.");

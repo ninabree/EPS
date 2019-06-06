@@ -2161,5 +2161,27 @@ namespace ExpenseProcessingSystem.Controllers
 
             return Json(vatList.ToList());
         }
+
+        public IActionResult GenerateVoucher()
+        {
+            string layoutName = "";
+            //string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmsstt"); // ORIGINAL
+            string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmss");
+            ReportHeaderViewModel headerVM = new ReportHeaderViewModel();
+
+            headerVM.Header_Logo = "";
+            headerVM.Header_Name = "Mizuho Bank Ltd., Manila Branch";
+            headerVM.Header_TIN = "004-669-467-000";
+            headerVM.Header_Address = "25th Floor, The Zuellig Building, Makati Avenue corner Paseo de Roxas, Makati City";
+
+            //Model for data retrieve from Database
+            HomeReportDataFilterViewModel data = null;
+
+            string pdfLayoutFilePath = GlobalSystemValues.VOUCHER_LAYOUT;
+
+            //Return Preview
+            return View(pdfLayoutFilePath, data);
+
+        }
     }
 }

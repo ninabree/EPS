@@ -48,6 +48,9 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly int TYPE_PC = 4;
         public static readonly int TYPE_NC = 5;
 
+        //Static value for the view path of voucher layout
+        public static readonly string VOUCHER_LAYOUT = "EntryReports/_Voucherlayout";
+
         public static string getApplicationType(int appType)
         {
             switch (appType)

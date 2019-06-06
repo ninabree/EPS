@@ -2486,35 +2486,39 @@ namespace ExpenseProcessingSystem.Services
         // [Budget Monitoring]
         public List<BMViewModel> PopulateBM()
         {
+            var accList = _context.DMAccount.Where(x => x.Account_isActive == true && x.Account_isDeleted == false
+                                                    && x.Account_Fund == true).ToList();
+
             List<BMViewModel> bmvmList = new List<BMViewModel>();
-            //var dbBudget = _context.Budget.ToList();
+
             var dbBudget = (from bud in _context.Budget
-                            join accGrp in _context.DMAccountGroup on bud.Budget_AccountGroup_MasterID equals accGrp.AccountGroup_MasterID
-                            join acc in _context.DMAccount on bud.Budget_Account_MasterID equals acc.Account_MasterID
-                            join user in _context.User on bud.Budget_Creator_ID equals user.User_ID
+                            join acc in _context.DMAccount on bud.Budget_Account_ID equals acc.Account_ID
+                            join accGrp in _context.DMAccountGroup on acc.Account_Group_MasterID equals accGrp.AccountGroup_MasterID
                             where bud.Budget_IsActive == true && bud.Budget_isDeleted == false &&
-                            accGrp.AccountGroup_isActive == true && accGrp.AccountGroup_isDeleted == false &&
-                            acc.Account_isActive == true && acc.Account_isDeleted == false
+                            accGrp.AccountGroup_isActive == true && accGrp.AccountGroup_isDeleted == false
                             select new
                             {
                                 bud.Budget_ID,
+                                acc.Account_ID,
+                                acc.Account_MasterID,
                                 accGrp.AccountGroup_Name,
-                                acc.Account_Name,
-                                bud.Budget_GBase_Budget_Code,
-                                acc.Account_No,
                                 bud.Budget_Amount,
                                 bud.Budget_Date_Registered
                             }).ToList();
 
             foreach (var i in dbBudget)
             {
+                //Get latest account information of saved account ID.
+                var accInfo = accList.Where(x => x.Account_MasterID == i.Account_MasterID && x.Account_isActive == true
+                                            && x.Account_isDeleted == false).FirstOrDefault();
+
                 bmvmList.Add(new BMViewModel()
                 {
                     BM_Budget_ID = i.Budget_ID,
                     BM_Acc_Group_Name = i.AccountGroup_Name,
-                    BM_Acc_Name = i.Account_Name,
-                    BM_GBase_Code = i.Budget_GBase_Budget_Code,
-                    BM_Acc_Num = i.Account_No,
+                    BM_Acc_Name = accInfo.Account_Name,
+                    BM_GBase_Code = accInfo.Account_Budget_Code,
+                    BM_Acc_Num = accInfo.Account_No,
                     BM_Budget_Amount = i.Budget_Amount,
                     BM_Date_Registered = i.Budget_Date_Registered
                 });
@@ -2626,7 +2630,8 @@ namespace ExpenseProcessingSystem.Services
 
             //Get all account group category with budget from DB
             var accountCategory = (from budget in _context.Budget
-                                   join accgroup in _context.DMAccountGroup on budget.Budget_AccountGroup_MasterID equals accgroup.AccountGroup_MasterID
+                                   join acc in _context.DMAccount on budget.Budget_Account_ID equals acc.Account_ID
+                                   join accgroup in _context.DMAccountGroup on acc.Account_Group_MasterID equals accgroup.AccountGroup_MasterID
                                    where accgroup.AccountGroup_isActive == true
                                    && accgroup.AccountGroup_isDeleted == false
                                    orderby accgroup.AccountGroup_MasterID

@@ -6,21 +6,18 @@ namespace ExpenseProcessingSystem.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<int>(
-                name: "Budget_Creator_ID",
+            migrationBuilder.AddColumn<int>(
+                name: "Budget_Account_MasterID",
                 table: "Budget",
                 nullable: false,
-                oldClrType: typeof(string),
-                oldNullable: true);
+                defaultValue: 0);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<string>(
-                name: "Budget_Creator_ID",
-                table: "Budget",
-                nullable: true,
-                oldClrType: typeof(int));
+            migrationBuilder.DropColumn(
+                name: "Budget_Account_MasterID",
+                table: "Budget");
         }
     }
 }

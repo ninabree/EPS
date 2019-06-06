@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    [Migration("20190603073706_ApplyAnnotationsToBudget")]
+    [Migration("20190606030607_ApplyAnnotationsToBudget")]
     partial class ApplyAnnotationsToBudget
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,7 +27,7 @@ namespace ExpenseProcessingSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Budget_AccountGroup_MasterID");
+                    b.Property<int>("Budget_Account_ID");
 
                     b.Property<int>("Budget_Account_MasterID");
 
@@ -36,10 +36,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.Property<int>("Budget_Creator_ID");
 
                     b.Property<DateTime>("Budget_Date_Registered");
-
-                    b.Property<string>("Budget_GBase_Budget_Code");
-
-                    b.Property<string>("Budget_ISPS_Account_Name");
 
                     b.Property<bool>("Budget_IsActive");
 
@@ -89,6 +85,8 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("Account_Approver_ID");
 
+                    b.Property<string>("Account_Budget_Code");
+
                     b.Property<string>("Account_Code");
 
                     b.Property<DateTime>("Account_Created_Date");
@@ -133,6 +131,8 @@ namespace ExpenseProcessingSystem.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("Pending_Account_Approver_ID");
+
+                    b.Property<string>("Pending_Account_Budget_Code");
 
                     b.Property<string>("Pending_Account_Code");
 
@@ -800,6 +800,71 @@ namespace ExpenseProcessingSystem.Migrations
                     b.ToTable("ExpenseEntry");
                 });
 
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryNCDtlAccModel", b =>
+                {
+                    b.Property<int>("ExpNCDtlAcc_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ExpNCDtlAcc_Acc_ID");
+
+                    b.Property<string>("ExpNCDtlAcc_Acc_Name");
+
+                    b.Property<float>("ExpNCDtlAcc_Amount");
+
+                    b.Property<int>("ExpNCDtlAcc_Curr_ID");
+
+                    b.Property<float>("ExpNCDtlAcc_Inter_Rate");
+
+                    b.Property<int>("ExpNCDtlAcc_Type_ID");
+
+                    b.Property<int?>("ExpenseEntryNCModelExpNCDtl_ID");
+
+                    b.HasKey("ExpNCDtlAcc_ID");
+
+                    b.HasIndex("ExpenseEntryNCModelExpNCDtl_ID");
+
+                    b.ToTable("ExpenseEntryNonCashDetailAccounts");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryNCDtlModel", b =>
+                {
+                    b.Property<int>("ExpNCDtl_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ExpNCDtl_Remarks_Desc");
+
+                    b.Property<DateTime>("ExpNCDtl_Remarks_Period_From");
+
+                    b.Property<DateTime>("ExpNCDtl_Remarks_Period_To");
+
+                    b.Property<int?>("ExpenseEntryNCModelExpNC_ID");
+
+                    b.HasKey("ExpNCDtl_ID");
+
+                    b.HasIndex("ExpenseEntryNCModelExpNC_ID");
+
+                    b.ToTable("ExpenseEntryNonCashDetails");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryNCModel", b =>
+                {
+                    b.Property<int>("ExpNC_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ExpNC_Category_ID");
+
+                    b.Property<int?>("ExpenseEntryModelExpense_ID");
+
+                    b.HasKey("ExpNC_ID");
+
+                    b.HasIndex("ExpenseEntryModelExpense_ID");
+
+                    b.ToTable("ExpenseEntryNonCash");
+                });
+
             modelBuilder.Entity("ExpenseProcessingSystem.Models.FileLocationModel", b =>
                 {
                     b.Property<int>("FL_ID")
@@ -1208,6 +1273,27 @@ namespace ExpenseProcessingSystem.Migrations
                     b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel", "ExpenseEntryDetailModel")
                         .WithMany("ExpenseEntryInterEntity")
                         .HasForeignKey("ExpenseEntryDetailModelExpDtl_ID");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryNCDtlAccModel", b =>
+                {
+                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryNCDtlModel", "ExpenseEntryNCModel")
+                        .WithMany("ExpenseEntryNCDtlAccs")
+                        .HasForeignKey("ExpenseEntryNCModelExpNCDtl_ID");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryNCDtlModel", b =>
+                {
+                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryNCModel", "ExpenseEntryNCModel")
+                        .WithMany("ExpenseEntryNCDtls")
+                        .HasForeignKey("ExpenseEntryNCModelExpNC_ID");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryNCModel", b =>
+                {
+                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryModel", "ExpenseEntryModel")
+                        .WithMany("ExpenseEntryNC")
+                        .HasForeignKey("ExpenseEntryModelExpense_ID");
                 });
 #pragma warning restore 612, 618
         }

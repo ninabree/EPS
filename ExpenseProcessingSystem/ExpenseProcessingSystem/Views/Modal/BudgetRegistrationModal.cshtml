@@ -7,42 +7,48 @@
 @using (Html.BeginForm("RegisterNewBudget", "Modal", FormMethod.Post, new { @id = "tsForm" }))
 {
     <div style="height:450px;overflow-y: scroll">
-        <table class="table table-striped tab-tbl"style="width:100%">
-            <colgroup>
-                <col style="width:25%">
-                <col style="width:20%">
-                <col style="width:15%">
-                <col style="width:20%">
-                <col style="width:20%">
-            </colgroup>
+        <table class="table tableBudReg table-striped tab-tbl" style="width:100%">
             <thead>
                 <tr>
                     <td class="p-l-150"><text>Account : </text></td>
-                    <td class="p-l-150"><text>Account Number: </text></td>
-                    <td class="p-l-150"><text>G-Base Budget Code: </text></td>
+                    <td class="p-l-150"><text>Account Number : </text></td>
+                    <td class="p-l-150"><text>G-Base Budget Code : </text></td>
                     <td><text>Current Budget : </text></td>
                     <td><text>New Budget : </text></td>
+                    <td><text>Retain budget : </text><input type="checkbox" id="chkAll"></td>
                 </tr>
             </thead>
             <tbody>
-                @for (var i = 0; i < Model.Count(); i++)
+                @if (Model.Count() != 0)
+                {
+                    @for (var i = 0; i < Model.Count(); i++)
+                    {
+                        <tr id="budRegId_@i">
+                            <td>
+                                @Html.HiddenFor(x => Model[i].BM_Account_ID)
+                                @Html.HiddenFor(x => Model[i].BM_Account_MasterID)
+                                @Html.TextBoxFor(x => Model[i].BM_Acc_Name, new { @class = "input100 txtAccName", @readonly = "readonly", tabindex = -1 })
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(x => Model[i].BM_Acc_Num, new { @class = "input100 txtAccNum", @readonly = "readonly", tabindex = -1 })
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(x => Model[i].BM_GBase_Code, new { @class = "input100 txtGbaseCode", @readonly = "readonly", tabindex = -1 })
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(x => Model[i].BM_Budget_Current, "{0:#,##0.00#}", new { @class = "input100 txtCurrBudget", style = "text-align:right;", @readonly = "readonly", tabindex = -1 })
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(x => Model[i].BM_Budget_Amount, "{0:#,##0.00#}", new { @class = "input100 txtNewBudget", @type = "Number", @min = "0", style = "text-align:right;", tabindex = @i + 1 })
+                            </td>
+                            <td style="text-align:center"><input type="checkbox" id="chk_@i" class="chkRetain"></td>
+                        </tr>
+                    }
+                }
+                else
                 {
                     <tr>
-                        <td>
-                            @Html.TextBoxFor(x => Model[i].BM_Acc_Name, new { @class = "input100 w-80 txtAccName", @readonly = "readonly" })
-                        </td>
-                        <td>
-                            @Html.TextBoxFor(x => Model[i].BM_Acc_Num, new { @class = "input100 w-80 txtAccNum", @readonly = "readonly" })
-                        </td>
-                        <td>
-                            @Html.TextBoxFor(x => Model[i].BM_GBase_Code, new { @class = "input100 w-80 txtGbaseCode", @readonly = "readonly" })
-                        </td>
-                        <td>
-                            @Html.TextBoxFor(x => Model[i].BM_Budget_Current, "{0:#,##0.00#}", new { @class = "input100 w-80 txtCurrBudget", @readonly = "readonly" })
-                        </td>
-                        <td>
-                            @Html.TextBoxFor(x => Model[i].BM_Budget_Amount, new { @class = "input100 w-80 txtNewBudget", @type = "Number" })
-                        </td>
+                        <td colspan="6" style="text-align:center">No account record found</td>
                     </tr>
                 }
             </tbody>
@@ -52,43 +58,83 @@
 
 <script>
     $(document).ready(function () {
-        $('#saveBtnEntry').show()
+        $('#saveBtnEntry').show();
+        var trsInit = $(".tableBudReg").find("tbody").find("tr");
+        if (trsInit.length == 1) {
+            $('#saveBtnEntry').attr("disabled", "disabled");
+        }
 
         $(function () {
-            $(".txtNewBudget").change(function () {
-                $('.txtNewBudget').val(round($('.txtNewBudget').val(), 2));
+            //Change format of New Budget entered value
+            $(".table").on("change", "input.txtNewBudget", function (e) {
+                var budRegPNode = $(this.parentNode)[0].parentNode;
+                var budRegItemNo = budRegPNode.id; //jquery obj
+                var txtnewbud = $("#" + budRegItemNo).find('.txtNewBudget');
+                txtnewbud.val(round(txtnewbud.val(), 2));
             });
 
-            function round(value, exp) {
-                if (typeof exp === 'undefined' || +exp === 0)
-                    return Math.round(value);
-
-                value = +value;
-                exp = +exp;
-
-                if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0))
-                    return NaN;
-
-                // Shift
-                value = value.toString().split('e');
-                value = Math.round(+(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp)));
-
-                // Shift back
-                value = value.toString().split('e');
-                return +(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp));
-            }
-
-            function addCommas(nStr) {
-                nStr += '';
-                x = nStr.split('.');
-                x1 = x[0];
-                x2 = x.length > 1 ? '.' + x[1] : '';
-                var rgx = /(\d+)(\d{3})/;
-                while (rgx.test(x1)) {
-                    x1 = x1.replace(rgx, '$1' + ',' + '$2');
+            //Change all check box based on the Check all check box.
+            $(".table").on("change", "#chkAll", function (e) {
+                var trs = $(".tableBudReg").find("tbody").find("tr");
+                var currAllStat = $('#chkAll').is(':checked');
+                for (var i = 0; i < trs.length; i++) {
+                    $('#chk_' + i).prop("checked", currAllStat);
+                    checkedOrNotChange(i, currAllStat);
                 }
-                return x1 + x2;
-            }
+            });
+
+            //Change format of New Budget entered value
+            $(".table").on("change", "input.chkRetain", function (e) {
+                var budRegPNode = $(this.parentNode)[0].parentNode;
+                var budRegItemNo = budRegPNode.id; //jquery obj
+                var selectedChk = $("#" + budRegItemNo).find('.chkRetain');
+                var currSelectedStat = selectedChk.is(':checked');
+                
+                checkedOrNotChange(selectedChk.attr('id').replace('chk_', ''), currSelectedStat);
+            });
         });
+
+        function checkedOrNotChange(cnt, stat) {
+            if (stat) {
+                $('#z' + cnt + '__BM_Budget_Amount').attr("type", 'text');
+                $('#z' + cnt + '__BM_Budget_Amount').val($('#z' + cnt + '__BM_Budget_Current').val());
+                $('#z' + cnt + '__BM_Budget_Amount').attr('readonly', 'true');
+            } else {
+                $('#z' + cnt + '__BM_Budget_Amount').attr("type", 'Number');
+                $('#z' + cnt + '__BM_Budget_Amount').val("0.00");
+                $('#z' + cnt + '__BM_Budget_Amount').removeAttr('readonly');
+            }
+        }
+
+        function round(value, exp) {
+            if (typeof exp === 'undefined' || +exp === 0)
+                return Math.round(value);
+
+            value = +value;
+            exp = +exp;
+
+            if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0))
+                return NaN;
+
+            // Shift
+            value = value.toString().split('e');
+            value = Math.round(+(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp)));
+
+            // Shift back
+            value = value.toString().split('e');
+            return +(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp));
+        }
+
+        function addCommas(nStr) {
+            nStr += '';
+            x = nStr.split('.');
+            x1 = x[0];
+            x2 = x.length > 1 ? '.' + x[1] : '';
+            var rgx = /(\d+)(\d{3})/;
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + ',' + '$2');
+            }
+            return x1 + x2;
+        }
     });
 </script>

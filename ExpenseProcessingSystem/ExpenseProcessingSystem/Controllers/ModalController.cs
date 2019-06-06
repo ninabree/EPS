@@ -48,9 +48,11 @@ namespace ExpenseProcessingSystem.Controllers
             foreach(var i in accountList)
             {
                 vm.Add(new BMViewModel {
+                    BM_Account_ID = i.Account_ID,
                     BM_Account_MasterID = i.Account_MasterID,
                     BM_Acc_Name = i.Account_Name,
                     BM_Acc_Num = i.Account_No,
+                    BM_GBase_Code = i.Account_Budget_Code,
                     BM_Budget_Current = _service.GetCurrentBudget(i.Account_MasterID)
                 });
             }
@@ -80,19 +82,12 @@ namespace ExpenseProcessingSystem.Controllers
             }
         }
 
-        //Get current budget of selected account in Budget Registration pop up screen.
-        [AcceptVerbs("GET")]
-        public JsonResult GetCurrentBudget(int accountMasterID)
-        {
-            return Json(_service.GetCurrentBudget(accountMasterID));
-        }
-
         //Register new budget from Budget Monitoring screen
-        public IActionResult RegisterNewBudget(BMViewModel vm)
+        public IActionResult RegisterNewBudget(List<BMViewModel> vmList)
         {
             var userId = GetUserID();
 
-            _service.AddNewBudget(vm, int.Parse(GetUserID()));
+            _service.AddNewBudget(vmList, int.Parse(GetUserID()));
 
             return RedirectToAction("BM", "Home");
         }
