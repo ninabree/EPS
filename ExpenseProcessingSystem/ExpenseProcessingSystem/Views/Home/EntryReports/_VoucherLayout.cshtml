@@ -1,0 +1,188 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>_VoucherLayout</title>
+
+    <style>
+        body{
+            font-family:Arial;
+        }
+
+        .heading{
+            font-weight: bold;
+        }
+
+        /*header styles*/
+        #headers {
+            margin:0 0 0 30px;
+            height:100%;
+        }
+        .container {
+            width: 200px;
+            height: 100px;
+        }
+        .container img {
+            max-height: 100%;
+            max-width: 100%;
+        }
+        /*end header styles*/
+        
+        table {
+            border: 1px solid black;
+            vertical-align: top;
+            padding:0;
+        }
+        
+        /*main body styles*/
+        #mainBody table{
+            width:100%;
+        }
+        #mainBody .wordAmount {
+            height: 36px
+        }
+        /*end main body styles*/
+
+        /*particulars style*/
+        #particulars table{
+            width:95%;
+            float:right;
+        }
+        #particulars table,
+        #particulars tr,
+        #particulars td{
+            border: 1px dotted black;
+            border-collapse:collapse;
+        }
+        /*end particulars style*/
+        input{
+            width:inherit;
+            border: 1px solid black;
+        }
+        .flexContainer{
+            display:flex;
+        }
+
+        .flexstuff{
+            flex:1;
+        }
+    </style>
+</head>
+<body>
+    <div id="headerTbl" class="flex-sb">
+        <table>
+            <colgroup>
+                <col style="width:10%"/>
+                <col style="width:90%" />
+            </colgroup>
+            <tr>
+                <td>
+                    <div>
+                        <div class="container"><a href="#" id="header-logo"><img src="~/images/ReportLogo.png"></a></div>
+                        <div class="container"><a href="#" id="header-logo"><img src="~/images/voucherLogo.png"></a></div>
+                    </div>
+                </td>
+                <td>
+                    <div id="headers">
+                        <h3>MIZUHO BANK, LTD. - MANILA BRANCH</h3>
+                        <br />
+                        <a>25th Floor The Zuellig Building, Makati Avenue cornet Paseo de Roxas, Makati City 1225</a>
+                        <br /><br /><br /><br />
+                        <a>Tel. No.:  860-3500</a><br />
+                        <a>TIN:  004-669-467-000 NON-VAT</a>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="mainBody">
+        <table>
+            <colgroup>
+                <col style="width:18%;"/>
+                <col style="width:42%;"/>
+                <col style="width:40%;"/>
+            </colgroup>
+            <tr>
+                <td><a class="heading">Date</a> </td>
+                <td><input type="text" disabled /></td>
+                <td>
+                    <div style="text-align:right;">
+                        <a class="heading">Check_Voucher_No.</a>
+                        <input style="margin-left:100px" type="text" disabled />
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><a class="heading">Payee</a></td>
+                <td colspan="2"><div class="flexContainer"><input class="flexstuff" type="text" disabled /></div></td>
+            </tr>
+            <tr>
+                <td><a class="heading">Check Number</a></td>
+                <td colspan="2"><div class="flexContainer"><input class="flexstuff" type="text" disabled /></div></td>
+            </tr>
+            <tr>
+                <td colspan="3"> &nbsp; &nbsp; &nbsp;</td>
+            </tr>
+            <tr>
+                <td><a class="heading">Payment Amount in Figures</a></td>
+                <td colspan="2"><div class="flexContainer"><input class="flexstuff" type="text" disabled /></div></td>
+            </tr>
+            <tr>
+                <td><a class="heading">Payment Amount in Words</a> <br /><div><a> &nbsp; &nbsp;</a></div></td>
+                <td rowspan="2" colspan="3"><div class="flexContainer"><input class="flexstuff wordAmount" type="text" disabled /></div></td>
+            </tr>
+        </table>
+    </div>
+    <div id="particulars">
+        <a class="heading">Payment for: </a><br />
+        <table>
+            <colgroup>
+                <col style="width:20%;" />
+                <col style="width:10%;" />
+                <col style="width:30%;" />
+                <col style="width:20%;" />
+                <col style="width:20%;" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <td>Particulars</td>
+                    <td>Number</td>
+                    <td>Period Covered</td>
+                    <td>Details</td>
+                    <td>Amount</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+                </tr>
+                 <tr>
+                    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+                </tr>
+                 <tr>
+                    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td colspan="5" style="border:1px solid black">Total <a style="float:right;">PHP 20,000.00</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

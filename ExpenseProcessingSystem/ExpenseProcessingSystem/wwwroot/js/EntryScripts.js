@@ -87,7 +87,6 @@
         $('#myModal').modal('hide');
         computeValues($("#item_" + rowNo)[0]);
     });
-
     $("#vendorName").on("change", function (e) {
         var vendorId = { vendorID: $("#vendorName").val() };
 
@@ -148,24 +147,36 @@
 
     function computeValues(parent) {
         var pNode = parent;
-        
-        var amounts = $("#" + pNode.id + " .amount");
+        var isInter = $("#" + pNode.id).find("#EntryDDV_" + pNode.id + "__inter_entity").is(':checked');
+        var amounts = $("");
         var grossAmt = 0;
-        var origGrossAmt = $("#" + pNode.id + " .txtGross").val();
-        for (var i = 0; i < amounts.length; i++) {
-            grossAmt += Number(amounts[i].value);
-        }
+        var origGrossAmt = 0;
+        
+        //check if Inter Entity
+        if (isInter) {
+            var grossAmt = $("#" + pNode.id + " .txtGross").val();
+        } else {
+            amounts = $("#" + pNode.id + " .amount");
+            grossAmt = 0;
+            origGrossAmt = $("#" + pNode.id + " .txtGross").val();
+            for (var i = 0; i < amounts.length; i++) {
+                grossAmt += Number(amounts[i].value);
+            }
 
-        //For PCS,SS - resetting of Cash breakdown list.
-        if ($(".hiddenScreencode").val() == "PCV" || $(".hiddenScreencode").val() == "SS") {
-            if (origGrossAmt != grossAmt) {
-                var ret = pNode.id.replace('item_', '');
-                $('#divCashBD_' + ret).empty();
-                $('#EntryCV_' + ret + '__modalInputFlag').val(0);
+            //For PCS,SS - resetting of Cash breakdown list.
+            if ($(".hiddenScreencode").val() == "PCV" || $(".hiddenScreencode").val() == "SS") {
+                if (origGrossAmt != grossAmt) {
+                    var ret = pNode.id.replace('item_', '');
+                    $('#divCashBD_' + ret).empty();
+                    $('#EntryCV_' + ret + '__modalInputFlag').val(0);
+                }
             }
         }
+        
 
-        $("#" + pNode.id + " .txtGross").attr("value", grossAmt);
+        $("#" + pNode.id + " td .txtGross").val(grossAmt);
+
+        //$("#" + pNode.id + " .txtGross").attr("value", grossAmt);
 
         var itemNo = pNode.id; //jquery obj
         var chkEwtVal = $("#" + itemNo).find(".chkEwt").is(':checked');

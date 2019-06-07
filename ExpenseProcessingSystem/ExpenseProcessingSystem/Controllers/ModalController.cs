@@ -998,7 +998,8 @@ namespace ExpenseProcessingSystem.Controllers
 
             return PartialView(model);
         }
-        public IActionResult EntryExpenseInterEntity(string id, string interRate, string account, string remarksTitle, string Curr1AbbrID, string Curr1AbbrName, string Curr1Amt, string Curr2AbbrID, string Curr2AbbrName, string Curr2Amt, string DebitVal)
+        public IActionResult EntryExpenseInterEntity(string id, string interRate, string account, string remarksTitle, string Curr1AbbrID, string Curr1AbbrName, string Curr1Amt,
+                                                    string Curr2AbbrID, string Curr2AbbrName, string Curr2Amt, string Chk1, string Conv1Amt, string Chk2, string Conv2Amt)
         {
             InterEntityParticular par = new InterEntityParticular();
             double InterRate = interRate != null ? int.Parse(interRate) * 1.0 : 1.0;
@@ -1017,13 +1018,16 @@ namespace ExpenseProcessingSystem.Controllers
                 Inter_Currency1_ABBR_Name = Curr1AbbrName,
                 Inter_Currency1_Amount = Curr1Amt,
                 Inter_Currency2_ABBR_ID = Curr2AbbrID == "NAN" ? "2" : Curr2AbbrID,
-                Inter_Currency2_ABBR_Name = Curr2AbbrID == "NAN" ? _context.DMCurrency.Where(x=> x.Curr_MasterID == 2).Select(x=> x.Curr_Name).FirstOrDefault() : Curr2AbbrName,
+                Inter_Currency2_ABBR_Name = Curr2AbbrID == "NAN" ? _context.DMCurrency.Where(x=> x.Curr_MasterID == 2 && x.Curr_isActive == true && x.Curr_isDeleted == false).Select(x=> x.Curr_CCY_ABBR).FirstOrDefault() : Curr2AbbrName,
                 Inter_Currency2_Amount = Curr2Amt,
-                Inter_Debit_Amount = DebitVal,
                 Inter_Rate = InterRate.ToString(),
                 Inter_Particular1 = parList1,
                 Inter_Particular2 = parList2,
                 Inter_Particular3 = parList3,
+                Inter_Check1 = Chk1 == "true" ? true : false,
+                Inter_Check2 = Chk2 == "true" ? true : false,
+                Inter_Convert1_Amount = Conv1Amt,
+                Inter_Convert2_Amount = Conv2Amt,
                 CurrencyList = currList
             };
             return PartialView(model);
