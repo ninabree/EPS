@@ -293,8 +293,7 @@ namespace ExpenseProcessingSystem.Controllers
             return View();
         }
 
-        //------------------------------------------------------------------
-        //[* REPORT *]
+        //--------------------------[* REPORT *]----------------------------------------
         [OnlineUserCheck]
         public IActionResult Report()
         {
@@ -418,8 +417,6 @@ namespace ExpenseProcessingSystem.Controllers
 
                     model.MonthName = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName;
 
-                    IEnumerable<HomeReportActualBudgetModel> testtest = _service.GetActualReportData(model.Month, model.Year);
-
                     //Get the necessary data from Database
                     data = new HomeReportDataFilterViewModel
                     {
@@ -501,11 +498,9 @@ namespace ExpenseProcessingSystem.Controllers
             };
         }
 
-        //[* REPORT *]
-        //------------------------------------------------------------------
+        //---------------------------[* REPORT *]---------------------------------------
 
-        //------------------------------------------------------------------
-        //[* BUDGET MONITORING *]
+        //-----------------------[* BUDGET MONITORING *]-------------------------------------------
         [OnlineUserCheck]
         [ImportModelState]
         public IActionResult BM(string sortOrder, string currentFilter, string searchString, int? page)
@@ -538,8 +533,7 @@ namespace ExpenseProcessingSystem.Controllers
                 (sortedVals.list).Cast<BMViewModel>().AsQueryable().AsNoTracking(), page ?? 1, pageSize));
         }
 
-        //[* BUDGET MONITORING *]
-        //------------------------------------------------------------------
+        //-----------------------[* BUDGET MONITORING *]-------------------------------------------
 
         [OnlineUserCheck]
         [ImportModelState]

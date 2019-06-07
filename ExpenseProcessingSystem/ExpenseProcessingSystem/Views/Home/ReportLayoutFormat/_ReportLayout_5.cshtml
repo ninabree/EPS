@@ -79,36 +79,46 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var i in Model.HomeReportOutputActualBudget)
+        @if (Model.HomeReportOutputActualBudget.Count() != 1)
         {
-            if (i.Category == "BREAK")
+            foreach (var i in Model.HomeReportOutputActualBudget)
             {
-                <tr class="tr-PDF-BREAK">
-                    <td colspan="6">&nbsp;</td>
-                </tr>
+                if (i.Category == "BREAK")
+                {
+                    <tr class="tr-PDF-BREAK">
+                        <td colspan="6">&nbsp;</td>
+                    </tr>
+                }
+                else if (!string.IsNullOrEmpty(i.Category))
+                {
+                    <tr class="tr-PDF-Budget">
+                        <td style="text-align:center" class="td-PDF">@Html.DisplayFor(model => i.ValueDate)</td>
+                        <td style="text-align:left" class="td-PDF">@i.Category</td>
+                        <td style="text-align:left" class="td-PDF">@i.Remarks</td>
+                        <td style="text-align:center" class="td-PDF"></td>
+                        <td style="text-align:right" class="td-PDF"></td>
+                        <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => i.BudgetBalance)</td>
+                    </tr>
+                }
+                else
+                {
+                    <tr class="tr-PDF">
+                        <td style="text-align:center" class="td-PDF">@Html.DisplayFor(model => i.ValueDate)</td>
+                        <td style="text-align:left" class="td-PDF">@i.Category</td>
+                        <td style="text-align:left" class="td-PDF">@i.Remarks</td>
+                        <td style="text-align:center" class="td-PDF">@i.Department</td>
+                        <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => i.ExpenseAmount)</td>
+                        <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => i.BudgetBalance)</td>
+                    </tr>
+                }
             }
-            else if (!string.IsNullOrEmpty(i.Category))
-            {
-                <tr class="tr-PDF-Budget">
-                    <td style="text-align:center" class="td-PDF">@Html.DisplayFor(model => i.ValueDate)</td>
-                    <td style="text-align:left" class="td-PDF">@i.Category</td>
-                    <td style="text-align:left" class="td-PDF">@i.Remarks</td>
-                    <td style="text-align:center" class="td-PDF"></td>
-                    <td style="text-align:right" class="td-PDF"></td>
-                    <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => i.BudgetBalance)</td>
-                </tr>
-            }
-            else
-            {
-                <tr class="tr-PDF">
-                    <td style="text-align:center" class="td-PDF">@Html.DisplayFor(model => i.ValueDate)</td>
-                    <td style="text-align:left" class="td-PDF">@i.Category</td>
-                    <td style="text-align:left" class="td-PDF">@i.Remarks</td>
-                    <td style="text-align:center" class="td-PDF">@i.Department</td>
-                    <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => i.ExpenseAmount)</td>
-                    <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => i.BudgetBalance)</td>
-                </tr>
-            }
+        }
+        else
+        {
+            <tr class="tr-PDF">
+                <td style="text-align:center" class="td-PDF" colspan="6">No Budget registered on Budget Monitoring screen for this term.</td>
+            </tr>
+
         }
     </tbody>
 </table>
