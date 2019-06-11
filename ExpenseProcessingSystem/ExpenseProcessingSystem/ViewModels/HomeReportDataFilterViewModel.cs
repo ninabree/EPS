@@ -21,7 +21,7 @@ namespace ExpenseProcessingSystem.ViewModels
 
         public HomeReportViewModel HomeReportFilter { get; set; }
 
-        public ReportHeaderViewModel ReportHeaderVM { get; set; }
+        public ReportCommonViewModel ReportCommonVM { get; set; }
 
     }
 }

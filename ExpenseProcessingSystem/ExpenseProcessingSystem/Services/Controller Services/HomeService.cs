@@ -2554,20 +2554,21 @@ namespace ExpenseProcessingSystem.Services
             return dbAPSWT_M;
         }
 
-        public IEnumerable<HomeReportOutputAST1000Model> GetAST1000_SData(int yearSem, int semester)
+        public IEnumerable<HomeReportOutputAST1000Model> GetAST1000_Data(HomeReportViewModel model)
         {
             int[] status = { 3, 4 };
-            float[] taxRateConsider = { 0.01f, 0.02f };
-            int[] semesterRange = (semester == 1) ? new int[] { 4, 5, 6, 7, 8, 9 } : new int[] { 10, 11, 12, 1, 2, 3 };
+            string format = "yyyy-M";
+            DateTime startDT = DateTime.ParseExact(model.Year + "-" + model.Month, format, CultureInfo.InvariantCulture);
+            DateTime endDT = DateTime.ParseExact(model.YearTo + "-" + model.MonthTo, format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
 
-            var dbAST1000_S = (from vendor in _context.DMVendor
+            var dbAST1000 = (from vendor in _context.DMVendor
                              join expense in _context.ExpenseEntry on vendor.Vendor_ID equals expense.Expense_Payee
                              join expEntryDetl in _context.ExpenseEntryDetails on expense.Expense_ID equals expEntryDetl.ExpenseEntryModel.Expense_ID
                              join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
                              where status.Contains(expense.Expense_Status)
-                             && semesterRange.Contains(expense.Expense_Last_Updated.Month)
-                             && expense.Expense_Last_Updated.Year == yearSem
-                             && taxRateConsider.Contains(tr.TR_Tax_Rate)
+                             && model.TaxRateList.Contains(tr.TR_Tax_Rate)
+                             && startDT.Date <= expense.Expense_Last_Updated 
+                             && expense.Expense_Last_Updated <= endDT.Date
                                orderby vendor.Vendor_Name
                              select new HomeReportOutputAST1000Model
                              {
@@ -2580,7 +2581,7 @@ namespace ExpenseProcessingSystem.Services
                                  AOTW = expEntryDetl.ExpDtl_Credit_Ewt
                              }).ToList();
 
-            return dbAST1000_S;
+            return dbAST1000;
         }
 
         public IEnumerable<HomeReportOutputAST1000Model> GetAST1000_AData(int year, int month, int yearTo, int monthTo)
@@ -2816,30 +2817,52 @@ namespace ExpenseProcessingSystem.Services
             }
             return startOfTermDate;
         }
+
+        public List<float> PopulateTaxRaxListIncludeHist()
+        {
+            var taxRate = _context.DMTR.OrderBy(x => x.TR_Tax_Rate).Select(x => x.TR_Tax_Rate).ToList().Distinct();
+            List<float> taxRateList = new List<float>();
+            foreach(var i in taxRate)
+            {
+                taxRateList.Add(i);
+            }
+
+            return taxRateList;
+        }
+
+        public IEnumerable<DMBIRCertSignModel> PopulateSignatoryList()
+        {
+            return _context.DMBCS.Where(x => x.BCS_isActive == true && x.BCS_isDeleted == false).OrderBy(x => x.BCS_Name).ToList();
+        }
         
+        public DMBIRCertSignModel GetSignatoryInfo(int id)
+        {
+            return _context.DMBCS.Where(x => x.BCS_ID == id).FirstOrDefault();
+        }
+
         // [Entry Petty Cash Voucher]
         public IEnumerable<DMVendorModel> PopulateVendorList()
         {
-            return _context.DMVendor.Where(db => db.Vendor_isActive == true 
-                && db.Vendor_isDeleted == false).OrderBy(db => db.Vendor_Name).ToList();
+            return _context.DMVendor.Where(x => x.Vendor_isActive == true 
+                && x.Vendor_isDeleted == false).OrderBy(x => x.Vendor_Name).ToList();
         }
 
         public IEnumerable<DMAccountModel> PopulateAccountList()
         {
-            return _context.DMAccount.Where(db => db.Account_isActive == true
-                && db.Account_isDeleted == false).OrderBy(db => db.Account_Name).ToList();
+            return _context.DMAccount.Where(x => x.Account_isActive == true
+                && x.Account_isDeleted == false).OrderBy(x => x.Account_Name).ToList();
         }
 
         public IEnumerable<DMDeptModel> PopulateDepartmentList()
         {
-            return _context.DMDept.Where(db => db.Dept_isActive == true
-                && db.Dept_isDeleted == false).OrderBy(db => db.Dept_Name).ToList();
+            return _context.DMDept.Where(x => x.Dept_isActive == true
+                && x.Dept_isDeleted == false).OrderBy(x => x.Dept_Name).ToList();
         }
 
         public IEnumerable<DMTRModel> PopulateTaxRateList()
         {
-            return _context.DMTR.Where(db => db.TR_isActive == true
-                && db.TR_isDeleted == false).OrderBy(db => db.TR_Tax_Rate).ToList();
+            return _context.DMTR.Where(x => x.TR_isActive == true
+                && x.TR_isDeleted == false).OrderBy(x => x.TR_Tax_Rate).ToList();
         }
 
         //MISC

@@ -57,13 +57,28 @@
 
 <table border="0" style="width:100%">
     <tr>
-        <td style="font-weight:bold;font-size:x-large">ACTUAL BUDGET - GENERAL EXPENSE</td>
+        <td style="width:10%" rowspan="2"><img src="@Model.ReportCommonVM.Header_Logo" style="width:100%;height:40%" /></td>
+        <td style="text-align:center"><b>ACTUAL BUDGET - GENERAL EXPENSE</b></td>
+        <td style="width:10%"></td>
     </tr>
     <tr>
-        <td style="font-weight:bold;font-size:large">
+        <td style="text-align:center">
             @Html.DisplayFor(Model => Model.HomeReportFilter.MonthName)
             @Html.DisplayFor(Model => Model.HomeReportFilter.Year)
         </td>
+        <td></td>
+    </tr>
+    <tr>
+        <td style="padding-left:3%">Name</td>
+        <td colspan="2">@Model.ReportCommonVM.Header_Name</td>
+    </tr>
+    <tr>
+        <td style="padding-left:3%">TIN</td>
+        <td colspan="2">@Model.ReportCommonVM.Header_TIN</td>
+    </tr>
+    <tr>
+        <td style="padding-left:3%">Address</td>
+        <td colspan="2">@Model.ReportCommonVM.Header_Address</td>
     </tr>
 </table>
 

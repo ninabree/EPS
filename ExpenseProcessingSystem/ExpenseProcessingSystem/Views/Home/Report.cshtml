@@ -5,292 +5,9 @@
 }
 
 @section Scripts {
-    <script type="text/javascript">
-        $(document).ready(function () {
-            // set fields
-            var radioPeriod1 = $('#radioPeriodOption1');
-            var radioPeriod2 = $('#radioPeriodOption2');
-            var radioPeriod3 = $('#radioPeriodOption3');
-            var ddlMonth = $('#ddlMonth');
-            var ddlYear = $('#ddlYear');
-            var ddlMonthTo = $('#ddlMonthTo');
-            var ddlYearTo = $('#ddlYearTo');
-            var ddlFileFormat = $('#ddlFileFormat');
-            var dtPeriodFrom = $('#PeriodFrom');
-            var dtPeriodTo = $('#PeriodTo');
-            var txtCheck1 = $('#txtCheck1');
-            var txtCheck2 = $('#txtCheck2');
-            var txtVoucher1 = $('#txtVoucher1');
-            var txtVoucher2 = $('#txtVoucher2');
-            var txtCoveredTransNo1 = $('#txtCoveredTranNo1');
-            var txtCoveredTransNo2 = $('#txtCoveredTranNo2');
-            var txtCoveredTransNo3 = $('#txtCoveredTranNo3');
-            var txtCoveredTransNo4 = $('#txtCoveredTranNo4');
-            var txtCoveredTransNo5 = $('#txtCoveredTranNo5');
-            var txtCoveredTransNo6 = $('#txtCoveredTranNo6');
-            var txttxtSubjName = $('#txtSubjName');
-            var btnGenerateFile = $("#btnGenerateFile");
-            var btnGeneratePreview = $("#btnGeneratePreview");
-            var lblValidation = $('#ValidationSummary');
-            var dt = new Date();
-            var today = dt.getFullYear() + "-" + ('0' + (dt.getMonth() + 1)).slice(-2) + "-" + ('0' + (dt.getDate())).slice(-2);
-            var currentSem = $('hiddenCurrentSemester');
-
-            $("#ddlReportType").change(function () {
-                var ReportType = $(this).val();
-                var select = $("#ddlSubType");
-                if (ReportType == '') {
-                    select.empty();
-                    select.attr("disabled", "disabled");
-                    select.append($('<option/>', {
-                        value: 0,
-                        text: "----Select Report Sub-Type----"
-                    }));
-                }
-
-                //Default fields filter
-
-                radioPeriod1.attr("disabled", "disabled");
-                radioPeriod2.attr("disabled", "disabled");
-                radioPeriod3.attr("disabled", "disabled");
-                ddlMonth.attr("disabled", "disabled");
-                ddlYear.attr("disabled", "disabled");
-                ddlMonthTo.attr("disabled", "disabled");
-                ddlYearTo.attr("disabled", "disabled");
-                ddlFileFormat.attr("disabled", "disabled");
-                dtPeriodFrom.attr("disabled", "disabled");
-                dtPeriodTo.attr("disabled", "disabled");
-                txtCheck1.attr("disabled", "disabled");
-                txtCheck2.attr("disabled", "disabled");
-                txtVoucher1.attr("disabled", "disabled");
-                txtVoucher2.attr("disabled", "disabled");
-                txtCoveredTransNo1.attr("disabled", "disabled");
-                txtCoveredTransNo2.attr("disabled", "disabled");
-                txtCoveredTransNo3.attr("disabled", "disabled");
-                txtCoveredTransNo4.attr("disabled", "disabled");
-                txtCoveredTransNo5.attr("disabled", "disabled");
-                txtCoveredTransNo6.attr("disabled", "disabled");
-                txttxtSubjName.attr("disabled", "disabled");
-                btnGenerateFile.attr("disabled", "disabled");
-                btnGeneratePreview.attr("disabled", "disabled");
-                radioPeriod1.prop('checked', false);
-                radioPeriod2.prop('checked', false);
-                radioPeriod3.prop('checked', false);
-                txtCheck1.text("");
-                txtCheck2.text("");
-                txtVoucher1.text("");
-                txtVoucher2.text("");
-                txtCoveredTransNo1.text("");
-                txtCoveredTransNo2.text("");
-                txtCoveredTransNo3.text("");
-                txtCoveredTransNo4.text("");
-                txtCoveredTransNo5.text("");
-                txtCoveredTransNo6.text("");
-                txttxtSubjName.text("");
-                ddlMonth.val(dt.getMonth() + 1);
-                ddlYear.val(dt.getFullYear());
-                ddlMonthTo.val(dt.getMonth() + 1);
-                ddlYearTo.val(dt.getFullYear());
-                ddlFileFormat.val('1');
-                lblValidation.hide();
-                dtPeriodFrom.val(today);
-                dtPeriodTo.val(today);
-
-                if (ReportType == "2" || ReportType == "5") {
-                    radioPeriod1.prop('checked', true);
-                    radioPeriod1.removeAttr("disabled");
-                    ddlYear.removeAttr("disabled");
-                    ddlMonth.removeAttr("disabled");
-
-                } else if (ReportType == "3") {
-                    radioPeriod2.prop('checked', true);
-                    ddlMonth.removeAttr("disabled");
-                    ddlYear.removeAttr("disabled");
-                    ddlMonthTo.removeAttr("disabled");
-                    ddlYearTo.removeAttr("disabled");
-                    radioPeriod1.removeAttr("disabled");
-                    radioPeriod2.removeAttr("disabled");
-                } else if (ReportType == "4") {
-                    radioPeriod1.prop('checked', true);
-                    ddlMonth.removeAttr("disabled");
-                    ddlYear.removeAttr("disabled");
-                    ddlMonthTo.removeAttr("disabled");
-                    ddlYearTo.removeAttr("disabled");
-                    radioPeriod1.removeAttr("disabled");
-                } else if (ReportType == "10") {
-                    radioPeriod1.prop('checked', true);
-                    radioPeriod1.removeAttr("disabled");
-                    radioPeriod3.removeAttr("disabled");
-                    ddlYear.removeAttr("disabled");
-                    ddlMonth.removeAttr("disabled");
-                    ddlMonthTo.removeAttr("disabled");
-                    ddlYearTo.removeAttr("disabled");
-                } else if (ReportType == "13") {
-                    radioPeriod1.prop('checked', true);
-                    radioPeriod1.removeAttr("disabled");
-                    radioPeriod2.removeAttr("disabled");
-                    radioPeriod3.removeAttr("disabled");
-                    ddlYear.removeAttr("disabled");
-                    ddlMonth.removeAttr("disabled");
-                }
-
-                if (ReportType != 0 || ReportType != '') {
-                    btnGenerateFile.removeAttr("disabled");
-                    btnGeneratePreview.removeAttr("disabled");
-                    ddlFileFormat.removeAttr("disabled");
-
-                    $.getJSON('@Url.Action("GetReportSubType")', { ReportTypeID: ReportType }, function (data) {
-                        select.empty();
-                        if (data.length == 0) {
-                            select.attr("disabled", "disabled");
-                            select.append($('<option/>', {
-                            value: 0,
-                            text: "----Select Report Sub-Type----"
-                            }));
-                        } else {
-                            select.removeAttr("disabled");
-                        }
-                        $.each(data, function (index, itemData) {
-                            select.append($('<option/>', {
-                            value: itemData.id,
-                            text: itemData.subTypeName
-                            }));
-                        });
-                    });
-                }
-            });
-
-            $(".radioPeriodOption").change(function () {
-
-                //Default fields filter
-                ddlMonth.attr("disabled", "disabled");
-                ddlYear.attr("disabled", "disabled");
-                ddlMonthTo.attr("disabled", "disabled");
-                ddlYearTo.attr("disabled", "disabled");
-                dtPeriodFrom.attr("disabled", "disabled");
-                dtPeriodTo.attr("disabled", "disabled");
-
-                switch ($(this).val()) {
-                    case "1":
-                        ddlYear.removeAttr("disabled");
-                        ddlMonth.removeAttr("disabled");
-                        ddlYearTo.removeAttr("disabled");
-                        ddlMonthTo.removeAttr("disabled");
-                        break;
-                    case "3":
-                        dtPeriodFrom.removeAttr("disabled");
-                        dtPeriodTo.removeAttr("disabled");
-                        break;
-                }
-            });
-        });
-
-        $(document).ready(function () {
-            $("#btnGenerateFile").click(function (e) {
-                e.preventDefault();
-                $.ajax({
-                    type: 'POST',
-                    url: '/Home/HomeReportValidation',
-                    dataType: 'json',
-                    contentType: 'application/x-www-form-urlencoded; charset=utf-8',
-                    data: {
-                        ReportType: $('#ddlReportType').val(),
-                        ReportSubType: $('#ddlSubType').val(),
-                        FileFormat: $('#ddlFileFormat').val(),
-                        Year: $('#ddlYear').val(),
-                        Month: $('#ddlMonth').val(),
-                        YearTo: $('#ddlYearTo').val(),
-                        MonthTo: $('#ddlMonthTo').val(),
-                        PeriodOption: $('.radioPeriodOption:checked').val(),
-                        PeriodFrom: $('#PeriodFrom').val(),
-                        PeriodTo: $('#PeriodTo').val()
-                    },
-                    success: function (result) {
-                        if (result.message == "Invalid") {
-                            var $summaryUl = $(".validation-summary-valid").find("ul");
-                            $summaryUl.empty();
-                            $.each(result.items, function (index) {
-                                $summaryUl.append($("<li>").text(result.items[index]));
-                            });
-                            $('#ValidationSummary').show();
-                        }
-                        else {
-                            $('#ValidationSummary').hide();
-                            window.location.href = "/Home/GenerateFilePreview?ReportType=" + $('#ddlReportType').val()
-                                + "&ReportSubType=" + $('#ddlSubType').val()
-                                + "&FileFormat=" + $('#ddlFileFormat').val()
-                                + "&Year=" + $('#ddlYear').val()
-                                + "&Month=" + $('#ddlMonth').val()
-                                + "&YearTo=" + $('#ddlYearTo').val()
-                                + "&MonthTo=" + $('#ddlMonthTo').val()
-                                + "&PeriodOption=" + $('.radioPeriodOption:checked').val()
-                                + "&PeriodFrom=" + $('#PeriodFrom').val()
-                                + "&PeriodTo=" + $('#PeriodTo').val()
-                                + "&TestReportType=" + $('#ddlReportType').val();
-                        }
-                    },
-                    error: function (result) {
-                        alert('Error');
-                    }
-                });
-            });
-            $("#btnGeneratePreview").click(function (e) {
-                e.preventDefault();
-
-                $.ajax({
-                    type: 'POST',
-                    url: '/Home/HomeReportValidation',
-                    dataType: 'json',
-                    contentType: 'application/x-www-form-urlencoded; charset=utf-8',
-                    data: {
-                        ReportType: $('#ddlReportType').val(),
-                        ReportSubType: $('#ddlSubType').val(),
-                        FileFormat: '3',
-                        Year: $('#ddlYear').val(),
-                        Month: $('#ddlMonth').val(),
-                        YearTo: $('#ddlYearTo').val(),
-                        MonthTo: $('#ddlMonthTo').val(),
-                        PeriodOption: $('.radioPeriodOption:checked').val(),
-                        PeriodFrom: $('#PeriodFrom').val(),
-                        PeriodTo: $('#PeriodTo').val()
-                    },
-                    success: function (result) {
-                        if (result.message == "Invalid") {
-                            var $summaryUl = $(".validation-summary-valid").find("ul");
-                            $summaryUl.empty();
-                            $.each(result.items, function (index) {
-                                $summaryUl.append($("<li>").text(result.items[index]));
-                            });
-                            $('#ValidationSummary').show();
-                        }
-                        else {
-                            $('#ValidationSummary').hide();
-                            $('#iframePreview').prop('src', "/Home/GenerateFilePreview?ReportType=" + $('#ddlReportType').val()
-                                + "&ReportSubType=" + $('#ddlSubType').val()
-                                + "&FileFormat=3"
-                                + "&Year=" + $('#ddlYear').val()
-                                + "&Month=" + $('#ddlMonth').val()
-                                + "&YearTo=" + $('#ddlYearTo').val()
-                                + "&MonthTo=" + $('#ddlMonthTo').val()
-                                + "&PeriodOption=" + $('.radioPeriodOption:checked').val()
-                                + "&PeriodFrom=" + $('#PeriodFrom').val()
-                                + "&PeriodTo=" + $('#PeriodTo').val());
-
-                            var dt = new Date();
-                            var date_time = ('0' + (dt.getMonth() + 1)).slice(-2) + "/" + dt.getDate() + "/" + dt.getFullYear() + " " + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
-
-                            $('#txtAsOfLabel').text("As of ");
-                            $('#txtDatePreviewShow').text(date_time);
-                        }
-                    },
-                    error: function (result) {
-                        alert('Error');
-                    }
-                });
-            });
-        });
-    </script>
+    <script type="text/javascript" src="~/js/ReportFilterScript.js"></script>
 }
+
 @using (Html.BeginForm())
 {
     <div class="m-t-10">
@@ -348,34 +65,60 @@
             <tr>
                 <td>&#9679</td>
                 <td>Check No.</td>
-                <td colspan="3"><input class="input" id="txtCheck1" disabled="disabled" /></td>
-                <td colspan="2"></td>
-                <td colspan="3"><input class="input" id="txtCheck2" disabled="disabled" /></td>
-                </tr>
+                <td><input class="input" id="txtCheck1" disabled="disabled" /></td>
+                <td style="text-align:right">To: </td>
+                <td><input class="input" id="txtCheck2" disabled="disabled" /></td>
+                <td></td>
+                <td>Tax Rate: </td>
+                <td colspan="3" rowspan="2">
+                    <div style="overflow-x:scroll;white-space:nowrap;pointer-events:none;background-color:#ccc" id="divChkTax" >
+                        <input type="checkbox" id="chkAllTax" /> All: 
+                        @foreach(var i in Model.TaxRateList)
+                        {
+                            @Html.CheckBox("chkTaxRate", false, new { @Value=i, @class="chkTaxRate" })<label>@((i*100))%</label>
+                        }
+                    </div>
+                </td>
+            </tr>
             <tr>
                 <td>&#9679</td>
                 <td>Voucher No.</td>
-                <td colspan="3"><input class="input" id="txtVoucher1" disabled="disabled" /></td>
-                <td colspan="2"></td>
-                <td colspan="3"><input class="input" id="txtVoucher2" disabled="disabled" /></td>
+                <td><input class="input" id="txtVoucher1" disabled="disabled" /></td>
+                <td style="text-align:right">To: </td>
+                <td><input class="input" id="txtVoucher2" disabled="disabled" /></td>
+                <td></td>
+                <td></td>
             </tr>
             <tr>
                 <td>&#9679</td>
                 <td>Covered Tran No.</td>
-                <td colspan="1"><input class="input" id="txtCoveredTranNo1" disabled="disabled" /></td>
-                <td colspan="1"><input class="input" id="txtCoveredTranNo2" disabled="disabled" /></td>
-                <td colspan="1"><input class="input" id="txtCoveredTranNo3" disabled="disabled" /></td>
-                <td colspan="2"></td>
-                <td colspan="1"><input class="input" id="txtCoveredTranNo4" disabled="disabled" /></td>
-                <td colspan="1"><input class="input" id="txtCoveredTranNo5" disabled="disabled" /></td>
-                <td colspan="1"><input class="input" id="txtCoveredTranNo6" disabled="disabled" /></td>
+                <td>
+                    <input type="number" id="txtCoveredTranNo1" disabled="disabled" />
+                    -
+                    <input style="float:right" id="txtCoveredTranNo2" disabled="disabled" />
+                </td>
+                <td style="text-align:right">To: </td>
+                <td>
+                    <input type="number" id="txtCoveredTranNo3" disabled="disabled" />
+                    -
+                    <input style="float:right" id="txtCoveredTranNo4" disabled="disabled" />
+                </td>
+                <td></td>
+                <td>Signatory :  </td>
+                <td>
+                    @Html.DropDownListFor(m => m.SignatoryList, new SelectList(Model.SignatoryList, "BCS_ID", "BCS_Name"), null, new { @class = "dis-inline-block", id = "ddlSignatory", disabled = "disabled" })
+                </td>
+                <td></td>
+                <td></td>
             </tr>
             <tr>
                 <td>&#9679</td>
                 <td>Subject Name</td>
-                <td colspan="2"><input class="input" id="txtSubjName" disabled="disabled" /></td>
-                <td colspan="2"></td>
-                <td>@Html.LabelFor(m => m.FileFormatList)</td>
+                <td><input class="input" id="txtSubjName" disabled="disabled" /></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>File Format: </td>
                 <td>
                     @Html.DropDownListFor(m => m.FileFormatList, new SelectList(Model.FileFormatList, "FileFormatID", "FileFormatName"), null, new { @class = "dis-inline-block", id = "ddlFileFormat", disabled = "disabled" })
                     @Html.ValidationMessageFor(m => m.FileFormatList)
