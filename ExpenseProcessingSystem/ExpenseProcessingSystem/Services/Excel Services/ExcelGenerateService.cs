@@ -1,6 +1,7 @@
 ﻿using ExpenseProcessingSystem.ViewModels;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
+using System;
 using System.Drawing;
 using System.IO;
 
@@ -25,9 +26,7 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
 
                     ExcelAPSWT_M(newFile, templateFile, data);
                     break;
-
-                case ConstantData.HomeReportConstantValue.AST1000_S:
-                case ConstantData.HomeReportConstantValue.AST1000_A:
+                case ConstantData.HomeReportConstantValue.AST1000:
 
                     ExcelAST1000(newFile, templateFile, data);
                     break;
@@ -54,8 +53,13 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 int dataStartRow = worksheet.Dimension.End.Row + 1;
                 int dataEndRow = 0;
 
-                worksheet.Cells["C5"].Value = data.HomeReportFilter.MonthName + " - " + data.HomeReportFilter.Year;
+                //Header
+                worksheet.Cells["A2"].Value = data.HomeReportFilter.MonthName + " - " + data.HomeReportFilter.Year;
+                worksheet.Cells["B3"].Value = data.ReportCommonVM.Header_Name;
+                worksheet.Cells["B4"].Value = data.ReportCommonVM.Header_TIN;
+                worksheet.Cells["B5"].Value = data.ReportCommonVM.Header_Address;
 
+                //Content
                 foreach (var i in data.HomeReportOutputAPSWT_M)
                 {
                     lastRow += 1;
@@ -92,6 +96,9 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 worksheet.Cells["C" + lastRow].Style.Font.UnderLine = true;
                 worksheet.Cells["C" + lastRow].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
+                //footer
+                worksheet.HeaderFooter.OddFooter.LeftAlignedText = DateTime.Now.ToString("dddd, MMMM dd,yyyy h:mm:sstt");
+
                 package.Save();
             }
         }
@@ -105,27 +112,15 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 int lastRow = worksheet.Dimension.End.Row;
                 int dataStartRow = worksheet.Dimension.End.Row + 1;
                 int dataEndRow = 0;
-                string timePeriod = "";
 
-                if(data.HomeReportFilter.ReportType == ConstantData.HomeReportConstantValue.AST1000_S)
-                {
-                    if (data.HomeReportFilter.Semester == ConstantData.HomeReportConstantValue.SEM1)
-                    {
-                        timePeriod = data.HomeReportFilter.Semester + "st Term " + data.HomeReportFilter.YearSem;
-                    }
-                    else
-                    {
-                        timePeriod = data.HomeReportFilter.Semester + "nd Term " + data.HomeReportFilter.YearSem;
-                    }
-                }else if(data.HomeReportFilter.ReportType == ConstantData.HomeReportConstantValue.AST1000_A)
-                {
-                    timePeriod = "Year " + data.HomeReportFilter.Year;
-                    
-                }
+                //Header
+                worksheet.Cells["A2"].Value = data.HomeReportFilter.MonthName + " " + data.HomeReportFilter.Year + " - "
+                                            + data.HomeReportFilter.MonthNameTo + " " + data.HomeReportFilter.YearTo;
+                worksheet.Cells["B3"].Value = data.ReportCommonVM.Header_Name;
+                worksheet.Cells["B4"].Value = data.ReportCommonVM.Header_TIN;
+                worksheet.Cells["B5"].Value = data.ReportCommonVM.Header_Address;
 
-                worksheet.Cells["A2"].Value = timePeriod;
-                worksheet.Cells["A2"].Style.Font.UnderLine = true;
-
+                //Content
                 foreach (var i in data.HomeReportOutputAST1000)
                 {
                     lastRow += 1;
@@ -170,6 +165,9 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 worksheet.Cells["F" + lastRow].Value = "VP-Manager/ AdministrationDepartment";
                 worksheet.Cells["F" + lastRow].Style.Font.Bold = true;
                 worksheet.Cells["F" + lastRow].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                
+                //footer
+                worksheet.HeaderFooter.OddFooter.LeftAlignedText = DateTime.Now.ToString("dddd, MMMM dd,yyyy h:mm:sstt");
 
                 package.Save();
             }
@@ -183,8 +181,13 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
 
                 int lastRow = worksheet.Dimension.End.Row + 1;
 
+                //Header
                 worksheet.Cells["A2"].Value = data.HomeReportFilter.MonthName + " " + data.HomeReportFilter.Year;
+                worksheet.Cells["B3"].Value = data.ReportCommonVM.Header_Name;
+                worksheet.Cells["B4"].Value = data.ReportCommonVM.Header_TIN;
+                worksheet.Cells["B5"].Value = data.ReportCommonVM.Header_Address;
 
+                //Content
                 foreach (var i in data.HomeReportOutputActualBudget)
                 {
                     worksheet.Cells["A" + lastRow + ":F" + lastRow].Style.Fill.PatternType = ExcelFillStyle.Solid;
@@ -234,6 +237,9 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     lastRow += 1;
                 }
 
+                //footer
+                worksheet.HeaderFooter.OddFooter.LeftAlignedText = DateTime.Now.ToString("dddd, MMMM dd,yyyy h:mm:sstt");
+
                 package.Save();
             }
         }
@@ -246,10 +252,14 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 int lastRow = worksheet.Dimension.End.Row;
                 int dataStartRow = worksheet.Dimension.End.Row + 1;
                 int dataEndRow = 0;
-                var cellVal = "";
-                cellVal = data.HomeReportFilter.ReportFrom + " - " + data.HomeReportFilter.ReportTo;
-                worksheet.Cells["J2"].Value = cellVal;
 
+                //Header
+                worksheet.Cells["A2"].Value = data.HomeReportFilter.ReportFrom + " - " + data.HomeReportFilter.ReportTo;
+                worksheet.Cells["C3"].Value = data.ReportCommonVM.Header_Name;
+                worksheet.Cells["C4"].Value = data.ReportCommonVM.Header_TIN;
+                worksheet.Cells["C5"].Value = data.ReportCommonVM.Header_Address;
+
+                //Content
                 foreach (var i in data.HomeReportOutputWTS)
                 {
                     lastRow += 1;
@@ -299,6 +309,10 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     worksheet.Cells["V" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
                 }
                 dataEndRow = lastRow;
+
+                //footer
+                worksheet.HeaderFooter.OddFooter.LeftAlignedText = DateTime.Now.ToString("dddd, MMMM dd,yyyy h:mm:sstt");
+
                 package.Save();
             }
         }

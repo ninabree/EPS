@@ -2554,20 +2554,21 @@ namespace ExpenseProcessingSystem.Services
             return dbAPSWT_M;
         }
 
-        public IEnumerable<HomeReportOutputAST1000Model> GetAST1000_SData(int yearSem, int semester)
+        public IEnumerable<HomeReportOutputAST1000Model> GetAST1000_Data(HomeReportViewModel model)
         {
             int[] status = { 3, 4 };
-            float[] taxRateConsider = { 0.01f, 0.02f };
-            int[] semesterRange = (semester == 1) ? new int[] { 4, 5, 6, 7, 8, 9 } : new int[] { 10, 11, 12, 1, 2, 3 };
+            string format = "yyyy-M";
+            DateTime startDT = DateTime.ParseExact(model.Year + "-" + model.Month, format, CultureInfo.InvariantCulture);
+            DateTime endDT = DateTime.ParseExact(model.YearTo + "-" + model.MonthTo, format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
 
-            var dbAST1000_S = (from vendor in _context.DMVendor
+            var dbAST1000 = (from vendor in _context.DMVendor
                              join expense in _context.ExpenseEntry on vendor.Vendor_ID equals expense.Expense_Payee
                              join expEntryDetl in _context.ExpenseEntryDetails on expense.Expense_ID equals expEntryDetl.ExpenseEntryModel.Expense_ID
                              join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
                              where status.Contains(expense.Expense_Status)
-                             && semesterRange.Contains(expense.Expense_Last_Updated.Month)
-                             && expense.Expense_Last_Updated.Year == yearSem
-                             && taxRateConsider.Contains(tr.TR_Tax_Rate)
+                             && model.TaxRateList.Contains(tr.TR_Tax_Rate)
+                             && startDT.Date <= expense.Expense_Last_Updated 
+                             && expense.Expense_Last_Updated <= endDT.Date
                                orderby vendor.Vendor_Name
                              select new HomeReportOutputAST1000Model
                              {
@@ -2580,7 +2581,7 @@ namespace ExpenseProcessingSystem.Services
                                  AOTW = expEntryDetl.ExpDtl_Credit_Ewt
                              }).ToList();
 
-            return dbAST1000_S;
+            return dbAST1000;
         }
 
         public IEnumerable<HomeReportOutputAST1000Model> GetAST1000_AData(int year, int month, int yearTo, int monthTo)
@@ -2617,7 +2618,7 @@ namespace ExpenseProcessingSystem.Services
         public IEnumerable<HomeReportActualBudgetModel> GetActualReportData(int filterMonth, int filterYear)
         {
             List<HomeReportActualBudgetModel> actualBudgetData = new List<HomeReportActualBudgetModel>();
-
+            List<AccGroupBudgetModel> accountCategory = new List<AccGroupBudgetModel>();
             DateTime startOfTerm = GetSelectedYearMonthOfTerm(filterMonth, filterYear);
             DateTime startDT;
             DateTime endDT;
@@ -2628,30 +2629,81 @@ namespace ExpenseProcessingSystem.Services
             double subTotal;
             string format = "yyyy-M";
 
-            //Get all account group category with budget from DB
-            var accountCategory = (from budget in _context.Budget
-                                   join acc in _context.DMAccount on budget.Budget_Account_ID equals acc.Account_ID
-                                   join accgroup in _context.DMAccountGroup on acc.Account_Group_MasterID equals accgroup.AccountGroup_MasterID
-                                   where accgroup.AccountGroup_isActive == true
-                                   && accgroup.AccountGroup_isDeleted == false
-                                   orderby accgroup.AccountGroup_MasterID
-                                   select new
-                                   {
-                                       startOfTerm,
-                                       accgroup.AccountGroup_Name,
-                                       accgroup.AccountGroup_MasterID,
-                                       Remarks = "Budget Amount - This Term",
-                                       budget.Budget_Amount
-                                   }).ToList();
+            endDT = DateTime.ParseExact(filterYear + "-" + filterMonth, format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
+            
+            //Get latest Budget that until end of the selected month of each account
+            var accountList = _context.DMAccount.Where(x => x.Account_isActive == true && x.Account_isDeleted == false
+                                                        && x.Account_Fund == true).OrderBy(x => x.Account_Group_MasterID);
+            var accountGrpList = _context.DMAccountGroup.Where(x => x.AccountGroup_isActive == true && x.AccountGroup_isDeleted == false);
+            var budgetList = _context.Budget.Where(x => x.Budget_Date_Registered.Date <= endDT)
+                                                    .OrderByDescending(x => x.Budget_Date_Registered);
+            int currGroup = accountList.First().Account_Group_MasterID;
+            double budgetAmount = 0.0;
+            string log = "";
 
-            //Get all expenses amount data between start of term date and last day of before filter month, year from DB
+            if(budgetList.Count() == 0)
+            {
+                actualBudgetData.Add(new HomeReportActualBudgetModel {
+                    BudgetBalance = 0.0,
+                    ExpenseAmount = 0.0,
+                    Remarks = "NO_RECORD",
+                    ValueDate = DateTime.Parse("1991/01/01 12:00:00")
+                });
+                return actualBudgetData;
+            }
+
+            foreach (var i in budgetList)
+            {
+                Console.WriteLine("############" + i.Budget_Account_MasterID);
+            }
+            foreach (var i in accountList)
+            {
+                var budget = budgetList.Where(x => x.Budget_Account_MasterID == i.Account_MasterID)
+                    .DefaultIfEmpty(new BudgetModel {
+                        Budget_Account_MasterID = i.Account_MasterID,
+                        Budget_Amount = 0.0
+                    }).OrderByDescending(x => x.Budget_Date_Registered).First();
+
+                if(currGroup == i.Account_Group_MasterID)
+                {
+                    budgetAmount += budget.Budget_Amount;
+                }
+                else
+                {
+                    accountCategory.Add(new AccGroupBudgetModel
+                    {
+                        StartOfTerm = startOfTerm,
+                        AccountGroupName = accountGrpList.Where(x => x.AccountGroup_MasterID == currGroup).FirstOrDefault().AccountGroup_Name,
+                        AccountGroupMasterID = currGroup,
+                        Remarks = "Budget Amount - This Term",
+                        Budget = budgetAmount
+                    });
+
+                    budgetAmount = budget.Budget_Amount;
+                    currGroup = i.Account_Group_MasterID;
+
+                }
+            }
+
+            //Add the last account group info and budget to List.
+            accountCategory.Add(new AccGroupBudgetModel
+            {
+                StartOfTerm = startOfTerm,
+                AccountGroupName = accountGrpList.Where(x => x.AccountGroup_MasterID == currGroup).FirstOrDefault().AccountGroup_Name,
+                AccountGroupMasterID = currGroup,
+                Remarks = "Budget Amount - This Term",
+                Budget = budgetAmount
+            });
+
+            ////Get all expenses amount data between start of term date and last day of before filter month, year from DB
             var expOfPrevMonthsList = (from expDtl in _context.ExpenseEntryDetails
-                                       join acc in _context.DMAccount on expDtl.ExpDtl_Account equals acc.Account_MasterID
+                                       join acc in _context.DMAccount on expDtl.ExpDtl_Account equals acc.Account_ID
                                        join accgroup in _context.DMAccountGroup on acc.Account_Group_MasterID equals accgroup.AccountGroup_MasterID
                                        join exp in _context.ExpenseEntry on expDtl.ExpenseEntryModel.Expense_ID equals exp.Expense_ID
                                        join dept in _context.DMDept on expDtl.ExpDtl_Dept equals dept.Dept_ID
                                        where exp.Expense_Last_Updated.Date >= startOfTerm.Date
                                        && exp.Expense_Last_Updated.Date <= DateTime.ParseExact(filterYear + "-" + filterMonth, format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1)
+                                       && accgroup.AccountGroup_isActive == true && accgroup.AccountGroup_isDeleted == false
                                        orderby exp.Expense_Last_Updated
                                        select new
                                        {
@@ -2670,25 +2722,24 @@ namespace ExpenseProcessingSystem.Services
                 subTotal = 0.00;
                 totalExpenseThisTermToPrevMonthend = 0.00;
 
-                budgetBalance = a.Budget_Amount;
+                budgetBalance = a.Budget;
 
                 actualBudgetData.Add(new HomeReportActualBudgetModel()
                 {
-                    Category = a.AccountGroup_Name,
+                    Category = a.AccountGroupName,
                     BudgetBalance = budgetBalance,
                     Remarks = a.Remarks,
-                    ValueDate = a.startOfTerm
+                    ValueDate = a.StartOfTerm
                 });
 
                 //Get total expenses from start of term to Prev monthend of selected month, year
 
-                var expensesOfTermMonthToBeforeFilterMonth = expOfPrevMonthsList.Where(c => c.AccountGroup_MasterID == a.AccountGroup_MasterID && c.Expense_Last_Updated.Date >= startOfTerm.Date
+                var expensesOfTermMonthToBeforeFilterMonth = expOfPrevMonthsList.Where(c => c.AccountGroup_MasterID == a.AccountGroupMasterID && c.Expense_Last_Updated.Date >= startOfTerm.Date
                                        && c.Expense_Last_Updated.Date <= endDT.AddDays(-1));
 
                 foreach (var i in expensesOfTermMonthToBeforeFilterMonth)
                 {
                     totalExpenseThisTermToPrevMonthend += i.ExpDtl_Credit_Cash;
-                    //Debug.WriteLine(i.AccountGroup_Name + " : " + i.ExpDtl_Credit_Cash + " - " + totalExpenseThisTermToPrevMonthend);
                 }
 
                 budgetBalance -= totalExpenseThisTermToPrevMonthend;
@@ -2702,7 +2753,7 @@ namespace ExpenseProcessingSystem.Services
                 });
 
                 //Get all expenses of selected month and year
-                var expensesOfFilterYearMonth = expOfPrevMonthsList.Where(c => c.AccountGroup_MasterID == a.AccountGroup_MasterID 
+                var expensesOfFilterYearMonth = expOfPrevMonthsList.Where(c => c.AccountGroup_MasterID == a.AccountGroupMasterID
                 && c.Expense_Last_Updated.Month == filterMonth && c.Expense_Last_Updated.Year == filterYear);
 
                 foreach (var i in expensesOfFilterYearMonth)
@@ -2766,30 +2817,52 @@ namespace ExpenseProcessingSystem.Services
             }
             return startOfTermDate;
         }
+
+        public List<float> PopulateTaxRaxListIncludeHist()
+        {
+            var taxRate = _context.DMTR.OrderBy(x => x.TR_Tax_Rate).Select(x => x.TR_Tax_Rate).ToList().Distinct();
+            List<float> taxRateList = new List<float>();
+            foreach(var i in taxRate)
+            {
+                taxRateList.Add(i);
+            }
+
+            return taxRateList;
+        }
+
+        public IEnumerable<DMBIRCertSignModel> PopulateSignatoryList()
+        {
+            return _context.DMBCS.Where(x => x.BCS_isActive == true && x.BCS_isDeleted == false).OrderBy(x => x.BCS_Name).ToList();
+        }
         
+        public DMBIRCertSignModel GetSignatoryInfo(int id)
+        {
+            return _context.DMBCS.Where(x => x.BCS_ID == id).FirstOrDefault();
+        }
+
         // [Entry Petty Cash Voucher]
         public IEnumerable<DMVendorModel> PopulateVendorList()
         {
-            return _context.DMVendor.Where(db => db.Vendor_isActive == true 
-                && db.Vendor_isDeleted == false).OrderBy(db => db.Vendor_Name).ToList();
+            return _context.DMVendor.Where(x => x.Vendor_isActive == true 
+                && x.Vendor_isDeleted == false).OrderBy(x => x.Vendor_Name).ToList();
         }
 
         public IEnumerable<DMAccountModel> PopulateAccountList()
         {
-            return _context.DMAccount.Where(db => db.Account_isActive == true
-                && db.Account_isDeleted == false).OrderBy(db => db.Account_Name).ToList();
+            return _context.DMAccount.Where(x => x.Account_isActive == true
+                && x.Account_isDeleted == false).OrderBy(x => x.Account_Name).ToList();
         }
 
         public IEnumerable<DMDeptModel> PopulateDepartmentList()
         {
-            return _context.DMDept.Where(db => db.Dept_isActive == true
-                && db.Dept_isDeleted == false).OrderBy(db => db.Dept_Name).ToList();
+            return _context.DMDept.Where(x => x.Dept_isActive == true
+                && x.Dept_isDeleted == false).OrderBy(x => x.Dept_Name).ToList();
         }
 
         public IEnumerable<DMTRModel> PopulateTaxRateList()
         {
-            return _context.DMTR.Where(db => db.TR_isActive == true
-                && db.TR_isDeleted == false).OrderBy(db => db.TR_Tax_Rate).ToList();
+            return _context.DMTR.Where(x => x.TR_isActive == true
+                && x.TR_isDeleted == false).OrderBy(x => x.TR_Tax_Rate).ToList();
         }
 
         //MISC
