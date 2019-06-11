@@ -2320,7 +2320,12 @@
 .w-80 {width:80%}
 .w-97 {width: 97%}
 .h-20 {height: 20px;}
-.w-49 {width: 49%;}
+.w-49 {
+    width: 49%;
+}
+.w-48 {
+    width: 48%;
+}
 .w-half {width: 48%;margin: 1%;}
 .w-full {width: 100%;}
 .h-full {height: 100%;}

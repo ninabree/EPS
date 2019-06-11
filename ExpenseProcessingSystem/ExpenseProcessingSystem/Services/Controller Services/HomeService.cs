@@ -3307,6 +3307,102 @@ namespace ExpenseProcessingSystem.Services
 
             return ddvModel;
         }
+        // [RETRIEVE NC EXPENSE DETAILS]
+        public EntryNCViewModelList getExpenseNC(int transID)
+        {
+            List<EntryNCViewModel> ncList = new List<EntryNCViewModel>();
+
+            var EntryDetails = (from e
+                                in _context.ExpenseEntry
+                                where e.Expense_ID == transID
+                                select new
+                                {
+                                    e,
+                                    ExpenseEntryNC = from d
+                                                          in _context.ExpenseEntryNonCash
+                                                     where d.ExpenseEntryModel.Expense_ID == e.Expense_ID
+                                                     select new
+                                                     {
+                                                         d,
+                                                         ExpenseEntryNCDtls = from g
+                                                                                 in _context.ExpenseEntryNonCashDetails
+                                                                              where g.ExpenseEntryNCModel.ExpNC_ID == d.ExpNC_ID
+                                                                              select new
+                                                                              {
+                                                                                  g,
+                                                                                  ExpenseEntryNCDtlAccs = from a
+                                                                                                           in _context.ExpenseEntryNonCashDetailAccounts
+                                                                                                          where a.ExpenseEntryNCDtlModel.ExpNCDtl_ID == g.ExpNCDtl_ID
+                                                                                                          select a
+                                                                              }
+
+                                                     }
+                                }).FirstOrDefault();
+            EntryNCViewModel ncDtlVM = new EntryNCViewModel();
+            foreach (var dtl in EntryDetails.ExpenseEntryNC)
+            {
+                List<ExpenseEntryNCDtlViewModel> ncDtls = new List<ExpenseEntryNCDtlViewModel>();
+                ExpenseEntryNCDtlViewModel entryNCDtl;
+                foreach (var ncDtl in dtl.ExpenseEntryNCDtls)
+                {
+                    List<ExpenseEntryNCDtlAccViewModel> ncDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>();
+                    ExpenseEntryNCDtlAccViewModel entryNCDtlAcc;
+                    foreach (var ncDtlAcc in ncDtl.ExpenseEntryNCDtlAccs)
+                    {
+                        entryNCDtlAcc = new ExpenseEntryNCDtlAccViewModel()
+                        {
+                            ExpNCDtlAcc_Acc_ID = ncDtlAcc.ExpNCDtlAcc_Acc_ID,
+                            ExpNCDtlAcc_Acc_Name = ncDtlAcc.ExpNCDtlAcc_Acc_Name ?? "",
+                            ExpNCDtlAcc_Curr_ID = ncDtlAcc.ExpNCDtlAcc_Curr_ID,
+                            ExpNCDtlAcc_Curr_Name = "",
+                            ExpNCDtlAcc_Inter_Rate = ncDtlAcc.ExpNCDtlAcc_Inter_Rate,
+                            ExpNCDtlAcc_Amount = ncDtlAcc.ExpNCDtlAcc_Amount,
+                            ExpNCDtlAcc_Type_ID = ncDtlAcc.ExpNCDtlAcc_Type_ID
+                        };
+                        if (entryNCDtlAcc.ExpNCDtlAcc_Acc_ID != 0)
+                        {
+                            entryNCDtlAcc.ExpNCDtlAcc_Acc_Name = _context.DMAccount.Where(x => x.Account_ID == entryNCDtlAcc.ExpNCDtlAcc_Acc_ID).Select(x => x.Account_Name).FirstOrDefault() ?? "";
+                        }
+                        if (entryNCDtlAcc.ExpNCDtlAcc_Curr_ID != 0)
+                        {
+                            entryNCDtlAcc.ExpNCDtlAcc_Curr_Name = _context.DMCurrency.Where(x => x.Curr_ID == entryNCDtlAcc.ExpNCDtlAcc_Curr_ID).Select(x => x.Curr_CCY_ABBR).FirstOrDefault() ?? "";
+                        }
+                        ncDtlAccs.Add(entryNCDtlAcc);
+                    }
+                    entryNCDtl = new ExpenseEntryNCDtlViewModel()
+                    {
+                        ExpNCDtl_Remarks_Desc = ncDtl.g.ExpNCDtl_Remarks_Desc,
+                        ExpNCDtl_Remarks_Period_From = ncDtl.g.ExpNCDtl_Remarks_Period_From,
+                        ExpNCDtl_Remarks_Period_To = ncDtl.g.ExpNCDtl_Remarks_Period_To,
+                        ExpNCDtl_Period_Duration = ncDtl.g.ExpNCDtl_Remarks_Period_From + " - " + ncDtl.g.ExpNCDtl_Remarks_Period_To,
+                        ExpenseEntryNCDtlAccs = ncDtlAccs
+                    };
+                    ncDtls.Add(entryNCDtl);
+                }
+                ncDtlVM = new EntryNCViewModel()
+                {
+                    NC_Category_ID = dtl.d.ExpNC_Category_ID,
+                    NC_CredAmt = EntryDetails.e.Expense_Credit_Total,
+                    NC_DebitAmt = EntryDetails.e.Expense_Debit_Total,
+                    NC_TotalAmt = EntryDetails.e.Expense_Credit_Total + EntryDetails.e.Expense_Debit_Total,
+                    ExpenseEntryNCDtls = ncDtls
+                };
+            }
+            EntryNCViewModelList ncModel = new EntryNCViewModelList()
+            {
+                entryID = EntryDetails.e.Expense_ID,
+                expenseDate = EntryDetails.e.Expense_Date,
+                status = getStatus(EntryDetails.e.Expense_Status),
+                statusID = EntryDetails.e.Expense_Status,
+                approver = (EntryDetails.e.Expense_Status == 1) ? "" : getUserName(EntryDetails.e.Expense_Approver),
+                verifier_1 = (EntryDetails.e.Expense_Status == 1) ? "" : getUserName(EntryDetails.e.Expense_Verifier_1),
+                verifier_2 = (EntryDetails.e.Expense_Status == 1) ? "" : getUserName(EntryDetails.e.Expense_Verifier_2),
+                maker = EntryDetails.e.Expense_Creator_ID,
+                EntryNC = ncDtlVM
+            };
+
+            return ncModel;
+        }
 
         //update status of entry
         public bool updateExpenseStatus(int transID, int status, int userid)
@@ -3466,7 +3562,66 @@ namespace ExpenseProcessingSystem.Services
 
             return -1;
         }
+        public int addExpense_NC(EntryNCViewModelList entryModel, int userId, int expenseType)
+        {
+            if (_modelState.IsValid)
+            {
+                List<ExpenseEntryNCDtlModel> expenseDtls = new List<ExpenseEntryNCDtlModel>();
 
+                foreach (var ncDtls in entryModel.EntryNC.ExpenseEntryNCDtls)
+                {
+                    List<ExpenseEntryNCDtlAccModel> accountDtls = new List<ExpenseEntryNCDtlAccModel>();
+                    foreach (var accDtls in ncDtls.ExpenseEntryNCDtlAccs)
+                    {
+                        ExpenseEntryNCDtlAccModel acc = new ExpenseEntryNCDtlAccModel
+                        {
+                            ExpNCDtlAcc_Acc_ID = accDtls.ExpNCDtlAcc_Acc_ID,
+                            ExpNCDtlAcc_Acc_Name = accDtls.ExpNCDtlAcc_Acc_Name,
+                            ExpNCDtlAcc_Curr_ID = accDtls.ExpNCDtlAcc_Curr_ID,
+                            ExpNCDtlAcc_Amount = accDtls.ExpNCDtlAcc_Amount,
+                            ExpNCDtlAcc_Inter_Rate = accDtls.ExpNCDtlAcc_Inter_Rate,
+                            ExpNCDtlAcc_Type_ID = accDtls.ExpNCDtlAcc_Type_ID
+                        };
+                        accountDtls.Add(acc);
+                    }
+                    ExpenseEntryNCDtlModel expenseDetail = new ExpenseEntryNCDtlModel
+                    {
+                        ExpNCDtl_Remarks_Desc = ncDtls.ExpNCDtl_Remarks_Desc,
+                        ExpNCDtl_Remarks_Period_From = ncDtls.ExpNCDtl_Remarks_Period_From,
+                        ExpNCDtl_Remarks_Period_To = ncDtls.ExpNCDtl_Remarks_Period_To,
+                        ExpenseEntryNCDtlAccs = accountDtls
+                    };
+                    expenseDtls.Add(expenseDetail);
+                }
+                List<ExpenseEntryNCModel> expenseNCList = new List<ExpenseEntryNCModel>
+                {
+                    new ExpenseEntryNCModel
+                    {
+                        ExpNC_Category_ID = entryModel.EntryNC.NC_Category_ID,
+                        ExpenseEntryNCDtls = expenseDtls
+                    }
+                };       
+
+                ExpenseEntryModel expenseEntry = new ExpenseEntryModel
+                {
+                    Expense_Type = expenseType,
+                    Expense_Date = entryModel.expenseDate,
+                    Expense_Debit_Total = entryModel.EntryNC.NC_DebitAmt,
+                    Expense_Credit_Total = entryModel.EntryNC.NC_CredAmt,
+                    Expense_Creator_ID = userId,
+                    Expense_Created_Date = DateTime.Now,
+                    Expense_Last_Updated = DateTime.Now,
+                    Expense_isDeleted = false,
+                    Expense_Status = 1,
+                    ExpenseEntryNC = expenseNCList
+                };
+
+                _context.ExpenseEntry.Add(expenseEntry);
+                _context.SaveChanges();
+                return expenseEntry.Expense_ID;
+            }
+            return -1;
+        }
         ////============[End Access Entry Tables]=========================
 
     }

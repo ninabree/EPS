@@ -17,6 +17,6 @@ namespace ExpenseProcessingSystem.Models
         public string ExpNCDtlAcc_Acc_Name { get; set; }
         public float ExpNCDtlAcc_Inter_Rate { get; set; }
         public float ExpNCDtlAcc_Amount { get; set; }
-        public ExpenseEntryNCDtlModel ExpenseEntryNCModel { get; set; }
+        public ExpenseEntryNCDtlModel ExpenseEntryNCDtlModel { get; set; }
     }
 }
