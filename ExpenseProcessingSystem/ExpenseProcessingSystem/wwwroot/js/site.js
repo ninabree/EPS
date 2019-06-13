@@ -341,7 +341,7 @@ $(document).ready(function () {
 
             //if any entry tab is clicked, 'Entry' tab is selected as well
             if ("/Home/Entry_CV" == tabVal || "/Home/Entry_DDV" == tabVal || "/Home/Entry_PCV" == tabVal || "/Home/Entry_NC" == tabVal ||
-                "/Home/Entry_SS" == tabVal) {
+                "/Home/Entry_SS" == tabVal || "/Home/Entry_Liquidation" == tabVal) {
                 document.getElementById('entry').firstElementChild.className = 'selected';
             }
             //if any home tab is clicked, 'Home' tab is selected as well

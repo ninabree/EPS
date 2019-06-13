@@ -76,6 +76,7 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly string ENTRY_NC = "/Home/Entry_NC";
         public static readonly string ENTRY_PCV = "/Home/Entry_PCV";
         public static readonly string ENTRY_SS = "/Home/Entry_SS";
+        public static readonly string ENTRY_Liquidation = "/Home/Entry_Liquidation";
         public static readonly string ENTRY_NEW_CV = "/Home/AddNewCV";
         public static readonly string ENTRY_NEW_DDV = "/Home/AddNewDDV";
 
@@ -86,6 +87,7 @@ namespace ExpenseProcessingSystem.ConstantData
             GlobalSystemValues.ENTRY_NC,
             GlobalSystemValues.ENTRY_PCV,
             GlobalSystemValues.ENTRY_SS,
+            GlobalSystemValues.ENTRY_Liquidation,
             GlobalSystemValues.ENTRY_NEW_CV,
             GlobalSystemValues.ENTRY_NEW_DDV
         };

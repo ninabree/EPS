@@ -1,4 +1,5 @@
 ﻿using ExpenseProcessingSystem.ViewModels;
+using ExpenseProcessingSystem.ViewModels.Entry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,63 +18,63 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             switch (sortOrder)
             {
                 case "acc_mapping":
-                    tempList = tempList.OrderByDescending(s => s.BM_Acc_Group_Name);
+                    tempList = tempList.OrderBy(s => s.BM_Acc_Group_Name);
                     viewData = "glyph-1";
                     vdInfo = "glyphicon-menu-up";
+                    break;
+                case "acc_mapping_desc":
+                    tempList = tempList.OrderByDescending(s => s.BM_Acc_Group_Name);
+                    viewData = "glyph-1";
+                    vdInfo = "glyphicon-menu-down";
                     break;
                 case "acc_name":
                     tempList = tempList.OrderBy(s => s.BM_Acc_Name);
                     viewData = "glyph-2";
-                    vdInfo = "glyphicon-menu-down";
+                    vdInfo = "glyphicon-menu-up";
                     break;
                 case "acc_name_desc":
                     tempList = tempList.OrderByDescending(s => s.BM_Acc_Name);
                     viewData = "glyph-2";
-                    vdInfo = "glyphicon-menu-up";
+                    vdInfo = "glyphicon-menu-down";
                     break;
                 case "gbase_budget_code":
                     tempList = tempList.OrderBy(s => s.BM_GBase_Code);
                     viewData = "glyph-3";
-                    vdInfo = "glyphicon-menu-down";
+                    vdInfo = "glyphicon-menu-up";
                     break;
                 case "gbase_budget_code_desc":
                     tempList = tempList.OrderByDescending(s => s.BM_GBase_Code);
                     viewData = "glyph-3";
-                    vdInfo = "glyphicon-menu-up";
+                    vdInfo = "glyphicon-menu-down";
                     break;
                 case "acc_num":
                     tempList = tempList.OrderBy(s => s.BM_Acc_Num);
                     viewData = "glyph-4";
-                    vdInfo = "glyphicon-menu-down";
+                    vdInfo = "glyphicon-menu-up";
                     break;
                 case "acc_num_desc":
                     tempList = tempList.OrderByDescending(s => s.BM_Acc_Num);
                     viewData = "glyph-4";
-                    vdInfo = "glyphicon-menu-up";
+                    vdInfo = "glyphicon-menu-down";
                     break;
                 case "budget":
                     tempList = tempList.OrderBy(s => s.BM_Budget_Amount);
                     viewData = "glyph-5";
-                    vdInfo = "glyphicon-menu-down";
+                    vdInfo = "glyphicon-menu-up";
                     break;
                 case "budget_desc":
                     tempList = tempList.OrderByDescending(s => s.BM_Budget_Amount);
                     viewData = "glyph-5";
-                    vdInfo = "glyphicon-menu-up";
+                    vdInfo = "glyphicon-menu-down";
                     break;
                 case "date_registered":
                     tempList = tempList.OrderBy(s => s.BM_Date_Registered);
                     viewData = "glyph-6";
-                    vdInfo = "glyphicon-menu-down";
+                    vdInfo = "glyphicon-menu-up";
                     break;
                 case "date_registered_desc":
                     tempList = tempList.OrderByDescending(s => s.BM_Date_Registered);
                     viewData = "glyph-6";
-                    vdInfo = "glyphicon-menu-up";
-                    break;
-                default:
-                    tempList = tempList.OrderBy(s => s.BM_Acc_Group_Name);
-                    viewData = "glyph-1";
                     vdInfo = "glyphicon-menu-down";
                     break;
             }
@@ -1484,6 +1485,104 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             };
             return vm;
         }
+
+        public SortViewModel SortData(IEnumerable<LiquidationMainListViewModel> list, string sortOrder)
+        {
+            var tempList = list.AsQueryable();
+            var viewData = "";
+            var vdInfo = "";
+            switch (sortOrder)
+            {
+                case "app_type":
+                    tempList = tempList.OrderBy(s => s.App_Type);
+                    viewData = "glyph-1";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "app_type_desc":
+                    tempList = tempList.OrderByDescending(s => s.App_Type);
+                    viewData = "glyph-1";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "amount":
+                    tempList = tempList.OrderBy(s => s.App_Amount);
+                    viewData = "glyph-2";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "amount_desc":
+                    tempList = tempList.OrderByDescending(s => s.App_Amount);
+                    viewData = "glyph-2";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "payee":
+                    tempList = tempList.OrderBy(s => s.App_Payee);
+                    viewData = "glyph-3";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "payee_desc":
+                    tempList = tempList.OrderByDescending(s => s.App_Payee);
+                    viewData = "glyph-3";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "maker":
+                    tempList = tempList.OrderBy(s => s.App_Maker);
+                    viewData = "glyph-4";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "maker_desc":
+                    tempList = tempList.OrderByDescending(s => s.App_Maker);
+                    viewData = "glyph-4";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "verifiers":
+                    tempList = tempList.OrderBy(s => s.App_Verifier_ID_List[0]);
+                    viewData = "glyph-5";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "verifiers_desc":
+                    tempList = tempList.OrderByDescending(s => s.App_Verifier_ID_List[0]);
+                    viewData = "glyph-5";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "date_submitted":
+                    tempList = tempList.OrderBy(s => s.App_Date);
+                    viewData = "glyph-6";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "date_submitted_desc":
+                    tempList = tempList.OrderByDescending(s => s.App_Date);
+                    viewData = "glyph-6";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "last_updated":
+                    tempList = tempList.OrderBy(s => s.App_Last_Updated);
+                    viewData = "glyph-7";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "last_updated_desc":
+                    tempList = tempList.OrderByDescending(s => s.App_Last_Updated);
+                    viewData = "glyph-7";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "status":
+                    tempList = tempList.OrderBy(s => s.App_Status);
+                    viewData = "glyph-8";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "status_desc":
+                    tempList = tempList.OrderByDescending(s => s.App_Status);
+                    viewData = "glyph-8";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+            }
+            SortViewModel vm = new SortViewModel
+            {
+                list = tempList.Cast<dynamic>().ToList(),
+                viewData = viewData,
+                viewDataInfo = vdInfo
+            };
+            return vm;
+        }
+
         public class SortViewModel
         {
             public List<dynamic> list { get; set; }

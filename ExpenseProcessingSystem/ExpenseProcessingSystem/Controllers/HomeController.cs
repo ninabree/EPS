@@ -24,6 +24,7 @@ using System.Globalization;
 using System.Linq;
 using ExpenseProcessingSystem.ViewModels.Entry;
 using System.Diagnostics;
+using LiquidationMainListViewModel = ExpenseProcessingSystem.ViewModels.Entry.LiquidationMainListViewModel;
 
 namespace ExpenseProcessingSystem.Controllers
 {
@@ -533,7 +534,7 @@ namespace ExpenseProcessingSystem.Controllers
         {
             //set sort vals
             ViewData["CurrentSort"] = sortOrder;
-            ViewData["AccountMappingSortParm"] = String.IsNullOrEmpty(sortOrder) ? "acc_mapping" : "";
+            ViewData["AccountMappingSortParm"] = sortOrder == "acc_mapping_desc" ? "acc_mapping" : "acc_mapping_desc";
             ViewData["AccountNameSortParm"] = sortOrder == "acc_name_desc" ? "acc_name" : "acc_name_desc";
             ViewData["GBaseBudgetCodeSortParm"] = sortOrder == "gbase_budget_code_desc" ? "gbase_budget_code" : "gbase_budget_code_desc";
             ViewData["AccountNumberSortParm"] = sortOrder == "acc_num_desc" ? "acc_num" : "acc_num_desc";
@@ -857,8 +858,8 @@ namespace ExpenseProcessingSystem.Controllers
 
             return View(viewLink, ddvList);
         }
-        //------------------------------------------------------------------
-        //[* Entry Petty Cash *]
+
+        //-----------------[* Entry Petty Cash *]-----------------------------
         [OnlineUserCheck]
         [ImportModelState]
         public IActionResult Entry_PCV()
@@ -1028,11 +1029,8 @@ namespace ExpenseProcessingSystem.Controllers
 
             return View("Entry_PCV_ReadOnly", pcvList);
         }
-        //[* Entry Petty Cash *]
-        //------------------------------------------------------------------
 
-        //------------------------------------------------------------------
-        //[* Entry Cash Advance(SS) *]
+        //-------------[* Entry Cash Advance(SS) *]--------------------------
         [OnlineUserCheck]
         [ImportModelState]
         public IActionResult Entry_SS()
@@ -1203,8 +1201,6 @@ namespace ExpenseProcessingSystem.Controllers
             return View("Entry_SS_ReadOnly", ssList);
         }
 
-        //[* Entry Cash Advance(SS) *]
-        //------------------------------------------------------------------
         //------------------------------------------------------------------
         //[* Entry Non Cash *]
 
@@ -1310,8 +1306,10 @@ namespace ExpenseProcessingSystem.Controllers
             }
             return View(viewLink, ncList);
         }
+
         //[* Entry Non Cash *]
         //------------------------------------------------------------------
+
         [HttpPost]
         public IActionResult RedirectCont(string Cont, string Method)
         {
@@ -1342,6 +1340,60 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.category_of_entry = GlobalSystemValues.NC_CATEGORIES_SELECT;
             return viewModel;
         }
+
+        //-------------[* Liquidation *]--------------------------
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
+        public IActionResult Liquidation_Main(string sortOrder, string currentFilter, string searchString, int? page)
+        {
+            var userId = GetUserID();
+
+            //set sort vals
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["ApplicationTypeSortParm"] = sortOrder == "app_type_desc" ? "app_type" : "app_type_desc";
+            ViewData["AmountSortParm"] = sortOrder == "amount_desc" ? "amount" : "amount_desc";
+            ViewData["PayeeSortParm"] = sortOrder == "payee_desc" ? "payee" : "payee_desc";
+            ViewData["MakerSortParm"] = sortOrder == "maker_desc" ? "maker" : "maker_desc";
+            ViewData["VerifiersSortParm"] = sortOrder == "verifiers_desc" ? "verifiers" : "verifiers_desc";
+            ViewData["DateSubmittedSortParm"] = sortOrder == "date_submitted_desc" ? "date_submitted" : "date_submitted_desc";
+            ViewData["LastUpdatedDateSortParm"] = sortOrder == "last_updated_desc" ? "last_updated" : "last_updated_desc";
+            ViewData["StatusSortParm"] = sortOrder == "status_desc" ? "status" : "status_desc";
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewData["CurrentFilter"] = searchString;
+
+            //populate and sort
+            var sortedVals = _sortService.SortData(_service.populateLiquidationList(int.Parse(userId)), sortOrder);
+            ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
+
+            //pagination
+            return View(PaginatedList<LiquidationMainListViewModel>.CreateAsync(
+                (sortedVals.list).Cast<LiquidationMainListViewModel>().AsQueryable().AsNoTracking(), page ?? 1, pageSize));
+        }
+
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
+        public IActionResult Liquidation_SS(int entryID)
+        {
+            var userId = GetUserID();
+
+            LiquidationViewModel ssList = _service.getExpenseToLiqudate(entryID);
+
+            foreach (var i in ssList.LiquidationDetails)
+            {
+                i.screenCode = "Liquidation_SS";
+            }
+
+            return View("Liquidation_SS", ssList);
+        }
+
         //------------------------------------------------------------------
         //[* ACCOUNT *]
         [HttpPost]
@@ -2120,7 +2172,6 @@ namespace ExpenseProcessingSystem.Controllers
         //}
 
         [HttpPost]
-        //[ExportModelState]
         public IActionResult HomeReportValidation(HomeReportViewModel model)
         {
             List<String> errors = new List<String>();
