@@ -18,10 +18,10 @@ namespace ExpenseProcessingSystem.ConstantData
         //Alphalist of Payees Subject to Withholding Tax (Monthly)
         public const int APSWT_M = 2;
 
-        //Alphalist of Suppliers by top 10000 corporations (Semestral)
-        public const int AST1000_S = 3;
+        //Alphalist of Suppliers by top 10000 corporations
+        public const int AST1000 = 3;
 
-        //Alphalist of Suppliers by top 10000 corporations (Annual)
+        //Reserved
         public const int AST1000_A = 4;
 
         //Actual Budget Report
@@ -45,7 +45,7 @@ namespace ExpenseProcessingSystem.ConstantData
         public const string ReportPdfPrevLayoutPath = "ReportLayoutFormat/";
         //PDF Footer foramt
         public static readonly string PdfFooter1 = "--footer-left \" PAGE => [page] of [toPage] \" --footer-right \" Printed Date => " + DateTime.Today.ToShortDateString() + "\" --footer-font-size \"9\" --footer-spacing 3 --footer-font-name \"calibri light\"";
-        public static readonly string PdfFooter2 = "--footer-left \" " + DateTime.Now.ToString("dddd, MMMM dd,yyyy h:mm:sstt") + " \" --footer-center \" Page [page] \" --footer-font-size \"9\" --footer-spacing 3 --footer-font-name \"calibri light\"";
+        public static readonly string PdfFooter2 = "--footer-left \" " + DateTime.Now.ToString("dddd, MMMM dd,yyyy h:mm:sstt") + " \" --footer-center \" Page [page] of [toPage] \" --footer-font-size \"9\" --footer-spacing 3 --footer-font-name \"calibri light\"";
 
         //========================================================================
         //Public IEnumerable class constant values
@@ -199,13 +199,13 @@ namespace ExpenseProcessingSystem.ConstantData
                 new HomeReportTypesModel
                 {
                     Id = 3,
-                    TypeName = "Alphalist of Suppliers by top 10000 corporation (1%, 2%)",
+                    TypeName = "Alphalist of Suppliers by top 10000 corporation",
                     SubTypeAvail = false
                 },
                 new HomeReportTypesModel
                 {
                     Id = 4,
-                    TypeName = "Alphalist of Suppliers by top 10000 corporation (All rate of taxes)",
+                    TypeName = "Reserved",
                     SubTypeAvail = false
                 },
                 new HomeReportTypesModel
@@ -217,7 +217,7 @@ namespace ExpenseProcessingSystem.ConstantData
                 new HomeReportTypesModel
                 {
                     Id = 6,
-                    TypeName = "General Expense Distribution Report",
+                    TypeName = "Reserved",
                     SubTypeAvail = false
                 },
                 new HomeReportTypesModel
@@ -1322,5 +1322,4 @@ namespace ExpenseProcessingSystem.ConstantData
     {
         public int PeriodOptionID { get; set; }
     }
-
 }

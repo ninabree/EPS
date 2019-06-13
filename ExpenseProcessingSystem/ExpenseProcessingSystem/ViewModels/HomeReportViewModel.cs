@@ -33,6 +33,10 @@ namespace ExpenseProcessingSystem.ViewModels
 
         public IEnumerable<PeriodOption> PeriodOptionList { get; set; }
 
+        public List<float> TaxRateList { get; set; }
+
+        public IEnumerable<DMBIRCertSignModel> SignatoryList { get; set; }
+
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime PeriodFrom { get; set; }
 
@@ -76,5 +80,9 @@ namespace ExpenseProcessingSystem.ViewModels
         public string ReportFrom { get; set; }
 
         public string ReportTo { get; set; }
+
+        public string TaxRateArray { get; set; }
+
+        public int SignatoryID { get; set; }
     }
 }

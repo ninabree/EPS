@@ -8,55 +8,52 @@
 
 <div class="tabContent">
     <input id="_screen" type="hidden" value="nc" />
-    @using (Html.BeginForm("AddNewNC", "Home", FormMethod.Post, new { @class = "validate-form" }))
-    {
-        <div id="tbl-lbl" class="flex-sb">
-            <div class="dis-inline-block w-20">Date: <p class="dis-inline-block w-70">@Html.TextBoxFor(model => model.expenseDate, new { @readonly = "true", @class = "input w-97" })</p> </div>
+    <div id="tbl-lbl" class="flex-sb">
+        <div class="dis-inline-block w-20">Date: <p class="dis-inline-block w-70">@Html.TextBoxFor(model => model.expenseDate, new { @readonly = "true", @class = "input w-97" })</p> </div>
+    </div>
+    <div id="tbl-lbl">
+        <div class="dis-inline-block"><p>Category of Entries:</p></div>
+        <div class="dis-inline-block">
+            @Html.DropDownListFor(m => m.category_of_entry, Model.systemValues.category_of_entries, new { id = "categoryName" })
         </div>
-        <div id="tbl-lbl">
-            <div class="dis-inline-block"><p>Category of Entries:</p></div>
-            <div class="dis-inline-block">
-                @Html.DropDownListFor(m => m.category_of_entry, Model.systemValues.category_of_entries, new { id = "categoryName" })
+    </div>
+    <div id="nc_container" class="border-solid">
+    </div>
+    <div id="entry-status" class="m-t-10 m-b-10">
+        <div class="dis-inline-block"><label>Status: </label></div>
+        <div class="dis-inline-block">@Html.TextBoxFor(x => x.status, new { @readonly = "true", @class = "input" })</div>
+        <div class="dis-inline-block"><label>Approver:</label></div>
+        <div class="dis-inline-block">@Html.TextBoxFor(model => model.approver, new { @readonly = "true", @class = "input" })</div>
+        <div class="dis-inline-block"><label>Verifier:</label></div>
+        <div class="dis-inline-block">
+            <p class="dis-inline-block">@Html.TextBoxFor(model => model.verifier_1, new { @readonly = "true", @class = "m-l-5 input" })</p>
+            <p class="dis-inline-block">@Html.TextBoxFor(model => model.verifier_2, new { @readonly = "true", @class = "m-l-5 input" })</p>
+        </div>
+    </div>
+    <div id="entry-controls" class="m-b-10">
+        <div class="flex-sb">
+            <div>
+                <div class="dis-inline-block tbl-btn"><button onclick="$('.nc-form').submit();">Save</button></div>
+                <div class="dis-inline-block tbl-btn"><button disabled>Delete</button></div>
+                <div class="dis-inline-block tbl-btn"><button disabled>Modify</button></div>
             </div>
-        </div>
-        <div id="nc_container" class="border-solid">
-        </div>
-        <div id="entry-status" class="m-t-10 m-b-10">
-            <div class="dis-inline-block"><label>Status: </label></div>
-            <div class="dis-inline-block">@Html.TextBoxFor(x => x.status, new { @readonly = "true", @class = "input" })</div>
-            <div class="dis-inline-block"><label>Approver:</label></div>
-            <div class="dis-inline-block">@Html.TextBoxFor(model => model.approver, new { @readonly = "true", @class = "input" })</div>
-            <div class="dis-inline-block"><label>Verifier:</label></div>
-            <div class="dis-inline-block">
-                <p class="dis-inline-block">@Html.TextBoxFor(model => model.verifier_1, new { @readonly = "true", @class = "m-l-5 input" })</p>
-                <p class="dis-inline-block">@Html.TextBoxFor(model => model.verifier_2, new { @readonly = "true", @class = "m-l-5 input" })</p>
+            <div>
+                <div class="dis-inline-block tbl-btn"><button id="reversal_entry" disabled>Create Reversal Entry</button></div>
+                <div class="dis-inline-block tbl-btn"><button disabled>Delete GBase Post</button></div>
+                <div class="dis-inline-block tbl-btn"><button disabled>Liquidate</button></div>
             </div>
-        </div>
-        <div id="entry-controls" class="m-b-10">
-            <div class="flex-sb">
-                <div>
-                    <div class="dis-inline-block tbl-btn"><button>Save</button></div>
-                    <div class="dis-inline-block tbl-btn"><button disabled>Delete</button></div>
-                    <div class="dis-inline-block tbl-btn"><button disabled>Modify</button></div>
-                </div>
-                <div>
-                    <div class="dis-inline-block tbl-btn"><button id="reversal_entry" disabled>Create Reversal Entry</button></div>
-                    <div class="dis-inline-block tbl-btn"><button disabled>Delete GBase Post</button></div>
-                    <div class="dis-inline-block tbl-btn"><button disabled>Liquidate</button></div>
-                </div>
-                <div>
-                    <div class="dis-inline-block tbl-btn"><button disabled>Print CDD Instruction Sheet</button></div>
-                </div>
+            <div>
+                <div class="dis-inline-block tbl-btn"><button disabled>Print CDD Instruction Sheet</button></div>
+            </div>
 
-            </div>
-            <div class="flex-sb">
-                <div>
-                    <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
-                    <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
-                </div>
+        </div>
+        <div class="flex-sb">
+            <div>
+                <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
+                <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
             </div>
         </div>
-    }
+    </div>
 
     <div id="modalDiv">
         @Html.Partial("ModalPartial")
@@ -69,18 +66,45 @@
 
         var partial = '@ViewData["partialName"]';
 
+        var $NC_TABLE = $('#NCPartialTbl');
         initPartial();
-        //------------[ FUNCTIONS ]---------------
+        //------------------- [[ Event ]] ---------------------
+        $(document).on('click', '.nc-table-remove', function (e) {
+            e.stopImmediatePropagation();
+            var tr = $(this).closest('tr');
+            tr.remove();
+        });
+        $(document).on('change', '.acc-sel', function (e) {
+            e.stopImmediatePropagation();
+            var selVal = this.value;
+            $(this).parent().siblings("input[id$='__ExpNCDtlAcc_Acc_ID']").val(selVal);
+        });
+        $(document).on("click", "#add_new_nc_row", function (e) {
+            e.stopImmediatePropagation();
+            var tblName = $('#categoryName').find(":selected").val();
+
+            var tblRow = $("tr[id^='item_']");
+            var itemCount = ($(tblRow).length / 2);
+
+            var $clone = tblName == "1" ? forma1RowFormat(itemCount, getAccsOptions(itemCount), getValueAccsOptions()) :
+                    tblName == "2" ? forma1RowFormat(itemCount, getAccsOptions(itemCount), getValueAccsOptions()) :
+                    tblName == "3" ? forma1RowFormat(itemCount, getAccsOptions(itemCount), getValueAccsOptions()) :
+                         $('');
+            $('#NCPartialTbl').find('tbody tr:last').before($clone);
+            //$('#NCPartialTbl').find('tbody').append($clone);
+        });
+
+        // ------------------- [[ FUNCTIONS ]] ------------------
         function initPartial() {
             $('select#categoryName option[value=' + partial + ']').attr('selected', 'selected');
             //var _entryID = $("select#categoryName option:selected").val();
             var _entryID = "";
-            alert(_entryID);
-
+            var _expenseDate = $("#expenseDate").val();
             $.ajax({
-                url: '/Partial/NC_Partial_' + partial,
+                url: '/Partial/NC_Partial_GetPreview',
                 type: "Get",
-                data: { 'entryID': _entryID },
+                data: {
+                    'categoryID': partial, 'entryID': _entryID, 'expenseDate': _expenseDate },
                 async: true,
                 datatype: "json",
                 cache: false,
@@ -91,27 +115,29 @@
                 }
             });
         }
-        ////change content of partial view on select on change
-        //$('select#dm-tbl').change(function () {
-        //    if (isSessionTimeout() != true) {
-        //        $('input#filterPartialName').val(this.value);
-        //        $.ajax({
-        //            url: '/Partial/' + this.value,
-        //            type: "Get",
-        //            data: { sortOrder: sortOrder, currentFilter: currentFilter, searchString: searchString, page: page },
-        //            //data: model,
-        //            async: false,
-        //            processData: false,
-        //            datatype: "json",
-        //            cache: false,
-        //            success: function (data) {
-        //                cont.empty();
-        //                cont.html(data);
-        //                isSearchDisabled()
-        //            }
-        //        });
-        //    }
-        //});
+        //change content of partial view on select on change
+        $('select#categoryName').change(function () {
+
+            if (isSessionTimeout() != true) {
+                partial = this.value;
+                var _entryID = "";
+                var _expenseDate = $("#expenseDate").val();
+                $.ajax({
+                    url: '/Partial/NC_Partial_GetPreview',
+                    type: "Get",
+                    data: {
+                        'categoryID': partial, 'entryID': _entryID, 'expenseDate': _expenseDate
+                    },
+                    async: true,
+                    datatype: "json",
+                    cache: false,
+                    success: function (data) {
+                        cont.empty();
+                        cont.html(data);
+                    }
+                });
+            }
+        });
         function isSessionTimeout() {
             var tmp = false;
             $.ajax({
@@ -137,25 +163,69 @@
             });
             return tmp;
         }
-        //function isSearchDisabled() {
-        //    var noFilter = true;
-        //    $('input[id^= "DMFilters_"]').each(function (i, obj) {
-        //        if ($(this).val() == "") {
-        //        } else if ($(this).val() == "0") {
-        //        } else if ($(this).val() == "0001-01-01T00:00:00.000") {
-        //        } else {
-        //            noFilter = false;
-        //            return false;
-        //        }
-        //    });
-        //    //disable if no entries
-        //    if ($('.tab-tbl tbody tr').length <= 0 && noFilter) {
-        //        $('#search-btn').attr("disabled", "disabled");
-        //        $('#full-list-btn').attr("disabled", "disabled");
-        //    }else {
-        //        $('#search-btn').removeAttr("disabled");
-        //        $('#full-list-btn').removeAttr("disabled");
-        //    }
-        //}
+
+        function getAccsOptions(itemCount) {
+            var accoptions = "";
+            if (itemCount > 0) {
+                $("#accOptions option").each(function (index, item) {
+                    if (index == 0) {
+                        accoptions += '<option value="' + item.value + '" selected>' + item.text + '</option>';
+                    } else {
+                        accoptions += '<option value="' + item.value + '">' + item.text + '</option>';
+                    }
+                });
+            }
+            return accoptions;
+        }
+        function getValueAccsOptions() {
+            return  $("#accOptions option:first").val();
+        }
+
+        function forma1RowFormat(itemCount, accoptions, accFirstID) {
+            var dt = new Date();
+            var formatMonth = (dt.getMonth() + 1).length == 2 ? (dt.getMonth() + 1) : "0" + (dt.getMonth() + 1);
+            var dtFormatted = dt.getFullYear() + "-" + formatMonth + "-" + dt.getDate();
+            var CurrIDOfFirstRow = $("#EntryNC_ExpenseEntryNCDtls_0__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Curr_ID").val();
+            return $('<tr id="item_' + itemCount + '">'
+                + '<td class="voucher-input"><input id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_Remarks_Desc" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_Remarks_Desc"  type="text" value=""></td>'
+                + '<td  class="voucher-input" colspan="2">'
+                + '<div class="dis-inline-block w-48 voucher-input">'
+                + '<input class="text-box single-line" data-val="true" data-val-required="The Period From field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_Remarks_Period_From" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_Remarks_Period_From" type="date" value="' + dtFormatted +'">'
+                + '</div>'
+                + '<div class="dis-inline-block w-48 voucher-input">'
+                + '<input class="text-box single-line" data-val="true" data-val-required="The Period To field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_Remarks_Period_To" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_Remarks_Period_To" type="date" value="' + dtFormatted +'">'
+                + '</div>'
+                + '</td>'
+                + '<td colspan="3"  class="voucher-input">'
+                + '<select class= "w-full input acc-sel" data-val="true" data-val- required="The Account field is required." id = "EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Acc_Name" name = "EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name"> '
+                + accoptions
+                + '</select> </td>'
+                + '<td class="voucher-inter"><input class="ncVar" data-val="true" data-val-number="The field Inter-Rate must be a number." data-val-required="The Inter-Rate field is required." disabled="disabled" id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Inter_Rate" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Inter_Rate"  type="text" value="0"></td>'
+                + '<td><input readonly="true" id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Curr_Name" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_Name"  type="text" value="PHP"></td>'
+                + '<td class="voucher-input" id="deb_' + itemCount + '"><input class="ncVar" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount" type="text" value="0"></td>'
+                + '<td></td>'
+                + '<td></td>'
+                + '<input data-val="true" data-val-required="The Account field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Acc_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID" type="hidden" value="' + accFirstID + '">'
+                + '<input data-val="true" data-val-required="The CCY field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Curr_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID" type="hidden" value="' + CurrIDOfFirstRow + '">'
+                + '<input data-val="true" data-val-required="The Type field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Type_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Type_ID" type="hidden" value="1">'
+                + '</tr>'
+                + '<tr id="item_' + itemCount + '">'
+                + '<td></td>'
+                + '<td colspan="2"></td>'
+                + '<td colspan="3" class="voucher-input">'
+                + '<select class= "w-full input  acc-sel" data-val="true" data-val- required="The Account field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Acc_Name" name = "EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Acc_Name"> '
+                + accoptions
+                + '</select></td>'
+                + '<td></td>'
+                + '<td></td>'
+                + '<td></td>'
+                + '<td><input readonly="true" id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Curr_Name" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Curr_Name"  type="text" value="PHP"></td>'
+                + '<td class="" id="cred_' + itemCount + '"><input class="ncVar" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Amount" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Amount"  type="text" readonly="true" value="0"></td>'
+                + '<input data-val="true" data-val-required="The Account field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Acc_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Acc_ID" type="hidden" value="' + accFirstID + '">'
+                + '<input data-val="true" data-val-required="The CCY field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Curr_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Curr_ID" type="hidden" value="' + CurrIDOfFirstRow + '">'
+                + '<input data-val="true" data-val-required="The Type field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Type_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Type_ID" type="hidden" value="2">'
+                + '</tr>'
+                + '<tr class="NC_spacing_row"><td colspan="11"></td></tr>');
+        }
     });
 </script>

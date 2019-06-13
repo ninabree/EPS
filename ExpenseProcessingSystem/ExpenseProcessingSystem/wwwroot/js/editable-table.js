@@ -21,6 +21,7 @@ $(document).ready(function () {
     }
 
     var $TABLE = $('#table');
+    var $NC_TABLE = $('#NCPartialTbl');
     var $BTN = $('#export-btn');
     var $EXPORT = $('#export');
     $(document).on('click', '.table-remove', function (e) {
@@ -68,8 +69,10 @@ $(document).ready(function () {
         var $row = $(this).parents('tr');
         $row.next().after($row.get(0));
     });
-
+    
     // ------------------- [[ FUNCTIONS ]] ------------------
+
+    //----------------- [[ DM Functions ]] ------------------
     function getTaxRatesOptions(itemCount) {
         var troptions = "";
         if (itemCount > 0) {

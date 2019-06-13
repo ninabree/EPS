@@ -38,7 +38,7 @@ namespace ExpenseProcessingSystem.Controllers
         private SortService _sortService;
         //to access resources
         private readonly IStringLocalizer<HomeController> _localizer;
-
+        private IHostingEnvironment _env;
 
         public HomeController(IHttpContextAccessor httpContextAccessor, EPSDbContext context, IHostingEnvironment hostingEnvironment, IStringLocalizer<HomeController> localizer)
         {
@@ -47,10 +47,11 @@ namespace ExpenseProcessingSystem.Controllers
             _context = context;
             _service = new HomeService(_httpContextAccessor, _context, this.ModelState, hostingEnvironment);
             _sortService = new SortService();
+            _env = hostingEnvironment;
         }
-        public ReportHeaderViewModel GetHeaderInfo()
+        public ReportCommonViewModel GetHeaderInfo()
         {
-            ReportHeaderViewModel headerVM = new ReportHeaderViewModel {
+            ReportCommonViewModel headerVM = new ReportCommonViewModel {
                 Header_Name = ReportResource.Branch_Title,
                 Header_TIN = ReportResource.Branch_TIN,
                 Header_Logo = ReportResource.Branch_Logo,
@@ -293,8 +294,7 @@ namespace ExpenseProcessingSystem.Controllers
             return View();
         }
 
-        //------------------------------------------------------------------
-        //[* REPORT *]
+        //--------------------------[* REPORT *]----------------------------------------
         [OnlineUserCheck]
         public IActionResult Report()
         {
@@ -322,7 +322,9 @@ namespace ExpenseProcessingSystem.Controllers
                 SemesterList = ConstantData.HomeReportConstantValue.GetSemesterList(),
                 PeriodOptionList = ConstantData.HomeReportConstantValue.GetPeriodOptionList(),
                 PeriodFrom = Convert.ToDateTime(ConstantData.HomeReportConstantValue.DateToday),
-                PeriodTo = Convert.ToDateTime(ConstantData.HomeReportConstantValue.DateToday)
+                PeriodTo = Convert.ToDateTime(ConstantData.HomeReportConstantValue.DateToday),
+                TaxRateList = _service.PopulateTaxRaxListIncludeHist(),
+                SignatoryList = _service.PopulateSignatoryList()
             };
 
             //Return ViewModel
@@ -348,14 +350,19 @@ namespace ExpenseProcessingSystem.Controllers
             string fileName = "";
             //string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmsstt"); // ORIGINAL
             string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmss");
-            string pdfFooterFormat = "";
-            ReportHeaderViewModel headerVM = new ReportHeaderViewModel();
+            string pdfFooterFormat = HomeReportConstantValue.PdfFooter2;
+            var signatory = _service.GetSignatoryInfo(model.SignatoryID);
+            ReportCommonViewModel repComVM = new ReportCommonViewModel
+            {
+                Header_Logo = "https://localhost:5001/images/mizuho-logo-2.png",
+                Header_Name = "Mizuho Bank Ltd., Manila Branch",
+                Header_TIN = "004-669-467-000",
+                Header_Address = "25th Floor, The Zuellig Building, Makati Avenue corner Paseo de Roxas, Makati City",
+                Signatory_Name = signatory.BCS_Name,
+                Signatory_Position = signatory.BCS_Position
+            };
 
-            headerVM.Header_Logo = "";
-            headerVM.Header_Name = "Mizuho Bank Ltd., Manila Branch";
-            headerVM.Header_TIN = "004-669-467-000";
-            headerVM.Header_Address = "25th Floor, The Zuellig Building, Makati Avenue corner Paseo de Roxas, Makati City";
-
+            Console.WriteLine("#############" + repComVM.Signatory_Name + "#####" + repComVM.Signatory_Position);
             //Model for data retrieve from Database
             HomeReportDataFilterViewModel data = null;
 
@@ -367,7 +374,6 @@ namespace ExpenseProcessingSystem.Controllers
 
                     fileName = "AlphalistOfPayeesSubjectToWithholdingTax_Monthly_" + dateNow;
                     layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
-                    pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter1;
 
                     model.MonthName = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName;
 
@@ -376,62 +382,72 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         HomeReportOutputAPSWT_M = _service.GetAPSWT_MData(model.Month, model.Year),
                         HomeReportFilter = model,
-                        ReportHeaderVM = headerVM
+                        ReportCommonVM = repComVM
                     };
                     break;
 
-                //For Alphalist of Suppliers by top 10000 corporation (Semestral)
-                case ConstantData.HomeReportConstantValue.AST1000_S:
-                    fileName = "AlphalistOfSuppliersByTop10000Corporation_Semestral_" + dateNow;
-                    layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
-                    pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter2;
-
-                    //Get the necessary data from Database
-                    data = new HomeReportDataFilterViewModel
-                    {
-                        HomeReportOutputAST1000 = _service.GetAST1000_SData(model.YearSem, model.Semester),
-                        HomeReportFilter = model,
-                    };
-                    break;
-
-                //For Alphalist of Suppliers by top 10000 corporation (Annual)
-                case ConstantData.HomeReportConstantValue.AST1000_A:
+                //For Alphalist of Suppliers by top 10000 corporation
+                case ConstantData.HomeReportConstantValue.AST1000:
                     fileName = "AlphalistOfSuppliersByTop10000Corporation_" + dateNow;
                     layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
-                    pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter2;
                     model.MonthName = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName;
-                    model.MonthNameTo = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName;
+                    model.MonthNameTo = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.MonthTo).Single().MonthName;
+
+                    if (!string.IsNullOrEmpty(model.TaxRateArray))
+                    {
+                        if (model.TaxRateArray.Contains(','))
+                        {
+                            model.TaxRateList = model.TaxRateArray.Split(',').Select(float.Parse).ToList();
+                        }
+                        else
+                        {
+                            model.TaxRateList = new List<float>
+                            {
+                                float.Parse(model.TaxRateArray)
+                            };
+                        }
+                    }
+                    else
+                    {
+                        model.TaxRateList = new List<float> { 0f };
+                    }
 
                     //Get the necessary data from Database
                     data = new HomeReportDataFilterViewModel
                     {
-                        HomeReportOutputAST1000 = _service.GetAST1000_AData(model.Year, model.Month, model.YearTo, model.MonthTo),
+                        HomeReportOutputAST1000 = _service.GetAST1000_Data(model),
                         HomeReportFilter = model,
+                        ReportCommonVM = repComVM
                     };
+
+                    int cnt = 0;
+                    foreach (var i in data.HomeReportOutputAST1000)
+                    {
+                        i.SeqNo = cnt;
+                        cnt += 1;
+                    }
+
                     break;
 
                 //For Actual Budget Report
                 case ConstantData.HomeReportConstantValue.ActualBudgetReport:
                     fileName = "ActualBudgetReport_" + dateNow;
                     layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
-                    pdfFooterFormat = String.Empty;
-
+  
                     model.MonthName = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName;
-
-                    IEnumerable<HomeReportActualBudgetModel> testtest = _service.GetActualReportData(model.Month, model.Year);
 
                     //Get the necessary data from Database
                     data = new HomeReportDataFilterViewModel
                     {
                         HomeReportOutputActualBudget = _service.GetActualReportData(model.Month, model.Year),
-                        HomeReportFilter = model
+                        HomeReportFilter = model,
+                        ReportCommonVM = repComVM
                     };
                     break;
 
                 case ConstantData.HomeReportConstantValue.WTS:
                     fileName = "WithholdingTaxSummary_" + dateNow;
                     layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
-                    pdfFooterFormat = ConstantData.HomeReportConstantValue.PdfFooter2;
                     data = new HomeReportDataFilterViewModel();
                     //Get the necessary data from Database
                     switch (model.PeriodOption)
@@ -441,7 +457,8 @@ namespace ExpenseProcessingSystem.Controllers
                             {
                                 HomeReportOutputWTS = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Month(model.Year, model.Month,
                                     ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType),
-                                HomeReportFilter = model
+                                HomeReportFilter = model,
+                                ReportCommonVM = repComVM
                             };
                             model.ReportFrom = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName
                                                 + " " + model.Year;
@@ -453,7 +470,8 @@ namespace ExpenseProcessingSystem.Controllers
                             {
                                 HomeReportOutputWTS = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Period(model.PeriodFrom, model.PeriodTo,
                                     ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType),
-                                HomeReportFilter = model
+                                HomeReportFilter = model,
+                                ReportCommonVM = repComVM
                             };
                             model.ReportFrom = model.PeriodFrom.ToShortDateString();
                             model.ReportTo = model.PeriodTo.ToShortDateString();
@@ -501,11 +519,14 @@ namespace ExpenseProcessingSystem.Controllers
             };
         }
 
-        //[* REPORT *]
-        //------------------------------------------------------------------
+        //public IActionResult MizuhoLogo2Image()
+        //{
+        //    var dir = _env.WebRootPath;
+        //    var file = System.IO.Path.Combine(dir, "\\images\\mizuho-logo-2.png");
+        //    return base.File(file, "image/png");
+        //}
 
-        //------------------------------------------------------------------
-        //[* BUDGET MONITORING *]
+        //-----------------------[* BUDGET MONITORING *]-------------------------------------------
         [OnlineUserCheck]
         [ImportModelState]
         public IActionResult BM(string sortOrder, string currentFilter, string searchString, int? page)
@@ -537,9 +558,6 @@ namespace ExpenseProcessingSystem.Controllers
             return View(PaginatedList<BMViewModel>.CreateAsync(
                 (sortedVals.list).Cast<BMViewModel>().AsQueryable().AsNoTracking(), page ?? 1, pageSize));
         }
-
-        //[* BUDGET MONITORING *]
-        //------------------------------------------------------------------
 
         [OnlineUserCheck]
         [ImportModelState]
@@ -897,7 +915,9 @@ namespace ExpenseProcessingSystem.Controllers
 
             //return View("Entry_PCV_ReadOnly", pcvList);
 
-            return RedirectToAction("View_PCV", "Home", new { entryID = id });
+            TempData["entryIDAddtoView"] = id;
+
+            return RedirectToAction("View_PCV", "Home");
         }
 
         [OnlineUserCheck]
@@ -981,6 +1001,16 @@ namespace ExpenseProcessingSystem.Controllers
         {
             var userId = GetUserID();
 
+            if (entryID == 0 && TempData["entryIDAddtoView"] != null)
+            { 
+                entryID = (int)TempData["entryIDAddtoView"];
+                TempData.Keep();
+            }
+            else
+            {
+                TempData.Remove("entryIDAddtoView");
+            }
+
             EntryCVViewModelList pcvList = _service.getExpense(entryID);
             List<SelectList> listOfSysVals = _service.getEntrySystemVals();
             pcvList.systemValues.vendors = listOfSysVals[0];
@@ -1059,7 +1089,9 @@ namespace ExpenseProcessingSystem.Controllers
 
             //return View("Entry_PCV_ReadOnly", pcvList);
 
-            return RedirectToAction("View_SS", "Home", new { entryID = id });
+            TempData["entryIDAddtoView"] = id;
+
+            return RedirectToAction("View_SS", "Home");
         }
 
         [OnlineUserCheck]
@@ -1143,6 +1175,16 @@ namespace ExpenseProcessingSystem.Controllers
         {
             var userId = GetUserID();
 
+            if (entryID == 0 && TempData["entryIDAddtoView"] != null)
+            {
+                entryID = (int)TempData["entryIDAddtoView"];
+                TempData.Keep();
+            }
+            else
+            {
+                TempData.Remove("entryIDAddtoView");
+            }
+
             EntryCVViewModelList ssList = _service.getExpense(entryID);
             List<SelectList> listOfSysVals = _service.getEntrySystemVals();
             ssList.systemValues.vendors = listOfSysVals[0];
@@ -1163,7 +1205,12 @@ namespace ExpenseProcessingSystem.Controllers
 
         //[* Entry Cash Advance(SS) *]
         //------------------------------------------------------------------
+        //------------------------------------------------------------------
+        //[* Entry Non Cash *]
 
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
+        [ImportModelState]
         public IActionResult Entry_NC(EntryNCViewModelList viewModel, string partialName)
         {
             var userId = GetUserID();
@@ -1171,14 +1218,100 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 viewModel = new EntryNCViewModelList();
             }
-            //viewModel = PopulateEntry(viewModel);
-            //viewModel.EntryNC.Add(new EntryNCViewModel());
-            
-            ViewData["partialName"] = partialName ?? GlobalSystemValues.NC_LS_PAYROLL.ToString();
+            ViewData["partialName"] = partialName ?? (viewModel.EntryNC.NC_Category_ID.ToString() != "0" ? viewModel.EntryNC.NC_Category_ID.ToString() : GlobalSystemValues.NC_LS_PAYROLL.ToString());
             viewModel.category_of_entry = GlobalSystemValues.NC_CATEGORIES_SELECT;
+            viewModel.expenseDate = DateTime.Now;
             return View(viewModel);
         }
+        [ExportModelState]
+        public IActionResult AddNewNC(EntryNCViewModelList EntryNCViewModelList)
+        {
+            var userId = GetUserID();
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("Entry_NC", EntryNCViewModelList);
+            }
 
+            //EntryNCViewModelList ncList = new EntryNCViewModelList();
+            int id = _service.addExpense_NC(EntryNCViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_NC);
+            ModelState.Clear();
+            return RedirectToAction("View_NC", "Home", new { entryID = id });
+        }
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
+        public IActionResult View_NC(int entryID)
+        {
+            var userId = GetUserID();
+
+            EntryNCViewModelList ncList = _service.getExpenseNC(entryID);
+            ncList = PopulateEntryNC(ncList);
+
+            return View("Entry_NC_ReadOnly", ncList);
+        }
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
+        public IActionResult VerAppModNC(int entryID, string command)
+        {
+            var userId = GetUserID();
+
+            string viewLink = "Entry_NC";
+            EntryNCViewModelList ncList;
+
+            switch (command)
+            {
+                case "Modify":
+                    viewLink = "Entry_NC";
+                    break;
+                case "approver":
+                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_APPROVED, int.Parse(GetUserID())))
+                    {
+                        _service.SaveToGBase();
+                        var expDtls = _context.ExpenseEntry.Where(x => x.Expense_ID == entryID).Select(x => x.ExpenseEntryDetails).FirstOrDefault();
+                        var isFbt = expDtls.Select(x => x.ExpDtl_Fbt).FirstOrDefault() == true;
+                        if (isFbt)
+                        {
+                            _service.SaveToGBaseFBT();
+                        }
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Entry_NC_ReadOnly";
+                    break;
+                case "verifier":
+                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_VERIFIED, int.Parse(GetUserID())))
+                    {
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Entry_NC_ReadOnly";
+                    break;
+                case "Reject": break;
+                default:
+                    break;
+            }
+
+            ModelState.Clear();
+
+            ncList = _service.getExpenseNC(entryID);
+
+            ncList = PopulateEntryNC(ncList);
+
+            
+            //ncList.systemValues.acc.AddRange(_service.getAccDetailsEntry(ncList.EntryNC.account));
+            if(viewLink == "Entry_NC")
+            {
+                return RedirectToAction("Entry_NC", ncList);
+            }
+            return View(viewLink, ncList);
+        }
+        //[* Entry Non Cash *]
+        //------------------------------------------------------------------
         [HttpPost]
         public IActionResult RedirectCont(string Cont, string Method)
         {
@@ -1204,7 +1337,11 @@ namespace ExpenseProcessingSystem.Controllers
 
             return viewModel;
         }
-
+        public EntryNCViewModelList PopulateEntryNC(EntryNCViewModelList viewModel)
+        {
+            viewModel.category_of_entry = GlobalSystemValues.NC_CATEGORIES_SELECT;
+            return viewModel;
+        }
         //------------------------------------------------------------------
         //[* ACCOUNT *]
         [HttpPost]
@@ -1996,14 +2133,8 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 switch (model.ReportType)
                 {
-                    case ConstantData.HomeReportConstantValue.AST1000_S:
-                        if (fromDate > toDate)
-                        {
-                            errors.Add("Year,Month(TO) must be later than Year,Month(FROM)");
-                        }
-                        break;
-                    case ConstantData.HomeReportConstantValue.AST1000_A:
-                        if (fromDate > toDate)
+                    case ConstantData.HomeReportConstantValue.AST1000:
+                        if (fromDate.Date > toDate.Date)
                         {
                             errors.Add("Year,Month(TO) must be later than Year,Month(FROM)");
                         }
@@ -2047,103 +2178,6 @@ namespace ExpenseProcessingSystem.Controllers
         {
             public string Message { get; set; }
             public List<String> Items = new List<String>();
-        }
-
-        public IEnumerable<HomeReportActualBudgetModel> GetDummyActualBudgetData()
-        {
-            List<HomeReportActualBudgetModel> actualBudgetData = new List<HomeReportActualBudgetModel>();
-
-            int filterYear = 2019;  //Filter value from screen
-            int filterMonth = 6;    //Filter value from screen
-            int termYear = 2019;    //Create logic to get term year
-            int termMonth = 4;      //Create logic to get term month
-            double budgetBalance;
-            double totalExpenseThisTermToPrevMonthend;
-            double subTotal;
-            string format = "yyyy-M";
-            var accountCategory = ConstantData.TEMP_HomeReportActualBudgetReportDummyData.GetAcountCategory().OrderBy(c => c.AccountID);
-
-            DateTime startDT;
-            DateTime endDT;
-
-            foreach(var a in accountCategory)
-            {
-                startDT = DateTime.ParseExact(termYear + "-" + termMonth, format, CultureInfo.InvariantCulture);
-                endDT = DateTime.ParseExact(filterYear + "-" + filterMonth, format, CultureInfo.InvariantCulture);
-                subTotal = 0.00;
-                totalExpenseThisTermToPrevMonthend = 0.00;
-
-                //Get current Budget of selected term
-                var budgetMonitoringData = ConstantData.TEMP_HomeReportActualBudgetReportDummyData.GetBudgetMonitoringData().Where(c => c.AccountID == a.AccountID && c.TermOfBudget.Year == termYear && c.TermOfBudget.Month == termMonth).SingleOrDefault();
-                budgetBalance = (budgetMonitoringData == null) ? 0.00 : budgetMonitoringData.BudgetAmount;
-                    
-                actualBudgetData.Add(new HomeReportActualBudgetModel()
-                {
-                    Category = a.Account_Category,
-                    BudgetBalance = budgetBalance,
-                    Remarks = "Budget Amount - This Term",
-                    ValueDate = DateTime.Parse(termYear + "/" + termMonth)
-                });
-
-                //Get total expense of selected term to Prev monthend
-                while (startDT < endDT)
-                {
-                    var expensesOfTermMonthToBeforeFilterMonth = ConstantData.TEMP_HomeReportActualBudgetReportDummyData.GetExpenseData().Where(c => c.AccountID == a.AccountID && c.DateReflected.Year == startDT.Year && c.DateReflected.Month == startDT.Month);
-
-                    foreach (var i in expensesOfTermMonthToBeforeFilterMonth)
-                    {
-                        totalExpenseThisTermToPrevMonthend += i.ExpenseAmount;
-                    }
-                    startDT = startDT.AddMonths(1);
-                }
-                budgetBalance -= totalExpenseThisTermToPrevMonthend;
-
-                actualBudgetData.Add(new HomeReportActualBudgetModel()
-                {
-                    BudgetBalance = budgetBalance,
-                    ExpenseAmount = totalExpenseThisTermToPrevMonthend,
-                    Remarks = "Total Expenses - This Term to Prev Monthend",
-                    ValueDate = endDT.AddDays(-1)
-                });
-
-                //Get all expenses of selected month and year
-                var expensesOfFilterYearMonth = ConstantData.TEMP_HomeReportActualBudgetReportDummyData.GetExpenseData().Where(c => c.AccountID == a.AccountID && c.DateReflected.Year == filterYear && c.DateReflected.Month == filterMonth).OrderBy(c => c.DateReflected);
-
-                foreach(var i in expensesOfFilterYearMonth)
-                {
-                    budgetBalance -= i.ExpenseAmount;
-                    subTotal += i.ExpenseAmount;
-
-                    actualBudgetData.Add(new HomeReportActualBudgetModel()
-                    {
-                        BudgetBalance = budgetBalance,
-                        ExpenseAmount = i.ExpenseAmount,
-                        Remarks = i.Remarks,
-                        Department = i.Department,
-                        ValueDate = i.DateReflected
-                    });
-                }
-
-                //Add Sub-Total to List
-                if(subTotal != 0)
-                {
-                    actualBudgetData.Add(new HomeReportActualBudgetModel()
-                    {
-                        BudgetBalance = budgetBalance,
-                        ExpenseAmount = subTotal,
-                        Remarks = "Sub-total",
-                        ValueDate = endDT.AddMonths(1).AddDays(-1)
-                    });
-                }
-
-                //Insert break or seperation row
-                actualBudgetData.Add(new HomeReportActualBudgetModel()
-                {
-                    Category = "BREAK"
-                });
-            }
-
-            return actualBudgetData;
         }
 
         [HttpPost]

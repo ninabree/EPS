@@ -4,14 +4,16 @@ using ExpenseProcessingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    partial class EPSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190610043908_UpdateNCModel1")]
+    partial class UpdateNCModel1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -816,11 +818,11 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("ExpNCDtlAcc_Type_ID");
 
-                    b.Property<int?>("ExpenseEntryNCDtlModelExpNCDtl_ID");
+                    b.Property<int?>("ExpenseEntryNCModelExpNCDtl_ID");
 
                     b.HasKey("ExpNCDtlAcc_ID");
 
-                    b.HasIndex("ExpenseEntryNCDtlModelExpNCDtl_ID");
+                    b.HasIndex("ExpenseEntryNCModelExpNCDtl_ID");
 
                     b.ToTable("ExpenseEntryNonCashDetailAccounts");
                 });
@@ -1275,9 +1277,9 @@ namespace ExpenseProcessingSystem.Migrations
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryNCDtlAccModel", b =>
                 {
-                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryNCDtlModel", "ExpenseEntryNCDtlModel")
+                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryNCDtlModel", "ExpenseEntryNCModel")
                         .WithMany("ExpenseEntryNCDtlAccs")
-                        .HasForeignKey("ExpenseEntryNCDtlModelExpNCDtl_ID");
+                        .HasForeignKey("ExpenseEntryNCModelExpNCDtl_ID");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryNCDtlModel", b =>

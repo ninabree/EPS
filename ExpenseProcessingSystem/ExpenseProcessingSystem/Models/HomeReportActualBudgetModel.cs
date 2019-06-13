@@ -19,4 +19,13 @@ namespace ExpenseProcessingSystem.Models
         [DisplayFormat(DataFormatString = "{0:M/dd/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime ValueDate { get; set; }
     }
+
+    public class AccGroupBudgetModel
+    {
+        public DateTime StartOfTerm { get; set; }
+        public int AccountGroupMasterID { get; set; }
+        public string AccountGroupName { get; set; }
+        public string Remarks { get; set; }
+        public double Budget { get; set; }
+    }
 }

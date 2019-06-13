@@ -39,40 +39,43 @@ namespace ExpenseProcessingSystem.Controllers
         // -------------------------------------- [[ NON CASH ]] --------------------------------------
         // [[ Local Payroll ]]
         [OnlineUserCheck]
-        [Route("//Partial/NC_Partial_1/")]
-        public IActionResult NC_Partial_1 (string entryID)
+        [Route("//Partial/NC_Partial_GetPreview/")]
+        public IActionResult NC_Partial_GetPreview (string categoryID, string entryID, string expenseDate)
         {
             var userId = _session.GetString("UserID");
             EntryNCViewModelList viewModel = new EntryNCViewModelList();
-            if (entryID != null)
+            DMCurrencyModel currDtl = _context.DMCurrency.Where(x => x.Curr_MasterID == 1 && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
+
+            if ((entryID != null) && (categoryID != null))
             {
                 viewModel = _service.getExpenseNC(int.Parse(entryID));
-            } else
+            } else if (categoryID == GlobalSystemValues.NC_LS_PAYROLL.ToString())
             {
-                viewModel.EntryNC.Add(
-                    new EntryNCViewModel
-                    {
-                        ExpenseEntryNCDtls = new List<ExpenseEntryNCDtlViewModel>
-                        {
-                            new ExpenseEntryNCDtlViewModel
-                            {
-                                ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
-                                {
-                                    new ExpenseEntryNCDtlAccViewModel()
-                                }
-                            }
-                        } 
-                    });
+                viewModel.EntryNC = CONSTANT_NC_LSPAYROLL.Populate_LSPAYROLL(currDtl);
+                viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
             }
-            viewModel = PopulateEntryNC(viewModel);
+            else if (categoryID == GlobalSystemValues.NC_TAX_REMITTANCE.ToString())
+            {
+                viewModel.EntryNC = CONSTANT_NC_TAXREMITTANCE.Populate_TAXREMITTANCE(currDtl);
+                viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
+            }
+            else if (categoryID == GlobalSystemValues.NC_MONTHLY_ROSS_BILL.ToString())
+            {
+               viewModel.EntryNC = CONSTANT_NC_MONTHLYROSSBILL.Populate_MONTHLYROSSBILL(currDtl);
+                viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
+            }
+            viewModel = PopulateEntryNC(viewModel, expenseDate);
             return View("NCPartial", viewModel);
         }
 
-        public EntryNCViewModelList PopulateEntryNC(EntryNCViewModelList viewModel)
+        public EntryNCViewModelList PopulateEntryNC(EntryNCViewModelList viewModel, string expenseDate)
         {
             viewModel.category_of_entry = GlobalSystemValues.NC_CATEGORIES_SELECT;
+            viewModel.expenseDate = DateTime.Parse(expenseDate);
+            viewModel.accountList = _service.getAccountSelectList();
             return viewModel;
         }
+        
         // -------------------------------------- [[ DATA MAINTENANCE ]] --------------------------------------
         [Route("/Partial/DMPartial_Vendor/")]
         public IActionResult DMPartial_Vendor(string sortOrder, string currentFilter, string colName, string searchString, string page)

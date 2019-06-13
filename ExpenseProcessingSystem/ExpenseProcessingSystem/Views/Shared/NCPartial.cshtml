@@ -1,78 +1,179 @@
 ﻿
-@{ 
+@{
     Layout = null;
 }
+@using ExpenseProcessingSystem.ConstantData
 @using ExpenseProcessingSystem.ViewModels.Entry
 @model EntryNCViewModelList
 <div>
-    <table class="table voucher-tbl" style="background-color: #fafafa">
+    @using (Html.BeginForm("AddNewNC", "Home", FormMethod.Post, new { @class = "nc-form" }))
+    {
+        <table id="NCPartialTbl" class="table table-bordered voucher-tbl" style="background-color: #fff; text-align: center">
+            <thead>
+                <tr>
+                    <th rowspan="1" colspan="3">Remarks</th>
+                    <th rowspan="2" colspan="3">Accounts</th>
+                    <th rowspan="2">Inter-Rate</th>
+                    <th rowspan="2">CCY</th>
+                    <th rowspan="2">Debit</th>
+                    <th rowspan="2">CCY</th>
+                    <th rowspan="2">Credit</th>
+                </tr>
+                <tr>
+                    <th colspan="1">Description</th>
+                    <th colspan="2">Period</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.EntryNC != null && Model.EntryNC.ExpenseEntryNCDtls.Count > 0)
+                {
+                    @for (int i = 0; i < Model.EntryNC.ExpenseEntryNCDtls.Count; i++)
+                    {
+                        <tr id="item_@i">
+                            <td>@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Remarks_Desc, new { @readonly = "true" })</td>
+                            <td colspan="2">
+                                <div class="dis-inline-block w-48">
+                                    @Html.EditorFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Remarks_Period_From, new { @type = "date", @class = "" })
+                                </div>
+                                <div class="dis-inline-block w-48">
+                                    @Html.EditorFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Remarks_Period_To, new { @type = "date", @class = "" })
+                                </div>
+                            </td>
 
-        <colgroup span="2"></colgroup>
-        <col />
-        <col />
-        <col />
-        <col />
-        <col />
-        <col />
+                            <td colspan="3">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name, new { @readonly = "true", @class = "w-full" })</td>
+                            <td class="voucher-inter @*disabled*@">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Inter_Rate, new { @class = "ncVar", @disabled = "disabled", @readonly = "true" })</td>
+                            @if (Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
+                            {
 
-        <thead>
+                                <td>@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_Name, new { @readonly = "true" })</td>
+                                <td class="voucher-input" id="deb_@i">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount, new { @class = "ncVar" })</td>
+                                <td></td>
+                                <td></td>
+                            }
+                            else if (Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs.First().ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_CREDIT)
+                            {
+                                <td></td>
+                                <td></td>
+                                <td>@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_Name, new { @readonly = "true" })</td>
+                                <td class="@*disabled*@" id="cred_@i">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount, new { @class = "ncVar", @readonly = "true" })</td>
+                            }
+                            @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID)
+                            @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID)
+                            @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Type_ID)
+                        </tr>
+
+                        @for (int j = 1; j < Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs.Count; j++)
+                        {
+                            <tr id="item_@i">
+                                <td></td>
+                                <td colspan="2"></td>
+                                <td colspan="3">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_Name, new { @readonly = "true", @class = "w-full" })</td>
+                                <td></td>
+                                @if (Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
+                                {
+
+                                    <td>@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_Name, new { @readonly = "true" })</td>
+                                    <td class="voucher-input" id="deb_@i">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Amount, new { @class = "ncVar" })</td>
+                                    <td></td>
+                                    <td></td>
+                                }
+                                else if (Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_CREDIT)
+                                {
+                                    <td></td>
+                                    <td></td>
+                                    <td>@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_Name, new { @readonly = "true" })</td>
+                                    <td class="@*disabled*@" id="cred_@i">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Amount, new { @class = "ncVar", @readonly = "true" })</td>
+                                }
+                                @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_ID)
+                                @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_ID)
+                                @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Type_ID)
+                            </tr>
+                        }
+                        <tr class="NC_spacing_row"><td colspan="11"></td></tr>
+                    }
+                }
+                @Html.HiddenFor(x => x.EntryNC.NC_Category_ID)
+                @Html.HiddenFor(x => x.category_of_entry)
+                @Html.HiddenFor(x => x.expenseDate)
+                @*@Html.DropDownList("Accounts", Model.accountList, new { style = "display: none;" })*@
+
+                <tr>
+                    <td class="float-l">
+                        <button id="add_new_nc_row" type="button" class="glyphicon glyphicon-plus"></button>
+                        <select id="accOptions" style="display: none;">
+                            @foreach (var opt in Model.accountList)
+                            {
+                                <option value="@opt.Value">@opt.Text</option>
+                            }
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="table voucher-tbl m-t-20" style="background-color: #fafafa; border: 2px solid #ccc !important">
             <tr>
-                <th rowspan="1" colspan="2">Sample Header</th>
-                <th rowspan="2">Sample Header</th>
-                <th rowspan="2">Sample Header</th>
-                <th rowspan="2">Sample Header</th>
-                <th rowspan="2">Sample Header</th>
-                <th rowspan="2">Sample Header</th>
-                <th rowspan="2">Sample Header</th>
+                <td colspan="8"></td>
+                <td colspan="1">Debit</td>
+                <td colspan="1">Credit</td>
             </tr>
             <tr>
-                <th colspan="1">Sample Header</th>
-                <th colspan="1">Sample Header</th>
+                <td colspan="2">Balance Checker</td>
+                <td colspan="1"></td>
+                <td colspan="3">Computer Suspense</td>
+                <td colspan="1"></td>
+                <td colspan="1"></td>
+                <td colspan="1" class="border-solid NC_readonly_row">@Html.TextBoxFor(x => x.EntryNC.NC_DebitAmt, new { @readonly = "true" })</td>
+                <td colspan="1" class="border-solid NC_readonly_row">@Html.TextBoxFor(x => x.EntryNC.NC_CredAmt, new { @readonly = "true" })</td>
             </tr>
-        </thead>
-        <tbody>
             <tr>
-                <td>Sample</td>
-                <td>Sample</td>
-                <td>Sample</td>
-                <td>Sample</td>
-                <td>Sample</td>
-                <td>Sample</td>
-                <td>Sample</td>
+                <td colspan="2">Total</td>
+                <td colspan="6"></td>
+                <td colspan="2" class="border-solid NC_readonly_row">@Html.TextBoxFor(x => x.EntryNC.NC_TotalAmt, new { @readonly = "true" })</td>
             </tr>
-        </tbody>
-    </table>
-
-    <table class="table voucher-tbl m-t-20" style="background-color: #fafafa; border: 2px solid #ccc !important">
-        <col style="width:14.3%">
-        <col style="width:14.3%">
-        <col style="width:14.3%">
-        <col style="width:14.3%">
-        <col style="width:14.3%">
-        <col style="width:14.3%">
-        <col style="width:14.3%">
-
-        <tr>
-            <td colspan="5"></td>
-            <td colspan="1"></td>
-            <td colspan="1"></td>
-        </tr>
-        <tr>
-            <td colspan="1"></td>
-            <td colspan="1"></td>
-            <td colspan="1"></td>
-            <td colspan="1"></td>
-            <td colspan="1"></td>
-            <td colspan="1" class="border-solid"></td>
-            <td colspan="1" class="border-solid"></td>
-        </tr>
-        <tr>
-            <td colspan="1"></td>
-            <td colspan="1"></td>
-            <td colspan="1"></td>
-            <td colspan="1"></td>
-            <td colspan="1"></td>
-            <td colspan="2" class="border-solid"></td>
-        </tr>
-    </table>
+        </table>
+    }
 </div>
+<script>
+    $(document).ready(function () {
+        var computeFunction = function (event) {
+            if (event.target.classList.contains("ncVar")) {
+                computeValsNC();
+            }
+        }
+        document.addEventListener("change", computeFunction, false);
+        computeValsNC();
+
+        $('#NCPartialTbl').on('update', function () {
+            computeValsNC();
+        });
+        
+        function computeValsNC() {
+            var totalDebit = 0;
+            var totalCredit = 0;
+            $("tr[id^='item_']").each(function (index, element) {
+                var idNo = $(element).attr('id').substr(5);
+                var rate = $(element).find("#ExpNCDtlAcc_Inter_Rate").val();
+                var subtotalDeb = 0;
+                var subtotalCred = 0;
+                $(element).find("td[id='deb_" + idNo + "']").each(function (ind, el) {
+                    var debitVal = parseFloat($(el).find("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + ind + "__ExpNCDtlAcc_Amount']").val());
+                    subtotalDeb += debitVal;
+                    var tempInd = parseInt(ind) + 1;
+                    $(el).parent().siblings().find("td[id='cred_" + idNo + "']").find("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + tempInd + "__ExpNCDtlAcc_Amount']").val(debitVal);
+                });
+
+                //$(element).find("td[id='cred_" + idNo + "']").each(function (ind, el) {
+                //    subtotalCred += parseFloat($(el).find("#item_ExpenseEntryNCDtlAccs_" + idNo + "__ExpNCDtlAcc_Amount").val());
+                //    alert(subtotalCred);
+                //});
+                totalDebit += parseFloat(subtotalDeb);
+                totalCredit += parseFloat(subtotalDeb);
+                //totalCredit += parseFloat(subtotalCred);
+            });
+            $("#EntryNC_NC_DebitAmt").val(parseFloat(totalDebit).toFixed(2));
+            $("#EntryNC_NC_CredAmt").val(parseFloat(totalCredit).toFixed(2));
+            $("#EntryNC_NC_TotalAmt").val(parseFloat(totalDebit).toFixed(2));
+        }
+    });
+</script>
