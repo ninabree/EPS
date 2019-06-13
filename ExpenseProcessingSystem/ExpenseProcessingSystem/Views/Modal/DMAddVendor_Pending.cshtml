@@ -24,28 +24,32 @@
                 <td>@Html.TextBoxFor(m => m.NewVendorVM[0].Vendor_TIN, new { @class = "w-full" })</td>
                 <td>@Html.TextBoxFor(m => m.NewVendorVM[0].Vendor_Address, new { @class = "w-full" })</td>
                 <td colspan="2">
-                    @if (Model.Vendor_Tax_Rates.Count > 0)
-                    {
-                        @foreach (var trName in Model.Vendor_Tax_Rates)
+                    <div style="height:80px; overflow-y:scroll">
+                        @if (Model.Vendor_Tax_Rates.Count > 0)
                         {
-                            <label id="lbl">
-                                @Html.CheckBox(trName.TR_WT_Title, new { @id = "chk" + trName.TR_MasterID, @class = "trChk", value = trName.TR_MasterID })
-                                <label>@trName.TR_WT_Title.ToString()</label>
-                            </label>
+                            @foreach (var trName in Model.Vendor_Tax_Rates)
+                            {
+                                <label id="lbl">
+                                    @Html.CheckBox(trName.TR_WT_Title, new { @id = "chk" + trName.TR_MasterID, @class = "trChk", value = trName.TR_MasterID })
+                                    <label>@trName.TR_WT_Title.ToString()</label>
+                                </label>
+                            }
                         }
-                    }
+                    </div>
                 </td>
                 <td colspan="2">
-                    @if (Model.Vendor_VAT.Count > 0)
-                    {
-                        @foreach (var vatName in Model.Vendor_VAT)
+                    <div style="height:80px; overflow-y:scroll">
+                        @if (Model.Vendor_VAT.Count > 0)
                         {
-                            <label id="lbl">
-                                @Html.CheckBox(vatName.VAT_Name, new { @id = "chk", @class = "vatChk", value = vatName.VAT_MasterID })
-                                <label>@vatName.VAT_Name.ToString()</label>
-                            </label>
+                            @foreach (var vatName in Model.Vendor_VAT)
+                            {
+                                <label id="lbl">
+                                    @Html.CheckBox(vatName.VAT_Name, new { @id = "chk", @class = "vatChk", value = vatName.VAT_MasterID })
+                                    <label>@vatName.VAT_Name.ToString()</label>
+                                </label>
+                            }
                         }
-                    }
+                    </div>
                 </td>
                 <td>
                     <span class="table-remove glyphicon glyphicon-remove"></span>

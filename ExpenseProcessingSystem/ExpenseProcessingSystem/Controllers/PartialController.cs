@@ -44,14 +44,44 @@ namespace ExpenseProcessingSystem.Controllers
         {
             var userId = _session.GetString("UserID");
             EntryNCViewModelList viewModel = new EntryNCViewModelList();
+            DMCurrencyModel currDtl = _context.DMCurrency.Where(x => x.Curr_MasterID == 1 && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
+
             if ((entryID != null) && (categoryID != null))
             {
                 viewModel = _service.getExpenseNC(int.Parse(entryID));
             } else if (categoryID == GlobalSystemValues.NC_LS_PAYROLL.ToString())
             {
-                //TEMP
-                DMCurrencyModel currDtl = _context.DMCurrency.Where(x => x.Curr_MasterID == 1 && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
                 viewModel.EntryNC = CONSTANT_NC_LSPAYROLL.Populate_LSPAYROLL(currDtl);
+                viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
+            }
+            else if (categoryID == GlobalSystemValues.NC_TAX_REMITTANCE.ToString())
+            {
+                viewModel.EntryNC = CONSTANT_NC_TAXREMITTANCE.Populate_TAXREMITTANCE(currDtl);
+                viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
+            }
+            else if (categoryID == GlobalSystemValues.NC_MONTHLY_ROSS_BILL.ToString())
+            {
+                viewModel.EntryNC = CONSTANT_NC_MONTHLYROSSBILL.Populate_MONTHLYROSSBILL(currDtl);
+                viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
+            }
+            else if (categoryID == GlobalSystemValues.NC_PSSC.ToString())
+            {
+                viewModel.EntryNC = CONSTANT_NC_PSSC.Populate_PSSC(currDtl);
+                viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
+            }
+            else if (categoryID == GlobalSystemValues.NC_PCHC.ToString())
+            {
+                viewModel.EntryNC = CONSTANT_NC_PCHC.Populate_PCHC(currDtl);
+                viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
+            }
+            else if (categoryID == GlobalSystemValues.NC_DEPRECIATION.ToString())
+            {
+                viewModel.EntryNC = CONSTANT_NC_DEPRECIATION.Populate_DEPRECIATION(currDtl);
+                viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
+            }
+            else if (categoryID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT.ToString())
+            {
+                viewModel.EntryNC = CONSTANT_NC_PETTYCASHREPLENISHMENT.Populate_PETTYCASHREPLENISHMENT(currDtl);
                 viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
             }
             viewModel = PopulateEntryNC(viewModel, expenseDate);

@@ -670,8 +670,8 @@ td.voucher-input {
         border: none;
         width: 100%;
     }
-#NCPartialTbl tbody tr td input,
-table tbody tr td input
+#NCPartialTbl tbody tr td input/*,
+.table tbody tr td input*/
 {
     width: 100%;
 }

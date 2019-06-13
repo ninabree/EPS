@@ -32,7 +32,7 @@
         ModalPopup('Modal', 'BudgetAdjustmentModal', 'Budget Adjustment');
     });
     //DM
-    $(".apprv-rec").click(function (e) {
+    $(document).on("click", ".apprv-rec", function (e) {
         e.stopImmediatePropagation();
         if (!isSessionTimeout()) {
             var methodName = getMethodName(this.id);
@@ -50,8 +50,8 @@
         }
     });
 
-    $(".rej-rec").click(function (e) {
-        //e.stopImmediatePropagation();
+    $(document).on("click", ".rej-rec", function (e) {
+        e.stopImmediatePropagation();
         if (!isSessionTimeout()) {
             var methodName = getMethodName(this.id);
             var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
@@ -68,7 +68,7 @@
         }
 
     });
-    $(".add-rec").click(function (e) {
+    $(document).on("click", ".add-rec", function (e) {
         e.stopImmediatePropagation();
         if (!isSessionTimeout()) {
             var methodName = getMethodName(this.id);
@@ -76,7 +76,7 @@
         }
     });
 
-    $(".edit-rec").click(function (e) {
+    $(document).on("click", ".edit-rec", function (e) {
         e.stopImmediatePropagation();
         if (!isSessionTimeout()) {
             var methodName = getMethodName(this.id);
@@ -95,7 +95,7 @@
         }
     });
 
-    $(".delete-rec").click(function (e) {
+    $(document).on("click", ".delete-rec", function (e) {
         e.stopImmediatePropagation();
         if (!isSessionTimeout()) {
             var methodName = getMethodName(this.id);

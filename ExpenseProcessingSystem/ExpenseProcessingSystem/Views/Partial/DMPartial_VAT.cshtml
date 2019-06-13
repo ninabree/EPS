@@ -54,7 +54,10 @@
                 @foreach (var item in Model.VAT)
                 {
                     <tr>
-                        <td><input class="tbl-chk" id="@item.VAT_MasterID" type="checkbox" /></td>
+                        <td>
+                            <input class="tbl-chk" id="@item.VAT_MasterID" type="checkbox" />
+                            @Html.HiddenFor(modelItem => item.VAT_Creator_ID)
+                        </td>
                         <td>@Html.DisplayFor(modelItem => item.VAT_Name)</td>
                         <td>@Html.DisplayFor(modelItem => item.VAT_Rate)</td>
                         <td>@Html.DisplayFor(modelItem => item.VAT_Creator_Name)</td>

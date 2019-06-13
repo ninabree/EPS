@@ -29,48 +29,52 @@
                         <td>@Html.TextBoxFor(item => item[i].Vendor_TIN, new { @class = "w-full" })</td>
                         <td>@Html.TextBoxFor(item => item[i].Vendor_Address, new { @class = "w-full" })</td>
                         <td colspan="3">
-                            @if (trList.Count > 0)
-                            {
-                                @foreach (var trName in trList)
+                            <div style="height:80px; overflow-y:scroll">
+                                @if (trList.Count > 0)
                                 {
-                                    if (Model[i].Vendor_Tax_Rates.Contains(trName.TR_WT_Title))
+                                    @foreach (var trName in trList)
                                     {
-                                        <label>
-                                            @Html.CheckBox(trName.TR_WT_Title, true, new { @id = "chk" + trName.TR_MasterID, @class = "trChk", value = trName.TR_MasterID})
-                                            @trName.TR_WT_Title.ToString()
-                                        </label>
-                                    }
-                                    else
-                                    {
-                                        <label>
-                                            @Html.CheckBox(trName.TR_WT_Title, new { @id = "chk" + trName.TR_MasterID, @class = "trChk", value = trName.TR_MasterID })
-                                            @trName.TR_WT_Title.ToString()
-                                        </label>
+                                        if (Model[i].Vendor_Tax_Rates.Contains(trName.TR_WT_Title))
+                                        {
+                                            <label>
+                                                @Html.CheckBox(trName.TR_WT_Title, true, new { @id = "chk" + trName.TR_MasterID, @class = "trChk", value = trName.TR_MasterID })
+                                                @trName.TR_WT_Title.ToString()
+                                            </label>
+                                        }
+                                        else
+                                        {
+                                            <label>
+                                                @Html.CheckBox(trName.TR_WT_Title, new { @id = "chk" + trName.TR_MasterID, @class = "trChk", value = trName.TR_MasterID })
+                                                @trName.TR_WT_Title.ToString()
+                                            </label>
+                                        }
                                     }
                                 }
-                            }
+                            </div>
                         </td>
                         <td colspan="3">
-                            @if (vatList.Count > 0)
-                            {
-                                @foreach (var vatName in vatList)
+                            <div style="height:80px; overflow-y:scroll">
+                                @if (vatList.Count > 0)
                                 {
-                                    if (Model[i].Vendor_VAT.Contains(vatName.VAT_Name))
+                                    @foreach (var vatName in vatList)
                                     {
-                                        <label>
-                                            @Html.CheckBox(vatName.VAT_Name, true, new { @id = "chk1", @class = "vatChk", value = vatName.VAT_MasterID })
-                                            @vatName.VAT_Name.ToString()
-                                        </label>
-                                    }
-                                    else
-                                    {
-                                        <label>
-                                            @Html.CheckBox(vatName.VAT_Name, new { @id = "chk1", @class = "vatChk", value = vatName.VAT_MasterID })
-                                            @vatName.VAT_Name.ToString()
-                                        </label>
+                                        if (Model[i].Vendor_VAT.Contains(vatName.VAT_Name))
+                                        {
+                                            <label>
+                                                @Html.CheckBox(vatName.VAT_Name, true, new { @id = "chk1", @class = "vatChk", value = vatName.VAT_MasterID })
+                                                @vatName.VAT_Name.ToString()
+                                            </label>
+                                        }
+                                        else
+                                        {
+                                            <label>
+                                                @Html.CheckBox(vatName.VAT_Name, new { @id = "chk1", @class = "vatChk", value = vatName.VAT_MasterID })
+                                                @vatName.VAT_Name.ToString()
+                                            </label>
+                                        }
                                     }
                                 }
-                            }
+                            </div>
                         </td>
                         <td>@Html.TextBoxFor(item => item[i].Vendor_Status, new { @class = "w-full", @readonly = "readonly" })</td>
                         @Html.HiddenFor(item => item[i].Vendor_MasterID)

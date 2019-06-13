@@ -52,7 +52,7 @@ $(document).ready(function () {
             tblName == "Temporary Employee" ? tempRegRowFormat(itemCount) :
             tblName == "Customer" ? custRowFormat(itemCount) :
             tblName == "" ? newGbaseRemarksRow(itemCount) : $('');
-        $TABLE.find('table').append($clone);
+        $('#table').find('table').append($clone);
     });
 
     $('.table-remove').click(function () {
@@ -131,10 +131,14 @@ $(document).ready(function () {
             + '<td><input class="w-full" id="NewVendorVM_' + itemCount + '__Vendor_TIN" name="NewVendorVM[' + itemCount + '].Vendor_TIN" type="text" value=""></td>'
             + '<td><input class="w-full" id="NewVendorVM_' + itemCount + '__Vendor_Address" name="NewVendorVM[' + itemCount + '].Vendor_Address" type="text" value=""></td>'
             + '<td colspan="2">'
+            + '<div style = "height:80px; overflow-y:scroll">'
             + trOptions
+            + '</div>'
             + '</td>'
             + '<td colspan="2">'
+            + '<div style = "height:80px; overflow-y:scroll">'
             + vatOptions
+            + '</div>'
             + '</td>'
             + '<td>'
             + '<span class="table-remove glyphicon glyphicon-remove"></span>'
