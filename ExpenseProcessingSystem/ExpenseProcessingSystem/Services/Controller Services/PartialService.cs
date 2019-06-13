@@ -5,6 +5,7 @@ using ExpenseProcessingSystem.ViewModels.Entry;
 using ExpenseProcessingSystem.ViewModels.Search_Filters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         // [RETRIEVE NC EXPENSE DETAILS]
         public EntryNCViewModelList getExpenseNC(int transID)
         {
-            List<EntryNCViewModel> ncList = new List<EntryNCViewModel>();
+            EntryNCViewModel ncVM = new EntryNCViewModel();
 
             var EntryDetails = (from e
                                 in _context.ExpenseEntry
@@ -50,7 +51,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                                                                                            g,
                                                                                            ExpenseEntryNCDtlAccModel = from a
                                                                                                                        in _context.ExpenseEntryNonCashDetailAccounts
-                                                                                                                       where a.ExpenseEntryNCModel.ExpNCDtl_ID == g.ExpNCDtl_ID
+                                                                                                                       where a.ExpenseEntryNCDtlModel.ExpNCDtl_ID == g.ExpNCDtl_ID
                                                                                                                        select a
                                                                                        }
 
@@ -100,13 +101,11 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 }
 
 
-                EntryNCViewModel ncVM = new EntryNCViewModel()
+                ncVM = new EntryNCViewModel()
                 {
                     NC_Category_ID = nc.d.ExpNC_Category_ID,
                     ExpenseEntryNCDtls = ncDtlList
                 };
-
-                ncList.Add(ncVM);
             }
 
             EntryNCViewModelList ncModel = new EntryNCViewModelList()
@@ -119,7 +118,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 verifier_1 = (EntryDetails.e.Expense_Status == 1) ? "" : getUserName(EntryDetails.e.Expense_Verifier_1),
                 verifier_2 = (EntryDetails.e.Expense_Status == 1) ? "" : getUserName(EntryDetails.e.Expense_Verifier_2),
                 maker = EntryDetails.e.Expense_Creator_ID,
-                EntryNC = ncList
+                EntryNC = ncVM
             };
 
             return ncModel;
@@ -141,6 +140,15 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             }
 
             return name.User_UserName;
+        }
+
+        public List<SelectListItem> getAccountSelectList()
+        {
+            List<SelectListItem> selList = new List<SelectListItem>();
+            _context.DMAccount.Where(x => x.Account_isDeleted == false && x.Account_isActive == true).ToList().ForEach(x => {
+                selList.Add(new SelectListItem() { Text = x.Account_No + " - " + x.Account_Name, Value = x.Account_ID + "" });
+            });
+            return selList;
         }
         //----------------------------------- [[ Populate DM ]] -------------------------------------//
         public List<DMVendorViewModel> populateVendor(DMFiltersViewModel filters)

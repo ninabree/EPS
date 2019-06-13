@@ -1205,7 +1205,12 @@ namespace ExpenseProcessingSystem.Controllers
 
         //[* Entry Cash Advance(SS) *]
         //------------------------------------------------------------------
+        //------------------------------------------------------------------
+        //[* Entry Non Cash *]
 
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
+        [ImportModelState]
         public IActionResult Entry_NC(EntryNCViewModelList viewModel, string partialName)
         {
             var userId = GetUserID();
@@ -1213,14 +1218,100 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 viewModel = new EntryNCViewModelList();
             }
-            //viewModel = PopulateEntry(viewModel);
-            //viewModel.EntryNC.Add(new EntryNCViewModel());
-            
-            ViewData["partialName"] = partialName ?? GlobalSystemValues.NC_LS_PAYROLL.ToString();
+            ViewData["partialName"] = partialName ?? (viewModel.EntryNC.NC_Category_ID.ToString() != "0" ? viewModel.EntryNC.NC_Category_ID.ToString() : GlobalSystemValues.NC_LS_PAYROLL.ToString());
             viewModel.category_of_entry = GlobalSystemValues.NC_CATEGORIES_SELECT;
+            viewModel.expenseDate = DateTime.Now;
             return View(viewModel);
         }
+        [ExportModelState]
+        public IActionResult AddNewNC(EntryNCViewModelList EntryNCViewModelList)
+        {
+            var userId = GetUserID();
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("Entry_NC", EntryNCViewModelList);
+            }
 
+            //EntryNCViewModelList ncList = new EntryNCViewModelList();
+            int id = _service.addExpense_NC(EntryNCViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_NC);
+            ModelState.Clear();
+            return RedirectToAction("View_NC", "Home", new { entryID = id });
+        }
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
+        public IActionResult View_NC(int entryID)
+        {
+            var userId = GetUserID();
+
+            EntryNCViewModelList ncList = _service.getExpenseNC(entryID);
+            ncList = PopulateEntryNC(ncList);
+
+            return View("Entry_NC_ReadOnly", ncList);
+        }
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
+        public IActionResult VerAppModNC(int entryID, string command)
+        {
+            var userId = GetUserID();
+
+            string viewLink = "Entry_NC";
+            EntryNCViewModelList ncList;
+
+            switch (command)
+            {
+                case "Modify":
+                    viewLink = "Entry_NC";
+                    break;
+                case "approver":
+                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_APPROVED, int.Parse(GetUserID())))
+                    {
+                        _service.SaveToGBase();
+                        var expDtls = _context.ExpenseEntry.Where(x => x.Expense_ID == entryID).Select(x => x.ExpenseEntryDetails).FirstOrDefault();
+                        var isFbt = expDtls.Select(x => x.ExpDtl_Fbt).FirstOrDefault() == true;
+                        if (isFbt)
+                        {
+                            _service.SaveToGBaseFBT();
+                        }
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Entry_NC_ReadOnly";
+                    break;
+                case "verifier":
+                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_VERIFIED, int.Parse(GetUserID())))
+                    {
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Entry_NC_ReadOnly";
+                    break;
+                case "Reject": break;
+                default:
+                    break;
+            }
+
+            ModelState.Clear();
+
+            ncList = _service.getExpenseNC(entryID);
+
+            ncList = PopulateEntryNC(ncList);
+
+            
+            //ncList.systemValues.acc.AddRange(_service.getAccDetailsEntry(ncList.EntryNC.account));
+            if(viewLink == "Entry_NC")
+            {
+                return RedirectToAction("Entry_NC", ncList);
+            }
+            return View(viewLink, ncList);
+        }
+        //[* Entry Non Cash *]
+        //------------------------------------------------------------------
         [HttpPost]
         public IActionResult RedirectCont(string Cont, string Method)
         {
@@ -1246,7 +1337,11 @@ namespace ExpenseProcessingSystem.Controllers
 
             return viewModel;
         }
-
+        public EntryNCViewModelList PopulateEntryNC(EntryNCViewModelList viewModel)
+        {
+            viewModel.category_of_entry = GlobalSystemValues.NC_CATEGORIES_SELECT;
+            return viewModel;
+        }
         //------------------------------------------------------------------
         //[* ACCOUNT *]
         [HttpPost]
