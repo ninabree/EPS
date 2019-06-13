@@ -54,6 +54,13 @@ namespace ExpenseProcessingSystem.Controllers
                 viewModel.EntryNC = CONSTANT_NC_LSPAYROLL.Populate_LSPAYROLL(currDtl);
                 viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
             }
+            else if (categoryID == GlobalSystemValues.NC_TAX_REMITTANCE.ToString())
+            {
+                //TEMP
+                DMCurrencyModel currDtl = _context.DMCurrency.Where(x => x.Curr_MasterID == 1 && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
+                viewModel.EntryNC = CONSTANT_NC_TAXREMITTANCE.Populate_TAXREMITTANCE(currDtl);
+                viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
+            }
             viewModel = PopulateEntryNC(viewModel, expenseDate);
             return View("NCPartial", viewModel);
         }

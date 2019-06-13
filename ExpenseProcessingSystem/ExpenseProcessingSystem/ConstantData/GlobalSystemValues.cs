@@ -483,7 +483,7 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 000000000000,
+                                ExpNCDtlAcc_Acc_ID = 470,
                                 ExpNCDtlAcc_Acc_Name = "H79-767-151292 - 2% WTX PHILPASS TRANS",
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
@@ -492,7 +492,7 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 000000000000,
+                                ExpNCDtlAcc_Acc_ID = 471,
                                 ExpNCDtlAcc_Acc_Name = "H79-767-801000 - BANGKO SENTRAL NG PILIPINAS",
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
@@ -511,7 +511,7 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 000000000000,
+                                ExpNCDtlAcc_Acc_ID = 472,
                                 ExpNCDtlAcc_Acc_Name = "H79-767-152060 - BPI PAYROLL WHTAX",
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
@@ -520,7 +520,7 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 000000000000,
+                                ExpNCDtlAcc_Acc_ID = 471,
                                 ExpNCDtlAcc_Acc_Name = "H79-767-801000 - BANGKO SENTRAL NG PILIPINAS",
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
@@ -538,7 +538,7 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 000000000000,
+                                ExpNCDtlAcc_Acc_ID = 473,
                                 ExpNCDtlAcc_Acc_Name = "H79-767-151226 - W/H TAX INCOME PAYMENT",
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
@@ -547,7 +547,7 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 000000000000,
+                                ExpNCDtlAcc_Acc_ID = 471,
                                 ExpNCDtlAcc_Acc_Name = "H79-767-801000 - BANGKO SENTRAL NG PILIPINAS",
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
@@ -565,7 +565,7 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 000000000000,
+                                ExpNCDtlAcc_Acc_ID = 474,
                                 ExpNCDtlAcc_Acc_Name = "B79-767-151195 - W/H TAX MONEY MARKETS",
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
@@ -574,7 +574,7 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 000000000000,
+                                ExpNCDtlAcc_Acc_ID = 471,
                                 ExpNCDtlAcc_Acc_Name = "H79-767-801000 - BANGKO SENTRAL NG PILIPINAS",
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
@@ -592,8 +592,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 000000000000,
-                                ExpNCDtlAcc_Acc_Name = "B79-767-151234 - W/H TAX SALARIES & ALLOW (jap)",
+                                ExpNCDtlAcc_Acc_ID = 475,
+                                ExpNCDtlAcc_Acc_Name = "B79-767-151234 - W/H TAX SALARIES & ALLOW (JAP)",
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -601,7 +601,7 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 000000000000,
+                                ExpNCDtlAcc_Acc_ID = 471,
                                 ExpNCDtlAcc_Acc_Name = "H79-767-801000 - BANGKO SENTRAL NG PILIPINAS",
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
@@ -619,7 +619,7 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 000000000000,
+                                ExpNCDtlAcc_Acc_ID = 476,
                                 ExpNCDtlAcc_Acc_Name = "B79-767-151242 - W/H TAX SALARIES & ALLOW (LOC)",
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
@@ -628,7 +628,7 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 000000000000,
+                                ExpNCDtlAcc_Acc_ID = 471,
                                 ExpNCDtlAcc_Acc_Name = "H79-767-801000 - BANGKO SENTRAL NG PILIPINAS",
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
@@ -646,7 +646,7 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 000000000000,
+                                ExpNCDtlAcc_Acc_ID = 477,
                                 ExpNCDtlAcc_Acc_Name = "B79-767-151268 - W/T TAX BONUS (LOCAL STAFF)",
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
@@ -655,7 +655,7 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 000000000000,
+                                ExpNCDtlAcc_Acc_ID = 471,
                                 ExpNCDtlAcc_Acc_Name = "H79-767-801000 - BANGKO SENTRAL NG PILIPINAS",
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
@@ -673,7 +673,7 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 000000000000,
+                                ExpNCDtlAcc_Acc_ID = 478,
                                 ExpNCDtlAcc_Acc_Name = "B79-767-151399 - TAXES WITHHELD OUTPUT VAT OPI",
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
@@ -682,7 +682,7 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 000000000000,
+                                ExpNCDtlAcc_Acc_ID = 471,
                                 ExpNCDtlAcc_Acc_Name = "H79-767-801000 - BANGKO SENTRAL NG PILIPINAS",
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
@@ -700,7 +700,7 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 000000000000,
+                                ExpNCDtlAcc_Acc_ID = 479,
                                 ExpNCDtlAcc_Acc_Name = "B79-767-151307 - W/H TAX PAY FRINGE BENEFITS",
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
@@ -709,7 +709,7 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 000000000000,
+                                ExpNCDtlAcc_Acc_ID = 471,
                                 ExpNCDtlAcc_Acc_Name = "H79-767-801000 - BANGKO SENTRAL NG PILIPINAS",
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,

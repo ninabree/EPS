@@ -3406,6 +3406,7 @@ namespace ExpenseProcessingSystem.Services
                                                                                   ExpenseEntryNCDtlAccs = from a
                                                                                                            in _context.ExpenseEntryNonCashDetailAccounts
                                                                                                           where a.ExpenseEntryNCDtlModel.ExpNCDtl_ID == g.ExpNCDtl_ID
+                                                                                                          orderby a.ExpNCDtlAcc_Type_ID
                                                                                                           select a
                                                                               }
 
