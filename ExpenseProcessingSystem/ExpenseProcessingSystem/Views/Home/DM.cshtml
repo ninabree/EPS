@@ -25,11 +25,8 @@
             </select>
         </div>
     </div>
-    <div id="partial-container">
-        @*validation message*@
-        <div id="ValidationSummary" style="display:none" class="">
-            @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
-        </div>
+    <div id="partialContainer">
+        <div id="partcontains"></div>
     </div>
     <input type="hidden" id="entryCheckTypes" />
 </div>
@@ -37,8 +34,6 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        var cont = $('#partial-container');
-
         var sortOrder = '@ViewData["sortOrder"]';
         var currentFilter = '@ViewData["currentFilter"]';
         var searchString = '@ViewData["searchString"]';
@@ -50,42 +45,38 @@
         //------------[ FUNCTIONS ]---------------
         function initPartial() {
             $('select#dm-tbl option[value=' + partial + ']').attr('selected', 'selected');
-            $.ajax({
-                url: '/Partial/' + partial,
-                type: "Get",
-                data: { 'sortOrder': sortOrder, 'currentFilter': currentFilter, 'colName': colName, 'searchString': searchString, 'page': page },
-                async: true,
-                //processData: false,
-                datatype: "json",
-                cache: false,
-                success: function (data) {
-                    cont.empty();
-                    cont.html(data);
-                    isSearchDisabled()
+
+            var filterData = { 'sortOrder': sortOrder, 'currentFilter': currentFilter, 'colName': colName, 'searchString': searchString, 'page': page };
+
+
+            $('#partcontains').load("/Partial/" + partial, filterData, function (response, status, xhr) {
+                if (status == "error") {
+                    alert("Something went wrong.");
+                } else {
+                    isSearchDisabled();
                 }
             });
         }
         //change content of partial view on select on change
+        
         $('select#dm-tbl').change(function () {
             if (isSessionTimeout() != true) {
                 $('input#filterPartialName').val(this.value);
-                $.ajax({
-                    url: '/Partial/' + this.value,
-                    type: "Get",
-                    data: { sortOrder: sortOrder, currentFilter: currentFilter, searchString: searchString, page: page },
-                    //data: model,
-                    async: false,
-                    processData: false,
-                    datatype: "json",
-                    cache: false,
-                    success: function (data) {
-                        cont.empty();
-                        cont.html(data);
-                        isSearchDisabled()
+
+                var filterData = { 'sortOrder': sortOrder, 'currentFilter': currentFilter, 'colName': colName, 'searchString': searchString, 'page': page };
+
+
+                $('#partcontains').load("/Partial/" + this.value, filterData, function (response, status, xhr) {
+                    if (status == "error") {
+                        alert("Something went wrong.");
+                    } else {
+                        isSearchDisabled();
                     }
                 });
             }
         });
+
+        /*Possibly no longer needed(session check is inside the controller?) please check*/
         function isSessionTimeout() {
             var tmp = false;
             $.ajax({
@@ -111,6 +102,7 @@
             });
             return tmp;
         }
+
         function isSearchDisabled() {
             var noFilter = true;
             $('input[id^= "DMFilters_"]').each(function (i, obj) {
@@ -130,6 +122,14 @@
                 $('#search-btn').removeAttr("disabled");
                 $('#full-list-btn').removeAttr("disabled");
             }
+        }
+
+        function ajaxCall(url, data) {
+            return $.ajax({
+                url: url,
+                type: "POST",
+                data: data,
+            });
         }
     });
 </script>

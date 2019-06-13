@@ -1,8 +1,41 @@
 ﻿$(function () {
     var computeFunction = function (event) {
         if (event.target.classList.contains("comVar")) {
-           computeValues(event.target.parentNode.parentNode);
+            computeValues(event.target.parentNode.parentNode);
         }
+        var payee = $("#vendorName option:selected").text();
+        var amount = $("#grossTotal").val();
+        var checkNo = $("#checkNo").val();
+        var voucherNo = $("#voucherNo").val();
+        var date = $("#entryDate").val();
+
+        var data = {
+            "headvm": {
+                "header_Logo": null,
+                "header_Name": null,
+                "header_TIN": null,
+                "header_Address": null
+            },
+            "payeeID": 0,
+            "payee": payee,
+            "amount": amount,
+            "amountString": null,
+            "checkNo": checkNo,
+            "voucherNo": voucherNo,
+            "makeriD": 0,
+            "maker": null,
+            "approver": null,
+            "verifier_1": null,
+            "verifier_2": null,
+            "date": date
+        }
+
+        ajaxCall("/Home/GenerateVoucher", data).done(function (response) {
+            $("#iframePreview").contents().find('html').html(response);
+        });
+
+
+        
     }
 
     $(".tabContent").keypress(
@@ -86,13 +119,10 @@
         $("#" + $("#parentId").val()).append(htmlText);
         $('#myModal').modal('hide');
         computeValues($("#item_" + rowNo)[0]);
+        computeFunction(e);
     });
     $("#vendorName").on("change", function (e) {
         var vendorId = { vendorID: $("#vendorName").val() };
-
-        var vat;
-        var ewt;
-
 
         ajaxCall("/Home/getVendorVatList", vendorId)
             .done(function (vatData) {
