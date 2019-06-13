@@ -74,6 +74,16 @@ namespace ExpenseProcessingSystem.Controllers
                 viewModel.EntryNC = CONSTANT_NC_PCHC.Populate_PCHC(currDtl);
                 viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
             }
+            else if (categoryID == GlobalSystemValues.NC_DEPRECIATION.ToString())
+            {
+                viewModel.EntryNC = CONSTANT_NC_DEPRECIATION.Populate_DEPRECIATION(currDtl);
+                viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
+            }
+            else if (categoryID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT.ToString())
+            {
+                viewModel.EntryNC = CONSTANT_NC_PETTYCASHREPLENISHMENT.Populate_PETTYCASHREPLENISHMENT(currDtl);
+                viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
+            }
             viewModel = PopulateEntryNC(viewModel, expenseDate);
             return View("NCPartial", viewModel);
         }
