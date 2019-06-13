@@ -915,7 +915,9 @@ namespace ExpenseProcessingSystem.Controllers
 
             //return View("Entry_PCV_ReadOnly", pcvList);
 
-            return RedirectToAction("View_PCV", "Home", new { entryID = id });
+            TempData["entryIDAddtoView"] = id;
+
+            return RedirectToAction("View_PCV", "Home");
         }
 
         [OnlineUserCheck]
@@ -999,6 +1001,16 @@ namespace ExpenseProcessingSystem.Controllers
         {
             var userId = GetUserID();
 
+            if (entryID == 0 && TempData["entryIDAddtoView"] != null)
+            { 
+                entryID = (int)TempData["entryIDAddtoView"];
+                TempData.Keep();
+            }
+            else
+            {
+                TempData.Remove("entryIDAddtoView");
+            }
+
             EntryCVViewModelList pcvList = _service.getExpense(entryID);
             List<SelectList> listOfSysVals = _service.getEntrySystemVals();
             pcvList.systemValues.vendors = listOfSysVals[0];
@@ -1077,7 +1089,9 @@ namespace ExpenseProcessingSystem.Controllers
 
             //return View("Entry_PCV_ReadOnly", pcvList);
 
-            return RedirectToAction("View_SS", "Home", new { entryID = id });
+            TempData["entryIDAddtoView"] = id;
+
+            return RedirectToAction("View_SS", "Home");
         }
 
         [OnlineUserCheck]
@@ -1160,6 +1174,16 @@ namespace ExpenseProcessingSystem.Controllers
         public IActionResult View_SS(int entryID)
         {
             var userId = GetUserID();
+
+            if (entryID == 0 && TempData["entryIDAddtoView"] != null)
+            {
+                entryID = (int)TempData["entryIDAddtoView"];
+                TempData.Keep();
+            }
+            else
+            {
+                TempData.Remove("entryIDAddtoView");
+            }
 
             EntryCVViewModelList ssList = _service.getExpense(entryID);
             List<SelectList> listOfSysVals = _service.getEntrySystemVals();
