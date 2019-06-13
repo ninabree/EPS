@@ -1,4 +1,5 @@
-﻿@{
+﻿@model ExpenseProcessingSystem.ViewModels.VoucherViewModelList
+@{
     Layout = null;
 }
 <!DOCTYPE html>
@@ -8,66 +9,97 @@
     <title>_VoucherLayout</title>
 
     <style>
-        body{
-            font-family:Arial;
+        body {
+            font-family: Arial;
         }
 
-        .heading{
+        .heading {
             font-weight: bold;
         }
 
+        .leftA {
+            text-align: left;
+        }
+
+        .rightA {
+            text-align: right;
+        }
         /*header styles*/
         #headers {
-            margin:0 0 0 30px;
-            height:100%;
+            margin: 0 0 0 30px;
+            height: 100%;
         }
+
         .container {
             width: 200px;
             height: 100px;
         }
-        .container img {
-            max-height: 100%;
-            max-width: 100%;
-        }
+
+            .container img {
+                max-height: 100%;
+                max-width: 100%;
+            }
         /*end header styles*/
-        
-        table {
-            border: 1px solid black;
-            vertical-align: top;
-            padding:0;
-        }
-        
         /*main body styles*/
-        #mainBody table{
-            width:100%;
+        #mainBody table {
+            width: 100%;
         }
+
         #mainBody .wordAmount {
             height: 36px
         }
         /*end main body styles*/
 
-        /*particulars style*/
-        #particulars table{
-            width:95%;
-            float:right;
-        }
-        #particulars table,
-        #particulars tr,
-        #particulars td{
-            border: 1px dotted black;
-            border-collapse:collapse;
-        }
-        /*end particulars style*/
-        input{
-            width:inherit;
-            border: 1px solid black;
-        }
-        .flexContainer{
-            display:flex;
+        /*payment style*/
+        #payment table {
+            width: 95%;
+            float: right;
+            margin-bottom: 30px;
         }
 
-        .flexstuff{
-            flex:1;
+        #payment table,
+        #payment tr,
+        #payment td {
+            border: 1px dotted black;
+            border-collapse: collapse;
+        }
+        /*end payment style*/
+
+        /*particulars style*/
+        #particulars #tblParticular {
+            width: 70%;
+            float: left;
+            margin-right: 0px;
+        }
+
+        #particulars #tblTaxInfo {
+            width: 30.05%;
+            float: right;
+            margin-left: 0px;
+        }
+
+        #particulars table,
+        #particulars table > thead > tr > td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+            #particulars table > tbody > tr > td {
+                height: 18px;
+            }
+
+        /*end particulars style*/
+        input {
+            width: inherit;
+            border: 1px solid black;
+        }
+
+        .flexContainer {
+            display: flex;
+        }
+
+        .flexstuff {
+            flex: 1;
         }
     </style>
 </head>
@@ -75,7 +107,7 @@
     <div id="headerTbl" class="flex-sb">
         <table>
             <colgroup>
-                <col style="width:10%"/>
+                <col style="width:10%" />
                 <col style="width:90%" />
             </colgroup>
             <tr>
@@ -87,12 +119,12 @@
                 </td>
                 <td>
                     <div id="headers">
-                        <h3>MIZUHO BANK, LTD. - MANILA BRANCH</h3>
+                        <h3>@Html.DisplayFor(x => x.headvm.Header_Name)</h3>
                         <br />
-                        <a>25th Floor The Zuellig Building, Makati Avenue cornet Paseo de Roxas, Makati City 1225</a>
+                        <a>@Html.DisplayFor(x => x.headvm.Header_Address)</a>
                         <br /><br /><br /><br />
                         <a>Tel. No.:  860-3500</a><br />
-                        <a>TIN:  004-669-467-000 NON-VAT</a>
+                        <a>TIN:  @Html.DisplayFor(x => x.headvm.Header_TIN)</a>
                     </div>
                 </td>
             </tr>
@@ -102,42 +134,42 @@
     <div id="mainBody">
         <table>
             <colgroup>
-                <col style="width:18%;"/>
-                <col style="width:42%;"/>
-                <col style="width:40%;"/>
+                <col style="width:18%;" />
+                <col style="width:42%;" />
+                <col style="width:40%;" />
             </colgroup>
             <tr>
                 <td><a class="heading">Date</a> </td>
-                <td><input type="text" disabled /></td>
+                <td>@Html.TextBoxFor(x => x.date, new {@disabled = "disabled" })</td>
                 <td>
                     <div style="text-align:right;">
                         <a class="heading">Check_Voucher_No.</a>
-                        <input style="margin-left:100px" type="text" disabled />
+                        @Html.TextBoxFor(x => x.voucherNo, new { @style = "margin-left:100px", @type = "text", @disabled="disabled" })
                     </div>
                 </td>
             </tr>
             <tr>
                 <td><a class="heading">Payee</a></td>
-                <td colspan="2"><div class="flexContainer"><input class="flexstuff" type="text" disabled /></div></td>
+                <td colspan="2"><div class="flexContainer">@Html.TextBoxFor(x => x.payee, new { @class="flexstuff", @type="text", @disabled="disabled"})</div></td>
             </tr>
             <tr>
                 <td><a class="heading">Check Number</a></td>
-                <td colspan="2"><div class="flexContainer"><input class="flexstuff" type="text" disabled /></div></td>
+                <td colspan="2"><div class="flexContainer">@Html.TextBoxFor(x => x.checkNo, new { @class = "flexstuff", @type = "text", @disabled = "disabled" })</div></td>
             </tr>
             <tr>
                 <td colspan="3"> &nbsp; &nbsp; &nbsp;</td>
             </tr>
             <tr>
                 <td><a class="heading">Payment Amount in Figures</a></td>
-                <td colspan="2"><div class="flexContainer"><input class="flexstuff" type="text" disabled /></div></td>
+                <td colspan="2"><div class="flexContainer">@Html.TextBoxFor(x => x.amount, new { @class = "flexstuff", @type = "text", @disabled = "disabled" })</div></td>
             </tr>
             <tr>
                 <td><a class="heading">Payment Amount in Words</a> <br /><div><a> &nbsp; &nbsp;</a></div></td>
-                <td rowspan="2" colspan="3"><div class="flexContainer"><input class="flexstuff wordAmount" type="text" disabled /></div></td>
+                <td rowspan="2" colspan="3"><div class="flexContainer">@Html.TextBoxFor(x => x.amountString, new { @class = "flexstuff wordAmount", @type = "text", @disabled = "disabled" })</div></td>
             </tr>
         </table>
     </div>
-    <div id="particulars">
+    <div id="payment">
         <a class="heading">Payment for: </a><br />
         <table>
             <colgroup>
@@ -158,28 +190,177 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
-                </tr>
-                 <tr>
-                    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
-                    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
-                </tr>
-                 <tr>
-                    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
-                    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td colspan="5" style="border:1px solid black">Total <a style="float:right;">PHP 20,000.00</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="particulars">
+        <table id="tblParticular" border="0" cellspacing="0">
+            <colgroup>
+                <col style="width:50%;" />
+                <col style="width:10%;" />
+                <col style="width:20%;" />
+                <col style="width:20%;" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <td colspan="4">Particulars</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="text-align:center;" class="heading">Account</td>
+                    <td style="text-align:center;" class="heading">FBT?</td>
+                    <td style="text-align:center;" class="heading">Debit</td>
+                    <td style="text-align:center;" class="heading">Credit</td>
+                </tr>
+                <tr>
+                    <td>Motor Vehicle-Lease - H90767121503<!--Insert Value here--></td>
+                    <td>No<!--Insert Value here--></td>
+                    <td class="rightA">PHP 19,936.58<!--Insert Value here--></td>
+                    <td><!--Insert Value here--></td>
+                </tr>
+                <tr>
+                    <td>Motor Vehicle-Fuel -  H90767121498<!--Insert Value here--></td>
+                    <td>No<!--Insert Value here--></td>
+                    <td class="rightA">PHP 3,400.00<!--Insert Value here--></td>
+                    <td><!--Insert Value here--></td>
+                </tr>
+                <tr>
+                    <td>Transportation-Others - H90767121480<!--Insert Value here--></td>
+                    <td>No<!--Insert Value here--></td>
+                    <td class="rightA">PHP 2,031.00<!--Insert Value here--></td>
+                    <td><!--Insert Value here--></td>
+                </tr>
+                <tr>
+                    <td>BDO MNL<!--Insert Value here--></td>
+                    <td><!--Insert Value here--></td>
+                    <td><!--Insert Value here--></td>
+                    <td class="rightA">25,021.94<!--Insert Value here--></td>
+                </tr>
+                <tr>
+                    <td>EWT 2%<!--Insert Value here--></td>
+                    <td><!--Insert Value here--></td>
+                    <td><!--Insert Value here--></td>
+                    <td class="rightA">345.64<!--Insert Value here--></td>
+                </tr>
+                <tr>
+                    <td colspan="4"><!--Insert Value here--></td>
+                </tr>
+                <tr>
+                    <td>Total<!--Insert Value here--></td>
+                    <td style="border-top:1px solid black;border-bottom:3px double black;"><!--Insert Value here--></td>
+                    <td class="rightA" style="border-top:1px solid black;border-bottom:3px double black;">25,367.58<!--Insert Value here--></td>
+                    <td class="rightA" style="border-top:1px solid black;border-bottom:3px double black;">25,367.58<!--Insert Value here--></td>
+                </tr>
+                <tr>
+                    <td colspan="4"><!--Insert Value here--></td>
+                </tr>
+                <tr>
+                    <td colspan="4"><!--Insert Value here--></td>
+                </tr>
+            </tbody>
+        </table>
+        <table id="tblTaxInfo" border="0" cellspacing="0">
+            <colgroup>
+                <col style="width:60%;" />
+                <col style="width:20%;" />
+                <col style="width:20%;" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <td class="heading" colspan="3">Tax Information</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td colspan="3"><div style="font-style:italic;">Expanded Withholding Tax</div></td></tr>
+                <tr>
+                    <td>Gross</td>
+                    <td><!--Insert Value here--></td>
+                    <td><!--Insert Value here--></td>
+                </tr>
+                <tr>
+                    <td>Vat</td>
+                    <td><!--Insert Value here--></td>
+                    <td><!--Insert Value here--></td>
+                </tr>
+                <tr>
+                    <td>Tax Base</td>
+                    <td><!--Insert Value here--></td>
+                    <td><!--Insert Value here--></td>
+                </tr>
+                <tr>
+                    <td>EWT</td>
+                    <td><!--Insert Value here--></td>
+                    <td><!--Insert Value here--></td>
+                </tr>
+                <tr>
+                    <td colspan="3"></td>
+                </tr>
+                <tr>
+                    <td colspan="3"></td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="font-style:italic;padding-bottom:3px;">Fringe Benefit Tax</td>
+                </tr>
+                <tr>
+                    <td colspan="2">Benefit Amount</td>
+                    <td class="rightA">-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                </tr>
+                <tr>
+                    <td colspan="2">35% Tax</td>
+                    <td class="rightA">-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                 </tr>
             </tbody>
         </table>
