@@ -723,4 +723,46 @@ namespace ExpenseProcessingSystem.ConstantData
             };
         }
     }
+    //NON CASH CONSTANT VALUES
+    public class CONSTANT_NC_MONTHLYROSSBILL
+    {
+        public static EntryNCViewModel Populate_MONTHLYROSSBILL(DMCurrencyModel currDetails)
+        {
+            return new EntryNCViewModel
+            {
+                NC_Category_ID = 1,
+                ExpenseEntryNCDtls = new List<ExpenseEntryNCDtlViewModel>()
+                {
+                    new ExpenseEntryNCDtlViewModel
+                    {
+                        ExpNCDtl_Remarks_Desc = "MONTHLY ROSS BILL",
+                        ExpNCDtl_Period_Duration = "Dec'17",
+                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
+                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
+                        {
+                            new ExpenseEntryNCDtlAccViewModel{
+                                ExpNCDtlAcc_Acc_ID = 433,
+                                ExpNCDtlAcc_Acc_Name = "H90-767-121781 - SUNDRY OTHERS",
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Type_ID = 1
+                            },
+                            new ExpenseEntryNCDtlAccViewModel{
+                                ExpNCDtlAcc_Acc_ID = 471,
+                                ExpNCDtlAcc_Acc_Name = "H79-767-801000 - BANGKO SENTRAL NG PILIPINAS",
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Type_ID = 2
+                            }
+                        }
+                    }
+                }
+            };
+        }
+    }
 }
