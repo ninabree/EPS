@@ -85,12 +85,12 @@ $(document).ready(function () {
         $('#search-frm').submit();
     });
     //enables/disables controls in DM depending on entry status
-    $('input.tbl-chk').change(function (e) {
+    $(document).on("change", "input.tbl-chk", function (e) {
         e.stopImmediatePropagation();
         //disable all buttons
         defaultDisableAll();
         //get column # of status per table
-        var count = $('#partial-container div div table thead tr th').length - 2;
+        var count = $('.table').find('th').length - 2;
         var stat = $(this).parent().siblings(":eq(" + count + ")").text();
         var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
         var remainingCheckStat = $('input.tbl-chk[type="checkbox"]:checked').parent().siblings(":eq(" + count + ")").text();
@@ -110,13 +110,11 @@ $(document).ready(function () {
                 return false;
             }
         });
-        alert(creatorId + "<-- creator === user --> " + userId);
-
         if (!isSameStat && chkCount <= 2) {
             alert("Kindly check rows with the same status only.");
             $('.rec').prop('disabled', true);
         }
-        else if (creatorId == userId) {
+        else if (creatorId == userId/* && chkCount <= 1*/) {
             if (stat != "Approved") {
                 defaultOnlyAdd();
             } else {
@@ -296,6 +294,9 @@ $(document).ready(function () {
         $('.add-rec').prop('disabled', false);
         $('.edit-rec').prop('disabled', false);
         $('.delete-rec').prop('disabled', false);
+    }
+    function defaultOnlyAdd() {
+        $('.add-rec').prop('disabled', false);
     }
     ///////////////////////////////////////////////////////////////////
     function populateCol() {
