@@ -87,9 +87,13 @@
             var itemCount = ($(tblRow).length / 2);
 
             var $clone = tblName == "1" ? forma1RowFormat(itemCount, getAccsOptions(itemCount), getValueAccsOptions()) :
-                    tblName == "2" ? forma1RowFormat(itemCount, getAccsOptions(itemCount), getValueAccsOptions()) :
-                    tblName == "3" ? forma1RowFormat(itemCount, getAccsOptions(itemCount), getValueAccsOptions()) :
-                         $('');
+                tblName == "2" ? forma1RowFormat(itemCount, getAccsOptions(itemCount), getValueAccsOptions()) :
+                tblName == "3" ? forma1RowFormat(itemCount, getAccsOptions(itemCount), getValueAccsOptions()) :
+                tblName == "4" ? forma1RowFormat(itemCount, getAccsOptions(itemCount), getValueAccsOptions()) :
+                tblName == "5" ? forma1RowFormat(itemCount, getAccsOptions(itemCount), getValueAccsOptions()) :
+                tblName == "6" ? forma1RowFormat(itemCount, getAccsOptions(itemCount), getValueAccsOptions()) :
+                tblName == "7" ? forma1RowFormat(itemCount, getAccsOptions(itemCount), getValueAccsOptions()) :
+                $('');
             $('#NCPartialTbl').find('tbody tr:last').before($clone);
             //$('#NCPartialTbl').find('tbody').append($clone);
         });

@@ -61,7 +61,17 @@ namespace ExpenseProcessingSystem.Controllers
             }
             else if (categoryID == GlobalSystemValues.NC_MONTHLY_ROSS_BILL.ToString())
             {
-               viewModel.EntryNC = CONSTANT_NC_MONTHLYROSSBILL.Populate_MONTHLYROSSBILL(currDtl);
+                viewModel.EntryNC = CONSTANT_NC_MONTHLYROSSBILL.Populate_MONTHLYROSSBILL(currDtl);
+                viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
+            }
+            else if (categoryID == GlobalSystemValues.NC_PSSC.ToString())
+            {
+                viewModel.EntryNC = CONSTANT_NC_PSSC.Populate_PSSC(currDtl);
+                viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
+            }
+            else if (categoryID == GlobalSystemValues.NC_PCHC.ToString())
+            {
+                viewModel.EntryNC = CONSTANT_NC_PCHC.Populate_PCHC(currDtl);
                 viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
             }
             viewModel = PopulateEntryNC(viewModel, expenseDate);
