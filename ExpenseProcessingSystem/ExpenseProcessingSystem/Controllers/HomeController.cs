@@ -2200,7 +2200,6 @@ namespace ExpenseProcessingSystem.Controllers
         {
             //string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmsstt"); // ORIGINAL
             model.date = DateTime.Now.ToString("MM-dd-yyyy");
-            ReportHeaderViewModel headerVM = new ReportHeaderViewModel();
 
             model.headvm.Header_Logo = "";
             model.headvm.Header_Name = "Mizuho Bank Ltd., Manila Branch";
