@@ -735,7 +735,7 @@ namespace ExpenseProcessingSystem.ConstantData
                 {
                     new ExpenseEntryNCDtlViewModel
                     {
-                        ExpNCDtl_Remarks_Desc = "MONTHLY ROSS BILL",
+                        ExpNCDtl_Remarks_Desc = "BSP:MONTHLY ROSS BILL",
                         ExpNCDtl_Period_Duration = "Dec'17",
                         ExpNCDtl_Remarks_Period_From = DateTime.Now,
                         ExpNCDtl_Remarks_Period_To = DateTime.Now,
@@ -777,7 +777,7 @@ namespace ExpenseProcessingSystem.ConstantData
                 {
                     new ExpenseEntryNCDtlViewModel
                     {
-                        ExpNCDtl_Remarks_Desc = "PSSC",
+                        ExpNCDtl_Remarks_Desc = "PSSC:2% PDDTS CHARGES",
                         ExpNCDtl_Period_Duration = "Dec'17",
                         ExpNCDtl_Remarks_Period_From = DateTime.Now,
                         ExpNCDtl_Remarks_Period_To = DateTime.Now,
@@ -791,6 +791,15 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
                                 ExpNCDtlAcc_Inter_Rate = 0,
                                 ExpNCDtlAcc_Type_ID = 1
+                            },
+                            new ExpenseEntryNCDtlAccViewModel{
+                                ExpNCDtlAcc_Acc_ID = 488,
+                                ExpNCDtlAcc_Acc_Name = "H79767151226 - TAX",
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Type_ID = 2
                             },
                             new ExpenseEntryNCDtlAccViewModel{
                                 ExpNCDtlAcc_Acc_ID = 471,
@@ -819,7 +828,7 @@ namespace ExpenseProcessingSystem.ConstantData
                 {
                     new ExpenseEntryNCDtlViewModel
                     {
-                        ExpNCDtl_Remarks_Desc = "PASS Transactions",
+                        ExpNCDtl_Remarks_Desc = "PCHC:2% PROC FEES",
                         ExpNCDtl_Period_Duration = "Dec'17",
                         ExpNCDtl_Remarks_Period_From = DateTime.Now,
                         ExpNCDtl_Remarks_Period_To = DateTime.Now,
@@ -835,6 +844,15 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
+                                ExpNCDtlAcc_Acc_ID = 488,
+                                ExpNCDtlAcc_Acc_Name = "H79767151226 - TAX",
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Type_ID = 2
+                            },
+                            new ExpenseEntryNCDtlAccViewModel{
                                 ExpNCDtlAcc_Acc_ID = 471,
                                 ExpNCDtlAcc_Acc_Name = "H79-767-801000 - BANGKO SENTRAL NG PILIPINAS",
                                 ExpNCDtlAcc_Amount = 0,
@@ -847,7 +865,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },
                     new ExpenseEntryNCDtlViewModel
                     {
-                        ExpNCDtl_Remarks_Desc = "Processing Fees",
+                        ExpNCDtl_Remarks_Desc = "2% PAS 5",
                         ExpNCDtl_Period_Duration = "Dec'17",
                         ExpNCDtl_Remarks_Period_From = DateTime.Now,
                         ExpNCDtl_Remarks_Period_To = DateTime.Now,
@@ -863,32 +881,13 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 471,
-                                ExpNCDtlAcc_Acc_Name = "H79-767-801000 - BANGKO SENTRAL NG PILIPINAS",
+                                ExpNCDtlAcc_Acc_ID = 488,
+                                ExpNCDtlAcc_Acc_Name = "H79767151226 - TAX",
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
                                 ExpNCDtlAcc_Inter_Rate = 0,
                                 ExpNCDtlAcc_Type_ID = 2
-                            }
-                        }
-                    },
-                    new ExpenseEntryNCDtlViewModel
-                    {
-                        ExpNCDtl_Remarks_Desc = "Tokens",
-                        ExpNCDtl_Period_Duration = "Dec'17",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
-                        ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
-                        {
-                            new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 433,
-                                ExpNCDtlAcc_Acc_Name = "H90-767-121781 - SUNDRY OTHERS",
-                                ExpNCDtlAcc_Amount = 0,
-                                ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
-                                ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
-                                ExpNCDtlAcc_Inter_Rate = 0,
-                                ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
                                 ExpNCDtlAcc_Acc_ID = 471,
@@ -917,7 +916,7 @@ namespace ExpenseProcessingSystem.ConstantData
                 {
                     new ExpenseEntryNCDtlViewModel
                     {
-                        ExpNCDtl_Remarks_Desc = "BANK PREMISES",
+                        ExpNCDtl_Remarks_Desc = "DEPRECIATION:BANK PREMISES",
                         ExpNCDtl_Period_Duration = "Dec'17",
                         ExpNCDtl_Remarks_Period_From = DateTime.Now,
                         ExpNCDtl_Remarks_Period_To = DateTime.Now,
@@ -925,7 +924,7 @@ namespace ExpenseProcessingSystem.ConstantData
                         {
                             new ExpenseEntryNCDtlAccViewModel{
                                 ExpNCDtlAcc_Acc_ID = 480,
-                                ExpNCDtlAcc_Acc_Name = "H99-767-31115-51205 - (Depr on Bk Premises-DEPRECIATION)",
+                                ExpNCDtlAcc_Acc_Name = "H99-767-31115 (51205) - DEP ON BANK PREMISES",
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -934,7 +933,7 @@ namespace ExpenseProcessingSystem.ConstantData
                             },
                             new ExpenseEntryNCDtlAccViewModel{
                                 ExpNCDtlAcc_Acc_ID = 481,
-                                ExpNCDtlAcc_Acc_Name = "H79-767-1600013-16205 - Bk Premises Accum Deprec-LEASEHOLD IMPRV",
+                                ExpNCDtlAcc_Acc_Name = "H79-767-1600013 (16205) - BK PREMISES ACCUM DEPREC-LEASEHOLD IMPROV",
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -945,7 +944,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },
                     new ExpenseEntryNCDtlViewModel
                     {
-                        ExpNCDtl_Remarks_Desc = "FURNITURES & FIXTURES",
+                        ExpNCDtl_Remarks_Desc = "DEPRECIATION:BK FIR FIX EQUIP",
                         ExpNCDtl_Period_Duration = "Dec'17",
                         ExpNCDtl_Remarks_Period_From = DateTime.Now,
                         ExpNCDtl_Remarks_Period_To = DateTime.Now,
@@ -953,7 +952,7 @@ namespace ExpenseProcessingSystem.ConstantData
                         {
                             new ExpenseEntryNCDtlAccViewModel{
                                 ExpNCDtlAcc_Acc_ID = 482,
-                                ExpNCDtlAcc_Acc_Name = "H99-767-131123-51205 - (Depr on Bk Fixtures-DEPRECIATION)",
+                                ExpNCDtlAcc_Acc_Name = "H99-767-131123 (51205) -  DEPR ON BK FIXTURES-DEPRECIATION",
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -962,7 +961,7 @@ namespace ExpenseProcessingSystem.ConstantData
                             },
                             new ExpenseEntryNCDtlAccViewModel{
                                 ExpNCDtlAcc_Acc_ID = 483,
-                                ExpNCDtlAcc_Acc_Name = "H79-767-170018-16409 - (Accum Depre Fur Fix & Equi-Furniture&Fix)",
+                                ExpNCDtlAcc_Acc_Name = "H79-767-170018 (16409) - ACCUM DEPRE FUR FIX&EQUI-FURNITURE&FIX",
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -973,7 +972,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },
                     new ExpenseEntryNCDtlViewModel
                     {
-                        ExpNCDtl_Remarks_Desc = "Software",
+                        ExpNCDtl_Remarks_Desc = "DEPRECIATION: SOFTWARE",
                         ExpNCDtl_Period_Duration = "Dec'17",
                         ExpNCDtl_Remarks_Period_From = DateTime.Now,
                         ExpNCDtl_Remarks_Period_To = DateTime.Now,
@@ -981,7 +980,7 @@ namespace ExpenseProcessingSystem.ConstantData
                         {
                             new ExpenseEntryNCDtlAccViewModel{
                                 ExpNCDtlAcc_Acc_ID = 484,
-                                ExpNCDtlAcc_Acc_Name = "B99-767-111115-54122 - (Depre. Softwre)",
+                                ExpNCDtlAcc_Acc_Name = "B99-767-111115 (54122) - DEPREC SOFTWARE",
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -990,7 +989,7 @@ namespace ExpenseProcessingSystem.ConstantData
                             },
                             new ExpenseEntryNCDtlAccViewModel{
                                 ExpNCDtlAcc_Acc_ID = 485,
-                                ExpNCDtlAcc_Acc_Name = "B79-767-111111-17146 (Def AST SYS-Dev)",
+                                ExpNCDtlAcc_Acc_Name = "B79-767-111111 (17146) - DEF ASST. SYS. - DEV",
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -1023,7 +1022,7 @@ namespace ExpenseProcessingSystem.ConstantData
                         {
                             new ExpenseEntryNCDtlAccViewModel{
                                 ExpNCDtlAcc_Acc_ID = 486,
-                                ExpNCDtlAcc_Acc_Name = "B60-767-151129-00204 - (Petty Cash)",
+                                ExpNCDtlAcc_Acc_Name = "B60-767-151129 (00204) - PETTY CASH",
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -1032,7 +1031,7 @@ namespace ExpenseProcessingSystem.ConstantData
                             },
                             new ExpenseEntryNCDtlAccViewModel{
                                 ExpNCDtlAcc_Acc_ID = 487,
-                                ExpNCDtlAcc_Acc_Name = "B79-767-111111-14017 - (Computer Suspense)",
+                                ExpNCDtlAcc_Acc_Name = "B79-767-111111 (14017) - COMPUTER SUSPENSE",
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -1044,16 +1043,82 @@ namespace ExpenseProcessingSystem.ConstantData
                 }
             };
         }
-        public static EntryNCViewModel Populate_CDD_Instruc_Sheet(DMCurrencyModel currDetails)
+        public static List<ExpenseEntryNCDtlViewModel> Populate_CDD_Instruc_Sheet(DMCurrencyModel currDetails)
+        {
+            return new List<ExpenseEntryNCDtlViewModel>()
+            {
+                new ExpenseEntryNCDtlViewModel
+                {
+                    ExpNCDtl_Remarks_Desc = "PETTY CASH REPLENISHMENT",
+                    ExpNCDtl_Period_Duration = "Dec'17",
+                    ExpNCDtl_Remarks_Period_From = DateTime.Now,
+                    ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                    ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
+                    {
+                        new ExpenseEntryNCDtlAccViewModel{
+                            ExpNCDtlAcc_Acc_ID = 487,
+                            ExpNCDtlAcc_Acc_Name = "B79-767-111111 (14017) - COMPUTER SUSPENSE",
+                            ExpNCDtlAcc_Amount = 0,
+                            ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
+                            ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
+                            ExpNCDtlAcc_Inter_Rate = 0,
+                            ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_DEBIT
+                        },
+                        new ExpenseEntryNCDtlAccViewModel{
+                            ExpNCDtlAcc_Acc_ID = 489,
+                            ExpNCDtlAcc_Acc_Name = "H79-767-151111 (00204)",
+                            ExpNCDtlAcc_Amount = 0,
+                            ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
+                            ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
+                            ExpNCDtlAcc_Inter_Rate = 0,
+                            ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_CREDIT
+                        }
+                    }
+                }
+            };
+        }
+    }
+    //NON CASH CONSTANT VALUES
+    public class CONSTANT_NC_JSPAYROLL
+    {
+        public static EntryNCViewModel Populate_JSPAYROLL(DMCurrencyModel currDetailsPHP, DMCurrencyModel currDetailsUSD)
         {
             return new EntryNCViewModel
             {
-                NC_Category_ID = 7,
+                NC_Category_ID = 8,
                 ExpenseEntryNCDtls = new List<ExpenseEntryNCDtlViewModel>()
                 {
                     new ExpenseEntryNCDtlViewModel
                     {
-                        ExpNCDtl_Remarks_Desc = "PETTY CASH REPLENISHMENT",
+                        ExpNCDtl_Remarks_Desc = "J/S PAYROLL: ",
+                        ExpNCDtl_Period_Duration = "Dec'17",
+                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
+                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
+                        {
+                            new ExpenseEntryNCDtlAccViewModel{
+                                ExpNCDtlAcc_Acc_ID = 490,
+                                ExpNCDtlAcc_Acc_Name = "H99-767-111115 - PERSONNEL EXPENSE JAP STAFF",
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Type_ID = 1
+                            },
+                            new ExpenseEntryNCDtlAccViewModel{
+                                ExpNCDtlAcc_Acc_ID = 487,
+                                ExpNCDtlAcc_Acc_Name = "B79-767-111111 - COMPUTER SUSPENSE",
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Type_ID = 2
+                            }
+                        }
+                    },
+                    new ExpenseEntryNCDtlViewModel
+                    {
+                        ExpNCDtl_Remarks_Desc = "WHT J/S PAYROLL:",
                         ExpNCDtl_Period_Duration = "Dec'17",
                         ExpNCDtl_Remarks_Period_From = DateTime.Now,
                         ExpNCDtl_Remarks_Period_To = DateTime.Now,
@@ -1061,19 +1126,103 @@ namespace ExpenseProcessingSystem.ConstantData
                         {
                             new ExpenseEntryNCDtlAccViewModel{
                                 ExpNCDtlAcc_Acc_ID = 487,
-                                ExpNCDtlAcc_Acc_Name = "B79-767-111111-14017 - (Computer Suspense)",
+                                ExpNCDtlAcc_Acc_Name = "B79-767-111111 - COMPUTER SUSPENSE",
                                 ExpNCDtlAcc_Amount = 0,
-                                ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
-                                ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
                                 ExpNCDtlAcc_Inter_Rate = 0,
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 487,
-                                ExpNCDtlAcc_Acc_Name = "xxxxxxxxxxxxxxxxxxxx (Computer Suspense)",
+                                ExpNCDtlAcc_Acc_ID = 491,
+                                ExpNCDtlAcc_Acc_Name = "H79-767-151234 - W/H TAX SALARIES & ALLOW (JAP)",
                                 ExpNCDtlAcc_Amount = 0,
-                                ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
-                                ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Type_ID = 2
+                            }
+                        }
+                    },
+                    new ExpenseEntryNCDtlViewModel
+                    {
+                        ExpNCDtl_Remarks_Desc = "J/S PAYROLL: ",
+                        ExpNCDtl_Period_Duration = "Dec'17",
+                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
+                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
+                        {
+                            new ExpenseEntryNCDtlAccViewModel{
+                                ExpNCDtlAcc_Acc_ID = 492,
+                                ExpNCDtlAcc_Acc_Name = "B79-789-111111 - INTERENTITY LIAB",
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Curr_ID = currDetailsUSD.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetailsUSD.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Type_ID = 1
+                            },
+                            new ExpenseEntryNCDtlAccViewModel{
+                                ExpNCDtlAcc_Acc_ID = 494,
+                                ExpNCDtlAcc_Acc_Name = "F60-789-801042 - CITIBANK, N.A. MANILA BRANCH",
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Curr_ID = currDetailsUSD.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetailsUSD.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Type_ID = 2
+                            }
+                        }
+                    },
+                    new ExpenseEntryNCDtlViewModel
+                    {
+                        ExpNCDtl_Remarks_Desc = "J/S PAYROLL: ",
+                        ExpNCDtl_Period_Duration = "Dec'17",
+                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
+                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
+                        {
+                            new ExpenseEntryNCDtlAccViewModel{
+                                ExpNCDtlAcc_Acc_ID = 487,
+                                ExpNCDtlAcc_Acc_Name = "B79-767-111111 - COMPUTER SUSPENSE",
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Type_ID = 1
+                            },
+                            new ExpenseEntryNCDtlAccViewModel{
+                                ExpNCDtlAcc_Acc_ID = 492,
+                                ExpNCDtlAcc_Acc_Name = "B79-789-111111 - INTERENTITY LIAB",
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Curr_ID = currDetailsUSD.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetailsUSD.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Type_ID = 2
+                            }
+                        }
+                    },
+                    new ExpenseEntryNCDtlViewModel
+                    {
+                        ExpNCDtl_Remarks_Desc = "JS PAYROLL: CAR ADJUST",
+                        ExpNCDtl_Period_Duration = "Dec'17",
+                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
+                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
+                        {
+                            new ExpenseEntryNCDtlAccViewModel{
+                                ExpNCDtlAcc_Acc_ID = 487,
+                                ExpNCDtlAcc_Acc_Name = "B79-767-111111 - COMPUTER SUSPENSE",
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Type_ID = 1
+                            },
+                            new ExpenseEntryNCDtlAccViewModel{
+                                ExpNCDtlAcc_Acc_ID = 493,
+                                ExpNCDtlAcc_Acc_Name = "H90-767-121684 - WELFARE OTHERS",
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
                                 ExpNCDtlAcc_Inter_Rate = 0,
                                 ExpNCDtlAcc_Type_ID = 2
                             }

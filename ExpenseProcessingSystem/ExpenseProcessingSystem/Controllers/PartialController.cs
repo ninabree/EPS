@@ -45,6 +45,7 @@ namespace ExpenseProcessingSystem.Controllers
             var userId = _session.GetString("UserID");
             EntryNCViewModelList viewModel = new EntryNCViewModelList();
             DMCurrencyModel currDtl = _context.DMCurrency.Where(x => x.Curr_MasterID == 1 && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
+            DMCurrencyModel currDtlUSD = _context.DMCurrency.Where(x => x.Curr_MasterID == 2 && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
 
             if ((entryID != null) && (categoryID != null))
             {
@@ -82,6 +83,12 @@ namespace ExpenseProcessingSystem.Controllers
             else if (categoryID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT.ToString())
             {
                 viewModel.EntryNC = CONSTANT_NC_PETTYCASHREPLENISHMENT.Populate_PETTYCASHREPLENISHMENT(currDtl);
+                viewModel.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_PETTYCASHREPLENISHMENT.Populate_CDD_Instruc_Sheet(currDtl);
+                viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
+            }
+            else if (categoryID == GlobalSystemValues.NC_JS_PAYROLL.ToString())
+            {
+                viewModel.EntryNC = CONSTANT_NC_JSPAYROLL.Populate_JSPAYROLL(currDtl, currDtlUSD);
                 viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
             }
             viewModel = PopulateEntryNC(viewModel, expenseDate);
@@ -89,7 +96,7 @@ namespace ExpenseProcessingSystem.Controllers
         }
 
         public EntryNCViewModelList PopulateEntryNC(EntryNCViewModelList viewModel, string expenseDate)
-        {
+        { 
             viewModel.category_of_entry = GlobalSystemValues.NC_CATEGORIES_SELECT;
             viewModel.expenseDate = DateTime.Parse(expenseDate);
             viewModel.accountList = _service.getAccountSelectList();

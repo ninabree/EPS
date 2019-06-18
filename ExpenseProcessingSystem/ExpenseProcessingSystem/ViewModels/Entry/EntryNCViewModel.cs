@@ -19,15 +19,35 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         [NotNullValidations, AmountValidation]
         [Display(Name = "Credit - Total Amount")]
         public float NC_CredAmt { get; set; }
-        [NotNullValidations, AmountValidation]
+        //[NotNullValidations, AmountValidation]
+        [Display(Name = "Computer Suspense: Debit - Total Amount")]
+        public float NC_CS_DebitAmt { get; set; }
+        //[NotNullValidations, AmountValidation]
+        [Display(Name = "Computer Suspense: Credit - Total Amount")]
+        public float NC_CS_CredAmt { get; set; }
+        //[NotNullValidations, AmountValidation]
+        [Display(Name = "Computer Suspense: Total Amount")]
+        public float NC_CS_TotalAmt { get; set; }
+        //[NotNullValidations, AmountValidation]
+        [Display(Name = "Inter-Entity: Debit - Total Amount")]
+        public float NC_IE_DebitAmt { get; set; }
+        //[NotNullValidations, AmountValidation]
+        [Display(Name = "Inter-Entity: Credit - Total Amount")]
+        public float NC_IE_CredAmt { get; set; }
+        //[NotNullValidations, AmountValidation]
+        [Display(Name = "Inter-Entity: Total Amount")]
+        public float NC_IE_TotalAmt { get; set; }
+        //[NotNullValidations, AmountValidation]
         [Display(Name = "Total Amount")]
         public float NC_TotalAmt { get; set; }
         public List<ExpenseEntryNCDtlViewModel> ExpenseEntryNCDtls { get; set; }
+        public List<ExpenseEntryNCDtlViewModel> ExpenseEntryNCDtls_CDD { get; set; }
 
 
         public EntryNCViewModel()
         {
             ExpenseEntryNCDtls = new List<ExpenseEntryNCDtlViewModel>();
+            ExpenseEntryNCDtls_CDD = new List<ExpenseEntryNCDtlViewModel>();
         }
     }
     public class EntryNCViewModelList
