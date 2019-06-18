@@ -2825,6 +2825,7 @@ namespace ExpenseProcessingSystem.Services
             foreach(var i in taxRate)
             {
                 taxRateList.Add(i);
+                Console.WriteLine("########" + i);
             }
 
             return taxRateList;
@@ -2976,6 +2977,12 @@ namespace ExpenseProcessingSystem.Services
 
             return vat.VAT_Rate;
         }
+
+        //get vat value
+        public float getVat(int id)
+        {
+            return _context.DMVAT.Where(x => x.VAT_ID == id).First().VAT_Rate;
+        }
         //get Tax Rate list for specific user
         public SelectList getVendorTaxRate(int vendorID)
         {
@@ -3019,6 +3026,26 @@ namespace ExpenseProcessingSystem.Services
             }
 
             return vendor.Vendor_Name;
+        }
+        //get account name
+        public string GetAccountName(int id)
+        {
+            return _context.DMAccount.Where(x => x.Account_ID == id).Single().Account_Name;
+        }
+        //get dept name
+        public string GetDeptName(int id)
+        {
+            return _context.DMDept.Where(x => x.Dept_ID == id).First().Dept_Name;
+        }
+        //get EWT(Tax Rate) value
+        public float GetEWTValue(int id)
+        {
+            return _context.DMTR.Where(x => x.TR_ID == id).First().TR_Tax_Rate;
+        }
+        //get currency abbreviation
+        public string GetCurrencyAbbrv(int id)
+        {
+            return _context.DMCurrency.Where(x => x.Curr_ID == id).First().Curr_CCY_ABBR;
         }
         //============[End Retrieve System Values]========================
 
@@ -3695,6 +3722,173 @@ namespace ExpenseProcessingSystem.Services
                 return expenseEntry.Expense_ID;
             }
             return -1;
+        }
+
+        //Liquidation
+        public List<LiquidationMainListViewModel> populateLiquidationList(int userID)
+        {
+            List<LiquidationMainListViewModel> postedEntryList = new List<LiquidationMainListViewModel>();
+
+            var dbPostedEntry = from p in _context.ExpenseEntry
+                            where p.Expense_Status == GlobalSystemValues.STATUS_POSTED
+                            && p.Expense_Type == GlobalSystemValues.TYPE_SS
+                            && p.Expense_Last_Updated.Date < DateTime.Now.Date
+                            && p.Expense_Creator_ID != userID
+                            orderby p.Expense_Last_Updated
+                            select new
+                            {
+                                p.Expense_ID,
+                                p.Expense_Type,
+                                p.Expense_Debit_Total,
+                                p.Expense_Payee,
+                                p.Expense_Creator_ID,
+                                p.Expense_Verifier_1,
+                                p.Expense_Verifier_2,
+                                p.Expense_Last_Updated,
+                                p.Expense_Date,
+                                p.Expense_Status,
+                                p.Expense_Created_Date
+                            };
+
+            foreach (var item in dbPostedEntry)
+            {
+
+                string ver1 = item.Expense_Verifier_1 == 0 ? null : getUserName(item.Expense_Verifier_1);
+                string ver2 = item.Expense_Verifier_2 == 0 ? null : getUserName(item.Expense_Verifier_2);
+
+                var linktionary = new Dictionary<int, string>
+                {
+                    {0,"Data Maintenance" },
+                    {GlobalSystemValues.TYPE_CV,""},
+                    {GlobalSystemValues.TYPE_DDV,""},
+                    {GlobalSystemValues.TYPE_NC,""},
+                    {GlobalSystemValues.TYPE_PC,""},
+                    {GlobalSystemValues.TYPE_SS,"Liquidation_SS"},
+                };
+
+                postedEntryList.Add(new LiquidationMainListViewModel
+                {
+                    App_ID = item.Expense_ID,
+                    App_Type = GlobalSystemValues.getApplicationType(item.Expense_Type),
+                    App_Amount = item.Expense_Debit_Total,
+                    App_Payee = getVendorName(item.Expense_Payee),
+                    App_Maker = getUserName(item.Expense_Creator_ID),
+                    App_Verifier_ID_List = new List<string> { ver1, ver2 },
+                    App_Date = item.Expense_Created_Date,
+                    App_Last_Updated = item.Expense_Last_Updated,
+                    App_Status = getStatus(item.Expense_Status),
+                    App_Link = linktionary[item.Expense_Type]
+                });
+            }
+
+            return new PaginatedList<LiquidationMainListViewModel>(postedEntryList, postedEntryList.Count, 1, 10);
+        }
+
+        //retrieve expense details to Liqudate
+        public LiquidationViewModel getExpenseToLiqudate(int transID)
+        {
+            List<LiquidationDetailsViewModel> liqList = new List<LiquidationDetailsViewModel>();
+
+            var EntryDetails = (from e
+                                in _context.ExpenseEntry
+                                where e.Expense_ID == transID
+                                select new
+                                {
+                                    e,
+                                    ExpenseEntryDetails = from d
+                                                          in _context.ExpenseEntryDetails
+                                                          where d.ExpenseEntryModel.Expense_ID == e.Expense_ID
+                                                          select new
+                                                          {
+                                                              d,
+                                                              ExpenseEntryGbaseDtls = from g
+                                                                                      in _context.ExpenseEntryGbaseDtls
+                                                                                      where g.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
+                                                                                      select g,
+                                                              ExpenseEntryCashBreakdown = (from c
+                                                                                               in _context.ExpenseEntryCashBreakdown
+                                                                                           where c.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
+                                                                                           select c).OrderByDescending(db => db.ExpenseEntryDetailModel.ExpDtl_ID).OrderByDescending(db => db.CashBreak_Denimination)
+                                                          }
+                                }).FirstOrDefault();
+
+            foreach (var dtl in EntryDetails.ExpenseEntryDetails)
+            {
+                List<EntryGbaseRemarksViewModel> remarksDtl = new List<EntryGbaseRemarksViewModel>();
+                List<LiquidationCashBreakdown> cashBreakdown = new List<LiquidationCashBreakdown>();
+
+                foreach (var gbase in dtl.ExpenseEntryGbaseDtls)
+                {
+                    EntryGbaseRemarksViewModel gbaseTemp = new EntryGbaseRemarksViewModel()
+                    {
+                        amount = gbase.GbaseDtl_Amount,
+                        desc = gbase.GbaseDtl_Description,
+                        docType = gbase.GbaseDtl_Document_Type,
+                        invNo = gbase.GbaseDtl_InvoiceNo
+                    };
+
+                    remarksDtl.Add(gbaseTemp);
+                }
+
+                foreach (var cashbd in dtl.ExpenseEntryCashBreakdown)
+                {
+                    LiquidationCashBreakdown cashbdTemp = new LiquidationCashBreakdown()
+                    {
+                        cashDenimination = cashbd.CashBreak_Denimination,
+                        cashNoPC = cashbd.CashBreak_NoPcs,
+                        cashAmount = cashbd.CashBreak_Amount
+                    };
+
+                    cashBreakdown.Add(cashbdTemp);
+                }
+
+                LiquidationDetailsViewModel liqDtl = new LiquidationDetailsViewModel()
+                {
+                    GBaseRemarks = dtl.d.ExpDtl_Gbase_Remarks,
+                    accountID = dtl.d.ExpDtl_Account,
+                    accountName = GetAccountName(dtl.d.ExpDtl_Account),
+                    fbt = dtl.d.ExpDtl_Fbt,
+                    deptID = dtl.d.ExpDtl_Dept,
+                    deptName = GetDeptName(dtl.d.ExpDtl_Dept),
+                    chkVat = (dtl.d.ExpDtl_Vat <= 0) ? false : true,
+                    vatID = dtl.d.ExpDtl_Vat,
+                    vatValue = (dtl.d.ExpDtl_Vat <= 0) ? 0 : getVat(dtl.d.ExpDtl_Vat),
+                    chkEwt = dtl.d.ExpDtl_isEwt,
+                    ewtID = dtl.d.ExpDtl_Ewt,
+                    ewtValue = (dtl.d.ExpDtl_Ewt <= 0) ? 0 : GetEWTValue(dtl.d.ExpDtl_Ewt),
+                    ccyID = dtl.d.ExpDtl_Ccy,
+                    ccyAbbrev = GetCurrencyAbbrv(dtl.d.ExpDtl_Ccy),
+                    debitGross = dtl.d.ExpDtl_Debit,
+                    credEwt = dtl.d.ExpDtl_Credit_Ewt,
+                    credCash = dtl.d.ExpDtl_Credit_Cash,
+                    dtlSSPayee = dtl.d.ExpDtl_SS_Payee,
+                    dtlSSPayeeName = getVendorName(dtl.d.ExpDtl_SS_Payee),
+                    gBaseRemarksDetails = remarksDtl,
+                    cashBreakdown = cashBreakdown,
+                    modalInputFlag = (cashBreakdown == null || cashBreakdown.Count == 0) ? 0 : 1
+                };
+                liqList.Add(liqDtl);
+            }
+
+            LiquidationViewModel liqModel = new LiquidationViewModel()
+            {
+                entryID = EntryDetails.e.Expense_ID,
+                expenseDate = EntryDetails.e.Expense_Date,
+                vendor = EntryDetails.e.Expense_Payee,
+                expenseYear = EntryDetails.e.Expense_Date.Year.ToString(),
+                expenseId = EntryDetails.e.Expense_Number,
+                checkNo = EntryDetails.e.Expense_CheckNo,
+                status = getStatus(EntryDetails.e.Expense_Status),
+                statusID = EntryDetails.e.Expense_Status,
+                approver = (EntryDetails.e.Expense_Status == 1) ? "" : getUserName(EntryDetails.e.Expense_Approver),
+                verifier_1 = (EntryDetails.e.Expense_Status == 1) ? "" : getUserName(EntryDetails.e.Expense_Verifier_1),
+                verifier_2 = (EntryDetails.e.Expense_Status == 1) ? "" : getUserName(EntryDetails.e.Expense_Verifier_2),
+                maker = EntryDetails.e.Expense_Creator_ID,
+                createdDate = EntryDetails.e.Expense_Created_Date,
+                LiquidationDetails = liqList
+            };
+
+            return liqModel;
         }
         ////============[End Access Entry Tables]=========================
 
