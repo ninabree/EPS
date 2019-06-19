@@ -33,6 +33,7 @@ namespace ExpenseProcessingSystem.Controllers
         private readonly int pageSize = 30;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly EPSDbContext _context;
+        private readonly GOExpressContext _GOContext;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
         private HomeService _service;
         private SortService _sortService;
@@ -45,7 +46,7 @@ namespace ExpenseProcessingSystem.Controllers
             _localizer = localizer;
             _httpContextAccessor = httpContextAccessor;
             _context = context;
-            _service = new HomeService(_httpContextAccessor, _context, this.ModelState, hostingEnvironment);
+            _service = new HomeService(_httpContextAccessor, _context, _GOContext, this.ModelState, hostingEnvironment);
             _sortService = new SortService();
             _env = hostingEnvironment;
         }
@@ -691,13 +692,9 @@ namespace ExpenseProcessingSystem.Controllers
                 case "approver":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_APPROVED, int.Parse(GetUserID())))
                     {
-                        _service.SaveToGBase();
-                        var expDtls = _context.ExpenseEntry.Where(x => x.Expense_ID == entryID).Select(x => x.ExpenseEntryDetails).FirstOrDefault();
-                        var isFbt = expDtls.Select(x => x.ExpDtl_Fbt).FirstOrDefault() == true;
-                        if (isFbt)
-                        {
-                            _service.SaveToGBaseFBT();
-                        }
+                        EntryCVViewModelList tempcv;
+                        tempcv = _service.getExpense(entryID);
+                        _service.postCV(tempcv);
                         ViewBag.Success = 1;
                     }
                     else

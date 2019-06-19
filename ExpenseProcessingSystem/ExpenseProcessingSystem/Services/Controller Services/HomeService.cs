@@ -26,15 +26,17 @@ namespace ExpenseProcessingSystem.Services
         private readonly string defaultPW = "Mizuho2019";
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly EPSDbContext _context;
+        private readonly GoWriteContext _GOContext;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
         private readonly IHostingEnvironment _hostingEnvironment;
         private ModalService _modalservice;
 
         private ModelStateDictionary _modelState;
-        public HomeService(IHttpContextAccessor httpContextAccessor, EPSDbContext context, ModelStateDictionary modelState, IHostingEnvironment hostingEnvironment)
+        public HomeService(IHttpContextAccessor httpContextAccessor, EPSDbContext context,GoWriteContext goWriteContext ,ModelStateDictionary modelState, IHostingEnvironment hostingEnvironment)
         {
             _httpContextAccessor = httpContextAccessor;
             _context = context;
+            _GOContext = goWriteContext;
             _modelState = modelState;
             _hostingEnvironment = hostingEnvironment;
             _modalservice = new ModalService(_httpContextAccessor, _context);
@@ -1716,20 +1718,20 @@ namespace ExpenseProcessingSystem.Services
             {
                 DMAccountModel_Pending m = new DMAccountModel_Pending
                 {
-                    Pending_Account_Name = dm.Account_Name,
-                    Pending_Account_MasterID = dm.Account_MasterID,
-                    Pending_Account_FBT_MasterID = dm.Account_FBT_MasterID,
-                    Pending_Account_Group_MasterID = dm.Account_Group_MasterID,
-                    Pending_Account_Currency_MasterID = dm.Account_Currency_MasterID,
-                    Pending_Account_Code = dm.Account_Code,
-                    Pending_Account_Cust = dm.Account_Cust,
-                    Pending_Account_Div = dm.Account_Div,
-                    Pending_Account_Fund = dm.Account_Fund,
-                    Pending_Account_No = dm.Account_No,
-                    Pending_Account_Creator_ID = int.Parse(_session.GetString("UserID")),
-                    Pending_Account_Filed_Date = DateTime.Now,
-                    Pending_Account_isDeleted = true,
-                    Pending_Account_Status_ID = 9
+                    Pending_Account_Name = dm.Account_Name,                                 
+                    Pending_Account_MasterID = dm.Account_MasterID,                         
+                    Pending_Account_FBT_MasterID = dm.Account_FBT_MasterID,                 
+                    Pending_Account_Group_MasterID = dm.Account_Group_MasterID,             
+                    Pending_Account_Currency_MasterID = dm.Account_Currency_MasterID,       
+                    Pending_Account_Code = dm.Account_Code,                                 
+                    Pending_Account_Cust = dm.Account_Cust,                                 
+                    Pending_Account_Div = dm.Account_Div,                                   
+                    Pending_Account_Fund = dm.Account_Fund,                                 
+                    Pending_Account_No = dm.Account_No,                                     
+                    Pending_Account_Creator_ID = int.Parse(_session.GetString("UserID")),   
+                    Pending_Account_Filed_Date = DateTime.Now,                              
+                    Pending_Account_isDeleted = true,                                       
+                    Pending_Account_Status_ID = 9                                           
                 };
                 vmList.Add(m);
             }
@@ -2879,7 +2881,7 @@ namespace ExpenseProcessingSystem.Services
 
         //--------------------Expense Entries--------------------------------
 
-        //============[Access Entry Tables]===============================
+        ////============[Access Entry Tables]===============================
         //save expense details
         public int addExpense_CV(EntryCVViewModelList entryModel, int userId, int expenseType)
         {
@@ -3555,6 +3557,21 @@ namespace ExpenseProcessingSystem.Services
         }
         ////============[End Access Entry Tables]=========================
 
+        ///==============[Post Entries]==============
+        public bool postCV(EntryCVViewModelList model)
+        {
+            foreach (var item in model.EntryCV)
+            {
+                gbaseContainer tempGbase = new gbaseContainer();
+
+
+            }
+
+            _GOContext.SaveChanges();
+            return true;
+        }
+        ///============[End Post Entries]============
+
         ///==============[Begin Gbase Entry Section]================
         private bool InsertGbaseEntry(gbaseContainer containerModel)
         {
@@ -3766,11 +3783,17 @@ namespace ExpenseProcessingSystem.Services
                 return false;
             }
 
+            _GOContext.Add(goModel);
             return true;
         }
         ///===============[End Gbase Entry Section]=================
 
         ///============[Other Functions]============
+        //get fbt id
+        public int getFbt(int id)
+        {
+            return _context.DMFBT.FirstOrDefault(x=>x.FBT_MasterID==id && x.FBT_isActive == true && x.FBT_isDeleted == false).FBT_ID;
+        }
         //get currency
         public DMCurrencyModel getCurrency(int id)
         {
@@ -3927,7 +3950,7 @@ namespace ExpenseProcessingSystem.Services
         public int approver { get; set; }
         public List<entryContainer> entries { get; set; }
 
-        gbaseContainer()
+        public gbaseContainer()
         {
             entries = new List<entryContainer>();
         }
