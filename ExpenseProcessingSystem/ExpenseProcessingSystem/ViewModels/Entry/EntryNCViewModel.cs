@@ -64,6 +64,7 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         public EntryNCViewModel EntryNC { get; set; }
         public List<SelectListItem> category_of_entry { get; set; }
         public List<SelectListItem> accountList { get; set; }
+        public List<SelectListItem> currList { get; set; }
 
         public EntryNCViewModelList()
         {

@@ -91,6 +91,12 @@ namespace ExpenseProcessingSystem.Controllers
                 viewModel.EntryNC = CONSTANT_NC_JSPAYROLL.Populate_JSPAYROLL(currDtl, currDtlUSD);
                 viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
             }
+            else if (categoryID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL.ToString())
+            {
+                viewModel.EntryNC = CONSTANT_NC_RETURN_OF_JSPAYROLL.Populate_RETURN_OF_JSPAYROLL(currDtl, currDtlUSD);
+                viewModel.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_RETURN_OF_JSPAYROLL.Populate_CDD_Instruc_Sheet(currDtl, currDtlUSD);
+                viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
+            }
             viewModel = PopulateEntryNC(viewModel, expenseDate);
             return View("NCPartial", viewModel);
         }
@@ -100,6 +106,7 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.category_of_entry = GlobalSystemValues.NC_CATEGORIES_SELECT;
             viewModel.expenseDate = DateTime.Parse(expenseDate);
             viewModel.accountList = _service.getAccountSelectList();
+            viewModel.currList = _service.getCurrencySelectList();
             return viewModel;
         }
         

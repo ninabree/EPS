@@ -1234,4 +1234,136 @@ namespace ExpenseProcessingSystem.ConstantData
             };
         }
     }
+    //NON CASH CONSTANT VALUES
+    public class CONSTANT_NC_RETURN_OF_JSPAYROLL
+    {
+        public static EntryNCViewModel Populate_RETURN_OF_JSPAYROLL(DMCurrencyModel currDetailsPHP, DMCurrencyModel currDetailsUSD)
+        {
+            return new EntryNCViewModel
+            {
+                NC_Category_ID = 8,
+                ExpenseEntryNCDtls = new List<ExpenseEntryNCDtlViewModel>()
+                {
+                    new ExpenseEntryNCDtlViewModel
+                    {
+                        ExpNCDtl_Remarks_Desc = "",
+                        ExpNCDtl_Period_Duration = "",
+                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
+                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
+                        {
+                            new ExpenseEntryNCDtlAccViewModel{
+                                ExpNCDtlAcc_Acc_ID = 495,
+                                ExpNCDtlAcc_Acc_Name = "B79-789-111111 - COMPUTER SUSPENSE $",
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Curr_ID = currDetailsUSD.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetailsUSD.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Type_ID = 1
+                            },
+                            new ExpenseEntryNCDtlAccViewModel{
+                                ExpNCDtlAcc_Acc_ID = 492,
+                                ExpNCDtlAcc_Acc_Name = "B79-789-111111 - INTERENTITY LIAB",
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Curr_ID = currDetailsUSD.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetailsUSD.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Type_ID = 2
+                            }
+                        }
+                    },
+                    new ExpenseEntryNCDtlViewModel
+                    {
+                        ExpNCDtl_Remarks_Desc = "",
+                        ExpNCDtl_Period_Duration = "",
+                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
+                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
+                        {
+                            new ExpenseEntryNCDtlAccViewModel{
+                                ExpNCDtlAcc_Acc_ID = 492,
+                                ExpNCDtlAcc_Acc_Name = "B79-789-111111 - INTERENTITY LIAB",
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Curr_ID = currDetailsUSD.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetailsUSD.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Type_ID = 1
+                            },
+                            new ExpenseEntryNCDtlAccViewModel{
+                                ExpNCDtlAcc_Acc_ID = 487,
+                                ExpNCDtlAcc_Acc_Name = "B79-767-111111 - COMPUTER SUSPENSE PHP",
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Type_ID = 2
+                            }
+                        }
+                    },
+                    new ExpenseEntryNCDtlViewModel
+                    {
+                        ExpNCDtl_Remarks_Desc = "",
+                        ExpNCDtl_Period_Duration = "",
+                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
+                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
+                        {
+                            new ExpenseEntryNCDtlAccViewModel{
+                                ExpNCDtlAcc_Acc_ID = 487,
+                                ExpNCDtlAcc_Acc_Name = "B79-767-111111 - COMPUTER SUSPENSE PHP",
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Type_ID = 1
+                            },
+                            new ExpenseEntryNCDtlAccViewModel{
+                                ExpNCDtlAcc_Acc_ID = 490,
+                                ExpNCDtlAcc_Acc_Name = "H99-767-111115 - PERSONNEL EXPENSE JAP STAFF",
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Type_ID = 2
+                            }
+                        }
+                    }
+                }
+            };
+        }
+        public static List<ExpenseEntryNCDtlViewModel> Populate_CDD_Instruc_Sheet(DMCurrencyModel currDetailsPHP, DMCurrencyModel currDetailsUSD)
+        {
+            return new List<ExpenseEntryNCDtlViewModel>()
+            {
+                new ExpenseEntryNCDtlViewModel
+                {
+                    ExpNCDtl_Remarks_Desc = "",
+                    ExpNCDtl_Period_Duration = "",
+                    ExpNCDtl_Remarks_Period_From = DateTime.Now,
+                    ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                    ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
+                    {
+                        new ExpenseEntryNCDtlAccViewModel{
+                            ExpNCDtlAcc_Acc_ID = 496,
+                            ExpNCDtlAcc_Acc_Name = "F79789151137 - USD CASH",
+                            ExpNCDtlAcc_Amount = 0,
+                            ExpNCDtlAcc_Curr_ID = currDetailsUSD.Curr_ID,
+                            ExpNCDtlAcc_Curr_Name = currDetailsUSD.Curr_CCY_ABBR,
+                            ExpNCDtlAcc_Inter_Rate = 0,
+                            ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_DEBIT
+                        },
+                        new ExpenseEntryNCDtlAccViewModel{
+                            ExpNCDtlAcc_Acc_ID = 495,
+                            ExpNCDtlAcc_Acc_Name = "B79-789-111111 - COMPUTER SUSPENSE USD",
+                            ExpNCDtlAcc_Amount = 0,
+                            ExpNCDtlAcc_Curr_ID = currDetailsUSD.Curr_ID,
+                            ExpNCDtlAcc_Curr_Name = currDetailsUSD.Curr_CCY_ABBR,
+                            ExpNCDtlAcc_Inter_Rate = 0,
+                            ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_CREDIT
+                        }
+                    }
+                }
+            };
+        }
+    }
 }
