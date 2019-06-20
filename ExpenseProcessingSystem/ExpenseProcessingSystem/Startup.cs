@@ -43,7 +43,9 @@ namespace ExpenseProcessingSystem
             //-------------------------FOR RESOURCE FILE-------------------------
 
             Configuration = configuration;
-            Setting.ConnectionString = Configuration.GetConnectionString("DefaultConnection");
+            Setting.DefaultConnectionString = Configuration.GetConnectionString("DefaultConnection");
+            Setting.GwriteConnectionString = Configuration.GetConnectionString("GoWriteConnection");
+            Setting.GOExpConnectionString = Configuration.GetConnectionString("GOExpressConnection");
         }
 
         public IConfiguration Configuration { get; }
@@ -87,7 +89,7 @@ namespace ExpenseProcessingSystem
             //Add DB context.
             services.AddDbContext<EPSDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddDbContext<GOExpressContext>(options => options.UseSqlServer(Configuration.GetConnectionString("GOExpressConnection")));
-            services.AddDbContext<GoWriteContext>(options => options.UseSqlServer(Configuration.GetConnectionString("GoWriteConnection")));
+            services.AddDbContext<GWriteContext>(options => options.UseSqlServer(Configuration.GetConnectionString("GoWriteConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -124,6 +126,8 @@ namespace ExpenseProcessingSystem
 
     public static class Setting
     {
-        public static string ConnectionString { get; set; }
+        public static string DefaultConnectionString { get; set; }
+        public static string GwriteConnectionString { get; set; }
+        public static string GOExpConnectionString { get; set; }
     }
 }

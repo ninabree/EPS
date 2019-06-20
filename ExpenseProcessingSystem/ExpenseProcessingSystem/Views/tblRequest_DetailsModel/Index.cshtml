@@ -1,0 +1,85 @@
+﻿@model IEnumerable<ExpenseProcessingSystem.Models.Gbase.tblRequest_DetailsModel>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.RacfID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RacfPassword)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RequestCreated)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReturnMessage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StatusDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SystemAbbr)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Priority)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.RacfID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RacfPassword)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RequestCreated)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReturnMessage)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StatusDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SystemAbbr)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Priority)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.RequestID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.RequestID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.RequestID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+</body>
+</html>
