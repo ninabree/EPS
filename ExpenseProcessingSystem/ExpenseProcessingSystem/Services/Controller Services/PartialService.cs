@@ -150,6 +150,15 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             });
             return selList;
         }
+
+        public List<SelectListItem> getCurrencySelectList()
+        {
+            List<SelectListItem> currList = new List<SelectListItem>();
+            _context.DMCurrency.Where(x => x.Curr_isDeleted == false && x.Curr_isActive == true).ToList().ForEach(x => {
+                currList.Add(new SelectListItem() { Text = x.Curr_CCY_ABBR, Value = x.Curr_ID + "" });
+            });
+            return currList;
+        }
         //----------------------------------- [[ Populate DM ]] -------------------------------------//
         public List<DMVendorViewModel> populateVendor(DMFiltersViewModel filters)
         {
