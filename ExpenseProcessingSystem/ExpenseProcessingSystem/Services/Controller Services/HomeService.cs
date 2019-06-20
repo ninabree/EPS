@@ -13,11 +13,13 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Reflection;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ExpenseProcessingSystem.Services
 {
@@ -26,13 +28,13 @@ namespace ExpenseProcessingSystem.Services
         private readonly string defaultPW = "Mizuho2019";
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly EPSDbContext _context;
-        private readonly GoWriteContext _GOContext;
+        private readonly GOExpressContext _GOContext;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
         private readonly IHostingEnvironment _hostingEnvironment;
         private ModalService _modalservice;
 
         private ModelStateDictionary _modelState;
-        public HomeService(IHttpContextAccessor httpContextAccessor, EPSDbContext context,GoWriteContext goWriteContext ,ModelStateDictionary modelState, IHostingEnvironment hostingEnvironment)
+        public HomeService(IHttpContextAccessor httpContextAccessor, EPSDbContext context, GOExpressContext goWriteContext ,ModelStateDictionary modelState, IHostingEnvironment hostingEnvironment)
         {
             _httpContextAccessor = httpContextAccessor;
             _context = context;
@@ -2961,6 +2963,7 @@ namespace ExpenseProcessingSystem.Services
                         ExpDtl_Gbase_Remarks = cv.GBaseRemarks,
                         ExpDtl_Account = cv.account,
                         ExpDtl_Fbt = cv.fbt,
+                        ExpDtl_FbtID = (cv.fbt) ? getFbt(getAccount(cv.account).Account_FBT_MasterID) : 0,
                         ExpDtl_Dept = cv.dept,
                         ExpDtl_Vat = cv.vat,
                         ExpDtl_Ewt = cv.ewt,
@@ -3459,6 +3462,7 @@ namespace ExpenseProcessingSystem.Services
                         ExpDtl_Account = ddv.account,
                         ExpDtl_Inter_Entity = ddv.inter_entity,
                         ExpDtl_Fbt = ddv.fbt,
+                        ExpDtl_FbtID = (ddv.fbt) ? getFbt(getAccount(ddv.account).Account_FBT_MasterID) : 0,
                         ExpDtl_Dept = ddv.dept,
                         ExpDtl_Vat = ddv.vat,
                         ExpDtl_Ewt = ddv.ewt,
@@ -3726,13 +3730,52 @@ namespace ExpenseProcessingSystem.Services
         ////============[End Access Entry Tables]=========================
 
         ///==============[Post Entries]==============
-        public bool postCV(EntryCVViewModelList model)
+        public bool postCV(int expID)
         {
-            foreach (var item in model.EntryCV)
+            var expenseDetails = getExpense(expID);
+
+            foreach (var item in expenseDetails.EntryCV)
             {
                 gbaseContainer tempGbase = new gbaseContainer();
 
+                tempGbase.valDate = expenseDetails.expenseDate;
+                tempGbase.remarks = item.GBaseRemarks;
+                tempGbase.maker = expenseDetails.maker;
+                tempGbase.approver = _context.ExpenseEntry.FirstOrDefault(x=>x.Expense_ID == expID).Expense_Approver;
 
+                entryContainer credit = new entryContainer();
+                entryContainer debit = new entryContainer();
+
+                credit.type = "C";
+                debit.type = "D";
+
+                credit.ccy = item.ccy;
+                debit.ccy = item.ccy;
+                credit.amount = item.debitGross;
+                debit.amount = item.debitGross;
+                credit.vendor = expenseDetails.vendor;
+                debit.vendor = expenseDetails.vendor;
+                credit.account = item.account;
+                debit.account = item.account;
+                debit.chkNo = expenseDetails.checkNo;
+                debit.dept = item.dept;
+                credit.dept = item.dept;
+
+                tempGbase.entries.Add(credit);
+                tempGbase.entries.Add(debit);
+
+                InsertGbaseEntry(tempGbase);
+
+                if (item.fbt)
+                {
+                    tempGbase.entries = new List<entryContainer>();
+
+                    //var fbt = getAccount()
+
+
+                    credit.amount = Convert.ToDouble(new DataTable().Compute("(3+3)*2+1", null));
+                    debit.amount = Convert.ToDouble(new DataTable().Compute("(3+3)*2+1", null));
+                }
             }
 
             _GOContext.SaveChanges();
@@ -3745,14 +3788,19 @@ namespace ExpenseProcessingSystem.Services
         {
             TblCm10 goModel = new TblCm10();
 
+            //goModel.Id = -1;
             goModel.SystemName = "EXPRESS";
+            goModel.Branchno = "767"; //Replace with proper branchNo later
             goModel.AutoApproved = "Y";
-            goModel.ValueDate = DateTime.Now.ToString("MMddyyyy");
+            goModel.ValueDate = DateTime.Now.ToString("MMddyy");
             goModel.Section = "10";
             goModel.Remarks = containerModel.remarks;
             goModel.MakerEmpno = containerModel.maker.ToString(); //Replace with user ID later when user module is finished.
             goModel.Empno = containerModel.approver.ToString();  //Replace with user ID later when user module is finished.
             goModel.Recstatus = "READY";
+            goModel.Datestamp = DateTime.Now;
+            goModel.Timerespond = DateTime.Now;
+            goModel.Timesent = DateTime.Now;
 
             if (containerModel.entries.Count > 0)
             {
@@ -3762,7 +3810,8 @@ namespace ExpenseProcessingSystem.Services
 
                 var entry11Account = getAccount(containerModel.entries[0].account);
                 goModel.Entry11Cust = entry11Account.Account_Cust;
-                goModel.Entry11ActType = entry11Account.Account_Code;
+                goModel.Entry11Actcde = entry11Account.Account_Code;
+                goModel.Entry11ActType = entry11Account.Account_No.Substring(0, 3);
                 goModel.Entry11ActNo = entry11Account.Account_No.Substring(Math.Max(0, entry11Account.Account_No.Length - 6));
                 goModel.Entry11ExchRate = containerModel.entries[0].interate.ToString();
                 goModel.Entry11ExchCcy = containerModel.entries[0].interCcy.ToString();
@@ -3785,7 +3834,8 @@ namespace ExpenseProcessingSystem.Services
 
                     var entry12Account = getAccount(containerModel.entries[1].account);
                     goModel.Entry12Cust = entry12Account.Account_Cust;
-                    goModel.Entry12ActType = entry12Account.Account_Code;
+                    goModel.Entry12Actcde = entry12Account.Account_Code;
+                    goModel.Entry12ActType = entry12Account.Account_No.Substring(0, 3);
                     goModel.Entry12ActNo = entry12Account.Account_No.Substring(Math.Max(0, entry12Account.Account_No.Length - 6));
                     goModel.Entry12ExchRate = containerModel.entries[1].interate.ToString();
                     goModel.Entry12ExchCcy = containerModel.entries[1].interCcy.ToString();
@@ -3809,7 +3859,8 @@ namespace ExpenseProcessingSystem.Services
 
                     var entry21Account = getAccount(containerModel.entries[2].account);
                     goModel.Entry21Cust = entry21Account.Account_Cust;
-                    goModel.Entry21ActType = entry21Account.Account_Code;
+                    goModel.Entry21Actcde = entry21Account.Account_Code;
+                    goModel.Entry21ActType = entry21Account.Account_No.Substring(0, 3);
                     goModel.Entry21ActNo = entry21Account.Account_No.Substring(Math.Max(0, entry21Account.Account_No.Length - 6));
                     goModel.Entry21ExchRate = containerModel.entries[2].interate.ToString();
                     goModel.Entry21ExchCcy = containerModel.entries[2].interCcy.ToString();
@@ -3833,7 +3884,8 @@ namespace ExpenseProcessingSystem.Services
 
                     var entry22Account = getAccount(containerModel.entries[3].account);
                     goModel.Entry22Cust = entry22Account.Account_Cust;
-                    goModel.Entry22ActType = entry22Account.Account_Code;
+                    goModel.Entry22Actcde = entry22Account.Account_Code;
+                    goModel.Entry22ActType = entry22Account.Account_No.Substring(0, 3);
                     goModel.Entry22ActNo = entry22Account.Account_No.Substring(Math.Max(0, entry22Account.Account_No.Length - 6));
                     goModel.Entry22ExchRate = containerModel.entries[3].interate.ToString();
                     goModel.Entry22ExchCcy = containerModel.entries[3].interCcy.ToString();
@@ -3857,7 +3909,8 @@ namespace ExpenseProcessingSystem.Services
 
                     var entry31Account = getAccount(containerModel.entries[4].account);
                     goModel.Entry31Cust = entry31Account.Account_Cust;
-                    goModel.Entry31ActType = entry31Account.Account_Code;
+                    goModel.Entry31Actcde = entry31Account.Account_Code;
+                    goModel.Entry31ActType = entry31Account.Account_No.Substring(0, 3);
                     goModel.Entry31ActNo = entry31Account.Account_No.Substring(Math.Max(0, entry31Account.Account_No.Length - 6));
                     goModel.Entry31ExchRate = containerModel.entries[4].interate.ToString();
                     goModel.Entry31ExchCcy = containerModel.entries[4].interCcy.ToString();
@@ -3881,7 +3934,8 @@ namespace ExpenseProcessingSystem.Services
 
                     var entry32Account = getAccount(containerModel.entries[5].account);
                     goModel.Entry32Cust = entry32Account.Account_Cust;
-                    goModel.Entry32ActType = entry32Account.Account_Code;
+                    goModel.Entry32Actcde = entry32Account.Account_Code;
+                    goModel.Entry32ActType = entry32Account.Account_No.Substring(0, 3);
                     goModel.Entry32ActNo = entry32Account.Account_No.Substring(Math.Max(0, entry32Account.Account_No.Length - 6));
                     goModel.Entry32ExchRate = containerModel.entries[5].interate.ToString();
                     goModel.Entry32ExchCcy = containerModel.entries[5].interCcy.ToString();
@@ -3905,7 +3959,8 @@ namespace ExpenseProcessingSystem.Services
 
                     var entry41Account = getAccount(containerModel.entries[6].account);
                     goModel.Entry41Cust = entry41Account.Account_Cust;
-                    goModel.Entry41ActType = entry41Account.Account_Code;
+                    goModel.Entry41Actcde = entry41Account.Account_Code;
+                    goModel.Entry41ActType = entry41Account.Account_No.Substring(0, 3);
                     goModel.Entry41ActNo = entry41Account.Account_No.Substring(Math.Max(0, entry41Account.Account_No.Length - 6));
                     goModel.Entry41ExchRate = containerModel.entries[6].interate.ToString();
                     goModel.Entry41ExchCcy = containerModel.entries[6].interCcy.ToString();
@@ -3929,7 +3984,8 @@ namespace ExpenseProcessingSystem.Services
 
                     var entry42Account = getAccount(containerModel.entries[7].account);
                     goModel.Entry42Cust = entry42Account.Account_Cust;
-                    goModel.Entry42ActType = entry42Account.Account_Code;
+                    goModel.Entry42Actcde = entry42Account.Account_Code;
+                    goModel.Entry42ActType = entry42Account.Account_No.Substring(0, 3);
                     goModel.Entry42ActNo = entry42Account.Account_No.Substring(Math.Max(0, entry42Account.Account_No.Length - 6));
                     goModel.Entry42ExchRate = containerModel.entries[7].interate.ToString();
                     goModel.Entry42ExchCcy = containerModel.entries[7].interCcy.ToString();
@@ -3951,7 +4007,8 @@ namespace ExpenseProcessingSystem.Services
                 return false;
             }
 
-            _GOContext.Add(goModel);
+            var query = _GOContext.Add(goModel);
+
             return true;
         }
         ///===============[End Gbase Entry Section]=================
@@ -3976,6 +4033,16 @@ namespace ExpenseProcessingSystem.Services
         public DMAccountModel getAccount(int id)
         {
             return _context.DMAccount.FirstOrDefault(x => x.Account_ID == id);
+        }
+        //get account name
+        public string GetAccountName(int id)
+        {
+            return _context.DMAccount.Where(x => x.Account_ID == id).Single().Account_Name;
+        }
+        //get dept name
+        public string GetDeptName(int id)
+        {
+            return _context.DMDept.Where(x => x.Dept_ID == id).First().Dept_Name;
         }
         //get Status
         public string getStatus(int id)
@@ -4006,6 +4073,20 @@ namespace ExpenseProcessingSystem.Services
             }
 
             return vat.VAT_Rate;
+        }
+        public float getVat(int id)
+        {
+            return _context.DMVAT.Where(x => x.VAT_ID == id).First().VAT_Rate;
+        }
+        //get EWT(Tax Rate) value
+        public float GetEWTValue(int id)
+        {
+            return _context.DMTR.Where(x => x.TR_ID == id).First().TR_Tax_Rate;
+        }
+        //get currency abbreviation
+        public string GetCurrencyAbbrv(int id)
+        {
+            return _context.DMCurrency.Where(x => x.Curr_ID == id).First().Curr_CCY_ABBR;
         }
         //get Tax Rate list for specific user
         public SelectList getVendorTaxRate(int vendorID)
@@ -4136,5 +4217,4 @@ namespace ExpenseProcessingSystem.Services
         public string chkNo { get; set; }
         public int dept { get; set; }
     }
-
 }
