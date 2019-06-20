@@ -658,7 +658,7 @@ div[aria-describedby=validationSummary] {
 td.voucher-input {
     background-color: #fcf8e3;
 }
-    td.voucher-input > input {
+    td.voucher-input > input, div.voucher-input > input {
         background: transparent;
         border: none;
         width: 100%;
@@ -682,7 +682,7 @@ td.voucher-input {
 .NC_spacing_row {
     background-color: #eee;
 }
-.ncVar[disabled = "disabled"], #EntryNC_NC_DebitAmt, #EntryNC_NC_CredAmt, #EntryNC_NC_TotalAmt {
+.ncVar[disabled = "disabled"], #EntryNC_NC_DebitAmt, #EntryNC_NC_CredAmt, #EntryNC_NC_TotalAmt, .NC_readonly_row > input {
     background-color: transparent;
 }
 /*-------------------------------------
@@ -709,7 +709,7 @@ img#td-logo {
 }
 
 .border-solid {
-    border: 1px solid #777 !important;
+    /*border: 1px solid #777 !important;*/
 }
 
 .btncustomize {
