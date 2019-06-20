@@ -69,5 +69,9 @@ namespace ExpenseProcessingSystem.Data
         public DbSet<ExpenseEntryNCDtlModel> ExpenseEntryNonCashDetails { get; set; }
         public DbSet<ExpenseEntryNCDtlAccModel> ExpenseEntryNonCashDetailAccounts { get; set; }
 
+        //LIQUIDATION TABLES
+        public DbSet<LiquidationEntryDetailModel> LiquidationEntryDetails { get; set; }
+        public DbSet<LiquidationCashBreakdownModel> LiquidationCashBreakdown { get; set; }
+
     }
 }

@@ -1513,64 +1513,44 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     viewData = "glyph-2";
                     vdInfo = "glyphicon-menu-down";
                     break;
-                case "payee":
-                    tempList = tempList.OrderBy(s => s.App_Payee);
-                    viewData = "glyph-3";
-                    vdInfo = "glyphicon-menu-up";
-                    break;
-                case "payee_desc":
-                    tempList = tempList.OrderByDescending(s => s.App_Payee);
-                    viewData = "glyph-3";
-                    vdInfo = "glyphicon-menu-down";
-                    break;
                 case "maker":
                     tempList = tempList.OrderBy(s => s.App_Maker);
-                    viewData = "glyph-4";
+                    viewData = "glyph-3";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "maker_desc":
                     tempList = tempList.OrderByDescending(s => s.App_Maker);
-                    viewData = "glyph-4";
+                    viewData = "glyph-3";
                     vdInfo = "glyphicon-menu-down";
                     break;
-                case "verifiers":
-                    tempList = tempList.OrderBy(s => s.App_Verifier_ID_List[0]);
-                    viewData = "glyph-5";
+                case "approver":
+                    tempList = tempList.OrderBy(s => s.App_Approver);
+                    viewData = "glyph-4";
                     vdInfo = "glyphicon-menu-up";
                     break;
-                case "verifiers_desc":
-                    tempList = tempList.OrderByDescending(s => s.App_Verifier_ID_List[0]);
-                    viewData = "glyph-5";
+                case "approver_desc":
+                    tempList = tempList.OrderByDescending(s => s.App_Approver);
+                    viewData = "glyph-4";
                     vdInfo = "glyphicon-menu-down";
                     break;
                 case "date_submitted":
                     tempList = tempList.OrderBy(s => s.App_Date);
-                    viewData = "glyph-6";
+                    viewData = "glyph-5";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "date_submitted_desc":
                     tempList = tempList.OrderByDescending(s => s.App_Date);
-                    viewData = "glyph-6";
+                    viewData = "glyph-5";
                     vdInfo = "glyphicon-menu-down";
                     break;
                 case "last_updated":
                     tempList = tempList.OrderBy(s => s.App_Last_Updated);
-                    viewData = "glyph-7";
+                    viewData = "glyph-6";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "last_updated_desc":
                     tempList = tempList.OrderByDescending(s => s.App_Last_Updated);
-                    viewData = "glyph-7";
-                    vdInfo = "glyphicon-menu-down";
-                    break;
-                case "status":
-                    tempList = tempList.OrderBy(s => s.App_Status);
-                    viewData = "glyph-8";
-                    vdInfo = "glyphicon-menu-up";
-                    break;
-                case "status_desc":
-                    tempList = tempList.OrderByDescending(s => s.App_Status);
-                    viewData = "glyph-8";
+                    viewData = "glyph-6";
                     vdInfo = "glyphicon-menu-down";
                     break;
             }

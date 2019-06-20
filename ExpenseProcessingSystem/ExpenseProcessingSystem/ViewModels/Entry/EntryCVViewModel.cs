@@ -78,7 +78,7 @@ namespace ExpenseProcessingSystem.ViewModels
     public class CashBreakdown
     {
         public double cashDenimination { get; set; }
-        public double cashNoPC { get; set; }
+        public int cashNoPC { get; set; }
         public double cashAmount { get; set; }
     }
     public class EntryCVViewModelList

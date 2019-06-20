@@ -1,4 +1,5 @@
 ﻿using ExpenseProcessingSystem.ViewModels.Entry;
+using ExpenseProcessingSystem.Services.Validations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,8 @@ namespace ExpenseProcessingSystem.ViewModels
         public string GBaseRemarks { get; set; }
         public int accountID { get; set; }
         public string accountName { get; set; }
+        public string accountNumber { get; set; }
+        public string accountCode { get; set; }
         public bool fbt { get; set; }
         public int deptID { get; set; }
         public string deptName { get; set; }
@@ -32,22 +35,26 @@ namespace ExpenseProcessingSystem.ViewModels
         public int day { get; set; }
         public int duration { get; set; }
         public int modalInputFlag { get; set; }
+        public int liqInputFlag { get; set; }
         public string screenCode { get; set; }
         public List<EntryGbaseRemarksViewModel> gBaseRemarksDetails { get; set; }
         public List<LiquidationCashBreakdown> cashBreakdown { get; set; }
+        [EmptyLiquidationCashBreakdown("ccyAbbrev", "liqInputFlag")]
+        public List<LiquidationCashBreakdown> liqCashBreakdown { get; set; }
 
 
         public LiquidationDetailsViewModel()
         {
             gBaseRemarksDetails = new List<EntryGbaseRemarksViewModel>();
             cashBreakdown = new List<LiquidationCashBreakdown>();
+            liqCashBreakdown = new List<LiquidationCashBreakdown>();
         }
     }
 
     public class LiquidationCashBreakdown
     {
         public double cashDenimination { get; set; }
-        public double cashNoPC { get; set; }
+        public int cashNoPC { get; set; }
         public double cashAmount { get; set; }
     }
 }

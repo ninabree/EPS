@@ -9,8 +9,8 @@
 @using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor HttpContextAccessor
 
-<input id="_screen" type="hidden" value="cv" />
-@using (Html.BeginForm("", "Home", FormMethod.Post, new { @class = "validate-form" }))
+<input id="_screen" type="hidden" value="liq_Dtl" />
+@using (Html.BeginForm("Liquidation_AddNewSS", "Home", FormMethod.Post, new { @class = "validate-form" }))
 {
     <div class="tabContent">
 
@@ -30,16 +30,17 @@
             </div>
         </div>
         <div class="flex-c">
-            <table class="table table-bordered table-striped voucher-tbl w-97" id="inputTable">
+            <table class="table table-bordered table-striped voucher-tbl w-97 table-hover" id="inputTable">
                 <colgroup>
+                    <col style="width:4%;" />
                     <col style="width:20%;" />
                     <col style="width:18%;" />
                     <col style="width:15%;" />
                     <col style="width:10%" />
                     <col style="width:2%;" />
-                    <col style="width:6%;" />
+                    <col style="width:4%;" />
                     <col style="width:2%;" />
-                    <col style="width:6%;" />
+                    <col style="width:4%;" />
                     <col style="width:5%;" />
                     <col style="width:8%;" />
                     <col style="width:8%;" />
@@ -48,6 +49,7 @@
                 </colgroup>
                 <thead>
                     <tr>
+                        <th rowspan="2"></th>
                         <th rowspan="2">Gbase Remarks</th>
                         <th rowspan="2">Payee</th>
                         <th rowspan="2">Account</th>
@@ -68,11 +70,27 @@
                     @for (int i = 0; i < Model.LiquidationDetails.Count; i++)
                     {
                         <tr id="item_@i">
+                            <td id="sss">
+                                <a class="liqudationBtn" href="#"><img id="imgLiq" src="~/images/liqLogo.png" style="width:100%;height:100%" /></a>
+                                @Html.HiddenFor(x => Model.LiquidationDetails[i].EntryDetailsID)
+                                @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInputFlag, new { @class = "hiddenLiqFlag" })
+                                <div id="divLiqCashBD_@i">
+                                    @for (int y = 0; y < Model.LiquidationDetails[i].liqCashBreakdown.Count(); y++)
+                                    {
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqCashBreakdown[y].cashDenimination)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqCashBreakdown[y].cashNoPC)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqCashBreakdown[y].cashAmount)
+                                    }
+                                </div>
+                                <div id="divLiqIE_@i">
+
+                                </div>
+                            </td>
                             <td class="p-b-1 p-t-1">
                                 <div class="flex-sb">
-                                    @Html.DisplayFor( x=> Model.LiquidationDetails[i].GBaseRemarks)
+                                    @Html.TextBoxFor(x => Model.LiquidationDetails[i].GBaseRemarks, new { @readonly = "true", @style = "width:100%;background:transparent" })
                                     <div id="remark_@i">
-                                        <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
+                                        <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-15 m-r-5"></a>
                                         @for (int y = 0; y < Model.LiquidationDetails[i].gBaseRemarksDetails.Count(); y++)
                                         {
                                             @Html.HiddenFor(x => Model.LiquidationDetails[i].gBaseRemarksDetails[y].docType);
@@ -84,37 +102,39 @@
                                 </div>
                             </td>
                             <td>
-                                @Html.DisplayFor(m => Model.LiquidationDetails[i].dtlSSPayeeName)
+                                @Html.TextBoxFor(m => Model.LiquidationDetails[i].dtlSSPayeeName, new { @class = "txtPayee", @readonly = "true", @style = "width:100%;background:transparent" })
                             </td>
                             <td>
-                                @Html.DisplayFor(m => Model.LiquidationDetails[i].accountName)
+                                @Html.TextBoxFor(m => Model.LiquidationDetails[i].accountName, new { @class = "txtAcc", @readonly = "true", @style = "width:100%;background:transparent" })
+                                @Html.HiddenFor(m => Model.LiquidationDetails[i].accountNumber, new { @class = "hidAccNo" })
+                                @Html.HiddenFor(m => Model.LiquidationDetails[i].accountCode, new { @class = "hidAccCode" })
                             </td>
                             <td>
-                                @Html.DisplayFor(m => Model.LiquidationDetails[i].deptName)
+                                @Html.TextBoxFor(m => Model.LiquidationDetails[i].deptName, new { @readonly = "true", @style = "width:100%;background:transparent" })
                             </td>
-                            <td style="text-align:center">
+                            <td style="text-align:center;">
                                 @Html.CheckBoxFor(x => Model.LiquidationDetails[i].chkVat, new { @class = "chkVat comVar", disabled = "disabled" })
                             </td>
                             <td>
-                                @Html.DisplayFor(m => Model.LiquidationDetails[i].vatValue)
+                                @Html.TextBoxFor(m => Model.LiquidationDetails[i].vatValue, new { @readonly = "true", @style = "width:100%;background:transparent" })
                             </td>
                             <td style="text-align:center">
                                 @Html.CheckBoxFor(x => Model.LiquidationDetails[i].chkEwt, new { @class = "chkEwt comVar", disabled = "disabled" })
                             </td>
                             <td>
-                                @Html.DisplayFor(m => Model.LiquidationDetails[i].ewtValue)
+                                @Html.TextBoxFor(m => Model.LiquidationDetails[i].ewtValue, new { @readonly = "true", @style = "width:100%;background:transparent" })
                             </td>
                             <td>
-                                @Html.DisplayFor(m => Model.LiquidationDetails[i].ccyAbbrev)
+                                @Html.TextBoxFor(m => Model.LiquidationDetails[i].ccyAbbrev, new { @class = "txtCcyAbbrev", @readonly = "true", @style = "width:100%;background:transparent" })
                             </td>
                             <td>
-                                @Html.DisplayFor(m => Model.LiquidationDetails[i].debitGross)
+                                @Html.TextBoxFor(m => Model.LiquidationDetails[i].debitGross, new { @class = "txtGross", @readonly = "true", @style = "width:100%;background:transparent" })
                             </td>
                             <td>
-                                @Html.DisplayFor(m => Model.LiquidationDetails[i].credEwt)
+                                @Html.TextBoxFor(m => Model.LiquidationDetails[i].credEwt, new { @readonly = "true", @style = "width:100%;background:transparent" })
                             </td>
                             <td>
-                                @Html.DisplayFor(m => Model.LiquidationDetails[i].credCash)
+                                @Html.TextBoxFor(m => Model.LiquidationDetails[i].credCash, new { @class = "txtCredit", @readonly = "true", @style = "width:100%;background:transparent" })
                             </td>
                             <td id="req_@i">
                                 <a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#"></a>
@@ -131,48 +151,336 @@
                             </td>
                         </tr>
                     }
-
-                    <tr>
-                        <td style="border:none; background-color:#f2f2f2" rowspan="2"><a id="addRow" href="#" class="glyphicon glyphicon-plus" style="display:none;"></a></td>
-                        <td colspan="8" style="text-align:right; border:none; background-color:#f2f2f2">Subtotal : </td>
-                        <td rowspan="2"><div class="flex-c"><input type="text" class="input100" readonly id="grossTotal" /></div></td>
-                        <td><input type="text" readonly class="input100" id="credEwtTotal" /></td>
-                        <td><input type="text" readonly class="input100" id="credCashTotal" /></td>
-                    </tr>
-                    <tr>
-                        <td colspan="8" style="text-align:right; border:none; background-color:#f2f2f2 ">Total:</td>
-                        <td colspan="2"><div class="flex-c"><input type="text" class="input100" readonly id="credTotal" /></div></td>
-                    </tr>
                 </tbody>
             </table>
+        </div>
+        @*+++++++++++Liquidation form+++++++++++*@
+        <div style="width:100%;text-align:center;padding-top:0.5%" class="table-bordered">
+            <input type="hidden" id="hiddenSelectedItem"/>
+            @*+++++++++++Liquidation form for PHP currency+++++++++++*@
+            <div id="divPHP" style="display:none;text-align:center">
+                <div style="display:inline-block;width:100%">
+                    <label>Liquidation for PHP currency</label>
+                </div>
+                <div style="display:inline-block;text-align:center;width:35%;vertical-align:top">
+                    <table style="width:100%;" class="table-bordered table-striped voucher-tbl">
+                        <colgroup>
+                            <col style="width:35%" />
+                            <col style="width:15%" />
+                            <col style="width:25%" />
+                            <col style="width:25%" />
+                        </colgroup>
+                        <tr>
+                            <th style="text-align:center">ACCOUNT NO.</th>
+                            <th style="text-align:center">ACCONT CODE</th>
+                            <th style="text-align:center">DEBIT</th>
+                            <th style="text-align:center">CREDIT</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input id="txtLiqAccNo" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="">
+                            </td>
+                            <td>
+                                <input id="txtLiqAccCode" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="">
+                            </td>
+                            <td>
+                                <input id="txtLiqDebit" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:right" type="text" value="">
+                            </td>
+                            <td>
+                                <input id="txtLiqCredit" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:right" type="text" value="">
+                            </td>
+                        </tr>
+                    </table>
+                    <table style="width:100%;margin-top:5%">
+                        <tr>
+                            <td colspan="2" style="text-align:left">
+                                <label>Transaction No.: </label><input type="text" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="button" id="saveLiqCashBD" class="saveCashBDBtn btn" value="Save Liquidation" />
+                            </td>
+                            <td>
+                                <input type="button" class="printCashBDBtn btn" value="Print Cash Breakdown" onclick='printDivCashBD("divCashBDLiq");' />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="divCashBDLiq" style="display:inline-block;text-align:center;width:35%">
+                    <table id="cashBDLiqTable" class="cashBDLiqTable table-bordered table-striped voucher-tbl w-70">
+                        <colgroup>
+                            <col />
+                            <col />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th style="text-align:center">Denimination</th>
+                                <th style="text-align:center">No. of Pcs.</th>
+                                <th style="text-align:center">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int cnt = 0;
+                                foreach (var i in DeniminationValues.GetDeniminationList())
+                                {
+
+                                    <tr id="cashbdliqid_@cnt">
+                                        <td>
+                                            <input type="number" class="input100 txtLiqDenimination" readonly="readonly" style="text-align:center" value="@i.CashBreak_Denimination" />
+                                        </td>
+                                        <td>
+                                            <input type="number" class="input100 txtLiqNoPCS" min="0" style="text-align:center" value="0" />
+                                        </td>
+                                        <td>
+                                            <input type="number" class="input100 txtLiqAmount" readonly="readonly" style="text-align:center" value="0" />
+                                        </td>
+                                    </tr>
+                                    cnt = cnt + 1;
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            @*+++++++++++Liquidation form for FOREIGN currency+++++++++++*@
+            <div id="divForeign" style="display:none;">
+                <div style="display:inline-block;width:100%">
+                    <label>INTER-ENTITY (Liquidation for Foreign currency)</label>
+                </div>
+                <div style="display:inline-block;text-align:center;width:auto;vertical-align:top">
+                    <table id="IEInfoTable" class="table-bordered table-striped voucher-tbl">
+                        <tr>
+                            <td colspan="2">
+                                <label>Cash Advance Amount:</label>
+                            </td>
+                            <td>
+                                <input id="txtIECurrency" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="CCY" />
+                            </td>
+                            <td>
+                                <input id="txtIEAmount" class="txtIEInfoInput input100" style="width:100%;background:transparent;text-align:center" type="number" min="0" value="0" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Exchange Rate:</label>
+                            </td>
+                            <td>
+                                <input id="txtIEExRate" class="txtIEInfoInput input100" style="width:100%;background:transparent;text-align:center" type="number" min="0" value="0" />
+                            </td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Exchange Rate:</label>
+                            </td>
+                            <td>
+                                <label>PHP</label>
+                            </td>
+                            <td colspan="2">
+                                <input id="txtIEExRatePhp" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="number" min="0" value="0" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="divIE" style="display:inline-block;text-align:center;width:auto">
+                    <table class="table-bordered table-striped voucher-tbl">
+                        <colgroup>
+                            <col style="width:15%" />
+                            <col style="width:15%" />
+                            <col style="width:5%" />
+                            <col style="width:15%" />
+                            <col style="width:15%" />
+                            <col style="width:5%" />
+                            <col style="width:15%" />
+                            <col style="width:15%" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <td>Particular</td>
+                                <td>Account</td>
+                                <td>CCY</td>
+                                <td>INTER-RATE</td>
+                                <td>DEBIT</td>
+                                <td>CCY</td>
+                                <td>INTER-RATE</td>
+                                <td>CREDIT</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td rowspan="2">Particular1</td>
+                                <td>xxxxx-COMP SUSP $</td>
+                                <td>USD</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>xxxxx-SUSP PAYMENT</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>USD</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td rowspan="3">Particular2</td>
+                                <td>xxxxx-EXPENSE</td>
+                                <td>PHP</td>
+                                <td></td>
+                                <td>18,000</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>xxxxx-BDO MNL</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>PHP</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>xxxxx-COM SUSP PHP</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>PHP</td>
+                                <td></td>
+                                <td>15,000</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2">Particular3</td>
+                                <td>xxxxx-COMP SUSP PH</td>
+                                <td>PHP</td>
+                                <td></td>
+                                <td>15,000</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>xxxxx-INTER-ENTITY $</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>USD</td>
+                                <td>XXX</td>
+                                <td>300</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2">Particular4</td>
+                                <td>xxxxx-INTER-ENTITY $</td>
+                                <td>USD</td>
+                                <td></td>
+                                <td>300</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>xxxxx-SUSP PAYMENT</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>USD</td>
+                                <td></td>
+                                <td>300</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td colspan="8">CDD INSTRUCTION SHEET</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>xxxxx-USD CASH</td>
+                                <td>USD</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>USD</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
         <div id="entry-status" class="m-t-10 m-b-10">
             <div class="dis-inline-block"><label>Status: </label></div>
             <div class="dis-inline-block">@Html.TextBoxFor(x => x.status, new { @disabled = "disabled", @class = "input" })</div>
             <div class="dis-inline-block"><label>Approver:</label></div>
-            <div class="dis-inline-block">@Html.TextBoxFor(model => model.approver, new { @disabled = "disabled", @class = "input" })</div>
+            <div class="dis-inline-block">@Html.TextBoxFor(x => x.approver, new { @disabled = "disabled", @class = "input" })</div>
             <div class="dis-inline-block"><label>Verifier:</label></div>
             <div class="dis-inline-block">
-                <p class="dis-inline-block">@Html.TextBoxFor(model => model.verifier_1, new { @disabled = "disabled", @class = "m-l-5 input" })</p>
-                <p class="dis-inline-block">@Html.TextBoxFor(model => model.verifier_2, new { @disabled = "disabled", @class = "m-l-5 input" })</p>
+                <p class="dis-inline-block">@Html.TextBoxFor(x => x.verifier_1, new { @disabled = "disabled", @class = "m-l-5 input" })</p>
+                <p class="dis-inline-block">@Html.TextBoxFor(x => x.verifier_2, new { @disabled = "disabled", @class = "m-l-5 input" })</p>
             </div>
         </div>
         <div id="entry-controls" class="m-b-10">
             @Html.HiddenFor(x => Model.entryID)
             <div class="flex-sb">
                 <div>
-                    <div class="dis-inline-block tbl-btn"><button disabled>Save</button></div>
-
-                    @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker)
-                    {
-                        <div class="dis-inline-block tbl-btn"><button value="Delete" name="command">Delete</button></div>
-                        <div class="dis-inline-block tbl-btn"><button value="Modify" name="command">Modify</button></div>
-                    }
-                    else
-                    {
-                        <div class="dis-inline-block tbl-btn"><button disabled>Delete</button></div>
-                        <div class="dis-inline-block tbl-btn"><button disabled>Modify</button></div>
-                    }
+                    <div class="dis-inline-block tbl-btn"><button>Save</button></div>
+                    <div class="dis-inline-block tbl-btn"><button disabled>Delete</button></div>
+                    <div class="dis-inline-block tbl-btn"><button disabled>Modify</button></div>
                 </div>
                 <div>
                     <div class="dis-inline-block tbl-btn"><button id="reversal_entry" disabled>Create Reversal Entry</button></div>
@@ -180,38 +488,8 @@
             </div>
             <div class="flex-sb">
                 <div>
-                    @if (HttpContextAccessor.HttpContext.Session.GetString("accessType") == GlobalSystemValues.ROLE_MAKER || HttpContextAccessor.HttpContext.Session.GetString("UserID") == Model.maker.ToString())
-                    {
-                        <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
-                        <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
-                    }
-                    else if (HttpContextAccessor.HttpContext.Session.GetString("accessType") == GlobalSystemValues.ROLE_VERIFIER)
-                    {
-                        if (Model.statusID == GlobalSystemValues.STATUS_APPROVED || Model.statusID == GlobalSystemValues.STATUS_VERIFIED
-                            || Model.statusID == GlobalSystemValues.STATUS_REJECTED)
-                        {
-                            <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
-                            <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
-                        }
-                        else
-                        {
-                            <div class="dis-inline-block tbl-btn"><button value="@HttpContextAccessor.HttpContext.Session.GetString("accessType")" name="command">Approve/Verify</button></div>
-                            <div class="dis-inline-block tbl-btn"><button value="Reject" name="command">Reject</button></div>
-                        }
-                    }
-                    else
-                    {
-                        if (Model.statusID == GlobalSystemValues.STATUS_APPROVED || Model.statusID == GlobalSystemValues.STATUS_REJECTED)
-                        {
-                            <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
-                            <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
-                        }
-                        else
-                        {
-                            <div class="dis-inline-block tbl-btn"><button value="@HttpContextAccessor.HttpContext.Session.GetString("accessType")" name="command">Approve/Verify</button></div>
-                            <div class="dis-inline-block tbl-btn"><button value="Reject" name="command">Reject</button></div>
-                        }
-                    }
+                    <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
+                    <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
                 </div>
                 <div>
                     <div class="dis-inline-block tbl-btn"><button disabled>Delete GBase Post</button></div>
@@ -230,75 +508,157 @@
 <div id="ValidationSummary" style="display:none" class="">
     @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
 </div>
-<script>
 
+<script>
     $(document).ready(function () {
+        $('#liqudation').find('a').addClass('selected');
+
         //Enable Cash breakdown button if currency = PHP, disable if not.
         var trs = $("#inputTable").find("tbody").find("tr");
-        for (var cnt = 0; cnt < trs.length - 2; cnt++) {
+        for (var cnt = 0; cnt < trs.length; cnt++) {
             reqBtnDisable(cnt);
+            if ($('#divLiqCashBD_' + cnt).find("input").length != 0) {
+                $('#item_' + cnt).find('#imgLiq').attr('src', '/images/liqLogo_chk.png');
+            }
         }
 
-        $(function () {
-            $(window).on("load", function () {
-                var gross = $(".txtGross");
-                var credEwt = $(".txtCredEwt");
-                var credCash = $(".txtCredCash");
+        //Cash Breakdown Modal
+        $("table").on("click", ".cashBreakdown", function (e) {
+            e.stopImmediatePropagation();
 
-                var grossTotal = 0;
-                var ewtSubTotal = 0;
-                var cashSubTotal = 0;
+            var pNode = $(this.parentNode)[0].parentNode;
+            var id = pNode.id;
+            var modalDivBody = $('.modal-body');
+            var modalDivFooter = $('.modal-footer').find("#add_row_btn").remove();
 
-                for (var i = 0; i < gross.length; i++) {
-                    grossTotal += Number(gross[i].value);
-                }
+            if ($('.modal-header').find(".modal-title")[0] == null) {
+                $('.modal-header').append('<h4 class="modal-title">Cash Breakdown</h4>');
+            }
 
-                for (var i = 0; i < credEwt.length; i++) {
-                    ewtSubTotal += Number(credEwt[i].value);
-                }
-
-                for (var i = 0; i < credCash.length; i++) {
-                    cashSubTotal += Number(credCash[i].value);
-                }
-
-                $("#grossTotal").val(grossTotal);
-                $("#credEwtTotal").val(ewtSubTotal);
-                $("#credCashTotal").val(cashSubTotal);
-                $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
-            });
-
-            //Cash Breakdown Modal
-            $("table").on("click", ".cashBreakdown", function (e) {
-                e.stopImmediatePropagation();
-
-                var pNode = $(this.parentNode)[0].parentNode;
-                var id = pNode.id;
-                var modalDivBody = $('.modal-body');
-                var modalDivFooter = $('.modal-footer').find("#add_row_btn").remove();;
-
-                if ($('.modal-header').find(".modal-title")[0] == null) {
-                    $('.modal-header').append('<h4 class="modal-title">Cash Breakdown</h4>');
-                }
-
-                modalDivBody.load("@Url.Action("EntryExpenseCashBreakdown", "Modal")", {
-                    "id": id,
-                    "vendor": $("#" + pNode.id).find(".txtPayee option:selected").text(),
-                    "account": $("#" + pNode.id).find(".txtAcc option:selected").text(),
-                    "amount": $("#" + pNode.id).find(".txtGross").val(),
-                    "screencode": $("#" + pNode.id).find(".hiddenScreencode").val()
-                }, function (response, status, xhr) {
-                    if (status == "error") {
-                        alert("Something went wrong.");
-                    } else {
-                        if ($("#parentIdCashBreakdown") != null) {
-                            var tableRef = document.getElementById('modalTable').getElementsByTagName('tbody')[0];
-                            var grossAmount = Number($("#" + id).find(".txtGross").val());
-                        }
+            modalDivBody.load("@Url.Action("EntryExpenseCashBreakdown", "Modal")", {
+                "id": id,
+                "vendor": $("#" + pNode.id).find(".txtPayee").val(),
+                "account": $("#" + pNode.id).find(".txtAcc").val(),
+                "amount": $("#" + pNode.id).find(".txtGross").val(),
+                "screencode": $("#" + pNode.id).find(".hiddenScreencode").val()
+            }, function (response, status, xhr) {
+                if (status == "error") {
+                    alert("Something went wrong.");
+                } else {
+                    if ($("#parentIdCashBreakdown") != null) {
+                        var tableRef = document.getElementById('modalTable').getElementsByTagName('tbody')[0];
+                        var grossAmount = Number($("#" + id).find(".txtGross").val());
                     }
-                });
-
-                $('#myModal').modal('show');
+                }
             });
+
+            $('#myModal').modal('show');
+        });
+
+        //Liquidation DIV display/Hide
+        $("table").on("click", ".liqudationBtn", function (e) {
+            e.stopImmediatePropagation();
+
+            var pid = $(this.parentNode)[0].parentNode.id;
+            var idx = pid.replace('item_', '');
+
+            //Change color of clicked row
+            $("table tr").removeClass("highlight");
+            $('#' + pid).addClass("highlight");
+
+            $('#hiddenSelectedItem').val(pid);
+
+            //Change to default value
+            $('#divPHP').find('input:text').val('');
+            $('#divForeign').find(':input[type="number"]').val('0');
+            $('#cashBDLiqTable').find('.txtLiqNoPCS').val('0');
+            $('#cashBDLiqTable').find('.txtLiqAmount').val('0');
+
+            if ($('#' + pid).find('.txtCcyAbbrev').val() != "PHP") {
+                $('#divForeign').show();
+                $('#divPHP').css('display', 'none');
+                displayInfoIE($(this.parentNode)[0].parentNode.id);
+            } else {
+                $('#divForeign').css('display', 'none');
+                $('#divPHP').show();
+                displayInfoCashBD($(this.parentNode)[0].parentNode.id);
+            }
+                
+        });
+
+        $("table").on("change", "input.txtLiqNoPCS", function (e) {
+            var cashBDLiqItemNo = $(this.parentNode)[0].parentNode.id; //jquery obj
+
+            var txtDenimination = $("#" + cashBDLiqItemNo).find('.txtLiqDenimination').val();
+            var txtNoPCS = $("#" + cashBDLiqItemNo).find('.txtLiqNoPCS').val();
+
+            $("#" + cashBDLiqItemNo).find('.txtLiqAmount').val(round(parseFloat(txtDenimination) * parseFloat(txtNoPCS), 2));
+
+            var amountTotal = 0;
+            var trs = $(".cashBDLiqTable").find("tbody").find("tr");
+
+            for (var count = 0; count < trs.length; count++) {
+                var subTotal = parseFloat($("#" + trs[count].id).find('.txtLiqNoPCS').val()) * parseFloat($("#" + trs[count].id).find('.txtLiqDenimination').val());
+                amountTotal = parseFloat(amountTotal) + parseFloat(subTotal);
+            }
+
+            $("#txtLiqCredit").val(addCommas(round(amountTotal, 2)));
+        });
+
+        $('#IEInfoTable').on("change", "input.txtIEInfoInput", function (e) {
+            $('#txtIEExRatePhp').val(round($("#txtIEAmount").val() * $("#txtIEExRate").val(), 2));
+        });
+
+        $("table").on("click", "#saveLiqCashBD", function (e) {
+
+            e.stopImmediatePropagation();
+
+            var selectedRow = $('#hiddenSelectedItem').val();
+
+            if ($('#txtLiqCredit').val().replace(',', '') != $('#' + selectedRow).find(".txtGross").val()) {
+                alert("Amount do not match.");
+                return false;
+            }
+
+            var ret = selectedRow.replace('item_', '');
+            var trs = $('#cashBDLiqTable').find("tbody").find("tr");
+
+            $('#divLiqCashBD_' + ret).empty();
+
+            for (var count = 0; count < trs.length; count++) {
+                var denim = $("#" + trs[count].id).find('.txtLiqDenimination').val();
+                var pcs = $("#" + trs[count].id).find('.txtLiqNoPCS').val();
+                var amount = $("#" + trs[count].id).find('.txtLiqAmount').val();
+
+                $('#divLiqCashBD_' + ret).append($('<input/>', {
+                    id: 'LiquidationDetails_' + ret + '__liqCashBreakdown_' + count + '__cashDenimination',
+                    type: 'hidden',
+                    name: 'LiquidationDetails[' + ret + '].liqCashBreakdown[' + count + '].cashDenimination',
+                    value: denim
+                }));
+                $('#divLiqCashBD_' + ret).append($('<input/>', {
+                    id: 'LiquidationDetails_' + ret + '__liqCashBreakdown_' + count + '__cashNoPC',
+                    type: 'hidden',
+                    name: 'LiquidationDetails[' + ret + '].liqCashBreakdown[' + count + '].cashNoPC',
+                    value: pcs
+                }));
+                $('#divLiqCashBD_' + ret).append($('<input/>', {
+                    id: 'LiquidationDetails_' + ret + '__liqCashBreakdown_' + count + '__cashAmount',
+                    type: 'hidden',
+                    name: 'LiquidationDetails[' + ret + '].liqCashBreakdown[' + count + '].cashAmount',
+                    value: amount
+                }));
+            }
+
+            if ($('#txtLiqCredit').val() == 0) {
+                $('#' + selectedRow).find(".hiddenLiqFlag").val(0);
+            } else {
+                $('#' + selectedRow).find(".hiddenLiqFlag").val(1);
+                $('#' + selectedRow).find('#sss')
+                    .animate({ backgroundColor: '#FFFBD5' }, 'slow')
+                    .animate({ backgroundColor: 'transparent' }, 'slow');
+                $('#' + selectedRow).find('#imgLiq').attr('src', '/images/liqLogo_chk.png');
+            }
         });
     });
 </script>
@@ -323,12 +683,82 @@
     };
 
     function reqBtnDisable(idx) {
-        if ($('#EntryCV_' + idx + '__ccy').find(':selected').text() != "PHP") {
+        if ($('#LiquidationDetails_' + idx + '__ccyAbbrev').val() != "PHP") {
             $('#req_' + idx).find('.reqBtn').css("pointer-events", "none");
         } else {
             $('#req_' + idx).find('.reqBtn').css("pointer-events", "auto");
         }
     };
 
+    function displayInfoCashBD(pid) {
+
+        $('#txtLiqAccNo').val($('#' + pid).find('.hidAccNo').val());
+        $('#txtLiqAccCode').val($('#' + pid).find('.hidAccCode').val());
+
+        if ($('#' + pid).find('.hiddenLiqFlag').val() == 0) {
+            $('#txtLiqCredit').val(0);
+            return false;
+        } 
+
+        var ret = pid.replace('item_', '');
+        var cashBDInput = $('#divLiqCashBD_' + ret).find("input");
+        var totalAmount = 0.0;
+
+        for (var count = 0; count < cashBDInput.length / 3; count++) {
+            $('#cashbdliqid_' + count).find('.txtLiqDenimination').val($('#LiquidationDetails_' + ret + '__liqCashBreakdown_' + count + '__cashDenimination').val());
+            $('#cashbdliqid_' + count).find('.txtLiqNoPCS').val($('#LiquidationDetails_' + ret + '__liqCashBreakdown_' + count + '__cashNoPC').val());
+            $('#cashbdliqid_' + count).find('.txtLiqAmount').val($('#LiquidationDetails_' + ret + '__liqCashBreakdown_' + count + '__cashAmount').val());
+
+            totalAmount += parseFloat($('#LiquidationDetails_' + ret + '__liqCashBreakdown_' + count + '__cashAmount').val());
+        }
+        $('#txtLiqCredit').val(totalAmount);
+    };
+
+    function displayInfoIE(pid){
+        $('#txtIECurrency').val($('#' + pid).find('.txtCcyAbbrev').val());
+    };
+
+    function printDivCashBD(divID) {
+
+        //Set Cash Breakdown Liquidation table value(property) to table attribute value.
+        var tableCnt = $('#cashBDLiqTable').find('tbody').find('tr');
+
+        for (var count = 0; count < tableCnt.length; count++) {
+            $('#cashbdliqid_' + count).find('.txtLiqNoPCS').attr('value', $('#cashbdliqid_' + count).find('.txtLiqNoPCS').val());
+            $('#cashbdliqid_' + count).find('.txtLiqAmount').attr('value', $('#cashbdliqid_' + count).find('.txtLiqAmount').val());
+        }
+
+        var css = '<link rel="stylesheet" href="https://localhost:5001/css/site.css" />' +
+            '<link rel="stylesheet" href="https://localhost:5001/css/editable-table.css" />' +
+            '<link rel="stylesheet" href="https://localhost:5001/css/util.css" />' +
+            '<link rel="stylesheet" href="https://localhost:5001/lib/bootstrap/dist/css/bootstrap.css"/>';
+        var printContent = document.getElementById(divID);
+
+        var WinPrint = window.open('', '', 'width=900,height=650');
+        WinPrint.document.write(printContent.innerHTML);
+        WinPrint.document.head.innerHTML = css;
+        WinPrint.document.close();
+        WinPrint.focus();
+        WinPrint.print();
+        WinPrint.close();
+
+        //Rollback the Cash Breakdown Liquidation table attribute value to default(0).
+        for (var count = 0; count < tableCnt.length; count++) {
+            $('#cashbdliqid_' + count).find('.txtLiqNoPCS').attr('value', 0);
+            $('#cashbdliqid_' + count).find('.txtLiqAmount').attr('value', 0);
+        }
+    };
+
+    function addCommas(nStr) {
+        nStr += '';
+        x = nStr.split('.');
+        x1 = x[0];
+        x2 = x.length > 1 ? '.' + x[1] : '';
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        }
+        return x1 + x2;
+    }
 </script>
 <script type="text/javascript" src="~/js/EntryScripts.js"></script>
