@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using ExpenseProcessingSystem.Models;
+using ExpenseProcessingSystem.ViewModels.Entry;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ExpenseProcessingSystem.ViewModels.Entry;
-using ExpenseProcessingSystem.ViewModels;
-using ExpenseProcessingSystem.Models;
 
 namespace ExpenseProcessingSystem.ConstantData
 {
@@ -64,6 +61,8 @@ namespace ExpenseProcessingSystem.ConstantData
                 case 3: return "Suspense Sundry";
                 case 4: return "Petty Cash";
                 case 5: return "Non-Cash";
+                case 6: return "Suspense Sundry (Liquidation)";
+                case 7: return "Non-Cash (Liquidation)";
                 default: return null;
             }
         }
@@ -79,6 +78,13 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly string ENTRY_Liquidation = "/Home/Entry_Liquidation";
         public static readonly string ENTRY_NEW_CV = "/Home/AddNewCV";
         public static readonly string ENTRY_NEW_DDV = "/Home/AddNewDDV";
+        public static readonly string ENTRY_VIEW_PCV = "/Home/View_PCV";
+        public static readonly string ENTRY_VIEW_SS = "/Home/View_SS";
+        public static readonly string ENTRY_NEW_PCV = "/Home/AddNewPCV";
+        public static readonly string ENTRY_NEW_SS = "/Home/AddNewSS";
+        public static readonly string LIQ_MAIN = "/Home/Liquidation_Main";
+        public static readonly string LIQ_SS = "/Home/Liquidation_SS";
+        public static readonly string LIQ_New_SS = "/Home/Liquidation_AddNewSS";
 
         public static readonly List<string> ENTRY_VALS = new List<string> {
             GlobalSystemValues.ENTRY,
@@ -89,7 +95,14 @@ namespace ExpenseProcessingSystem.ConstantData
             GlobalSystemValues.ENTRY_SS,
             GlobalSystemValues.ENTRY_Liquidation,
             GlobalSystemValues.ENTRY_NEW_CV,
-            GlobalSystemValues.ENTRY_NEW_DDV
+            GlobalSystemValues.ENTRY_NEW_DDV,
+            GlobalSystemValues.ENTRY_VIEW_PCV,
+            GlobalSystemValues.ENTRY_VIEW_SS,
+            GlobalSystemValues.ENTRY_NEW_PCV,
+            GlobalSystemValues.ENTRY_NEW_SS,
+            GlobalSystemValues.LIQ_MAIN,
+            GlobalSystemValues.LIQ_SS,
+            GlobalSystemValues.LIQ_New_SS
         };
         //Static values for entry path use for checking if HomeTabsPartial will be shown.
         //Example: instead of [if Context.Request.Path.ToString() == "/Home/Index"] use (GlobalSystemValues.HOME_VALS.Contains(Context.Request.Path.ToString())) ? true : false;

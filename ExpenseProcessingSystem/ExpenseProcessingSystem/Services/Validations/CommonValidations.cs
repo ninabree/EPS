@@ -376,6 +376,46 @@ namespace ExpenseProcessingSystem.Services.Validations
             return ValidationResult.Success;
         }
     }
+    public class EmptyLiquidationCashBreakdown : ValidationAttribute
+    {
+        private readonly string _CheckBoxProperty;
+        private readonly string _CheckBoxProperty2;
+
+        public EmptyLiquidationCashBreakdown(string CheckBoxProperty, string CheckBoxProperty2)
+        {
+            _CheckBoxProperty = CheckBoxProperty;
+            _CheckBoxProperty2 = CheckBoxProperty2;
+        }
+
+
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            var val = validationContext.ObjectType.GetProperty(_CheckBoxProperty).GetValue(validationContext.ObjectInstance, null);
+            var val2 = validationContext.ObjectType.GetProperty(_CheckBoxProperty2).GetValue(validationContext.ObjectInstance, null);
+
+            int flag = 0;
+
+            if((int)val2 == 0)
+            {
+                List<LiquidationCashBreakdown> data = value as List<LiquidationCashBreakdown>;
+                foreach (var i in data)
+                {
+                    if (i.cashNoPC != 0 && i.cashAmount != 0)
+                    {
+                        flag = 1;
+                        break;
+                    }
+                }
+
+                if (flag == 0)
+                {
+                    return new ValidationResult("You must fill up the Liqudation for each entries.");
+                }
+            }
+
+            return ValidationResult.Success;
+        }
+    }
     public class ListValidation : ValidationAttribute
     {
         private readonly string _CheckBoxProperty;

@@ -24,7 +24,6 @@ using System.Globalization;
 using System.Linq;
 using ExpenseProcessingSystem.ViewModels.Entry;
 using System.Diagnostics;
-using LiquidationMainListViewModel = ExpenseProcessingSystem.ViewModels.Entry.LiquidationMainListViewModel;
 
 namespace ExpenseProcessingSystem.Controllers
 {
@@ -1352,12 +1351,10 @@ namespace ExpenseProcessingSystem.Controllers
             ViewData["CurrentSort"] = sortOrder;
             ViewData["ApplicationTypeSortParm"] = sortOrder == "app_type_desc" ? "app_type" : "app_type_desc";
             ViewData["AmountSortParm"] = sortOrder == "amount_desc" ? "amount" : "amount_desc";
-            ViewData["PayeeSortParm"] = sortOrder == "payee_desc" ? "payee" : "payee_desc";
             ViewData["MakerSortParm"] = sortOrder == "maker_desc" ? "maker" : "maker_desc";
-            ViewData["VerifiersSortParm"] = sortOrder == "verifiers_desc" ? "verifiers" : "verifiers_desc";
+            ViewData["ApproverSortParm"] = sortOrder == "approver_desc" ? "approver" : "approver_desc";
             ViewData["DateSubmittedSortParm"] = sortOrder == "date_submitted_desc" ? "date_submitted" : "date_submitted_desc";
             ViewData["LastUpdatedDateSortParm"] = sortOrder == "last_updated_desc" ? "last_updated" : "last_updated_desc";
-            ViewData["StatusSortParm"] = sortOrder == "status_desc" ? "status" : "status_desc";
 
             if (searchString != null)
             {
@@ -1392,6 +1389,21 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             return View("Liquidation_SS", ssList);
+        }
+
+        [ExportModelState]
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
+        public IActionResult Liquidation_AddNewSS(LiquidationViewModel vm)
+        {
+            var userId = GetUserID();
+            if (!ModelState.IsValid)
+            {
+                return View("Liquidation_SS", vm);
+            }
+            int id = _service.addLiquidationDetail(vm, int.Parse(GetUserID()));
+
+            return RedirectToAction("Liquidation_Main");
         }
 
         //------------------------------------------------------------------

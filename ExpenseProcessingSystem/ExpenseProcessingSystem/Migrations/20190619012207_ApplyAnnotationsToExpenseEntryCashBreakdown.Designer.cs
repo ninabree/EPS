@@ -4,14 +4,16 @@ using ExpenseProcessingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    partial class EPSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190619012207_ApplyAnnotationsToExpenseEntryCashBreakdown")]
+    partial class ApplyAnnotationsToExpenseEntryCashBreakdown
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -926,35 +928,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.ToTable("LiquidationCashBreakdown");
                 });
 
-            modelBuilder.Entity("ExpenseProcessingSystem.Models.LiquidationEntryDetailModel", b =>
-                {
-                    b.Property<int>("Liq_DtlID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("ExpenseEntryModelExpense_ID");
-
-                    b.Property<int>("Liq_Approver");
-
-                    b.Property<DateTime>("Liq_Created_Date");
-
-                    b.Property<int>("Liq_Created_UserID");
-
-                    b.Property<DateTime>("Liq_LastUpdated_Date");
-
-                    b.Property<int>("Liq_Status");
-
-                    b.Property<int>("Liq_Verifier1");
-
-                    b.Property<int>("Liq_Verifier2");
-
-                    b.HasKey("Liq_DtlID");
-
-                    b.HasIndex("ExpenseEntryModelExpense_ID");
-
-                    b.ToTable("LiquidationEntryDetails");
-                });
-
             modelBuilder.Entity("ExpenseProcessingSystem.Models.Pending.DMAccountGroupModel_Pending", b =>
                 {
                     b.Property<int>("Pending_AccountGroup_ID")
@@ -1349,13 +1322,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel", "ExpenseEntryDetailModel")
                         .WithMany()
                         .HasForeignKey("ExpenseEntryDetailModelExpDtl_ID");
-                });
-
-            modelBuilder.Entity("ExpenseProcessingSystem.Models.LiquidationEntryDetailModel", b =>
-                {
-                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryModel", "ExpenseEntryModel")
-                        .WithMany()
-                        .HasForeignKey("ExpenseEntryModelExpense_ID");
                 });
 #pragma warning restore 612, 618
         }

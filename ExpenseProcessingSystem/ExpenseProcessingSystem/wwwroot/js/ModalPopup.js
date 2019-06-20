@@ -225,7 +225,7 @@
         var noOfItem = ($("#" + id).find('input').length)/ 4;
         var tblDiv = $("#table").find("table");
 
-        var screenCode = { cv: "#EntryCV_", ddv: "#EntryDDV_"};
+        var screenCode = { cv: "#EntryCV_", ddv: "#EntryDDV_", liq_Dtl: "#LiquidationDetails_"};
 
         if (noOfItem > 0) {
             tblDiv.find('tbody').find('tr').remove();

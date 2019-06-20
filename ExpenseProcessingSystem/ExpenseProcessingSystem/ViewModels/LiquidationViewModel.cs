@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ExpenseProcessingSystem.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -23,5 +24,6 @@ namespace ExpenseProcessingSystem.ViewModels
         public int maker { get; set; }
         public DateTime createdDate { get; set; }
         public List<LiquidationDetailsViewModel> LiquidationDetails { get; set; }
+        public LiquidationEntryDetailModel LiqEntryDetails { get; set; }
     }
 }
