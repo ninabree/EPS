@@ -13,7 +13,7 @@ namespace ExpenseProcessingSystem.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(Setting.ConnectionString);
+                optionsBuilder.UseSqlServer(Setting.DefaultConnectionString);
             }
         }
         public DbSet<SystemMessageModel> SystemMessageModels { get; set; }

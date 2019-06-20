@@ -1,7 +1,9 @@
-﻿using ExpenseProcessingSystem.Data;
+﻿using ExpenseProcessingSystem.ConstantData;
+using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Models;
-using ExpenseProcessingSystem.ConstantData;
+using ExpenseProcessingSystem.Models.Gbase;
 using ExpenseProcessingSystem.Models.Pending;
+using ExpenseProcessingSystem.Services.Controller_Services;
 using ExpenseProcessingSystem.ViewModels;
 using ExpenseProcessingSystem.ViewModels.Entry;
 using ExpenseProcessingSystem.ViewModels.NewRecord;
@@ -11,14 +13,11 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Reflection;
-using ExpenseProcessingSystem.Services.Controller_Services;
-using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseProcessingSystem.Services
 {
@@ -27,15 +26,17 @@ namespace ExpenseProcessingSystem.Services
         private readonly string defaultPW = "Mizuho2019";
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly EPSDbContext _context;
+        private readonly GoWriteContext _GOContext;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
         private readonly IHostingEnvironment _hostingEnvironment;
         private ModalService _modalservice;
 
         private ModelStateDictionary _modelState;
-        public HomeService(IHttpContextAccessor httpContextAccessor, EPSDbContext context, ModelStateDictionary modelState, IHostingEnvironment hostingEnvironment)
+        public HomeService(IHttpContextAccessor httpContextAccessor, EPSDbContext context,GoWriteContext goWriteContext ,ModelStateDictionary modelState, IHostingEnvironment hostingEnvironment)
         {
             _httpContextAccessor = httpContextAccessor;
             _context = context;
+            _GOContext = goWriteContext;
             _modelState = modelState;
             _hostingEnvironment = hostingEnvironment;
             _modalservice = new ModalService(_httpContextAccessor, _context);
@@ -130,10 +131,10 @@ namespace ExpenseProcessingSystem.Services
                             || p.Expense_Status == GlobalSystemValues.STATUS_DELETE)
                             && p.Expense_Creator_ID != userID
                             select new { p.Expense_ID, p.Expense_Type, p.Expense_Debit_Total, p.Expense_Payee,
-                                        p.Expense_Creator_ID, p.Expense_Verifier_1, p.Expense_Verifier_2,
-                                        p.Expense_Last_Updated,p.Expense_Date,p.Expense_Status};
+                                p.Expense_Creator_ID, p.Expense_Verifier_1, p.Expense_Verifier_2,
+                                p.Expense_Last_Updated, p.Expense_Date, p.Expense_Status };
 
-            foreach(var item in dbPending)
+            foreach (var item in dbPending)
             {
 
                 string ver1 = item.Expense_Verifier_1 == 0 ? null : getUserName(item.Expense_Verifier_1);
@@ -166,7 +167,7 @@ namespace ExpenseProcessingSystem.Services
                 pendingList.Add(tempPending);
             }
 
-            PaginatedList<ApplicationsViewModel> pgPendingList = new PaginatedList<ApplicationsViewModel>(pendingList,pendingList.Count,1,10);
+            PaginatedList<ApplicationsViewModel> pgPendingList = new PaginatedList<ApplicationsViewModel>(pendingList, pendingList.Count, 1, 10);
 
             return pgPendingList;
         }
@@ -180,14 +181,14 @@ namespace ExpenseProcessingSystem.Services
                         select new
                         {
                             a.User_ID, a.User_UserName, a.User_FName, a.User_LName, d.Dept_Name, a.User_DeptID, a.User_Email, a.User_Role,
-                            a.User_Comment, a.User_InUse, a.User_Creator_ID, a.User_Created_Date,a.User_Approver_ID, a.User_Last_Updated, a.User_Status
+                            a.User_Comment, a.User_InUse, a.User_Creator_ID, a.User_Created_Date, a.User_Approver_ID, a.User_Last_Updated, a.User_Status
                         }).ToList();
             //get account creator/approver IDs and dates, not all accounts have this
             var creatr = (from a in accs
-                         join c in _context.User on a.User_Creator_ID equals c.User_ID
-                         let CreatorName = c.User_LName + ", " + c.User_FName
-                         select new
-                         { a.User_ID, CreatorName }).ToList();
+                          join c in _context.User on a.User_Creator_ID equals c.User_ID
+                          let CreatorName = c.User_LName + ", " + c.User_FName
+                          select new
+                          { a.User_ID, CreatorName }).ToList();
             var apprv = (from a in accs
                          join c in _context.User on a.User_Approver_ID equals c.User_ID
                          let ApproverName = c.User_LName + ", " + c.User_FName
@@ -212,7 +213,7 @@ namespace ExpenseProcessingSystem.Services
                     User_Creator_Name = creator ?? "N/A",
                     User_Approver_Name = approver ?? "",
                     User_Created_Date = x.User_Created_Date,
-                    User_Last_Updated =x.User_Last_Updated,
+                    User_Last_Updated = x.User_Last_Updated,
                     User_Status = x.User_Status
                 };
                 vmList.Add(vm);
@@ -295,7 +296,7 @@ namespace ExpenseProcessingSystem.Services
             }
             return true;
         }
-         
+
         //---------------------------DM - ADMIN---------------------------
         //[ PAYEE ]
         public bool approveVendor(List<DMVendorViewModel> model, string userId)
@@ -303,27 +304,27 @@ namespace ExpenseProcessingSystem.Services
             List<int> intList = model.Select(c => c.Vendor_MasterID).ToList();
 
             var allPending = (from pp in _context.DMVendor_Pending
-                             from pm in _context.DMVendor.Where(x => x.Vendor_MasterID == pp.Pending_Vendor_MasterID).DefaultIfEmpty()
-                             select new {pp.Pending_Vendor_MasterID,
-                                         pp.Pending_Vendor_Name,
-                                         pp.Pending_Vendor_TIN,
-                                         pp.Pending_Vendor_Address,
-                                         pp.Pending_Vendor_IsDeleted,
-                                         pp.Pending_Vendor_Creator_ID,
-                                         pmCreatorID = pm.Vendor_Creator_ID.ToString(),
-                                         pmCreateDate = pm.Vendor_Created_Date.ToString()
-                             }).Where(x => intList.Contains(x.Pending_Vendor_MasterID)).Distinct().ToList();
+                              from pm in _context.DMVendor.Where(x => x.Vendor_MasterID == pp.Pending_Vendor_MasterID).DefaultIfEmpty()
+                              select new { pp.Pending_Vendor_MasterID,
+                                  pp.Pending_Vendor_Name,
+                                  pp.Pending_Vendor_TIN,
+                                  pp.Pending_Vendor_Address,
+                                  pp.Pending_Vendor_IsDeleted,
+                                  pp.Pending_Vendor_Creator_ID,
+                                  pmCreatorID = pm.Vendor_Creator_ID.ToString(),
+                                  pmCreateDate = pm.Vendor_Created_Date.ToString()
+                              }).Where(x => intList.Contains(x.Pending_Vendor_MasterID)).Distinct().ToList();
             var allVTVPending = (from pp in _context.DMVendorTRVAT_Pending
-                              from pm in _context.DMVendorTRVAT.Where(x => x.VTV_ID == pp.Pending_VTV_ID).DefaultIfEmpty()
-                              select new
-                              {
-                                  pp.Pending_VTV_ID,
-                                  pp.Pending_VTV_Vendor_ID,
-                                  pp.Pending_VTV_TR_ID,
-                                  pp.Pending_VTV_VAT_ID
-                              }).Where(x => intList.Contains(x.Pending_VTV_Vendor_ID)).ToList();
+                                 from pm in _context.DMVendorTRVAT.Where(x => x.VTV_ID == pp.Pending_VTV_ID).DefaultIfEmpty()
+                                 select new
+                                 {
+                                     pp.Pending_VTV_ID,
+                                     pp.Pending_VTV_Vendor_ID,
+                                     pp.Pending_VTV_TR_ID,
+                                     pp.Pending_VTV_VAT_ID
+                                 }).Where(x => intList.Contains(x.Pending_VTV_Vendor_ID)).ToList();
 
-            List<DMVendorModel_Pending> toDelete = _context.DMVendor_Pending.Where(x=> intList.Contains(x.Pending_Vendor_MasterID)).ToList();
+            List<DMVendorModel_Pending> toDelete = _context.DMVendor_Pending.Where(x => intList.Contains(x.Pending_Vendor_MasterID)).ToList();
             List<DMVendorTRVATModel_Pending> toVTVDelete = _context.DMVendorTRVAT_Pending.Where(x => intList.Contains(x.Pending_VTV_Vendor_ID)).ToList();
 
             //get all records that currently exists in Master Data
@@ -412,7 +413,7 @@ namespace ExpenseProcessingSystem.Services
                                    pmCreatorID = pm.Dept_Creator_ID.ToString(),
                                    pmCreateDate = pm.Dept_Created_Date.ToString(),
                                    pp.Pending_Dept_isActive
-                               })).Where(x=> intList.Contains(x.Pending_Dept_MasterID)).Distinct().ToList();
+                               })).Where(x => intList.Contains(x.Pending_Dept_MasterID)).Distinct().ToList();
 
             List<DMDeptModel_Pending> toDelete = _context.DMDept_Pending.Where(x => intList.Contains(x.Pending_Dept_MasterID)).ToList();
 
@@ -1403,27 +1404,27 @@ namespace ExpenseProcessingSystem.Services
             model.Select(x => x.Vendor_MasterID)
                 .ToList()
                 .ForEach(x => {
-                     _context.DMVendorTRVAT.Where(tr => tr.VTV_Vendor_ID == x).ToList()
-                    .ForEach(val => {
-                        if (val.VTV_TR_ID != 0)
-                        {
-                            tmp = new DMVendorTRVATModel_Pending()
-                            {
-                                Pending_VTV_Vendor_ID = x,
-                                Pending_VTV_TR_ID = val.VTV_TR_ID
-                            };
-                            vtvList.Add(tmp);
-                        }
-                        if (val.VTV_VAT_ID != 0)
-                        {
-                            tmp = new DMVendorTRVATModel_Pending()
-                            {
-                                Pending_VTV_Vendor_ID = x,
-                                Pending_VTV_VAT_ID = val.VTV_VAT_ID
-                            };
-                            vtvList.Add(tmp);
-                        }
-                    });
+                    _context.DMVendorTRVAT.Where(tr => tr.VTV_Vendor_ID == x).ToList()
+                   .ForEach(val => {
+                       if (val.VTV_TR_ID != 0)
+                       {
+                           tmp = new DMVendorTRVATModel_Pending()
+                           {
+                               Pending_VTV_Vendor_ID = x,
+                               Pending_VTV_TR_ID = val.VTV_TR_ID
+                           };
+                           vtvList.Add(tmp);
+                       }
+                       if (val.VTV_VAT_ID != 0)
+                       {
+                           tmp = new DMVendorTRVATModel_Pending()
+                           {
+                               Pending_VTV_Vendor_ID = x,
+                               Pending_VTV_VAT_ID = val.VTV_VAT_ID
+                           };
+                           vtvList.Add(tmp);
+                       }
+                   });
                 });
 
             if (_modelState.IsValid)
@@ -1717,20 +1718,20 @@ namespace ExpenseProcessingSystem.Services
             {
                 DMAccountModel_Pending m = new DMAccountModel_Pending
                 {
-                    Pending_Account_Name = dm.Account_Name,
-                    Pending_Account_MasterID = dm.Account_MasterID,
-                    Pending_Account_FBT_MasterID = dm.Account_FBT_MasterID,
-                    Pending_Account_Group_MasterID = dm.Account_Group_MasterID,
-                    Pending_Account_Currency_MasterID = dm.Account_Currency_MasterID,
-                    Pending_Account_Code = dm.Account_Code,
-                    Pending_Account_Cust = dm.Account_Cust,
-                    Pending_Account_Div = dm.Account_Div,
-                    Pending_Account_Fund = dm.Account_Fund,
-                    Pending_Account_No = dm.Account_No,
-                    Pending_Account_Creator_ID = int.Parse(_session.GetString("UserID")),
-                    Pending_Account_Filed_Date = DateTime.Now,
-                    Pending_Account_isDeleted = true,
-                    Pending_Account_Status_ID = 9
+                    Pending_Account_Name = dm.Account_Name,                                 
+                    Pending_Account_MasterID = dm.Account_MasterID,                         
+                    Pending_Account_FBT_MasterID = dm.Account_FBT_MasterID,                 
+                    Pending_Account_Group_MasterID = dm.Account_Group_MasterID,             
+                    Pending_Account_Currency_MasterID = dm.Account_Currency_MasterID,       
+                    Pending_Account_Code = dm.Account_Code,                                 
+                    Pending_Account_Cust = dm.Account_Cust,                                 
+                    Pending_Account_Div = dm.Account_Div,                                   
+                    Pending_Account_Fund = dm.Account_Fund,                                 
+                    Pending_Account_No = dm.Account_No,                                     
+                    Pending_Account_Creator_ID = int.Parse(_session.GetString("UserID")),   
+                    Pending_Account_Filed_Date = DateTime.Now,                              
+                    Pending_Account_isDeleted = true,                                       
+                    Pending_Account_Status_ID = 9                                           
                 };
                 vmList.Add(m);
             }
@@ -2533,23 +2534,23 @@ namespace ExpenseProcessingSystem.Services
             int[] status = { 3, 4 };
 
             var dbAPSWT_M = (from vendor in _context.DMVendor
-                                join expense in _context.ExpenseEntry on vendor.Vendor_ID equals expense.Expense_Payee
-                                join expEntryDetl in _context.ExpenseEntryDetails on  expense.Expense_ID equals expEntryDetl.ExpenseEntryModel.Expense_ID
-                                join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
-                                where status.Contains(expense.Expense_Status)
-                                && expense.Expense_Last_Updated.Month == month
-                                && expense.Expense_Last_Updated.Year == year
+                             join expense in _context.ExpenseEntry on vendor.Vendor_ID equals expense.Expense_Payee
+                             join expEntryDetl in _context.ExpenseEntryDetails on expense.Expense_ID equals expEntryDetl.ExpenseEntryModel.Expense_ID
+                             join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
+                             where status.Contains(expense.Expense_Status)
+                             && expense.Expense_Last_Updated.Month == month
+                             && expense.Expense_Last_Updated.Year == year
                              orderby vendor.Vendor_Name
-            select new HomeReportOutputAPSWT_MModel
-                            {
-                                Tin = vendor.Vendor_TIN,
-                                Payee = vendor.Vendor_Name,
-                                ATC = tr.TR_ATC,
-                                NOIP =  tr.TR_Nature,
-                                AOIP = expEntryDetl.ExpDtl_Credit_Cash,
-                                RateOfTax = tr.TR_Tax_Rate,
-                                AOTW = expEntryDetl.ExpDtl_Credit_Ewt
-                            }).ToList();
+                             select new HomeReportOutputAPSWT_MModel
+                             {
+                                 Tin = vendor.Vendor_TIN,
+                                 Payee = vendor.Vendor_Name,
+                                 ATC = tr.TR_ATC,
+                                 NOIP = tr.TR_Nature,
+                                 AOIP = expEntryDetl.ExpDtl_Credit_Cash,
+                                 RateOfTax = tr.TR_Tax_Rate,
+                                 AOTW = expEntryDetl.ExpDtl_Credit_Ewt
+                             }).ToList();
 
             return dbAPSWT_M;
         }
@@ -2567,9 +2568,9 @@ namespace ExpenseProcessingSystem.Services
                              join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
                              where status.Contains(expense.Expense_Status)
                              && model.TaxRateList.Contains(tr.TR_Tax_Rate)
-                             && startDT.Date <= expense.Expense_Last_Updated 
+                             && startDT.Date <= expense.Expense_Last_Updated
                              && expense.Expense_Last_Updated <= endDT.Date
-                               orderby vendor.Vendor_Name
+                             orderby vendor.Vendor_Name
                              select new HomeReportOutputAST1000Model
                              {
                                  Tin = vendor.Vendor_TIN,
@@ -2593,13 +2594,13 @@ namespace ExpenseProcessingSystem.Services
             DateTime toDate = DateTime.ParseExact(yearTo + "-" + monthTo, format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
 
             var dbAST1000_A = (from vendor in _context.DMVendor
-                            join expense in _context.ExpenseEntry on vendor.Vendor_ID equals expense.Expense_Payee
-                            join expEntryDetl in _context.ExpenseEntryDetails on expense.Expense_ID equals expEntryDetl.ExpenseEntryModel.Expense_ID
-                            join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
-                            where status.Contains(expense.Expense_Status)
-                            && expense.Expense_Last_Updated.Date >= fromDate.Date
-                            && expense.Expense_Last_Updated.Date <= toDate.Date
-                            && taxRateConsider.Contains(tr.TR_Tax_Rate)
+                               join expense in _context.ExpenseEntry on vendor.Vendor_ID equals expense.Expense_Payee
+                               join expEntryDetl in _context.ExpenseEntryDetails on expense.Expense_ID equals expEntryDetl.ExpenseEntryModel.Expense_ID
+                               join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
+                               where status.Contains(expense.Expense_Status)
+                               && expense.Expense_Last_Updated.Date >= fromDate.Date
+                               && expense.Expense_Last_Updated.Date <= toDate.Date
+                               && taxRateConsider.Contains(tr.TR_Tax_Rate)
                                orderby vendor.Vendor_Name
                                select new HomeReportOutputAST1000Model
                                {
@@ -2630,7 +2631,7 @@ namespace ExpenseProcessingSystem.Services
             string format = "yyyy-M";
 
             endDT = DateTime.ParseExact(filterYear + "-" + filterMonth, format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
-            
+
             //Get latest Budget that until end of the selected month of each account
             var accountList = _context.DMAccount.Where(x => x.Account_isActive == true && x.Account_isDeleted == false
                                                         && x.Account_Fund == true).OrderBy(x => x.Account_Group_MasterID);
@@ -2641,7 +2642,7 @@ namespace ExpenseProcessingSystem.Services
             double budgetAmount = 0.0;
             string log = "";
 
-            if(budgetList.Count() == 0)
+            if (budgetList.Count() == 0)
             {
                 actualBudgetData.Add(new HomeReportActualBudgetModel {
                     BudgetBalance = 0.0,
@@ -2664,7 +2665,7 @@ namespace ExpenseProcessingSystem.Services
                         Budget_Amount = 0.0
                     }).OrderByDescending(x => x.Budget_Date_Registered).First();
 
-                if(currGroup == i.Account_Group_MasterID)
+                if (currGroup == i.Account_Group_MasterID)
                 {
                     budgetAmount += budget.Budget_Amount;
                 }
@@ -2795,8 +2796,8 @@ namespace ExpenseProcessingSystem.Services
 
         public DateTime GetSelectedYearMonthOfTerm(int month, int year)
         {
-            int[] firstTermMonths = { 4, 5, 6, 7, 8, 9};
-            int[] secodnTermNextYearMonths = { 1, 2, 3};
+            int[] firstTermMonths = { 4, 5, 6, 7, 8, 9 };
+            int[] secodnTermNextYearMonths = { 1, 2, 3 };
             DateTime startOfTermDate;
 
             if (firstTermMonths.Contains(month))
@@ -2822,7 +2823,7 @@ namespace ExpenseProcessingSystem.Services
         {
             var taxRate = _context.DMTR.OrderBy(x => x.TR_Tax_Rate).Select(x => x.TR_Tax_Rate).ToList().Distinct();
             List<float> taxRateList = new List<float>();
-            foreach(var i in taxRate)
+            foreach (var i in taxRate)
             {
                 taxRateList.Add(i);
                 Console.WriteLine("########" + i);
@@ -2835,7 +2836,7 @@ namespace ExpenseProcessingSystem.Services
         {
             return _context.DMBCS.Where(x => x.BCS_isActive == true && x.BCS_isDeleted == false).OrderBy(x => x.BCS_Name).ToList();
         }
-        
+
         public DMBIRCertSignModel GetSignatoryInfo(int id)
         {
             return _context.DMBCS.Where(x => x.BCS_ID == id).FirstOrDefault();
@@ -2844,7 +2845,7 @@ namespace ExpenseProcessingSystem.Services
         // [Entry Petty Cash Voucher]
         public IEnumerable<DMVendorModel> PopulateVendorList()
         {
-            return _context.DMVendor.Where(x => x.Vendor_isActive == true 
+            return _context.DMVendor.Where(x => x.Vendor_isActive == true
                 && x.Vendor_isDeleted == false).OrderBy(x => x.Vendor_Name).ToList();
         }
 
@@ -2880,184 +2881,16 @@ namespace ExpenseProcessingSystem.Services
         }
 
         //--------------------Expense Entries--------------------------------
-        public void SaveToGBase()
-        {
 
-        }
-
-        public void SaveToGBaseFBT()
-        {
-
-        }
-        //============[Retrieve System Values]=============================
-        //retrieve vendor list
-        public List<SelectList> getEntrySystemVals()
-        {
-            List<SelectList> listOfLists = new List<SelectList>();
-
-            listOfLists.Add(new SelectList (_context.DMVendor.Where(x => x.Vendor_isActive == true && x.Vendor_isDeleted == false).Select(q => new {q.Vendor_ID, q.Vendor_Name }),
-                                                "Vendor_ID", "Vendor_Name"));
-
-            listOfLists.Add(new SelectList(_context.DMDept.Where(x => x.Dept_isActive == true && x.Dept_isDeleted == false).Select(q => new { q.Dept_ID, q.Dept_Name }),
-                                                "Dept_ID", "Dept_Name"));
-
-            listOfLists.Add(new SelectList(_context.DMCurrency.Where(x => x.Curr_isActive == true && x.Curr_isDeleted == false).Select(q => new { q.Curr_ID, q.Curr_CCY_ABBR }),
-                                    "Curr_ID", "Curr_CCY_ABBR"));
-
-            listOfLists.Add(new SelectList(_context.DMTR.Where(x => x.TR_isActive == true && x.TR_isDeleted == false).Select(q => new { q.TR_ID, q.TR_Tax_Rate }),
-                        "TR_ID", "TR_Tax_Rate"));
-
-            return listOfLists;
-        }
-        //retrieve account details
-        public List<accDetails> getAccDetailsEntry()
-        {
-            List<accDetails> accDetails = new List<accDetails>();
-
-            var accDbDetails = _context.DMAccount.Where(x => x.Account_isActive == true).Select(q => new { q.Account_ID, q.Account_Name, q.Account_Code });
-
-            foreach (var detail in accDbDetails)
-            {
-                accDetails temp = new accDetails();
-                temp.accId = detail.Account_ID;
-                temp.accName = detail.Account_Name;
-                temp.accCode = detail.Account_Code;
-
-                accDetails.Add(temp);
-            }
-
-            return accDetails;
-        }
-
-        public List<accDetails> getAccDetailsEntry(int account)
-        {
-            List<accDetails> accDetails = new List<accDetails>();
-
-            var accDbDetails = _context.DMAccount.Where(x => x.Account_ID == account).Select(q => new { q.Account_ID, q.Account_Name, q.Account_Code });
-
-            foreach (var detail in accDbDetails)
-            {
-                accDetails temp = new accDetails();
-                temp.accId = detail.Account_ID;
-                temp.accName = detail.Account_Name;
-                temp.accCode = detail.Account_Code;
-
-                accDetails.Add(temp);
-            }
-
-            return accDetails;
-        }
-        //get Status
-        public string getStatus(int id)
-        {
-            var status = _context.StatusList.SingleOrDefault(q => q.Status_ID == id);
-            return status.Status_Name;
-        }
-        //get userName
-        public string getUserName(int id)
-        {
-            var name = _context.User.SingleOrDefault(q => q.User_ID == id);
-
-            if (name == null)
-            {
-                return null;
-            }
-
-            return name.User_UserName;
-        }
-        //get vat value
-        public float getVat()
-        {
-            var vat = _context.DMVAT.FirstOrDefault(q => q.VAT_isActive == true);
-
-            if (vat == null)
-            {
-                return 0;
-            }
-
-            return vat.VAT_Rate;
-        }
-
-        //get vat value
-        public float getVat(int id)
-        {
-            return _context.DMVAT.Where(x => x.VAT_ID == id).First().VAT_Rate;
-        }
-        //get Tax Rate list for specific user
-        public SelectList getVendorTaxRate(int vendorID)
-        {
-            var vendorMasterID = _context.DMVendor.Where(x => x.Vendor_ID == vendorID).Select(id => id.Vendor_MasterID).FirstOrDefault();
-            var vendorTRIDList = _context.DMVendorTRVAT.Where(x => x.VTV_Vendor_ID == vendorMasterID 
-                                                                && x.VTV_TR_ID > 0)
-                                                       .Select(q => q.VTV_TR_ID).ToList();
-
-            var select = new SelectList(_context.DMTR.Where(x => vendorTRIDList.Contains(x.TR_MasterID) 
-                                                            && x.TR_isActive == true
-                                                            && x.TR_isDeleted == false)
-                                                     .Select(q => new { q.TR_ID, TR_Tax_Rate = (q.TR_Tax_Rate * 100) }),
-                        "TR_ID", "TR_Tax_Rate");
-
-            return select;
-        }
-        //get Vat list for specific user
-        public SelectList getVendorVat(int vendorID)
-        {
-            var vendorMasterID = _context.DMVendor.Where(x => x.Vendor_ID == vendorID).Select(id => id.Vendor_MasterID).FirstOrDefault();
-            var vendorVatIDList = _context.DMVendorTRVAT.Where(x => x.VTV_Vendor_ID == vendorMasterID
-                                                                && x.VTV_VAT_ID > 0)
-                                                       .Select(q => q.VTV_VAT_ID).ToList();
-
-            var select = new SelectList(_context.DMVAT.Where(x => vendorVatIDList.Contains(x.VAT_ID)
-                                                             && x.VAT_isActive == true
-                                                             && x.VAT_isDeleted == false)
-                                                      .Select(q => new { q.VAT_ID, VAT_Rate = (q.VAT_Rate * 100) }),
-                        "VAT_ID", "VAT_Rate");
-
-            return select;
-        }
-        //get vendor
-        public string getVendorName(int vendorID)
-        {
-            var vendor = _context.DMVendor.SingleOrDefault(x => x.Vendor_ID == vendorID);
-
-            if (vendor == null)
-            {
-                return null;
-            }
-
-            return vendor.Vendor_Name;
-        }
-        //get account name
-        public string GetAccountName(int id)
-        {
-            return _context.DMAccount.Where(x => x.Account_ID == id).Single().Account_Name;
-        }
-        //get dept name
-        public string GetDeptName(int id)
-        {
-            return _context.DMDept.Where(x => x.Dept_ID == id).First().Dept_Name;
-        }
-        //get EWT(Tax Rate) value
-        public float GetEWTValue(int id)
-        {
-            return _context.DMTR.Where(x => x.TR_ID == id).First().TR_Tax_Rate;
-        }
-        //get currency abbreviation
-        public string GetCurrencyAbbrv(int id)
-        {
-            return _context.DMCurrency.Where(x => x.Curr_ID == id).First().Curr_CCY_ABBR;
-        }
-        //============[End Retrieve System Values]========================
-
-        //============[Access Entry Tables]===============================
+        ////============[Access Entry Tables]===============================
         //save expense details
-        public int addExpense_CV(EntryCVViewModelList entryModel,int userId,int expenseType)
+        public int addExpense_CV(EntryCVViewModelList entryModel, int userId, int expenseType)
         {
             float TotalDebit = 0;
             float credEwtTotal = 0;
             float credCashTotal = 0;
 
-            foreach(EntryCVViewModel cv in entryModel.EntryCV)
+            foreach (EntryCVViewModel cv in entryModel.EntryCV)
             {
                 TotalDebit += cv.debitGross;
                 credEwtTotal += cv.credEwt;
@@ -3074,7 +2907,7 @@ namespace ExpenseProcessingSystem.Services
                     List<ExpenseEntryCashBreakdownModel> expenseCashBreakdown = new List<ExpenseEntryCashBreakdownModel>();
                     List<ExpenseEntryGbaseDtl> expenseGbase = new List<ExpenseEntryGbaseDtl>();
 
-                    if(expenseType == GlobalSystemValues.TYPE_CV)
+                    if (expenseType == GlobalSystemValues.TYPE_CV)
                     {
                         foreach (var amorSchedule in cv.amtDetails)
                         {
@@ -3087,7 +2920,7 @@ namespace ExpenseProcessingSystem.Services
                             expenseAmor.Add(amortization);
                         }
                     }
-                    else if(expenseType == GlobalSystemValues.TYPE_PC)
+                    else if (expenseType == GlobalSystemValues.TYPE_PC)
                     {
                         foreach (var cashbd in cv.cashBreakdown)
                         {
@@ -3098,7 +2931,7 @@ namespace ExpenseProcessingSystem.Services
                                 CashBreak_Amount = cashbd.cashAmount
                             });
                         }
-                    }else if(expenseType == GlobalSystemValues.TYPE_SS && cv.ccyAbbrev == "PHP")
+                    } else if (expenseType == GlobalSystemValues.TYPE_SS && cv.ccyAbbrev == "PHP")
                     {
                         foreach (var cashbd in cv.cashBreakdown)
                         {
@@ -3155,7 +2988,7 @@ namespace ExpenseProcessingSystem.Services
                     Expense_Debit_Total = TotalDebit,
                     Expense_Credit_Total = credEwtTotal + credCashTotal,
                     Expense_Creator_ID = userId,
-                    Expense_Created_Date = (entryModel.entryID == 0 ) ? DateTime.Now : entryModel.createdDate,
+                    Expense_Created_Date = (entryModel.entryID == 0) ? DateTime.Now : entryModel.createdDate,
                     Expense_Last_Updated = DateTime.Now,
                     Expense_isDeleted = false,
                     Expense_Status = 1,
@@ -3174,26 +3007,26 @@ namespace ExpenseProcessingSystem.Services
         {
             List<EntryCVViewModel> cvList = new List<EntryCVViewModel>();
 
-            var EntryDetails = (from e 
+            var EntryDetails = (from e
                                 in _context.ExpenseEntry
                                 where e.Expense_ID == transID
                                 select new { e,
                                     ExpenseEntryDetails = from d
                                                           in _context.ExpenseEntryDetails
                                                           where d.ExpenseEntryModel.Expense_ID == e.Expense_ID
-                                                          select new { d ,
+                                                          select new { d,
                                                               ExpenseEntryGbaseDtls = from g
                                                                                       in _context.ExpenseEntryGbaseDtls
                                                                                       where g.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
-                                                                                      select g ,
+                                                                                      select g,
                                                               ExpenseEntryAmortizations = from a
                                                                                           in _context.ExpenseEntryAmortizations
                                                                                           where a.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
                                                                                           select a,
                                                               ExpenseEntryCashBreakdown = (from c
                                                                                                in _context.ExpenseEntryCashBreakdown
-                                                                                               where c.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
-                                                                                               select c).OrderByDescending(db => db.ExpenseEntryDetailModel.ExpDtl_ID).OrderByDescending(db => db.CashBreak_Denimination)
+                                                                                           where c.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
+                                                                                           select c).OrderByDescending(db => db.ExpenseEntryDetailModel.ExpDtl_ID).OrderByDescending(db => db.CashBreak_Denimination)
                                                           }
                                 }).FirstOrDefault();
 
@@ -3215,7 +3048,7 @@ namespace ExpenseProcessingSystem.Services
 
                 foreach (var gbase in dtl.ExpenseEntryGbaseDtls)
                 {
-                    EntryGbaseRemarksViewModel gbaseTemp = new EntryGbaseRemarksViewModel(){
+                    EntryGbaseRemarksViewModel gbaseTemp = new EntryGbaseRemarksViewModel() {
                         amount = gbase.GbaseDtl_Amount,
                         desc = gbase.GbaseDtl_Description,
                         docType = gbase.GbaseDtl_Document_Type,
@@ -3305,8 +3138,8 @@ namespace ExpenseProcessingSystem.Services
                                                                                       select g,
                                                               ExpenseEntryInterEntity = from a
                                                                                           in _context.ExpenseEntryInterEntity
-                                                                                          where a.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
-                                                                                          select a
+                                                                                        where a.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
+                                                                                        select a
                                                           }
                                 }).FirstOrDefault();
 
@@ -3367,7 +3200,7 @@ namespace ExpenseProcessingSystem.Services
                     inter_entity = dtl.d.ExpDtl_Inter_Entity,
                     fbt = dtl.d.ExpDtl_Fbt,
                     dept = dtl.d.ExpDtl_Dept,
-                    dept_Name = _context.DMDept.Where(x=> x.Dept_ID == dtl.d.ExpDtl_Dept && x.Dept_isActive == true).Select(x=> x.Dept_Name).FirstOrDefault(),
+                    dept_Name = _context.DMDept.Where(x => x.Dept_ID == dtl.d.ExpDtl_Dept && x.Dept_isActive == true).Select(x => x.Dept_Name).FirstOrDefault(),
                     chkVat = (dtl.d.ExpDtl_Vat <= 0) ? false : true,
                     vat = dtl.d.ExpDtl_Vat,
                     vat_Name = _context.DMVAT.Where(x => x.VAT_ID == dtl.d.ExpDtl_Vat && x.VAT_isActive == true).Select(x => x.VAT_Name).FirstOrDefault(),
@@ -3522,7 +3355,7 @@ namespace ExpenseProcessingSystem.Services
                     dbExpenseEntry.Expense_Verifier_1 = userid;
 
                 if (status == GlobalSystemValues.STATUS_APPROVED)
-                { 
+                {
                     dbExpenseEntry.Expense_Approver = userid;
                     if (GlobalSystemValues.STATUS_PENDING == GetCurrentEntryStatus(dbExpenseEntry.Expense_ID))
                     {
@@ -3559,7 +3392,7 @@ namespace ExpenseProcessingSystem.Services
             _context.ExpenseEntryDetails.RemoveRange(_context.ExpenseEntryDetails
                 .Where(x => x.ExpenseEntryModel.Expense_ID == entry.Expense_ID));
             _context.ExpenseEntry.RemoveRange(_context.ExpenseEntry.Where(x => x.Expense_ID == expense_ID));
-           
+
             _context.SaveChanges();
 
             return true;
@@ -3701,7 +3534,7 @@ namespace ExpenseProcessingSystem.Services
                         ExpNC_Category_ID = entryModel.EntryNC.NC_Category_ID,
                         ExpenseEntryNCDtls = expenseDtls
                     }
-                };       
+                };
 
                 ExpenseEntryModel expenseEntry = new ExpenseEntryModel
                 {
@@ -3892,8 +3725,416 @@ namespace ExpenseProcessingSystem.Services
         }
         ////============[End Access Entry Tables]=========================
 
+        ///==============[Post Entries]==============
+        public bool postCV(EntryCVViewModelList model)
+        {
+            foreach (var item in model.EntryCV)
+            {
+                gbaseContainer tempGbase = new gbaseContainer();
+
+
+            }
+
+            _GOContext.SaveChanges();
+            return true;
+        }
+        ///============[End Post Entries]============
+
+        ///==============[Begin Gbase Entry Section]================
+        private bool InsertGbaseEntry(gbaseContainer containerModel)
+        {
+            TblCm10 goModel = new TblCm10();
+
+            goModel.SystemName = "EXPRESS";
+            goModel.AutoApproved = "Y";
+            goModel.ValueDate = DateTime.Now.ToString("MMddyyyy");
+            goModel.Section = "10";
+            goModel.Remarks = containerModel.remarks;
+            goModel.MakerEmpno = containerModel.maker.ToString(); //Replace with user ID later when user module is finished.
+            goModel.Empno = containerModel.approver.ToString();  //Replace with user ID later when user module is finished.
+            goModel.Recstatus = "READY";
+
+            if (containerModel.entries.Count > 0)
+            {
+                goModel.Entry11Type = containerModel.entries[0].type;
+                goModel.Entry11Ccy = getCurrency(containerModel.entries[0].ccy).Curr_CCY_ABBR;
+                goModel.Entry11Amt = containerModel.entries[0].amount.ToString();
+
+                var entry11Account = getAccount(containerModel.entries[0].account);
+                goModel.Entry11Cust = entry11Account.Account_Cust;
+                goModel.Entry11ActType = entry11Account.Account_Code;
+                goModel.Entry11ActNo = entry11Account.Account_No.Substring(Math.Max(0, entry11Account.Account_No.Length - 6));
+                goModel.Entry11ExchRate = containerModel.entries[0].interate.ToString();
+                goModel.Entry11ExchCcy = containerModel.entries[0].interCcy.ToString();
+                goModel.Entry11Fund = "";//Replace with proper fund default.
+                if(containerModel.entries[0].chkNo != null)
+                {
+                    goModel.Entry11CheckNo = containerModel.entries[0].chkNo;
+                }
+                goModel.Entry11Available = "";//Replace with proper available default.
+                goModel.Entry11Details = "";//Replace with proper details default.
+                goModel.Entry11Entity = "";//Replace with proper entity default.
+                goModel.Entry11Division = "";//Replace with proper division default.
+                goModel.Entry11InterRate = "";//Replace with proper interate default.
+                goModel.Entry11InterAmt = "";//Replace with proper interamt default.
+
+                if (containerModel.entries.Count > 1) {
+                    goModel.Entry12Type = containerModel.entries[1].type;
+                    goModel.Entry12Ccy = getCurrency(containerModel.entries[1].ccy).Curr_CCY_ABBR;
+                    goModel.Entry12Amt = containerModel.entries[1].amount.ToString();
+
+                    var entry12Account = getAccount(containerModel.entries[1].account);
+                    goModel.Entry12Cust = entry12Account.Account_Cust;
+                    goModel.Entry12ActType = entry12Account.Account_Code;
+                    goModel.Entry12ActNo = entry12Account.Account_No.Substring(Math.Max(0, entry12Account.Account_No.Length - 6));
+                    goModel.Entry12ExchRate = containerModel.entries[1].interate.ToString();
+                    goModel.Entry12ExchCcy = containerModel.entries[1].interCcy.ToString();
+                    goModel.Entry12Fund = "";//Replace with proper fund default.
+                    if (containerModel.entries[1].chkNo != null)
+                    {
+                        goModel.Entry12CheckNo = containerModel.entries[1].chkNo;
+                    }
+                    goModel.Entry12Available = "";//Replace with proper available default.
+                    goModel.Entry12Details = "";//Replace with proper details default.
+                    goModel.Entry12Entity = "";//Replace with proper entity default.
+                    goModel.Entry12Division = "";//Replace with proper division default.
+                    goModel.Entry12InterRate = "";//Replace with proper interate default.
+                    goModel.Entry12InterAmt = "";//Replace with proper interamt default.
+                }
+                if (containerModel.entries.Count > 2)
+                {
+                    goModel.Entry21Type = containerModel.entries[2].type;
+                    goModel.Entry21Ccy = getCurrency(containerModel.entries[2].ccy).Curr_CCY_ABBR;
+                    goModel.Entry21Amt = containerModel.entries[2].amount.ToString();
+
+                    var entry21Account = getAccount(containerModel.entries[2].account);
+                    goModel.Entry21Cust = entry21Account.Account_Cust;
+                    goModel.Entry21ActType = entry21Account.Account_Code;
+                    goModel.Entry21ActNo = entry21Account.Account_No.Substring(Math.Max(0, entry21Account.Account_No.Length - 6));
+                    goModel.Entry21ExchRate = containerModel.entries[2].interate.ToString();
+                    goModel.Entry21ExchCcy = containerModel.entries[2].interCcy.ToString();
+                    goModel.Entry21Fund = "";//Replace with proper fund default.
+                    if (containerModel.entries[2].chkNo != null)
+                    {
+                        goModel.Entry21CheckNo = containerModel.entries[2].chkNo;
+                    }
+                    goModel.Entry21Available = "";//Replace with proper available default.
+                    goModel.Entry21Details = "";//Replace with proper details default.
+                    goModel.Entry21Entity = "";//Replace with proper entity default.
+                    goModel.Entry21Division = "";//Replace with proper division default.
+                    goModel.Entry21InterRate = "";//Replace with proper interate default.
+                    goModel.Entry21InterAmt = "";//Replace with proper interamt default.
+                }
+                if (containerModel.entries.Count > 3)
+                {
+                    goModel.Entry22Type = containerModel.entries[3].type;
+                    goModel.Entry22Ccy = getCurrency(containerModel.entries[3].ccy).Curr_CCY_ABBR;
+                    goModel.Entry22Amt = containerModel.entries[3].amount.ToString();
+
+                    var entry22Account = getAccount(containerModel.entries[3].account);
+                    goModel.Entry22Cust = entry22Account.Account_Cust;
+                    goModel.Entry22ActType = entry22Account.Account_Code;
+                    goModel.Entry22ActNo = entry22Account.Account_No.Substring(Math.Max(0, entry22Account.Account_No.Length - 6));
+                    goModel.Entry22ExchRate = containerModel.entries[3].interate.ToString();
+                    goModel.Entry22ExchCcy = containerModel.entries[3].interCcy.ToString();
+                    goModel.Entry22Fund = "";//Replace with proper fund default.
+                    if (containerModel.entries[3].chkNo != null)
+                    {
+                        goModel.Entry22CheckNo = containerModel.entries[3].chkNo;
+                    }
+                    goModel.Entry22Available = "";//Replace with proper available default.
+                    goModel.Entry22Details = "";//Replace with proper details default.
+                    goModel.Entry22Entity = "";//Replace with proper entity default.
+                    goModel.Entry22Division = "";//Replace with proper division default.
+                    goModel.Entry22InterRate = "";//Replace with proper interate default.
+                    goModel.Entry22InterAmt = "";//Replace with proper interamt default.
+                }
+                if (containerModel.entries.Count > 4)
+                {
+                    goModel.Entry31Type = containerModel.entries[4].type;
+                    goModel.Entry31Ccy = getCurrency(containerModel.entries[4].ccy).Curr_CCY_ABBR;
+                    goModel.Entry31Amt = containerModel.entries[4].amount.ToString();
+
+                    var entry31Account = getAccount(containerModel.entries[4].account);
+                    goModel.Entry31Cust = entry31Account.Account_Cust;
+                    goModel.Entry31ActType = entry31Account.Account_Code;
+                    goModel.Entry31ActNo = entry31Account.Account_No.Substring(Math.Max(0, entry31Account.Account_No.Length - 6));
+                    goModel.Entry31ExchRate = containerModel.entries[4].interate.ToString();
+                    goModel.Entry31ExchCcy = containerModel.entries[4].interCcy.ToString();
+                    goModel.Entry31Fund = "";//Replace with proper fund default.
+                    if (containerModel.entries[4].chkNo != null)
+                    {
+                        goModel.Entry31CheckNo = containerModel.entries[4].chkNo;
+                    }
+                    goModel.Entry31Available = "";//Replace with proper available default.
+                    goModel.Entry31Details = "";//Replace with proper details default.
+                    goModel.Entry31Entity = "";//Replace with proper entity default.
+                    goModel.Entry31Division = "";//Replace with proper division default.
+                    goModel.Entry31InterRate = "";//Replace with proper interate default.
+                    goModel.Entry31InterAmt = "";//Replace with proper interamt default.
+                }
+                if (containerModel.entries.Count > 5)
+                {
+                    goModel.Entry32Type = containerModel.entries[5].type;
+                    goModel.Entry32Ccy = getCurrency(containerModel.entries[5].ccy).Curr_CCY_ABBR;
+                    goModel.Entry32Amt = containerModel.entries[5].amount.ToString();
+
+                    var entry32Account = getAccount(containerModel.entries[5].account);
+                    goModel.Entry32Cust = entry32Account.Account_Cust;
+                    goModel.Entry32ActType = entry32Account.Account_Code;
+                    goModel.Entry32ActNo = entry32Account.Account_No.Substring(Math.Max(0, entry32Account.Account_No.Length - 6));
+                    goModel.Entry32ExchRate = containerModel.entries[5].interate.ToString();
+                    goModel.Entry32ExchCcy = containerModel.entries[5].interCcy.ToString();
+                    goModel.Entry32Fund = "";//Replace with proper fund default.
+                    if (containerModel.entries[5].chkNo != null)
+                    {
+                        goModel.Entry32CheckNo = containerModel.entries[5].chkNo;
+                    }
+                    goModel.Entry32Available = "";//Replace with proper available default.
+                    goModel.Entry32Details = "";//Replace with proper details default.
+                    goModel.Entry32Entity = "";//Replace with proper entity default.
+                    goModel.Entry32Division = "";//Replace with proper division default.
+                    goModel.Entry32InterRate = "";//Replace with proper interate default.
+                    goModel.Entry32InterAmt = "";//Replace with proper interamt default.
+                }
+                if (containerModel.entries.Count > 6)
+                {
+                    goModel.Entry41Type = containerModel.entries[6].type;
+                    goModel.Entry41Ccy = getCurrency(containerModel.entries[6].ccy).Curr_CCY_ABBR;
+                    goModel.Entry41Amt = containerModel.entries[6].amount.ToString();
+
+                    var entry41Account = getAccount(containerModel.entries[6].account);
+                    goModel.Entry41Cust = entry41Account.Account_Cust;
+                    goModel.Entry41ActType = entry41Account.Account_Code;
+                    goModel.Entry41ActNo = entry41Account.Account_No.Substring(Math.Max(0, entry41Account.Account_No.Length - 6));
+                    goModel.Entry41ExchRate = containerModel.entries[6].interate.ToString();
+                    goModel.Entry41ExchCcy = containerModel.entries[6].interCcy.ToString();
+                    goModel.Entry41Fund = "";//Replace with proper fund default.
+                    if (containerModel.entries[6].chkNo != null)
+                    {
+                        goModel.Entry41CheckNo = containerModel.entries[6].chkNo;
+                    }
+                    goModel.Entry41Available = "";//Replace with proper available default.
+                    goModel.Entry41Details = "";//Replace with proper details default.
+                    goModel.Entry41Entity = "";//Replace with proper entity default.
+                    goModel.Entry41Division = "";//Replace with proper division default.
+                    goModel.Entry41InterRate = "";//Replace with proper interate default.
+                    goModel.Entry41InterAmt = "";//Replace with proper interamt default.
+                }
+                if (containerModel.entries.Count > 7)
+                {
+                    goModel.Entry42Type = containerModel.entries[7].type;
+                    goModel.Entry42Ccy = getCurrency(containerModel.entries[7].ccy).Curr_CCY_ABBR;
+                    goModel.Entry42Amt = containerModel.entries[7].amount.ToString();
+
+                    var entry42Account = getAccount(containerModel.entries[7].account);
+                    goModel.Entry42Cust = entry42Account.Account_Cust;
+                    goModel.Entry42ActType = entry42Account.Account_Code;
+                    goModel.Entry42ActNo = entry42Account.Account_No.Substring(Math.Max(0, entry42Account.Account_No.Length - 6));
+                    goModel.Entry42ExchRate = containerModel.entries[7].interate.ToString();
+                    goModel.Entry42ExchCcy = containerModel.entries[7].interCcy.ToString();
+                    goModel.Entry42Fund = "";//Replace with proper fund default.
+                    if (containerModel.entries[7].chkNo != null)
+                    {
+                        goModel.Entry42CheckNo = containerModel.entries[7].chkNo;
+                    }
+                    goModel.Entry42Available = "";//Replace with proper available default.
+                    goModel.Entry42Details = "";//Replace with proper details default.
+                    goModel.Entry42Entity = "";//Replace with proper entity default.
+                    goModel.Entry42Division = "";//Replace with proper division default.
+                    goModel.Entry42InterRate = "";//Replace with proper interate default.
+                    goModel.Entry42InterAmt = "";//Replace with proper interamt default.
+                }
+            }
+            else
+            {
+                return false;
+            }
+
+            _GOContext.Add(goModel);
+            return true;
+        }
+        ///===============[End Gbase Entry Section]=================
+
+        ///============[Other Functions]============
+        //get fbt id
+        public int getFbt(int id)
+        {
+            return _context.DMFBT.FirstOrDefault(x=>x.FBT_MasterID==id && x.FBT_isActive == true && x.FBT_isDeleted == false).FBT_ID;
+        }
+        //get currency
+        public DMCurrencyModel getCurrency(int id)
+        {
+            return _context.DMCurrency.FirstOrDefault(x => x.Curr_ID == id);
+        }
+        //get vendor
+        public DMVendorModel getVendor(int id)
+        {
+            return _context.DMVendor.FirstOrDefault(x=> x.Vendor_ID == id);
+        }
+        //get account
+        public DMAccountModel getAccount(int id)
+        {
+            return _context.DMAccount.FirstOrDefault(x => x.Account_ID == id);
+        }
+        //get Status
+        public string getStatus(int id)
+        {
+            var status = _context.StatusList.SingleOrDefault(q => q.Status_ID == id);
+            return status.Status_Name;
+        }
+        //get userName
+        public string getUserName(int id)
+        {
+            var name = _context.User.SingleOrDefault(q => q.User_ID == id);
+
+            if (name == null)
+            {
+                return null;
+            }
+
+            return name.User_UserName;
+        }
+        //get vat value
+        public float getVat()
+        {
+            var vat = _context.DMVAT.FirstOrDefault(q => q.VAT_isActive == true);
+
+            if (vat == null)
+            {
+                return 0;
+            }
+
+            return vat.VAT_Rate;
+        }
+        //get Tax Rate list for specific user
+        public SelectList getVendorTaxRate(int vendorID)
+        {
+            var vendorMasterID = _context.DMVendor.Where(x => x.Vendor_ID == vendorID).Select(id => id.Vendor_MasterID).FirstOrDefault();
+            var vendorTRIDList = _context.DMVendorTRVAT.Where(x => x.VTV_Vendor_ID == vendorMasterID
+                                                                && x.VTV_TR_ID > 0)
+                                                       .Select(q => q.VTV_TR_ID).ToList();
+
+            var select = new SelectList(_context.DMTR.Where(x => vendorTRIDList.Contains(x.TR_MasterID)
+                                                            && x.TR_isActive == true
+                                                            && x.TR_isDeleted == false)
+                                                     .Select(q => new { q.TR_ID, TR_Tax_Rate = (q.TR_Tax_Rate * 100) }),
+                        "TR_ID", "TR_Tax_Rate");
+
+            return select;
+        }
+        //get Vat list for specific user
+        public SelectList getVendorVat(int vendorID)
+        {
+            var vendorMasterID = _context.DMVendor.Where(x => x.Vendor_ID == vendorID).Select(id => id.Vendor_MasterID).FirstOrDefault();
+            var vendorVatIDList = _context.DMVendorTRVAT.Where(x => x.VTV_Vendor_ID == vendorMasterID
+                                                                && x.VTV_VAT_ID > 0)
+                                                       .Select(q => q.VTV_VAT_ID).ToList();
+
+            var select = new SelectList(_context.DMVAT.Where(x => vendorVatIDList.Contains(x.VAT_ID)
+                                                             && x.VAT_isActive == true
+                                                             && x.VAT_isDeleted == false)
+                                                      .Select(q => new { q.VAT_ID, VAT_Rate = (q.VAT_Rate * 100) }),
+                        "VAT_ID", "VAT_Rate");
+
+            return select;
+        }
+        //get vendor name
+        public string getVendorName(int vendorID)
+        {
+            var vendor = _context.DMVendor.SingleOrDefault(x => x.Vendor_ID == vendorID);
+
+            if (vendor == null)
+            {
+                return null;
+            }
+
+            return vendor.Vendor_Name;
+        }
+        //retrieve vendor list
+        public List<SelectList> getEntrySystemVals()
+        {
+            List<SelectList> listOfLists = new List<SelectList>();
+
+            listOfLists.Add(new SelectList(_context.DMVendor.Where(x => x.Vendor_isActive == true && x.Vendor_isDeleted == false).Select(q => new { q.Vendor_ID, q.Vendor_Name }),
+                                                "Vendor_ID", "Vendor_Name"));
+
+            listOfLists.Add(new SelectList(_context.DMDept.Where(x => x.Dept_isActive == true && x.Dept_isDeleted == false).Select(q => new { q.Dept_ID, q.Dept_Name }),
+                                                "Dept_ID", "Dept_Name"));
+
+            listOfLists.Add(new SelectList(_context.DMCurrency.Where(x => x.Curr_isActive == true && x.Curr_isDeleted == false).Select(q => new { q.Curr_ID, q.Curr_CCY_ABBR }),
+                                    "Curr_ID", "Curr_CCY_ABBR"));
+
+            listOfLists.Add(new SelectList(_context.DMTR.Where(x => x.TR_isActive == true && x.TR_isDeleted == false).Select(q => new { q.TR_ID, q.TR_Tax_Rate }),
+                        "TR_ID", "TR_Tax_Rate"));
+
+            return listOfLists;
+        }
+        //retrieve account details
+        public List<accDetails> getAccDetailsEntry()
+        {
+            List<accDetails> accDetails = new List<accDetails>();
+
+            var accDbDetails = _context.DMAccount.Where(x => x.Account_isActive == true).Select(q => new { q.Account_ID, q.Account_Name, q.Account_Code });
+
+            foreach (var detail in accDbDetails)
+            {
+                accDetails temp = new accDetails();
+                temp.accId = detail.Account_ID;
+                temp.accName = detail.Account_Name;
+                temp.accCode = detail.Account_Code;
+
+                accDetails.Add(temp);
+            }
+
+            return accDetails;
+        }
+        public List<accDetails> getAccDetailsEntry(int account)
+        {
+            List<accDetails> accDetails = new List<accDetails>();
+
+            var accDbDetails = _context.DMAccount.Where(x => x.Account_ID == account).Select(q => new { q.Account_ID, q.Account_Name, q.Account_Code });
+
+            foreach (var detail in accDbDetails)
+            {
+                accDetails temp = new accDetails();
+                temp.accId = detail.Account_ID;
+                temp.accName = detail.Account_Name;
+                temp.accCode = detail.Account_Code;
+
+                accDetails.Add(temp);
+            }
+
+            return accDetails;
+        }
+        ///========[End of Other Functions]============
     }
 
+    internal class gbaseContainer
+    {
+        public DateTime valDate { get; set; }
+        public string remarks { get; set; }
+        public int maker { get; set; }
+        public int approver { get; set; }
+        public List<entryContainer> entries { get; set; }
 
+        public gbaseContainer()
+        {
+            entries = new List<entryContainer>();
+        }
+    }
+
+    internal class entryContainer
+    {
+        public string type { get; set; }
+        public int ccy { get; set; }
+        public double amount { get; set; }
+        public int vendor { get; set; }
+        public int account { get; set; }
+        public double interate { get; set; }
+        public double interCcy { get; set; }
+        public string chkNo { get; set; }
+        public int dept { get; set; }
+    }
 
 }

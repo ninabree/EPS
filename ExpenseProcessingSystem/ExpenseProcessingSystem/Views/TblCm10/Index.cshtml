@@ -1,0 +1,1093 @@
+﻿@model IEnumerable<ExpenseProcessingSystem.Models.Gbase.TblCm10>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SystemName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Groupcode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Branchno)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OpeKind)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AutoApproved)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WarningOverride)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CcyFormat)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OpeBranch)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ValueDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReferenceType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReferenceNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Comment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Section)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Remarks)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Memo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SchemeNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry11Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry11IbfCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry11Ccy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry11Amt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry11Cust)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry11Actcde)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry11ActType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry11ActNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry11ExchRate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry11ExchCcy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry11Fund)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry11CheckNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry11Available)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry11AdvcPrnt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry11Details)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry11Entity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry11Division)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry11InterAmt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry11InterRate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry12Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry12IbfCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry12Ccy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry12Amt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry12Cust)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry12Actcde)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry12ActType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry12ActNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry12ExchRate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry12ExchCcy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry12Fund)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry12CheckNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry12Available)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry12AdvcPrnt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry12Details)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry12Entity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry12Division)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry12InterAmt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry12InterRate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry21Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry21IbfCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry21Ccy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry21Amt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry21Cust)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry21Actcde)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry21ActType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry21ActNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry21ExchRate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry21ExchCcy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry21Fund)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry21CheckNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry21Available)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry21AdvcPrnt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry21Details)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry21Entity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry21Division)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry21InterAmt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry21InterRate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry22Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry22IbfCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry22Ccy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry22Amt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry22Cust)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry22Actcde)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry22ActType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry22ActNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry22ExchRate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry22ExchCcy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry22Fund)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry22CheckNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry22Available)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry22AdvcPrnt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry22Details)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry22Entity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry22Division)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry22InterAmt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry22InterRate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry31Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry31IbfCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry31Ccy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry31Amt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry31Cust)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry31Actcde)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry31ActType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry31ActNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry31ExchRate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry31ExchCcy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry31Fund)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry31CheckNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry31Available)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry31AdvcPrnt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry31Details)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry31Entity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry31Division)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry31InterAmt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry31InterRate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry32Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry32IbfCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry32Ccy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry32Amt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry32Cust)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry32Actcde)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry32ActType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry32ActNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry32ExchRate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry32ExchCcy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry32Fund)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry32CheckNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry32Available)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry32AdvcPrnt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry32Details)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry32Entity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry32Division)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry32InterAmt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry32InterRate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry41Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry41IbfCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry41Ccy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry41Amt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry41Cust)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry41Actcde)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry41ActType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry41ActNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry41ExchRate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry41ExchCcy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry41Fund)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry41CheckNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry41Available)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry41AdvcPrnt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry41Details)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry41Entity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry41Division)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry41InterAmt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry41InterRate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry42Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry42IbfCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry42Ccy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry42Amt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry42Cust)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry42Actcde)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry42ActType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry42ActNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry42ExchRate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry42ExchCcy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry42Fund)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry42CheckNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry42Available)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry42AdvcPrnt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry42Details)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry42Entity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry42Division)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry42InterAmt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Entry42InterRate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MakerEmpno)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Empno)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Datestamp)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Transno)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Xmlmsg)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Recstatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Timesent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Timerespond)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SystemName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Groupcode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Branchno)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OpeKind)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AutoApproved)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WarningOverride)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CcyFormat)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OpeBranch)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ValueDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReferenceType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReferenceNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Comment)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Section)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Remarks)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Memo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SchemeNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry11Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry11IbfCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry11Ccy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry11Amt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry11Cust)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry11Actcde)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry11ActType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry11ActNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry11ExchRate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry11ExchCcy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry11Fund)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry11CheckNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry11Available)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry11AdvcPrnt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry11Details)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry11Entity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry11Division)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry11InterAmt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry11InterRate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry12Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry12IbfCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry12Ccy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry12Amt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry12Cust)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry12Actcde)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry12ActType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry12ActNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry12ExchRate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry12ExchCcy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry12Fund)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry12CheckNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry12Available)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry12AdvcPrnt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry12Details)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry12Entity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry12Division)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry12InterAmt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry12InterRate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry21Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry21IbfCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry21Ccy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry21Amt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry21Cust)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry21Actcde)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry21ActType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry21ActNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry21ExchRate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry21ExchCcy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry21Fund)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry21CheckNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry21Available)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry21AdvcPrnt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry21Details)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry21Entity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry21Division)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry21InterAmt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry21InterRate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry22Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry22IbfCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry22Ccy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry22Amt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry22Cust)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry22Actcde)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry22ActType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry22ActNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry22ExchRate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry22ExchCcy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry22Fund)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry22CheckNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry22Available)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry22AdvcPrnt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry22Details)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry22Entity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry22Division)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry22InterAmt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry22InterRate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry31Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry31IbfCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry31Ccy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry31Amt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry31Cust)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry31Actcde)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry31ActType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry31ActNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry31ExchRate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry31ExchCcy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry31Fund)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry31CheckNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry31Available)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry31AdvcPrnt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry31Details)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry31Entity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry31Division)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry31InterAmt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry31InterRate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry32Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry32IbfCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry32Ccy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry32Amt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry32Cust)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry32Actcde)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry32ActType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry32ActNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry32ExchRate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry32ExchCcy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry32Fund)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry32CheckNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry32Available)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry32AdvcPrnt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry32Details)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry32Entity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry32Division)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry32InterAmt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry32InterRate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry41Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry41IbfCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry41Ccy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry41Amt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry41Cust)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry41Actcde)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry41ActType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry41ActNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry41ExchRate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry41ExchCcy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry41Fund)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry41CheckNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry41Available)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry41AdvcPrnt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry41Details)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry41Entity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry41Division)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry41InterAmt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry41InterRate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry42Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry42IbfCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry42Ccy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry42Amt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry42Cust)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry42Actcde)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry42ActType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry42ActNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry42ExchRate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry42ExchCcy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry42Fund)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry42CheckNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry42Available)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry42AdvcPrnt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry42Details)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry42Entity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry42Division)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry42InterAmt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Entry42InterRate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MakerEmpno)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Empno)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Datestamp)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Transno)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Xmlmsg)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Recstatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Timesent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Timerespond)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+</body>
+</html>
