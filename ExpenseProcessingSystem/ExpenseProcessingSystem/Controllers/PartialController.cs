@@ -103,6 +103,11 @@ namespace ExpenseProcessingSystem.Controllers
                 viewModel.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_FOREIGN_EXCHANGE_RECEIVING.Populate_CDD_Instruc_Sheet(currDtl, currDtlUSD);
                 viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
             }
+            else if (categoryID == GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES.ToString())
+            {
+                viewModel.EntryNC = CONSTANT_NC_MISC_ENTRIES.Populate_MISC_ENTRIES(currDtl);
+                viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
+            }
             viewModel = PopulateEntryNC(viewModel, expenseDate);
             return View("NCPartial", viewModel);
         }
