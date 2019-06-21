@@ -3919,7 +3919,7 @@ namespace ExpenseProcessingSystem.Services
             if (containerModel.entries.Count > 0)
             {
                 goModel.Entry11Type = containerModel.entries[0].type;
-                goModel.Entry11Ccy = getCurrency(containerModel.entries[0].ccy).Curr_CCY_ABBR;
+                goModel.Entry11Ccy = GetCurrencyAbbrv(containerModel.entries[0].ccy);
                 goModel.Entry11Amt = containerModel.entries[0].amount.ToString();
 
                 var entry11Account = getAccount(containerModel.entries[0].account);
@@ -3943,7 +3943,7 @@ namespace ExpenseProcessingSystem.Services
 
                 if (containerModel.entries.Count > 1) {
                     goModel.Entry12Type = containerModel.entries[1].type;
-                    goModel.Entry12Ccy = getCurrency(containerModel.entries[1].ccy).Curr_CCY_ABBR;
+                    goModel.Entry12Ccy = GetCurrencyAbbrv(containerModel.entries[1].ccy);
                     goModel.Entry12Amt = containerModel.entries[1].amount.ToString();
 
                     var entry12Account = getAccount(containerModel.entries[1].account);
@@ -3968,7 +3968,7 @@ namespace ExpenseProcessingSystem.Services
                 if (containerModel.entries.Count > 2)
                 {
                     goModel.Entry21Type = containerModel.entries[2].type;
-                    goModel.Entry21Ccy = getCurrency(containerModel.entries[2].ccy).Curr_CCY_ABBR;
+                    goModel.Entry21Ccy = GetCurrencyAbbrv(containerModel.entries[2].ccy);
                     goModel.Entry21Amt = containerModel.entries[2].amount.ToString();
 
                     var entry21Account = getAccount(containerModel.entries[2].account);
@@ -3993,7 +3993,7 @@ namespace ExpenseProcessingSystem.Services
                 if (containerModel.entries.Count > 3)
                 {
                     goModel.Entry22Type = containerModel.entries[3].type;
-                    goModel.Entry22Ccy = getCurrency(containerModel.entries[3].ccy).Curr_CCY_ABBR;
+                    goModel.Entry22Ccy = GetCurrencyAbbrv(containerModel.entries[3].ccy);
                     goModel.Entry22Amt = containerModel.entries[3].amount.ToString();
 
                     var entry22Account = getAccount(containerModel.entries[3].account);
@@ -4018,7 +4018,7 @@ namespace ExpenseProcessingSystem.Services
                 if (containerModel.entries.Count > 4)
                 {
                     goModel.Entry31Type = containerModel.entries[4].type;
-                    goModel.Entry31Ccy = getCurrency(containerModel.entries[4].ccy).Curr_CCY_ABBR;
+                    goModel.Entry31Ccy = GetCurrencyAbbrv(containerModel.entries[4].ccy);
                     goModel.Entry31Amt = containerModel.entries[4].amount.ToString();
 
                     var entry31Account = getAccount(containerModel.entries[4].account);
@@ -4043,7 +4043,7 @@ namespace ExpenseProcessingSystem.Services
                 if (containerModel.entries.Count > 5)
                 {
                     goModel.Entry32Type = containerModel.entries[5].type;
-                    goModel.Entry32Ccy = getCurrency(containerModel.entries[5].ccy).Curr_CCY_ABBR;
+                    goModel.Entry32Ccy = GetCurrencyAbbrv(containerModel.entries[5].ccy);
                     goModel.Entry32Amt = containerModel.entries[5].amount.ToString();
 
                     var entry32Account = getAccount(containerModel.entries[5].account);
@@ -4068,7 +4068,7 @@ namespace ExpenseProcessingSystem.Services
                 if (containerModel.entries.Count > 6)
                 {
                     goModel.Entry41Type = containerModel.entries[6].type;
-                    goModel.Entry41Ccy = getCurrency(containerModel.entries[6].ccy).Curr_CCY_ABBR;
+                    goModel.Entry41Ccy = GetCurrencyAbbrv(containerModel.entries[6].ccy);
                     goModel.Entry41Amt = containerModel.entries[6].amount.ToString();
 
                     var entry41Account = getAccount(containerModel.entries[6].account);
@@ -4093,7 +4093,7 @@ namespace ExpenseProcessingSystem.Services
                 if (containerModel.entries.Count > 7)
                 {
                     goModel.Entry42Type = containerModel.entries[7].type;
-                    goModel.Entry42Ccy = getCurrency(containerModel.entries[7].ccy).Curr_CCY_ABBR;
+                    goModel.Entry42Ccy = GetCurrencyAbbrv(containerModel.entries[7].ccy);
                     goModel.Entry42Amt = containerModel.entries[7].amount.ToString();
 
                     var entry42Account = getAccount(containerModel.entries[7].account);
@@ -4132,11 +4132,6 @@ namespace ExpenseProcessingSystem.Services
         public int getFbt(int id)
         {
             return _context.DMFBT.FirstOrDefault(x=>x.FBT_MasterID==id && x.FBT_isActive == true && x.FBT_isDeleted == false).FBT_ID;
-        }
-        //get currency
-        public DMCurrencyModel getCurrency(int id)
-        {
-            return _context.DMCurrency.FirstOrDefault(x => x.Curr_ID == id);
         }
         //get vendor
         public DMVendorModel getVendor(int id)
@@ -4200,7 +4195,7 @@ namespace ExpenseProcessingSystem.Services
         //get currency abbreviation
         public string GetCurrencyAbbrv(int id)
         {
-            return _context.DMCurrency.Where(x => x.Curr_ID == id).First().Curr_CCY_ABBR;
+            return (id != 0 ) ? _context.DMCurrency.Where(x => x.Curr_ID == id).First().Curr_CCY_ABBR : "PHP";
         }
         //get Tax Rate list for specific user
         public SelectList getVendorTaxRate(int vendorID)

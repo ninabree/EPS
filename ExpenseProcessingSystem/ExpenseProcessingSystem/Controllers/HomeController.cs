@@ -933,6 +933,7 @@ namespace ExpenseProcessingSystem.Controllers
                 case "approver":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_APPROVED, int.Parse(GetUserID())))
                     {
+                        _service.postCV(entryID);
                         ViewBag.Success = 1;
                     }
                     else
@@ -1106,6 +1107,7 @@ namespace ExpenseProcessingSystem.Controllers
                 case "approver":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_APPROVED, int.Parse(GetUserID())))
                     {
+                        _service.postCV(entryID);
                         ViewBag.Success = 1;
                     }
                     else
