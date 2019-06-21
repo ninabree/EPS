@@ -3895,6 +3895,48 @@ namespace ExpenseProcessingSystem.Services
             _GOContext.SaveChanges();
             return true;
         }
+        public bool postNC(int expID)
+        {
+            var expenseDetails = getExpenseNC(expID);
+
+            foreach (var dtls in expenseDetails.EntryNC.ExpenseEntryNCDtls)
+            {
+                gbaseContainer tempGbase = new gbaseContainer();
+
+                tempGbase.valDate = expenseDetails.expenseDate;
+                tempGbase.remarks = dtls.ExpNCDtl_Remarks_Desc;
+                tempGbase.maker = expenseDetails.maker;
+                tempGbase.approver = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == expID).Expense_Approver;
+                foreach (var item in dtls.ExpenseEntryNCDtlAccs)
+                {
+                    if (item.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_CREDIT)
+                    {
+                        entryContainer credit = new entryContainer();
+                        credit.type = "C";
+                        credit.ccy = item.ExpNCDtlAcc_Curr_ID;
+                        credit.amount = item.ExpNCDtlAcc_Amount;
+                        credit.account = item.ExpNCDtlAcc_Acc_ID;
+                        credit.interate = item.ExpNCDtlAcc_Inter_Rate;
+                        tempGbase.entries.Add(credit);
+                    }
+                    else if (item.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
+                    {
+                        entryContainer debit = new entryContainer();
+                        debit.type = "D";
+                        debit.ccy = item.ExpNCDtlAcc_Curr_ID;
+                        debit.amount = item.ExpNCDtlAcc_Amount;
+                        debit.account = item.ExpNCDtlAcc_Acc_ID;
+                        debit.interate = item.ExpNCDtlAcc_Inter_Rate;
+                        tempGbase.entries.Add(debit);
+                    }
+                }
+                //insert
+                InsertGbaseEntry(tempGbase);
+            }
+
+            _GOContext.SaveChanges();
+            return true;
+        }
         ///============[End Post Entries]============
 
         ///==============[Begin Gbase Entry Section]================

@@ -17,7 +17,8 @@
     <div id="tbl-lbl">
         <div class="dis-inline-block"><p>Category of Entries:</p></div>
         <div class="dis-inline-block">
-            @Html.DropDownListFor(m => m.category_of_entry, Model.systemValues.category_of_entries, new { id = "categoryName" })
+            @Html.DisplayFor(x=> x.EntryNC.NC_Category_Name)
+            @*@Html.DropDownListFor(m => m.category_of_entry, Model.systemValues.category_of_entries, new { id = "categoryName" })*@
         </div>
     </div>
 
@@ -158,8 +159,16 @@
 
                     @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker)
                     {
-                        <div class="dis-inline-block tbl-btn"><button>Delete</button></div>
-                        <div class="dis-inline-block tbl-btn"><button value="Modify" name="command">Modify</button></div>
+                        if (Model.statusID == GlobalSystemValues.STATUS_APPROVED)
+                        {
+                            <div class="dis-inline-block tbl-btn"><button disabled>Delete</button></div>
+                            <div class="dis-inline-block tbl-btn"><button disabled>Modify</button></div>
+                        }
+                        else
+                        {
+                            <div class="dis-inline-block tbl-btn"><button>Delete</button></div>
+                            <div class="dis-inline-block tbl-btn"><button value="Modify" name="command">Modify</button></div>
+                        }
                     }
                     else
                     {
@@ -167,13 +176,27 @@
                         <div class="dis-inline-block tbl-btn"><button disabled>Modify</button></div>
                     }
                 </div>
-                <div>
-                    <div class="dis-inline-block tbl-btn"><button id="reversal_entry" disabled>Create Reversal Entry</button></div>
-                    <div class="dis-inline-block tbl-btn"><button disabled>Liquidate</button></div>
-                </div>
-                <div>
-                    <div class="dis-inline-block tbl-btn m-l-41"><button disabled>Print CDD Instruction Sheet</button></div>
-                </div>
+                
+                @if (Model.statusID == GlobalSystemValues.STATUS_APPROVED)
+                {
+                    <div>
+                        <div class="dis-inline-block tbl-btn"><button id="reversal_entry">Create Reversal Entry</button></div>
+                        <div class="dis-inline-block tbl-btn"><button >Liquidate</button></div>
+                    </div>
+                    <div>
+                        <div class="dis-inline-block tbl-btn m-l-41"><button >Print CDD Instruction Sheet</button></div>
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        <div class="dis-inline-block tbl-btn"><button id="reversal_entry" disabled>Create Reversal Entry</button></div>
+                        <div class="dis-inline-block tbl-btn"><button disabled>Liquidate</button></div>
+                    </div>
+                    <div>
+                        <div class="dis-inline-block tbl-btn m-l-41"><button disabled>Print CDD Instruction Sheet</button></div>
+                    </div>
+                }
 
             </div>
             <div class="flex-sb">
@@ -193,7 +216,14 @@
                             <div class="dis-inline-block tbl-btn"><button value="@HttpContextAccessor.HttpContext.Session.GetString("accessType")" name="command">Approve/Verify</button></div>
                         }
                     }
-                    <div class="dis-inline-block tbl-btn"><button value="Reject" name="command">Reject</button></div>
+                    @if (Model.statusID == GlobalSystemValues.STATUS_APPROVED)
+                    {
+                        <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
+                    }
+                    else
+                    {
+                        <div class="dis-inline-block tbl-btn"><button value="Reject" name="command">Reject</button></div>
+                    }
                 </div>
                 <div>
                 </div>

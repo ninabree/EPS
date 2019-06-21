@@ -1258,13 +1258,7 @@ namespace ExpenseProcessingSystem.Controllers
                 case "approver":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_APPROVED, int.Parse(GetUserID())))
                     {
-                        //_service.SaveToGBase();
-                        var expDtls = _context.ExpenseEntry.Where(x => x.Expense_ID == entryID).Select(x => x.ExpenseEntryDetails).FirstOrDefault();
-                        var isFbt = expDtls.Select(x => x.ExpDtl_Fbt).FirstOrDefault() == true;
-                        if (isFbt)
-                        {
-                            //_service.SaveToGBaseFBT();
-                        }
+                        _service.postNC(entryID);
                         ViewBag.Success = 1;
                     }
                     else
@@ -1295,12 +1289,14 @@ namespace ExpenseProcessingSystem.Controllers
 
             ncList = PopulateEntryNC(ncList);
 
-            
-            //ncList.systemValues.acc.AddRange(_service.getAccDetailsEntry(ncList.EntryNC.account));
-            if(viewLink == "Entry_NC")
-            {
-                return RedirectToAction("Entry_NC", ncList);
-            }
+            //foreach (var dtls in ncList.EntryNC.ExpenseEntryNCDtls)
+            //{
+            //    foreach (var acc in dtls.ExpenseEntryNCDtlAccs)
+            //    {
+            //        ncList.systemValues.acc.AddRange(_service.getAccDetailsEntry(acc.ExpNCDtlAcc_Acc_ID));
+            //    }
+            //}
+
             return View(viewLink, ncList);
         }
 
@@ -1335,6 +1331,8 @@ namespace ExpenseProcessingSystem.Controllers
         public EntryNCViewModelList PopulateEntryNC(EntryNCViewModelList viewModel)
         {
             viewModel.category_of_entry = GlobalSystemValues.NC_CATEGORIES_SELECT;
+            viewModel.EntryNC.NC_Category_Name = GlobalSystemValues.NC_CATEGORIES_SELECT.Where(x => x.Value == viewModel.EntryNC.NC_Category_ID + "")
+                                            .Select(x => x.Text).FirstOrDefault();
             return viewModel;
         }
 

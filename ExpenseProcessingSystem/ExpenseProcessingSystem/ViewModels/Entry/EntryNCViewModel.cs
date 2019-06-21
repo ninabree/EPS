@@ -13,6 +13,7 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         [NotNullValidations]
         [Display(Name = "Category of Entry")]
         public int NC_Category_ID { get; set; }
+        public string NC_Category_Name { get; set; }
         [NotNullValidations, AmountValidation]
         [Display(Name = "Debit - Total Amount")]
         public float NC_DebitAmt { get; set; }
