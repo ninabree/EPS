@@ -655,7 +655,7 @@ div[aria-describedby=validationSummary] {
 [ Voucher - Table ]*/
 /*-------------------------------------
 [ INPUT FIELDS ]*/
-td.voucher-input {
+td.voucher-input, div.voucher-input {
     background-color: #fcf8e3;
 }
     td.voucher-input > input, div.voucher-input > input {

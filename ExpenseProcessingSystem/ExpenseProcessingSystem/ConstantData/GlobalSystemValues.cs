@@ -1536,4 +1536,47 @@ namespace ExpenseProcessingSystem.ConstantData
             };
         }
     }
+
+    //NON CASH CONSTANT VALUES
+    public class CONSTANT_NC_MISC_ENTRIES
+    {
+        public static EntryNCViewModel Populate_MISC_ENTRIES(DMCurrencyModel currDetailsPHP)
+        {
+            return new EntryNCViewModel
+            {
+                NC_Category_ID = 11,
+                ExpenseEntryNCDtls = new List<ExpenseEntryNCDtlViewModel>()
+                {
+                    new ExpenseEntryNCDtlViewModel
+                    {
+                        ExpNCDtl_Remarks_Desc = "",
+                        ExpNCDtl_Period_Duration = "",
+                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
+                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
+                        {
+                            new ExpenseEntryNCDtlAccViewModel{
+                                ExpNCDtlAcc_Acc_ID = 0,
+                                ExpNCDtlAcc_Acc_Name = "",
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_DEBIT
+                            },
+                            new ExpenseEntryNCDtlAccViewModel{
+                                ExpNCDtlAcc_Acc_ID = 0,
+                                ExpNCDtlAcc_Acc_Name = "",
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_CREDIT
+                            }
+                        }
+                    }
+                }
+            };
+        }
+    }
 }
