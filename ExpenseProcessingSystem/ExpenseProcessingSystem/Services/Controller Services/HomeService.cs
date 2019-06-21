@@ -3077,6 +3077,7 @@ namespace ExpenseProcessingSystem.Services
                     GBaseRemarks = dtl.d.ExpDtl_Gbase_Remarks,
                     account = dtl.d.ExpDtl_Account,
                     fbt = dtl.d.ExpDtl_Fbt,
+                    fbtID = dtl.d.ExpDtl_FbtID,
                     dept = dtl.d.ExpDtl_Dept,
                     chkVat = (dtl.d.ExpDtl_Vat <= 0) ? false : true,
                     vat = dtl.d.ExpDtl_Vat,
@@ -3770,11 +3771,19 @@ namespace ExpenseProcessingSystem.Services
                 {
                     tempGbase.entries = new List<entryContainer>();
 
-                    //var fbt = getAccount()
+                    //((ExpenseAmount*.50)/.65)*.35
+                    string fbt = getFbtFormula(getAccount(item.account).Account_FBT_MasterID);
 
+                    string equation = fbt.Replace("ExpenseAmount", item.debitGross.ToString());
+                    double fbtAmount = Math.Round(Convert.ToDouble(new DataTable().Compute(equation, null)),2);
+                    Console.WriteLine(equation);
+                    credit.amount = fbtAmount;
+                    debit.amount = fbtAmount;
 
-                    credit.amount = Convert.ToDouble(new DataTable().Compute("(3+3)*2+1", null));
-                    debit.amount = Convert.ToDouble(new DataTable().Compute("(3+3)*2+1", null));
+                    tempGbase.entries.Add(credit);
+                    tempGbase.entries.Add(debit);
+
+                    InsertGbaseEntry(tempGbase);
                 }
             }
 
@@ -4018,6 +4027,10 @@ namespace ExpenseProcessingSystem.Services
         public int getFbt(int id)
         {
             return _context.DMFBT.FirstOrDefault(x=>x.FBT_MasterID==id && x.FBT_isActive == true && x.FBT_isDeleted == false).FBT_ID;
+        }
+        public string getFbtFormula(int id)
+        {
+            return _context.DMFBT.FirstOrDefault(x=>x.FBT_ID == id).FBT_Formula;
         }
         //get currency
         public DMCurrencyModel getCurrency(int id)

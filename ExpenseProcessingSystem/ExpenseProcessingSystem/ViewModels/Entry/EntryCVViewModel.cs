@@ -19,6 +19,7 @@ namespace ExpenseProcessingSystem.ViewModels
         [NotNullValidations]
         [Display(Name = "FBT")]
         public bool fbt { get; set; }
+        public int fbtID { get; set; }
         [NotNullValidations]
         [Display(Name = "Department")]
         public int dept { get; set; }
