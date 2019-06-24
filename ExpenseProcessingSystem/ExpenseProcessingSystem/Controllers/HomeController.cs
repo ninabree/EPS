@@ -1219,8 +1219,7 @@ namespace ExpenseProcessingSystem.Controllers
         {
             string newFileName = "CDD_IS" + DateTime.Now.ToString("MM-dd-yyyy_hhmmss") + ".xlsx";
             ExcelGenerateService excelGenerate = new ExcelGenerateService();
-
-            return File(excelGenerate.ExcelCDDIS(new CDDISValuesVIewModel
+            CDDISValuesVIewModel viewModel = new CDDISValuesVIewModel
             {
                 VALUE_DATE = DateTime.Parse("2019/01/01"),
                 REFERENCE_NO = "CHK767123456",
@@ -1228,42 +1227,54 @@ namespace ExpenseProcessingSystem.Controllers
                 SECTION = "09",
                 REMARKS = "THIS IS CDD Instruction sheet generate TEST",
                 SCHEME_NO = "123456789012",
-                MEMO = "Y",
-                DEBIT_CREDIT_1 = "D",
-                CCY_1 = "JPY",
-                AMOUNT_1 = 98223,
-                CUSTOMER_ABBR_1 = "900",
-                ACCOUNT_CODE_1 = "14017",
-                ACCOUNT_NO_1 = "B79789111111",
-                EXCHANGE_RATE_1 = 0.4545,
-                CONTRA_CCY_1 = "USD",
-                FUND_1 = "O",
-                CHECK_NO_1 = "2019062122",
-                AVAILABLE_DATE_1 = DateTime.Parse("2019/02/01"),
-                ADVICE_1 = "Y",
-                DETAILS_1 = "This is Details 1 Test",
-                ENTITY_1 = "010",
-                DIVISION_1 = "11",
-                INTER_AMOUNT_1 = 915.25,
-                INTER_RATE_1 = 0.0093,
-                DEBIT_CREDIT_2 = "C",
-                CCY_2 = "JPY",
-                AMOUNT_2 = 98223.25,
-                CUSTOMER_ABBR_2 = "911",
-                ACCOUNT_CODE_2 = "00204",
-                ACCOUNT_NO_2 = "F79789171137",
-                EXCHANGE_RATE_2 = 0.4545,
-                CONTRA_CCY_2 = "SGD",
-                FUND_2 = "O",
-                CHECK_NO_2 = "2019062123",
-                AVAILABLE_DATE_2 = DateTime.Parse("2019/02/22"),
-                ADVICE_2 = "Y",
-                DETAILS_2 = "This is Details 2 Test",
-                ENTITY_2 = "011",
-                DIVISION_2 = "12",
-                INTER_AMOUNT_2 = 1915.25,
-                INTER_RATE_2 = 0.1193
-            }, newFileName), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", newFileName);
+                MEMO = "Y"
+            };
+
+            List<CDDISValueContentsViewModel> cddContents = new List<CDDISValueContentsViewModel>
+            {
+                new CDDISValueContentsViewModel
+                {
+                    DEBIT_CREDIT = "D",
+                    CCY = "JPY",
+                    AMOUNT = 98223,
+                    CUSTOMER_ABBR = "900",
+                    ACCOUNT_CODE = "14017",
+                    ACCOUNT_NO = "B79789111111",
+                    EXCHANGE_RATE = 0.4545,
+                    CONTRA_CCY = "USD",
+                    FUND = "O",
+                    CHECK_NO = "2019062122",
+                    AVAILABLE_DATE = DateTime.Parse("2019/02/01"),
+                    ADVICE = "Y",
+                    DETAILS = "This is Details 1 Test",
+                    ENTITY = "010",
+                    DIVISION = "11",
+                    INTER_AMOUNT = 915.25,
+                    INTER_RATE = 0.0093
+                },
+                new CDDISValueContentsViewModel
+                {
+                    DEBIT_CREDIT = "C",
+                    CCY = "JPY",
+                    AMOUNT = 98223.25,
+                    CUSTOMER_ABBR = "911",
+                    ACCOUNT_CODE = "00204",
+                    ACCOUNT_NO = "F79789171137",
+                    EXCHANGE_RATE = 0.4545,
+                    CONTRA_CCY = "SGD",
+                    FUND = "O",
+                    CHECK_NO = "2019062123",
+                    AVAILABLE_DATE = DateTime.Parse("2019/02/22"),
+                    ADVICE = "Y",
+                    DETAILS = "This is Details 2 Test",
+                    ENTITY = "011",
+                    DIVISION = "12",
+                    INTER_AMOUNT = 1915.25,
+                    INTER_RATE = 0.1193
+                },
+            };
+            viewModel.CDDContents = cddContents;
+            return File(excelGenerate.ExcelCDDIS(viewModel, newFileName), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", newFileName);
 
         }
 
@@ -1371,6 +1382,8 @@ namespace ExpenseProcessingSystem.Controllers
                     }
                     viewLink = "Entry_NC";
                     return RedirectToAction("Entry_NC", new EntryNCViewModelList());
+                case "PrintCDD":
+                    return RedirectToAction("CDD_IS_NC_PCR", new { entryID = entryID });
                 default:
                     break;
             }
@@ -1379,17 +1392,57 @@ namespace ExpenseProcessingSystem.Controllers
             ncList = _service.getExpenseNC(entryID);
             ncList = PopulateEntryNC(ncList);
 
-            //foreach (var dtls in ncList.EntryNC.ExpenseEntryNCDtls)
-            //{
-            //    foreach (var acc in dtls.ExpenseEntryNCDtlAccs)
-            //    {
-            //        ncList.systemValues.acc.AddRange(_service.getAccDetailsEntry(acc.ExpNCDtlAcc_Acc_ID));
-            //    }
-            //}
             ViewData["partialName"] = ncList.EntryNC.NC_Category_ID.ToString();
             return View(viewLink, ncList);
         }
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
+        public IActionResult CDD_IS_NC_PCR(int entryID)
+        {
+            var entryVals = _service.getExpenseNC(entryID);
+            string newFileName = "CDD_IS_NC_PCR_" + DateTime.Now.ToString("MM-dd-yyyy_hhmmss") + ".xlsx";
+            ExcelGenerateService excelGenerate = new ExcelGenerateService();
+            CDDISValuesVIewModel viewModel = new CDDISValuesVIewModel {
+                VALUE_DATE = DateTime.Parse("2019/01/01"), //TEMP VALUE
+                REFERENCE_NO = " GA767123456",
+                COMMENT = "  ",
+                SECTION = "09",
+                REMARKS = "AD: PETTY CASH REPLENISHEMENT",
+                SCHEME_NO = "  ",
+                MEMO = "Y"
+            };
+            List<CDDISValueContentsViewModel> cddContents = new List<CDDISValueContentsViewModel>();
+            foreach (var dtl in entryVals.EntryNC.ExpenseEntryNCDtls){
+                foreach (var acc in dtl.ExpenseEntryNCDtlAccs)
+                {
+                    var acct = _context.DMAccount.Where(x => x.Account_ID == acc.ExpNCDtlAcc_Acc_ID).FirstOrDefault();
+                    CDDISValueContentsViewModel vm = new CDDISValueContentsViewModel
+                    {
+                        DEBIT_CREDIT = (acc.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT) ? "D" : "C",
+                        CCY = _context.DMCurrency.Where(x=> x.Curr_ID == acc.ExpNCDtlAcc_Curr_ID).Select(x => x.Curr_CCY_ABBR).FirstOrDefault(),
+                        AMOUNT = acc.ExpNCDtlAcc_Amount,
+                        CUSTOMER_ABBR = "900",
+                        ACCOUNT_CODE = acct.Account_Code,
+                        ACCOUNT_NO = acct.Account_No,
+                        EXCHANGE_RATE = acc.ExpNCDtlAcc_Inter_Rate,
+                        CONTRA_CCY = "   ",
+                        FUND = (acct.Account_Fund) ? "O" : " ",
+                        CHECK_NO = " ",
+                        AVAILABLE_DATE = DateTime.Parse("2019/02/01"),
+                        ADVICE = " ",
+                        DETAILS = " ",
+                        ENTITY = "010",
+                        DIVISION = "11",
+                        INTER_AMOUNT = 0,
+                        INTER_RATE = 0,
+                    };
+                    cddContents.Add(vm);
+                }
+            }
+            viewModel.CDDContents = cddContents;
+            return File(excelGenerate.ExcelCDDIS(viewModel, newFileName), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", newFileName);
 
+        }
         //[* Entry Non Cash *]
         //------------------------------------------------------------------
 
