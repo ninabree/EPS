@@ -1,0 +1,57 @@
+﻿@{
+    Layout = null;
+}
+@model List<ExpenseProcessingSystem.ViewModels.BMViewModel>
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>BM_PrintPDF</title>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Account Mapping</th>
+                <th>Account Name</th>
+                <th style="text-align:center">G-Base Budget Code</th>
+                <th style="text-align:center">Account Number</th>
+                <th style="text-align:center">Budget</th>
+                <th style="text-align:center">Date Registered</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.BM_Acc_Group_Name)</td>
+                    <td>@Html.DisplayFor(modelItem => item.BM_Acc_Name)</td>
+                    <td style="text-align:center">@Html.DisplayFor(modelItem => item.BM_GBase_Code)</td>
+                    <td style="text-align:center">@Html.DisplayFor(modelItem => item.BM_Acc_Num)</td>
+                    <td style="text-align:right">@Html.DisplayFor(modelItem => item.BM_Budget_Amount)</td>
+                    <td style="text-align:center">@Html.DisplayFor(modelItem => item.BM_Date_Registered)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+</html>
