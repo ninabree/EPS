@@ -215,7 +215,7 @@
                     }
                 </div>
                 <div>
-                    <div class="dis-inline-block tbl-btn"><button disabled>Delete GBase Post</button></div>
+                    <a class="printCDD_IS tbl-btn" href="#">Print CDD Instruction Sheet</a>
                 </div>
                 <div>
                     <div class="dis-inline-block tbl-btn"><button disabled>Print BIR Certificate</button></div>
@@ -232,7 +232,6 @@
     @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
 </div>
 <script>
-
     $(document).ready(function () {
         //Enable Cash breakdown button if currency = PHP, disable if not.
         var trs = $("#inputTable").find("tbody").find("tr");
@@ -301,6 +300,12 @@
 
                 $('#myModal').modal('show');
             });
+        });
+
+        $(".printCDD_IS").click(function (e) {
+            e.preventDefault();
+
+            window.location.href = "/Home/CDD_IS_SS";
         });
     });
 </script>

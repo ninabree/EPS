@@ -563,6 +563,19 @@ namespace ExpenseProcessingSystem.Controllers
 
         [OnlineUserCheck]
         [ImportModelState]
+        public IActionResult BM_PrintList()
+        {
+            return new ViewAsPdf("BM_PrintPDF", _service.PopulateBM())
+            {
+                FileName = "Budget_List_" + DateTime.Now + ".pdf",
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape,
+                CustomSwitches = HomeReportConstantValue.PdfFooter2,
+                PageSize = Rotativa.AspNetCore.Options.Size.A4
+            };
+        }
+
+        [OnlineUserCheck]
+        [ImportModelState]
         public IActionResult UM(string sortOrder, string currentFilter, string searchString, int? page)
         {
             //set sort vals
@@ -1198,6 +1211,60 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             return View("Entry_SS_ReadOnly", ssList);
+        }
+
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
+        public IActionResult CDD_IS_SS(int entryID)
+        {
+            string newFileName = "CDD_IS" + DateTime.Now.ToString("MM-dd-yyyy_hhmmss") + ".xlsx";
+            ExcelGenerateService excelGenerate = new ExcelGenerateService();
+
+            return File(excelGenerate.ExcelCDDIS(new CDDISValuesVIewModel
+            {
+                VALUE_DATE = DateTime.Parse("2019/01/01"),
+                REFERENCE_NO = "CHK767123456",
+                COMMENT = "CD",
+                SECTION = "09",
+                REMARKS = "THIS IS CDD Instruction sheet generate TEST",
+                SCHEME_NO = "123456789012",
+                MEMO = "Y",
+                DEBIT_CREDIT_1 = "D",
+                CCY_1 = "JPY",
+                AMOUNT_1 = 98223,
+                CUSTOMER_ABBR_1 = "900",
+                ACCOUNT_CODE_1 = "14017",
+                ACCOUNT_NO_1 = "B79789111111",
+                EXCHANGE_RATE_1 = 0.4545,
+                CONTRA_CCY_1 = "USD",
+                FUND_1 = "O",
+                CHECK_NO_1 = "2019062122",
+                AVAILABLE_DATE_1 = DateTime.Parse("2019/02/01"),
+                ADVICE_1 = "Y",
+                DETAILS_1 = "This is Details 1 Test",
+                ENTITY_1 = "010",
+                DIVISION_1 = "11",
+                INTER_AMOUNT_1 = 915.25,
+                INTER_RATE_1 = 0.0093,
+                DEBIT_CREDIT_2 = "C",
+                CCY_2 = "JPY",
+                AMOUNT_2 = 98223.25,
+                CUSTOMER_ABBR_2 = "911",
+                ACCOUNT_CODE_2 = "00204",
+                ACCOUNT_NO_2 = "F79789171137",
+                EXCHANGE_RATE_2 = 0.4545,
+                CONTRA_CCY_2 = "SGD",
+                FUND_2 = "O",
+                CHECK_NO_2 = "2019062123",
+                AVAILABLE_DATE_2 = DateTime.Parse("2019/02/22"),
+                ADVICE_2 = "Y",
+                DETAILS_2 = "This is Details 2 Test",
+                ENTITY_2 = "011",
+                DIVISION_2 = "12",
+                INTER_AMOUNT_2 = 1915.25,
+                INTER_RATE_2 = 0.1193
+            }, newFileName), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", newFileName);
+
         }
 
         //------------------------------------------------------------------
