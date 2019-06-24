@@ -210,6 +210,10 @@
         var modalDivBody2 = $(modalDiv2).find('.modal-body2');
         var modalDivFooter2 = $(modalDiv2).find('.modal-footer2');
 
+        //checks each checkbox and enables corresponding modals
+        CheckEachEWT();
+        CheckEachInter();
+
         $(window).on("load", function () {
             var gross = $(".txtGross");
             var credEwt = $(".txtCredEwt");
@@ -468,7 +472,58 @@
             }
         });
     });
+    //--------------------------------------------------------------------------------------------
+    // [[ FUNCTIONS ]]
+    function updateExpenseEWTDDV(chkEwt) {
+        var pNode = String($(chkEwt.parentNode)[0].parentNode.id);
+        var btnAttr = $("#" + pNode).find(".reqEWTBtn");
+        if (chkEwt.checked == true) {
+            btnAttr.attr("href", "#");
+            btnAttr.addClass("expenseEWT");
+        } else {
+            btnAttr.removeAttr("href");
+            btnAttr.removeClass("expenseEWT");
+        }
+    }
+    function updateExpenseInterDDV(chkInter) {
 
+        var pNode = String($(chkInter.parentNode)[0].parentNode.id);
+        var btnAttr = $("#" + pNode).find("#req_" + pNode.substring(5)).find(".reqBtn");
+
+        if (chkInter.checked == true) {
+            btnAttr.attr("href", "#");
+            btnAttr.attr("class", "expenseInterEntity reqBtn glyphicon glyphicon-list-alt");
+            //disable the gbase remarks for that row
+            $("#" + pNode).find("#remark_" + pNode.substring(5)).find("a").removeClass("gRemarks");
+            //remove the gbase remarks details for that row
+            $("#" + pNode).find("#remark_" + pNode.substring(5)).find("input").each(function () {
+                $(chkInter).remove();
+            });
+            resetDebitCredit(pNode);
+            //computeValuesDDV($(this.parentNode)[0]);
+        } else {
+            btnAttr.removeAttr("href");
+            btnAttr.attr("class", "reqBtn glyphicon glyphicon-list-alt");
+            //enable GBase remarks
+            alert(pNode);
+            $("#" + pNode).find("#remark_" + pNode.substring(5)).find("a").addClass("gRemarks");
+            $("#" + pNode).find("#req_" + pNode.substring(5)).find("input[id^='EntryDDV_" + pNode.substring(5) + "__interDetails_']").each(function () {
+                $(chkInter).val();
+            });
+            resetDebitCredit(pNode);
+        }
+    }
+    function CheckEachEWT() {
+        $(".chkEwt").each(function (index, item) {
+            updateExpenseEWTDDV(item);
+        });
+    }
+
+    function CheckEachInter() {
+        $(".chkInter").each(function (index, item) {
+            updateExpenseInterDDV(item);
+        });
+    }
     function resetDebitCredit(itemNo) {
         $("#grossTotal").val(0);
         $("#credEwtTotal").val(0);
