@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!--How to call value to c#.
+
+XElement xelem = XElement.Load("wwwroot/xml/ChangeableData.xml"); <- xml path
+
+string value1 = xelem.Element("LOGO").Value
+string value2 = xelem.Element("NAME").Value
+string value3 = xelem.Element("TIN").Value
+string value4 = xelem.Element("ADDRESS").Value
+
+-->
+
+<ReportHeader>
+  <NAME>Mizuho Bank Ltd., Manila Branch</NAME>
+  <TIN>004-669-467-000</TIN>
+  <ADDRESS>25th Floor, The Zuellig Building, Makati Avenue corner Paseo de Roxas, Makati City</ADDRESS>
+  <LOGO>https://localhost:5001/images/mizuho-logo-2.png</LOGO>
+</ReportHeader>

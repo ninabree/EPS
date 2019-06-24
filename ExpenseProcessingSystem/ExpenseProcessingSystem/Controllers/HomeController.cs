@@ -24,6 +24,8 @@ using System.Globalization;
 using System.Linq;
 using ExpenseProcessingSystem.ViewModels.Entry;
 using System.Diagnostics;
+using System.Text;
+using System.Xml.Linq;
 
 namespace ExpenseProcessingSystem.Controllers
 {
@@ -53,6 +55,7 @@ namespace ExpenseProcessingSystem.Controllers
         }
         public ReportCommonViewModel GetHeaderInfo()
         {
+
             ReportCommonViewModel headerVM = new ReportCommonViewModel {
                 Header_Name = ReportResource.Branch_Title,
                 Header_TIN = ReportResource.Branch_TIN,
@@ -354,17 +357,19 @@ namespace ExpenseProcessingSystem.Controllers
             string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmss");
             string pdfFooterFormat = HomeReportConstantValue.PdfFooter2;
             var signatory = _service.GetSignatoryInfo(model.SignatoryID);
+
+            XElement xelem = XElement.Load("wwwroot/xml/ChangeableData.xml");
+
             ReportCommonViewModel repComVM = new ReportCommonViewModel
             {
-                Header_Logo = "https://localhost:5001/images/mizuho-logo-2.png",
-                Header_Name = "Mizuho Bank Ltd., Manila Branch",
-                Header_TIN = "004-669-467-000",
-                Header_Address = "25th Floor, The Zuellig Building, Makati Avenue corner Paseo de Roxas, Makati City",
+                Header_Logo = xelem.Element("LOGO").Value,
+                Header_Name = xelem.Element("NAME").Value,
+                Header_TIN = xelem.Element("TIN").Value,
+                Header_Address = xelem.Element("ADDRESS").Value,
                 Signatory_Name = signatory.BCS_Name,
                 Signatory_Position = signatory.BCS_Position
             };
 
-            Console.WriteLine("#############" + repComVM.Signatory_Name + "#####" + repComVM.Signatory_Position);
             //Model for data retrieve from Database
             HomeReportDataFilterViewModel data = null;
 

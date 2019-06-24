@@ -24,7 +24,7 @@
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.6" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="2.9.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.8">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.11">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
@@ -100,6 +100,10 @@
     <Folder Include="wwwroot\uploads\NCC\" />
     <Folder Include="wwwroot\uploads\BCS\" />
     <Folder Include="wwwroot\uploads\Temp\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\xml\ChangeableData.xml" />
   </ItemGroup>
 
 </Project>
