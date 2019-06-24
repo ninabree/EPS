@@ -33,9 +33,6 @@
         ajaxCall("/Home/GenerateVoucher", data).done(function (response) {
             $("#iframePreview").contents().find('html').html(response);
         });
-
-
-        
     }
 
     $(".tabContent").keypress(
@@ -48,10 +45,6 @@
                 $canfocus.eq(index).focus();
             }
         });
-    //$(".modal-footer").on("click", "button.gBaseSaveBtn", function (e) {
-    //    e.stopImmediatePropagation();
-    //    alert();
-    //});
     $("table").on("change", "input.chkVat", function (e) {
         var pNode = $(this.parentNode)[0].parentNode;
 

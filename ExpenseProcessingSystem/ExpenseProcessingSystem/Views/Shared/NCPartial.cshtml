@@ -227,7 +227,7 @@
                 @Html.HiddenFor(x => x.EntryNC.NC_Category_ID)
                 @Html.HiddenFor(x => x.category_of_entry)
                 @Html.HiddenFor(x => x.expenseDate)
-
+                @Html.HiddenFor(x => x.entryID)
                 <tr>
                     <td class="float-l">
                         <button id="add_new_nc_row" type="button" class="glyphicon glyphicon-plus"></button>
@@ -531,7 +531,9 @@
         }
         document.addEventListener("change", computeFunction, false);
         computeValsNC();
-
+        if ($("#entryID").val() == "") {
+            $("#entryID").val(0);
+        }
         $('#NCPartialTbl').on('update', function () {
             computeValsNC();
         });

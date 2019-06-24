@@ -3450,7 +3450,51 @@ namespace ExpenseProcessingSystem.Services
 
             return true;
         }
+        //Delete expense entry NC
+        public bool deleteExpenseEntry(int expense_ID, int expenseType)
+        {
+            var entry = _context.ExpenseEntry.Where(x => x.Expense_ID == expense_ID).First();
+            if(expenseType == GlobalSystemValues.TYPE_NC)
+            {
+                var entryDtlNC = _context.ExpenseEntryNonCash.Where(x => x.ExpenseEntryModel.Expense_ID == expense_ID).ToList();
+                foreach (var nc in entryDtlNC)
+                {
+                    var entryDtlNCDtl = _context.ExpenseEntryNonCashDetails.Where(x => x.ExpenseEntryNCModel.ExpNC_ID == nc.ExpNC_ID).ToList();
+                    foreach (var dtl in entryDtlNCDtl)
+                    {
+                        _context.ExpenseEntryNonCashDetailAccounts.RemoveRange(_context.ExpenseEntryNonCashDetailAccounts
+                            .Where(x => x.ExpenseEntryNCDtlModel.ExpNCDtl_ID == dtl.ExpNCDtl_ID));
 
+                    }
+                    _context.ExpenseEntryNonCashDetails.RemoveRange(_context.ExpenseEntryNonCashDetails
+                        .Where(x => x.ExpenseEntryNCModel.ExpNC_ID == nc.ExpNC_ID));
+                }
+                _context.ExpenseEntryNonCash.RemoveRange(_context.ExpenseEntryNonCash
+                    .Where(x => x.ExpenseEntryModel.Expense_ID == entry.Expense_ID));
+            }
+            else
+            {
+                var entryDtl = _context.ExpenseEntryDetails.Where(x => x.ExpenseEntryModel.Expense_ID == expense_ID).ToList();
+                foreach (var i in entryDtl)
+                {
+                    _context.ExpenseEntryAmortizations.RemoveRange(_context.ExpenseEntryAmortizations
+                        .Where(x => x.ExpenseEntryDetailModel.ExpDtl_ID == i.ExpDtl_ID));
+                    _context.ExpenseEntryCashBreakdown.RemoveRange(_context.ExpenseEntryCashBreakdown
+                        .Where(x => x.ExpenseEntryDetailModel.ExpDtl_ID == i.ExpDtl_ID));
+                    _context.ExpenseEntryGbaseDtls.RemoveRange(_context.ExpenseEntryGbaseDtls
+                        .Where(x => x.ExpenseEntryDetailModel.ExpDtl_ID == i.ExpDtl_ID));
+                }
+                _context.ExpenseEntryDetails.RemoveRange(_context.ExpenseEntryDetails
+                    .Where(x => x.ExpenseEntryModel.Expense_ID == entry.Expense_ID));
+            }
+            
+
+            _context.ExpenseEntry.RemoveRange(_context.ExpenseEntry.Where(x => x.Expense_ID == expense_ID));
+
+            _context.SaveChanges();
+
+            return true;
+        }
         public int GetCurrentEntryStatus(int expense_ID)
         {
             return _context.ExpenseEntry.Where(db => db.Expense_ID == expense_ID).SingleOrDefault().Expense_Status;
@@ -3542,7 +3586,6 @@ namespace ExpenseProcessingSystem.Services
                     Expense_Status = 1,
                     ExpenseEntryDetails = expenseDtls
                 };
-
                 _context.ExpenseEntry.Add(expenseEntry);
                 _context.SaveChanges();
                 return expenseEntry.Expense_ID;
@@ -3603,8 +3646,16 @@ namespace ExpenseProcessingSystem.Services
                     Expense_Status = 1,
                     ExpenseEntryNC = expenseNCList
                 };
-
-                _context.ExpenseEntry.Add(expenseEntry);
+                if(entryModel.entryID == 0)
+                {
+                    _context.ExpenseEntry.Add(expenseEntry);
+                }
+                else
+                {
+                    // Update entity in DbSet
+                    expenseEntry.Expense_ID = entryModel.entryID;
+                    _context.ExpenseEntry.Update(expenseEntry);
+                }
                 _context.SaveChanges();
                 return expenseEntry.Expense_ID;
             }

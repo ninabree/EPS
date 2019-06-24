@@ -1288,6 +1288,7 @@ namespace ExpenseProcessingSystem.Controllers
             ViewData["partialName"] = partialName ?? (viewModel.EntryNC.NC_Category_ID.ToString() != "0" ? viewModel.EntryNC.NC_Category_ID.ToString() : GlobalSystemValues.NC_LS_PAYROLL.ToString());
             viewModel.category_of_entry = GlobalSystemValues.NC_CATEGORIES_SELECT;
             viewModel.expenseDate = DateTime.Now;
+            viewModel.entryID = 0;
             return View(viewModel);
         }
         [ExportModelState]
@@ -1352,15 +1353,35 @@ namespace ExpenseProcessingSystem.Controllers
                     }
                     viewLink = "Entry_NC_ReadOnly";
                     break;
-                case "Reject": break;
+                case "Reject":
+                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REJECTED, int.Parse(GetUserID())))
+                    {
+                        _service.postNC(entryID);
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Entry_NC_ReadOnly";
+                    break;
+                case "Delete":
+                    if (_service.deleteExpenseEntry(entryID, GlobalSystemValues.TYPE_NC))
+                    {
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Entry_NC";
+                    return RedirectToAction("Entry_NC", new EntryNCViewModelList());
                 default:
                     break;
             }
 
             ModelState.Clear();
-
             ncList = _service.getExpenseNC(entryID);
-
             ncList = PopulateEntryNC(ncList);
 
             //foreach (var dtls in ncList.EntryNC.ExpenseEntryNCDtls)
@@ -1370,7 +1391,7 @@ namespace ExpenseProcessingSystem.Controllers
             //        ncList.systemValues.acc.AddRange(_service.getAccDetailsEntry(acc.ExpNCDtlAcc_Acc_ID));
             //    }
             //}
-
+            ViewData["partialName"] = ncList.EntryNC.NC_Category_ID.ToString();
             return View(viewLink, ncList);
         }
 
@@ -1407,6 +1428,7 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.category_of_entry = GlobalSystemValues.NC_CATEGORIES_SELECT;
             viewModel.EntryNC.NC_Category_Name = GlobalSystemValues.NC_CATEGORIES_SELECT.Where(x => x.Value == viewModel.EntryNC.NC_Category_ID + "")
                                             .Select(x => x.Text).FirstOrDefault();
+            viewModel.expenseDate = DateTime.Now;
             return viewModel;
         }
 

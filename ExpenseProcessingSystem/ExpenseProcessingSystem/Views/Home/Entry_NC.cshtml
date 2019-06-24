@@ -131,7 +131,7 @@
         function initPartial() {
             $('select#categoryName option[value=' + partial + ']').attr('selected', 'selected');
             //var _entryID = $("select#categoryName option:selected").val();
-            var _entryID = "";
+            var _entryID = @Model.entryID;
             var _expenseDate = $("#expenseDate").val();
             $.ajax({
                 url: '/Partial/NC_Partial_GetPreview',
