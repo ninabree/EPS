@@ -4040,7 +4040,7 @@ namespace ExpenseProcessingSystem.Services
                 tempGbase.entries.Add(credit);
                 tempGbase.entries.Add(debit);
 
-                InsertGbaseEntry(tempGbase);
+                InsertGbaseEntry(tempGbase, expID);
 
                 if (item.fbt)
                 {
