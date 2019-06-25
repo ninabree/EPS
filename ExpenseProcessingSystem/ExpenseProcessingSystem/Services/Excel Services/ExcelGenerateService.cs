@@ -337,13 +337,21 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
             int strLength = 0;
             int count1 = 0;
             int count2 = 1;
-
+            int loopCount = 1;
             using (ExcelPackage package = new ExcelPackage(newFile, templateFile))
             {
-                while (count2 <= (data.CDDContents.Count / 2))
+                while (loopCount <= (data.CDDContents.Count / 2))
                 {
-                    ExcelWorksheet ws = package.Workbook.Worksheets[1];
-                    ws.Name = "SS - Yen";
+                    ExcelWorksheet ws;
+                    if (loopCount > 1)
+                    {
+                        ws = package.Workbook.Worksheets.Add("WorkSheet_" + loopCount, package.Workbook.Worksheets[1]);
+                    }
+                    else
+                    {
+                        ws = package.Workbook.Worksheets[loopCount];
+                        ws.Name = "WorkSheet_1";
+                    }
 
                     //Content
                     ws.Cells["V5"].Value = DateTime.Now.ToShortDateString();
@@ -649,6 +657,7 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     package.Save();
                     count1 += 2;
                     count2 += 2;
+                    loopCount++;
                 }
             }
             return destPath + newFileName;

@@ -505,7 +505,6 @@
             btnAttr.removeAttr("href");
             btnAttr.attr("class", "reqBtn glyphicon glyphicon-list-alt");
             //enable GBase remarks
-            alert(pNode);
             $("#" + pNode).find("#remark_" + pNode.substring(5)).find("a").addClass("gRemarks");
             $("#" + pNode).find("#req_" + pNode.substring(5)).find("input[id^='EntryDDV_" + pNode.substring(5) + "__interDetails_']").each(function () {
                 $(chkInter).val();
