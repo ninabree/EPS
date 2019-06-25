@@ -2259,21 +2259,86 @@ namespace ExpenseProcessingSystem.Controllers
             return Json(vatList.ToList());
         }
 
-        public IActionResult GenerateVoucher(VoucherViewModelList model)
+        public IActionResult GenerateVoucher(EntryCVViewModelList model)
         {
+            VoucherViewModelList vvm = new VoucherViewModelList();
+
             //string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmsstt"); // ORIGINAL
-            model.date = DateTime.Now.ToString("MM-dd-yyyy");
-            ReportCommonViewModel headerVM = new ReportCommonViewModel();
+            vvm.date = DateTime.Now.ToString("MM-dd-yyyy");
 
-            model.headvm.Header_Logo = "";
-            model.headvm.Header_Name = "Mizuho Bank Ltd., Manila Branch";
-            model.headvm.Header_TIN = "004-669-467-000";
-            model.headvm.Header_Address = "25th Floor, The Zuellig Building, Makati Avenue corner Paseo de Roxas, Makati City";
+            vvm.headvm.Header_Logo = "";
+            vvm.headvm.Header_Name = "Mizuho Bank Ltd., Manila Branch";
+            vvm.headvm.Header_TIN = "004-669-467-000";
+            vvm.headvm.Header_Address = "25th Floor, The Zuellig Building, Makati Avenue corner Paseo de Roxas, Makati City";
 
-            model.maker = GetUserID();
+            vvm.maker = GetUserID();
+
+            vvm.voucherNo = DateTime.Now.Year.ToString("YY") + "-" + model.expenseId;
+            vvm.payee = _service.getVendorName(model.vendor);
+
+            List<ewtAmtList> _ewtList = new List<ewtAmtList>();
+
+            double vat = 0.00;
+            double gross = 0.00;
+
+            foreach (var inputItem in model.EntryCV)
+            {
+                foreach(var particular in inputItem.gBaseRemarksDetails)
+                {
+                    particulars temp = new particulars();
+
+                    if(vvm.particulars.FirstOrDefault(x=>x.documentType.Trim()==particular.docType.Trim() 
+                                                    && x.invoiceNo.Trim() == particular.invNo.Trim()) != null)
+                    {
+                        int index = vvm.particulars.FindIndex(x => x.documentType.Trim() == particular.docType.Trim()
+                                                    && x.invoiceNo.Trim() == particular.invNo.Trim());
+
+                        vvm.particulars[index].amount += particular.amount;
+                    }
+                    else
+                    {
+                        temp.documentType = particular.docType;
+                        temp.invoiceNo = particular.invNo;
+                        temp.description = particular.desc;
+                        temp.amount = particular.amount;
+
+                        vvm.particulars.Add(temp);
+                    }
+                }
+
+                VoucherViewModel tempVoucher = new VoucherViewModel();
+
+                gross += (inputItem.chkEwt || inputItem.chkVat) ? inputItem.debitGross : 0;
+
+                if (inputItem.chkVat)
+                {
+                    double _vat = _service.getVat(inputItem.vat);
+                    vat += (inputItem.debitGross / (1 + _vat)) * _vat;
+                }
+
+                if (inputItem.chkEwt)
+                {
+                    double _vat = _service.getVat(inputItem.vat);
+                    double _ewt = _service.GetEWTValue(inputItem.ewt);
+                    if (_ewtList.FirstOrDefault(x=>x.ewt == _ewt) != null)
+                    {
+                        int index = _ewtList.FindIndex(x => x.ewt == _ewt);
+                        _ewtList[index].ewtAmt += (inputItem.debitGross / (1+_vat)) * _ewt;
+                    }
+                    else
+                    {
+                        ewtAmtList tempEwt = new ewtAmtList();
+                        tempEwt.ewt = _ewt;
+                        tempEwt.ewtAmt = (inputItem.debitGross / (1 + _vat)) * _ewt;
+                        _ewtList.Add(tempEwt);
+                    }
+
+                }
+            }
+
 
             //Return Preview
-            return View(GlobalSystemValues.VOUCHER_LAYOUT, model);
+            return View(GlobalSystemValues.VOUCHER_LAYOUT, vvm);
         }
 
         public static string NumberToWords(int number)
