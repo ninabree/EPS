@@ -184,7 +184,7 @@
                         <div class="dis-inline-block tbl-btn"><button >Liquidate</button></div>
                     </div>
                     <div>
-                        <div class="dis-inline-block tbl-btn m-l-41"><button >Print CDD Instruction Sheet</button></div>
+                        <div class="dis-inline-block tbl-btn m-l-41">@*<a class="printCDD_IS tbl-btn" href="#">Print CDD Instruction Sheet</a>*@<button value="PrintCDD" name="command">Print CDD Instruction Sheet</button></div>
                     </div>
                 }
                 else
@@ -240,6 +240,12 @@
 <script type="text/javascript" src="~/js/EntryScripts.js"></script>
 <script type="text/javascript">
     $(function () {
+
+        //$(".printCDD_IS").click(function (e) {
+        //    e.preventDefault();
+
+        //    window.location.href = "/Home/CDD_IS_NC_PCR";
+        //});
         $(window).on("load", function () {
             if (@ViewBag.Success == 1) {
                 alert("Entry Approved");
