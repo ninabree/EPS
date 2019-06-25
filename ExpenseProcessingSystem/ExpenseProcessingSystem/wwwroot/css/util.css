@@ -3,11 +3,10 @@
 */
 .modal-dialog {
     max-width: 75% !important;
-    width: auto;
 }
 .modal-body {
-    /*max-height: 300px;
-    overflow-y: scroll;*/
+    /*max-height: 300px;*/
+    /*overflow-y: scroll;*/
 }
 /*[ FONT SIZE ]
 ///////////////////////////////////////////////////////////

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -126,43 +127,92 @@ namespace ExpenseProcessingSystem.Services
             List<ApplicationsViewModel> pendingList = new List<ApplicationsViewModel>();
 
             var dbPending = from p in _context.ExpenseEntry
-                            where (p.Expense_Status == GlobalSystemValues.STATUS_PENDING
+                            join l in _context.LiquidationEntryDetails on p.Expense_ID equals l.ExpenseEntryModel.Expense_ID into gj
+                            from l in gj.DefaultIfEmpty()
+                            where (
+                            (p.Expense_Status == GlobalSystemValues.STATUS_PENDING
                             || p.Expense_Status == GlobalSystemValues.STATUS_VERIFIED
                             || p.Expense_Status == GlobalSystemValues.STATUS_NEW
                             || p.Expense_Status == GlobalSystemValues.STATUS_EDIT
                             || p.Expense_Status == GlobalSystemValues.STATUS_DELETE)
                             && p.Expense_Creator_ID != userID
-                            select new { p.Expense_ID, p.Expense_Type, p.Expense_Debit_Total, p.Expense_Payee,
-                                p.Expense_Creator_ID, p.Expense_Verifier_1, p.Expense_Verifier_2,
-                                p.Expense_Last_Updated, p.Expense_Date, p.Expense_Status };
+                            )
+                            ||
+                            (
+                            p.Expense_Status == GlobalSystemValues.STATUS_POSTED
+                            && p.Expense_Type == GlobalSystemValues.TYPE_SS
+                            && l.Liq_Created_UserID != userID
+                            && (l.Liq_Status == GlobalSystemValues.STATUS_PENDING
+                            || l.Liq_Status == GlobalSystemValues.STATUS_VERIFIED)
+                            )
+                            select new
+                            {
+                                p.Expense_ID,
+                                p.Expense_Type,
+                                p.Expense_Debit_Total,
+                                p.Expense_Payee,
+                                p.Expense_Creator_ID,
+                                p.Expense_Verifier_1,
+                                p.Expense_Verifier_2,
+                                p.Expense_Last_Updated,
+                                p.Expense_Date,
+                                p.Expense_Status,
+                                Liq_Status = l == null ? 0 : l.Liq_Status,
+                                Liq_Created_UserID = l == null ? 0 : l.Liq_Created_UserID,
+                                Liq_Created_Date = l == null ? DateTime.Now : l.Liq_Created_Date,
+                                Liq_Verifier1 = l == null ? 0 : l.Liq_Verifier1,
+                                Liq_Verifier2 = l == null ? 0 : l.Liq_Verifier2,
+                                Liq_LastUpdated_Date = l == null ? DateTime.Now : l.Liq_LastUpdated_Date
+                            };
 
             foreach (var item in dbPending)
             {
+                string ver1 = "";
+                string ver2 = "";
+                var linktionary = new Dictionary<int, string>();
 
-                string ver1 = item.Expense_Verifier_1 == 0 ? null : getUserName(item.Expense_Verifier_1);
-                string ver2 = item.Expense_Verifier_2 == 0 ? null : getUserName(item.Expense_Verifier_2);
-                var linktionary = new Dictionary<int, string>
+                if (item.Liq_Status == 0)
                 {
-                    {0,"Data Maintenance" },
-                    {GlobalSystemValues.TYPE_CV,"View_CV"},
-                    {GlobalSystemValues.TYPE_DDV,"View_DDV"},
-                    {GlobalSystemValues.TYPE_NC,"View_NC"},
-                    {GlobalSystemValues.TYPE_PC,"View_PCV"},
-                    {GlobalSystemValues.TYPE_SS,"View_SS"},
-                };
+                    ver1 = item.Expense_Verifier_1 == 0 ? null : getUserName(item.Expense_Verifier_1);
+                    ver2 = item.Expense_Verifier_2 == 0 ? null : getUserName(item.Expense_Verifier_2);
 
+                    linktionary = new Dictionary<int, string>
+                    {
+                        {0,"Data Maintenance" },
+                        {GlobalSystemValues.TYPE_CV,"View_CV"},
+                        {GlobalSystemValues.TYPE_DDV,"View_DDV"},
+                        {GlobalSystemValues.TYPE_NC,"View_NC"},
+                        {GlobalSystemValues.TYPE_PC,"View_PCV"},
+                        {GlobalSystemValues.TYPE_SS,"View_SS"},
+                    };
+                }
+                else
+                {
+                    ver1 = item.Liq_Verifier1 == 0 ? null : getUserName(item.Liq_Verifier1);
+                    ver2 = item.Liq_Verifier2 == 0 ? null : getUserName(item.Liq_Verifier2);
+
+                    linktionary = new Dictionary<int, string>
+                    {
+                        {0,"Data Maintenance" },
+                        {GlobalSystemValues.TYPE_CV,"View_CV"},
+                        {GlobalSystemValues.TYPE_DDV,"View_DDV"},
+                        {GlobalSystemValues.TYPE_NC,"View_Liquidation_NC"},
+                        {GlobalSystemValues.TYPE_PC,"View_PCV"},
+                        {GlobalSystemValues.TYPE_SS,"View_Liquidation_SS"},
+                    };
+                }
 
                 ApplicationsViewModel tempPending = new ApplicationsViewModel
                 {
                     App_ID = item.Expense_ID,
-                    App_Type = GlobalSystemValues.getApplicationType(item.Expense_Type),
+                    App_Type = (item.Liq_Status == 0) ? GlobalSystemValues.getApplicationType(item.Expense_Type) : GlobalSystemValues.getApplicationType(item.Expense_Type) + " (Liquidation)",
                     App_Amount = item.Expense_Debit_Total,
                     App_Payee = getVendorName(item.Expense_Payee),
-                    App_Maker = getUserName(item.Expense_Creator_ID),
+                    App_Maker = (item.Liq_Status == 0) ? getUserName(item.Expense_Creator_ID) : getUserName(item.Liq_Created_UserID),
                     App_Verifier_ID_List = new List<string> { ver1, ver2 },
-                    App_Date = item.Expense_Date,
-                    App_Last_Updated = item.Expense_Last_Updated,
-                    App_Status = getStatus(item.Expense_Status),
+                    App_Date = (item.Liq_Status == 0) ? item.Expense_Date : item.Liq_Created_Date,
+                    App_Last_Updated = (item.Liq_Status == 0) ? item.Expense_Last_Updated : item.Liq_LastUpdated_Date,
+                    App_Status = (item.Liq_Status == 0) ? getStatus(item.Expense_Status) : getStatus(item.Liq_Status),
                     App_Link = linktionary[item.Expense_Type]
                 };
 
@@ -3568,31 +3618,28 @@ namespace ExpenseProcessingSystem.Services
             List<LiquidationMainListViewModel> postedEntryList = new List<LiquidationMainListViewModel>();
 
             var dbPostedEntry = from p in _context.ExpenseEntry
-                            where p.Expense_Status == GlobalSystemValues.STATUS_POSTED
-                            && p.Expense_Type == GlobalSystemValues.TYPE_SS
-                            && p.Expense_Last_Updated.Date < DateTime.Now.Date
-                            && p.Expense_Creator_ID != userID
-                            orderby p.Expense_Last_Updated
-                            select new
-                            {
-                                p.Expense_ID,
-                                p.Expense_Type,
-                                p.Expense_Debit_Total,
-                                p.Expense_Payee,
-                                p.Expense_Creator_ID,
-                                p.Expense_Verifier_1,
-                                p.Expense_Verifier_2,
-                                p.Expense_Last_Updated,
-                                p.Expense_Date,
-                                p.Expense_Status,
-                                p.Expense_Created_Date
-                            };
+                                where p.Expense_Status == GlobalSystemValues.STATUS_POSTED
+                                && p.Expense_Type == GlobalSystemValues.TYPE_SS
+                                && p.Expense_Last_Updated.Date < DateTime.Now.Date
+                                orderby p.Expense_Last_Updated
+                                select new
+                                {
+                                    p.Expense_ID,
+                                    p.Expense_Type,
+                                    p.Expense_Debit_Total,
+                                    p.Expense_Payee,
+                                    p.Expense_Creator_ID,
+                                    p.Expense_Approver,
+                                    p.Expense_Last_Updated,
+                                    p.Expense_Date,
+                                    p.Expense_Created_Date
+                                };
 
             foreach (var item in dbPostedEntry)
             {
-
-                string ver1 = item.Expense_Verifier_1 == 0 ? null : getUserName(item.Expense_Verifier_1);
-                string ver2 = item.Expense_Verifier_2 == 0 ? null : getUserName(item.Expense_Verifier_2);
+                if (_context.LiquidationEntryDetails.Where(
+                    x => x.ExpenseEntryModel.Expense_ID == item.Expense_ID).Count() != 0)
+                    continue;
 
                 var linktionary = new Dictionary<int, string>
                 {
@@ -3611,10 +3658,9 @@ namespace ExpenseProcessingSystem.Services
                     App_Amount = item.Expense_Debit_Total,
                     App_Payee = getVendorName(item.Expense_Payee),
                     App_Maker = getUserName(item.Expense_Creator_ID),
-                    App_Verifier_ID_List = new List<string> { ver1, ver2 },
+                    App_Approver = getUserName(item.Expense_Approver),
                     App_Date = item.Expense_Created_Date,
                     App_Last_Updated = item.Expense_Last_Updated,
-                    App_Status = getStatus(item.Expense_Status),
                     App_Link = linktionary[item.Expense_Type]
                 });
             }
@@ -3643,6 +3689,10 @@ namespace ExpenseProcessingSystem.Services
                                                                                       in _context.ExpenseEntryGbaseDtls
                                                                                       where g.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
                                                                                       select g,
+                                                              LiquidationCashBreakdown = from l
+                                                                                      in _context.LiquidationCashBreakdown
+                                                                                         where l.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
+                                                                                         select l,
                                                               ExpenseEntryCashBreakdown = (from c
                                                                                                in _context.ExpenseEntryCashBreakdown
                                                                                            where c.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
@@ -3654,6 +3704,7 @@ namespace ExpenseProcessingSystem.Services
             {
                 List<EntryGbaseRemarksViewModel> remarksDtl = new List<EntryGbaseRemarksViewModel>();
                 List<LiquidationCashBreakdown> cashBreakdown = new List<LiquidationCashBreakdown>();
+                List<LiquidationCashBreakdown> liqCashBreakdown = new List<LiquidationCashBreakdown>();
 
                 foreach (var gbase in dtl.ExpenseEntryGbaseDtls)
                 {
@@ -3680,11 +3731,28 @@ namespace ExpenseProcessingSystem.Services
                     cashBreakdown.Add(cashbdTemp);
                 }
 
+                foreach (var liqCashbd in dtl.LiquidationCashBreakdown)
+                {
+                    LiquidationCashBreakdown liqCashbdTemp = new LiquidationCashBreakdown()
+                    {
+                        cashDenimination = liqCashbd.LiqCashBreak_Denimination,
+                        cashNoPC = liqCashbd.LiqCashBreak_NoPcs,
+                        cashAmount = liqCashbd.LiqCashBreak_Amount
+                    };
+
+                    liqCashBreakdown.Add(liqCashbdTemp);
+                }
+
+                var accountInfo = _context.DMAccount.Where(x => x.Account_ID == dtl.d.ExpDtl_Account).Single();
+
                 LiquidationDetailsViewModel liqDtl = new LiquidationDetailsViewModel()
                 {
+                    EntryDetailsID = dtl.d.ExpDtl_ID,
                     GBaseRemarks = dtl.d.ExpDtl_Gbase_Remarks,
                     accountID = dtl.d.ExpDtl_Account,
-                    accountName = GetAccountName(dtl.d.ExpDtl_Account),
+                    accountName = accountInfo.Account_Name,
+                    accountNumber = accountInfo.Account_No,
+                    accountCode = accountInfo.Account_Code,
                     fbt = dtl.d.ExpDtl_Fbt,
                     deptID = dtl.d.ExpDtl_Dept,
                     deptName = GetDeptName(dtl.d.ExpDtl_Dept),
@@ -3703,7 +3771,9 @@ namespace ExpenseProcessingSystem.Services
                     dtlSSPayeeName = getVendorName(dtl.d.ExpDtl_SS_Payee),
                     gBaseRemarksDetails = remarksDtl,
                     cashBreakdown = cashBreakdown,
-                    modalInputFlag = (cashBreakdown == null || cashBreakdown.Count == 0) ? 0 : 1
+                    liqCashBreakdown = liqCashBreakdown,
+                    modalInputFlag = (cashBreakdown == null || cashBreakdown.Count == 0) ? 0 : 1,
+                    liqInputFlag = (liqCashBreakdown == null || liqCashBreakdown.Count == 0) ? 0 : 1
                 };
                 liqList.Add(liqDtl);
             }
@@ -3716,17 +3786,61 @@ namespace ExpenseProcessingSystem.Services
                 expenseYear = EntryDetails.e.Expense_Date.Year.ToString(),
                 expenseId = EntryDetails.e.Expense_Number,
                 checkNo = EntryDetails.e.Expense_CheckNo,
-                status = getStatus(EntryDetails.e.Expense_Status),
-                statusID = EntryDetails.e.Expense_Status,
-                approver = (EntryDetails.e.Expense_Status == 1) ? "" : getUserName(EntryDetails.e.Expense_Approver),
-                verifier_1 = (EntryDetails.e.Expense_Status == 1) ? "" : getUserName(EntryDetails.e.Expense_Verifier_1),
-                verifier_2 = (EntryDetails.e.Expense_Status == 1) ? "" : getUserName(EntryDetails.e.Expense_Verifier_2),
                 maker = EntryDetails.e.Expense_Creator_ID,
                 createdDate = EntryDetails.e.Expense_Created_Date,
                 LiquidationDetails = liqList
             };
 
             return liqModel;
+        }
+
+        //Add liquidation details
+        public int addLiquidationDetail(LiquidationViewModel vm, int userid)
+        {
+            LiquidationCashBreakdownModel model = new LiquidationCashBreakdownModel();
+            foreach (var i in vm.LiquidationDetails)
+            {
+                ExpenseEntryDetailModel dtlModel = _context.ExpenseEntryDetails.Where(x => x.ExpDtl_ID == i.EntryDetailsID).FirstOrDefault();
+                foreach (var j in i.liqCashBreakdown)
+                {
+                    _context.LiquidationCashBreakdown.Add(new LiquidationCashBreakdownModel
+                    {
+                        ExpenseEntryDetailModel = dtlModel,
+                        LiqCashBreak_Denimination = j.cashDenimination,
+                        LiqCashBreak_NoPcs = j.cashNoPC,
+                        LiqCashBreak_Amount = j.cashAmount
+                    });
+                    _context.SaveChanges();
+                }
+            }
+
+            ExpenseEntryModel expenseModel = _context.ExpenseEntry.Where(x => x.Expense_ID == vm.entryID).FirstOrDefault();
+            _context.LiquidationEntryDetails.Add(new LiquidationEntryDetailModel
+            {
+                ExpenseEntryModel = expenseModel,
+                Liq_Status = GlobalSystemValues.STATUS_PENDING,
+                Liq_Created_Date = DateTime.Now,
+                Liq_LastUpdated_Date = DateTime.Now,
+                Liq_Created_UserID = userid
+            });
+            _context.SaveChanges();
+
+            return vm.entryID;
+        }
+
+        //Update liquidation status
+        public int updateLiquidateStatus(int id, int status, int userid)
+        {
+            var liquidateEntry = _context.LiquidationEntryDetails.Include(x => x.ExpenseEntryModel)
+                .Where(x => x.ExpenseEntryModel.Expense_ID == id).FirstOrDefault();
+
+            liquidateEntry.Liq_Status = status;
+            liquidateEntry.Liq_Created_UserID = userid;
+            liquidateEntry.Liq_Created_Date = DateTime.Now;
+            liquidateEntry.Liq_LastUpdated_Date = DateTime.Now;
+            _context.SaveChanges();
+
+            return id;
         }
         ////============[End Access Entry Tables]=========================
 
@@ -3814,7 +3928,7 @@ namespace ExpenseProcessingSystem.Services
             if (containerModel.entries.Count > 0)
             {
                 goModel.Entry11Type = containerModel.entries[0].type;
-                goModel.Entry11Ccy = getCurrency(containerModel.entries[0].ccy).Curr_CCY_ABBR;
+                goModel.Entry11Ccy = GetCurrencyAbbrv(containerModel.entries[0].ccy);
                 goModel.Entry11Amt = containerModel.entries[0].amount.ToString();
 
                 var entry11Account = getAccount(containerModel.entries[0].account);
@@ -3838,7 +3952,7 @@ namespace ExpenseProcessingSystem.Services
 
                 if (containerModel.entries.Count > 1) {
                     goModel.Entry12Type = containerModel.entries[1].type;
-                    goModel.Entry12Ccy = getCurrency(containerModel.entries[1].ccy).Curr_CCY_ABBR;
+                    goModel.Entry12Ccy = GetCurrencyAbbrv(containerModel.entries[1].ccy);
                     goModel.Entry12Amt = containerModel.entries[1].amount.ToString();
 
                     var entry12Account = getAccount(containerModel.entries[1].account);
@@ -3863,7 +3977,7 @@ namespace ExpenseProcessingSystem.Services
                 if (containerModel.entries.Count > 2)
                 {
                     goModel.Entry21Type = containerModel.entries[2].type;
-                    goModel.Entry21Ccy = getCurrency(containerModel.entries[2].ccy).Curr_CCY_ABBR;
+                    goModel.Entry21Ccy = GetCurrencyAbbrv(containerModel.entries[2].ccy);
                     goModel.Entry21Amt = containerModel.entries[2].amount.ToString();
 
                     var entry21Account = getAccount(containerModel.entries[2].account);
@@ -3888,7 +4002,7 @@ namespace ExpenseProcessingSystem.Services
                 if (containerModel.entries.Count > 3)
                 {
                     goModel.Entry22Type = containerModel.entries[3].type;
-                    goModel.Entry22Ccy = getCurrency(containerModel.entries[3].ccy).Curr_CCY_ABBR;
+                    goModel.Entry22Ccy = GetCurrencyAbbrv(containerModel.entries[3].ccy);
                     goModel.Entry22Amt = containerModel.entries[3].amount.ToString();
 
                     var entry22Account = getAccount(containerModel.entries[3].account);
@@ -3913,7 +4027,7 @@ namespace ExpenseProcessingSystem.Services
                 if (containerModel.entries.Count > 4)
                 {
                     goModel.Entry31Type = containerModel.entries[4].type;
-                    goModel.Entry31Ccy = getCurrency(containerModel.entries[4].ccy).Curr_CCY_ABBR;
+                    goModel.Entry31Ccy = GetCurrencyAbbrv(containerModel.entries[4].ccy);
                     goModel.Entry31Amt = containerModel.entries[4].amount.ToString();
 
                     var entry31Account = getAccount(containerModel.entries[4].account);
@@ -3938,7 +4052,7 @@ namespace ExpenseProcessingSystem.Services
                 if (containerModel.entries.Count > 5)
                 {
                     goModel.Entry32Type = containerModel.entries[5].type;
-                    goModel.Entry32Ccy = getCurrency(containerModel.entries[5].ccy).Curr_CCY_ABBR;
+                    goModel.Entry32Ccy = GetCurrencyAbbrv(containerModel.entries[5].ccy);
                     goModel.Entry32Amt = containerModel.entries[5].amount.ToString();
 
                     var entry32Account = getAccount(containerModel.entries[5].account);
@@ -3963,7 +4077,7 @@ namespace ExpenseProcessingSystem.Services
                 if (containerModel.entries.Count > 6)
                 {
                     goModel.Entry41Type = containerModel.entries[6].type;
-                    goModel.Entry41Ccy = getCurrency(containerModel.entries[6].ccy).Curr_CCY_ABBR;
+                    goModel.Entry41Ccy = GetCurrencyAbbrv(containerModel.entries[6].ccy);
                     goModel.Entry41Amt = containerModel.entries[6].amount.ToString();
 
                     var entry41Account = getAccount(containerModel.entries[6].account);
@@ -3988,7 +4102,7 @@ namespace ExpenseProcessingSystem.Services
                 if (containerModel.entries.Count > 7)
                 {
                     goModel.Entry42Type = containerModel.entries[7].type;
-                    goModel.Entry42Ccy = getCurrency(containerModel.entries[7].ccy).Curr_CCY_ABBR;
+                    goModel.Entry42Ccy = GetCurrencyAbbrv(containerModel.entries[7].ccy);
                     goModel.Entry42Amt = containerModel.entries[7].amount.ToString();
 
                     var entry42Account = getAccount(containerModel.entries[7].account);
@@ -4099,7 +4213,7 @@ namespace ExpenseProcessingSystem.Services
         //get currency abbreviation
         public string GetCurrencyAbbrv(int id)
         {
-            return _context.DMCurrency.Where(x => x.Curr_ID == id).First().Curr_CCY_ABBR;
+            return (id != 0 ) ? _context.DMCurrency.Where(x => x.Curr_ID == id).First().Curr_CCY_ABBR : "PHP";
         }
         //get Tax Rate list for specific user
         public SelectList getVendorTaxRate(int vendorID)

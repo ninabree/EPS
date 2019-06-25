@@ -184,7 +184,8 @@
         //Enable Cash breakdown button if currency = PHP, disable if not.
         var trs = $("#inputTable").find("tbody").find("tr");
         for (var cnt = 0; cnt < trs.length - 2; cnt++) {
-            reqBtnDisable(cnt); 
+            reqBtnDisable(cnt);
+            ddlEnabled(cnt);
         }
 
         $(function () {
@@ -381,5 +382,14 @@
         }
     };
 
+    function ddlEnabled(idx) {
+        if ($('#item_' + idx).find('.chkVat').is(':checked')) {
+            $('#item_' + idx).find('.txtVat').removeAttr('disabled');
+        }
+
+        if ($('#item_' + idx).find('.chkEwt').is(':checked')) {
+            $('#item_' + idx).find('.txtEwt').removeAttr('disabled');
+        }
+    };
 </script>
 <script type="text/javascript" src="~/js/EntryScripts.js"></script>

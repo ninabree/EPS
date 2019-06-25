@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using ExpenseProcessingSystem.Models;
+using ExpenseProcessingSystem.ViewModels.Entry;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ExpenseProcessingSystem.ViewModels.Entry;
-using ExpenseProcessingSystem.ViewModels;
-using ExpenseProcessingSystem.Models;
 
 namespace ExpenseProcessingSystem.ConstantData
 {
@@ -64,6 +61,8 @@ namespace ExpenseProcessingSystem.ConstantData
                 case 3: return "Suspense Sundry";
                 case 4: return "Petty Cash";
                 case 5: return "Non-Cash";
+                case 6: return "Suspense Sundry (Liquidation)";
+                case 7: return "Non-Cash (Liquidation)";
                 default: return null;
             }
         }
@@ -79,6 +78,13 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly string ENTRY_Liquidation = "/Home/Entry_Liquidation";
         public static readonly string ENTRY_NEW_CV = "/Home/AddNewCV";
         public static readonly string ENTRY_NEW_DDV = "/Home/AddNewDDV";
+        public static readonly string ENTRY_VIEW_PCV = "/Home/View_PCV";
+        public static readonly string ENTRY_VIEW_SS = "/Home/View_SS";
+        public static readonly string ENTRY_NEW_PCV = "/Home/AddNewPCV";
+        public static readonly string ENTRY_NEW_SS = "/Home/AddNewSS";
+        public static readonly string LIQ_MAIN = "/Home/Liquidation_Main";
+        public static readonly string LIQ_SS = "/Home/Liquidation_SS";
+        public static readonly string LIQ_New_SS = "/Home/Liquidation_AddNewSS";
 
         public static readonly List<string> ENTRY_VALS = new List<string> {
             GlobalSystemValues.ENTRY,
@@ -89,7 +95,14 @@ namespace ExpenseProcessingSystem.ConstantData
             GlobalSystemValues.ENTRY_SS,
             GlobalSystemValues.ENTRY_Liquidation,
             GlobalSystemValues.ENTRY_NEW_CV,
-            GlobalSystemValues.ENTRY_NEW_DDV
+            GlobalSystemValues.ENTRY_NEW_DDV,
+            GlobalSystemValues.ENTRY_VIEW_PCV,
+            GlobalSystemValues.ENTRY_VIEW_SS,
+            GlobalSystemValues.ENTRY_NEW_PCV,
+            GlobalSystemValues.ENTRY_NEW_SS,
+            GlobalSystemValues.LIQ_MAIN,
+            GlobalSystemValues.LIQ_SS,
+            GlobalSystemValues.LIQ_New_SS
         };
         //Static values for entry path use for checking if HomeTabsPartial will be shown.
         //Example: instead of [if Context.Request.Path.ToString() == "/Home/Index"] use (GlobalSystemValues.HOME_VALS.Contains(Context.Request.Path.ToString())) ? true : false;
@@ -117,9 +130,8 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly int NC_PETTY_CASH_REPLENISHMENT = 7;
         public static readonly int NC_JS_PAYROLL = 8;
         public static readonly int NC_RETURN_OF_JS_PAYROLL = 9;
-        public static readonly int NC_DOLLAR_PAYMENT = 10;
-        public static readonly int NC_ADJUSTMENTS = 11;
-        public static readonly int NC_ADVANCE_EXPENSE_HO_REVERSAL = 12;
+        public static readonly int NC_FOREIGN_EXCHANGE_RECEIVING = 10;
+        public static readonly int NC_MISCELLANEOUS_ENTRIES = 11;
 
         public static readonly List<int> NC_CATEGORIES = new List<int> {
             GlobalSystemValues.NC_LS_PAYROLL,
@@ -131,9 +143,8 @@ namespace ExpenseProcessingSystem.ConstantData
             GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT,
             GlobalSystemValues.NC_JS_PAYROLL,
             GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL,
-            GlobalSystemValues.NC_DOLLAR_PAYMENT,
-            GlobalSystemValues.NC_ADJUSTMENTS,
-            GlobalSystemValues.NC_ADVANCE_EXPENSE_HO_REVERSAL
+            GlobalSystemValues.NC_FOREIGN_EXCHANGE_RECEIVING,
+            GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES
         };
         public static readonly List<SelectListItem> NC_CATEGORIES_SELECT = new List<SelectListItem> {
                 new SelectListItem { Text = "LS PAYROLL", Value = NC_CATEGORIES[0].ToString(), Selected = true },
@@ -145,9 +156,8 @@ namespace ExpenseProcessingSystem.ConstantData
                 new SelectListItem { Text = "PETTY CASH REPLENISHMENT", Value = NC_CATEGORIES[6].ToString(), Selected = false },
                 new SelectListItem { Text = "JS PAYROLL.", Value = NC_CATEGORIES[7].ToString(), Selected = false },
                 new SelectListItem { Text = "RETURN OF JS PAYROLL", Value = NC_CATEGORIES[8].ToString(), Selected = false },
-                new SelectListItem { Text = "DOLLAR PAYMENT", Value = NC_CATEGORIES[9].ToString(), Selected = false },
-                new SelectListItem { Text = "ADJUSTMENTS", Value = NC_CATEGORIES[10].ToString(), Selected = false },
-                new SelectListItem { Text = "ADVANCE EXPENSE HO REVERSAL", Value = NC_CATEGORIES[11].ToString(), Selected = false }
+                new SelectListItem { Text = "FOREIGN EXCHANGE RECEIVING", Value = NC_CATEGORIES[9].ToString(), Selected = false },
+                new SelectListItem { Text = "MISCELLANEOUS ENTRIES", Value = NC_CATEGORIES[10].ToString(), Selected = false }
         };
         //Static values for account types of entries use for Non Cash.
         public static readonly int NC_DEBIT = 1;
@@ -1241,7 +1251,7 @@ namespace ExpenseProcessingSystem.ConstantData
         {
             return new EntryNCViewModel
             {
-                NC_Category_ID = 8,
+                NC_Category_ID = 9,
                 ExpenseEntryNCDtls = new List<ExpenseEntryNCDtlViewModel>()
                 {
                     new ExpenseEntryNCDtlViewModel
@@ -1360,6 +1370,209 @@ namespace ExpenseProcessingSystem.ConstantData
                             ExpNCDtlAcc_Curr_Name = currDetailsUSD.Curr_CCY_ABBR,
                             ExpNCDtlAcc_Inter_Rate = 0,
                             ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_CREDIT
+                        }
+                    }
+                }
+            };
+        }
+    }
+    //NON CASH CONSTANT VALUES
+    public class CONSTANT_NC_FOREIGN_EXCHANGE_RECEIVING
+    {
+        public static EntryNCViewModel Populate_FOREIGN_EXCHANGE_RECEIVING(DMCurrencyModel currDetailsPHP, DMCurrencyModel currDetailsUSD)
+        {
+            return new EntryNCViewModel
+            {
+                NC_Category_ID = 10,
+                ExpenseEntryNCDtls = new List<ExpenseEntryNCDtlViewModel>()
+                {
+                    new ExpenseEntryNCDtlViewModel
+                    {
+                        ExpNCDtl_Remarks_Desc = "",
+                        ExpNCDtl_Period_Duration = "",
+                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
+                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
+                        {
+                            new ExpenseEntryNCDtlAccViewModel{
+                                ExpNCDtlAcc_Acc_ID = 497,
+                                ExpNCDtlAcc_Acc_Name = "EXPENSE",
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Type_ID = 1
+                            },
+                            new ExpenseEntryNCDtlAccViewModel{
+                                ExpNCDtlAcc_Acc_ID = 487,
+                                ExpNCDtlAcc_Acc_Name = "B79-767-111111 - COMPUTER SUSPENSE PHP",
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Type_ID = 2
+                            }
+                        }
+                    },
+                    new ExpenseEntryNCDtlViewModel
+                    {
+                        ExpNCDtl_Remarks_Desc = "",
+                        ExpNCDtl_Period_Duration = "",
+                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
+                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
+                        {
+                            new ExpenseEntryNCDtlAccViewModel{
+                                ExpNCDtlAcc_Acc_ID = 487,
+                                ExpNCDtlAcc_Acc_Name = "B79-767-111111 - COMPUTER SUSPENSE PHP",
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Type_ID = 1
+                            },
+                            new ExpenseEntryNCDtlAccViewModel{
+                                ExpNCDtlAcc_Acc_ID = 498,
+                                ExpNCDtlAcc_Acc_Name = "B79767111111 - INTERENTITY LIAB USD",
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Curr_ID = currDetailsUSD.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetailsUSD.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Type_ID = 2
+                            }
+                        }
+                    },
+                    new ExpenseEntryNCDtlViewModel
+                    {
+                        ExpNCDtl_Remarks_Desc = "",
+                        ExpNCDtl_Period_Duration = "",
+                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
+                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
+                        {
+                            new ExpenseEntryNCDtlAccViewModel{
+                                ExpNCDtlAcc_Acc_ID = 498,
+                                ExpNCDtlAcc_Acc_Name = "B79767111111 - INTERENTITY LIAB USD",
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Curr_ID = currDetailsUSD.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetailsUSD.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Type_ID = 1
+                            },
+                            new ExpenseEntryNCDtlAccViewModel{
+                                ExpNCDtlAcc_Acc_ID = 499,
+                                ExpNCDtlAcc_Acc_Name = "SUSPENSE PAYMENT",
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Curr_ID = currDetailsUSD.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetailsUSD.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Type_ID = 2
+                            }
+                        }
+                    },
+                    new ExpenseEntryNCDtlViewModel
+                    {
+                        ExpNCDtl_Remarks_Desc = "",
+                        ExpNCDtl_Period_Duration = "",
+                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
+                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
+                        {
+                            new ExpenseEntryNCDtlAccViewModel{
+                                ExpNCDtlAcc_Acc_ID = 495,
+                                ExpNCDtlAcc_Acc_Name = "B79-789-111111 - COMPUTER SUSPENSE USD",
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Curr_ID = currDetailsUSD.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetailsUSD.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_DEBIT
+                            },
+                            new ExpenseEntryNCDtlAccViewModel{
+                                ExpNCDtlAcc_Acc_ID = 499,
+                                ExpNCDtlAcc_Acc_Name = "SUSPENSE PAYMENT",
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Curr_ID = currDetailsUSD.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetailsUSD.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_CREDIT
+                            }
+                        }
+                    }
+                }
+            };
+        }
+        public static List<ExpenseEntryNCDtlViewModel> Populate_CDD_Instruc_Sheet(DMCurrencyModel currDetailsPHP, DMCurrencyModel currDetailsUSD)
+        {
+            return new List<ExpenseEntryNCDtlViewModel>()
+            {
+                new ExpenseEntryNCDtlViewModel
+                {
+                    ExpNCDtl_Remarks_Desc = "",
+                    ExpNCDtl_Period_Duration = "",
+                    ExpNCDtl_Remarks_Period_From = DateTime.Now,
+                    ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                    ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
+                    {
+                        new ExpenseEntryNCDtlAccViewModel{
+                            ExpNCDtlAcc_Acc_ID = 496,
+                            ExpNCDtlAcc_Acc_Name = "F79789151137 - USD CASH",
+                            ExpNCDtlAcc_Amount = 0,
+                            ExpNCDtlAcc_Curr_ID = currDetailsUSD.Curr_ID,
+                            ExpNCDtlAcc_Curr_Name = currDetailsUSD.Curr_CCY_ABBR,
+                            ExpNCDtlAcc_Inter_Rate = 0,
+                            ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_DEBIT
+                        },
+                        new ExpenseEntryNCDtlAccViewModel{
+                            ExpNCDtlAcc_Acc_ID = 495,
+                            ExpNCDtlAcc_Acc_Name = "B79-789-111111 - COMPUTER SUSPENSE USD",
+                            ExpNCDtlAcc_Amount = 0,
+                            ExpNCDtlAcc_Curr_ID = currDetailsUSD.Curr_ID,
+                            ExpNCDtlAcc_Curr_Name = currDetailsUSD.Curr_CCY_ABBR,
+                            ExpNCDtlAcc_Inter_Rate = 0,
+                            ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_CREDIT
+                        }
+                    }
+                }
+            };
+        }
+    }
+
+    //NON CASH CONSTANT VALUES
+    public class CONSTANT_NC_MISC_ENTRIES
+    {
+        public static EntryNCViewModel Populate_MISC_ENTRIES(DMCurrencyModel currDetailsPHP)
+        {
+            return new EntryNCViewModel
+            {
+                NC_Category_ID = 11,
+                ExpenseEntryNCDtls = new List<ExpenseEntryNCDtlViewModel>()
+                {
+                    new ExpenseEntryNCDtlViewModel
+                    {
+                        ExpNCDtl_Remarks_Desc = "",
+                        ExpNCDtl_Period_Duration = "",
+                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
+                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
+                        {
+                            new ExpenseEntryNCDtlAccViewModel{
+                                ExpNCDtlAcc_Acc_ID = 0,
+                                ExpNCDtlAcc_Acc_Name = "",
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_DEBIT
+                            },
+                            new ExpenseEntryNCDtlAccViewModel{
+                                ExpNCDtlAcc_Acc_ID = 0,
+                                ExpNCDtlAcc_Acc_Name = "",
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_CREDIT
+                            }
                         }
                     }
                 }

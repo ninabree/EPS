@@ -10,7 +10,7 @@
     <body>
         <div id="cashBreakdownBody">
             @Html.HiddenFor(x => Model.id, new { @id = "parentIdPCVSSTable" })
-            <div id="divVendor">@if (Model.screencode != "SS") {<text>Vendor/Employee :</text> }else{<text>Payee :</text>} <p class="dis-inline-block w-49">@Html.TextBoxFor(x => Model.vendor, new { @id = "reqVendor", @readonly = "readonly", @class = "input" })</p></div>
+            <div id="divVendor">@if (Model.screencode != "SS" || Model.screencode != "Liquidation_SS") {<text>Vendor/Employee :</text> }else{<text>Payee :</text>} <p class="dis-inline-block w-49">@Html.TextBoxFor(x => Model.vendor, new { @id = "reqVendor", @readonly = "readonly", @class = "input" })</p></div>
             <div>Account :<p class="dis-inline-block w-49">@Html.TextBoxFor(x => Model.accountName, new { @id = "reqAccount", @readonly = "readonly", @class = "input" })</p></div>
             <div>Amount :<p class="dis-inline-block w-49">@Html.TextBoxFor(x => Model.amount, new { @id = "reqAmount", @readonly = "readonly", @class = "input" })</p></div>
             <div class="flex-c">
@@ -47,20 +47,28 @@
 </html>
 <script>
     $(document).ready(function () {
+        $('.modal-dialog').css('width', '30%');
         if ($("#" + $("#parentIdPCVSSTable").val()).find(".hiddenItem").val() == "1") {
             var ret = $('#parentIdPCVSSTable').val().replace('item_', '');
             var trs = $(".cashBreakdowntable").find("tbody").find("tr");
             var amountTotal = 0;
 
+            var header = "";
+            if ($("#" + $('#parentIdPCVSSTable').val()).find(".hiddenScreencode").val() == "Liquidation_SS"){
+                header = "LiquidationDetails_";
+            } else {
+                header = "EntryCV_";
+            }
+
             for (var count = 0; count < trs.length - 1; count++) {
-                $("#" + trs[count].id).find('.txtNoPCS').val($("#EntryCV_" + ret + "__cashBreakdown_" + count + "__cashNoPC").val());
-                $("#" + trs[count].id).find('.txtAmount').val($("#EntryCV_" + ret + "__cashBreakdown_" + count + "__cashAmount").val());
+                $("#" + trs[count].id).find('.txtNoPCS').val($("#" + header + ret + "__cashBreakdown_" + count + "__cashNoPC").val());
+                $("#" + trs[count].id).find('.txtAmount').val($("#" + header + ret + "__cashBreakdown_" + count + "__cashAmount").val());
 
-                amountTotal = parseFloat(amountTotal) + parseFloat($("#EntryCV_" + ret + "__cashBreakdown_" + count + "__cashAmount").val());
+                amountTotal = parseFloat(amountTotal) + parseFloat($("#" + header + ret + "__cashBreakdown_" + count + "__cashAmount").val());
 
-                if ($("#item_" + ret).find(".txtgbaseRemarks").prop('disabled')) {
+                if ($("#item_" + ret).find(".txtgbaseRemarks").prop('disabled') || header == "LiquidationDetails_") {
                     $("#" + trs[count].id).find('.txtNoPCS').attr("readonly", "readonly");
-                    $("#saveBtn").attr("disabled", "disabled");
+                    $("#saveGbase").attr("disabled", "disabled");
                 }
             }
             $(".cashBDAmountTotal").val(round(amountTotal, 2));
