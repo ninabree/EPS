@@ -3986,7 +3986,7 @@ namespace ExpenseProcessingSystem.Services
                 tempGbase.entries.Add(credit);
                 tempGbase.entries.Add(debit);
 
-                InsertGbaseEntry(tempGbase);
+                InsertGbaseEntry(tempGbase, expID);
 
                 if (item.fbt)
                 {
@@ -4001,8 +4001,11 @@ namespace ExpenseProcessingSystem.Services
             }
 
             _GOContext.SaveChanges();
+            _context.SaveChanges();
+
             return true;
         }
+
         public bool postNC(int expID)
         {
             var expenseDetails = getExpenseNC(expID);
@@ -4039,7 +4042,7 @@ namespace ExpenseProcessingSystem.Services
                     }
                 }
                 //insert
-                InsertGbaseEntry(tempGbase);
+                InsertGbaseEntry(tempGbase, expID);
             }
 
             _GOContext.SaveChanges();
@@ -4048,7 +4051,7 @@ namespace ExpenseProcessingSystem.Services
         ///============[End Post Entries]============
 
         ///==============[Begin Gbase Entry Section]================
-        private bool InsertGbaseEntry(gbaseContainer containerModel)
+        private bool InsertGbaseEntry(gbaseContainer containerModel, int expenseID)
         {
             TblCm10 goModel = new TblCm10();
 
@@ -4271,7 +4274,9 @@ namespace ExpenseProcessingSystem.Services
                 return false;
             }
 
-            var query = _GOContext.Add(goModel);
+            _GOContext.Add(goModel);
+
+            _context.GOExpressHist.Add(convertTblCm10ToGOExHist(goModel, _context.ExpenseEntry.Where(x => x.Expense_ID == expenseID).FirstOrDefault()));
 
             return true;
         }
@@ -4446,6 +4451,181 @@ namespace ExpenseProcessingSystem.Services
             }
 
             return accDetails;
+        }
+
+        public GOExpressHistModel convertTblCm10ToGOExHist(TblCm10 tblcm10, ExpenseEntryModel expense)
+        {
+            return new GOExpressHistModel {
+                GOExpHist_SystemName = tblcm10.SystemName,
+                GOExpHist_Groupcode = tblcm10.Groupcode,
+                GOExpHist_Branchno = tblcm10.Branchno,
+                GOExpHist_OpeKind = tblcm10.OpeKind,
+                GOExpHist_AutoApproved = tblcm10.AutoApproved,
+                GOExpHist_WarningOverride = tblcm10.WarningOverride,
+                GOExpHist_CcyFormat = tblcm10.CcyFormat,
+                GOExpHist_OpeBranch = tblcm10.OpeBranch,
+                GOExpHist_ValueDate = tblcm10.ValueDate,
+                GOExpHist_ReferenceType = tblcm10.ReferenceType,
+                GOExpHist_ReferenceNo = tblcm10.ReferenceNo,
+                GOExpHist_Comment = tblcm10.Comment,
+                GOExpHist_Section = tblcm10.Section,
+                GOExpHist_Remarks = tblcm10.Remarks,
+                GOExpHist_Memo = tblcm10.Memo,
+                GOExpHist_SchemeNo = tblcm10.SchemeNo,
+                GOExpHist_Entry11Type = tblcm10.Entry11Type,
+                GOExpHist_Entry11IbfCode = tblcm10.Entry11IbfCode,
+                GOExpHist_Entry11Ccy = tblcm10.Entry11Ccy,
+                GOExpHist_Entry11Amt = tblcm10.Entry11Amt,
+                GOExpHist_Entry11Cust = tblcm10.Entry11Cust,
+                GOExpHist_Entry11Actcde = tblcm10.Entry11Actcde,
+                GOExpHist_Entry11ActType = tblcm10.Entry11ActType,
+                GOExpHist_Entry11ActNo = tblcm10.Entry11ActNo,
+                GOExpHist_Entry11ExchRate = tblcm10.Entry11ExchRate,
+                GOExpHist_Entry11ExchCcy = tblcm10.Entry11ExchCcy,
+                GOExpHist_Entry11Fund = tblcm10.Entry11Fund,
+                GOExpHist_Entry11CheckNo = tblcm10.Entry11CheckNo,
+                GOExpHist_Entry11Available = tblcm10.Entry11Available,
+                GOExpHist_Entry11AdvcPrnt = tblcm10.Entry11AdvcPrnt,
+                GOExpHist_Entry11Details = tblcm10.Entry11Details,
+                GOExpHist_Entry11Entity = tblcm10.Entry11Entity,
+                GOExpHist_Entry11Division = tblcm10.Entry11Division,
+                GOExpHist_Entry11InterAmt = tblcm10.Entry11InterAmt,
+                GOExpHist_Entry11InterRate = tblcm10.Entry11InterRate,
+                GOExpHist_Entry12Type = tblcm10.Entry12Type,
+                GOExpHist_Entry12IbfCode = tblcm10.Entry12IbfCode,
+                GOExpHist_Entry12Ccy = tblcm10.Entry12Ccy,
+                GOExpHist_Entry12Amt = tblcm10.Entry12Amt,
+                GOExpHist_Entry12Cust = tblcm10.Entry12Cust,
+                GOExpHist_Entry12Actcde = tblcm10.Entry12Actcde,
+                GOExpHist_Entry12ActType = tblcm10.Entry12ActType,
+                GOExpHist_Entry12ActNo = tblcm10.Entry12ActNo,
+                GOExpHist_Entry12ExchRate = tblcm10.Entry12ExchRate,
+                GOExpHist_Entry12ExchCcy = tblcm10.Entry12ExchCcy,
+                GOExpHist_Entry12Fund = tblcm10.Entry12Fund,
+                GOExpHist_Entry12CheckNo = tblcm10.Entry12CheckNo,
+                GOExpHist_Entry12Available = tblcm10.Entry12Available,
+                GOExpHist_Entry12AdvcPrnt = tblcm10.Entry12AdvcPrnt,
+                GOExpHist_Entry12Details = tblcm10.Entry12Details,
+                GOExpHist_Entry12Entity = tblcm10.Entry12Entity,
+                GOExpHist_Entry12Division = tblcm10.Entry12Division,
+                GOExpHist_Entry12InterAmt = tblcm10.Entry12InterAmt,
+                GOExpHist_Entry12InterRate = tblcm10.Entry12InterRate,
+                GOExpHist_Entry21Type = tblcm10.Entry21Type,
+                GOExpHist_Entry21IbfCode = tblcm10.Entry21IbfCode,
+                GOExpHist_Entry21Ccy = tblcm10.Entry21Ccy,
+                GOExpHist_Entry21Amt = tblcm10.Entry21Amt,
+                GOExpHist_Entry21Cust = tblcm10.Entry21Cust,
+                GOExpHist_Entry21Actcde = tblcm10.Entry21Actcde,
+                GOExpHist_Entry21ActType = tblcm10.Entry21ActType,
+                GOExpHist_Entry21ActNo = tblcm10.Entry21ActNo,
+                GOExpHist_Entry21ExchRate = tblcm10.Entry21ExchRate,
+                GOExpHist_Entry21ExchCcy = tblcm10.Entry21ExchCcy,
+                GOExpHist_Entry21Fund = tblcm10.Entry21Fund,
+                GOExpHist_Entry21CheckNo = tblcm10.Entry21CheckNo,
+                GOExpHist_Entry21Available = tblcm10.Entry21Available,
+                GOExpHist_Entry21AdvcPrnt = tblcm10.Entry21AdvcPrnt,
+                GOExpHist_Entry21Details = tblcm10.Entry21Details,
+                GOExpHist_Entry21Entity = tblcm10.Entry21Entity,
+                GOExpHist_Entry21Division = tblcm10.Entry21Division,
+                GOExpHist_Entry21InterAmt = tblcm10.Entry21InterAmt,
+                GOExpHist_Entry21InterRate = tblcm10.Entry21InterRate,
+                GOExpHist_Entry22Type = tblcm10.Entry22Type,
+                GOExpHist_Entry22IbfCode = tblcm10.Entry22IbfCode,
+                GOExpHist_Entry22Ccy = tblcm10.Entry22Ccy,
+                GOExpHist_Entry22Amt = tblcm10.Entry22Amt,
+                GOExpHist_Entry22Cust = tblcm10.Entry22Cust,
+                GOExpHist_Entry22Actcde = tblcm10.Entry22Actcde,
+                GOExpHist_Entry22ActType = tblcm10.Entry22ActType,
+                GOExpHist_Entry22ActNo = tblcm10.Entry22ActNo,
+                GOExpHist_Entry22ExchRate = tblcm10.Entry22ExchRate,
+                GOExpHist_Entry22ExchCcy = tblcm10.Entry22ExchCcy,
+                GOExpHist_Entry22Fund = tblcm10.Entry22Fund,
+                GOExpHist_Entry22CheckNo = tblcm10.Entry22CheckNo,
+                GOExpHist_Entry22Available = tblcm10.Entry22Available,
+                GOExpHist_Entry22AdvcPrnt = tblcm10.Entry22AdvcPrnt,
+                GOExpHist_Entry22Details = tblcm10.Entry22Details,
+                GOExpHist_Entry22Entity = tblcm10.Entry22Entity,
+                GOExpHist_Entry22Division = tblcm10.Entry22Division,
+                GOExpHist_Entry22InterAmt = tblcm10.Entry22InterAmt,
+                GOExpHist_Entry22InterRate = tblcm10.Entry22InterRate,
+                GOExpHist_Entry31Type = tblcm10.Entry31Type,
+                GOExpHist_Entry31IbfCode = tblcm10.Entry31IbfCode,
+                GOExpHist_Entry31Ccy = tblcm10.Entry31Ccy,
+                GOExpHist_Entry31Amt = tblcm10.Entry31Amt,
+                GOExpHist_Entry31Cust = tblcm10.Entry31Cust,
+                GOExpHist_Entry31Actcde = tblcm10.Entry31Actcde,
+                GOExpHist_Entry31ActType = tblcm10.Entry31ActType,
+                GOExpHist_Entry31ActNo = tblcm10.Entry31ActNo,
+                GOExpHist_Entry31ExchRate = tblcm10.Entry31ExchRate,
+                GOExpHist_Entry31ExchCcy = tblcm10.Entry31ExchCcy,
+                GOExpHist_Entry31Fund = tblcm10.Entry31Fund,
+                GOExpHist_Entry31CheckNo = tblcm10.Entry31CheckNo,
+                GOExpHist_Entry31Available = tblcm10.Entry31Available,
+                GOExpHist_Entry31AdvcPrnt = tblcm10.Entry31AdvcPrnt,
+                GOExpHist_Entry31Details = tblcm10.Entry31Details,
+                GOExpHist_Entry31Entity = tblcm10.Entry31Entity,
+                GOExpHist_Entry31Division = tblcm10.Entry31Division,
+                GOExpHist_Entry31InterAmt = tblcm10.Entry31InterAmt,
+                GOExpHist_Entry31InterRate = tblcm10.Entry31InterRate,
+                GOExpHist_Entry32Type = tblcm10.Entry32Type,
+                GOExpHist_Entry32IbfCode = tblcm10.Entry32IbfCode,
+                GOExpHist_Entry32Ccy = tblcm10.Entry32Ccy,
+                GOExpHist_Entry32Amt = tblcm10.Entry32Amt,
+                GOExpHist_Entry32Cust = tblcm10.Entry32Cust,
+                GOExpHist_Entry32Actcde = tblcm10.Entry32Actcde,
+                GOExpHist_Entry32ActType = tblcm10.Entry32ActType,
+                GOExpHist_Entry32ActNo = tblcm10.Entry32ActNo,
+                GOExpHist_Entry32ExchRate = tblcm10.Entry32ExchRate,
+                GOExpHist_Entry32ExchCcy = tblcm10.Entry32ExchCcy,
+                GOExpHist_Entry32Fund = tblcm10.Entry32Fund,
+                GOExpHist_Entry32CheckNo = tblcm10.Entry32CheckNo,
+                GOExpHist_Entry32Available = tblcm10.Entry32Available,
+                GOExpHist_Entry32AdvcPrnt = tblcm10.Entry32AdvcPrnt,
+                GOExpHist_Entry32Details = tblcm10.Entry32Details,
+                GOExpHist_Entry32Entity = tblcm10.Entry32Entity,
+                GOExpHist_Entry32Division = tblcm10.Entry32Division,
+                GOExpHist_Entry32InterAmt = tblcm10.Entry32InterAmt,
+                GOExpHist_Entry32InterRate = tblcm10.Entry32InterRate,
+                GOExpHist_Entry41Type = tblcm10.Entry41Type,
+                GOExpHist_Entry41IbfCode = tblcm10.Entry41IbfCode,
+                GOExpHist_Entry41Ccy = tblcm10.Entry41Ccy,
+                GOExpHist_Entry41Amt = tblcm10.Entry41Amt,
+                GOExpHist_Entry41Cust = tblcm10.Entry41Cust,
+                GOExpHist_Entry41Actcde = tblcm10.Entry41Actcde,
+                GOExpHist_Entry41ActType = tblcm10.Entry41ActType,
+                GOExpHist_Entry41ActNo = tblcm10.Entry41ActNo,
+                GOExpHist_Entry41ExchRate = tblcm10.Entry41ExchRate,
+                GOExpHist_Entry41ExchCcy = tblcm10.Entry41ExchCcy,
+                GOExpHist_Entry41Fund = tblcm10.Entry41Fund,
+                GOExpHist_Entry41CheckNo = tblcm10.Entry41CheckNo,
+                GOExpHist_Entry41Available = tblcm10.Entry41Available,
+                GOExpHist_Entry41AdvcPrnt = tblcm10.Entry41AdvcPrnt,
+                GOExpHist_Entry41Details = tblcm10.Entry41Details,
+                GOExpHist_Entry41Entity = tblcm10.Entry41Entity,
+                GOExpHist_Entry41Division = tblcm10.Entry41Division,
+                GOExpHist_Entry41InterAmt = tblcm10.Entry41InterAmt,
+                GOExpHist_Entry41InterRate = tblcm10.Entry41InterRate,
+                GOExpHist_Entry42Type = tblcm10.Entry42Type,
+                GOExpHist_Entry42IbfCode = tblcm10.Entry42IbfCode,
+                GOExpHist_Entry42Ccy = tblcm10.Entry42Ccy,
+                GOExpHist_Entry42Amt = tblcm10.Entry42Amt,
+                GOExpHist_Entry42Cust = tblcm10.Entry42Cust,
+                GOExpHist_Entry42Actcde = tblcm10.Entry42Actcde,
+                GOExpHist_Entry42ActType = tblcm10.Entry42ActType,
+                GOExpHist_Entry42ActNo = tblcm10.Entry42ActNo,
+                GOExpHist_Entry42ExchRate = tblcm10.Entry42ExchRate,
+                GOExpHist_Entry42ExchCcy = tblcm10.Entry42ExchCcy,
+                GOExpHist_Entry42Fund = tblcm10.Entry42Fund,
+                GOExpHist_Entry42CheckNo = tblcm10.Entry42CheckNo,
+                GOExpHist_Entry42Available = tblcm10.Entry42Available,
+                GOExpHist_Entry42AdvcPrnt = tblcm10.Entry42AdvcPrnt,
+                GOExpHist_Entry42Details = tblcm10.Entry42Details,
+                GOExpHist_Entry42Entity = tblcm10.Entry42Entity,
+                GOExpHist_Entry42Division = tblcm10.Entry42Division,
+                GOExpHist_Entry42InterAmt = tblcm10.Entry42InterAmt,
+                GOExpHist_Entry42InterRate = tblcm10.Entry42InterRate,
+                ExpenseEntryModel = expense
+            };
         }
         ///========[End of Other Functions]============
     }

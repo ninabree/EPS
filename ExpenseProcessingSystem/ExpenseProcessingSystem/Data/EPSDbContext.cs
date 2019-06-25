@@ -73,5 +73,9 @@ namespace ExpenseProcessingSystem.Data
         public DbSet<LiquidationEntryDetailModel> LiquidationEntryDetails { get; set; }
         public DbSet<LiquidationCashBreakdownModel> LiquidationCashBreakdown { get; set; }
 
+        //GOExpress table history
+        public DbSet<GOExpressHistModel> GOExpressHist { get; set; }
+
+
     }
 }
