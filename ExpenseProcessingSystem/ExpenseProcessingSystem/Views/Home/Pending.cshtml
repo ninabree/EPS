@@ -28,21 +28,25 @@
             <tbody>
                 @foreach (ApplicationsViewModel item in Model.GeneralPendingList)
                 {
-                    <tr data-href="@String.Concat(item.App_Link,"/",item.App_ID)">
-                        <td>@Html.DisplayFor(model => item.App_Type)</td>
-                        <td>@Html.DisplayFor(model => item.App_Amount)</td>
-                        <td>@Html.DisplayFor(model => item.App_Payee)</td>
-                        <td>@Html.DisplayFor(model => item.App_Maker)</td>
-                        <td>
-                            @foreach (string ver in item.App_Verifier_ID_List)
-                            {
-                                Html.DisplayFor(model => ver);
-                            }
-                        </td>
-                        <td>@Html.DisplayFor(model => item.App_Date)</td>
-                        <td>@Html.DisplayFor(model => item.App_Last_Updated)</td>
-                        <td>@Html.DisplayFor(model => item.App_Status)</td>
-                    </tr>
+                <tr data-href="@String.Concat(item.App_Link,"/",item.App_ID)">
+                    <td>@Html.DisplayFor(model => item.App_Type)</td>
+                    <td>@Html.DisplayFor(model => item.App_Amount)</td>
+                    <td>@Html.DisplayFor(model => item.App_Payee)</td>
+                    <td>@Html.DisplayFor(model => item.App_Maker)</td>
+                    <td>
+                        @if (item.App_Verifier_ID_List[0] != null && item.App_Verifier_ID_List[1] != null)
+                        {
+                            <text>@item.App_Verifier_ID_List[0] / @item.App_Verifier_ID_List[1]</text>
+                        }
+                        else
+                        {
+                            <text>@item.App_Verifier_ID_List[0]</text>
+                        }
+                    </td>
+                    <td>@Html.DisplayFor(model => item.App_Date)</td>
+                    <td>@Html.DisplayFor(model => item.App_Last_Updated)</td>
+                    <td>@Html.DisplayFor(model => item.App_Status)</td>
+                </tr>
                 }
             </tbody>
         </table>
