@@ -130,6 +130,7 @@ namespace ExpenseProcessingSystem.Controllers
 
             return View(vm);
         }
+
         [OnlineUserCheck]
         public IActionResult History(string sortOrder, string currentFilter, string searchString, int? page)
         {
@@ -1493,9 +1494,127 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 return View("Liquidation_SS", vm);
             }
-            int id = _service.addLiquidationDetail(vm, int.Parse(GetUserID()));
 
-            return RedirectToAction("Liquidation_Main");
+            int id = 0;
+            int exist = _service.getLiquidationExistence(vm.entryID);
+
+            if (exist == 0)
+            {
+                id = _service.addLiquidationDetail(vm, int.Parse(GetUserID()), exist);
+            }
+            else
+            {
+                if (_service.deleteLiquidationEntry(vm.entryID))
+                {
+                    id = _service.addLiquidationDetail(vm, int.Parse(GetUserID()), exist);
+                }
+            }
+
+            ModelState.Clear();
+
+            TempData["entryIDAddtoView"] = id;
+
+            return RedirectToAction("View_Liquidation_SS", "Home");
+        }
+
+        [ExportModelState]
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
+        public IActionResult View_Liquidation_SS(int entryID)
+        {
+            var userId = GetUserID();
+            if (entryID == 0 && TempData["entryIDAddtoView"] != null)
+            {
+                entryID = (int)TempData["entryIDAddtoView"];
+                TempData.Keep();
+            }
+            else
+            {
+                TempData.Remove("entryIDAddtoView");
+            }
+
+            LiquidationViewModel ssList = _service.getExpenseToLiqudate(entryID);
+
+            foreach (var i in ssList.LiquidationDetails)
+            {
+                i.screenCode = "Liquidation_SS";
+            }
+
+            return View("Liquidation_SS_ReadOnly", ssList);
+        }
+
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
+        public IActionResult Liquidation_VerAppModSS(int entryID, string command)
+        {
+            var userId = GetUserID();
+
+            string viewLink = "Liquidation_SS";
+            LiquidationViewModel ssList;
+
+            switch (command)
+            {
+                case "Modify":
+                    viewLink = "Liquidation_SS";
+                    break;
+                case "approver":
+                    if (_service.updateLiquidateStatus(entryID, GlobalSystemValues.STATUS_APPROVED, int.Parse(GetUserID())))
+                    {
+                        //_service.postCV(entryID);
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Liquidation_SS_ReadOnly";
+                    break;
+                case "verifier":
+                    if (_service.updateLiquidateStatus(entryID, GlobalSystemValues.STATUS_VERIFIED, int.Parse(GetUserID())))
+                    {
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Liquidation_SS_ReadOnly";
+                    break;
+                case "Delete":
+                    if (_service.deleteLiquidationEntry(entryID))
+                    {
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    return RedirectToAction("Index", "Home");
+
+                case "Reject":
+                    if (_service.updateLiquidateStatus(entryID, GlobalSystemValues.STATUS_REJECTED, int.Parse(GetUserID())))
+                    {
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Liquidation_SS_ReadOnly";
+                    break;
+
+                default:
+                    break;
+            }
+
+            ssList = _service.getExpenseToLiqudate(entryID);
+
+            foreach (var i in ssList.LiquidationDetails)
+            {
+                i.screenCode = "Liquidation_SS";
+            }
+
+            return View(viewLink, ssList);
         }
 
         //------------------------------------------------------------------

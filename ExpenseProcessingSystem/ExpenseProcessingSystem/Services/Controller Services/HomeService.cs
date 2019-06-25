@@ -136,12 +136,16 @@ namespace ExpenseProcessingSystem.Services
                             || p.Expense_Status == GlobalSystemValues.STATUS_EDIT
                             || p.Expense_Status == GlobalSystemValues.STATUS_DELETE)
                             && p.Expense_Creator_ID != userID
+                            && p.Expense_Verifier_1 != userID 
+                            && p.Expense_Verifier_2 != userID
                             )
                             ||
                             (
                             p.Expense_Status == GlobalSystemValues.STATUS_POSTED
                             && p.Expense_Type == GlobalSystemValues.TYPE_SS
                             && l.Liq_Created_UserID != userID
+                            && l.Liq_Verifier1 != userID 
+                            && l.Liq_Verifier2 != userID
                             && (l.Liq_Status == GlobalSystemValues.STATUS_PENDING
                             || l.Liq_Status == GlobalSystemValues.STATUS_VERIFIED)
                             )
@@ -215,7 +219,7 @@ namespace ExpenseProcessingSystem.Services
                     App_Status = (item.Liq_Status == 0) ? getStatus(item.Expense_Status) : getStatus(item.Liq_Status),
                     App_Link = linktionary[item.Expense_Type]
                 };
-
+                
                 pendingList.Add(tempPending);
             }
 
@@ -223,6 +227,7 @@ namespace ExpenseProcessingSystem.Services
 
             return pgPendingList;
         }
+
         //[ User Maintenance ]
         public UserManagementViewModel2 populateUM()
         {
@@ -3828,6 +3833,8 @@ namespace ExpenseProcessingSystem.Services
                 liqList.Add(liqDtl);
             }
 
+            var liqStatus = _context.LiquidationEntryDetails.Where(x => x.ExpenseEntryModel.Expense_ID == transID).FirstOrDefault();
+
             LiquidationViewModel liqModel = new LiquidationViewModel()
             {
                 entryID = EntryDetails.e.Expense_ID,
@@ -3836,16 +3843,22 @@ namespace ExpenseProcessingSystem.Services
                 expenseYear = EntryDetails.e.Expense_Date.Year.ToString(),
                 expenseId = EntryDetails.e.Expense_Number,
                 checkNo = EntryDetails.e.Expense_CheckNo,
-                maker = EntryDetails.e.Expense_Creator_ID,
+                statusID = (liqStatus == null) ? 0 : liqStatus.Liq_Status,
+                status = (liqStatus == null) ? "" : getStatus(liqStatus.Liq_Status),
+                maker = (liqStatus == null) ? EntryDetails.e.Expense_Creator_ID : liqStatus.Liq_Created_UserID,
+                verifier_1 = (liqStatus == null) ? "" : getUserName(liqStatus.Liq_Verifier1),
+                verifier_2 = (liqStatus == null) ? "" : getUserName(liqStatus.Liq_Verifier2),
+                approver = (liqStatus == null) ? "" : getUserName(liqStatus.Liq_Approver),
                 createdDate = EntryDetails.e.Expense_Created_Date,
-                LiquidationDetails = liqList
+                LiquidationDetails = liqList,
+                LiqEntryDetails = (liqStatus == null) ? new LiquidationEntryDetailModel() : liqStatus
             };
 
             return liqModel;
         }
 
         //Add liquidation details
-        public int addLiquidationDetail(LiquidationViewModel vm, int userid)
+        public int addLiquidationDetail(LiquidationViewModel vm, int userid, int count)
         {
             LiquidationCashBreakdownModel model = new LiquidationCashBreakdownModel();
             foreach (var i in vm.LiquidationDetails)
@@ -3869,7 +3882,7 @@ namespace ExpenseProcessingSystem.Services
             {
                 ExpenseEntryModel = expenseModel,
                 Liq_Status = GlobalSystemValues.STATUS_PENDING,
-                Liq_Created_Date = DateTime.Now,
+                Liq_Created_Date = (count == 0) ? DateTime.Now : vm.LiqEntryDetails.Liq_Created_Date,
                 Liq_LastUpdated_Date = DateTime.Now,
                 Liq_Created_UserID = userid
             });
@@ -3879,19 +3892,63 @@ namespace ExpenseProcessingSystem.Services
         }
 
         //Update liquidation status
-        public int updateLiquidateStatus(int id, int status, int userid)
+        public bool updateLiquidateStatus(int id, int status, int userid)
         {
-            var liquidateEntry = _context.LiquidationEntryDetails.Include(x => x.ExpenseEntryModel)
+            if (_modelState.IsValid)
+            {
+                var liquidateEntry = _context.LiquidationEntryDetails.Include(x => x.ExpenseEntryModel)
                 .Where(x => x.ExpenseEntryModel.Expense_ID == id).FirstOrDefault();
 
-            liquidateEntry.Liq_Status = status;
-            liquidateEntry.Liq_Created_UserID = userid;
-            liquidateEntry.Liq_Created_Date = DateTime.Now;
-            liquidateEntry.Liq_LastUpdated_Date = DateTime.Now;
+                if (status == GlobalSystemValues.STATUS_VERIFIED)
+                    liquidateEntry.Liq_Verifier1 = userid;
+
+                if (status == GlobalSystemValues.STATUS_APPROVED)
+                {
+                    liquidateEntry.Liq_Approver = userid;
+                    if (GlobalSystemValues.STATUS_PENDING == getCurrentLiquidationStatus(liquidateEntry.ExpenseEntryModel.Expense_ID))
+                    {
+                        liquidateEntry.Liq_Verifier1 = userid;
+                    }
+                }
+
+                liquidateEntry.Liq_Status = status;
+                liquidateEntry.Liq_LastUpdated_Date = DateTime.Now;
+                _context.SaveChanges();
+            }
+            else { return false; }
+            return true;
+        }
+
+        //Delete liquidation entry
+        public bool deleteLiquidationEntry(int entryID)
+        {
+            var entryDtl = _context.ExpenseEntryDetails.Where(x => x.ExpenseEntryModel.Expense_ID == entryID).ToList();
+            foreach (var i in entryDtl)
+            {
+                _context.LiquidationCashBreakdown.RemoveRange(_context.LiquidationCashBreakdown
+                    .Where(x => x.ExpenseEntryDetailModel.ExpDtl_ID == i.ExpDtl_ID));
+            }
+
+            _context.LiquidationEntryDetails.RemoveRange(_context.LiquidationEntryDetails
+                .Where(x => x.ExpenseEntryModel.Expense_ID == entryID));
+
             _context.SaveChanges();
 
-            return id;
+            return true;
         }
+
+        //Check liquidation record existence
+        public int getLiquidationExistence(int entryID)
+        {
+            return _context.LiquidationEntryDetails.Where(x => x.ExpenseEntryModel.Expense_ID == entryID).Count();
+        }
+
+        //Check current status of liqudation entry
+        public int getCurrentLiquidationStatus(int entryID)
+        {
+            return _context.LiquidationEntryDetails.Where(x => x.ExpenseEntryModel.Expense_ID == entryID).SingleOrDefault().Liq_Status;
+        }
+
         ////============[End Access Entry Tables]=========================
 
         ///==============[Post Entries]==============

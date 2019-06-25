@@ -82,9 +82,13 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly string ENTRY_VIEW_SS = "/Home/View_SS";
         public static readonly string ENTRY_NEW_PCV = "/Home/AddNewPCV";
         public static readonly string ENTRY_NEW_SS = "/Home/AddNewSS";
+        public static readonly string ENTRY_MOD_PCV = "/Home/VerAppModPCV";
+        public static readonly string ENTRY_MOD_SS = "/Home/VerAppModSS";
         public static readonly string LIQ_MAIN = "/Home/Liquidation_Main";
         public static readonly string LIQ_SS = "/Home/Liquidation_SS";
         public static readonly string LIQ_New_SS = "/Home/Liquidation_AddNewSS";
+        public static readonly string LIQ_View_SS = "/Home/View_Liquidation_SS";
+        public static readonly string LIQ_MOD_SS = "/Home/Liquidation_VerAppModSS";
 
         public static readonly List<string> ENTRY_VALS = new List<string> {
             GlobalSystemValues.ENTRY,
@@ -100,9 +104,13 @@ namespace ExpenseProcessingSystem.ConstantData
             GlobalSystemValues.ENTRY_VIEW_SS,
             GlobalSystemValues.ENTRY_NEW_PCV,
             GlobalSystemValues.ENTRY_NEW_SS,
+            GlobalSystemValues.ENTRY_MOD_PCV,
+            GlobalSystemValues.ENTRY_MOD_SS,
             GlobalSystemValues.LIQ_MAIN,
             GlobalSystemValues.LIQ_SS,
-            GlobalSystemValues.LIQ_New_SS
+            GlobalSystemValues.LIQ_New_SS,
+            GlobalSystemValues.LIQ_View_SS,
+            GlobalSystemValues.LIQ_MOD_SS
         };
         //Static values for entry path use for checking if HomeTabsPartial will be shown.
         //Example: instead of [if Context.Request.Path.ToString() == "/Home/Index"] use (GlobalSystemValues.HOME_VALS.Contains(Context.Request.Path.ToString())) ? true : false;

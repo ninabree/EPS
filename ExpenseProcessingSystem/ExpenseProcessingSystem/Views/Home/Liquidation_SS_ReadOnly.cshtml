@@ -1,14 +1,16 @@
-﻿@using ExpenseProcessingSystem.ViewModels
-@using ExpenseProcessingSystem.ConstantData
-@model LiquidationViewModel
-@inject IJsonHelper Json;
-
-@{
-    ViewData["Title"] = "Liquidation_SS";
+﻿@{
+    ViewData["Title"] = "Liquidation_SS_ReadOnly";
 }
 
+@using ExpenseProcessingSystem.ViewModels
+@using ExpenseProcessingSystem.ConstantData
+@model LiquidationViewModel
+
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
 <input id="_screen" type="hidden" value="liq_Dtl" />
-@using (Html.BeginForm("Liquidation_AddNewSS", "Home", FormMethod.Post))
+@using (Html.BeginForm("Liquidation_VerAppModSS", "Home", FormMethod.Post))
 {
     <div class="tabContent">
 
@@ -197,7 +199,6 @@
                         </tr>
                         <tr>
                             <td>
-                                <input type="button" id="saveLiqCashBD" class="saveCashBDBtn btn" value="Save Liquidation" />
                             </td>
                             <td>
                                 <input type="button" class="printCashBDBtn btn" value="Print Cash Breakdown" onclick='printDivCashBD("divCashBDLiq");' />
@@ -229,7 +230,7 @@
                                             <input type="number" class="input100 txtLiqDenimination" readonly="readonly" style="text-align:center" value="@i.CashBreak_Denimination" />
                                         </td>
                                         <td>
-                                            <input type="number" class="input100 txtLiqNoPCS" min="0" style="text-align:center" value="0" />
+                                            <input type="number" class="input100 txtLiqNoPCS" min="0" readonly="readonly" style="text-align:center" value="0" />
                                         </td>
                                         <td>
                                             <input type="number" class="input100 txtLiqAmount" readonly="readonly" style="text-align:center" value="0" />
@@ -474,12 +475,20 @@
         </div>
         <div id="entry-controls" class="m-b-10">
             @Html.HiddenFor(x => Model.entryID)
-            @Html.HiddenFor(x => Model.LiqEntryDetails.Liq_Created_Date)
             <div class="flex-sb">
                 <div>
-                    <div class="dis-inline-block tbl-btn"><button>Save</button></div>
-                    <div class="dis-inline-block tbl-btn"><button disabled>Delete</button></div>
-                    <div class="dis-inline-block tbl-btn"><button disabled>Modify</button></div>
+                    <div class="dis-inline-block tbl-btn"><button disabled>Save</button></div>
+
+                    @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker)
+                    {
+                        <div class="dis-inline-block tbl-btn"><button value="Delete" name="command">Delete</button></div>
+                        <div class="dis-inline-block tbl-btn"><button value="Modify" name="command">Modify</button></div>
+                    }
+                    else
+                    {
+                        <div class="dis-inline-block tbl-btn"><button disabled>Delete</button></div>
+                        <div class="dis-inline-block tbl-btn"><button disabled>Modify</button></div>
+                    }
                 </div>
                 <div>
                     <div class="dis-inline-block tbl-btn"><button id="reversal_entry" disabled>Create Reversal Entry</button></div>
@@ -487,8 +496,38 @@
             </div>
             <div class="flex-sb">
                 <div>
-                    <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
-                    <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
+                    @if (HttpContextAccessor.HttpContext.Session.GetString("accessType") == GlobalSystemValues.ROLE_MAKER || HttpContextAccessor.HttpContext.Session.GetString("UserID") == Model.maker.ToString())
+                    {
+                        <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
+                        <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
+                    }
+                    else if (HttpContextAccessor.HttpContext.Session.GetString("accessType") == GlobalSystemValues.ROLE_VERIFIER)
+                    {
+                        if (Model.statusID == GlobalSystemValues.STATUS_APPROVED || Model.statusID == GlobalSystemValues.STATUS_VERIFIED
+                            || Model.statusID == GlobalSystemValues.STATUS_REJECTED)
+                        {
+                            <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
+                            <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
+                        }
+                        else
+                        {
+                            <div class="dis-inline-block tbl-btn"><button value="@HttpContextAccessor.HttpContext.Session.GetString("accessType")" name="command">Approve/Verify</button></div>
+                            <div class="dis-inline-block tbl-btn"><button value="Reject" name="command">Reject</button></div>
+                        }
+                    }
+                    else
+                    {
+                        if (Model.statusID == GlobalSystemValues.STATUS_APPROVED || Model.statusID == GlobalSystemValues.STATUS_REJECTED)
+                        {
+                            <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
+                            <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
+                        }
+                        else
+                        {
+                            <div class="dis-inline-block tbl-btn"><button value="@HttpContextAccessor.HttpContext.Session.GetString("accessType")" name="command">Approve/Verify</button></div>
+                            <div class="dis-inline-block tbl-btn"><button value="Reject" name="command">Reject</button></div>
+                        }
+                    }
                 </div>
                 <div>
                     <div class="dis-inline-block tbl-btn"><button disabled>Delete GBase Post</button></div>
@@ -584,81 +623,6 @@
             }
 
         });
-
-        $("table").on("change", "input.txtLiqNoPCS", function (e) {
-            var cashBDLiqItemNo = $(this.parentNode)[0].parentNode.id; //jquery obj
-
-            var txtDenimination = $("#" + cashBDLiqItemNo).find('.txtLiqDenimination').val();
-            var txtNoPCS = $("#" + cashBDLiqItemNo).find('.txtLiqNoPCS').val();
-
-            $("#" + cashBDLiqItemNo).find('.txtLiqAmount').val(round(parseFloat(txtDenimination) * parseFloat(txtNoPCS), 2));
-
-            var amountTotal = 0;
-            var trs = $(".cashBDLiqTable").find("tbody").find("tr");
-
-            for (var count = 0; count < trs.length; count++) {
-                var subTotal = parseFloat($("#" + trs[count].id).find('.txtLiqNoPCS').val()) * parseFloat($("#" + trs[count].id).find('.txtLiqDenimination').val());
-                amountTotal = parseFloat(amountTotal) + parseFloat(subTotal);
-            }
-
-            $("#txtLiqCredit").val(addCommas(round(amountTotal, 2)));
-        });
-
-        $('#IEInfoTable').on("change", "input.txtIEInfoInput", function (e) {
-            $('#txtIEExRatePhp').val(round($("#txtIEAmount").val() * $("#txtIEExRate").val(), 2));
-        });
-
-        $("table").on("click", "#saveLiqCashBD", function (e) {
-
-            e.stopImmediatePropagation();
-
-            var selectedRow = $('#hiddenSelectedItem').val();
-
-            if ($('#txtLiqCredit').val().replace(',', '') != $('#' + selectedRow).find(".txtGross").val()) {
-                alert("Amount do not match.");
-                return false;
-            }
-
-            var ret = selectedRow.replace('item_', '');
-            var trs = $('#cashBDLiqTable').find("tbody").find("tr");
-
-            $('#divLiqCashBD_' + ret).empty();
-
-            for (var count = 0; count < trs.length; count++) {
-                var denim = $("#" + trs[count].id).find('.txtLiqDenimination').val();
-                var pcs = $("#" + trs[count].id).find('.txtLiqNoPCS').val();
-                var amount = $("#" + trs[count].id).find('.txtLiqAmount').val();
-
-                $('#divLiqCashBD_' + ret).append($('<input/>', {
-                    id: 'LiquidationDetails_' + ret + '__liqCashBreakdown_' + count + '__cashDenimination',
-                    type: 'hidden',
-                    name: 'LiquidationDetails[' + ret + '].liqCashBreakdown[' + count + '].cashDenimination',
-                    value: denim
-                }));
-                $('#divLiqCashBD_' + ret).append($('<input/>', {
-                    id: 'LiquidationDetails_' + ret + '__liqCashBreakdown_' + count + '__cashNoPC',
-                    type: 'hidden',
-                    name: 'LiquidationDetails[' + ret + '].liqCashBreakdown[' + count + '].cashNoPC',
-                    value: pcs
-                }));
-                $('#divLiqCashBD_' + ret).append($('<input/>', {
-                    id: 'LiquidationDetails_' + ret + '__liqCashBreakdown_' + count + '__cashAmount',
-                    type: 'hidden',
-                    name: 'LiquidationDetails[' + ret + '].liqCashBreakdown[' + count + '].cashAmount',
-                    value: amount
-                }));
-            }
-
-            if ($('#txtLiqCredit').val() == 0) {
-                $('#' + selectedRow).find(".hiddenLiqFlag").val(0);
-            } else {
-                $('#' + selectedRow).find(".hiddenLiqFlag").val(1);
-                $('#' + selectedRow).find('#sss')
-                    .animate({ backgroundColor: '#FFFBD5' }, 'slow')
-                    .animate({ backgroundColor: 'transparent' }, 'slow');
-                $('#' + selectedRow).find('#imgLiq').attr('src', '/images/liqLogo_chk.png');
-            }
-        });
     });
 </script>
 <script type="text/javascript">
@@ -713,7 +677,7 @@
         $('#txtLiqCredit').val(totalAmount);
     };
 
-    function displayInfoIE(pid) {
+    function displayInfoIE(pid){
         $('#txtIECurrency').val($('#' + pid).find('.txtCcyAbbrev').val());
     };
 

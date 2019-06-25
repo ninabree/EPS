@@ -15,7 +15,7 @@
             <div class="dis-inline-block">
                 @Html.EditorFor(m => m.expenseDate, new { htmlAttributes = new { @class = "input w-97", @type = "date", @readonly = "readonly" } })
             </div>
-            <div class="dis-inline-block" style="float:right">
+            <div class="dis-inline-block" style="float:right;">
                 <p class="dis-inline-block">
                     @Html.TextBoxFor(model => model.expenseYear, new { @readonly = "true", @class = "input" })
                 </p>
@@ -168,8 +168,8 @@
                 </div>
             </div>
         </div>
-        @Html.HiddenFor(x => Model.entryID);
-        @Html.HiddenFor(x => Model.createdDate);
+        @Html.HiddenFor(x => Model.entryID)
+        @Html.HiddenFor(x => Model.createdDate)
     }
     <div id="modalDiv">
         @Html.Partial("ModalGBase")
