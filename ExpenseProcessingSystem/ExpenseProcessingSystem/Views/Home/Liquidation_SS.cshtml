@@ -1,16 +1,14 @@
-﻿@{
+﻿@using ExpenseProcessingSystem.ViewModels
+@using ExpenseProcessingSystem.ConstantData
+@model LiquidationViewModel
+@inject IJsonHelper Json;
+
+@{
     ViewData["Title"] = "Liquidation_SS";
 }
 
-@using ExpenseProcessingSystem.ViewModels
-@using ExpenseProcessingSystem.ConstantData
-@model LiquidationViewModel
-
-@using Microsoft.AspNetCore.Http
-@inject IHttpContextAccessor HttpContextAccessor
-
 <input id="_screen" type="hidden" value="liq_Dtl" />
-@using (Html.BeginForm("Liquidation_AddNewSS", "Home", FormMethod.Post, new { @class = "validate-form" }))
+@using (Html.BeginForm("Liquidation_AddNewSS", "Home", FormMethod.Post))
 {
     <div class="tabContent">
 
@@ -156,7 +154,7 @@
         </div>
         @*+++++++++++Liquidation form+++++++++++*@
         <div style="width:100%;text-align:center;padding-top:0.5%" class="table-bordered">
-            <input type="hidden" id="hiddenSelectedItem"/>
+            <input type="hidden" id="hiddenSelectedItem" />
             @*+++++++++++Liquidation form for PHP currency+++++++++++*@
             <div id="divPHP" style="display:none;text-align:center">
                 <div style="display:inline-block;width:100%">
@@ -476,6 +474,7 @@
         </div>
         <div id="entry-controls" class="m-b-10">
             @Html.HiddenFor(x => Model.entryID)
+            @Html.HiddenFor(x => Model.LiqEntryDetails.Liq_Created_Date)
             <div class="flex-sb">
                 <div>
                     <div class="dis-inline-block tbl-btn"><button>Save</button></div>
@@ -583,7 +582,7 @@
                 $('#divPHP').show();
                 displayInfoCashBD($(this.parentNode)[0].parentNode.id);
             }
-                
+
         });
 
         $("table").on("change", "input.txtLiqNoPCS", function (e) {
@@ -698,7 +697,7 @@
         if ($('#' + pid).find('.hiddenLiqFlag').val() == 0) {
             $('#txtLiqCredit').val(0);
             return false;
-        } 
+        }
 
         var ret = pid.replace('item_', '');
         var cashBDInput = $('#divLiqCashBD_' + ret).find("input");
@@ -714,7 +713,7 @@
         $('#txtLiqCredit').val(totalAmount);
     };
 
-    function displayInfoIE(pid){
+    function displayInfoIE(pid) {
         $('#txtIECurrency').val($('#' + pid).find('.txtCcyAbbrev').val());
     };
 

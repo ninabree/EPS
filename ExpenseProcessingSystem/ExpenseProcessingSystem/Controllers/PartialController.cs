@@ -47,67 +47,64 @@ namespace ExpenseProcessingSystem.Controllers
             DMCurrencyModel currDtl = _context.DMCurrency.Where(x => x.Curr_MasterID == 1 && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
             DMCurrencyModel currDtlUSD = _context.DMCurrency.Where(x => x.Curr_MasterID == 2 && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
 
-            if ((entryID != null) && (categoryID != null))
+            if ((entryID != "0") && (entryID != null) && (categoryID != null))
             {
                 viewModel = _service.getExpenseNC(int.Parse(entryID));
-            } else if (categoryID == GlobalSystemValues.NC_LS_PAYROLL.ToString())
-            {
-                viewModel.EntryNC = CONSTANT_NC_LSPAYROLL.Populate_LSPAYROLL(currDtl);
                 viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
-            }
-            else if (categoryID == GlobalSystemValues.NC_TAX_REMITTANCE.ToString())
+            } else
             {
-                viewModel.EntryNC = CONSTANT_NC_TAXREMITTANCE.Populate_TAXREMITTANCE(currDtl);
+                viewModel.entryID = 0;
                 viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
+
+                if (categoryID == GlobalSystemValues.NC_LS_PAYROLL.ToString())
+                {
+                    viewModel.EntryNC = CONSTANT_NC_LSPAYROLL.Populate_LSPAYROLL(currDtl);
+                }
+                else if (categoryID == GlobalSystemValues.NC_TAX_REMITTANCE.ToString())
+                {
+                    viewModel.EntryNC = CONSTANT_NC_TAXREMITTANCE.Populate_TAXREMITTANCE(currDtl);
+                }
+                else if (categoryID == GlobalSystemValues.NC_MONTHLY_ROSS_BILL.ToString())
+                {
+                    viewModel.EntryNC = CONSTANT_NC_MONTHLYROSSBILL.Populate_MONTHLYROSSBILL(currDtl);
+                }
+                else if (categoryID == GlobalSystemValues.NC_PSSC.ToString())
+                {
+                    viewModel.EntryNC = CONSTANT_NC_PSSC.Populate_PSSC(currDtl);
+                }
+                else if (categoryID == GlobalSystemValues.NC_PCHC.ToString())
+                {
+                    viewModel.EntryNC = CONSTANT_NC_PCHC.Populate_PCHC(currDtl);
+                }
+                else if (categoryID == GlobalSystemValues.NC_DEPRECIATION.ToString())
+                {
+                    viewModel.EntryNC = CONSTANT_NC_DEPRECIATION.Populate_DEPRECIATION(currDtl);
+                }
+                else if (categoryID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT.ToString())
+                {
+                    viewModel.EntryNC = CONSTANT_NC_PETTYCASHREPLENISHMENT.Populate_PETTYCASHREPLENISHMENT(currDtl);
+                    viewModel.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_PETTYCASHREPLENISHMENT.Populate_CDD_Instruc_Sheet(currDtl);
+                }
+                else if (categoryID == GlobalSystemValues.NC_JS_PAYROLL.ToString())
+                {
+                    viewModel.EntryNC = CONSTANT_NC_JSPAYROLL.Populate_JSPAYROLL(currDtl, currDtlUSD);
+                }
+                else if (categoryID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL.ToString())
+                {
+                    viewModel.EntryNC = CONSTANT_NC_RETURN_OF_JSPAYROLL.Populate_RETURN_OF_JSPAYROLL(currDtl, currDtlUSD);
+                    viewModel.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_RETURN_OF_JSPAYROLL.Populate_CDD_Instruc_Sheet(currDtl, currDtlUSD);
+                }
+                else if (categoryID == GlobalSystemValues.NC_FOREIGN_EXCHANGE_RECEIVING.ToString())
+                {
+                    viewModel.EntryNC = CONSTANT_NC_FOREIGN_EXCHANGE_RECEIVING.Populate_FOREIGN_EXCHANGE_RECEIVING(currDtl, currDtlUSD);
+                    viewModel.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_FOREIGN_EXCHANGE_RECEIVING.Populate_CDD_Instruc_Sheet(currDtl, currDtlUSD);
+                }
+                else if (categoryID == GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES.ToString())
+                {
+                    viewModel.EntryNC = CONSTANT_NC_MISC_ENTRIES.Populate_MISC_ENTRIES(currDtl);
+                }
             }
-            else if (categoryID == GlobalSystemValues.NC_MONTHLY_ROSS_BILL.ToString())
-            {
-                viewModel.EntryNC = CONSTANT_NC_MONTHLYROSSBILL.Populate_MONTHLYROSSBILL(currDtl);
-                viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
-            }
-            else if (categoryID == GlobalSystemValues.NC_PSSC.ToString())
-            {
-                viewModel.EntryNC = CONSTANT_NC_PSSC.Populate_PSSC(currDtl);
-                viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
-            }
-            else if (categoryID == GlobalSystemValues.NC_PCHC.ToString())
-            {
-                viewModel.EntryNC = CONSTANT_NC_PCHC.Populate_PCHC(currDtl);
-                viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
-            }
-            else if (categoryID == GlobalSystemValues.NC_DEPRECIATION.ToString())
-            {
-                viewModel.EntryNC = CONSTANT_NC_DEPRECIATION.Populate_DEPRECIATION(currDtl);
-                viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
-            }
-            else if (categoryID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT.ToString())
-            {
-                viewModel.EntryNC = CONSTANT_NC_PETTYCASHREPLENISHMENT.Populate_PETTYCASHREPLENISHMENT(currDtl);
-                viewModel.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_PETTYCASHREPLENISHMENT.Populate_CDD_Instruc_Sheet(currDtl);
-                viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
-            }
-            else if (categoryID == GlobalSystemValues.NC_JS_PAYROLL.ToString())
-            {
-                viewModel.EntryNC = CONSTANT_NC_JSPAYROLL.Populate_JSPAYROLL(currDtl, currDtlUSD);
-                viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
-            }
-            else if (categoryID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL.ToString())
-            {
-                viewModel.EntryNC = CONSTANT_NC_RETURN_OF_JSPAYROLL.Populate_RETURN_OF_JSPAYROLL(currDtl, currDtlUSD);
-                viewModel.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_RETURN_OF_JSPAYROLL.Populate_CDD_Instruc_Sheet(currDtl, currDtlUSD);
-                viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
-            }
-            else if (categoryID == GlobalSystemValues.NC_FOREIGN_EXCHANGE_RECEIVING.ToString())
-            {
-                viewModel.EntryNC = CONSTANT_NC_FOREIGN_EXCHANGE_RECEIVING.Populate_FOREIGN_EXCHANGE_RECEIVING(currDtl, currDtlUSD);
-                viewModel.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_FOREIGN_EXCHANGE_RECEIVING.Populate_CDD_Instruc_Sheet(currDtl, currDtlUSD);
-                viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
-            }
-            else if (categoryID == GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES.ToString())
-            {
-                viewModel.EntryNC = CONSTANT_NC_MISC_ENTRIES.Populate_MISC_ENTRIES(currDtl);
-                viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
-            }
+            
             viewModel = PopulateEntryNC(viewModel, expenseDate);
             return View("NCPartial", viewModel);
         }

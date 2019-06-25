@@ -71,6 +71,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
 
                 foreach (var ncDtl in nc.ExpenseEntryNCDtlModel)
                 {
+                    ncDtlAccList = new List<ExpenseEntryNCDtlAccViewModel>();
                     foreach (var ncDtlAcc in ncDtl.ExpenseEntryNCDtlAccModel)
                     {
                         ncDtlAccVM = new ExpenseEntryNCDtlAccViewModel()
@@ -78,7 +79,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             ExpNCDtlAcc_Acc_ID = ncDtlAcc.ExpNCDtlAcc_Acc_ID,
                             ExpNCDtlAcc_Acc_Name = ncDtlAcc.ExpNCDtlAcc_Acc_Name,
                             ExpNCDtlAcc_Curr_ID = ncDtlAcc.ExpNCDtlAcc_Curr_ID,
-                            ExpNCDtlAcc_Curr_Name = _context.DMCurrency.Where(x=> x.Curr_ID == ncDtlAcc.ExpNCDtlAcc_Curr_ID).Select(x=> x.Curr_Name).FirstOrDefault(),
+                            ExpNCDtlAcc_Curr_Name = _context.DMCurrency.Where(x=> x.Curr_ID == ncDtlAcc.ExpNCDtlAcc_Curr_ID).Select(x=> x.Curr_CCY_ABBR).FirstOrDefault(),
                             ExpNCDtlAcc_Inter_Rate = ncDtlAcc.ExpNCDtlAcc_Inter_Rate,
                             ExpNCDtlAcc_Amount = ncDtlAcc.ExpNCDtlAcc_Amount,
                             ExpNCDtlAcc_Type_ID = ncDtlAcc.ExpNCDtlAcc_Type_ID

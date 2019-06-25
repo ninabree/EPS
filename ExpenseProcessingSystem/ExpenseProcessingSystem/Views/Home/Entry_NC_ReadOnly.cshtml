@@ -17,7 +17,8 @@
     <div id="tbl-lbl">
         <div class="dis-inline-block"><p>Category of Entries:</p></div>
         <div class="dis-inline-block">
-            @Html.DropDownListFor(m => m.category_of_entry, Model.systemValues.category_of_entries, new { id = "categoryName" })
+            @Html.DisplayFor(x=> x.EntryNC.NC_Category_Name)
+            @*@Html.DropDownListFor(m => m.category_of_entry, Model.systemValues.category_of_entries, new { id = "categoryName" })*@
         </div>
     </div>
 
@@ -152,21 +153,52 @@
         {
             @Html.HiddenFor(x => Model.entryID)
             @Html.HiddenFor(x => Model.EntryNC.NC_Category_ID)
-            <div class="flex-sb">
-                <div>
-                    <div class="dis-inline-block tbl-btn"><button disabled>Save</button></div>
+        <div class="flex-sb">
+            <div>
+                <div class="dis-inline-block tbl-btn"><button disabled>Save</button></div>
 
-                    @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker)
-                    {
-                        <div class="dis-inline-block tbl-btn"><button>Delete</button></div>
-                        <div class="dis-inline-block tbl-btn"><button value="Modify" name="command">Modify</button></div>
-                    }
-                    else
+                @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker)
+                {
+                    @if ((Model.statusID == GlobalSystemValues.STATUS_APPROVED) || (Model.statusID == GlobalSystemValues.STATUS_REJECTED) || (Model.statusID == GlobalSystemValues.STATUS_REVERSED))
                     {
                         <div class="dis-inline-block tbl-btn"><button disabled>Delete</button></div>
                         <div class="dis-inline-block tbl-btn"><button disabled>Modify</button></div>
                     }
+                    else
+                    {
+                        <div class="dis-inline-block tbl-btn"><button value="Delete" name="command">Delete</button></div>
+                        <div class="dis-inline-block tbl-btn"><button value="Modify" name="command">Modify</button></div>
+                    }
+                }
+                else
+                {
+                    <div class="dis-inline-block tbl-btn"><button disabled>Delete</button></div>
+                    <div class="dis-inline-block tbl-btn"><button disabled>Modify</button></div>
+                }
+            </div>
+
+            @if ((Model.statusID == GlobalSystemValues.STATUS_APPROVED) || (Model.statusID == GlobalSystemValues.STATUS_REJECTED))
+            {
+                <div>
+                    <div class="dis-inline-block tbl-btn"><button value="Reversal" name="command">Create Reversal Entry</button></div>
+                    <div class="dis-inline-block tbl-btn"><button>Liquidate</button></div>
                 </div>
+                <div>
+                    <div class="dis-inline-block tbl-btn m-l-41"><button value="PrintCDD" name="command">Print CDD Instruction Sheet</button></div>
+                </div>
+            }
+            else if (Model.statusID == GlobalSystemValues.STATUS_REVERSED)
+            {
+                <div>
+                    <div class="dis-inline-block tbl-btn"><button disabled>Create Reversal Entry</button></div>
+                    <div class="dis-inline-block tbl-btn"><button>Liquidate</button></div>
+                </div>
+                <div>
+                    <div class="dis-inline-block tbl-btn m-l-41"><button value="PrintCDD" name="command">Print CDD Instruction Sheet</button></div>
+                </div>
+            }
+            else
+            {
                 <div>
                     <div class="dis-inline-block tbl-btn"><button id="reversal_entry" disabled>Create Reversal Entry</button></div>
                     <div class="dis-inline-block tbl-btn"><button disabled>Liquidate</button></div>
@@ -174,8 +206,9 @@
                 <div>
                     <div class="dis-inline-block tbl-btn m-l-41"><button disabled>Print CDD Instruction Sheet</button></div>
                 </div>
+            }
 
-            </div>
+        </div>
             <div class="flex-sb">
                 <div>
                     @if (HttpContextAccessor.HttpContext.Session.GetString("accessType") == GlobalSystemValues.ROLE_MAKER)
@@ -184,7 +217,7 @@
                     }
                     else
                     {
-                        if (Model.statusID == GlobalSystemValues.STATUS_APPROVED)
+                        @if ((Model.statusID == GlobalSystemValues.STATUS_APPROVED) || (Model.statusID == GlobalSystemValues.STATUS_REJECTED) || (Model.statusID == GlobalSystemValues.STATUS_REVERSED))
                         {
                             <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
                         }
@@ -193,7 +226,14 @@
                             <div class="dis-inline-block tbl-btn"><button value="@HttpContextAccessor.HttpContext.Session.GetString("accessType")" name="command">Approve/Verify</button></div>
                         }
                     }
-                    <div class="dis-inline-block tbl-btn"><button value="Reject" name="command">Reject</button></div>
+                    @if ((Model.statusID == GlobalSystemValues.STATUS_APPROVED) || (Model.statusID == GlobalSystemValues.STATUS_REJECTED) || (Model.statusID == GlobalSystemValues.STATUS_REVERSED))
+                    {
+                        <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
+                    }
+                    else
+                    {
+                        <div class="dis-inline-block tbl-btn"><button value="Reject" name="command">Reject</button></div>
+                    }
                 </div>
                 <div>
                 </div>
@@ -210,6 +250,12 @@
 <script type="text/javascript" src="~/js/EntryScripts.js"></script>
 <script type="text/javascript">
     $(function () {
+
+        //$(".printCDD_IS").click(function (e) {
+        //    e.preventDefault();
+
+        //    window.location.href = "/Home/CDD_IS_NC_PCR";
+        //});
         $(window).on("load", function () {
             if (@ViewBag.Success == 1) {
                 alert("Entry Approved");

@@ -6,66 +6,69 @@
 
 @model PaginatedList<BMViewModel>
 
-
-<div class="tab-content-cont m-t-10">
-    <div class="tbl-cont">
-        <table class="table table-striped tab-tbl table-hover">
-            <thead>
-                <tr>
-                    <th><a asp-action="BM" asp-route-sortOrder="@ViewData["AccountMappingSortParm"]">Account Mapping<p class="btn-xs glyphicon @ViewData["glyph-1"]"></p></a></th>
-                    <th><a asp-action="BM" asp-route-sortOrder="@ViewData["AccountNameSortParm"]">Account Name<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
-                    <th style="text-align:center"><a asp-action="BM" asp-route-sortOrder="@ViewData["GBaseBudgetCodeSortParm"]">G-Base Budget Code<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
-                    <th style="text-align:center"><a asp-action="BM" asp-route-sortOrder="@ViewData["AccountNumberSortParm"]">Account Number<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
-                    <th style="text-align:right"><a asp-action="BM" asp-route-sortOrder="@ViewData["BudgetSortParm"]">Budget<p class="btn-xs glyphicon @ViewData["glyph-5"]"></p></a></th>
-                    <th style="text-align:center"><a asp-action="BM" asp-route-sortOrder="@ViewData["DateRegisteredSortParm"]">Date Registered<p class="btn-xs glyphicon @ViewData["glyph-6"]"></p></a></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
+@using (Html.BeginForm("BM_PrintList", "Home", FormMethod.Post, new { @class = "validate-form" }))
+{
+    <div class="tab-content-cont m-t-10">
+        <div class="tbl-cont">
+            <table class="table table-striped tab-tbl table-hover">
+                <thead>
                     <tr>
-                        <td>@Html.DisplayFor(modelItem => item.BM_Acc_Group_Name)</td>
-                        <td>@Html.DisplayFor(modelItem => item.BM_Acc_Name)</td>
-                        <td style="text-align:center">@Html.DisplayFor(modelItem => item.BM_GBase_Code)</td>
-                        <td style="text-align:center">@Html.DisplayFor(modelItem => item.BM_Acc_Num)</td>
-                        <td style="text-align:right">@Html.DisplayFor(modelItem => item.BM_Budget_Amount)</td>
-                        <td style="text-align:center">@Html.DisplayFor(modelItem => item.BM_Date_Registered)</td>
+                        <th style="text-align:center"><a asp-action="BM" asp-route-sortOrder="@ViewData["AccountMappingSortParm"]">Account Mapping<p class="btn-xs glyphicon @ViewData["glyph-1"]"></p></a></th>
+                        <th style="text-align:center"><a asp-action="BM" asp-route-sortOrder="@ViewData["AccountNameSortParm"]">Account Name<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
+                        <th style="text-align:center"><a asp-action="BM" asp-route-sortOrder="@ViewData["GBaseBudgetCodeSortParm"]">G-Base Budget Code<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
+                        <th style="text-align:center"><a asp-action="BM" asp-route-sortOrder="@ViewData["AccountNumberSortParm"]">Account Number<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
+                        <th style="text-align:center"><a asp-action="BM" asp-route-sortOrder="@ViewData["BudgetSortParm"]">Budget<p class="btn-xs glyphicon @ViewData["glyph-5"]"></p></a></th>
+                        <th style="text-align:center"><a asp-action="BM" asp-route-sortOrder="@ViewData["DateRegisteredSortParm"]">Date Registered<p class="btn-xs glyphicon @ViewData["glyph-6"]"></p></a></th>
                     </tr>
-                }
-            </tbody>
-        </table>
-        @{
-            var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
-            var nextDisabled = !Model.HasNextPage ? "disabled" : "";
-        }
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.BM_Acc_Group_Name)</td>
+                            <td>@Html.DisplayFor(modelItem => item.BM_Acc_Name)</td>
+                            <td style="text-align:center">@Html.DisplayFor(modelItem => item.BM_GBase_Code)</td>
+                            <td style="text-align:center">@Html.DisplayFor(modelItem => item.BM_Acc_Num)</td>
+                            <td style="text-align:right">@Html.DisplayFor(modelItem => item.BM_Budget_Amount)</td>
+                            <td style="text-align:center">@Html.DisplayFor(modelItem => item.BM_Date_Registered)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @{
+                var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+                var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+            }
 
-        <a asp-action="BM"
-           asp-route-sortOrder="@ViewData["CurrentSort"]"
-           asp-route-page="@(Model.PageIndex - 1)"
-           asp-route-currentFilter="@ViewData["CurrentFilter"]"
-           class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left">
-        </a>
-        <input type="text" class="pagination-input" id="paginationInput" val="" />
-        <input type="text" class="pagination-input" value="of @(Model.TotalPages)" disabled />
-        <a asp-action="BM"
-           asp-route-sortOrder="@ViewData["CurrentSort"]"
-           asp-route-page="@(Model.PageIndex + 1)"
-           asp-route-currentFilter="@ViewData["CurrentFilter"]"
-           class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right">
-        </a>
-        <div class="float-r m-r-10 divBtn">
-            <a class="tbl-btn btnBudgetReg" href="#">Budget Registration</a>
-            <a class="tbl-btn btnBudgetRegHist" href="#">History of Budget Registration</a>
-        </div>
-        <div id="modalDiv2">
-            @Html.Partial("ModalPartial2")
-        </div>
-        @*validation message*@
-        <div id="ValidationSummary" style="display:none" class="">
-            @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
+            <a asp-action="BM"
+               asp-route-sortOrder="@ViewData["CurrentSort"]"
+               asp-route-page="@(Model.PageIndex - 1)"
+               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+               class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left">
+            </a>
+            <input type="text" class="pagination-input" id="paginationInput" val="" />
+            <input type="text" class="pagination-input" value="of @(Model.TotalPages)" disabled />
+            <a asp-action="BM"
+               asp-route-sortOrder="@ViewData["CurrentSort"]"
+               asp-route-page="@(Model.PageIndex + 1)"
+               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+               class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right">
+            </a>
+            <div class="float-r m-r-10 divBtn">
+                <a class="tbl-btn btnBudgetReg" href="#">Budget Registration</a>
+                <a class="tbl-btn btnBudgetRegHist" href="#">History of Budget Registration</a>
+                <button class="tbl-btn">Print Budget List</button>
+            </div>
+            <div id="modalDiv2">
+                @Html.Partial("ModalPartial2")
+            </div>
+            @*validation message*@
+            <div id="ValidationSummary" style="display:none" class="">
+                @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
+            </div>
         </div>
     </div>
-</div>
+}
 <script>
     $(function () {
         //Budget registration modal

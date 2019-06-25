@@ -24,6 +24,8 @@ using System.Globalization;
 using System.Linq;
 using ExpenseProcessingSystem.ViewModels.Entry;
 using System.Diagnostics;
+using System.Text;
+using System.Xml.Linq;
 
 namespace ExpenseProcessingSystem.Controllers
 {
@@ -53,6 +55,7 @@ namespace ExpenseProcessingSystem.Controllers
         }
         public ReportCommonViewModel GetHeaderInfo()
         {
+
             ReportCommonViewModel headerVM = new ReportCommonViewModel {
                 Header_Name = ReportResource.Branch_Title,
                 Header_TIN = ReportResource.Branch_TIN,
@@ -127,6 +130,7 @@ namespace ExpenseProcessingSystem.Controllers
 
             return View(vm);
         }
+
         [OnlineUserCheck]
         public IActionResult History(string sortOrder, string currentFilter, string searchString, int? page)
         {
@@ -354,17 +358,19 @@ namespace ExpenseProcessingSystem.Controllers
             string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmss");
             string pdfFooterFormat = HomeReportConstantValue.PdfFooter2;
             var signatory = _service.GetSignatoryInfo(model.SignatoryID);
+
+            XElement xelem = XElement.Load("wwwroot/xml/ChangeableData.xml");
+
             ReportCommonViewModel repComVM = new ReportCommonViewModel
             {
-                Header_Logo = "https://localhost:5001/images/mizuho-logo-2.png",
-                Header_Name = "Mizuho Bank Ltd., Manila Branch",
-                Header_TIN = "004-669-467-000",
-                Header_Address = "25th Floor, The Zuellig Building, Makati Avenue corner Paseo de Roxas, Makati City",
+                Header_Logo = xelem.Element("LOGO").Value,
+                Header_Name = xelem.Element("NAME").Value,
+                Header_TIN = xelem.Element("TIN").Value,
+                Header_Address = xelem.Element("ADDRESS").Value,
                 Signatory_Name = signatory.BCS_Name,
                 Signatory_Position = signatory.BCS_Position
             };
 
-            Console.WriteLine("#############" + repComVM.Signatory_Name + "#####" + repComVM.Signatory_Position);
             //Model for data retrieve from Database
             HomeReportDataFilterViewModel data = null;
 
@@ -559,6 +565,19 @@ namespace ExpenseProcessingSystem.Controllers
             //pagination
             return View(PaginatedList<BMViewModel>.CreateAsync(
                 (sortedVals.list).Cast<BMViewModel>().AsQueryable().AsNoTracking(), page ?? 1, pageSize));
+        }
+
+        [OnlineUserCheck]
+        [ImportModelState]
+        public IActionResult BM_PrintList()
+        {
+            return new ViewAsPdf("BM_PrintPDF", _service.PopulateBM())
+            {
+                FileName = "Budget_List_" + DateTime.Now + ".pdf",
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape,
+                CustomSwitches = HomeReportConstantValue.PdfFooter2,
+                PageSize = Rotativa.AspNetCore.Options.Size.A4
+            };
         }
 
         [OnlineUserCheck]
@@ -809,13 +828,7 @@ namespace ExpenseProcessingSystem.Controllers
                 case "approver":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_APPROVED, int.Parse(GetUserID())))
                     {
-                        //_service.SaveToGBase();
-                        var expDtls = _context.ExpenseEntry.Where(x => x.Expense_ID == entryID).Select(x => x.ExpenseEntryDetails).FirstOrDefault();
-                        var isFbt = expDtls.Select(x => x.ExpDtl_Fbt).FirstOrDefault() == true;
-                        if (isFbt)
-                        {
-                            //_service.SaveToGBaseFBT();
-                        }
+                        _service.postCV(entryID);
                         ViewBag.Success = 1;
                     }
                     else
@@ -835,7 +848,41 @@ namespace ExpenseProcessingSystem.Controllers
                     }
                     viewLink = "Entry_DDV_ReadOnly";
                     break;
-                case "Reject": break;
+                case "Reject":
+                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REJECTED, int.Parse(GetUserID())))
+                    {
+                        _service.postCV(entryID);
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Entry_DDV_ReadOnly";
+                    break;
+                case "Delete":
+                    if (_service.deleteExpenseEntry(entryID, GlobalSystemValues.TYPE_DDV))
+                    {
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Entry_DDV";
+                    return RedirectToAction("Entry_DDV", new EntryDDVViewModelList());
+                case "Reversal":
+                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
+                    {
+                        _service.postCV(entryID, "R");
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Entry_DDV_ReadOnly";
+                    break;
                 default:
                     break;
             }
@@ -1200,6 +1247,71 @@ namespace ExpenseProcessingSystem.Controllers
             return View("Entry_SS_ReadOnly", ssList);
         }
 
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
+        public IActionResult CDD_IS_SS(int entryID)
+        {
+            string newFileName = "CDD_IS" + DateTime.Now.ToString("MM-dd-yyyy_hhmmss") + ".xlsx";
+            ExcelGenerateService excelGenerate = new ExcelGenerateService();
+            CDDISValuesVIewModel viewModel = new CDDISValuesVIewModel
+            {
+                VALUE_DATE = DateTime.Parse("2019/01/01"),
+                REFERENCE_NO = "CHK767123456",
+                COMMENT = "CD",
+                SECTION = "09",
+                REMARKS = "THIS IS CDD Instruction sheet generate TEST",
+                SCHEME_NO = "123456789012",
+                MEMO = "Y"
+            };
+
+            List<CDDISValueContentsViewModel> cddContents = new List<CDDISValueContentsViewModel>
+            {
+                new CDDISValueContentsViewModel
+                {
+                    DEBIT_CREDIT = "D",
+                    CCY = "JPY",
+                    AMOUNT = 98223,
+                    CUSTOMER_ABBR = "900",
+                    ACCOUNT_CODE = "14017",
+                    ACCOUNT_NO = "B79789111111",
+                    EXCHANGE_RATE = 0.4545,
+                    CONTRA_CCY = "USD",
+                    FUND = "O",
+                    CHECK_NO = "2019062122",
+                    AVAILABLE_DATE = DateTime.Parse("2019/02/01"),
+                    ADVICE = "Y",
+                    DETAILS = "This is Details 1 Test",
+                    ENTITY = "010",
+                    DIVISION = "11",
+                    INTER_AMOUNT = 915.25,
+                    INTER_RATE = 0.0093
+                },
+                new CDDISValueContentsViewModel
+                {
+                    DEBIT_CREDIT = "C",
+                    CCY = "JPY",
+                    AMOUNT = 98223.25,
+                    CUSTOMER_ABBR = "911",
+                    ACCOUNT_CODE = "00204",
+                    ACCOUNT_NO = "F79789171137",
+                    EXCHANGE_RATE = 0.4545,
+                    CONTRA_CCY = "SGD",
+                    FUND = "O",
+                    CHECK_NO = "2019062123",
+                    AVAILABLE_DATE = DateTime.Parse("2019/02/22"),
+                    ADVICE = "Y",
+                    DETAILS = "This is Details 2 Test",
+                    ENTITY = "011",
+                    DIVISION = "12",
+                    INTER_AMOUNT = 1915.25,
+                    INTER_RATE = 0.1193
+                },
+            };
+            viewModel.CDDContents = cddContents;
+            return File(excelGenerate.ExcelCDDIS(viewModel, newFileName), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", newFileName);
+
+        }
+
         //------------------------------------------------------------------
         //[* Entry Non Cash *]
 
@@ -1216,6 +1328,7 @@ namespace ExpenseProcessingSystem.Controllers
             ViewData["partialName"] = partialName ?? (viewModel.EntryNC.NC_Category_ID.ToString() != "0" ? viewModel.EntryNC.NC_Category_ID.ToString() : GlobalSystemValues.NC_LS_PAYROLL.ToString());
             viewModel.category_of_entry = GlobalSystemValues.NC_CATEGORIES_SELECT;
             viewModel.expenseDate = DateTime.Now;
+            viewModel.entryID = 0;
             return View(viewModel);
         }
         [ExportModelState]
@@ -1260,13 +1373,8 @@ namespace ExpenseProcessingSystem.Controllers
                 case "approver":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_APPROVED, int.Parse(GetUserID())))
                     {
-                        //_service.SaveToGBase();
-                        var expDtls = _context.ExpenseEntry.Where(x => x.Expense_ID == entryID).Select(x => x.ExpenseEntryDetails).FirstOrDefault();
-                        var isFbt = expDtls.Select(x => x.ExpDtl_Fbt).FirstOrDefault() == true;
-                        if (isFbt)
-                        {
-                            //_service.SaveToGBaseFBT();
-                        }
+                        //"P" for Normal Posting, "R" for Reversal
+                        _service.postNC(entryID,"P");
                         ViewBag.Success = 1;
                     }
                     else
@@ -1286,26 +1394,110 @@ namespace ExpenseProcessingSystem.Controllers
                     }
                     viewLink = "Entry_NC_ReadOnly";
                     break;
-                case "Reject": break;
+                case "Reject":
+                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REJECTED, int.Parse(GetUserID())))
+                    {
+                        _service.postNC(entryID, "P");
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Entry_NC_ReadOnly";
+                    break;
+                case "Delete":
+                    if (_service.deleteExpenseEntry(entryID, GlobalSystemValues.TYPE_NC))
+                    {
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Entry_NC";
+                    return RedirectToAction("Entry_NC", new EntryNCViewModelList());
+                case "PrintCDD":
+                    //if ()
+                    //{
+                        return RedirectToAction("CDD_IS_NC_PCR", new { entryID = entryID });
+                    //}
+                    //else if ()
+                    //{
+                    //    return RedirectToAction("CDD_IS_NC_DDV", new { entryID = entryID });
+                    //}
+                    //break;
+                case "Reversal":
+                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
+                    {
+                        _service.postNC(entryID, "R");
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Entry_NC_ReadOnly";
+                    break;
                 default:
                     break;
             }
 
             ModelState.Clear();
-
             ncList = _service.getExpenseNC(entryID);
-
             ncList = PopulateEntryNC(ncList);
 
-            
-            //ncList.systemValues.acc.AddRange(_service.getAccDetailsEntry(ncList.EntryNC.account));
-            if(viewLink == "Entry_NC")
-            {
-                return RedirectToAction("Entry_NC", ncList);
-            }
+            ViewData["partialName"] = ncList.EntryNC.NC_Category_ID.ToString();
             return View(viewLink, ncList);
         }
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
+        public IActionResult CDD_IS_NC_PCR(int entryID)
+        {
+            var entryVals = _service.getExpenseNC(entryID);
+            string newFileName = "CDD_IS_NC_PCR_" + DateTime.Now.ToString("MM-dd-yyyy_hhmmss") + ".xlsx";
+            ExcelGenerateService excelGenerate = new ExcelGenerateService();
+            CDDISValuesVIewModel viewModel = new CDDISValuesVIewModel {
+                VALUE_DATE = DateTime.Parse("2019/01/01"), //TEMP VALUE
+                REFERENCE_NO = " GA767123456",
+                COMMENT = "  ",
+                SECTION = "09",
+                REMARKS = "AD: PETTY CASH REPLENISHEMENT",
+                SCHEME_NO = "  ",
+                MEMO = "Y"
+            };
+            List<CDDISValueContentsViewModel> cddContents = new List<CDDISValueContentsViewModel>();
+            foreach (var dtl in entryVals.EntryNC.ExpenseEntryNCDtls){
+                foreach (var acc in dtl.ExpenseEntryNCDtlAccs)
+                {
+                    var acct = _context.DMAccount.Where(x => x.Account_ID == acc.ExpNCDtlAcc_Acc_ID).FirstOrDefault();
+                    CDDISValueContentsViewModel vm = new CDDISValueContentsViewModel
+                    {
+                        DEBIT_CREDIT = (acc.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT) ? "D" : "C",
+                        CCY = _context.DMCurrency.Where(x=> x.Curr_ID == acc.ExpNCDtlAcc_Curr_ID).Select(x => x.Curr_CCY_ABBR).FirstOrDefault(),
+                        AMOUNT = acc.ExpNCDtlAcc_Amount,
+                        CUSTOMER_ABBR = "900",
+                        ACCOUNT_CODE = acct.Account_Code,
+                        ACCOUNT_NO = acct.Account_No,
+                        EXCHANGE_RATE = acc.ExpNCDtlAcc_Inter_Rate,
+                        CONTRA_CCY = "   ",
+                        FUND = (acct.Account_Fund) ? "O" : " ",
+                        CHECK_NO = " ",
+                        AVAILABLE_DATE = DateTime.Parse("2019/02/01"),
+                        ADVICE = " ",
+                        DETAILS = " ",
+                        ENTITY = "010",
+                        DIVISION = "11",
+                        INTER_AMOUNT = 0,
+                        INTER_RATE = 0,
+                    };
+                    cddContents.Add(vm);
+                }
+            }
+            viewModel.CDDContents = cddContents;
+            return File(excelGenerate.ExcelCDDIS(viewModel, newFileName), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", newFileName);
 
+        }
         //[* Entry Non Cash *]
         //------------------------------------------------------------------
 
@@ -1337,6 +1529,9 @@ namespace ExpenseProcessingSystem.Controllers
         public EntryNCViewModelList PopulateEntryNC(EntryNCViewModelList viewModel)
         {
             viewModel.category_of_entry = GlobalSystemValues.NC_CATEGORIES_SELECT;
+            viewModel.EntryNC.NC_Category_Name = GlobalSystemValues.NC_CATEGORIES_SELECT.Where(x => x.Value == viewModel.EntryNC.NC_Category_ID + "")
+                                            .Select(x => x.Text).FirstOrDefault();
+            viewModel.expenseDate = DateTime.Now;
             return viewModel;
         }
 
@@ -1401,9 +1596,127 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 return View("Liquidation_SS", vm);
             }
-            int id = _service.addLiquidationDetail(vm, int.Parse(GetUserID()));
 
-            return RedirectToAction("Liquidation_Main");
+            int id = 0;
+            int exist = _service.getLiquidationExistence(vm.entryID);
+
+            if (exist == 0)
+            {
+                id = _service.addLiquidationDetail(vm, int.Parse(GetUserID()), exist);
+            }
+            else
+            {
+                if (_service.deleteLiquidationEntry(vm.entryID))
+                {
+                    id = _service.addLiquidationDetail(vm, int.Parse(GetUserID()), exist);
+                }
+            }
+
+            ModelState.Clear();
+
+            TempData["entryIDAddtoView"] = id;
+
+            return RedirectToAction("View_Liquidation_SS", "Home");
+        }
+
+        [ExportModelState]
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
+        public IActionResult View_Liquidation_SS(int entryID)
+        {
+            var userId = GetUserID();
+            if (entryID == 0 && TempData["entryIDAddtoView"] != null)
+            {
+                entryID = (int)TempData["entryIDAddtoView"];
+                TempData.Keep();
+            }
+            else
+            {
+                TempData.Remove("entryIDAddtoView");
+            }
+
+            LiquidationViewModel ssList = _service.getExpenseToLiqudate(entryID);
+
+            foreach (var i in ssList.LiquidationDetails)
+            {
+                i.screenCode = "Liquidation_SS";
+            }
+
+            return View("Liquidation_SS_ReadOnly", ssList);
+        }
+
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
+        public IActionResult Liquidation_VerAppModSS(int entryID, string command)
+        {
+            var userId = GetUserID();
+
+            string viewLink = "Liquidation_SS";
+            LiquidationViewModel ssList;
+
+            switch (command)
+            {
+                case "Modify":
+                    viewLink = "Liquidation_SS";
+                    break;
+                case "approver":
+                    if (_service.updateLiquidateStatus(entryID, GlobalSystemValues.STATUS_APPROVED, int.Parse(GetUserID())))
+                    {
+                        //_service.postCV(entryID);
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Liquidation_SS_ReadOnly";
+                    break;
+                case "verifier":
+                    if (_service.updateLiquidateStatus(entryID, GlobalSystemValues.STATUS_VERIFIED, int.Parse(GetUserID())))
+                    {
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Liquidation_SS_ReadOnly";
+                    break;
+                case "Delete":
+                    if (_service.deleteLiquidationEntry(entryID))
+                    {
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    return RedirectToAction("Index", "Home");
+
+                case "Reject":
+                    if (_service.updateLiquidateStatus(entryID, GlobalSystemValues.STATUS_REJECTED, int.Parse(GetUserID())))
+                    {
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Liquidation_SS_ReadOnly";
+                    break;
+
+                default:
+                    break;
+            }
+
+            ssList = _service.getExpenseToLiqudate(entryID);
+
+            foreach (var i in ssList.LiquidationDetails)
+            {
+                i.screenCode = "Liquidation_SS";
+            }
+
+            return View(viewLink, ssList);
         }
 
         //------------------------------------------------------------------
