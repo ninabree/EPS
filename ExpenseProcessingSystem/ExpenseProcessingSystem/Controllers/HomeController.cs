@@ -827,13 +827,7 @@ namespace ExpenseProcessingSystem.Controllers
                 case "approver":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_APPROVED, int.Parse(GetUserID())))
                     {
-                        //_service.SaveToGBase();
-                        var expDtls = _context.ExpenseEntry.Where(x => x.Expense_ID == entryID).Select(x => x.ExpenseEntryDetails).FirstOrDefault();
-                        var isFbt = expDtls.Select(x => x.ExpDtl_Fbt).FirstOrDefault() == true;
-                        if (isFbt)
-                        {
-                            //_service.SaveToGBaseFBT();
-                        }
+                        _service.postCV(entryID);
                         ViewBag.Success = 1;
                     }
                     else
@@ -853,7 +847,41 @@ namespace ExpenseProcessingSystem.Controllers
                     }
                     viewLink = "Entry_DDV_ReadOnly";
                     break;
-                case "Reject": break;
+                case "Reject":
+                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REJECTED, int.Parse(GetUserID())))
+                    {
+                        _service.postCV(entryID);
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Entry_DDV_ReadOnly";
+                    break;
+                case "Delete":
+                    if (_service.deleteExpenseEntry(entryID, GlobalSystemValues.TYPE_DDV))
+                    {
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Entry_DDV";
+                    return RedirectToAction("Entry_DDV", new EntryDDVViewModelList());
+                case "Reversal":
+                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
+                    {
+                        _service.postCV(entryID, "R");
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Entry_DDV_ReadOnly";
+                    break;
                 default:
                     break;
             }
@@ -1344,7 +1372,8 @@ namespace ExpenseProcessingSystem.Controllers
                 case "approver":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_APPROVED, int.Parse(GetUserID())))
                     {
-                        _service.postNC(entryID);
+                        //"P" for Normal Posting, "R" for Reversal
+                        _service.postNC(entryID,"P");
                         ViewBag.Success = 1;
                     }
                     else
@@ -1367,7 +1396,7 @@ namespace ExpenseProcessingSystem.Controllers
                 case "Reject":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REJECTED, int.Parse(GetUserID())))
                     {
-                        _service.postNC(entryID);
+                        _service.postNC(entryID, "P");
                         ViewBag.Success = 1;
                     }
                     else
@@ -1388,7 +1417,27 @@ namespace ExpenseProcessingSystem.Controllers
                     viewLink = "Entry_NC";
                     return RedirectToAction("Entry_NC", new EntryNCViewModelList());
                 case "PrintCDD":
-                    return RedirectToAction("CDD_IS_NC_PCR", new { entryID = entryID });
+                    //if ()
+                    //{
+                        return RedirectToAction("CDD_IS_NC_PCR", new { entryID = entryID });
+                    //}
+                    //else if ()
+                    //{
+                    //    return RedirectToAction("CDD_IS_NC_DDV", new { entryID = entryID });
+                    //}
+                    //break;
+                case "Reversal":
+                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
+                    {
+                        _service.postNC(entryID, "R");
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Entry_NC_ReadOnly";
+                    break;
                 default:
                     break;
             }

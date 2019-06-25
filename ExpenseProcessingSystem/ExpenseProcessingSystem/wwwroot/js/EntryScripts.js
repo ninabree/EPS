@@ -170,14 +170,14 @@
 
     function computeValues(parent) {
         var pNode = parent;
-        var isInter = $("#" + pNode.id).find("#EntryDDV_" + pNode.id + "__inter_entity").is(':checked');
+        var isInter = $("#" + pNode.id).find("#EntryDDV_" + pNode.id.substring(5) + "__inter_entity").is(':checked');
         var amounts = $("");
         var grossAmt = 0;
         var origGrossAmt = 0;
         
         //check if Inter Entity
         if (isInter) {
-            var grossAmt = $("#" + pNode.id + " .txtGross").val();
+            var grossAmt = $("#" + pNode.id + " td .txtGross").val();
         } else {
             amounts = $("#" + pNode.id + " .amount");
             grossAmt = 0;
@@ -195,8 +195,6 @@
                 }
             }
         }
-        
-
         $("#" + pNode.id + " td .txtGross").val(grossAmt);
 
         //$("#" + pNode.id + " .txtGross").attr("value", grossAmt);

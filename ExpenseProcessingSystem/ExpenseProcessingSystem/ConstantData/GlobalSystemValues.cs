@@ -20,6 +20,7 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly int STATUS_NEW = 7;
         public static readonly int STATUS_EDIT = 8;
         public static readonly int STATUS_DELETE = 9;
+        public static readonly int STATUS_REVERSED = 10;
 
         //Static values for the index of certain lists that are to be stored inside a list object.
         //i.e: Retrieving system values for the dropdown boxes of entry views.

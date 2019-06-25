@@ -3946,7 +3946,59 @@ namespace ExpenseProcessingSystem.Services
             _GOContext.SaveChanges();
             return true;
         }
-        public bool postNC(int expID)
+        ///==============[Post Entries]==============
+        public bool postCV(int expID, string command)
+        {
+            var expenseDetails = getExpense(expID);
+
+            foreach (var item in expenseDetails.EntryCV)
+            {
+                gbaseContainer tempGbase = new gbaseContainer();
+
+                tempGbase.valDate = expenseDetails.expenseDate;
+                tempGbase.remarks = item.GBaseRemarks;
+                tempGbase.maker = expenseDetails.maker;
+                tempGbase.approver = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == expID).Expense_Approver;
+
+                entryContainer credit = new entryContainer();
+                entryContainer debit = new entryContainer();
+
+                credit.type = (command != "R") ? "C" : "D";
+                debit.type = (command != "R") ? "D" : "C";
+
+                credit.ccy = item.ccy;
+                debit.ccy = item.ccy;
+                credit.amount = item.debitGross;
+                debit.amount = item.debitGross;
+                credit.vendor = expenseDetails.vendor;
+                debit.vendor = expenseDetails.vendor;
+                credit.account = item.account;
+                debit.account = item.account;
+                debit.chkNo = expenseDetails.checkNo;
+                debit.dept = item.dept;
+                credit.dept = item.dept;
+
+                tempGbase.entries.Add(credit);
+                tempGbase.entries.Add(debit);
+
+                InsertGbaseEntry(tempGbase);
+
+                if (item.fbt)
+                {
+                    tempGbase.entries = new List<entryContainer>();
+
+                    //var fbt = getAccount()
+
+
+                    credit.amount = Convert.ToDouble(new DataTable().Compute("(3+3)*2+1", null));
+                    debit.amount = Convert.ToDouble(new DataTable().Compute("(3+3)*2+1", null));
+                }
+            }
+
+            _GOContext.SaveChanges();
+            return true;
+        }
+        public bool postNC(int expID, string command)
         {
             var expenseDetails = getExpenseNC(expID);
 
@@ -3962,22 +4014,26 @@ namespace ExpenseProcessingSystem.Services
                 {
                     if (item.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_CREDIT)
                     {
-                        entryContainer credit = new entryContainer();
-                        credit.type = "C";
-                        credit.ccy = item.ExpNCDtlAcc_Curr_ID;
-                        credit.amount = item.ExpNCDtlAcc_Amount;
-                        credit.account = item.ExpNCDtlAcc_Acc_ID;
-                        credit.interate = item.ExpNCDtlAcc_Inter_Rate;
+                        entryContainer credit = new entryContainer
+                        {
+                            type = (command != "R") ? "C" : "D",
+                            ccy = item.ExpNCDtlAcc_Curr_ID,
+                            amount = item.ExpNCDtlAcc_Amount,
+                            account = item.ExpNCDtlAcc_Acc_ID,
+                            interate = item.ExpNCDtlAcc_Inter_Rate
+                        };
                         tempGbase.entries.Add(credit);
                     }
                     else if (item.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
                     {
-                        entryContainer debit = new entryContainer();
-                        debit.type = "D";
-                        debit.ccy = item.ExpNCDtlAcc_Curr_ID;
-                        debit.amount = item.ExpNCDtlAcc_Amount;
-                        debit.account = item.ExpNCDtlAcc_Acc_ID;
-                        debit.interate = item.ExpNCDtlAcc_Inter_Rate;
+                        entryContainer debit = new entryContainer
+                        {
+                            type = (command != "R") ? "D" : "C",
+                            ccy = item.ExpNCDtlAcc_Curr_ID,
+                            amount = item.ExpNCDtlAcc_Amount,
+                            account = item.ExpNCDtlAcc_Acc_ID,
+                            interate = item.ExpNCDtlAcc_Inter_Rate
+                        };
                         tempGbase.entries.Add(debit);
                     }
                 }
