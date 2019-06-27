@@ -49,8 +49,24 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly int TYPE_PC = 4;
         public static readonly int TYPE_NC = 5;
 
+        //Static value for application codes used for Expense Transactio No.
+        //Example : [CV]-2019-100001
+        private static readonly Dictionary<int, string> codeDictio = new Dictionary<int, string>
+            {
+                {1,"CV" },
+                {2,"DDV"},
+                {3,"SSV"},
+                {4,"PCV"},
+                {5,"NCV"},
+            };
+
         //Static value for the view path of voucher layout
         public static readonly string VOUCHER_LAYOUT = "EntryReports/_Voucherlayout";
+
+        public static string getApplicationCode(int appType)
+        {
+            return codeDictio[appType];
+        }
 
         public static string getApplicationType(int appType)
         {

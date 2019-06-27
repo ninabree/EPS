@@ -151,7 +151,8 @@ namespace ExpenseProcessingSystem.Controllers
         [OnlineUserCheck]
         public IActionResult Close(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            return View();
+            ClosingViewModel model = new ClosingViewModel();
+            return View(model);
         }
         [OnlineUserCheck]
         [ImportModelState]
