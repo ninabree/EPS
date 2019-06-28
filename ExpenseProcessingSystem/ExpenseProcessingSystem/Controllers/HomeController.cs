@@ -359,7 +359,7 @@ namespace ExpenseProcessingSystem.Controllers
             string pdfFooterFormat = HomeReportConstantValue.PdfFooter2;
             var signatory = _service.GetSignatoryInfo(model.SignatoryID);
 
-            XElement xelem = XElement.Load("wwwroot/xml/ChangeableData.xml");
+            XElement xelem = XElement.Load("wwwroot/xml/ReportHeader.xml");
 
             ReportCommonViewModel repComVM = new ReportCommonViewModel
             {
@@ -1541,6 +1541,7 @@ namespace ExpenseProcessingSystem.Controllers
         public IActionResult Liquidation_Main(string sortOrder, string currentFilter, string searchString, int? page)
         {
             var userId = GetUserID();
+            InterEntityValues interEntityValues = new InterEntityValues();
 
             //set sort vals
             ViewData["CurrentSort"] = sortOrder;
@@ -1662,7 +1663,7 @@ namespace ExpenseProcessingSystem.Controllers
                 case "approver":
                     if (_service.updateLiquidateStatus(entryID, GlobalSystemValues.STATUS_APPROVED, int.Parse(GetUserID())))
                     {
-                        //_service.postCV(entryID);
+                        _service.postLiq_SS(entryID);
                         ViewBag.Success = 1;
                     }
                     else

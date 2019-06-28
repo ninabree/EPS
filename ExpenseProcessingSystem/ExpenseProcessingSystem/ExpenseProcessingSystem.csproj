@@ -103,7 +103,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\xml\ChangeableData.xml" />
+    <None Include="wwwroot\xml\ReportHeader.xml" />
   </ItemGroup>
 
 </Project>

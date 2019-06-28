@@ -6,62 +6,62 @@ using System.Threading.Tasks;
 
 namespace ExpenseProcessingSystem.ConstantData
 {
-    public class DeniminationValues
+    public class DenominationValues
     {
-        public static IEnumerable<ExpenseEntryCashBreakdownModel> GetDeniminationList()
+        public static IEnumerable<ExpenseEntryCashBreakdownModel> GetDenominationList()
         {
             return new ExpenseEntryCashBreakdownModel[] {
                 new ExpenseEntryCashBreakdownModel
                 {
-                    CashBreak_Denimination = 1000
+                    CashBreak_Denomination = 1000
                 },
                 new ExpenseEntryCashBreakdownModel
                 {
-                    CashBreak_Denimination = 500
+                    CashBreak_Denomination = 500
                 },
                 new ExpenseEntryCashBreakdownModel
                 {
-                    CashBreak_Denimination = 200
+                    CashBreak_Denomination = 200
                 },
                 new ExpenseEntryCashBreakdownModel
                 {
-                    CashBreak_Denimination = 100
+                    CashBreak_Denomination = 100
                 },
                 new ExpenseEntryCashBreakdownModel
                 {
-                    CashBreak_Denimination = 50
+                    CashBreak_Denomination = 50
                 },
                 new ExpenseEntryCashBreakdownModel
                 {
-                    CashBreak_Denimination = 20
+                    CashBreak_Denomination = 20
                 },
                 new ExpenseEntryCashBreakdownModel
                 {
-                    CashBreak_Denimination = 10
+                    CashBreak_Denomination = 10
                 },
                 new ExpenseEntryCashBreakdownModel
                 {
-                    CashBreak_Denimination = 5
+                    CashBreak_Denomination = 5
                 },
                 new ExpenseEntryCashBreakdownModel
                 {
-                    CashBreak_Denimination = 1
+                    CashBreak_Denomination = 1
                 },
                 new ExpenseEntryCashBreakdownModel
                 {
-                    CashBreak_Denimination = 0.25
+                    CashBreak_Denomination = 0.25
                 },
                 new ExpenseEntryCashBreakdownModel
                 {
-                    CashBreak_Denimination = 0.1
+                    CashBreak_Denomination = 0.1
                 },
                 new ExpenseEntryCashBreakdownModel
                 {
-                    CashBreak_Denimination = 0.05
+                    CashBreak_Denomination = 0.05
                 },
                 new ExpenseEntryCashBreakdownModel
                 {
-                    CashBreak_Denimination = 0.01
+                    CashBreak_Denomination = 0.01
                 }
             };
         }

@@ -125,7 +125,7 @@
                                 <div id="divCashBD_@i">
                                     @for (int y = 0; y < Model.EntryCV[i].cashBreakdown.Count(); y++)
                                     {
-                                        @Html.HiddenFor(x => Model.EntryCV[i].cashBreakdown[y].cashDenimination)
+                                        @Html.HiddenFor(x => Model.EntryCV[i].cashBreakdown[y].cashDenomination)
                                         @Html.HiddenFor(x => Model.EntryCV[i].cashBreakdown[y].cashNoPC)
                                         @Html.HiddenFor(x => Model.EntryCV[i].cashBreakdown[y].cashAmount)
                                     }

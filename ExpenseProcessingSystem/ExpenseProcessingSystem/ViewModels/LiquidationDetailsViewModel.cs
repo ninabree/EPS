@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ExpenseProcessingSystem.Models;
 
 namespace ExpenseProcessingSystem.ViewModels
 {
@@ -41,20 +42,46 @@ namespace ExpenseProcessingSystem.ViewModels
         public List<LiquidationCashBreakdown> cashBreakdown { get; set; }
         [EmptyLiquidationCashBreakdown("ccyAbbrev", "liqInputFlag")]
         public List<LiquidationCashBreakdown> liqCashBreakdown { get; set; }
-
+        [EmptyLiquidationInterEntity("ccyAbbrev", "liqInputFlag")]
+        public List<LiquidationInterEntity> liqInterEntity { get; set; }
 
         public LiquidationDetailsViewModel()
         {
             gBaseRemarksDetails = new List<EntryGbaseRemarksViewModel>();
             cashBreakdown = new List<LiquidationCashBreakdown>();
             liqCashBreakdown = new List<LiquidationCashBreakdown>();
+            liqInterEntity = new List<LiquidationInterEntity>();
         }
     }
 
     public class LiquidationCashBreakdown
     {
-        public double cashDenimination { get; set; }
+        public double cashDenomination { get; set; }
         public int cashNoPC { get; set; }
         public double cashAmount { get; set; }
+    }
+
+    public class LiquidationInterEntity
+    {
+        public string Liq_DebitCred_1_1 { get; set; }
+        public string Liq_AccountID_1_1 { get; set; }
+        public double Liq_InterRate_1_1 { get; set; }
+        public string Liq_CCY_1_1 { get; set; }
+        public double Liq_Amount_1_1 { get; set; }
+        public string Liq_DebitCred_1_2 { get; set; }
+        public string Liq_AccountID_1_2 { get; set; }
+        public double Liq_InterRate_1_2 { get; set; }
+        public string Liq_CCY_1_2 { get; set; }
+        public double Liq_Amount_1_2 { get; set; }
+        public string Liq_DebitCred_2_1 { get; set; }
+        public string Liq_AccountID_2_1 { get; set; }
+        public double Liq_InterRate_2_1 { get; set; }
+        public string Liq_CCY_2_1 { get; set; }
+        public double Liq_Amount_2_1 { get; set; }
+        public string Liq_DebitCred_2_2 { get; set; }
+        public string Liq_AccountID_2_2 { get; set; }
+        public double Liq_InterRate_2_2 { get; set; }
+        public string Liq_CCY_2_2 { get; set; }
+        public double Liq_Amount_2_2 { get; set; }
     }
 }

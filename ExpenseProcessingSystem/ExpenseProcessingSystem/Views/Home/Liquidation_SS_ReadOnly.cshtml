@@ -77,18 +77,40 @@
                                 <div id="divLiqCashBD_@i">
                                     @for (int y = 0; y < Model.LiquidationDetails[i].liqCashBreakdown.Count(); y++)
                                     {
-                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqCashBreakdown[y].cashDenimination)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqCashBreakdown[y].cashDenomination)
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqCashBreakdown[y].cashNoPC)
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqCashBreakdown[y].cashAmount)
                                     }
                                 </div>
                                 <div id="divLiqIE_@i">
-
+                                    @for (int y = 0; y < Model.LiquidationDetails[i].liqInterEntity.Count(); y++)
+                                    {
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_AccountID_1_1)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_AccountID_1_2)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_AccountID_2_1)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_AccountID_2_2)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_Amount_1_1)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_Amount_1_2)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_Amount_2_1)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_Amount_2_2)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_CCY_1_1)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_CCY_1_2)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_CCY_2_1)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_CCY_2_2)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_DebitCred_1_1)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_DebitCred_1_2)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_DebitCred_2_1)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_DebitCred_2_2)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_InterRate_1_1)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_InterRate_1_2)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_InterRate_2_1)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_InterRate_2_2)
+                                    }
                                 </div>
                             </td>
                             <td class="p-b-1 p-t-1">
                                 <div class="flex-sb">
-                                    @Html.TextBoxFor(x => Model.LiquidationDetails[i].GBaseRemarks, new { @readonly = "true", @style = "width:100%;background:transparent" })
+                                    @Html.TextBoxFor(x => Model.LiquidationDetails[i].GBaseRemarks, new { @class = "txtGBaseRemark", @readonly = "true", @style = "width:100%;background:transparent" })
                                     <div id="remark_@i">
                                         <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-15 m-r-5"></a>
                                         @for (int y = 0; y < Model.LiquidationDetails[i].gBaseRemarksDetails.Count(); y++)
@@ -143,7 +165,7 @@
                                 <div id="divCashBD_@i">
                                     @for (int y = 0; y < Model.LiquidationDetails[i].cashBreakdown.Count(); y++)
                                     {
-                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].cashBreakdown[y].cashDenimination)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].cashBreakdown[y].cashDenomination)
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].cashBreakdown[y].cashNoPC)
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].cashBreakdown[y].cashAmount)
                                     }
@@ -198,8 +220,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>
-                            </td>
+                            <td></td>
                             <td>
                                 <input type="button" class="printCashBDBtn btn" value="Print Cash Breakdown" onclick='printDivCashBD("divCashBDLiq");' />
                             </td>
@@ -214,7 +235,7 @@
                         </colgroup>
                         <thead>
                             <tr>
-                                <th style="text-align:center">Denimination</th>
+                                <th style="text-align:center">Denomination</th>
                                 <th style="text-align:center">No. of Pcs.</th>
                                 <th style="text-align:center">Amount</th>
                             </tr>
@@ -222,12 +243,12 @@
                         <tbody>
                             @{
                                 int cnt = 0;
-                                foreach (var i in DeniminationValues.GetDeniminationList())
+                                foreach (var i in DenominationValues.GetDenominationList())
                                 {
 
                                     <tr id="cashbdliqid_@cnt">
                                         <td>
-                                            <input type="number" class="input100 txtLiqDenimination" readonly="readonly" style="text-align:center" value="@i.CashBreak_Denimination" />
+                                            <input type="number" class="input100 txtLiqDenomination" readonly="readonly" style="text-align:center" value="@i.CashBreak_Denomination" />
                                         </td>
                                         <td>
                                             <input type="number" class="input100 txtLiqNoPCS" min="0" readonly="readonly" style="text-align:center" value="0" />
@@ -258,7 +279,7 @@
                                 <input id="txtIECurrency" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="CCY" />
                             </td>
                             <td>
-                                <input id="txtIEAmount" class="txtIEInfoInput input100" style="width:100%;background:transparent;text-align:center" type="number" min="0" value="0" />
+                                <input id="txtIEAmount" class="txtIEInfoInput input100" readonly="readonly" style="width:100%;text-align:center" type="number" min="0" value="0" />
                             </td>
                         </tr>
                         <tr>
@@ -266,7 +287,7 @@
                                 <label>Exchange Rate:</label>
                             </td>
                             <td>
-                                <input id="txtIEExRate" class="txtIEInfoInput input100" style="width:100%;background:transparent;text-align:center" type="number" min="0" value="0" />
+                                <input id="txtIEExRate" class="txtIEInfoInput input100" readonly="readonly" style="width:100%;text-align:center" type="number" min="0" value="0" />
                             </td>
                             <td></td>
                             <td></td>
@@ -279,40 +300,71 @@
                                 <label>PHP</label>
                             </td>
                             <td colspan="2">
-                                <input id="txtIEExRatePhp" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="number" min="0" value="0" />
+                                <input id="txtIEExRatePhp" class="txtIEExRatePhp input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" />
+                            </td>
+                        </tr>
+                    </table>
+                    <table style="width:100%;margin-top:5%">
+                        <tr>
+                            <td colspan="2" style="text-align:left">
+                                <label>Transaction No.: </label><input type="text" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <input type="button" class="printCDD btn" value="Print CDD Instruction Sheet" />
                             </td>
                         </tr>
                     </table>
                 </div>
-                <div id="divIE" style="display:inline-block;text-align:center;width:auto">
-                    <table class="table-bordered table-striped voucher-tbl">
+                <div id="divIE" style="display:inline-block;text-align:center;width:60%">
+                    <table id="IEInputTable" class="table-bordered table-striped voucher-tbl">
                         <colgroup>
-                            <col style="width:15%" />
-                            <col style="width:15%" />
+                            <col style="width:30%" />
+                            <col style="width:20%" />
                             <col style="width:5%" />
-                            <col style="width:15%" />
-                            <col style="width:15%" />
                             <col style="width:5%" />
-                            <col style="width:15%" />
-                            <col style="width:15%" />
+                            <col style="width:10%" />
+                            <col style="width:5%" />
+                            <col style="width:10%" />
                         </colgroup>
                         <thead>
                             <tr>
                                 <td>Particular</td>
                                 <td>Account</td>
-                                <td>CCY</td>
                                 <td>INTER-RATE</td>
+                                <td>CCY</td>
                                 <td>DEBIT</td>
                                 <td>CCY</td>
-                                <td>INTER-RATE</td>
                                 <td>CREDIT</td>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td rowspan="2">Particular1</td>
-                                <td>xxxxx-COMP SUSP $</td>
-                                <td>USD</td>
+                                <td rowspan="2"><label class="lblParticular"></label></td>
+                                <td style="text-align:left"><label id="lblAccount1"></label></td>
+                                <td></td>
+                                <td><label class="lblCurrency"></label></td>
+                                <td><label class="lblIEInput" id="lblIEInput1"></label></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:left"><label id="lblAccount2"></label></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><label class="lblCurrency"></label></td>
+                                <td>
+                                    <label style="width:100%;background-color:transparent;text-align:left">
+                                        <input id="txtIEInput1" class="txtIEInput" readonly="readonly" style="width:100%;background-color:transparent;text-align:center" type="text" value="0" />
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label></label></td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -320,84 +372,48 @@
                                 <td></td>
                             </tr>
                             <tr>
-                                <td>xxxxx-SUSP PAYMENT</td>
+                                <td rowspan="3"><label class="lblParticular"></label></td>
+                                <td style="text-align:left"><label id="lblAccount3"></label></td>
                                 <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>USD</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td><label>PHP</label></td>
+                                <td>
+                                    <label style="width:100%;background-color:transparent;text-align:left">
+                                        <input id="txtIEInput2" class="txtIEInput" readonly="readonly" style="width:100%;background-color:transparent;text-align:center" type="text" value="0" />
+                                    </label>
+                                </td>
                                 <td></td>
                                 <td></td>
                             </tr>
                             <tr>
-                                <td rowspan="3">Particular2</td>
-                                <td>xxxxx-EXPENSE</td>
-                                <td>PHP</td>
-                                <td></td>
-                                <td>18,000</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>xxxxx-BDO MNL</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>PHP</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>xxxxx-COM SUSP PHP</td>
-                                <td></td>
-                                <td></td>
+                                <td style="text-align:left">
+                                    <label style="width:100%;background-color:transparent;text-align:left">
+                                        <input id="ddlAccount11" class="txtIEInput" readonly="readonly" style="width:100%;background-color:transparent;text-align:left" type="text" value="0" />
+                                    </label>
+                                </td>
                                 <td></td>
                                 <td>PHP</td>
-                                <td></td>
-                                <td>15,000</td>
+                                <td>
+                                    <label style="width:100%;background-color:transparent;text-align:left">
+                                        <input id="txtIEInput3" class="txtIEInput" readonly="readonly" style="width:100%;background-color:transparent;text-align:center" type="text" value="0" />
+                                    </label>
+                                </td>
+                                <td><label>PHP</label></td>
+                                <td>
+                                    <label style="width:100%;background-color:transparent;text-align:left">
+                                        <input id="txtIEInput4" class="txtIEInput" readonly="readonly" style="width:100%;background-color:transparent;text-align:center" type="text" value="0" />
+                                    </label>
+                                </td>
                             </tr>
                             <tr>
+                                <td style="text-align:left"><label id="lblAccount4"></label></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td><label>PHP</label></td>
+                                <td><label class="lblIEInput" id="lblIEInput2"></label></td>
                             </tr>
                             <tr>
-                                <td rowspan="2">Particular3</td>
-                                <td>xxxxx-COMP SUSP PH</td>
-                                <td>PHP</td>
-                                <td></td>
-                                <td>15,000</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>xxxxx-INTER-ENTITY $</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>USD</td>
-                                <td>XXX</td>
-                                <td>300</td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
+                                <td><label></label></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -406,27 +422,24 @@
                                 <td></td>
                             </tr>
                             <tr>
-                                <td rowspan="2">Particular4</td>
-                                <td>xxxxx-INTER-ENTITY $</td>
-                                <td>USD</td>
+                                <td rowspan="2"><label class="lblParticular"></label></td>
+                                <td style="text-align:left"><label id="lblAccount5"></label></td>
                                 <td></td>
-                                <td>300</td>
-                                <td></td>
+                                <td><label>PHP</label></td>
+                                <td><label class="lblIEInput" id="lblIEInput3"></label></td>
                                 <td></td>
                                 <td></td>
                             </tr>
                             <tr>
-                                <td>xxxxx-SUSP PAYMENT</td>
+                                <td style="text-align:left"><label id="lblAccount6"></label></td>
+                                <td><label class="lblIEInput" id="lblIEInput9"></label></td>
                                 <td></td>
                                 <td></td>
-                                <td></td>
-                                <td>USD</td>
-                                <td></td>
-                                <td>300</td>
+                                <td><label class="lblCurrency"></label></td>
+                                <td><label class="lblIEInput" id="lblIEInput4"></label></td>
                             </tr>
                             <tr>
-                                <td></td>
-                                <td></td>
+                                <td><label></label></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -435,27 +448,51 @@
                                 <td></td>
                             </tr>
                             <tr>
-                                <td colspan="8">CDD INSTRUCTION SHEET</td>
-                            </tr>
-                            <tr>
+                                <td rowspan="2"><label class="lblParticular"></label></td>
+                                <td style="text-align:left"><label id="lblAccount7"></label></td>
                                 <td></td>
-                                <td>xxxxx-USD CASH</td>
-                                <td>USD</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td><label class="lblCurrency"></label></td>
+                                <td><label class="lblIEInput" id="lblIEInput5"></label></td>
                                 <td></td>
                                 <td></td>
                             </tr>
                             <tr>
+                                <td style="text-align:left"><label id="lblAccount8"></label></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><label class="lblCurrency"></label></td>
+                                <td><label class="lblIEInput" id="lblIEInput6"></label></td>
+                            </tr>
+                            <tr>
+                                <td><label></label></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td>USD</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td colspan="7" style="text-align:left">CDD INSTRUCTION SHEET</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td style="text-align:left"><label id="lblAccount9"></label></td>
+                                <td></td>
+                                <td><label class="lblCurrency"></label></td>
+                                <td><label class="lblIEInput" id="lblIEInput7"></label></td>
                                 <td></td>
                                 <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td style="text-align:left"><label id="lblAccount10"></label></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><label class="lblCurrency"></label></td>
+                                <td><label class="lblIEInput" id="lblIEInput8"></label></td>
                             </tr>
                         </tbody>
                     </table>
@@ -547,6 +584,7 @@
     @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
 </div>
 
+<script type="text/javascript" src="~/js/LiquidationScript.js"></script>
 <script>
     $(document).ready(function () {
         $('#liqudation').find('a').addClass('selected');
@@ -555,7 +593,7 @@
         var trs = $("#inputTable").find("tbody").find("tr");
         for (var cnt = 0; cnt < trs.length; cnt++) {
             reqBtnDisable(cnt);
-            if ($('#divLiqCashBD_' + cnt).find("input").length != 0) {
+            if ($('#divLiqCashBD_' + cnt).find("input").length != 0 || $('#divLiqIE_' + cnt).find("input").length != 0) {
                 $('#item_' + cnt).find('#imgLiq').attr('src', '/images/liqLogo_chk.png');
             }
         }
@@ -611,117 +649,17 @@
             $('#divForeign').find(':input[type="number"]').val('0');
             $('#cashBDLiqTable').find('.txtLiqNoPCS').val('0');
             $('#cashBDLiqTable').find('.txtLiqAmount').val('0');
-
-            if ($('#' + pid).find('.txtCcyAbbrev').val() != "PHP") {
-                $('#divForeign').show();
-                $('#divPHP').css('display', 'none');
-                displayInfoIE($(this.parentNode)[0].parentNode.id);
-            } else {
-                $('#divForeign').css('display', 'none');
+            var currency = $('#' + pid).find('.txtCcyAbbrev').val();
+            if (currency == "PHP") {
+                $('#divForeign').hide();
                 $('#divPHP').show();
                 displayInfoCashBD($(this.parentNode)[0].parentNode.id);
+            } else {
+                $('#divForeign').show();
+                $('#divPHP').hide();
+                displayInfoIE($(this.parentNode)[0].parentNode.id);
             }
-
         });
     });
-</script>
-<script type="text/javascript">
-    function round(value, exp) {
-        if (typeof exp === 'undefined' || +exp === 0)
-            return Math.round(value);
-
-        value = +value;
-        exp = +exp;
-
-        if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0))
-            return NaN;
-
-        // Shift
-        value = value.toString().split('e');
-        value = Math.round(+(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp)));
-
-        // Shift back
-        value = value.toString().split('e');
-        return +(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp));
-    };
-
-    function reqBtnDisable(idx) {
-        if ($('#LiquidationDetails_' + idx + '__ccyAbbrev').val() != "PHP") {
-            $('#req_' + idx).find('.reqBtn').css("pointer-events", "none");
-        } else {
-            $('#req_' + idx).find('.reqBtn').css("pointer-events", "auto");
-        }
-    };
-
-    function displayInfoCashBD(pid) {
-
-        $('#txtLiqAccNo').val($('#' + pid).find('.hidAccNo').val());
-        $('#txtLiqAccCode').val($('#' + pid).find('.hidAccCode').val());
-
-        if ($('#' + pid).find('.hiddenLiqFlag').val() == 0) {
-            $('#txtLiqCredit').val(0);
-            return false;
-        }
-
-        var ret = pid.replace('item_', '');
-        var cashBDInput = $('#divLiqCashBD_' + ret).find("input");
-        var totalAmount = 0.0;
-
-        for (var count = 0; count < cashBDInput.length / 3; count++) {
-            $('#cashbdliqid_' + count).find('.txtLiqDenimination').val($('#LiquidationDetails_' + ret + '__liqCashBreakdown_' + count + '__cashDenimination').val());
-            $('#cashbdliqid_' + count).find('.txtLiqNoPCS').val($('#LiquidationDetails_' + ret + '__liqCashBreakdown_' + count + '__cashNoPC').val());
-            $('#cashbdliqid_' + count).find('.txtLiqAmount').val($('#LiquidationDetails_' + ret + '__liqCashBreakdown_' + count + '__cashAmount').val());
-
-            totalAmount += parseFloat($('#LiquidationDetails_' + ret + '__liqCashBreakdown_' + count + '__cashAmount').val());
-        }
-        $('#txtLiqCredit').val(totalAmount);
-    };
-
-    function displayInfoIE(pid){
-        $('#txtIECurrency').val($('#' + pid).find('.txtCcyAbbrev').val());
-    };
-
-    function printDivCashBD(divID) {
-
-        //Set Cash Breakdown Liquidation table value(property) to table attribute value.
-        var tableCnt = $('#cashBDLiqTable').find('tbody').find('tr');
-
-        for (var count = 0; count < tableCnt.length; count++) {
-            $('#cashbdliqid_' + count).find('.txtLiqNoPCS').attr('value', $('#cashbdliqid_' + count).find('.txtLiqNoPCS').val());
-            $('#cashbdliqid_' + count).find('.txtLiqAmount').attr('value', $('#cashbdliqid_' + count).find('.txtLiqAmount').val());
-        }
-
-        var css = '<link rel="stylesheet" href="https://localhost:5001/css/site.css" />' +
-            '<link rel="stylesheet" href="https://localhost:5001/css/editable-table.css" />' +
-            '<link rel="stylesheet" href="https://localhost:5001/css/util.css" />' +
-            '<link rel="stylesheet" href="https://localhost:5001/lib/bootstrap/dist/css/bootstrap.css"/>';
-        var printContent = document.getElementById(divID);
-
-        var WinPrint = window.open('', '', 'width=900,height=650');
-        WinPrint.document.write(printContent.innerHTML);
-        WinPrint.document.head.innerHTML = css;
-        WinPrint.document.close();
-        WinPrint.focus();
-        WinPrint.print();
-        WinPrint.close();
-
-        //Rollback the Cash Breakdown Liquidation table attribute value to default(0).
-        for (var count = 0; count < tableCnt.length; count++) {
-            $('#cashbdliqid_' + count).find('.txtLiqNoPCS').attr('value', 0);
-            $('#cashbdliqid_' + count).find('.txtLiqAmount').attr('value', 0);
-        }
-    };
-
-    function addCommas(nStr) {
-        nStr += '';
-        x = nStr.split('.');
-        x1 = x[0];
-        x2 = x.length > 1 ? '.' + x[1] : '';
-        var rgx = /(\d+)(\d{3})/;
-        while (rgx.test(x1)) {
-            x1 = x1.replace(rgx, '$1' + ',' + '$2');
-        }
-        return x1 + x2;
-    }
 </script>
 <script type="text/javascript" src="~/js/EntryScripts.js"></script>

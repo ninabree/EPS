@@ -1041,12 +1041,12 @@ namespace ExpenseProcessingSystem.Controllers
             model.cashBreakdown = new List<ExpenseEntryCashBreakdownModel>();
 
 
-            foreach (var i in DeniminationValues.GetDeniminationList())
+            foreach (var i in DenominationValues.GetDenominationList())
             {
                 model.cashBreakdown.Add(
                     new ExpenseEntryCashBreakdownModel
                     {
-                        CashBreak_Denimination = i.CashBreak_Denimination
+                        CashBreak_Denomination = i.CashBreak_Denomination
                     });
             }
 

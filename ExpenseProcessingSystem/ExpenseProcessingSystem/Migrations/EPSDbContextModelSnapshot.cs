@@ -644,7 +644,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<double>("CashBreak_Amount");
 
-                    b.Property<double>("CashBreak_Denimination");
+                    b.Property<double>("CashBreak_Denomination");
 
                     b.Property<int>("CashBreak_NoPcs");
 
@@ -1268,7 +1268,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<double>("LiqCashBreak_Amount");
 
-                    b.Property<double>("LiqCashBreak_Denimination");
+                    b.Property<double>("LiqCashBreak_Denomination");
 
                     b.Property<int>("LiqCashBreak_NoPcs");
 
@@ -1306,6 +1306,61 @@ namespace ExpenseProcessingSystem.Migrations
                     b.HasIndex("ExpenseEntryModelExpense_ID");
 
                     b.ToTable("LiquidationEntryDetails");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.LiquidationInterEntityModel", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("ExpenseEntryDetailModelExpDtl_ID");
+
+                    b.Property<string>("Liq_AccountID_1_1");
+
+                    b.Property<string>("Liq_AccountID_1_2");
+
+                    b.Property<string>("Liq_AccountID_2_1");
+
+                    b.Property<string>("Liq_AccountID_2_2");
+
+                    b.Property<double>("Liq_Amount_1_1");
+
+                    b.Property<double>("Liq_Amount_1_2");
+
+                    b.Property<double>("Liq_Amount_2_1");
+
+                    b.Property<double>("Liq_Amount_2_2");
+
+                    b.Property<string>("Liq_CCY_1_1");
+
+                    b.Property<string>("Liq_CCY_1_2");
+
+                    b.Property<string>("Liq_CCY_2_1");
+
+                    b.Property<string>("Liq_CCY_2_2");
+
+                    b.Property<string>("Liq_DebitCred_1_1");
+
+                    b.Property<string>("Liq_DebitCred_1_2");
+
+                    b.Property<string>("Liq_DebitCred_2_1");
+
+                    b.Property<string>("Liq_DebitCred_2_2");
+
+                    b.Property<double>("Liq_InterRate_1_1");
+
+                    b.Property<double>("Liq_InterRate_1_2");
+
+                    b.Property<double>("Liq_InterRate_2_1");
+
+                    b.Property<double>("Liq_InterRate_2_2");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("ExpenseEntryDetailModelExpDtl_ID");
+
+                    b.ToTable("LiquidationInterEntity");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.Pending.DMAccountGroupModel_Pending", b =>
@@ -1716,6 +1771,13 @@ namespace ExpenseProcessingSystem.Migrations
                     b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryModel", "ExpenseEntryModel")
                         .WithMany()
                         .HasForeignKey("ExpenseEntryModelExpense_ID");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.LiquidationInterEntityModel", b =>
+                {
+                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel", "ExpenseEntryDetailModel")
+                        .WithMany()
+                        .HasForeignKey("ExpenseEntryDetailModelExpDtl_ID");
                 });
 #pragma warning restore 612, 618
         }
