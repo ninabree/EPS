@@ -3133,6 +3133,7 @@ namespace ExpenseProcessingSystem.Services
                     GBaseRemarks = dtl.d.ExpDtl_Gbase_Remarks,
                     account = dtl.d.ExpDtl_Account,
                     fbt = dtl.d.ExpDtl_Fbt,
+                    fbtID = dtl.d.ExpDtl_FbtID,
                     dept = dtl.d.ExpDtl_Dept,
                     chkVat = (dtl.d.ExpDtl_Vat <= 0) ? false : true,
                     vat = dtl.d.ExpDtl_Vat,
@@ -4042,7 +4043,7 @@ namespace ExpenseProcessingSystem.Services
         public bool postCV(int expID)
         {
             var expenseDetails = getExpense(expID);
-
+            List<TblCm10> stuff = new List<TblCm10>();
             foreach (var item in expenseDetails.EntryCV)
             {
                 gbaseContainer tempGbase = new gbaseContainer();
@@ -4073,23 +4074,34 @@ namespace ExpenseProcessingSystem.Services
                 tempGbase.entries.Add(credit);
                 tempGbase.entries.Add(debit);
 
-                InsertGbaseEntry(tempGbase, expID);
+                stuff.Add(InsertGbaseEntry(tempGbase, expID));
 
                 if (item.fbt)
                 {
                     tempGbase.entries = new List<entryContainer>();
 
-                    //var fbt = getAccount()
+                    //((ExpenseAmount*.50)/.65)*.35
+                    string fbt = getFbtFormula(getAccount(item.account).Account_FBT_MasterID);
 
+                    string equation = fbt.Replace("ExpenseAmount", item.debitGross.ToString());
+                    double fbtAmount = Math.Round(Convert.ToDouble(new DataTable().Compute(equation, null)),2);
+                    Console.WriteLine(equation);
+                    credit.amount = fbtAmount;
+                    debit.amount = fbtAmount;
 
-                    credit.amount = Convert.ToDouble(new DataTable().Compute("(3+3)*2+1", null));
-                    debit.amount = Convert.ToDouble(new DataTable().Compute("(3+3)*2+1", null));
+                    tempGbase.entries.Add(credit);
+                    tempGbase.entries.Add(debit);
+                    stuff.Add(InsertGbaseEntry(tempGbase, expID));
                 }
             }
 
             _GOContext.SaveChanges();
             _context.SaveChanges();
 
+            foreach (var item in stuff)
+            {
+                Console.WriteLine("======> this is the new ID : " + item.Id);
+            }
             return true;
         }
         public bool postLiq_SS(int expID)
@@ -4225,7 +4237,7 @@ namespace ExpenseProcessingSystem.Services
         public bool postCV(int expID, string command)
         {
             var expenseDetails = getExpense(expID);
-
+            List<TblCm10> stuff = new List<TblCm10>();
             foreach (var item in expenseDetails.EntryCV)
             {
                 gbaseContainer tempGbase = new gbaseContainer();
@@ -4256,31 +4268,43 @@ namespace ExpenseProcessingSystem.Services
                 tempGbase.entries.Add(credit);
                 tempGbase.entries.Add(debit);
 
-                InsertGbaseEntry(tempGbase, expID);
+                stuff.Add(InsertGbaseEntry(tempGbase, expID));
 
                 if (item.fbt)
                 {
                     tempGbase.entries = new List<entryContainer>();
 
-                    //var fbt = getAccount()
+                    //((ExpenseAmount*.50)/.65)*.35
+                    string fbt = getFbtFormula(getAccount(item.account).Account_FBT_MasterID);
 
+                    string equation = fbt.Replace("ExpenseAmount", item.debitGross.ToString());
+                    double fbtAmount = Math.Round(Convert.ToDouble(new DataTable().Compute(equation, null)), 2);
+                    Console.WriteLine("-=-=-=-=-=->" + equation);
+                    credit.amount = fbtAmount;
+                    debit.amount = fbtAmount;
 
-                    credit.amount = Convert.ToDouble(new DataTable().Compute("(3+3)*2+1", null));
-                    debit.amount = Convert.ToDouble(new DataTable().Compute("(3+3)*2+1", null));
+                    tempGbase.entries.Add(credit);
+                    tempGbase.entries.Add(debit);
+                    stuff.Add(InsertGbaseEntry(tempGbase, expID));
                 }
             }
-
+            
             _GOContext.SaveChanges();
+
+            foreach(var item in stuff)
+            {
+                Console.WriteLine("======> this is the new ID : " + item.Id);
+            }
             return true;
         }
         public bool postNC(int expID, string command)
         {
             var expenseDetails = getExpenseNC(expID);
-
+            TblCm10 stuff = new TblCm10();
             foreach (var dtls in expenseDetails.EntryNC.ExpenseEntryNCDtls)
             {
                 gbaseContainer tempGbase = new gbaseContainer();
-
+                
                 tempGbase.valDate = expenseDetails.expenseDate;
                 tempGbase.remarks = dtls.ExpNCDtl_Remarks_Desc;
                 tempGbase.maker = expenseDetails.maker;
@@ -4313,18 +4337,21 @@ namespace ExpenseProcessingSystem.Services
                     }
                 }
                 //insert
-                InsertGbaseEntry(tempGbase, expID);
+                stuff = InsertGbaseEntry(tempGbase, expID);
             }
 
             _GOContext.SaveChanges();
+
+            Console.WriteLine("======> " + stuff.Id);
+            Console.WriteLine("===========> This is the new ID:" + stuff.Id);
             return true;
         }
         ///============[End Post Entries]============
 
         ///==============[Begin Gbase Entry Section]================
-        private bool InsertGbaseEntry(gbaseContainer containerModel, int expenseID)
+        private TblCm10 InsertGbaseEntry(gbaseContainer containerModel, int expenseID)
         {
-            TblCm10 goModel = new TblCm10();
+             TblCm10 goModel = new TblCm10();
 
             //goModel.Id = -1;
             goModel.SystemName = "EXPRESS";
@@ -4542,14 +4569,14 @@ namespace ExpenseProcessingSystem.Services
             }
             else
             {
-                return false;
+                return goModel;
             }
 
-            _GOContext.Add(goModel);
-
+            _GOContext.TblCm10.Add(goModel);
+           
             _context.GOExpressHist.Add(convertTblCm10ToGOExHist(goModel, _context.ExpenseEntry.Where(x => x.Expense_ID == expenseID).FirstOrDefault()));
 
-            return true;
+            return goModel;
         }
         ///===============[End Gbase Entry Section]=================
 
@@ -4558,6 +4585,15 @@ namespace ExpenseProcessingSystem.Services
         public int getFbt(int id)
         {
             return _context.DMFBT.FirstOrDefault(x=>x.FBT_MasterID==id && x.FBT_isActive == true && x.FBT_isDeleted == false).FBT_ID;
+        }
+        public string getFbtFormula(int id)
+        {
+            return _context.DMFBT.FirstOrDefault(x=>x.FBT_ID == id).FBT_Formula;
+        }
+        //get currency
+        public DMCurrencyModel getCurrency(int id)
+        {
+            return _context.DMCurrency.FirstOrDefault(x => x.Curr_ID == id);
         }
         //get vendor
         public DMVendorModel getVendor(int id)
@@ -4733,6 +4769,12 @@ namespace ExpenseProcessingSystem.Services
 
             return accDetails;
         }
+        //retrieve latest Express transation no. (transaction type-year-number)
+        //public string getExpTransNo()
+        //{
+
+        //}
+
 
         public GOExpressHistModel convertTblCm10ToGOExHist(TblCm10 tblcm10, ExpenseEntryModel expense)
         {
