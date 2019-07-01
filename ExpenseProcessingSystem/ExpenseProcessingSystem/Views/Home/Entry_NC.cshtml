@@ -39,7 +39,6 @@
             </div>
             <div>
                 <div class="dis-inline-block tbl-btn"><button id="reversal_entry" disabled>Create Reversal Entry</button></div>
-                <div class="dis-inline-block tbl-btn"><button disabled>Delete GBase Post</button></div>
                 <div class="dis-inline-block tbl-btn"><button disabled>Liquidate</button></div>
             </div>
             <div>
@@ -117,10 +116,9 @@
                 tblName == "4" ? forma2RowFormat(($(tblRow).length / 3), getAccsPCROptions(itemCount, "1"), getAccsPCROptions(itemCount, "2"), getAccsPCROptions(itemCount, "3"), getOneValueAccsOption(itemCount, "1"), getOneValueAccsOption(itemCount, "2"), getOneValueAccsOption(itemCount, "3"), getCurrOptions(itemCount)) :
                 tblName == "5" ? forma2RowFormat(($(tblRow).length / 3), getAccsPCROptions(itemCount, "1"), getAccsPCROptions(itemCount, "2"), getAccsPCROptions(itemCount, "3"), getOneValueAccsOption(itemCount, "1"), getOneValueAccsOption(itemCount, "2"), getOneValueAccsOption(itemCount, "3"), getCurrOptions(itemCount)) :
                 tblName == "6" ? forma1RowFormat(itemCount, getAccsOptions(itemCount), getValueAccsOptions(), getCurrOptions(itemCount)) :
-                tblName == "7" ? forma1RowFormat2(itemCount, getAccsPCROptions(itemCount, "1"), getAccsPCROptions(itemCount, "2"), getOneValueAccsOption(itemCount, "1"), getOneValueAccsOption(itemCount, "2"), getCurrOptions(itemCount)) :
+                tblName == "7" ? forma1RowFormat(itemCount, getAccsOptions(itemCount), getValueAccsOptions(), getCurrOptions(itemCount)) :
                 tblName == "8" ? forma1RowFormat(itemCount, getAccsOptions(itemCount), getValueAccsOptions(), getCurrOptions(itemCount)) :
                 tblName == "9" ? forma1RowFormat(itemCount, getAccsOptions(itemCount), getValueAccsOptions(), getCurrOptions(itemCount)) :
-                tblName == "10" ? forma1RowFormat(itemCount, getAccsOptions(itemCount), getValueAccsOptions(), getCurrOptions(itemCount)) :
                 tblName == "11" ? forma3RowFormat(itemCount, getAccsOptions(itemCount), getCurrOptions(itemCount), getValueAccsOptions(), getValueCurrsOptions()) :
                 $('');
             $('#NCPartialTbl').find('tbody tr:last').before($clone);
@@ -266,10 +264,7 @@
                 + '<td class="voucher-input"><input id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_Remarks_Desc" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_Remarks_Desc"  type="text" value=""></td>'
                 + '<td  class="voucher-input" colspan="2">'
                 + '<div class="dis-inline-block w-48 voucher-input">'
-                + '<input class="text-box single-line" data-val="true" data-val-required="The Period From field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_Remarks_Period_From" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_Remarks_Period_From" type="date" value="' + dtFormatted +'">'
-                + '</div>'
-                + '<div class="dis-inline-block w-48 voucher-input">'
-                + '<input class="text-box single-line" data-val="true" data-val-required="The Period To field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_Remarks_Period_To" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_Remarks_Period_To" type="date" value="' + dtFormatted +'">'
+                + '<input class="text-box single-line" id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_Remarks_Period" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_Remarks_Period" type="text" value="">'
                 + '</div>'
                 + '</td>'
                 + '<td colspan="3"  class="voucher-input">'
@@ -316,10 +311,7 @@
                 + '<td class="voucher-input"><input id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_Remarks_Desc" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_Remarks_Desc"  type="text" value=""></td>'
                 + '<td  class="voucher-input" colspan="2">'
                 + '<div class="dis-inline-block w-48 voucher-input">'
-                + '<input class="text-box single-line" data-val="true" data-val-required="The Period From field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_Remarks_Period_From" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_Remarks_Period_From" type="date" value="' + dtFormatted + '">'
-                + '</div>'
-                + '<div class="dis-inline-block w-48 voucher-input">'
-                + '<input class="text-box single-line" data-val="true" data-val-required="The Period To field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_Remarks_Period_To" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_Remarks_Period_To" type="date" value="' + dtFormatted + '">'
+                + '<input class="text-box single-line" id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_Remarks_Period" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_Remarks_Period" type="text" value="">'
                 + '</div>'
                 + '</td>'
                 + '<td colspan="3"  class="voucher-input">'
@@ -364,12 +356,9 @@
             var CurrIDOfFirstRow = $("#EntryNC_ExpenseEntryNCDtls_0__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Curr_ID").val();
             return $('<tr id="item_' + itemCount + '">'
                 + '<td class="voucher-input"><input id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_Remarks_Desc" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_Remarks_Desc" type="text" value=""></td>'
-                + '<td colspan="2">'
+                + '<td  class="voucher-input" colspan="2">'
                 + '<div class="dis-inline-block w-48 voucher-input">'
-                + '<input class="text-box single-line" data-val="true" data-val-required="The Period From field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_Remarks_Period_From" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_Remarks_Period_From" type="date" value="2019-06-18">'
-                + '</div>'
-                + '<div class="dis-inline-block w-48 voucher-input">'
-                + '<input class="text-box single-line" data-val="true" data-val-required="The Period To field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_Remarks_Period_To" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_Remarks_Period_To" type="date" value="2019-06-18">'
+                + '<input class="text-box single-line" id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_Remarks_Period" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_Remarks_Period" type="text" value="">'
                 + '</div>'
                 + '</td>'
                 + '<td colspan="3">'
@@ -430,10 +419,7 @@
                 + '<td class="voucher-input"><input id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_Remarks_Desc" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_Remarks_Desc"  type="text" value=""></td>'
                 + '<td  class="voucher-input" colspan="2">'
                 + '<div class="dis-inline-block w-48 voucher-input">'
-                + '<input class="text-box single-line" data-val="true" data-val-required="The Period From field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_Remarks_Period_From" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_Remarks_Period_From" type="date" value="' + dtFormatted + '">'
-                + '</div>'
-                + '<div class="dis-inline-block w-48 voucher-input">'
-                + '<input class="text-box single-line" data-val="true" data-val-required="The Period To field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_Remarks_Period_To" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_Remarks_Period_To" type="date" value="' + dtFormatted + '">'
+                + '<input class="text-box single-line" id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_Remarks_Period" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_Remarks_Period" type="text" value="">'
                 + '</div>'
                 + '</td>'
                 + '<td colspan="3"  class="voucher-input">'

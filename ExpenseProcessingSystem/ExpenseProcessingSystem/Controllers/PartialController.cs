@@ -51,6 +51,14 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 viewModel = _service.getExpenseNC(int.Parse(entryID));
                 viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
+                if (categoryID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT.ToString())
+                {
+                    viewModel.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_PETTYCASHREPLENISHMENT.Populate_CDD_Instruc_Sheet(currDtl);
+                }
+                else if (categoryID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL.ToString())
+                {
+                    viewModel.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_RETURN_OF_JSPAYROLL.Populate_CDD_Instruc_Sheet(currDtl, currDtlUSD);
+                }
             } else
             {
                 viewModel.entryID = 0;
@@ -93,11 +101,6 @@ namespace ExpenseProcessingSystem.Controllers
                 {
                     viewModel.EntryNC = CONSTANT_NC_RETURN_OF_JSPAYROLL.Populate_RETURN_OF_JSPAYROLL(currDtl, currDtlUSD);
                     viewModel.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_RETURN_OF_JSPAYROLL.Populate_CDD_Instruc_Sheet(currDtl, currDtlUSD);
-                }
-                else if (categoryID == GlobalSystemValues.NC_FOREIGN_EXCHANGE_RECEIVING.ToString())
-                {
-                    viewModel.EntryNC = CONSTANT_NC_FOREIGN_EXCHANGE_RECEIVING.Populate_FOREIGN_EXCHANGE_RECEIVING(currDtl, currDtlUSD);
-                    viewModel.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_FOREIGN_EXCHANGE_RECEIVING.Populate_CDD_Instruc_Sheet(currDtl, currDtlUSD);
                 }
                 else if (categoryID == GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES.ToString())
                 {

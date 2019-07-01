@@ -1353,6 +1353,20 @@ namespace ExpenseProcessingSystem.Controllers
 
             EntryNCViewModelList ncList = _service.getExpenseNC(entryID);
             ncList = PopulateEntryNC(ncList);
+            DMCurrencyModel currDtl = _context.DMCurrency.Where(x => x.Curr_MasterID == 1 && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
+            DMCurrencyModel currDtlUSD = _context.DMCurrency.Where(x => x.Curr_MasterID == 2 && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
+
+            if (ncList.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT)
+            {
+                ncList.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_PETTYCASHREPLENISHMENT.Populate_CDD_Instruc_Sheet(currDtl);
+                ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount = ncList.EntryNC.NC_CS_DebitAmt;
+                ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Amount = ncList.EntryNC.NC_CS_CredAmt;
+            }else if (ncList.EntryNC.NC_Category_ID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL)
+            {
+                ncList.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_RETURN_OF_JSPAYROLL.Populate_CDD_Instruc_Sheet(currDtl, currDtlUSD);
+                ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount = ncList.EntryNC.NC_CS_DebitAmt;
+                ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Amount = ncList.EntryNC.NC_CS_CredAmt;
+            }
 
             return View("Entry_NC_ReadOnly", ncList);
         }
@@ -1381,8 +1395,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "Entry_NC_ReadOnly";
-                    break;
+                    return RedirectToAction("View_NC", "Home", new { entryID = entryID });
                 case "verifier":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_VERIFIED, int.Parse(GetUserID())))
                     {
@@ -1392,19 +1405,18 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "Entry_NC_ReadOnly";
+                    return RedirectToAction("View_NC", "Home", new { entryID = entryID });
                     break;
                 case "Reject":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REJECTED, int.Parse(GetUserID())))
                     {
-                        _service.postNC(entryID, "P");
                         ViewBag.Success = 1;
                     }
                     else
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "Entry_NC_ReadOnly";
+                    return RedirectToAction("View_NC", "Home", new { entryID = entryID });
                     break;
                 case "Delete":
                     if (_service.deleteExpenseEntry(entryID, GlobalSystemValues.TYPE_NC))
@@ -1418,15 +1430,7 @@ namespace ExpenseProcessingSystem.Controllers
                     viewLink = "Entry_NC";
                     return RedirectToAction("Entry_NC", new EntryNCViewModelList());
                 case "PrintCDD":
-                    //if ()
-                    //{
-                        return RedirectToAction("CDD_IS_NC_PCR", new { entryID = entryID });
-                    //}
-                    //else if ()
-                    //{
-                    //    return RedirectToAction("CDD_IS_NC_DDV", new { entryID = entryID });
-                    //}
-                    //break;
+                    return RedirectToAction("CDD_IS_NC_PCR", new { entryID = entryID });
                 case "Reversal":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
                     {
@@ -1437,7 +1441,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "Entry_NC_ReadOnly";
+                    return RedirectToAction("View_NC", "Home", new { entryID = entryID });
                     break;
                 default:
                     break;
@@ -1459,12 +1463,12 @@ namespace ExpenseProcessingSystem.Controllers
             ExcelGenerateService excelGenerate = new ExcelGenerateService();
             CDDISValuesVIewModel viewModel = new CDDISValuesVIewModel {
                 VALUE_DATE = DateTime.Parse("2019/01/01"), //TEMP VALUE
-                REFERENCE_NO = " GA767123456",
+                REFERENCE_NO = " GA767      ",
                 COMMENT = "  ",
                 SECTION = "09",
                 REMARKS = "AD: PETTY CASH REPLENISHEMENT",
                 SCHEME_NO = "  ",
-                MEMO = "Y"
+                MEMO = " "
             };
             List<CDDISValueContentsViewModel> cddContents = new List<CDDISValueContentsViewModel>();
             foreach (var dtl in entryVals.EntryNC.ExpenseEntryNCDtls){
@@ -1477,9 +1481,9 @@ namespace ExpenseProcessingSystem.Controllers
                         CCY = _context.DMCurrency.Where(x=> x.Curr_ID == acc.ExpNCDtlAcc_Curr_ID).Select(x => x.Curr_CCY_ABBR).FirstOrDefault(),
                         AMOUNT = acc.ExpNCDtlAcc_Amount,
                         CUSTOMER_ABBR = "900",
-                        ACCOUNT_CODE = acct.Account_Code,
+                        ACCOUNT_CODE = "147017"/*acct.Account_Code*/,
                         ACCOUNT_NO = acct.Account_No,
-                        EXCHANGE_RATE = acc.ExpNCDtlAcc_Inter_Rate,
+                        //EXCHANGE_RATE = ,
                         CONTRA_CCY = "   ",
                         FUND = (acct.Account_Fund) ? "O" : " ",
                         CHECK_NO = " ",

@@ -34,10 +34,10 @@ $(document).ready(function () {
     });
     /*//////////////////////////////////////////////////////////////////
     [ Login ]*/
-    $('#User_UserName').change(function () {
+    $(document).on("change", "'#User_UserName", function (e) {
         CheckUn();
     });
-    $('#User_Password').change(function () {
+    $(document).on("change", "'#User_Password", function (e) {
         CheckPw();
     });
 
@@ -72,7 +72,7 @@ $(document).ready(function () {
     /*//////////////////////////////////////////////////////////////////
     [ DM ]*/
     //reset search filter values
-    $('#full-list-btn').click(function (e) {
+    $(document).on("click", "#full-list-btn", function (e) {
         e.stopImmediatePropagation();
         $('input[id^= "DMFilters_"]').each(function (i, obj) {
             $(this).val("");

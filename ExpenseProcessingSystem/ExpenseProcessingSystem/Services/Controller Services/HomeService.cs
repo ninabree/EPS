@@ -3364,9 +3364,7 @@ namespace ExpenseProcessingSystem.Services
                     entryNCDtl = new ExpenseEntryNCDtlViewModel()
                     {
                         ExpNCDtl_Remarks_Desc = ncDtl.g.ExpNCDtl_Remarks_Desc,
-                        ExpNCDtl_Remarks_Period_From = ncDtl.g.ExpNCDtl_Remarks_Period_From,
-                        ExpNCDtl_Remarks_Period_To = ncDtl.g.ExpNCDtl_Remarks_Period_To,
-                        ExpNCDtl_Period_Duration = ncDtl.g.ExpNCDtl_Remarks_Period_From + " - " + ncDtl.g.ExpNCDtl_Remarks_Period_To,
+                        ExpNCDtl_Remarks_Period = ncDtl.g.ExpNCDtl_Remarks_Period,
                         ExpenseEntryNCDtlAccs = ncDtlAccs
                     };
                     ncDtls.Add(entryNCDtl);
@@ -3374,9 +3372,15 @@ namespace ExpenseProcessingSystem.Services
                 ncDtlVM = new EntryNCViewModel()
                 {
                     NC_Category_ID = dtl.d.ExpNC_Category_ID,
-                    NC_CredAmt = EntryDetails.e.Expense_Credit_Total,
-                    NC_DebitAmt = EntryDetails.e.Expense_Debit_Total,
-                    NC_TotalAmt = EntryDetails.e.Expense_Credit_Total + EntryDetails.e.Expense_Debit_Total,
+                    NC_CredAmt = dtl.d.ExpNC_CredAmt,
+                    NC_DebitAmt = dtl.d.ExpNC_DebitAmt,
+                    NC_CS_CredAmt = dtl.d.ExpNC_CS_CredAmt,
+                    NC_CS_DebitAmt = dtl.d.ExpNC_CS_DebitAmt,
+                    NC_IE_CredAmt = dtl.d.ExpNC_IE_CredAmt,
+                    NC_IE_DebitAmt = dtl.d.ExpNC_IE_DebitAmt,
+                    NC_TotalAmt = dtl.d.ExpNC_CredAmt + dtl.d.ExpNC_DebitAmt,
+                    NC_CS_TotalAmt = dtl.d.ExpNC_CS_CredAmt + dtl.d.ExpNC_CS_DebitAmt,
+                    NC_IE_TotalAmt = dtl.d.ExpNC_IE_CredAmt + dtl.d.ExpNC_IE_DebitAmt,
                     ExpenseEntryNCDtls = ncDtls
                 };
             }
@@ -3412,7 +3416,7 @@ namespace ExpenseProcessingSystem.Services
                 if (status == GlobalSystemValues.STATUS_VERIFIED)
                     dbExpenseEntry.Expense_Verifier_1 = userid;
 
-                if (status == GlobalSystemValues.STATUS_APPROVED)
+                if (status == GlobalSystemValues.STATUS_APPROVED || status == GlobalSystemValues.STATUS_REJECTED)
                 {
                     dbExpenseEntry.Expense_Approver = userid;
                     if (GlobalSystemValues.STATUS_PENDING == GetCurrentEntryStatus(dbExpenseEntry.Expense_ID))
@@ -3606,34 +3610,43 @@ namespace ExpenseProcessingSystem.Services
 
                 foreach (var ncDtls in entryModel.EntryNC.ExpenseEntryNCDtls)
                 {
-                    List<ExpenseEntryNCDtlAccModel> accountDtls = new List<ExpenseEntryNCDtlAccModel>();
-                    foreach (var accDtls in ncDtls.ExpenseEntryNCDtlAccs)
+                    //Only if Debit and Credit is Not Equal to 0
+                    if ((ncDtls.ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount != 0) && (ncDtls.ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Amount != 0))
                     {
-                        ExpenseEntryNCDtlAccModel acc = new ExpenseEntryNCDtlAccModel
+                        List<ExpenseEntryNCDtlAccModel> accountDtls = new List<ExpenseEntryNCDtlAccModel>();
+                        foreach (var accDtls in ncDtls.ExpenseEntryNCDtlAccs)
                         {
-                            ExpNCDtlAcc_Acc_ID = accDtls.ExpNCDtlAcc_Acc_ID,
-                            ExpNCDtlAcc_Acc_Name = accDtls.ExpNCDtlAcc_Acc_Name,
-                            ExpNCDtlAcc_Curr_ID = accDtls.ExpNCDtlAcc_Curr_ID,
-                            ExpNCDtlAcc_Amount = accDtls.ExpNCDtlAcc_Amount,
-                            ExpNCDtlAcc_Inter_Rate = accDtls.ExpNCDtlAcc_Inter_Rate,
-                            ExpNCDtlAcc_Type_ID = accDtls.ExpNCDtlAcc_Type_ID
+                            ExpenseEntryNCDtlAccModel acc = new ExpenseEntryNCDtlAccModel
+                            {
+                                ExpNCDtlAcc_Acc_ID = accDtls.ExpNCDtlAcc_Acc_ID,
+                                ExpNCDtlAcc_Acc_Name = _context.DMAccount.Where(x => x.Account_ID == accDtls.ExpNCDtlAcc_Acc_ID).Select(x => x.Account_Name).FirstOrDefault(),
+                                ExpNCDtlAcc_Curr_ID = accDtls.ExpNCDtlAcc_Curr_ID,
+                                ExpNCDtlAcc_Amount = accDtls.ExpNCDtlAcc_Amount,
+                                ExpNCDtlAcc_Inter_Rate = accDtls.ExpNCDtlAcc_Inter_Rate,
+                                ExpNCDtlAcc_Type_ID = accDtls.ExpNCDtlAcc_Type_ID
+                            };
+                            accountDtls.Add(acc);
+                        }
+                        ExpenseEntryNCDtlModel expenseDetail = new ExpenseEntryNCDtlModel
+                        {
+                            ExpNCDtl_Remarks_Desc = ncDtls.ExpNCDtl_Remarks_Desc,
+                            ExpNCDtl_Remarks_Period = ncDtls.ExpNCDtl_Remarks_Period,
+                            ExpenseEntryNCDtlAccs = accountDtls
                         };
-                        accountDtls.Add(acc);
+                        expenseDtls.Add(expenseDetail);
                     }
-                    ExpenseEntryNCDtlModel expenseDetail = new ExpenseEntryNCDtlModel
-                    {
-                        ExpNCDtl_Remarks_Desc = ncDtls.ExpNCDtl_Remarks_Desc,
-                        ExpNCDtl_Remarks_Period_From = ncDtls.ExpNCDtl_Remarks_Period_From,
-                        ExpNCDtl_Remarks_Period_To = ncDtls.ExpNCDtl_Remarks_Period_To,
-                        ExpenseEntryNCDtlAccs = accountDtls
-                    };
-                    expenseDtls.Add(expenseDetail);
                 }
                 List<ExpenseEntryNCModel> expenseNCList = new List<ExpenseEntryNCModel>
                 {
                     new ExpenseEntryNCModel
                     {
                         ExpNC_Category_ID = entryModel.EntryNC.NC_Category_ID,
+                        ExpNC_DebitAmt = entryModel.EntryNC.NC_DebitAmt,
+                        ExpNC_CredAmt = entryModel.EntryNC.NC_CredAmt,
+                        ExpNC_CS_DebitAmt = (entryModel.EntryNC.NC_CS_DebitAmt > 0) ? entryModel.EntryNC.NC_CS_DebitAmt : (entryModel.EntryNC.ExpenseEntryNCDtls_CDD.Count >= 1 ) ? entryModel.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount : 0,
+                        ExpNC_CS_CredAmt = (entryModel.EntryNC.NC_CS_CredAmt > 0) ? entryModel.EntryNC.NC_CS_CredAmt :  (entryModel.EntryNC.ExpenseEntryNCDtls_CDD.Count >= 1 ) ? entryModel.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Amount : 0,
+                        ExpNC_IE_DebitAmt = entryModel.EntryNC.NC_IE_DebitAmt,
+                        ExpNC_IE_CredAmt = entryModel.EntryNC.NC_IE_CredAmt,
                         ExpenseEntryNCDtls = expenseDtls
                     }
                 };
@@ -4037,7 +4050,7 @@ namespace ExpenseProcessingSystem.Services
 
                 tempGbase.entries.Add(credit);
                 tempGbase.entries.Add(debit);
-
+                tempGbase.entries = tempGbase.entries.OrderByDescending(x=> x.type == "D").ToList();
                 InsertGbaseEntry(tempGbase);
 
                 if (item.fbt)
@@ -4064,7 +4077,7 @@ namespace ExpenseProcessingSystem.Services
                 gbaseContainer tempGbase = new gbaseContainer();
 
                 tempGbase.valDate = expenseDetails.expenseDate;
-                tempGbase.remarks = dtls.ExpNCDtl_Remarks_Desc;
+                tempGbase.remarks = dtls.ExpNCDtl_Remarks_Desc + " " + dtls.ExpNCDtl_Remarks_Period;
                 tempGbase.maker = expenseDetails.maker;
                 tempGbase.approver = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == expID).Expense_Approver;
                 foreach (var item in dtls.ExpenseEntryNCDtlAccs)
@@ -4094,6 +4107,8 @@ namespace ExpenseProcessingSystem.Services
                         tempGbase.entries.Add(debit);
                     }
                 }
+
+                tempGbase.entries = tempGbase.entries.OrderByDescending(x => x.type == "D").ToList();
                 //insert
                 InsertGbaseEntry(tempGbase);
             }

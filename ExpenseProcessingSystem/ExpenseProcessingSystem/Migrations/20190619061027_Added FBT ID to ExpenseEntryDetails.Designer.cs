@@ -837,7 +837,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("ExpNCDtl_Remarks_Desc");
 
-                    b.Property<DateTime>("ExpNCDtl_Remarks_Period_From");
+                    b.Property<DateTime>("ExpNCDtl_Remarks_Period");
 
                     b.Property<DateTime>("ExpNCDtl_Remarks_Period_To");
 

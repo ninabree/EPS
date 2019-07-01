@@ -90,8 +90,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     ncDtlVM = new ExpenseEntryNCDtlViewModel()
                     {
                         ExpNCDtl_Remarks_Desc = ncDtl.g.ExpNCDtl_Remarks_Desc,
-                        ExpNCDtl_Remarks_Period_From = ncDtl.g.ExpNCDtl_Remarks_Period_From,
-                        ExpNCDtl_Remarks_Period_To = ncDtl.g.ExpNCDtl_Remarks_Period_To,
+                        ExpNCDtl_Remarks_Period = ncDtl.g.ExpNCDtl_Remarks_Period,
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>()
                     };
                     if (ncDtlVM.ExpenseEntryNCDtlAccs.Count <= 0)

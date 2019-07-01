@@ -367,9 +367,9 @@
             } else {
                 curr2_Amt = "0";
             }
-            var interRate = $("#" + pNode.id).find(".txtInterRate").val()
-            var remarksTitle = $("#" + pNode.id).find(".gbaseRemarks").val()
-            var account = $("#" + pNode.id).find(".txtAcc option:selected").text()
+            var interRate = $("#" + pNode.id).find(".txtInterRate").val();
+            var remarksTitle = $("#" + pNode.id).find("td div #EntryDDV_" + pNode.id.substring(5) + "__GBaseRemarks").val();
+            var account = $("#" + pNode.id).find(".txtAcc option:selected").text();
 
             //remove prev contents
             modalDivBody2.empty();

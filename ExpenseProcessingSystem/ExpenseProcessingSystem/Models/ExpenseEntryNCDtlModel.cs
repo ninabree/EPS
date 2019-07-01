@@ -12,10 +12,7 @@ namespace ExpenseProcessingSystem.Models
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ExpNCDtl_ID { get; set; }
         public string ExpNCDtl_Remarks_Desc { get; set; }
-        [DataType(DataType.Date)]
-        public DateTime ExpNCDtl_Remarks_Period_From { get; set; }
-        [DataType(DataType.Date)]
-        public DateTime ExpNCDtl_Remarks_Period_To { get; set; }
+        public string ExpNCDtl_Remarks_Period { get; set; }
         public ExpenseEntryNCModel ExpenseEntryNCModel { get; set; }
 
         public ICollection<ExpenseEntryNCDtlAccModel> ExpenseEntryNCDtlAccs { get; set; }
