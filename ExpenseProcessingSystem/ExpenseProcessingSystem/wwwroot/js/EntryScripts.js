@@ -30,7 +30,7 @@
             "date": date
         }
 
-        ajaxCall("/Home/GenerateVoucher", data).done(function (response) {
+        ajaxFormCall("/Home/GenerateVoucher").done(function (response) {
             $("#iframePreview").contents().find('html').html(response);
         });
     }
@@ -253,6 +253,13 @@
             url: url,
             type: "POST",
             data: data,
+        });
+    }
+
+    function ajaxFormCall(url) {
+        return $.ajaxForm({
+            url: url,
+            type: "POST",
         });
     }
 });

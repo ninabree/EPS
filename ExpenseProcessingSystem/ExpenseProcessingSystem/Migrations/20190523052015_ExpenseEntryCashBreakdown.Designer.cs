@@ -638,7 +638,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<float>("CashBreak_Amount");
 
-                    b.Property<double>("CashBreak_Denimination");
+                    b.Property<double>("CashBreak_Denomination");
 
                     b.Property<float>("CashBreak_NoPcs");
 

@@ -19,6 +19,7 @@ namespace ExpenseProcessingSystem.ViewModels
         [NotNullValidations]
         [Display(Name = "FBT")]
         public bool fbt { get; set; }
+        public int fbtID { get; set; }
         [NotNullValidations]
         [Display(Name = "Department")]
         public int dept { get; set; }
@@ -77,7 +78,7 @@ namespace ExpenseProcessingSystem.ViewModels
 
     public class CashBreakdown
     {
-        public double cashDenimination { get; set; }
+        public double cashDenomination { get; set; }
         public int cashNoPC { get; set; }
         public double cashAmount { get; set; }
     }

@@ -20,6 +20,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Reflection;
+using System.Xml.Linq;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ExpenseProcessingSystem.Services
@@ -2983,7 +2984,7 @@ namespace ExpenseProcessingSystem.Services
                         {
                             expenseCashBreakdown.Add(new ExpenseEntryCashBreakdownModel
                             {
-                                CashBreak_Denimination = cashbd.cashDenimination,
+                                CashBreak_Denomination = cashbd.cashDenomination,
                                 CashBreak_NoPcs = cashbd.cashNoPC,
                                 CashBreak_Amount = cashbd.cashAmount
                             });
@@ -2994,7 +2995,7 @@ namespace ExpenseProcessingSystem.Services
                         {
                             expenseCashBreakdown.Add(new ExpenseEntryCashBreakdownModel
                             {
-                                CashBreak_Denimination = cashbd.cashDenimination,
+                                CashBreak_Denomination = cashbd.cashDenomination,
                                 CashBreak_NoPcs = cashbd.cashNoPC,
                                 CashBreak_Amount = cashbd.cashAmount
                             });
@@ -3084,7 +3085,7 @@ namespace ExpenseProcessingSystem.Services
                                                               ExpenseEntryCashBreakdown = (from c
                                                                                                in _context.ExpenseEntryCashBreakdown
                                                                                            where c.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
-                                                                                           select c).OrderByDescending(db => db.ExpenseEntryDetailModel.ExpDtl_ID).OrderByDescending(db => db.CashBreak_Denimination)
+                                                                                           select c).OrderByDescending(db => db.ExpenseEntryDetailModel.ExpDtl_ID).OrderByDescending(db => db.CashBreak_Denomination)
                                                           }
                                 }).FirstOrDefault();
 
@@ -3120,7 +3121,7 @@ namespace ExpenseProcessingSystem.Services
                 {
                     CashBreakdown cashbdTemp = new CashBreakdown()
                     {
-                        cashDenimination = cashbd.CashBreak_Denimination,
+                        cashDenomination = cashbd.CashBreak_Denomination,
                         cashNoPC = cashbd.CashBreak_NoPcs,
                         cashAmount = cashbd.CashBreak_Amount
                     };
@@ -3132,6 +3133,7 @@ namespace ExpenseProcessingSystem.Services
                     GBaseRemarks = dtl.d.ExpDtl_Gbase_Remarks,
                     account = dtl.d.ExpDtl_Account,
                     fbt = dtl.d.ExpDtl_Fbt,
+                    fbtID = dtl.d.ExpDtl_FbtID,
                     dept = dtl.d.ExpDtl_Dept,
                     chkVat = (dtl.d.ExpDtl_Vat <= 0) ? false : true,
                     vat = dtl.d.ExpDtl_Vat,
@@ -3761,10 +3763,14 @@ namespace ExpenseProcessingSystem.Services
                                                                                       in _context.LiquidationCashBreakdown
                                                                                          where l.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
                                                                                          select l,
+                                                              LiquidationInterEntity = from i
+                                                                                      in _context.LiquidationInterEntity
+                                                                                         where i.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
+                                                                                         select i,
                                                               ExpenseEntryCashBreakdown = (from c
                                                                                                in _context.ExpenseEntryCashBreakdown
                                                                                            where c.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
-                                                                                           select c).OrderByDescending(db => db.ExpenseEntryDetailModel.ExpDtl_ID).OrderByDescending(db => db.CashBreak_Denimination)
+                                                                                           select c).OrderByDescending(db => db.ExpenseEntryDetailModel.ExpDtl_ID).OrderByDescending(db => db.CashBreak_Denomination)
                                                           }
                                 }).FirstOrDefault();
 
@@ -3773,6 +3779,7 @@ namespace ExpenseProcessingSystem.Services
                 List<EntryGbaseRemarksViewModel> remarksDtl = new List<EntryGbaseRemarksViewModel>();
                 List<LiquidationCashBreakdown> cashBreakdown = new List<LiquidationCashBreakdown>();
                 List<LiquidationCashBreakdown> liqCashBreakdown = new List<LiquidationCashBreakdown>();
+                List<LiquidationInterEntity> liqInterEntity = new List<LiquidationInterEntity>();
 
                 foreach (var gbase in dtl.ExpenseEntryGbaseDtls)
                 {
@@ -3791,7 +3798,7 @@ namespace ExpenseProcessingSystem.Services
                 {
                     LiquidationCashBreakdown cashbdTemp = new LiquidationCashBreakdown()
                     {
-                        cashDenimination = cashbd.CashBreak_Denimination,
+                        cashDenomination = cashbd.CashBreak_Denomination,
                         cashNoPC = cashbd.CashBreak_NoPcs,
                         cashAmount = cashbd.CashBreak_Amount
                     };
@@ -3803,7 +3810,7 @@ namespace ExpenseProcessingSystem.Services
                 {
                     LiquidationCashBreakdown liqCashbdTemp = new LiquidationCashBreakdown()
                     {
-                        cashDenimination = liqCashbd.LiqCashBreak_Denimination,
+                        cashDenomination = liqCashbd.LiqCashBreak_Denomination,
                         cashNoPC = liqCashbd.LiqCashBreak_NoPcs,
                         cashAmount = liqCashbd.LiqCashBreak_Amount
                     };
@@ -3811,8 +3818,45 @@ namespace ExpenseProcessingSystem.Services
                     liqCashBreakdown.Add(liqCashbdTemp);
                 }
 
-                var accountInfo = _context.DMAccount.Where(x => x.Account_ID == dtl.d.ExpDtl_Account).Single();
+                foreach (var liqIE in dtl.LiquidationInterEntity)
+                {
+                    LiquidationInterEntity liqIETemp = new LiquidationInterEntity()
+                    {
+                        Liq_AccountID_1_1 = liqIE.Liq_AccountID_1_1,
+                        Liq_AccountID_1_2 = liqIE.Liq_AccountID_1_2,
+                        Liq_AccountID_2_1 = liqIE.Liq_AccountID_2_1,
+                        Liq_AccountID_2_2 = liqIE.Liq_AccountID_2_2,
+                        Liq_Amount_1_1 = liqIE.Liq_Amount_1_1,
+                        Liq_Amount_1_2 = liqIE.Liq_Amount_1_2,
+                        Liq_Amount_2_1 = liqIE.Liq_Amount_2_1,
+                        Liq_Amount_2_2 = liqIE.Liq_Amount_2_2,
+                        Liq_CCY_1_1 = liqIE.Liq_CCY_1_1,
+                        Liq_CCY_1_2 = liqIE.Liq_CCY_1_2,
+                        Liq_CCY_2_1 = liqIE.Liq_CCY_2_1,
+                        Liq_CCY_2_2 = liqIE.Liq_CCY_2_2,
+                        Liq_DebitCred_1_1 = liqIE.Liq_DebitCred_1_1,
+                        Liq_DebitCred_1_2 = liqIE.Liq_DebitCred_1_2,
+                        Liq_DebitCred_2_1 = liqIE.Liq_DebitCred_2_1,
+                        Liq_DebitCred_2_2 = liqIE.Liq_DebitCred_2_2,
+                        Liq_InterRate_1_1 = liqIE.Liq_InterRate_1_1,
+                        Liq_InterRate_1_2 = liqIE.Liq_InterRate_1_2,
+                        Liq_InterRate_2_1 = liqIE.Liq_InterRate_2_1,
+                        Liq_InterRate_2_2 = liqIE.Liq_InterRate_2_2
+                    };
 
+                    liqInterEntity.Add(liqIETemp);
+                }
+
+                var accountInfo = _context.DMAccount.Where(x => x.Account_ID == dtl.d.ExpDtl_Account).Single();
+                int liqFlag = 0;
+                if(liqCashBreakdown.Count != 0)
+                {
+                    liqFlag = 1;
+                }
+                if(liqInterEntity.Count != 0)
+                {
+                    liqFlag = 2;
+                }
                 LiquidationDetailsViewModel liqDtl = new LiquidationDetailsViewModel()
                 {
                     EntryDetailsID = dtl.d.ExpDtl_ID,
@@ -3840,8 +3884,9 @@ namespace ExpenseProcessingSystem.Services
                     gBaseRemarksDetails = remarksDtl,
                     cashBreakdown = cashBreakdown,
                     liqCashBreakdown = liqCashBreakdown,
+                    liqInterEntity = liqInterEntity,
                     modalInputFlag = (cashBreakdown == null || cashBreakdown.Count == 0) ? 0 : 1,
-                    liqInputFlag = (liqCashBreakdown == null || liqCashBreakdown.Count == 0) ? 0 : 1
+                    liqInputFlag = liqFlag
                 };
                 liqList.Add(liqDtl);
             }
@@ -3873,21 +3918,58 @@ namespace ExpenseProcessingSystem.Services
         //Add liquidation details
         public int addLiquidationDetail(LiquidationViewModel vm, int userid, int count)
         {
+            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
             LiquidationCashBreakdownModel model = new LiquidationCashBreakdownModel();
             foreach (var i in vm.LiquidationDetails)
             {
                 ExpenseEntryDetailModel dtlModel = _context.ExpenseEntryDetails.Where(x => x.ExpDtl_ID == i.EntryDetailsID).FirstOrDefault();
-                foreach (var j in i.liqCashBreakdown)
+
+                if(i.ccyAbbrev == xelem.Element("CURRENCY_PHP").Value)
                 {
-                    _context.LiquidationCashBreakdown.Add(new LiquidationCashBreakdownModel
+                    foreach (var j in i.liqCashBreakdown)
                     {
-                        ExpenseEntryDetailModel = dtlModel,
-                        LiqCashBreak_Denimination = j.cashDenimination,
-                        LiqCashBreak_NoPcs = j.cashNoPC,
-                        LiqCashBreak_Amount = j.cashAmount
-                    });
-                    _context.SaveChanges();
+                        _context.LiquidationCashBreakdown.Add(new LiquidationCashBreakdownModel
+                        {
+                            ExpenseEntryDetailModel = dtlModel,
+                            LiqCashBreak_Denomination = j.cashDenomination,
+                            LiqCashBreak_NoPcs = j.cashNoPC,
+                            LiqCashBreak_Amount = j.cashAmount
+                        });
+                        _context.SaveChanges();
+                    }
                 }
+                else
+                {
+                    foreach (var j in i.liqInterEntity)
+                    {
+                        _context.LiquidationInterEntity.Add(new LiquidationInterEntityModel
+                        {
+                            ExpenseEntryDetailModel = dtlModel,
+                            Liq_DebitCred_1_1 = j.Liq_DebitCred_1_1,
+                            Liq_AccountID_1_1 = j.Liq_AccountID_1_1,
+                            Liq_InterRate_1_1 = j.Liq_InterRate_1_1,
+                            Liq_CCY_1_1 = j.Liq_CCY_1_1,
+                            Liq_Amount_1_1 = j.Liq_Amount_1_1,
+                            Liq_DebitCred_1_2 = j.Liq_DebitCred_1_2,
+                            Liq_AccountID_1_2 = j.Liq_AccountID_1_2,
+                            Liq_InterRate_1_2 = j.Liq_InterRate_1_2,
+                            Liq_CCY_1_2 = j.Liq_CCY_1_2,
+                            Liq_Amount_1_2 = j.Liq_Amount_1_2,
+                            Liq_DebitCred_2_1 = j.Liq_DebitCred_2_1,
+                            Liq_AccountID_2_1 = j.Liq_AccountID_2_1,
+                            Liq_InterRate_2_1 = j.Liq_InterRate_2_1,
+                            Liq_CCY_2_1 = j.Liq_CCY_2_1,
+                            Liq_Amount_2_1 = j.Liq_Amount_2_1,
+                            Liq_DebitCred_2_2 = j.Liq_DebitCred_2_2,
+                            Liq_AccountID_2_2 = j.Liq_AccountID_2_2,
+                            Liq_InterRate_2_2 = j.Liq_InterRate_2_2,
+                            Liq_CCY_2_2 = j.Liq_CCY_2_2,
+                            Liq_Amount_2_2 = j.Liq_Amount_2_2
+                        });
+                        _context.SaveChanges();
+                    }
+                }
+                
             }
 
             ExpenseEntryModel expenseModel = _context.ExpenseEntry.Where(x => x.Expense_ID == vm.entryID).FirstOrDefault();
@@ -3942,6 +4024,12 @@ namespace ExpenseProcessingSystem.Services
                     .Where(x => x.ExpenseEntryDetailModel.ExpDtl_ID == i.ExpDtl_ID));
             }
 
+            foreach (var i in entryDtl)
+            {
+                _context.LiquidationInterEntity.RemoveRange(_context.LiquidationInterEntity
+                    .Where(x => x.ExpenseEntryDetailModel.ExpDtl_ID == i.ExpDtl_ID));
+            }
+
             _context.LiquidationEntryDetails.RemoveRange(_context.LiquidationEntryDetails
                 .Where(x => x.ExpenseEntryModel.Expense_ID == entryID));
 
@@ -3968,7 +4056,7 @@ namespace ExpenseProcessingSystem.Services
         public bool postCV(int expID)
         {
             var expenseDetails = getExpense(expID);
-
+            List<TblCm10> stuff = new List<TblCm10>();
             foreach (var item in expenseDetails.EntryCV)
             {
                 gbaseContainer tempGbase = new gbaseContainer();
@@ -3999,28 +4087,170 @@ namespace ExpenseProcessingSystem.Services
                 tempGbase.entries.Add(credit);
                 tempGbase.entries.Add(debit);
 
-                InsertGbaseEntry(tempGbase);
+                stuff.Add(InsertGbaseEntry(tempGbase, expID));
 
                 if (item.fbt)
                 {
                     tempGbase.entries = new List<entryContainer>();
 
-                    //var fbt = getAccount()
+                    //((ExpenseAmount*.50)/.65)*.35
+                    string fbt = getFbtFormula(getAccount(item.account).Account_FBT_MasterID);
 
+                    string equation = fbt.Replace("ExpenseAmount", item.debitGross.ToString());
+                    double fbtAmount = Math.Round(Convert.ToDouble(new DataTable().Compute(equation, null)),2);
+                    Console.WriteLine(equation);
+                    credit.amount = fbtAmount;
+                    debit.amount = fbtAmount;
 
-                    credit.amount = Convert.ToDouble(new DataTable().Compute("(3+3)*2+1", null));
-                    debit.amount = Convert.ToDouble(new DataTable().Compute("(3+3)*2+1", null));
+                    tempGbase.entries.Add(credit);
+                    tempGbase.entries.Add(debit);
+                    stuff.Add(InsertGbaseEntry(tempGbase, expID));
                 }
             }
 
             _GOContext.SaveChanges();
+            _context.SaveChanges();
+
+            foreach (var item in stuff)
+            {
+                Console.WriteLine("======> this is the new ID : " + item.Id);
+            }
+            return true;
+        }
+        public bool postLiq_SS(int expID)
+        {
+            var liquidationDetails = getExpenseToLiqudate(expID);
+
+            foreach (var item in liquidationDetails.LiquidationDetails)
+            {
+                double totalAmount = 0;
+                if (item.liqCashBreakdown.Count() != 0)
+                {
+                    gbaseContainer tempGbase = new gbaseContainer();
+
+                    tempGbase.valDate = liquidationDetails.LiqEntryDetails.Liq_Created_Date.Date;
+                    tempGbase.remarks = "S" + item.GBaseRemarks;
+                    tempGbase.maker = liquidationDetails.LiqEntryDetails.Liq_Created_UserID;
+                    tempGbase.approver = liquidationDetails.LiqEntryDetails.Liq_Approver;
+
+                    foreach (var i in item.liqCashBreakdown)
+                    {
+                        totalAmount += i.cashAmount;
+                    }
+                    tempGbase.entries.Add(new entryContainer {
+                        type = "D",
+                        ccy = item.ccyID,
+                        amount = totalAmount,
+                        account = item.accountID, //Change in the future
+                    });
+
+                    tempGbase.entries.Add(new entryContainer
+                    {
+                        type = "C",
+                        ccy = item.ccyID,
+                        amount = totalAmount,
+                        account = item.accountID,
+                    });
+                    InsertGbaseEntry(tempGbase, expID);
+                }
+                else if (item.liqInterEntity.Count() != 0)
+                {
+                    foreach(var i in item.liqInterEntity)
+                    {
+                        gbaseContainer tempGbase = new gbaseContainer();
+
+                        tempGbase.valDate = liquidationDetails.LiqEntryDetails.Liq_Created_Date.Date;
+                        tempGbase.remarks = "S" + item.GBaseRemarks;
+                        tempGbase.maker = liquidationDetails.LiqEntryDetails.Liq_Created_UserID;
+                        tempGbase.approver = liquidationDetails.LiqEntryDetails.Liq_Approver;
+
+                        tempGbase.entries.Add(new entryContainer
+                        {
+                            type = i.Liq_DebitCred_1_1,
+                            ccy = getCurrencyID(i.Liq_CCY_1_1),
+                            amount = i.Liq_Amount_1_1,
+                            account = getAccountID(i.Liq_AccountID_1_1),//Change in the future
+                            interate = i.Liq_InterRate_1_1
+                        });
+
+                        double amount = i.Liq_Amount_1_2;
+                        string contraCcy = "";
+                        string ccy = i.Liq_CCY_1_2;
+
+                        if (i.Liq_CCY_1_1 != i.Liq_CCY_1_2)
+                        {
+                            amount = i.Liq_Amount_1_1;
+                            ccy = i.Liq_CCY_1_1;
+                            contraCcy = i.Liq_CCY_1_2;
+                        }
+                        tempGbase.entries.Add(new entryContainer
+                        {
+                            type = i.Liq_DebitCred_1_2,
+                            ccy = getCurrencyID(ccy),
+                            amount = amount,
+                            account = getAccountID(i.Liq_AccountID_1_2),
+                            interate = i.Liq_InterRate_1_2,
+                            contraCcy = getCurrencyID(contraCcy)
+                        });
+
+                        if(i.Liq_Amount_2_1 > 0)
+                        {
+                            tempGbase.entries.Add(new entryContainer
+                            {
+                                type = i.Liq_DebitCred_2_1,
+                                ccy = getCurrencyID(i.Liq_CCY_2_1),
+                                amount = i.Liq_Amount_2_1,
+                                account = getAccountID(i.Liq_AccountID_2_1),
+                                interate = i.Liq_InterRate_2_1
+                            });
+
+                            amount = i.Liq_Amount_2_2;
+                            contraCcy = "";
+                            ccy = i.Liq_CCY_2_2;
+
+                            if (i.Liq_CCY_2_1 != i.Liq_CCY_2_2)
+                            {
+                                amount = i.Liq_Amount_2_1;
+                                ccy = i.Liq_CCY_2_1;
+                                contraCcy = i.Liq_CCY_2_2;
+                            }
+                            tempGbase.entries.Add(new entryContainer
+                            {
+                                type = i.Liq_DebitCred_2_2,
+                                ccy = getCurrencyID(ccy),
+                                amount = amount,
+                                account = getAccountID(i.Liq_AccountID_2_2),
+                                interate = i.Liq_InterRate_2_2,
+                                contraCcy = getCurrencyID(contraCcy)
+                            });
+                        }
+
+                        InsertGbaseEntry(tempGbase, expID);
+                    }
+                }
+
+                //if (item.fbt)
+                //{
+                //    tempGbase.entries = new List<entryContainer>();
+
+                //    //var fbt = getAccount()
+
+
+                //    credit.amount = Convert.ToDouble(new DataTable().Compute("(3+3)*2+1", null));
+                //    debit.amount = Convert.ToDouble(new DataTable().Compute("(3+3)*2+1", null));
+                //}
+            }
+
+            _GOContext.SaveChanges();
+            _context.SaveChanges();
+
             return true;
         }
         ///==============[Post Entries]==============
         public bool postCV(int expID, string command)
         {
             var expenseDetails = getExpense(expID);
-
+            List<TblCm10> stuff = new List<TblCm10>();
             foreach (var item in expenseDetails.EntryCV)
             {
                 gbaseContainer tempGbase = new gbaseContainer();
@@ -4050,28 +4280,40 @@ namespace ExpenseProcessingSystem.Services
 
                 tempGbase.entries.Add(credit);
                 tempGbase.entries.Add(debit);
-                tempGbase.entries = tempGbase.entries.OrderByDescending(x=> x.type == "D").ToList();
-                InsertGbaseEntry(tempGbase);
+
+                stuff.Add(InsertGbaseEntry(tempGbase, expID));
 
                 if (item.fbt)
                 {
                     tempGbase.entries = new List<entryContainer>();
 
-                    //var fbt = getAccount()
+                    //((ExpenseAmount*.50)/.65)*.35
+                    string fbt = getFbtFormula(getAccount(item.account).Account_FBT_MasterID);
 
+                    string equation = fbt.Replace("ExpenseAmount", item.debitGross.ToString());
+                    double fbtAmount = Math.Round(Convert.ToDouble(new DataTable().Compute(equation, null)), 2);
+                    Console.WriteLine("-=-=-=-=-=->" + equation);
+                    credit.amount = fbtAmount;
+                    debit.amount = fbtAmount;
 
-                    credit.amount = Convert.ToDouble(new DataTable().Compute("(3+3)*2+1", null));
-                    debit.amount = Convert.ToDouble(new DataTable().Compute("(3+3)*2+1", null));
+                    tempGbase.entries.Add(credit);
+                    tempGbase.entries.Add(debit);
+                    stuff.Add(InsertGbaseEntry(tempGbase, expID));
                 }
             }
-
+            
             _GOContext.SaveChanges();
+
+            foreach(var item in stuff)
+            {
+                Console.WriteLine("======> this is the new ID : " + item.Id);
+            }
             return true;
         }
         public bool postNC(int expID, string command)
         {
             var expenseDetails = getExpenseNC(expID);
-
+            TblCm10 stuff = new TblCm10();
             foreach (var dtls in expenseDetails.EntryNC.ExpenseEntryNCDtls)
             {
                 gbaseContainer tempGbase = new gbaseContainer();
@@ -4110,18 +4352,21 @@ namespace ExpenseProcessingSystem.Services
 
                 tempGbase.entries = tempGbase.entries.OrderByDescending(x => x.type == "D").ToList();
                 //insert
-                InsertGbaseEntry(tempGbase);
+                stuff = InsertGbaseEntry(tempGbase, expID);
             }
 
             _GOContext.SaveChanges();
+
+            Console.WriteLine("======> " + stuff.Id);
+            Console.WriteLine("===========> This is the new ID:" + stuff.Id);
             return true;
         }
         ///============[End Post Entries]============
 
         ///==============[Begin Gbase Entry Section]================
-        private bool InsertGbaseEntry(gbaseContainer containerModel)
+        private TblCm10 InsertGbaseEntry(gbaseContainer containerModel, int expenseID)
         {
-            TblCm10 goModel = new TblCm10();
+             TblCm10 goModel = new TblCm10();
 
             //goModel.Id = -1;
             goModel.SystemName = "EXPRESS";
@@ -4149,17 +4394,17 @@ namespace ExpenseProcessingSystem.Services
                 goModel.Entry11ActType = entry11Account.Account_No.Substring(0, 3);
                 goModel.Entry11ActNo = entry11Account.Account_No.Substring(Math.Max(0, entry11Account.Account_No.Length - 6));
                 goModel.Entry11ExchRate = containerModel.entries[0].interate.ToString();
-                goModel.Entry11ExchCcy = containerModel.entries[0].interCcy.ToString();
-                goModel.Entry11Fund = "";//Replace with proper fund default.
+                goModel.Entry11ExchCcy = (containerModel.entries[0].contraCcy > 0) ? GetCurrencyAbbrv(containerModel.entries[0].contraCcy) : "";
+                goModel.Entry11Fund = (entry11Account.Account_Fund == true) ? "O" : "";//Replace with proper fund default.
                 if(containerModel.entries[0].chkNo != null)
                 {
                     goModel.Entry11CheckNo = containerModel.entries[0].chkNo;
                 }
                 goModel.Entry11Available = "";//Replace with proper available default.
                 goModel.Entry11Details = "";//Replace with proper details default.
-                goModel.Entry11Entity = "";//Replace with proper entity default.
-                goModel.Entry11Division = "";//Replace with proper division default.
-                goModel.Entry11InterRate = "";//Replace with proper interate default.
+                goModel.Entry11Entity = "10";//Replace with proper entity default.
+                goModel.Entry11Division = entry11Account.Account_Div;//Replace with proper division default.
+                goModel.Entry11InterRate = (containerModel.entries[0].interate > 0) ? containerModel.entries[0].interate.ToString() : "";//Replace with proper interate default.
                 goModel.Entry11InterAmt = "";//Replace with proper interamt default.
 
                 if (containerModel.entries.Count > 1) {
@@ -4173,17 +4418,17 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry12ActType = entry12Account.Account_No.Substring(0, 3);
                     goModel.Entry12ActNo = entry12Account.Account_No.Substring(Math.Max(0, entry12Account.Account_No.Length - 6));
                     goModel.Entry12ExchRate = containerModel.entries[1].interate.ToString();
-                    goModel.Entry12ExchCcy = containerModel.entries[1].interCcy.ToString();
-                    goModel.Entry12Fund = "";//Replace with proper fund default.
+                    goModel.Entry12ExchCcy = (containerModel.entries[1].contraCcy > 0) ? GetCurrencyAbbrv(containerModel.entries[1].contraCcy) : "";
+                    goModel.Entry12Fund = (entry12Account.Account_Fund == true) ? "O" : "";//Replace with proper fund default.
                     if (containerModel.entries[1].chkNo != null)
                     {
                         goModel.Entry12CheckNo = containerModel.entries[1].chkNo;
                     }
                     goModel.Entry12Available = "";//Replace with proper available default.
                     goModel.Entry12Details = "";//Replace with proper details default.
-                    goModel.Entry12Entity = "";//Replace with proper entity default.
-                    goModel.Entry12Division = "";//Replace with proper division default.
-                    goModel.Entry12InterRate = "";//Replace with proper interate default.
+                    goModel.Entry12Entity = "10";//Replace with proper entity default.
+                    goModel.Entry12Division = entry11Account.Account_Div;//Replace with proper division default.
+                    goModel.Entry12InterRate = (containerModel.entries[1].interate > 0) ? containerModel.entries[1].interate.ToString() : "";//Replace with proper interate default.
                     goModel.Entry12InterAmt = "";//Replace with proper interamt default.
                 }
                 if (containerModel.entries.Count > 2)
@@ -4198,17 +4443,17 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry21ActType = entry21Account.Account_No.Substring(0, 3);
                     goModel.Entry21ActNo = entry21Account.Account_No.Substring(Math.Max(0, entry21Account.Account_No.Length - 6));
                     goModel.Entry21ExchRate = containerModel.entries[2].interate.ToString();
-                    goModel.Entry21ExchCcy = containerModel.entries[2].interCcy.ToString();
-                    goModel.Entry21Fund = "";//Replace with proper fund default.
+                    goModel.Entry21ExchCcy = (containerModel.entries[2].contraCcy > 0) ? GetCurrencyAbbrv(containerModel.entries[2].contraCcy) : "";
+                    goModel.Entry21Fund = (entry21Account.Account_Fund == true) ? "O" : "";//Replace with proper fund default.
                     if (containerModel.entries[2].chkNo != null)
                     {
                         goModel.Entry21CheckNo = containerModel.entries[2].chkNo;
                     }
                     goModel.Entry21Available = "";//Replace with proper available default.
                     goModel.Entry21Details = "";//Replace with proper details default.
-                    goModel.Entry21Entity = "";//Replace with proper entity default.
-                    goModel.Entry21Division = "";//Replace with proper division default.
-                    goModel.Entry21InterRate = "";//Replace with proper interate default.
+                    goModel.Entry21Entity = "10";//Replace with proper entity default.
+                    goModel.Entry21Division = entry11Account.Account_Div;//Replace with proper division default.
+                    goModel.Entry21InterRate = (containerModel.entries[2].interate > 0) ? containerModel.entries[2].interate.ToString() : "";//Replace with proper interate default.
                     goModel.Entry21InterAmt = "";//Replace with proper interamt default.
                 }
                 if (containerModel.entries.Count > 3)
@@ -4223,17 +4468,17 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry22ActType = entry22Account.Account_No.Substring(0, 3);
                     goModel.Entry22ActNo = entry22Account.Account_No.Substring(Math.Max(0, entry22Account.Account_No.Length - 6));
                     goModel.Entry22ExchRate = containerModel.entries[3].interate.ToString();
-                    goModel.Entry22ExchCcy = containerModel.entries[3].interCcy.ToString();
-                    goModel.Entry22Fund = "";//Replace with proper fund default.
+                    goModel.Entry22ExchCcy = (containerModel.entries[3].contraCcy > 0) ? GetCurrencyAbbrv(containerModel.entries[3].contraCcy) : "";
+                    goModel.Entry22Fund = (entry22Account.Account_Fund == true) ? "O" : "";//Replace with proper fund default.
                     if (containerModel.entries[3].chkNo != null)
                     {
                         goModel.Entry22CheckNo = containerModel.entries[3].chkNo;
                     }
                     goModel.Entry22Available = "";//Replace with proper available default.
                     goModel.Entry22Details = "";//Replace with proper details default.
-                    goModel.Entry22Entity = "";//Replace with proper entity default.
-                    goModel.Entry22Division = "";//Replace with proper division default.
-                    goModel.Entry22InterRate = "";//Replace with proper interate default.
+                    goModel.Entry22Entity = "10";//Replace with proper entity default.
+                    goModel.Entry22Division = entry11Account.Account_Div;//Replace with proper division default.
+                    goModel.Entry22InterRate = (containerModel.entries[3].interate > 0) ? containerModel.entries[3].interate.ToString() : "";//Replace with proper interate default.
                     goModel.Entry22InterAmt = "";//Replace with proper interamt default.
                 }
                 if (containerModel.entries.Count > 4)
@@ -4248,17 +4493,17 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry31ActType = entry31Account.Account_No.Substring(0, 3);
                     goModel.Entry31ActNo = entry31Account.Account_No.Substring(Math.Max(0, entry31Account.Account_No.Length - 6));
                     goModel.Entry31ExchRate = containerModel.entries[4].interate.ToString();
-                    goModel.Entry31ExchCcy = containerModel.entries[4].interCcy.ToString();
-                    goModel.Entry31Fund = "";//Replace with proper fund default.
+                    goModel.Entry31ExchCcy = (containerModel.entries[4].contraCcy > 0) ? GetCurrencyAbbrv(containerModel.entries[4].contraCcy) : "";
+                    goModel.Entry31Fund = (entry31Account.Account_Fund == true) ? "O" : "";//Replace with proper fund default.
                     if (containerModel.entries[4].chkNo != null)
                     {
                         goModel.Entry31CheckNo = containerModel.entries[4].chkNo;
                     }
                     goModel.Entry31Available = "";//Replace with proper available default.
                     goModel.Entry31Details = "";//Replace with proper details default.
-                    goModel.Entry31Entity = "";//Replace with proper entity default.
-                    goModel.Entry31Division = "";//Replace with proper division default.
-                    goModel.Entry31InterRate = "";//Replace with proper interate default.
+                    goModel.Entry31Entity = "10";//Replace with proper entity default.
+                    goModel.Entry31Division = entry11Account.Account_Div;//Replace with proper division default.
+                    goModel.Entry31InterRate = (containerModel.entries[4].interate > 0) ? containerModel.entries[4].interate.ToString() : "";//Replace with proper interate default.
                     goModel.Entry31InterAmt = "";//Replace with proper interamt default.
                 }
                 if (containerModel.entries.Count > 5)
@@ -4273,17 +4518,17 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry32ActType = entry32Account.Account_No.Substring(0, 3);
                     goModel.Entry32ActNo = entry32Account.Account_No.Substring(Math.Max(0, entry32Account.Account_No.Length - 6));
                     goModel.Entry32ExchRate = containerModel.entries[5].interate.ToString();
-                    goModel.Entry32ExchCcy = containerModel.entries[5].interCcy.ToString();
-                    goModel.Entry32Fund = "";//Replace with proper fund default.
+                    goModel.Entry32ExchCcy = (containerModel.entries[5].contraCcy > 0) ? GetCurrencyAbbrv(containerModel.entries[5].contraCcy) : "";
+                    goModel.Entry32Fund = (entry32Account.Account_Fund == true) ? "O" : "";//Replace with proper fund default.
                     if (containerModel.entries[5].chkNo != null)
                     {
                         goModel.Entry32CheckNo = containerModel.entries[5].chkNo;
                     }
                     goModel.Entry32Available = "";//Replace with proper available default.
                     goModel.Entry32Details = "";//Replace with proper details default.
-                    goModel.Entry32Entity = "";//Replace with proper entity default.
-                    goModel.Entry32Division = "";//Replace with proper division default.
-                    goModel.Entry32InterRate = "";//Replace with proper interate default.
+                    goModel.Entry32Entity = "10";//Replace with proper entity default.
+                    goModel.Entry32Division = entry11Account.Account_Div;//Replace with proper division default.
+                    goModel.Entry32InterRate = (containerModel.entries[5].interate > 0) ? containerModel.entries[5].interate.ToString() : "";//Replace with proper interate default.
                     goModel.Entry32InterAmt = "";//Replace with proper interamt default.
                 }
                 if (containerModel.entries.Count > 6)
@@ -4298,17 +4543,17 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry41ActType = entry41Account.Account_No.Substring(0, 3);
                     goModel.Entry41ActNo = entry41Account.Account_No.Substring(Math.Max(0, entry41Account.Account_No.Length - 6));
                     goModel.Entry41ExchRate = containerModel.entries[6].interate.ToString();
-                    goModel.Entry41ExchCcy = containerModel.entries[6].interCcy.ToString();
-                    goModel.Entry41Fund = "";//Replace with proper fund default.
+                    goModel.Entry41ExchCcy = (containerModel.entries[6].contraCcy > 0) ? GetCurrencyAbbrv(containerModel.entries[6].contraCcy) : "";
+                    goModel.Entry41Fund = (entry41Account.Account_Fund == true) ? "O" : "";//Replace with proper fund default.
                     if (containerModel.entries[6].chkNo != null)
                     {
                         goModel.Entry41CheckNo = containerModel.entries[6].chkNo;
                     }
                     goModel.Entry41Available = "";//Replace with proper available default.
                     goModel.Entry41Details = "";//Replace with proper details default.
-                    goModel.Entry41Entity = "";//Replace with proper entity default.
-                    goModel.Entry41Division = "";//Replace with proper division default.
-                    goModel.Entry41InterRate = "";//Replace with proper interate default.
+                    goModel.Entry41Entity = "10";//Replace with proper entity default.
+                    goModel.Entry41Division = entry11Account.Account_Div;//Replace with proper division default.
+                    goModel.Entry41InterRate = (containerModel.entries[6].interate > 0) ? containerModel.entries[6].interate.ToString() : "";//Replace with proper interate default.
                     goModel.Entry41InterAmt = "";//Replace with proper interamt default.
                 }
                 if (containerModel.entries.Count > 7)
@@ -4323,28 +4568,30 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry42ActType = entry42Account.Account_No.Substring(0, 3);
                     goModel.Entry42ActNo = entry42Account.Account_No.Substring(Math.Max(0, entry42Account.Account_No.Length - 6));
                     goModel.Entry42ExchRate = containerModel.entries[7].interate.ToString();
-                    goModel.Entry42ExchCcy = containerModel.entries[7].interCcy.ToString();
-                    goModel.Entry42Fund = "";//Replace with proper fund default.
+                    goModel.Entry42ExchCcy = (containerModel.entries[7].contraCcy > 0) ? GetCurrencyAbbrv(containerModel.entries[7].contraCcy) : "";
+                    goModel.Entry42Fund = (entry42Account.Account_Fund == true) ? "O" : "";//Replace with proper fund default.
                     if (containerModel.entries[7].chkNo != null)
                     {
                         goModel.Entry42CheckNo = containerModel.entries[7].chkNo;
                     }
                     goModel.Entry42Available = "";//Replace with proper available default.
                     goModel.Entry42Details = "";//Replace with proper details default.
-                    goModel.Entry42Entity = "";//Replace with proper entity default.
-                    goModel.Entry42Division = "";//Replace with proper division default.
-                    goModel.Entry42InterRate = "";//Replace with proper interate default.
+                    goModel.Entry42Entity = "10";//Replace with proper entity default.
+                    goModel.Entry42Division = entry11Account.Account_Div;//Replace with proper division default.
+                    goModel.Entry42InterRate = (containerModel.entries[7].interate > 0) ? containerModel.entries[7].interate.ToString() : "";//Replace with proper interate default.
                     goModel.Entry42InterAmt = "";//Replace with proper interamt default.
                 }
             }
             else
             {
-                return false;
+                return goModel;
             }
 
-            var query = _GOContext.Add(goModel);
+            _GOContext.TblCm10.Add(goModel);
+           
+            _context.GOExpressHist.Add(convertTblCm10ToGOExHist(goModel, _context.ExpenseEntry.Where(x => x.Expense_ID == expenseID).FirstOrDefault()));
 
-            return true;
+            return goModel;
         }
         ///===============[End Gbase Entry Section]=================
 
@@ -4353,6 +4600,15 @@ namespace ExpenseProcessingSystem.Services
         public int getFbt(int id)
         {
             return _context.DMFBT.FirstOrDefault(x=>x.FBT_MasterID==id && x.FBT_isActive == true && x.FBT_isDeleted == false).FBT_ID;
+        }
+        public string getFbtFormula(int id)
+        {
+            return _context.DMFBT.FirstOrDefault(x=>x.FBT_ID == id).FBT_Formula;
+        }
+        //get currency
+        public DMCurrencyModel getCurrency(int id)
+        {
+            return _context.DMCurrency.FirstOrDefault(x => x.Curr_ID == id);
         }
         //get vendor
         public DMVendorModel getVendor(int id)
@@ -4462,6 +4718,16 @@ namespace ExpenseProcessingSystem.Services
 
             return vendor.Vendor_Name;
         }
+        public int getAccountID(string accountNo)
+        {
+            return _context.DMAccount.Where(x => x.Account_No.Replace("-", "") == accountNo.Replace("-", "").Substring(0, 12) && x.Account_isActive == true 
+            && x.Account_isDeleted == false).FirstOrDefault().Account_ID;
+        }
+        public int getCurrencyID(string ccyAbbr)
+        {
+            return _context.DMCurrency.Where(x => x.Curr_CCY_ABBR == ccyAbbr && x.Curr_isActive == true
+            && x.Curr_isDeleted == false).DefaultIfEmpty(new DMCurrencyModel { Curr_ID = 0 }).FirstOrDefault().Curr_ID;
+        }
         //retrieve vendor list
         public List<SelectList> getEntrySystemVals()
         {
@@ -4518,6 +4784,187 @@ namespace ExpenseProcessingSystem.Services
 
             return accDetails;
         }
+        //retrieve latest Express transation no. (transaction type-year-number)
+        //public string getExpTransNo()
+        //{
+
+        //}
+
+
+        public GOExpressHistModel convertTblCm10ToGOExHist(TblCm10 tblcm10, ExpenseEntryModel expense)
+        {
+            return new GOExpressHistModel {
+                GOExpHist_SystemName = tblcm10.SystemName,
+                GOExpHist_Groupcode = tblcm10.Groupcode,
+                GOExpHist_Branchno = tblcm10.Branchno,
+                GOExpHist_OpeKind = tblcm10.OpeKind,
+                GOExpHist_AutoApproved = tblcm10.AutoApproved,
+                GOExpHist_WarningOverride = tblcm10.WarningOverride,
+                GOExpHist_CcyFormat = tblcm10.CcyFormat,
+                GOExpHist_OpeBranch = tblcm10.OpeBranch,
+                GOExpHist_ValueDate = tblcm10.ValueDate,
+                GOExpHist_ReferenceType = tblcm10.ReferenceType,
+                GOExpHist_ReferenceNo = tblcm10.ReferenceNo,
+                GOExpHist_Comment = tblcm10.Comment,
+                GOExpHist_Section = tblcm10.Section,
+                GOExpHist_Remarks = tblcm10.Remarks,
+                GOExpHist_Memo = tblcm10.Memo,
+                GOExpHist_SchemeNo = tblcm10.SchemeNo,
+                GOExpHist_Entry11Type = tblcm10.Entry11Type,
+                GOExpHist_Entry11IbfCode = tblcm10.Entry11IbfCode,
+                GOExpHist_Entry11Ccy = tblcm10.Entry11Ccy,
+                GOExpHist_Entry11Amt = tblcm10.Entry11Amt,
+                GOExpHist_Entry11Cust = tblcm10.Entry11Cust,
+                GOExpHist_Entry11Actcde = tblcm10.Entry11Actcde,
+                GOExpHist_Entry11ActType = tblcm10.Entry11ActType,
+                GOExpHist_Entry11ActNo = tblcm10.Entry11ActNo,
+                GOExpHist_Entry11ExchRate = tblcm10.Entry11ExchRate,
+                GOExpHist_Entry11ExchCcy = tblcm10.Entry11ExchCcy,
+                GOExpHist_Entry11Fund = tblcm10.Entry11Fund,
+                GOExpHist_Entry11CheckNo = tblcm10.Entry11CheckNo,
+                GOExpHist_Entry11Available = tblcm10.Entry11Available,
+                GOExpHist_Entry11AdvcPrnt = tblcm10.Entry11AdvcPrnt,
+                GOExpHist_Entry11Details = tblcm10.Entry11Details,
+                GOExpHist_Entry11Entity = tblcm10.Entry11Entity,
+                GOExpHist_Entry11Division = tblcm10.Entry11Division,
+                GOExpHist_Entry11InterAmt = tblcm10.Entry11InterAmt,
+                GOExpHist_Entry11InterRate = tblcm10.Entry11InterRate,
+                GOExpHist_Entry12Type = tblcm10.Entry12Type,
+                GOExpHist_Entry12IbfCode = tblcm10.Entry12IbfCode,
+                GOExpHist_Entry12Ccy = tblcm10.Entry12Ccy,
+                GOExpHist_Entry12Amt = tblcm10.Entry12Amt,
+                GOExpHist_Entry12Cust = tblcm10.Entry12Cust,
+                GOExpHist_Entry12Actcde = tblcm10.Entry12Actcde,
+                GOExpHist_Entry12ActType = tblcm10.Entry12ActType,
+                GOExpHist_Entry12ActNo = tblcm10.Entry12ActNo,
+                GOExpHist_Entry12ExchRate = tblcm10.Entry12ExchRate,
+                GOExpHist_Entry12ExchCcy = tblcm10.Entry12ExchCcy,
+                GOExpHist_Entry12Fund = tblcm10.Entry12Fund,
+                GOExpHist_Entry12CheckNo = tblcm10.Entry12CheckNo,
+                GOExpHist_Entry12Available = tblcm10.Entry12Available,
+                GOExpHist_Entry12AdvcPrnt = tblcm10.Entry12AdvcPrnt,
+                GOExpHist_Entry12Details = tblcm10.Entry12Details,
+                GOExpHist_Entry12Entity = tblcm10.Entry12Entity,
+                GOExpHist_Entry12Division = tblcm10.Entry12Division,
+                GOExpHist_Entry12InterAmt = tblcm10.Entry12InterAmt,
+                GOExpHist_Entry12InterRate = tblcm10.Entry12InterRate,
+                GOExpHist_Entry21Type = tblcm10.Entry21Type,
+                GOExpHist_Entry21IbfCode = tblcm10.Entry21IbfCode,
+                GOExpHist_Entry21Ccy = tblcm10.Entry21Ccy,
+                GOExpHist_Entry21Amt = tblcm10.Entry21Amt,
+                GOExpHist_Entry21Cust = tblcm10.Entry21Cust,
+                GOExpHist_Entry21Actcde = tblcm10.Entry21Actcde,
+                GOExpHist_Entry21ActType = tblcm10.Entry21ActType,
+                GOExpHist_Entry21ActNo = tblcm10.Entry21ActNo,
+                GOExpHist_Entry21ExchRate = tblcm10.Entry21ExchRate,
+                GOExpHist_Entry21ExchCcy = tblcm10.Entry21ExchCcy,
+                GOExpHist_Entry21Fund = tblcm10.Entry21Fund,
+                GOExpHist_Entry21CheckNo = tblcm10.Entry21CheckNo,
+                GOExpHist_Entry21Available = tblcm10.Entry21Available,
+                GOExpHist_Entry21AdvcPrnt = tblcm10.Entry21AdvcPrnt,
+                GOExpHist_Entry21Details = tblcm10.Entry21Details,
+                GOExpHist_Entry21Entity = tblcm10.Entry21Entity,
+                GOExpHist_Entry21Division = tblcm10.Entry21Division,
+                GOExpHist_Entry21InterAmt = tblcm10.Entry21InterAmt,
+                GOExpHist_Entry21InterRate = tblcm10.Entry21InterRate,
+                GOExpHist_Entry22Type = tblcm10.Entry22Type,
+                GOExpHist_Entry22IbfCode = tblcm10.Entry22IbfCode,
+                GOExpHist_Entry22Ccy = tblcm10.Entry22Ccy,
+                GOExpHist_Entry22Amt = tblcm10.Entry22Amt,
+                GOExpHist_Entry22Cust = tblcm10.Entry22Cust,
+                GOExpHist_Entry22Actcde = tblcm10.Entry22Actcde,
+                GOExpHist_Entry22ActType = tblcm10.Entry22ActType,
+                GOExpHist_Entry22ActNo = tblcm10.Entry22ActNo,
+                GOExpHist_Entry22ExchRate = tblcm10.Entry22ExchRate,
+                GOExpHist_Entry22ExchCcy = tblcm10.Entry22ExchCcy,
+                GOExpHist_Entry22Fund = tblcm10.Entry22Fund,
+                GOExpHist_Entry22CheckNo = tblcm10.Entry22CheckNo,
+                GOExpHist_Entry22Available = tblcm10.Entry22Available,
+                GOExpHist_Entry22AdvcPrnt = tblcm10.Entry22AdvcPrnt,
+                GOExpHist_Entry22Details = tblcm10.Entry22Details,
+                GOExpHist_Entry22Entity = tblcm10.Entry22Entity,
+                GOExpHist_Entry22Division = tblcm10.Entry22Division,
+                GOExpHist_Entry22InterAmt = tblcm10.Entry22InterAmt,
+                GOExpHist_Entry22InterRate = tblcm10.Entry22InterRate,
+                GOExpHist_Entry31Type = tblcm10.Entry31Type,
+                GOExpHist_Entry31IbfCode = tblcm10.Entry31IbfCode,
+                GOExpHist_Entry31Ccy = tblcm10.Entry31Ccy,
+                GOExpHist_Entry31Amt = tblcm10.Entry31Amt,
+                GOExpHist_Entry31Cust = tblcm10.Entry31Cust,
+                GOExpHist_Entry31Actcde = tblcm10.Entry31Actcde,
+                GOExpHist_Entry31ActType = tblcm10.Entry31ActType,
+                GOExpHist_Entry31ActNo = tblcm10.Entry31ActNo,
+                GOExpHist_Entry31ExchRate = tblcm10.Entry31ExchRate,
+                GOExpHist_Entry31ExchCcy = tblcm10.Entry31ExchCcy,
+                GOExpHist_Entry31Fund = tblcm10.Entry31Fund,
+                GOExpHist_Entry31CheckNo = tblcm10.Entry31CheckNo,
+                GOExpHist_Entry31Available = tblcm10.Entry31Available,
+                GOExpHist_Entry31AdvcPrnt = tblcm10.Entry31AdvcPrnt,
+                GOExpHist_Entry31Details = tblcm10.Entry31Details,
+                GOExpHist_Entry31Entity = tblcm10.Entry31Entity,
+                GOExpHist_Entry31Division = tblcm10.Entry31Division,
+                GOExpHist_Entry31InterAmt = tblcm10.Entry31InterAmt,
+                GOExpHist_Entry31InterRate = tblcm10.Entry31InterRate,
+                GOExpHist_Entry32Type = tblcm10.Entry32Type,
+                GOExpHist_Entry32IbfCode = tblcm10.Entry32IbfCode,
+                GOExpHist_Entry32Ccy = tblcm10.Entry32Ccy,
+                GOExpHist_Entry32Amt = tblcm10.Entry32Amt,
+                GOExpHist_Entry32Cust = tblcm10.Entry32Cust,
+                GOExpHist_Entry32Actcde = tblcm10.Entry32Actcde,
+                GOExpHist_Entry32ActType = tblcm10.Entry32ActType,
+                GOExpHist_Entry32ActNo = tblcm10.Entry32ActNo,
+                GOExpHist_Entry32ExchRate = tblcm10.Entry32ExchRate,
+                GOExpHist_Entry32ExchCcy = tblcm10.Entry32ExchCcy,
+                GOExpHist_Entry32Fund = tblcm10.Entry32Fund,
+                GOExpHist_Entry32CheckNo = tblcm10.Entry32CheckNo,
+                GOExpHist_Entry32Available = tblcm10.Entry32Available,
+                GOExpHist_Entry32AdvcPrnt = tblcm10.Entry32AdvcPrnt,
+                GOExpHist_Entry32Details = tblcm10.Entry32Details,
+                GOExpHist_Entry32Entity = tblcm10.Entry32Entity,
+                GOExpHist_Entry32Division = tblcm10.Entry32Division,
+                GOExpHist_Entry32InterAmt = tblcm10.Entry32InterAmt,
+                GOExpHist_Entry32InterRate = tblcm10.Entry32InterRate,
+                GOExpHist_Entry41Type = tblcm10.Entry41Type,
+                GOExpHist_Entry41IbfCode = tblcm10.Entry41IbfCode,
+                GOExpHist_Entry41Ccy = tblcm10.Entry41Ccy,
+                GOExpHist_Entry41Amt = tblcm10.Entry41Amt,
+                GOExpHist_Entry41Cust = tblcm10.Entry41Cust,
+                GOExpHist_Entry41Actcde = tblcm10.Entry41Actcde,
+                GOExpHist_Entry41ActType = tblcm10.Entry41ActType,
+                GOExpHist_Entry41ActNo = tblcm10.Entry41ActNo,
+                GOExpHist_Entry41ExchRate = tblcm10.Entry41ExchRate,
+                GOExpHist_Entry41ExchCcy = tblcm10.Entry41ExchCcy,
+                GOExpHist_Entry41Fund = tblcm10.Entry41Fund,
+                GOExpHist_Entry41CheckNo = tblcm10.Entry41CheckNo,
+                GOExpHist_Entry41Available = tblcm10.Entry41Available,
+                GOExpHist_Entry41AdvcPrnt = tblcm10.Entry41AdvcPrnt,
+                GOExpHist_Entry41Details = tblcm10.Entry41Details,
+                GOExpHist_Entry41Entity = tblcm10.Entry41Entity,
+                GOExpHist_Entry41Division = tblcm10.Entry41Division,
+                GOExpHist_Entry41InterAmt = tblcm10.Entry41InterAmt,
+                GOExpHist_Entry41InterRate = tblcm10.Entry41InterRate,
+                GOExpHist_Entry42Type = tblcm10.Entry42Type,
+                GOExpHist_Entry42IbfCode = tblcm10.Entry42IbfCode,
+                GOExpHist_Entry42Ccy = tblcm10.Entry42Ccy,
+                GOExpHist_Entry42Amt = tblcm10.Entry42Amt,
+                GOExpHist_Entry42Cust = tblcm10.Entry42Cust,
+                GOExpHist_Entry42Actcde = tblcm10.Entry42Actcde,
+                GOExpHist_Entry42ActType = tblcm10.Entry42ActType,
+                GOExpHist_Entry42ActNo = tblcm10.Entry42ActNo,
+                GOExpHist_Entry42ExchRate = tblcm10.Entry42ExchRate,
+                GOExpHist_Entry42ExchCcy = tblcm10.Entry42ExchCcy,
+                GOExpHist_Entry42Fund = tblcm10.Entry42Fund,
+                GOExpHist_Entry42CheckNo = tblcm10.Entry42CheckNo,
+                GOExpHist_Entry42Available = tblcm10.Entry42Available,
+                GOExpHist_Entry42AdvcPrnt = tblcm10.Entry42AdvcPrnt,
+                GOExpHist_Entry42Details = tblcm10.Entry42Details,
+                GOExpHist_Entry42Entity = tblcm10.Entry42Entity,
+                GOExpHist_Entry42Division = tblcm10.Entry42Division,
+                GOExpHist_Entry42InterAmt = tblcm10.Entry42InterAmt,
+                GOExpHist_Entry42InterRate = tblcm10.Entry42InterRate,
+                ExpenseEntryModel = expense
+            };
+        }
         ///========[End of Other Functions]============
     }
 
@@ -4543,7 +4990,7 @@ namespace ExpenseProcessingSystem.Services
         public int vendor { get; set; }
         public int account { get; set; }
         public double interate { get; set; }
-        public double interCcy { get; set; }
+        public int contraCcy { get; set; }
         public string chkNo { get; set; }
         public int dept { get; set; }
     }

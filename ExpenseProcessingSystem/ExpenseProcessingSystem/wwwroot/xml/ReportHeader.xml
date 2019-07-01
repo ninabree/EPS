@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 
-<!--How to call value to c#.
+<!--How to call value in c#.
 
-XElement xelem = XElement.Load("wwwroot/xml/ChangeableData.xml"); <- xml path
+XElement xelem = XElement.Load("wwwroot/xml/ReportHeader.xml"); <- xml path
 
 string value1 = xelem.Element("LOGO").Value
 string value2 = xelem.Element("NAME").Value

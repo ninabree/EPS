@@ -9,12 +9,21 @@ namespace ExpenseProcessingSystem.ViewModels
     {
         public int accountid { get; set; }
         public string account { get; set; }
-        public double amount { get; set; }
-        public bool fbt { get; set; }
-        public int ewtid { get; set; }
+        public double grossAmt { get; set; }
+    }
+
+    public class ewtAmtList
+    {
         public double ewt { get; set; }
-        public int vatid { get; set; }
-        public double vat { get; set; } 
+        public double ewtAmt { get; set; }
+    }
+
+    public class particulars
+    {
+        public string documentType { get; set; }
+        public string invoiceNo { get; set; }
+        public string description { get; set; }
+        public double amount { get; set; }
     }
 
     public class VoucherViewModelList
@@ -24,6 +33,9 @@ namespace ExpenseProcessingSystem.ViewModels
         public int payeeID { get; set; }
         public string payee { get; set; }
         public double amount { get; set; }
+        public double vat { get; set; }
+        public double gross { get; set; }
+        public double taxBase { get; set; }
         public string amountString { get; set; }
         public string checkNo { get; set; }
         public string voucherNo { get; set; }
@@ -33,9 +45,14 @@ namespace ExpenseProcessingSystem.ViewModels
         public string verifier_1 { get; set; }
         public string verifier_2 { get; set; }
         public string date { get; set; }
+        public bool isFbt { get; set; }
+        public List<particulars> particulars { get; set; }
+        public List<ewtAmtList> vatAmtList { get; set; }
 
         public VoucherViewModelList()
         {
+            particulars = new List<particulars>();
+            vatAmtList = new List<ewtAmtList>();
             headvm = new headerVM();
         }
     }

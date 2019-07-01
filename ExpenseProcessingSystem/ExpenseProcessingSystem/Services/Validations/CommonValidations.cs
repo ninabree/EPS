@@ -9,6 +9,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using ExpenseProcessingSystem.Services.Controller_Services;
+using ExpenseProcessingSystem.Models;
+using System.Xml.Linq;
 
 namespace ExpenseProcessingSystem.Services.Validations
 {
@@ -392,10 +394,11 @@ namespace ExpenseProcessingSystem.Services.Validations
         {
             var val = validationContext.ObjectType.GetProperty(_CheckBoxProperty).GetValue(validationContext.ObjectInstance, null);
             var val2 = validationContext.ObjectType.GetProperty(_CheckBoxProperty2).GetValue(validationContext.ObjectInstance, null);
+            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
 
             int flag = 0;
 
-            if((int)val2 == 0)
+            if((int)val2 == 0 && (string)val == xelem.Element("CURRENCY_PHP").Value)
             {
                 List<LiquidationCashBreakdown> data = value as List<LiquidationCashBreakdown>;
                 foreach (var i in data)
@@ -408,6 +411,39 @@ namespace ExpenseProcessingSystem.Services.Validations
                 }
 
                 if (flag == 0)
+                {
+                    return new ValidationResult("You must fill up the Liqudation for each entries.");
+                }
+            }
+
+            return ValidationResult.Success;
+        }
+    }
+    public class EmptyLiquidationInterEntity : ValidationAttribute
+    {
+        private readonly string _CheckBoxProperty;
+        private readonly string _CheckBoxProperty2;
+
+        public EmptyLiquidationInterEntity(string CheckBoxProperty, string CheckBoxProperty2)
+        {
+            _CheckBoxProperty = CheckBoxProperty;
+            _CheckBoxProperty2 = CheckBoxProperty2;
+        }
+
+
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            var val = validationContext.ObjectType.GetProperty(_CheckBoxProperty).GetValue(validationContext.ObjectInstance, null);
+            var val2 = validationContext.ObjectType.GetProperty(_CheckBoxProperty2).GetValue(validationContext.ObjectInstance, null);
+            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
+
+            int flag = 0;
+
+            if ((int)val2 == 0 && (string)val != xelem.Element("CURRENCY_PHP").Value)
+            {
+                List<LiquidationInterEntityModel> data = value as List<LiquidationInterEntityModel>;
+
+                if (data == null || data.Count() == 0)
                 {
                     return new ValidationResult("You must fill up the Liqudation for each entries.");
                 }

@@ -2,24 +2,38 @@
     ViewData["Title"] = "Close";
 }
 
+@using ExpenseProcessingSystem.ViewModels
+
+@model ClosingViewModel
+
 <div class="tab-content-cont m-t-10">
-    <div id="tbl-lbl"><p>Date:</p></div>
+    <div id="tbl-lbl">Date: <p class="dis-inline-block">@Html.EditorFor(m => m.date, new { htmlAttributes = new { @class = "input", @type = "date", @readonly = "readonly"} })</p></div>
+    <br />
     <div class="tbl-cont m-b-20">
         <table class="table table-striped tab-tbl m-b-20">
             <thead>
                 <tr>
                     <th><a asp-action="Close" asp-route-sortOrder="@ViewData["AccountSortParm"]">Tran Type<p class="btn-xs glyphicon @ViewData["glyph-acc"]"></p></a></th>
                     <th><a asp-action="Close" asp-route-sortOrder="@ViewData["TypeSortParm"]">GBase Tran#<p class="btn-xs glyphicon @ViewData["glyph-type"]"></p></a></th>
-                    <th>Express Tran#</th>
                     <th>Particulars</th>
                     <th>CCY</th>
                     <th>Amount</th>
-                    <th>Tran Count</th>
-                    <th></th>
                     <th>Status</th>
                 </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+                @foreach(var item in Model.rbuItems)
+                {
+                    <tr>
+                        <td>RBU</td>
+                        <td>@item.gBaseTrans</td>
+                        <td>@item.particulars</td>
+                        <td>@item.ccy</td>
+                        <td>@item.amount</td>
+                        <td>@item.status</td>
+                    </tr>
+                }
+            </tbody>
         </table>
         <div class="tbl-controls m-t-20">
             <button class="tbl-btn float-l">Close RBU</button>
@@ -40,16 +54,24 @@
                 <tr>
                     <th><a asp-action="Close" asp-route-sortOrder="@ViewData["AccountSortParm"]">Tran Type<p class="btn-xs glyphicon @ViewData["glyph-acc"]"></p></a></th>
                     <th><a asp-action="Close" asp-route-sortOrder="@ViewData["TypeSortParm"]">GBase Tran#<p class="btn-xs glyphicon @ViewData["glyph-type"]"></p></a></th>
-                    <th>Express Tran#</th>
                     <th>Particulars</th>
                     <th>CCY</th>
                     <th>Amount</th>
-                    <th>Tran Count</th>
-                    <th></th>
                     <th>Status</th>
                 </tr>
             </thead>
             <tbody>
+                @foreach (var item in Model.fcduItems)
+                {
+                    <tr>
+                        <td>RBU</td>
+                        <td>@item.gBaseTrans</td>
+                        <td>@item.particulars</td>
+                        <td>@item.ccy</td>
+                        <td>@item.amount</td>
+                        <td>@item.status</td>
+                    </tr>
+                }
             </tbody>
         </table>
 
@@ -66,15 +88,14 @@
         </div>
     </div>
     <hr class="dotted" />
-    <div id="tbl-lbl"><p>Petty Cash Balance:</p></div>
+    <div id="tbl-lbl"><h4 style="font-weight:bold;">Petty Cash Balance:</h4></div>
+    <br />
     <table class="table" id="close-tbl">
-        <thead>
-            <tr>
-                <td width="18%"></td>
-                <td></td>
-                <td></td>
-            </tr>
-        </thead>
+        <colgroup>
+            <col style="width:10%;"/>
+            <col style="width:15%;"/>
+            <col />
+        </colgroup>
         <tbody>
             <tr>
                 <td>
