@@ -6,7 +6,7 @@
     var isLoggedin = (Context.Request.Path.ToString() == GlobalSystemValues.ACCOUNT_LOGIN) ? false : (Context.Request.Path.ToString() == "/") ? false : true;
     var isEntry = (GlobalSystemValues.ENTRY_VALS.Contains(Context.Request.Path.ToString())) ? true : false;
     var isHome = (GlobalSystemValues.HOME_VALS.Contains(Context.Request.Path.ToString())) ? true : false;
-
+    var isDM = (GlobalSystemValues.HOME_DM == Context.Request.Path.ToString()) ? true : false;
 }
 <!DOCTYPE html>
 <html>
@@ -23,11 +23,16 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jquery-ui/jquery-ui.js"></script>
     <link type="text/css" rel="stylesheet" href="~/lib/jquery-ui/jquery-ui.css" />
-    @*<script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>*@
     <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    @if (!isDM)
+    {
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/site.min.js" asp-append-version="true"></script>
+    }
+    @*else
+    {
+    <script src="~/js/DMScript.js" asp-append-version="true"></script>
+    }*@
+    @*<script src="~/js/site.min.js" asp-append-version="true"></script>*@
     <script src="~/js/editable-table.js" asp-append-version="true"></script>
     <script src="~/js/ModalPopup.js" asp-append-version="true"></script>
     <script type="text/javascript" src="~/js/CallXML.js"></script>
@@ -65,7 +70,7 @@
             <div class="tabContent">
                 @if (isEntry)
                 {@Html.Partial("EntityTabsPartial")}
-                else if(isHome)
+                else if (isHome)
                 {@Html.Partial("HomeTabsPartial")}
                 @RenderBody()
             </div>
@@ -79,8 +84,8 @@
             @RenderBody()
         </div>
     }
+    <hr />
     <div class="m-l-25 m-r-25">
-        <hr />
         <footer>
             <p>&copy; 2019 - EPS</p>
         </footer>

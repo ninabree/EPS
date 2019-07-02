@@ -40,8 +40,10 @@
         var page = '@ViewData["page"]';
         var partial = '@ViewData["partialName"]';
         var colName = '@ViewData["colName"]';
+        var $pageInput;
 
         initPartial();
+            
         //------------[ FUNCTIONS ]---------------
         function initPartial() {
             $('select#dm-tbl option[value=' + partial + ']').attr('selected', 'selected');
@@ -52,13 +54,37 @@
             $('#partcontains').load("/Partial/" + partial, filterData, function (response, status, xhr) {
                 if (status == "error") {
                     alert("Something went wrong.");
+                    return false;
                 } else {
                     isSearchDisabled();
+                    //disable approve/reject button upon initial load in DM
+                    defaultDisableAll();
+                    //Pagination Input Field
+                    $pageInput = $('#paginationInput');
+                    $pageInput.data("value", $pageInput.val());
+
+                    ////DM ON LOAD
+                    $('input#entryCheckTypes').val("");
+                    //get column # of status per table
+                    var countDoc = $('#partialContainer #partcontains div div table thead tr th').length - 2;
+                    var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
+                    var remainingCheckStatDoc = $('input.tbl-chk[type="checkbox"]:checked').parent().siblings(":eq(" + countDoc + ")").text();
+
+                    if (chkCount <= 0) {
+                        defaultApproved();
+                    } else {
+                        if (remainingCheckStatDoc == "Approved") {
+                            defaultApproved();
+                        } else {
+                            defaultForApproval();
+                        }
+                    }
                 }
             });
         }
+    /*//////////////////////////////////////////////////////////////////
+    [ Events ]*/
         //change content of partial view on select on change
-        
         $('select#dm-tbl').change(function () {
             if (isSessionTimeout() != true) {
                 $('input#filterPartialName').val(this.value);
@@ -75,6 +101,196 @@
                 });
             }
         });
+        //reset search filter values
+        $(document).on("click", "#full-list-btn", function (e) {
+            e.stopImmediatePropagation();
+            $('input[id^= "DMFilters_"]').each(function (i, obj) {
+                $(this).val("");
+                if ($(this).attr('data-val-range-min') == "0") {
+                    $(this).val("0");
+                } else if ($(this).attr('type') == "datetime-local") {
+                    $(this).val("0001-01-01T00:00:00.000");
+                }
+            });
+            $('#search-frm').submit();
+        });
+
+        //enables/disables controls in DM depending on entry status
+        $(document).on("change", "input.tbl-chk", function (e) {
+            e.stopImmediatePropagation();
+            //disable all buttons
+            defaultDisableAll();
+            //get column # of status per table
+            var count = $('.table').find('th').length - 2;
+            var stat = $(this).parent().siblings(":eq(" + count + ")").text();
+            var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
+            var remainingCheckStat = $('input.tbl-chk[type="checkbox"]:checked').parent().siblings(":eq(" + count + ")").text();
+            //to check if entries are of same status
+            var txtVal = $('input#entryCheckTypes').val();
+            //get table name
+            var tblName = $('#dm-tbl').find(":selected").text();
+
+            var creatorId = $(this).parent().find("#item_Vendor_Creator_ID").val();
+            var userId = $("#UI").val();
+            //check if all selected chkboxs have same statuses
+            var isSameStat = true;
+            var firstChk = $('input.tbl-chk[type="checkbox"]:checked').first().parent().siblings(":eq(" + count + ")").text()
+            $('input.tbl-chk[type="checkbox"]:checked').each(function (index) {
+                if ($(this).parent().siblings(":eq(" + count + ")").text() != firstChk) {
+                    isSameStat = false;
+                    return false;
+                }
+            });
+            if (!isSameStat && chkCount <= 2) {
+                alert("Kindly check rows with the same status only.");
+                $('.rec').prop('disabled', true);
+            }
+            else if (creatorId == userId/* && chkCount <= 1*/) {
+                if (stat != "Approved") {
+                    defaultOnlyAdd();
+                } else {
+                    defaultApproved();
+                }
+                if (this.checked == false && chkCount <= 0) {
+                    defaultApproved();
+                }
+            } else {
+                //if there is no previously checked box
+                if (txtVal != "") {
+                    $('input#entryCheckTypes').val(stat);
+                    // if change is to uncheck or check the element
+                    if (this.checked == true) {
+                        if (!isSameStat) {
+                            alert("Kindly check rows with the same status only.");
+                            $('.rec').prop('disabled', true);
+                        }
+                        else if (txtVal == stat) {
+                            //In BCS, only one row can be selected for edit
+                            if (chkCount >= 2 && stat == "Approved" && (tblName == "BIR Cert Signatory")) {
+                                $('.apprv-rec').prop('disabled', true);
+                                $('.rej-rec').prop('disabled', true);
+                                $('.add-rec').prop('disabled', false);
+                                $('.edit-rec').prop('disabled', true);
+                                $('.delete-rec').prop('disabled', false);
+                            }
+                            else if (stat == "Approved") {
+                                defaultApproved();
+                            } else {
+                                defaultForApproval();
+                            }
+                        }
+                        else if (remainingCheckStat == stat) {
+                            if (remainingCheckStat == "Approved") {
+                                defaultApproved();
+                            } else {
+                                defaultForApproval();
+                            }
+                        } else {
+                            $('.rec').prop('disabled', true);
+                        }
+                    }
+                    //if this element is unchecked
+                    else {
+                        //if no element selected
+                        if (chkCount <= 0) {
+                            $('input#entryCheckTypes').val("");
+                            defaultApproved();
+                        }
+                        //if there is remaining, filter btns according to stat of other selected elements
+                        else {
+                            if (remainingCheckStat == "Approved") {
+                                defaultApproved();
+                            } else {
+                                defaultForApproval();
+                            }
+                        }
+                    }
+                } else {
+                    $('input#entryCheckTypes').val(stat);
+                    //format only avail buttons for clicked checkbox 
+                    if (remainingCheckStat == "Approved") {
+                        defaultApproved();
+                    } else {
+                        defaultForApproval();
+                    }
+                }
+            }
+        });
+
+        /*//////////////////////////////////////////////////////////////////
+        [ Modal ]*/
+        setInterval(function () {
+            $('div.modal-backdrop.fade.in').not(':first').remove();
+        }, 1);
+
+        /*//////////////////////////////////////////////////////////////////
+        [ Pagination - Number Input]*/
+
+        setInterval(function () {
+            //get hidden value of partial view in Data Maintenance
+            var partial = $('input#partialVal').val();
+
+            var data = $pageInput.data("value"),
+                 val = $pageInput.val();
+
+            if (data !== val) {
+                $pageInput.data("value", val);
+                var url = window.location.pathname + '?page=' + val;
+                //check if in data maintenance
+                if (window.location.pathname == "/Home/DM") {
+                    url = window.location.pathname + '?partialName=' + partial + '&page=' + val;
+                }
+                window.location = url;
+            }
+        }, 1000);
+    /*//////////////////////////////////////////////////////////////////
+    [ Functions ]*/
+
+        //default buttons in DM
+        function defaultDisableAll() {
+            $('.apprv-rec').prop('disabled', true);
+            $('.rej-rec').prop('disabled', true);
+            $('.add-rec').prop('disabled', true);
+            $('.edit-rec').prop('disabled', true);
+            $('.delete-rec').prop('disabled', true);
+        }
+        function defaultDM() {
+            $('.add-rec').prop('disabled', false);
+            $('.edit-rec').prop('disabled', false);
+            $('.delete-rec').prop('disabled', false);
+        }
+        function defaultForApproval() {
+            $('.apprv-rec').prop('disabled', false);
+            $('.rej-rec').prop('disabled', false);
+        }
+        function defaultApproved() {
+            $('.add-rec').prop('disabled', false);
+            $('.edit-rec').prop('disabled', false);
+            $('.delete-rec').prop('disabled', false);
+        }
+        function defaultOnlyAdd() {
+            $('.add-rec').prop('disabled', false);
+        }
+        function isSearchDisabled() {
+            var noFilter = true;
+            $('input[id^= "DMFilters_"]').each(function (i, obj) {
+                if ($(this).val() == "") {
+                } else if ($(this).val() == "0") {
+                } else if ($(this).val() == "0001-01-01T00:00:00.000") {
+                } else {
+                    noFilter = false;
+                    return false;
+                }
+            });
+            //disable if no entries
+            if ($('.tab-tbl tbody tr').length <= 0 && noFilter) {
+                $('#search-btn').attr("disabled", "disabled");
+                $('#full-list-btn').attr("disabled", "disabled");
+            }else {
+                $('#search-btn').removeAttr("disabled");
+                $('#full-list-btn').removeAttr("disabled");
+            }
+        }
 
         /*Possibly no longer needed(session check is inside the controller?) please check*/
         function isSessionTimeout() {
@@ -102,28 +318,6 @@
             });
             return tmp;
         }
-
-        function isSearchDisabled() {
-            var noFilter = true;
-            $('input[id^= "DMFilters_"]').each(function (i, obj) {
-                if ($(this).val() == "") {
-                } else if ($(this).val() == "0") {
-                } else if ($(this).val() == "0001-01-01T00:00:00.000") {
-                } else {
-                    noFilter = false;
-                    return false;
-                }
-            });
-            //disable if no entries
-            if ($('.tab-tbl tbody tr').length <= 0 && noFilter) {
-                $('#search-btn').attr("disabled", "disabled");
-                $('#full-list-btn').attr("disabled", "disabled");
-            }else {
-                $('#search-btn').removeAttr("disabled");
-                $('#full-list-btn').removeAttr("disabled");
-            }
-        }
-
         function ajaxCall(url, data) {
             return $.ajax({
                 url: url,

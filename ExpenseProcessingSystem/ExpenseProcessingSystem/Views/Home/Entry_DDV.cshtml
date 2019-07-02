@@ -273,13 +273,12 @@
 
             htmlContent += '</select></td>' +
                 '<td style="text-align:center"><input class="chkVat comVar" data-val="true" data-val-required="The chkVat field is required." id="EntryDDV_' + itemCount + '__chkVat" name="EntryDDV[' + itemCount + '].chkVat" type="checkbox" value="true"></td>' +
-                '<td><input class="input100 txtVat comVar" data-val="true" data-val-number="The field vat must be a number." data-val-required="The vat field is required." id="EntryDDV_' + itemCount + '__vat" name="EntryDDV[' + itemCount + '].vat" readonly="true" type="text" value="0"></td>' +
+                '<td><select class="input100 txtVat comVar" data-val="true" data-val-number="The field vat must be a number." data-val-required="The vat field is required." id="EntryDDV_' + itemCount + '__vat" name="EntryDDV[' + itemCount + '].vat" disabled="disabled">' +
+                '</select> </td>' +
                 '<td style="text-align:center"><input class="chkEwt comVar" data-val="true" data-val-required="The chkEwt field is required." id="EntryDDV_' + itemCount + '__chkEwt" name="EntryDDV[' + itemCount + '].chkEwt" type="checkbox" value="true"></td>' +
                 '<td><select class="input100 txtEwt  comVar" data-val="true" data-val-required="The ewt field is required." id="EntryDDV_' + itemCount + '__ewt" name="EntryDDV[' + itemCount + '].ewt" disabled="disabled">';
-            for (var i = 0; i < ewt.length; i++) {
-                htmlContent += '<option value="' + ewt[i]["value"] + '">' + ewt[i]["text"] + '</option>';
-            }
             htmlContent += '</select></td>' +
+                '<td style="text-align:center"><a class="reqEWTBtn glyphicon glyphicon-list-alt"></a></td>' +
                 '<td><select class="input100" data-val="true" data-val-required="The ccy field is required." id="EntryDDV_' + itemCount + '__ccy" name="EntryDDV[' + itemCount + '].ccy">';
             for (var i = 0; i < curr.length; i++) {
                 htmlContent += '<option value="' + curr[i]["value"] + '">' + curr[i]["text"] + '</option>';
@@ -298,6 +297,8 @@
                 '</td>';
 
             newRow.innerHTML = htmlContent;
+            $('#EntryDDV_' + itemCount + '__vat').append($("#EntryDDV_0__vat > option").clone());
+            $('#EntryDDV_' + itemCount + '__ewt').append($("#EntryDDV_0__ewt > option").clone());
         });
 
         //Inter Entity
