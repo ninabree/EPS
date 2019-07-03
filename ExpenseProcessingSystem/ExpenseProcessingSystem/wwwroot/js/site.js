@@ -11,33 +11,18 @@ $(document).ready(function () {
     $pageInput.data("value", $pageInput.val());
     ////DM ON LOAD
 
-    //disable approve/reject button upon initial load in DM
-    defaultDisableAll();
-    $('input#entryCheckTypes').val("");
-    //get column # of status per table
-    var countDoc = $('#partial-container div div table thead tr th').length - 2;
-    var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
-    var remainingCheckStatDoc = $('input.tbl-chk[type="checkbox"]:checked').parent().siblings(":eq(" + countDoc + ")").text();
-
-    if (chkCount <= 0) {
-        defaultApproved();
-    } else {
-        if (remainingCheckStatDoc == "Approved") {
-            defaultApproved();
-        } else {
-            defaultForApproval();
-        }
-    }
+    
+    
     /////END DM ON LOAD
     $('#um').find('a').click(function () {
         ClearValidations();
     });
     /*//////////////////////////////////////////////////////////////////
     [ Login ]*/
-    $('#User_UserName').change(function () {
+    $(document).on("change", "'#User_UserName", function (e) {
         CheckUn();
     });
-    $('#User_Password').change(function () {
+    $(document).on("change", "'#User_Password", function (e) {
         CheckPw();
     });
 
@@ -69,122 +54,7 @@ $(document).ready(function () {
     }, 1000);
 
 
-    /*//////////////////////////////////////////////////////////////////
-    [ DM ]*/
-    //reset search filter values
-    $('#full-list-btn').click(function (e) {
-        e.stopImmediatePropagation();
-        $('input[id^= "DMFilters_"]').each(function (i, obj) {
-            $(this).val("");
-            if ($(this).attr('data-val-range-min') == "0") {
-                $(this).val("0");
-            } else if ($(this).attr('type') == "datetime-local") {
-                $(this).val("0001-01-01T00:00:00.000");
-            }
-        });
-        $('#search-frm').submit();
-    });
-    //enables/disables controls in DM depending on entry status
-    $(document).on("change", "input.tbl-chk", function (e) {
-        e.stopImmediatePropagation();
-        //disable all buttons
-        defaultDisableAll();
-        //get column # of status per table
-        var count = $('.table').find('th').length - 2;
-        var stat = $(this).parent().siblings(":eq(" + count + ")").text();
-        var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
-        var remainingCheckStat = $('input.tbl-chk[type="checkbox"]:checked').parent().siblings(":eq(" + count + ")").text();
-        //to check if entries are of same status
-        var txtVal = $('input#entryCheckTypes').val();
-        //get table name
-        var tblName = $('#dm-tbl').find(":selected").text();
-
-        var creatorId = $(this).parent().find("#item_Vendor_Creator_ID").val();
-        var userId = $("#UI").val();
-        //check if all selected chkboxs have same statuses
-        var isSameStat = true;
-        var firstChk = $('input.tbl-chk[type="checkbox"]:checked').first().parent().siblings(":eq(" + count + ")").text()
-        $('input.tbl-chk[type="checkbox"]:checked').each(function (index) {
-            if ($(this).parent().siblings(":eq(" + count + ")").text() != firstChk) {
-                isSameStat = false;
-                return false;
-            }
-        });
-        if (!isSameStat && chkCount <= 2) {
-            alert("Kindly check rows with the same status only.");
-            $('.rec').prop('disabled', true);
-        }
-        else if (creatorId == userId/* && chkCount <= 1*/) {
-            if (stat != "Approved") {
-                defaultOnlyAdd();
-            } else {
-                defaultApproved();
-            }
-            if (this.checked == false && chkCount <= 0) {
-                defaultApproved();
-            }
-        } else {
-            //if there is no previously checked box
-            if (txtVal != "") {
-                $('input#entryCheckTypes').val(stat);
-                // if change is to uncheck or check the element
-                if (this.checked == true) {
-                    if (!isSameStat) {
-                        alert("Kindly check rows with the same status only.");
-                        $('.rec').prop('disabled', true);
-                    }
-                    else if (txtVal == stat) {
-                        //In BCS, only one row can be selected for edit
-                        if (chkCount >= 2 && stat == "Approved" && (tblName == "BIR Cert Signatory")) {
-                            $('.apprv-rec').prop('disabled', true);
-                            $('.rej-rec').prop('disabled', true);
-                            $('.add-rec').prop('disabled', false);
-                            $('.edit-rec').prop('disabled', true);
-                            $('.delete-rec').prop('disabled', false);
-                        }
-                        else if (stat == "Approved") {
-                            defaultApproved();
-                        } else {
-                            defaultForApproval();
-                        }
-                    }
-                    else if (remainingCheckStat == stat) {
-                        if (remainingCheckStat == "Approved") {
-                            defaultApproved();
-                        } else {
-                            defaultForApproval();
-                        }
-                    } else {
-                        $('.rec').prop('disabled', true);
-                    }
-                }
-                //if this element is unchecked
-                else {
-                    //if no element selected
-                    if (chkCount <= 0) {
-                        $('input#entryCheckTypes').val("");
-                        defaultApproved();
-                    }
-                    //if there is remaining, filter btns according to stat of other selected elements
-                    else {
-                        if (remainingCheckStat == "Approved") {
-                            defaultApproved();
-                        } else {
-                            defaultForApproval();
-                        }
-                    }
-                }
-            } else {
-                $('input#entryCheckTypes').val(stat);
-                //format only avail buttons for clicked checkbox 
-                if (remainingCheckStat == "Approved") {
-                    defaultApproved();
-                } else {
-                    defaultForApproval();
-                }
-            }
-        }
-    });
+    
     /*//////////////////////////////////////////////////////////////////
     [ UM ]*/
 
@@ -273,30 +143,10 @@ $(document).ready(function () {
     /*//////////////////////////////////////////////////////////////////
     [ Functions ]*/
 
-    //default buttons in DM
-    function defaultDisableAll() {
-        $('.apprv-rec').prop('disabled', true);
-        $('.rej-rec').prop('disabled', true);
-        $('.add-rec').prop('disabled', true);
-        $('.edit-rec').prop('disabled', true);
-        $('.delete-rec').prop('disabled', true);
-    }
-    function defaultDM() {
-        $('.add-rec').prop('disabled', false);
-        $('.edit-rec').prop('disabled', false);
-        $('.delete-rec').prop('disabled', false);
-    }
-    function defaultForApproval() {
-        $('.apprv-rec').prop('disabled', false);
-        $('.rej-rec').prop('disabled', false);
-    }
     function defaultApproved() {
         $('.add-rec').prop('disabled', false);
         $('.edit-rec').prop('disabled', false);
         $('.delete-rec').prop('disabled', false);
-    }
-    function defaultOnlyAdd() {
-        $('.add-rec').prop('disabled', false);
     }
     ///////////////////////////////////////////////////////////////////
     function populateCol() {

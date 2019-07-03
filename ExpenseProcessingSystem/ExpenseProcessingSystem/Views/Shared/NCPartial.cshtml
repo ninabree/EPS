@@ -8,11 +8,11 @@
 @functions{
     public string SetClassCompSusp(int catID, int csID, string suffix)
     {
-        return (csID == 454) ? "nc-comp-susp-" + suffix : (csID == 487 && catID == 8) ? "nc-comp-susp-" + suffix : (csID == 492) ? "nc-inter-" + suffix : (csID == 486) ? "nc-cdd-petty-" + suffix : (csID == 487 && catID == 7) ? "nc-cdd-comp-" + suffix : "";
+        return (csID == 454) ? "nc-comp-susp-" + suffix : ((csID == 487 && catID == 8) || ((csID == 495 || csID == 487) && catID == 9)) ? "nc-comp-susp-" + suffix : (csID == 492) ? "nc-inter-" + suffix : (csID == 486) ? "nc-cdd-petty-" + suffix : (csID == 487 && catID == 7) ? "nc-cdd-comp-" + suffix : "";
     }
     object getHtmlAttributes(int catID, int count)
     {
-        if (!(catID == 8 && count == 3) && !(catID == 9 && count == 1) && !(catID == 10 && count == 1) && !(catID == 11))
+        if (!(catID == 8 && count == 3) && !(catID == 9 && count == 1) &&  !(catID == 11))
         {
             return new { @class = "ncVar", @readonly = "true" };
         }
@@ -20,7 +20,15 @@
     }
     object getHtmlAttributesDebit(int catID, int count, string suffixClass)
     {
-        if ((catID == 8 && count == 3) || (catID == 9 && count == 1) || (catID == 10 && count != 0))
+        if (catID == 9 && count == 1)
+        {
+            return new { @class = "ncVar " + suffixClass, @readonly = "true" };
+        }
+        return new { @class = "ncVar " + suffixClass };
+    }
+    object getHtmlAttributesCredit(int catID, int count, string suffixClass)
+    {
+        if ((catID != 4) && (catID != 5))
         {
             return new { @class = "ncVar " + suffixClass, @readonly = "true" };
         }
@@ -28,15 +36,32 @@
     }
     public string SetRateClass(int catID, int count)
     {
-        return ((catID == 8 && count == 3) || (catID == 9 && count == 1) || (catID == 10 && count == 1) || (catID == 11)) ? "voucher-input" : "";
+        return ((catID == 8 && count == 3) || (catID == 9 && count == 1) || (catID == 11)) ? "voucher-input" : "";
     }
-    public string SetDebitClass(int catID, int count)
+    public string SetClass(int catID, int count, string type)
     {
-        return ((catID == 8 && count == 3) || (catID == 9 && count == 1)) || (catID == 10 && count != 0)? "" : "voucher-input";
+        string temp = "voucher-input";
+
+        if (type == "cd")
+        {
+            temp = "";
+        }
+        if (catID == 9 && count == 1 && type == "db")
+        {
+            temp = "";
+        }else if ((type == "cd") && (catID == 4 || catID == 5))
+        {
+            temp = "voucher-input";
+        }
+        return temp;
     }
     public string SetRemarksClass(int catID)
     {
-        return ((catID != 9) && (catID != 10) && (catID != 11)) ? "" : "voucher-input";
+        return ((catID != 9) && (catID != 11)) ? "" : "voucher-input";
+    }
+    public string SetEnableToCredit(int catID)
+    {
+        return ((catID != 4) && (catID != 5)) ? "true" : "false";
     }
 }
 <div>
@@ -65,7 +90,7 @@
                     {
                         <tr id="item_@i">
                             <td class="@SetRemarksClass(@Model.EntryNC.NC_Category_ID)">
-                                @if ((@Model.EntryNC.NC_Category_ID == 9) || (@Model.EntryNC.NC_Category_ID == 10) || (@Model.EntryNC.NC_Category_ID == 11))
+                                @if ((@Model.EntryNC.NC_Category_ID == 9) || (@Model.EntryNC.NC_Category_ID == 11))
                                 {
                                     @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Remarks_Desc)
                                 }
@@ -74,13 +99,8 @@
                                     @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Remarks_Desc, new { @readonly = "true" })
                                 }
                             </td>
-                            <td colspan="2"class="@SetRemarksClass(@Model.EntryNC.NC_Category_ID)">
-                                <div class="dis-inline-block w-48 @SetRemarksClass(@Model.EntryNC.NC_Category_ID)">
-                                    @Html.EditorFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Remarks_Period_From, new { @type = "date", @class = "" })
-                                </div>
-                                <div class="dis-inline-block w-48 @SetRemarksClass(@Model.EntryNC.NC_Category_ID)">
-                                    @Html.EditorFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Remarks_Period_To, new { @type = "date", @class = "" })
-                                </div>
+                            <td colspan="2" class="voucher-input">
+                                @Html.EditorFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Remarks_Period, new { @type = "date", @class = "" })
                             </td>
 
                             @if (@Model.EntryNC.NC_Category_ID == 11)
@@ -112,8 +132,7 @@
                             {
 
                                 <td>
-                                    @if ((@Model.EntryNC.NC_Category_ID == 9 && ((i == 0) || (i == 1))) ||
-                                   (@Model.EntryNC.NC_Category_ID == 10 && (i == 3)) || (@Model.EntryNC.NC_Category_ID == 11))
+                                    @if ((@Model.EntryNC.NC_Category_ID == 9 && ((i == 0) || (i == 1)))  || (@Model.EntryNC.NC_Category_ID == 11))
                                     {
                                         <select id="@Html.IdFor(x => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID)" class="w-full input curr-sel" name="@Html.NameFor(x => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID)">
                                             @foreach (var groepModel in Model.currList)
@@ -134,7 +153,7 @@
                                         @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_Name, new { @readonly = "true" })
                                     }
                                 </td>
-                                <td class="@SetDebitClass(@Model.EntryNC.NC_Category_ID, @i)" id="deb_@i">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount, @getHtmlAttributesDebit(@Model.EntryNC.NC_Category_ID, @i, @SetClassCompSusp(Model.EntryNC.NC_Category_ID, Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID, "db")))</td>
+                                <td class="@SetClass(@Model.EntryNC.NC_Category_ID, @i, "db")" id="deb_@i">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount, @getHtmlAttributesDebit(@Model.EntryNC.NC_Category_ID, @i, @SetClassCompSusp(Model.EntryNC.NC_Category_ID, Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID, "db")))</td>
                                 <td></td>
                                 <td></td>
                             }
@@ -143,7 +162,11 @@
                                 <td></td>
                                 <td></td>
                                 <td>@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_Name, new { @readonly = "true" })</td>
-                                <td class="" id="cred_@i">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount, new { @class = "ncVar" + @SetClassCompSusp(Model.EntryNC.NC_Category_ID, Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID, "cd") + "", @readonly = "true" })</td>
+                                <td class="@SetClass(@Model.EntryNC.NC_Category_ID, @i, "cd")" id="cred_@i">
+                                    @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount,
+                                    @getHtmlAttributesCredit(@Model.EntryNC.NC_Category_ID, @i,
+                                    @SetClassCompSusp(Model.EntryNC.NC_Category_ID, Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID, "cd")))
+                                </td>
                             }
                             @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID)
                             @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID)
@@ -152,16 +175,53 @@
 
                         @for (int j = 1; j < Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs.Count; j++)
                         {
-                            <tr id="item_@i">
-                                <td></td>
-                                <td colspan="2"></td>
-                                @if (@Model.EntryNC.NC_Category_ID == 11)
-                                {
-                                    <td colspan="3" class="@SetRemarksClass(@Model.EntryNC.NC_Category_ID)">
-                                        <select id="@Html.IdFor(x => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_Name)" class="w-full input acc-sel" name="@Html.NameFor(x => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_Name)">
-                                            @foreach (var groepModel in Model.accountList)
+                        <tr id="item_@i">
+                            <td></td>
+                            <td colspan="2"></td>
+                            @if (@Model.EntryNC.NC_Category_ID == 11)
+                            {
+                                <td colspan="3" class="@SetRemarksClass(@Model.EntryNC.NC_Category_ID)">
+                                    <select id="@Html.IdFor(x => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_Name)" class="w-full input acc-sel" name="@Html.NameFor(x => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_Name)">
+                                        @foreach (var groepModel in Model.accountList)
+                                        {
+                                            if (@groepModel.Value == @Model.accountList[0].Value)
                                             {
-                                                if (@groepModel.Value == @Model.accountList[0].Value)
+                                                <option value="@groepModel.Value" selected>@groepModel.Text</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@groepModel.Value">@groepModel.Text</option>
+                                            }
+                                        }
+                                    </select>
+                                </td>
+                            }
+                            else
+                            {
+                                <td colspan="3">
+                                    @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_Name, new { @readonly = "true", @class = "w-full" })
+                                </td>
+                            }
+                            <td></td>
+                            @if (Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
+                            {
+
+                                <td>@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_Name, new { @readonly = "true" })</td>
+                                <td class="@SetClass(@Model.EntryNC.NC_Category_ID, @i, "db")" id="deb_@i">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount, @getHtmlAttributesDebit(@Model.EntryNC.NC_Category_ID, @i, @SetClassCompSusp(Model.EntryNC.NC_Category_ID, Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID, "db")))</td>
+                                <td></td>
+                                <td></td>
+                            }
+                            else if (Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_CREDIT)
+                            {
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    @if ((@Model.EntryNC.NC_Category_ID == 9 && (i == 0)) || (@Model.EntryNC.NC_Category_ID == 11))
+                                    {
+                                        <select id="@Html.IdFor(x => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_ID)" class="w-full input curr-sel" name="@Html.NameFor(x => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_ID)">
+                                            @foreach (var groepModel in Model.currList)
+                                            {
+                                                if (@groepModel.Value == @Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_ID + "")
                                                 {
                                                     <option value="@groepModel.Value" selected>@groepModel.Text</option>
                                                 }
@@ -171,55 +231,22 @@
                                                 }
                                             }
                                         </select>
-                                    </td>
-                                }
-                                else
-                                {
-                                    <td colspan="3">
-                                        @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_Name, new { @readonly = "true", @class = "w-full" })
-                                    </td>
-                                }
-                                <td></td>
-                                @if (Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
-                                {
-
-                                    <td>@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_Name, new { @readonly = "true" })</td>
-                                    <td class="voucher-input" id="deb_@i">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Amount, new { @class = "ncVar " + @SetClassCompSusp(Model.EntryNC.NC_Category_ID, Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_ID, "db") + "" })</td>
-                                    <td></td>
-                                    <td></td>
-                                }
-                                else if (Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_CREDIT)
-                                {
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        @if ((@Model.EntryNC.NC_Category_ID == 9 && (i == 0)) || (@Model.EntryNC.NC_Category_ID == 10) || (@Model.EntryNC.NC_Category_ID == 11))
-                                        {
-                                            <select id="@Html.IdFor(x => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_ID)" class="w-full input curr-sel" name="@Html.NameFor(x => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_ID)">
-                                                @foreach (var groepModel in Model.currList)
-                                                {
-                                                    if (@groepModel.Value == @Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_ID + "")
-                                                    {
-                                                        <option value="@groepModel.Value" selected>@groepModel.Text</option>
-                                                    }
-                                                    else
-                                                    {
-                                                        <option value="@groepModel.Value">@groepModel.Text</option>
-                                                    }
-                                                }
-                                            </select>
-                                        }
-                                        else
-                                        {
-                                            @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_Name, new { @readonly = "true" })
-                                        }
-                                    </td>
-                                    <td class="" id="cred_@i">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Amount, new { @class = "ncVar " + @SetClassCompSusp(Model.EntryNC.NC_Category_ID, Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_ID, "cd") + "", @readonly = "true" })</td>
-                                }
-                                @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_ID)
-                                @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_ID)
-                                @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Type_ID)
-                            </tr>
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_Name, new { @readonly = "true" })
+                                    }
+                                </td>
+                                <td class="@SetClass(@Model.EntryNC.NC_Category_ID, @i, "cd")" id="cred_@i">
+                                    @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Amount,
+                                    @getHtmlAttributesCredit(@Model.EntryNC.NC_Category_ID, @i,
+                                    @SetClassCompSusp(Model.EntryNC.NC_Category_ID, Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_ID, "cd")))
+                                </td>
+                            }
+                            @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_ID)
+                            @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_ID)
+                            @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Type_ID)
+                        </tr>
                         }
                         <tr class="NC_spacing_row"><td colspan="11"></td></tr>
                     }
@@ -255,7 +282,7 @@
                     <td colspan="2">Total</td>
                     <td colspan="5"></td>
                     <td colspan="1" class="border-solid NC_readonly_row">@Html.TextBoxFor(x => x.EntryNC.NC_DebitAmt, new { @readonly = "true" })</td>
-                    <td colspan="1" class="border-solid">@Html.TextBoxFor(x => x.EntryNC.NC_TotalAmt, new { @readonly = "true", @class="hidden"})</td>
+                    <td colspan="1" class="border-solid">@Html.TextBoxFor(x => x.EntryNC.NC_TotalAmt, new { @readonly = "true", @class = "hidden" })</td>
                     <td colspan="1" class="border-solid NC_readonly_row">@Html.TextBoxFor(x => x.EntryNC.NC_CredAmt, new { @readonly = "true" })</td>
                 </tr>
                 <tr>
@@ -286,13 +313,6 @@
         else if (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_JS_PAYROLL)
         {
             <table class="table table-bordered voucher-tbl m-t-20" style="background-color: #fafafa; border: 2px solid #ccc !important">
-                <tr style="border-bottom: 2px solid #ccc !important;">
-                    <td colspan="2">Total Php</td>
-                    <td colspan="5"></td>
-                    <td colspan="1" class="border-solid NC_readonly_row">@Html.TextBoxFor(x => x.EntryNC.NC_DebitAmt, new { @readonly = "true" })</td>
-                    <td colspan="1" class="border-solid">@Html.TextBoxFor(x => x.EntryNC.NC_TotalAmt, new { @readonly = "true", @class="hidden"})</td>
-                    <td colspan="1" class="border-solid NC_readonly_row">@Html.TextBoxFor(x => x.EntryNC.NC_CredAmt, new { @readonly = "true" })</td>
-                </tr>
                 <tr>
                     <td colspan="7"></td>
                     <td colspan="1">Debit</td>
@@ -334,12 +354,16 @@
                     <td colspan="3" class="border-solid NC_readonly_row">@Html.TextBoxFor(x => x.EntryNC.NC_IE_TotalAmt, new { @readonly = "true" })</td>
                 </tr>
             </table>
+            @Html.HiddenFor(x => x.EntryNC.NC_DebitAmt)
+            @Html.HiddenFor(x => x.EntryNC.NC_CredAmt)
+            @Html.HiddenFor(x => x.EntryNC.NC_TotalAmt)
         }
         else if (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT
-            || Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL
-            || Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_FOREIGN_EXCHANGE_RECEIVING)
+            || Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL)
         {
-                <table class="table table-bordered voucher-tbl" style="background-color: #fafafa; border: 2px solid #ccc !important; margin-bottom: 20px!important">
+            <table class="table table-bordered voucher-tbl" style="background-color: #fafafa; border: 2px solid #ccc !important; margin-bottom: 20px!important">
+                @if (!(Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL))
+                {
                     <tr style="border-bottom: 2px solid #ccc !important;">
                         <td colspan="2">Total</td>
                         <td colspan="6"></td>
@@ -348,95 +372,96 @@
                         <td colspan="1" class="border-solid NC_readonly_row">@Html.TextBoxFor(x => x.EntryNC.NC_CredAmt, new { @readonly = "true" })</td>
                     </tr>
                     <tr class="NC_spacing_row"><td colspan="11"></td></tr>
-                    <tr>
-                        <td colspan="11"><label class="float-l">CDD Instruction Sheet</label></td>
-                    </tr>
-                    <tr id="NC_PCR1">
-                        <td>@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpNCDtl_Remarks_Desc, new { @readonly = "true" })</td>
-                        <td colspan="2">
-                            <div class="dis-inline-block w-48">
-                                @Html.EditorFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpNCDtl_Remarks_Period_From, new { @type = "date", @class = "hidden" })
-                            </div>
-                            <div class="dis-inline-block w-48">
-                                @Html.EditorFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpNCDtl_Remarks_Period_To, new { @type = "date", @class = "hidden" })
-                            </div>
-                        </td>
+                }
+                else
+                {
+                    @Html.HiddenFor(x => x.EntryNC.NC_DebitAmt)
+                    @Html.HiddenFor(x => x.EntryNC.NC_CredAmt)
+                    @Html.HiddenFor(x => x.EntryNC.NC_TotalAmt)
+                }
+                <tr>
+                    <td colspan="11"><label class="float-l">CDD Instruction Sheet</label></td>
+                </tr>
+                <tr id="NC_PCR1">
+                    <td>@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpNCDtl_Remarks_Desc, new { @readonly = "true" })</td>
+                    <td colspan="2" class="@SetRemarksClass(@Model.EntryNC.NC_Category_ID)">
+                        @Html.EditorFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpNCDtl_Remarks_Period, new { @type = "date", @class = "hidden" })
+                    </td>
 
-                        <td colspan="3">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name, new { @readonly = "true", @class = "w-full" })</td>
-                        <td class="voucher-inter">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Inter_Rate, new { @class = "ncVar", @disabled = "disabled", @readonly = "true" })</td>
-                        @if (Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
-                        {
-
-                            <td>
-                                @if ((@Model.EntryNC.NC_Category_ID == 9) || (@Model.EntryNC.NC_Category_ID == 10))
-                                {
-                                    <select id="@Html.IdFor(x => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID)" class="w-full input curr-sel" name="@Html.NameFor(x => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID)">
-                                        @foreach (var groepModel in Model.currList)
-                                        {
-                                            if (@groepModel.Value == @Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID + "")
-                                            {
-                                                <option value="@groepModel.Value" selected>@groepModel.Text</option>
-                                            }
-                                            else
-                                            {
-                                                <option value="@groepModel.Value">@groepModel.Text</option>
-                                            }
-                                        }
-                                    </select>
-                                }
-                                else
-                                {
-                                    @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_Name, new { @readonly = "true" })
-                                }
-                            </td>
-                            <td class="" id="">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount, new { @class = "ncVar", @readonly = "true" })</td>
-                            <td></td>
-                            <td></td>
-                        }
-                        else if (Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs.First().ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_CREDIT)
-                        {
-                            <td></td>
-                            <td></td>
-                            <td>
-                                @if ((@Model.EntryNC.NC_Category_ID == 9) || (@Model.EntryNC.NC_Category_ID == 10))
-                                {
-                                    <select id="@Html.IdFor(x => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID)" class="w-full input curr-sel" name="@Html.NameFor(x => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID)">
-                                        @foreach (var groepModel in Model.currList)
-                                        {
-                                            if (@groepModel.Value == @Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID + "")
-                                            {
-                                                <option value="@groepModel.Value" selected>@groepModel.Text</option>
-                                            }
-                                            else
-                                            {
-                                                <option value="@groepModel.Value">@groepModel.Text</option>
-                                            }
-                                        }
-                                    </select>
-                                }
-                                else
-                                {
-                                    @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_Name, new { @readonly = "true" })
-                                }
-                            </td>
-                            <td class="" id="">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount, new { @class = "ncVar", @readonly = "true" })</td>
-                        }
-                        @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID)
-                        @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID)
-                        @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Type_ID)
-                    </tr>
-
-                    @for (int j = 1; j < Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs.Count; j++)
+                    <td colspan="3">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name, new { @readonly = "true", @class = "w-full" })</td>
+                    <td class="voucher-inter">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Inter_Rate, new { @class = "ncVar", @disabled = "disabled", @readonly = "true" })</td>
+                    @if (Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
                     {
-                        <tr id="NC_PCR2">
-                            <td></td>
-                            <td colspan="2"></td>
-                            <td colspan="3">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_Name, new { @readonly = "true", @class = "w-full" })</td>
-                            <td></td>
-                            @if (Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
+                        <td>
+                            @if ((@Model.EntryNC.NC_Category_ID == 9))
                             {
+                                <select id="@Html.IdFor(x => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID)" class="w-full input curr-sel" name="@Html.NameFor(x => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID)">
+                                    @foreach (var groepModel in Model.currList)
+                                    {
+                                        if (@groepModel.Value == @Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID + "")
+                                        {
+                                            <option value="@groepModel.Value" selected>@groepModel.Text</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@groepModel.Value">@groepModel.Text</option>
+                                        }
+                                    }
+                                </select>
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_Name, new { @readonly = "true" })
+                            }
+                        </td>
+                        <td class="" id="">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount, new { @class = "ncVar", @readonly = "true" })</td>
+                        <td></td>
+                        <td></td>
+                    }
+                    else if (Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs.First().ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_CREDIT)
+                    {
+                        <td></td>
+                        <td></td>
+                        <td>
+                            @if ((@Model.EntryNC.NC_Category_ID == 9))
+                            {
+                                <select id="@Html.IdFor(x => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID)" class="w-full input curr-sel" name="@Html.NameFor(x => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID)">
+                                    @foreach (var groepModel in Model.currList)
+                                    {
+                                        if (@groepModel.Value == @Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID + "")
+                                        {
+                                            <option value="@groepModel.Value" selected>@groepModel.Text</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@groepModel.Value">@groepModel.Text</option>
+                                        }
+                                    }
+                                </select>
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_Name, new { @readonly = "true" })
+                            }
+                        </td>
+                        <td class="" id="">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount, new { @class = "ncVar", @readonly = "true" })</td>
+                    }
+                    @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID)
+                    @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID)
+                    @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Type_ID)
+                </tr>
+
+                @for (int j = 1; j < Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs.Count; j++)
+                {
+                    <tr id="NC_PCR2">
+                        <td></td>
+                        <td colspan="2"></td>
+                        <td colspan="3">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_Name, new { @readonly = "true", @class = "w-full" })</td>
+                        <td></td>
+                        @if (Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
+                        {
                             <td>
-                                @if ((@Model.EntryNC.NC_Category_ID == 9) || (@Model.EntryNC.NC_Category_ID == 10))
+                                @if ((@Model.EntryNC.NC_Category_ID == 9))
                                 {
                                     <select id="@Html.IdFor(x => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_ID)" class="w-full input curr-sel" name="@Html.NameFor(x => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_ID)">
                                         @foreach (var groepModel in Model.currList)
@@ -457,50 +482,50 @@
                                     @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_Name, new { @readonly = "true" })
                                 }
                             </td>
-                                <td class="" id="">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Amount, new { @class = "ncVar", @readonly = "true" })</td>
-                                <td></td>
-                                <td></td>
-                            }
-                            else if (Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_CREDIT)
-                            {
-                                <td></td>
-                                <td></td>
-                                <td>
-                                    @if ((@Model.EntryNC.NC_Category_ID == 9) || (@Model.EntryNC.NC_Category_ID == 10))
-                                    {
-                                        <select id="@Html.IdFor(x => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_Name)" class="w-full input curr-sel" name="@Html.NameFor(x => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_Name)">
-                                            @foreach (var groepModel in Model.currList)
+                            <td class="" id="">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Amount, new { @class = "ncVar", @readonly = "true" })</td>
+                            <td></td>
+                            <td></td>
+                        }
+                        else if (Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_CREDIT)
+                        {
+                            <td></td>
+                            <td></td>
+                            <td>
+                                @if ((@Model.EntryNC.NC_Category_ID == 9))
+                                {
+                                    <select id="@Html.IdFor(x => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_Name)" class="w-full input curr-sel" name="@Html.NameFor(x => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_Name)">
+                                        @foreach (var groepModel in Model.currList)
+                                        {
+                                            if (@groepModel.Value == @Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_ID + "")
                                             {
-                                                if (@groepModel.Value == @Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_ID + "")
-                                                {
-                                                    <option value="@groepModel.Value" selected>@groepModel.Text</option>
-                                                }
-                                                else
-                                                {
-                                                    <option value="@groepModel.Value">@groepModel.Text</option>
-                                                }
+                                                <option value="@groepModel.Value" selected>@groepModel.Text</option>
                                             }
-                                        </select>
-                                    }
-                                    else
-                                    {
-                                        @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_Name, new { @readonly = "true" })
-                                    }
-                                </td>
-                                <td class="" id="">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Amount, new { @class = "ncVar", @readonly = "true" })</td>
-                            }
-                            @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_ID)
-                            @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_ID)
-                            @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Type_ID)
-                        </tr>
-                    }
-                    @Html.HiddenFor(x => x.EntryNC.NC_IE_DebitAmt)
-                    @Html.HiddenFor(x => x.EntryNC.NC_IE_CredAmt)
-                    @Html.HiddenFor(x => x.EntryNC.NC_IE_TotalAmt)
-                    @Html.HiddenFor(x => x.EntryNC.NC_CS_DebitAmt)
-                    @Html.HiddenFor(x => x.EntryNC.NC_CS_CredAmt)
-                    @Html.HiddenFor(x => x.EntryNC.NC_CS_TotalAmt)
-                </table>
+                                            else
+                                            {
+                                                <option value="@groepModel.Value">@groepModel.Text</option>
+                                            }
+                                        }
+                                    </select>
+                                }
+                                else
+                                {
+                                    @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_Name, new { @readonly = "true" })
+                                }
+                            </td>
+                            <td class="" id="">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Amount, new { @class = "ncVar", @readonly = "true" })</td>
+                        }
+                        @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_ID)
+                        @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_ID)
+                        @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Type_ID)
+                    </tr>
+                }
+                @Html.HiddenFor(x => x.EntryNC.NC_IE_DebitAmt)
+                @Html.HiddenFor(x => x.EntryNC.NC_IE_CredAmt)
+                @Html.HiddenFor(x => x.EntryNC.NC_IE_TotalAmt)
+                @Html.HiddenFor(x => x.EntryNC.NC_CS_DebitAmt)
+                @Html.HiddenFor(x => x.EntryNC.NC_CS_CredAmt)
+                @Html.HiddenFor(x => x.EntryNC.NC_CS_TotalAmt)
+            </table>
         }
         else
         {
@@ -552,7 +577,7 @@
             var subtotalIECred = 0;
 
             //TEMP
-            var tax_Rate = 0.0178572065098185;
+            //var tax_Rate = 0.0178572065098185;
 
             var categoryID = $("select#categoryName option:selected").val();
             $("tr[id^='item_']").each(function (index, element) {
@@ -584,45 +609,16 @@
 
                     //set values of Credit from Debit
                     var tempInd = parseInt(ind) + 1;
-                    if ((categoryID == "4") || (categoryID == "5")) {
-                        var taxAccVal = parseFloat(debitVal * tax_Rate);
-                        var BkAccVal = debitVal - taxAccVal;
-                        $(el).parent().siblings().find("td[id='cred_" + idNo + "']").find("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + tempInd + "__ExpNCDtlAcc_Amount']").val(parseFloat(taxAccVal).toFixed(2));
-                        $(el).parent().siblings().find("td[id='cred_" + idNo + "']").find("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + (parseInt(tempInd) + 1) + "__ExpNCDtlAcc_Amount']").val(parseFloat(BkAccVal).toFixed(2));
+                    if ((categoryID == "4") || (categoryID == "5") || ((categoryID == "8") && (idNo == 3)) || ((categoryID == "9") && (idNo == 1))) {
+                        //nothing will happen when inputting values in debit of PSSC and PCHC
+                        //the value will be manually inputed by the user
+
+                        //nothing will happen when passing the 4th row in Petty Cash Replenishment
+                        //the value will only be inputted when rate and credit is not empty
                     } else if ((categoryID == "8") && (idNo == 2)) {
                         $(el).parent().siblings().find("td[id='cred_" + idNo + "']").find("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + tempInd + "__ExpNCDtlAcc_Amount']").val(debitVal);
                         $("#EntryNC_ExpenseEntryNCDtls_3__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Amount").val(debitVal);
-                    } else if ((categoryID == "8") && (idNo == 3) || (categoryID == "9") && (idNo == 1)) {
-                        //nothing will happen when passing the 4th row in Petty Cash Replenishment
-                        //the value will only be inputted when rate and credit is not empty
-                    } else if ((categoryID == "10") && (idNo == 1)) {
-                        var rateVal = $("#EntryNC_ExpenseEntryNCDtls_1__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Inter_Rate").val();
-                        var debitVal = $("#EntryNC_ExpenseEntryNCDtls_1__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount").val();
-                        if (((rateVal != "0") && ($.isNumeric(rateVal))) && ((debitVal != "0") && ($.isNumeric(debitVal)))) {
-                            var creditVal = parseFloat(debitVal) / parseFloat(rateVal);
-                            //set value to credit
-                            $("#EntryNC_ExpenseEntryNCDtls_1__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Amount").val(creditVal.toFixed(2));
-                            $("#EntryNC_ExpenseEntryNCDtls_1__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Amount").attr('value', creditVal.toFixed(2));
-                            //set value to 3rd debit
-                            $("#EntryNC_ExpenseEntryNCDtls_2__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount").val(creditVal.toFixed(2));
-                            $("#EntryNC_ExpenseEntryNCDtls_2__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount").attr('value', creditVal.toFixed(2));
-                            //set value to 4th debit
-                            $("#EntryNC_ExpenseEntryNCDtls_3__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount").val(creditVal.toFixed(2));
-                            $("#EntryNC_ExpenseEntryNCDtls_3__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount").attr('value', creditVal.toFixed(2));
-                            //set value to cdd debit
-                            $("#EntryNC_ExpenseEntryNCDtls_CDD_0__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount").val(creditVal.toFixed(2));
-                            $("#EntryNC_ExpenseEntryNCDtls_CDD_0__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount").attr('value', creditVal.toFixed(2));
-                            //set value to cdd credit
-                            $("#EntryNC_ExpenseEntryNCDtls_CDD_0__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Amount").val(creditVal.toFixed(2));
-                            $("#EntryNC_ExpenseEntryNCDtls_CDD_0__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Amount").attr('value', creditVal.toFixed(2));
-                        } else {
-                            $("#EntryNC_ExpenseEntryNCDtls_1__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Amount").val(0);
-                            $("#EntryNC_ExpenseEntryNCDtls_2__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount").val(0);
-                            $("#EntryNC_ExpenseEntryNCDtls_3__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount").val(0);
-                            $("#EntryNC_ExpenseEntryNCDtls_CDD_0__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount").val(0);
-                            $("#EntryNC_ExpenseEntryNCDtls_CDD_0__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Amount").val(0);
-                        }
-                    } else if (((categoryID == "9") && (idNo == 0)) || ((categoryID == "10") && (idNo == 0))) {
+                    } else if ((categoryID == "9") && (idNo == 0)) {
                         $(el).parent().siblings().find("td[id='cred_" + idNo + "']").find("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + tempInd + "__ExpNCDtlAcc_Amount']").val(debitVal);
                         $("#EntryNC_ExpenseEntryNCDtls_1__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount").val(debitVal.toFixed(2));
                         $("#EntryNC_ExpenseEntryNCDtls_1__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount").attr('value', debitVal.toFixed(2));
@@ -635,18 +631,6 @@
                     subtotalCred += parseFloat($(el).find("[id$='__ExpNCDtlAcc_Amount']").val());
                 });
 
-                //In JSPAYROLL, set value to 4th Entry Debit
-                if ((categoryID == "8") && (idNo == 3) && ($(element).find("#EntryNC_ExpenseEntryNCDtls_3__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Inter_Rate").length != 0)) {
-                    var rateVal = $(element).find("#EntryNC_ExpenseEntryNCDtls_3__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Inter_Rate").val();
-                    var credVal = $("#EntryNC_ExpenseEntryNCDtls_3__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Amount").val();
-                    if (((rateVal != "0") && ($.isNumeric(rateVal))) && ((credVal != "0") && ($.isNumeric(credVal)))) {
-                        var debitVal = parseFloat(rateVal) * parseFloat(credVal);
-                        $(element).find("#EntryNC_ExpenseEntryNCDtls_3__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount").val(debitVal.toFixed(2));
-                        $(element).find("#EntryNC_ExpenseEntryNCDtls_3__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount").attr('value', debitVal.toFixed(2));
-                    } else {
-                        $(element).find("#EntryNC_ExpenseEntryNCDtls_3__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount").val(0);
-                    }
-                }
                 //In RETURN OF JSPAYROLL, set value to 2nd Entry Debit
                 if ((categoryID == "9") && (idNo == 1) && ($(element).find("#EntryNC_ExpenseEntryNCDtls_1__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Inter_Rate").length != 0)) {
                     var rateVal = $(element).find("#EntryNC_ExpenseEntryNCDtls_1__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Inter_Rate").val();
@@ -673,12 +657,17 @@
                     }
                 }
 
-                //For Computation of Computer Suspense Balance Checker in LSPAYROLL AND JSPAYROLL
-                if ((categoryID == "1") || (categoryID == "8")) {
+                //For Computation of Computer Suspense Balance Checker in LSPAYROLL AND JSPAYROLL AND RETURN OF JS PAYROLL
+                if ((categoryID == "1") || (categoryID == "8") || (categoryID == "9")) {
+                    //alert("ID NO => " + idNo);
                     $(element).find("td[id='deb_" + idNo + "']").each(function (ind, el) {
+                        var currID = $("#EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Curr_ID").val();
+                        //alert("CurrID => " + currID + ", CatID => " + categoryID);
                         if ($(el).find("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + ind + "__ExpNCDtlAcc_Amount']").hasClass("nc-comp-susp-db")) {
                             var debitVal = parseFloat($(el).find("#EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + ind + "__ExpNCDtlAcc_Amount").val());
                             if ((categoryID == "8") && ((idNo != 1) && (idNo != 3) && (idNo != 4) )) {
+                                debitVal = 0;
+                            } else if ((categoryID == "9") && (currID != "9")) {
                                 debitVal = 0;
                             }
                             subtotalCSDeb += debitVal;
@@ -688,10 +677,15 @@
                             subtotalIEDeb += debitVal;
                         }
                     });
+
                     $(element).find("td[id='cred_" + idNo + "']").each(function (ind, el) {
                         var tempInd = parseInt(ind) + 1;
+                        var currID = $("#EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Curr_ID").val();
                         if ($(el).find("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + tempInd + "__ExpNCDtlAcc_Amount']").hasClass("nc-comp-susp-cd")) {
                             var creditVal = parseFloat($(el).find("#EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + tempInd + "__ExpNCDtlAcc_Amount").val());
+                            if ((categoryID == "9") && (currID != "9")) {
+                                creditVal = 0;
+                            }
                             subtotalCSCred += creditVal;
                         }
                         if ($(el).find("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + tempInd + "__ExpNCDtlAcc_Amount']").hasClass("nc-inter-cd")) {
@@ -720,7 +714,11 @@
             $("#EntryNC_NC_CS_CredAmt").val(parseFloat(totalCSCredit).toFixed(2));
             $("#EntryNC_NC_CS_TotalAmt").val((parseFloat(totalCSDebit) + parseFloat(totalCSCredit)).toFixed(2));
 
-
+            //Assign values to CDD IS in Return of JS Payroll
+            if (categoryID == "9") {
+                $("#EntryNC_ExpenseEntryNCDtls_CDD_0__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount").val(parseFloat(totalCSDebit).toFixed(2));
+                $("#EntryNC_ExpenseEntryNCDtls_CDD_0__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Amount").val(parseFloat(subtotalIECred).toFixed(2));
+            }
             //For Computation of Computer Suspense Balance Checker in Petty Cash Replenishment
             $("tr[id^='item_']").each(function (index, element) {
                 if (categoryID == "7") {
@@ -749,6 +747,7 @@
                 }
 
             });
+
             if (categoryID == "7") {
                 $("#EntryNC_ExpenseEntryNCDtls_CDD_0__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount").val(parseFloat(subtotalPCRPettyDeb).toFixed(2))
                 //$("#EntryNC_ExpenseEntryNCDtls_CDD_0__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount").parent().siblings("td:eq(6)").text(parseFloat(subtotalPCRPettyCred).toFixed(2))

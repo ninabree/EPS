@@ -39,14 +39,25 @@
         </div>
     </form>
     <table class="table table-striped tab-tbl">
+        <colgroup>
+            <col style="width:2%;" />
+            <col>
+            <col/>
+            <col/>
+            <col style="width:15%;" />
+            <col style="width:15%;" />
+            <col/>
+            <col/>
+            <col/>
+        </colgroup>
         <thead>
             <tr>
                 <th></th>
                 <th id="Name"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["VendorSortParm"]">Vendor<p class="btn-xs glyphicon @ViewData["glyph-1"]"></p></a></th>
                 <th id="TIN"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData[" Title"]" asp-route-sortOrder="@ViewData[" VendorTINSortParm"]">TIN<p class="btn-xs glyphicon @ViewData[" glyph-2"]"></p></a></th>
                 <th id="Address"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData[" Title"]" asp-route-sortOrder="@ViewData[" VendorAddSortParm"]">Address<p class="btn-xs glyphicon @ViewData[" glyph-3"]"></p></a></th>
-                <th id="" colspan="3">Tax Rate/s</th>
-                <th id="" colspan="3">VAT/s</th>
+                <th id="">Tax Rate/s</th>
+                <th id="">VAT/s</th>
                 <th id="Creator_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["VendorCreatorSortParm"]">Input By<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
                 <th id="Approver_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["VendorApproverSortParm"]">Approved By<p class="btn-xs glyphicon @ViewData["glyph-5"]"></p></a></th>
                 <th id="Status"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["VendorStatusSortParm"]">Status<p class="btn-xs glyphicon @ViewData["glyph-6"]"></p></a></th>
@@ -65,7 +76,7 @@
                         <td>@Html.DisplayFor(modelItem => item.Vendor_Name)</td>
                         <td>@Html.DisplayFor(modelItem => item.Vendor_TIN)</td>
                         <td>@Html.DisplayFor(modelItem => item.Vendor_Address)</td>
-                        <td colspan="3">
+                        <td>
                             @if (item.Vendor_Tax_Rates.Count > 0)
                             {
                                 var last = item.Vendor_Tax_Rates.Last();
@@ -83,7 +94,7 @@
                                 }
                             }
                         </td>
-                        <td colspan="3">
+                        <td>
                             @if (item.Vendor_VAT.Count > 0)
                             {
                                 var last = item.Vendor_VAT.Last();

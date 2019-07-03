@@ -135,6 +135,9 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly string HOME_PENDING = "/Home/Pending";
         public static readonly string HOME_HISTORY = "/Home/History";
 
+
+        public static readonly string HOME_DM = "/Home/DM";
+
         public static readonly List<string> HOME_VALS = new List<string> {
             GlobalSystemValues.HOME_INDEX,
             GlobalSystemValues.HOME_PENDING,
@@ -155,7 +158,6 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly int NC_PETTY_CASH_REPLENISHMENT = 7;
         public static readonly int NC_JS_PAYROLL = 8;
         public static readonly int NC_RETURN_OF_JS_PAYROLL = 9;
-        public static readonly int NC_FOREIGN_EXCHANGE_RECEIVING = 10;
         public static readonly int NC_MISCELLANEOUS_ENTRIES = 11;
 
         public static readonly List<int> NC_CATEGORIES = new List<int> {
@@ -168,7 +170,6 @@ namespace ExpenseProcessingSystem.ConstantData
             GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT,
             GlobalSystemValues.NC_JS_PAYROLL,
             GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL,
-            GlobalSystemValues.NC_FOREIGN_EXCHANGE_RECEIVING,
             GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES
         };
         public static readonly List<SelectListItem> NC_CATEGORIES_SELECT = new List<SelectListItem> {
@@ -181,8 +182,7 @@ namespace ExpenseProcessingSystem.ConstantData
                 new SelectListItem { Text = "PETTY CASH REPLENISHMENT", Value = NC_CATEGORIES[6].ToString(), Selected = false },
                 new SelectListItem { Text = "JS PAYROLL.", Value = NC_CATEGORIES[7].ToString(), Selected = false },
                 new SelectListItem { Text = "RETURN OF JS PAYROLL", Value = NC_CATEGORIES[8].ToString(), Selected = false },
-                new SelectListItem { Text = "FOREIGN EXCHANGE RECEIVING", Value = NC_CATEGORIES[9].ToString(), Selected = false },
-                new SelectListItem { Text = "MISCELLANEOUS ENTRIES", Value = NC_CATEGORIES[10].ToString(), Selected = false }
+                new SelectListItem { Text = "MISCELLANEOUS ENTRIES", Value = NC_CATEGORIES[9].ToString(), Selected = false }
         };
         //Static values for account types of entries use for Non Cash.
         public static readonly int NC_DEBIT = 1;
@@ -201,9 +201,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "T-L/S PAY:",
-                        ExpNCDtl_Period_Duration = "Dec'17",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "Dec'19",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -229,9 +227,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "HDMF ER Cont.",
-                        ExpNCDtl_Period_Duration = "Dec'17",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "Dec'19",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -256,9 +252,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "WHT L/S PAY",
-                        ExpNCDtl_Period_Duration = "Dec16-31'17",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "Dec16-31,'19",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -283,9 +277,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "HDMF LOAN:",
-                        ExpNCDtl_Period_Duration = "Dec16-31'17",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "Dec16-31,'19",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -310,9 +302,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "NET BDO -L/S PAY:",
-                        ExpNCDtl_Period_Duration = "Dec16-31'17",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "Dec16-31,'19",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -337,9 +327,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "CTBC LOAN:",
-                        ExpNCDtl_Period_Duration = "Dec16-31'17",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "Dec16-31,'19",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -364,9 +352,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "HSBC LOAN:",
-                        ExpNCDtl_Period_Duration = "Dec'17",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "Dec16-31,'19",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -391,9 +377,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "HDMF ER-EE CONT:",
-                        ExpNCDtl_Period_Duration = "Dec'17",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "Dec'19",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -418,9 +402,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "SSS LOAN:",
-                        ExpNCDtl_Period_Duration = "Dec16-31,'17",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "Dec16-31,'19",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -445,9 +427,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "NT - Cloth, Medical, Rice:",
-                        ExpNCDtl_Period_Duration = "",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = " ",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -472,9 +452,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "NT - Proportionate Bonus:",
-                        ExpNCDtl_Period_Duration = "2017",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "2019",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -514,9 +492,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "REMIT RTGS PHILPASS",
-                        ExpNCDtl_Period_Duration = "Dec'17",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "Dec'19",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -542,9 +518,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "BPI PAYROLL FACILITY",
-                        ExpNCDtl_Period_Duration = "Dec'17",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "Dec'19",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -569,9 +543,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "REMIT WHT CONTRACTORS",
-                        ExpNCDtl_Period_Duration = "Dec16-31'17",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "Dec'19",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -596,9 +568,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "REMIT WHT MONEY MARKET",
-                        ExpNCDtl_Period_Duration = "Dec16-31'17",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "Dec'19",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -623,9 +593,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "REMIT WHT J/S SALARY",
-                        ExpNCDtl_Period_Duration = "Dec16-31'17",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "Dec'19",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -650,9 +618,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "REMIT WHT L/S SALARY",
-                        ExpNCDtl_Period_Duration = "Dec16-31'17",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "Dec'19",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -677,9 +643,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "REMIT WHT L/S BONUS",
-                        ExpNCDtl_Period_Duration = "Dec'17",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "Dec'19",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -704,9 +668,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "REMIT VAT",
-                        ExpNCDtl_Period_Duration = "Dec'17",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "Dec'19",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -731,9 +693,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "FRINGE BENEFIT TAX",
-                        ExpNCDtl_Period_Duration = "Dec16-31,'17",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "Dec'19",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -773,9 +733,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "BSP:MONTHLY ROSS BILL",
-                        ExpNCDtl_Period_Duration = "Dec'17",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "Dec'19",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -815,9 +773,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "PSSC:2% PDDTS CHARGES",
-                        ExpNCDtl_Period_Duration = "Dec'17",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "Dec'19",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -866,9 +822,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "PCHC:2% PROC FEES",
-                        ExpNCDtl_Period_Duration = "Dec'17",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "Dec'19",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -903,9 +857,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "2% PAS 5",
-                        ExpNCDtl_Period_Duration = "Dec'17",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "Dec'19",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -954,9 +906,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "DEPRECIATION:BANK PREMISES",
-                        ExpNCDtl_Period_Duration = "Dec'17",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "Dec'19",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -982,9 +932,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "DEPRECIATION:BK FIR FIX EQUIP",
-                        ExpNCDtl_Period_Duration = "Dec'17",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "Dec'19",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -1010,9 +958,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "DEPRECIATION: SOFTWARE",
-                        ExpNCDtl_Period_Duration = "Dec'17",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "Dec'19",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -1052,9 +998,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "PETTY CASH REPLENISHMENT",
-                        ExpNCDtl_Period_Duration = "Dec'17",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = " ",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -1087,9 +1031,7 @@ namespace ExpenseProcessingSystem.ConstantData
                 new ExpenseEntryNCDtlViewModel
                 {
                     ExpNCDtl_Remarks_Desc = "PETTY CASH REPLENISHMENT",
-                    ExpNCDtl_Period_Duration = "Dec'17",
-                    ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                    ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = " ",
                     ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                     {
                         new ExpenseEntryNCDtlAccViewModel{
@@ -1128,9 +1070,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "J/S PAYROLL: ",
-                        ExpNCDtl_Period_Duration = "Dec'17",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "Dec'19",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -1156,9 +1096,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "WHT J/S PAYROLL:",
-                        ExpNCDtl_Period_Duration = "Dec'17",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "Dec'19",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -1184,9 +1122,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "J/S PAYROLL: ",
-                        ExpNCDtl_Period_Duration = "Dec'17",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "Dec'19",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -1212,9 +1148,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "J/S PAYROLL: ",
-                        ExpNCDtl_Period_Duration = "Dec'17",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "Dec'19",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -1240,9 +1174,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "JS PAYROLL: CAR ADJUST",
-                        ExpNCDtl_Period_Duration = "Dec'17",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "Dec'19",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -1282,9 +1214,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "",
-                        ExpNCDtl_Period_Duration = "",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -1310,9 +1240,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "",
-                        ExpNCDtl_Period_Duration = "",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -1338,9 +1266,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "",
-                        ExpNCDtl_Period_Duration = "",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -1373,9 +1299,7 @@ namespace ExpenseProcessingSystem.ConstantData
                 new ExpenseEntryNCDtlViewModel
                 {
                     ExpNCDtl_Remarks_Desc = "",
-                    ExpNCDtl_Period_Duration = "",
-                    ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                    ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "",
                     ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                     {
                         new ExpenseEntryNCDtlAccViewModel{
@@ -1401,167 +1325,6 @@ namespace ExpenseProcessingSystem.ConstantData
             };
         }
     }
-    //NON CASH CONSTANT VALUES
-    public class CONSTANT_NC_FOREIGN_EXCHANGE_RECEIVING
-    {
-        public static EntryNCViewModel Populate_FOREIGN_EXCHANGE_RECEIVING(DMCurrencyModel currDetailsPHP, DMCurrencyModel currDetailsUSD)
-        {
-            return new EntryNCViewModel
-            {
-                NC_Category_ID = 10,
-                ExpenseEntryNCDtls = new List<ExpenseEntryNCDtlViewModel>()
-                {
-                    new ExpenseEntryNCDtlViewModel
-                    {
-                        ExpNCDtl_Remarks_Desc = "",
-                        ExpNCDtl_Period_Duration = "",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
-                        ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
-                        {
-                            new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 497,
-                                ExpNCDtlAcc_Acc_Name = "EXPENSE",
-                                ExpNCDtlAcc_Amount = 0,
-                                ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
-                                ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
-                                ExpNCDtlAcc_Inter_Rate = 0,
-                                ExpNCDtlAcc_Type_ID = 1
-                            },
-                            new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 487,
-                                ExpNCDtlAcc_Acc_Name = "B79-767-111111 - COMPUTER SUSPENSE PHP",
-                                ExpNCDtlAcc_Amount = 0,
-                                ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
-                                ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
-                                ExpNCDtlAcc_Inter_Rate = 0,
-                                ExpNCDtlAcc_Type_ID = 2
-                            }
-                        }
-                    },
-                    new ExpenseEntryNCDtlViewModel
-                    {
-                        ExpNCDtl_Remarks_Desc = "",
-                        ExpNCDtl_Period_Duration = "",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
-                        ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
-                        {
-                            new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 487,
-                                ExpNCDtlAcc_Acc_Name = "B79-767-111111 - COMPUTER SUSPENSE PHP",
-                                ExpNCDtlAcc_Amount = 0,
-                                ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
-                                ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
-                                ExpNCDtlAcc_Inter_Rate = 0,
-                                ExpNCDtlAcc_Type_ID = 1
-                            },
-                            new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 498,
-                                ExpNCDtlAcc_Acc_Name = "B79767111111 - INTERENTITY LIAB USD",
-                                ExpNCDtlAcc_Amount = 0,
-                                ExpNCDtlAcc_Curr_ID = currDetailsUSD.Curr_ID,
-                                ExpNCDtlAcc_Curr_Name = currDetailsUSD.Curr_CCY_ABBR,
-                                ExpNCDtlAcc_Inter_Rate = 0,
-                                ExpNCDtlAcc_Type_ID = 2
-                            }
-                        }
-                    },
-                    new ExpenseEntryNCDtlViewModel
-                    {
-                        ExpNCDtl_Remarks_Desc = "",
-                        ExpNCDtl_Period_Duration = "",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
-                        ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
-                        {
-                            new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 498,
-                                ExpNCDtlAcc_Acc_Name = "B79767111111 - INTERENTITY LIAB USD",
-                                ExpNCDtlAcc_Amount = 0,
-                                ExpNCDtlAcc_Curr_ID = currDetailsUSD.Curr_ID,
-                                ExpNCDtlAcc_Curr_Name = currDetailsUSD.Curr_CCY_ABBR,
-                                ExpNCDtlAcc_Inter_Rate = 0,
-                                ExpNCDtlAcc_Type_ID = 1
-                            },
-                            new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 499,
-                                ExpNCDtlAcc_Acc_Name = "SUSPENSE PAYMENT",
-                                ExpNCDtlAcc_Amount = 0,
-                                ExpNCDtlAcc_Curr_ID = currDetailsUSD.Curr_ID,
-                                ExpNCDtlAcc_Curr_Name = currDetailsUSD.Curr_CCY_ABBR,
-                                ExpNCDtlAcc_Inter_Rate = 0,
-                                ExpNCDtlAcc_Type_ID = 2
-                            }
-                        }
-                    },
-                    new ExpenseEntryNCDtlViewModel
-                    {
-                        ExpNCDtl_Remarks_Desc = "",
-                        ExpNCDtl_Period_Duration = "",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
-                        ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
-                        {
-                            new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 495,
-                                ExpNCDtlAcc_Acc_Name = "B79-789-111111 - COMPUTER SUSPENSE USD",
-                                ExpNCDtlAcc_Amount = 0,
-                                ExpNCDtlAcc_Curr_ID = currDetailsUSD.Curr_ID,
-                                ExpNCDtlAcc_Curr_Name = currDetailsUSD.Curr_CCY_ABBR,
-                                ExpNCDtlAcc_Inter_Rate = 0,
-                                ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_DEBIT
-                            },
-                            new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 499,
-                                ExpNCDtlAcc_Acc_Name = "SUSPENSE PAYMENT",
-                                ExpNCDtlAcc_Amount = 0,
-                                ExpNCDtlAcc_Curr_ID = currDetailsUSD.Curr_ID,
-                                ExpNCDtlAcc_Curr_Name = currDetailsUSD.Curr_CCY_ABBR,
-                                ExpNCDtlAcc_Inter_Rate = 0,
-                                ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_CREDIT
-                            }
-                        }
-                    }
-                }
-            };
-        }
-        public static List<ExpenseEntryNCDtlViewModel> Populate_CDD_Instruc_Sheet(DMCurrencyModel currDetailsPHP, DMCurrencyModel currDetailsUSD)
-        {
-            return new List<ExpenseEntryNCDtlViewModel>()
-            {
-                new ExpenseEntryNCDtlViewModel
-                {
-                    ExpNCDtl_Remarks_Desc = "",
-                    ExpNCDtl_Period_Duration = "",
-                    ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                    ExpNCDtl_Remarks_Period_To = DateTime.Now,
-                    ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
-                    {
-                        new ExpenseEntryNCDtlAccViewModel{
-                            ExpNCDtlAcc_Acc_ID = 496,
-                            ExpNCDtlAcc_Acc_Name = "F79789151137 - USD CASH",
-                            ExpNCDtlAcc_Amount = 0,
-                            ExpNCDtlAcc_Curr_ID = currDetailsUSD.Curr_ID,
-                            ExpNCDtlAcc_Curr_Name = currDetailsUSD.Curr_CCY_ABBR,
-                            ExpNCDtlAcc_Inter_Rate = 0,
-                            ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_DEBIT
-                        },
-                        new ExpenseEntryNCDtlAccViewModel{
-                            ExpNCDtlAcc_Acc_ID = 495,
-                            ExpNCDtlAcc_Acc_Name = "B79-789-111111 - COMPUTER SUSPENSE USD",
-                            ExpNCDtlAcc_Amount = 0,
-                            ExpNCDtlAcc_Curr_ID = currDetailsUSD.Curr_ID,
-                            ExpNCDtlAcc_Curr_Name = currDetailsUSD.Curr_CCY_ABBR,
-                            ExpNCDtlAcc_Inter_Rate = 0,
-                            ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_CREDIT
-                        }
-                    }
-                }
-            };
-        }
-    }
-
     //NON CASH CONSTANT VALUES
     public class CONSTANT_NC_MISC_ENTRIES
     {
@@ -1575,9 +1338,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "",
-                        ExpNCDtl_Period_Duration = "",
-                        ExpNCDtl_Remarks_Period_From = DateTime.Now,
-                        ExpNCDtl_Remarks_Period_To = DateTime.Now,
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{

@@ -174,7 +174,6 @@
         var amounts = $("");
         var grossAmt = 0;
         var origGrossAmt = 0;
-        
         //check if Inter Entity
         if (isInter) {
             var grossAmt = $("#" + pNode.id + " td .txtGross").val();
@@ -195,6 +194,7 @@
                 }
             }
         }
+
         $("#" + pNode.id + " td .txtGross").val(grossAmt);
 
         //$("#" + pNode.id + " .txtGross").attr("value", grossAmt);

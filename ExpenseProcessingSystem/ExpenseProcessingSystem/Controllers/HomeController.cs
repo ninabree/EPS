@@ -1243,7 +1243,6 @@ namespace ExpenseProcessingSystem.Controllers
             foreach(var i in ssList.EntryCV)
             {
                 i.screenCode = "SS";
-                i.ccyAbbrev = _service.GetCurrencyAbbrv(i.ccy);
             }
 
             return View("Entry_SS_ReadOnly", ssList);
@@ -1251,36 +1250,66 @@ namespace ExpenseProcessingSystem.Controllers
 
         [OnlineUserCheck]
         [NonAdminRoleCheck]
-        public IActionResult CDD_IS_SS(int entryID, int entryDtlID, string ccyAbbr)
+        public IActionResult CDD_IS_SS(int entryID)
         {
-            string newFileName = "CDD_IS_CashAdvance_" + ccyAbbr + "_" + DateTime.Now.ToString("MM-dd-yyyy_hhmmss") + ".xlsx";
-            var expense = _service.getExpenseDetail(entryID);
-            var expenseDtl = expense.ExpenseEntryDetails.Where(x => x.ExpDtl_ID == entryDtlID).FirstOrDefault();
-
+            string newFileName = "CDD_IS" + DateTime.Now.ToString("MM-dd-yyyy_hhmmss") + ".xlsx";
             ExcelGenerateService excelGenerate = new ExcelGenerateService();
             CDDISValuesVIewModel viewModel = new CDDISValuesVIewModel
             {
-                VALUE_DATE = DateTime.Parse(expense.Expense_Date.ToLongDateString()),
-                REMARKS = expenseDtl.ExpDtl_Gbase_Remarks,
-                CURRENCY = _service.GetCurrencyAbbrv(expenseDtl.ExpDtl_Ccy)
+                VALUE_DATE = DateTime.Parse("2019/01/01"),
+                REFERENCE_NO = "CHK767123456",
+                COMMENT = "CD",
+                SECTION = "09",
+                REMARKS = "THIS IS CDD Instruction sheet generate TEST",
+                SCHEME_NO = "123456789012",
+                MEMO = "Y"
             };
 
             List<CDDISValueContentsViewModel> cddContents = new List<CDDISValueContentsViewModel>
             {
                 new CDDISValueContentsViewModel
                 {
-                    AMOUNT = expenseDtl.ExpDtl_Debit,
+                    DEBIT_CREDIT = "D",
+                    CCY = "JPY",
+                    AMOUNT = 98223,
+                    CUSTOMER_ABBR = "900",
+                    ACCOUNT_CODE = "14017",
+                    ACCOUNT_NO = "B79789111111",
+                    EXCHANGE_RATE = 0.4545,
+                    CONTRA_CCY = "USD",
+                    FUND = "O",
+                    CHECK_NO = "2019062122",
+                    AVAILABLE_DATE = DateTime.Parse("2019/02/01"),
+                    ADVICE = "Y",
+                    DETAILS = "This is Details 1 Test",
+                    ENTITY = "010",
+                    DIVISION = "11",
+                    INTER_AMOUNT = 915.25,
+                    INTER_RATE = 0.0093
                 },
                 new CDDISValueContentsViewModel
                 {
-                    AMOUNT = expenseDtl.ExpDtl_Debit,
+                    DEBIT_CREDIT = "C",
+                    CCY = "JPY",
+                    AMOUNT = 98223.25,
+                    CUSTOMER_ABBR = "911",
+                    ACCOUNT_CODE = "00204",
+                    ACCOUNT_NO = "F79789171137",
+                    EXCHANGE_RATE = 0.4545,
+                    CONTRA_CCY = "SGD",
+                    FUND = "O",
+                    CHECK_NO = "2019062123",
+                    AVAILABLE_DATE = DateTime.Parse("2019/02/22"),
+                    ADVICE = "Y",
+                    DETAILS = "This is Details 2 Test",
+                    ENTITY = "011",
+                    DIVISION = "12",
+                    INTER_AMOUNT = 1915.25,
+                    INTER_RATE = 0.1193
                 },
             };
             viewModel.CDDContents = cddContents;
-            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
-            string excelTemplateName = (viewModel.CURRENCY == xelem.Element("CURRENCY_Yen").Value) ? "CDDIS_Yen.xlsx" : "CDDIS_USD.xlsx";
-
-            return File(excelGenerate.ExcelCDDIS(viewModel, newFileName, excelTemplateName), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", newFileName);
+            return File(excelGenerate.ExcelCDDIS(viewModel, newFileName), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", newFileName);
 
         }
 
@@ -1325,6 +1354,20 @@ namespace ExpenseProcessingSystem.Controllers
 
             EntryNCViewModelList ncList = _service.getExpenseNC(entryID);
             ncList = PopulateEntryNC(ncList);
+            DMCurrencyModel currDtl = _context.DMCurrency.Where(x => x.Curr_MasterID == 1 && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
+            DMCurrencyModel currDtlUSD = _context.DMCurrency.Where(x => x.Curr_MasterID == 2 && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
+
+            if (ncList.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT)
+            {
+                ncList.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_PETTYCASHREPLENISHMENT.Populate_CDD_Instruc_Sheet(currDtl);
+                ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount = ncList.EntryNC.NC_CS_DebitAmt;
+                ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Amount = ncList.EntryNC.NC_CS_CredAmt;
+            }else if (ncList.EntryNC.NC_Category_ID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL)
+            {
+                ncList.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_RETURN_OF_JSPAYROLL.Populate_CDD_Instruc_Sheet(currDtl, currDtlUSD);
+                ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount = ncList.EntryNC.NC_CS_DebitAmt;
+                ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Amount = ncList.EntryNC.NC_CS_CredAmt;
+            }
 
             return View("Entry_NC_ReadOnly", ncList);
         }
@@ -1353,8 +1396,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "Entry_NC_ReadOnly";
-                    break;
+                    return RedirectToAction("View_NC", "Home", new { entryID = entryID });
                 case "verifier":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_VERIFIED, int.Parse(GetUserID())))
                     {
@@ -1364,19 +1406,18 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "Entry_NC_ReadOnly";
+                    return RedirectToAction("View_NC", "Home", new { entryID = entryID });
                     break;
                 case "Reject":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REJECTED, int.Parse(GetUserID())))
                     {
-                        _service.postNC(entryID, "P");
                         ViewBag.Success = 1;
                     }
                     else
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "Entry_NC_ReadOnly";
+                    return RedirectToAction("View_NC", "Home", new { entryID = entryID });
                     break;
                 case "Delete":
                     if (_service.deleteExpenseEntry(entryID, GlobalSystemValues.TYPE_NC))
@@ -1390,15 +1431,7 @@ namespace ExpenseProcessingSystem.Controllers
                     viewLink = "Entry_NC";
                     return RedirectToAction("Entry_NC", new EntryNCViewModelList());
                 case "PrintCDD":
-                    //if ()
-                    //{
-                        return RedirectToAction("CDD_IS_NC_PCR", new { entryID = entryID });
-                    //}
-                    //else if ()
-                    //{
-                    //    return RedirectToAction("CDD_IS_NC_DDV", new { entryID = entryID });
-                    //}
-                    //break;
+                    return RedirectToAction("CDD_IS_NC_PCR", new { entryID = entryID });
                 case "Reversal":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
                     {
@@ -1409,7 +1442,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "Entry_NC_ReadOnly";
+                    return RedirectToAction("View_NC", "Home", new { entryID = entryID });
                     break;
                 default:
                     break;
@@ -1431,11 +1464,12 @@ namespace ExpenseProcessingSystem.Controllers
             ExcelGenerateService excelGenerate = new ExcelGenerateService();
             CDDISValuesVIewModel viewModel = new CDDISValuesVIewModel {
                 VALUE_DATE = DateTime.Parse("2019/01/01"), //TEMP VALUE
+                REFERENCE_NO = " GA767      ",
                 COMMENT = "  ",
                 SECTION = "09",
                 REMARKS = "AD: PETTY CASH REPLENISHEMENT",
                 SCHEME_NO = "  ",
-                MEMO = "Y"
+                MEMO = " "
             };
             List<CDDISValueContentsViewModel> cddContents = new List<CDDISValueContentsViewModel>();
             foreach (var dtl in entryVals.EntryNC.ExpenseEntryNCDtls){
@@ -1448,9 +1482,9 @@ namespace ExpenseProcessingSystem.Controllers
                         CCY = _context.DMCurrency.Where(x=> x.Curr_ID == acc.ExpNCDtlAcc_Curr_ID).Select(x => x.Curr_CCY_ABBR).FirstOrDefault(),
                         AMOUNT = acc.ExpNCDtlAcc_Amount,
                         CUSTOMER_ABBR = "900",
-                        ACCOUNT_CODE = acct.Account_Code,
+                        ACCOUNT_CODE = "147017"/*acct.Account_Code*/,
                         ACCOUNT_NO = acct.Account_No,
-                        EXCHANGE_RATE = acc.ExpNCDtlAcc_Inter_Rate,
+                        //EXCHANGE_RATE = ,
                         CONTRA_CCY = "   ",
                         FUND = (acct.Account_Fund) ? "O" : " ",
                         CHECK_NO = " ",
@@ -1466,10 +1500,7 @@ namespace ExpenseProcessingSystem.Controllers
                 }
             }
             viewModel.CDDContents = cddContents;
-
-            string excelTemplateName = "CDDIS_template.xlsx";
-
-            return File(excelGenerate.ExcelCDDIS(viewModel, newFileName, excelTemplateName), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", newFileName);
+            return File(excelGenerate.ExcelCDDIS(viewModel, newFileName), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", newFileName);
 
         }
         //[* Entry Non Cash *]
@@ -1552,7 +1583,7 @@ namespace ExpenseProcessingSystem.Controllers
             var userId = GetUserID();
 
             LiquidationViewModel ssList = _service.getExpenseToLiqudate(entryID);
-            ssList.accList = _service.getAccountList();
+
             foreach (var i in ssList.LiquidationDetails)
             {
                 i.screenCode = "Liquidation_SS";
@@ -1569,7 +1600,6 @@ namespace ExpenseProcessingSystem.Controllers
             var userId = GetUserID();
             if (!ModelState.IsValid)
             {
-                vm.accList = _service.getAccountList();
                 return View("Liquidation_SS", vm);
             }
 
@@ -1612,7 +1642,7 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             LiquidationViewModel ssList = _service.getExpenseToLiqudate(entryID);
-            ssList.accList = _service.getAccountList();
+
             foreach (var i in ssList.LiquidationDetails)
             {
                 i.screenCode = "Liquidation_SS";
@@ -1686,7 +1716,6 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             ssList = _service.getExpenseToLiqudate(entryID);
-            ssList.accList = _service.getAccountList();
 
             foreach (var i in ssList.LiquidationDetails)
             {
@@ -1694,43 +1723,6 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             return View(viewLink, ssList);
-        }
-
-        [OnlineUserCheck]
-        [NonAdminRoleCheck]
-        public IActionResult CDD_IS_Liquidation(int entryID, int entryDtlID, string ccyAbbr)
-        {
-            string newFileName = "CDD_IS_Liqudation_" + ccyAbbr + "_" + DateTime.Now.ToString("MM-dd-yyyy_hhmmss") + ".xlsx";
-            var expense = _service.getExpenseToLiqudate(entryID);
-            var expenseDtl = expense.LiquidationDetails.Where(x => x.EntryDetailsID == entryDtlID).FirstOrDefault();
-
-            ExcelGenerateService excelGenerate = new ExcelGenerateService();
-            CDDISValuesVIewModel viewModel = new CDDISValuesVIewModel
-            {
-                VALUE_DATE = DateTime.Parse(expense.LiqEntryDetails.Liq_Created_Date.ToLongDateString()),
-                REMARKS = "S" + expenseDtl.GBaseRemarks,
-                CURRENCY = _service.GetCurrencyAbbrv(expenseDtl.ccyID)
-            };
-            
-
-            List<CDDISValueContentsViewModel> cddContents = new List<CDDISValueContentsViewModel>
-            {
-                new CDDISValueContentsViewModel
-                {
-                    AMOUNT = expenseDtl.liqInterEntity[2].Liq_Amount_1_2,
-                },
-                new CDDISValueContentsViewModel
-                {
-                    AMOUNT = expenseDtl.liqInterEntity[2].Liq_Amount_1_2,
-                },
-            };
-            viewModel.CDDContents = cddContents;
-
-            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
-            string excelTemplateName = (viewModel.CURRENCY == xelem.Element("CURRENCY_Yen").Value) ? "CDDIS_Liq_Yen.xlsx" : "CDDIS_Liq_USD.xlsx";
-
-            return File(excelGenerate.ExcelCDDIS(viewModel, newFileName, excelTemplateName), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", newFileName);
-
         }
 
         //------------------------------------------------------------------
@@ -2571,7 +2563,6 @@ namespace ExpenseProcessingSystem.Controllers
         }
 
         [HttpPost]
-        [AcceptVerbs("GET")]
         public JsonResult getVendorTRList(int vendorID)
         {
             var trList = _service.getVendorTaxRate(vendorID);
@@ -2580,7 +2571,6 @@ namespace ExpenseProcessingSystem.Controllers
         }
 
         [HttpPost]
-        [AcceptVerbs("GET")]
         public JsonResult getVendorVatList(int vendorID)
         {
             var vatList = _service.getVendorVat(vendorID);
