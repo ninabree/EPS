@@ -4,6 +4,7 @@
 
 @using ExpenseProcessingSystem.ViewModels
 @using ExpenseProcessingSystem.ConstantData
+@using System.Xml.Linq
 @model LiquidationViewModel
 
 @using Microsoft.AspNetCore.Http
@@ -72,7 +73,7 @@
                         <tr id="item_@i">
                             <td id="sss">
                                 <a class="liqudationBtn" href="#"><img id="imgLiq" src="~/images/liqLogo.png" style="width:100%;height:100%" /></a>
-                                @Html.HiddenFor(x => Model.LiquidationDetails[i].EntryDetailsID)
+                                @Html.HiddenFor(x => Model.LiquidationDetails[i].EntryDetailsID, new { @class = "entryDtlID" })
                                 @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInputFlag, new { @class = "hiddenLiqFlag" })
                                 <div id="divLiqCashBD_@i">
                                     @for (int y = 0; y < Model.LiquidationDetails[i].liqCashBreakdown.Count(); y++)
@@ -89,22 +90,32 @@
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_AccountID_1_2)
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_AccountID_2_1)
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_AccountID_2_2)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_AccountID_3_1)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_AccountID_3_2)
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_Amount_1_1)
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_Amount_1_2)
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_Amount_2_1)
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_Amount_2_2)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_Amount_3_1)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_Amount_3_2)
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_CCY_1_1)
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_CCY_1_2)
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_CCY_2_1)
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_CCY_2_2)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_CCY_3_1)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_CCY_3_2)
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_DebitCred_1_1)
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_DebitCred_1_2)
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_DebitCred_2_1)
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_DebitCred_2_2)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_DebitCred_3_1)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_DebitCred_3_2)
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_InterRate_1_1)
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_InterRate_1_2)
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_InterRate_2_1)
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_InterRate_2_2)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_InterRate_3_1)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_InterRate_3_2)
                                     }
                                 </div>
                             </td>
@@ -160,6 +171,10 @@
                             </td>
                             <td id="req_@i">
                                 <a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#"></a>
+                                @if (Model.LiquidationDetails[i].ccyAbbrev != XElement.Load("wwwroot/xml/LiquidationValue.xml").Element("CURRENCY_PHP").Value)
+                                {
+                                    <a class="cddISBtn" href="#"><img id="imgCDD" src="~/images/cddLogo.png" style="width:100%;height:70%" /></a>
+                                }
                                 @Html.HiddenFor(x => Model.LiquidationDetails[i].modalInputFlag, new { @class = "hiddenItem" })
                                 @Html.HiddenFor(x => Model.LiquidationDetails[i].screenCode, new { @class = "hiddenScreencode" })
                                 <div id="divCashBD_@i">
@@ -184,32 +199,78 @@
                 <div style="display:inline-block;width:100%">
                     <label>Liquidation for PHP currency</label>
                 </div>
-                <div style="display:inline-block;text-align:center;width:35%;vertical-align:top">
+                <div style="display:inline-block;text-align:center;width:45%;vertical-align:top">
                     <table style="width:100%;" class="table-bordered table-striped voucher-tbl">
                         <colgroup>
-                            <col style="width:35%" />
+                            <col style="width:45%" />
                             <col style="width:15%" />
-                            <col style="width:25%" />
-                            <col style="width:25%" />
+                            <col style="width:20%" />
+                            <col style="width:20%" />
                         </colgroup>
                         <tr>
-                            <th style="text-align:center">ACCOUNT NO.</th>
-                            <th style="text-align:center">ACCONT CODE</th>
-                            <th style="text-align:center">DEBIT</th>
-                            <th style="text-align:center">CREDIT</th>
+                            <th style="text-align:center"><label>ACCOUNT NO.</label></th>
+                            <th style="text-align:center"><label>ACCONT CODE</label></th>
+                            <th style="text-align:center"><label>DEBIT</label></th>
+                            <th style="text-align:center"><label>CREDIT</label></th>
                         </tr>
                         <tr>
                             <td>
-                                <input id="txtLiqAccNo" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="">
+                                @Html.DropDownListFor(x => Model.accList, new SelectList(Model.accList, "Account_No", "Account_Name"), new { @id = "ddlLiqPhpAccount1", @style = "width:100%", @class = "input100 selectDisabled", @disabled="disabled" })
                             </td>
                             <td>
                                 <input id="txtLiqAccCode" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="">
                             </td>
                             <td>
-                                <input id="txtLiqDebit" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:right" type="text" value="">
+                                <input id="txtLiqPhpInput1" class="input100" readonly="readonly" style="width:100%;text-align:center" type="text" value="0" />
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <select id="ddlLiqPhpAccount2" style="width:100%" class="input100 selectDisabled" disabled></select>
                             </td>
                             <td>
-                                <input id="txtLiqCredit" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:right" type="text" value="">
+                                <input id="txtLiqAccCode" class="input100" readonly="readonly" style="width:100%;text-align:center" type="text" value="">
+                            </td>
+                            <td>
+                                <input id="txtLiqPhpInput2" class="input100" readonly="readonly" style="width:100%;text-align:center" type="text" value="0" />
+                            </td>
+                            <td>
+                                <input id="txtLiqPhpInput3" class="input100" readonly="readonly" style="width:100%;text-align:center" type="text" value="0" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left;">
+                                <label id="lblAccount1_PHP" class="input100"></label>
+                            </td>
+                            <td>
+                                <input id="txtLiqAccCode" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="">
+                            </td>
+                            <td></td>
+                            <td>
+                                <input id="txtLiqPhpInput4" class="input100" readonly="readonly" style="width:100%;text-align:center" type="text" value="0" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left;">
+                                <label id="lblAccount2_PHP" class="input100"></label>
+                            <td>
+                                <input id="txtLiqAccCode" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="">
+                            </td>
+                            <td></td>
+                            <td>
+                                <input id="txtLiqPhpInput5" class="input100" readonly="readonly" style="width:100%;text-align:center" type="text" value="0" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="text-align:right;">
+                                <label>Total:</label>
+                            </td>
+                            <td>
+                                <input id="txtLiqPhpInput6" class="input100" style="width:100%;text-align:center" readonly="readonly" type="text" value="0" />
+                            </td>
+                            <td>
+                                <input id="txtLiqPhpInput7" class="input100" style="width:100%;text-align:center" readonly="readonly" type="text" value="0" />
                             </td>
                         </tr>
                     </table>
@@ -235,9 +296,9 @@
                         </colgroup>
                         <thead>
                             <tr>
-                                <th style="text-align:center">Denomination</th>
-                                <th style="text-align:center">No. of Pcs.</th>
-                                <th style="text-align:center">Amount</th>
+                                <th style="text-align:center"><label>Denomination</label></th>
+                                <th style="text-align:center"><label>No. of Pcs.</label></th>
+                                <th style="text-align:center"><label>Amount</label></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -248,17 +309,29 @@
 
                                     <tr id="cashbdliqid_@cnt">
                                         <td>
-                                            <input type="number" class="input100 txtLiqDenomination" readonly="readonly" style="text-align:center" value="@i.CashBreak_Denomination" />
+                                            <input type="number" class="txtLiqDenomination" readonly="readonly" style="width:100%;background:transparent;text-align:center" value="@i.CashBreak_Denomination" />
+
                                         </td>
                                         <td>
-                                            <input type="number" class="input100 txtLiqNoPCS" min="0" readonly="readonly" style="text-align:center" value="0" />
+                                            <input type="number" class="txtLiqNoPCS" readonly="readonly" style="width:100%;;background:transparent;text-align:center" min="0" value="0" />
+
                                         </td>
                                         <td>
-                                            <input type="number" class="input100 txtLiqAmount" readonly="readonly" style="text-align:center" value="0" />
+                                            <input type="number" class="txtLiqAmount" readonly="readonly" style="width:100%;background:transparent;text-align:center" value="0" />
                                         </td>
                                     </tr>
                                     cnt = cnt + 1;
                                 }
+                                <tr>
+                                    <td colspan="2" style="text-align:right;">
+                                        <label>Total: </label>
+                                    </td>
+                                    <td>
+                                        <label style="width:100%;">
+                                            <input type="text" id="txtCashBDTotal" class="txtCashBDTotal" readonly="readonly" style="width:100%;background:transparent;text-align:center" value="0" />
+                                        </label>
+                                    </td>
+                                </tr>
                             }
                         </tbody>
                     </table>
@@ -279,7 +352,7 @@
                                 <input id="txtIECurrency" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="CCY" />
                             </td>
                             <td>
-                                <input id="txtIEAmount" class="txtIEInfoInput input100" readonly="readonly" style="width:100%;text-align:center" type="number" min="0" value="0" />
+                                <input id="txtIEAmount" class="input100" readonly="readonly" style="width:100%;text-align:center" type="number" min="0" value="0" />
                             </td>
                         </tr>
                         <tr>
@@ -287,7 +360,7 @@
                                 <label>Exchange Rate:</label>
                             </td>
                             <td>
-                                <input id="txtIEExRate" class="txtIEInfoInput input100" readonly="readonly" style="width:100%;text-align:center" type="number" min="0" value="0" />
+                                <input id="txtIEExRate" class="input100" readonly="readonly" style="width:100%;text-align:center" type="number" min="0" value="0" />
                             </td>
                             <td></td>
                             <td></td>
@@ -313,7 +386,10 @@
                         <tr>
                             <td></td>
                             <td>
-                                <input type="button" class="printCDD btn" value="Print CDD Instruction Sheet" />
+                                @if (Model.statusID == GlobalSystemValues.STATUS_APPROVED || Model.statusID == GlobalSystemValues.STATUS_POSTED)
+                                {
+                                    <a class="cddISLiqBtn" href="#"><img id="imgLiqCDD" src="~/images/cddLiqLogo.png" style="width:20%;height:30%" /></a>
+                                }
                             </td>
                         </tr>
                     </table>
@@ -373,7 +449,11 @@
                             </tr>
                             <tr>
                                 <td rowspan="3"><label class="lblParticular"></label></td>
-                                <td style="text-align:left"><label id="lblAccount3"></label></td>
+                                <td style="text-align:left; text-align:left">
+                                    <label style="width:100%">
+                                        @Html.DropDownListFor(x => x.accList, new SelectList(Model.accList, "Account_No", "Account_Name"), new { @id = "ddlAccount3", @style = "width:100%;", @disabled = "disabled", @class = "selectDisabled" })
+                                    </label>
+                                </td>
                                 <td></td>
                                 <td><label>PHP</label></td>
                                 <td>
@@ -387,7 +467,7 @@
                             <tr>
                                 <td style="text-align:left">
                                     <label style="width:100%;background-color:transparent;text-align:left">
-                                        <input id="ddlAccount11" class="txtIEInput" readonly="readonly" style="width:100%;background-color:transparent;text-align:left" type="text" value="0" />
+                                        <select id="ddlAccount11" style="width:100%" class="selectDisabled" disabled></select>
                                     </label>
                                 </td>
                                 <td></td>
@@ -405,7 +485,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td style="text-align:left"><label id="lblAccount4"></label></td>
+                                <td style="text-align:left"><label id="lblAccount3"></label></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -423,7 +503,7 @@
                             </tr>
                             <tr>
                                 <td rowspan="2"><label class="lblParticular"></label></td>
-                                <td style="text-align:left"><label id="lblAccount5"></label></td>
+                                <td style="text-align:left"><label id="lblAccount4"></label></td>
                                 <td></td>
                                 <td><label>PHP</label></td>
                                 <td><label class="lblIEInput" id="lblIEInput3"></label></td>
@@ -431,7 +511,7 @@
                                 <td></td>
                             </tr>
                             <tr>
-                                <td style="text-align:left"><label id="lblAccount6"></label></td>
+                                <td style="text-align:left"><label id="lblAccount5"></label></td>
                                 <td><label class="lblIEInput" id="lblIEInput9"></label></td>
                                 <td></td>
                                 <td></td>
@@ -449,7 +529,7 @@
                             </tr>
                             <tr>
                                 <td rowspan="2"><label class="lblParticular"></label></td>
-                                <td style="text-align:left"><label id="lblAccount7"></label></td>
+                                <td style="text-align:left"><label id="lblAccount6"></label></td>
                                 <td></td>
                                 <td><label class="lblCurrency"></label></td>
                                 <td><label class="lblIEInput" id="lblIEInput5"></label></td>
@@ -457,7 +537,7 @@
                                 <td></td>
                             </tr>
                             <tr>
-                                <td style="text-align:left"><label id="lblAccount8"></label></td>
+                                <td style="text-align:left"><label id="lblAccount7"></label></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -478,7 +558,7 @@
                             </tr>
                             <tr>
                                 <td></td>
-                                <td style="text-align:left"><label id="lblAccount9"></label></td>
+                                <td style="text-align:left"><label id="lblAccount8"></label></td>
                                 <td></td>
                                 <td><label class="lblCurrency"></label></td>
                                 <td><label class="lblIEInput" id="lblIEInput7"></label></td>
@@ -487,7 +567,7 @@
                             </tr>
                             <tr>
                                 <td></td>
-                                <td style="text-align:left"><label id="lblAccount10"></label></td>
+                                <td style="text-align:left"><label id="lblAccount9"></label></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -511,7 +591,7 @@
             </div>
         </div>
         <div id="entry-controls" class="m-b-10">
-            @Html.HiddenFor(x => Model.entryID)
+            @Html.HiddenFor(x => Model.entryID, new { @class = "entryID" })
             <div class="flex-sb">
                 <div>
                     <div class="dis-inline-block tbl-btn"><button disabled>Save</button></div>
@@ -605,7 +685,6 @@
             var pNode = $(this.parentNode)[0].parentNode;
             var id = pNode.id;
             var modalDivBody = $('.modal-body');
-            var modalDivFooter = $('.modal-footer').find("#add_row_btn").remove();
 
             if ($('.modal-header').find(".modal-title")[0] == null) {
                 $('.modal-header').append('<h4 class="modal-title">Cash Breakdown</h4>');
@@ -646,9 +725,12 @@
 
             //Change to default value
             $('#divPHP').find('input:text').val('');
-            $('#divForeign').find(':input[type="number"]').val('0');
-            $('#cashBDLiqTable').find('.txtLiqNoPCS').val('0');
-            $('#cashBDLiqTable').find('.txtLiqAmount').val('0');
+            $('#divForeign').find(':input[type="number"]').val(0);
+            $('#cashBDLiqTable').find('.txtLiqNoPCS').val(0);
+            $('#cashBDLiqTable').find('.txtLiqAmount').val(0);
+            $('#cashBDLiqTable').find('#txtCashBDTotal').val(0);
+            $('#ddlLiqPhpAccount1').val($("#ddlLiqPhpAccount1 option:first").val());
+            $('#ddlAccount3').val($("#ddlAccount3 option:first").val());
             var currency = $('#' + pid).find('.txtCcyAbbrev').val();
             if (currency == "PHP") {
                 $('#divForeign').hide();
@@ -660,6 +742,24 @@
                 displayInfoIE($(this.parentNode)[0].parentNode.id);
             }
         });
+    });
+    //CDD Instruction sheet for Cash Advance(Suspense & Sundry) excel output cddISBtn
+    $("table").on("click", ".cddISBtn", function (e) {
+        e.stopImmediatePropagation();
+
+        var pNode = $(this.parentNode)[0].parentNode;
+        window.location.href = "/Home/CDD_IS_SS?entryID=" + $('.entryID').val()
+            + "&entryDtlID=" + $('#' + pNode.id).find('.entryDtlID').val()
+            + "&ccyAbbr=" + $('#' + pNode.id).find('.txtCcyAbbrev').val();
+    });
+    //CDD Instruction sheet for Liquidation excel output cddISBtn
+    $("table").on("click", ".cddISLiqBtn", function (e) {
+        e.stopImmediatePropagation();
+
+        var pNode = $('#hiddenSelectedItem').val();
+        window.location.href = "/Home/CDD_IS_Liquidation?entryID=" + $('.entryID').val()
+            + "&entryDtlID=" + $('#' + pNode).find('.entryDtlID').val()
+            + "&ccyAbbr=" + $('#' + pNode).find('.txtCcyAbbrev').val();
     });
 </script>
 <script type="text/javascript" src="~/js/EntryScripts.js"></script>

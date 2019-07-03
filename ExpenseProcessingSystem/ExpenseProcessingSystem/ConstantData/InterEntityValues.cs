@@ -18,7 +18,6 @@ namespace ExpenseProcessingSystem.ConstantData
         public static string Account7_US { get; set; }
         public static string Account8_US { get; set; }
         public static string Account9_US { get; set; }
-        public static string Account10_US { get; set; }
 
         public static string Currency_Yen { get; set; }
         public static string Account1_Yen { get; set; }
@@ -30,7 +29,6 @@ namespace ExpenseProcessingSystem.ConstantData
         public static string Account7_Yen { get; set; }
         public static string Account8_Yen { get; set; }
         public static string Account9_Yen { get; set; }
-        public static string Account10_Yen { get; set; }
 
         public InterEntityValues()
         {
@@ -46,7 +44,6 @@ namespace ExpenseProcessingSystem.ConstantData
             Account7_US = xelem.Element("ACCOUNT7_US").Value;
             Account8_US = xelem.Element("ACCOUNT8_US").Value;
             Account9_US = xelem.Element("ACCOUNT9_US").Value;
-            Account10_US = xelem.Element("ACCOUNT10_US").Value;
 
             Currency_Yen = xelem.Element("CURRENCY_Yen").Value;
             Account1_Yen = xelem.Element("ACCOUNT1_Yen").Value;
@@ -58,7 +55,6 @@ namespace ExpenseProcessingSystem.ConstantData
             Account7_Yen = xelem.Element("ACCOUNT7_Yen").Value;
             Account8_Yen = xelem.Element("ACCOUNT8_Yen").Value;
             Account9_Yen = xelem.Element("ACCOUNT9_Yen").Value;
-            Account10_Yen = xelem.Element("ACCOUNT10_Yen").Value;
         }
     }
 }

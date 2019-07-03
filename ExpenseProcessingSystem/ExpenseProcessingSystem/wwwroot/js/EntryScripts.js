@@ -257,7 +257,7 @@
     }
 
     function ajaxFormCall(url) {
-        return $.ajaxForm({
+        return $.ajax({
             url: url,
             type: "POST",
         });

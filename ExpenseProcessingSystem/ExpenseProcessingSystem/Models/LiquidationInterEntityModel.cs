@@ -31,6 +31,16 @@ namespace ExpenseProcessingSystem.Models
         public double Liq_InterRate_2_2 { get; set; }
         public string Liq_CCY_2_2 { get; set; }
         public double Liq_Amount_2_2 { get; set; }
+        public string Liq_DebitCred_3_1 { get; set; }
+        public string Liq_AccountID_3_1 { get; set; }
+        public double Liq_InterRate_3_1 { get; set; }
+        public string Liq_CCY_3_1 { get; set; }
+        public double Liq_Amount_3_1 { get; set; }
+        public string Liq_DebitCred_3_2 { get; set; }
+        public string Liq_AccountID_3_2 { get; set; }
+        public double Liq_InterRate_3_2 { get; set; }
+        public string Liq_CCY_3_2 { get; set; }
+        public double Liq_Amount_3_2 { get; set; }
         public ExpenseEntryDetailModel ExpenseEntryDetailModel { get; set; }
     }
 }
