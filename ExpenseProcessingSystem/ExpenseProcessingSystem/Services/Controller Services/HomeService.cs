@@ -3051,7 +3051,8 @@ namespace ExpenseProcessingSystem.Services
                     Expense_Last_Updated = DateTime.Now,
                     Expense_isDeleted = false,
                     Expense_Status = 1,
-                    ExpenseEntryDetails = expenseDtls
+                    ExpenseEntryDetails = expenseDtls,
+                    Expense_Number = getExpTransNo(expenseType)
                 };
 
                 _context.ExpenseEntry.Add(expenseEntry);
@@ -4784,11 +4785,24 @@ namespace ExpenseProcessingSystem.Services
 
             return accDetails;
         }
-        //retrieve latest Express transation no. (transaction type-year-number)
-        //public string getExpTransNo()
-        //{
+        //retrieve latest Express transation no.
+        public string getExpTransNo(int transType)
+        {
+            string transactionNo = null;
+            ExpenseEntryModel transNoMax;
+            int transno;
 
-        //}
+            do
+            {
+                transNoMax = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == _context.ExpenseEntry.Max(y => y.Expense_ID));
+
+                transno = (transNoMax.Expense_Created_Date.Year < DateTime.Now.Year) ? 1
+                        : (int.Parse(transNoMax.Expense_Number.Substring(1)) + 1);
+                transactionNo = transType.ToString() + transno.ToString().PadLeft(5, '0');
+            } while (transNoMax.Expense_ID != _context.ExpenseEntry.Max(x=>x.Expense_ID));
+
+            return transactionNo;
+        }
 
 
         public GOExpressHistModel convertTblCm10ToGOExHist(TblCm10 tblcm10, ExpenseEntryModel expense)
