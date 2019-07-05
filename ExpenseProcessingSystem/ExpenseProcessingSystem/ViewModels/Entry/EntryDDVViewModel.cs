@@ -56,15 +56,14 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         [FalseValidation("chkEwt"), TextValidation]
         [Display(Name = "EWT - Tax Payor's Name")]
         public string ewtPayorName { get; set; }
-        [ListValidation("inter_entity")]
+        //[ListValidation("inter_entity")]
         [Display(Name = "Inter-Entity Details")]
-        public List<DDVInterEntityViewModel> interDetails { get; set; }
+        public DDVInterEntityViewModel interDetails { get; set; }
         public List<EntryGbaseRemarksViewModel> gBaseRemarksDetails { get; set; }
 
         public EntryDDVViewModel()
         {
             gBaseRemarksDetails = new List<EntryGbaseRemarksViewModel>();
-            interDetails = new List<DDVInterEntityViewModel>();
         }
 
     }

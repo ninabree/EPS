@@ -1405,7 +1405,6 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             }
             return tempList;
         }
-
         //-----------------------------------------------------------------
         //Dropdown Select List
         public List<SelectListItem> getFbtSelectList()
@@ -1428,7 +1427,15 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         {
             List<SelectListItem> currList = new List<SelectListItem>();
             _context.DMCurrency.Where(x => x.Curr_isDeleted == false && x.Curr_isActive == true).ToList().ForEach(x => {
-                currList.Add(new SelectListItem() { Text = x.Curr_Name, Value = x.Curr_MasterID + "" });
+                currList.Add(new SelectListItem() { Text = x.Curr_CCY_ABBR, Value = x.Curr_MasterID + "" });
+            });
+            return currList;
+        }
+        public List<SelectListItem> getCurrencyIDSelectList()
+        {
+            List<SelectListItem> currList = new List<SelectListItem>();
+            _context.DMCurrency.Where(x => x.Curr_isDeleted == false && x.Curr_isActive == true).ToList().ForEach(x => {
+                currList.Add(new SelectListItem() { Text = x.Curr_CCY_ABBR, Value = x.Curr_ID + "" });
             });
             return currList;
         }
@@ -1457,71 +1464,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             });
             return grpList;
         }
-        public List<InterEntityParticular> PopulateParticular1(string accName, string Curr1Abbr, string Curr1Amt, string Curr2Amt, double InterRate)
-        {
-            return new List<InterEntityParticular> {
-                new InterEntityParticular {
-                    Particular_Account_Name = accName,
-                    Particular_Debit_Curr = Curr1Abbr,
-                    Particular_Debit_Amount = double.Parse(Curr1Amt) + (double.Parse(Curr2Amt) * InterRate),
-                    Particular_Credit_Curr = "",
-                    Particular_Credit_Amount = 0
-                },
-                new InterEntityParticular {
-                    Particular_Account_Name = "14017 - COMPUTER SUSPENSE",
-                    Particular_Debit_Curr = "",
-                    Particular_Debit_Amount = 0,
-                    Particular_Credit_Curr = Curr1Abbr,
-                    Particular_Credit_Amount = double.Parse(Curr2Amt) * InterRate
-                },
-                new InterEntityParticular {
-                    Particular_Account_Name = "09800 - BDO MNL",
-                    Particular_Debit_Curr = "",
-                    Particular_Debit_Amount = 0,
-                    Particular_Credit_Curr = Curr1Abbr,
-                    Particular_Credit_Amount = double.Parse(Curr1Amt)
-                },
-            };
-        }
-        public List<InterEntityParticular> PopulateParticular2(string Curr1Abbr, string Curr2Abbr, string Curr2Amt, double InterRate)
-        {
-            return new List<InterEntityParticular> {
-                new InterEntityParticular {
-                    Particular_Account_Name = "14017 - COMPUTER SUSPENSE",
-                    Particular_Debit_Curr = Curr1Abbr,
-                    Particular_Debit_Amount = double.Parse(Curr2Amt) * InterRate,
-                    Particular_Credit_Curr = "",
-                    Particular_Credit_Amount = 0
-                },
-                new InterEntityParticular {
-                    Particular_Account_Name = "89046 - INTER ENTITY REG to FCDU",
-                    Particular_Debit_Curr = "",
-                    Particular_Debit_Amount = 0,
-                    Particular_Credit_Curr = Curr2Abbr,
-                    Particular_Credit_Rate = InterRate,
-                    Particular_Credit_Amount = double.Parse(Curr2Amt)
-                }
-            };
-        }
-        public List<InterEntityParticular> PopulateParticular3(string Curr2Abbr, string Curr2Amt)
-        {
-            return new List<InterEntityParticular> {
-                new InterEntityParticular {
-                    Particular_Account_Name = "89046 - INTER ENTITY REG to FCDU",
-                    Particular_Debit_Curr = Curr2Abbr,
-                    Particular_Debit_Amount = double.Parse(Curr2Amt),
-                    Particular_Credit_Curr = "",
-                    Particular_Credit_Amount = 0
-                },
-                new InterEntityParticular {
-                    Particular_Account_Name = "09800 - CITI MNL",
-                    Particular_Debit_Curr = "",
-                    Particular_Debit_Amount = 0,
-                    Particular_Credit_Curr = Curr2Abbr,
-                    Particular_Credit_Amount = double.Parse(Curr2Amt)
-                }
-            };
-        }
+        
 
         public string GetAccountName(string id)
         {

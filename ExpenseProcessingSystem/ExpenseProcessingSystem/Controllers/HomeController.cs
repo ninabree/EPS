@@ -839,7 +839,31 @@ namespace ExpenseProcessingSystem.Controllers
             if (viewModel.EntryDDV.Count <= 0)
             {
                viewModel = new EntryDDVViewModelList();
-               viewModel.EntryDDV.Add(new EntryDDVViewModel { interDetails = new List<DDVInterEntityViewModel> { new DDVInterEntityViewModel() } });
+                viewModel.EntryDDV.Add(new EntryDDVViewModel {
+                    interDetails = new DDVInterEntityViewModel {
+                        interPartList = new List<ExpenseEntryInterEntityParticularViewModel>{
+                            new ExpenseEntryInterEntityParticularViewModel{
+                                ExpenseEntryInterEntityAccs = new List<ExpenseEntryInterEntityAccsViewModel>{
+                                    new ExpenseEntryInterEntityAccsViewModel(),
+                                    new ExpenseEntryInterEntityAccsViewModel(),
+                                    new ExpenseEntryInterEntityAccsViewModel()
+                                }
+                            },
+                            new ExpenseEntryInterEntityParticularViewModel{
+                                ExpenseEntryInterEntityAccs = new List<ExpenseEntryInterEntityAccsViewModel>{
+                                    new ExpenseEntryInterEntityAccsViewModel(),
+                                    new ExpenseEntryInterEntityAccsViewModel()
+                                }
+                            },
+                            new ExpenseEntryInterEntityParticularViewModel{
+                                ExpenseEntryInterEntityAccs = new List<ExpenseEntryInterEntityAccsViewModel>{
+                                    new ExpenseEntryInterEntityAccsViewModel(),
+                                    new ExpenseEntryInterEntityAccsViewModel()
+                                }
+                            }
+                       }
+                    }
+                });
             }
             viewModel = PopulateEntry((EntryDDVViewModelList)viewModel);
             return View(viewModel);
@@ -886,7 +910,7 @@ namespace ExpenseProcessingSystem.Controllers
                 case "approver":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_APPROVED, int.Parse(GetUserID())))
                     {
-                        _service.postCV(entryID);
+                        _service.postDDV(entryID, "P");
                         ViewBag.Success = 1;
                     }
                     else
@@ -909,7 +933,7 @@ namespace ExpenseProcessingSystem.Controllers
                 case "Reject":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REJECTED, int.Parse(GetUserID())))
                     {
-                        _service.postCV(entryID);
+                        _service.postDDV(entryID, "P");
                         ViewBag.Success = 1;
                     }
                     else
@@ -932,7 +956,7 @@ namespace ExpenseProcessingSystem.Controllers
                 case "Reversal":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
                     {
-                        _service.postCV(entryID, "R");
+                        _service.postDDV(entryID, "R");
                         ViewBag.Success = 1;
                     }
                     else

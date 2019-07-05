@@ -4,18 +4,20 @@ using ExpenseProcessingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    partial class EPSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190704004848_UpdateDDVToAddInterEntityAsEntry")]
+    partial class UpdateDDVToAddInterEntityAsEntry
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
+                .HasAnnotation("ProductVersion", "2.2.0-rtm-35687")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -42,25 +44,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.HasKey("Budget_ID");
 
                     b.ToTable("Budget");
-                });
-
-            modelBuilder.Entity("ExpenseProcessingSystem.Models.ClosingModel", b =>
-                {
-                    b.Property<int>("Close_ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("Close_Date");
-
-                    b.Property<DateTime>("Close_Open_Date");
-
-                    b.Property<int>("Close_Status");
-
-                    b.Property<int>("Close_User");
-
-                    b.HasKey("Close_ID");
-
-                    b.ToTable("Closing");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.DMAccountGroupModel", b =>
@@ -642,13 +625,9 @@ namespace ExpenseProcessingSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Amor_Number");
-
                     b.Property<float>("Amor_Price");
 
                     b.Property<DateTime>("Amor_Sched_Date");
-
-                    b.Property<string>("Amor_Status");
 
                     b.Property<int?>("ExpenseEntryDetailModelExpDtl_ID");
 
@@ -855,7 +834,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<DateTime>("Expense_Last_Updated");
 
-                    b.Property<int>("Expense_Number");
+                    b.Property<string>("Expense_Number");
 
                     b.Property<int>("Expense_Payee");
 
@@ -947,25 +926,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.HasIndex("ExpenseEntryModelExpense_ID");
 
                     b.ToTable("ExpenseEntryNonCash");
-                });
-
-            modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseTransList", b =>
-                {
-                    b.Property<int>("TL_ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("TL_ExpenseID");
-
-                    b.Property<int>("TL_GoExpress_ID");
-
-                    b.Property<bool>("TL_Liquidation");
-
-                    b.Property<int>("TL_TransID");
-
-                    b.HasKey("TL_ID");
-
-                    b.ToTable("ExpenseTransLists");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.FileLocationModel", b =>
@@ -1427,10 +1387,6 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Liq_AccountID_2_2");
 
-                    b.Property<string>("Liq_AccountID_3_1");
-
-                    b.Property<string>("Liq_AccountID_3_2");
-
                     b.Property<double>("Liq_Amount_1_1");
 
                     b.Property<double>("Liq_Amount_1_2");
@@ -1438,10 +1394,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.Property<double>("Liq_Amount_2_1");
 
                     b.Property<double>("Liq_Amount_2_2");
-
-                    b.Property<double>("Liq_Amount_3_1");
-
-                    b.Property<double>("Liq_Amount_3_2");
 
                     b.Property<string>("Liq_CCY_1_1");
 
@@ -1451,10 +1403,6 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("Liq_CCY_2_2");
 
-                    b.Property<string>("Liq_CCY_3_1");
-
-                    b.Property<string>("Liq_CCY_3_2");
-
                     b.Property<string>("Liq_DebitCred_1_1");
 
                     b.Property<string>("Liq_DebitCred_1_2");
@@ -1462,10 +1410,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.Property<string>("Liq_DebitCred_2_1");
 
                     b.Property<string>("Liq_DebitCred_2_2");
-
-                    b.Property<string>("Liq_DebitCred_3_1");
-
-                    b.Property<string>("Liq_DebitCred_3_2");
 
                     b.Property<double>("Liq_InterRate_1_1");
 
@@ -1475,56 +1419,11 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<double>("Liq_InterRate_2_2");
 
-                    b.Property<double>("Liq_InterRate_3_1");
-
-                    b.Property<double>("Liq_InterRate_3_2");
-
                     b.HasKey("id");
 
                     b.HasIndex("ExpenseEntryDetailModelExpDtl_ID");
 
                     b.ToTable("LiquidationInterEntity");
-                });
-
-            modelBuilder.Entity("ExpenseProcessingSystem.Models.PCBreakdownModel", b =>
-                {
-                    b.Property<int>("PCB_ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("PCB_Fifty");
-
-                    b.Property<int>("PCB_Five");
-
-                    b.Property<int>("PCB_FiveCents");
-
-                    b.Property<int>("PCB_FiveHundred");
-
-                    b.Property<int>("PCB_One");
-
-                    b.Property<int>("PCB_OneCents");
-
-                    b.Property<int>("PCB_OneHundred");
-
-                    b.Property<int>("PCB_OneThousand");
-
-                    b.Property<int>("PCB_Ten");
-
-                    b.Property<int>("PCB_TenCents");
-
-                    b.Property<int>("PCB_Twenty");
-
-                    b.Property<int>("PCB_TwentyFiveCents");
-
-                    b.Property<int>("PCB_TwoHundred");
-
-                    b.Property<int>("PC_ID");
-
-                    b.HasKey("PCB_ID");
-
-                    b.HasIndex("PC_ID");
-
-                    b.ToTable("PettyCashBreakDown");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.Pending.DMAccountGroupModel_Pending", b =>
@@ -1794,33 +1693,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.ToTable("DMVendorTRVAT_Pending");
                 });
 
-            modelBuilder.Entity("ExpenseProcessingSystem.Models.PettyCashModel", b =>
-                {
-                    b.Property<int>("PC_ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("PC_CloseUser");
-
-                    b.Property<string>("PC_ConfirmComment");
-
-                    b.Property<DateTime>("PC_Date");
-
-                    b.Property<double>("PC_Disbursed");
-
-                    b.Property<double>("PC_EndBal");
-
-                    b.Property<bool>("PC_OpenConfirm");
-
-                    b.Property<int>("PC_OpenUser");
-
-                    b.Property<double>("PC_StartBal");
-
-                    b.HasKey("PC_ID");
-
-                    b.ToTable("PettyCash");
-                });
-
             modelBuilder.Entity("ExpenseProcessingSystem.Models.StatusListModel", b =>
                 {
                     b.Property<int>("Status_ID")
@@ -1983,14 +1855,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel", "ExpenseEntryDetailModel")
                         .WithMany()
                         .HasForeignKey("ExpenseEntryDetailModelExpDtl_ID");
-                });
-
-            modelBuilder.Entity("ExpenseProcessingSystem.Models.PCBreakdownModel", b =>
-                {
-                    b.HasOne("ExpenseProcessingSystem.Models.PettyCashModel", "PettyCashObject")
-                        .WithMany("PCBreakdown")
-                        .HasForeignKey("PC_ID")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

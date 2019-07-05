@@ -65,7 +65,7 @@
                     <tr id="item_@i">
                         <td class="p-b-1 p-t-1">
                             <div class="flex-sb">
-                                <input value="@Model.EntryDDV[i].GBaseRemarks" class="input100 w-80" disabled />
+                                <input value="@Model.EntryDDV[i].GBaseRemarks" class="input100 w-80 GBaseRemarksTitle" disabled />
                                 <div id="remark_@i">
                                     <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
                                     @for (int y = 0; y < Model.EntryDDV[i].gBaseRemarksDetails.Count(); y++)
@@ -78,7 +78,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td><input value="@Model.EntryDDV[i].account_Name" class="input100" disabled /></td>
+                        <td><input value="@Model.EntryDDV[i].account_Name" class="input100 accName" disabled /></td>
                         <td style="text-align:center">@Html.DisplayFor(x => Model.EntryDDV[i].inter_entity)</td>
                         <td style="text-align:center">@Html.DisplayFor(x => Model.EntryDDV[i].fbt)</td>
                         <td><input id="@Model.EntryDDV[i].dept" value="@Model.EntryDDV[i].dept_Name" class="input100" disabled /></td>
@@ -87,21 +87,46 @@
                         <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryDDV[i].chkEwt, new { @class = "chkEwt", @disabled = "disabled" })</td>
                         <td><input value="@Model.EntryDDV[i].ewt_Name" class="input100" disabled /></td>
                         <td><input value="@Model.EntryDDV[i].ccy_Name" class="input100" disabled /></td>
-                        <td><input value="@Model.EntryDDV[i].debitGross" class="input100" disabled /></td>
-                        <td><input value="@Model.EntryDDV[i].credEwt" class="input100" disabled /></td>
-                        <td><input value="@Model.EntryDDV[i].credCash" class="input100" disabled /></td>
+                        <td><input value="@Model.EntryDDV[i].debitGross" class="input100 txtGross" disabled /></td>
+                        <td><input value="@Model.EntryDDV[i].credEwt" class="input100 txtCredEwt" disabled /></td>
+                        <td><input value="@Model.EntryDDV[i].credCash" class="input100 txtCredCash" disabled /></td>
                         <td id="req_@i">
-                            @if (Model.EntryDDV[i].interDetails.Count > 0)
+                            @if (Model.EntryDDV[i].interDetails != null)
                             {
                                 <a class="expenseInterEntity reqBtn glyphicon glyphicon-list-alt" href="#"></a>
-                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails[0].Inter_Currency1_ABBR_ID, new { @class = "txtCurr1Abbr" })
-                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails[0].Inter_Currency1_ABBR_Name, new { @class = "txtCurr1Abbr" })
-                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails[0].Inter_Currency1_Amount, new { @class = "txtCurr1Amt" })
-                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails[0].Inter_Currency2_ABBR_Name, new { @class = "txtCurr2Abbr" })
-                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails[0].Inter_Currency2_Amount, new { @class = "txtCurr2Amt" })
-                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails[0].Inter_Rate, new { @class = "txtInterRate" })
+                                <div id="interDtls">
+                                    @if (Model.EntryDDV[i].interDetails.interPartList.Count() > 0)
+                                    {
+                                        @for (int p = 0; p < Model.EntryDDV[i].interDetails.interPartList.Count(); p++)
+                                        {
+                                            @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.interPartList[p].InterPart_ID)
+                                            @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.interPartList[p].InterPart_Particular_Title)
+                                            @if (Model.EntryDDV[i].interDetails.interPartList[p].ExpenseEntryInterEntityAccs.Count() > 0)
+                                            {
+                                                @for (int a = 0; a < Model.EntryDDV[i].interDetails.interPartList[p].ExpenseEntryInterEntityAccs.Count(); a++)
+                                                {
+                                                    @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.interPartList[p].ExpenseEntryInterEntityAccs[a].Inter_Acc_ID)
+                                                    @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.interPartList[p].ExpenseEntryInterEntityAccs[a].Inter_Amount)
+                                                    @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.interPartList[p].ExpenseEntryInterEntityAccs[a].Inter_Curr_ID)
+                                                    @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.interPartList[p].ExpenseEntryInterEntityAccs[a].Inter_Rate)
+                                                    @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.interPartList[p].ExpenseEntryInterEntityAccs[a].Inter_Type_ID)
+                                                }
+                                            }
+                                        }
+                                    }
+                                </div>
+                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.Inter_Currency1_ID, new { @class = "txtCurr1AbbrID" })
+                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.Inter_Currency1_ABBR, new { @class = "txtCurr1Abbr" })
+                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.Inter_Currency1_Amount, new { @class = "txtCurr1Amt" })
+                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.Inter_Currency2_ID, new { @class = "txtCurr2AbbrID" })
+                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.Inter_Currency2_ABBR, new { @class = "txtCurr2Abbr" })
+                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.Inter_Currency2_Amount, new { @class = "txtCurr2Amt" })
+                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.Inter_Convert1_Amount, new { @class = "txtConv1Amt" })
+                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.Inter_Convert2_Amount, new { @class = "txtConv2Amt" })
+                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.Inter_Check1, new { @class = "txtChk1" })
+                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.Inter_Check2, new { @class = "txtChk2" })
+                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.Inter_Rate, new { @class = "txtInterRate" })
                                 @Html.HiddenFor(x => Model.EntryDDV[i].ewtPayorName, new { @class = "txtPayor" })
-                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails[0].Inter_Rate, new { @class = "txtInterRate" })
                             }
                             else
                             {
@@ -142,110 +167,213 @@
             <p class="dis-inline-block">@Html.TextBoxFor(model => model.verifier_2, new { @readonly = "true", @class = "m-l-5 input" })</p>
         </div>
     </div>
-          <div id="entry-controls" class="m-b-10">
-              @using (Html.BeginForm("VerAppModDDV", "Home", FormMethod.Post, new { @class = "validate-form" }))
-              {
-                  @Html.HiddenFor(x => Model.entryID)
-                  <div class="flex-sb">
-                      <div>
-                          <div class="dis-inline-block tbl-btn"><button disabled>Save</button></div>
+    <div id="entry-controls" class="m-b-10">
+        @using (Html.BeginForm("VerAppModDDV", "Home", FormMethod.Post, new { @class = "validate-form" }))
+        {
+            @Html.HiddenFor(x => Model.entryID)
+            <div class="flex-sb">
+                <div>
+                    <div class="dis-inline-block tbl-btn"><button disabled>Save</button></div>
 
-                          @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker)
-                          {
-                              @if ((Model.statusID == GlobalSystemValues.STATUS_APPROVED) || (Model.statusID == GlobalSystemValues.STATUS_REJECTED) || (Model.statusID == GlobalSystemValues.STATUS_REVERSED))
-                              {
-                                  <div class="dis-inline-block tbl-btn"><button disabled>Delete</button></div>
-                                  <div class="dis-inline-block tbl-btn"><button disabled>Modify</button></div>
-                              }
-                              else
-                              {
-                                  <div class="dis-inline-block tbl-btn"><button value="Delete" name="command">Delete</button></div>
-                                  <div class="dis-inline-block tbl-btn"><button value="Modify" name="command">Modify</button></div>
-                              }
-                          }
-                          else
-                          {
-                              <div class="dis-inline-block tbl-btn"><button disabled>Delete</button></div>
-                              <div class="dis-inline-block tbl-btn"><button disabled>Modify</button></div>
-                          }
-                      </div>
+                    @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker)
+                    {
+                        @if ((Model.statusID == GlobalSystemValues.STATUS_APPROVED) || (Model.statusID == GlobalSystemValues.STATUS_REJECTED) || (Model.statusID == GlobalSystemValues.STATUS_REVERSED))
+                        {
+                            <div class="dis-inline-block tbl-btn"><button disabled>Delete</button></div>
+                            <div class="dis-inline-block tbl-btn"><button disabled>Modify</button></div>
+                        }
+                        else
+                        {
+                            <div class="dis-inline-block tbl-btn"><button value="Delete" name="command">Delete</button></div>
+                            <div class="dis-inline-block tbl-btn"><button value="Modify" name="command">Modify</button></div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="dis-inline-block tbl-btn"><button disabled>Delete</button></div>
+                        <div class="dis-inline-block tbl-btn"><button disabled>Modify</button></div>
+                    }
+                </div>
 
-                      @if ((Model.statusID == GlobalSystemValues.STATUS_APPROVED) || (Model.statusID == GlobalSystemValues.STATUS_REJECTED))
-                      {
-                          <div>
-                              <div class="dis-inline-block tbl-btn"><button value="Reversal" name="command">Create Reversal Entry</button></div>
-                          </div>
-                          <div>
-                              <div class="dis-inline-block tbl-btn m-l-41"><button value="PrintBIR" name="command">Print BIR Certificate</button></div>
-                          </div>
-                      }
-                      else if (Model.statusID == GlobalSystemValues.STATUS_REVERSED)
-                      {
-                          <div>
-                              <div class="dis-inline-block tbl-btn"><button disabled>Create Reversal Entry</button></div>
-                          </div>
-                          <div>
-                              <div class="dis-inline-block tbl-btn m-l-41"><button value="PrintBIR" name="command">Print BIR Certificate</button></div>
-                          </div>
-                      }
-                      else
-                      {
-                          <div>
-                              <div class="dis-inline-block tbl-btn"><button disabled>Create Reversal Entry</button></div>
-                          </div>
-                          <div>
-                              <div class="dis-inline-block tbl-btn m-l-41"><button disabled>Print BIR Certificate</button></div>
-                          </div>
-                      }
+                @if ((Model.statusID == GlobalSystemValues.STATUS_APPROVED) || (Model.statusID == GlobalSystemValues.STATUS_REJECTED))
+                {
+                    <div>
+                        <div class="dis-inline-block tbl-btn"><button value="Reversal" name="command">Create Reversal Entry</button></div>
+                    </div>
+                    <div>
+                        <div class="dis-inline-block tbl-btn m-l-41"><button value="PrintBIR" name="command">Print BIR Certificate</button></div>
+                    </div>
+                }
+                else if (Model.statusID == GlobalSystemValues.STATUS_REVERSED)
+                {
+                    <div>
+                        <div class="dis-inline-block tbl-btn"><button disabled>Create Reversal Entry</button></div>
+                    </div>
+                    <div>
+                        <div class="dis-inline-block tbl-btn m-l-41"><button value="PrintBIR" name="command">Print BIR Certificate</button></div>
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        <div class="dis-inline-block tbl-btn"><button disabled>Create Reversal Entry</button></div>
+                    </div>
+                    <div>
+                        <div class="dis-inline-block tbl-btn m-l-41"><button disabled>Print BIR Certificate</button></div>
+                    </div>
+                }
 
-                  </div>
-                  <div class="flex-sb">
-                      <div>
-                          @if (HttpContextAccessor.HttpContext.Session.GetString("accessType") == GlobalSystemValues.ROLE_MAKER)
-                          {
-                              <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
-                          }
-                          else
-                          {
-                              @if ((Model.statusID == GlobalSystemValues.STATUS_APPROVED) || (Model.statusID == GlobalSystemValues.STATUS_REJECTED) || (Model.statusID == GlobalSystemValues.STATUS_REVERSED))
-                              {
-                                  <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
-                              }
-                              else
-                              {
-                                  <div class="dis-inline-block tbl-btn"><button value="@HttpContextAccessor.HttpContext.Session.GetString("accessType")" name="command">Approve/Verify</button></div>
-                              }
-                          }
-                          @if ((Model.statusID == GlobalSystemValues.STATUS_APPROVED) || (Model.statusID == GlobalSystemValues.STATUS_REJECTED) || (Model.statusID == GlobalSystemValues.STATUS_REVERSED))
-                          {
-                              <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
-                          }
-                          else
-                          {
-                              <div class="dis-inline-block tbl-btn"><button value="Reject" name="command">Reject</button></div>
-                          }
-                      </div>
-                      <div>
-                      </div>
-                      <div>
-                      </div>
-                  </div>
-              }
-          </div>
-    <div id="modalDiv">
-        @Html.Partial("ModalPartial")
+            </div>
+            <div class="flex-sb">
+                <div>
+                    @if (HttpContextAccessor.HttpContext.Session.GetString("accessType") == GlobalSystemValues.ROLE_MAKER)
+                    {
+                        <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
+                    }
+                    else
+                    {
+                        @if ((Model.statusID == GlobalSystemValues.STATUS_APPROVED) || (Model.statusID == GlobalSystemValues.STATUS_REJECTED) || (Model.statusID == GlobalSystemValues.STATUS_REVERSED))
+                        {
+                            <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
+                        }
+                        else
+                        {
+                            <div class="dis-inline-block tbl-btn"><button value="@HttpContextAccessor.HttpContext.Session.GetString("accessType")" name="command">Approve/Verify</button></div>
+                        }
+                    }
+                    @if ((Model.statusID == GlobalSystemValues.STATUS_APPROVED) || (Model.statusID == GlobalSystemValues.STATUS_REJECTED) || (Model.statusID == GlobalSystemValues.STATUS_REVERSED))
+                    {
+                        <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
+                    }
+                    else
+                    {
+                        <div class="dis-inline-block tbl-btn"><button value="Reject" name="command">Reject</button></div>
+                    }
+                </div>
+                <div>
+                </div>
+                <div>
+                </div>
+            </div>
+        }
     </div>
+
+    @Html.Partial("ModalPartial2")
 </div>
 
 <script type="text/javascript" src="~/js/EntryScripts.js"></script>
 <script type="text/javascript">
-    $(function () {
-        $(window).on("load", function () {
+
+    $(document).ready(function () {
+
+        var myModal2 = $('.myModal2');
+        var modalDiv2 = $(myModal2).find('div div');
+        var modalDivHeader2 = $(modalDiv2).find('.modal-header2');
+        var modalDivBody2 = $(modalDiv2).find('.modal-body2');
+        var modalDivFooter2 = $(modalDiv2).find('.modal-footer2');
+
+        $("tr[id^='item_']").each(function (ind, item) {
+            computeValuesDDVRead($(item)[0]);
+        });
+
+        @*$(window).on("load", function () {
             if (@ViewBag.Success == 1) {
                 alert("Entry Approved");
             } else if (@ViewBag.Success == 0){
                 alert("Entry Failed");
             }
+        });*@
+
+        //Inter Entity
+        $(".expenseInterEntity").click(function (e) {
+            e.stopImmediatePropagation();
+            var pNode = $(this.parentNode)[0].parentNode;
+            var id = pNode.id;
+
+            var curr1_Abbr_ID = $("#" + pNode.id).find('#EntryDDV_0__interDetails_Inter_Currency1_ID').val();
+            var curr1_Abbr_Name = $("#" + pNode.id).find('#EntryDDV_0__interDetails_Inter_Currency1_ABBR').val();
+            var curr1_Amt = $("#" + pNode.id).find('#EntryDDV_0__interDetails_Inter_Currency1_Amount').val();
+            var curr1_Chk = $("#" + pNode.id).find('#EntryDDV_0__interDetails_Inter_Check1').val(); //
+            var conv1_Amt = $("#" + pNode.id).find('#EntryDDV_0__interDetails_Inter_Convert1_Amount').val(); //
+            var curr2_Abbr_ID = $("#" + pNode.id).find('#EntryDDV_0__interDetails_Inter_Currency2_ID').val();
+            var curr2_Abbr_Name = $("#" + pNode.id).find('#EntryDDV_0__interDetails_Inter_Currency2_ABBR').val();
+            var curr2_Amt = $("#" + pNode.id).find('#EntryDDV_0__interDetails_Inter_Currency2_Amount').val();
+            var curr2_Chk = $("#" + pNode.id).find('#EntryDDV_0__interDetails_Inter_Check2').val(); //
+            var conv2_Amt = $("#" + pNode.id).find('#EntryDDV_0__interDetails_Inter_Convert2_Amount').val(); //
+            var interRate = $("#" + pNode.id).find("#EntryDDV_0__interDetails_Inter_Rate").val();
+            var remarksTitle = $("#" + pNode.id).find("td div .GBaseRemarksTitle").val();
+            var account = $("#" + pNode.id).find("td .accName").val();
+            var accountID = $("#" + pNode.id).find("#EntryDDV_0__interDetails_interPartList_0__ExpenseEntryInterEntityAccs_0__Inter_Acc_ID").val();
+
+            //remove prev contents
+            modalDivBody2.empty();
+            modalDivHeader2.find('h4').remove();
+            modalDivFooter2.find("#add_row_btn").remove();
+            modalDivFooter2.find("#saveBtnEntry").remove();
+
+            //set modal header title
+            modalDivHeader2.append('<h4 class="modal-title">Inter-Entity</h4>');
+            //set modal body content
+            modalDivBody2.load("@Url.Action("EntryExpenseInterEntity_READONLY", "Modal")", {
+                "id": id,
+                "interRate": interRate,
+                "account": account,
+                "remarksTitle": remarksTitle,
+                "Curr1AbbrID": curr1_Abbr_ID,
+                "Curr1AbbrName": curr1_Abbr_Name,
+                "Curr1Amt": curr1_Amt,
+                "Curr2AbbrID": curr2_Abbr_ID,
+                "Curr2AbbrName": curr2_Abbr_Name,
+                "Curr2Amt": curr2_Amt,
+                "Chk1": curr1_Chk,
+                "Conv1Amt": conv1_Amt,
+                "Chk2": curr2_Chk,
+                "Conv2Amt": conv2_Amt,
+                "accID": accountID
+
+            }, function (response, status, xhr) {
+                if (status == "error") {
+                    alert("Something went wrong.");
+                }
+            });
+
+            $(myModal2).modal('show');
+
         });
+        function computeValuesDDVRead(parent) {
+
+            var pNode = parent;
+
+            var gross = $(".txtGross");
+            var credEwt = $(".txtCredEwt");
+            var credCash = $(".txtCredCash");
+
+            var isInter = $("#" + pNode.id).find("#EntryDDV_" + pNode.id.substring(5) + "__inter_entity").is(':checked');
+            if (isInter) {
+                var btnAttr = $("#" + pNodeID).find("#req_" + pNode.id.substring(5)).find(".reqBtn");
+                btnAttr.attr("href", "#");
+                btnAttr.attr("class", "expenseInterEntity reqBtn glyphicon glyphicon-list-alt");
+            }
+            var grossTotal = 0;
+            var ewtSubTotal = 0;
+            var cashSubTotal = 0;
+
+            for (var i = 0; i < gross.length; i++) {
+                grossTotal += Number(gross[i].value);
+            }
+
+            for (var i = 0; i < credEwt.length; i++) {
+                ewtSubTotal += Number(credEwt[i].value);
+            }
+
+            for (var i = 0; i < credCash.length; i++) {
+                cashSubTotal += Number(credCash[i].value);
+            }
+
+            $("#grossTotal").val(grossTotal);
+            $("#credEwtTotal").val(ewtSubTotal);
+            $("#credCashTotal").val(cashSubTotal);
+            $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
+        }
     });
 </script>

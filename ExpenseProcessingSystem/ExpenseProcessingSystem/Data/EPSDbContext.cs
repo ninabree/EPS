@@ -61,10 +61,13 @@ namespace ExpenseProcessingSystem.Data
         public DbSet<ExpenseEntryModel> ExpenseEntry { get; set; }
         public DbSet<ExpenseEntryDetailModel> ExpenseEntryDetails { get; set; }
         public DbSet<ExpenseEntryAmortizationModel> ExpenseEntryAmortizations { get; set; }
-        public DbSet<ExpenseEntryInterEntityModel> ExpenseEntryInterEntity { get; set; }
         public DbSet<ExpenseEntryGbaseDtl> ExpenseEntryGbaseDtls { get; set; }
         public DbSet<ExpenseEntryCashBreakdownModel> ExpenseEntryCashBreakdown { get; set; }
         public DbSet<ExpenseTransList> ExpenseTransLists { get; set; }
+        //EXPENSE ENTRY TABLES DDV 
+        public DbSet<ExpenseEntryInterEntityModel> ExpenseEntryInterEntity { get; set; }
+        public DbSet<ExpenseEntryInterEntityParticularModel> ExpenseEntryInterEntityParticular { get; set; }
+        public DbSet<ExpenseEntryInterEntityAccsModel> ExpenseEntryInterEntityAccs { get; set; }
         //EXPENSE ENTRY TABLES NON CASH
         public DbSet<ExpenseEntryNCModel> ExpenseEntryNonCash { get; set; }
         public DbSet<ExpenseEntryNCDtlModel> ExpenseEntryNonCashDetails { get; set; }

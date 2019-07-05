@@ -994,37 +994,82 @@ namespace ExpenseProcessingSystem.Controllers
             return PartialView(model);
         }
         public IActionResult EntryExpenseInterEntity(string id, string interRate, string account, string remarksTitle, string Curr1AbbrID, string Curr1AbbrName, string Curr1Amt,
-                                                    string Curr2AbbrID, string Curr2AbbrName, string Curr2Amt, string Chk1, string Conv1Amt, string Chk2, string Conv2Amt)
+                                                    string Curr2AbbrID, string Curr2AbbrName, string Curr2Amt, string Chk1, string Conv1Amt, string Chk2, string Conv2Amt, 
+                                                    string accID)
         {
             InterEntityParticular par = new InterEntityParticular();
-            double InterRate = interRate != null ? int.Parse(interRate) * 1.0 : 1.0;
+            float InterRate = interRate != null ? float.Parse(interRate) : 1;
             string remarks = remarksTitle + " " + ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == DateTime.Now.Month).Single().MonthName + " " + DateTime.Now.Year;
 
-            List<InterEntityParticular> parList1 = _service.PopulateParticular1(account, Curr1AbbrName, Curr1Amt, Curr2Amt, InterRate);
-            List<InterEntityParticular> parList2 = _service.PopulateParticular2(Curr1AbbrName, Curr2AbbrName, Curr2Amt, InterRate);
-            List<InterEntityParticular> parList3 = _service.PopulateParticular3(Curr2AbbrName, Curr2Amt);
+            List<InterEntityParticular> parList1 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular1(account, Curr1AbbrName, float.Parse(Curr1Amt), float.Parse(Curr2Amt), InterRate, int.Parse(accID), int.Parse(Curr1AbbrID));
+            List<InterEntityParticular> parList2 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular2(Curr1AbbrName, Curr2AbbrName, float.Parse(Curr2Amt), InterRate, int.Parse(Curr1AbbrID), int.Parse(Curr2AbbrID));
+            List<InterEntityParticular> parList3 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular3(Curr2AbbrName, float.Parse(Curr2Amt), int.Parse(Curr2AbbrID));
+            List<SelectListItem> currList = _service.getCurrencyIDSelectList();
+
+            DDVInterEntityViewModel model = new DDVInterEntityViewModel
+            {
+                Inter_ID = int.Parse(id.Substring(5)),
+                Inter_Currency1_ID = int.Parse(Curr1AbbrID),
+                Inter_Currency1_ABBR = Curr1AbbrName,
+                Inter_Currency1_Amount = float.Parse(Curr1Amt),
+                Inter_Currency2_ID = Curr2AbbrID == "NAN" ? 2 : int.Parse(Curr2AbbrID),
+                Inter_Currency2_ABBR = Curr2AbbrID == "NAN" ? _context.DMCurrency.Where(x => x.Curr_MasterID == 2 && x.Curr_isActive == true && x.Curr_isDeleted == false).Select(x => x.Curr_CCY_ABBR).FirstOrDefault() : Curr2AbbrName,
+                Inter_Currency2_Amount = float.Parse(Curr2Amt),
+                Inter_Rate = InterRate,
+                Inter_Check1 = Chk1 == "true" ? true : false,
+                Inter_Check2 = Chk2 == "true" ? true : false,
+                Inter_Convert1_Amount = float.Parse(Conv1Amt),
+                Inter_Convert2_Amount = float.Parse(Conv2Amt),
+                interPartList = new List<ExpenseEntryInterEntityParticularViewModel>(),
+                CurrencyList = currList
+            };
+            ExpenseEntryInterEntityParticularViewModel particular = new ExpenseEntryInterEntityParticularViewModel {
+                InterPart_Particular_Title = remarks,
+                Inter_Particular1 = parList1,
+                Inter_Particular2 = parList2,
+                Inter_Particular3 = parList3
+            };
+            model.interPartList.Add(particular);
+            return PartialView(model);
+        }
+        public IActionResult EntryExpenseInterEntity_READONLY(string id, string interRate, string account, string remarksTitle, string Curr1AbbrID, string Curr1AbbrName, string Curr1Amt,
+                                                    string Curr2AbbrID, string Curr2AbbrName, string Curr2Amt, string Chk1, string Conv1Amt, string Chk2, string Conv2Amt,
+                                                    string accID)
+        {
+            InterEntityParticular par = new InterEntityParticular();
+            float InterRate = interRate != null ? float.Parse(interRate) : 1;
+            string remarks = remarksTitle + " " + ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == DateTime.Now.Month).Single().MonthName + " " + DateTime.Now.Year;
+
+            List<InterEntityParticular> parList1 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular1(account, Curr1AbbrName, float.Parse(Curr1Amt), float.Parse(Curr2Amt), InterRate, int.Parse(accID), int.Parse(Curr1AbbrID));
+            List<InterEntityParticular> parList2 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular2(Curr1AbbrName, Curr2AbbrName, float.Parse(Curr2Amt), InterRate, int.Parse(Curr1AbbrID), int.Parse(Curr2AbbrID));
+            List<InterEntityParticular> parList3 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular3(Curr2AbbrName, float.Parse(Curr2Amt), int.Parse(Curr2AbbrID));
             List<SelectListItem> currList = _service.getCurrencySelectList();
 
             DDVInterEntityViewModel model = new DDVInterEntityViewModel
             {
-                Inter_ID = id,
-                Inter_Particular_Title = remarks,
-                Inter_Currency1_ABBR_ID = Curr1AbbrID,
-                Inter_Currency1_ABBR_Name = Curr1AbbrName,
-                Inter_Currency1_Amount = Curr1Amt,
-                Inter_Currency2_ABBR_ID = Curr2AbbrID == "NAN" ? "2" : Curr2AbbrID,
-                Inter_Currency2_ABBR_Name = Curr2AbbrID == "NAN" ? _context.DMCurrency.Where(x=> x.Curr_MasterID == 2 && x.Curr_isActive == true && x.Curr_isDeleted == false).Select(x=> x.Curr_CCY_ABBR).FirstOrDefault() : Curr2AbbrName,
-                Inter_Currency2_Amount = Curr2Amt,
-                Inter_Rate = InterRate.ToString(),
-                Inter_Particular1 = parList1,
-                Inter_Particular2 = parList2,
-                Inter_Particular3 = parList3,
+                Inter_ID = int.Parse(id.Substring(5)),
+                Inter_Currency1_ID = int.Parse(Curr1AbbrID),
+                Inter_Currency1_ABBR = Curr1AbbrName,
+                Inter_Currency1_Amount = float.Parse(Curr1Amt),
+                Inter_Currency2_ID = Curr2AbbrID == "NAN" ? 2 : int.Parse(Curr2AbbrID),
+                Inter_Currency2_ABBR = Curr2AbbrID == "NAN" ? _context.DMCurrency.Where(x => x.Curr_MasterID == 2 && x.Curr_isActive == true && x.Curr_isDeleted == false).Select(x => x.Curr_CCY_ABBR).FirstOrDefault() : Curr2AbbrName,
+                Inter_Currency2_Amount = float.Parse(Curr2Amt),
+                Inter_Rate = InterRate,
                 Inter_Check1 = Chk1 == "true" ? true : false,
                 Inter_Check2 = Chk2 == "true" ? true : false,
-                Inter_Convert1_Amount = Conv1Amt,
-                Inter_Convert2_Amount = Conv2Amt,
+                Inter_Convert1_Amount = float.Parse(Conv1Amt),
+                Inter_Convert2_Amount = float.Parse(Conv2Amt),
+                interPartList = new List<ExpenseEntryInterEntityParticularViewModel>(),
                 CurrencyList = currList
             };
+            ExpenseEntryInterEntityParticularViewModel particular = new ExpenseEntryInterEntityParticularViewModel
+            {
+                InterPart_Particular_Title = remarks,
+                Inter_Particular1 = parList1,
+                Inter_Particular2 = parList2,
+                Inter_Particular3 = parList3
+            };
+            model.interPartList.Add(particular);
             return PartialView(model);
         }
         //_________________________//[Petty Cash/Cash Advance(Suspense sundry) Expense]//_____________________________

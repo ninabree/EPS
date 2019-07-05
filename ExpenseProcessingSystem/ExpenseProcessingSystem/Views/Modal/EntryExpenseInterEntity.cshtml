@@ -16,23 +16,23 @@
     <tr>
         <td colspan="3"><label>PhP Amount</label></td>
         <td colspan="2" id="curr1-abbr">
-            @Html.DisplayFor(m => m.Inter_Currency1_ABBR_Name)
-            @Html.HiddenFor(m => m.Inter_Currency1_ABBR_ID)
+            @Html.DisplayFor(m => m.Inter_Currency1_ABBR)
+            @Html.HiddenFor(m => m.Inter_Currency1_ID)
         </td>
         <td colspan="4">@Html.TextBoxFor(m => m.Inter_Currency1_Amount, new { @class = "changeable" })</td>
         <td colspan="3">
             @Html.CheckBoxFor(model => model.Inter_Check1, new { @class = "convertChk changeable" })
-            Convert from <label id="convertCurr1">@Model.Inter_Currency2_ABBR_Name</label>
+            Convert from <label id="convertCurr1">@Model.Inter_Currency2_ABBR</label>
         </td>
         <td colspan="4"><input type="number" id="convertAmt1" class="changeable" value="@Model.Inter_Convert1_Amount" /></td>
     </tr>
     <tr>
         <td colspan="3"><label id="curr2-lbl">USD Amount</label></td>
         <td colspan="2" id="curr2-abbr">
-            <select id="@Html.IdFor(x => Model.Inter_Currency2_ABBR_ID)" class="input100 txtAcc" name="@Html.NameFor(x => Model.Inter_Currency2_ABBR_ID)">
+            <select id="@Html.IdFor(x => Model.Inter_Currency2_ID)" class="input100 txtAcc" name="@Html.NameFor(x => Model.Inter_Currency2_ID)">
                 @foreach (var groepModel in Model.CurrencyList)
                 {
-                    if (@groepModel.Value == @Model.Inter_Currency2_ABBR_ID)
+                    if (@groepModel.Value == @Model.Inter_Currency2_ID + "")
                     {
                         <option value="@groepModel.Value" selected>@groepModel.Text</option>
                     }
@@ -46,7 +46,7 @@
         <td colspan="4">@Html.TextBoxFor(m => m.Inter_Currency2_Amount, new { @class = "changeable" })</td>
         <td colspan="3">
             @Html.CheckBoxFor(model => model.Inter_Check2, new { @class = "convertChk changeable" })
-            Convert from <label id="convertCurr2">@Model.Inter_Currency1_ABBR_Name</label>
+            Convert from <label id="convertCurr2">@Model.Inter_Currency1_ABBR</label>
         </td>
         <td colspan="4"><input type="number" id="convertAmt2" value="@Model.Inter_Convert2_Amount" class="changeable" /></td>
     </tr>
@@ -63,70 +63,98 @@
         <td colspan="1"><label>Inter-Rate</label></td>
         <td colspan="2"><label>Credit</label></td>
     </tr>
-    @if (Model.Inter_Particular1.Count > 0)
+    @if (Model.interPartList[0].Inter_Particular1.Count > 0)
     {
-        var rowCount = Model.Inter_Particular1.Count;
-        <tr>
-            <td rowspan=@rowCount colspan="3"> @Html.DisplayFor(m => @Model.Inter_Particular_Title) </td>
-            <td colspan="5">@Html.DisplayFor(m => m.Inter_Particular1[0].Particular_Account_Name)</td>
-            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency1_ABBR_Name)</td>
+        var rowCount = Model.interPartList[0].Inter_Particular1.Count;
+        <tr class="part-tr" id="part1">
+            <td rowspan=@rowCount colspan="3" id="part1-title"> @Html.DisplayFor(m => m.interPartList[0].InterPart_Particular_Title) </td>
+            <td colspan="5">@Html.DisplayFor(m => m.interPartList[0].Inter_Particular1[0].Particular_Account_Name)</td>
+            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency1_ABBR)</td>
             <td colspan="1"></td>
-            <td colspan="2" id="par1-0">@Html.DisplayFor(m => m.Inter_Particular1[0].Particular_Debit_Amount)</td>
+            <td colspan="2" id="par1-0">@Html.DisplayFor(m => m.interPartList[0].Inter_Particular1[0].Particular_Debit_Amount)</td>
             <td colspan="4"></td>
+            @Html.HiddenFor(m => m.interPartList[0].Inter_Particular1[0].Particular_Acc_ID)
+            @Html.HiddenFor(m => m.interPartList[0].Inter_Particular1[0].Particular_DebCurr_ID)
+            @Html.HiddenFor(m => m.interPartList[0].Inter_Particular1[0].Particular_CredCurr_ID)
+            @Html.HiddenFor(m => m.interPartList[0].Inter_Particular1[0].Particular_Type_ID)
         </tr>
-        <tr>
-            <td colspan="5">@Html.DisplayFor(m => m.Inter_Particular1[1].Particular_Account_Name)</td>
+        <tr class="part-tr" id="part1">
+            <td colspan="5">@Html.DisplayFor(m => m.interPartList[0].Inter_Particular1[1].Particular_Account_Name)</td>
             <td colspan="4"></td>
-            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency1_ABBR_Name)</td>
+            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency1_ABBR)</td>
             <td colspan="1"></td>
-            <td colspan="2" id="par1-1">@Html.DisplayFor(m => m.Inter_Particular1[1].Particular_Credit_Amount)</td>
+            <td colspan="2" id="par1-1">@Html.DisplayFor(m => m.interPartList[0].Inter_Particular1[1].Particular_Credit_Amount)</td>
+            @Html.HiddenFor(m => m.interPartList[0].Inter_Particular1[1].Particular_Acc_ID)
+            @Html.HiddenFor(m => m.interPartList[0].Inter_Particular1[1].Particular_DebCurr_ID)
+            @Html.HiddenFor(m => m.interPartList[0].Inter_Particular1[1].Particular_CredCurr_ID)
+            @Html.HiddenFor(m => m.interPartList[0].Inter_Particular1[1].Particular_Type_ID)
         </tr>
-        <tr>
-            <td colspan="5">@Html.DisplayFor(m => m.Inter_Particular1[2].Particular_Account_Name)</td>
+        <tr class="part-tr" id="part1">
+            <td colspan="5">@Html.DisplayFor(m => m.interPartList[0].Inter_Particular1[2].Particular_Account_Name)</td>
             <td colspan="4"></td>
-            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency1_ABBR_Name)</td>
+            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency1_ABBR)</td>
             <td colspan="1"></td>
-            <td colspan="2" id="par1-2">@Html.DisplayFor(m => m.Inter_Particular1[2].Particular_Credit_Amount)</td>
+            <td colspan="2" id="par1-2">@Html.DisplayFor(m => m.interPartList[0].Inter_Particular1[2].Particular_Credit_Amount)</td>
+            @Html.HiddenFor(m => m.interPartList[0].Inter_Particular1[2].Particular_Acc_ID)
+            @Html.HiddenFor(m => m.interPartList[0].Inter_Particular1[2].Particular_DebCurr_ID)
+            @Html.HiddenFor(m => m.interPartList[0].Inter_Particular1[2].Particular_CredCurr_ID)
+            @Html.HiddenFor(m => m.interPartList[0].Inter_Particular1[2].Particular_Type_ID)
         </tr>
         <tr></tr>
     }
-    @if (Model.Inter_Particular2.Count > 0)
+    @if (Model.interPartList[0].Inter_Particular2.Count > 0)
     {
-        var rowCount = Model.Inter_Particular2.Count;
-        <tr>
-            <td rowspan=@rowCount colspan="3"> @Html.DisplayFor(m => @Model.Inter_Particular_Title) </td>
-            <td colspan="5">@Html.DisplayFor(m => m.Inter_Particular2[0].Particular_Account_Name)</td>
-            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency1_ABBR_Name)</td>
+        var rowCount = Model.interPartList[0].Inter_Particular2.Count;
+        <tr class="part-tr" id="part2">
+            <td rowspan=@rowCount colspan="3" id="part2-title"> @Html.DisplayFor(m => m.interPartList[0].InterPart_Particular_Title) </td>
+            <td colspan="5">@Html.DisplayFor(m => m.interPartList[0].Inter_Particular2[0].Particular_Account_Name)</td>
+            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency1_ABBR)</td>
             <td colspan="1"></td>
-            <td colspan="2" id="par2-0">@Html.DisplayFor(m => m.Inter_Particular2[0].Particular_Debit_Amount)</td>
+            <td colspan="2" id="par2-0">@Html.DisplayFor(m => m.interPartList[0].Inter_Particular2[0].Particular_Debit_Amount)</td>
             <td colspan="4"></td>
+            @Html.HiddenFor(m => m.interPartList[0].Inter_Particular2[0].Particular_Acc_ID)
+            @Html.HiddenFor(m => m.interPartList[0].Inter_Particular2[0].Particular_DebCurr_ID)
+            @Html.HiddenFor(m => m.interPartList[0].Inter_Particular2[0].Particular_CredCurr_ID)
+            @Html.HiddenFor(m => m.interPartList[0].Inter_Particular2[0].Particular_Type_ID)
         </tr>
-        <tr>
-            <td colspan="5">@Html.DisplayFor(m => m.Inter_Particular2[1].Particular_Account_Name)</td>
+        <tr class="part-tr" id="part2">
+            <td colspan="5">@Html.DisplayFor(m => m.interPartList[0].Inter_Particular2[1].Particular_Account_Name)</td>
             <td colspan="4"></td>
-            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency2_ABBR_Name)</td>
+            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency2_ABBR)</td>
             <td colspan="1" id="par2-0-1">@Html.DisplayFor(m => m.Inter_Rate)</td>
-            <td colspan="2" id="par2-1">@Html.DisplayFor(m => m.Inter_Particular2[1].Particular_Credit_Amount)</td>
+            <td colspan="2" id="par2-1">@Html.DisplayFor(m => m.interPartList[0].Inter_Particular2[1].Particular_Credit_Amount)</td>
+            @Html.HiddenFor(m => m.interPartList[0].Inter_Particular2[1].Particular_Acc_ID)
+            @Html.HiddenFor(m => m.interPartList[0].Inter_Particular2[1].Particular_DebCurr_ID)
+            @Html.HiddenFor(m => m.interPartList[0].Inter_Particular2[1].Particular_CredCurr_ID)
+            @Html.HiddenFor(m => m.interPartList[0].Inter_Particular2[1].Particular_Type_ID)
         </tr>
         <tr></tr>
     }
-    @if (Model.Inter_Particular3.Count > 0)
+    @if (Model.interPartList[0].Inter_Particular3.Count > 0)
     {
-        var rowCount = Model.Inter_Particular3.Count;
-        <tr>
-            <td rowspan=@rowCount colspan="3"> @Html.DisplayFor(m => @Model.Inter_Particular_Title) </td>
-            <td colspan="5">@Html.DisplayFor(m => m.Inter_Particular3[0].Particular_Account_Name)</td>
-            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency2_ABBR_Name)</td>
+        var rowCount = Model.interPartList[0].Inter_Particular3.Count;
+        <tr class="part-tr" id="part3">
+            <td rowspan=@rowCount colspan="3" id="part3-title"> @Html.DisplayFor(m => m.interPartList[0].InterPart_Particular_Title) </td>
+            <td colspan="5">@Html.DisplayFor(m => m.interPartList[0].Inter_Particular3[0].Particular_Account_Name)</td>
+            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency2_ABBR)</td>
             <td colspan="1"></td>
-            <td colspan="2" id="par3-0">@Html.DisplayFor(m => m.Inter_Particular3[0].Particular_Debit_Amount)</td>
+            <td colspan="2" id="par3-0">@Html.DisplayFor(m => m.interPartList[0].Inter_Particular3[0].Particular_Debit_Amount)</td>
             <td colspan="4"></td>
+            @Html.HiddenFor(m => m.interPartList[0].Inter_Particular3[0].Particular_Acc_ID)
+            @Html.HiddenFor(m => m.interPartList[0].Inter_Particular3[0].Particular_DebCurr_ID)
+            @Html.HiddenFor(m => m.interPartList[0].Inter_Particular3[0].Particular_CredCurr_ID)
+            @Html.HiddenFor(m => m.interPartList[0].Inter_Particular3[0].Particular_Type_ID)
         </tr>
-        <tr>
-            <td colspan="5">@Html.DisplayFor(m => m.Inter_Particular3[1].Particular_Account_Name)</td>
+        <tr class="part-tr" id="part3">
+            <td colspan="5">@Html.DisplayFor(m => m.interPartList[0].Inter_Particular3[1].Particular_Account_Name)</td>
             <td colspan="4"></td>
-            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency2_ABBR_Name)</td>
+            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency2_ABBR)</td>
             <td colspan="1"></td>
-            <td colspan="2" id="par3-1">@Html.DisplayFor(m => m.Inter_Particular3[1].Particular_Credit_Amount)</td>
+            <td colspan="2" id="par3-1">@Html.DisplayFor(m => m.interPartList[0].Inter_Particular3[1].Particular_Credit_Amount)</td>
+            @Html.HiddenFor(m => m.interPartList[0].Inter_Particular3[1].Particular_Acc_ID)
+            @Html.HiddenFor(m => m.interPartList[0].Inter_Particular3[1].Particular_DebCurr_ID)
+            @Html.HiddenFor(m => m.interPartList[0].Inter_Particular3[1].Particular_CredCurr_ID)
+            @Html.HiddenFor(m => m.interPartList[0].Inter_Particular3[1].Particular_Type_ID)
         </tr>
     }
     <tr></tr>
@@ -134,7 +162,6 @@
 
 </table>
 
-@*<script type="text/javascript" src="~/js/EntryScripts.js"></script>*@
 <script>
     $(function () {
         //set fields
@@ -194,27 +221,80 @@
         });
         $(".modal-footer2").on("click", "#saveBtnEntry", function () {
             if ($(this).parent().siblings().find('h4.modal-title', this).text() == "Inter-Entity") {
-                var itemNo = $("#parentIdInter").val().substr(5);
+                var itemNo = $("#parentIdInter").val();
                 isChk();
-
-                $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Currency1_ABBR_ID").val($("#curr1-abbr").find("input#Inter_Currency1_ABBR_ID").val());
-                $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Currency2_ABBR_ID").val($("#curr2-abbr").find("#Inter_Currency2_ABBR_ID option:selected").val());
-                $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Currency1_Amount").val($(curr1Amt).val());
-                $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Currency2_Amount").val($(curr2Amt).val());
-                $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Convert1_Amount").val($(conv1Amt).val());
-                $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Convert2_Amount").val($(conv2Amt).val());
-                $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Check1").val(isChk1);
-                $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Check2").val(isChk2);
-                $("#EntryDDV_" + itemNo + "__interDetails_" + itemNo + "__Inter_Rate").val($("table").find("#Inter_Rate").val());
+                $("#EntryDDV_" + itemNo + "__interDetails_Inter_Currency1_ID").val($("#curr1-abbr").find("input#Inter_Currency1_ID").val());
+                $("#EntryDDV_" + itemNo + "__interDetails_Inter_Currency2_ID").val($("#curr2-abbr").find("#Inter_Currency2_ID option:selected").val());
+                $("#EntryDDV_" + itemNo + "__interDetails_Inter_Currency1_Amount").val($(curr1Amt).val());
+                $("#EntryDDV_" + itemNo + "__interDetails_Inter_Currency2_Amount").val($(curr2Amt).val());
+                $("#EntryDDV_" + itemNo + "__interDetails_Inter_Convert1_Amount").val($(conv1Amt).val());
+                $("#EntryDDV_" + itemNo + "__interDetails_Inter_Convert2_Amount").val($(conv2Amt).val());
+                $("#EntryDDV_" + itemNo + "__interDetails_Inter_Check1").val(isChk1);
+                $("#EntryDDV_" + itemNo + "__interDetails_Inter_Check2").val(isChk2);
+                $("#EntryDDV_" + itemNo + "__interDetails_Inter_Rate").val($("table").find("#Inter_Rate").val());
                 $("#EntryDDV_" + itemNo + "__debitGross").val($("#par1-0").text());
 
-                $('.modal-body2').empty();
+
+                //Populate the Particulars and Accs Lists
+                $('#interDtls').empty();
+
+                var parts = '<input id = "EntryDDV_0__interDetails_interPartList_0__InterPart_Particular_Title" name = "EntryDDV[0].interDetails.interPartList[0].InterPart_Particular_Title" type = "hidden" value = "' + $('#part1-title').text() + '" >';
+                $("tr#part1.part-tr").each(function (ind, item) {
+                    var partNo = 0;
+                    var AccID = $('#interPartList_' + itemNo + '__Inter_Particular1_' + ind + '__Particular_Acc_ID').val(),
+                        Amt = $('#par1-' + ind).text(),
+                        CurrID = ($('#interPartList_0__Inter_Particular1_' + itemNo + '__Particular_DebCurr_ID').val() > 0) ? $('#interPartList_0__Inter_Particular1_' + itemNo + '__Particular_DebCurr_ID').val() : $('#interPartList_0__Inter_Particular1_' + itemNo + '__Particular_CredCurr_ID').val(),
+                        Rate = "0",
+                        TypeID = $('#interPartList_' + itemNo + '__Inter_Particular1_' + ind + '__Particular_Type_ID').val();
+
+                    parts += '<input data-val="true" data-val-required="The Inter_Acc_ID field is required." id="EntryDDV_' + itemNo + '__interDetails_interPartList_' + itemNo + '__ExpenseEntryInterEntityAccs_' + ind + '__Inter_Acc_ID" name="EntryDDV[' + itemNo + '].interDetails.interPartList[' + itemNo + '].ExpenseEntryInterEntityAccs[' + ind + '].Inter_Acc_ID" type="hidden" value="' + AccID + '">'
+                        + '<input data-val="true" data-val-number="The field Inter_Amount must be a number." data-val-required="The Inter_Amount field is required." id="EntryDDV_' + itemNo + '__interDetails_interPartList_' + itemNo + '__ExpenseEntryInterEntityAccs_' + ind + '__Inter_Amount" name="EntryDDV[' + itemNo + '].interDetails.interPartList[0].ExpenseEntryInterEntityAccs[' + ind + '].Inter_Amount" type="hidden" value="' + Amt + '">'
+                        + '<input data-val="true" data-val-required="The Inter_Curr_ID field is required." id="EntryDDV_' + itemNo + '__interDetails_interPartList_' + itemNo + '__ExpenseEntryInterEntityAccs_' + ind + '__Inter_Curr_ID" name="EntryDDV[' + itemNo + '].interDetails.interPartList[' + itemNo + '].ExpenseEntryInterEntityAccs[' + ind + '].Inter_Curr_ID" type="hidden" value="' + CurrID + '">'
+                        + '<input data-val="true" data-val-number="The field Inter_Rate must be a number." data-val-required="The Inter_Rate field is required." id="EntryDDV_' + itemNo + '__interDetails_interPartList_' + itemNo + '__ExpenseEntryInterEntityAccs_' + ind + '__Inter_Rate" name="EntryDDV[' + itemNo + '].interDetails.interPartList[0].ExpenseEntryInterEntityAccs[' + ind + '].Inter_Rate" type="hidden" value="' + Rate + '">'
+                        + '<input data-val="true" data-val-required="The Inter_Type_ID field is required." id="EntryDDV_' + itemNo + '__interDetails_interPartList_' + itemNo + '__ExpenseEntryInterEntityAccs_' + ind + '__Inter_Type_ID" name="EntryDDV[' + itemNo + '].interDetails.interPartList[' + itemNo + '].ExpenseEntryInterEntityAccs[' + ind + '].Inter_Type_ID" type="hidden" value="' + TypeID + '">'
+                });
+                parts += '<input id = "EntryDDV_0__interDetails_interPartList_1__InterPart_Particular_Title" name = "EntryDDV[0].interDetails.interPartList[1].InterPart_Particular_Title" type = "hidden" value = "' + $('#part2-title').text() + '" >'
+
+                $("tr#part2.part-tr").each(function (ind, item) {
+                    var partNo = parseInt(item.id.substring(4)) - 1;
+                    var AccID = $('#interPartList_' + itemNo + '__Inter_Particular2_' + ind + '__Particular_Acc_ID').val(),
+                        Amt = $('#par1-' + ind).text(),
+                        CurrID = ($('#interPartList_' + itemNo + '__Inter_Particular2_' + ind + '__Particular_DebCurr_ID').val() > 0) ? $('#interPartList_' + itemNo + '__Inter_Particular2_' + ind + '__Particular_DebCurr_ID').val() : $('#interPartList_' + itemNo + '__Inter_Particular2_' + ind + '__Particular_CredCurr_ID').val(),
+                        Rate = "0",
+                        TypeID = $('#interPartList_' + itemNo + '__Inter_Particular2_' + ind + '__Particular_Type_ID').val();
+
+                    parts += '<input data-val="true" data-val-required="The Inter_Acc_ID field is required." id="EntryDDV_' + itemNo + '__interDetails_interPartList_' + partNo + '__ExpenseEntryInterEntityAccs_' + ind + '__Inter_Acc_ID" name="EntryDDV[' + itemNo + '].interDetails.interPartList[' + partNo + '].ExpenseEntryInterEntityAccs[' + ind + '].Inter_Acc_ID" type="hidden" value="' + AccID + '">'
+                        + '<input data-val="true" data-val-number="The field Inter_Amount must be a number." data-val-required="The Inter_Amount field is required." id="EntryDDV_' + itemNo + '__interDetails_interPartList_' + partNo + '__ExpenseEntryInterEntityAccs_' + ind + '__Inter_Amount" name="EntryDDV[' + itemNo + '].interDetails.interPartList[' + partNo + '].ExpenseEntryInterEntityAccs[' + ind + '].Inter_Amount" type="hidden" value="' + Amt + '">'
+                        + '<input data-val="true" data-val-required="The Inter_Curr_ID field is required." id="EntryDDV_' + itemNo + '__interDetails_interPartList_' + partNo + '__ExpenseEntryInterEntityAccs_' + ind + '__Inter_Curr_ID" name="EntryDDV[' + itemNo + '].interDetails.interPartList[' + partNo + '].ExpenseEntryInterEntityAccs[' + ind + '].Inter_Curr_ID" type="hidden" value="' + CurrID + '">'
+                        + '<input data-val="true" data-val-number="The field Inter_Rate must be a number." data-val-required="The Inter_Rate field is required." id="EntryDDV_' + itemNo + '__interDetails_interPartList_' + partNo + '__ExpenseEntryInterEntityAccs_' + ind + '__Inter_Rate" name="EntryDDV[' + itemNo + '].interDetails.interPartList[' + partNo + '].ExpenseEntryInterEntityAccs[' + ind + '].Inter_Rate" type="hidden" value="' + Rate + '">'
+                        + '<input data-val="true" data-val-required="The Inter_Type_ID field is required." id="EntryDDV_' + itemNo + '__interDetails_interPartList_' + partNo + '__ExpenseEntryInterEntityAccs_' + ind + '__Inter_Type_ID" name="EntryDDV[' + itemNo + '].interDetails.interPartList[' + partNo + '].ExpenseEntryInterEntityAccs[' + ind + '].Inter_Type_ID" type="hidden" value="' + TypeID + '">'
+                });
+
+                parts += '<input id="EntryDDV_0__interDetails_interPartList_2__InterPart_Particular_Title" name="EntryDDV[0].interDetails.interPartList[2].InterPart_Particular_Title" type="hidden" value="' + $('#part3-title').text() + '" > '
+
+                $("tr#part3.part-tr").each(function (ind, item) {
+                    var partNo = parseInt(item.id.substring(4)) - 1;
+                    var AccID = $('#interPartList_' + itemNo + '__Inter_Particular3_' + ind + '__Particular_Acc_ID').val(),
+                        Amt = $('#par1-' + ind).text(),
+                        CurrID = ($('#interPartList_' + itemNo + '__Inter_Particular3_' + ind + '__Particular_DebCurr_ID').val() > 0) ? $('#interPartList_' + itemNo + '__Inter_Particular3_' + ind + '__Particular_DebCurr_ID').val() : $('#interPartList_' + itemNo + '__Inter_Particular3_' + ind + '__Particular_CredCurr_ID').val(),
+                        Rate = "0",
+                        TypeID = $('#interPartList_' + itemNo + '__Inter_Particular3_' + ind + '__Particular_Type_ID').val();
+
+                    parts += '<input data-val="true" data-val-required="The Inter_Acc_ID field is required." id="EntryDDV_' + itemNo + '__interDetails_interPartList_' + partNo + '__ExpenseEntryInterEntityAccs_' + ind + '__Inter_Acc_ID" name="EntryDDV[' + itemNo + '].interDetails.interPartList[' + partNo + '].ExpenseEntryInterEntityAccs[' + ind + '].Inter_Acc_ID" type="hidden" value="' + AccID + '">'
+                        + '<input data-val="true" data-val-number="The field Inter_Amount must be a number." data-val-required="The Inter_Amount field is required." id="EntryDDV_' + itemNo + '__interDetails_interPartList_' + partNo + '__ExpenseEntryInterEntityAccs_' + ind + '__Inter_Amount" name="EntryDDV[' + itemNo + '].interDetails.interPartList[' + partNo + '].ExpenseEntryInterEntityAccs[' + ind + '].Inter_Amount" type="hidden" value="' + Amt + '">'
+                        + '<input data-val="true" data-val-required="The Inter_Curr_ID field is required." id="EntryDDV_' + itemNo + '__interDetails_interPartList_' + partNo + '__ExpenseEntryInterEntityAccs_' + ind + '__Inter_Curr_ID" name="EntryDDV[' + itemNo + '].interDetails.interPartList[' + partNo + '].ExpenseEntryInterEntityAccs[' + ind + '].Inter_Curr_ID" type="hidden" value="' + CurrID + '">'
+                        + '<input data-val="true" data-val-number="The field Inter_Rate must be a number." data-val-required="The Inter_Rate field is required." id="EntryDDV_' + itemNo + '__interDetails_interPartList_' + partNo + '__ExpenseEntryInterEntityAccs_' + ind + '__Inter_Rate" name="EntryDDV[' + itemNo + '].interDetails.interPartList[' + partNo + '].ExpenseEntryInterEntityAccs[' + ind + '].Inter_Rate" type="hidden" value="' + Rate + '">'
+                        + '<input data-val="true" data-val-required="The Inter_Type_ID field is required." id="EntryDDV_' + itemNo + '__interDetails_interPartList_' + partNo + '__ExpenseEntryInterEntityAccs_' + ind + '__Inter_Type_ID" name="EntryDDV[' + itemNo + '].interDetails.interPartList[' + partNo + '].ExpenseEntryInterEntityAccs[' + ind + '].Inter_Type_ID" type="hidden" value="' + TypeID + '">'
+                });
+
+                //append the particulars list to model to post
+                $('#req_' + itemNo).find('#interDtls').append(parts);
 
                 //trigger recomputation of debit and credit
-                //$(document).trigger("change");
-                computeValuesDDV($("#item_" + itemNo)[0]);
+                computeValuesDDVInter($("#item_" + itemNo)[0]);
 
 
+                $('.modal-body2').empty();
                 $('.myModal2').modal('hide');
             }
         });
@@ -312,10 +392,9 @@
                 $("#par2-0-1").text(rate);
             }
         }
-        //TEMP FIX
-        function computeValuesDDV(parent) {
+        ////TEMP FIX
+        function computeValuesDDVInter(parent) {
             var pNode = parent;
-            
             var grossAmt = $("#" + pNode.id + " .txtGross").val();
             
             $("#" + pNode.id + " .txtGross").attr("value", grossAmt);
