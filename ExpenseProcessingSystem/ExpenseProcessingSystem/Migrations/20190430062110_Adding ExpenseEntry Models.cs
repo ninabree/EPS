@@ -15,7 +15,7 @@ namespace ExpenseProcessingSystem.Migrations
                     Expense_ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Expense_Date = table.Column<DateTime>(nullable: false),
-                    Expense_Number = table.Column<string>(nullable: true),
+                    Expense_Number = table.Column<int>(nullable: false),
                     Expense_CheckId = table.Column<int>(nullable: false),
                     Expense_CheckNo = table.Column<string>(nullable: true),
                     Expense_Payee = table.Column<int>(nullable: false),

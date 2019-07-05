@@ -77,6 +77,11 @@ namespace ExpenseProcessingSystem.Data
         public DbSet<LiquidationCashBreakdownModel> LiquidationCashBreakdown { get; set; }
         public DbSet<LiquidationInterEntityModel> LiquidationInterEntity { get; set; }
 
+        //CLOSING TABLES
+        public DbSet<ClosingModel> Closing { get; set; }
+        public DbSet<PettyCashModel> PettyCash { get; set; }
+        public DbSet<PCBreakdownModel> PettyCashBreakDown { get; set; }
+
         //GOExpress table history
         public DbSet<GOExpressHistModel> GOExpressHist { get; set; }
 

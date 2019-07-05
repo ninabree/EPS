@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using ExpenseProcessingSystem.Data;
+using ExpenseProcessingSystem.HostedServices;
 using ExpenseProcessingSystem.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -90,6 +91,8 @@ namespace ExpenseProcessingSystem
             services.AddDbContext<EPSDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddDbContext<GOExpressContext>(options => options.UseSqlServer(Configuration.GetConnectionString("GOExpressConnection")));
             services.AddDbContext<GWriteContext>(options => options.UseSqlServer(Configuration.GetConnectionString("GoWriteConnection")));
+
+            services.AddHostedService<HelloWorldHostedService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

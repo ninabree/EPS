@@ -1,10 +1,17 @@
 ﻿@{
     ViewData["Title"] = "Close";
-}
+    string prevCcyRBU = Model.rbuItems.Count > 0 ? Model.rbuItems[0].ccy : "";
+    string prevCcyFCDU = Model.fcduItems.Count > 0 ? Model.fcduItems[0].ccy : "";
+    double totalAmount = 0 ;
+    int totalTransCount =  0 ;
+    int index = 0;
+ }
 
-@using ExpenseProcessingSystem.ViewModels
+    @using ExpenseProcessingSystem.ViewModels
 
-@model ClosingViewModel
+
+
+    @model ClosingViewModel
 
 <div class="tab-content-cont m-t-10">
     <div id="tbl-lbl">Date: <p class="dis-inline-block">@Html.EditorFor(m => m.date, new { htmlAttributes = new { @class = "input", @type = "date", @readonly = "readonly"} })</p></div>
@@ -13,26 +20,67 @@
         <table class="table table-striped tab-tbl m-b-20">
             <thead>
                 <tr>
-                    <th><a asp-action="Close" asp-route-sortOrder="@ViewData["AccountSortParm"]">Tran Type<p class="btn-xs glyphicon @ViewData["glyph-acc"]"></p></a></th>
-                    <th><a asp-action="Close" asp-route-sortOrder="@ViewData["TypeSortParm"]">GBase Tran#<p class="btn-xs glyphicon @ViewData["glyph-type"]"></p></a></th>
+                    <th>Tran Type</th>
+                    <th>GBase Trans #</th>
+                    <th>Express Trans #</th>
                     <th>Particulars</th>
                     <th>CCY</th>
                     <th>Amount</th>
+                    <th>Trans Count</th>
                     <th>Status</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach(var item in Model.rbuItems)
+                @foreach (var item in Model.rbuItems)
                 {
-                    <tr>
-                        <td>RBU</td>
-                        <td>@item.gBaseTrans</td>
-                        <td>@item.particulars</td>
-                        <td>@item.ccy</td>
-                        <td>@item.amount</td>
-                        <td>@item.status</td>
-                    </tr>
+                    if (prevCcyRBU == item.ccy)
+                    {
+                        totalAmount += item.amount;
+                        totalTransCount += item.transCount;
+                        <tr>
+                            <td>RBU</td>
+                            <td>@item.gBaseTrans</td>
+                            <td>@item.expTrans</td>
+                            <td>@item.particulars</td>
+                            <td>@item.ccy</td>
+                            <td>@item.amount</td>
+                            <td>@item.transCount</td>
+                            <td>@item.status</td>
+                        </tr>
+                        prevCcyRBU = item.ccy;
+                    }
+                    else
+                    {
+                        <tr class="totalStyle">
+                            <td colspan="4">RBU TOTAL</td>
+                            <td>@prevCcyRBU</td>
+                            <td>@totalAmount</td>
+                            <td>@totalTransCount</td>
+                            <td></td>
+                        </tr>
+
+                        totalAmount = item.amount;
+                        totalTransCount = item.transCount;
+                        <tr>
+                            <td>RBU</td>
+                            <td>@item.gBaseTrans</td>
+                            <td>@item.expTrans</td>
+                            <td>@item.particulars</td>
+                            <td>@item.ccy</td>
+                            <td>@item.amount</td>
+                            <td>@item.transCount</td>
+                            <td>@item.status</td>
+                        </tr>
+                        prevCcyRBU = item.ccy;
+                    }
                 }
+                <tr class="totalStyle">
+                    <td colspan="4">RBU TOTAL</td>
+                    <td>@prevCcyRBU</td>
+                    <td>@totalAmount</td>
+                    <td>@totalTransCount</td>
+                    <td></td>
+                </tr>
             </tbody>
         </table>
         <div class="tbl-controls m-t-20">
@@ -48,30 +96,76 @@
         </div>
 
     </div>
+
+    @{  
+        totalAmount = 0;
+        totalTransCount = 0;
+    }
     <div class="tbl-cont m-t-20 m-b-20">
         <table class="table table-striped tab-tbl m-b-20">
             <thead>
                 <tr>
-                    <th><a asp-action="Close" asp-route-sortOrder="@ViewData["AccountSortParm"]">Tran Type<p class="btn-xs glyphicon @ViewData["glyph-acc"]"></p></a></th>
-                    <th><a asp-action="Close" asp-route-sortOrder="@ViewData["TypeSortParm"]">GBase Tran#<p class="btn-xs glyphicon @ViewData["glyph-type"]"></p></a></th>
+                    <th>Tran Type</th>
+                    <th>GBase Trans #</th>
+                    <th>Express Trans #</th>
                     <th>Particulars</th>
                     <th>CCY</th>
                     <th>Amount</th>
+                    <th>Trans Count</th>
                     <th>Status</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.fcduItems)
+                @foreach (var item in Model.rbuItems)
                 {
-                    <tr>
-                        <td>RBU</td>
-                        <td>@item.gBaseTrans</td>
-                        <td>@item.particulars</td>
-                        <td>@item.ccy</td>
-                        <td>@item.amount</td>
-                        <td>@item.status</td>
-                    </tr>
+                    if (prevCcyFCDU == item.ccy)
+                    {
+                        totalAmount += item.amount;
+                        totalTransCount += item.transCount;
+                        <tr>
+                            <td>FCDU</td>
+                            <td>@item.gBaseTrans</td>
+                            <td>@item.expTrans</td>
+                            <td>@item.particulars</td>
+                            <td>@item.ccy</td>
+                            <td>@item.amount</td>
+                            <td>@item.transCount</td>
+                            <td>@item.status</td>
+                        </tr>
+                        prevCcyFCDU = item.ccy;
+                    }
+                    else
+                    {
+                        <tr class="totalStyle">
+                            <td colspan="4">FCDU TOTAL</td>
+                            <td>@prevCcyRBU</td>
+                            <td>@totalAmount</td>
+                            <td>@totalTransCount</td>
+                            <td></td>
+                        </tr>
+
+                        totalAmount = item.amount;
+                        totalTransCount = item.transCount;
+                        <tr>
+                            <td>FCDU</td>
+                            <td>@item.gBaseTrans</td>
+                            <td>@item.expTrans</td>
+                            <td>@item.particulars</td>
+                            <td>@item.ccy</td>
+                            <td>@item.amount</td>
+                            <td>@item.transCount</td>
+                            <td>@item.status</td>
+                        </tr>
+                        prevCcyFCDU = item.ccy;
+                    }
                 }
+                <tr class="totalStyle">
+                    <td colspan="4">FCDU TOTAL</td>
+                    <td>@prevCcyRBU</td>
+                    <td>@totalAmount</td>
+                    <td>@totalTransCount</td>
+                    <td></td>
+                </tr>
             </tbody>
         </table>
 

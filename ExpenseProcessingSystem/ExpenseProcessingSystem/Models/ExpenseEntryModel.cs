@@ -12,7 +12,7 @@ namespace ExpenseProcessingSystem.Models
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Expense_ID { get; set; }
         public DateTime Expense_Date { get; set; }
-        public string Expense_Number { get; set; }
+        public int Expense_Number { get; set; }
         public int Expense_CheckId { get; set; }
         public int Expense_Type { get; set; }
         public string Expense_CheckNo { get; set; }

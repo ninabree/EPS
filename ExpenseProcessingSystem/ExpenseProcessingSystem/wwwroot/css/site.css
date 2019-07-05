@@ -712,6 +712,14 @@ img#td-logo {
     border: 1px solid #777 !important;
 }*/
 
+/*----------------[Closing]------------------------*/
+.totalStyle {
+    border-top: 1px solid black;
+    border-bottom: 3px double black;
+    padding: 1em;
+    margin: 1em;
+}
+/*--------------[End Closing]----------------------*/
 .btncustomize {
     font-family: HelveticaNeue;
     font-size: 12px;

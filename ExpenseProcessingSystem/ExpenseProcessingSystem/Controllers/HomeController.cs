@@ -152,6 +152,63 @@ namespace ExpenseProcessingSystem.Controllers
         public IActionResult Close(string sortOrder, string currentFilter, string searchString, int? page)
         {
             ClosingViewModel model = new ClosingViewModel();
+            model.date = DateTime.Now;
+            int index = 0;
+            do {
+                CloseItems temp = new CloseItems();
+                temp.gBaseTrans = "111,222,333";
+                temp.expTrans = "CV-2019-100001";
+                temp.particulars = "THIS IS A PARTICULAR!";
+                temp.ccy = "PHP";
+                temp.amount = 1000 + ((135 * index) / 2.6);
+                temp.transCount = 2;
+                temp.status = "Posted";
+                index++;
+                model.rbuItems.Add(temp);
+            } while (index != 10);
+            index = 0;
+            do
+            {
+                CloseItems temp = new CloseItems();
+                temp.gBaseTrans = "111,222,333";
+                temp.expTrans = "CV-2019-100001";
+                temp.particulars = "THIS IS A PARTICULAR!";
+                temp.ccy = "USD";
+                temp.amount = 1000 + ((135 * index) / 2.6);
+                temp.transCount = 2;
+                temp.status = "Posted";
+                index++;
+                model.rbuItems.Add(temp);
+            } while (index != 10);
+
+            index = 0;
+            do
+            {
+                CloseItems temp = new CloseItems();
+                temp.gBaseTrans = "111,222,333";
+                temp.expTrans = "CV-2019-100001";
+                temp.particulars = "THIS IS A PARTICULAR!";
+                temp.ccy = "PHP";
+                temp.amount = 1000 + ((135 * index) / 2.6);
+                temp.transCount = 2;
+                temp.status = "Posted";
+                index++;
+                model.fcduItems.Add(temp);
+            } while (index != 10);
+            index = 0;
+            do
+            {
+                CloseItems temp = new CloseItems();
+                temp.gBaseTrans = "111,222,333";
+                temp.expTrans = "CV-2019-100001";
+                temp.particulars = "THIS IS A PARTICULAR!";
+                temp.ccy = "USD";
+                temp.amount = 1000 + ((135 * index) / 2.6);
+                temp.transCount = 2;
+                temp.status = "Posted";
+                index++;
+                model.fcduItems.Add(temp);
+            } while (index != 10);
             return View(model);
         }
         [OnlineUserCheck]

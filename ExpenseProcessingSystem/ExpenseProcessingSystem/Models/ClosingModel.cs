@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace ExpenseProcessingSystem.Models
 {
-    public class ExpenseTransList
+    public class ClosingModel
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int TL_ID { get; set; }
-        public int TL_ExpenseID { get; set; }
-        public bool TL_Liquidation { get; set; }
-        public int TL_GoExpress_ID { get; set; }
-        public int TL_TransID { get; set; }
+        public int Close_ID { get; set; }
+        public DateTime Close_Date { get; set; }
+        public DateTime Close_Open_Date { get; set; }
+        public int Close_Status { get; set; }
+        public int Close_User { get; set; }
     }
 }

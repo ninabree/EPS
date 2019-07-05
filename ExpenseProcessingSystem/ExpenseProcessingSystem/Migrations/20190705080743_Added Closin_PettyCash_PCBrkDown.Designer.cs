@@ -4,14 +4,16 @@ using ExpenseProcessingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    partial class EPSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190705080743_Added Closin_PettyCash_PCBrkDown")]
+    partial class AddedClosin_PettyCash_PCBrkDown
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -652,8 +654,6 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int?>("ExpenseEntryDetailModelExpDtl_ID");
 
-                    b.Property<string>("status");
-
                     b.HasKey("Amor_ID");
 
                     b.HasIndex("ExpenseEntryDetailModelExpDtl_ID");
@@ -756,79 +756,30 @@ namespace ExpenseProcessingSystem.Migrations
                     b.ToTable("ExpenseEntryGbaseDtls");
                 });
 
-            modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryInterEntityAccsModel", b =>
-                {
-                    b.Property<int>("InterAcc_ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("ExpenseEntryInterEntityParticularInterPart_ID");
-
-                    b.Property<int>("InterAcc_Acc_ID");
-
-                    b.Property<float>("InterAcc_Amount");
-
-                    b.Property<int>("InterAcc_Curr_ID");
-
-                    b.Property<float>("InterAcc_Rate");
-
-                    b.Property<int>("InterAcc_Type_ID");
-
-                    b.HasKey("InterAcc_ID");
-
-                    b.HasIndex("ExpenseEntryInterEntityParticularInterPart_ID");
-
-                    b.ToTable("ExpenseEntryInterEntityAccs");
-                });
-
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryInterEntityModel", b =>
                 {
-                    b.Property<int>("ExpDtl_DDVInter_ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<float>("ExpDtl_DDVInter_Amount1");
-
-                    b.Property<float>("ExpDtl_DDVInter_Amount2");
-
-                    b.Property<bool>("ExpDtl_DDVInter_Check1");
-
-                    b.Property<bool>("ExpDtl_DDVInter_Check2");
-
-                    b.Property<float>("ExpDtl_DDVInter_Conv_Amount1");
-
-                    b.Property<float>("ExpDtl_DDVInter_Conv_Amount2");
-
-                    b.Property<int>("ExpDtl_DDVInter_Curr1_ID");
-
-                    b.Property<int>("ExpDtl_DDVInter_Curr2_ID");
-
-                    b.Property<float>("ExpDtl_DDVInter_Rate");
+                    b.Property<string>("Inter_ID")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int?>("ExpenseEntryDetailModelExpDtl_ID");
 
-                    b.HasKey("ExpDtl_DDVInter_ID");
+                    b.Property<string>("Inter_Currency1_ABBR");
+
+                    b.Property<string>("Inter_Currency1_Amount");
+
+                    b.Property<string>("Inter_Currency2_ABBR");
+
+                    b.Property<string>("Inter_Currency2_Amount");
+
+                    b.Property<string>("Inter_Particular_Title");
+
+                    b.Property<string>("Inter_Rate");
+
+                    b.HasKey("Inter_ID");
 
                     b.HasIndex("ExpenseEntryDetailModelExpDtl_ID");
 
                     b.ToTable("ExpenseEntryInterEntity");
-                });
-
-            modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryInterEntityParticularModel", b =>
-                {
-                    b.Property<int>("InterPart_ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("ExpenseEntryInterEntityModelExpDtl_DDVInter_ID");
-
-                    b.Property<string>("InterPart_Particular_Title");
-
-                    b.HasKey("InterPart_ID");
-
-                    b.HasIndex("ExpenseEntryInterEntityModelExpDtl_DDVInter_ID");
-
-                    b.ToTable("ExpenseEntryInterEntityParticular");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryModel", b =>
@@ -1915,25 +1866,11 @@ namespace ExpenseProcessingSystem.Migrations
                         .HasForeignKey("ExpenseEntryDetailModelExpDtl_ID");
                 });
 
-            modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryInterEntityAccsModel", b =>
-                {
-                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryInterEntityParticularModel", "ExpenseEntryInterEntityParticular")
-                        .WithMany("ExpenseEntryInterEntityAccs")
-                        .HasForeignKey("ExpenseEntryInterEntityParticularInterPart_ID");
-                });
-
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryInterEntityModel", b =>
                 {
                     b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel", "ExpenseEntryDetailModel")
                         .WithMany("ExpenseEntryInterEntity")
                         .HasForeignKey("ExpenseEntryDetailModelExpDtl_ID");
-                });
-
-            modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryInterEntityParticularModel", b =>
-                {
-                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryInterEntityModel", "ExpenseEntryInterEntityModel")
-                        .WithMany("ExpenseEntryInterEntityParticular")
-                        .HasForeignKey("ExpenseEntryInterEntityModelExpDtl_DDVInter_ID");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryNCDtlAccModel", b =>

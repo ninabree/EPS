@@ -3060,8 +3060,7 @@ namespace ExpenseProcessingSystem.Services
                     Expense_Last_Updated = DateTime.Now,
                     Expense_isDeleted = false,
                     Expense_Status = 1,
-                    ExpenseEntryDetails = expenseDtls,
-                    Expense_Number = getExpTransNo(expenseType)
+                    ExpenseEntryDetails = expenseDtls
                 };
 
                 _context.ExpenseEntry.Add(expenseEntry);
@@ -3172,7 +3171,7 @@ namespace ExpenseProcessingSystem.Services
                 expenseDate = EntryDetails.e.Expense_Date,
                 vendor = EntryDetails.e.Expense_Payee,
                 expenseYear = EntryDetails.e.Expense_Date.Year.ToString(),
-                expenseId = EntryDetails.e.Expense_Number,
+                expenseId = EntryDetails.e.Expense_Number.ToString().PadLeft(5,'0'),
                 checkNo = EntryDetails.e.Expense_CheckNo,
                 status = getStatus(EntryDetails.e.Expense_Status),
                 statusID = EntryDetails.e.Expense_Status,
@@ -3339,7 +3338,7 @@ namespace ExpenseProcessingSystem.Services
                 expenseDate = EntryDetails.e.Expense_Date,
                 vendor = EntryDetails.e.Expense_Payee,
                 expenseYear = EntryDetails.e.Expense_Date.Year.ToString(),
-                expenseId = EntryDetails.e.Expense_Number,
+                expenseId = EntryDetails.e.Expense_Number.ToString().PadLeft(5,'0'),
                 checkNo = EntryDetails.e.Expense_CheckNo,
                 status = getStatus(EntryDetails.e.Expense_Status),
                 statusID = EntryDetails.e.Expense_Status,
@@ -3468,16 +3467,33 @@ namespace ExpenseProcessingSystem.Services
                 ExpenseEntryModel dbExpenseEntry = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == transID);
 
                 if (status == GlobalSystemValues.STATUS_VERIFIED)
-                    dbExpenseEntry.Expense_Verifier_1 = userid;
+                {
+                    if (dbExpenseEntry.Expense_Verifier_1 == 0)
+                    {
+                        dbExpenseEntry.Expense_Verifier_1 = userid;
+                    }
+                    else
+                    {
+                        if (dbExpenseEntry.Expense_Verifier_2 == 0)
+                        {
+                            dbExpenseEntry.Expense_Verifier_2 = userid;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                }
 
                 if (status == GlobalSystemValues.STATUS_APPROVED || status == GlobalSystemValues.STATUS_REJECTED)
                 {
                     dbExpenseEntry.Expense_Approver = userid;
-                    if (GlobalSystemValues.STATUS_PENDING == GetCurrentEntryStatus(dbExpenseEntry.Expense_ID))
-                    {
-                        dbExpenseEntry.Expense_Verifier_1 = userid;
-                    }
+                    //if (GlobalSystemValues.STATUS_PENDING == GetCurrentEntryStatus(dbExpenseEntry.Expense_ID))
+                    //{
+                    //    dbExpenseEntry.Expense_Verifier_1 = userid;
+                    //}
                 }
+                dbExpenseEntry.Expense_Number = getExpTransNo(dbExpenseEntry.Expense_Type);
                 dbExpenseEntry.Expense_Status = status;
                 dbExpenseEntry.Expense_Last_Updated = DateTime.Now;
 
@@ -3992,7 +4008,7 @@ namespace ExpenseProcessingSystem.Services
                 expenseDate = EntryDetails.e.Expense_Date,
                 vendor = EntryDetails.e.Expense_Payee,
                 expenseYear = EntryDetails.e.Expense_Date.Year.ToString(),
-                expenseId = EntryDetails.e.Expense_Number,
+                expenseId = EntryDetails.e.Expense_Number.ToString().PadLeft(5,'0'),
                 checkNo = EntryDetails.e.Expense_CheckNo,
                 statusID = (liqStatus == null) ? 0 : liqStatus.Liq_Status,
                 status = (liqStatus == null) ? "" : getStatus(liqStatus.Liq_Status),
@@ -4228,10 +4244,21 @@ namespace ExpenseProcessingSystem.Services
             _GOContext.SaveChanges();
             _context.SaveChanges();
 
+            List<ExpenseTransList> transactions = new List<ExpenseTransList>();
+
             foreach (var item in stuff)
             {
-                Console.WriteLine("======> this is the new ID : " + item.Id);
+                ExpenseTransList tran = new ExpenseTransList
+                {
+                    TL_ExpenseID = expID,
+                    TL_GoExpress_ID = int.Parse(item.Id.ToString()),
+                    TL_Liquidation = false
+                };
+                transactions.Add(tran);
             }
+
+            _context.ExpenseTransLists.AddRange(transactions);
+            _context.SaveChanges();
             return true;
         }
         public bool postLiq_SS(int expID)
@@ -5080,26 +5107,24 @@ namespace ExpenseProcessingSystem.Services
 
             return accList;
         }
-        //retrieve latest Express transation no. (transaction type-year-number)
-        //public string getExpTransNo()
-        //{
+
         //retrieve latest Express transation no.
-        public string getExpTransNo(int transType)
+        public int getExpTransNo(int transType)
         {
-            string transactionNo = null;
             ExpenseEntryModel transNoMax;
             int transno;
 
             do
             {
-                transNoMax = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == _context.ExpenseEntry.Max(y => y.Expense_ID));
-
+                transNoMax = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == _context.ExpenseEntry
+                                                                                                .Where(y => y.Expense_Date.Year == DateTime.Now.Year
+                                                                                                         && y.Expense_Number != 0)
+                                                                                                .Max(y => y.Expense_ID));
                 transno = (transNoMax.Expense_Created_Date.Year < DateTime.Now.Year) ? 1
-                        : (int.Parse(transNoMax.Expense_Number.Substring(1)) + 1);
-                transactionNo = transType.ToString() + transno.ToString().PadLeft(5, '0');
-            } while (transNoMax.Expense_ID != _context.ExpenseEntry.Max(x=>x.Expense_ID));
+                        : (transNoMax.Expense_Number + 1);
+            } while (transNoMax.Expense_ID != _context.ExpenseEntry.Where(y => y.Expense_Date.Year == DateTime.Now.Year && y.Expense_Number != 0).Max(y => y.Expense_ID));
 
-            return transactionNo;
+            return transno;
         }
 
 
