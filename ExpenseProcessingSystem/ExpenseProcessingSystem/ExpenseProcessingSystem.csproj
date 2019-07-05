@@ -18,6 +18,8 @@
     <Compile Remove="Migrations\20190508043414_UpdateDM7.Designer.cs" />
     <Compile Remove="Migrations\20190627024046_NCPeriodToString.cs" />
     <Compile Remove="Migrations\20190627024046_NCPeriodToString.Designer.cs" />
+    <Compile Remove="Migrations\20190703024226_ApplyAnnotationsToLiquidationInterEntity.cs" />
+    <Compile Remove="Migrations\20190703024226_ApplyAnnotationsToLiquidationInterEntity.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

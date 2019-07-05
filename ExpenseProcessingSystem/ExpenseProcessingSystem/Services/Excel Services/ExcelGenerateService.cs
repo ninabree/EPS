@@ -4,6 +4,7 @@ using OfficeOpenXml.Style;
 using System;
 using System.Drawing;
 using System.IO;
+using System.Xml.Linq;
 
 namespace ExpenseProcessingSystem.Services.Excel_Services
 {
@@ -318,9 +319,8 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
             }
         }
 
-        public string ExcelCDDIS(CDDISValuesVIewModel data, string newFileName)
+        public string ExcelCDDIS(CDDISValuesVIewModel data, string newFileName, string excelTemplateName)
         {
-            string excelTemplateName = "CDDIS_template.xlsx";
             string rootFolder = "wwwroot";
             string sourcePath = "/ExcelTemplates/";
             string destPath = "/ExcelTemplatesTempFolder/";
@@ -350,7 +350,7 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     else
                     {
                         ws = package.Workbook.Worksheets[loopCount];
-                        ws.Name = "WorkSheet_1";
+                        //ws.Name = "WorkSheet_1";
                     }
 
                     //Content
@@ -364,66 +364,12 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     ws.Cells["K8"].Value = data.VALUE_DATE.Year.ToString().Substring(2, 1);
                     ws.Cells["L8"].Value = data.VALUE_DATE.Year.ToString().Substring(3, 1);
 
-                    //REFERENCE NO
-                    ws.Cells["T8"].Value = data.REFERENCE_NO.Substring(0, 1);
-                    ws.Cells["U8"].Value = data.REFERENCE_NO.Substring(1, 1);
-                    ws.Cells["V8"].Value = data.REFERENCE_NO.Substring(2, 1);
-                    ws.Cells["X8"].Value = data.REFERENCE_NO.Substring(3, 1);
-                    ws.Cells["Y8"].Value = data.REFERENCE_NO.Substring(4, 1);
-                    ws.Cells["Z8"].Value = data.REFERENCE_NO.Substring(5, 1);
-                    colpnt = 27;
-                    for (int c = 6; c < 12; c++)
-                    {
-                        ws.Cells[col[colpnt] + "8"].Value = data.REFERENCE_NO.Substring(c, 1);
-                        colpnt++;
-                    }
-
-                    //COMMENT
-                    ws.Cells["AL8"].Value = data.COMMENT.Substring(0, 1);
-                    ws.Cells["AM8"].Value = data.COMMENT.Substring(1, 1);
-
-                    //SECTION
-                    ws.Cells["E9"].Value = data.SECTION.Substring(0, 1);
-                    ws.Cells["F9"].Value = data.SECTION.Substring(1, 1);
-
                     //REMARKS
                     colpnt = 10;
                     strLength = (data.REMARKS.Length <= 29) ? data.REMARKS.Length : 29;
                     for (int c = 0; c < strLength; c++)
                     {
                         ws.Cells[col[colpnt] + "9"].Value = data.REMARKS.Substring(c, 1);
-                        colpnt++;
-                    }
-
-                    //SCHEME NO
-                    colpnt = 4;
-                    strLength = (data.SCHEME_NO.Length <= 12) ? data.SCHEME_NO.Length : 12;
-                    for (int c = 0; c < strLength; c++)
-                    {
-                        ws.Cells[col[colpnt] + "10"].Value = data.SCHEME_NO.Substring(c, 1);
-                        colpnt++;
-                    }
-
-                    //MEMO
-                    ws.Cells["AM10"].Value = data.MEMO;
-
-                    //DEBIT/CREDIT 1 and 2
-                    ws.Cells["E14"].Value = data.CDDContents[count1].DEBIT_CREDIT;
-                    ws.Cells["E25"].Value = data.CDDContents[count2].DEBIT_CREDIT;
-
-                    //CCY 1 & 2
-                    colpnt = 12;
-                    strLength = (data.CDDContents[count1].CCY.Length <= 4) ? data.CDDContents[count1].CCY.Length : 4;
-                    for (int c = 0; c < strLength; c++)
-                    {
-                        ws.Cells[col[colpnt] + "14"].Value = data.CDDContents[count1].CCY.Substring(c, 1);
-                        colpnt++;
-                    }
-                    colpnt = 12;
-                    strLength = (data.CDDContents[count2].CCY.Length <= 4) ? data.CDDContents[count2].CCY.Length : 4;
-                    for (int c = 0; c < strLength; c++)
-                    {
-                        ws.Cells[col[colpnt] + "25"].Value = data.CDDContents[count2].CCY.Substring(c, 1);
                         colpnt++;
                     }
 
@@ -443,214 +389,6 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     for (int c = 0; c < strLength; c++)
                     {
                         ws.Cells[col[colpnt] + "25"].Value = amount_2.Substring(c, 1);
-                        colpnt++;
-                    }
-
-                    //CUSTOMER ABBR 1 & 2
-                    colpnt = 4;
-                    strLength = (data.CDDContents[count1].CUSTOMER_ABBR.Length <= 12) ? data.CDDContents[count1].CUSTOMER_ABBR.Length : 12;
-                    for (int c = 0; c < strLength; c++)
-                    {
-                        ws.Cells[col[colpnt] + "15"].Value = data.CDDContents[count1].CUSTOMER_ABBR.Substring(c, 1);
-                        colpnt++;
-                    }
-                    colpnt = 4;
-                    strLength = (data.CDDContents[count2].CUSTOMER_ABBR.Length <= 12) ? data.CDDContents[count2].CUSTOMER_ABBR.Length : 12;
-                    for (int c = 0; c < strLength; c++)
-                    {
-                        ws.Cells[col[colpnt] + "26"].Value = data.CDDContents[count2].CUSTOMER_ABBR.Substring(c, 1);
-                        colpnt++;
-                    }
-
-                    //ACCOUNT CODE 1 & 2
-                    colpnt = 4;
-                    strLength = (data.CDDContents[count1].ACCOUNT_CODE.Length <= 5) ? data.CDDContents[count1].ACCOUNT_CODE.Length : 5;
-                    for (int c = 0; c < strLength; c++)
-                    {
-                        ws.Cells[col[colpnt] + "16"].Value = data.CDDContents[count1].ACCOUNT_CODE.Substring(c, 1);
-                        colpnt++;
-                    }
-                    colpnt = 4;
-                    strLength = (data.CDDContents[count2].ACCOUNT_CODE.Length <= 5) ? data.CDDContents[count2].ACCOUNT_CODE.Length : 5;
-                    for (int c = 0; c < strLength; c++)
-                    {
-                        ws.Cells[col[colpnt] + "27"].Value = data.CDDContents[count2].ACCOUNT_CODE.Substring(c, 1);
-                        colpnt++;
-                    }
-
-                    //ACCOUNT NO 1 & 2
-                    ws.Cells["Z16"].Value = data.CDDContents[count1].ACCOUNT_NO.Substring(0, 1);
-                    ws.Cells["AA16"].Value = data.CDDContents[count1].ACCOUNT_NO.Substring(1, 1);
-                    ws.Cells["AB16"].Value = data.CDDContents[count1].ACCOUNT_NO.Substring(2, 1);
-                    ws.Cells["AD16"].Value = data.CDDContents[count1].ACCOUNT_NO.Substring(3, 1);
-                    ws.Cells["AE16"].Value = data.CDDContents[count1].ACCOUNT_NO.Substring(4, 1);
-                    ws.Cells["AF16"].Value = data.CDDContents[count1].ACCOUNT_NO.Substring(5, 1);
-                    colpnt = 33;
-                    strLength = (data.CDDContents[count1].ACCOUNT_NO.Length <= 12) ? data.CDDContents[count1].ACCOUNT_NO.Length : 12;
-                    for (int c = 6; c < strLength; c++)
-                    {
-                        ws.Cells[col[colpnt] + "16"].Value = data.CDDContents[count1].ACCOUNT_NO.Substring(c, 1);
-                        colpnt++;
-                    }
-
-                    ws.Cells["Z27"].Value = data.CDDContents[count2].ACCOUNT_NO.Substring(0, 1);
-                    ws.Cells["AA27"].Value = data.CDDContents[count2].ACCOUNT_NO.Substring(1, 1);
-                    ws.Cells["AB27"].Value = data.CDDContents[count2].ACCOUNT_NO.Substring(2, 1);
-                    ws.Cells["AD27"].Value = data.CDDContents[count2].ACCOUNT_NO.Substring(3, 1);
-                    ws.Cells["AE27"].Value = data.CDDContents[count2].ACCOUNT_NO.Substring(4, 1);
-                    ws.Cells["AF27"].Value = data.CDDContents[count2].ACCOUNT_NO.Substring(5, 1);
-                    colpnt = 33;
-                    strLength = (data.CDDContents[count2].ACCOUNT_NO.Length <= 12) ? data.CDDContents[count2].ACCOUNT_NO.Length : 12;
-                    for (int c = 6; c < strLength; c++)
-                    {
-                        ws.Cells[col[colpnt] + "27"].Value = data.CDDContents[count2].ACCOUNT_NO.Substring(c, 1);
-                        colpnt++;
-                    }
-
-                    //EXCHANGE RATE 1 & 2
-                    string exrate_1 = String.Format("{0:#,##0.####}", data.CDDContents[count1].EXCHANGE_RATE);
-                    string exrate_2 = String.Format("{0:#,##0.####}", data.CDDContents[count2].EXCHANGE_RATE);
-
-                    colpnt = 4;
-                    strLength = (exrate_1.Length <= 10) ? exrate_1.Length : 10;
-                    for (int c = 0; c < strLength; c++)
-                    {
-                        ws.Cells[col[colpnt] + "17"].Value = exrate_1.Substring(c, 1);
-                        colpnt++;
-                    }
-                    colpnt = 4;
-                    strLength = (exrate_2.Length <= 10) ? exrate_2.Length : 10;
-                    for (int c = 0; c < strLength; c++)
-                    {
-                        ws.Cells[col[colpnt] + "28"].Value = exrate_2.Substring(c, 1);
-                        colpnt++;
-                    }
-
-                    //CONTRA CCY 1 & 2
-                    colpnt = 25;
-                    strLength = (data.CDDContents[count1].CONTRA_CCY.Length <= 4) ? data.CDDContents[count1].CONTRA_CCY.Length : 4;
-                    for (int c = 0; c < strLength; c++)
-                    {
-                        ws.Cells[col[colpnt] + "17"].Value = data.CDDContents[count1].CONTRA_CCY.Substring(c, 1);
-                        colpnt++;
-                    }
-
-                    colpnt = 25;
-                    strLength = (data.CDDContents[count2].CONTRA_CCY.Length <= 4) ? data.CDDContents[count2].CONTRA_CCY.Length : 4;
-                    for (int c = 0; c < strLength; c++)
-                    {
-                        ws.Cells[col[colpnt] + "28"].Value = data.CDDContents[count2].CONTRA_CCY.Substring(c, 1);
-                        colpnt++;
-                    }
-
-                    //FUND 1 & 2
-                    ws.Cells["E18"].Value = data.CDDContents[count1].FUND.Substring(0, 1);
-                    ws.Cells["E29"].Value = data.CDDContents[count2].FUND.Substring(0, 1);
-
-                    //CHECK NO 1 & 2
-                    colpnt = 11;
-                    strLength = (data.CDDContents[count1].CHECK_NO.Length <= 10) ? data.CDDContents[count1].CHECK_NO.Length : 10;
-                    for (int c = 0; c < strLength; c++)
-                    {
-                        ws.Cells[col[colpnt] + "18"].Value = data.CDDContents[count1].CHECK_NO.Substring(c, 1);
-                        colpnt++;
-                    }
-
-                    colpnt = 11;
-                    strLength = (data.CDDContents[count2].CHECK_NO.Length <= 10) ? data.CDDContents[count2].CHECK_NO.Length : 10;
-                    for (int c = 0; c < strLength; c++)
-                    {
-                        ws.Cells[col[colpnt] + "29"].Value = data.CDDContents[count2].CHECK_NO.Substring(c, 1);
-                        colpnt++;
-                    }
-
-                    //AVAILABLE(DATE) 1 & 2
-                    ws.Cells["AH18"].Value = data.CDDContents[count1].AVAILABLE_DATE.Month.ToString("d2").Substring(0, 1);
-                    ws.Cells["AI18"].Value = data.CDDContents[count1].AVAILABLE_DATE.Month.ToString("d2").Substring(1, 1);
-                    ws.Cells["AJ18"].Value = data.CDDContents[count1].AVAILABLE_DATE.Date.ToString("dd").Substring(0, 1);
-                    ws.Cells["AK18"].Value = data.CDDContents[count1].AVAILABLE_DATE.Date.ToString("dd").Substring(1, 1);
-                    ws.Cells["AL18"].Value = data.CDDContents[count1].AVAILABLE_DATE.Year.ToString().Substring(2, 1);
-                    ws.Cells["AM18"].Value = data.CDDContents[count1].AVAILABLE_DATE.Year.ToString().Substring(3, 1);
-
-                    ws.Cells["AH29"].Value = data.CDDContents[count2].AVAILABLE_DATE.Month.ToString("d2").Substring(0, 1);
-                    ws.Cells["AI29"].Value = data.CDDContents[count2].AVAILABLE_DATE.Month.ToString("d2").Substring(1, 1);
-                    ws.Cells["AJ29"].Value = data.CDDContents[count2].AVAILABLE_DATE.Date.ToString("dd").Substring(0, 1);
-                    ws.Cells["AK29"].Value = data.CDDContents[count2].AVAILABLE_DATE.Date.ToString("dd").Substring(1, 1);
-                    ws.Cells["AL29"].Value = data.CDDContents[count2].AVAILABLE_DATE.Year.ToString().Substring(2, 1);
-                    ws.Cells["AM29"].Value = data.CDDContents[count2].AVAILABLE_DATE.Year.ToString().Substring(3, 1);
-
-                    //ADVICE PRINT 1 & 2
-                    ws.Cells["E19"].Value = data.CDDContents[count1].ADVICE.Substring(0, 1);
-                    ws.Cells["E30"].Value = data.CDDContents[count2].ADVICE.Substring(0, 1);
-
-                    //DETAILS 1 & 2
-                    colpnt = 9;
-                    strLength = (data.CDDContents[count1].DETAILS.Length <= 30) ? data.CDDContents[count1].DETAILS.Length : 30;
-                    for (int c = 0; c < strLength; c++)
-                    {
-                        ws.Cells[col[colpnt] + "19"].Value = data.CDDContents[count1].DETAILS.Substring(c, 1);
-                        colpnt++;
-                    }
-
-                    colpnt = 9;
-                    strLength = (data.CDDContents[count2].DETAILS.Length <= 30) ? data.CDDContents[count2].DETAILS.Length : 30;
-                    for (int c = 0; c < strLength; c++)
-                    {
-                        ws.Cells[col[colpnt] + "30"].Value = data.CDDContents[count2].DETAILS.Substring(c, 1);
-                        colpnt++;
-                    }
-
-                    //ENTITY 1 & 2
-                    ws.Cells["E20"].Value = data.CDDContents[count1].ENTITY.Substring(0, 1);
-                    ws.Cells["F20"].Value = data.CDDContents[count1].ENTITY.Substring(1, 1);
-                    ws.Cells["G20"].Value = data.CDDContents[count1].ENTITY.Substring(2, 1);
-
-                    ws.Cells["E31"].Value = data.CDDContents[count2].ENTITY.Substring(0, 1);
-                    ws.Cells["F31"].Value = data.CDDContents[count2].ENTITY.Substring(1, 1);
-                    ws.Cells["G31"].Value = data.CDDContents[count2].ENTITY.Substring(2, 1);
-
-                    //DIVISION 1 & 2
-                    ws.Cells["M20"].Value = data.CDDContents[count1].DIVISION.Substring(0, 1);
-                    ws.Cells["N20"].Value = data.CDDContents[count1].DIVISION.Substring(1, 1);
-
-                    ws.Cells["M31"].Value = data.CDDContents[count2].DIVISION.Substring(0, 1);
-                    ws.Cells["N31"].Value = data.CDDContents[count2].DIVISION.Substring(1, 1);
-
-                    //INTER AMOUNT 1 & 2
-                    string interamount_1 = String.Format("{0:#,##0.##}", data.CDDContents[count1].INTER_AMOUNT);
-                    string interamount_2 = String.Format("{0:#,##0.##}", data.CDDContents[count2].INTER_AMOUNT);
-
-                    colpnt = 23;
-                    strLength = (interamount_1.Length <= 16) ? interamount_1.Length : 16;
-                    for (int c = 0; c < strLength; c++)
-                    {
-                        ws.Cells[col[colpnt] + "20"].Value = interamount_1.Substring(c, 1);
-                        colpnt++;
-                    }
-                    colpnt = 23;
-                    strLength = (interamount_2.Length <= 16) ? interamount_2.Length : 16;
-                    for (int c = 0; c < strLength; c++)
-                    {
-                        ws.Cells[col[colpnt] + "31"].Value = interamount_2.Substring(c, 1);
-                        colpnt++;
-                    }
-
-                    //INTER RATE 1 & 2
-                    string interrate_1 = String.Format("{0:#,##0.####}", data.CDDContents[count1].INTER_RATE);
-                    string interrate_2 = String.Format("{0:#,##0.####}", data.CDDContents[count2].INTER_RATE);
-
-                    colpnt = 4;
-                    strLength = (interrate_1.Length <= 10) ? interrate_1.Length : 10;
-                    for (int c = 0; c < strLength; c++)
-                    {
-                        ws.Cells[col[colpnt] + "21"].Value = interrate_1.Substring(c, 1);
-                        colpnt++;
-                    }
-                    colpnt = 4;
-                    strLength = (interrate_2.Length <= 10) ? interrate_2.Length : 10;
-                    for (int c = 0; c < strLength; c++)
-                    {
-                        ws.Cells[col[colpnt] + "32"].Value = interrate_2.Substring(c, 1);
                         colpnt++;
                     }
 

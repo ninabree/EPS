@@ -25,5 +25,6 @@ namespace ExpenseProcessingSystem.ViewModels
         public DateTime createdDate { get; set; }
         public List<LiquidationDetailsViewModel> LiquidationDetails { get; set; }
         public LiquidationEntryDetailModel LiqEntryDetails { get; set; }
+        public List<DMAccountModel> accList { get; set; }
     }
 }

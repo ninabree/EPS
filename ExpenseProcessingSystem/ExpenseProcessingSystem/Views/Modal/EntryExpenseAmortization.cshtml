@@ -108,7 +108,7 @@
             tblBuilder(tableRef, begMonth, day, duration, grossAmount);
         });
 
-        $(".modal-footer").on("click", "#saveBtn", function () {
+        $(".modal-footer").on("click", "#saveGbase", function () {
             var parentEntry = $("#" + $("#parentIdAmortization").val()).find("#req_" + $("#parentIdAmortization").val().substr(5));
 
             var itemNo = $("#parentIdAmortization").val().substr(5);

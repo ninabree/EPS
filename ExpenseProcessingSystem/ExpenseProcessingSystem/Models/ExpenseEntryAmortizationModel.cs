@@ -13,7 +13,8 @@ namespace ExpenseProcessingSystem.Models
         public int Amor_ID { get; set; }
         public DateTime Amor_Sched_Date { get; set; }
         public float Amor_Price { get; set; }
-        public string status { get; set; }
+        public string Amor_Status { get; set; }
+        public string Amor_Number { get; set; }
         public ExpenseEntryDetailModel ExpenseEntryDetailModel { get; set; }
     }
 }

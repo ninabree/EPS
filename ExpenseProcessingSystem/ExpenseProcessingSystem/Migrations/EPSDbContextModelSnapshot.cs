@@ -1375,8 +1375,6 @@ namespace ExpenseProcessingSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ExpenseEntryDetailModelExpDtl_ID");
-
                     b.Property<string>("Liq_AccountID_1_1");
 
                     b.Property<string>("Liq_AccountID_1_2");
@@ -1417,9 +1415,11 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<double>("Liq_InterRate_2_2");
 
+                    b.Property<int?>("LiquidationEntryDetailModelLiq_DtlID");
+
                     b.HasKey("id");
 
-                    b.HasIndex("ExpenseEntryDetailModelExpDtl_ID");
+                    b.HasIndex("LiquidationEntryDetailModelLiq_DtlID");
 
                     b.ToTable("LiquidationInterEntity");
                 });
@@ -1850,9 +1850,9 @@ namespace ExpenseProcessingSystem.Migrations
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.LiquidationInterEntityModel", b =>
                 {
-                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel", "ExpenseEntryDetailModel")
+                    b.HasOne("ExpenseProcessingSystem.Models.LiquidationEntryDetailModel", "LiquidationEntryDetailModel")
                         .WithMany()
-                        .HasForeignKey("ExpenseEntryDetailModelExpDtl_ID");
+                        .HasForeignKey("LiquidationEntryDetailModelLiq_DtlID");
                 });
 #pragma warning restore 612, 618
         }

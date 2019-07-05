@@ -2589,20 +2589,19 @@ namespace ExpenseProcessingSystem.Services
         // [Report]
         public IEnumerable<HomeReportOutputAPSWT_MModel> GetAPSWT_MData(int month, int year)
         {
-            int[] status = { 3, 4 };
-
-            var dbAPSWT_M = (from vendor in _context.DMVendor
-                             join expense in _context.ExpenseEntry on vendor.Vendor_ID equals expense.Expense_Payee
-                             join expEntryDetl in _context.ExpenseEntryDetails on expense.Expense_ID equals expEntryDetl.ExpenseEntryModel.Expense_ID
+            int[] status = { GlobalSystemValues.STATUS_APPROVED, GlobalSystemValues.STATUS_POSTED };
+            var vendList = _context.DMVendor.ToList();
+            var dbAPSWT_M = (from expEntryDetl in _context.ExpenseEntryDetails
+                             join expense in _context.ExpenseEntry on expEntryDetl.ExpenseEntryModel.Expense_ID equals expense.Expense_ID
                              join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
                              where status.Contains(expense.Expense_Status)
                              && expense.Expense_Last_Updated.Month == month
                              && expense.Expense_Last_Updated.Year == year
-                             orderby vendor.Vendor_Name
+                             orderby expense.Expense_Last_Updated
                              select new HomeReportOutputAPSWT_MModel
                              {
-                                 Tin = vendor.Vendor_TIN,
-                                 Payee = vendor.Vendor_Name,
+                                 Payee_ID = expense.Expense_Payee,
+                                 Payee_SS_ID = expEntryDetl.ExpDtl_SS_Payee,
                                  ATC = tr.TR_ATC,
                                  NOIP = tr.TR_Nature,
                                  AOIP = expEntryDetl.ExpDtl_Credit_Cash,
@@ -2610,35 +2609,50 @@ namespace ExpenseProcessingSystem.Services
                                  AOTW = expEntryDetl.ExpDtl_Credit_Ewt
                              }).ToList();
 
+            foreach (var i in dbAPSWT_M)
+            {
+                var vendorRecord = vendList.Where(x => x.Vendor_ID == i.Payee_ID || x.Vendor_ID == i.Payee_SS_ID).FirstOrDefault();
+
+                i.Tin = vendorRecord.Vendor_TIN;
+                i.Payee = vendorRecord.Vendor_Name;
+            }
+
             return dbAPSWT_M;
         }
 
         public IEnumerable<HomeReportOutputAST1000Model> GetAST1000_Data(HomeReportViewModel model)
         {
-            int[] status = { 3, 4 };
+            int[] status = { GlobalSystemValues.STATUS_APPROVED, GlobalSystemValues.STATUS_POSTED };
             string format = "yyyy-M";
             DateTime startDT = DateTime.ParseExact(model.Year + "-" + model.Month, format, CultureInfo.InvariantCulture);
             DateTime endDT = DateTime.ParseExact(model.YearTo + "-" + model.MonthTo, format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
-
-            var dbAST1000 = (from vendor in _context.DMVendor
-                             join expense in _context.ExpenseEntry on vendor.Vendor_ID equals expense.Expense_Payee
-                             join expEntryDetl in _context.ExpenseEntryDetails on expense.Expense_ID equals expEntryDetl.ExpenseEntryModel.Expense_ID
+            var vendList = _context.DMVendor.ToList();
+            var dbAST1000 = (from expEntryDetl in _context.ExpenseEntryDetails
+                             join expense in _context.ExpenseEntry on expEntryDetl.ExpenseEntryModel.Expense_ID equals expense.Expense_ID
                              join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
                              where status.Contains(expense.Expense_Status)
                              && model.TaxRateList.Contains(tr.TR_Tax_Rate)
                              && startDT.Date <= expense.Expense_Last_Updated
                              && expense.Expense_Last_Updated <= endDT.Date
-                             orderby vendor.Vendor_Name
+                             orderby expense.Expense_Last_Updated
                              select new HomeReportOutputAST1000Model
                              {
-                                 Tin = vendor.Vendor_TIN,
-                                 SupplierName = vendor.Vendor_Name,
+                                 Payee_ID = expense.Expense_Payee,
+                                 Payee_SS_ID = expEntryDetl.ExpDtl_SS_Payee,
                                  ATC = tr.TR_ATC,
                                  NOIP = tr.TR_Nature,
                                  TaxBase = expEntryDetl.ExpDtl_Credit_Cash,
                                  RateOfTax = tr.TR_Tax_Rate,
                                  AOTW = expEntryDetl.ExpDtl_Credit_Ewt
                              }).ToList();
+
+            foreach (var i in dbAST1000)
+            {
+                var vendorRecord = vendList.Where(x => x.Vendor_ID == i.Payee_ID || x.Vendor_ID == i.Payee_SS_ID).FirstOrDefault();
+
+                i.Tin = vendorRecord.Vendor_TIN;
+                i.SupplierName = vendorRecord.Vendor_Name;
+            }
 
             return dbAST1000;
         }
@@ -2698,7 +2712,6 @@ namespace ExpenseProcessingSystem.Services
                                                     .OrderByDescending(x => x.Budget_Date_Registered);
             int currGroup = accountList.First().Account_Group_MasterID;
             double budgetAmount = 0.0;
-            string log = "";
 
             if (budgetList.Count() == 0)
             {
@@ -2711,10 +2724,6 @@ namespace ExpenseProcessingSystem.Services
                 return actualBudgetData;
             }
 
-            foreach (var i in budgetList)
-            {
-                Console.WriteLine("############" + i.Budget_Account_MasterID);
-            }
             foreach (var i in accountList)
             {
                 var budget = budgetList.Where(x => x.Budget_Account_MasterID == i.Account_MasterID)
@@ -3051,7 +3060,8 @@ namespace ExpenseProcessingSystem.Services
                     Expense_Last_Updated = DateTime.Now,
                     Expense_isDeleted = false,
                     Expense_Status = 1,
-                    ExpenseEntryDetails = expenseDtls
+                    ExpenseEntryDetails = expenseDtls,
+                    Expense_Number = getExpTransNo(expenseType)
                 };
 
                 _context.ExpenseEntry.Add(expenseEntry);
@@ -3130,6 +3140,7 @@ namespace ExpenseProcessingSystem.Services
                 }
 
                 EntryCVViewModel cvDtl = new EntryCVViewModel() {
+                    expenseDtlID = dtl.d.ExpDtl_ID,
                     GBaseRemarks = dtl.d.ExpDtl_Gbase_Remarks,
                     account = dtl.d.ExpDtl_Account,
                     fbt = dtl.d.ExpDtl_Fbt,
@@ -3897,22 +3908,32 @@ namespace ExpenseProcessingSystem.Services
                         Liq_AccountID_1_2 = liqIE.Liq_AccountID_1_2,
                         Liq_AccountID_2_1 = liqIE.Liq_AccountID_2_1,
                         Liq_AccountID_2_2 = liqIE.Liq_AccountID_2_2,
+                        Liq_AccountID_3_1 = liqIE.Liq_AccountID_3_1,
+                        Liq_AccountID_3_2 = liqIE.Liq_AccountID_3_2,
                         Liq_Amount_1_1 = liqIE.Liq_Amount_1_1,
                         Liq_Amount_1_2 = liqIE.Liq_Amount_1_2,
                         Liq_Amount_2_1 = liqIE.Liq_Amount_2_1,
                         Liq_Amount_2_2 = liqIE.Liq_Amount_2_2,
+                        Liq_Amount_3_1 = liqIE.Liq_Amount_3_1,
+                        Liq_Amount_3_2 = liqIE.Liq_Amount_3_2,
                         Liq_CCY_1_1 = liqIE.Liq_CCY_1_1,
                         Liq_CCY_1_2 = liqIE.Liq_CCY_1_2,
                         Liq_CCY_2_1 = liqIE.Liq_CCY_2_1,
                         Liq_CCY_2_2 = liqIE.Liq_CCY_2_2,
+                        Liq_CCY_3_1 = liqIE.Liq_CCY_3_1,
+                        Liq_CCY_3_2 = liqIE.Liq_CCY_3_2,
                         Liq_DebitCred_1_1 = liqIE.Liq_DebitCred_1_1,
                         Liq_DebitCred_1_2 = liqIE.Liq_DebitCred_1_2,
                         Liq_DebitCred_2_1 = liqIE.Liq_DebitCred_2_1,
                         Liq_DebitCred_2_2 = liqIE.Liq_DebitCred_2_2,
+                        Liq_DebitCred_3_1 = liqIE.Liq_DebitCred_3_1,
+                        Liq_DebitCred_3_2 = liqIE.Liq_DebitCred_3_2,
                         Liq_InterRate_1_1 = liqIE.Liq_InterRate_1_1,
                         Liq_InterRate_1_2 = liqIE.Liq_InterRate_1_2,
                         Liq_InterRate_2_1 = liqIE.Liq_InterRate_2_1,
-                        Liq_InterRate_2_2 = liqIE.Liq_InterRate_2_2
+                        Liq_InterRate_2_2 = liqIE.Liq_InterRate_2_2,
+                        Liq_InterRate_3_1 = liqIE.Liq_InterRate_3_1,
+                        Liq_InterRate_3_2 = liqIE.Liq_InterRate_3_2
                     };
 
                     liqInterEntity.Add(liqIETemp);
@@ -3924,7 +3945,7 @@ namespace ExpenseProcessingSystem.Services
                 {
                     liqFlag = 1;
                 }
-                if(liqInterEntity.Count != 0)
+                if(liqInterEntity.Count != 0 && liqCashBreakdown.Count == 0)
                 {
                     liqFlag = 2;
                 }
@@ -4008,6 +4029,30 @@ namespace ExpenseProcessingSystem.Services
                         });
                         _context.SaveChanges();
                     }
+
+                    _context.LiquidationInterEntity.Add(new LiquidationInterEntityModel
+                    {
+                        ExpenseEntryDetailModel = dtlModel,
+                        Liq_DebitCred_1_1 = i.liqInterEntity[0].Liq_DebitCred_1_1,
+                        Liq_AccountID_1_1 = i.liqInterEntity[0].Liq_AccountID_1_1,
+                        Liq_Amount_1_1 = i.liqInterEntity[0].Liq_Amount_1_1,
+                        Liq_DebitCred_1_2 = i.liqInterEntity[0].Liq_DebitCred_1_2,
+                        Liq_AccountID_1_2 = i.liqInterEntity[0].Liq_AccountID_1_2,
+                        Liq_Amount_1_2 = i.liqInterEntity[0].Liq_Amount_1_2,
+                        Liq_DebitCred_2_1 = i.liqInterEntity[0].Liq_DebitCred_2_1,
+                        Liq_AccountID_2_1 = i.liqInterEntity[0].Liq_AccountID_2_1,
+                        Liq_Amount_2_1 = i.liqInterEntity[0].Liq_Amount_2_1,
+                        Liq_DebitCred_2_2 = i.liqInterEntity[0].Liq_DebitCred_2_2,
+                        Liq_AccountID_2_2 = i.liqInterEntity[0].Liq_AccountID_2_2,
+                        Liq_Amount_2_2 = i.liqInterEntity[0].Liq_Amount_2_2,
+                        Liq_DebitCred_3_1 = i.liqInterEntity[0].Liq_DebitCred_3_1,
+                        Liq_AccountID_3_1 = i.liqInterEntity[0].Liq_AccountID_3_1,
+                        Liq_Amount_3_1 = i.liqInterEntity[0].Liq_Amount_3_1,
+                        Liq_DebitCred_3_2 = i.liqInterEntity[0].Liq_DebitCred_3_2,
+                        Liq_AccountID_3_2 = i.liqInterEntity[0].Liq_AccountID_3_2,
+                        Liq_Amount_3_2 = i.liqInterEntity[0].Liq_Amount_3_2,
+                    });
+                    _context.SaveChanges();
                 }
                 else
                 {
@@ -4194,7 +4239,6 @@ namespace ExpenseProcessingSystem.Services
 
             foreach (var item in liquidationDetails.LiquidationDetails)
             {
-                double totalAmount = 0;
                 if (item.liqCashBreakdown.Count() != 0)
                 {
                     gbaseContainer tempGbase = new gbaseContainer();
@@ -4204,30 +4248,61 @@ namespace ExpenseProcessingSystem.Services
                     tempGbase.maker = liquidationDetails.LiqEntryDetails.Liq_Created_UserID;
                     tempGbase.approver = liquidationDetails.LiqEntryDetails.Liq_Approver;
 
-                    foreach (var i in item.liqCashBreakdown)
+                    if (item.liqInterEntity[0].Liq_Amount_1_1 != 0)
                     {
-                        totalAmount += i.cashAmount;
+                        tempGbase.entries.Add(new entryContainer
+                        {
+                            type = item.liqInterEntity[0].Liq_DebitCred_1_1,
+                            amount = item.liqInterEntity[0].Liq_Amount_1_1,
+                            account = getAccountID(item.liqInterEntity[0].Liq_AccountID_1_1),
+                        });
                     }
-                    tempGbase.entries.Add(new entryContainer {
-                        type = "D",
-                        ccy = item.ccyID,
-                        amount = totalAmount,
-                        account = item.accountID, //Change in the future
-                    });
-
-                    tempGbase.entries.Add(new entryContainer
+                    if (item.liqInterEntity[0].Liq_Amount_1_2 != 0)
                     {
-                        type = "C",
-                        ccy = item.ccyID,
-                        amount = totalAmount,
-                        account = item.accountID,
-                    });
+                        tempGbase.entries.Add(new entryContainer
+                        {
+                            type = item.liqInterEntity[0].Liq_DebitCred_1_2,
+                            amount = item.liqInterEntity[0].Liq_Amount_1_2,
+                            account = getAccountID(item.liqInterEntity[0].Liq_AccountID_1_2),
+                        });
+                    }
+                    if (item.liqInterEntity[0].Liq_Amount_2_1 != 0)
+                    {
+                        tempGbase.entries.Add(new entryContainer
+                        {
+                            type = item.liqInterEntity[0].Liq_DebitCred_2_1,
+                            amount = item.liqInterEntity[0].Liq_Amount_2_1,
+                            account = getAccountID(item.liqInterEntity[0].Liq_AccountID_2_1),
+                        });
+                    }
+                    if (item.liqInterEntity[0].Liq_Amount_2_2 != 0)
+                    {
+                        tempGbase.entries.Add(new entryContainer
+                        {
+                            type = item.liqInterEntity[0].Liq_DebitCred_2_2,
+                            amount = item.liqInterEntity[0].Liq_Amount_2_2,
+                            account = getAccountID(item.liqInterEntity[0].Liq_AccountID_2_2),
+                        });
+                    }
+                    if (item.liqInterEntity[0].Liq_Amount_3_1 != 0)
+                    {
+                        tempGbase.entries.Add(new entryContainer
+                        {
+                            type = item.liqInterEntity[0].Liq_DebitCred_3_1,
+                            amount = item.liqInterEntity[0].Liq_Amount_3_1,
+                            account = getAccountID(item.liqInterEntity[0].Liq_AccountID_3_1),
+                        });
+                    }
+
                     InsertGbaseEntry(tempGbase, expID);
                 }
-                else if (item.liqInterEntity.Count() != 0)
+                else if (item.liqInterEntity.Count() != 0 && item.liqCashBreakdown.Count() == 0)
                 {
                     foreach(var i in item.liqInterEntity)
                     {
+                        if (i.Liq_Amount_1_1 == 0 && i.Liq_Amount_1_2 == 0)
+                            continue;
+
                         gbaseContainer tempGbase = new gbaseContainer();
 
                         tempGbase.valDate = liquidationDetails.LiqEntryDetails.Liq_Created_Date.Date;
@@ -4235,15 +4310,16 @@ namespace ExpenseProcessingSystem.Services
                         tempGbase.maker = liquidationDetails.LiqEntryDetails.Liq_Created_UserID;
                         tempGbase.approver = liquidationDetails.LiqEntryDetails.Liq_Approver;
 
-                        tempGbase.entries.Add(new entryContainer
-                        {
-                            type = i.Liq_DebitCred_1_1,
-                            ccy = getCurrencyID(i.Liq_CCY_1_1),
-                            amount = i.Liq_Amount_1_1,
-                            account = getAccountID(i.Liq_AccountID_1_1),//Change in the future
-                            interate = i.Liq_InterRate_1_1
-                        });
-
+                        if(i.Liq_Amount_1_1 != 0) { 
+                            tempGbase.entries.Add(new entryContainer
+                            {
+                                type = i.Liq_DebitCred_1_1,
+                                ccy = getCurrencyID(i.Liq_CCY_1_1),
+                                amount = i.Liq_Amount_1_1,
+                                account = getAccountID(i.Liq_AccountID_1_1),
+                                interate = i.Liq_InterRate_1_1
+                            });
+                        }
                         double amount = i.Liq_Amount_1_2;
                         string contraCcy = "";
                         string ccy = i.Liq_CCY_1_2;
@@ -4254,27 +4330,31 @@ namespace ExpenseProcessingSystem.Services
                             ccy = i.Liq_CCY_1_1;
                             contraCcy = i.Liq_CCY_1_2;
                         }
-                        tempGbase.entries.Add(new entryContainer
-                        {
-                            type = i.Liq_DebitCred_1_2,
-                            ccy = getCurrencyID(ccy),
-                            amount = amount,
-                            account = getAccountID(i.Liq_AccountID_1_2),
-                            interate = i.Liq_InterRate_1_2,
-                            contraCcy = getCurrencyID(contraCcy)
-                        });
-
-                        if(i.Liq_Amount_2_1 > 0)
+                        if (i.Liq_Amount_1_2 != 0)
                         {
                             tempGbase.entries.Add(new entryContainer
                             {
-                                type = i.Liq_DebitCred_2_1,
-                                ccy = getCurrencyID(i.Liq_CCY_2_1),
-                                amount = i.Liq_Amount_2_1,
-                                account = getAccountID(i.Liq_AccountID_2_1),
-                                interate = i.Liq_InterRate_2_1
+                                type = i.Liq_DebitCred_1_2,
+                                ccy = getCurrencyID(ccy),
+                                amount = amount,
+                                account = getAccountID(i.Liq_AccountID_1_2),
+                                interate = i.Liq_InterRate_1_2,
+                                contraCcy = getCurrencyID(contraCcy)
                             });
-
+                        }
+                        if(i.Liq_Amount_2_1 > 0 || i.Liq_Amount_2_2 > 0)
+                        {
+                            if (i.Liq_Amount_2_1 != 0)
+                            {
+                                tempGbase.entries.Add(new entryContainer
+                                {
+                                    type = i.Liq_DebitCred_2_1,
+                                    ccy = getCurrencyID(i.Liq_CCY_2_1),
+                                    amount = i.Liq_Amount_2_1,
+                                    account = getAccountID(i.Liq_AccountID_2_1),
+                                    interate = i.Liq_InterRate_2_1
+                                });
+                            }
                             amount = i.Liq_Amount_2_2;
                             contraCcy = "";
                             ccy = i.Liq_CCY_2_2;
@@ -4285,15 +4365,18 @@ namespace ExpenseProcessingSystem.Services
                                 ccy = i.Liq_CCY_2_1;
                                 contraCcy = i.Liq_CCY_2_2;
                             }
-                            tempGbase.entries.Add(new entryContainer
+                            if (i.Liq_Amount_2_2 != 0)
                             {
-                                type = i.Liq_DebitCred_2_2,
-                                ccy = getCurrencyID(ccy),
-                                amount = amount,
-                                account = getAccountID(i.Liq_AccountID_2_2),
-                                interate = i.Liq_InterRate_2_2,
-                                contraCcy = getCurrencyID(contraCcy)
-                            });
+                                tempGbase.entries.Add(new entryContainer
+                                {
+                                    type = i.Liq_DebitCred_2_2,
+                                    ccy = getCurrencyID(ccy),
+                                    amount = amount,
+                                    account = getAccountID(i.Liq_AccountID_2_2),
+                                    interate = i.Liq_InterRate_2_2,
+                                    contraCcy = getCurrencyID(contraCcy)
+                                });
+                            }
                         }
 
                         InsertGbaseEntry(tempGbase, expID);
@@ -4974,11 +5057,49 @@ namespace ExpenseProcessingSystem.Services
 
             return accDetails;
         }
+        public ExpenseEntryModel getExpenseDetail(int entryID)
+        {
+            return _context.ExpenseEntry.Include("ExpenseEntryDetails").Where(x => x.Expense_ID == entryID).FirstOrDefault();
+        }
+
+        public List<DMAccountModel> getAccountList()
+        {
+            List<DMAccountModel> accList = new List<DMAccountModel>();
+            var acc = _context.DMAccount.Where(x => x.Account_isActive == true 
+                        && x.Account_isDeleted == false).ToList().OrderBy(x => x.Account_Name);
+            foreach (var i in acc)
+            {
+                accList.Add(new DMAccountModel
+                {
+                    Account_ID =  i.Account_ID,
+                    Account_Name = i.Account_No + " - " + i.Account_Name,
+                    Account_No = i.Account_No
+                });
+            }
+
+            return accList;
+        }
         //retrieve latest Express transation no. (transaction type-year-number)
         //public string getExpTransNo()
         //{
+        //retrieve latest Express transation no.
+        public string getExpTransNo(int transType)
+        {
+            string transactionNo = null;
+            ExpenseEntryModel transNoMax;
+            int transno;
 
-        //}
+            do
+            {
+                transNoMax = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == _context.ExpenseEntry.Max(y => y.Expense_ID));
+
+                transno = (transNoMax.Expense_Created_Date.Year < DateTime.Now.Year) ? 1
+                        : (int.Parse(transNoMax.Expense_Number.Substring(1)) + 1);
+                transactionNo = transType.ToString() + transno.ToString().PadLeft(5, '0');
+            } while (transNoMax.Expense_ID != _context.ExpenseEntry.Max(x=>x.Expense_ID));
+
+            return transactionNo;
+        }
 
 
         public GOExpressHistModel convertTblCm10ToGOExHist(TblCm10 tblcm10, ExpenseEntryModel expense)
