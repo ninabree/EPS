@@ -64,6 +64,7 @@ namespace ExpenseProcessingSystem.Data
         public DbSet<ExpenseEntryInterEntityModel> ExpenseEntryInterEntity { get; set; }
         public DbSet<ExpenseEntryGbaseDtl> ExpenseEntryGbaseDtls { get; set; }
         public DbSet<ExpenseEntryCashBreakdownModel> ExpenseEntryCashBreakdown { get; set; }
+        public DbSet<ExpenseTransList> ExpenseTransLists { get; set; }
         //EXPENSE ENTRY TABLES NON CASH
         public DbSet<ExpenseEntryNCModel> ExpenseEntryNonCash { get; set; }
         public DbSet<ExpenseEntryNCDtlModel> ExpenseEntryNonCashDetails { get; set; }
@@ -73,6 +74,11 @@ namespace ExpenseProcessingSystem.Data
         public DbSet<LiquidationEntryDetailModel> LiquidationEntryDetails { get; set; }
         public DbSet<LiquidationCashBreakdownModel> LiquidationCashBreakdown { get; set; }
         public DbSet<LiquidationInterEntityModel> LiquidationInterEntity { get; set; }
+
+        //CLOSING TABLES
+        public DbSet<ClosingModel> Closing { get; set; }
+        public DbSet<PettyCashModel> PettyCash { get; set; }
+        public DbSet<PCBreakdownModel> PettyCashBreakDown { get; set; }
 
         //GOExpress table history
         public DbSet<GOExpressHistModel> GOExpressHist { get; set; }

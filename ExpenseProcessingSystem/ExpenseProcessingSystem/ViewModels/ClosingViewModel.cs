@@ -51,9 +51,11 @@ namespace ExpenseProcessingSystem.ViewModels
     public class CloseItems
     {
         public string gBaseTrans { get; set; }
+        public string expTrans { get; set; }
         public string particulars { get; set; }
         public string ccy { get; set; }
         public double amount { get; set; }
+        public int transCount { get; set; }
         public string status { get; set; }
     }
 
