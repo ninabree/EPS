@@ -3677,7 +3677,8 @@ namespace ExpenseProcessingSystem.Services
                     Expense_Last_Updated = DateTime.Now,
                     Expense_isDeleted = false,
                     Expense_Status = 1,
-                    ExpenseEntryDetails = expenseDtls
+                    ExpenseEntryDetails = expenseDtls,
+                    Expense_Number = getExpTransNo(expenseType)
                 };
                 _context.ExpenseEntry.Add(expenseEntry);
                 _context.SaveChanges();
