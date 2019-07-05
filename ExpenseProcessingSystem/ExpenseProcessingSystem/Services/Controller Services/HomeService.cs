@@ -3199,45 +3199,86 @@ namespace ExpenseProcessingSystem.Services
                                                               ExpenseEntryInterEntity = from a
                                                                                           in _context.ExpenseEntryInterEntity
                                                                                         where a.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
-                                                                                        select a
+                                                                                        select new
+                                                                                        {
+                                                                                            a,
+                                                                                            ExpenseEntryInterEntityParticular = from p
+                                                                                                                                in _context.ExpenseEntryInterEntityParticular
+                                                                                                                                where p.ExpenseEntryInterEntityModel.ExpDtl_DDVInter_ID == a.ExpDtl_DDVInter_ID
+                                                                                                                                select new
+                                                                                                                                {
+                                                                                                                                    p,
+                                                                                                                                    ExpenseEntryEntityAccounts = from acc
+                                                                                                                                                                 in _context.ExpenseEntryInterEntityAccs
+                                                                                                                                                                 where acc.ExpenseEntryInterEntityParticular.InterPart_ID == p.InterPart_ID
+                                                                                                                                                                 select acc
+                                                                                                                                }
+                                                                                        }
                                                           }
                                 }).FirstOrDefault();
-
             foreach (var dtl in EntryDetails.ExpenseEntryDetails)
             {
-                List<DDVInterEntityViewModel> interDetails = new List<DDVInterEntityViewModel>();
+                DDVInterEntityViewModel interDetail = new DDVInterEntityViewModel();
                 List<EntryGbaseRemarksViewModel> remarksDtl = new List<EntryGbaseRemarksViewModel>();
-                DDVInterEntityViewModel interDetailsVM = new DDVInterEntityViewModel();
-                foreach (ExpenseEntryInterEntityModel inter in dtl.ExpenseEntryInterEntity)
+                ExpenseEntryInterEntityAccsViewModel interDetailAccs = new ExpenseEntryInterEntityAccsViewModel();
+                foreach (var inter in dtl.ExpenseEntryInterEntity)
                 {
-                    interDetailsVM = new DDVInterEntityViewModel()
+                    interDetail = new DDVInterEntityViewModel
                     {
-                        Inter_ID = inter.Inter_ID,
-                        Inter_Particular_Title = inter.Inter_Particular_Title ?? "",
-                        Inter_Currency1_ABBR_ID = inter.Inter_Currency1_ABBR,
-                        Inter_Currency1_ABBR_Name = "",
-                        Inter_Currency1_Amount = inter.Inter_Currency1_Amount ?? "0",
-                        Inter_Currency2_ABBR_ID = inter.Inter_Currency2_ABBR,
-                        Inter_Currency2_ABBR_Name = "",
-                        Inter_Currency2_Amount = inter.Inter_Currency2_Amount ?? "0",
-                        Inter_Rate = inter.Inter_Rate ?? "1",
-                        Inter_Particular1 = _modalservice.PopulateParticular1(inter.Inter_Particular_Title ?? "", inter.Inter_Currency1_ABBR ?? "", inter.Inter_Currency1_Amount ?? "0", inter.Inter_Currency2_Amount ?? "0", double.Parse(inter.Inter_Rate ?? "1")),
-                        Inter_Particular2 = _modalservice.PopulateParticular2(inter.Inter_Currency1_ABBR ?? "", inter.Inter_Currency2_ABBR ?? "", inter.Inter_Currency2_Amount ?? "0", double.Parse(inter.Inter_Rate ?? "1")),
-                        Inter_Particular3 = _modalservice.PopulateParticular3(inter.Inter_Currency2_ABBR ?? "", inter.Inter_Currency2_Amount ?? "0")
-                    };
-                    if (interDetailsVM.Inter_Currency1_ABBR_ID != null)
-                    {
-                        interDetailsVM.Inter_Currency1_ABBR_Name = _context.DMCurrency.Where(x => x.Curr_MasterID == int.Parse(inter.Inter_Currency1_ABBR) &&
-                                                       x.Curr_isDeleted == false && x.Curr_isActive == true).Select(x => x.Curr_Name).FirstOrDefault() ?? "";
-                    }
-                    if (interDetailsVM.Inter_Currency2_ABBR_ID != null)
-                    {
-                        interDetailsVM.Inter_Currency2_ABBR_Name = _context.DMCurrency.Where(x => x.Curr_MasterID == int.Parse(inter.Inter_Currency2_ABBR) &&
-                                                    x.Curr_isDeleted == false && x.Curr_isActive == true).Select(x => x.Curr_Name).FirstOrDefault() ?? "";
-                    }
-                    interDetails.Add(interDetailsVM);
-                }
+                        Inter_Check1 = inter.a.ExpDtl_DDVInter_Check1,
+                        Inter_Check2 = inter.a.ExpDtl_DDVInter_Check2,
+                        Inter_Convert1_Amount = inter.a.ExpDtl_DDVInter_Conv_Amount1,
+                        Inter_Convert2_Amount = inter.a.ExpDtl_DDVInter_Conv_Amount2,
+                        Inter_Currency1_ID = inter.a.ExpDtl_DDVInter_Curr1_ID,
+                        Inter_Currency1_ABBR =  "",
+                        Inter_Currency1_Amount = inter.a.ExpDtl_DDVInter_Amount1,
+                        Inter_Currency2_ID = inter.a.ExpDtl_DDVInter_Curr2_ID,
+                        Inter_Currency2_ABBR = "",
+                        Inter_Currency2_Amount = inter.a.ExpDtl_DDVInter_Amount2,
+                        Inter_Rate = (inter.a.ExpDtl_DDVInter_Rate > 0) ? inter.a.ExpDtl_DDVInter_Rate : 1,
+                        interPartList = new List<ExpenseEntryInterEntityParticularViewModel>()
 
+                    };
+
+                    if (interDetail.Inter_Currency1_ID > 0)
+                    {
+                        interDetail.Inter_Currency1_ABBR = _context.DMCurrency.Where(x => x.Curr_ID == inter.a.ExpDtl_DDVInter_Curr1_ID &&
+                                                       x.Curr_isDeleted == false && x.Curr_isActive == true).Select(x => x.Curr_CCY_ABBR).FirstOrDefault() ?? "";
+                    }
+                    if (interDetail.Inter_Currency2_ID > 0)
+                    {
+                        interDetail.Inter_Currency2_ABBR = _context.DMCurrency.Where(x => x.Curr_ID == inter.a.ExpDtl_DDVInter_Curr2_ID &&
+                                                    x.Curr_isDeleted == false && x.Curr_isActive == true).Select(x => x.Curr_CCY_ABBR).FirstOrDefault() ?? "";
+                    }
+                    //ERROR HERE                                                                  VVVVVV
+                    foreach (var interPart in inter.ExpenseEntryInterEntityParticular)
+                    {
+                        var acc = _context.DMAccount.Where(x => x.Account_ID == dtl.d.ExpDtl_Account).FirstOrDefault();
+                        ExpenseEntryInterEntityParticularViewModel interParticular = new ExpenseEntryInterEntityParticularViewModel
+                        {
+                            InterPart_ID = interPart.p.InterPart_ID,
+                            InterPart_Particular_Title = interPart.p.InterPart_Particular_Title,
+                            Inter_Particular1 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular1(acc.Account_Name ?? "", interDetail.Inter_Currency1_ABBR ?? "", interDetail.Inter_Currency1_Amount, interDetail.Inter_Currency2_Amount, interDetail.Inter_Rate, acc.Account_ID, interDetail.Inter_Currency1_ID),
+                            Inter_Particular2 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular2(interDetail.Inter_Currency1_ABBR, interDetail.Inter_Currency2_ABBR, interDetail.Inter_Currency2_Amount, interDetail.Inter_Rate, interDetail.Inter_Currency1_ID, interDetail.Inter_Currency2_ID),
+                            Inter_Particular3 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular3(interDetail.Inter_Currency2_ABBR, interDetail.Inter_Currency2_Amount, interDetail.Inter_Currency2_ID),
+                            ExpenseEntryInterEntityAccs = new List<ExpenseEntryInterEntityAccsViewModel>()
+                        };
+                        foreach (var interAcc in interPart.ExpenseEntryEntityAccounts)
+                        {
+                            ExpenseEntryInterEntityAccsViewModel interDetailAcc = new ExpenseEntryInterEntityAccsViewModel()
+                            {
+                                Inter_Acc_ID = interAcc.InterAcc_Acc_ID,
+                                Inter_Amount = interAcc.InterAcc_Amount,
+                                Inter_Curr_ID = interAcc.InterAcc_Curr_ID,
+                                Inter_Rate = interAcc.InterAcc_Rate,
+                                Inter_Type_ID = interAcc.InterAcc_Type_ID
+                            };
+                            interParticular.ExpenseEntryInterEntityAccs.Add(interDetailAcc);
+                        }
+                        interDetail.interPartList.Add(interParticular);
+                    }
+                }
+                
                 foreach (var gbase in dtl.ExpenseEntryGbaseDtls)
                 {
                     EntryGbaseRemarksViewModel gbaseTemp = new EntryGbaseRemarksViewModel()
@@ -3267,14 +3308,14 @@ namespace ExpenseProcessingSystem.Services
                     chkEwt = dtl.d.ExpDtl_isEwt,
                     ewt = dtl.d.ExpDtl_isEwt ? 0 : dtl.d.ExpDtl_Ewt,
                     ewt_Name = _context.DMTR.Where(x => x.TR_ID == dtl.d.ExpDtl_Ewt).Select(x => x.TR_Tax_Rate.ToString()).FirstOrDefault(),
-                    ewt_Payor_Name = _context.DMTR.Where(x => x.TR_ID == int.Parse(dtl.d.ExpDtl_Ewt_Payor_Name)).Select(x => x.TR_Tax_Rate.ToString()).FirstOrDefault(),
+                    ewt_Payor_Name = (dtl.d.ExpDtl_Ewt_Payor_Name != null) ? _context.DMTR.Where(x => x.TR_ID == int.Parse(dtl.d.ExpDtl_Ewt_Payor_Name)).Select(x => x.TR_Tax_Rate.ToString()).FirstOrDefault() : "",
                     ccy = dtl.d.ExpDtl_Ccy,
                     ccy_Name = _context.DMCurrency.Where(x => x.Curr_ID == dtl.d.ExpDtl_Ccy && x.Curr_isActive == true).Select(x => x.Curr_CCY_ABBR).FirstOrDefault(),
                     debitGross = dtl.d.ExpDtl_Debit,
                     credEwt = dtl.d.ExpDtl_Credit_Ewt,
                     credCash = dtl.d.ExpDtl_Credit_Cash,
-                    ewtPayorName = dtl.d.ExpDtl_Ewt_Payor_Name,
-                    interDetails = interDetails,
+                    ewtPayorName = (dtl.d.ExpDtl_Ewt_Payor_Name != null) ? _context.DMTR.Where(x => x.TR_ID == int.Parse(dtl.d.ExpDtl_Ewt_Payor_Name)).Select(x => x.TR_Tax_Rate.ToString()).FirstOrDefault() : "",
+                    interDetails = interDetail,
                     gBaseRemarksDetails = remarksDtl
                 };
 
@@ -3533,20 +3574,50 @@ namespace ExpenseProcessingSystem.Services
                     List<ExpenseEntryInterEntityModel> expenseInter = new List<ExpenseEntryInterEntityModel>();
                     List<ExpenseEntryGbaseDtl> expenseGbase = new List<ExpenseEntryGbaseDtl>();
 
-                    foreach (var interDetails in ddv.interDetails)
-                    {
-                        ExpenseEntryInterEntityModel interEntity = new ExpenseEntryInterEntityModel
-                        {
-                            Inter_Particular_Title = interDetails.Inter_Particular_Title,
-                            Inter_Currency1_ABBR = interDetails.Inter_Currency1_ABBR_ID,
-                            Inter_Currency1_Amount = interDetails.Inter_Currency1_Amount,
-                            Inter_Currency2_ABBR = interDetails.Inter_Currency2_ABBR_ID,
-                            Inter_Currency2_Amount = interDetails.Inter_Currency2_Amount,
-                            Inter_Rate = interDetails.Inter_Rate
-                        };
+                    ExpenseEntryInterEntityModel interDetail = new ExpenseEntryInterEntityModel();
+                    var inter = ddv.interDetails;
 
-                        expenseInter.Add(interEntity);
+                    interDetail = new ExpenseEntryInterEntityModel
+                    {
+                        ExpDtl_DDVInter_Check1 = inter.Inter_Check1,
+                        ExpDtl_DDVInter_Check2 = inter.Inter_Check2,
+                        ExpDtl_DDVInter_Conv_Amount1 = inter.Inter_Convert1_Amount,
+                        ExpDtl_DDVInter_Conv_Amount2 = inter.Inter_Convert2_Amount,
+                        ExpDtl_DDVInter_Curr1_ID = inter.Inter_Currency1_ID,
+                        ExpDtl_DDVInter_Amount1 = inter.Inter_Currency1_Amount,
+                        ExpDtl_DDVInter_Curr2_ID = inter.Inter_Currency2_ID,
+                        ExpDtl_DDVInter_Amount2 = inter.Inter_Currency2_Amount,
+                        ExpDtl_DDVInter_Rate = (inter.Inter_Rate > 0) ? inter.Inter_Rate : 1,
+                        ExpenseEntryInterEntityParticular = new List<ExpenseEntryInterEntityParticularModel>()
+
+                    };
+
+                    foreach (ExpenseEntryInterEntityParticularViewModel interPart in inter.interPartList)
+                    {
+                        var accName = _context.DMAccount.Where(x => x.Account_ID == ddv.account).Select(x => x.Account_Name).FirstOrDefault();
+                        ExpenseEntryInterEntityParticularModel interParticular = new ExpenseEntryInterEntityParticularModel
+                        {
+                            InterPart_ID = interPart.InterPart_ID,
+                            InterPart_Particular_Title = interPart.InterPart_Particular_Title
+                        };
+                        List<ExpenseEntryInterEntityAccsModel> interAccsList = new List<ExpenseEntryInterEntityAccsModel>();
+                        foreach (ExpenseEntryInterEntityAccsViewModel interAcc in interPart.ExpenseEntryInterEntityAccs)
+                        {
+                            ExpenseEntryInterEntityAccsModel interDetailAcc = new ExpenseEntryInterEntityAccsModel()
+                            {
+                                InterAcc_Acc_ID = interAcc.Inter_Acc_ID,
+                                InterAcc_Amount = interAcc.Inter_Amount,
+                                InterAcc_Curr_ID = interAcc.Inter_Curr_ID,
+                                InterAcc_Rate = interAcc.Inter_Rate,
+                                InterAcc_Type_ID = interAcc.Inter_Type_ID
+                            };
+                            interAccsList.Add(interDetailAcc);
+                        }
+                        interParticular.ExpenseEntryInterEntityAccs = interAccsList;
+                        interDetail.ExpenseEntryInterEntityParticular.Add(interParticular);
                     }
+                    
+                    expenseInter.Add(interDetail);
 
                     foreach (var gbaseRemark in ddv.gBaseRemarksDetails)
                     {
@@ -4305,6 +4376,125 @@ namespace ExpenseProcessingSystem.Services
             _GOContext.SaveChanges();
 
             foreach(var item in stuff)
+            {
+                Console.WriteLine("======> this is the new ID : " + item.Id);
+            }
+            return true;
+        }
+        public bool postDDV(int expID, string command)
+        {
+            var expenseDDV = getExpenseDDV(expID);
+            List<TblCm10> stuff = new List<TblCm10>();
+            foreach (var item in expenseDDV.EntryDDV)
+            {
+                if (item.inter_entity)
+                {
+                    DDVInterEntityViewModel interDtls = item.interDetails;
+
+                    foreach (var particular in item.interDetails.interPartList)
+                    {
+                        gbaseContainer tempGbase = new gbaseContainer
+                        {
+                            valDate = expenseDDV.expenseDate,
+                            remarks = particular.InterPart_Particular_Title,
+                            maker = expenseDDV.maker,
+                            approver = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == expID).Expense_Approver
+                        };
+                        foreach (var accs in particular.ExpenseEntryInterEntityAccs)
+                        {
+                            var entryType = (accs.Inter_Type_ID == GlobalSystemValues.NC_DEBIT) ? "D" :
+                                            (accs.Inter_Type_ID == GlobalSystemValues.NC_CREDIT) ? "C" : "";
+                            if (command == "R")
+                            {
+                                entryType = (entryType == "D") ? "C" : (entryType == "C") ? "D" : "";
+                            }
+                            if (entryType != "")
+                            {
+                                entryContainer entry = new entryContainer
+                                {
+                                    account = accs.Inter_Acc_ID,
+                                    amount = accs.Inter_Amount,
+                                    ccy = accs.Inter_Curr_ID,
+                                    dept = item.dept,
+                                    interate = accs.Inter_Rate,
+                                    //vendor = item.
+                                    type = entryType
+                                };
+                                tempGbase.entries.Add(entry);
+
+                                if (item.fbt)
+                                {
+                                    tempGbase.entries = new List<entryContainer>();
+                                    string fbt = getFbtFormula(getAccount(item.account).Account_FBT_MasterID);
+
+                                    string equation = fbt.Replace("ExpenseAmount", item.debitGross.ToString());
+                                    double fbtAmount = Math.Round(Convert.ToDouble(new DataTable().Compute(equation, null)), 2);
+                                    Console.WriteLine("-=-=-=-=-=->" + equation);
+                                    entry.amount = fbtAmount;
+
+                                    tempGbase.entries.Add(entry);
+                                    stuff.Add(InsertGbaseEntry(tempGbase, expID));
+                                }
+                            }
+                        }
+                        stuff.Add(InsertGbaseEntry(tempGbase, expID));
+
+                    }
+                } else
+                {
+                    gbaseContainer tempGbase = new gbaseContainer();
+
+                    tempGbase.valDate = expenseDDV.expenseDate;
+                    tempGbase.remarks = item.GBaseRemarks;
+                    tempGbase.maker = expenseDDV.maker;
+                    tempGbase.approver = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == expID).Expense_Approver;
+
+                    entryContainer credit = new entryContainer();
+                    entryContainer debit = new entryContainer();
+
+                    credit.type = (command != "R") ? "C" : "D";
+                    debit.type = (command != "R") ? "D" : "C";
+
+                    credit.ccy = item.ccy;
+                    debit.ccy = item.ccy;
+                    credit.amount = item.debitGross;
+                    debit.amount = item.debitGross;
+                    credit.vendor = expenseDDV.vendor;
+                    debit.vendor = expenseDDV.vendor;
+                    credit.account = item.account;
+                    debit.account = item.account;
+                    debit.chkNo = expenseDDV.checkNo;
+                    debit.dept = item.dept;
+                    credit.dept = item.dept;
+
+                    tempGbase.entries.Add(credit);
+                    tempGbase.entries.Add(debit);
+
+                    stuff.Add(InsertGbaseEntry(tempGbase, expID));
+
+                    if (item.fbt)
+                    {
+                        tempGbase.entries = new List<entryContainer>();
+
+                        //((ExpenseAmount*.50)/.65)*.35
+                        string fbt = getFbtFormula(getAccount(item.account).Account_FBT_MasterID);
+
+                        string equation = fbt.Replace("ExpenseAmount", item.debitGross.ToString());
+                        double fbtAmount = Math.Round(Convert.ToDouble(new DataTable().Compute(equation, null)), 2);
+                        Console.WriteLine("-=-=-=-=-=->" + equation);
+                        credit.amount = fbtAmount;
+                        debit.amount = fbtAmount;
+
+                        tempGbase.entries.Add(credit);
+                        tempGbase.entries.Add(debit);
+                        stuff.Add(InsertGbaseEntry(tempGbase, expID));
+                    }
+                }
+            }
+
+            _GOContext.SaveChanges();
+
+            foreach (var item in stuff)
             {
                 Console.WriteLine("======> this is the new ID : " + item.Id);
             }

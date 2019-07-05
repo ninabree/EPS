@@ -471,12 +471,14 @@ namespace ExpenseProcessingSystem.Services.Validations
 
             if ((Boolean)val)
             {
-                foreach (var dtl in data.interDetails)
+                foreach (var dtl in data.interDetails.interPartList)
                 {
-                    if ((dtl.Inter_Currency1_ABBR_ID == null) || (dtl.Inter_Currency2_ABBR_ID == null) ||
-                        (dtl.Inter_Currency1_Amount == null) || (dtl.Inter_Currency2_Amount == null))
+                    foreach (var acc in dtl.ExpenseEntryInterEntityAccs)
                     {
-                        return new ValidationResult(name + " is Required. Kindly fill-up the required form.");
+                        if ((acc.Inter_Curr_ID <= 0) || (acc.Inter_Amount <= 0))
+                        {
+                            return new ValidationResult(name + " is Required. Kindly fill-up the required form.");
+                        }
                     }
                 }
             }
