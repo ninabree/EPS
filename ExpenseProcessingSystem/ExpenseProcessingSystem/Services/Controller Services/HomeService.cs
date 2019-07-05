@@ -3551,6 +3551,33 @@ namespace ExpenseProcessingSystem.Services
                 _context.ExpenseEntryNonCash.RemoveRange(_context.ExpenseEntryNonCash
                     .Where(x => x.ExpenseEntryModel.Expense_ID == entry.Expense_ID));
             }
+            else if (expenseType == GlobalSystemValues.TYPE_DDV)
+            {
+                var entryDtl = _context.ExpenseEntryDetails.Where(x => x.ExpenseEntryModel.Expense_ID == expense_ID).ToList();
+                foreach (var i in entryDtl)
+                {
+                    var interList = _context.ExpenseEntryInterEntity.Where(x => x.ExpenseEntryDetailModel.ExpDtl_ID == i.ExpDtl_ID).ToList();
+                    foreach (var inter in interList)
+                    {
+                        var partList = _context.ExpenseEntryInterEntityParticular.Where(x => x.ExpenseEntryInterEntityModel.ExpDtl_DDVInter_ID == inter.ExpDtl_DDVInter_ID).ToList();
+                        foreach (var part in partList)
+                        {
+                            var accList = _context.ExpenseEntryInterEntityAccs.Where(x => x.ExpenseEntryInterEntityParticular.InterPart_ID == part.InterPart_ID).ToList();
+                            foreach (var accs in accList)
+                            {
+                                _context.ExpenseEntryInterEntityAccs.RemoveRange(_context.ExpenseEntryInterEntityAccs
+                                    .Where(x => x.ExpenseEntryInterEntityParticular.InterPart_ID == part.InterPart_ID));
+                            }
+                            _context.ExpenseEntryInterEntityParticular.RemoveRange(_context.ExpenseEntryInterEntityParticular
+                                .Where(x => x.ExpenseEntryInterEntityModel.ExpDtl_DDVInter_ID == inter.ExpDtl_DDVInter_ID));
+                        }
+                        _context.ExpenseEntryInterEntity.RemoveRange(_context.ExpenseEntryInterEntity
+                            .Where(x => x.ExpenseEntryDetailModel.ExpDtl_ID == i.ExpDtl_ID));
+                    }
+                }
+                _context.ExpenseEntryDetails.RemoveRange(_context.ExpenseEntryDetails
+                    .Where(x => x.ExpenseEntryModel.Expense_ID == entry.Expense_ID));
+            }
             else
             {
                 var entryDtl = _context.ExpenseEntryDetails.Where(x => x.ExpenseEntryModel.Expense_ID == expense_ID).ToList();
