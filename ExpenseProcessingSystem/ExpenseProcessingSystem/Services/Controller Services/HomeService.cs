@@ -4922,16 +4922,21 @@ namespace ExpenseProcessingSystem.Services
         {
             ExpenseEntryModel transNoMax;
             int transno;
-
+            int maxNumber;
             do
             {
-                transNoMax = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == _context.ExpenseEntry
-                                                                                                .Where(y => y.Expense_Date.Year == DateTime.Now.Year
-                                                                                                         && y.Expense_Number != 0)
-                                                                                                .Max(y => y.Expense_ID));
+                maxNumber = _context.ExpenseEntry
+                                        .Where(y => y.Expense_Date.Year == DateTime.Now.Year && y.Expense_Number != 0)
+                                        .Max(y => y.Expense_Number);
+
+                transNoMax = _context.ExpenseEntry.OrderByDescending(x=>x.Expense_ID).First();
+
                 transno = (transNoMax.Expense_Created_Date.Year < DateTime.Now.Year) ? 1
-                        : (transNoMax.Expense_Number + 1);
-            } while (transNoMax.Expense_ID != _context.ExpenseEntry.Where(y => y.Expense_Date.Year == DateTime.Now.Year && y.Expense_Number != 0).Max(y => y.Expense_ID));
+                        : (maxNumber + 1);
+
+            } while (maxNumber != _context.ExpenseEntry
+                                        .Where(y => y.Expense_Date.Year == DateTime.Now.Year && y.Expense_Number != 0)
+                                        .Max(y => y.Expense_Number));
 
             return transno;
         }
