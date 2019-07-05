@@ -253,15 +253,11 @@
                 '<td style="text-align:center"><input class="chkVat comVar" data-val="true" data-val-required="The chkVat field is required." id="EntryCV_' + itemCount + '__chkVat" name="EntryCV[' + itemCount + '].chkVat" type="checkbox" value="true"></td>' +
                 //'<td><input class="input100 txtVat" data-val="true" data-val-number="The field vat must be a number." data-val-required="The vat field is required." id="EntryCV_' + itemCount + '__vat" name="EntryCV[' + itemCount + '].vat" readonly="true" type="text" value="0"></td>' +
                 '<td><select class="input100 txtVat comVar" data-val="true" data-val-required="The vat field is required." id="EntryCV_' + itemCount + '__vat" name="EntryCV[' + itemCount + '].vat" disabled="disabled">';
-            for (var i = 0; i < vat.length; i++) {
-                htmlContent += '<option value="' + vat[i]["value"] + '">' + vat[i]["text"] + '</option>';
-            }
+
             htmlContent += '</select></td>' +
                 '<td style="text-align:center"><input class="chkEwt comVar" data-val="true" data-val-required="The chkEwt field is required." id="EntryCV_' + itemCount + '__chkEwt" name="EntryCV[' + itemCount + '].chkEwt" type="checkbox" value="true"></td>' +
                 '<td><select class="input100 txtEwt comVar" data-val="true" data-val-required="The ewt field is required." id="EntryCV_' + itemCount + '__ewt" name="EntryCV[' + itemCount + '].ewt" disabled="disabled">';
-            for (var i = 0; i < ewt.length; i++) {
-                htmlContent += '<option value="' + ewt[i]["value"] + '">' + ewt[i]["text"] + '</option>';
-            }
+
             htmlContent += '</select></td>' +
                 '<td><input class="input100 txtGross" data-val="true" data-val-number="The field debitGross must be a number." data-val-required="The debitGross field is required." id="EntryCV_' + itemCount + '__debitGross" name="EntryCV[' + itemCount + '].debitGross" type="number" readonly="true" min="0" value="0"></td>' +
                 '<td><input class="input100  txtCredEwt" data-val="true" data-val-number="The field credEwt must be a number." data-val-required="The credEwt field is required." id="EntryCV_' + itemCount + '__credEwt" name="EntryCV[' + itemCount + '].credEwt" type="number" readonly="true" min="0" value="0"></td>' +
@@ -269,6 +265,9 @@
                 '<td id="req_' + itemCount + '"><a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#"></a><input class="hiddenItem" data-val="true" data-val-required="The modalInputFlag field is required." id="EntryCV_' + itemCount + '__modalInputFlag" name="EntryCV[' + itemCount + '].modalInputFlag" type="hidden" value="0"><input id="EntryCV_' + itemCount + '__screenCode" name="EntryCV[' + itemCount + '].screenCode" type="hidden" value="PCV"><div id="divCashBD_' + itemCount + '"></div></td>';
 
             newRow.innerHTML = htmlContent;
+
+            $('#EntryCV_' + itemCount + '__vat').append($("#EntryCV_0__vat > option").clone());
+            $('#EntryCV_' + itemCount + '__ewt').append($("#EntryCV_0__ewt > option").clone());
         });
 
         //Cash Breakdown Modal
@@ -366,7 +365,8 @@
         // Shift back
         value = value.toString().split('e');
         return +(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp));
-    }
+    };
+
     function ddlEnabled(idx) {
         if ($('#item_' + idx).find('.chkVat').is(':checked')) {
             $('#item_' + idx).find('.txtVat').removeAttr('disabled');
@@ -376,6 +376,5 @@
             $('#item_' + idx).find('.txtEwt').removeAttr('disabled');
         }
     };
-
 </script>
 <script type="text/javascript" src="~/js/EntryScripts.js"></script>

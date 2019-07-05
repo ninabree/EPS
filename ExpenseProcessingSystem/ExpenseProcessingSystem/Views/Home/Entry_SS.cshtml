@@ -319,6 +319,46 @@
             $("table").on("change", ".txtccy", function (e) {
                 reqBtnDisable($(this.parentNode)[0].parentNode.id.replace('item_', ''));
             });
+
+            //Get EWT and VAT of selected vendor.
+            $("table").on("change", ".txtPayee", function (e) {
+                var vendorid = $(this).val();
+                var pNode = $(this.parentNode)[0].parentNode;
+                var ddlVAT = $('#' + pNode.id).find('.txtVat');
+                var ddlEWT = $('#' + pNode.id).find('.txtEwt');
+
+                $.getJSON('getVendorVatList', { vendorID: vendorid }, function (data) {
+                    ddlVAT.empty();
+                    if (data.length == 0) {
+                        ddlVAT.append($('<option/>', {
+                            value: 0,
+                            text: "N/A"
+                        }));
+                    }
+                    $.each(data, function (index, itemData) {
+                        ddlVAT.append($('<option/>', {
+                            value: itemData["value"],
+                            text: itemData["text"]
+                        }));
+                    });
+                });
+
+                $.getJSON('getVendorTRList', { vendorID: vendorid }, function (data) {
+                    ddlEWT.empty();
+                    if (data.length == 0) {
+                        ddlEWT.append($('<option/>', {
+                            value: 0,
+                            text: "N/A"
+                        }));
+                    }
+                    $.each(data, function (index, itemData) {
+                        ddlEWT.append($('<option/>', {
+                            value: itemData["value"],
+                            text: itemData["text"]
+                        }));
+                    });
+                });               
+            });
         });
     });
 </script>
