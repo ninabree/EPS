@@ -4,14 +4,16 @@ using ExpenseProcessingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    partial class EPSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190708045048_ApplyAnnotationsToExpenseTransLists")]
+    partial class ApplyAnnotationsToExpenseTransLists
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -989,9 +991,7 @@ namespace ExpenseProcessingSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ExpenseDetailID");
-
-                    b.Property<int>("ExpenseEntryID");
+                    b.Property<int?>("ExpenseEntryModelExpense_ID");
 
                     b.Property<string>("GOExpHist_AutoApproved");
 
@@ -1330,6 +1330,8 @@ namespace ExpenseProcessingSystem.Migrations
                     b.Property<string>("GOExpHist_WarningOverride");
 
                     b.HasKey("GOExpHist_Id");
+
+                    b.HasIndex("ExpenseEntryModelExpense_ID");
 
                     b.ToTable("GOExpressHist");
                 });
@@ -1954,6 +1956,13 @@ namespace ExpenseProcessingSystem.Migrations
                 {
                     b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryModel", "ExpenseEntryModel")
                         .WithMany("ExpenseEntryNC")
+                        .HasForeignKey("ExpenseEntryModelExpense_ID");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.GOExpressHistModel", b =>
+                {
+                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryModel", "ExpenseEntryModel")
+                        .WithMany()
                         .HasForeignKey("ExpenseEntryModelExpense_ID");
                 });
 
