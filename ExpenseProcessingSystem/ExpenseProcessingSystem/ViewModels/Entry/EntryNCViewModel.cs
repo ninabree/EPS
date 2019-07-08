@@ -41,6 +41,7 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         //[NotNullValidations, AmountValidation]
         [Display(Name = "Total Amount")]
         public float NC_TotalAmt { get; set; }
+        public int NC_ID { get; set; }
         public List<ExpenseEntryNCDtlViewModel> ExpenseEntryNCDtls { get; set; }
         public List<ExpenseEntryNCDtlViewModel> ExpenseEntryNCDtls_CDD { get; set; }
 

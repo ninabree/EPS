@@ -12,7 +12,7 @@ namespace ExpenseProcessingSystem.Models
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int TL_ID { get; set; }
         public int TL_ExpenseID { get; set; }
-        public int TL_ExpenseDtlID { get; set; }
+        public int TL_GoExpHist_ID { get; set; }
         public bool TL_Liquidation { get; set; }
         public int TL_GoExpress_ID { get; set; }
         public int TL_TransID { get; set; }

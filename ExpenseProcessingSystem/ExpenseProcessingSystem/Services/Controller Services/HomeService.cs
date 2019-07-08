@@ -3439,6 +3439,7 @@ namespace ExpenseProcessingSystem.Services
                 }
                 ncDtlVM = new EntryNCViewModel()
                 {
+                    NC_ID = dtl.d.ExpNC_ID,
                     NC_Category_ID = dtl.d.ExpNC_Category_ID,
                     NC_CredAmt = dtl.d.ExpNC_CredAmt,
                     NC_DebitAmt = dtl.d.ExpNC_DebitAmt,
@@ -4231,11 +4232,13 @@ namespace ExpenseProcessingSystem.Services
         public bool postCV(int expID)
         {
             var expenseDetails = getExpense(expID);
-            //List<TblCm10> stuff = new List<TblCm10>();
+
             var list = new[] {
-                new { expEntryID = 0, expDtlID = 0, model = new TblCm10()}
+                new { expEntryID = 0, goExp = new TblCm10(), goExpHist = new GOExpressHistModel()}
             }.ToList();
-            
+            TblCm10 goExpData = new TblCm10();
+            GOExpressHistModel goExpHistData = new GOExpressHistModel();
+
             list.Clear();
 
             foreach (var item in expenseDetails.EntryCV)
@@ -4268,7 +4271,9 @@ namespace ExpenseProcessingSystem.Services
                 tempGbase.entries.Add(credit);
                 tempGbase.entries.Add(debit);
 
-                list.Add(new { expEntryID = expID, expDtlID = item.expenseDtlID, model = InsertGbaseEntry(tempGbase, expID, item.expenseDtlID) });
+                goExpData = InsertGbaseEntry(tempGbase, expID);
+                goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.expenseDtlID);
+                list.Add(new { expEntryID = expID, goExp = goExpData, goExpHist = goExpHistData });
 
                 if (item.fbt)
                 {
@@ -4285,9 +4290,10 @@ namespace ExpenseProcessingSystem.Services
 
                     tempGbase.entries.Add(credit);
                     tempGbase.entries.Add(debit);
-                    //stuff.Add(InsertGbaseEntry(tempGbase, expID));
 
-                    list.Add(new { expEntryID = expID, expDtlID = item.expenseDtlID, model = InsertGbaseEntry(tempGbase, expID, item.expenseDtlID) });
+                    goExpData = InsertGbaseEntry(tempGbase, expID);
+                    goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.expenseDtlID);
+                    list.Add(new { expEntryID = expID, goExp = goExpData, goExpHist = goExpHistData });
                 }
             }
 
@@ -4301,8 +4307,8 @@ namespace ExpenseProcessingSystem.Services
                 ExpenseTransList tran = new ExpenseTransList
                 {
                     TL_ExpenseID = item.expEntryID,
-                    TL_ExpenseDtlID = item.expDtlID,
-                    TL_GoExpress_ID = int.Parse(item.model.Id.ToString()),
+                    TL_GoExpress_ID = int.Parse(item.goExp.Id.ToString()),
+                    TL_GoExpHist_ID = int.Parse(item.goExpHist.GOExpHist_Id.ToString()),
                     TL_Liquidation = false
                 };
                 transactions.Add(tran);
@@ -4315,7 +4321,13 @@ namespace ExpenseProcessingSystem.Services
         public bool postLiq_SS(int expID)
         {
             var liquidationDetails = getExpenseToLiqudate(expID);
-            List<TblCm10> stuff = new List<TblCm10>();
+            var list = new[] {
+                new { expEntryID = 0, goExp = new TblCm10(), goExpHist = new GOExpressHistModel()}
+            }.ToList();
+            TblCm10 goExpData = new TblCm10();
+            GOExpressHistModel goExpHistData = new GOExpressHistModel();
+
+            list.Clear();
 
             foreach (var item in liquidationDetails.LiquidationDetails)
             {
@@ -4374,7 +4386,9 @@ namespace ExpenseProcessingSystem.Services
                         });
                     }
 
-                    stuff.Add(InsertGbaseEntry(tempGbase, expID, item.EntryDetailsID));
+                    goExpData = InsertGbaseEntry(tempGbase, expID);
+                    goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.EntryDetailsID);
+                    list.Add(new { expEntryID = expID, goExp = goExpData, goExpHist = goExpHistData });
                 }
                 else if (item.liqInterEntity.Count() != 0 && item.liqCashBreakdown.Count() == 0)
                 {
@@ -4459,7 +4473,9 @@ namespace ExpenseProcessingSystem.Services
                             }
                         }
 
-                        stuff.Add(InsertGbaseEntry(tempGbase, expID, item.EntryDetailsID));
+                        goExpData = InsertGbaseEntry(tempGbase, expID);
+                        goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.EntryDetailsID);
+                        list.Add(new { expEntryID = expID, goExp = goExpData, goExpHist = goExpHistData });
                     }
                 }
 
@@ -4480,13 +4496,14 @@ namespace ExpenseProcessingSystem.Services
 
             List<ExpenseTransList> transactions = new List<ExpenseTransList>();
 
-            foreach (var item in stuff)
+            foreach (var item in list)
             {
                 ExpenseTransList tran = new ExpenseTransList
                 {
-                    TL_ExpenseID = expID,
-                    TL_GoExpress_ID = int.Parse(item.Id.ToString()),
-                    TL_Liquidation = true
+                    TL_ExpenseID = item.expEntryID,
+                    TL_GoExpress_ID = int.Parse(item.goExp.Id.ToString()),
+                    TL_GoExpHist_ID = int.Parse(item.goExpHist.GOExpHist_Id.ToString()),
+                    TL_Liquidation = false
                 };
                 transactions.Add(tran);
             }
@@ -4496,11 +4513,18 @@ namespace ExpenseProcessingSystem.Services
 
             return true;
         }
-        ///==============[Post Entries]==============
         public bool postCV(int expID, string command)
         {
             var expenseDetails = getExpense(expID);
-            List<TblCm10> stuff = new List<TblCm10>();
+
+            var list = new[] {
+                new { expEntryID = 0, goExp = new TblCm10(), goExpHist = new GOExpressHistModel()}
+            }.ToList();
+            TblCm10 goExpData = new TblCm10();
+            GOExpressHistModel goExpHistData = new GOExpressHistModel();
+
+            list.Clear();
+
             foreach (var item in expenseDetails.EntryCV)
             {
                 gbaseContainer tempGbase = new gbaseContainer();
@@ -4531,7 +4555,9 @@ namespace ExpenseProcessingSystem.Services
                 tempGbase.entries.Add(credit);
                 tempGbase.entries.Add(debit);
 
-                stuff.Add(InsertGbaseEntry(tempGbase, expID, item.expenseDtlID));
+                goExpData = InsertGbaseEntry(tempGbase, expID);
+                goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.expenseDtlID);
+                list.Add(new { expEntryID = expID, goExp = goExpData, goExpHist = goExpHistData });
 
                 if (item.fbt)
                 {
@@ -4548,22 +4574,47 @@ namespace ExpenseProcessingSystem.Services
 
                     tempGbase.entries.Add(credit);
                     tempGbase.entries.Add(debit);
-                    stuff.Add(InsertGbaseEntry(tempGbase, expID, item.expenseDtlID));
+
+                    goExpData = InsertGbaseEntry(tempGbase, expID);
+                    goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.expenseDtlID);
+                    list.Add(new { expEntryID = expID, goExp = goExpData, goExpHist = goExpHistData });
                 }
             }
             
             _GOContext.SaveChanges();
+            _context.SaveChanges();
 
-            foreach(var item in stuff)
+            List<ExpenseTransList> transactions = new List<ExpenseTransList>();
+
+            foreach (var item in list)
             {
-                Console.WriteLine("======> this is the new ID : " + item.Id);
+                ExpenseTransList tran = new ExpenseTransList
+                {
+                    TL_ExpenseID = item.expEntryID,
+                    TL_GoExpress_ID = int.Parse(item.goExp.Id.ToString()),
+                    TL_GoExpHist_ID = int.Parse(item.goExpHist.GOExpHist_Id.ToString()),
+                    TL_Liquidation = false
+                };
+                transactions.Add(tran);
             }
+
+            _context.ExpenseTransLists.AddRange(transactions);
+            _context.SaveChanges();
+
             return true;
         }
         public bool postDDV(int expID, string command)
         {
             var expenseDDV = getExpenseDDV(expID);
-            List<TblCm10> stuff = new List<TblCm10>();
+
+            var list = new[] {
+                new { expEntryID = 0, goExp = new TblCm10(), goExpHist = new GOExpressHistModel()}
+            }.ToList();
+            TblCm10 goExpData = new TblCm10();
+            GOExpressHistModel goExpHistData = new GOExpressHistModel();
+
+            list.Clear();
+
             foreach (var item in expenseDDV.EntryDDV)
             {
                 if (item.inter_entity)
@@ -4612,12 +4663,16 @@ namespace ExpenseProcessingSystem.Services
                                     entry.amount = fbtAmount;
 
                                     tempGbase.entries.Add(entry);
-                                    stuff.Add(InsertGbaseEntry(tempGbase, expID, item.dtlID));
+
+                                    goExpData = InsertGbaseEntry(tempGbase, expID);
+                                    goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.dtlID);
+                                    list.Add(new { expEntryID = expID, goExp = goExpData, goExpHist = goExpHistData });
                                 }
                             }
                         }
-                        stuff.Add(InsertGbaseEntry(tempGbase, expID, item.dtlID));
-
+                        goExpData = InsertGbaseEntry(tempGbase, expID);
+                        goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.dtlID);
+                        list.Add(new { expEntryID = expID, goExp = goExpData, goExpHist = goExpHistData });
                     }
                 } else
                 {
@@ -4649,7 +4704,9 @@ namespace ExpenseProcessingSystem.Services
                     tempGbase.entries.Add(credit);
                     tempGbase.entries.Add(debit);
 
-                    stuff.Add(InsertGbaseEntry(tempGbase, expID, item.dtlID));
+                    goExpData = InsertGbaseEntry(tempGbase, expID);
+                    goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.dtlID);
+                    list.Add(new { expEntryID = expID, goExp = goExpData, goExpHist = goExpHistData });
 
                     if (item.fbt)
                     {
@@ -4666,23 +4723,45 @@ namespace ExpenseProcessingSystem.Services
 
                         tempGbase.entries.Add(credit);
                         tempGbase.entries.Add(debit);
-                        stuff.Add(InsertGbaseEntry(tempGbase, expID, item.dtlID));
+                        goExpData = InsertGbaseEntry(tempGbase, expID);
+                        goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.dtlID);
+                        list.Add(new { expEntryID = expID, goExp = goExpData, goExpHist = goExpHistData });
                     }
                 }
             }
 
             _GOContext.SaveChanges();
+            _context.SaveChanges();
 
-            foreach (var item in stuff)
+            List<ExpenseTransList> transactions = new List<ExpenseTransList>();
+
+            foreach (var item in list)
             {
-                Console.WriteLine("======> this is the new ID : " + item.Id);
+                ExpenseTransList tran = new ExpenseTransList
+                {
+                    TL_ExpenseID = item.expEntryID,
+                    TL_GoExpress_ID = int.Parse(item.goExp.Id.ToString()),
+                    TL_GoExpHist_ID = int.Parse(item.goExpHist.GOExpHist_Id.ToString()),
+                    TL_Liquidation = false
+                };
+                transactions.Add(tran);
             }
+
+            _context.ExpenseTransLists.AddRange(transactions);
+            _context.SaveChanges();
+
             return true;
         }
         public bool postNC(int expID, string command)
         {
             var expenseDetails = getExpenseNC(expID);
-            TblCm10 stuff = new TblCm10();
+            var list = new[] {
+                new { expEntryID = 0, goExp = new TblCm10(), goExpHist = new GOExpressHistModel()}
+            }.ToList();
+            TblCm10 goExpData = new TblCm10();
+            GOExpressHistModel goExpHistData = new GOExpressHistModel();
+
+            list.Clear();
             foreach (var dtls in expenseDetails.EntryNC.ExpenseEntryNCDtls)
             {
                 gbaseContainer tempGbase = new gbaseContainer();
@@ -4721,19 +4800,37 @@ namespace ExpenseProcessingSystem.Services
 
                 tempGbase.entries = tempGbase.entries.OrderByDescending(x => x.type == "D").ToList();
                 //insert
-                stuff = InsertGbaseEntry(tempGbase, expID, _context.ExpenseEntryNonCash.Where(x => x.ExpenseEntryModel.Expense_ID == expID).FirstOrDefault().ExpNC_ID);
+                goExpData = InsertGbaseEntry(tempGbase, expID);
+                goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, expenseDetails.EntryNC.NC_ID);
+                list.Add(new { expEntryID = expID, goExp = goExpData, goExpHist = goExpHistData });
             }
 
             _GOContext.SaveChanges();
+            _context.SaveChanges();
 
-            Console.WriteLine("======> " + stuff.Id);
-            Console.WriteLine("===========> This is the new ID:" + stuff.Id);
+            List<ExpenseTransList> transactions = new List<ExpenseTransList>();
+
+            foreach (var item in list)
+            {
+                ExpenseTransList tran = new ExpenseTransList
+                {
+                    TL_ExpenseID = item.expEntryID,
+                    TL_GoExpress_ID = int.Parse(item.goExp.Id.ToString()),
+                    TL_GoExpHist_ID = int.Parse(item.goExpHist.GOExpHist_Id.ToString()),
+                    TL_Liquidation = false
+                };
+                transactions.Add(tran);
+            }
+
+            _context.ExpenseTransLists.AddRange(transactions);
+            _context.SaveChanges();
+
             return true;
         }
         ///============[End Post Entries]============
 
         ///==============[Begin Gbase Entry Section]================
-        private TblCm10 InsertGbaseEntry(gbaseContainer containerModel, int expenseID, int expDtlID)
+        private TblCm10 InsertGbaseEntry(gbaseContainer containerModel, int expenseID)
         {
              TblCm10 goModel = new TblCm10();
 
@@ -4958,7 +5055,7 @@ namespace ExpenseProcessingSystem.Services
 
             _GOContext.TblCm10.Add(goModel);
            
-            _context.GOExpressHist.Add(convertTblCm10ToGOExHist(goModel, expenseID, expDtlID));
+            //_context.GOExpressHist.Add(convertTblCm10ToGOExHist(goModel, expenseID, expDtlID));
 
             return goModel;
         }
@@ -5209,7 +5306,7 @@ namespace ExpenseProcessingSystem.Services
 
         public GOExpressHistModel convertTblCm10ToGOExHist(TblCm10 tblcm10, int entryID, int entryDtlID)
         {
-            return new GOExpressHistModel {
+            var goExpHist =  new GOExpressHistModel {
                 GOExpHist_SystemName = tblcm10.SystemName,
                 GOExpHist_Groupcode = tblcm10.Groupcode,
                 GOExpHist_Branchno = tblcm10.Branchno,
@@ -5381,6 +5478,10 @@ namespace ExpenseProcessingSystem.Services
                 ExpenseEntryID = entryID,
                 ExpenseDetailID = entryDtlID
             };
+
+            _context.GOExpressHist.Add(goExpHist);
+
+            return goExpHist;
         }
         ///========[End of Other Functions]============
     }
