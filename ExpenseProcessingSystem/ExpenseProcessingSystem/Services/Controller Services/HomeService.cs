@@ -31,16 +31,18 @@ namespace ExpenseProcessingSystem.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly EPSDbContext _context;
         private readonly GOExpressContext _GOContext;
+        private readonly GWriteContext _gWriteContext;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
         private readonly IHostingEnvironment _hostingEnvironment;
         private ModalService _modalservice;
 
         private ModelStateDictionary _modelState;
-        public HomeService(IHttpContextAccessor httpContextAccessor, EPSDbContext context, GOExpressContext goWriteContext ,ModelStateDictionary modelState, IHostingEnvironment hostingEnvironment)
+        public HomeService(IHttpContextAccessor httpContextAccessor, EPSDbContext context, GOExpressContext goContext, GWriteContext gWriteContext,ModelStateDictionary modelState, IHostingEnvironment hostingEnvironment)
         {
             _httpContextAccessor = httpContextAccessor;
             _context = context;
-            _GOContext = goWriteContext;
+            _GOContext = goContext;
+            _gWriteContext = gWriteContext;
             _modelState = modelState;
             _hostingEnvironment = hostingEnvironment;
             _modalservice = new ModalService(_httpContextAccessor, _context);
@@ -4690,7 +4692,46 @@ namespace ExpenseProcessingSystem.Services
             return true;
         }
         ///============[End Post Entries]============
+        
+        ///============[Post to GWrite]==============
+        public TblRequestDetails postToGwrite(string command, string username, string password)
+        {
+            TblRequestDetails rqDtlModel = new TblRequestDetails();
+            TblRequestItem rqItemModel = new TblRequestItem();
 
+            byte[] asciiBytes = System.Text.Encoding.ASCII.GetBytes(password);
+            string encodedPass = "";
+            int index = 0;
+
+            foreach (byte b in asciiBytes)
+            {
+                string hexValue = b.ToString("X");
+                encodedPass += hexValue + ",0";
+                if (index != asciiBytes.Length - 1)
+                    encodedPass += ",";
+                index++;
+            }
+
+            rqDtlModel.RacfId = username;
+            rqDtlModel.RacfPassword = encodedPass;
+            rqDtlModel.RequestCreated = DateTime.Now;
+            rqDtlModel.Status = "SCRIPTING";
+            rqDtlModel.SystemAbbr = "EXPRESS";
+            rqDtlModel.Priority = 1;
+
+            rqItemModel.SequenceNo = 1;
+            rqItemModel.ReturnFlag = true;
+            rqItemModel.Command = command;
+
+            rqDtlModel.TblRequestItem.Add(rqItemModel);
+
+            _gWriteContext.Add(rqDtlModel);
+            _gWriteContext.SaveChanges();
+
+            return rqDtlModel;
+        }
+        ///==========[End Post to Gwrite]============
+        
         ///==============[Begin Gbase Entry Section]================
         private TblCm10 InsertGbaseEntry(gbaseContainer containerModel, int expenseID)
         {
