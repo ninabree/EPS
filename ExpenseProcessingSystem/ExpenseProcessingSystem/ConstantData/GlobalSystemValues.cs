@@ -3,6 +3,8 @@ using ExpenseProcessingSystem.ViewModels.Entry;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace ExpenseProcessingSystem.ConstantData
 {
@@ -188,12 +190,19 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly int NC_DEBIT = 1;
         public static readonly int NC_CREDIT = 2;
     }
+    public class CONSTANT_NC_VALS
+    {
+        public int accID { get; set; }
+        public string accNo { get; set; }
+        public string accName { get; set; }
+    }
     //NON CASH CONSTANT VALUES
     public class CONSTANT_NC_LSPAYROLL
     {
-        public static EntryNCViewModel Populate_LSPAYROLL(DMCurrencyModel currDetails)
+        public static EntryNCViewModel Populate_LSPAYROLL(DMCurrencyModel currDetails, List<CONSTANT_NC_VALS> accList)
         {
-            return new EntryNCViewModel
+           
+                return new EntryNCViewModel
             {
                 NC_Category_ID = 1,
                 ExpenseEntryNCDtls = new List<ExpenseEntryNCDtlViewModel>()
@@ -205,8 +214,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 458,
-                                ExpNCDtlAcc_Acc_Name = "H99-767-111123 - P.E. Salary-Local Staff",
+                                ExpNCDtlAcc_Acc_ID = accList[0].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[0].accNo + " - " + accList[0].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -214,8 +223,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 454,
-                                ExpNCDtlAcc_Acc_Name = "B79-767-111111 - Computer Suspense",
+                                ExpNCDtlAcc_Acc_ID = accList[1].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[1].accNo + " - " + accList[1].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -231,8 +240,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 459,
-                                ExpNCDtlAcc_Acc_Name = "H99-767-111220 - P.E. Welfare-Local Staff",
+                                ExpNCDtlAcc_Acc_ID = accList[2].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[2].accNo + " - " + accList[2].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -240,8 +249,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 454,
-                                ExpNCDtlAcc_Acc_Name = "B79-767-111111 - Computer Suspense",
+                                ExpNCDtlAcc_Acc_ID = accList[3].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[3].accNo + " - " + accList[3].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -256,8 +265,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 454,
-                                ExpNCDtlAcc_Acc_Name = "B79-767-111111 - Computer Suspense",
+                                ExpNCDtlAcc_Acc_ID = accList[4].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[4].accNo + " - " + accList[4].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -265,8 +274,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 461,
-                                ExpNCDtlAcc_Acc_Name = "H79-767-151242 - WHT on Local Staff Salary",
+                                ExpNCDtlAcc_Acc_ID = accList[5].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[5].accNo + " - " + accList[5].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -281,8 +290,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 454,
-                                ExpNCDtlAcc_Acc_Name = "B79-767-111111 - Computer Suspense",
+                                ExpNCDtlAcc_Acc_ID = accList[6].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[6].accNo + " - " + accList[6].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -290,8 +299,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 465,
-                                ExpNCDtlAcc_Acc_Name = "H79-767-151381 - HDMF Loan Repayment",
+                                ExpNCDtlAcc_Acc_ID = accList[7].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[7].accNo + " - " + accList[7].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -306,8 +315,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 454,
-                                ExpNCDtlAcc_Acc_Name = "B79-767-111111 - Computer Suspense",
+                                ExpNCDtlAcc_Acc_ID = accList[8].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[8].accNo + " - " + accList[8].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -315,8 +324,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 466,
-                                ExpNCDtlAcc_Acc_Name = "H60-767-801042 - Current Account with BDO MNL",
+                                ExpNCDtlAcc_Acc_ID = accList[9].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[9].accNo + " - " + accList[9].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -331,8 +340,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 454,
-                                ExpNCDtlAcc_Acc_Name = "B79-767-111111 - Computer Suspense",
+                                ExpNCDtlAcc_Acc_ID = accList[10].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[10].accNo + " - " + accList[10].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -340,8 +349,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 467,
-                                ExpNCDtlAcc_Acc_Name = "H79-767-151365 - Bank's Multipurpose Loan Payable",
+                                ExpNCDtlAcc_Acc_ID = accList[11].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[11].accNo + " - " + accList[11].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -356,8 +365,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 454,
-                                ExpNCDtlAcc_Acc_Name = "B79-767-111111 - Computer Suspense",
+                                ExpNCDtlAcc_Acc_ID = accList[12].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[12].accNo + " - " + accList[12].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -365,8 +374,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 467,
-                                ExpNCDtlAcc_Acc_Name =  "H79-767-151365 - Bank's Multipurpose Loan Payable",
+                                ExpNCDtlAcc_Acc_ID = accList[13].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[13].accNo + " - " + accList[13].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -381,8 +390,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 454,
-                                ExpNCDtlAcc_Acc_Name = "B79-767-111111 - Computer Suspense",
+                                ExpNCDtlAcc_Acc_ID = accList[14].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[14].accNo + " - " + accList[14].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -390,8 +399,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 468,
-                                ExpNCDtlAcc_Acc_Name = "H79-767-151357 - HDMF Contribution Payable",
+                                ExpNCDtlAcc_Acc_ID = accList[15].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[15].accNo + " - " + accList[15].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -406,8 +415,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 454,
-                                ExpNCDtlAcc_Acc_Name = "B79-767-111111 - Computer Suspense",
+                                ExpNCDtlAcc_Acc_ID = accList[16].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[16].accNo + " - " + accList[16].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -415,8 +424,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 469,
-                                ExpNCDtlAcc_Acc_Name = "H79-767-151365 - SSS Salary Loan Repayment",
+                                ExpNCDtlAcc_Acc_ID = accList[17].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[17].accNo + " - " + accList[17].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -431,8 +440,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 459,
-                                ExpNCDtlAcc_Acc_Name = "H99-767-111220 - P.E. Welfare-Local Staff",
+                                ExpNCDtlAcc_Acc_ID = accList[18].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[18].accNo + " - " + accList[18].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -440,8 +449,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 454,
-                                ExpNCDtlAcc_Acc_Name = "B79-767-111111 - Computer Suspense",
+                                ExpNCDtlAcc_Acc_ID = accList[19].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[19].accNo + " - " + accList[19].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -456,8 +465,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 460,
-                                ExpNCDtlAcc_Acc_Name = "H99-767-111212 - P.E. Bonus-Local Staff",
+                                ExpNCDtlAcc_Acc_ID = accList[20].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[20].accNo + " - " + accList[20].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -465,8 +474,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 454,
-                                ExpNCDtlAcc_Acc_Name = "B79-767-111111 - Computer Suspense",
+                                ExpNCDtlAcc_Acc_ID = accList[21].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[21].accNo + " - " + accList[21].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -482,7 +491,7 @@ namespace ExpenseProcessingSystem.ConstantData
     //NON CASH CONSTANT VALUES
     public class CONSTANT_NC_TAXREMITTANCE
     {
-        public static EntryNCViewModel Populate_TAXREMITTANCE(DMCurrencyModel currDetails)
+        public static EntryNCViewModel Populate_TAXREMITTANCE(DMCurrencyModel currDetails, List<CONSTANT_NC_VALS> accList)
         {
             return new EntryNCViewModel
             {
@@ -496,8 +505,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 470,
-                                ExpNCDtlAcc_Acc_Name = "H79-767-151292 - 2% WTX PHILPASS TRANS",
+                                ExpNCDtlAcc_Acc_ID = accList[0].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[0].accNo + " - " + accList[0].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -505,8 +514,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 471,
-                                ExpNCDtlAcc_Acc_Name = "H79-767-801000 - BANGKO SENTRAL NG PILIPINAS",
+                                ExpNCDtlAcc_Acc_ID = accList[1].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[1].accNo + " - " + accList[1].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -522,8 +531,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 472,
-                                ExpNCDtlAcc_Acc_Name = "H79-767-152060 - BPI PAYROLL WHTAX",
+                                ExpNCDtlAcc_Acc_ID = accList[2].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[2].accNo + " - " + accList[2].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -531,8 +540,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 471,
-                                ExpNCDtlAcc_Acc_Name = "H79-767-801000 - BANGKO SENTRAL NG PILIPINAS",
+                                ExpNCDtlAcc_Acc_ID = accList[3].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[3].accNo + " - " + accList[3].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -547,8 +556,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 473,
-                                ExpNCDtlAcc_Acc_Name = "H79-767-151226 - W/H TAX INCOME PAYMENT",
+                                ExpNCDtlAcc_Acc_ID = accList[4].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[4].accNo + " - " + accList[4].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -556,8 +565,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 471,
-                                ExpNCDtlAcc_Acc_Name = "H79-767-801000 - BANGKO SENTRAL NG PILIPINAS",
+                                ExpNCDtlAcc_Acc_ID = accList[5].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[5].accNo + " - " + accList[5].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -572,8 +581,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 474,
-                                ExpNCDtlAcc_Acc_Name = "B79-767-151195 - W/H TAX MONEY MARKETS",
+                                ExpNCDtlAcc_Acc_ID = accList[6].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[6].accNo + " - " + accList[6].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -581,8 +590,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 471,
-                                ExpNCDtlAcc_Acc_Name = "H79-767-801000 - BANGKO SENTRAL NG PILIPINAS",
+                                ExpNCDtlAcc_Acc_ID = accList[7].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[7].accNo + " - " + accList[7].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -597,8 +606,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 475,
-                                ExpNCDtlAcc_Acc_Name = "B79-767-151234 - W/H TAX SALARIES & ALLOW (JAP)",
+                                ExpNCDtlAcc_Acc_ID = accList[8].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[8].accNo + " - " + accList[8].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -606,8 +615,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 471,
-                                ExpNCDtlAcc_Acc_Name = "H79-767-801000 - BANGKO SENTRAL NG PILIPINAS",
+                                ExpNCDtlAcc_Acc_ID = accList[9].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[9].accNo + " - " + accList[9].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -622,8 +631,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 476,
-                                ExpNCDtlAcc_Acc_Name = "B79-767-151242 - W/H TAX SALARIES & ALLOW (LOC)",
+                                ExpNCDtlAcc_Acc_ID = accList[10].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[10].accNo + " - " + accList[10].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -631,8 +640,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 471,
-                                ExpNCDtlAcc_Acc_Name = "H79-767-801000 - BANGKO SENTRAL NG PILIPINAS",
+                                ExpNCDtlAcc_Acc_ID = accList[11].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[11].accNo + " - " + accList[11].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -647,8 +656,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 477,
-                                ExpNCDtlAcc_Acc_Name = "B79-767-151268 - W/T TAX BONUS (LOCAL STAFF)",
+                                ExpNCDtlAcc_Acc_ID = accList[12].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[12].accNo + " - " + accList[12].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -656,8 +665,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 471,
-                                ExpNCDtlAcc_Acc_Name = "H79-767-801000 - BANGKO SENTRAL NG PILIPINAS",
+                                ExpNCDtlAcc_Acc_ID = accList[13].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[13].accNo + " - " + accList[13].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -672,8 +681,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 478,
-                                ExpNCDtlAcc_Acc_Name = "B79-767-151399 - TAXES WITHHELD OUTPUT VAT OPI",
+                                ExpNCDtlAcc_Acc_ID = accList[14].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[14].accNo + " - " + accList[14].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -681,8 +690,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 471,
-                                ExpNCDtlAcc_Acc_Name = "H79-767-801000 - BANGKO SENTRAL NG PILIPINAS",
+                                ExpNCDtlAcc_Acc_ID = accList[15].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[15].accNo + " - " + accList[15].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -697,8 +706,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 479,
-                                ExpNCDtlAcc_Acc_Name = "B79-767-151307 - W/H TAX PAY FRINGE BENEFITS",
+                                ExpNCDtlAcc_Acc_ID = accList[16].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[16].accNo + " - " + accList[16].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -706,8 +715,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 471,
-                                ExpNCDtlAcc_Acc_Name = "H79-767-801000 - BANGKO SENTRAL NG PILIPINAS",
+                                ExpNCDtlAcc_Acc_ID = accList[17].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[17].accNo + " - " + accList[17].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -723,7 +732,7 @@ namespace ExpenseProcessingSystem.ConstantData
     //NON CASH CONSTANT VALUES
     public class CONSTANT_NC_MONTHLYROSSBILL
     {
-        public static EntryNCViewModel Populate_MONTHLYROSSBILL(DMCurrencyModel currDetails)
+        public static EntryNCViewModel Populate_MONTHLYROSSBILL(DMCurrencyModel currDetails, List<CONSTANT_NC_VALS> accList)
         {
             return new EntryNCViewModel
             {
@@ -737,8 +746,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 433,
-                                ExpNCDtlAcc_Acc_Name = "H90-767-121781 - SUNDRY OTHERS",
+                                ExpNCDtlAcc_Acc_ID = accList[0].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[0].accNo + " - " + accList[0].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -746,8 +755,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 471,
-                                ExpNCDtlAcc_Acc_Name = "H79-767-801000 - BANGKO SENTRAL NG PILIPINAS",
+                                ExpNCDtlAcc_Acc_ID = accList[1].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[1].accNo + " - " + accList[1].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -763,7 +772,7 @@ namespace ExpenseProcessingSystem.ConstantData
     //NON CASH CONSTANT VALUES
     public class CONSTANT_NC_PSSC
     {
-        public static EntryNCViewModel Populate_PSSC(DMCurrencyModel currDetails)
+        public static EntryNCViewModel Populate_PSSC(DMCurrencyModel currDetails, List<CONSTANT_NC_VALS> accList)
         {
             return new EntryNCViewModel
             {
@@ -777,8 +786,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 433,
-                                ExpNCDtlAcc_Acc_Name = "H90-767-121781 - SUNDRY OTHERS",
+                                ExpNCDtlAcc_Acc_ID = accList[0].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[0].accNo + " - " + accList[0].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -786,8 +795,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 488,
-                                ExpNCDtlAcc_Acc_Name = "H79767151226 - TAX",
+                                ExpNCDtlAcc_Acc_ID = accList[1].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[1].accNo + " - " + accList[1].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -795,8 +804,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 2
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 471,
-                                ExpNCDtlAcc_Acc_Name = "H79-767-801000 - BANGKO SENTRAL NG PILIPINAS",
+                                ExpNCDtlAcc_Acc_ID = accList[2].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[2].accNo + " - " + accList[2].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -812,7 +821,7 @@ namespace ExpenseProcessingSystem.ConstantData
     //NON CASH CONSTANT VALUES
     public class CONSTANT_NC_PCHC
     {
-        public static EntryNCViewModel Populate_PCHC(DMCurrencyModel currDetails)
+        public static EntryNCViewModel Populate_PCHC(DMCurrencyModel currDetails, List<CONSTANT_NC_VALS> accList)
         {
             return new EntryNCViewModel
             {
@@ -826,8 +835,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 433,
-                                ExpNCDtlAcc_Acc_Name = "H90-767-121781 - SUNDRY OTHERS",
+                                ExpNCDtlAcc_Acc_ID = accList[0].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[0].accNo + " - " + accList[0].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -835,8 +844,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 488,
-                                ExpNCDtlAcc_Acc_Name = "H79767151226 - TAX",
+                                ExpNCDtlAcc_Acc_ID = accList[1].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[1].accNo + " - " + accList[1].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -844,8 +853,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 2
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 471,
-                                ExpNCDtlAcc_Acc_Name = "H79-767-801000 - BANGKO SENTRAL NG PILIPINAS",
+                                ExpNCDtlAcc_Acc_ID = accList[2].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[2].accNo + " - " + accList[2].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -861,8 +870,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 433,
-                                ExpNCDtlAcc_Acc_Name = "H90-767-121781 - SUNDRY OTHERS",
+                                ExpNCDtlAcc_Acc_ID = accList[3].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[3].accNo + " - " + accList[3].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -870,8 +879,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 488,
-                                ExpNCDtlAcc_Acc_Name = "H79767151226 - TAX",
+                                ExpNCDtlAcc_Acc_ID = accList[4].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[4].accNo + " - " + accList[4].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -879,8 +888,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 2
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 471,
-                                ExpNCDtlAcc_Acc_Name = "H79-767-801000 - BANGKO SENTRAL NG PILIPINAS",
+                                ExpNCDtlAcc_Acc_ID = accList[5].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[5].accNo + " - " + accList[5].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -896,7 +905,7 @@ namespace ExpenseProcessingSystem.ConstantData
     //NON CASH CONSTANT VALUES
     public class CONSTANT_NC_DEPRECIATION
     {
-        public static EntryNCViewModel Populate_DEPRECIATION(DMCurrencyModel currDetails)
+        public static EntryNCViewModel Populate_DEPRECIATION(DMCurrencyModel currDetails, List<CONSTANT_NC_VALS> accList)
         {
             return new EntryNCViewModel
             {
@@ -910,8 +919,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 480,
-                                ExpNCDtlAcc_Acc_Name = "H99-767-31115 (51205) - DEP ON BANK PREMISES",
+                                ExpNCDtlAcc_Acc_ID = accList[0].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[0].accNo + " - " + accList[0].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -919,8 +928,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 481,
-                                ExpNCDtlAcc_Acc_Name = "H79-767-1600013 (16205) - BK PREMISES ACCUM DEPREC-LEASEHOLD IMPROV",
+                                ExpNCDtlAcc_Acc_ID = accList[1].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[1].accNo + " - " + accList[1].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -936,8 +945,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 482,
-                                ExpNCDtlAcc_Acc_Name = "H99-767-131123 (51205) -  DEPR ON BK FIXTURES-DEPRECIATION",
+                                ExpNCDtlAcc_Acc_ID = accList[2].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[2].accNo + " - " + accList[2].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -945,8 +954,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 483,
-                                ExpNCDtlAcc_Acc_Name = "H79-767-170018 (16409) - ACCUM DEPRE FUR FIX&EQUI-FURNITURE&FIX",
+                                ExpNCDtlAcc_Acc_ID = accList[3].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[3].accNo + " - " + accList[3].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -962,8 +971,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 484,
-                                ExpNCDtlAcc_Acc_Name = "B99-767-111115 (54122) - DEPREC SOFTWARE",
+                                ExpNCDtlAcc_Acc_ID = accList[4].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[4].accNo + " - " + accList[4].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -971,8 +980,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 485,
-                                ExpNCDtlAcc_Acc_Name = "B79-767-111111 (17146) - DEF ASST. SYS. - DEV",
+                                ExpNCDtlAcc_Acc_ID = accList[5].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[5].accNo + " - " + accList[5].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -988,7 +997,7 @@ namespace ExpenseProcessingSystem.ConstantData
     //NON CASH CONSTANT VALUES
     public class CONSTANT_NC_PETTYCASHREPLENISHMENT
     {
-        public static EntryNCViewModel Populate_PETTYCASHREPLENISHMENT(DMCurrencyModel currDetails)
+        public static EntryNCViewModel Populate_PETTYCASHREPLENISHMENT(DMCurrencyModel currDetails, List<CONSTANT_NC_VALS> accList)
         {
             return new EntryNCViewModel
             {
@@ -1002,8 +1011,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 486,
-                                ExpNCDtlAcc_Acc_Name = "B60-767-151129 (00204) - PETTY CASH",
+                                ExpNCDtlAcc_Acc_ID = accList[0].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[0].accNo + " - " + accList[0].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -1011,8 +1020,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 487,
-                                ExpNCDtlAcc_Acc_Name = "B79-767-111111 (14017) - COMPUTER SUSPENSE",
+                                ExpNCDtlAcc_Acc_ID = accList[1].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[1].accNo + " - " + accList[1].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
@@ -1060,7 +1069,7 @@ namespace ExpenseProcessingSystem.ConstantData
     //NON CASH CONSTANT VALUES
     public class CONSTANT_NC_JSPAYROLL
     {
-        public static EntryNCViewModel Populate_JSPAYROLL(DMCurrencyModel currDetailsPHP, DMCurrencyModel currDetailsUSD)
+        public static EntryNCViewModel Populate_JSPAYROLL(DMCurrencyModel currDetailsPHP, DMCurrencyModel currDetailsUSD, List<CONSTANT_NC_VALS> accList)
         {
             return new EntryNCViewModel
             {
@@ -1074,8 +1083,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 490,
-                                ExpNCDtlAcc_Acc_Name = "H99-767-111115 - PERSONNEL EXPENSE JAP STAFF",
+                                ExpNCDtlAcc_Acc_ID = accList[0].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[0].accNo + " - " + accList[0].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
@@ -1083,8 +1092,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 487,
-                                ExpNCDtlAcc_Acc_Name = "B79-767-111111 - COMPUTER SUSPENSE",
+                                ExpNCDtlAcc_Acc_ID = accList[1].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[1].accNo + " - " + accList[1].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
@@ -1100,8 +1109,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 487,
-                                ExpNCDtlAcc_Acc_Name = "B79-767-111111 - COMPUTER SUSPENSE",
+                                ExpNCDtlAcc_Acc_ID = accList[2].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[2].accNo + " - " + accList[2].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
@@ -1109,8 +1118,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 491,
-                                ExpNCDtlAcc_Acc_Name = "H79-767-151234 - W/H TAX SALARIES & ALLOW (JAP)",
+                                ExpNCDtlAcc_Acc_ID = accList[3].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[3].accNo + " - " + accList[3].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
@@ -1126,8 +1135,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 492,
-                                ExpNCDtlAcc_Acc_Name = "B79-789-111111 - INTERENTITY LIAB",
+                                ExpNCDtlAcc_Acc_ID = accList[4].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[4].accNo + " - " + accList[4].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetailsUSD.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetailsUSD.Curr_CCY_ABBR,
@@ -1135,8 +1144,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 494,
-                                ExpNCDtlAcc_Acc_Name = "F60-789-801042 - CITIBANK, N.A. MANILA BRANCH",
+                                ExpNCDtlAcc_Acc_ID = accList[5].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[5].accNo + " - " + accList[5].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetailsUSD.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetailsUSD.Curr_CCY_ABBR,
@@ -1152,8 +1161,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 487,
-                                ExpNCDtlAcc_Acc_Name = "B79-767-111111 - COMPUTER SUSPENSE",
+                                ExpNCDtlAcc_Acc_ID = accList[6].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[6].accNo + " - " + accList[6].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
@@ -1161,8 +1170,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 492,
-                                ExpNCDtlAcc_Acc_Name = "B79-789-111111 - INTERENTITY LIAB",
+                                ExpNCDtlAcc_Acc_ID = accList[7].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[7].accNo + " - " + accList[7].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetailsUSD.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetailsUSD.Curr_CCY_ABBR,
@@ -1178,8 +1187,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 487,
-                                ExpNCDtlAcc_Acc_Name = "B79-767-111111 - COMPUTER SUSPENSE",
+                                ExpNCDtlAcc_Acc_ID = accList[8].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[8].accNo + " - " + accList[8].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
@@ -1187,8 +1196,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 493,
-                                ExpNCDtlAcc_Acc_Name = "H90-767-121684 - WELFARE OTHERS",
+                                ExpNCDtlAcc_Acc_ID = accList[9].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[9].accNo + " - " + accList[9].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
@@ -1204,7 +1213,7 @@ namespace ExpenseProcessingSystem.ConstantData
     //NON CASH CONSTANT VALUES
     public class CONSTANT_NC_RETURN_OF_JSPAYROLL
     {
-        public static EntryNCViewModel Populate_RETURN_OF_JSPAYROLL(DMCurrencyModel currDetailsPHP, DMCurrencyModel currDetailsUSD)
+        public static EntryNCViewModel Populate_RETURN_OF_JSPAYROLL(DMCurrencyModel currDetailsPHP, DMCurrencyModel currDetailsUSD, List<CONSTANT_NC_VALS> accList)
         {
             return new EntryNCViewModel
             {
@@ -1218,8 +1227,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 495,
-                                ExpNCDtlAcc_Acc_Name = "B79-789-111111 - COMPUTER SUSPENSE $",
+                                ExpNCDtlAcc_Acc_ID = accList[0].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[0].accNo + " - " + accList[0].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetailsUSD.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetailsUSD.Curr_CCY_ABBR,
@@ -1227,8 +1236,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 492,
-                                ExpNCDtlAcc_Acc_Name = "B79-789-111111 - INTERENTITY LIAB",
+                                ExpNCDtlAcc_Acc_ID = accList[1].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[1].accNo + " - " + accList[1].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetailsUSD.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetailsUSD.Curr_CCY_ABBR,
@@ -1244,8 +1253,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 492,
-                                ExpNCDtlAcc_Acc_Name = "B79-789-111111 - INTERENTITY LIAB",
+                                ExpNCDtlAcc_Acc_ID = accList[2].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[2].accNo + " - " + accList[2].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetailsUSD.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetailsUSD.Curr_CCY_ABBR,
@@ -1253,8 +1262,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 487,
-                                ExpNCDtlAcc_Acc_Name = "B79-767-111111 - COMPUTER SUSPENSE PHP",
+                                ExpNCDtlAcc_Acc_ID = accList[3].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[3].accNo + " - " + accList[3].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
@@ -1270,8 +1279,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 487,
-                                ExpNCDtlAcc_Acc_Name = "B79-767-111111 - COMPUTER SUSPENSE PHP",
+                                ExpNCDtlAcc_Acc_ID = accList[4].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[4].accNo + " - " + accList[4].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
@@ -1279,8 +1288,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = 1
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 490,
-                                ExpNCDtlAcc_Acc_Name = "H99-767-111115 - PERSONNEL EXPENSE JAP STAFF",
+                                ExpNCDtlAcc_Acc_ID = accList[5].accID,
+                                ExpNCDtlAcc_Acc_Name = accList[5].accNo + " - " + accList[5].accName,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,

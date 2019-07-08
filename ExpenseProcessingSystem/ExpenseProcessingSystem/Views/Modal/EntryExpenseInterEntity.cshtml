@@ -29,7 +29,7 @@
     <tr>
         <td colspan="3"><label id="curr2-lbl">USD Amount</label></td>
         <td colspan="2" id="curr2-abbr">
-            <select id="@Html.IdFor(x => Model.Inter_Currency2_ID)" class="input100 txtAcc" name="@Html.NameFor(x => Model.Inter_Currency2_ID)">
+            <select id="@Html.IdFor(x => Model.Inter_Currency2_ID)" class="input100 txtAcc curr2" name="@Html.NameFor(x => Model.Inter_Currency2_ID)">
                 @foreach (var groepModel in Model.CurrencyList)
                 {
                     if (@groepModel.Value == @Model.Inter_Currency2_ID + "")
@@ -120,7 +120,7 @@
         <tr class="part-tr" id="part2">
             <td colspan="5">@Html.DisplayFor(m => m.interPartList[0].Inter_Particular2[1].Particular_Account_Name)</td>
             <td colspan="4"></td>
-            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency2_ABBR)</td>
+            <td colspan="1" class="curr2-abbr">@Html.DisplayFor(m => m.Inter_Currency2_ABBR)</td>
             <td colspan="1" id="par2-0-1">@Html.DisplayFor(m => m.Inter_Rate)</td>
             <td colspan="2" id="par2-1">@Html.DisplayFor(m => m.interPartList[0].Inter_Particular2[1].Particular_Credit_Amount)</td>
             @Html.HiddenFor(m => m.interPartList[0].Inter_Particular2[1].Particular_Acc_ID)
@@ -136,7 +136,7 @@
         <tr class="part-tr" id="part3">
             <td rowspan=@rowCount colspan="3" id="part3-title"> @Html.DisplayFor(m => m.interPartList[0].InterPart_Particular_Title) </td>
             <td colspan="5">@Html.DisplayFor(m => m.interPartList[0].Inter_Particular3[0].Particular_Account_Name)</td>
-            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency2_ABBR)</td>
+            <td colspan="1" class="curr2-abbr">@Html.DisplayFor(m => m.Inter_Currency2_ABBR)</td>
             <td colspan="1"></td>
             <td colspan="2" id="par3-0">@Html.DisplayFor(m => m.interPartList[0].Inter_Particular3[0].Particular_Debit_Amount)</td>
             <td colspan="4"></td>
@@ -148,7 +148,7 @@
         <tr class="part-tr" id="part3">
             <td colspan="5">@Html.DisplayFor(m => m.interPartList[0].Inter_Particular3[1].Particular_Account_Name)</td>
             <td colspan="4"></td>
-            <td colspan="1">@Html.DisplayFor(m => m.Inter_Currency2_ABBR)</td>
+            <td colspan="1" class="curr2-abbr">@Html.DisplayFor(m => m.Inter_Currency2_ABBR)</td>
             <td colspan="1"></td>
             <td colspan="2" id="par3-1">@Html.DisplayFor(m => m.interPartList[0].Inter_Particular3[1].Particular_Credit_Amount)</td>
             @Html.HiddenFor(m => m.interPartList[0].Inter_Particular3[1].Particular_Acc_ID)
@@ -218,6 +218,13 @@
             else if ((curr2Val != 0) && isChk1 && (conv1Val != 0)) {
                 UpdateParticulars2(curr2Val, conv1Val);
             }
+        });
+
+        $(".curr2").on("change", function (e) {
+            e.stopImmediatePropagation();
+            var val = $(this).find("option:selected").text();
+            $("#convertCurr1").text(val);
+            $(".curr2-abbr").text(val);
         });
         $(".modal-footer2").on("click", "#saveBtnEntry", function () {
             if ($(this).parent().siblings().find('h4.modal-title', this).text() == "Inter-Entity") {

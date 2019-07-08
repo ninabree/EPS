@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Xml;
 using ExpenseProcessingSystem.ConstantData;
 using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Models;
@@ -34,7 +35,28 @@ namespace ExpenseProcessingSystem.Controllers
             _service = new PartialService(_httpContextAccessor, _context);
             _sortService = new SortService();
         }
-
+        public List<CONSTANT_NC_VALS> getNCAccs(string Loc)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load("wwwroot/xml/NonCashAccounts.xml");
+            //var xLSPayroll = xelem.Element("LSPAYROLL").Value;
+            XmlNodeList nodeList = doc.SelectNodes(Loc);
+            List<CONSTANT_NC_VALS> valList = new List<CONSTANT_NC_VALS>();
+            foreach (XmlNode no in nodeList)
+            {
+                var rawVal = no.InnerText;
+                var acc = _context.DMAccount.Where(x => (x.Account_MasterID == int.Parse(rawVal))
+                                                    && x.Account_isActive == true && x.Account_isDeleted == false).FirstOrDefault();
+                CONSTANT_NC_VALS vals = new CONSTANT_NC_VALS
+                {
+                    accID = acc.Account_ID,
+                    accNo = acc.Account_No,
+                    accName = acc.Account_Name
+                };
+                valList.Add(vals);
+            }
+            return valList;
+        }
 
         // -------------------------------------- [[ NON CASH ]] --------------------------------------
         // [[ Local Payroll ]]
@@ -46,6 +68,7 @@ namespace ExpenseProcessingSystem.Controllers
             EntryNCViewModelList viewModel = new EntryNCViewModelList();
             DMCurrencyModel currDtl = _context.DMCurrency.Where(x => x.Curr_MasterID == 1 && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
             DMCurrencyModel currDtlUSD = _context.DMCurrency.Where(x => x.Curr_MasterID == 2 && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
+
 
             if ((entryID != "0") && (entryID != null) && (categoryID != null))
             {
@@ -66,40 +89,40 @@ namespace ExpenseProcessingSystem.Controllers
 
                 if (categoryID == GlobalSystemValues.NC_LS_PAYROLL.ToString())
                 {
-                    viewModel.EntryNC = CONSTANT_NC_LSPAYROLL.Populate_LSPAYROLL(currDtl);
+                    viewModel.EntryNC = CONSTANT_NC_LSPAYROLL.Populate_LSPAYROLL(currDtl, getNCAccs("/NONCASHACCOUNTS/LSPAYROLL/ACCOUNT"));
                 }
                 else if (categoryID == GlobalSystemValues.NC_TAX_REMITTANCE.ToString())
                 {
-                    viewModel.EntryNC = CONSTANT_NC_TAXREMITTANCE.Populate_TAXREMITTANCE(currDtl);
+                    viewModel.EntryNC = CONSTANT_NC_TAXREMITTANCE.Populate_TAXREMITTANCE(currDtl, getNCAccs("/NONCASHACCOUNTS/TAXREMITTANCE/ACCOUNT"));
                 }
                 else if (categoryID == GlobalSystemValues.NC_MONTHLY_ROSS_BILL.ToString())
                 {
-                    viewModel.EntryNC = CONSTANT_NC_MONTHLYROSSBILL.Populate_MONTHLYROSSBILL(currDtl);
+                    viewModel.EntryNC = CONSTANT_NC_MONTHLYROSSBILL.Populate_MONTHLYROSSBILL(currDtl, getNCAccs("/NONCASHACCOUNTS/MONTHLYROSS/ACCOUNT"));
                 }
                 else if (categoryID == GlobalSystemValues.NC_PSSC.ToString())
                 {
-                    viewModel.EntryNC = CONSTANT_NC_PSSC.Populate_PSSC(currDtl);
+                    viewModel.EntryNC = CONSTANT_NC_PSSC.Populate_PSSC(currDtl, getNCAccs("/NONCASHACCOUNTS/PSSC/ACCOUNT"));
                 }
                 else if (categoryID == GlobalSystemValues.NC_PCHC.ToString())
                 {
-                    viewModel.EntryNC = CONSTANT_NC_PCHC.Populate_PCHC(currDtl);
+                    viewModel.EntryNC = CONSTANT_NC_PCHC.Populate_PCHC(currDtl, getNCAccs("/NONCASHACCOUNTS/PCHC/ACCOUNT"));
                 }
                 else if (categoryID == GlobalSystemValues.NC_DEPRECIATION.ToString())
                 {
-                    viewModel.EntryNC = CONSTANT_NC_DEPRECIATION.Populate_DEPRECIATION(currDtl);
+                    viewModel.EntryNC = CONSTANT_NC_DEPRECIATION.Populate_DEPRECIATION(currDtl, getNCAccs("/NONCASHACCOUNTS/DEPRECIATION/ACCOUNT"));
                 }
                 else if (categoryID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT.ToString())
                 {
-                    viewModel.EntryNC = CONSTANT_NC_PETTYCASHREPLENISHMENT.Populate_PETTYCASHREPLENISHMENT(currDtl);
+                    viewModel.EntryNC = CONSTANT_NC_PETTYCASHREPLENISHMENT.Populate_PETTYCASHREPLENISHMENT(currDtl, getNCAccs("/NONCASHACCOUNTS/PCR/ACCOUNT"));
                     viewModel.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_PETTYCASHREPLENISHMENT.Populate_CDD_Instruc_Sheet(currDtl);
                 }
                 else if (categoryID == GlobalSystemValues.NC_JS_PAYROLL.ToString())
                 {
-                    viewModel.EntryNC = CONSTANT_NC_JSPAYROLL.Populate_JSPAYROLL(currDtl, currDtlUSD);
+                    viewModel.EntryNC = CONSTANT_NC_JSPAYROLL.Populate_JSPAYROLL(currDtl, currDtlUSD, getNCAccs("/NONCASHACCOUNTS/JSPAYROLL/ACCOUNT"));
                 }
                 else if (categoryID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL.ToString())
                 {
-                    viewModel.EntryNC = CONSTANT_NC_RETURN_OF_JSPAYROLL.Populate_RETURN_OF_JSPAYROLL(currDtl, currDtlUSD);
+                    viewModel.EntryNC = CONSTANT_NC_RETURN_OF_JSPAYROLL.Populate_RETURN_OF_JSPAYROLL(currDtl, currDtlUSD, getNCAccs("/NONCASHACCOUNTS/RETURNOFJSPAYROLL/ACCOUNT"));
                     viewModel.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_RETURN_OF_JSPAYROLL.Populate_CDD_Instruc_Sheet(currDtl, currDtlUSD);
                 }
                 else if (categoryID == GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES.ToString())
