@@ -27,6 +27,9 @@ namespace ExpenseProcessingSystem.ConstantData
         //Actual Budget Report
         public const int ActualBudgetReport = 5;
 
+        //Actual Budget Report
+        public const int TransListReport = 7;
+
         //Alphalist of Payees Subject to Withholding Tax Summary
         public const int WTS = 10;
 
@@ -46,6 +49,11 @@ namespace ExpenseProcessingSystem.ConstantData
         //PDF Footer foramt
         public static readonly string PdfFooter1 = "--footer-left \" PAGE => [page] of [toPage] \" --footer-right \" Printed Date => " + DateTime.Today.ToShortDateString() + "\" --footer-font-size \"9\" --footer-spacing 3 --footer-font-name \"calibri light\"";
         public static readonly string PdfFooter2 = "--footer-left \" " + DateTime.Now.ToString("dddd, MMMM dd,yyyy h:mm:sstt") + " \" --footer-center \" Page [page] of [toPage] \" --footer-font-size \"9\" --footer-spacing 3 --footer-font-name \"calibri light\"";
+
+        //Non-Cash category distinguish value
+        public static readonly int REP_NC_LS_PAYROLL = GlobalSystemValues.NC_LS_PAYROLL + 50;
+        public static readonly int REP_NC_JS_PAYROLL = GlobalSystemValues.NC_JS_PAYROLL + 50;
+        public static readonly int REP_NC_TAX_REMITTANCE = GlobalSystemValues.NC_TAX_REMITTANCE + 50;
 
         //========================================================================
         //Public IEnumerable class constant values
@@ -265,49 +273,49 @@ namespace ExpenseProcessingSystem.ConstantData
             {
                 new HomeReportSubTypesModel
                 {
-                    Id = 1,
+                    Id = 0,
                     SubTypeName = "All",
                     ParentTypeId = 7
                 },
                 new HomeReportSubTypesModel
                 {
-                    Id = 2,
+                    Id = GlobalSystemValues.TYPE_CV,
                     SubTypeName = "Check Disbursement",
                     ParentTypeId = 7
                 },
                 new HomeReportSubTypesModel
                 {
-                    Id = 3,
+                    Id = GlobalSystemValues.TYPE_PC,
                     SubTypeName = "Petty Cash Disbursement",
                     ParentTypeId = 7
                 },
                 new HomeReportSubTypesModel
                 {
-                    Id = 4,
+                    Id = GlobalSystemValues.TYPE_DDV,
                     SubTypeName = "Direct Deposit Disbursement",
                     ParentTypeId = 7
                 },
                 new HomeReportSubTypesModel
                 {
-                    Id = 5,
+                    Id = GlobalSystemValues.TYPE_SS,
                     SubTypeName = "Cash Advance",
                     ParentTypeId = 7
                 },
                 new HomeReportSubTypesModel
                 {
-                    Id = 6,
+                    Id = REP_NC_LS_PAYROLL,
                     SubTypeName = "Local Payroll",
                     ParentTypeId = 7
                 },
                 new HomeReportSubTypesModel
                 {
-                    Id = 7,
+                    Id = REP_NC_JS_PAYROLL,
                     SubTypeName = "Japanese Payroll",
                     ParentTypeId = 7
                 },
                 new HomeReportSubTypesModel
                 {
-                    Id = 8,
+                    Id = REP_NC_TAX_REMITTANCE,
                     SubTypeName = "Tax Remittances",
                     ParentTypeId = 7
                 },

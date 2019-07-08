@@ -483,12 +483,39 @@ namespace ExpenseProcessingSystem.Controllers
 
         //Populate the Report sub-type list to dropdownlist depends on the selected Report Type
         [AcceptVerbs("GET")]
-        public JsonResult GetReportSubType(string ReportTypeID)
+        public JsonResult GetReportSubType(int ReportTypeID)
         {
-            if (!string.IsNullOrWhiteSpace(ReportTypeID))
+            if(ReportTypeID == 8)
+            {
+                var accounts = _service.getAccountListIncHist();
+
+                List<string> accList = new List<string>();
+                foreach (var i in accounts)
+                {
+                    accList.Add(i.Account_No + " - " + i.Account_Name);
+                }
+
+                List<HomeReportSubTypeAccModel> subtypes = new List<HomeReportSubTypeAccModel>();
+
+                subtypes.Add(new HomeReportSubTypeAccModel
+                {
+                    Id = "0",
+                    SubTypeName = "All"
+                });
+                foreach (var i in accList.Distinct())
+                {
+                    subtypes.Add(new HomeReportSubTypeAccModel
+                    {
+                        Id = i.Replace("-", "").Replace(" ", "").Substring(0, 12),
+                        SubTypeName = i
+                    });
+                }
+                return Json(subtypes);
+            }
+            if (ReportTypeID != 0)
             {
                 return Json(ConstantData.HomeReportConstantValue.GetReportSubTypeData()
-                    .Where(m => m.ParentTypeId == Convert.ToInt32(ReportTypeID)).ToList());
+                    .Where(m => m.ParentTypeId == ReportTypeID).ToList());
             }
             return null;
         }
@@ -596,7 +623,19 @@ namespace ExpenseProcessingSystem.Controllers
                         ReportCommonVM = repComVM
                     };
                     break;
+                //For Actual Budget Report
+                case ConstantData.HomeReportConstantValue.TransListReport:
+                    fileName = "TransactionList_" + dateNow;
+                    layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
 
+                    //Get the necessary data from Database
+                    data = new HomeReportDataFilterViewModel
+                    {
+                        HomeReportOutputTransactionList = _service.GetTransactionData(model),
+                        HomeReportFilter = model,
+                        ReportCommonVM = repComVM
+                    };
+                    break;
                 case ConstantData.HomeReportConstantValue.WTS:
                     fileName = "WithholdingTaxSummary_" + dateNow;
                     layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;

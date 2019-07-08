@@ -760,7 +760,23 @@ div.sticky {
 .txtIEInput, .txtIEInfoInput, .txtLiqPhpInput {
     background-color: #FFFBD5;
 }
+input[type=date]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    display: none;
+}
+input[type=date]::-webkit-clear-button {
+    -webkit-appearance: none;
+    display: none;
+}
+input[type=date]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    display: none;
+}
 
+input[type=date]::-ms-clear {
+    -webkit-appearance: none;
+    display: none;
+}
 .divcss {
     background-attachment: scroll;
     background-color: rgb(255, 255, 255);
