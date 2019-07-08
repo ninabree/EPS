@@ -36,6 +36,7 @@ namespace ExpenseProcessingSystem.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly EPSDbContext _context;
         private readonly GOExpressContext _GOContext;
+        private readonly GWriteContext _GwriteContext;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
         private HomeService _service;
         private SortService _sortService;
@@ -43,13 +44,14 @@ namespace ExpenseProcessingSystem.Controllers
         private readonly IStringLocalizer<HomeController> _localizer;
         private IHostingEnvironment _env;
 
-        public HomeController(IHttpContextAccessor httpContextAccessor, EPSDbContext context, GOExpressContext gocontext, IHostingEnvironment hostingEnvironment, IStringLocalizer<HomeController> localizer)
+        public HomeController(IHttpContextAccessor httpContextAccessor, EPSDbContext context, GOExpressContext gocontext, GWriteContext gwritecontext,IHostingEnvironment hostingEnvironment, IStringLocalizer<HomeController> localizer)
         {
             _localizer = localizer;
             _httpContextAccessor = httpContextAccessor;
             _context = context;
             _GOContext = gocontext;
-            _service = new HomeService(_httpContextAccessor, _context, _GOContext, this.ModelState, hostingEnvironment);
+            _GwriteContext = gwritecontext;
+            _service = new HomeService(_httpContextAccessor, _context, _GOContext, _GwriteContext,this.ModelState, hostingEnvironment);
             _sortService = new SortService();
             _env = hostingEnvironment;
         }
@@ -148,13 +150,31 @@ namespace ExpenseProcessingSystem.Controllers
         {
             return View();
         }
+        //-----------Closing Screen-----------------
         [OnlineUserCheck]
-        public IActionResult Close(string sortOrder, string currentFilter, string searchString, int? page)
+        public IActionResult Close(string command = "load")
+        {
+            ClosingViewModel model = new ClosingViewModel();
+            switch (command)
+            {
+                case "load":
+                    model = CloseLoad();
+                    break;
+                case "CloseRBU":
+                    model = CloseRBU();
+                    break;
+                case "b": break;
+            }
+            return View(model);
+        }
+
+        public ClosingViewModel CloseLoad()
         {
             ClosingViewModel model = new ClosingViewModel();
             model.date = DateTime.Now;
             int index = 0;
-            do {
+            do
+            {
                 CloseItems temp = new CloseItems();
                 temp.gBaseTrans = "111,222,333";
                 temp.expTrans = "CV-2019-100001";
@@ -209,8 +229,74 @@ namespace ExpenseProcessingSystem.Controllers
                 index++;
                 model.fcduItems.Add(temp);
             } while (index != 10);
-            return View(model);
+
+            return model;
         }
+        public ClosingViewModel CloseRBU()
+        {
+            ClosingViewModel model = new ClosingViewModel();
+            model.date = DateTime.Now;
+            int index = 0;
+            do
+            {
+                CloseItems temp = new CloseItems();
+                temp.gBaseTrans = "111,222,333";
+                temp.expTrans = "CLOSING TIME!";
+                temp.particulars = "THIS IS A PARTICULAR!";
+                temp.ccy = "PHP";
+                temp.amount = 1000 + ((135 * index) / 2.6);
+                temp.transCount = 2;
+                temp.status = "Posted";
+                index++;
+                model.rbuItems.Add(temp);
+            } while (index != 10);
+            index = 0;
+            do
+            {
+                CloseItems temp = new CloseItems();
+                temp.gBaseTrans = "111,222,333";
+                temp.expTrans = "CLOSING TIME!";
+                temp.particulars = "THIS IS A PARTICULAR!";
+                temp.ccy = "USD";
+                temp.amount = 1000 + ((135 * index) / 2.6);
+                temp.transCount = 2;
+                temp.status = "Posted";
+                index++;
+                model.rbuItems.Add(temp);
+            } while (index != 10);
+
+            index = 0;
+            do
+            {
+                CloseItems temp = new CloseItems();
+                temp.gBaseTrans = "111,222,333";
+                temp.expTrans = "CLOSING TIME!";
+                temp.particulars = "THIS IS A PARTICULAR!";
+                temp.ccy = "PHP";
+                temp.amount = 1000 + ((135 * index) / 2.6);
+                temp.transCount = 2;
+                temp.status = "Posted";
+                index++;
+                model.fcduItems.Add(temp);
+            } while (index != 10);
+            index = 0;
+            do
+            {
+                CloseItems temp = new CloseItems();
+                temp.gBaseTrans = "111,222,333";
+                temp.expTrans = "CLOSING TIME!";
+                temp.particulars = "THIS IS A PARTICULAR!";
+                temp.ccy = "USD";
+                temp.amount = 1000 + ((135 * index) / 2.6);
+                temp.transCount = 2;
+                temp.status = "Posted";
+                index++;
+                model.fcduItems.Add(temp);
+            } while (index != 10);
+
+            return model;
+        }
+        //----------End Closing Screen--------------
         [OnlineUserCheck]
         [ImportModelState]
         public IActionResult DM(DMViewModel vm, string sortOrder, string currentFilter, string tblName, string colName, string searchString, int? page, string partialName)
