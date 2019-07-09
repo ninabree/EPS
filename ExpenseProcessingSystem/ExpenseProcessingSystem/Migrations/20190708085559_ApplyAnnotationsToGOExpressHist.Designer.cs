@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    [Migration("20190708052551_ApplyAnnotationsToGOExpressHist")]
+    [Migration("20190708085559_ApplyAnnotationsToGOExpressHist")]
     partial class ApplyAnnotationsToGOExpressHist
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -955,9 +955,9 @@ namespace ExpenseProcessingSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("TL_ExpenseDtlID");
-
                     b.Property<int>("TL_ExpenseID");
+
+                    b.Property<int>("TL_GoExpHist_ID");
 
                     b.Property<int>("TL_GoExpress_ID");
 
@@ -1334,6 +1334,23 @@ namespace ExpenseProcessingSystem.Migrations
                     b.HasKey("GOExpHist_Id");
 
                     b.ToTable("GOExpressHist");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.GwriteTransList", b =>
+                {
+                    b.Property<int>("GW_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("GW_GWrite_ID");
+
+                    b.Property<string>("GW_Status");
+
+                    b.Property<int>("GW_TransID");
+
+                    b.HasKey("GW_ID");
+
+                    b.ToTable("GwriteTransLists");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.HomeNotifModel", b =>

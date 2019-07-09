@@ -6,18 +6,18 @@ namespace ExpenseProcessingSystem.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "ExpenseDetailModelExpDtl_ID",
+            migrationBuilder.AddColumn<int>(
+                name: "ExpenseDetailID",
                 table: "GOExpressHist",
-                newName: "ExpenseDetailID");
+                nullable: false,
+                defaultValue: 0);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "ExpenseDetailModelExpDtl_ID",
-                table: "GOExpressHist",
-                newName: "ExpenseDetailID");
+            migrationBuilder.DropColumn(
+                name: "ExpenseDetailID",
+                table: "GOExpressHist");
         }
     }
 }
