@@ -1431,10 +1431,10 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             });
             return currList;
         }
-        public List<SelectListItem> getCurrencyIDSelectList()
+        public List<SelectListItem> getCurrencyIDSelectList(int Curr1ID)
         {
             List<SelectListItem> currList = new List<SelectListItem>();
-            _context.DMCurrency.Where(x => x.Curr_isDeleted == false && x.Curr_isActive == true).ToList().ForEach(x => {
+            _context.DMCurrency.Where(x => x.Curr_isDeleted == false && x.Curr_isActive == true && x.Curr_ID != Curr1ID).ToList().ForEach(x => {
                 currList.Add(new SelectListItem() { Text = x.Curr_CCY_ABBR, Value = x.Curr_ID + "" });
             });
             return currList;
