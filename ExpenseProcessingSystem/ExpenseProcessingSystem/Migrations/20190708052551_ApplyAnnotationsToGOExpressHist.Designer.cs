@@ -4,18 +4,20 @@ using ExpenseProcessingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    partial class EPSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190708052551_ApplyAnnotationsToGOExpressHist")]
+    partial class ApplyAnnotationsToGOExpressHist
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.0-rtm-35687")
+                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -706,7 +708,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("ExpDtl_Ewt");
 
-                    b.Property<int>("ExpDtl_Ewt_Payor_Name_ID");
+                    b.Property<string>("ExpDtl_Ewt_Payor_Name");
 
                     b.Property<bool>("ExpDtl_Fbt");
 
@@ -953,9 +955,9 @@ namespace ExpenseProcessingSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("TL_ExpenseID");
+                    b.Property<int>("TL_ExpenseDtlID");
 
-                    b.Property<int>("TL_GoExpHist_ID");
+                    b.Property<int>("TL_ExpenseID");
 
                     b.Property<int>("TL_GoExpress_ID");
 
@@ -1332,23 +1334,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.HasKey("GOExpHist_Id");
 
                     b.ToTable("GOExpressHist");
-                });
-
-            modelBuilder.Entity("ExpenseProcessingSystem.Models.GwriteTransList", b =>
-                {
-                    b.Property<int>("GW_ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("GW_GWrite_ID");
-
-                    b.Property<string>("GW_Status");
-
-                    b.Property<int>("GW_TransID");
-
-                    b.HasKey("GW_ID");
-
-                    b.ToTable("GwriteTransLists");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.HomeNotifModel", b =>

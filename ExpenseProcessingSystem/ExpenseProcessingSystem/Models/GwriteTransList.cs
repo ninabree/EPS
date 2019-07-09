@@ -7,14 +7,12 @@ using System.Threading.Tasks;
 
 namespace ExpenseProcessingSystem.Models
 {
-    public class ExpenseTransList
+    public class GwriteTransList
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int TL_ID { get; set; }
-        public int TL_ExpenseID { get; set; }
-        public int TL_GoExpHist_ID { get; set; }
-        public bool TL_Liquidation { get; set; }
-        public int TL_GoExpress_ID { get; set; }
-        public int TL_TransID { get; set; }
+        public int GW_ID { get; set; }
+        public int GW_GWrite_ID { get; set; }
+        public int GW_TransID { get; set; }
+        public string GW_Status { get; set; }
     }
 }

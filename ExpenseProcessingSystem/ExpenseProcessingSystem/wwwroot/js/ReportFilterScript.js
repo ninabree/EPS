@@ -94,14 +94,14 @@
         dtPeriodFrom.val(today);
         dtPeriodTo.val(today);
 
-        if (ReportType == "2") {
+        if (ReportType == 2) {
             radioPeriod1.prop('checked', true);
             radioPeriod1.removeAttr("disabled");
             ddlYear.removeAttr("disabled");
             ddlMonth.removeAttr("disabled");
             ddlSignatory.removeAttr("disabled");
 
-        } else if (ReportType == "3") {
+        } else if (ReportType == 3) {
             radioPeriod1.prop('checked', true);
             ddlMonth.removeAttr("disabled");
             ddlYear.removeAttr("disabled");
@@ -112,13 +112,13 @@
             divChkTax.css('background-color', '');
             ddlSignatory.removeAttr("disabled");
 
-        } else if (ReportType == "5") {
+        } else if (ReportType == 5) {
             radioPeriod1.prop('checked', true);
             radioPeriod1.removeAttr("disabled");
             ddlYear.removeAttr("disabled");
             ddlMonth.removeAttr("disabled");
 
-        } else if (ReportType == "10") {
+        } else if (ReportType == 8 || ReportType == 10) {
             radioPeriod1.prop('checked', true);
             radioPeriod1.removeAttr("disabled");
             radioPeriod3.removeAttr("disabled");

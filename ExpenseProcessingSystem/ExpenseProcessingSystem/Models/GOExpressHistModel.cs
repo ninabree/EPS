@@ -179,6 +179,7 @@ namespace ExpenseProcessingSystem.Models
         public string GOExpHist_Entry42Division { get; set; }
         public string GOExpHist_Entry42InterAmt { get; set; }
         public string GOExpHist_Entry42InterRate { get; set; }
-        public ExpenseEntryModel ExpenseEntryModel { get; set; }
+        public int ExpenseEntryID { get; set; }
+        public int ExpenseDetailID { get; set; }
     }
 }
