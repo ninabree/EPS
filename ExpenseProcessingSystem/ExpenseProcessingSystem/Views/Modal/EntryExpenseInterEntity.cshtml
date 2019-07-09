@@ -172,25 +172,23 @@
         var conv1Amt = $("table").find("#convertAmt1");
         var conv2Amt = $("table").find("#convertAmt2");
 
-        //set fields to default
-        //defaultSet();
-        //defaultVals();
-        //var isChk1 = false;
-        //var isChk2 = false;
-
         var curr1Val = $(curr1Amt).val();
         var curr2Val = $(curr2Amt).val();
         isChk();
         var conv1Val = $(conv1Amt).val();
         var conv2Val = $(conv2Amt).val();
         if ((curr1Val != 0) && isChk2 && (conv2Val != 0)) {
+            alert("In Update Particulars 1");
             UpdateParticulars1(curr1Val, conv2Val);
         }
         else if ((curr2Val != 0) && isChk1 && (conv1Val != 0)) {
+            alert("In Update Particulars2");
             UpdateParticulars2(curr2Val, conv1Val);
         } else {
+            alert("In Default Inter");
             defaultInter();
         }
+        alert("In Default Check");
         defaultCheck();
 
         $(".convertChk").on("change", function (e) {
@@ -226,12 +224,26 @@
             $("#convertCurr1").text(val);
             $(".curr2-abbr").text(val);
         });
-        $(".modal-footer2").on("click", "#saveBtnEntry", function () {
+        $(".modal-footer2").on("click", "#saveBtnEntry", function (e) {
+            e.stopImmediatePropagation();
             if ($(this).parent().siblings().find('h4.modal-title', this).text() == "Inter-Entity") {
                 var itemNo = $("#parentIdInter").val();
                 isChk();
+                //alert("Curr 1 ID --> " + $("#curr1-abbr").find("input#Inter_Currency1_ID").val());
+                //alert("Curr 2 ID --> " + $("#curr2-abbr").find("#Inter_Currency2_ID option:selected").val());
+                //alert("Curr 1 Amount --> " + $(curr1Amt).val());
+                //alert("Curr 2 Amount --> " + $(curr2Amt).val());
+                //alert("Conv 1 Amount --> " + $(conv1Amt).val());
+                //alert("Conv 2 Amount --> " + $(conv2Amt).val());
+                //alert("Check 1 --> " + isChk1);
+                //alert("Check 2 --> " + isChk2);
+                //alert("Inter Rate --> " + $("table").find("#Inter_Rate").val());
+                //alert("Debit Gross --> " + $("#par1-0").text());
+
+
                 $("#EntryDDV_" + itemNo + "__interDetails_Inter_Currency1_ID").val($("#curr1-abbr").find("input#Inter_Currency1_ID").val());
                 $("#EntryDDV_" + itemNo + "__interDetails_Inter_Currency2_ID").val($("#curr2-abbr").find("#Inter_Currency2_ID option:selected").val());
+                $("#EntryDDV_" + itemNo + "__interDetails_Inter_Currency2_ABBR").val($("#curr2-abbr").find("#Inter_Currency2_ID option:selected").text());
                 $("#EntryDDV_" + itemNo + "__interDetails_Inter_Currency1_Amount").val($(curr1Amt).val());
                 $("#EntryDDV_" + itemNo + "__interDetails_Inter_Currency2_Amount").val($(curr2Amt).val());
                 $("#EntryDDV_" + itemNo + "__interDetails_Inter_Convert1_Amount").val($(conv1Amt).val());
@@ -418,7 +430,7 @@
                     var netEwt = grossAmt - ewt;
 
                     $("#" + itemNo).find(".txtCredEwt").val(ewt);
-                    $("#" + itemNo).find(".txtCredCash").val(netEwt);
+                    $("#" + itemNo).find(".txtCredCash").val(roundNumber(netEwt, 2));
                 } else {
                     var ewtAmount = grossAmt * (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100);
                     $("#" + itemNo).find(".txtCredEwt").val(roundNumber(ewtAmount, 2));
@@ -426,7 +438,7 @@
                 }
             } else {
                 $("#" + itemNo).find(".txtCredEwt").val(0);
-                $("#" + itemNo).find(".txtCredCash").val(grossAmt);
+                $("#" + itemNo).find(".txtCredCash").val(roundNumber(grossAmt, 2));
             }
 
             var gross = $(".txtGross");
@@ -451,7 +463,7 @@
 
             $("#grossTotal").val(grossTotal);
             $("#credEwtTotal").val(ewtSubTotal);
-            $("#credCashTotal").val(cashSubTotal);
+            $("#credCashTotal").val(roundNumber(cashSubTotal, 2));
             $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
         }
     });

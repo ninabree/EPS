@@ -3314,21 +3314,21 @@ namespace ExpenseProcessingSystem.Services
                     dept_Name = _context.DMDept.Where(x => x.Dept_ID == dtl.d.ExpDtl_Dept && x.Dept_isActive == true).Select(x => x.Dept_Name).FirstOrDefault(),
                     chkVat = (dtl.d.ExpDtl_Vat <= 0) ? false : true,
                     vat = dtl.d.ExpDtl_Vat,
-                    vat_Name = _context.DMVAT.Where(x => x.VAT_ID == dtl.d.ExpDtl_Vat && x.VAT_isActive == true).Select(x => x.VAT_Name).FirstOrDefault(),
-                    chkEwt = dtl.d.ExpDtl_isEwt,
+                    //vat_Name is actually the rate
+                    vat_Name = _context.DMVAT.Where(x => x.VAT_ID == dtl.d.ExpDtl_Vat && x.VAT_isActive == true).Select(x => x.VAT_Rate.ToString()).FirstOrDefault(),
+                    chkEwt = (dtl.d.ExpDtl_Ewt <= 0) ? false : true,
                     ewt = dtl.d.ExpDtl_isEwt ? 0 : dtl.d.ExpDtl_Ewt,
                     ewt_Name = _context.DMTR.Where(x => x.TR_ID == dtl.d.ExpDtl_Ewt).Select(x => x.TR_Tax_Rate.ToString()).FirstOrDefault(),
-                    ewt_Payor_Name = (dtl.d.ExpDtl_Ewt_Payor_Name != null) ? _context.DMTR.Where(x => x.TR_ID == int.Parse(dtl.d.ExpDtl_Ewt_Payor_Name)).Select(x => x.TR_Tax_Rate.ToString()).FirstOrDefault() : "",
+                    ewt_Payor_Name = (dtl.d.ExpDtl_Ewt_Payor_Name_ID >= 0) ? _context.DMVendor.Where(x => x.Vendor_ID == dtl.d.ExpDtl_Ewt_Payor_Name_ID).Select(x => x.Vendor_Name).FirstOrDefault() : "",
                     ccy = dtl.d.ExpDtl_Ccy,
                     ccy_Name = _context.DMCurrency.Where(x => x.Curr_ID == dtl.d.ExpDtl_Ccy && x.Curr_isActive == true).Select(x => x.Curr_CCY_ABBR).FirstOrDefault(),
                     debitGross = dtl.d.ExpDtl_Debit,
                     credEwt = dtl.d.ExpDtl_Credit_Ewt,
                     credCash = dtl.d.ExpDtl_Credit_Cash,
-                    ewtPayorName = (dtl.d.ExpDtl_Ewt_Payor_Name != null) ? _context.DMTR.Where(x => x.TR_ID == int.Parse(dtl.d.ExpDtl_Ewt_Payor_Name)).Select(x => x.TR_Tax_Rate.ToString()).FirstOrDefault() : "",
+                    ewt_Payor_Name_ID = (dtl.d.ExpDtl_Ewt_Payor_Name_ID >= 0) ? dtl.d.ExpDtl_Ewt_Payor_Name_ID : 0,
                     interDetails = interDetail,
                     gBaseRemarksDetails = remarksDtl
                 };
-
                 ddvList.Add(ddvDtl);
             }
 
@@ -3700,7 +3700,7 @@ namespace ExpenseProcessingSystem.Services
                         ExpDtl_Debit = ddv.debitGross,
                         ExpDtl_Credit_Ewt = ddv.credEwt,
                         ExpDtl_Credit_Cash = ddv.credCash,
-                        ExpDtl_Ewt_Payor_Name = ddv.ewtPayorName,
+                        ExpDtl_Ewt_Payor_Name_ID = ddv.ewt_Payor_Name_ID,
                         ExpenseEntryInterEntity = expenseInter,
                         ExpenseEntryGbaseDtls = expenseGbase
                     };
@@ -3723,7 +3723,17 @@ namespace ExpenseProcessingSystem.Services
                     ExpenseEntryDetails = expenseDtls,
                     Expense_Number = getExpTransNo(expenseType)
                 };
-                _context.ExpenseEntry.Add(expenseEntry);
+
+                if (entryModel.entryID == 0)
+                {
+                    _context.ExpenseEntry.Add(expenseEntry);
+                }
+                else
+                {
+                    // Update entity in DbSet
+                    expenseEntry.Expense_ID = entryModel.entryID;
+                    _context.ExpenseEntry.Update(expenseEntry);
+                }
                 _context.SaveChanges();
                 return expenseEntry.Expense_ID;
             }

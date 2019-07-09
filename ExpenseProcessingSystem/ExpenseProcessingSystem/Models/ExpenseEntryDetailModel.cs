@@ -27,7 +27,7 @@ namespace ExpenseProcessingSystem.Models
         public int ExpDtl_Amor_Month { get; set; }
         public int ExpDtl_Amor_Day { get; set; }
         public int ExpDtl_Amor_Duration { get; set; }
-        public string ExpDtl_Ewt_Payor_Name { get; set; }
+        public int ExpDtl_Ewt_Payor_Name_ID { get; set; }
         public int ExpDtl_SS_Payee { get; set; }
         public ExpenseEntryModel ExpenseEntryModel { get; set; }
 

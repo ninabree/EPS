@@ -39,6 +39,9 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         [Display(Name = "EWT")]
         public int ewt { get; set; }
         public string ewt_Name { get; set; }
+        [FalseValidation("chkEwt"), TextValidation]
+        [Display(Name = "EWT - Tax Payor's Name")]
+        public int ewt_Payor_Name_ID { get; set; }
         public string ewt_Payor_Name { get; set; }
         [NotNullValidations]
         [Display(Name = "Currency")]
@@ -53,9 +56,6 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         [NotNullValidations, AmountValidation]
         [Display(Name = "Credit - Cash")]
         public float credCash { get; set; }
-        [FalseValidation("chkEwt"), TextValidation]
-        [Display(Name = "EWT - Tax Payor's Name")]
-        public string ewtPayorName { get; set; }
         //[ListValidation("inter_entity")]
         [Display(Name = "Inter-Entity Details")]
         public DDVInterEntityViewModel interDetails { get; set; }
