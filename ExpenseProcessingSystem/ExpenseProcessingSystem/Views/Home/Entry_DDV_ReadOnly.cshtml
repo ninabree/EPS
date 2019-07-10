@@ -67,7 +67,7 @@
                             <div class="flex-sb">
                                 <input value="@Model.EntryDDV[i].GBaseRemarks" class="input100 w-80 GBaseRemarksTitle" disabled />
                                 <div id="remark_@i">
-                                    <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
+                                    <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5 gRemarksReadOnly"></a>
                                     @for (int y = 0; y < Model.EntryDDV[i].gBaseRemarksDetails.Count(); y++)
                                     {
                                         @Html.HiddenFor(x => Model.EntryDDV[i].gBaseRemarksDetails[y].docType);
@@ -84,7 +84,7 @@
                         <td><input id="@Model.EntryDDV[i].dept" value="@Model.EntryDDV[i].dept_Name" class="input100" disabled /></td>
                         <td style="text-align:center">@Html.DisplayFor(x => Model.EntryDDV[i].chkVat, new { @class = "chkVat" })</td>
                         <td><input value="@Model.EntryDDV[i].vat_Name" class="input100" disabled /></td>
-                        <td style="text-align:center">@Html.DisplayFor(x => Model.EntryDDV[i].chkEwt, new { @class = "chkEwt"})</td>
+                        <td style="text-align:center">@Html.DisplayFor(x => Model.EntryDDV[i].chkEwt, new { @class = "chkEwt" })</td>
                         <td><input value="@Model.EntryDDV[i].ewt_Name" class="input100" disabled /></td>
                         <td><input value="@Model.EntryDDV[i].ccy_Name" class="input100" disabled /></td>
                         <td><input value="@Model.EntryDDV[i].debitGross" class="input100 txtGross" disabled /></td>
@@ -137,6 +137,8 @@
                     </tr>
                 }
 
+                @Html.HiddenFor(x => x.entryID)
+                <input value="DDV" id="expenseType" type="hidden" />
                 <tr>
                     <td style="border:none; background-color:#f2f2f2" rowspan="2"><a id="addRow" href="#" class="glyphicon glyphicon-plus"></a></td>
                     <td colspan="8" style="text-align:right; border:none; background-color:#f2f2f2">Subtotal : </td>
@@ -258,6 +260,9 @@
         }
     </div>
 
+    <div id="modalDiv">
+        @Html.Partial("ModalGbase")
+    </div>
     @Html.Partial("ModalPartial2")
 </div>
 
@@ -309,8 +314,8 @@
             //remove prev contents
             modalDivBody2.empty();
             modalDivHeader2.find('h4').remove();
-            modalDivFooter2.find("#add_row_btn").remove();
-            modalDivFooter2.find("#saveBtnEntry").remove();
+            modalDivFooter2.find("#add_row_btn").remove(); //
+            modalDivFooter2.find("#saveBtnEntry").remove(); //
 
             //set modal header title
             modalDivHeader2.append('<h4 class="modal-title">Inter-Entity</h4>');
@@ -350,11 +355,15 @@
             var credCash = $(".txtCredCash");
 
             var isInter = $("#" + pNode.id).find("#EntryDDV_" + pNode.id.substring(5) + "__inter_entity").is(':checked');
+            var btnAttr = $("#" + pNode.id).find("#req_" + pNode.id.substring(5)).find(".reqBtn");
+
             if (isInter) {
-                var btnAttr = $("#" + pNodeID).find("#req_" + pNode.id.substring(5)).find(".reqBtn");
                 btnAttr.attr("href", "#");
                 btnAttr.attr("class", "expenseInterEntity reqBtn glyphicon glyphicon-list-alt");
+            } else {
+                btnAttr.removeClass("expenseInterEntity");
             }
+
             var grossTotal = 0;
             var ewtSubTotal = 0;
             var cashSubTotal = 0;

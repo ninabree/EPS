@@ -12,6 +12,8 @@
             var screen = $("#_screen").val();
             idsArr.push(pNode);
             ModalPopup2('Modal', 'EntryGbaseRemarks', 'Gbase Remarks', idsArr, screen);
+
+            var modalDivFooter = $('.modal-footer');
         }
     });
 
@@ -187,6 +189,7 @@
         var modalDivBody = $('.modal-body');
         var modalDivHeader = $('.modal-header');
         var modalDivFooter = $('.modal-footer');
+        var isReadOnly = $("#" + idsArr[0]).find(".gRemarks").hasClass("gRemarksReadOnly");
 
         $.ajax({
             url: "RedirectCont2/",
@@ -206,8 +209,11 @@
 
                     gbaseRemarksSet(idsArr[0], screen)
 
-                    if ($("#add_row_btn").length <= 0) {
+                    if ($("#add_row_btn").length <= 0 && !isReadOnly) {
                         modalDivFooter.append('<button type="button" id="add_row_btn" class="btn table-add">Add Row</button>');
+                    } else if (isReadOnly) {
+                        modalDivFooter.find("#add_row_btn").remove();
+                        modalDivFooter.find("#saveGbase").remove();
                     }
                 }
 
