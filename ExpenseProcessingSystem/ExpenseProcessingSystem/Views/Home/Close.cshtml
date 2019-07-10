@@ -2,19 +2,19 @@
     ViewData["Title"] = "Close";
     string prevCcyRBU = Model.rbuItems.Count > 0 ? Model.rbuItems[0].ccy : "";
     string prevCcyFCDU = Model.fcduItems.Count > 0 ? Model.fcduItems[0].ccy : "";
-    double totalAmount = 0 ;
-    int totalTransCount =  0 ;
+    double totalAmount = 0;
+    int totalTransCount = 0;
     int index = 0;
- }
+}
 
-    @using ExpenseProcessingSystem.ViewModels
+@using ExpenseProcessingSystem.ViewModels
 
 
 
-    @model ClosingViewModel
+@model ClosingViewModel
 
-<div class="tab-content-cont m-t-10">
-    <div id="tbl-lbl">Date: <p class="dis-inline-block">@Html.EditorFor(m => m.date, new { htmlAttributes = new { @class = "input", @type = "date", @readonly = "readonly"} })</p></div>
+<div class="tab-content-cont m-t-10" id="closeBody">
+    <div id="tbl-lbl">Date: <p class="dis-inline-block">@Html.EditorFor(m => m.date, new { htmlAttributes = new { @class = "input", @type = "date", @readonly = "readonly" } })</p></div>
     <br />
     <div class="tbl-cont m-b-20">
         <table class="table table-striped tab-tbl m-b-20">
@@ -83,15 +83,14 @@
                 </tr>
             </tbody>
         </table>
-        @using (Html.BeginForm("Close", "Home", FormMethod.Post))
-        {
-            <div class="tbl-controls m-t-20">
-                <button name="command" value="CloseRBU" class="tbl-btn float-l">Close RBU</button>
-                <button class="tbl-btn float-l">Re-Open RBU</button>
-                <button class="tbl-btn float-l">Print RBU Balance</button>
-                <button class="tbl-btn float-r">Print RBU Proof sheet</button>
-            </div>
-        }
+
+        <div class="tbl-controls m-t-20">
+            <button value="CloseRBU" class="tbl-btn float-l">Close RBU</button>
+            <button value="reOpenRBU" class="tbl-btn float-l">Re-Open RBU</button>
+            <!--<button class="tbl-btn float-l">Print RBU Balance</button>-->
+            <!--<button class="tbl-btn float-r">Print RBU Proof sheet</button>-->
+        </div>
+
         <div id="tbl-lbl">
             <div class="dis-inline-block"><p>Status:</p></div>
             <div class="dis-inline-block"><input class="input" /></div>
@@ -99,8 +98,8 @@
 
     </div>
 
-    @{  
-            totalAmount = 0;
+    @{
+        totalAmount = 0;
         totalTransCount = 0;
     }
     <div class="tbl-cont m-t-20 m-b-20">
@@ -188,8 +187,8 @@
     <br />
     <table class="table" id="close-tbl">
         <colgroup>
-            <col style="width:10%;"/>
-            <col style="width:15%;"/>
+            <col style="width:10%;" />
+            <col style="width:15%;" />
             <col />
         </colgroup>
         <tbody>
@@ -200,8 +199,8 @@
                 <td>
                     <input class="input" />
                 </td>
-                <td>
-                    <button class="tbl-btn">Beginning Cash balance Confirmation</button>
+                <td rowspan="2">
+                    <button class="tbl-btn" value="StartPettyCash">Beginning Cash balance Confirmation</button>
                 </td>
             </tr>
             <tr>
@@ -220,7 +219,9 @@
                 <td>
                     <input class="input" />
                 </td>
-                <td></td>
+                <td rowspan="2">
+                    <button class="tbl-btn">Petty Cash Breakdown</button>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -230,9 +231,90 @@
                     <input class="input" />
                 </td>
                 <td>
-                    <button class="tbl-btn">Petty Cash Breakdown</button>
                 </td>
             </tr>
         </tbody>
     </table>
 </div>
+<div id="pettyCashModal" class="modal fade" role="dialog" >
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="vertical-alignment-helper">
+            <div class="modal-dialog vertical-align-center">
+                <div class="modal-content w-48">
+                    <div class="modal-header">
+                        <h4 style="display:inline">Login</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <partial name="../Modal/ClosePettyCash" view-data='new ViewDataDictionary(ViewContext.ViewData) { TemplateInfo = {HtmlFieldPrefix="startBal" } }' />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn float-r" data-dismiss="modal">Close</button>
+                        <button class="btn float-r comVar" id="loginSubmit">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="login" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="vertical-alignment-helper">
+            <div class="modal-dialog vertical-align-center">
+                <div class="modal-content w-20">
+                    <div class="modal-header">
+                        <h4 style="display:inline">Login</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <table style="margin:5px;">
+                            <tr>
+                                <td>Username : </td>
+                                <td>&nbsp;<input type="text" id="userName" class="input" /></td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>Password : </td>
+                                <td>&nbsp;<input type="password" id="passWord" class="input" /></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn float-r" data-dismiss="modal">Close</button>
+                        <button class="btn float-r comVar" id="loginSubmit">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@using (Html.BeginForm("Close", "Home", FormMethod.Post, new { @id = "inputForm" }))
+{
+    <input type="hidden" name="command" id="cmdString" />
+    <input type="hidden" name="username" id="userString" />
+    <input type="hidden" name="password" id="passString" />
+}
+
+<script type="text/javascript">
+    $(function () {
+        $("#closeBody").on("click", "button", function (e) {
+            var command = $(this).val();
+            if (command == "StartPettyCash") {
+                $('#pettyCashModal').modal('show');
+            } else {
+                $("#cmdString").val($(this).val());
+                $('#login').modal('show');
+            }
+        });
+
+        $("#login").on("click", "#loginSubmit", function (e) {
+            $("#userString").val($("#userName").val());
+            $("#passString").val($("#passWord").val());
+            $("#inputForm").submit();
+        });
+    });
+</script>

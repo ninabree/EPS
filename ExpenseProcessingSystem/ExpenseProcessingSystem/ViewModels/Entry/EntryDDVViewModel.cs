@@ -56,9 +56,6 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         [NotNullValidations, AmountValidation]
         [Display(Name = "Credit - Cash")]
         public float credCash { get; set; }
-        [FalseValidation("chkEwt"), TextValidation]
-        [Display(Name = "EWT - Tax Payor's Name")]
-        public string ewtPayorName { get; set; }
         public int dtlID { get; set; }
         //[ListValidation("inter_entity")]
         [Display(Name = "Inter-Entity Details")]

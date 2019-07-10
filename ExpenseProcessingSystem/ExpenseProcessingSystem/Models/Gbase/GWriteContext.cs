@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace ExpenseProcessingSystem.Data
+namespace ExpenseProcessingSystem.Models.Gbase
 {
     public partial class GWriteContext : DbContext
     {
@@ -22,7 +22,8 @@ namespace ExpenseProcessingSystem.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(Setting.GwriteConnectionString);
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Data Source=J-PCS008\\SQLEXPRESS;Persist Security Info=True;Password=emiAdmin;User ID=sa;Initial Catalog=G-Write");
             }
         }
 

@@ -31,18 +31,18 @@ namespace ExpenseProcessingSystem.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly EPSDbContext _context;
         private readonly GOExpressContext _GOContext;
-        private readonly GWriteContext _gWriteContext;
+        //private readonly GWriteContext _gWriteContext;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
         private readonly IHostingEnvironment _hostingEnvironment;
         private ModalService _modalservice;
 
         private ModelStateDictionary _modelState;
-        public HomeService(IHttpContextAccessor httpContextAccessor, EPSDbContext context, GOExpressContext goContext, GWriteContext gWriteContext,ModelStateDictionary modelState, IHostingEnvironment hostingEnvironment)
+        public HomeService(IHttpContextAccessor httpContextAccessor, EPSDbContext context, GOExpressContext goContext, ModelStateDictionary modelState, IHostingEnvironment hostingEnvironment)
         {
             _httpContextAccessor = httpContextAccessor;
             _context = context;
             _GOContext = goContext;
-            _gWriteContext = gWriteContext;
+            //_gWriteContext = gWriteContext;
             _modelState = modelState;
             _hostingEnvironment = hostingEnvironment;
             _modalservice = new ModalService(_httpContextAccessor, _context);
@@ -4185,7 +4185,6 @@ namespace ExpenseProcessingSystem.Services
 
                         expenseGbase.Add(remarks);
                     }
-
                     ExpenseEntryDetailModel expenseDetails = new ExpenseEntryDetailModel
                     {
                         ExpDtl_Gbase_Remarks = ddv.GBaseRemarks,
@@ -4205,6 +4204,9 @@ namespace ExpenseProcessingSystem.Services
                         ExpenseEntryGbaseDtls = expenseGbase
                     };
 
+                    //if (entryModel.entryID != 0){
+                    //    expenseDetails.ExpDtl_ID = _context.ExpenseEntryDetails.Where(x => x.ExpenseEntryModel.Expense_ID == entryModel.entryID).Select(x => x.ExpDtl_ID).FirstOrDefault();
+                    //}
                     expenseDtls.Add(expenseDetails);
                 }
 
@@ -4220,8 +4222,8 @@ namespace ExpenseProcessingSystem.Services
                     Expense_Last_Updated = DateTime.Now,
                     Expense_isDeleted = false,
                     Expense_Status = 1,
-                    ExpenseEntryDetails = expenseDtls,
-                    Expense_Number = getExpTransNo(expenseType)
+                    ExpenseEntryDetails = expenseDtls
+                    //Expense_Number = getExpTransNo(expenseType)
                 };
 
                 if (entryModel.entryID == 0)
@@ -4232,6 +4234,7 @@ namespace ExpenseProcessingSystem.Services
                 {
                     // Update entity in DbSet
                     expenseEntry.Expense_ID = entryModel.entryID;
+                    removeDDVChild(entryModel.entryID);
                     _context.ExpenseEntry.Update(expenseEntry);
                 }
                 _context.SaveChanges();
@@ -4310,6 +4313,7 @@ namespace ExpenseProcessingSystem.Services
                 {
                     // Update entity in DbSet
                     expenseEntry.Expense_ID = entryModel.entryID;
+                    removeNCChild(entryModel.entryID);
                     _context.ExpenseEntry.Update(expenseEntry);
                 }
                 _context.SaveChanges();
@@ -4317,7 +4321,53 @@ namespace ExpenseProcessingSystem.Services
             }
             return -1;
         }
+        public bool removeDDVChild(int expense_ID)
+        {
+            var entryDtl = _context.ExpenseEntryDetails.Where(x => x.ExpenseEntryModel.Expense_ID == expense_ID).ToList();
+            foreach (var i in entryDtl)
+            {
+                var interList = _context.ExpenseEntryInterEntity.Where(x => x.ExpenseEntryDetailModel.ExpDtl_ID == i.ExpDtl_ID).ToList();
+                foreach (var inter in interList)
+                {
+                    var partList = _context.ExpenseEntryInterEntityParticular.Where(x => x.ExpenseEntryInterEntityModel.ExpDtl_DDVInter_ID == inter.ExpDtl_DDVInter_ID).ToList();
+                    foreach (var part in partList)
+                    {
+                        var accList = _context.ExpenseEntryInterEntityAccs.Where(x => x.ExpenseEntryInterEntityParticular.InterPart_ID == part.InterPart_ID).ToList();
+                        foreach (var accs in accList)
+                        {
+                            _context.ExpenseEntryInterEntityAccs.RemoveRange(_context.ExpenseEntryInterEntityAccs
+                                .Where(x => x.ExpenseEntryInterEntityParticular.InterPart_ID == part.InterPart_ID));
+                        }
+                        _context.ExpenseEntryInterEntityParticular.RemoveRange(_context.ExpenseEntryInterEntityParticular
+                            .Where(x => x.ExpenseEntryInterEntityModel.ExpDtl_DDVInter_ID == inter.ExpDtl_DDVInter_ID));
+                    }
+                    _context.ExpenseEntryInterEntity.RemoveRange(_context.ExpenseEntryInterEntity
+                        .Where(x => x.ExpenseEntryDetailModel.ExpDtl_ID == i.ExpDtl_ID));
+                }
+            }
+            _context.ExpenseEntryDetails.RemoveRange(_context.ExpenseEntryDetails
+                .Where(x => x.ExpenseEntryModel.Expense_ID == expense_ID));
+            return true;
+        }
+        public bool removeNCChild(int expense_ID)
+        {
+            var entryDtlNC = _context.ExpenseEntryNonCash.Where(x => x.ExpenseEntryModel.Expense_ID == expense_ID).ToList();
+            foreach (var nc in entryDtlNC)
+            {
+                var entryDtlNCDtl = _context.ExpenseEntryNonCashDetails.Where(x => x.ExpenseEntryNCModel.ExpNC_ID == nc.ExpNC_ID).ToList();
+                foreach (var dtl in entryDtlNCDtl)
+                {
+                    _context.ExpenseEntryNonCashDetailAccounts.RemoveRange(_context.ExpenseEntryNonCashDetailAccounts
+                        .Where(x => x.ExpenseEntryNCDtlModel.ExpNCDtl_ID == dtl.ExpNCDtl_ID));
 
+                }
+                _context.ExpenseEntryNonCashDetails.RemoveRange(_context.ExpenseEntryNonCashDetails
+                    .Where(x => x.ExpenseEntryNCModel.ExpNC_ID == nc.ExpNC_ID));
+            }
+            _context.ExpenseEntryNonCash.RemoveRange(_context.ExpenseEntryNonCash
+                .Where(x => x.ExpenseEntryModel.Expense_ID == expense_ID));
+            return true;
+        }
         //Liquidation
         public List<LiquidationMainListViewModel> populateLiquidationList(int userID)
         {
@@ -5323,43 +5373,63 @@ namespace ExpenseProcessingSystem.Services
         }
         ///============[End Post Entries]============
         
-        ///============[Post to GWrite]==============
-        public TblRequestDetails postToGwrite(string command, string username, string password)
+        ///================[Closing]=================
+        public bool closeTransaction(string transactionType, string username, string password)
         {
-            TblRequestDetails rqDtlModel = new TblRequestDetails();
-            TblRequestItem rqItemModel = new TblRequestItem();
+            //string closeCommand = "cm00@E*1@E@E17-@E1210@E";
 
-            byte[] asciiBytes = System.Text.Encoding.ASCII.GetBytes(password);
-            string encodedPass = "";
-            int index = 0;
+            //TblRequestDetails rqDtl = new TblRequestDetails();
+            //GwriteTransList gWriteModel = new GwriteTransList();
 
-            foreach (byte b in asciiBytes)
-            {
-                string hexValue = b.ToString("X");
-                encodedPass += hexValue + ",0";
-                if (index != asciiBytes.Length - 1)
-                    encodedPass += ",";
-                index++;
-            }
+            //closeCommand = closeCommand.Replace("*",transactionType);
+            //closeCommand = closeCommand.Replace("-",username.Substring(username.Length - 4));
 
-            rqDtlModel.RacfId = username;
-            rqDtlModel.RacfPassword = encodedPass;
-            rqDtlModel.RequestCreated = DateTime.Now;
-            rqDtlModel.Status = "SCRIPTING";
-            rqDtlModel.SystemAbbr = "EXPRESS";
-            rqDtlModel.Priority = 1;
+            //rqDtl = postToGwrite(closeCommand,username,password);
 
-            rqItemModel.SequenceNo = 1;
-            rqItemModel.ReturnFlag = true;
-            rqItemModel.Command = command;
+            //gWriteModel.GW_GWrite_ID = rqDtl.RequestId;
+            //gWriteModel.GW_Status = "pending";
 
-            rqDtlModel.TblRequestItem.Add(rqItemModel);
-
-            _gWriteContext.Add(rqDtlModel);
-            _gWriteContext.SaveChanges();
-
-            return rqDtlModel;
+            return true;
         }
+        ///==============[End Closing]===============
+        
+        ///============[Post to GWrite]==============
+        //public TblRequestDetails postToGwrite(string command, string username, string password)
+        //{
+        //    TblRequestDetails rqDtlModel = new TblRequestDetails();
+        //    TblRequestItem rqItemModel = new TblRequestItem();
+
+        //    byte[] asciiBytes = System.Text.Encoding.ASCII.GetBytes(password);
+        //    string encodedPass = "";
+        //    int index = 0;
+
+        //    foreach (byte b in asciiBytes)
+        //    {
+        //        string hexValue = b.ToString("X");
+        //        encodedPass += hexValue + ",0";
+        //        if (index != asciiBytes.Length - 1)
+        //            encodedPass += ",";
+        //        index++;
+        //    }
+
+        //    rqDtlModel.RacfId = username;
+        //    rqDtlModel.RacfPassword = encodedPass;
+        //    rqDtlModel.RequestCreated = DateTime.Now;
+        //    rqDtlModel.Status = "SCRIPTING";
+        //    rqDtlModel.SystemAbbr = "EXPRESS";
+        //    rqDtlModel.Priority = 1;
+
+        //    rqItemModel.SequenceNo = 1;
+        //    rqItemModel.ReturnFlag = true;
+        //    rqItemModel.Command = command;
+
+        //    rqDtlModel.TblRequestItem.Add(rqItemModel);
+
+        //    _gWriteContext.Add(rqDtlModel);
+        //    _gWriteContext.SaveChanges();
+
+        //    return rqDtlModel;
+        //}
         ///==========[End Post to Gwrite]============
         
         ///==============[Begin Gbase Entry Section]================
