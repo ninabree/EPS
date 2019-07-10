@@ -2863,15 +2863,24 @@ namespace ExpenseProcessingSystem.Services
             return actualBudgetData;
         }
 
-        public IEnumerable<GOExpressHistModel> GetTransactionData(HomeReportViewModel model)
+        public IEnumerable<HomeReportTransactionListViewModel> GetTransactionData(HomeReportViewModel model)
         {
             string whereQuery = "";
             DateTime startDT = DateTime.ParseExact(model.Year + "-" + model.Month, "yyyy-M", CultureInfo.InvariantCulture);
             DateTime endDT = DateTime.ParseExact(model.YearTo + "-" + model.MonthTo, "yyyy-M", CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
 
             if (model.ReportSubType != 0)
-                whereQuery = "Expense_Type = @0";
-
+            {
+                if(model.ReportSubType == GlobalSystemValues.TYPE_CV || model.ReportSubType == GlobalSystemValues.TYPE_PC || 
+                    model.ReportSubType == GlobalSystemValues.TYPE_DDV || model.ReportSubType == GlobalSystemValues.TYPE_SS)
+                {
+                    whereQuery = "Expense_Type = @0";
+                }
+                else
+                {
+                    whereQuery = "ExpNC_Category_ID = (@0 - 50)";
+                }
+            }
 
             if (model.PeriodOption == 1)
             {
@@ -2937,7 +2946,7 @@ namespace ExpenseProcessingSystem.Services
                 whereQuery += "TL_TransID <= @10";
             }
 
-            if (model.SubjName != "")
+            if (!String.IsNullOrEmpty(model.SubjName))
             {
                 if (whereQuery != "")
                     whereQuery += " && ";
@@ -2945,10 +2954,11 @@ namespace ExpenseProcessingSystem.Services
                 whereQuery += "GOExpHist_Remarks.Contains(@11)";
             }
 
-            if (model.ReportSubType == GlobalSystemValues.TYPE_CV || model.ReportSubType == GlobalSystemValues.TYPE_PC ||
-                model.ReportSubType == GlobalSystemValues.TYPE_DDV || model.ReportSubType == GlobalSystemValues.TYPE_SS)
+            if (model.ReportSubType == 0 || model.ReportSubType == GlobalSystemValues.TYPE_CV || 
+                model.ReportSubType == GlobalSystemValues.TYPE_PC || model.ReportSubType == GlobalSystemValues.TYPE_DDV || 
+                model.ReportSubType == GlobalSystemValues.TYPE_SS)
             {
-                var dbTransData = (from hist in _context.GOExpressHist
+                var dbTransData1 = (from hist in _context.GOExpressHist
                                    join exp in _context.ExpenseEntry on hist.ExpenseEntryID equals exp.Expense_ID
                                    join trans in _context.ExpenseTransLists on hist.GOExpHist_Id equals trans.TL_GoExpHist_ID
                                    select new 
@@ -3137,17 +3147,213 @@ namespace ExpenseProcessingSystem.Services
                                    model.PeriodTo.Date, model.CheckNoFrom, model.CheckNoTo, model.VoucherNoFrom, model.VoucherNoTo, 
                                    model.TransNoFrom, model.TransNoTo, model.SubjName).ToList();
 
-                //Console.WriteLine("#############" + model.ReportSubType + startDT.Date + endDT.Date + model.PeriodFrom.Date + model.PeriodTo.Date + model.CheckNoFrom + model.CheckNoTo + model.VoucherNoFrom + model.VoucherNoTo + model.TransNoFrom + model.TransNoTo + model.SubjName);
-                Console.WriteLine("########################");
-                Console.WriteLine(whereQuery, model.ReportSubType, startDT.Date, endDT.Date, model.PeriodFrom.Date, model.PeriodTo.Date, model.CheckNoFrom, model.CheckNoTo, model.VoucherNoFrom, model.VoucherNoTo, model.TransNoFrom, model.TransNoTo, model.SubjName);
-                foreach (var i in dbTransData)
+                foreach (var i in dbTransData1)
                 {
                     Console.WriteLine("#############" + i.Expense_ID);
                 }
             }
-            else
+            
+            if(model.ReportSubType == 0 || model.ReportSubType == HomeReportConstantValue.REP_NC_LS_PAYROLL ||
+                model.ReportSubType == HomeReportConstantValue.REP_NC_JS_PAYROLL ||
+                model.ReportSubType == HomeReportConstantValue.REP_NC_TAX_REMITTANCE)
             {
+                var dbTransData2 = (from hist in _context.GOExpressHist
+                                    join ncDtl in _context.ExpenseEntryNonCashDetails on hist.ExpenseDetailID equals ncDtl.ExpNCDtl_ID
+                                    join nc in _context.ExpenseEntryNonCash on ncDtl.ExpenseEntryNCModel.ExpNC_ID equals nc.ExpNC_ID
+                                    join trans in _context.ExpenseTransLists on hist.GOExpHist_Id equals trans.TL_GoExpHist_ID
+                                    join exp in _context.ExpenseEntry on nc.ExpenseEntryModel.Expense_ID equals exp.Expense_ID
+                                    select new
+                                    {
+                                        exp.Expense_ID,
+                                        exp.Expense_Type,
+                                        exp.Expense_Last_Updated,
+                                        exp.Expense_Date,
+                                        exp.Expense_Number,
+                                        exp.Expense_CheckNo,
+                                        nc.ExpNC_Category_ID,
+                                        hist.ExpenseEntryID,
+                                        hist.ExpenseDetailID,
+                                        hist.GOExpHist_Id,
+                                        hist.GOExpHist_SystemName,
+                                        hist.GOExpHist_Groupcode,
+                                        hist.GOExpHist_Branchno,
+                                        hist.GOExpHist_OpeKind,
+                                        hist.GOExpHist_AutoApproved,
+                                        hist.GOExpHist_WarningOverride,
+                                        hist.GOExpHist_CcyFormat,
+                                        hist.GOExpHist_OpeBranch,
+                                        hist.GOExpHist_ValueDate,
+                                        hist.GOExpHist_ReferenceType,
+                                        hist.GOExpHist_ReferenceNo,
+                                        hist.GOExpHist_Comment,
+                                        hist.GOExpHist_Section,
+                                        hist.GOExpHist_Remarks,
+                                        hist.GOExpHist_Memo,
+                                        hist.GOExpHist_SchemeNo,
+                                        hist.GOExpHist_Entry11Type,
+                                        hist.GOExpHist_Entry11IbfCode,
+                                        hist.GOExpHist_Entry11Ccy,
+                                        hist.GOExpHist_Entry11Amt,
+                                        hist.GOExpHist_Entry11Cust,
+                                        hist.GOExpHist_Entry11Actcde,
+                                        hist.GOExpHist_Entry11ActType,
+                                        hist.GOExpHist_Entry11ActNo,
+                                        hist.GOExpHist_Entry11ExchRate,
+                                        hist.GOExpHist_Entry11ExchCcy,
+                                        hist.GOExpHist_Entry11Fund,
+                                        hist.GOExpHist_Entry11CheckNo,
+                                        hist.GOExpHist_Entry11Available,
+                                        hist.GOExpHist_Entry11AdvcPrnt,
+                                        hist.GOExpHist_Entry11Details,
+                                        hist.GOExpHist_Entry11Entity,
+                                        hist.GOExpHist_Entry11Division,
+                                        hist.GOExpHist_Entry11InterAmt,
+                                        hist.GOExpHist_Entry11InterRate,
+                                        hist.GOExpHist_Entry12Type,
+                                        hist.GOExpHist_Entry12IbfCode,
+                                        hist.GOExpHist_Entry12Ccy,
+                                        hist.GOExpHist_Entry12Amt,
+                                        hist.GOExpHist_Entry12Cust,
+                                        hist.GOExpHist_Entry12Actcde,
+                                        hist.GOExpHist_Entry12ActType,
+                                        hist.GOExpHist_Entry12ActNo,
+                                        hist.GOExpHist_Entry12ExchRate,
+                                        hist.GOExpHist_Entry12ExchCcy,
+                                        hist.GOExpHist_Entry12Fund,
+                                        hist.GOExpHist_Entry12CheckNo,
+                                        hist.GOExpHist_Entry12Available,
+                                        hist.GOExpHist_Entry12AdvcPrnt,
+                                        hist.GOExpHist_Entry12Details,
+                                        hist.GOExpHist_Entry12Entity,
+                                        hist.GOExpHist_Entry12Division,
+                                        hist.GOExpHist_Entry12InterAmt,
+                                        hist.GOExpHist_Entry12InterRate,
+                                        hist.GOExpHist_Entry21Type,
+                                        hist.GOExpHist_Entry21IbfCode,
+                                        hist.GOExpHist_Entry21Ccy,
+                                        hist.GOExpHist_Entry21Amt,
+                                        hist.GOExpHist_Entry21Cust,
+                                        hist.GOExpHist_Entry21Actcde,
+                                        hist.GOExpHist_Entry21ActType,
+                                        hist.GOExpHist_Entry21ActNo,
+                                        hist.GOExpHist_Entry21ExchRate,
+                                        hist.GOExpHist_Entry21ExchCcy,
+                                        hist.GOExpHist_Entry21Fund,
+                                        hist.GOExpHist_Entry21CheckNo,
+                                        hist.GOExpHist_Entry21Available,
+                                        hist.GOExpHist_Entry21AdvcPrnt,
+                                        hist.GOExpHist_Entry21Details,
+                                        hist.GOExpHist_Entry21Entity,
+                                        hist.GOExpHist_Entry21Division,
+                                        hist.GOExpHist_Entry21InterAmt,
+                                        hist.GOExpHist_Entry21InterRate,
+                                        hist.GOExpHist_Entry22Type,
+                                        hist.GOExpHist_Entry22IbfCode,
+                                        hist.GOExpHist_Entry22Ccy,
+                                        hist.GOExpHist_Entry22Amt,
+                                        hist.GOExpHist_Entry22Cust,
+                                        hist.GOExpHist_Entry22Actcde,
+                                        hist.GOExpHist_Entry22ActType,
+                                        hist.GOExpHist_Entry22ActNo,
+                                        hist.GOExpHist_Entry22ExchRate,
+                                        hist.GOExpHist_Entry22ExchCcy,
+                                        hist.GOExpHist_Entry22Fund,
+                                        hist.GOExpHist_Entry22CheckNo,
+                                        hist.GOExpHist_Entry22Available,
+                                        hist.GOExpHist_Entry22AdvcPrnt,
+                                        hist.GOExpHist_Entry22Details,
+                                        hist.GOExpHist_Entry22Entity,
+                                        hist.GOExpHist_Entry22Division,
+                                        hist.GOExpHist_Entry22InterAmt,
+                                        hist.GOExpHist_Entry22InterRate,
+                                        hist.GOExpHist_Entry31Type,
+                                        hist.GOExpHist_Entry31IbfCode,
+                                        hist.GOExpHist_Entry31Ccy,
+                                        hist.GOExpHist_Entry31Amt,
+                                        hist.GOExpHist_Entry31Cust,
+                                        hist.GOExpHist_Entry31Actcde,
+                                        hist.GOExpHist_Entry31ActType,
+                                        hist.GOExpHist_Entry31ActNo,
+                                        hist.GOExpHist_Entry31ExchRate,
+                                        hist.GOExpHist_Entry31ExchCcy,
+                                        hist.GOExpHist_Entry31Fund,
+                                        hist.GOExpHist_Entry31CheckNo,
+                                        hist.GOExpHist_Entry31Available,
+                                        hist.GOExpHist_Entry31AdvcPrnt,
+                                        hist.GOExpHist_Entry31Details,
+                                        hist.GOExpHist_Entry31Entity,
+                                        hist.GOExpHist_Entry31Division,
+                                        hist.GOExpHist_Entry31InterAmt,
+                                        hist.GOExpHist_Entry31InterRate,
+                                        hist.GOExpHist_Entry32Type,
+                                        hist.GOExpHist_Entry32IbfCode,
+                                        hist.GOExpHist_Entry32Ccy,
+                                        hist.GOExpHist_Entry32Amt,
+                                        hist.GOExpHist_Entry32Cust,
+                                        hist.GOExpHist_Entry32Actcde,
+                                        hist.GOExpHist_Entry32ActType,
+                                        hist.GOExpHist_Entry32ActNo,
+                                        hist.GOExpHist_Entry32ExchRate,
+                                        hist.GOExpHist_Entry32ExchCcy,
+                                        hist.GOExpHist_Entry32Fund,
+                                        hist.GOExpHist_Entry32CheckNo,
+                                        hist.GOExpHist_Entry32Available,
+                                        hist.GOExpHist_Entry32AdvcPrnt,
+                                        hist.GOExpHist_Entry32Details,
+                                        hist.GOExpHist_Entry32Entity,
+                                        hist.GOExpHist_Entry32Division,
+                                        hist.GOExpHist_Entry32InterAmt,
+                                        hist.GOExpHist_Entry32InterRate,
+                                        hist.GOExpHist_Entry41Type,
+                                        hist.GOExpHist_Entry41IbfCode,
+                                        hist.GOExpHist_Entry41Ccy,
+                                        hist.GOExpHist_Entry41Amt,
+                                        hist.GOExpHist_Entry41Cust,
+                                        hist.GOExpHist_Entry41Actcde,
+                                        hist.GOExpHist_Entry41ActType,
+                                        hist.GOExpHist_Entry41ActNo,
+                                        hist.GOExpHist_Entry41ExchRate,
+                                        hist.GOExpHist_Entry41ExchCcy,
+                                        hist.GOExpHist_Entry41Fund,
+                                        hist.GOExpHist_Entry41CheckNo,
+                                        hist.GOExpHist_Entry41Available,
+                                        hist.GOExpHist_Entry41AdvcPrnt,
+                                        hist.GOExpHist_Entry41Details,
+                                        hist.GOExpHist_Entry41Entity,
+                                        hist.GOExpHist_Entry41Division,
+                                        hist.GOExpHist_Entry41InterAmt,
+                                        hist.GOExpHist_Entry41InterRate,
+                                        hist.GOExpHist_Entry42Type,
+                                        hist.GOExpHist_Entry42IbfCode,
+                                        hist.GOExpHist_Entry42Ccy,
+                                        hist.GOExpHist_Entry42Amt,
+                                        hist.GOExpHist_Entry42Cust,
+                                        hist.GOExpHist_Entry42Actcde,
+                                        hist.GOExpHist_Entry42ActType,
+                                        hist.GOExpHist_Entry42ActNo,
+                                        hist.GOExpHist_Entry42ExchRate,
+                                        hist.GOExpHist_Entry42ExchCcy,
+                                        hist.GOExpHist_Entry42Fund,
+                                        hist.GOExpHist_Entry42CheckNo,
+                                        hist.GOExpHist_Entry42Available,
+                                        hist.GOExpHist_Entry42AdvcPrnt,
+                                        hist.GOExpHist_Entry42Details,
+                                        hist.GOExpHist_Entry42Entity,
+                                        hist.GOExpHist_Entry42Division,
+                                        hist.GOExpHist_Entry42InterAmt,
+                                        hist.GOExpHist_Entry42InterRate,
+                                        trans.TL_ID,
+                                        trans.TL_GoExpress_ID,
+                                        trans.TL_TransID
 
+                                    }).Where(whereQuery, model.ReportSubType, startDT.Date, endDT.Date, model.PeriodFrom.Date,
+                   model.PeriodTo.Date, model.CheckNoFrom, model.CheckNoTo, model.VoucherNoFrom, model.VoucherNoTo,
+                   model.TransNoFrom, model.TransNoTo, model.SubjName).ToList();
+
+                foreach (var i in dbTransData2)
+                {
+                    Console.WriteLine("#############" + i.TL_GoExpress_ID);
+                }
             }
 
             return null;
@@ -3708,6 +3914,7 @@ namespace ExpenseProcessingSystem.Services
                     }
                     entryNCDtl = new ExpenseEntryNCDtlViewModel()
                     {
+                        ExpNCDtl_ID = ncDtl.g.ExpNCDtl_ID,
                         ExpNCDtl_Remarks_Desc = ncDtl.g.ExpNCDtl_Remarks_Desc,
                         ExpNCDtl_Remarks_Period = ncDtl.g.ExpNCDtl_Remarks_Period,
                         ExpenseEntryNCDtlAccs = ncDtlAccs
@@ -5149,7 +5356,7 @@ namespace ExpenseProcessingSystem.Services
                 tempGbase.entries = tempGbase.entries.OrderByDescending(x => x.type == "D").ToList();
                 //insert
                 goExpData = InsertGbaseEntry(tempGbase, expID);
-                goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, expenseDetails.EntryNC.NC_ID);
+                goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, dtls.ExpNCDtl_ID);
                 list.Add(new { expEntryID = expID, goExp = goExpData, goExpHist = goExpHistData });
             }
 
@@ -5709,7 +5916,6 @@ namespace ExpenseProcessingSystem.Services
 
             return transno;
         }
-
 
         public GOExpressHistModel convertTblCm10ToGOExHist(TblCm10 tblcm10, int entryID, int entryDtlID)
         {

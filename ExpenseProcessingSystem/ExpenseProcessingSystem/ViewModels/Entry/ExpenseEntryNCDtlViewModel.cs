@@ -9,6 +9,7 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
 {
     public class ExpenseEntryNCDtlViewModel
     {
+        public int ExpNCDtl_ID { get; set; }
         //[NotNullValidations]
         [Display(Name = "Description")]
         public string ExpNCDtl_Remarks_Desc { get; set; }
