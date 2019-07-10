@@ -84,7 +84,7 @@
                         <td><input id="@Model.EntryDDV[i].dept" value="@Model.EntryDDV[i].dept_Name" class="input100" disabled /></td>
                         <td style="text-align:center">@Html.DisplayFor(x => Model.EntryDDV[i].chkVat, new { @class = "chkVat" })</td>
                         <td><input value="@Model.EntryDDV[i].vat_Name" class="input100" disabled /></td>
-                        <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryDDV[i].chkEwt, new { @class = "chkEwt", @disabled = "disabled" })</td>
+                        <td style="text-align:center">@Html.DisplayFor(x => Model.EntryDDV[i].chkEwt, new { @class = "chkEwt"})</td>
                         <td><input value="@Model.EntryDDV[i].ewt_Name" class="input100" disabled /></td>
                         <td><input value="@Model.EntryDDV[i].ccy_Name" class="input100" disabled /></td>
                         <td><input value="@Model.EntryDDV[i].debitGross" class="input100 txtGross" disabled /></td>
@@ -126,12 +126,12 @@
                                 @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.Inter_Check1, new { @class = "txtChk1" })
                                 @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.Inter_Check2, new { @class = "txtChk2" })
                                 @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.Inter_Rate, new { @class = "txtInterRate" })
-                                @Html.HiddenFor(x => Model.EntryDDV[i].ewtPayorName, new { @class = "txtPayor" })
+                                @Html.HiddenFor(x => Model.EntryDDV[i].ewt_Payor_Name_ID, new { @class = "txtPayor" })
                             }
                             else
                             {
                                 <a class="reqBtn glyphicon glyphicon-list-alt"></a>
-                                @Html.HiddenFor(x => Model.EntryDDV[i].ewtPayorName, new { @class = "txtPayor" })
+                                @Html.HiddenFor(x => Model.EntryDDV[i].ewt_Payor_Name_ID, new { @class = "txtPayor" })
                             }
                         </td>
                     </tr>
@@ -288,22 +288,23 @@
         $(".expenseInterEntity").click(function (e) {
             e.stopImmediatePropagation();
             var pNode = $(this.parentNode)[0].parentNode;
+            var idNo = pNode.id.substring(5);
             var id = pNode.id;
-
-            var curr1_Abbr_ID = $("#" + pNode.id).find('#EntryDDV_0__interDetails_Inter_Currency1_ID').val();
-            var curr1_Abbr_Name = $("#" + pNode.id).find('#EntryDDV_0__interDetails_Inter_Currency1_ABBR').val();
-            var curr1_Amt = $("#" + pNode.id).find('#EntryDDV_0__interDetails_Inter_Currency1_Amount').val();
-            var curr1_Chk = $("#" + pNode.id).find('#EntryDDV_0__interDetails_Inter_Check1').val(); //
-            var conv1_Amt = $("#" + pNode.id).find('#EntryDDV_0__interDetails_Inter_Convert1_Amount').val(); //
-            var curr2_Abbr_ID = $("#" + pNode.id).find('#EntryDDV_0__interDetails_Inter_Currency2_ID').val();
-            var curr2_Abbr_Name = $("#" + pNode.id).find('#EntryDDV_0__interDetails_Inter_Currency2_ABBR').val();
-            var curr2_Amt = $("#" + pNode.id).find('#EntryDDV_0__interDetails_Inter_Currency2_Amount').val();
-            var curr2_Chk = $("#" + pNode.id).find('#EntryDDV_0__interDetails_Inter_Check2').val(); //
-            var conv2_Amt = $("#" + pNode.id).find('#EntryDDV_0__interDetails_Inter_Convert2_Amount').val(); //
-            var interRate = $("#" + pNode.id).find("#EntryDDV_0__interDetails_Inter_Rate").val();
+            
+            var curr1_Abbr_ID = $("#" + pNode.id).find('#EntryDDV_' + idNo + '__interDetails_Inter_Currency1_ID').val();
+            var curr1_Abbr_Name = $("#" + pNode.id).find('#EntryDDV_' + idNo + '__interDetails_Inter_Currency1_ABBR').val();
+            var curr1_Amt = $("#" + pNode.id).find('#EntryDDV_' + idNo + '__interDetails_Inter_Currency1_Amount').val();
+            var curr1_Chk = $("#" + pNode.id).find('#EntryDDV_' + idNo + '__interDetails_Inter_Check1').val();
+            var conv1_Amt = $("#" + pNode.id).find('#EntryDDV_' + idNo + '__interDetails_Inter_Convert1_Amount').val();
+            var curr2_Abbr_ID = $("#" + pNode.id).find('#EntryDDV_' + idNo + '__interDetails_Inter_Currency2_ID').val();
+            var curr2_Abbr_Name = $("#" + pNode.id).find('#EntryDDV_' + idNo + '__interDetails_Inter_Currency2_ABBR').val();
+            var curr2_Amt = $("#" + pNode.id).find('#EntryDDV_' + idNo + '__interDetails_Inter_Currency2_Amount').val();
+            var curr2_Chk = $("#" + pNode.id).find('#EntryDDV_' + idNo + '__interDetails_Inter_Check2').val();
+            var conv2_Amt = $("#" + pNode.id).find('#EntryDDV_' + idNo + '__interDetails_Inter_Convert2_Amount').val(); 
+            var interRate = $("#" + pNode.id).find('#EntryDDV_' + idNo + '__interDetails_Inter_Rate').val();
             var remarksTitle = $("#" + pNode.id).find("td div .GBaseRemarksTitle").val();
             var account = $("#" + pNode.id).find("td .accName").val();
-            var accountID = $("#" + pNode.id).find("#EntryDDV_0__interDetails_interPartList_0__ExpenseEntryInterEntityAccs_0__Inter_Acc_ID").val();
+            var accountID = $("#" + pNode.id).find("#EntryDDV_0__interDetails_interPartList_" + idNo + "__ExpenseEntryInterEntityAccs_" + idNo + "__Inter_Acc_ID").val();
 
             //remove prev contents
             modalDivBody2.empty();

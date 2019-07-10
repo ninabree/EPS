@@ -36,7 +36,7 @@
             if ($(this).parent().siblings().find('h4.modal-title', this).text() == "EWT Information") {
                 var itemNo = $("#parentIdEWT").val().substr(5);
                 var val = $("table").find("#tax_payor option:selected").val();
-                $("#EntryDDV_" + itemNo + "__ewtPayorName").val(val);
+                $("#EntryDDV_" + itemNo + "__ewt_Payor_Name_ID").val(val);
                 $('.modal-body2').empty();
                 $('.myModal2').modal('hide');
             } else {

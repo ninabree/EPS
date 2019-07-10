@@ -65,6 +65,20 @@ namespace ExpenseProcessingSystem.ViewModels
 
         public string MonthNameTo { get; set; }
 
+        public int CheckNoFrom { get; set; }
+
+        public int CheckNoTo { get; set; }
+
+        public int VoucherNoFrom { get; set; }
+
+        public int VoucherNoTo { get; set; }
+
+        public int TransNoFrom { get; set; }
+
+        public int TransNoTo { get; set; }
+
+        public string SubjName { get; set; }
+
         public string SemesterName { get; set; }
 
         public int YearSem { get; set; }

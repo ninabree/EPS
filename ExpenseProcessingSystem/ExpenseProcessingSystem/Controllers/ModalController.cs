@@ -1004,7 +1004,7 @@ namespace ExpenseProcessingSystem.Controllers
             List<InterEntityParticular> parList1 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular1(account, Curr1AbbrName, float.Parse(Curr1Amt), float.Parse(Curr2Amt), InterRate, int.Parse(accID), int.Parse(Curr1AbbrID));
             List<InterEntityParticular> parList2 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular2(Curr1AbbrName, Curr2AbbrName, float.Parse(Curr2Amt), InterRate, int.Parse(Curr1AbbrID), int.Parse(Curr2AbbrID));
             List<InterEntityParticular> parList3 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular3(Curr2AbbrName, float.Parse(Curr2Amt), int.Parse(Curr2AbbrID));
-            List<SelectListItem> currList = _service.getCurrencyIDSelectList();
+            List<SelectListItem> currList = _service.getCurrencyIDSelectList(int.Parse(Curr1AbbrID));
 
             DDVInterEntityViewModel model = new DDVInterEntityViewModel
             {
@@ -1012,12 +1012,12 @@ namespace ExpenseProcessingSystem.Controllers
                 Inter_Currency1_ID = int.Parse(Curr1AbbrID),
                 Inter_Currency1_ABBR = Curr1AbbrName,
                 Inter_Currency1_Amount = float.Parse(Curr1Amt),
-                Inter_Currency2_ID = Curr2AbbrID == "NAN" ? 2 : int.Parse(Curr2AbbrID),
-                Inter_Currency2_ABBR = Curr2AbbrID == "NAN" ? _context.DMCurrency.Where(x => x.Curr_MasterID == 2 && x.Curr_isActive == true && x.Curr_isDeleted == false).Select(x => x.Curr_CCY_ABBR).FirstOrDefault() : Curr2AbbrName,
+                Inter_Currency2_ID = Curr2AbbrID == "0" ? int.Parse(currList.Select(x => x.Value).FirstOrDefault()) : int.Parse(Curr2AbbrID),
+                Inter_Currency2_ABBR = Curr2AbbrID == "0" ? currList.Select(x => x.Text).FirstOrDefault() : Curr2AbbrName,
                 Inter_Currency2_Amount = float.Parse(Curr2Amt),
                 Inter_Rate = InterRate,
-                Inter_Check1 = Chk1 == "true" ? true : false,
-                Inter_Check2 = Chk2 == "true" ? true : false,
+                Inter_Check1 = Chk1 == "True" ? true : Chk1 == "true" ? true : false,
+                Inter_Check2 = Chk2 == "True" ? true : Chk2 == "true" ? true : false,
                 Inter_Convert1_Amount = float.Parse(Conv1Amt),
                 Inter_Convert2_Amount = float.Parse(Conv2Amt),
                 interPartList = new List<ExpenseEntryInterEntityParticularViewModel>(),
@@ -1055,8 +1055,8 @@ namespace ExpenseProcessingSystem.Controllers
                 Inter_Currency2_ABBR = Curr2AbbrID == "NAN" ? _context.DMCurrency.Where(x => x.Curr_MasterID == 2 && x.Curr_isActive == true && x.Curr_isDeleted == false).Select(x => x.Curr_CCY_ABBR).FirstOrDefault() : Curr2AbbrName,
                 Inter_Currency2_Amount = float.Parse(Curr2Amt),
                 Inter_Rate = InterRate,
-                Inter_Check1 = Chk1 == "true" ? true : false,
-                Inter_Check2 = Chk2 == "true" ? true : false,
+                Inter_Check1 = Chk1 == "True" ? true : Chk1 == "true" ? true : false,
+                Inter_Check2 = Chk2 == "True" ? true : Chk2 == "true" ? true : false,
                 Inter_Convert1_Amount = float.Parse(Conv1Amt),
                 Inter_Convert2_Amount = float.Parse(Conv2Amt),
                 interPartList = new List<ExpenseEntryInterEntityParticularViewModel>(),
