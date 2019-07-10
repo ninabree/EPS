@@ -36,7 +36,7 @@ namespace ExpenseProcessingSystem.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly EPSDbContext _context;
         private readonly GOExpressContext _GOContext;
-        private readonly GWriteContext _GwriteContext;
+        //private readonly GWriteContext _GwriteContext;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
         private HomeService _service;
         private SortService _sortService;
@@ -44,14 +44,14 @@ namespace ExpenseProcessingSystem.Controllers
         private readonly IStringLocalizer<HomeController> _localizer;
         private IHostingEnvironment _env;
 
-        public HomeController(IHttpContextAccessor httpContextAccessor, EPSDbContext context, GOExpressContext gocontext, GWriteContext gwritecontext,IHostingEnvironment hostingEnvironment, IStringLocalizer<HomeController> localizer)
+        public HomeController(IHttpContextAccessor httpContextAccessor, EPSDbContext context, GOExpressContext gocontext,IHostingEnvironment hostingEnvironment, IStringLocalizer<HomeController> localizer)
         {
             _localizer = localizer;
             _httpContextAccessor = httpContextAccessor;
             _context = context;
             _GOContext = gocontext;
-            _GwriteContext = gwritecontext;
-            _service = new HomeService(_httpContextAccessor, _context, _GOContext, _GwriteContext,this.ModelState, hostingEnvironment);
+            //_GwriteContext = gwritecontext;
+            _service = new HomeService(_httpContextAccessor, _context, _GOContext,this.ModelState, hostingEnvironment);
             _sortService = new SortService();
             _env = hostingEnvironment;
         }
@@ -152,7 +152,7 @@ namespace ExpenseProcessingSystem.Controllers
         }
         //-----------Closing Screen-----------------
         [OnlineUserCheck]
-        public IActionResult Close(string command = "load")
+        public IActionResult Close(string username, string password, string command = "load")
         {
             ClosingViewModel model = new ClosingViewModel();
             switch (command)
@@ -161,7 +161,7 @@ namespace ExpenseProcessingSystem.Controllers
                     model = CloseLoad();
                     break;
                 case "CloseRBU":
-                    model = CloseRBU();
+                    model = CloseRBU(username,password);
                     break;
                 case "b": break;
             }
@@ -232,67 +232,70 @@ namespace ExpenseProcessingSystem.Controllers
 
             return model;
         }
-        public ClosingViewModel CloseRBU()
+        public ClosingViewModel CloseRBU(string username, string password)
         {
             ClosingViewModel model = new ClosingViewModel();
             model.date = DateTime.Now;
             int index = 0;
-            do
+            if (_service.closeTransaction("767",username,password)) {
+                do
+                {
+                    CloseItems temp = new CloseItems();
+                    temp.gBaseTrans = "111,222,333";
+                    temp.expTrans = "CLOSING TIME!";
+                    temp.particulars = "THIS IS A PARTICULAR!";
+                    temp.ccy = "PHP";
+                    temp.amount = 1000 + ((135 * index) / 2.6);
+                    temp.transCount = 2;
+                    temp.status = "Posted";
+                    index++;
+                    model.rbuItems.Add(temp);
+                } while (index != 10);
+                index = 0;
+                do
+                {
+                    CloseItems temp = new CloseItems();
+                    temp.gBaseTrans = "111,222,333";
+                    temp.expTrans = "CLOSING TIME!";
+                    temp.particulars = "THIS IS A PARTICULAR!";
+                    temp.ccy = "PHP";
+                    temp.amount = 1000 + ((135 * index) / 2.6);
+                    temp.transCount = 2;
+                    temp.status = "Posted";
+                    index++;
+                    model.fcduItems.Add(temp);
+                } while (index != 10);
+            }
+            else
             {
-                CloseItems temp = new CloseItems();
-                temp.gBaseTrans = "111,222,333";
-                temp.expTrans = "CLOSING TIME!";
-                temp.particulars = "THIS IS A PARTICULAR!";
-                temp.ccy = "PHP";
-                temp.amount = 1000 + ((135 * index) / 2.6);
-                temp.transCount = 2;
-                temp.status = "Posted";
-                index++;
-                model.rbuItems.Add(temp);
-            } while (index != 10);
-            index = 0;
-            do
-            {
-                CloseItems temp = new CloseItems();
-                temp.gBaseTrans = "111,222,333";
-                temp.expTrans = "CLOSING TIME!";
-                temp.particulars = "THIS IS A PARTICULAR!";
-                temp.ccy = "USD";
-                temp.amount = 1000 + ((135 * index) / 2.6);
-                temp.transCount = 2;
-                temp.status = "Posted";
-                index++;
-                model.rbuItems.Add(temp);
-            } while (index != 10);
-
-            index = 0;
-            do
-            {
-                CloseItems temp = new CloseItems();
-                temp.gBaseTrans = "111,222,333";
-                temp.expTrans = "CLOSING TIME!";
-                temp.particulars = "THIS IS A PARTICULAR!";
-                temp.ccy = "PHP";
-                temp.amount = 1000 + ((135 * index) / 2.6);
-                temp.transCount = 2;
-                temp.status = "Posted";
-                index++;
-                model.fcduItems.Add(temp);
-            } while (index != 10);
-            index = 0;
-            do
-            {
-                CloseItems temp = new CloseItems();
-                temp.gBaseTrans = "111,222,333";
-                temp.expTrans = "CLOSING TIME!";
-                temp.particulars = "THIS IS A PARTICULAR!";
-                temp.ccy = "USD";
-                temp.amount = 1000 + ((135 * index) / 2.6);
-                temp.transCount = 2;
-                temp.status = "Posted";
-                index++;
-                model.fcduItems.Add(temp);
-            } while (index != 10);
+                do
+                {
+                    CloseItems temp = new CloseItems();
+                    temp.gBaseTrans = "111,222,333";
+                    temp.expTrans = "OPENING TIME!";
+                    temp.particulars = "THIS IS A PARTICULAR!";
+                    temp.ccy = "PHP";
+                    temp.amount = 1000 + ((135 * index) / 2.6);
+                    temp.transCount = 2;
+                    temp.status = "Posted";
+                    index++;
+                    model.rbuItems.Add(temp);
+                } while (index != 10);
+                index = 0;
+                do
+                {
+                    CloseItems temp = new CloseItems();
+                    temp.gBaseTrans = "111,222,333";
+                    temp.expTrans = "OPENING TIME!";
+                    temp.particulars = "THIS IS A PARTICULAR!";
+                    temp.ccy = "PHP";
+                    temp.amount = 1000 + ((135 * index) / 2.6);
+                    temp.transCount = 2;
+                    temp.status = "Posted";
+                    index++;
+                    model.fcduItems.Add(temp);
+                } while (index != 10);
+            }
 
             return model;
         }

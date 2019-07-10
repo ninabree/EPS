@@ -1115,6 +1115,11 @@ namespace ExpenseProcessingSystem.Controllers
             return PartialView(model);
         }
 
+        public IActionResult ClosePettyCash()
+        {
+            return PartialView();
+        }
+
         private string GetUserID()
         {
             return _session.GetString("UserID");
