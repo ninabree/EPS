@@ -24,19 +24,18 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
             switch (data.HomeReportFilter.ReportType)
             {
                 case ConstantData.HomeReportConstantValue.APSWT_M:
-
                     ExcelAPSWT_M(newFile, templateFile, data);
                     break;
                 case ConstantData.HomeReportConstantValue.AST1000:
-
                     ExcelAST1000(newFile, templateFile, data);
                     break;
                 case ConstantData.HomeReportConstantValue.ActualBudgetReport:
-
-                        ExcelActualBudget(newFile, templateFile, data);
+                    ExcelActualBudget(newFile, templateFile, data);
+                    break;
+                case ConstantData.HomeReportConstantValue.TransListReport:
+                    ExcelTransactionList(newFile, templateFile, data);
                     break;
                 case ConstantData.HomeReportConstantValue.WTS:
-
                     ExcelWTS(newFile, templateFile, data);
                     break;
             }
@@ -245,6 +244,158 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
             }
         }
 
+        public void ExcelTransactionList(FileInfo newFile, FileInfo templateFile, HomeReportDataFilterViewModel data)
+        {
+            using (ExcelPackage package = new ExcelPackage(newFile, templateFile))
+            {
+                ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
+
+                int lastRow = worksheet.Dimension.End.Row + 1;
+
+                //Content
+                foreach (var i in data.HomeReportOutputTransactionList)
+                {
+                    worksheet.Cells["A" + lastRow].Value = i.Trans_Voucher_Number;
+                    worksheet.Cells["B" + lastRow].Value = i.Trans_Check_Number;
+                    worksheet.Cells["C" + lastRow].Value = i.Trans_Value_Date;
+                    worksheet.Cells["D" + lastRow].Value = i.Trans_Reference_No;
+                    worksheet.Cells["E" + lastRow].Value = i.Trans_Section;
+                    worksheet.Cells["F" + lastRow].Value = i.Trans_Remarks;
+                    worksheet.Cells["G" + lastRow].Value = i.Trans_DebitCredit1_1;
+                    worksheet.Cells["H" + lastRow].Value = i.Trans_Currency1_1;
+                    worksheet.Cells["I" + lastRow].Value = i.Trans_Amount1_1;
+                    worksheet.Cells["J" + lastRow].Value = i.Trans_Customer1_1;
+                    worksheet.Cells["K" + lastRow].Value = i.Trans_Account_Code1_1;
+                    worksheet.Cells["L" + lastRow].Value = i.Trans_Account_Number1_1;
+                    worksheet.Cells["M" + lastRow].Value = i.Trans_Account_Name1_1;
+                    worksheet.Cells["N" + lastRow].Value = i.Trans_Exchange_Rate1_1;
+                    worksheet.Cells["O" + lastRow].Value = i.Trans_Contra_Currency1_1;
+                    worksheet.Cells["P" + lastRow].Value = i.Trans_Fund1_1;
+                    worksheet.Cells["Q" + lastRow].Value = i.Trans_Advice_Print1_1;
+                    worksheet.Cells["R" + lastRow].Value = i.Trans_Details1_1;
+                    worksheet.Cells["S" + lastRow].Value = i.Trans_Entity1_1;
+                    worksheet.Cells["T" + lastRow].Value = i.Trans_Division1_1;
+                    worksheet.Cells["U" + lastRow].Value = i.Trans_InterAmount1_1;
+                    worksheet.Cells["V" + lastRow].Value = i.Trans_InterRate1_1;
+                    worksheet.Cells["W" + lastRow].Value = i.Trans_DebitCredit1_2;
+                    worksheet.Cells["X" + lastRow].Value = i.Trans_Currency1_2;
+                    worksheet.Cells["Y" + lastRow].Value = i.Trans_Amount1_2;
+                    worksheet.Cells["Z" + lastRow].Value = i.Trans_Customer1_2;
+                    worksheet.Cells["AA" + lastRow].Value = i.Trans_Account_Code1_2;
+                    worksheet.Cells["AB" + lastRow].Value = i.Trans_Account_Number1_2;
+                    worksheet.Cells["AC" + lastRow].Value = i.Trans_Account_Name1_2;
+                    worksheet.Cells["AD" + lastRow].Value = i.Trans_Exchange_Rate1_2;
+                    worksheet.Cells["AE" + lastRow].Value = i.Trans_Contra_Currency1_2;
+                    worksheet.Cells["AF" + lastRow].Value = i.Trans_Fund1_2;
+                    worksheet.Cells["AG" + lastRow].Value = i.Trans_Advice_Print1_2;
+                    worksheet.Cells["AH" + lastRow].Value = i.Trans_Details1_2;
+                    worksheet.Cells["AI" + lastRow].Value = i.Trans_Entity1_2;
+                    worksheet.Cells["AJ" + lastRow].Value = i.Trans_Division1_2;
+                    worksheet.Cells["AK" + lastRow].Value = i.Trans_InterAmount1_2;
+                    worksheet.Cells["AL" + lastRow].Value = i.Trans_InterRate1_2;
+                    worksheet.Cells["AM" + lastRow].Value = i.Trans_DebitCredit2_1;
+                    worksheet.Cells["AN" + lastRow].Value = i.Trans_Currency2_1;
+                    worksheet.Cells["AO" + lastRow].Value = i.Trans_Amount2_1;
+                    worksheet.Cells["AP" + lastRow].Value = i.Trans_Customer2_1;
+                    worksheet.Cells["AQ" + lastRow].Value = i.Trans_Account_Code2_1;
+                    worksheet.Cells["AR" + lastRow].Value = i.Trans_Account_Number2_1;
+                    worksheet.Cells["AS" + lastRow].Value = i.Trans_Account_Name2_1;
+                    worksheet.Cells["AT" + lastRow].Value = i.Trans_Exchange_Rate2_1;
+                    worksheet.Cells["AU" + lastRow].Value = i.Trans_Contra_Currency2_1;
+                    worksheet.Cells["AV" + lastRow].Value = i.Trans_Fund2_1;
+                    worksheet.Cells["AW" + lastRow].Value = i.Trans_Advice_Print2_1;
+                    worksheet.Cells["AX" + lastRow].Value = i.Trans_Details2_1;
+                    worksheet.Cells["AY" + lastRow].Value = i.Trans_Entity2_1;
+                    worksheet.Cells["AZ" + lastRow].Value = i.Trans_Division2_1;
+                    worksheet.Cells["BA" + lastRow].Value = i.Trans_InterAmount2_1;
+                    worksheet.Cells["BB" + lastRow].Value = i.Trans_InterRate2_1;
+                    worksheet.Cells["BC" + lastRow].Value = i.Trans_DebitCredit2_2;
+                    worksheet.Cells["BD" + lastRow].Value = i.Trans_Currency2_2;
+                    worksheet.Cells["BE" + lastRow].Value = i.Trans_Amount2_2;
+                    worksheet.Cells["BF" + lastRow].Value = i.Trans_Customer2_2;
+                    worksheet.Cells["BG" + lastRow].Value = i.Trans_Account_Code2_2;
+                    worksheet.Cells["BH" + lastRow].Value = i.Trans_Account_Number2_2;
+                    worksheet.Cells["BI" + lastRow].Value = i.Trans_Account_Name2_2;
+                    worksheet.Cells["BJ" + lastRow].Value = i.Trans_Exchange_Rate2_2;
+                    worksheet.Cells["BK" + lastRow].Value = i.Trans_Contra_Currency2_2;
+                    worksheet.Cells["BL" + lastRow].Value = i.Trans_Fund2_2;
+                    worksheet.Cells["BM" + lastRow].Value = i.Trans_Advice_Print2_2;
+                    worksheet.Cells["BN" + lastRow].Value = i.Trans_Details2_2;
+                    worksheet.Cells["BO" + lastRow].Value = i.Trans_Entity2_2;
+                    worksheet.Cells["BP" + lastRow].Value = i.Trans_Division2_2;
+                    worksheet.Cells["BQ" + lastRow].Value = i.Trans_InterAmount2_2;
+                    worksheet.Cells["BR" + lastRow].Value = i.Trans_InterRate2_2;
+                    worksheet.Cells["BS" + lastRow].Value = i.Trans_DebitCredit3_1;
+                    worksheet.Cells["BT" + lastRow].Value = i.Trans_Currency3_1;
+                    worksheet.Cells["BU" + lastRow].Value = i.Trans_Amount3_1;
+                    worksheet.Cells["BV" + lastRow].Value = i.Trans_Customer3_1;
+                    worksheet.Cells["BW" + lastRow].Value = i.Trans_Account_Code3_1;
+                    worksheet.Cells["BX" + lastRow].Value = i.Trans_Account_Number3_1;
+                    worksheet.Cells["BY" + lastRow].Value = i.Trans_Account_Name3_1;
+                    worksheet.Cells["BZ" + lastRow].Value = i.Trans_Exchange_Rate3_1;
+                    worksheet.Cells["CA" + lastRow].Value = i.Trans_Contra_Currency3_1;
+                    worksheet.Cells["CB" + lastRow].Value = i.Trans_Fund3_1;
+                    worksheet.Cells["CC" + lastRow].Value = i.Trans_Advice_Print3_1;
+                    worksheet.Cells["CD" + lastRow].Value = i.Trans_Details3_1;
+                    worksheet.Cells["CE" + lastRow].Value = i.Trans_Entity3_1;
+                    worksheet.Cells["CF" + lastRow].Value = i.Trans_Division3_1;
+                    worksheet.Cells["CG" + lastRow].Value = i.Trans_InterAmount3_1;
+                    worksheet.Cells["CH" + lastRow].Value = i.Trans_InterRate3_1;
+                    worksheet.Cells["CI" + lastRow].Value = i.Trans_DebitCredit3_2;
+                    worksheet.Cells["CJ" + lastRow].Value = i.Trans_Currency3_2;
+                    worksheet.Cells["CK" + lastRow].Value = i.Trans_Amount3_2;
+                    worksheet.Cells["CL" + lastRow].Value = i.Trans_Customer3_2;
+                    worksheet.Cells["CM" + lastRow].Value = i.Trans_Account_Code3_2;
+                    worksheet.Cells["CN" + lastRow].Value = i.Trans_Account_Number3_2;
+                    worksheet.Cells["CO" + lastRow].Value = i.Trans_Account_Name3_2;
+                    worksheet.Cells["CP" + lastRow].Value = i.Trans_Exchange_Rate3_2;
+                    worksheet.Cells["CQ" + lastRow].Value = i.Trans_Contra_Currency3_2;
+                    worksheet.Cells["CR" + lastRow].Value = i.Trans_Fund3_2;
+                    worksheet.Cells["CS" + lastRow].Value = i.Trans_Advice_Print3_2;
+                    worksheet.Cells["CT" + lastRow].Value = i.Trans_Details3_2;
+                    worksheet.Cells["CU" + lastRow].Value = i.Trans_Entity3_2;
+                    worksheet.Cells["CV" + lastRow].Value = i.Trans_Division3_2;
+                    worksheet.Cells["CW" + lastRow].Value = i.Trans_InterAmount3_2;
+                    worksheet.Cells["CX" + lastRow].Value = i.Trans_InterRate3_2;
+                    worksheet.Cells["CY" + lastRow].Value = i.Trans_DebitCredit4_1;
+                    worksheet.Cells["CZ" + lastRow].Value = i.Trans_Currency4_1;
+                    worksheet.Cells["DA" + lastRow].Value = i.Trans_Amount4_1;
+                    worksheet.Cells["DB" + lastRow].Value = i.Trans_Customer4_1;
+                    worksheet.Cells["DC" + lastRow].Value = i.Trans_Account_Code4_1;
+                    worksheet.Cells["DD" + lastRow].Value = i.Trans_Account_Number4_1;
+                    worksheet.Cells["DE" + lastRow].Value = i.Trans_Account_Name4_1;
+                    worksheet.Cells["DF" + lastRow].Value = i.Trans_Exchange_Rate4_1;
+                    worksheet.Cells["DG" + lastRow].Value = i.Trans_Contra_Currency4_1;
+                    worksheet.Cells["DH" + lastRow].Value = i.Trans_Fund4_1;
+                    worksheet.Cells["DI" + lastRow].Value = i.Trans_Advice_Print4_1;
+                    worksheet.Cells["DJ" + lastRow].Value = i.Trans_Details4_1;
+                    worksheet.Cells["DK" + lastRow].Value = i.Trans_Entity4_1;
+                    worksheet.Cells["DL" + lastRow].Value = i.Trans_Division4_1;
+                    worksheet.Cells["DM" + lastRow].Value = i.Trans_InterAmount4_1;
+                    worksheet.Cells["DN" + lastRow].Value = i.Trans_InterRate4_1;
+                    worksheet.Cells["DO" + lastRow].Value = i.Trans_DebitCredit4_2;
+                    worksheet.Cells["DP" + lastRow].Value = i.Trans_Currency4_2;
+                    worksheet.Cells["DQ" + lastRow].Value = i.Trans_Amount4_2;
+                    worksheet.Cells["DR" + lastRow].Value = i.Trans_Customer4_2;
+                    worksheet.Cells["DS" + lastRow].Value = i.Trans_Account_Code4_2;
+                    worksheet.Cells["DT" + lastRow].Value = i.Trans_Account_Number4_2;
+                    worksheet.Cells["DU" + lastRow].Value = i.Trans_Account_Name4_2;
+                    worksheet.Cells["DV" + lastRow].Value = i.Trans_Exchange_Rate4_2;
+                    worksheet.Cells["DW" + lastRow].Value = i.Trans_Contra_Currency4_2;
+                    worksheet.Cells["DX" + lastRow].Value = i.Trans_Fund4_2;
+                    worksheet.Cells["DY" + lastRow].Value = i.Trans_Advice_Print4_2;
+                    worksheet.Cells["DZ" + lastRow].Value = i.Trans_Details4_2;
+                    worksheet.Cells["EA" + lastRow].Value = i.Trans_Entity4_2;
+                    worksheet.Cells["EB" + lastRow].Value = i.Trans_Division4_2;
+                    worksheet.Cells["EC" + lastRow].Value = i.Trans_InterAmount4_2;
+                    worksheet.Cells["ED" + lastRow].Value = i.Trans_InterRate4_2;
+
+                    lastRow += 1;
+                }
+
+                package.Save();
+            }
+        }
         public void ExcelWTS(FileInfo newFile, FileInfo templateFile, HomeReportDataFilterViewModel data)
         {
             using (ExcelPackage package = new ExcelPackage(newFile, templateFile))

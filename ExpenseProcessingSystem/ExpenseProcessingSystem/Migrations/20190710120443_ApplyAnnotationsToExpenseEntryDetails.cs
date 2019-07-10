@@ -7,7 +7,13 @@ namespace ExpenseProcessingSystem.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
-                name: "ExpDtl_SS_Payee",
+                name: "ExpDtl_CreditAccount1",
+                table: "ExpenseEntryDetails",
+                nullable: false,
+                defaultValue: 0);
+
+            migrationBuilder.AddColumn<int>(
+                name: "ExpDtl_CreditAccount2",
                 table: "ExpenseEntryDetails",
                 nullable: false,
                 defaultValue: 0);
@@ -16,8 +22,13 @@ namespace ExpenseProcessingSystem.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "ExpDtl_SS_Payee",
+                name: "ExpDtl_CreditAccount1",
                 table: "ExpenseEntryDetails");
+
+            migrationBuilder.DropColumn(
+                name: "ExpDtl_CreditAccount2",
+                table: "ExpenseEntryDetails");
+
         }
     }
 }

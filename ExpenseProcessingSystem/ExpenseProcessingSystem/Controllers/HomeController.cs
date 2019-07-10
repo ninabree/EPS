@@ -567,7 +567,6 @@ namespace ExpenseProcessingSystem.Controllers
                         ReportCommonVM = repComVM
                     };
                     break;
-
                 //For Alphalist of Suppliers by top 10000 corporation
                 case ConstantData.HomeReportConstantValue.AST1000:
                     fileName = "AlphalistOfSuppliersByTop10000Corporation_" + dateNow;
@@ -610,7 +609,6 @@ namespace ExpenseProcessingSystem.Controllers
                     }
 
                     break;
-
                 //For Actual Budget Report
                 case ConstantData.HomeReportConstantValue.ActualBudgetReport:
                     fileName = "ActualBudgetReport_" + dateNow;
@@ -626,7 +624,7 @@ namespace ExpenseProcessingSystem.Controllers
                         ReportCommonVM = repComVM
                     };
                     break;
-                //For Actual Budget Report
+                //For Transaction List
                 case ConstantData.HomeReportConstantValue.TransListReport:
                     fileName = "TransactionList_" + dateNow;
                     layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
