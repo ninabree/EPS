@@ -15,7 +15,7 @@ namespace ExpenseProcessingSystem.ViewModels
 
         public IEnumerable<HomeReportActualBudgetModel> HomeReportOutputActualBudget { get; set; }
 
-        public IEnumerable<GOExpressHistModel> HomeReportOutputTransactionList { get; set; }
+        public IEnumerable<HomeReportTransactionListViewModel> HomeReportOutputTransactionList { get; set; }
 
         public IEnumerable<Temp_RepWTSViewModel> HomeReportOutputWTS { get; set; }
 
