@@ -2881,7 +2881,7 @@ namespace ExpenseProcessingSystem.Services
             List<HomeReportTransactionListViewModel> list1 = new List<HomeReportTransactionListViewModel>();
             List<HomeReportTransactionListViewModel> list2 = new List<HomeReportTransactionListViewModel>();
 
-            var accList = getAccountListIncHist();
+            List<DMAccountModel> accList = getAccountListIncHist();
 
 
             if (model.PeriodOption == 1)
@@ -2972,6 +2972,7 @@ namespace ExpenseProcessingSystem.Services
                 var db1 = (from hist in _context.GOExpressHist
                            join exp in _context.ExpenseEntry on hist.ExpenseEntryID equals exp.Expense_ID
                            join trans in _context.ExpenseTransLists on hist.GOExpHist_Id equals trans.TL_GoExpHist_ID
+                           join expDtl in _context.ExpenseEntryDetails on hist.ExpenseDetailID equals expDtl.ExpDtl_ID
                            select new
                            {
                                exp.Expense_ID,
@@ -2980,6 +2981,9 @@ namespace ExpenseProcessingSystem.Services
                                exp.Expense_Date,
                                exp.Expense_Number,
                                exp.Expense_CheckNo,
+                               expDtl.ExpDtl_Account,
+                               expDtl.ExpDtl_CreditAccount1,
+                               expDtl.ExpDtl_CreditAccount2,
                                hist.ExpenseEntryID,
                                hist.ExpenseDetailID,
                                hist.GOExpHist_Id,
@@ -3145,7 +3149,7 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount1_1 = i.GOExpHist_Entry11Amt,
                         Trans_Customer1_1 = i.GOExpHist_Entry11Cust,
                         Trans_Account_Code1_1 = i.GOExpHist_Entry11Actcde,
-                        Trans_Account_Name1_1 = i.GOExpHist_Entry11ActType,
+                        Trans_Account_Name1_1 = "",
                         Trans_Account_Number1_1 = i.GOExpHist_Entry11ActNo,
                         Trans_Exchange_Rate1_1 = i.GOExpHist_Entry11ExchRate,
                         Trans_Contra_Currency1_1 = i.GOExpHist_Entry11ExchCcy,
@@ -3614,13 +3618,21 @@ namespace ExpenseProcessingSystem.Services
                 }
             }
 
-            foreach (var i in list1.Concat(list2).OrderBy(x => x.Trans_Last_Updated_Date))
-            {
-                Console.WriteLine("##########" + i.HistGOExpHist_Id);
-            }
-
             return list1.Concat(list2);
         }
+
+        //GetAccountNameForTransList(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2),
+        //public string GetAccountNameForTransList(List<DMAccountModel> accList, string accType, string accNo, int acc1, int? acc2, int? acc3)
+        //{
+        //    DMAccountModel accno1 = accList.Where(x => x.Account_ID == acc1).FirstOrDefault();
+        //    DMAccountModel accno2 = (acc2 != 0) ? accList.Where(x => x.Account_ID == acc2).FirstOrDefault() : null;
+        //    DMAccountModel accno3 = (acc3 != 0) ? accList.Where(x => x.Account_ID == acc3).FirstOrDefault() : null;
+
+        //    if (accno1.Account_No.Contains(accType) && accno1.Account_No.Contains(accNo))
+        //    {
+
+        //    }
+        //}
 
         public DateTime GetSelectedYearMonthOfTerm(int month, int year)
         {
