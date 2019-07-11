@@ -4420,12 +4420,6 @@ namespace ExpenseProcessingSystem.Services
             float TotalDebit = 0;
             float credEwtTotal = 0;
             float credCashTotal = 0;
-            int creditAccMasterID1 = 0;
-            int creditAccMasterID2 = 0;
-            XElement xelem = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
-
-            creditAccMasterID1 = int.Parse(xelem.Element("C_DDV1").Value);
-            creditAccMasterID2 = int.Parse(xelem.Element("C_DDV2").Value);
 
             foreach (EntryDDVViewModel cv in entryModel.EntryDDV)
             {
@@ -4444,84 +4438,87 @@ namespace ExpenseProcessingSystem.Services
                     List<ExpenseEntryGbaseDtl> expenseGbase = new List<ExpenseEntryGbaseDtl>();
 
                     ExpenseEntryInterEntityModel interDetail = new ExpenseEntryInterEntityModel();
-                    var inter = ddv.interDetails;
-
-                    interDetail = new ExpenseEntryInterEntityModel
+                    if (ddv.interDetails != null)
                     {
-                        ExpDtl_DDVInter_Check1 = inter.Inter_Check1,
-                        ExpDtl_DDVInter_Check2 = inter.Inter_Check2,
-                        ExpDtl_DDVInter_Conv_Amount1 = inter.Inter_Convert1_Amount,
-                        ExpDtl_DDVInter_Conv_Amount2 = inter.Inter_Convert2_Amount,
-                        ExpDtl_DDVInter_Curr1_ID = inter.Inter_Currency1_ID,
-                        ExpDtl_DDVInter_Amount1 = inter.Inter_Currency1_Amount,
-                        ExpDtl_DDVInter_Curr2_ID = inter.Inter_Currency2_ID,
-                        ExpDtl_DDVInter_Amount2 = inter.Inter_Currency2_Amount,
-                        ExpDtl_DDVInter_Rate = (inter.Inter_Rate > 0) ? inter.Inter_Rate : 1,
-                        ExpenseEntryInterEntityParticular = new List<ExpenseEntryInterEntityParticularModel>()
+                        var inter = ddv.interDetails;
 
-                    };
-
-                    foreach (ExpenseEntryInterEntityParticularViewModel interPart in inter.interPartList)
-                    {
-                        var accName = _context.DMAccount.Where(x => x.Account_ID == ddv.account).Select(x => x.Account_Name).FirstOrDefault();
-                        ExpenseEntryInterEntityParticularModel interParticular = new ExpenseEntryInterEntityParticularModel
+                        interDetail = new ExpenseEntryInterEntityModel
                         {
-                            InterPart_ID = interPart.InterPart_ID,
-                            InterPart_Particular_Title = interPart.InterPart_Particular_Title
+                            ExpDtl_DDVInter_Check1 = inter.Inter_Check1,
+                            ExpDtl_DDVInter_Check2 = inter.Inter_Check2,
+                            ExpDtl_DDVInter_Conv_Amount1 = inter.Inter_Convert1_Amount,
+                            ExpDtl_DDVInter_Conv_Amount2 = inter.Inter_Convert2_Amount,
+                            ExpDtl_DDVInter_Curr1_ID = inter.Inter_Currency1_ID,
+                            ExpDtl_DDVInter_Amount1 = inter.Inter_Currency1_Amount,
+                            ExpDtl_DDVInter_Curr2_ID = inter.Inter_Currency2_ID,
+                            ExpDtl_DDVInter_Amount2 = inter.Inter_Currency2_Amount,
+                            ExpDtl_DDVInter_Rate = (inter.Inter_Rate > 0) ? inter.Inter_Rate : 1,
+                            ExpenseEntryInterEntityParticular = new List<ExpenseEntryInterEntityParticularModel>()
+
                         };
-                        List<ExpenseEntryInterEntityAccsModel> interAccsList = new List<ExpenseEntryInterEntityAccsModel>();
-                        foreach (ExpenseEntryInterEntityAccsViewModel interAcc in interPart.ExpenseEntryInterEntityAccs)
+
+                        foreach (ExpenseEntryInterEntityParticularViewModel interPart in inter.interPartList)
                         {
-                            ExpenseEntryInterEntityAccsModel interDetailAcc = new ExpenseEntryInterEntityAccsModel()
+                            var accName = _context.DMAccount.Where(x => x.Account_ID == ddv.account).Select(x => x.Account_Name).FirstOrDefault();
+                            ExpenseEntryInterEntityParticularModel interParticular = new ExpenseEntryInterEntityParticularModel
                             {
-                                InterAcc_Acc_ID = interAcc.Inter_Acc_ID,
-                                InterAcc_Amount = interAcc.Inter_Amount,
-                                InterAcc_Curr_ID = interAcc.Inter_Curr_ID,
-                                InterAcc_Rate = interAcc.Inter_Rate,
-                                InterAcc_Type_ID = interAcc.Inter_Type_ID
+                                InterPart_ID = interPart.InterPart_ID,
+                                InterPart_Particular_Title = interPart.InterPart_Particular_Title
                             };
-                            interAccsList.Add(interDetailAcc);
+                            List<ExpenseEntryInterEntityAccsModel> interAccsList = new List<ExpenseEntryInterEntityAccsModel>();
+                            foreach (ExpenseEntryInterEntityAccsViewModel interAcc in interPart.ExpenseEntryInterEntityAccs)
+                            {
+                                ExpenseEntryInterEntityAccsModel interDetailAcc = new ExpenseEntryInterEntityAccsModel()
+                                {
+                                    InterAcc_Acc_ID = interAcc.Inter_Acc_ID,
+                                    InterAcc_Amount = interAcc.Inter_Amount,
+                                    InterAcc_Curr_ID = interAcc.Inter_Curr_ID,
+                                    InterAcc_Rate = interAcc.Inter_Rate,
+                                    InterAcc_Type_ID = interAcc.Inter_Type_ID
+                                };
+                                interAccsList.Add(interDetailAcc);
+                            }
+                            interParticular.ExpenseEntryInterEntityAccs = interAccsList;
+                            interDetail.ExpenseEntryInterEntityParticular.Add(interParticular);
                         }
-                        interParticular.ExpenseEntryInterEntityAccs = interAccsList;
-                        interDetail.ExpenseEntryInterEntityParticular.Add(interParticular);
-                    }
-                    
-                    expenseInter.Add(interDetail);
 
-                    foreach (var gbaseRemark in ddv.gBaseRemarksDetails)
+                        expenseInter.Add(interDetail);
+                    }
+                    if (ddv.gBaseRemarksDetails.Count > 0)
                     {
-                        ExpenseEntryGbaseDtl remarks = new ExpenseEntryGbaseDtl
+                        foreach (var gbaseRemark in ddv.gBaseRemarksDetails)
                         {
-                            GbaseDtl_Document_Type = gbaseRemark.docType,
-                            GbaseDtl_InvoiceNo = gbaseRemark.invNo,
-                            GbaseDtl_Description = gbaseRemark.desc,
-                            GbaseDtl_Amount = gbaseRemark.amount
-                        };
+                            ExpenseEntryGbaseDtl remarks = new ExpenseEntryGbaseDtl
+                            {
+                                GbaseDtl_Document_Type = gbaseRemark.docType,
+                                GbaseDtl_InvoiceNo = gbaseRemark.invNo,
+                                GbaseDtl_Description = gbaseRemark.desc,
+                                GbaseDtl_Amount = gbaseRemark.amount
+                            };
 
-                        expenseGbase.Add(remarks);
+                            expenseGbase.Add(remarks);
+                        }
+                        ExpenseEntryDetailModel expenseDetails = new ExpenseEntryDetailModel
+                        {
+                            ExpDtl_Gbase_Remarks = ddv.GBaseRemarks,
+                            ExpDtl_Account = ddv.account,
+                            ExpDtl_Inter_Entity = ddv.inter_entity,
+                            ExpDtl_Fbt = ddv.fbt,
+                            ExpDtl_FbtID = (ddv.fbt) ? getFbt(getAccount(ddv.account).Account_FBT_MasterID) : 0,
+                            ExpDtl_Dept = ddv.dept,
+                            ExpDtl_Vat = ddv.vat,
+                            ExpDtl_Ewt = ddv.ewt,
+                            ExpDtl_Ccy = ddv.ccy,
+                            ExpDtl_Debit = ddv.debitGross,
+                            ExpDtl_Credit_Ewt = ddv.credEwt,
+                            ExpDtl_Credit_Cash = ddv.credCash,
+                            ExpDtl_Ewt_Payor_Name_ID = ddv.ewt_Payor_Name_ID,
+                            ExpenseEntryInterEntity = expenseInter,
+                            ExpDtl_isEwt = ddv.chkEwt,
+                            ExpenseEntryGbaseDtls = expenseGbase
+                        };
+                        expenseDtls.Add(expenseDetails);
                     }
-                    ExpenseEntryDetailModel expenseDetails = new ExpenseEntryDetailModel
-                    {
-                        ExpDtl_Gbase_Remarks = ddv.GBaseRemarks,
-                        ExpDtl_Account = ddv.account,
-                        ExpDtl_Inter_Entity = ddv.inter_entity,
-                        ExpDtl_Fbt = ddv.fbt,
-                        ExpDtl_FbtID = (ddv.fbt) ? getFbt(getAccount(ddv.account).Account_FBT_MasterID) : 0,
-                        ExpDtl_Dept = ddv.dept,
-                        ExpDtl_Vat = ddv.vat,
-                        ExpDtl_Ewt = ddv.ewt,
-                        ExpDtl_Ccy = ddv.ccy,
-                        ExpDtl_Debit = ddv.debitGross,
-                        ExpDtl_Credit_Ewt = ddv.credEwt,
-                        ExpDtl_Credit_Cash = ddv.credCash,
-                        ExpDtl_CreditAccount1 = (ddv.credEwt > 0) ? getAccountByMasterID(creditAccMasterID1).Account_ID : 0,
-                        ExpDtl_CreditAccount2 = getAccountByMasterID(creditAccMasterID2).Account_ID,
-                        ExpDtl_Ewt_Payor_Name_ID = ddv.ewt_Payor_Name_ID,
-                        ExpenseEntryInterEntity = expenseInter,
-                        ExpDtl_isEwt = ddv.chkEwt,
-                        ExpenseEntryGbaseDtls = expenseGbase
-                    };
-                    expenseDtls.Add(expenseDetails);
                 }
 
                 ExpenseEntryModel expenseEntry = new ExpenseEntryModel
@@ -4537,7 +4534,6 @@ namespace ExpenseProcessingSystem.Services
                     Expense_isDeleted = false,
                     Expense_Status = 1,
                     ExpenseEntryDetails = expenseDtls
-                    //Expense_Number = getExpTransNo(expenseType)
                 };
 
                 if (entryModel.entryID == 0)
