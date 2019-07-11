@@ -31,18 +31,18 @@ namespace ExpenseProcessingSystem.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly EPSDbContext _context;
         private readonly GOExpressContext _GOContext;
-        //private readonly GWriteContext _gWriteContext;
+        private readonly GWriteContext _gWriteContext;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
         private readonly IHostingEnvironment _hostingEnvironment;
         private ModalService _modalservice;
 
         private ModelStateDictionary _modelState;
-        public HomeService(IHttpContextAccessor httpContextAccessor, EPSDbContext context, GOExpressContext goContext, ModelStateDictionary modelState, IHostingEnvironment hostingEnvironment)
+        public HomeService(IHttpContextAccessor httpContextAccessor, EPSDbContext context, GOExpressContext goContext, GWriteContext gWriteContext ,ModelStateDictionary modelState, IHostingEnvironment hostingEnvironment)
         {
             _httpContextAccessor = httpContextAccessor;
             _context = context;
             _GOContext = goContext;
-            //_gWriteContext = gWriteContext;
+            _gWriteContext = gWriteContext;
             _modelState = modelState;
             _hostingEnvironment = hostingEnvironment;
             _modalservice = new ModalService(_httpContextAccessor, _context);
@@ -5119,62 +5119,78 @@ namespace ExpenseProcessingSystem.Services
         ///================[Closing]=================
         public bool closeTransaction(string transactionType, string username, string password)
         {
-            //string closeCommand = "cm00@E*1@E@E17-@E1210@E";
+            string closeCommand = "cm00@E*1@E@E17-@E1210@E";
 
-            //TblRequestDetails rqDtl = new TblRequestDetails();
-            //GwriteTransList gWriteModel = new GwriteTransList();
+            TblRequestDetails rqDtl = new TblRequestDetails();
+            GwriteTransList gWriteModel = new GwriteTransList();
 
-            //closeCommand = closeCommand.Replace("*",transactionType);
-            //closeCommand = closeCommand.Replace("-",username.Substring(username.Length - 4));
+            closeCommand = closeCommand.Replace("*", transactionType);
+            closeCommand = closeCommand.Replace("-", username.Substring(username.Length - 4));
 
-            //rqDtl = postToGwrite(closeCommand,username,password);
+            rqDtl = postToGwrite(closeCommand, username, password);
 
-            //gWriteModel.GW_GWrite_ID = rqDtl.RequestId;
-            //gWriteModel.GW_Status = "pending";
+            gWriteModel.GW_GWrite_ID = int.Parse(rqDtl.RequestId.ToString());
+            gWriteModel.GW_Status = "pending";
 
             return true;
         }
+        public ClosingViewModel closeLoadSheet()
+        {
+            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
+
+            ClosingViewModel closeVM = new ClosingViewModel();
+
+            PettyCashModel pcModel = _context.PettyCash.OrderByDescending(x => x.PC_CloseDate).FirstOrDefault();
+            ClosingModel closeModel = _context.Closing.OrderByDescending(x => x.Close_Date).FirstOrDefault();
+
+            closeVM.pettyBegBalance = pcModel.PC_EndBal;
+            
+
+
+            return closeVM;
+        }
         ///==============[End Closing]===============
-        
+
         ///============[Post to GWrite]==============
-        //public TblRequestDetails postToGwrite(string command, string username, string password)
-        //{
-        //    TblRequestDetails rqDtlModel = new TblRequestDetails();
-        //    TblRequestItem rqItemModel = new TblRequestItem();
+        public TblRequestDetails postToGwrite(string command, string username, string password)
+        {
+            TblRequestDetails rqDtlModel = new TblRequestDetails();
+            rqDtlModel.tblRequestItems = new List<TblRequestItem>();
+            TblRequestItem rqItemModel = new TblRequestItem();
 
-        //    byte[] asciiBytes = System.Text.Encoding.ASCII.GetBytes(password);
-        //    string encodedPass = "";
-        //    int index = 0;
+            byte[] asciiBytes = System.Text.Encoding.ASCII.GetBytes(password);
+            string encodedPass = "";
+            int index = 0;
 
-        //    foreach (byte b in asciiBytes)
-        //    {
-        //        string hexValue = b.ToString("X");
-        //        encodedPass += hexValue + ",0";
-        //        if (index != asciiBytes.Length - 1)
-        //            encodedPass += ",";
-        //        index++;
-        //    }
+            foreach (byte b in asciiBytes)
+            {
+                string hexValue = b.ToString("X");
+                encodedPass += hexValue + ",0";
+                if (index != asciiBytes.Length - 1)
+                    encodedPass += ",";
+                index++;
+            }
 
-        //    rqDtlModel.RacfId = username;
-        //    rqDtlModel.RacfPassword = encodedPass;
-        //    rqDtlModel.RequestCreated = DateTime.Now;
-        //    rqDtlModel.Status = "SCRIPTING";
-        //    rqDtlModel.SystemAbbr = "EXPRESS";
-        //    rqDtlModel.Priority = 1;
+            rqDtlModel.RacfId = username;
+            rqDtlModel.RacfPassword = encodedPass;
+            rqDtlModel.RequestCreated = DateTime.Now;
+            rqDtlModel.Status = "SCRIPTING";
+            rqDtlModel.SystemAbbr = "EXPRESS";
+            rqDtlModel.Priority = 1;
 
-        //    rqItemModel.SequenceNo = 1;
-        //    rqItemModel.ReturnFlag = true;
-        //    rqItemModel.Command = command;
+            rqItemModel.SequenceNo = 1;
+            rqItemModel.ReturnFlag = true;
+            rqItemModel.Command = command;
 
-        //    rqDtlModel.TblRequestItem.Add(rqItemModel);
+            rqDtlModel.tblRequestItems.Add(rqItemModel);
 
-        //    _gWriteContext.Add(rqDtlModel);
-        //    _gWriteContext.SaveChanges();
+            _gWriteContext.Add(rqDtlModel);
+            _gWriteContext.SaveChanges();
 
-        //    return rqDtlModel;
-        //}
+            return rqDtlModel;
+        }
         ///==========[End Post to Gwrite]============
-        
+
         ///==============[Begin Gbase Entry Section]================
         private TblCm10 InsertGbaseEntry(gbaseContainer containerModel, int expenseID)
         {
@@ -5645,7 +5661,7 @@ namespace ExpenseProcessingSystem.Services
             } while (maxNumber != _context.ExpenseEntry
                                         .Where(y => y.Expense_Date.Year == DateTime.Now.Year && y.Expense_Number != 0)
                                         .Max(y => y.Expense_Number));
-
+            _context.Entry<ExpenseEntryModel>(transNoMax).State = EntityState.Detached;
             return transno;
         }
 

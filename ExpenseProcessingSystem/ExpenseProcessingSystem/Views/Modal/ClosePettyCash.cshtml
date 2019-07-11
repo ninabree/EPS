@@ -1,4 +1,9 @@
-﻿<div style="text-align:center">
+﻿@model ExpenseProcessingSystem.ViewModels.ClosingBrkDwnViewModel
+@{ 
+    double billsTotal = Math.Round(Model.CBD_oneKAmount + Model.CBD_fiveHAmount + Model.CBD_twoHAmount + Model.CBD_oneHAmount + Model.CBD_fiftyAmount + Model.CBD_twentyAmount, 2);
+    double coinsTotal = Math.Round(Model.CBD_tenAmount + Model.CBD_fiveAmount + Model.CBD_oneAmount + Model.CBD_c25Amount + Model.CBD_c10Amount + Model.CBD_c5Amount + Model.CBD_c1Amout, 2);
+}
+<div style="text-align:center">
     <h5>MIZUHO BANK, LTD. - MANILA BRANCH</h5>
     <p>Administration Department</p>
     <br />
@@ -6,14 +11,14 @@
     <p>Cash Closing Sheet</p>
 </div>
 <div style="float:left">
-    Date : <input type="date" />
+    Date : @Html.DisplayFor(x => x.CBD_Date, new {@readonly = "readonly" })
 </div>
 <div style="float:right">
     <table>
         <colgroup>
-            <col  style="border:1px solid black"/>
-            <col  style="border:1px solid black"/>
-            <col  style="border:1px solid black"/>
+            <col style="border:1px solid black" />
+            <col style="border:1px solid black" />
+            <col style="border:1px solid black" />
         </colgroup>
         <thead>
             <tr>
@@ -37,22 +42,58 @@
             <tr style="height: 18px;">
                 <td style="width: 40%; height: 18px; text-align: center;" colspan="3"><strong>Opening Balance</strong></td>
                 <td style="width: 20%; height: 18px; text-align: center;" colspan="2">PHP</td>
-                <td style="width: 40%; height: 18px; text-align: center;" colspan="2">1234679</td>
+                @if (Model.CBD_displayMode)
+                {
+                    <td style="width: 40%; height: 18px; text-align: center;" colspan="2">@Model.CBD_opeBalance.ToString("0.00")</td>
+                }
+                else
+                {
+                    <td style="width: 40%; height: 18px; text-align: center;" colspan="2">
+                        <input type="text" id="brkDwnOpnBal" readonly />
+                    </td>
+                }
             </tr>
             <tr style="height: 18px;">
                 <td style="width: 40%; height: 18px; text-align: center;" colspan="3">Recieved</td>
                 <td style="width: 20%; height: 18px; text-align: center;" colspan="2">PHP</td>
-                <td style="width: 40%; height: 18px; text-align: center;" colspan="2">1234679</td>
+                @if (Model.CBD_displayMode)
+                {
+                    <td style="width: 40%; height: 18px; text-align: center;" colspan="2">@Model.CBD_recieve.ToString("0.00")</td>
+                }
+                else
+                {
+                    <td style="width: 40%; height: 18px; text-align: center;" colspan="2">
+                        <input type="text" id="brkDwnRecieve" readonly />
+                    </td>
+                }
             </tr>
             <tr style="height: 18px;">
                 <td style="width: 40%; height: 18px; text-align: center;" colspan="3">Disbursed</td>
                 <td style="width: 20%; height: 18px; text-align: center;" colspan="2">PHP</td>
-                <td style="width: 40%; height: 18px; text-align: center;" colspan="2">1234679</td>
+                @if (Model.CBD_displayMode)
+                {
+                    <td style="width: 40%; height: 18px; text-align: center;" colspan="2">@Model.CBD_disburse.ToString("0.00")</td>
+                }
+                else
+                {
+                    <td style="width: 40%; height: 18px; text-align: center;" colspan="2">
+                        <input type="text" id="brkDwnDisburse" readonly />
+                    </td>
+                }
             </tr>
             <tr style="height: 18px;">
                 <td style="width: 40%; height: 18px; text-align: center;" colspan="3"><strong>Closing Balance</strong></td>
                 <td style="width: 20%; height: 18px; text-align: center;" colspan="2">PHP</td>
-                <td style="width: 40%; height: 18px; text-align: center;" colspan="2">1234679</td>
+                @if (Model.CBD_displayMode)
+                {
+                    <td style="width: 40%; height: 18px; text-align: center;" colspan="2">@Model.CBD_closeBalance.ToString("0.00")</td>
+                }
+                else
+                {
+                    <td style="width: 40%; height: 18px; text-align: center;" colspan="2">
+                        <input type="text" id="brkDwnClsBal" readonly />
+                    </td>
+                }
             </tr>
             <tr style="height: 18px;">
                 <td style="width: 30%; height: 18px; text-align: center;" colspan="2"><strong>Denomination</strong></td>
@@ -63,96 +104,365 @@
             <tr style="height: 18px;">
                 <td style="width: 10%; height: 109px;" rowspan="6"><p style=" writing-mode:tb-rl;padding-top:50%;">B&nbsp;I&nbsp;L&nbsp;L&nbsp;S</p></td>
                 <td style="width: 20%; height: 18px; text-align: center;">1,000.00</td>
-                <td style="width: 20%; height: 18px; text-align: center;" colspan="2">&nbsp;</td>
+                <td style="width: 20%; height: 18px; text-align: center;" colspan="2">
+                    @if (Model.CBD_displayMode)
+                    {
+                        @Model.CBD_oneK
+                    }
+                    else
+                    {
+                        <input type="number" min="0" id="oneK" />
+                    }
+                </td>
                 <td style="width: 10%; height: 18px; text-align: center;" colspan="2">N/A</td>
-                <td style="width: 40%; height: 18px; text-align: center;">&nbsp;</td>
+                <td style="width: 40%; height: 18px; text-align: center;">
+                    @if (Model.CBD_displayMode)
+                    {
+                        @Model.CBD_oneKAmount.ToString("0.00")
+                    }
+                    else
+                    {
+                        <input type="number" min="0" id="oneKAmount" readonly />
+                    }
+                </td>
             </tr>
             <tr style="height: 18px;">
                 <td style="width: 20%; height: 18px; text-align: center;">500.00</td>
-                <td style="width: 20%; height: 18px; text-align: center;" colspan="2">&nbsp;</td>
+                <td style="width: 20%; height: 18px; text-align: center;" colspan="2">
+                    @if (Model.CBD_displayMode)
+                    {
+                       @Model.CBD_fiveH
+                    }
+                    else
+                    {
+                        <input type="number" min="0" id="fiveH" />
+                    }
+                </td>
                 <td style="width: 10%; height: 18px; text-align: center;" colspan="2">N/A</td>
-                <td style="width: 40%; height: 18px; text-align: center;">&nbsp;</td>
+                <td style="width: 40%; height: 18px; text-align: center;">
+                    @if (Model.CBD_displayMode)
+                    {
+                        @Model.CBD_fiveHAmount.ToString("0.00")
+                    }
+                    else
+                    {
+                        <input type="number" min="0" id="fiveHAmount" readonly />
+                    }
+                </td>
             </tr>
             <tr style="height: 18px;">
                 <td style="width: 20%; height: 18px; text-align: center;">200.00</td>
-                <td style="width: 20%; height: 18px; text-align: center;" colspan="2">&nbsp;</td>
+                <td style="width: 20%; height: 18px; text-align: center;" colspan="2">
+                    @if (Model.CBD_displayMode)
+                    {
+                        @Model.CBD_twoH
+                    }
+                    else
+                    {
+                        <input type="number" min="0" id="twoH" />
+                    }
+                </td>
                 <td style="width: 10%; height: 18px; text-align: center;" colspan="2">N/A</td>
-                <td style="width: 40%; height: 18px; text-align: center;">&nbsp;</td>
+                <td style="width: 40%; height: 18px; text-align: center;">
+                    @if (Model.CBD_displayMode)
+                    {
+                        @Model.CBD_twoHAmount.ToString("0.00")
+                    }
+                    else
+                    {
+                        <input type="number" min="0" id="twoHAmount" readonly />
+                    }
+                </td>
             </tr>
             <tr style="height: 19px;">
                 <td style="width: 20%; height: 19px; text-align: center;">100.00</td>
-                <td style="width: 20%; height: 19px; text-align: center;" colspan="2">&nbsp;</td>
+                <td style="width: 20%; height: 19px; text-align: center;" colspan="2">
+                    @if (Model.CBD_displayMode)
+                    {
+                        @Model.CBD_oneH
+                    }
+                    else
+                    {
+                        <input type="number" min="0" id="oneH" />
+                    }
+                </td>
                 <td style="width: 10%; height: 19px; text-align: center;" colspan="2">N/A</td>
-                <td style="width: 40%; height: 19px; text-align: center;">&nbsp;</td>
+                <td style="width: 40%; height: 19px; text-align: center;">
+                    @if (Model.CBD_displayMode)
+                    {
+                        @Model.CBD_oneHAmount.ToString("0.00")
+                    }
+                    else
+                    {
+                        <input type="number" min="0" id="oneHAmount" readonly />
+                    }
+                </td>
             </tr>
             <tr style="height: 18px;">
                 <td style="width: 20%; height: 18px; text-align: center;">50.00</td>
-                <td style="width: 20%; height: 18px; text-align: center;" colspan="2">&nbsp;</td>
+                <td style="width: 20%; height: 18px; text-align: center;" colspan="2">
+                    @if (Model.CBD_displayMode)
+                    {
+                        @Model.CBD_fifty
+                    }
+                    else
+                    {
+                        <input type="number" min="0" id="fifty" />
+                    }
+                </td>
                 <td style="width: 10%; height: 18px; text-align: center;" colspan="2">N/A</td>
-                <td style="width: 40%; height: 18px; text-align: center;">&nbsp;</td>
+                <td style="width: 40%; height: 18px; text-align: center;">
+                    @if (Model.CBD_displayMode)
+                    {
+                        @Model.CBD_fiftyAmount.ToString("0.00")
+                    }
+                    else
+                    {
+                        <input type="number" min="0" id="fifty" readonly />
+                    }
+                </td>
             </tr>
             <tr style="height: 18px;">
                 <td style="width: 20%; height: 18px; text-align: center;">20.00</td>
-                <td style="width: 20%; height: 18px; text-align: center;" colspan="2">&nbsp;</td>
+                <td style="width: 20%; height: 18px; text-align: center;" colspan="2">
+                    @if (Model.CBD_displayMode)
+                    {
+                        @Model.CBD_twenty
+                    }
+                    else
+                    {
+                        <input type="number" min="0" id="twenty" />
+                    }
+                </td>
                 <td style="width: 10%; height: 18px; text-align: center;" colspan="2">N/A</td>
-                <td style="width: 40%; height: 18px; text-align: center;">&nbsp;</td>
+                <td style="width: 40%; height: 18px; text-align: center;">
+                    @if (Model.CBD_displayMode)
+                    {
+                        @Model.CBD_twentyAmount.ToString("0.00")
+                    }
+                    else
+                    {
+                        <input type="number" min="0" id="twentyAmount" readonly />
+                    }
+                </td>
             </tr>
             <tr style="height: 18px;">
                 <td style="width: 30%; height: 18px; text-align: center;" colspan="2"><strong>Sub Total</strong></td>
                 <td style="width: 30%; height: 18px; text-align: center; background-color:black;" colspan="4">&nbsp;</td>
-                <td style="width: 40%; height: 18px; text-align: center;"><strong>234234234</strong></td>
+                <td style="width: 40%; height: 18px; text-align: center;">
+                    <strong>
+                        @if (Model.CBD_displayMode)
+                        {
+                            @billsTotal
+                        }
+                        else
+                        {
+                            <input type="number" min="0" id="billTotal" readonly />
+                        }
+                    </strong>
+                </td>
             </tr>
             <tr style="height: 18px;">
-                <td style="width: 10%; height: 18px;" rowspan="7">&nbsp;</td>
+                <td style="width: 10%; height: 18px;" rowspan="7"><p style=" writing-mode:tb-rl;padding-top:50%;">C&nbsp;O&nbsp;I&nbsp;N&nbsp;S</p></td>
                 <td style="width: 20%; height: 18px; text-align: center;">10.00</td>
-                <td style="width: 20%; height: 18px; text-align: center;" colspan="2">&nbsp;</td>
+                <td style="width: 20%; height: 18px; text-align: center;" colspan="2">
+                    @if (Model.CBD_displayMode)
+                    {
+                        @Model.CBD_ten
+                    }
+                    else
+                    {
+                        <input type="number" min="0" id="ten" />
+                    }
+                </td>
                 <td style="width: 10%; height: 18px; text-align: center;" colspan="2">N/A</td>
-                <td style="width: 40%; height: 18px; text-align: center;">&nbsp;</td>
+                <td style="width: 40%; height: 18px; text-align: center;">
+                    @if (Model.CBD_displayMode)
+                    {
+                        @Model.CBD_tenAmount.ToString("0.00")
+                    }
+                    else
+                    {
+                        <input type="number" min="0" id="tenAmount" readonly />
+                    }
+                </td>
             </tr>
             <tr style="height: 18px;">
                 <td style="width: 20%; height: 18px; text-align: center;">5.00</td>
-                <td style="width: 20%; height: 18px; text-align: center;" colspan="2">&nbsp;</td>
+                <td style="width: 20%; height: 18px; text-align: center;" colspan="2">
+                    @if (Model.CBD_displayMode)
+                    {
+                        @Model.CBD_five
+                    }
+                    else
+                    {
+                        <input type="number" min="0" id="five" />
+                    }
+                </td>
                 <td style="width: 10%; height: 18px; text-align: center;" colspan="2">N/A</td>
-                <td style="width: 40%; height: 18px; text-align: center;">&nbsp;</td>
+                <td style="width: 40%; height: 18px; text-align: center;">
+                    @if (Model.CBD_displayMode)
+                    {
+                        @Model.CBD_fiveAmount.ToString("0.00")
+                    }
+                    else
+                    {
+                        <input type="number" min="0" id="fiveAmount" readonly />
+                    }
+                </td>
             </tr>
             <tr style="height: 18px;">
                 <td style="width: 20%; height: 18px; text-align: center;">1.00</td>
-                <td style="width: 20%; height: 18px; text-align: center;" colspan="2">&nbsp;</td>
+                <td style="width: 20%; height: 18px; text-align: center;" colspan="2">
+                    @if (Model.CBD_displayMode)
+                    {
+                        @Model.CBD_one
+                    }
+                    else
+                    {
+                        <input type="number" min="0" id="one" />
+                    }
+                </td>
                 <td style="width: 10%; height: 18px; text-align: center;" colspan="2">N/A</td>
-                <td style="width: 40%; height: 18px; text-align: center;">&nbsp;</td>
+                <td style="width: 40%; height: 18px; text-align: center;">
+                    @if (Model.CBD_displayMode)
+                    {
+                        @Model.CBD_oneAmount.ToString("0.00")
+                    }
+                    else
+                    {
+                        <input type="number" min="0" id="oneAmount" readonly />
+                    }
+                </td>
             </tr>
             <tr style="height: 18px;">
                 <td style="width: 20%; height: 18px; text-align: center;">0.25</td>
-                <td style="width: 20%; height: 18px; text-align: center;" colspan="2">&nbsp;</td>
+                <td style="width: 20%; height: 18px; text-align: center;" colspan="2">
+                    @if (Model.CBD_displayMode)
+                    {
+                        @Model.CBD_c25
+                    }
+                    else
+                    {
+                        <input type="number" min="0" id="c25" />
+                    }
+                </td>
                 <td style="width: 10%; height: 18px; text-align: center;" colspan="2">N/A</td>
-                <td style="width: 40%; height: 18px; text-align: center;">&nbsp;</td>
+                <td style="width: 40%; height: 18px; text-align: center;">
+                    @if (Model.CBD_displayMode)
+                    {
+                        @Model.CBD_c25Amount.ToString("0.00")
+                    }
+                    else
+                    {
+                        <input type="number" min="0" id="c25Amount" readonly />
+                    }
+                </td>
             </tr>
             <tr style="height: 18px;">
                 <td style="width: 20%; height: 18px; text-align: center;">0.10</td>
-                <td style="width: 20%; height: 18px; text-align: center;" colspan="2">&nbsp;</td>
+                <td style="width: 20%; height: 18px; text-align: center;" colspan="2">
+                    @if (Model.CBD_displayMode)
+                    {
+                        @Model.CBD_c10
+                    }
+                    else
+                    {
+                        <input type="number" min="0" id="c10" />
+                    }
+                </td>
                 <td style="width: 10%; height: 18px; text-align: center;" colspan="2">N/A</td>
-                <td style="width: 40%; height: 18px; text-align: center;">&nbsp;</td>
+                <td style="width: 40%; height: 18px; text-align: center;">
+                    @if (Model.CBD_displayMode)
+                    {
+                        @Model.CBD_c10Amount.ToString("0.00")
+                    }
+                    else
+                    {
+                        <input type="number" min="0" id="c10Amount" readonly />
+                    }
+                </td>
             </tr>
             <tr style="height: 18px;">
                 <td style="width: 20%; height: 18px; text-align: center;">0.05</td>
-                <td style="width: 20%; height: 18px; text-align: center;" colspan="2">&nbsp;</td>
+                <td style="width: 20%; height: 18px; text-align: center;" colspan="2">
+                    @if (Model.CBD_displayMode)
+                    {
+                        @Model.CBD_c5
+                    }
+                    else
+                    {
+                        <input type="number" min="0" id="c5" />
+                    }
+                </td>
                 <td style="width: 10%; height: 18px; text-align: center;" colspan="2">N/A</td>
-                <td style="width: 40%; height: 18px; text-align: center;">&nbsp;</td>
+                <td style="width: 40%; height: 18px; text-align: center;">
+                    @if (Model.CBD_displayMode)
+                    {
+                        @Model.CBD_c5Amount.ToString("0.00")
+                    }
+                    else
+                    {
+                        <input type="number" min="0" id="c5Amount" readonly />
+                    }
+                </td>
             </tr>
             <tr style="height: 18px;">
                 <td style="width: 20%; height: 18px; text-align: center;">0.01</td>
-                <td style="width: 20%; height: 18px; text-align: center;" colspan="2">&nbsp;</td>
+                <td style="width: 20%; height: 18px; text-align: center;" colspan="2">
+                    @if (Model.CBD_displayMode)
+                    {
+                        @Model.CBD_c1
+                    }
+                    else
+                    {
+                        <input type="number" min="0" id="c1" />
+                    }
+                </td>
                 <td style="width: 10%; height: 18px; text-align: center;" colspan="2">N/A</td>
-                <td style="width: 40%; height: 18px; text-align: center;">&nbsp;</td>
+                <td style="width: 40%; height: 18px; text-align: center;">
+                    @if (Model.CBD_displayMode)
+                    {
+                        @Model.CBD_c1Amout.ToString("0.00")
+                    }
+                    else
+                    {
+                        <input type="number" min="0" id="c1Amount" readonly />
+                    }
+                </td>
             </tr>
             <tr style="height: 18px;">
                 <td style="width: 30%; height: 18px; text-align: center;" colspan="2"><strong>Subtotal</strong></td>
                 <td style="width: 30%; height: 18px; text-align: center; background-color:black;" colspan="4">&nbsp;</td>
-                <td style="width: 40%; height: 18px; text-align: center;"><strong>123123123</strong></td>
+                <td style="width: 40%; height: 18px; text-align: center;">
+                    <strong>
+                        @if (Model.CBD_displayMode)
+                        {
+                            @coinsTotal
+                        }
+                        else
+                        {
+                            <input type="number" min="0" id="coinTotal" readonly />
+                        }
+                    </strong>
+                </td>
             </tr>
             <tr style="height: 18px;">
                 <td style="width: 70%; height: 18px; text-align: center;" colspan="6"><strong>Closing Balance</strong></td>
-                <td style="width: 30%; height: 18px; text-align: center;"><span style="text-decoration: underline;"><strong>3333333</strong></span></td>
+                <td style="width: 30%; height: 18px; text-align: center;">
+                    <span style="text-decoration: underline;">
+                        <strong>
+                            @if (Model.CBD_displayMode)
+                            {
+                                @(billsTotal+coinsTotal)
+                            }
+                            else
+                            {
+                                <p id="ClosingTotal"></p>
+                            }
+                        </strong>
+                    </span>
+                </td>
             </tr>
         </tbody>
     </table>

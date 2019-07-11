@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--How to call value in c#.
+
+XElement xelem = XElement.Load("wwwroot/xml/ReportHeader.xml"); <- xml path
+
+string value1 = xelem.Element("LOGO").Value
+string value2 = xelem.Element("NAME").Value
+string value3 = xelem.Element("TIN").Value
+string value4 = xelem.Element("ADDRESS").Value
+
+-->
+<CLOSING>
+  <PC_ID id="PC_ID">USD</PC_ID>
+</CLOSING>

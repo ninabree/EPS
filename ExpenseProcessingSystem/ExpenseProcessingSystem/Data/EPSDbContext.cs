@@ -81,7 +81,6 @@ namespace ExpenseProcessingSystem.Data
         //CLOSING TABLES
         public DbSet<ClosingModel> Closing { get; set; }
         public DbSet<PettyCashModel> PettyCash { get; set; }
-        public DbSet<PCBreakdownModel> PettyCashBreakDown { get; set; }
         public DbSet<GwriteTransList> GwriteTransLists { get; set; }
 
         //GOExpress table history
