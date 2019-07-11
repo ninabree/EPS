@@ -4204,10 +4204,6 @@ namespace ExpenseProcessingSystem.Services
                         ExpDtl_isEwt = ddv.chkEwt,
                         ExpenseEntryGbaseDtls = expenseGbase
                     };
-
-                    //if (entryModel.entryID != 0){
-                    //    expenseDetails.ExpDtl_ID = _context.ExpenseEntryDetails.Where(x => x.ExpenseEntryModel.Expense_ID == entryModel.entryID).Select(x => x.ExpDtl_ID).FirstOrDefault();
-                    //}
                     expenseDtls.Add(expenseDetails);
                 }
 

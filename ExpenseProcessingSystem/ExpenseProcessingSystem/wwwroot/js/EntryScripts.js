@@ -81,7 +81,6 @@
         var parent = $("#" + $("#parentId").val());
 
         var trs = $("#gBaseTable").find("tbody").find("tr");
-        alert("trsLength--> " + trs.length);
         var htmlText = "";
         
         //to stop form submit if incomplete
@@ -98,7 +97,6 @@
             var invNo = $("#" + trs[i].id).find(".gInvoiceNo").val();
             var desc = $("#" + trs[i].id).find(".gDescription").val();
             var amount = $("#" + trs[i].id).find(".gAmount").val();
-            alert("IS IT DDV? " + isDDV);
             if (isDDV) {
                 htmlText += '<input class="docType" id="EntryDDV_' + rowNo + '__gBaseRemarksDetails_' + i + '__docType" name="EntryDDV[' + rowNo + '].gBaseRemarksDetails[' + i + '].docType" type="hidden" value="' + docuType + '">';
                 htmlText += '<input class="desc" id="EntryDDV_' + rowNo + '__gBaseRemarksDetails_' + i + '__desc" name="EntryDDV[' + rowNo + '].gBaseRemarksDetails[' + i + '].desc" type="hidden" value="' + desc + '">';
