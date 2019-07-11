@@ -15,6 +15,8 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         [NotNullValidations]
         [Display(Name = "Account")]
         public int account { get; set; }
+        public int creditAccount1 { get; set; }
+        public int creditAccount2 { get; set; }
         public string account_Name { get; set; }
         [NotNullValidations]
         [Display(Name = "Inter Entity")]

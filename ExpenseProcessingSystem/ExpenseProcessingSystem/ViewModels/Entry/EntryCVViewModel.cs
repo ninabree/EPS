@@ -16,6 +16,8 @@ namespace ExpenseProcessingSystem.ViewModels
         [NotNullValidations]
         [Display(Name = "Account")]
         public int account { get; set; }
+        public int creditAccount1 { get; set; }
+        public int creditAccount2 { get; set; }
         [NotNullValidations]
         [Display(Name = "FBT")]
         public bool fbt { get; set; }

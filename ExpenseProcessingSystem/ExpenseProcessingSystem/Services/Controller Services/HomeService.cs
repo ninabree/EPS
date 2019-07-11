@@ -36,7 +36,7 @@ namespace ExpenseProcessingSystem.Services
         private ISession _session => _httpContextAccessor.HttpContext.Session;
         private readonly IHostingEnvironment _hostingEnvironment;
         private ModalService _modalservice;
-
+        XElement xelemAcc = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
         private ModelStateDictionary _modelState;
         public HomeService(IHttpContextAccessor httpContextAccessor, EPSDbContext context, GOExpressContext goContext, ModelStateDictionary modelState, IHostingEnvironment hostingEnvironment)
         {
@@ -3937,6 +3937,8 @@ namespace ExpenseProcessingSystem.Services
                     debitGross = dtl.d.ExpDtl_Debit,
                     credEwt = dtl.d.ExpDtl_Credit_Ewt,
                     credCash = dtl.d.ExpDtl_Credit_Cash,
+                    creditAccount1 = dtl.d.ExpDtl_CreditAccount1,
+                    creditAccount2 = dtl.d.ExpDtl_CreditAccount2,
                     dtlSSPayee = dtl.d.ExpDtl_SS_Payee,
                     month = dtl.d.ExpDtl_Amor_Month,
                     day = dtl.d.ExpDtl_Amor_Day,
@@ -4132,6 +4134,8 @@ namespace ExpenseProcessingSystem.Services
                     debitGross = dtl.d.ExpDtl_Debit,
                     credEwt = dtl.d.ExpDtl_Credit_Ewt,
                     credCash = dtl.d.ExpDtl_Credit_Cash,
+                    creditAccount1 = dtl.d.ExpDtl_CreditAccount1,
+                    creditAccount2 = dtl.d.ExpDtl_CreditAccount2,
                     ewt_Payor_Name_ID = (dtl.d.ExpDtl_Ewt_Payor_Name_ID >= 0) ? dtl.d.ExpDtl_Ewt_Payor_Name_ID : 0,
                     interDetails = interDetail,
                     gBaseRemarksDetails = remarksDtl
@@ -5114,26 +5118,44 @@ namespace ExpenseProcessingSystem.Services
                 tempGbase.maker = expenseDetails.maker;
                 tempGbase.approver = _context.ExpenseEntry.FirstOrDefault(x=>x.Expense_ID == expID).Expense_Approver;
 
-                entryContainer credit = new entryContainer();
                 entryContainer debit = new entryContainer();
+                entryContainer credit = new entryContainer();
 
-                credit.type = "C";
                 debit.type = "D";
 
-                credit.ccy = item.ccy;
+                //Debit
                 debit.ccy = item.ccy;
-                credit.amount = item.debitGross;
                 debit.amount = item.debitGross;
-                credit.vendor = expenseDetails.vendor;
                 debit.vendor = expenseDetails.vendor;
-                credit.account = item.account;
                 debit.account = item.account;
                 debit.chkNo = expenseDetails.checkNo;
                 debit.dept = item.dept;
+
+                tempGbase.entries.Add(debit);
+
+                //Credit 1 - tax withheld if only has tax
+                if(item.credEwt > 0)
+                {
+                    credit.type = "C";
+                    credit.ccy = item.ccy;
+                    credit.amount = item.credEwt;
+                    credit.vendor = expenseDetails.vendor;
+                    credit.account = item.creditAccount1;
+                    credit.dept = item.dept;
+
+                    tempGbase.entries.Add(credit);
+                }
+
+                //Credit 2 - Credit amount
+                credit = new entryContainer();
+                credit.type = "C";
+                credit.ccy = item.ccy;
+                credit.amount = item.credCash;
+                credit.vendor = expenseDetails.vendor;
+                credit.account = item.creditAccount2;
                 credit.dept = item.dept;
 
                 tempGbase.entries.Add(credit);
-                tempGbase.entries.Add(debit);
 
                 goExpData = InsertGbaseEntry(tempGbase, expID);
                 goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.expenseDtlID);
@@ -5149,11 +5171,15 @@ namespace ExpenseProcessingSystem.Services
                     string equation = fbt.Replace("ExpenseAmount", item.debitGross.ToString());
                     double fbtAmount = Math.Round(Convert.ToDouble(new DataTable().Compute(equation, null)),2);
                     Console.WriteLine(equation);
-                    credit.amount = fbtAmount;
+
+                    debit.account = getAccountByMasterID(int.Parse(xelemAcc.Element("D_FBT").Value)).Account_ID;
                     debit.amount = fbtAmount;
 
-                    tempGbase.entries.Add(credit);
+                    credit.account = getAccountByMasterID(int.Parse(xelemAcc.Element("C_FBT").Value)).Account_ID;
+                    credit.amount = fbtAmount;
+
                     tempGbase.entries.Add(debit);
+                    tempGbase.entries.Add(credit);
 
                     goExpData = InsertGbaseEntry(tempGbase, expID);
                     goExpHistData = new GOExpressHistModel();
@@ -5398,26 +5424,43 @@ namespace ExpenseProcessingSystem.Services
                 tempGbase.maker = expenseDetails.maker;
                 tempGbase.approver = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == expID).Expense_Approver;
 
-                entryContainer credit = new entryContainer();
                 entryContainer debit = new entryContainer();
+                entryContainer credit = new entryContainer();
 
-                credit.type = (command != "R") ? "C" : "D";
+                //Debit
                 debit.type = (command != "R") ? "D" : "C";
-
-                credit.ccy = item.ccy;
                 debit.ccy = item.ccy;
-                credit.amount = item.debitGross;
                 debit.amount = item.debitGross;
-                credit.vendor = expenseDetails.vendor;
                 debit.vendor = expenseDetails.vendor;
-                credit.account = item.account;
                 debit.account = item.account;
                 debit.chkNo = expenseDetails.checkNo;
                 debit.dept = item.dept;
+
+                tempGbase.entries.Add(debit);
+
+                //Credit 1 - tax withheld if only has tax
+                if (item.credEwt > 0)
+                {
+                    credit.type = (command != "R") ? "C" : "D";
+                    credit.ccy = item.ccy;
+                    credit.amount = item.credEwt;
+                    credit.vendor = expenseDetails.vendor;
+                    credit.account = item.creditAccount1;
+                    credit.dept = item.dept;
+
+                    tempGbase.entries.Add(credit);
+                }
+
+                //Credit 2 - Credit amount
+                credit = new entryContainer();
+                credit.type = (command != "R") ? "C" : "D";
+                credit.ccy = item.ccy;
+                credit.amount = item.credCash;
+                credit.vendor = expenseDetails.vendor;
+                credit.account = item.creditAccount2;
                 credit.dept = item.dept;
 
                 tempGbase.entries.Add(credit);
-                tempGbase.entries.Add(debit);
 
                 goExpData = InsertGbaseEntry(tempGbase, expID);
                 goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.expenseDtlID);
@@ -5433,11 +5476,15 @@ namespace ExpenseProcessingSystem.Services
                     string equation = fbt.Replace("ExpenseAmount", item.debitGross.ToString());
                     double fbtAmount = Math.Round(Convert.ToDouble(new DataTable().Compute(equation, null)), 2);
                     Console.WriteLine("-=-=-=-=-=->" + equation);
-                    credit.amount = fbtAmount;
+
+                    debit.account = getAccountByMasterID(int.Parse(xelemAcc.Element("D_FBT").Value)).Account_ID;
                     debit.amount = fbtAmount;
 
-                    tempGbase.entries.Add(credit);
+                    credit.account = getAccountByMasterID(int.Parse(xelemAcc.Element("C_FBT").Value)).Account_ID;
+                    credit.amount = fbtAmount;
+
                     tempGbase.entries.Add(debit);
+                    tempGbase.entries.Add(credit);
 
                     goExpData = InsertGbaseEntry(tempGbase, expID);
                     goExpHistData = new GOExpressHistModel();
@@ -5547,26 +5594,42 @@ namespace ExpenseProcessingSystem.Services
                     tempGbase.maker = expenseDDV.maker;
                     tempGbase.approver = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == expID).Expense_Approver;
 
-                    entryContainer credit = new entryContainer();
                     entryContainer debit = new entryContainer();
+                    entryContainer credit = new entryContainer();
 
-                    credit.type = (command != "R") ? "C" : "D";
+                    //Debit
                     debit.type = (command != "R") ? "D" : "C";
-
-                    credit.ccy = item.ccy;
                     debit.ccy = item.ccy;
-                    credit.amount = item.debitGross;
                     debit.amount = item.debitGross;
-                    credit.vendor = expenseDDV.vendor;
                     debit.vendor = expenseDDV.vendor;
-                    credit.account = item.account;
                     debit.account = item.account;
                     debit.chkNo = expenseDDV.checkNo;
                     debit.dept = item.dept;
+
+                    tempGbase.entries.Add(debit);
+
+                    //Credit 1 - tax withheld if only has tax
+                    if (item.credEwt > 0)
+                    {
+                        credit.type = (command != "R") ? "C" : "D";
+                        credit.ccy = item.ccy;
+                        credit.amount = item.credEwt;
+                        credit.vendor = expenseDDV.vendor;
+                        credit.account = item.creditAccount1;
+                        credit.dept = item.dept;
+
+                        tempGbase.entries.Add(credit);
+                    }
+
+                    //Credit 2 - Credit amount
+                    credit.type = (command != "R") ? "C" : "D";
+                    credit.ccy = item.ccy;
+                    credit.amount = item.credCash;
+                    credit.vendor = expenseDDV.vendor;
+                    credit.account = item.creditAccount2;
                     credit.dept = item.dept;
 
                     tempGbase.entries.Add(credit);
-                    tempGbase.entries.Add(debit);
 
                     goExpData = InsertGbaseEntry(tempGbase, expID);
                     goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.dtlID);
