@@ -225,9 +225,8 @@
         CheckEachInter();
 
         $("#addRow").click(function (e) {
-            var itemCount = document.getElementById('inputTable').getElementsByTagName('tbody')[0].childElementCount - 2;
+            var itemCount = document.getElementById('inputTable').getElementsByTagName('tbody')[0].childElementCount - 4;
             var tableRef = document.getElementById('inputTable').getElementsByTagName('tbody')[0];
-            alert(itemCount);
             var acc = @Html.Raw(Json.Serialize(Model.systemValues.acc));
             var dept = @Html.Raw(Json.Serialize(Model.systemValues.dept));
             var curr = @Html.Raw(Json.Serialize(Model.systemValues.currency));
