@@ -3733,8 +3733,15 @@ namespace ExpenseProcessingSystem.Services
                     List<ExpenseEntryCashBreakdownModel> expenseCashBreakdown = new List<ExpenseEntryCashBreakdownModel>();
                     List<ExpenseEntryGbaseDtl> expenseGbase = new List<ExpenseEntryGbaseDtl>();
 
+                    int creditAccMasterID1 = 0;
+                    int creditAccMasterID2 = 0;
+                    XElement xelem = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
+
                     if (expenseType == GlobalSystemValues.TYPE_CV)
                     {
+                        creditAccMasterID1 = int.Parse(xelem.Element("C_CV1").Value);
+                        creditAccMasterID2 = int.Parse(xelem.Element("C_CV2").Value);
+
                         foreach (var amorSchedule in cv.amtDetails)
                         {
                             ExpenseEntryAmortizationModel amortization = new ExpenseEntryAmortizationModel
@@ -3748,6 +3755,9 @@ namespace ExpenseProcessingSystem.Services
                     }
                     else if (expenseType == GlobalSystemValues.TYPE_PC)
                     {
+                        creditAccMasterID1 = int.Parse(xelem.Element("C_PC1").Value);
+                        creditAccMasterID2 = int.Parse(xelem.Element("C_PC2").Value);
+
                         foreach (var cashbd in cv.cashBreakdown)
                         {
                             expenseCashBreakdown.Add(new ExpenseEntryCashBreakdownModel
@@ -3767,6 +3777,18 @@ namespace ExpenseProcessingSystem.Services
                                 CashBreak_NoPcs = cashbd.cashNoPC,
                                 CashBreak_Amount = cashbd.cashAmount
                             });
+                        }
+                    }
+
+                    if(expenseType == GlobalSystemValues.TYPE_SS)
+                    {
+                        if(getAccount(cv.account).Account_MasterID == int.Parse(xelem.Element("D_SS1").Value))
+                        {
+                            creditAccMasterID2 = int.Parse(xelem.Element("C_SS1").Value);
+                        }
+                        else
+                        {
+                            creditAccMasterID2 = int.Parse(xelem.Element("C_SS2").Value);
                         }
                     }
 
@@ -3800,6 +3822,8 @@ namespace ExpenseProcessingSystem.Services
                         ExpDtl_Amor_Month = cv.month,
                         ExpDtl_Amor_Day = cv.day,
                         ExpDtl_Amor_Duration = cv.duration,
+                        ExpDtl_CreditAccount1 = (cv.credEwt > 0) ? getAccountByMasterID(creditAccMasterID1).Account_ID : 0,
+                        ExpDtl_CreditAccount2 = getAccountByMasterID(creditAccMasterID2).Account_ID,
                         ExpenseEntryAmortizations = expenseAmor,
                         ExpenseEntryGbaseDtls = expenseGbase,
                         ExpenseEntryCashBreakdowns = expenseCashBreakdown
@@ -4373,6 +4397,12 @@ namespace ExpenseProcessingSystem.Services
             float TotalDebit = 0;
             float credEwtTotal = 0;
             float credCashTotal = 0;
+            int creditAccMasterID1 = 0;
+            int creditAccMasterID2 = 0;
+            XElement xelem = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
+
+            creditAccMasterID1 = int.Parse(xelem.Element("C_DDV1").Value);
+            creditAccMasterID2 = int.Parse(xelem.Element("C_DDV2").Value);
 
             foreach (EntryDDVViewModel cv in entryModel.EntryDDV)
             {
@@ -4461,6 +4491,8 @@ namespace ExpenseProcessingSystem.Services
                         ExpDtl_Debit = ddv.debitGross,
                         ExpDtl_Credit_Ewt = ddv.credEwt,
                         ExpDtl_Credit_Cash = ddv.credCash,
+                        ExpDtl_CreditAccount1 = (ddv.credEwt > 0) ? getAccountByMasterID(creditAccMasterID1).Account_ID : 0,
+                        ExpDtl_CreditAccount2 = getAccountByMasterID(creditAccMasterID2).Account_ID,
                         ExpDtl_Ewt_Payor_Name_ID = ddv.ewt_Payor_Name_ID,
                         ExpenseEntryInterEntity = expenseInter,
                         ExpDtl_isEwt = ddv.chkEwt,
@@ -5967,6 +5999,76 @@ namespace ExpenseProcessingSystem.Services
         {
             return _context.DMAccount.Where(x => x.Account_ID == id).Single().Account_Name;
         }
+        //Get lastest account by its account master ID.
+        public DMAccountModel getAccountByMasterID(int masterID)
+        {
+            return _context.DMAccount.Where(x => x.Account_MasterID == masterID && x.Account_isActive == true
+                    && x.Account_isDeleted == false).FirstOrDefault();
+        }
+        public int getAccountID(string accountNo)
+        {
+            return _context.DMAccount.Where(x => x.Account_No.Replace("-", "") == accountNo.Replace("-", "").Substring(0, 12) && x.Account_isActive == true
+            && x.Account_isDeleted == false).FirstOrDefault().Account_ID;
+        }
+        public List<accDetails> getAccDetailsEntry()
+        {
+            List<accDetails> accDetails = new List<accDetails>();
+
+            var accDbDetails = _context.DMAccount.Where(x => x.Account_isActive == true).Select(q => new { q.Account_ID, q.Account_Name, q.Account_Code });
+
+            foreach (var detail in accDbDetails)
+            {
+                accDetails temp = new accDetails();
+                temp.accId = detail.Account_ID;
+                temp.accName = detail.Account_Name;
+                temp.accCode = detail.Account_Code;
+
+                accDetails.Add(temp);
+            }
+
+            return accDetails;
+        }
+        public List<accDetails> getAccDetailsEntry(int account)
+        {
+            List<accDetails> accDetails = new List<accDetails>();
+
+            var accDbDetails = _context.DMAccount.Where(x => x.Account_ID == account).Select(q => new { q.Account_ID, q.Account_Name, q.Account_Code });
+
+            foreach (var detail in accDbDetails)
+            {
+                accDetails temp = new accDetails();
+                temp.accId = detail.Account_ID;
+                temp.accName = detail.Account_Name;
+                temp.accCode = detail.Account_Code;
+
+                accDetails.Add(temp);
+            }
+
+            return accDetails;
+        }
+        //Account list only Active and not deleted
+        public List<DMAccountModel> getAccountList()
+        {
+            List<DMAccountModel> accList = new List<DMAccountModel>();
+            var acc = _context.DMAccount.Where(x => x.Account_isActive == true
+                        && x.Account_isDeleted == false).ToList().OrderBy(x => x.Account_Name);
+            foreach (var i in acc)
+            {
+                accList.Add(new DMAccountModel
+                {
+                    Account_ID = i.Account_ID,
+                    Account_Name = i.Account_No + " - " + i.Account_Name,
+                    Account_No = i.Account_No
+                });
+            }
+
+            return accList;
+        }
+        //Account list including history
+        public List<DMAccountModel> getAccountListIncHist()
+        {
+            return _context.DMAccount.OrderBy(x => x.Account_No).ToList();
+        }
         //get dept name
         public string GetDeptName(int id)
         {
@@ -6060,11 +6162,6 @@ namespace ExpenseProcessingSystem.Services
 
             return vendor.Vendor_Name;
         }
-        public int getAccountID(string accountNo)
-        {
-            return _context.DMAccount.Where(x => x.Account_No.Replace("-", "") == accountNo.Replace("-", "").Substring(0, 12) && x.Account_isActive == true 
-            && x.Account_isDeleted == false).FirstOrDefault().Account_ID;
-        }
         public int getCurrencyID(string ccyAbbr)
         {
             return _context.DMCurrency.Where(x => x.Curr_CCY_ABBR == ccyAbbr && x.Curr_isActive == true
@@ -6090,70 +6187,9 @@ namespace ExpenseProcessingSystem.Services
             return listOfLists;
         }
         //retrieve account details
-        public List<accDetails> getAccDetailsEntry()
-        {
-            List<accDetails> accDetails = new List<accDetails>();
-
-            var accDbDetails = _context.DMAccount.Where(x => x.Account_isActive == true).Select(q => new { q.Account_ID, q.Account_Name, q.Account_Code });
-
-            foreach (var detail in accDbDetails)
-            {
-                accDetails temp = new accDetails();
-                temp.accId = detail.Account_ID;
-                temp.accName = detail.Account_Name;
-                temp.accCode = detail.Account_Code;
-
-                accDetails.Add(temp);
-            }
-
-            return accDetails;
-        }
-        public List<accDetails> getAccDetailsEntry(int account)
-        {
-            List<accDetails> accDetails = new List<accDetails>();
-
-            var accDbDetails = _context.DMAccount.Where(x => x.Account_ID == account).Select(q => new { q.Account_ID, q.Account_Name, q.Account_Code });
-
-            foreach (var detail in accDbDetails)
-            {
-                accDetails temp = new accDetails();
-                temp.accId = detail.Account_ID;
-                temp.accName = detail.Account_Name;
-                temp.accCode = detail.Account_Code;
-
-                accDetails.Add(temp);
-            }
-
-            return accDetails;
-        }
         public ExpenseEntryModel getExpenseDetail(int entryID)
         {
             return _context.ExpenseEntry.Include("ExpenseEntryDetails").Where(x => x.Expense_ID == entryID).FirstOrDefault();
-        }
-
-        //Account list only Active and not deleted
-        public List<DMAccountModel> getAccountList()
-        {
-            List<DMAccountModel> accList = new List<DMAccountModel>();
-            var acc = _context.DMAccount.Where(x => x.Account_isActive == true 
-                        && x.Account_isDeleted == false).ToList().OrderBy(x => x.Account_Name);
-            foreach (var i in acc)
-            {
-                accList.Add(new DMAccountModel
-                {
-                    Account_ID =  i.Account_ID,
-                    Account_Name = i.Account_No + " - " + i.Account_Name,
-                    Account_No = i.Account_No
-                });
-            }
-
-            return accList;
-        }
-
-        //Account list including history
-        public List<DMAccountModel> getAccountListIncHist()
-        {
-            return _context.DMAccount.OrderBy(x => x.Account_No).ToList();
         }
         //retrieve latest Express transation no.
         public int getExpTransNo(int transType)
