@@ -22,6 +22,7 @@ using System.Linq.Dynamic.Core;
 using System.Reflection;
 using System.Xml.Linq;
 using System.Data.SqlClient;
+using System.Xml;
 
 namespace ExpenseProcessingSystem.Services
 {
@@ -3944,6 +3945,28 @@ namespace ExpenseProcessingSystem.Services
 
             return cvModel;
         }
+
+        public List<CONSTANT_NC_VALS> getInterEntityAccs(string Loc)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load("wwwroot/xml/DDVInterEntityAccounts.xml");
+            XmlNodeList nodeList = doc.SelectNodes(Loc);
+            List<CONSTANT_NC_VALS> valList = new List<CONSTANT_NC_VALS>();
+            foreach (XmlNode no in nodeList)
+            {
+                var rawVal = no.InnerText;
+                var acc = _context.DMAccount.Where(x => (x.Account_MasterID == int.Parse(rawVal))
+                                                    && x.Account_isActive == true && x.Account_isDeleted == false).FirstOrDefault();
+                CONSTANT_NC_VALS vals = new CONSTANT_NC_VALS
+                {
+                    accID = acc.Account_ID,
+                    accNo = acc.Account_No,
+                    accName = acc.Account_Name
+                };
+                valList.Add(vals);
+            }
+            return valList;
+        }
         // [RETRIEVE DDV EXPENSE DETAILS]
         public EntryDDVViewModelList getExpenseDDV(int transID)
         {
@@ -4027,9 +4050,9 @@ namespace ExpenseProcessingSystem.Services
                         {
                             InterPart_ID = interPart.p.InterPart_ID,
                             InterPart_Particular_Title = interPart.p.InterPart_Particular_Title,
-                            Inter_Particular1 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular1(acc.Account_Name ?? "", interDetail.Inter_Currency1_ABBR ?? "", interDetail.Inter_Currency1_Amount, interDetail.Inter_Currency2_Amount, interDetail.Inter_Rate, acc.Account_ID, interDetail.Inter_Currency1_ID),
-                            Inter_Particular2 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular2(interDetail.Inter_Currency1_ABBR, interDetail.Inter_Currency2_ABBR, interDetail.Inter_Currency2_Amount, interDetail.Inter_Rate, interDetail.Inter_Currency1_ID, interDetail.Inter_Currency2_ID),
-                            Inter_Particular3 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular3(interDetail.Inter_Currency2_ABBR, interDetail.Inter_Currency2_Amount, interDetail.Inter_Currency2_ID),
+                            Inter_Particular1 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular1(acc.Account_Name ?? "", interDetail.Inter_Currency1_ABBR ?? "", interDetail.Inter_Currency1_Amount, interDetail.Inter_Currency2_Amount, interDetail.Inter_Rate, acc.Account_ID, interDetail.Inter_Currency1_ID, getInterEntityAccs("/INTERENTITYACCOUNTS/ACCOUNT[@class='entry1']")),
+                            Inter_Particular2 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular2(interDetail.Inter_Currency1_ABBR, interDetail.Inter_Currency2_ABBR, interDetail.Inter_Currency2_Amount, interDetail.Inter_Rate, interDetail.Inter_Currency1_ID, interDetail.Inter_Currency2_ID, getInterEntityAccs("/INTERENTITYACCOUNTS/ACCOUNT[@class='entry2']")),
+                            Inter_Particular3 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular3(interDetail.Inter_Currency2_ABBR, interDetail.Inter_Currency2_Amount, interDetail.Inter_Currency2_ID, getInterEntityAccs("/INTERENTITYACCOUNTS/ACCOUNT[@class='entry3']")),
                             ExpenseEntryInterEntityAccs = new List<ExpenseEntryInterEntityAccsViewModel>()
                         };
                         foreach (var interAcc in interPart.ExpenseEntryEntityAccounts)

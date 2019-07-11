@@ -1,4 +1,5 @@
-﻿using ExpenseProcessingSystem.Data;
+﻿using ExpenseProcessingSystem.ConstantData;
+using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Models;
 using ExpenseProcessingSystem.ViewModels;
 using ExpenseProcessingSystem.ViewModels.Entry;
@@ -10,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Xml;
 
 namespace ExpenseProcessingSystem.Services.Controller_Services
 {
@@ -25,6 +27,28 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             _context = context;
         }
 
+        public List<CONSTANT_NC_VALS> getNCAccs(string Loc)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load("wwwroot/xml/NonCashAccounts.xml");
+            //var xLSPayroll = xelem.Element("LSPAYROLL").Value;
+            XmlNodeList nodeList = doc.SelectNodes(Loc);
+            List<CONSTANT_NC_VALS> valList = new List<CONSTANT_NC_VALS>();
+            foreach (XmlNode no in nodeList)
+            {
+                var rawVal = no.InnerText;
+                var acc = _context.DMAccount.Where(x => (x.Account_MasterID == int.Parse(rawVal))
+                                                    && x.Account_isActive == true && x.Account_isDeleted == false).FirstOrDefault();
+                CONSTANT_NC_VALS vals = new CONSTANT_NC_VALS
+                {
+                    accID = acc.Account_ID,
+                    accNo = acc.Account_No,
+                    accName = acc.Account_Name
+                };
+                valList.Add(vals);
+            }
+            return valList;
+        }
         //----------------------------------- [[ Populate Non Cash ]] -------------------------------------////
         // [RETRIEVE NC EXPENSE DETAILS]
         public EntryNCViewModelList getExpenseNC(int transID)
