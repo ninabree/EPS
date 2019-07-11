@@ -277,11 +277,10 @@
             var pNode = $(this.parentNode)[0].parentNode;
             var id = pNode.id;
             var modalDivBody = $('.modal-body');
-            var modalDivFooter = $('.modal-footer').find("#add_row_btn").remove();;
+            var modalDivFooter = $('.modal-footer').find("#add_row_btn").remove();
 
-            if ($('.modal-header').find(".modal-title")[0] == null) {
-                $('.modal-header').append('<h4 class="modal-title">Cash Breakdown</h4>');
-            }
+            $('.modal-header').find('.modal-title').remove();
+            $('.modal-header').append('<h4 class="modal-title">Cash Breakdown</h4>');
 
             modalDivBody.load("@Url.Action("EntryExpenseCashBreakdown", "Modal")", {
                 "id": id,
