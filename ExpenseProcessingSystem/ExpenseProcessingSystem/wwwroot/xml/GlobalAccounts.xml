@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--How to call value in c#.
+
+XElement xelem = XElement.Load("wwwroot/xml/ReportHeader.xml"); <- xml path
+
+string value1 = xelem.Element("LOGO").Value
+string value2 = xelem.Element("NAME").Value
+string value3 = xelem.Element("TIN").Value
+string value4 = xelem.Element("ADDRESS").Value
+
+-->
+
+<GlobalAccount>  
+<!--Credit Account - CV-->
+  <!--Tax withheld-->
+  <C_CV1 id="C_CV1">91</C_CV1>
+  <!--BDO MANILA-->
+  <C_CV2 id="C_CV2">123</C_CV2>
+  
+<!--Credit Account - DDV-->
+  <!--Tax withheld-->
+  <C_DDV1 id="C_DDV1">91</C_DDV1>
+  <!--BDO MANILA-->
+  <C_DDV2 id="C_DDV2">123</C_DDV2>
+  
+<!--Credit Account - PC-->
+  <!--Tax withheld-->
+  <C_PC1 id="C_PC1">91</C_PC1>
+  <!--Petty Cash-->
+  <C_PC2 id="C_PC2">120</C_PC2>
+  
+<!--Debit Account - SS-->
+  <!--Gen Exp-->
+  <D_SS1 id="D_SS1">130</D_SS1>
+  <!--Expense HO US$-->
+  <D_SS2 id="D_SS2">132</D_SS2>
+  <!--Reimburse US$-->
+  <D_SS3 id="D_SS3">133</D_SS3>
+  <!--Adv Exp HO PhP-->
+  <D_SS4 id="D_SS4">134</D_SS4>
+  <!--Reimburse Yen-->
+  <D_SS5 id="D_SS5">135</D_SS5>
+  
+<!--Credit Account - SS-->
+  <!--PETTY CASH-->
+  <C_SS1 id="C_SS1">104</C_SS1>
+  <!--COMP SUSP-->
+  <C_SS2 id="C_SS2">136</C_SS2>
+
+<!--FBT debit/credit account-->
+  <!--FBT debit-->
+  <D_FBT id="D_FBT">137</D_FBT>
+  <!--FBT credit-->
+  <C_FBT id="C_FBT">138</C_FBT>
+
+<!--Prepaid Amortization-->
+  <!--EXP PREPAY GEXP-->
+  <C_Amort id="C_Amort">139</C_Amort>
+  
+</GlobalAccount>

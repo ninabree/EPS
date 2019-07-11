@@ -1001,9 +1001,9 @@ namespace ExpenseProcessingSystem.Controllers
             float InterRate = interRate != null ? float.Parse(interRate) : 1;
             string remarks = remarksTitle + " " + ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == DateTime.Now.Month).Single().MonthName + " " + DateTime.Now.Year;
 
-            List<InterEntityParticular> parList1 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular1(account, Curr1AbbrName, float.Parse(Curr1Amt), float.Parse(Curr2Amt), InterRate, int.Parse(accID), int.Parse(Curr1AbbrID));
-            List<InterEntityParticular> parList2 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular2(Curr1AbbrName, Curr2AbbrName, float.Parse(Curr2Amt), InterRate, int.Parse(Curr1AbbrID), int.Parse(Curr2AbbrID));
-            List<InterEntityParticular> parList3 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular3(Curr2AbbrName, float.Parse(Curr2Amt), int.Parse(Curr2AbbrID));
+            List<InterEntityParticular> parList1 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular1(account, Curr1AbbrName, float.Parse(Curr1Amt), float.Parse(Curr2Amt), InterRate, int.Parse(accID), int.Parse(Curr1AbbrID), _service.getInterEntityAccs("/INTERENTITYACCOUNTS/ACCOUNT[@class='entry1']"));
+            List<InterEntityParticular> parList2 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular2(Curr1AbbrName, Curr2AbbrName, float.Parse(Curr2Amt), InterRate, int.Parse(Curr1AbbrID), int.Parse(Curr2AbbrID), _service.getInterEntityAccs("/INTERENTITYACCOUNTS/ACCOUNT[@class='entry2']"));
+            List<InterEntityParticular> parList3 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular3(Curr2AbbrName, float.Parse(Curr2Amt), int.Parse(Curr2AbbrID), _service.getInterEntityAccs("/INTERENTITYACCOUNTS/ACCOUNT[@class='entry3']"));
             List<SelectListItem> currList = _service.getCurrencyIDSelectList(int.Parse(Curr1AbbrID));
 
             DDVInterEntityViewModel model = new DDVInterEntityViewModel
@@ -1040,9 +1040,9 @@ namespace ExpenseProcessingSystem.Controllers
             float InterRate = interRate != null ? float.Parse(interRate) : 1;
             string remarks = remarksTitle + " " + ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == DateTime.Now.Month).Single().MonthName + " " + DateTime.Now.Year;
 
-            List<InterEntityParticular> parList1 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular1(account, Curr1AbbrName, float.Parse(Curr1Amt), float.Parse(Curr2Amt), InterRate, int.Parse(accID), int.Parse(Curr1AbbrID));
-            List<InterEntityParticular> parList2 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular2(Curr1AbbrName, Curr2AbbrName, float.Parse(Curr2Amt), InterRate, int.Parse(Curr1AbbrID), int.Parse(Curr2AbbrID));
-            List<InterEntityParticular> parList3 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular3(Curr2AbbrName, float.Parse(Curr2Amt), int.Parse(Curr2AbbrID));
+            List<InterEntityParticular> parList1 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular1(account, Curr1AbbrName, float.Parse(Curr1Amt), float.Parse(Curr2Amt), InterRate, int.Parse(accID), int.Parse(Curr1AbbrID), _service.getInterEntityAccs("/INTERENTITYACCOUNTS/ACCOUNT[@class='entry1']"));
+            List<InterEntityParticular> parList2 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular2(Curr1AbbrName, Curr2AbbrName, float.Parse(Curr2Amt), InterRate, int.Parse(Curr1AbbrID), int.Parse(Curr2AbbrID), _service.getInterEntityAccs("/INTERENTITYACCOUNTS/ACCOUNT[@class='entry2']"));
+            List<InterEntityParticular> parList3 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular3(Curr2AbbrName, float.Parse(Curr2Amt), int.Parse(Curr2AbbrID), _service.getInterEntityAccs("/INTERENTITYACCOUNTS/ACCOUNT[@class='entry3']"));
             List<SelectListItem> currList = _service.getCurrencySelectList();
 
             DDVInterEntityViewModel model = new DDVInterEntityViewModel

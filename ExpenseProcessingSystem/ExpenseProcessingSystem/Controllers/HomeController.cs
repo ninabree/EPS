@@ -567,7 +567,6 @@ namespace ExpenseProcessingSystem.Controllers
                         ReportCommonVM = repComVM
                     };
                     break;
-
                 //For Alphalist of Suppliers by top 10000 corporation
                 case ConstantData.HomeReportConstantValue.AST1000:
                     fileName = "AlphalistOfSuppliersByTop10000Corporation_" + dateNow;
@@ -610,7 +609,6 @@ namespace ExpenseProcessingSystem.Controllers
                     }
 
                     break;
-
                 //For Actual Budget Report
                 case ConstantData.HomeReportConstantValue.ActualBudgetReport:
                     fileName = "ActualBudgetReport_" + dateNow;
@@ -626,7 +624,7 @@ namespace ExpenseProcessingSystem.Controllers
                         ReportCommonVM = repComVM
                     };
                     break;
-                //For Actual Budget Report
+                //For Transaction List
                 case ConstantData.HomeReportConstantValue.TransListReport:
                     fileName = "TransactionList_" + dateNow;
                     layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
@@ -841,6 +839,50 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.systemValues.ewt = _service.getVendorTaxRate(firstId);
             viewModel.systemValues.vat = _service.getVendorVat(firstId);
             viewModel.systemValues.acc = _service.getAccDetailsEntry();
+
+            //for NC
+
+            if (viewModel.GetType() != typeof(EntryNCViewModelList))
+            {
+                viewModel.expenseYear = DateTime.Today.Year.ToString();
+                viewModel.expenseDate = DateTime.Today;
+            }
+
+            return viewModel;
+        }
+
+        public dynamic PopulateEntry(dynamic viewModel, int screenCode)
+        {
+            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
+            viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
+            viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
+            viewModel.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
+
+            int firstId = int.Parse(listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR].First().Value);
+
+            viewModel.systemValues.ewt = _service.getVendorTaxRate(firstId);
+            viewModel.systemValues.vat = _service.getVendorVat(firstId);
+            if(screenCode == GlobalSystemValues.TYPE_SS)
+            {
+                DMAccountModel acc = new DMAccountModel();
+                List<accDetails> acclist = new List<accDetails>();
+                XElement xelem = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
+                for(int i = 1; i <= 5; i++)
+                {
+                    acc = _service.getAccountByMasterID(int.Parse(xelem.Element("D_SS" + i).Value));
+                    acclist.Add(new accDetails
+                    {
+                        accId = acc.Account_ID,
+                        accName = acc.Account_Name,
+                        accCode = acc.Account_Code
+                    });
+                }
+                viewModel.systemValues.acc = acclist;
+            }
+            else
+            {
+                viewModel.systemValues.acc = _service.getAccDetailsEntry();
+            }
 
             //for NC
 
@@ -1293,7 +1335,7 @@ namespace ExpenseProcessingSystem.Controllers
             var userId = GetUserID();
 
             EntryCVViewModelList viewModel = new EntryCVViewModelList();
-            viewModel = PopulateEntry((EntryCVViewModelList)viewModel);
+            viewModel = PopulateEntry((EntryCVViewModelList)viewModel, GlobalSystemValues.TYPE_SS);
 
             viewModel.EntryCV.Add(new EntryCVViewModel { screenCode = "SS" });
 
@@ -1309,7 +1351,7 @@ namespace ExpenseProcessingSystem.Controllers
 
             if (!ModelState.IsValid)
             {
-                return View("Entry_SS", PopulateEntry((EntryCVViewModelList)EntryCVViewModelList));
+                return View("Entry_SS", PopulateEntry((EntryCVViewModelList)EntryCVViewModelList, GlobalSystemValues.TYPE_SS));
             }
 
             //EntryCVViewModelList ssList = new EntryCVViewModelList();
@@ -1412,7 +1454,7 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             ssList = _service.getExpense(entryID);
-            ssList = PopulateEntry((EntryCVViewModelList)ssList);
+            ssList = PopulateEntry((EntryCVViewModelList)ssList, GlobalSystemValues.TYPE_SS);
 
             foreach (var i in ssList.EntryCV)
             {
@@ -1448,8 +1490,23 @@ namespace ExpenseProcessingSystem.Controllers
 
             ssList.systemValues.ewt = _service.getVendorTaxRate(firstId);
             ssList.systemValues.vat = _service.getVendorVat(firstId);
-            ssList.systemValues.acc = _service.getAccDetailsEntry();
-            foreach(var i in ssList.EntryCV)
+
+            DMAccountModel acc = new DMAccountModel();
+            List<accDetails> acclist = new List<accDetails>();
+            XElement xelem = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
+            for (int i = 1; i <= 5; i++)
+            {
+                acc = _service.getAccountByMasterID(int.Parse(xelem.Element("D_SS" + i).Value));
+                acclist.Add(new accDetails
+                {
+                    accId = acc.Account_ID,
+                    accName = acc.Account_Name,
+                    accCode = acc.Account_Code
+                });
+            }
+            ssList.systemValues.acc = acclist;
+
+            foreach (var i in ssList.EntryCV)
             {
                 i.screenCode = "SS";
             }

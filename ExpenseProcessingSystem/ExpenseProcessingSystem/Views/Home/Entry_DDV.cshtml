@@ -126,6 +126,7 @@
                                 @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.Inter_Currency2_Amount, new { @class = "txtCurr2Amt" })
                                 @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.Inter_Rate, new { @class = "txtInterRate" })
                                 @Html.HiddenFor(x => Model.EntryDDV[i].ewt_Payor_Name_ID, new { @class = "txtPayor" })
+                                @Html.HiddenFor(x => Model.EntryDDV[i].ewt_Payor_Name, new { @class = "txtPayorName" })
                                 @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.Inter_Check1, new { @class = "txtChk1" })
                                 @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.Inter_Check2, new { @class = "txtChk2" })
                                 @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.Inter_Convert1_Amount, new { @class = "txtConv1" })
@@ -135,6 +136,7 @@
                     }
 
                     @Html.HiddenFor(x => x.entryID)
+                    <input value="DDV" id="expenseType" type="hidden" />
                     <tr>
                         <td style="border:none; background-color:#f2f2f2" rowspan="2"><a id="addRow" href="#" class="glyphicon glyphicon-plus"></a></td>
                         <td colspan="9" style="text-align:right; border:none; background-color:#f2f2f2">Subtotal : </td>
@@ -204,9 +206,13 @@
         @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
     </div>
 </div>
-
 <script>
-    $(function () {
+    $(document).ready(function () {
+        //Enable VAT/EWT dropdown list if corresponding checkbox is checked
+        var trs = $("#inputTable").find("tbody").find("tr");
+        for (var cnt = 0; cnt < trs.length - 2; cnt++) {
+            ddlEnabled(cnt);
+        }
 
         var myModal2 = $('.myModal2');
         var modalDiv2 = $(myModal2).find('div div');
@@ -218,37 +224,9 @@
         CheckEachEWT();
         CheckEachInter();
 
-        //$(window).on("load", function () {
-            //var gross = $(".txtGross");
-            //var credEwt = $(".txtCredEwt");
-            //var credCash = $(".txtCredCash");
-
-            //var grossTotal = 0;
-            //var ewtSubTotal = 0;
-            //var cashSubTotal = 0;
-
-            //for (var i = 0; i < gross.length; i++) {
-            //    grossTotal += Number(gross[i].value);
-            //}
-
-            //for (var i = 0; i < credEwt.length; i++) {
-            //    ewtSubTotal += Number(credEwt[i].value);
-            //}
-
-            //for (var i = 0; i < credCash.length; i++) {
-            //    cashSubTotal += Number(credCash[i].value);
-            //}
-
-            //$("#grossTotal").val(grossTotal);
-            //$("#credEwtTotal").val(ewtSubTotal);
-            //$("#credCashTotal").val(cashSubTotal);
-            //$("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
-        //});
-
         $("#addRow").click(function (e) {
-            var itemCount = document.getElementById('inputTable').getElementsByTagName('tbody')[0].childElementCount - 2;
+            var itemCount = document.getElementById('inputTable').getElementsByTagName('tbody')[0].childElementCount - 4;
             var tableRef = document.getElementById('inputTable').getElementsByTagName('tbody')[0];
-
             var acc = @Html.Raw(Json.Serialize(Model.systemValues.acc));
             var dept = @Html.Raw(Json.Serialize(Model.systemValues.dept));
             var curr = @Html.Raw(Json.Serialize(Model.systemValues.currency));
@@ -316,7 +294,7 @@
             var curr1_Abbr_Name = $("#" + pNode.id).find("select[id$='__ccy']  option:selected").text();
             var curr1_Amt = $("#" + pNode.id).find('#EntryDDV_' + idNo + '__interDetails_Inter_Currency1_Amount').val();
             var curr1_Chk = $("#" + pNode.id).find('#EntryDDV_' + idNo + '__interDetails_Inter_Check1').val();
-            var conv1_Amt = $("#" + pNode.id).find('#EntryDDV_' + idNo + '__interDetails_Inter_Convert1_Amount').val(); 
+            var conv1_Amt = $("#" + pNode.id).find('#EntryDDV_' + idNo + '__interDetails_Inter_Convert1_Amount').val();
             var curr2_Abbr_ID = $("#" + pNode.id).find('#EntryDDV_' + idNo + '__interDetails_Inter_Currency2_ID').val();
             var curr2_Abbr_Name = $("#" + pNode.id).find('#EntryDDV_' + idNo + '__interDetails_Inter_Currency2_ABBR').val();
             var curr2_Amt = $("#" + pNode.id).find('#EntryDDV_' + idNo + '__interDetails_Inter_Currency2_Amount').val();
@@ -466,7 +444,8 @@
             $("#" + pNode).find("#req_" + pNode.substring(5)).find("input[id^='EntryDDV_" + pNode.substring(5) + "__interDetails_']").each(function () {
                 $(chkInter).val();
             });
-            resetDebitCredit(pNode);
+            //resetDebitCredit(pNode);
+            computeValuesDDV($(chkInter.parentNode)[0].parentNode);
         }
     }
     function CheckEachEWT() {
@@ -556,35 +535,6 @@
     }
 </script>
 <script type="text/javascript">
-    //function tblBuilder(tableRef, begMonth, day, duration, grossAmount) {
-    //    var dvdAmount = roundNumber((grossAmount / duration), 2);
-
-    //    var now = new Date();
-    //    var Year = now.getFullYear();
-
-    //    for (var i = 0; i < duration; i++) {
-    //        var newRow = tableRef.insertRow(i);
-    //        var cellDate = newRow.insertCell(0);
-    //        var cellAmount = newRow.insertCell(1);
-
-    //        var month = Number(begMonth) + Number(i);
-
-    //        cellDate.innerHTML = new Date(Year, month, day).toDateString();
-    //        cellAmount.innerHTML = dvdAmount;
-    //    }
-    //};
-    //function TriggerInterEntity() {
-    //    $("input.chkInter").each(function (i, val) {
-    //        var btnAttr = $(val).siblings(":eq(14)").find(".reqBtn");
-    //        if (val.checked == true) {
-    //            btnAttr.attr("href", "#");
-    //            btnAttr.attr("class", "expenseInterEntity");
-    //        } else {
-    //            btnAttr.removeAttr("href");
-    //            btnAttr.removeAttr("class", "expenseInterEntity");
-    //        }
-    //    });
-    //}
     function roundNumber(num, scale) {
         if (!("" + num).includes("e")) {
             return +(Math.round(num + "e+" + scale) + "e-" + scale);
@@ -595,6 +545,16 @@
                 sig = "+";
             }
             return +(Math.round(+arr[0] + "e" + sig + (+arr[1] + scale)) + "e-" + scale);
+        }
+    };
+
+    function ddlEnabled(idx) {
+        if ($('#item_' + idx).find('.chkVat').is(':checked')) {
+            $('#item_' + idx).find('.txtVat').removeAttr('disabled');
+        }
+
+        if ($('#item_' + idx).find('.chkEwt').is(':checked')) {
+            $('#item_' + idx).find('.txtEwt').removeAttr('disabled');
         }
     };
 </script>

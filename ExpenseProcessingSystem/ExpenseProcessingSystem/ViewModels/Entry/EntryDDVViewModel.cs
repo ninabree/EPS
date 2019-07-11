@@ -15,6 +15,8 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         [NotNullValidations]
         [Display(Name = "Account")]
         public int account { get; set; }
+        public int creditAccount1 { get; set; }
+        public int creditAccount2 { get; set; }
         public string account_Name { get; set; }
         [NotNullValidations]
         [Display(Name = "Inter Entity")]
@@ -56,9 +58,6 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         [NotNullValidations, AmountValidation]
         [Display(Name = "Credit - Cash")]
         public float credCash { get; set; }
-        [FalseValidation("chkEwt"), TextValidation]
-        [Display(Name = "EWT - Tax Payor's Name")]
-        public string ewtPayorName { get; set; }
         public int dtlID { get; set; }
         //[ListValidation("inter_entity")]
         [Display(Name = "Inter-Entity Details")]

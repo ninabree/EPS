@@ -1,0 +1,14 @@
+﻿<INTERENTITYACCOUNTS>
+    <!-- THE VALUE PER ACCOUNT ARE THEIR DESIGNATED ACCOUNT MASTER ID'S 
+        TO UPDATE THESE VALUES, REFER TO THE MASTER ID IN DATA MAINTENANCE: ACCOUNT
+    -->
+  <!-- First Account in entry1 comes from the DDV form -->
+    <ACCOUNT class="entry1" id="ACCOUNT2">105</ACCOUNT>
+    <ACCOUNT class="entry1" id="ACCOUNT3">84</ACCOUNT>
+
+    <ACCOUNT class="entry2" id="ACCOUNT1">105</ACCOUNT>
+    <ACCOUNT class="entry2" id="ACCOUNT2">131</ACCOUNT>
+
+    <ACCOUNT class="entry3" id="ACCOUNT1">131</ACCOUNT>
+    <ACCOUNT class="entry3" id="ACCOUNT2">112</ACCOUNT>
+</INTERENTITYACCOUNTS>

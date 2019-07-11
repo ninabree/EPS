@@ -13,6 +13,8 @@ namespace ExpenseProcessingSystem.Models
         public int ExpDtl_ID { get; set; }
         public string ExpDtl_Gbase_Remarks { get; set; }
         public int ExpDtl_Account { get; set; }
+        public int ExpDtl_CreditAccount1 { get; set; }
+        public int ExpDtl_CreditAccount2 { get; set; }
         public bool ExpDtl_Inter_Entity { get; set; }
         public bool ExpDtl_Fbt { get; set; }
         public int ExpDtl_FbtID { get; set; }

@@ -91,7 +91,7 @@
         parent.find(":hidden").remove();
 
         var rowNo = $("#parentId").val().substring(7);
-        var isDDV = $("li#ddv").find("a").hasClass("selected");
+        var isDDV = $("#expenseType").val() == "DDV";
         for (var i = 0; i < trs.length; i++) {
             var docuType = $("#" + trs[i].id).find(".gDocuType").val();
             var invNo = $("#" + trs[i].id).find(".gInvoiceNo").val();

@@ -15,7 +15,7 @@ namespace ExpenseProcessingSystem.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.0-rtm-35687")
+                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -696,6 +696,10 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("ExpDtl_Ccy");
 
+                    b.Property<int>("ExpDtl_CreditAccount1");
+
+                    b.Property<int>("ExpDtl_CreditAccount2");
+
                     b.Property<float>("ExpDtl_Credit_Cash");
 
                     b.Property<float>("ExpDtl_Credit_Ewt");
@@ -1343,8 +1347,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.Property<int>("GW_GWrite_ID");
 
                     b.Property<string>("GW_Status");
-
-                    b.Property<int>("GW_TransID");
 
                     b.HasKey("GW_ID");
 
