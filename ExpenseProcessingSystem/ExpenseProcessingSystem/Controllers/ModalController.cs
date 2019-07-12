@@ -1115,9 +1115,31 @@ namespace ExpenseProcessingSystem.Controllers
             return PartialView(model);
         }
 
-        public IActionResult ClosePettyCash()
+        public IActionResult ClosePettyCash(string command)
         {
-            return PartialView();
+            ClosingBrkDwnViewModel model = new ClosingBrkDwnViewModel();
+
+            switch (command)
+            {
+                case "StartPettyCash":
+                    model.CBD_displayMode = true;
+                    model.CBD_Date = DateTime.Now;
+                    model.CBD_opeBalance = 99999999;
+                    model.CBD_recieve = 2000;
+                    model.CBD_disburse = 500000;
+                    model.CBD_closeBalance = 10;
+
+                    model.CBD_oneK = 3;
+                    model.CBD_oneKAmount = 3000;
+                    model.CBD_ten = 10000;
+                    model.CBD_tenAmount = 10000 * 10;
+                    break;
+                case "ClosePettyCash":
+                    model.CBD_displayMode = false;
+                    break;
+            }
+
+            return PartialView(model);
         }
 
         private string GetUserID()

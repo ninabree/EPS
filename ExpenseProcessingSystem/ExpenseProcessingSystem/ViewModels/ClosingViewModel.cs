@@ -23,7 +23,32 @@ namespace ExpenseProcessingSystem.ViewModels
         public double Disbursed { get; set; }
         public double closeBal { get; set; }
 
-
+        public int oneK { get; set; }
+        public double oneKAmount { get; set; }
+        public int fiveH { get; set; }
+        public double fiveHAmount { get; set; }
+        public int twoH { get; set; }
+        public double twoHAmount { get; set; }
+        public int oneH { get; set; }
+        public double oneHAmount { get; set; }
+        public int fifty { get; set; }
+        public double fiftyAmount { get; set; }
+        public int twenty { get; set; }
+        public double twentyAmount { get; set; }
+        public int ten { get; set; }
+        public double tenAmount { get; set; }
+        public int five { get; set; }
+        public double fiveAmount { get; set; }
+        public int one { get; set; }
+        public double oneAmount { get; set; }
+        public int c25 { get; set; }
+        public double c25Amount { get; set; }
+        public int c10 { get; set; }
+        public double c10Amount { get; set; }
+        public int c5 { get; set; }
+        public double c5Amount { get; set; }
+        public int c1 { get; set; }
+        public double c1Amout { get; set; }
 
         public ClosingViewModel()
         {

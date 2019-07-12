@@ -32,18 +32,18 @@ namespace ExpenseProcessingSystem.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly EPSDbContext _context;
         private readonly GOExpressContext _GOContext;
-        //private readonly GWriteContext _gWriteContext;
+        private readonly GWriteContext _gWriteContext;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
         private readonly IHostingEnvironment _hostingEnvironment;
         private ModalService _modalservice;
         XElement xelemAcc = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
         private ModelStateDictionary _modelState;
-        public HomeService(IHttpContextAccessor httpContextAccessor, EPSDbContext context, GOExpressContext goContext, ModelStateDictionary modelState, IHostingEnvironment hostingEnvironment)
+        public HomeService(IHttpContextAccessor httpContextAccessor, EPSDbContext context, GOExpressContext goContext, GWriteContext gWriteContext ,ModelStateDictionary modelState, IHostingEnvironment hostingEnvironment)
         {
             _httpContextAccessor = httpContextAccessor;
             _context = context;
             _GOContext = goContext;
-            //_gWriteContext = gWriteContext;
+            _gWriteContext = gWriteContext;
             _modelState = modelState;
             _hostingEnvironment = hostingEnvironment;
             _modalservice = new ModalService(_httpContextAccessor, _context);
@@ -2881,8 +2881,7 @@ namespace ExpenseProcessingSystem.Services
             List<HomeReportTransactionListViewModel> list1 = new List<HomeReportTransactionListViewModel>();
             List<HomeReportTransactionListViewModel> list2 = new List<HomeReportTransactionListViewModel>();
 
-            var accList = getAccountListIncHist();
-
+            List<DMAccountModel> accList = getAccountListIncHist();
 
             if (model.PeriodOption == 1)
             {
@@ -2946,6 +2945,9 @@ namespace ExpenseProcessingSystem.Services
                 model.ReportSubType == GlobalSystemValues.TYPE_PC || model.ReportSubType == GlobalSystemValues.TYPE_DDV ||
                 model.ReportSubType == GlobalSystemValues.TYPE_SS)
             {
+                //Get DDV entry detail list. include inter entity
+                List<EntryDDVViewModel> ddvDetails = GetEntryDetailsListForDDV();
+
                 if (model.ReportSubType != 0)
                 {
                     if (!String.IsNullOrEmpty(whereQuery))
@@ -2972,6 +2974,7 @@ namespace ExpenseProcessingSystem.Services
                 var db1 = (from hist in _context.GOExpressHist
                            join exp in _context.ExpenseEntry on hist.ExpenseEntryID equals exp.Expense_ID
                            join trans in _context.ExpenseTransLists on hist.GOExpHist_Id equals trans.TL_GoExpHist_ID
+                           join expDtl in _context.ExpenseEntryDetails on hist.ExpenseDetailID equals expDtl.ExpDtl_ID
                            select new
                            {
                                exp.Expense_ID,
@@ -2980,6 +2983,9 @@ namespace ExpenseProcessingSystem.Services
                                exp.Expense_Date,
                                exp.Expense_Number,
                                exp.Expense_CheckNo,
+                               expDtl.ExpDtl_Account,
+                               expDtl.ExpDtl_CreditAccount1,
+                               expDtl.ExpDtl_CreditAccount2,
                                hist.ExpenseEntryID,
                                hist.ExpenseDetailID,
                                hist.GOExpHist_Id,
@@ -3145,7 +3151,7 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount1_1 = i.GOExpHist_Entry11Amt,
                         Trans_Customer1_1 = i.GOExpHist_Entry11Cust,
                         Trans_Account_Code1_1 = i.GOExpHist_Entry11Actcde,
-                        Trans_Account_Name1_1 = i.GOExpHist_Entry11ActType,
+                        Trans_Account_Name1_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseDetailID),
                         Trans_Account_Number1_1 = i.GOExpHist_Entry11ActNo,
                         Trans_Exchange_Rate1_1 = i.GOExpHist_Entry11ExchRate,
                         Trans_Contra_Currency1_1 = i.GOExpHist_Entry11ExchCcy,
@@ -3161,7 +3167,7 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount1_2 = i.GOExpHist_Entry12Amt,
                         Trans_Customer1_2 = i.GOExpHist_Entry12Cust,
                         Trans_Account_Code1_2 = i.GOExpHist_Entry12Actcde,
-                        Trans_Account_Name1_2 = i.GOExpHist_Entry12ActType,
+                        Trans_Account_Name1_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseDetailID),
                         Trans_Account_Number1_2 = i.GOExpHist_Entry12ActNo,
                         Trans_Exchange_Rate1_2 = i.GOExpHist_Entry12ExchRate,
                         Trans_Contra_Currency1_2 = i.GOExpHist_Entry12ExchCcy,
@@ -3177,7 +3183,7 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount2_1 = i.GOExpHist_Entry21Amt,
                         Trans_Customer2_1 = i.GOExpHist_Entry21Cust,
                         Trans_Account_Code2_1 = i.GOExpHist_Entry21Actcde,
-                        Trans_Account_Name2_1 = i.GOExpHist_Entry21ActType,
+                        Trans_Account_Name2_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseDetailID),
                         Trans_Account_Number2_1 = i.GOExpHist_Entry21ActNo,
                         Trans_Exchange_Rate2_1 = i.GOExpHist_Entry21ExchRate,
                         Trans_Contra_Currency2_1 = i.GOExpHist_Entry21ExchCcy,
@@ -3193,7 +3199,7 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount2_2 = i.GOExpHist_Entry22Amt,
                         Trans_Customer2_2 = i.GOExpHist_Entry22Cust,
                         Trans_Account_Code2_2 = i.GOExpHist_Entry22Actcde,
-                        Trans_Account_Name2_2 = i.GOExpHist_Entry22ActType,
+                        Trans_Account_Name2_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseDetailID),
                         Trans_Account_Number2_2 = i.GOExpHist_Entry22ActNo,
                         Trans_Exchange_Rate2_2 = i.GOExpHist_Entry22ExchRate,
                         Trans_Contra_Currency2_2 = i.GOExpHist_Entry22ExchCcy,
@@ -3209,7 +3215,7 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount3_1 = i.GOExpHist_Entry31Amt,
                         Trans_Customer3_1 = i.GOExpHist_Entry31Cust,
                         Trans_Account_Code3_1 = i.GOExpHist_Entry31Actcde,
-                        Trans_Account_Name3_1 = i.GOExpHist_Entry31ActType,
+                        Trans_Account_Name3_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseDetailID),
                         Trans_Account_Number3_1 = i.GOExpHist_Entry31ActNo,
                         Trans_Exchange_Rate3_1 = i.GOExpHist_Entry31ExchRate,
                         Trans_Contra_Currency3_1 = i.GOExpHist_Entry31ExchCcy,
@@ -3225,7 +3231,7 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount3_2 = i.GOExpHist_Entry32Amt,
                         Trans_Customer3_2 = i.GOExpHist_Entry32Cust,
                         Trans_Account_Code3_2 = i.GOExpHist_Entry32Actcde,
-                        Trans_Account_Name3_2 = i.GOExpHist_Entry32ActType,
+                        Trans_Account_Name3_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseDetailID),
                         Trans_Account_Number3_2 = i.GOExpHist_Entry32ActNo,
                         Trans_Exchange_Rate3_2 = i.GOExpHist_Entry32ExchRate,
                         Trans_Contra_Currency3_2 = i.GOExpHist_Entry32ExchCcy,
@@ -3241,7 +3247,7 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount4_1 = i.GOExpHist_Entry41Amt,
                         Trans_Customer4_1 = i.GOExpHist_Entry41Cust,
                         Trans_Account_Code4_1 = i.GOExpHist_Entry41Actcde,
-                        Trans_Account_Name4_1 = i.GOExpHist_Entry41ActType,
+                        Trans_Account_Name4_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseDetailID),
                         Trans_Account_Number4_1 = i.GOExpHist_Entry41ActNo,
                         Trans_Exchange_Rate4_1 = i.GOExpHist_Entry41ExchRate,
                         Trans_Contra_Currency4_1 = i.GOExpHist_Entry41ExchCcy,
@@ -3257,7 +3263,7 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount4_2 = i.GOExpHist_Entry42Amt,
                         Trans_Customer4_2 = i.GOExpHist_Entry42Cust,
                         Trans_Account_Code4_2 = i.GOExpHist_Entry42Actcde,
-                        Trans_Account_Name4_2 = i.GOExpHist_Entry42ActType,
+                        Trans_Account_Name4_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseDetailID),
                         Trans_Account_Number4_2 = i.GOExpHist_Entry42ActNo,
                         Trans_Exchange_Rate4_2 = i.GOExpHist_Entry42ExchRate,
                         Trans_Contra_Currency4_2 = i.GOExpHist_Entry42ExchCcy,
@@ -3614,13 +3620,134 @@ namespace ExpenseProcessingSystem.Services
                 }
             }
 
-            foreach (var i in list1.Concat(list2).OrderBy(x => x.Trans_Last_Updated_Date))
-            {
-                Console.WriteLine("##########" + i.HistGOExpHist_Id);
-            }
-
             return list1.Concat(list2);
         }
+
+        //GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.ExpExpense_Type, ddvDetails, i.HistExpenseDetailID)
+        public string GetAccountNameForCADDVPCSS(List<DMAccountModel> accList, string accType, string accNo, int acc1, int? acc2, int? acc3, int expType, List<EntryDDVViewModel> entryDtlListDDV, int dtlID)
+        {
+            DMAccountModel accno1 = accList.Where(x => x.Account_ID == acc1).FirstOrDefault();
+            DMAccountModel accno2 = (acc2 != 0) ? accList.Where(x => x.Account_ID == acc2).FirstOrDefault() : null;
+            DMAccountModel accno3 = (acc3 != 0) ? accList.Where(x => x.Account_ID == acc3).FirstOrDefault() : null;
+
+            if(expType == GlobalSystemValues.TYPE_CV || expType == GlobalSystemValues.TYPE_PC || expType == GlobalSystemValues.TYPE_SS)
+            {
+                if (accno1.Account_No.Contains(accType) && accno1.Account_No.Contains(accNo))
+                {
+                    return accno1.Account_Name;
+                }
+
+                if (accno2 != null && accno2.Account_No.Contains(accType) && accno2.Account_No.Contains(accNo))
+                {
+                    return accno2.Account_Name;
+                }
+
+                if (accno3 != null && accno3.Account_No.Contains(accType) && accno3.Account_No.Contains(accNo))
+                {
+                    return accno3.Account_Name;
+                }
+            }
+
+            if(expType == GlobalSystemValues.TYPE_DDV)
+            {
+
+            }
+
+            return "";
+        }
+        
+        //Get DDV entry details and DDV inter entity list. For report purpose.
+        public List<EntryDDVViewModel> GetEntryDetailsListForDDV()
+        {
+            var EntryDetails = (from d
+                  in _context.ExpenseEntryDetails
+                                select new
+                                {
+                                    d,
+                                    ExpenseEntryGbaseDtls = from g
+                                                            in _context.ExpenseEntryGbaseDtls
+                                                            where g.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
+                                                            select g,
+                                    ExpenseEntryInterEntity = from a
+                                                                in _context.ExpenseEntryInterEntity
+                                                              where a.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
+                                                              select new
+                                                              {
+                                                                  a,
+                                                                  ExpenseEntryInterEntityParticular = from p
+                                                                                                      in _context.ExpenseEntryInterEntityParticular
+                                                                                                      where p.ExpenseEntryInterEntityModel.ExpDtl_DDVInter_ID == a.ExpDtl_DDVInter_ID
+                                                                                                      select new
+                                                                                                      {
+                                                                                                          p,
+                                                                                                          ExpenseEntryEntityAccounts = from acc
+                                                                                                                                       in _context.ExpenseEntryInterEntityAccs
+                                                                                                                                       where acc.ExpenseEntryInterEntityParticular.InterPart_ID == p.InterPart_ID
+                                                                                                                                       select acc
+                                                                                                      }
+                                                              }
+                                }).ToList();
+
+            List<EntryDDVViewModel> ddvList = new List<EntryDDVViewModel>();
+
+            foreach (var dtl in EntryDetails)
+            {
+                DDVInterEntityViewModel interDetail = new DDVInterEntityViewModel();
+                ExpenseEntryInterEntityAccsViewModel interDetailAccs = new ExpenseEntryInterEntityAccsViewModel();
+                foreach (var inter in dtl.ExpenseEntryInterEntity)
+                {
+                    interDetail = new DDVInterEntityViewModel
+                    {
+                        interPartList = new List<ExpenseEntryInterEntityParticularViewModel>()
+                    };
+
+                    if (interDetail.Inter_Currency1_ID > 0)
+                    {
+                        interDetail.Inter_Currency1_ABBR = _context.DMCurrency.Where(x => x.Curr_ID == inter.a.ExpDtl_DDVInter_Curr1_ID &&
+                                                       x.Curr_isDeleted == false && x.Curr_isActive == true).Select(x => x.Curr_CCY_ABBR).FirstOrDefault() ?? "";
+                    }
+                    if (interDetail.Inter_Currency2_ID > 0)
+                    {
+                        interDetail.Inter_Currency2_ABBR = _context.DMCurrency.Where(x => x.Curr_ID == inter.a.ExpDtl_DDVInter_Curr2_ID &&
+                                                    x.Curr_isDeleted == false && x.Curr_isActive == true).Select(x => x.Curr_CCY_ABBR).FirstOrDefault() ?? "";
+                    }
+
+                    foreach (var interPart in inter.ExpenseEntryInterEntityParticular)
+                    {
+                        var acc = _context.DMAccount.Where(x => x.Account_ID == dtl.d.ExpDtl_Account).FirstOrDefault();
+                        ExpenseEntryInterEntityParticularViewModel interParticular = new ExpenseEntryInterEntityParticularViewModel
+                        {
+                            InterPart_ID = interPart.p.InterPart_ID,
+                            ExpenseEntryInterEntityAccs = new List<ExpenseEntryInterEntityAccsViewModel>()
+                        };
+                        foreach (var interAcc in interPart.ExpenseEntryEntityAccounts)
+                        {
+                            ExpenseEntryInterEntityAccsViewModel interDetailAcc = new ExpenseEntryInterEntityAccsViewModel()
+                            {
+                                Inter_Acc_ID = interAcc.InterAcc_Acc_ID,
+                                Inter_Type_ID = interAcc.InterAcc_Type_ID
+                            };
+                            interParticular.ExpenseEntryInterEntityAccs.Add(interDetailAcc);
+                        }
+                        interDetail.interPartList.Add(interParticular);
+                    }
+                }
+
+                EntryDDVViewModel ddvDtl = new EntryDDVViewModel()
+                {
+                    dtlID = dtl.d.ExpDtl_ID,
+                    account = dtl.d.ExpDtl_Account,
+                    inter_entity = dtl.d.ExpDtl_Inter_Entity,
+                    fbt = dtl.d.ExpDtl_Fbt,
+                    creditAccount1 = dtl.d.ExpDtl_CreditAccount1,
+                    creditAccount2 = dtl.d.ExpDtl_CreditAccount2,
+                    interDetails = interDetail
+                };
+                ddvList.Add(ddvDtl);
+            }
+
+            return ddvList;
+        }   
 
         public DateTime GetSelectedYearMonthOfTerm(int month, int year)
         {
@@ -5645,11 +5772,16 @@ namespace ExpenseProcessingSystem.Services
                         string equation = fbt.Replace("ExpenseAmount", item.debitGross.ToString());
                         double fbtAmount = Math.Round(Convert.ToDouble(new DataTable().Compute(equation, null)), 2);
                         Console.WriteLine("-=-=-=-=-=->" + equation);
-                        credit.amount = fbtAmount;
+
+                        debit.account = getAccountByMasterID(int.Parse(xelemAcc.Element("D_FBT").Value)).Account_ID;
                         debit.amount = fbtAmount;
 
-                        tempGbase.entries.Add(credit);
+                        credit.account = getAccountByMasterID(int.Parse(xelemAcc.Element("C_FBT").Value)).Account_ID;
+                        credit.amount = fbtAmount;
+
                         tempGbase.entries.Add(debit);
+                        tempGbase.entries.Add(credit);
+
                         goExpData = InsertGbaseEntry(tempGbase, expID);
                         goExpHistData = new GOExpressHistModel();
                         list.Add(new { expEntryID = expID, goExp = goExpData, goExpHist = goExpHistData });
@@ -5759,62 +5891,85 @@ namespace ExpenseProcessingSystem.Services
         ///================[Closing]=================
         public bool closeTransaction(string transactionType, string username, string password)
         {
-            //string closeCommand = "cm00@E*1@E@E17-@E1210@E";
+            string closeCommand = "cm00@E*1@E@E17-@E1210@E";
 
-            //TblRequestDetails rqDtl = new TblRequestDetails();
-            //GwriteTransList gWriteModel = new GwriteTransList();
+            TblRequestDetails rqDtl = new TblRequestDetails();
+            GwriteTransList gWriteModel = new GwriteTransList();
 
-            //closeCommand = closeCommand.Replace("*",transactionType);
-            //closeCommand = closeCommand.Replace("-",username.Substring(username.Length - 4));
+            closeCommand = closeCommand.Replace("*", transactionType);
+            closeCommand = closeCommand.Replace("-", username.Substring(username.Length - 4));
 
-            //rqDtl = postToGwrite(closeCommand,username,password);
+            rqDtl = postToGwrite(closeCommand, username, password);
 
-            //gWriteModel.GW_GWrite_ID = rqDtl.RequestId;
-            //gWriteModel.GW_Status = "pending";
+            gWriteModel.GW_GWrite_ID = int.Parse(rqDtl.RequestId.ToString());
+            gWriteModel.GW_Status = "pending";
 
             return true;
         }
+        public ClosingViewModel closeLoadSheet()
+        {
+            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
+            int pcMasterID = int.Parse(xelem.Element("PC_MASTERID").Value);
+
+            var pcID = _context.DMAccount.Where(x=>x.Account_MasterID == pcMasterID).Select(x=>x.Account_ID);
+
+            var transactions = _context.ExpenseEntryDetails.Where(x => pcID.Contains(x.ExpDtl_Account) ||
+                                                                       pcID.Contains(x.ExpDtl_CreditAccount1) ||
+                                                                       pcID.Contains(x.ExpDtl_CreditAccount2));
+
+            ClosingViewModel closeVM = new ClosingViewModel();
+
+            PettyCashModel pcModel = _context.PettyCash.OrderByDescending(x => x.PC_CloseDate).FirstOrDefault();
+            ClosingModel closeModel = _context.Closing.OrderByDescending(x => x.Close_Date).FirstOrDefault();
+
+            closeVM.pettyBegBalance = pcModel.PC_EndBal;
+            
+
+
+            return closeVM;
+        }
         ///==============[End Closing]===============
-        
+
         ///============[Post to GWrite]==============
-        //public TblRequestDetails postToGwrite(string command, string username, string password)
-        //{
-        //    TblRequestDetails rqDtlModel = new TblRequestDetails();
-        //    TblRequestItem rqItemModel = new TblRequestItem();
+        public TblRequestDetails postToGwrite(string command, string username, string password)
+        {
+            TblRequestDetails rqDtlModel = new TblRequestDetails();
+            rqDtlModel.tblRequestItems = new List<TblRequestItem>();
+            TblRequestItem rqItemModel = new TblRequestItem();
 
-        //    byte[] asciiBytes = System.Text.Encoding.ASCII.GetBytes(password);
-        //    string encodedPass = "";
-        //    int index = 0;
+            byte[] asciiBytes = System.Text.Encoding.ASCII.GetBytes(password);
+            string encodedPass = "";
+            int index = 0;
 
-        //    foreach (byte b in asciiBytes)
-        //    {
-        //        string hexValue = b.ToString("X");
-        //        encodedPass += hexValue + ",0";
-        //        if (index != asciiBytes.Length - 1)
-        //            encodedPass += ",";
-        //        index++;
-        //    }
+            foreach (byte b in asciiBytes)
+            {
+                string hexValue = b.ToString("X");
+                encodedPass += hexValue + ",0";
+                if (index != asciiBytes.Length - 1)
+                    encodedPass += ",";
+                index++;
+            }
 
-        //    rqDtlModel.RacfId = username;
-        //    rqDtlModel.RacfPassword = encodedPass;
-        //    rqDtlModel.RequestCreated = DateTime.Now;
-        //    rqDtlModel.Status = "SCRIPTING";
-        //    rqDtlModel.SystemAbbr = "EXPRESS";
-        //    rqDtlModel.Priority = 1;
+            rqDtlModel.RacfId = username;
+            rqDtlModel.RacfPassword = encodedPass;
+            rqDtlModel.RequestCreated = DateTime.Now;
+            rqDtlModel.Status = "SCRIPTING";
+            rqDtlModel.SystemAbbr = "EXPRESS";
+            rqDtlModel.Priority = 1;
 
-        //    rqItemModel.SequenceNo = 1;
-        //    rqItemModel.ReturnFlag = true;
-        //    rqItemModel.Command = command;
+            rqItemModel.SequenceNo = 1;
+            rqItemModel.ReturnFlag = true;
+            rqItemModel.Command = command;
 
-        //    rqDtlModel.TblRequestItem.Add(rqItemModel);
+            rqDtlModel.tblRequestItems.Add(rqItemModel);
 
-        //    _gWriteContext.Add(rqDtlModel);
-        //    _gWriteContext.SaveChanges();
+            _gWriteContext.Add(rqDtlModel);
+            _gWriteContext.SaveChanges();
 
-        //    return rqDtlModel;
-        //}
+            return rqDtlModel;
+        }
         ///==========[End Post to Gwrite]============
-        
+
         ///==============[Begin Gbase Entry Section]================
         private TblCm10 InsertGbaseEntry(gbaseContainer containerModel, int expenseID)
         {
@@ -6274,22 +6429,34 @@ namespace ExpenseProcessingSystem.Services
         {
             ExpenseEntryModel transNoMax;
             int transno;
-            int maxNumber;
+            int maxNumber = 0;
+            var maxNumberObj = _context.ExpenseEntry
+                        .Where(y => y.Expense_Date.Year == DateTime.Now.Year && y.Expense_Number != 0);
             do
             {
-                maxNumber = _context.ExpenseEntry
+                
+                if (_context.ExpenseEntry.Where(x=>x.Expense_Number !=0).Count() > 0)
+                {
+                    if(maxNumber != _context.ExpenseEntry
                                         .Where(y => y.Expense_Date.Year == DateTime.Now.Year && y.Expense_Number != 0)
-                                        .Max(y => y.Expense_Number);
+                                        .Max(y => y.Expense_Number))
+                    {
+                        maxNumberObj = _context.ExpenseEntry
+                        .Where(y => y.Expense_Date.Year == DateTime.Now.Year && y.Expense_Number != 0);
+                    }
 
-                transNoMax = _context.ExpenseEntry.OrderByDescending(x=>x.Expense_ID).First();
-
-                transno = (transNoMax.Expense_Created_Date.Year < DateTime.Now.Year) ? 1
-                        : (maxNumber + 1);
-
+                    maxNumber = maxNumberObj.Max(y => y.Expense_Number);
+                    transNoMax = _context.ExpenseEntry.OrderByDescending(x => x.Expense_ID).First();
+                    transno = (transNoMax.Expense_Created_Date.Year < DateTime.Now.Year) ? 1 : (maxNumber + 1);
+                }
+                else
+                {
+                    return 1;
+                }
             } while (maxNumber != _context.ExpenseEntry
                                         .Where(y => y.Expense_Date.Year == DateTime.Now.Year && y.Expense_Number != 0)
                                         .Max(y => y.Expense_Number));
-
+            _context.Entry<ExpenseEntryModel>(transNoMax).State = EntityState.Detached;
             return transno;
         }
 

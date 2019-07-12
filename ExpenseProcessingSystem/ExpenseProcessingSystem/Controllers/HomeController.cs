@@ -36,7 +36,7 @@ namespace ExpenseProcessingSystem.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly EPSDbContext _context;
         private readonly GOExpressContext _GOContext;
-        //private readonly GWriteContext _GwriteContext;
+        private readonly GWriteContext _GwriteContext;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
         private HomeService _service;
         private SortService _sortService;
@@ -44,14 +44,14 @@ namespace ExpenseProcessingSystem.Controllers
         private readonly IStringLocalizer<HomeController> _localizer;
         private IHostingEnvironment _env;
 
-        public HomeController(IHttpContextAccessor httpContextAccessor, EPSDbContext context, GOExpressContext gocontext,IHostingEnvironment hostingEnvironment, IStringLocalizer<HomeController> localizer)
+        public HomeController(IHttpContextAccessor httpContextAccessor, EPSDbContext context, GOExpressContext gocontext,GWriteContext gwritecontext,IHostingEnvironment hostingEnvironment, IStringLocalizer<HomeController> localizer)
         {
             _localizer = localizer;
             _httpContextAccessor = httpContextAccessor;
             _context = context;
             _GOContext = gocontext;
-            //_GwriteContext = gwritecontext;
-            _service = new HomeService(_httpContextAccessor, _context, _GOContext,this.ModelState, hostingEnvironment);
+            _GwriteContext = gwritecontext;
+            _service = new HomeService(_httpContextAccessor, _context, _GOContext, _GwriteContext, this.ModelState, hostingEnvironment);
             _sortService = new SortService();
             _env = hostingEnvironment;
         }
@@ -180,7 +180,7 @@ namespace ExpenseProcessingSystem.Controllers
                 temp.expTrans = "CV-2019-100001";
                 temp.particulars = "THIS IS A PARTICULAR!";
                 temp.ccy = "PHP";
-                temp.amount = 1000 + ((135 * index) / 2.6);
+                temp.amount = Math.Round(1000 + ((135 * index) / 2.6),2);
                 temp.transCount = 2;
                 temp.status = "Posted";
                 index++;
@@ -194,7 +194,7 @@ namespace ExpenseProcessingSystem.Controllers
                 temp.expTrans = "CV-2019-100001";
                 temp.particulars = "THIS IS A PARTICULAR!";
                 temp.ccy = "USD";
-                temp.amount = 1000 + ((135 * index) / 2.6);
+                temp.amount = Math.Round(1000 + ((135 * index) / 2.6),2);
                 temp.transCount = 2;
                 temp.status = "Posted";
                 index++;
@@ -209,7 +209,7 @@ namespace ExpenseProcessingSystem.Controllers
                 temp.expTrans = "CV-2019-100001";
                 temp.particulars = "THIS IS A PARTICULAR!";
                 temp.ccy = "PHP";
-                temp.amount = 1000 + ((135 * index) / 2.6);
+                temp.amount = Math.Round(1000 + ((135 * index) / 2.6),2);
                 temp.transCount = 2;
                 temp.status = "Posted";
                 index++;
@@ -223,7 +223,7 @@ namespace ExpenseProcessingSystem.Controllers
                 temp.expTrans = "CV-2019-100001";
                 temp.particulars = "THIS IS A PARTICULAR!";
                 temp.ccy = "USD";
-                temp.amount = 1000 + ((135 * index) / 2.6);
+                temp.amount = Math.Round(1000 + ((135 * index) / 2.6),2);
                 temp.transCount = 2;
                 temp.status = "Posted";
                 index++;
@@ -245,7 +245,7 @@ namespace ExpenseProcessingSystem.Controllers
                     temp.expTrans = "CLOSING TIME!";
                     temp.particulars = "THIS IS A PARTICULAR!";
                     temp.ccy = "PHP";
-                    temp.amount = 1000 + ((135 * index) / 2.6);
+                    temp.amount = Math.Round(1000 + ((135 * index) / 2.6),2);
                     temp.transCount = 2;
                     temp.status = "Posted";
                     index++;
@@ -259,7 +259,7 @@ namespace ExpenseProcessingSystem.Controllers
                     temp.expTrans = "CLOSING TIME!";
                     temp.particulars = "THIS IS A PARTICULAR!";
                     temp.ccy = "PHP";
-                    temp.amount = 1000 + ((135 * index) / 2.6);
+                    temp.amount = Math.Round(1000 + ((135 * index) / 2.6),2);
                     temp.transCount = 2;
                     temp.status = "Posted";
                     index++;
@@ -275,7 +275,7 @@ namespace ExpenseProcessingSystem.Controllers
                     temp.expTrans = "OPENING TIME!";
                     temp.particulars = "THIS IS A PARTICULAR!";
                     temp.ccy = "PHP";
-                    temp.amount = 1000 + ((135 * index) / 2.6);
+                    temp.amount = Math.Round(1000 + ((135 * index) / 2.6),2);
                     temp.transCount = 2;
                     temp.status = "Posted";
                     index++;
@@ -289,7 +289,7 @@ namespace ExpenseProcessingSystem.Controllers
                     temp.expTrans = "OPENING TIME!";
                     temp.particulars = "THIS IS A PARTICULAR!";
                     temp.ccy = "PHP";
-                    temp.amount = 1000 + ((135 * index) / 2.6);
+                    temp.amount = Math.Round(1000 + ((135 * index) / 2.6),2);
                     temp.transCount = 2;
                     temp.status = "Posted";
                     index++;
