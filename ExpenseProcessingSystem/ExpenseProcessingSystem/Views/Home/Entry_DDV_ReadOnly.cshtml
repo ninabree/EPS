@@ -79,7 +79,7 @@
                             </div>
                         </td>
                         <td><input value="@Model.EntryDDV[i].account_Name" class="input100 accName" disabled /></td>
-                        <td style="text-align:center">@Html.DisplayFor(x => Model.EntryDDV[i].inter_entity)</td>
+                        <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryDDV[i].inter_entity, new { @readonly = "true" })</td>
                         <td style="text-align:center">@Html.DisplayFor(x => Model.EntryDDV[i].fbt)</td>
                         <td><input id="@Model.EntryDDV[i].dept" value="@Model.EntryDDV[i].dept_Name" class="input100" disabled /></td>
                         <td style="text-align:center">@Html.DisplayFor(x => Model.EntryDDV[i].chkVat, new { @class = "chkVat" })</td>
@@ -309,14 +309,13 @@
             var interRate = $("#" + pNode.id).find('#EntryDDV_' + idNo + '__interDetails_Inter_Rate').val();
             var remarksTitle = $("#" + pNode.id).find("td div .GBaseRemarksTitle").val();
             var account = $("#" + pNode.id).find("td .accName").val();
-            var accountID = $("#" + pNode.id).find("#EntryDDV_0__interDetails_interPartList_" + idNo + "__ExpenseEntryInterEntityAccs_" + idNo + "__Inter_Acc_ID").val();
+            var accountID = $("#" + pNode.id).find("#EntryDDV_" + idNo + "__interDetails_interPartList_" + idNo + "__ExpenseEntryInterEntityAccs_" + idNo + "__Inter_Acc_ID").val();
 
             //remove prev contents
             modalDivBody2.empty();
             modalDivHeader2.find('h4').remove();
             modalDivFooter2.find("#add_row_btn").remove(); //
-            modalDivFooter2.find("#saveBtnEntry").remove(); //
-
+            modalDivFooter2.find("#saveBtnEntry").remove(); 
             //set modal header title
             modalDivHeader2.append('<h4 class="modal-title">Inter-Entity</h4>');
             //set modal body content
@@ -356,7 +355,6 @@
 
             var isInter = $("#" + pNode.id).find("#EntryDDV_" + pNode.id.substring(5) + "__inter_entity").is(':checked');
             var btnAttr = $("#" + pNode.id).find("#req_" + pNode.id.substring(5)).find(".reqBtn");
-
             if (isInter) {
                 btnAttr.attr("href", "#");
                 btnAttr.attr("class", "expenseInterEntity reqBtn glyphicon glyphicon-list-alt");

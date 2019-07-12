@@ -3,12 +3,12 @@
         TO UPDATE THESE VALUES, REFER TO THE MASTER ID IN DATA MAINTENANCE: ACCOUNT
     -->
   <!-- First Account in entry1 comes from the DDV form -->
-    <ACCOUNT class="entry1" id="ACCOUNT2">105</ACCOUNT>
+    <ACCOUNT class="entry1" id="ACCOUNT2">56</ACCOUNT>
     <ACCOUNT class="entry1" id="ACCOUNT3">84</ACCOUNT>
 
-    <ACCOUNT class="entry2" id="ACCOUNT1">105</ACCOUNT>
-    <ACCOUNT class="entry2" id="ACCOUNT2">131</ACCOUNT>
+    <ACCOUNT class="entry2" id="ACCOUNT1">74</ACCOUNT>
+    <ACCOUNT class="entry2" id="ACCOUNT2">88</ACCOUNT>
 
-    <ACCOUNT class="entry3" id="ACCOUNT1">131</ACCOUNT>
-    <ACCOUNT class="entry3" id="ACCOUNT2">112</ACCOUNT>
+    <ACCOUNT class="entry3" id="ACCOUNT1">100</ACCOUNT>
+    <ACCOUNT class="entry3" id="ACCOUNT2">101</ACCOUNT>
 </INTERENTITYACCOUNTS>
