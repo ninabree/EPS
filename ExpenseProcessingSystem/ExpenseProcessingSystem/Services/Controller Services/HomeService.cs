@@ -5789,6 +5789,13 @@ namespace ExpenseProcessingSystem.Services
         public ClosingViewModel closeLoadSheet()
         {
             XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
+            int pcMasterID = int.Parse(xelem.Element("PC_MASTERID").Value);
+
+            var pcID = _context.DMAccount.Where(x=>x.Account_MasterID == pcMasterID).Select(x=>x.Account_ID);
+
+            var transactions = _context.ExpenseEntryDetails.Where(x => pcID.Contains(x.ExpDtl_Account) ||
+                                                                       pcID.Contains(x.ExpDtl_CreditAccount1) ||
+                                                                       pcID.Contains(x.ExpDtl_CreditAccount2));
 
             ClosingViewModel closeVM = new ClosingViewModel();
 
@@ -6302,18 +6309,30 @@ namespace ExpenseProcessingSystem.Services
         {
             ExpenseEntryModel transNoMax;
             int transno;
-            int maxNumber;
+            int maxNumber = 0;
+            var maxNumberObj = _context.ExpenseEntry
+                        .Where(y => y.Expense_Date.Year == DateTime.Now.Year && y.Expense_Number != 0);
             do
             {
-                maxNumber = _context.ExpenseEntry
+                
+                if (_context.ExpenseEntry.Where(x=>x.Expense_Number !=0).Count() > 0)
+                {
+                    if(maxNumber != _context.ExpenseEntry
                                         .Where(y => y.Expense_Date.Year == DateTime.Now.Year && y.Expense_Number != 0)
-                                        .Max(y => y.Expense_Number);
+                                        .Max(y => y.Expense_Number))
+                    {
+                        maxNumberObj = _context.ExpenseEntry
+                        .Where(y => y.Expense_Date.Year == DateTime.Now.Year && y.Expense_Number != 0);
+                    }
 
-                transNoMax = _context.ExpenseEntry.OrderByDescending(x=>x.Expense_ID).First();
-
-                transno = (transNoMax.Expense_Created_Date.Year < DateTime.Now.Year) ? 1
-                        : (maxNumber + 1);
-
+                    maxNumber = maxNumberObj.Max(y => y.Expense_Number);
+                    transNoMax = _context.ExpenseEntry.OrderByDescending(x => x.Expense_ID).First();
+                    transno = (transNoMax.Expense_Created_Date.Year < DateTime.Now.Year) ? 1 : (maxNumber + 1);
+                }
+                else
+                {
+                    return 1;
+                }
             } while (maxNumber != _context.ExpenseEntry
                                         .Where(y => y.Expense_Date.Year == DateTime.Now.Year && y.Expense_Number != 0)
                                         .Max(y => y.Expense_Number));
