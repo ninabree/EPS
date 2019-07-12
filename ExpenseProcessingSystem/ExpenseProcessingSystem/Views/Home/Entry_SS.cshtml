@@ -96,7 +96,7 @@
                                 @Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.systemValues.vat.SelectedValue), new { @class = "input100 txtVat comVar", @disabled = "true" })
                             </td>
                             <td style="text-align:center">
-                                @Html.CheckBoxFor(x => Model.EntryCV[i].chkEwt, new { @class = "chkEwt comVar" })
+                                @Html.CheckBoxFor(x => Model.EntryCV[i].chkEwt, new { @class = "chkEwt comVar", @disabled = "true" })
                             </td>
                             <td>
                                 @Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt comVar", @disabled = "true" })
@@ -261,7 +261,7 @@
                     htmlContent += '<option value="' + vat[i]["value"] + '">' + vat[i]["text"] + '</option>';
                 }
                 htmlContent += '</select></td>' +
-                    '<td style="text-align:center"><input class="chkEwt comVar" data-val="true" data-val-required="The chkEwt field is required." id="EntryCV_' + itemCount + '__chkEwt" name="EntryCV[' + itemCount + '].chkEwt" type="checkbox" value="true"></td>' +
+                    '<td style="text-align:center"><input class="chkEwt comVar" data-val="true" data-val-required="The chkEwt field is required." id="EntryCV_' + itemCount + '__chkEwt" name="EntryCV[' + itemCount + '].chkEwt" type="checkbox" value="true" disabled="disabled"></td>' +
                     '<td><select class="input100 txtEwt comVar" data-val="true" data-val-required="The ewt field is required." id="EntryCV_' + itemCount + '__ewt" name="EntryCV[' + itemCount + '].ewt" disabled="disabled">';
                 for (var i = 0; i < ewt.length; i++) {
                     htmlContent += '<option value="' + ewt[i]["value"] + '">' + ewt[i]["text"] + '</option>';
