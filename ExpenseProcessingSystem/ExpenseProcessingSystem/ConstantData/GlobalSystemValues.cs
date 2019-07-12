@@ -23,6 +23,8 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly int STATUS_EDIT = 8;
         public static readonly int STATUS_DELETE = 9;
         public static readonly int STATUS_REVERSED = 10;
+        public static readonly int STATUS_CLOSED = 11;
+        public static readonly int STATUS_OPEN = 12;
 
         //Static values for the index of certain lists that are to be stored inside a list object.
         //i.e: Retrieving system values for the dropdown boxes of entry views.
@@ -50,6 +52,12 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly int TYPE_SS = 3;
         public static readonly int TYPE_PC = 4;
         public static readonly int TYPE_NC = 5;
+
+        //Static value for branch Type/Name/Code
+        //i.e: determining what is the branch code for the transaction
+        //Example : RBU = 767, FCDU = 789
+        public static readonly string BRANCH_RBU = "RBU";
+        public static readonly string BRANCH_FCDU = "FCDU";
 
         //Static value for application codes used for Expense Transactio No.
         //Example : [CV]-2019-100001

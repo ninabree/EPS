@@ -11,6 +11,9 @@ namespace ExpenseProcessingSystem.ViewModels
         public List<CloseItems> rbuItems { get; set; }
         public List<CloseItems> fcduItems { get; set; }
 
+        public string rbuStatus { get; set; }
+        public string fcduStatus { get; set; }
+
         public double pettyBegBalance { get; set; }
         public double cashIn { get; set; }
         public double cashOut { get; set; }

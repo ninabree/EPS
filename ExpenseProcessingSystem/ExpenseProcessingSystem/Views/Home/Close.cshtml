@@ -12,7 +12,19 @@
 @model ClosingViewModel
 
 <div class="tab-content-cont m-t-10" id="closeBody">
-    <div id="tbl-lbl">Date: <p class="dis-inline-block">@Html.EditorFor(m => m.date, new { htmlAttributes = new { @class = "input", @type = "date", @readonly = "readonly" } })</p></div>
+    <div class="flex-c">
+        <div id="tbl-lbl" class="float-l"><p class="dis-inline-block">Date: @Html.EditorFor(m => m.date, new { htmlAttributes = new { @class = "input", @type = "date", @readonly = "readonly" } })</p></div>
+        <div class="float-l">
+            @if (Model.fcduStatus == "CLOSED" && Model.rbuStatus == "CLOSED")
+            {
+                <button class="tbl-btn dis-inline-block" id="openBook" value="openBook">Open Daily Book</button>
+            }
+            else
+            {
+                <button class="tbl-btn dis-inline-block" disabled>Open Daily Book</button>
+            }
+        </div>
+    </div>
     <br />
     <div class="tbl-cont m-b-20">
         <table class="table table-striped tab-tbl m-b-20">
@@ -83,8 +95,8 @@
         </table>
 
         <div class="tbl-controls m-t-20">
-            <button value="CloseRBU" class="tbl-btn float-l">Close RBU</button>
-            <button value="reOpenRBU" class="tbl-btn float-l">Re-Open RBU</button>
+            <button value="CloseRBU" class="tbl-btn float-l closeBtn">Close RBU</button>
+            <button value="reOpenRBU" class="tbl-btn float-l closeBtn">Re-Open RBU</button>
             <!--<button class="tbl-btn float-l">Print RBU Balance</button>-->
             <!--<button class="tbl-btn float-r">Print RBU Proof sheet</button>-->
         </div>
@@ -169,10 +181,8 @@
         </table>
 
         <div class="tbl-controls m-t-20 m-b-20">
-            <button class="tbl-btn float-l">Close FCDU</button>
-            <button class="tbl-btn float-l">Re-Open FCDU</button>
-            <button class="tbl-btn float-l">Print FCDU Balance</button>
-            <button class="tbl-btn float-r">Print FCDU Proof sheet</button>
+            <button value="CloseFCDU" class="tbl-btn float-l closeBtn">Close FCDU</button>
+            <button value="reOpenFCDU" class="tbl-btn float-l closeBtn">Re-Open FCDU</button>
         </div>
 
         <div id="tbl-lbl">
@@ -198,7 +208,7 @@
                     <input class="input" />
                 </td>
                 <td>
-                    <button class="tbl-btn" value="StartPettyCash">Beginning Cash balance Confirmation</button>
+                    <button class="tbl-btn" id="StartPettyCash" value="StartPettyCash">Beginning Cash balance Confirmation</button>
                 </td>
             </tr>
             <tr>
@@ -208,7 +218,7 @@
                 <td>
                     <input class="input" />
                 </td>
-                <td><button class="tbl-btn" value="ClosePettyCash">Petty Cash Breakdown</button></td>
+                <td><button class="tbl-btn" id="ClosePettyCash" value="ClosePettyCash">Petty Cash Breakdown</button></td>
             </tr>
             <tr>
                 <td>
@@ -299,28 +309,38 @@
 
 <script type="text/javascript">
     $(function () {
-        $("#closeBody").on("click", "button", function (e) {
+        $("#closeBody").on("click", "#StartPettyCash", function (e) {
             var command = $(this).val();
-            if (command == "StartPettyCash") {
-                $("#pettyCashModal").find(".modal-body").empty();
-                $("#pettyCashModal").find(".modal-body").load("@Url.Action("ClosePettyCash", "Modal")", { command : command}, function (response, status, xhr) {
+            $("#pettyCashModal").find(".modal-body").empty();
+            $("#pettyCashModal").find(".modal-body").load("@Url.Action("ClosePettyCash", "Modal")", { command : command}, function (response, status, xhr) {
                     if (status == "error") {
                         alert("Something went wrong.");
                     }
-                });
-                $('#pettyCashModal').modal('show');
-            } else if (command == "ClosePettyCash") {
-                $("#pettyCashModal").find(".modal-body").empty();
-                $("#pettyCashModal").find(".modal-body").load("@Url.Action("ClosePettyCash", "Modal")", { command : command}, function (response, status, xhr) {
-                    if (status == "error") {
-                        alert("Something went wrong.");
-                    }
-                });
-                $('#pettyCashModal').modal('show');
-            } else {
-                $("#cmdString").val($(this).val());
-                $('#login').modal('show');
-            }
+            });
+            $('#pettyCashModal').modal('show');
+        });
+
+        $("#closeBody").on("click", "#ClosePettyCash", function (e) {
+            var command = $(this).val();
+            $("#pettyCashModal").find(".modal-body").empty();
+            $("#pettyCashModal").find(".modal-body").load("@Url.Action("ClosePettyCash", "Modal")", { command: command }, function (response, status, xhr) {
+                if (status == "error") {
+                    alert("Something went wrong.");
+                }
+            });
+            $('#pettyCashModal').modal('show');
+        });
+
+        $("#closeBody").on("click", ".closeBtn", function (e) {
+            $("#cmdString").val($(this).val());
+            $('#login').modal('show');
+        });
+
+        $("#closeBody").on("click", "#openBook", function (e) {
+            $("#cmdString").val($(this).val());
+            $("#userString").val("-");
+            $("#passString").val("-");
+            $("#inputForm").submit();
         });
 
         $("#login").on("click", "#loginSubmit", function (e) {

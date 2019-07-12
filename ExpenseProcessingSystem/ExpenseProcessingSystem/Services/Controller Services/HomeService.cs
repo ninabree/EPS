@@ -5473,7 +5473,7 @@ namespace ExpenseProcessingSystem.Services
                 credit.dept = item.dept;
 
                 tempGbase.entries.Add(credit);
-
+                tempGbase.entries = tempGbase.entries.OrderByDescending(x => x.type).ToList();
                 goExpData = InsertGbaseEntry(tempGbase, expID);
                 goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.expenseDtlID);
                 list.Add(new { expEntryID = expID, goExp = goExpData, goExpHist = goExpHistData });
@@ -5788,7 +5788,7 @@ namespace ExpenseProcessingSystem.Services
         }
         public ClosingViewModel closeLoadSheet()
         {
-            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
+            XElement xelem = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
             int pcMasterID = int.Parse(xelem.Element("PC_MASTERID").Value);
 
             var pcID = _context.DMAccount.Where(x=>x.Account_MasterID == pcMasterID).Select(x=>x.Account_ID);
@@ -5803,8 +5803,78 @@ namespace ExpenseProcessingSystem.Services
             ClosingModel closeModel = _context.Closing.OrderByDescending(x => x.Close_Date).FirstOrDefault();
 
             closeVM.pettyBegBalance = pcModel.PC_EndBal;
-            
 
+
+
+            return closeVM;
+        }
+
+        public ClosingViewModel ClosingGetRecords()
+        {
+            ClosingViewModel closeVM = new ClosingViewModel();
+            ClosingModel closingItemsRBU = _context.Closing.Where(x => x.Close_Type == GlobalSystemValues.BRANCH_RBU)
+                                                           .OrderByDescending(x=>x.Close_Open_Date).FirstOrDefault();
+            ClosingModel closingItemsFCDU = _context.Closing.Where(x => x.Close_Type == GlobalSystemValues.BRANCH_FCDU)
+                                               .OrderByDescending(x => x.Close_Open_Date).FirstOrDefault();
+            //MMddyy
+            var rbuItems = _context.GOExpressHist.Where(x => DateTime.ParseExact(x.GOExpHist_ValueDate, "MMddyy", CultureInfo.InvariantCulture) <= closingItemsRBU.Close_Open_Date
+                                                          && x.GOExpHist_Branchno == "767").ToList();
+            var fcduItems = _context.GOExpressHist.Where(x => DateTime.ParseExact(x.GOExpHist_ValueDate, "MMddyy", CultureInfo.InvariantCulture) <= closingItemsRBU.Close_Open_Date
+                                                          && x.GOExpHist_Branchno == "789").ToList();
+
+            Dictionary<int, List<int>> expenseRbuId = new Dictionary<int, List<int>>();
+            Dictionary<int, List<int>> expenseFcduId = new Dictionary<int, List<int>>();
+
+            foreach (var item in rbuItems)
+            {
+                if(expenseRbuId.ContainsKey(item.ExpenseEntryID))
+                {
+                    expenseRbuId[item.ExpenseEntryID].Add(item.ExpenseDetailID);
+                }
+                else
+                {
+                    expenseRbuId.Add(item.ExpenseEntryID, new List<int>() { item.ExpenseDetailID });
+                }
+            }
+
+            foreach (var item in fcduItems)
+            {
+                if (expenseFcduId.ContainsKey(item.ExpenseEntryID))
+                {
+                    expenseFcduId[item.ExpenseEntryID].Add(item.ExpenseDetailID);
+                }
+                else
+                {
+                    expenseFcduId.Add(item.ExpenseEntryID, new List<int>() { item.ExpenseDetailID });
+                }
+            }
+
+            return closeVM;
+        }
+
+        public ClosingViewModel ClosingOpenDailyBook()
+        {
+            ClosingModel fcduModel = new ClosingModel();
+            ClosingModel rbuModel = new ClosingModel();
+
+            DateTime openDate = DateTime.Now;
+
+            fcduModel.Close_Open_Date = openDate;
+            fcduModel.Close_Type = GlobalSystemValues.BRANCH_FCDU;
+            fcduModel.Close_Status = 12;
+
+            rbuModel.Close_Open_Date = openDate;
+            rbuModel.Close_Type = GlobalSystemValues.BRANCH_RBU;
+            rbuModel.Close_Status = 12;
+
+            List<ClosingModel> listClosing = new List<ClosingModel>() { fcduModel,rbuModel };
+
+            _context.Closing.AddRange(listClosing);
+
+            _context.Entry<ClosingModel>(fcduModel).State = EntityState.Detached;
+            _context.Entry<ClosingModel>(rbuModel).State = EntityState.Detached;
+
+            ClosingViewModel closeVM = ClosingGetRecords();
 
             return closeVM;
         }
@@ -5857,7 +5927,7 @@ namespace ExpenseProcessingSystem.Services
 
             //goModel.Id = -1;
             goModel.SystemName = "EXPRESS";
-            goModel.Branchno = "767"; //Replace with proper branchNo later
+            goModel.Branchno = getAccount(containerModel.entries[0].account).Account_No.Substring(3,3); //Replace with proper branchNo later
             goModel.AutoApproved = "Y";
             goModel.ValueDate = DateTime.Now.ToString("MMddyy");
             goModel.Section = "10";

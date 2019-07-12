@@ -158,12 +158,17 @@ namespace ExpenseProcessingSystem.Controllers
             switch (command)
             {
                 case "load":
-                    model = CloseLoad();
+                    model = _service.ClosingGetRecords();
+                    break;
+                case "openBook":
+                    model = _service.ClosingOpenDailyBook();
                     break;
                 case "CloseRBU":
                     model = CloseRBU(username,password);
                     break;
-                case "b": break;
+                case "reOpenRBU": break;
+                case "CloseFCDU": break;
+                case "reOpenFCDU": break;
             }
             return View(model);
         }
