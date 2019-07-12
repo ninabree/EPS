@@ -10,5 +10,5 @@ string value4 = xelem.Element("ADDRESS").Value
 
 -->
 <CLOSING>
-  <PC_ID id="PC_ID">USD</PC_ID>
+  <PC_MASTERID id="PC_MASTERID">95</PC_MASTERID>
 </CLOSING>
