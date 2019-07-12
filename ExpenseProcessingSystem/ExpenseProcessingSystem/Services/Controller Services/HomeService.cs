@@ -4675,7 +4675,7 @@ namespace ExpenseProcessingSystem.Services
                     List<ExpenseEntryGbaseDtl> expenseGbase = new List<ExpenseEntryGbaseDtl>();
 
                     ExpenseEntryInterEntityModel interDetail = new ExpenseEntryInterEntityModel();
-                    if (ddv.interDetails != null)
+                    if (ddv.interDetails.Inter_Currency1_ID > 0)
                     {
                         var inter = ddv.interDetails;
 

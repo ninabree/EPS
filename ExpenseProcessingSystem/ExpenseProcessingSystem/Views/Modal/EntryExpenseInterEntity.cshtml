@@ -14,7 +14,7 @@
         <td colspan="11"></td>
     </tr>
     <tr>
-        <td colspan="3"><label>PhP Amount</label></td>
+        <td colspan="3"><label>@Html.DisplayFor(m => m.Inter_Currency1_ABBR) Amount</label></td>
         <td colspan="2" id="curr1-abbr">
             @Html.DisplayFor(m => m.Inter_Currency1_ABBR)
             @Html.HiddenFor(m => m.Inter_Currency1_ID)
@@ -27,7 +27,7 @@
         <td colspan="4"><input type="number" id="convertAmt1" class="changeable" value="@Model.Inter_Convert1_Amount" /></td>
     </tr>
     <tr>
-        <td colspan="3"><label id="curr2-lbl">USD Amount</label></td>
+        <td colspan="3"><label id="curr2-lbl"> @Model.CurrencyList.Where(x=> x.Value == @Model.Inter_Currency2_ID + "").Select(x => x.Text).FirstOrDefault() Amount</label></td>
         <td colspan="2" id="curr2-abbr">
             <select id="@Html.IdFor(x => Model.Inter_Currency2_ID)" class="input100 txtAcc curr2" name="@Html.NameFor(x => Model.Inter_Currency2_ID)">
                 @foreach (var groepModel in Model.CurrencyList)
@@ -240,32 +240,31 @@
 
 
                 //Populate the Particulars and Accs Lists
-                $('#interDtls').empty();
+                $('#req_' + itemNo).find('#interDtls').empty();
 
-                var parts = '<input id = "EntryDDV_0__interDetails_interPartList_0__InterPart_Particular_Title" name = "EntryDDV[0].interDetails.interPartList[0].InterPart_Particular_Title" type = "hidden" value = "' + $('#part1-title').text() + '" >';
+                var parts = '<input id = "EntryDDV_' + itemNo + '__interDetails_interPartList_0__InterPart_Particular_Title" name = "EntryDDV[0].interDetails.interPartList[0].InterPart_Particular_Title" type = "hidden" value = "' + $('#part1-title').text() + '" >';
                 $("tr#part1.part-tr").each(function (ind, item) {
                     var partNo = 0;
-                    var AccID = $('#interPartList_' + itemNo + '__Inter_Particular1_' + ind + '__Particular_Acc_ID').val(),
+                    var AccID = $('#interPartList_0__Inter_Particular1_' + ind + '__Particular_Acc_ID').val(),
                         Amt = $('#par1-' + ind).text(),
                         CurrID = ($('#interPartList_0__Inter_Particular1_' + itemNo + '__Particular_DebCurr_ID').val() > 0) ? $('#interPartList_0__Inter_Particular1_' + itemNo + '__Particular_DebCurr_ID').val() : $('#interPartList_0__Inter_Particular1_' + itemNo + '__Particular_CredCurr_ID').val(),
                         Rate = "0",
-                        TypeID = $('#interPartList_' + itemNo + '__Inter_Particular1_' + ind + '__Particular_Type_ID').val();
-
+                        TypeID = $('#interPartList_0__Inter_Particular1_' + ind + '__Particular_Type_ID').val();
                     parts += '<input data-val="true" data-val-required="The Inter_Acc_ID field is required." id="EntryDDV_' + itemNo + '__interDetails_interPartList_' + itemNo + '__ExpenseEntryInterEntityAccs_' + ind + '__Inter_Acc_ID" name="EntryDDV[' + itemNo + '].interDetails.interPartList[' + itemNo + '].ExpenseEntryInterEntityAccs[' + ind + '].Inter_Acc_ID" type="hidden" value="' + AccID + '">'
                         + '<input data-val="true" data-val-number="The field Inter_Amount must be a number." data-val-required="The Inter_Amount field is required." id="EntryDDV_' + itemNo + '__interDetails_interPartList_' + itemNo + '__ExpenseEntryInterEntityAccs_' + ind + '__Inter_Amount" name="EntryDDV[' + itemNo + '].interDetails.interPartList[0].ExpenseEntryInterEntityAccs[' + ind + '].Inter_Amount" type="hidden" value="' + Amt + '">'
                         + '<input data-val="true" data-val-required="The Inter_Curr_ID field is required." id="EntryDDV_' + itemNo + '__interDetails_interPartList_' + itemNo + '__ExpenseEntryInterEntityAccs_' + ind + '__Inter_Curr_ID" name="EntryDDV[' + itemNo + '].interDetails.interPartList[' + itemNo + '].ExpenseEntryInterEntityAccs[' + ind + '].Inter_Curr_ID" type="hidden" value="' + CurrID + '">'
                         + '<input data-val="true" data-val-number="The field Inter_Rate must be a number." data-val-required="The Inter_Rate field is required." id="EntryDDV_' + itemNo + '__interDetails_interPartList_' + itemNo + '__ExpenseEntryInterEntityAccs_' + ind + '__Inter_Rate" name="EntryDDV[' + itemNo + '].interDetails.interPartList[0].ExpenseEntryInterEntityAccs[' + ind + '].Inter_Rate" type="hidden" value="' + Rate + '">'
                         + '<input data-val="true" data-val-required="The Inter_Type_ID field is required." id="EntryDDV_' + itemNo + '__interDetails_interPartList_' + itemNo + '__ExpenseEntryInterEntityAccs_' + ind + '__Inter_Type_ID" name="EntryDDV[' + itemNo + '].interDetails.interPartList[' + itemNo + '].ExpenseEntryInterEntityAccs[' + ind + '].Inter_Type_ID" type="hidden" value="' + TypeID + '">'
                 });
-                parts += '<input id = "EntryDDV_0__interDetails_interPartList_1__InterPart_Particular_Title" name = "EntryDDV[0].interDetails.interPartList[1].InterPart_Particular_Title" type = "hidden" value = "' + $('#part2-title').text() + '" >'
+                parts += '<input id = "EntryDDV_' + itemNo + '__interDetails_interPartList_1__InterPart_Particular_Title" name = "EntryDDV[0].interDetails.interPartList[1].InterPart_Particular_Title" type = "hidden" value = "' + $('#part2-title').text() + '" >'
 
                 $("tr#part2.part-tr").each(function (ind, item) {
                     var partNo = parseInt(item.id.substring(4)) - 1;
-                    var AccID = $('#interPartList_' + itemNo + '__Inter_Particular2_' + ind + '__Particular_Acc_ID').val(),
+                    var AccID = $('#interPartList_0__Inter_Particular2_' + ind + '__Particular_Acc_ID').val(),
                         Amt = $('#par1-' + ind).text(),
-                        CurrID = ($('#interPartList_' + itemNo + '__Inter_Particular2_' + ind + '__Particular_DebCurr_ID').val() > 0) ? $('#interPartList_' + itemNo + '__Inter_Particular2_' + ind + '__Particular_DebCurr_ID').val() : $('#interPartList_' + itemNo + '__Inter_Particular2_' + ind + '__Particular_CredCurr_ID').val(),
+                        CurrID = ($('#interPartList_0__Inter_Particular2_' + ind + '__Particular_DebCurr_ID').val() > 0) ? $('#interPartList_0__Inter_Particular2_' + ind + '__Particular_DebCurr_ID').val() : $('#interPartList_0__Inter_Particular2_' + ind + '__Particular_CredCurr_ID').val(),
                         Rate = "0",
-                        TypeID = $('#interPartList_' + itemNo + '__Inter_Particular2_' + ind + '__Particular_Type_ID').val();
+                        TypeID = $('#interPartList_0__Inter_Particular2_' + ind + '__Particular_Type_ID').val();
 
                     parts += '<input data-val="true" data-val-required="The Inter_Acc_ID field is required." id="EntryDDV_' + itemNo + '__interDetails_interPartList_' + partNo + '__ExpenseEntryInterEntityAccs_' + ind + '__Inter_Acc_ID" name="EntryDDV[' + itemNo + '].interDetails.interPartList[' + partNo + '].ExpenseEntryInterEntityAccs[' + ind + '].Inter_Acc_ID" type="hidden" value="' + AccID + '">'
                         + '<input data-val="true" data-val-number="The field Inter_Amount must be a number." data-val-required="The Inter_Amount field is required." id="EntryDDV_' + itemNo + '__interDetails_interPartList_' + partNo + '__ExpenseEntryInterEntityAccs_' + ind + '__Inter_Amount" name="EntryDDV[' + itemNo + '].interDetails.interPartList[' + partNo + '].ExpenseEntryInterEntityAccs[' + ind + '].Inter_Amount" type="hidden" value="' + Amt + '">'
@@ -274,15 +273,15 @@
                         + '<input data-val="true" data-val-required="The Inter_Type_ID field is required." id="EntryDDV_' + itemNo + '__interDetails_interPartList_' + partNo + '__ExpenseEntryInterEntityAccs_' + ind + '__Inter_Type_ID" name="EntryDDV[' + itemNo + '].interDetails.interPartList[' + partNo + '].ExpenseEntryInterEntityAccs[' + ind + '].Inter_Type_ID" type="hidden" value="' + TypeID + '">'
                 });
 
-                parts += '<input id="EntryDDV_0__interDetails_interPartList_2__InterPart_Particular_Title" name="EntryDDV[0].interDetails.interPartList[2].InterPart_Particular_Title" type="hidden" value="' + $('#part3-title').text() + '" > '
+                parts += '<input id="EntryDDV_' + itemNo + '__interDetails_interPartList_2__InterPart_Particular_Title" name="EntryDDV[0].interDetails.interPartList[2].InterPart_Particular_Title" type="hidden" value="' + $('#part3-title').text() + '" > '
 
                 $("tr#part3.part-tr").each(function (ind, item) {
                     var partNo = parseInt(item.id.substring(4)) - 1;
-                    var AccID = $('#interPartList_' + itemNo + '__Inter_Particular3_' + ind + '__Particular_Acc_ID').val(),
+                    var AccID = $('#interPartList_0__Inter_Particular3_' + ind + '__Particular_Acc_ID').val(),
                         Amt = $('#par1-' + ind).text(),
-                        CurrID = ($('#interPartList_' + itemNo + '__Inter_Particular3_' + ind + '__Particular_DebCurr_ID').val() > 0) ? $('#interPartList_' + itemNo + '__Inter_Particular3_' + ind + '__Particular_DebCurr_ID').val() : $('#interPartList_' + itemNo + '__Inter_Particular3_' + ind + '__Particular_CredCurr_ID').val(),
+                        CurrID = ($('#interPartList_0__Inter_Particular3_' + ind + '__Particular_DebCurr_ID').val() > 0) ? $('#interPartList_0__Inter_Particular3_' + ind + '__Particular_DebCurr_ID').val() : $('#interPartList_0__Inter_Particular3_' + ind + '__Particular_CredCurr_ID').val(),
                         Rate = "0",
-                        TypeID = $('#interPartList_' + itemNo + '__Inter_Particular3_' + ind + '__Particular_Type_ID').val();
+                        TypeID = $('#interPartList_0__Inter_Particular3_' + ind + '__Particular_Type_ID').val();
 
                     parts += '<input data-val="true" data-val-required="The Inter_Acc_ID field is required." id="EntryDDV_' + itemNo + '__interDetails_interPartList_' + partNo + '__ExpenseEntryInterEntityAccs_' + ind + '__Inter_Acc_ID" name="EntryDDV[' + itemNo + '].interDetails.interPartList[' + partNo + '].ExpenseEntryInterEntityAccs[' + ind + '].Inter_Acc_ID" type="hidden" value="' + AccID + '">'
                         + '<input data-val="true" data-val-number="The field Inter_Amount must be a number." data-val-required="The Inter_Amount field is required." id="EntryDDV_' + itemNo + '__interDetails_interPartList_' + partNo + '__ExpenseEntryInterEntityAccs_' + ind + '__Inter_Amount" name="EntryDDV[' + itemNo + '].interDetails.interPartList[' + partNo + '].ExpenseEntryInterEntityAccs[' + ind + '].Inter_Amount" type="hidden" value="' + Amt + '">'
@@ -290,7 +289,6 @@
                         + '<input data-val="true" data-val-number="The field Inter_Rate must be a number." data-val-required="The Inter_Rate field is required." id="EntryDDV_' + itemNo + '__interDetails_interPartList_' + partNo + '__ExpenseEntryInterEntityAccs_' + ind + '__Inter_Rate" name="EntryDDV[' + itemNo + '].interDetails.interPartList[' + partNo + '].ExpenseEntryInterEntityAccs[' + ind + '].Inter_Rate" type="hidden" value="' + Rate + '">'
                         + '<input data-val="true" data-val-required="The Inter_Type_ID field is required." id="EntryDDV_' + itemNo + '__interDetails_interPartList_' + partNo + '__ExpenseEntryInterEntityAccs_' + ind + '__Inter_Type_ID" name="EntryDDV[' + itemNo + '].interDetails.interPartList[' + partNo + '].ExpenseEntryInterEntityAccs[' + ind + '].Inter_Type_ID" type="hidden" value="' + TypeID + '">'
                 });
-
                 //append the particulars list to model to post
                 $('#req_' + itemNo).find('#interDtls').append(parts);
 
