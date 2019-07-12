@@ -53,13 +53,11 @@ $(document).ready(function () {
         }
     }, 1000);
 
-
-    
     /*//////////////////////////////////////////////////////////////////
     [ UM ]*/
 
     //to highlight a table row in UM
-    var rows = $('#um-tbl tbody tr');
+    var rows = $(document).find('#um-tbl').find('tbody').find('tr');
     rows.on('click', function(e) {
         /* Get current row */
         var row = $(this);

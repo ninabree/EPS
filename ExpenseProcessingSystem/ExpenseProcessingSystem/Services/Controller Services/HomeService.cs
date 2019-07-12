@@ -4442,7 +4442,7 @@ namespace ExpenseProcessingSystem.Services
                     List<ExpenseEntryGbaseDtl> expenseGbase = new List<ExpenseEntryGbaseDtl>();
 
                     ExpenseEntryInterEntityModel interDetail = new ExpenseEntryInterEntityModel();
-                    if (ddv.interDetails != null)
+                    if (ddv.interDetails.Inter_Currency1_ID > 0)
                     {
                         var inter = ddv.interDetails;
 
@@ -4502,27 +4502,27 @@ namespace ExpenseProcessingSystem.Services
 
                             expenseGbase.Add(remarks);
                         }
-                        ExpenseEntryDetailModel expenseDetails = new ExpenseEntryDetailModel
-                        {
-                            ExpDtl_Gbase_Remarks = ddv.GBaseRemarks,
-                            ExpDtl_Account = ddv.account,
-                            ExpDtl_Inter_Entity = ddv.inter_entity,
-                            ExpDtl_Fbt = ddv.fbt,
-                            ExpDtl_FbtID = (ddv.fbt) ? getFbt(getAccount(ddv.account).Account_FBT_MasterID) : 0,
-                            ExpDtl_Dept = ddv.dept,
-                            ExpDtl_Vat = ddv.vat,
-                            ExpDtl_Ewt = ddv.ewt,
-                            ExpDtl_Ccy = ddv.ccy,
-                            ExpDtl_Debit = ddv.debitGross,
-                            ExpDtl_Credit_Ewt = ddv.credEwt,
-                            ExpDtl_Credit_Cash = ddv.credCash,
-                            ExpDtl_Ewt_Payor_Name_ID = ddv.ewt_Payor_Name_ID,
-                            ExpenseEntryInterEntity = expenseInter,
-                            ExpDtl_isEwt = ddv.chkEwt,
-                            ExpenseEntryGbaseDtls = expenseGbase
-                        };
-                        expenseDtls.Add(expenseDetails);
                     }
+                    ExpenseEntryDetailModel expenseDetails = new ExpenseEntryDetailModel
+                    {
+                        ExpDtl_Gbase_Remarks = ddv.GBaseRemarks,
+                        ExpDtl_Account = ddv.account,
+                        ExpDtl_Inter_Entity = ddv.inter_entity,
+                        ExpDtl_Fbt = ddv.fbt,
+                        ExpDtl_FbtID = (ddv.fbt) ? getFbt(getAccount(ddv.account).Account_FBT_MasterID) : 0,
+                        ExpDtl_Dept = ddv.dept,
+                        ExpDtl_Vat = ddv.vat,
+                        ExpDtl_Ewt = ddv.ewt,
+                        ExpDtl_Ccy = ddv.ccy,
+                        ExpDtl_Debit = ddv.debitGross,
+                        ExpDtl_Credit_Ewt = ddv.credEwt,
+                        ExpDtl_Credit_Cash = ddv.credCash,
+                        ExpDtl_Ewt_Payor_Name_ID = ddv.ewt_Payor_Name_ID,
+                        ExpenseEntryInterEntity = expenseInter,
+                        ExpDtl_isEwt = ddv.chkEwt,
+                        ExpenseEntryGbaseDtls = expenseGbase
+                    };
+                    expenseDtls.Add(expenseDetails);
                 }
 
                 ExpenseEntryModel expenseEntry = new ExpenseEntryModel
