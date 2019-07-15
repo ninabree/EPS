@@ -1,24 +1,125 @@
 ﻿@using ExpenseProcessingSystem.ViewModels
 @model HomeIndexViewModel
 <div class="tabContent">
-    <div>
-        <div class="tab-tbl">All Application Records:</div>
-        <table class="table table-striped tab-tbl table-bordered">
+    <div class="p-t-10 p-l-20 p-r-20">
+        <form asp-action="History" asp-controller="Home" method="get" id="search-frm">
+            <div class="form-actions no-color">
+                <p>
+                    Find by:
+                    <table class="table">
+                        <tr>
+                            <td>@Html.LabelFor(model => model.Filters.HistoryFil.Hist_Voucher_No)</td>
+                            <td>@Html.EditorFor(model => model.Filters.HistoryFil.Hist_Voucher_No)</td>
+                            <td>@Html.LabelFor(model => model.Filters.HistoryFil.Hist_Maker)</td>
+                            <td>@Html.TextBoxFor(model => model.Filters.HistoryFil.Hist_Maker, new { @class = "input" })</td>
+                            <td>@Html.LabelFor(model => model.Filters.HistoryFil.Hist_Approver)</td>
+                            <td>@Html.TextBoxFor(model => model.Filters.HistoryFil.Hist_Approver, new { @class = "input" })</td>
+                            <td>@Html.LabelFor(model => model.Filters.HistoryFil.Hist_Created_Date)</td>
+                            <td>@Html.TextBoxFor(model => model.Filters.HistoryFil.Hist_Created_Date, new { @class = "input" })</td>
+                            <td>@Html.LabelFor(model => model.Filters.HistoryFil.Hist_Updated_Date)</td>
+                            <td>@Html.TextBoxFor(model => model.Filters.HistoryFil.Hist_Updated_Date, new { @class = "input" })</td>
+                            <td>@Html.LabelFor(model => model.Filters.HistoryFil.Hist_Status)</td>
+                            <td>@Html.TextBoxFor(model => model.Filters.HistoryFil.Hist_Status, new { @class = "input" })</td>
+                            <td colspan="2" style="text-align: right;">
+                                <input type="submit" value="Search" class="btn btn-default" id="search-btn" />
+                                <input type="button" value="Back to Full List" id="full-list-btn" class="btn btn-default" />
+                            </td>
+                        </tr>
+                    </table>
+                </p>
+            </div>
+        </form>
+    </div>
+    <div class="flex-c p-t-10">
+        <table class="table table-striped tab-tbl table-bordered table-hover w-97">
+            <colgroup>
+                <col style="width:10%" />
+                <col style="width:8%" />
+                <col style="width:29%" />
+                <col style="width:8%" />
+                <col style="width:8%" />
+                <col style="width:12%" />
+                <col style="width:12%" />
+                <col style="width:10%" />
+            </colgroup>
             <thead>
                 <tr>
-                    <th>Application ID</th>
-                    <th>Application Type</th>
-                    <th>Amount</th>
-                    <th>Payee</th>
-                    <th>Maker</th>
+                    <th><a asp-action="History" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["HistVoucherSortParm"]">Voucher No<p class="btn-xs glyphicon @ViewData["glyph-1"]"></p></a></th>
+                    <th><a asp-action="History" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["HistMakerSortParm"]">Maker<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
                     <th>Verifier/s</th>
-                    <th>Approver</th>
-                    <th>Date Submitted</th>
-                    <th>Last Updated Date</th>
-                    <th>Status</th>
+                    <th><a asp-action="History" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["HistApproverSortParm"]">Approver<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
+                    <th><a asp-action="History" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["HistDateCreatedSortParm"]">Date Submitted<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
+                    <th><a asp-action="History" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["HistLastUpdatedSortParm"]">Last Updated Date<p class="btn-xs glyphicon @ViewData["glyph-5"]"></p></a></th>
+                    <th><a asp-action="History" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["HistStatusSortParm"]">Status<p class="btn-xs glyphicon @ViewData["glyph-6"]"></p></a></th>
                 </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+                @if (Model.HistoryList.Count > 0)
+                {
+                    @foreach (AppHistoryViewModel item in Model.HistoryList)
+                    {
+                        <tr data-href="@String.Concat(item.App_Link,"/",item.App_Entry_ID)">
+                            <td>@Html.DisplayFor(model => item.App_Voucher_No)</td>
+                            <td>@Html.DisplayFor(model => item.App_Maker_Name)</td>
+                            <td>
+                                @if (item.App_Verifier_Name_List[0] != null && item.App_Verifier_Name_List[1] != null)
+                                {
+                                    <text>@item.App_Verifier_Name_List[0] / @item.App_Verifier_Name_List[1]</text>
+                                }
+                                else
+                                {
+                                    <text>@item.App_Verifier_Name_List[0]</text>
+                                }
+                            </td>
+                            <td>@Html.DisplayFor(model => item.App_Approver_Name)</td>
+                            <td>@Html.DisplayFor(model => item.App_Date)</td>
+                            <td>@Html.DisplayFor(model => item.App_Last_Updated)</td>
+                            <td>@Html.DisplayFor(model => item.App_Status)</td>
+                        </tr>
+                    }
+                }
+            </tbody>
         </table>
+        @using (Html.BeginForm("", "Home", FormMethod.Post, new { @class = "validate-form", @id = "pendingForm" }))
+        {
+            <input id="entryID" type="hidden" name="entryID" value="" />
+        }
     </div>
+    @{
+        var prevDisabled = !Model.HistoryList.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.HistoryList.HasNextPage ? "disabled" : "";
+    }
+    <a asp-action="Pending"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-page="@(Model.HistoryList.PageIndex - 1)"
+       asp-controller="Home"
+       asp-route-partialName="@ViewData["Title"]"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left">
+    </a>
+    <input type="text" class="pagination-input" id="paginationInput" val="" />
+    <input type="text" class="pagination-input" value="of @(Model.HistoryList.TotalPages)" disabled />
+    <a asp-action="Pending"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-controller="Home"
+       asp-route-partialName="@ViewData["Title"]"
+       asp-route-page="@(Model.HistoryList.PageIndex + 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right">
+    </a>
 </div>
+
+<script type="text/javascript">
+    $(function () {
+        $('*[data-href]').on('click', function () {
+            var form = $("#pendingForm")
+            var hrefString = $(this).data("href").split("/");
+            var link = hrefString[0];
+            var entryID = hrefString[1];
+
+            $("#entryID").val(entryID);
+            form.attr("action", "/Home/" + link)
+            form.submit();
+        });
+    });
+</script>
