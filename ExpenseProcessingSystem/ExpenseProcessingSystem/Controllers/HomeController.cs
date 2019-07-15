@@ -1871,6 +1871,12 @@ namespace ExpenseProcessingSystem.Controllers
 
             LiquidationViewModel ssList = _service.getExpenseToLiqudate(entryID);
             ssList.accList = _service.getAccountList();
+            ssList.accAllList = _service.getAccountListIncHist();
+
+            foreach (var i in ssList.accAllList)
+            {
+                i.Account_Name = i.Account_No + " - " + i.Account_Name;
+            }
             foreach (var i in ssList.LiquidationDetails)
             {
                 i.screenCode = "Liquidation_SS";
@@ -2905,7 +2911,20 @@ namespace ExpenseProcessingSystem.Controllers
 
             return Json(vatList.ToList());
         }
+        [AcceptVerbs("GET")]
+        public JsonResult getAccount(int masterID)
+        {
+            var acc = _service.getAccountByMasterID(masterID);
 
+            return Json(acc);
+        }
+        [AcceptVerbs("GET")]
+        public JsonResult getCurrency(int masterID)
+        {
+            var acc = _service.getCurrencyByMasterID(masterID);
+
+            return Json(acc);
+        }
         public IActionResult GenerateVoucher(EntryCVViewModelList model)
         {
             VoucherViewModelList vvm = new VoucherViewModelList();
