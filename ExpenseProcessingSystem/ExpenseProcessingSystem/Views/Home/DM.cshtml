@@ -89,7 +89,7 @@
             if (isSessionTimeout() != true) {
                 $('input#filterPartialName').val(this.value);
 
-                var filterData = { 'sortOrder': sortOrder, 'currentFilter': currentFilter, 'colName': colName, 'searchString': searchString, 'page': page };
+                var filterData = { 'sortOrder': sortOrder, 'currentFilter': currentFilter, 'partialName': this.value, 'colName': colName, 'searchString': searchString, 'page': 1 };
 
 
                 $('#partcontains').load("/Partial/" + this.value, filterData, function (response, status, xhr) {
@@ -141,12 +141,13 @@
                     return false;
                 }
             });
+
             if (!isSameStat && chkCount <= 2) {
                 alert("Kindly check rows with the same status only.");
                 $('.rec').prop('disabled', true);
             }
             else if (creatorId == userId/* && chkCount <= 1*/) {
-                if (stat != "Approved") {
+                if (stat != "APPROVED") {
                     defaultOnlyAdd();
                 } else {
                     defaultApproved();
@@ -166,21 +167,21 @@
                         }
                         else if (txtVal == stat) {
                             //In BCS, only one row can be selected for edit
-                            if (chkCount >= 2 && stat == "Approved" && (tblName == "BIR Cert Signatory")) {
+                            if (chkCount >= 2 && stat == "APPROVED" && (tblName == "BIR Cert Signatory")) {
                                 $('.apprv-rec').prop('disabled', true);
                                 $('.rej-rec').prop('disabled', true);
                                 $('.add-rec').prop('disabled', false);
                                 $('.edit-rec').prop('disabled', true);
                                 $('.delete-rec').prop('disabled', false);
                             }
-                            else if (stat == "Approved") {
+                            else if (stat == "APPROVED") {
                                 defaultApproved();
                             } else {
                                 defaultForApproval();
                             }
                         }
                         else if (remainingCheckStat == stat) {
-                            if (remainingCheckStat == "Approved") {
+                            if (remainingCheckStat == "APPROVED") {
                                 defaultApproved();
                             } else {
                                 defaultForApproval();
@@ -198,7 +199,7 @@
                         }
                         //if there is remaining, filter btns according to stat of other selected elements
                         else {
-                            if (remainingCheckStat == "Approved") {
+                            if (remainingCheckStat == "APPROVED") {
                                 defaultApproved();
                             } else {
                                 defaultForApproval();
@@ -208,7 +209,7 @@
                 } else {
                     $('input#entryCheckTypes').val(stat);
                     //format only avail buttons for clicked checkbox 
-                    if (remainingCheckStat == "Approved") {
+                    if (remainingCheckStat == "APPROVED") {
                         defaultApproved();
                     } else {
                         defaultForApproval();
@@ -223,26 +224,6 @@
             $('div.modal-backdrop.fade.in').not(':first').remove();
         }, 1);
 
-        /*//////////////////////////////////////////////////////////////////
-        [ Pagination - Number Input]*/
-
-        setInterval(function () {
-            //get hidden value of partial view in Data Maintenance
-            var partial = $('input#partialVal').val();
-
-            var data = $pageInput.data("value"),
-                 val = $pageInput.val();
-
-            if (data !== val) {
-                $pageInput.data("value", val);
-                var url = window.location.pathname + '?page=' + val;
-                //check if in data maintenance
-                if (window.location.pathname == "/Home/DM") {
-                    url = window.location.pathname + '?partialName=' + partial + '&page=' + val;
-                }
-                window.location = url;
-            }
-        }, 1000);
     /*//////////////////////////////////////////////////////////////////
     [ Functions ]*/
 

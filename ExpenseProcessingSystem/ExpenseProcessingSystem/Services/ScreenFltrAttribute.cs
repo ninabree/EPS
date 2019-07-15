@@ -59,7 +59,7 @@ namespace ExpenseProcessingSystem.Services
                 PF = new VendorFiltersViewModel
                 {
                     PF_Name = ctx.Session.GetString("PF_Name") ?? "",
-                    PF_TIN = int.Parse(ctx.Session.GetString("PF_TIN") ?? "0"),
+                    PF_TIN = ctx.Session.GetString("PF_TIN") ?? "",
                     PF_Address = ctx.Session.GetString("PF_Address") ?? "",
                     PF_Creator_Name = ctx.Session.GetString("PF_Creator_Name") ?? "",
                     PF_Approver_Name = ctx.Session.GetString("PF_Approver_Name") ?? "",
@@ -161,7 +161,7 @@ namespace ExpenseProcessingSystem.Services
                     TR_Nature = ctx.Session.GetString("TR_Nature") ?? "",
                     TR_Nature_Income_Payment = ctx.Session.GetString("TR_Nature_Income_Payment") ?? "",
                     TR_ATC = ctx.Session.GetString("TR_ATC") ?? "",
-                    TR_Tax_Rate = int.Parse(ctx.Session.GetString("TR_Tax_Rate") ?? "0"),
+                    TR_Tax_Rate = ctx.Session.GetString("TR_Tax_Rate") ?? "",
                     TR_Creator_Name = ctx.Session.GetString("TR_Creator_Name") ?? "",
                     TR_Approver_Name = ctx.Session.GetString("TR_Approver_Name") ?? "",
                     TR_Status = ctx.Session.GetString("TR_Status") ?? ""
