@@ -45,7 +45,7 @@
                 </td>
             </tr>
             <tr>
-                <td>@Html.RadioButton("radioTimePeriod", "1", false, new { id = "radioPeriodOption1", @class = "radioPeriodOption", disabled = "disabled" })</td>
+                <td><a href="#" id="deselectRadio"><img src="~/images/deselect.png" style="width:20%; vertical-align:middle" /></a>@Html.RadioButton("radioTimePeriod", "1", false, new { id = "radioPeriodOption1", @class = "radioPeriodOption", disabled = "disabled" })</td>
                 <td> From:</td>
                 <td>
                     @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-49", id = "ddlYear", disabled = "disabled" })
@@ -109,7 +109,7 @@
             </tr>
             <tr>
                 <td>&#9679</td>
-                <td>Subject Name</td>
+                <td>Remarks</td>
                 <td><input id="SubjName" class="input h-20 fs-11" type="text" disabled="disabled" /></td>
                 <td></td>
                 <td></td>

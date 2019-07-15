@@ -22,6 +22,8 @@
     <Compile Remove="Migrations\20190703024226_ApplyAnnotationsToLiquidationInterEntity.Designer.cs" />
     <Compile Remove="Migrations\20190708083255_ApplyAnnotationsToGOExpressHistModel.cs" />
     <Compile Remove="Migrations\20190708083255_ApplyAnnotationsToGOExpressHistModel.Designer.cs" />
+    <Compile Remove="Migrations\20190715065514_ApplyAnnotationsToLiquidationInterEntity.cs" />
+    <Compile Remove="Migrations\20190715065514_ApplyAnnotationsToLiquidationInterEntity.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

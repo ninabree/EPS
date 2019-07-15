@@ -26,5 +26,7 @@ namespace ExpenseProcessingSystem.ViewModels
         public List<LiquidationDetailsViewModel> LiquidationDetails { get; set; }
         public LiquidationEntryDetailModel LiqEntryDetails { get; set; }
         public List<DMAccountModel> accList { get; set; }
+        public List<DMAccountModel> accAllList { get; set; }
+        public List<DMCurrencyModel> currList { get; set; }
     }
 }

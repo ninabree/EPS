@@ -26,6 +26,7 @@ namespace ExpenseProcessingSystem.ViewModels
         public int ewtID { get; set; }
         public float ewtValue { get; set; }
         public int ccyID { get; set; }
+        public int ccyMasterID { get; set; }
         public string ccyAbbrev { get; set; }
         public float debitGross { get; set; }
         public float credEwt { get; set; }
@@ -64,34 +65,34 @@ namespace ExpenseProcessingSystem.ViewModels
     public class LiquidationInterEntity
     {
         public string Liq_DebitCred_1_1 { get; set; }
-        public string Liq_AccountID_1_1 { get; set; }
+        public int Liq_AccountID_1_1 { get; set; }
         public double Liq_InterRate_1_1 { get; set; }
-        public string Liq_CCY_1_1 { get; set; }
+        public int Liq_CCY_1_1 { get; set; }
         public double Liq_Amount_1_1 { get; set; }
         public string Liq_DebitCred_1_2 { get; set; }
-        public string Liq_AccountID_1_2 { get; set; }
+        public int Liq_AccountID_1_2 { get; set; }
         public double Liq_InterRate_1_2 { get; set; }
-        public string Liq_CCY_1_2 { get; set; }
+        public int Liq_CCY_1_2 { get; set; }
         public double Liq_Amount_1_2 { get; set; }
         public string Liq_DebitCred_2_1 { get; set; }
-        public string Liq_AccountID_2_1 { get; set; }
+        public int Liq_AccountID_2_1 { get; set; }
         public double Liq_InterRate_2_1 { get; set; }
-        public string Liq_CCY_2_1 { get; set; }
+        public int Liq_CCY_2_1 { get; set; }
         public double Liq_Amount_2_1 { get; set; }
         public string Liq_DebitCred_2_2 { get; set; }
-        public string Liq_AccountID_2_2 { get; set; }
+        public int Liq_AccountID_2_2 { get; set; }
         public double Liq_InterRate_2_2 { get; set; }
-        public string Liq_CCY_2_2 { get; set; }
+        public int Liq_CCY_2_2 { get; set; }
         public double Liq_Amount_2_2 { get; set; }
         public string Liq_DebitCred_3_1 { get; set; }
-        public string Liq_AccountID_3_1 { get; set; }
+        public int Liq_AccountID_3_1 { get; set; }
         public double Liq_InterRate_3_1 { get; set; }
-        public string Liq_CCY_3_1 { get; set; }
+        public int Liq_CCY_3_1 { get; set; }
         public double Liq_Amount_3_1 { get; set; }
         public string Liq_DebitCred_3_2 { get; set; }
-        public string Liq_AccountID_3_2 { get; set; }
+        public int Liq_AccountID_3_2 { get; set; }
         public double Liq_InterRate_3_2 { get; set; }
-        public string Liq_CCY_3_2 { get; set; }
+        public int Liq_CCY_3_2 { get; set; }
         public double Liq_Amount_3_2 { get; set; }
     }
 }
