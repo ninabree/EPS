@@ -17,6 +17,8 @@ namespace ExpenseProcessingSystem.ViewModels
 
         public IEnumerable<HomeReportTransactionListViewModel> HomeReportOutputTransactionList { get; set; }
 
+        public IEnumerable<HomeReportAccountSummaryViewModel> HomeReportOutputAccountSummary { get; set; }
+
         public IEnumerable<Temp_RepWTSViewModel> HomeReportOutputWTS { get; set; }
 
         public IEnumerable<Temp_RepCSBViewModel> HomeReportOutputCSB { get; set; }

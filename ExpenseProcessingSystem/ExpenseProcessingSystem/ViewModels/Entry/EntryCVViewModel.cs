@@ -57,6 +57,7 @@ namespace ExpenseProcessingSystem.ViewModels
         public int modalInputFlag { get; set; }
         public string screenCode { get; set; }
         public string ccyAbbrev { get; set; }
+        public int ccyMasterID { get; set; }
         public int expenseDtlID { get; set; }
         public List<amortizationSchedule> amtDetails { get; set; }
         public List<EntryGbaseRemarksViewModel> gBaseRemarksDetails { get; set; }

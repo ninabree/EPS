@@ -156,6 +156,10 @@
     });
 
     $('#ddlSubType').change(function () {
+        if ($("#ddlReportType").val() != 7) {
+            return false;
+        }
+
         radioPeriod1.removeAttr("disabled");
         radioPeriod3.removeAttr("disabled");
         dtPeriodFrom.attr("disabled", "disabled");
@@ -185,10 +189,6 @@
         ddlMonthTo.val(dt.getMonth() + 1);
         ddlYearTo.val(dt.getFullYear());
 
-        if ($("#ddlReportType").val() != 7) {
-            alert("1");
-            return false;
-        }
         if ($(this).val() == 0) {
             return false;
         }
