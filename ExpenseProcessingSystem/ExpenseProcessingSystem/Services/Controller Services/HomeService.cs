@@ -232,6 +232,162 @@ namespace ExpenseProcessingSystem.Services
             return pgPendingList;
         }
 
+        //History
+        public PaginatedList<AppHistoryViewModel> getHistory(int userID, FiltersViewModel filters)
+        {
+            List<AppHistoryViewModel> historyList = new List<AppHistoryViewModel>();
+
+            var properties = filters.HistoryFil.GetType().GetProperties();
+
+            var dbHistory = from p in _context.ExpenseEntry
+                            join l in _context.LiquidationEntryDetails on p.Expense_ID equals l.ExpenseEntryModel.Expense_ID into gj
+                            from l in gj.DefaultIfEmpty()
+                            where (
+                            (p.Expense_Creator_ID == userID || p.Expense_Verifier_1 == userID || p.Expense_Verifier_2 == userID || p.Expense_Approver == userID))
+                            ||
+                            (l.Liq_Created_UserID == userID || l.Liq_Verifier1 == userID  || l.Liq_Verifier2 == userID || l.Liq_Approver == userID)
+                            select new
+                            {
+                                p.Expense_ID,
+                                p.Expense_Number,
+                                p.Expense_Type,
+                                p.Expense_Debit_Total,
+                                p.Expense_Payee,
+                                p.Expense_Creator_ID,
+                                p.Expense_Approver,
+                                p.Expense_Verifier_1,
+                                p.Expense_Verifier_2,
+                                p.Expense_Last_Updated,
+                                p.Expense_Date,
+                                p.Expense_Status,
+                                Liq_Status = l == null ? 0 : l.Liq_Status,
+                                Liq_Created_UserID = l == null ? 0 : l.Liq_Created_UserID,
+                                Liq_Created_Date = l == null ? DateTime.Now : l.Liq_Created_Date,
+                                Liq_Verifier1 = l == null ? 0 : l.Liq_Verifier1,
+                                Liq_Verifier2 = l == null ? 0 : l.Liq_Verifier2,
+                                Liq_Approver_ID = l == null ? 0 : l.Liq_Approver,
+                                Liq_LastUpdated_Date = l == null ? DateTime.Now : l.Liq_LastUpdated_Date
+                            };
+            //FILTER
+            foreach (var property in properties)
+            {
+                var propertyName = property.Name;
+                var subStr = propertyName.Substring(propertyName.IndexOf("_") + 1);
+                var toStr = property.GetValue(filters.HistoryFil).ToString();
+                if (toStr != "")
+                {
+                    if (toStr != "0")
+                    {
+                        if (subStr == "Maker" || subStr == "Approver" || subStr == "Status")
+                        {
+                            //get all userIDs of creator or approver that contains string
+                            var names = _context.User
+                              .Where(x => (x.User_FName.Contains(property.GetValue(filters.HistoryFil).ToString())
+                              || x.User_LName.Contains(property.GetValue(filters.HistoryFil).ToString())))
+                              .Select(x => x.User_ID).ToList();
+                            //get all status IDs that contains string
+                            var status = _context.StatusList
+                              .Where(x => (x.Status_Name.Contains(property.GetValue(filters.HistoryFil).ToString())))
+                              .Select(x => x.Status_ID).ToList();
+                            if (subStr == "Approver")
+                            {
+                                dbHistory = dbHistory.Where(x => (names.Contains(x.Expense_Approver) || names.Contains(x.Liq_Approver_ID)))
+                                         .Select(e => e).AsQueryable();
+                            }
+                            else if (subStr == "Maker")
+                            {
+                                dbHistory = dbHistory.Where(x => (names.Contains(x.Expense_Creator_ID) || names.Contains(x.Liq_Created_UserID)))
+                                         .Select(e => e).AsQueryable();
+                            }
+                            else if (subStr == "Status")
+                            {
+                                dbHistory = dbHistory.Where(x => (status.Contains(x.Expense_Status) || status.Contains(x.Liq_Status)))
+                                         .Select(e => e).AsQueryable();
+                            }
+                        }else if (subStr == "Created_Date" || subStr == "Updated_Date")
+                        {
+                            if (toStr != new DateTime().ToString())
+                            {
+                                if (subStr == "Created_Date")
+                                {
+                                    dbHistory = dbHistory.Where(x => (x.Expense_Date.ToString() ==  subStr|| x.Liq_Created_Date.ToString() == subStr))
+                                             .Select(e => e).AsQueryable();
+                                }
+                                else
+                                {
+                                    dbHistory = dbHistory.Where(x => (x.Expense_Last_Updated.ToString() == subStr || x.Liq_LastUpdated_Date.ToString() == subStr))
+                                             .Select(e => e).AsQueryable();
+                                }
+                            }
+                        }else if (subStr == "Voucher_No")
+                        {
+
+                        }
+                        else // IF STRING VALUE
+                        {
+                            dbHistory = dbHistory.Where("Expense_" + subStr + ".Contains(@0) or Liq_" + subStr + ".Contains(@1)", toStr, toStr)
+                                    .Select(e => e).AsQueryable();
+                        }
+                    }
+                }
+            }
+
+            foreach (var item in dbHistory)
+            {
+                string ver1 = "";
+                string ver2 = "";
+                var linktionary = new Dictionary<int, string>();
+
+                if (item.Liq_Status == 0)
+                {
+                    ver1 = item.Expense_Verifier_1 == 0 ? null : getName(item.Expense_Verifier_1);
+                    ver2 = item.Expense_Verifier_2 == 0 ? null : getName(item.Expense_Verifier_2);
+
+                    linktionary = new Dictionary<int, string>
+                    {
+                        {0,"Data Maintenance" },
+                        {GlobalSystemValues.TYPE_CV,"View_CV"},
+                        {GlobalSystemValues.TYPE_DDV,"View_DDV"},
+                        {GlobalSystemValues.TYPE_NC,"View_NC"},
+                        {GlobalSystemValues.TYPE_PC,"View_PCV"},
+                        {GlobalSystemValues.TYPE_SS,"View_SS"},
+                    };
+                }
+                else
+                {
+                    ver1 = item.Liq_Verifier1 == 0 ? null : getName(item.Liq_Verifier1);
+                    ver2 = item.Liq_Verifier2 == 0 ? null : getName(item.Liq_Verifier2);
+
+                    linktionary = new Dictionary<int, string>
+                    {
+                        {0,"Data Maintenance" },
+                        {GlobalSystemValues.TYPE_CV,"View_CV"},
+                        {GlobalSystemValues.TYPE_DDV,"View_DDV"},
+                        {GlobalSystemValues.TYPE_NC,"View_Liquidation_NC"},
+                        {GlobalSystemValues.TYPE_PC,"View_PCV"},
+                        {GlobalSystemValues.TYPE_SS,"View_Liquidation_SS"},
+                    };
+                }
+                AppHistoryViewModel tempHistory = new AppHistoryViewModel
+                {
+                    App_Entry_ID = item.Expense_ID,
+                    App_Voucher_No =  GlobalSystemValues.getApplicationCode(item.Expense_Type)+ "-" + item.Expense_Date.Year + "-" + item.Expense_Number.ToString().PadLeft(5,'0'),
+                    App_Approver_Name = (item.Liq_Status == 0) ? getName(item.Expense_Approver) : getName(item.Liq_Approver_ID),
+                    App_Maker_Name = (item.Liq_Status == 0) ? getName(item.Expense_Creator_ID) : getName(item.Liq_Created_UserID),
+                    App_Verifier_Name_List = new List<string> { ver1, ver2 },
+                    App_Date = (item.Liq_Status == 0) ? item.Expense_Date : item.Liq_Created_Date,
+                    App_Last_Updated = (item.Liq_Status == 0) ? item.Expense_Last_Updated : item.Liq_LastUpdated_Date,
+                    App_Status = (item.Liq_Status == 0) ? getStatus(item.Expense_Status) : getStatus(item.Liq_Status),
+                    App_Link = linktionary[item.Expense_Type]
+                };
+
+                historyList.Add(tempHistory);
+            }
+
+            PaginatedList<AppHistoryViewModel> pgHistoryList = new PaginatedList<AppHistoryViewModel>(historyList, historyList.Count, 1, 10);
+
+            return pgHistoryList;
+        }
         //[ User Maintenance ]
         public UserManagementViewModel2 populateUM()
         {
@@ -6436,6 +6592,18 @@ namespace ExpenseProcessingSystem.Services
             }
 
             return name.User_UserName;
+        }
+        //get userName
+        public string getName(int id)
+        {
+            var name = _context.User.SingleOrDefault(q => q.User_ID == id);
+
+            if (name == null)
+            {
+                return null;
+            }
+
+            return name.User_LName.Substring(0)+", "+name.User_FName;
         }
         //get vat value
         public float getVat()

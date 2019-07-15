@@ -26,6 +26,7 @@ using ExpenseProcessingSystem.ViewModels.Entry;
 using System.Diagnostics;
 using System.Text;
 using System.Xml.Linq;
+using ExpenseProcessingSystem.ViewModels.Search_Filters.Home;
 
 namespace ExpenseProcessingSystem.Controllers
 {
@@ -134,15 +135,68 @@ namespace ExpenseProcessingSystem.Controllers
         }
 
         [OnlineUserCheck]
-        public IActionResult History(string sortOrder, string currentFilter, string searchString, int? page)
+        public IActionResult History(HomeIndexViewModel vm, string sortOrder, string currentFilter, string searchString, int? page)
         {
             var role = _service.getUserRole(GetUserID());
             if (role == "admin")
             {
                 return RedirectToAction("UM");
             }
-            HomeIndexViewModel vm = new HomeIndexViewModel();
-            return View(vm);
+
+            //sort
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["HistVoucherSortParm"] = String.IsNullOrEmpty(sortOrder) ? "hist_voucher" : "";
+            ViewData["HistMakerSortParm"] = sortOrder == "hist_maker_desc" ? "hist_maker" : "hist_maker_desc";
+            ViewData["HistApproverSortParm"] = sortOrder == "hist_approver_desc" ? "hist_approver" : "hist_approver_desc";
+            ViewData["HistDateCreatedSortParm"] = sortOrder == "hist_date_created_desc" ? "hist_date_created" : "hist_date_created_desc";
+            ViewData["HistLastUpdatedSortParm"] = sortOrder == "hist_last_updte_desc" ? "hist_last_updte" : "hist_last_updte_desc";
+            ViewData["HistStatusSortParm"] = sortOrder == "hist_status_desc" ? "hist_status" : "hist_status_desc";
+
+            if (searchString != null) { page = 1; }
+            else { searchString = currentFilter; }
+
+            ViewData["CurrentFilter"] = searchString;
+            ViewData["CurrentFilter"] = searchString;
+            FiltersViewModel tempFil = new FiltersViewModel();
+            if (vm.Filters == null)
+            {
+                tempFil = new FiltersViewModel {
+                    HistoryFil = new HistoryFiltersViewModel
+                    {
+                        Hist_Approver = "",
+                        Hist_Created_Date = new DateTime(),
+                        Hist_Maker = "",
+                        Hist_Status = "",
+                        Hist_Updated_Date = new DateTime(),
+                        Hist_Voucher_No = ""
+
+                    }
+                };
+            }else
+            {
+                tempFil.HistoryFil = new HistoryFiltersViewModel
+                {
+                    Hist_Approver = vm.Filters.HistoryFil.Hist_Approver ?? "",
+                    Hist_Created_Date = vm.Filters.HistoryFil.Hist_Created_Date != new DateTime() ? vm.Filters.HistoryFil.Hist_Created_Date : new DateTime(),
+                    Hist_Maker = vm.Filters.HistoryFil.Hist_Maker ?? "",
+                    Hist_Status = vm.Filters.HistoryFil.Hist_Status ?? "",
+                    Hist_Updated_Date = vm.Filters.HistoryFil.Hist_Updated_Date != new DateTime() ? vm.Filters.HistoryFil.Hist_Updated_Date : new DateTime(),
+                    Hist_Voucher_No = vm.Filters.HistoryFil.Hist_Voucher_No ??  ""
+
+                };
+            }
+
+            //populate and sort
+            var sortedVals = _sortService.SortData(_service.getHistory(int.Parse(GetUserID()), tempFil), sortOrder);
+            ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
+
+            HomeIndexViewModel VM = new HomeIndexViewModel()
+            {
+                Filters = vm.Filters,
+                HistoryList = PaginatedList<AppHistoryViewModel>.CreateAsync(
+                        (sortedVals.list).Cast<AppHistoryViewModel>().AsQueryable().AsNoTracking(), page ?? 1, pageSize)
+            };
+            return View(VM);
         }
         //Home Screen Block End-----------------------------------------------------------------------------------
 
@@ -1103,7 +1157,6 @@ namespace ExpenseProcessingSystem.Controllers
                 case "Reject":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REJECTED, int.Parse(GetUserID())))
                     {
-                        _service.postDDV(entryID, "P");
                         ViewBag.Success = 1;
                     }
                     else

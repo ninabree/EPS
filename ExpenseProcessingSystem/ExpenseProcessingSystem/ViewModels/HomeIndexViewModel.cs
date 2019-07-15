@@ -18,20 +18,21 @@ namespace ExpenseProcessingSystem.ViewModels
         public NotifFiltersViewModel NotifFil { get; set; }
         //public PendingPerFiltersViewModel PersPendFil { get; set; }
         public PendingGenFiltersViewModel GenPendFil { get; set; }
-        //public HistoryFiltersViewModel HistoryFil { get; set; }
+        public HistoryFiltersViewModel HistoryFil { get; set; }
     }
     public class AppHistoryViewModel
     {
-        public int App_ID { get; set; }
-        public string App_Type { get; set; }
-        public double App_Amount { get; set; }
-        public string App_Payee { get; set; }
-        public string App_Maker { get; set; }
-        public int App_Approver_ID{ get; set; }
-        public List<int> App_Verifier_ID_List { get; set; }
+        public string App_Voucher_No { get; set; }
+        public int App_Entry_ID { get; set; }
+        public int App_Maker_ID { get; set; }
+        public string App_Maker_Name { get; set; }
+        public int App_Approver_ID { get; set; }
+        public string App_Approver_Name { get; set; }
+        public List<string> App_Verifier_Name_List { get; set; }
         public DateTime App_Date { get; set; }
         public DateTime App_Last_Updated { get; set; }
         public string App_Status { get; set; }
+        public string App_Link { get; set; }
     }
     public class ApplicationsViewModel
     {
