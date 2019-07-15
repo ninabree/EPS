@@ -11,8 +11,7 @@ namespace ExpenseProcessingSystem.ViewModels.Search_Filters
         [Display(Name = "Vendor Name")]
         public string PF_Name { get; set; }
         [Display(Name = "Vendor TIN")]
-        [Range(0, int.MaxValue, ErrorMessage = "Please enter a valid TIN number")]
-        public int PF_TIN { get; set; }
+        public string PF_TIN { get; set; }
         [Display(Name = "Vendor Address")]
         public string PF_Address { get; set; }
         [Display(Name = "Vendor Creator Name")]

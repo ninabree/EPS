@@ -320,7 +320,7 @@ namespace ExpenseProcessingSystem.Controllers
                 {
                     //Vendor
                     _session.SetString("PF_Name", vm.DMFilters.PF.PF_Name ?? "");
-                    _session.SetString("PF_TIN", vm.DMFilters.PF.PF_TIN.ToString() ?? "0");
+                    _session.SetString("PF_TIN", vm.DMFilters.PF.PF_TIN ?? "");
                     _session.SetString("PF_Address", vm.DMFilters.PF.PF_Address ?? "");
                     _session.SetString("PF_Creator_Name", vm.DMFilters.PF.PF_Creator_Name ?? "");
                     _session.SetString("PF_Approver_Name", vm.DMFilters.PF.PF_Approver_Name ?? "");
@@ -388,7 +388,7 @@ namespace ExpenseProcessingSystem.Controllers
                     _session.SetString("TR_WT_Title", vm.DMFilters.TF.TR_WT_Title ?? "");
                     _session.SetString("TR_Nature", vm.DMFilters.TF.TR_Nature ?? "");
                     _session.SetString("TR_Nature_Income_Payment", vm.DMFilters.TF.TR_Nature_Income_Payment ?? "");
-                    _session.SetString("TR_Tax_Rate", vm.DMFilters.TF.TR_Tax_Rate.ToString() ?? "0");
+                    _session.SetString("TR_Tax_Rate", vm.DMFilters.TF.TR_Tax_Rate ?? "");
                     _session.SetString("TR_ATC", vm.DMFilters.TF.TR_ATC ?? "");
                     _session.SetString("TR_Creator_Name", vm.DMFilters.TF.TR_Creator_Name ?? "");
                     _session.SetString("TR_Approver_Name", vm.DMFilters.TF.TR_Approver_Name ?? "");
