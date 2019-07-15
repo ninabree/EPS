@@ -73,6 +73,27 @@ namespace ExpenseProcessingSystem.ConstantData
         //Static value for the view path of voucher layout
         public static readonly string VOUCHER_LAYOUT = "EntryReports/_Voucherlayout";
 
+        public static string getStatus(int statusCode)
+        {
+            switch (statusCode)
+            {
+                case 1: return "PENDING";
+                case 2: return "VERIFIED";
+                case 3: return "APPROVED";
+                case 4: return "POSTED";
+                case 5: return "REJECTED";
+                case 6: return "DELETED";
+                case 7: return "NEW";
+                case 8: return "EDIT";
+                case 9: return "DELETE";
+                case 10: return "REVERSED";
+                case 11: return "CLOSED";
+                case 12: return "OPEN";
+            };
+
+            return "";
+    }
+
         public static string getApplicationCode(int appType)
         {
             return codeDictio[appType];

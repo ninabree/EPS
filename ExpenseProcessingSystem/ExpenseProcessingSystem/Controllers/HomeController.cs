@@ -161,7 +161,14 @@ namespace ExpenseProcessingSystem.Controllers
                     model = _service.ClosingGetRecords();
                     break;
                 case "openBook":
-                    model = _service.ClosingOpenDailyBook();
+                    if (_service.ClosingCheckStatus())
+                    {
+                        model = _service.ClosingOpenDailyBook();
+                    }
+                    else
+                    {
+                        model.messages.Add("Can't open a new book, status still open.");
+                    }
                     break;
                 case "CloseRBU":
                     model = CloseRBU(username,password);

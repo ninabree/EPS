@@ -103,7 +103,7 @@
 
         <div id="tbl-lbl">
             <div class="dis-inline-block"><p>Status:</p></div>
-            <div class="dis-inline-block"><input class="input" /></div>
+            <div class="dis-inline-block">@Html.EditorFor(x=>x.rbuStatus,new { @readonly = "readonly" })</div>
         </div>
 
     </div>
@@ -187,7 +187,7 @@
 
         <div id="tbl-lbl">
             <div class="dis-inline-block"><p>Status:</p></div>
-            <div class="dis-inline-block"><input class="input" /></div>
+            <div class="dis-inline-block">@Html.EditorFor(x => x.fcduStatus, new { @readonly = "readonly" })</div>
         </div>
     </div>
     <hr class="dotted" />
@@ -205,7 +205,7 @@
                     <p>Beginning Balance</p>
                 </td>
                 <td>
-                    <input class="input" />
+                    @Html.EditorFor(x=>x.pettyBegBalance, new { @readonly = "readonly"})
                 </td>
                 <td>
                     <button class="tbl-btn" id="StartPettyCash" value="StartPettyCash">Beginning Cash balance Confirmation</button>
@@ -216,7 +216,7 @@
                     <p>Cash-IN</p>
                 </td>
                 <td>
-                    <input class="input" />
+                    @Html.EditorFor(x=>x.recieve, new { @readonly = "readonly" })
                 </td>
                 <td><button class="tbl-btn" id="ClosePettyCash" value="ClosePettyCash">Petty Cash Breakdown</button></td>
             </tr>
@@ -225,9 +225,9 @@
                     <p>Cash-OUT</p>
                 </td>
                 <td>
-                    <input class="input" />
+                    @Html.EditorFor(x=>x.Disbursed, new { @readonly = "readonly" })
                 </td>
-                <td >
+                <td>
                     <button class="tbl-btn" value="Close">Close</button>
                 </td>
             </tr>
@@ -236,15 +236,14 @@
                     <p>Ending Balance</p>
                 </td>
                 <td>
-                    <input class="input" />
+                    @Html.EditorFor(x=>x.closeBal, new { @readonly = "readonly" })
                 </td>
-                <td>
-                </td>
+                <td></td>
             </tr>
         </tbody>
     </table>
 </div>
-<div id="pettyCashModal" class="modal fade" role="dialog" >
+<div id="pettyCashModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <!-- Modal content-->
         <div class="vertical-alignment-helper">
@@ -255,7 +254,7 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
-                       
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn float-r" data-dismiss="modal">Close</button>
@@ -306,16 +305,26 @@
     <input type="hidden" name="username" id="userString" />
     <input type="hidden" name="password" id="passString" />
 }
-
-<script type="text/javascript">
+@Html.Partial("PopupMessage")
+    <script type="text/javascript">
     $(function () {
+
+        @if (Model.messages.Count() > 0)
+        {
+            <text>
+                $('#alert').text("@Model.messages[0]");
+                $('#divcss').show();
+                return false;
+            </text>
+        }
+
         $("#closeBody").on("click", "#StartPettyCash", function (e) {
             var command = $(this).val();
             $("#pettyCashModal").find(".modal-body").empty();
             $("#pettyCashModal").find(".modal-body").load("@Url.Action("ClosePettyCash", "Modal")", { command : command}, function (response, status, xhr) {
-                    if (status == "error") {
-                        alert("Something went wrong.");
-                    }
+                if (status == "error") {
+                    alert("Something went wrong.");
+                }
             });
             $('#pettyCashModal').modal('show');
         });
@@ -349,4 +358,4 @@
             $("#inputForm").submit();
         });
     });
-</script>
+    </script>

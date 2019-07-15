@@ -11,6 +11,8 @@ namespace ExpenseProcessingSystem.ViewModels
         public List<CloseItems> rbuItems { get; set; }
         public List<CloseItems> fcduItems { get; set; }
 
+        public List<String> messages { get; set; }
+
         public string rbuStatus { get; set; }
         public string fcduStatus { get; set; }
 
@@ -55,11 +57,12 @@ namespace ExpenseProcessingSystem.ViewModels
 
         public ClosingViewModel()
         {
+            messages = new List<string>();
             rbuItems = new List<CloseItems>();
             fcduItems = new List<CloseItems>();
         }
     }
-    
+
     public class CloseItems
     {
         public string gBaseTrans { get; set; }
