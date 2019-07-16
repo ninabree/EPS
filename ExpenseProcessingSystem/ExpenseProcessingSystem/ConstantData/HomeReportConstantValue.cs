@@ -36,6 +36,9 @@ namespace ExpenseProcessingSystem.ConstantData
         //Alphalist of Payees Subject to Withholding Tax Summary
         public const int WTS = 10;
 
+        //Outstanding Advances
+        public const int OutstandingAdvances = 11;
+
         //EXCEL, PDF, Preview format ID
         public const int EXCELID = 1;
         public const int PDFID = 2;

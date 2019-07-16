@@ -78,6 +78,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="Views\Home\ReportLayoutFormat\_ReportLayout_11.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Home\ReportLayoutFormat\_ReportLayout_4.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
@@ -108,10 +111,6 @@
     <Folder Include="wwwroot\uploads\NCC\" />
     <Folder Include="wwwroot\uploads\BCS\" />
     <Folder Include="wwwroot\uploads\Temp\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\xml\ReportHeader.xml" />
   </ItemGroup>
 
 </Project>

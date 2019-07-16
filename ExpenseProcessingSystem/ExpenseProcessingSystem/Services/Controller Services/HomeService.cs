@@ -5340,7 +5340,7 @@ namespace ExpenseProcessingSystem.Services
                     chkEwt = dtl.d.ExpDtl_isEwt,
                     ewt = dtl.d.ExpDtl_Ewt,
                     ccy = dtl.d.ExpDtl_Ccy,
-                    ccyMasterID = getCurrencyByMasterID(dtl.d.ExpDtl_Ccy).Curr_MasterID,
+                    ccyMasterID = (dtl.d.ExpDtl_Ccy != 0) ? getCurrencyByMasterID(dtl.d.ExpDtl_Ccy).Curr_MasterID : 0,
                     debitGross = dtl.d.ExpDtl_Debit,
                     credEwt = dtl.d.ExpDtl_Credit_Ewt,
                     credCash = dtl.d.ExpDtl_Credit_Cash,
