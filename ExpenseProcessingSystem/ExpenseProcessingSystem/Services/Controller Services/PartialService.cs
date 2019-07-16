@@ -234,7 +234,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                                 .Select(x => x.User_ID).ToList();
                             //get all status IDs that contains string
                             var status = _context.StatusList
-                              .Where(x => (x.Status_Name.Contains(property.GetValue(filters.DF).ToString())))
+                              .Where(x => (x.Status_Name.Contains(property.GetValue(filters.PF).ToString())))
                               .Select(x => x.Status_ID).ToList();
                             if (subStr == "Approver")
                             {
@@ -971,14 +971,14 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 var propertyName = property.Name;
                 var subStr = propertyName.Substring(propertyName.IndexOf("_")+1);
                 var toStr = property.GetValue(filters.TF).ToString();
-                string[] colArr = { "Tax_Rate", "Creator_ID", "Approver_ID" };
                 if (toStr != "")
                 {
                     if (toStr != "0")
                     {
-                        if (colArr.Contains(subStr)) // IF INT VAL
+                        if ("Tax_Rate" == subStr) // IF INT VAL
                         {
-                            mList = mList.Where("TR_" + subStr + " = @0 AND  TR_isDeleted == @1", property.GetValue(filters.TF), false)
+                            float newVal = Convert.ToSingle(property.GetValue(filters.TF));
+                            mList = mList.Where("TR_" + subStr + " = @0 AND  TR_isDeleted == @1", newVal / 100, false)
                                      .Select(e => e).AsQueryable();
                         }
                         else if (subStr == "Creator_Name" || subStr == "Approver_Name" || subStr == "Status")

@@ -40,7 +40,6 @@
         //Default fields filter
 
         radioPeriod1.attr("disabled", "disabled");
-        radioPeriod2.attr("disabled", "disabled");
         radioPeriod3.attr("disabled", "disabled");
         ddlMonth.attr("disabled", "disabled");
         ddlYear.attr("disabled", "disabled");
@@ -82,6 +81,8 @@
         dtPeriodFrom.val(today);
         dtPeriodTo.val(today);
 
+        alert(ReportType);
+
         if (ReportType == 2) {
             radioPeriod1.prop('checked', true);
             radioPeriod1.removeAttr("disabled");
@@ -107,20 +108,8 @@
             ddlMonth.removeAttr("disabled");
 
         } else if (ReportType == 7) {
-            radioPeriod1.prop('checked', true);
             radioPeriod1.removeAttr("disabled");
             radioPeriod3.removeAttr("disabled");
-            ddlYear.removeAttr("disabled");
-            ddlMonth.removeAttr("disabled");
-            ddlMonthTo.removeAttr("disabled");
-            ddlYearTo.removeAttr("disabled");
-            txtCheckNoFrom.removeAttr("disabled");
-            txtCheckNoTo.removeAttr("disabled");
-            txtVoucherNoFrom.removeAttr("disabled");
-            txtVoucherNoTo.removeAttr("disabled");
-            txtTransNoFrom.removeAttr("disabled");
-            txtTransNoTo.removeAttr("disabled");
-            txtSubjName.removeAttr("disabled");
 
         } else if (ReportType == 8) {
             radioPeriod1.prop('checked', true);
@@ -168,6 +157,60 @@
         }
     });
 
+    $('#ddlSubType').change(function () {
+        if ($("#ddlReportType").val() != 7) {
+            return false;
+        }
+
+        radioPeriod1.removeAttr("disabled");
+        radioPeriod3.removeAttr("disabled");
+        dtPeriodFrom.attr("disabled", "disabled");
+        dtPeriodTo.attr("disabled", "disabled");
+        ddlYear.attr("disabled", "disabled");
+        ddlMonth.attr("disabled", "disabled");
+        ddlMonthTo.attr("disabled", "disabled");
+        ddlYearTo.attr("disabled", "disabled");
+        txtCheckNoFrom.attr("disabled", "disabled");
+        txtCheckNoTo.attr("disabled", "disabled");
+        txtVoucherNoFrom.attr("disabled", "disabled");
+        txtVoucherNoTo.attr("disabled", "disabled");
+        txtTransNoFrom.attr("disabled", "disabled");
+        txtTransNoTo.attr("disabled", "disabled");
+        txtSubjName.attr("disabled", "disabled");
+        txtCheckNoFrom.val("");
+        txtCheckNoTo.val("");
+        txtVoucherNoFrom.val("");
+        txtVoucherNoTo.val("");
+        txtTransNoFrom.val("");
+        txtTransNoTo.val("");
+        txtSubjName.val("");
+        dtPeriodFrom.val(today);
+        dtPeriodTo.val(today);
+        ddlMonth.val(dt.getMonth() + 1);
+        ddlYear.val(dt.getFullYear());
+        ddlMonthTo.val(dt.getMonth() + 1);
+        ddlYearTo.val(dt.getFullYear());
+
+        if ($(this).val() == 0) {
+            return false;
+        }
+        if ($(this).val() == 1) {
+            txtCheckNoFrom.removeAttr("disabled");
+            txtCheckNoTo.removeAttr("disabled");
+            txtVoucherNoFrom.removeAttr("disabled");
+            txtVoucherNoTo.removeAttr("disabled");
+        }
+
+        if ($(this).val() == 2 || $(this).val() == 3 || $(this).val() == 4) {
+            txtVoucherNoFrom.removeAttr("disabled");
+            txtVoucherNoTo.removeAttr("disabled");
+        }
+
+        txtTransNoFrom.removeAttr("disabled");
+        txtTransNoTo.removeAttr("disabled");
+        txtSubjName.removeAttr("disabled");
+    });
+
     $(".radioPeriodOption").change(function () {
 
         //Default fields filter
@@ -205,6 +248,23 @@
         if ((event.which < 48 || event.which > 57)) {
             event.preventDefault();
         }
+    });
+
+    $('#deselectRadio').click(function () {
+        $('.radioPeriodOption').prop('checked', false);
+        dtPeriodFrom.val(today);
+        dtPeriodTo.val(today);
+        ddlMonth.val(dt.getMonth() + 1);
+        ddlYear.val(dt.getFullYear());
+        ddlMonthTo.val(dt.getMonth() + 1);
+        ddlYearTo.val(dt.getFullYear());
+        dtPeriodFrom.attr("disabled", "disabled");
+        dtPeriodTo.attr("disabled", "disabled");
+        ddlMonth.attr("disabled", "disabled");
+        ddlYear.attr("disabled", "disabled");
+        ddlMonthTo.attr("disabled", "disabled");
+        ddlYearTo.attr("disabled", "disabled");
+
     });
 });
 $(document).ready(function () {

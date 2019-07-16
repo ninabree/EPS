@@ -69,28 +69,22 @@
             }
         </tbody>
     </table>
-    @{
-        var prevDisabled = !Model.Curr.HasPreviousPage ? "disabled" : "";
-        var nextDisabled = !Model.Curr.HasNextPage ? "disabled" : "";
-    }
-    <a asp-action="DM"
-       asp-route-sortOrder="@ViewData["CurrentSort"]"
-       asp-route-page="@(Model.Curr.PageIndex - 1)"
-       asp-controller="Home"
-       asp-route-partialName="@ViewData["Title"]"
-       asp-route-currentFilter="@ViewData["CurrentFilter"]"
-       class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left">
-    </a>
-    <input type="text" class="pagination-input" id="paginationInput" val="" />
-    <input type="text" class="pagination-input" value="of @(Model.Curr.TotalPages)" disabled />
-    <a asp-action="DM"
-       asp-route-sortOrder="@ViewData["CurrentSort"]"
-       asp-controller="Home"
-       asp-route-partialName="@ViewData["Title"]"
-       asp-route-page="@(Model.Curr.PageIndex + 1)"
-       asp-route-currentFilter="@ViewData["CurrentFilter"]"
-       class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right">
-    </a>
+
+    <ul class="pagination">
+        @for (var i = 1; i <= Model.Curr.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.Curr.PageIndex ? "active" : "")">
+                <a asp-action="DM"
+                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                   asp-route-page="@(i)"
+                   asp-controller="Home"
+                   asp-route-partialName="@ViewData["Title"]"
+                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                   asp-route-currentpage="@i" class="page-link">@i</a>
+            </li>
+        }
+    </ul>
+
     <div class="float-r m-r-10">
         <button class="dis-inline-block tbl-btn btn add-rec rec" id="add_curr">Add</button>
         <button class="dis-inline-block tbl-btn btn edit-rec rec" id="edit_curr">Edit</button>

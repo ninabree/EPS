@@ -35,6 +35,9 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 case ConstantData.HomeReportConstantValue.TransListReport:
                     ExcelTransactionList(newFile, templateFile, data);
                     break;
+                case ConstantData.HomeReportConstantValue.AccSummaryReport:
+                    ExcelAccountSummary(newFile, templateFile, data);
+                    break;
                 case ConstantData.HomeReportConstantValue.WTS:
                     ExcelWTS(newFile, templateFile, data);
                     break;
@@ -396,6 +399,48 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 package.Save();
             }
         }
+
+        public void ExcelAccountSummary(FileInfo newFile, FileInfo templateFile, HomeReportDataFilterViewModel data)
+        {
+            using (ExcelPackage package = new ExcelPackage(newFile, templateFile))
+            {
+                ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
+
+                int lastRow = worksheet.Dimension.End.Row + 1;
+
+                //Content
+                foreach (var i in data.HomeReportOutputAccountSummary)
+                {
+                    worksheet.Cells["A" + lastRow].Value = i.Trans_Voucher_Number;
+                    worksheet.Cells["B" + lastRow].Value = i.Trans_Check_Number;
+                    worksheet.Cells["C" + lastRow].Value = i.Trans_Value_Date;
+                    worksheet.Cells["D" + lastRow].Value = i.Trans_Reference_No;
+                    worksheet.Cells["E" + lastRow].Value = i.Trans_Section;
+                    worksheet.Cells["F" + lastRow].Value = i.Trans_Remarks;
+                    worksheet.Cells["G" + lastRow].Value = i.Trans_DebitCredit;
+                    worksheet.Cells["H" + lastRow].Value = i.Trans_Currency;
+                    worksheet.Cells["I" + lastRow].Value = i.Trans_Amount;
+                    worksheet.Cells["J" + lastRow].Value = i.Trans_Customer;
+                    worksheet.Cells["K" + lastRow].Value = i.Trans_Account_Code;
+                    worksheet.Cells["L" + lastRow].Value = i.Trans_Account_Number;
+                    worksheet.Cells["M" + lastRow].Value = i.Trans_Account_Name;
+                    worksheet.Cells["N" + lastRow].Value = i.Trans_Exchange_Rate;
+                    worksheet.Cells["O" + lastRow].Value = i.Trans_Contra_Currency;
+                    worksheet.Cells["P" + lastRow].Value = i.Trans_Fund;
+                    worksheet.Cells["Q" + lastRow].Value = i.Trans_Advice_Print;
+                    worksheet.Cells["R" + lastRow].Value = i.Trans_Details;
+                    worksheet.Cells["S" + lastRow].Value = i.Trans_Entity;
+                    worksheet.Cells["T" + lastRow].Value = i.Trans_Division;
+                    worksheet.Cells["U" + lastRow].Value = i.Trans_InterAmount;
+                    worksheet.Cells["V" + lastRow].Value = i.Trans_InterRate;
+
+                    lastRow += 1;
+                }
+
+                package.Save();
+            }
+        }
+
         public void ExcelWTS(FileInfo newFile, FileInfo templateFile, HomeReportDataFilterViewModel data)
         {
             using (ExcelPackage package = new ExcelPackage(newFile, templateFile))

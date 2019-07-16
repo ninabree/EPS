@@ -39,4 +39,19 @@ namespace ExpenseProcessingSystem.ViewModels.Search_Filters.Home
                 }, "Value", "Text");
         }
     }
+    public class HistoryFiltersViewModel
+    {
+        [Display(Name = "Voucher No")]
+        public string Hist_Voucher_No { get; set; }
+        [Display(Name = "Maker Name")]
+        public string Hist_Maker { get; set; }
+        [Display(Name = "Approver Name")]
+        public string Hist_Approver { get; set; }
+        [Display(Name = "Date Created")]
+        public DateTime Hist_Created_Date { get; set; }
+        [Display(Name = "Date Updated")]
+        public DateTime Hist_Updated_Date { get; set; }
+        [Display(Name = "Status")]
+        public string Hist_Status { get; set; }
+    }
 }

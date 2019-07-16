@@ -13,8 +13,7 @@ namespace ExpenseProcessingSystem.ViewModels.Search_Filters
         [Display(Name = "Tax Rate Nature")]
         public string TR_Nature { get; set; }
         [Display(Name = "Tax Rate")]
-        [Range(0, int.MaxValue, ErrorMessage = "Please enter a valid Tax Rate")]
-        public int TR_Tax_Rate { get; set; }
+        public string TR_Tax_Rate { get; set; }
         [Display(Name = "ATC")]
         public string TR_ATC { get; set; }
         [Display(Name = "Nature of Income Payment")]

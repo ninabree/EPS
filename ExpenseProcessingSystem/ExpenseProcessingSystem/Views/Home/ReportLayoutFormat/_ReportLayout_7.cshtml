@@ -1,0 +1,327 @@
+﻿@model ExpenseProcessingSystem.ViewModels.HomeReportDataFilterViewModel
+
+@{
+    Layout = null;
+}
+
+<style>
+    .table-PDF {
+        border-collapse: collapse;
+        border-width: 1px;
+        border-style: solid;
+        border-color: black;
+        margin-top: 20px;
+        width: auto;
+    }
+
+    thead {
+        display: table-header-group
+    }
+
+    tfoot {
+        display: table-row-group
+    }
+
+    .tr-PDF {
+        page-break-inside: avoid;
+        border-width: 1px;
+        width: auto;
+    }
+
+    .th-PDF {
+        border-width: 1px;
+        border-style: solid;
+        border-color: black;
+        font-weight: bold;
+        width: auto;
+    }
+
+    .td-PDF {
+        border-width: 1px;
+        border-style: solid;
+        border-color: black;
+        width:auto;
+    }
+</style>
+
+<table class="table-PDF">
+    <thead>
+        <tr style="vertical-align:top" class="tr-PDF">
+            <th class="th-PDF">VoucherNumber</th>
+            <th class="th-PDF">CheckNumber</th>
+            <th class="th-PDF">ValueDate</th>
+            <th class="th-PDF">ReferenceNo.</th>
+            <th class="th-PDF">Section</th>
+            <th class="th-PDF">Remarks</th>
+            <th class="th-PDF">Debit/Credit1_1</th>
+            <th class="th-PDF">Currency1_1</th>
+            <th class="th-PDF">Amount1_1</th>
+            <th class="th-PDF">Customer1_1</th>
+            <th class="th-PDF">AccountCode1_1</th>
+            <th class="th-PDF">AccountNumber1_1</th>
+            <th class="th-PDF">AccountName1_1</th>
+            <th class="th-PDF">ExchangeRate1_1</th>
+            <th class="th-PDF">ContraCurrency1_1</th>
+            <th class="th-PDF">Fund1_1</th>
+            <th class="th-PDF">AdvicePrint1_1</th>
+            <th class="th-PDF">Details1_1</th>
+            <th class="th-PDF">Entity1_1</th>
+            <th class="th-PDF">Division1_1</th>
+            <th class="th-PDF">Inter-Amount1_1</th>
+            <th class="th-PDF">Inter-Rate1_1</th>
+            <th class="th-PDF">Debit/Credit1_2</th>
+            <th class="th-PDF">Currency1_2</th>
+            <th class="th-PDF">Amount1_2</th>
+            <th class="th-PDF">Customer1_2</th>
+            <th class="th-PDF">AccountCode1_2</th>
+            <th class="th-PDF">AccountNumber1_2</th>
+            <th class="th-PDF">AccountName1_2</th>
+            <th class="th-PDF">ExchangeRate1_2</th>
+            <th class="th-PDF">ContraCurrency1_2</th>
+            <th class="th-PDF">Fund1_2</th>
+            <th class="th-PDF">AdvicePrint1_2</th>
+            <th class="th-PDF">Details1_2</th>
+            <th class="th-PDF">Entity1_2</th>
+            <th class="th-PDF">Division1_2</th>
+            <th class="th-PDF">Inter-Amount1_2</th>
+            <th class="th-PDF">Inter-Rate1_2</th>
+            <th class="th-PDF">Debit/Credit2_1</th>
+            <th class="th-PDF">Currency2_1</th>
+            <th class="th-PDF">Amount2_1</th>
+            <th class="th-PDF">Customer2_1</th>
+            <th class="th-PDF">AccountCode2_1</th>
+            <th class="th-PDF">AccountNumber2_1</th>
+            <th class="th-PDF">AccountName2_1</th>
+            <th class="th-PDF">ExchangeRate2_1</th>
+            <th class="th-PDF">ContraCurrency2_1</th>
+            <th class="th-PDF">Fund2_1</th>
+            <th class="th-PDF">AdvicePrint2_1</th>
+            <th class="th-PDF">Details2_1</th>
+            <th class="th-PDF">Entity2_1</th>
+            <th class="th-PDF">Division2_1</th>
+            <th class="th-PDF">Inter-Amount2_1</th>
+            <th class="th-PDF">Inter-Rate2_1</th>
+            <th class="th-PDF">Debit/Credit2_2</th>
+            <th class="th-PDF">Currency2_2</th>
+            <th class="th-PDF">Amount2_2</th>
+            <th class="th-PDF">Customer2_2</th>
+            <th class="th-PDF">AccountCode2_2</th>
+            <th class="th-PDF">AccountNumber2_2</th>
+            <th class="th-PDF">AccountName2_2</th>
+            <th class="th-PDF">ExchangeRate2_2</th>
+            <th class="th-PDF">ContraCurrency2_2</th>
+            <th class="th-PDF">Fund2_2</th>
+            <th class="th-PDF">AdvicePrint2_2</th>
+            <th class="th-PDF">Details2_2</th>
+            <th class="th-PDF">Entity2_2</th>
+            <th class="th-PDF">Division2_2</th>
+            <th class="th-PDF">Inter-Amount2_2</th>
+            <th class="th-PDF">Inter-Rate2_2</th>
+            <th class="th-PDF">Debit/Credit3_1</th>
+            <th class="th-PDF">Currency3_1</th>
+            <th class="th-PDF">Amount3_1</th>
+            <th class="th-PDF">Customer3_1</th>
+            <th class="th-PDF">AccountCode3_1</th>
+            <th class="th-PDF">AccountNumber3_1</th>
+            <th class="th-PDF">AccountName3_1</th>
+            <th class="th-PDF">ExchangeRate3_1</th>
+            <th class="th-PDF">ContraCurrency3_1</th>
+            <th class="th-PDF">Fund3_1</th>
+            <th class="th-PDF">AdvicePrint3_1</th>
+            <th class="th-PDF">Details3_1</th>
+            <th class="th-PDF">Entity3_1</th>
+            <th class="th-PDF">Division3_1</th>
+            <th class="th-PDF">Inter-Amount3_1</th>
+            <th class="th-PDF">Inter-Rate3_1</th>
+            <th class="th-PDF">Debit/Credit3_2</th>
+            <th class="th-PDF">Currency3_2</th>
+            <th class="th-PDF">Amount3_2</th>
+            <th class="th-PDF">Customer3_2</th>
+            <th class="th-PDF">AccountCode3_2</th>
+            <th class="th-PDF">AccountNumber3_2</th>
+            <th class="th-PDF">AccountName3_2</th>
+            <th class="th-PDF">ExchangeRate3_2</th>
+            <th class="th-PDF">ContraCurrency3_2</th>
+            <th class="th-PDF">Fund3_2</th>
+            <th class="th-PDF">AdvicePrint3_2</th>
+            <th class="th-PDF">Details3_2</th>
+            <th class="th-PDF">Entity3_2</th>
+            <th class="th-PDF">Division3_2</th>
+            <th class="th-PDF">Inter-Amount3_2</th>
+            <th class="th-PDF">Inter-Rate3_2</th>
+            <th class="th-PDF">Debit/Credit4_1</th>
+            <th class="th-PDF">Currency4_1</th>
+            <th class="th-PDF">Amount4_1</th>
+            <th class="th-PDF">Customer4_1</th>
+            <th class="th-PDF">AccountCode4_1</th>
+            <th class="th-PDF">AccountNumber4_1</th>
+            <th class="th-PDF">AccountName4_1</th>
+            <th class="th-PDF">ExchangeRate4_1</th>
+            <th class="th-PDF">ContraCurrency4_1</th>
+            <th class="th-PDF">Fund4_1</th>
+            <th class="th-PDF">AdvicePrint4_1</th>
+            <th class="th-PDF">Details4_1</th>
+            <th class="th-PDF">Entity4_1</th>
+            <th class="th-PDF">Division4_1</th>
+            <th class="th-PDF">Inter-Amount4_1</th>
+            <th class="th-PDF">Inter-Rate4_1</th>
+            <th class="th-PDF">Debit/Credit4_2</th>
+            <th class="th-PDF">Currency4_2</th>
+            <th class="th-PDF">Amount4_2</th>
+            <th class="th-PDF">Customer4_2</th>
+            <th class="th-PDF">AccountCode4_2</th>
+            <th class="th-PDF">AccountNumber4_2</th>
+            <th class="th-PDF">AccountName4_2</th>
+            <th class="th-PDF">ExchangeRate4_2</th>
+            <th class="th-PDF">ContraCurrency4_2</th>
+            <th class="th-PDF">Fund4_2</th>
+            <th class="th-PDF">AdvicePrint4_2</th>
+            <th class="th-PDF">Details4_2</th>
+            <th class="th-PDF">Entity4_2</th>
+            <th class="th-PDF">Division4_2</th>
+            <th class="th-PDF">Inter-Amount4_2</th>
+            <th class="th-PDF">Inter-Rate4_2</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var i in Model.HomeReportOutputTransactionList)
+        {
+            <tr class="tr-PDF">
+                <td style="text-align:center" class="td-PDF">@i.Trans_Voucher_Number</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Check_Number</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Value_Date</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Reference_No</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Section</td>
+                <td style="text-align:left" class="td-PDF">@i.Trans_Remarks</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_DebitCredit1_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Currency1_1</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_Amount1_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Customer1_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Account_Code1_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Account_Number1_1</td>
+                <td style="text-align:left" class="td-PDF">@i.Trans_Account_Name1_1</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_Exchange_Rate1_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Contra_Currency1_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Fund1_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Advice_Print1_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Details1_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Entity1_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Division1_1</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_InterAmount1_1</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_InterRate1_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_DebitCredit1_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Currency1_2</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_Amount1_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Customer1_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Account_Code1_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Account_Number1_2</td>
+                <td style="text-align:left" class="td-PDF">@i.Trans_Account_Name1_2</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_Exchange_Rate1_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Contra_Currency1_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Fund1_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Advice_Print1_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Details1_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Entity1_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Division1_2</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_InterAmount1_2</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_InterRate1_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_DebitCredit2_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Currency2_1</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_Amount2_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Customer2_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Account_Code2_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Account_Number2_1</td>
+                <td style="text-align:left" class="td-PDF">@i.Trans_Account_Name2_1</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_Exchange_Rate2_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Contra_Currency2_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Fund2_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Advice_Print2_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Details2_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Entity2_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Division2_1</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_InterAmount2_1</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_InterRate2_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_DebitCredit2_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Currency2_2</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_Amount2_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Customer2_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Account_Code2_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Account_Number2_2</td>
+                <td style="text-align:left" class="td-PDF">@i.Trans_Account_Name2_2</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_Exchange_Rate2_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Contra_Currency2_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Fund2_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Advice_Print2_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Details2_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Entity2_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Division2_2</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_InterAmount2_2</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_InterRate2_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_DebitCredit3_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Currency3_1</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_Amount3_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Customer3_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Account_Code3_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Account_Number3_1</td>
+                <td style="text-align:left" class="td-PDF">@i.Trans_Account_Name3_1</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_Exchange_Rate3_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Contra_Currency3_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Fund3_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Advice_Print3_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Details3_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Entity3_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Division3_1</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_InterAmount3_1</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_InterRate3_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_DebitCredit3_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Currency3_2</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_Amount3_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Customer3_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Account_Code3_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Account_Number3_2</td>
+                <td style="text-align:left" class="td-PDF">@i.Trans_Account_Name3_2</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_Exchange_Rate3_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Contra_Currency3_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Fund3_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Advice_Print3_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Details3_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Entity3_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Division3_2</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_InterAmount3_2</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_InterRate3_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_DebitCredit4_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Currency4_1</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_Amount4_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Customer4_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Account_Code4_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Account_Number4_1</td>
+                <td style="text-align:left" class="td-PDF">@i.Trans_Account_Name4_1</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_Exchange_Rate4_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Contra_Currency4_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Fund4_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Advice_Print4_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Details4_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Entity4_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Division4_1</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_InterAmount4_1</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_InterRate4_1</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_DebitCredit4_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Currency4_2</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_Amount4_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Customer4_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Account_Code4_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Account_Number4_2</td>
+                <td style="text-align:left" class="td-PDF">@i.Trans_Account_Name4_2</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_Exchange_Rate4_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Contra_Currency4_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Fund4_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Advice_Print4_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Details4_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Entity4_2</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Division4_2</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_InterAmount4_2</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_InterRate4_2</td>
+            </tr>
+        }
+    </tbody>
+</table>

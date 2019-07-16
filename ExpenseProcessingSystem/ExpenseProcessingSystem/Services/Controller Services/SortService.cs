@@ -1486,6 +1486,82 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             return vm;
         }
 
+        public SortViewModel SortData(List<AppHistoryViewModel> list, string sortOrder)
+        {
+            var tempList = list.AsQueryable();
+            var viewData = "";
+            var vdInfo = "";
+            switch (sortOrder)
+            {
+                case "hist_voucher":
+                    tempList = tempList.OrderBy(x => x.App_Voucher_No);
+                    viewData = "glyph-1";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "hist_maker":
+                    tempList = tempList.OrderBy(s => s.App_Maker_Name);
+                    viewData = "glyph-2";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "hist_maker_desc":
+                    tempList = tempList.OrderByDescending(s => s.App_Maker_Name);
+                    viewData = "glyph-2";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "hist_approver":
+                    tempList = tempList.OrderBy(s => s.App_Approver_Name);
+                    viewData = "glyph-3";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "hist_approver_desc":
+                    tempList = tempList.OrderByDescending(s => s.App_Approver_Name);
+                    viewData = "glyph-3";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "hist_date_created":
+                    tempList = tempList.OrderBy(s => s.App_Date);
+                    viewData = "glyph-4";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "hist_date_created_desc":
+                    tempList = tempList.OrderByDescending(s => s.App_Date);
+                    viewData = "glyph-4";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "hist_last_updte":
+                    tempList = tempList.OrderBy(s => s.App_Last_Updated);
+                    viewData = "glyph-5";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "hist_last_updte_desc":
+                    tempList = tempList.OrderByDescending(s => s.App_Last_Updated);
+                    viewData = "glyph-5";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "hist_status":
+                    tempList = tempList.OrderBy(s => s.App_Status);
+                    viewData = "glyph-6";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "hist_status_desc":
+                    tempList = tempList.OrderByDescending(s => s.App_Status);
+                    viewData = "glyph-6";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                default:
+                    tempList = tempList.OrderByDescending(x => x.App_Voucher_No);
+                    viewData = "glyph-1";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+            }
+            SortViewModel vm = new SortViewModel
+            {
+                list = tempList.Cast<dynamic>().ToList(),
+                viewData = viewData,
+                viewDataInfo = vdInfo
+            };
+            return vm;
+        }
         public SortViewModel SortData(IEnumerable<LiquidationMainListViewModel> list, string sortOrder)
         {
             var tempList = list.AsQueryable();

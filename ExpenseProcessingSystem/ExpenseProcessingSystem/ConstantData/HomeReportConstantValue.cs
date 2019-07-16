@@ -27,8 +27,11 @@ namespace ExpenseProcessingSystem.ConstantData
         //Actual Budget Report
         public const int ActualBudgetReport = 5;
 
-        //Actual Budget Report
+        //Transaction List Report
         public const int TransListReport = 7;
+
+        //Account Summary Report
+        public const int AccSummaryReport = 8;
 
         //Alphalist of Payees Subject to Withholding Tax Summary
         public const int WTS = 10;

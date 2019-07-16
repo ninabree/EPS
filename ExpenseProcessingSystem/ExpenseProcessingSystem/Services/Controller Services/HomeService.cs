@@ -232,6 +232,162 @@ namespace ExpenseProcessingSystem.Services
             return pgPendingList;
         }
 
+        //History
+        public PaginatedList<AppHistoryViewModel> getHistory(int userID, FiltersViewModel filters)
+        {
+            List<AppHistoryViewModel> historyList = new List<AppHistoryViewModel>();
+
+            var properties = filters.HistoryFil.GetType().GetProperties();
+
+            var dbHistory = from p in _context.ExpenseEntry
+                            join l in _context.LiquidationEntryDetails on p.Expense_ID equals l.ExpenseEntryModel.Expense_ID into gj
+                            from l in gj.DefaultIfEmpty()
+                            where (
+                            (p.Expense_Creator_ID == userID || p.Expense_Verifier_1 == userID || p.Expense_Verifier_2 == userID || p.Expense_Approver == userID))
+                            ||
+                            (l.Liq_Created_UserID == userID || l.Liq_Verifier1 == userID  || l.Liq_Verifier2 == userID || l.Liq_Approver == userID)
+                            select new
+                            {
+                                p.Expense_ID,
+                                p.Expense_Number,
+                                p.Expense_Type,
+                                p.Expense_Debit_Total,
+                                p.Expense_Payee,
+                                p.Expense_Creator_ID,
+                                p.Expense_Approver,
+                                p.Expense_Verifier_1,
+                                p.Expense_Verifier_2,
+                                p.Expense_Last_Updated,
+                                p.Expense_Date,
+                                p.Expense_Status,
+                                Liq_Status = l == null ? 0 : l.Liq_Status,
+                                Liq_Created_UserID = l == null ? 0 : l.Liq_Created_UserID,
+                                Liq_Created_Date = l == null ? DateTime.Now : l.Liq_Created_Date,
+                                Liq_Verifier1 = l == null ? 0 : l.Liq_Verifier1,
+                                Liq_Verifier2 = l == null ? 0 : l.Liq_Verifier2,
+                                Liq_Approver_ID = l == null ? 0 : l.Liq_Approver,
+                                Liq_LastUpdated_Date = l == null ? DateTime.Now : l.Liq_LastUpdated_Date
+                            };
+            //FILTER
+            foreach (var property in properties)
+            {
+                var propertyName = property.Name;
+                var subStr = propertyName.Substring(propertyName.IndexOf("_") + 1);
+                var toStr = property.GetValue(filters.HistoryFil).ToString();
+                if (toStr != "")
+                {
+                    if (toStr != "0")
+                    {
+                        if (subStr == "Maker" || subStr == "Approver" || subStr == "Status")
+                        {
+                            //get all userIDs of creator or approver that contains string
+                            var names = _context.User
+                              .Where(x => (x.User_FName.Contains(property.GetValue(filters.HistoryFil).ToString())
+                              || x.User_LName.Contains(property.GetValue(filters.HistoryFil).ToString())))
+                              .Select(x => x.User_ID).ToList();
+                            //get all status IDs that contains string
+                            var status = _context.StatusList
+                              .Where(x => (x.Status_Name.Contains(property.GetValue(filters.HistoryFil).ToString())))
+                              .Select(x => x.Status_ID).ToList();
+                            if (subStr == "Approver")
+                            {
+                                dbHistory = dbHistory.Where(x => (names.Contains(x.Expense_Approver) || names.Contains(x.Liq_Approver_ID)))
+                                         .Select(e => e).AsQueryable();
+                            }
+                            else if (subStr == "Maker")
+                            {
+                                dbHistory = dbHistory.Where(x => (names.Contains(x.Expense_Creator_ID) || names.Contains(x.Liq_Created_UserID)))
+                                         .Select(e => e).AsQueryable();
+                            }
+                            else if (subStr == "Status")
+                            {
+                                dbHistory = dbHistory.Where(x => (status.Contains(x.Expense_Status) || status.Contains(x.Liq_Status)))
+                                         .Select(e => e).AsQueryable();
+                            }
+                        }else if (subStr == "Created_Date" || subStr == "Updated_Date")
+                        {
+                            if (toStr != new DateTime().ToString())
+                            {
+                                if (subStr == "Created_Date")
+                                {
+                                    dbHistory = dbHistory.Where(x => (x.Expense_Date.ToString() ==  subStr|| x.Liq_Created_Date.ToString() == subStr))
+                                             .Select(e => e).AsQueryable();
+                                }
+                                else
+                                {
+                                    dbHistory = dbHistory.Where(x => (x.Expense_Last_Updated.ToString() == subStr || x.Liq_LastUpdated_Date.ToString() == subStr))
+                                             .Select(e => e).AsQueryable();
+                                }
+                            }
+                        }else if (subStr == "Voucher_No")
+                        {
+
+                        }
+                        else // IF STRING VALUE
+                        {
+                            dbHistory = dbHistory.Where("Expense_" + subStr + ".Contains(@0) or Liq_" + subStr + ".Contains(@1)", toStr, toStr)
+                                    .Select(e => e).AsQueryable();
+                        }
+                    }
+                }
+            }
+
+            foreach (var item in dbHistory)
+            {
+                string ver1 = "";
+                string ver2 = "";
+                var linktionary = new Dictionary<int, string>();
+
+                if (item.Liq_Status == 0)
+                {
+                    ver1 = item.Expense_Verifier_1 == 0 ? null : getName(item.Expense_Verifier_1);
+                    ver2 = item.Expense_Verifier_2 == 0 ? null : getName(item.Expense_Verifier_2);
+
+                    linktionary = new Dictionary<int, string>
+                    {
+                        {0,"Data Maintenance" },
+                        {GlobalSystemValues.TYPE_CV,"View_CV"},
+                        {GlobalSystemValues.TYPE_DDV,"View_DDV"},
+                        {GlobalSystemValues.TYPE_NC,"View_NC"},
+                        {GlobalSystemValues.TYPE_PC,"View_PCV"},
+                        {GlobalSystemValues.TYPE_SS,"View_SS"},
+                    };
+                }
+                else
+                {
+                    ver1 = item.Liq_Verifier1 == 0 ? null : getName(item.Liq_Verifier1);
+                    ver2 = item.Liq_Verifier2 == 0 ? null : getName(item.Liq_Verifier2);
+
+                    linktionary = new Dictionary<int, string>
+                    {
+                        {0,"Data Maintenance" },
+                        {GlobalSystemValues.TYPE_CV,"View_CV"},
+                        {GlobalSystemValues.TYPE_DDV,"View_DDV"},
+                        {GlobalSystemValues.TYPE_NC,"View_Liquidation_NC"},
+                        {GlobalSystemValues.TYPE_PC,"View_PCV"},
+                        {GlobalSystemValues.TYPE_SS,"View_Liquidation_SS"},
+                    };
+                }
+                AppHistoryViewModel tempHistory = new AppHistoryViewModel
+                {
+                    App_Entry_ID = item.Expense_ID,
+                    App_Voucher_No =  GlobalSystemValues.getApplicationCode(item.Expense_Type)+ "-" + item.Expense_Date.Year + "-" + item.Expense_Number.ToString().PadLeft(5,'0'),
+                    App_Approver_Name = (item.Liq_Status == 0) ? getName(item.Expense_Approver) : getName(item.Liq_Approver_ID),
+                    App_Maker_Name = (item.Liq_Status == 0) ? getName(item.Expense_Creator_ID) : getName(item.Liq_Created_UserID),
+                    App_Verifier_Name_List = new List<string> { ver1, ver2 },
+                    App_Date = (item.Liq_Status == 0) ? item.Expense_Date : item.Liq_Created_Date,
+                    App_Last_Updated = (item.Liq_Status == 0) ? item.Expense_Last_Updated : item.Liq_LastUpdated_Date,
+                    App_Status = (item.Liq_Status == 0) ? getStatus(item.Expense_Status) : getStatus(item.Liq_Status),
+                    App_Link = linktionary[item.Expense_Type]
+                };
+
+                historyList.Add(tempHistory);
+            }
+
+            PaginatedList<AppHistoryViewModel> pgHistoryList = new PaginatedList<AppHistoryViewModel>(historyList, historyList.Count, 1, 10);
+
+            return pgHistoryList;
+        }
         //[ User Maintenance ]
         public UserManagementViewModel2 populateUM()
         {
@@ -2887,7 +3043,7 @@ namespace ExpenseProcessingSystem.Services
             {
                 whereQuery = "@1 <= Expense_Last_Updated.Date && Expense_Last_Updated.Date <= @2";
             }
-            else
+            else if (model.PeriodOption == 3)
             {
                 whereQuery = "@3 <= Expense_Last_Updated.Date && Expense_Last_Updated.Date <= @4";
             }
@@ -2991,6 +3147,7 @@ namespace ExpenseProcessingSystem.Services
                                hist.GOExpHist_Id,
                                hist.GOExpHist_ValueDate,
                                hist.GOExpHist_ReferenceNo,
+                               hist.GOExpHist_Branchno,
                                hist.GOExpHist_Section,
                                hist.GOExpHist_Remarks,
                                hist.GOExpHist_Entry11Type,
@@ -3131,6 +3288,11 @@ namespace ExpenseProcessingSystem.Services
                 //Convert to List object.
                 foreach(var i in db1)
                 {
+                    if (_context.LiquidationEntryDetails.Where(x => x.ExpenseEntryModel.Expense_ID == i.ExpenseEntryID).Count() > 0)
+                    {
+                        continue;
+                    }
+
                     list1.Add(new HomeReportTransactionListViewModel
                     {
                         ExpExpense_ID = i.Expense_ID,
@@ -3151,8 +3313,8 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount1_1 = i.GOExpHist_Entry11Amt,
                         Trans_Customer1_1 = i.GOExpHist_Entry11Cust,
                         Trans_Account_Code1_1 = i.GOExpHist_Entry11Actcde,
-                        Trans_Account_Name1_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseDetailID),
-                        Trans_Account_Number1_1 = i.GOExpHist_Entry11ActNo,
+                        Trans_Account_Name1_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                        Trans_Account_Number1_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde),
                         Trans_Exchange_Rate1_1 = i.GOExpHist_Entry11ExchRate,
                         Trans_Contra_Currency1_1 = i.GOExpHist_Entry11ExchCcy,
                         Trans_Fund1_1 = i.GOExpHist_Entry11Fund,
@@ -3167,8 +3329,8 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount1_2 = i.GOExpHist_Entry12Amt,
                         Trans_Customer1_2 = i.GOExpHist_Entry12Cust,
                         Trans_Account_Code1_2 = i.GOExpHist_Entry12Actcde,
-                        Trans_Account_Name1_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseDetailID),
-                        Trans_Account_Number1_2 = i.GOExpHist_Entry12ActNo,
+                        Trans_Account_Name1_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                        Trans_Account_Number1_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde),
                         Trans_Exchange_Rate1_2 = i.GOExpHist_Entry12ExchRate,
                         Trans_Contra_Currency1_2 = i.GOExpHist_Entry12ExchCcy,
                         Trans_Fund1_2 = i.GOExpHist_Entry12Fund,
@@ -3183,8 +3345,8 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount2_1 = i.GOExpHist_Entry21Amt,
                         Trans_Customer2_1 = i.GOExpHist_Entry21Cust,
                         Trans_Account_Code2_1 = i.GOExpHist_Entry21Actcde,
-                        Trans_Account_Name2_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseDetailID),
-                        Trans_Account_Number2_1 = i.GOExpHist_Entry21ActNo,
+                        Trans_Account_Name2_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                        Trans_Account_Number2_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde),
                         Trans_Exchange_Rate2_1 = i.GOExpHist_Entry21ExchRate,
                         Trans_Contra_Currency2_1 = i.GOExpHist_Entry21ExchCcy,
                         Trans_Fund2_1 = i.GOExpHist_Entry21Fund,
@@ -3199,8 +3361,8 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount2_2 = i.GOExpHist_Entry22Amt,
                         Trans_Customer2_2 = i.GOExpHist_Entry22Cust,
                         Trans_Account_Code2_2 = i.GOExpHist_Entry22Actcde,
-                        Trans_Account_Name2_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseDetailID),
-                        Trans_Account_Number2_2 = i.GOExpHist_Entry22ActNo,
+                        Trans_Account_Name2_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                        Trans_Account_Number2_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde),
                         Trans_Exchange_Rate2_2 = i.GOExpHist_Entry22ExchRate,
                         Trans_Contra_Currency2_2 = i.GOExpHist_Entry22ExchCcy,
                         Trans_Fund2_2 = i.GOExpHist_Entry22Fund,
@@ -3215,8 +3377,8 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount3_1 = i.GOExpHist_Entry31Amt,
                         Trans_Customer3_1 = i.GOExpHist_Entry31Cust,
                         Trans_Account_Code3_1 = i.GOExpHist_Entry31Actcde,
-                        Trans_Account_Name3_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseDetailID),
-                        Trans_Account_Number3_1 = i.GOExpHist_Entry31ActNo,
+                        Trans_Account_Name3_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                        Trans_Account_Number3_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde),
                         Trans_Exchange_Rate3_1 = i.GOExpHist_Entry31ExchRate,
                         Trans_Contra_Currency3_1 = i.GOExpHist_Entry31ExchCcy,
                         Trans_Fund3_1 = i.GOExpHist_Entry31Fund,
@@ -3231,8 +3393,8 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount3_2 = i.GOExpHist_Entry32Amt,
                         Trans_Customer3_2 = i.GOExpHist_Entry32Cust,
                         Trans_Account_Code3_2 = i.GOExpHist_Entry32Actcde,
-                        Trans_Account_Name3_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseDetailID),
-                        Trans_Account_Number3_2 = i.GOExpHist_Entry32ActNo,
+                        Trans_Account_Name3_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                        Trans_Account_Number3_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde),
                         Trans_Exchange_Rate3_2 = i.GOExpHist_Entry32ExchRate,
                         Trans_Contra_Currency3_2 = i.GOExpHist_Entry32ExchCcy,
                         Trans_Fund3_2 = i.GOExpHist_Entry32Fund,
@@ -3247,8 +3409,8 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount4_1 = i.GOExpHist_Entry41Amt,
                         Trans_Customer4_1 = i.GOExpHist_Entry41Cust,
                         Trans_Account_Code4_1 = i.GOExpHist_Entry41Actcde,
-                        Trans_Account_Name4_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseDetailID),
-                        Trans_Account_Number4_1 = i.GOExpHist_Entry41ActNo,
+                        Trans_Account_Name4_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                        Trans_Account_Number4_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde),
                         Trans_Exchange_Rate4_1 = i.GOExpHist_Entry41ExchRate,
                         Trans_Contra_Currency4_1 = i.GOExpHist_Entry41ExchCcy,
                         Trans_Fund4_1 = i.GOExpHist_Entry41Fund,
@@ -3263,8 +3425,8 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount4_2 = i.GOExpHist_Entry42Amt,
                         Trans_Customer4_2 = i.GOExpHist_Entry42Cust,
                         Trans_Account_Code4_2 = i.GOExpHist_Entry42Actcde,
-                        Trans_Account_Name4_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseDetailID),
-                        Trans_Account_Number4_2 = i.GOExpHist_Entry42ActNo,
+                        Trans_Account_Name4_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                        Trans_Account_Number4_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde),
                         Trans_Exchange_Rate4_2 = i.GOExpHist_Entry42ExchRate,
                         Trans_Contra_Currency4_2 = i.GOExpHist_Entry42ExchCcy,
                         Trans_Fund4_2 = i.GOExpHist_Entry42Fund,
@@ -3286,6 +3448,8 @@ namespace ExpenseProcessingSystem.Services
                 model.ReportSubType == HomeReportConstantValue.REP_NC_JS_PAYROLL ||
                 model.ReportSubType == HomeReportConstantValue.REP_NC_TAX_REMITTANCE)
             {
+                List<ExpenseEntryNCDtlViewModel> ncDtlList = GetEntryDetailAccountListForNonCash();
+
                 if (model.ReportSubType != 0)
                 {
                     if (!String.IsNullOrEmpty(whereQuery))
@@ -3310,165 +3474,166 @@ namespace ExpenseProcessingSystem.Services
                 }
                 
                 var db2 = (from hist in _context.GOExpressHist
-                                    join ncDtl in _context.ExpenseEntryNonCashDetails on hist.ExpenseDetailID equals ncDtl.ExpNCDtl_ID
-                                    join nc in _context.ExpenseEntryNonCash on ncDtl.ExpenseEntryNCModel.ExpNC_ID equals nc.ExpNC_ID
-                                    join trans in _context.ExpenseTransLists on hist.GOExpHist_Id equals trans.TL_GoExpHist_ID
-                                    join exp in _context.ExpenseEntry on nc.ExpenseEntryModel.Expense_ID equals exp.Expense_ID
-                                    select new 
-                                    {
-                                        exp.Expense_ID,
-                                        exp.Expense_Type,
-                                        exp.Expense_Last_Updated,
-                                        exp.Expense_Date,
-                                        exp.Expense_Number,
-                                        exp.Expense_CheckNo,
-                                        hist.ExpenseEntryID,
-                                        hist.ExpenseDetailID,
-                                        hist.GOExpHist_Id,
-                                        nc.ExpNC_Category_ID,
-                                        hist.GOExpHist_ValueDate,
-                                        hist.GOExpHist_ReferenceNo,
-                                        hist.GOExpHist_Section,
-                                        hist.GOExpHist_Remarks,
-                                        hist.GOExpHist_Entry11Type,
-                                        hist.GOExpHist_Entry11Ccy,
-                                        hist.GOExpHist_Entry11Amt,
-                                        hist.GOExpHist_Entry11Cust,
-                                        hist.GOExpHist_Entry11Actcde,
-                                        hist.GOExpHist_Entry11ActType,
-                                        hist.GOExpHist_Entry11ActNo,
-                                        hist.GOExpHist_Entry11ExchRate,
-                                        hist.GOExpHist_Entry11ExchCcy,
-                                        hist.GOExpHist_Entry11Fund,
-                                        hist.GOExpHist_Entry11AdvcPrnt,
-                                        hist.GOExpHist_Entry11Details,
-                                        hist.GOExpHist_Entry11Entity,
-                                        hist.GOExpHist_Entry11Division,
-                                        hist.GOExpHist_Entry11InterAmt,
-                                        hist.GOExpHist_Entry11InterRate,
-                                        hist.GOExpHist_Entry12Type,
-                                        hist.GOExpHist_Entry12Ccy,
-                                        hist.GOExpHist_Entry12Amt,
-                                        hist.GOExpHist_Entry12Cust,
-                                        hist.GOExpHist_Entry12Actcde,
-                                        hist.GOExpHist_Entry12ActType,
-                                        hist.GOExpHist_Entry12ActNo,
-                                        hist.GOExpHist_Entry12ExchRate,
-                                        hist.GOExpHist_Entry12ExchCcy,
-                                        hist.GOExpHist_Entry12Fund,
-                                        hist.GOExpHist_Entry12AdvcPrnt,
-                                        hist.GOExpHist_Entry12Details,
-                                        hist.GOExpHist_Entry12Entity,
-                                        hist.GOExpHist_Entry12Division,
-                                        hist.GOExpHist_Entry12InterAmt,
-                                        hist.GOExpHist_Entry12InterRate,
-                                        hist.GOExpHist_Entry21Type,
-                                        hist.GOExpHist_Entry21Ccy,
-                                        hist.GOExpHist_Entry21Amt,
-                                        hist.GOExpHist_Entry21Cust,
-                                        hist.GOExpHist_Entry21Actcde,
-                                        hist.GOExpHist_Entry21ActType,
-                                        hist.GOExpHist_Entry21ActNo,
-                                        hist.GOExpHist_Entry21ExchRate,
-                                        hist.GOExpHist_Entry21ExchCcy,
-                                        hist.GOExpHist_Entry21Fund,
-                                        hist.GOExpHist_Entry21AdvcPrnt,
-                                        hist.GOExpHist_Entry21Details,
-                                        hist.GOExpHist_Entry21Entity,
-                                        hist.GOExpHist_Entry21Division,
-                                        hist.GOExpHist_Entry21InterAmt,
-                                        hist.GOExpHist_Entry21InterRate,
-                                        hist.GOExpHist_Entry22Type,
-                                        hist.GOExpHist_Entry22Ccy,
-                                        hist.GOExpHist_Entry22Amt,
-                                        hist.GOExpHist_Entry22Cust,
-                                        hist.GOExpHist_Entry22Actcde,
-                                        hist.GOExpHist_Entry22ActType,
-                                        hist.GOExpHist_Entry22ActNo,
-                                        hist.GOExpHist_Entry22ExchRate,
-                                        hist.GOExpHist_Entry22ExchCcy,
-                                        hist.GOExpHist_Entry22Fund,
-                                        hist.GOExpHist_Entry22AdvcPrnt,
-                                        hist.GOExpHist_Entry22Details,
-                                        hist.GOExpHist_Entry22Entity,
-                                        hist.GOExpHist_Entry22Division,
-                                        hist.GOExpHist_Entry22InterAmt,
-                                        hist.GOExpHist_Entry22InterRate,
-                                        hist.GOExpHist_Entry31Type,
-                                        hist.GOExpHist_Entry31Ccy,
-                                        hist.GOExpHist_Entry31Amt,
-                                        hist.GOExpHist_Entry31Cust,
-                                        hist.GOExpHist_Entry31Actcde,
-                                        hist.GOExpHist_Entry31ActType,
-                                        hist.GOExpHist_Entry31ActNo,
-                                        hist.GOExpHist_Entry31ExchRate,
-                                        hist.GOExpHist_Entry31ExchCcy,
-                                        hist.GOExpHist_Entry31Fund,
-                                        hist.GOExpHist_Entry31AdvcPrnt,
-                                        hist.GOExpHist_Entry31Details,
-                                        hist.GOExpHist_Entry31Entity,
-                                        hist.GOExpHist_Entry31Division,
-                                        hist.GOExpHist_Entry31InterAmt,
-                                        hist.GOExpHist_Entry31InterRate,
-                                        hist.GOExpHist_Entry32Type,
-                                        hist.GOExpHist_Entry32Ccy,
-                                        hist.GOExpHist_Entry32Amt,
-                                        hist.GOExpHist_Entry32Cust,
-                                        hist.GOExpHist_Entry32Actcde,
-                                        hist.GOExpHist_Entry32ActType,
-                                        hist.GOExpHist_Entry32ActNo,
-                                        hist.GOExpHist_Entry32ExchRate,
-                                        hist.GOExpHist_Entry32ExchCcy,
-                                        hist.GOExpHist_Entry32Fund,
-                                        hist.GOExpHist_Entry32AdvcPrnt,
-                                        hist.GOExpHist_Entry32Details,
-                                        hist.GOExpHist_Entry32Entity,
-                                        hist.GOExpHist_Entry32Division,
-                                        hist.GOExpHist_Entry32InterAmt,
-                                        hist.GOExpHist_Entry32InterRate,
-                                        hist.GOExpHist_Entry41Type,
-                                        hist.GOExpHist_Entry41Ccy,
-                                        hist.GOExpHist_Entry41Amt,
-                                        hist.GOExpHist_Entry41Cust,
-                                        hist.GOExpHist_Entry41Actcde,
-                                        hist.GOExpHist_Entry41ActType,
-                                        hist.GOExpHist_Entry41ActNo,
-                                        hist.GOExpHist_Entry41ExchRate,
-                                        hist.GOExpHist_Entry41ExchCcy,
-                                        hist.GOExpHist_Entry41Fund,
-                                        hist.GOExpHist_Entry41AdvcPrnt,
-                                        hist.GOExpHist_Entry41Details,
-                                        hist.GOExpHist_Entry41Entity,
-                                        hist.GOExpHist_Entry41Division,
-                                        hist.GOExpHist_Entry41InterAmt,
-                                        hist.GOExpHist_Entry41InterRate,
-                                        hist.GOExpHist_Entry42Type,
-                                        hist.GOExpHist_Entry42Ccy,
-                                        hist.GOExpHist_Entry42Amt,
-                                        hist.GOExpHist_Entry42Cust,
-                                        hist.GOExpHist_Entry42Actcde,
-                                        hist.GOExpHist_Entry42ActType,
-                                        hist.GOExpHist_Entry42ActNo,
-                                        hist.GOExpHist_Entry42ExchRate,
-                                        hist.GOExpHist_Entry42ExchCcy,
-                                        hist.GOExpHist_Entry42Fund,
-                                        hist.GOExpHist_Entry42AdvcPrnt,
-                                        hist.GOExpHist_Entry42Details,
-                                        hist.GOExpHist_Entry42Entity,
-                                        hist.GOExpHist_Entry42Division,
-                                        hist.GOExpHist_Entry42InterAmt,
-                                        hist.GOExpHist_Entry42InterRate,
-                                        trans.TL_ID,
-                                        trans.TL_GoExpress_ID,
-                                        trans.TL_TransID
-                                    }).Where(whereQuery2, model.ReportSubType, startDT.Date, endDT.Date, model.PeriodFrom.Date,
-                   model.PeriodTo.Date, model.CheckNoFrom, model.CheckNoTo, model.VoucherNoFrom, model.VoucherNoTo,
-                   model.TransNoFrom, model.TransNoTo, model.SubjName, expType2).ToList();
+                            join exp in _context.ExpenseEntry on hist.ExpenseEntryID equals exp.Expense_ID
+                            join ncDtl in _context.ExpenseEntryNonCashDetails on hist.ExpenseDetailID equals ncDtl.ExpNCDtl_ID
+                            join nc in _context.ExpenseEntryNonCash on ncDtl.ExpenseEntryNCModel.ExpNC_ID equals nc.ExpNC_ID
+                            join trans in _context.ExpenseTransLists on hist.GOExpHist_Id equals trans.TL_GoExpHist_ID
+                            select new 
+                            {
+                                exp.Expense_ID,
+                                exp.Expense_Type,
+                                exp.Expense_Last_Updated,
+                                exp.Expense_Date,
+                                exp.Expense_Number,
+                                exp.Expense_CheckNo,
+                                hist.ExpenseEntryID,
+                                hist.ExpenseDetailID,
+                                hist.GOExpHist_Id,
+                                nc.ExpNC_Category_ID,
+                                hist.GOExpHist_ValueDate,
+                                hist.GOExpHist_ReferenceNo,
+                                hist.GOExpHist_Branchno,
+                                hist.GOExpHist_Section,
+                                hist.GOExpHist_Remarks,
+                                hist.GOExpHist_Entry11Type,
+                                hist.GOExpHist_Entry11Ccy,
+                                hist.GOExpHist_Entry11Amt,
+                                hist.GOExpHist_Entry11Cust,
+                                hist.GOExpHist_Entry11Actcde,
+                                hist.GOExpHist_Entry11ActType,
+                                hist.GOExpHist_Entry11ActNo,
+                                hist.GOExpHist_Entry11ExchRate,
+                                hist.GOExpHist_Entry11ExchCcy,
+                                hist.GOExpHist_Entry11Fund,
+                                hist.GOExpHist_Entry11AdvcPrnt,
+                                hist.GOExpHist_Entry11Details,
+                                hist.GOExpHist_Entry11Entity,
+                                hist.GOExpHist_Entry11Division,
+                                hist.GOExpHist_Entry11InterAmt,
+                                hist.GOExpHist_Entry11InterRate,
+                                hist.GOExpHist_Entry12Type,
+                                hist.GOExpHist_Entry12Ccy,
+                                hist.GOExpHist_Entry12Amt,
+                                hist.GOExpHist_Entry12Cust,
+                                hist.GOExpHist_Entry12Actcde,
+                                hist.GOExpHist_Entry12ActType,
+                                hist.GOExpHist_Entry12ActNo,
+                                hist.GOExpHist_Entry12ExchRate,
+                                hist.GOExpHist_Entry12ExchCcy,
+                                hist.GOExpHist_Entry12Fund,
+                                hist.GOExpHist_Entry12AdvcPrnt,
+                                hist.GOExpHist_Entry12Details,
+                                hist.GOExpHist_Entry12Entity,
+                                hist.GOExpHist_Entry12Division,
+                                hist.GOExpHist_Entry12InterAmt,
+                                hist.GOExpHist_Entry12InterRate,
+                                hist.GOExpHist_Entry21Type,
+                                hist.GOExpHist_Entry21Ccy,
+                                hist.GOExpHist_Entry21Amt,
+                                hist.GOExpHist_Entry21Cust,
+                                hist.GOExpHist_Entry21Actcde,
+                                hist.GOExpHist_Entry21ActType,
+                                hist.GOExpHist_Entry21ActNo,
+                                hist.GOExpHist_Entry21ExchRate,
+                                hist.GOExpHist_Entry21ExchCcy,
+                                hist.GOExpHist_Entry21Fund,
+                                hist.GOExpHist_Entry21AdvcPrnt,
+                                hist.GOExpHist_Entry21Details,
+                                hist.GOExpHist_Entry21Entity,
+                                hist.GOExpHist_Entry21Division,
+                                hist.GOExpHist_Entry21InterAmt,
+                                hist.GOExpHist_Entry21InterRate,
+                                hist.GOExpHist_Entry22Type,
+                                hist.GOExpHist_Entry22Ccy,
+                                hist.GOExpHist_Entry22Amt,
+                                hist.GOExpHist_Entry22Cust,
+                                hist.GOExpHist_Entry22Actcde,
+                                hist.GOExpHist_Entry22ActType,
+                                hist.GOExpHist_Entry22ActNo,
+                                hist.GOExpHist_Entry22ExchRate,
+                                hist.GOExpHist_Entry22ExchCcy,
+                                hist.GOExpHist_Entry22Fund,
+                                hist.GOExpHist_Entry22AdvcPrnt,
+                                hist.GOExpHist_Entry22Details,
+                                hist.GOExpHist_Entry22Entity,
+                                hist.GOExpHist_Entry22Division,
+                                hist.GOExpHist_Entry22InterAmt,
+                                hist.GOExpHist_Entry22InterRate,
+                                hist.GOExpHist_Entry31Type,
+                                hist.GOExpHist_Entry31Ccy,
+                                hist.GOExpHist_Entry31Amt,
+                                hist.GOExpHist_Entry31Cust,
+                                hist.GOExpHist_Entry31Actcde,
+                                hist.GOExpHist_Entry31ActType,
+                                hist.GOExpHist_Entry31ActNo,
+                                hist.GOExpHist_Entry31ExchRate,
+                                hist.GOExpHist_Entry31ExchCcy,
+                                hist.GOExpHist_Entry31Fund,
+                                hist.GOExpHist_Entry31AdvcPrnt,
+                                hist.GOExpHist_Entry31Details,
+                                hist.GOExpHist_Entry31Entity,
+                                hist.GOExpHist_Entry31Division,
+                                hist.GOExpHist_Entry31InterAmt,
+                                hist.GOExpHist_Entry31InterRate,
+                                hist.GOExpHist_Entry32Type,
+                                hist.GOExpHist_Entry32Ccy,
+                                hist.GOExpHist_Entry32Amt,
+                                hist.GOExpHist_Entry32Cust,
+                                hist.GOExpHist_Entry32Actcde,
+                                hist.GOExpHist_Entry32ActType,
+                                hist.GOExpHist_Entry32ActNo,
+                                hist.GOExpHist_Entry32ExchRate,
+                                hist.GOExpHist_Entry32ExchCcy,
+                                hist.GOExpHist_Entry32Fund,
+                                hist.GOExpHist_Entry32AdvcPrnt,
+                                hist.GOExpHist_Entry32Details,
+                                hist.GOExpHist_Entry32Entity,
+                                hist.GOExpHist_Entry32Division,
+                                hist.GOExpHist_Entry32InterAmt,
+                                hist.GOExpHist_Entry32InterRate,
+                                hist.GOExpHist_Entry41Type,
+                                hist.GOExpHist_Entry41Ccy,
+                                hist.GOExpHist_Entry41Amt,
+                                hist.GOExpHist_Entry41Cust,
+                                hist.GOExpHist_Entry41Actcde,
+                                hist.GOExpHist_Entry41ActType,
+                                hist.GOExpHist_Entry41ActNo,
+                                hist.GOExpHist_Entry41ExchRate,
+                                hist.GOExpHist_Entry41ExchCcy,
+                                hist.GOExpHist_Entry41Fund,
+                                hist.GOExpHist_Entry41AdvcPrnt,
+                                hist.GOExpHist_Entry41Details,
+                                hist.GOExpHist_Entry41Entity,
+                                hist.GOExpHist_Entry41Division,
+                                hist.GOExpHist_Entry41InterAmt,
+                                hist.GOExpHist_Entry41InterRate,
+                                hist.GOExpHist_Entry42Type,
+                                hist.GOExpHist_Entry42Ccy,
+                                hist.GOExpHist_Entry42Amt,
+                                hist.GOExpHist_Entry42Cust,
+                                hist.GOExpHist_Entry42Actcde,
+                                hist.GOExpHist_Entry42ActType,
+                                hist.GOExpHist_Entry42ActNo,
+                                hist.GOExpHist_Entry42ExchRate,
+                                hist.GOExpHist_Entry42ExchCcy,
+                                hist.GOExpHist_Entry42Fund,
+                                hist.GOExpHist_Entry42AdvcPrnt,
+                                hist.GOExpHist_Entry42Details,
+                                hist.GOExpHist_Entry42Entity,
+                                hist.GOExpHist_Entry42Division,
+                                hist.GOExpHist_Entry42InterAmt,
+                                hist.GOExpHist_Entry42InterRate,
+                                trans.TL_ID,
+                                trans.TL_GoExpress_ID,
+                                trans.TL_TransID
+                            }).Where(whereQuery2 + " && Expense_Type = @13", model.ReportSubType, startDT.Date, endDT.Date, model.PeriodFrom.Date,
+            model.PeriodTo.Date, model.CheckNoFrom, model.CheckNoTo, model.VoucherNoFrom, model.VoucherNoTo,
+            model.TransNoFrom, model.TransNoTo, model.SubjName, expType2, GlobalSystemValues.TYPE_NC).ToList();
 
                 //Convert to List object.
                 foreach (var i in db2)
                 {
-                    list1.Add(new HomeReportTransactionListViewModel
+                    list2.Add(new HomeReportTransactionListViewModel
                     {
                         ExpExpense_ID = i.Expense_ID,
                         ExpExpense_Type = i.Expense_Type,
@@ -3489,8 +3654,8 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount1_1 = i.GOExpHist_Entry11Amt,
                         Trans_Customer1_1 = i.GOExpHist_Entry11Cust,
                         Trans_Account_Code1_1 = i.GOExpHist_Entry11Actcde,
-                        Trans_Account_Name1_1 = i.GOExpHist_Entry11ActType,
-                        Trans_Account_Number1_1 = i.GOExpHist_Entry11ActNo,
+                        Trans_Account_Name1_1 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde, ncDtlList, i.ExpenseDetailID),
+                        Trans_Account_Number1_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde),
                         Trans_Exchange_Rate1_1 = i.GOExpHist_Entry11ExchRate,
                         Trans_Contra_Currency1_1 = i.GOExpHist_Entry11ExchCcy,
                         Trans_Fund1_1 = i.GOExpHist_Entry11Fund,
@@ -3505,8 +3670,8 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount1_2 = i.GOExpHist_Entry12Amt,
                         Trans_Customer1_2 = i.GOExpHist_Entry12Cust,
                         Trans_Account_Code1_2 = i.GOExpHist_Entry12Actcde,
-                        Trans_Account_Name1_2 = i.GOExpHist_Entry12ActType,
-                        Trans_Account_Number1_2 = i.GOExpHist_Entry12ActNo,
+                        Trans_Account_Name1_2 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde, ncDtlList, i.ExpenseDetailID),
+                        Trans_Account_Number1_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde),
                         Trans_Exchange_Rate1_2 = i.GOExpHist_Entry12ExchRate,
                         Trans_Contra_Currency1_2 = i.GOExpHist_Entry12ExchCcy,
                         Trans_Fund1_2 = i.GOExpHist_Entry12Fund,
@@ -3521,8 +3686,8 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount2_1 = i.GOExpHist_Entry21Amt,
                         Trans_Customer2_1 = i.GOExpHist_Entry21Cust,
                         Trans_Account_Code2_1 = i.GOExpHist_Entry21Actcde,
-                        Trans_Account_Name2_1 = i.GOExpHist_Entry21ActType,
-                        Trans_Account_Number2_1 = i.GOExpHist_Entry21ActNo,
+                        Trans_Account_Name2_1 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde, ncDtlList, i.ExpenseDetailID),
+                        Trans_Account_Number2_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde),
                         Trans_Exchange_Rate2_1 = i.GOExpHist_Entry21ExchRate,
                         Trans_Contra_Currency2_1 = i.GOExpHist_Entry21ExchCcy,
                         Trans_Fund2_1 = i.GOExpHist_Entry21Fund,
@@ -3537,8 +3702,8 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount2_2 = i.GOExpHist_Entry22Amt,
                         Trans_Customer2_2 = i.GOExpHist_Entry22Cust,
                         Trans_Account_Code2_2 = i.GOExpHist_Entry22Actcde,
-                        Trans_Account_Name2_2 = i.GOExpHist_Entry22ActType,
-                        Trans_Account_Number2_2 = i.GOExpHist_Entry22ActNo,
+                        Trans_Account_Name2_2 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde, ncDtlList, i.ExpenseDetailID),
+                        Trans_Account_Number2_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde),
                         Trans_Exchange_Rate2_2 = i.GOExpHist_Entry22ExchRate,
                         Trans_Contra_Currency2_2 = i.GOExpHist_Entry22ExchCcy,
                         Trans_Fund2_2 = i.GOExpHist_Entry22Fund,
@@ -3553,8 +3718,8 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount3_1 = i.GOExpHist_Entry31Amt,
                         Trans_Customer3_1 = i.GOExpHist_Entry31Cust,
                         Trans_Account_Code3_1 = i.GOExpHist_Entry31Actcde,
-                        Trans_Account_Name3_1 = i.GOExpHist_Entry31ActType,
-                        Trans_Account_Number3_1 = i.GOExpHist_Entry31ActNo,
+                        Trans_Account_Name3_1 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde, ncDtlList, i.ExpenseDetailID),
+                        Trans_Account_Number3_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde),
                         Trans_Exchange_Rate3_1 = i.GOExpHist_Entry31ExchRate,
                         Trans_Contra_Currency3_1 = i.GOExpHist_Entry31ExchCcy,
                         Trans_Fund3_1 = i.GOExpHist_Entry31Fund,
@@ -3569,8 +3734,8 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount3_2 = i.GOExpHist_Entry32Amt,
                         Trans_Customer3_2 = i.GOExpHist_Entry32Cust,
                         Trans_Account_Code3_2 = i.GOExpHist_Entry32Actcde,
-                        Trans_Account_Name3_2 = i.GOExpHist_Entry32ActType,
-                        Trans_Account_Number3_2 = i.GOExpHist_Entry32ActNo,
+                        Trans_Account_Name3_2 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde, ncDtlList, i.ExpenseDetailID),
+                        Trans_Account_Number3_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde),
                         Trans_Exchange_Rate3_2 = i.GOExpHist_Entry32ExchRate,
                         Trans_Contra_Currency3_2 = i.GOExpHist_Entry32ExchCcy,
                         Trans_Fund3_2 = i.GOExpHist_Entry32Fund,
@@ -3585,8 +3750,8 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount4_1 = i.GOExpHist_Entry41Amt,
                         Trans_Customer4_1 = i.GOExpHist_Entry41Cust,
                         Trans_Account_Code4_1 = i.GOExpHist_Entry41Actcde,
-                        Trans_Account_Name4_1 = i.GOExpHist_Entry41ActType,
-                        Trans_Account_Number4_1 = i.GOExpHist_Entry41ActNo,
+                        Trans_Account_Name4_1 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde, ncDtlList, i.ExpenseDetailID),
+                        Trans_Account_Number4_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde),
                         Trans_Exchange_Rate4_1 = i.GOExpHist_Entry41ExchRate,
                         Trans_Contra_Currency4_1 = i.GOExpHist_Entry41ExchCcy,
                         Trans_Fund4_1 = i.GOExpHist_Entry41Fund,
@@ -3601,8 +3766,8 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount4_2 = i.GOExpHist_Entry42Amt,
                         Trans_Customer4_2 = i.GOExpHist_Entry42Cust,
                         Trans_Account_Code4_2 = i.GOExpHist_Entry42Actcde,
-                        Trans_Account_Name4_2 = i.GOExpHist_Entry42ActType,
-                        Trans_Account_Number4_2 = i.GOExpHist_Entry42ActNo,
+                        Trans_Account_Name4_2 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde, ncDtlList, i.ExpenseDetailID),
+                        Trans_Account_Number4_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde),
                         Trans_Exchange_Rate4_2 = i.GOExpHist_Entry42ExchRate,
                         Trans_Contra_Currency4_2 = i.GOExpHist_Entry42ExchCcy,
                         Trans_Fund4_2 = i.GOExpHist_Entry42Fund,
@@ -3620,29 +3785,1019 @@ namespace ExpenseProcessingSystem.Services
                 }
             }
 
-            return list1.Concat(list2);
+            return list1.Concat(list2).OrderBy(x => x.Trans_Last_Updated_Date);
         }
 
-        //GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.ExpExpense_Type, ddvDetails, i.HistExpenseDetailID)
-        public string GetAccountNameForCADDVPCSS(List<DMAccountModel> accList, string accType, string accNo, int acc1, int? acc2, int? acc3, int expType, List<EntryDDVViewModel> entryDtlListDDV, int dtlID)
+        public IEnumerable<HomeReportAccountSummaryViewModel> GetAccountSummaryData(HomeReportViewModel model)
         {
+            string whereQuery = "";
+            string whereQuery1 = "";
+            string whereQuery2 = "";
+
+            DateTime startDT = DateTime.ParseExact(model.Year + "-" + model.Month, "yyyy-M", CultureInfo.InvariantCulture);
+            DateTime endDT = DateTime.ParseExact(model.YearTo + "-" + model.MonthTo, "yyyy-M", CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
+
+            int[] expType1 = { GlobalSystemValues.TYPE_CV, GlobalSystemValues.TYPE_PC,
+                GlobalSystemValues.TYPE_DDV, GlobalSystemValues.TYPE_SS };
+            int[] expType2 = { HomeReportConstantValue.REP_NC_LS_PAYROLL - 50, HomeReportConstantValue.REP_NC_JS_PAYROLL - 50,
+                HomeReportConstantValue.REP_NC_TAX_REMITTANCE - 50};
+
+            List<HomeReportTransactionListViewModel> list1 = new List<HomeReportTransactionListViewModel>();
+            List<HomeReportTransactionListViewModel> list2 = new List<HomeReportTransactionListViewModel>();
+
+            List<DMAccountModel> accList = getAccountListIncHist();
+            DMAccountModel selectedAccount = new DMAccountModel();
+
+            if (model.ReportSubType != 0)
+            {
+                selectedAccount = accList.Where(x => x.Account_ID == model.ReportSubType).FirstOrDefault();
+            }
+
+            if (model.PeriodOption == 1)
+            {
+                whereQuery = "@0 <= Expense_Last_Updated.Date && Expense_Last_Updated.Date <= @1";
+            }
+            else if (model.PeriodOption == 3)
+            {
+                whereQuery = "@2 <= Expense_Last_Updated.Date && Expense_Last_Updated.Date <= @3";
+            }
+            if (!String.IsNullOrEmpty(whereQuery))
+            {
+                whereQuery1 = "Expense_Type != @4 && " + whereQuery;
+            }
+            else
+            {
+                whereQuery1 = "Expense_Type != @4";
+            }
+            
+            //Get DDV entry detail list. include inter entity
+            List<EntryDDVViewModel> ddvDetails = GetEntryDetailsListForDDV();
+
+            var db1 = (from hist in _context.GOExpressHist
+                       join exp in _context.ExpenseEntry on hist.ExpenseEntryID equals exp.Expense_ID
+                       join trans in _context.ExpenseTransLists on hist.GOExpHist_Id equals trans.TL_GoExpHist_ID
+                       join expDtl in _context.ExpenseEntryDetails on hist.ExpenseDetailID equals expDtl.ExpDtl_ID
+                       select new
+                       {
+                           exp.Expense_ID,
+                           exp.Expense_Type,
+                           exp.Expense_Last_Updated,
+                           exp.Expense_Date,
+                           exp.Expense_Number,
+                           exp.Expense_CheckNo,
+                           expDtl.ExpDtl_Account,
+                           expDtl.ExpDtl_CreditAccount1,
+                           expDtl.ExpDtl_CreditAccount2,
+                           hist.ExpenseEntryID,
+                           hist.ExpenseDetailID,
+                           hist.GOExpHist_Id,
+                           hist.GOExpHist_ValueDate,
+                           hist.GOExpHist_ReferenceNo,
+                           hist.GOExpHist_Branchno,
+                           hist.GOExpHist_Section,
+                           hist.GOExpHist_Remarks,
+                           hist.GOExpHist_Entry11Type,
+                           hist.GOExpHist_Entry11Ccy,
+                           hist.GOExpHist_Entry11Amt,
+                           hist.GOExpHist_Entry11Cust,
+                           hist.GOExpHist_Entry11Actcde,
+                           hist.GOExpHist_Entry11ActType,
+                           hist.GOExpHist_Entry11ActNo,
+                           hist.GOExpHist_Entry11ExchRate,
+                           hist.GOExpHist_Entry11ExchCcy,
+                           hist.GOExpHist_Entry11Fund,
+                           hist.GOExpHist_Entry11AdvcPrnt,
+                           hist.GOExpHist_Entry11Details,
+                           hist.GOExpHist_Entry11Entity,
+                           hist.GOExpHist_Entry11Division,
+                           hist.GOExpHist_Entry11InterAmt,
+                           hist.GOExpHist_Entry11InterRate,
+                           hist.GOExpHist_Entry12Type,
+                           hist.GOExpHist_Entry12Ccy,
+                           hist.GOExpHist_Entry12Amt,
+                           hist.GOExpHist_Entry12Cust,
+                           hist.GOExpHist_Entry12Actcde,
+                           hist.GOExpHist_Entry12ActType,
+                           hist.GOExpHist_Entry12ActNo,
+                           hist.GOExpHist_Entry12ExchRate,
+                           hist.GOExpHist_Entry12ExchCcy,
+                           hist.GOExpHist_Entry12Fund,
+                           hist.GOExpHist_Entry12AdvcPrnt,
+                           hist.GOExpHist_Entry12Details,
+                           hist.GOExpHist_Entry12Entity,
+                           hist.GOExpHist_Entry12Division,
+                           hist.GOExpHist_Entry12InterAmt,
+                           hist.GOExpHist_Entry12InterRate,
+                           hist.GOExpHist_Entry21Type,
+                           hist.GOExpHist_Entry21Ccy,
+                           hist.GOExpHist_Entry21Amt,
+                           hist.GOExpHist_Entry21Cust,
+                           hist.GOExpHist_Entry21Actcde,
+                           hist.GOExpHist_Entry21ActType,
+                           hist.GOExpHist_Entry21ActNo,
+                           hist.GOExpHist_Entry21ExchRate,
+                           hist.GOExpHist_Entry21ExchCcy,
+                           hist.GOExpHist_Entry21Fund,
+                           hist.GOExpHist_Entry21AdvcPrnt,
+                           hist.GOExpHist_Entry21Details,
+                           hist.GOExpHist_Entry21Entity,
+                           hist.GOExpHist_Entry21Division,
+                           hist.GOExpHist_Entry21InterAmt,
+                           hist.GOExpHist_Entry21InterRate,
+                           hist.GOExpHist_Entry22Type,
+                           hist.GOExpHist_Entry22Ccy,
+                           hist.GOExpHist_Entry22Amt,
+                           hist.GOExpHist_Entry22Cust,
+                           hist.GOExpHist_Entry22Actcde,
+                           hist.GOExpHist_Entry22ActType,
+                           hist.GOExpHist_Entry22ActNo,
+                           hist.GOExpHist_Entry22ExchRate,
+                           hist.GOExpHist_Entry22ExchCcy,
+                           hist.GOExpHist_Entry22Fund,
+                           hist.GOExpHist_Entry22AdvcPrnt,
+                           hist.GOExpHist_Entry22Details,
+                           hist.GOExpHist_Entry22Entity,
+                           hist.GOExpHist_Entry22Division,
+                           hist.GOExpHist_Entry22InterAmt,
+                           hist.GOExpHist_Entry22InterRate,
+                           hist.GOExpHist_Entry31Type,
+                           hist.GOExpHist_Entry31Ccy,
+                           hist.GOExpHist_Entry31Amt,
+                           hist.GOExpHist_Entry31Cust,
+                           hist.GOExpHist_Entry31Actcde,
+                           hist.GOExpHist_Entry31ActType,
+                           hist.GOExpHist_Entry31ActNo,
+                           hist.GOExpHist_Entry31ExchRate,
+                           hist.GOExpHist_Entry31ExchCcy,
+                           hist.GOExpHist_Entry31Fund,
+                           hist.GOExpHist_Entry31AdvcPrnt,
+                           hist.GOExpHist_Entry31Details,
+                           hist.GOExpHist_Entry31Entity,
+                           hist.GOExpHist_Entry31Division,
+                           hist.GOExpHist_Entry31InterAmt,
+                           hist.GOExpHist_Entry31InterRate,
+                           hist.GOExpHist_Entry32Type,
+                           hist.GOExpHist_Entry32Ccy,
+                           hist.GOExpHist_Entry32Amt,
+                           hist.GOExpHist_Entry32Cust,
+                           hist.GOExpHist_Entry32Actcde,
+                           hist.GOExpHist_Entry32ActType,
+                           hist.GOExpHist_Entry32ActNo,
+                           hist.GOExpHist_Entry32ExchRate,
+                           hist.GOExpHist_Entry32ExchCcy,
+                           hist.GOExpHist_Entry32Fund,
+                           hist.GOExpHist_Entry32AdvcPrnt,
+                           hist.GOExpHist_Entry32Details,
+                           hist.GOExpHist_Entry32Entity,
+                           hist.GOExpHist_Entry32Division,
+                           hist.GOExpHist_Entry32InterAmt,
+                           hist.GOExpHist_Entry32InterRate,
+                           hist.GOExpHist_Entry41Type,
+                           hist.GOExpHist_Entry41Ccy,
+                           hist.GOExpHist_Entry41Amt,
+                           hist.GOExpHist_Entry41Cust,
+                           hist.GOExpHist_Entry41Actcde,
+                           hist.GOExpHist_Entry41ActType,
+                           hist.GOExpHist_Entry41ActNo,
+                           hist.GOExpHist_Entry41ExchRate,
+                           hist.GOExpHist_Entry41ExchCcy,
+                           hist.GOExpHist_Entry41Fund,
+                           hist.GOExpHist_Entry41AdvcPrnt,
+                           hist.GOExpHist_Entry41Details,
+                           hist.GOExpHist_Entry41Entity,
+                           hist.GOExpHist_Entry41Division,
+                           hist.GOExpHist_Entry41InterAmt,
+                           hist.GOExpHist_Entry41InterRate,
+                           hist.GOExpHist_Entry42Type,
+                           hist.GOExpHist_Entry42Ccy,
+                           hist.GOExpHist_Entry42Amt,
+                           hist.GOExpHist_Entry42Cust,
+                           hist.GOExpHist_Entry42Actcde,
+                           hist.GOExpHist_Entry42ActType,
+                           hist.GOExpHist_Entry42ActNo,
+                           hist.GOExpHist_Entry42ExchRate,
+                           hist.GOExpHist_Entry42ExchCcy,
+                           hist.GOExpHist_Entry42Fund,
+                           hist.GOExpHist_Entry42AdvcPrnt,
+                           hist.GOExpHist_Entry42Details,
+                           hist.GOExpHist_Entry42Entity,
+                           hist.GOExpHist_Entry42Division,
+                           hist.GOExpHist_Entry42InterAmt,
+                           hist.GOExpHist_Entry42InterRate,
+                           trans.TL_ID,
+                           trans.TL_GoExpress_ID,
+                           trans.TL_TransID
+                       }).Where(whereQuery1, startDT.Date, endDT.Date, model.PeriodFrom.Date,
+                               model.PeriodTo.Date, GlobalSystemValues.TYPE_NC).ToList();
+
+            //Convert to List object.
+            foreach (var i in db1)
+            {
+
+                list1.Add(new HomeReportTransactionListViewModel
+                {
+                    ExpExpense_ID = i.Expense_ID,
+                    ExpExpense_Type = i.Expense_Type,
+                    Trans_Last_Updated_Date = i.Expense_Last_Updated,
+                    ExpExpense_Date = i.Expense_Date.ToString(),
+                    Trans_Voucher_Number = i.Expense_Number.ToString(),
+                    Trans_Check_Number = i.Expense_CheckNo,
+                    HistExpenseEntryID = i.ExpenseEntryID,
+                    HistExpenseDetailID = i.ExpenseDetailID,
+                    HistGOExpHist_Id = i.GOExpHist_Id,
+                    Trans_Value_Date = i.GOExpHist_ValueDate,
+                    Trans_Reference_No = i.GOExpHist_ReferenceNo,
+                    Trans_Section = i.GOExpHist_Section,
+                    Trans_Remarks = i.GOExpHist_Remarks,
+                    Trans_DebitCredit1_1 = i.GOExpHist_Entry11Type,
+                    Trans_Currency1_1 = i.GOExpHist_Entry11Ccy,
+                    Trans_Amount1_1 = i.GOExpHist_Entry11Amt,
+                    Trans_Customer1_1 = i.GOExpHist_Entry11Cust,
+                    Trans_Account_Code1_1 = i.GOExpHist_Entry11Actcde,
+                    Trans_Account_Name1_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number1_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde),
+                    Trans_Exchange_Rate1_1 = i.GOExpHist_Entry11ExchRate,
+                    Trans_Contra_Currency1_1 = i.GOExpHist_Entry11ExchCcy,
+                    Trans_Fund1_1 = i.GOExpHist_Entry11Fund,
+                    Trans_Advice_Print1_1 = i.GOExpHist_Entry11AdvcPrnt,
+                    Trans_Details1_1 = i.GOExpHist_Entry11Details,
+                    Trans_Entity1_1 = i.GOExpHist_Entry11Entity,
+                    Trans_Division1_1 = i.GOExpHist_Entry11Division,
+                    Trans_InterAmount1_1 = i.GOExpHist_Entry11InterAmt,
+                    Trans_InterRate1_1 = i.GOExpHist_Entry11InterRate,
+                    Trans_DebitCredit1_2 = i.GOExpHist_Entry12Type,
+                    Trans_Currency1_2 = i.GOExpHist_Entry12Ccy,
+                    Trans_Amount1_2 = i.GOExpHist_Entry12Amt,
+                    Trans_Customer1_2 = i.GOExpHist_Entry12Cust,
+                    Trans_Account_Code1_2 = i.GOExpHist_Entry12Actcde,
+                    Trans_Account_Name1_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number1_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde),
+                    Trans_Exchange_Rate1_2 = i.GOExpHist_Entry12ExchRate,
+                    Trans_Contra_Currency1_2 = i.GOExpHist_Entry12ExchCcy,
+                    Trans_Fund1_2 = i.GOExpHist_Entry12Fund,
+                    Trans_Advice_Print1_2 = i.GOExpHist_Entry12AdvcPrnt,
+                    Trans_Details1_2 = i.GOExpHist_Entry12Details,
+                    Trans_Entity1_2 = i.GOExpHist_Entry12Entity,
+                    Trans_Division1_2 = i.GOExpHist_Entry12Division,
+                    Trans_InterAmount1_2 = i.GOExpHist_Entry12InterAmt,
+                    Trans_InterRate1_2 = i.GOExpHist_Entry12InterRate,
+                    Trans_DebitCredit2_1 = i.GOExpHist_Entry21Type,
+                    Trans_Currency2_1 = i.GOExpHist_Entry21Ccy,
+                    Trans_Amount2_1 = i.GOExpHist_Entry21Amt,
+                    Trans_Customer2_1 = i.GOExpHist_Entry21Cust,
+                    Trans_Account_Code2_1 = i.GOExpHist_Entry21Actcde,
+                    Trans_Account_Name2_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number2_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde),
+                    Trans_Exchange_Rate2_1 = i.GOExpHist_Entry21ExchRate,
+                    Trans_Contra_Currency2_1 = i.GOExpHist_Entry21ExchCcy,
+                    Trans_Fund2_1 = i.GOExpHist_Entry21Fund,
+                    Trans_Advice_Print2_1 = i.GOExpHist_Entry21AdvcPrnt,
+                    Trans_Details2_1 = i.GOExpHist_Entry21Details,
+                    Trans_Entity2_1 = i.GOExpHist_Entry21Entity,
+                    Trans_Division2_1 = i.GOExpHist_Entry21Division,
+                    Trans_InterAmount2_1 = i.GOExpHist_Entry21InterAmt,
+                    Trans_InterRate2_1 = i.GOExpHist_Entry21InterRate,
+                    Trans_DebitCredit2_2 = i.GOExpHist_Entry22Type,
+                    Trans_Currency2_2 = i.GOExpHist_Entry22Ccy,
+                    Trans_Amount2_2 = i.GOExpHist_Entry22Amt,
+                    Trans_Customer2_2 = i.GOExpHist_Entry22Cust,
+                    Trans_Account_Code2_2 = i.GOExpHist_Entry22Actcde,
+                    Trans_Account_Name2_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number2_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde),
+                    Trans_Exchange_Rate2_2 = i.GOExpHist_Entry22ExchRate,
+                    Trans_Contra_Currency2_2 = i.GOExpHist_Entry22ExchCcy,
+                    Trans_Fund2_2 = i.GOExpHist_Entry22Fund,
+                    Trans_Advice_Print2_2 = i.GOExpHist_Entry22AdvcPrnt,
+                    Trans_Details2_2 = i.GOExpHist_Entry22Details,
+                    Trans_Entity2_2 = i.GOExpHist_Entry22Entity,
+                    Trans_Division2_2 = i.GOExpHist_Entry22Division,
+                    Trans_InterAmount2_2 = i.GOExpHist_Entry22InterAmt,
+                    Trans_InterRate2_2 = i.GOExpHist_Entry22InterRate,
+                    Trans_DebitCredit3_1 = i.GOExpHist_Entry31Type,
+                    Trans_Currency3_1 = i.GOExpHist_Entry31Ccy,
+                    Trans_Amount3_1 = i.GOExpHist_Entry31Amt,
+                    Trans_Customer3_1 = i.GOExpHist_Entry31Cust,
+                    Trans_Account_Code3_1 = i.GOExpHist_Entry31Actcde,
+                    Trans_Account_Name3_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number3_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde),
+                    Trans_Exchange_Rate3_1 = i.GOExpHist_Entry31ExchRate,
+                    Trans_Contra_Currency3_1 = i.GOExpHist_Entry31ExchCcy,
+                    Trans_Fund3_1 = i.GOExpHist_Entry31Fund,
+                    Trans_Advice_Print3_1 = i.GOExpHist_Entry31AdvcPrnt,
+                    Trans_Details3_1 = i.GOExpHist_Entry31Details,
+                    Trans_Entity3_1 = i.GOExpHist_Entry31Entity,
+                    Trans_Division3_1 = i.GOExpHist_Entry31Division,
+                    Trans_InterAmount3_1 = i.GOExpHist_Entry31InterAmt,
+                    Trans_InterRate3_1 = i.GOExpHist_Entry31InterRate,
+                    Trans_DebitCredit3_2 = i.GOExpHist_Entry32Type,
+                    Trans_Currency3_2 = i.GOExpHist_Entry32Ccy,
+                    Trans_Amount3_2 = i.GOExpHist_Entry32Amt,
+                    Trans_Customer3_2 = i.GOExpHist_Entry32Cust,
+                    Trans_Account_Code3_2 = i.GOExpHist_Entry32Actcde,
+                    Trans_Account_Name3_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number3_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde),
+                    Trans_Exchange_Rate3_2 = i.GOExpHist_Entry32ExchRate,
+                    Trans_Contra_Currency3_2 = i.GOExpHist_Entry32ExchCcy,
+                    Trans_Fund3_2 = i.GOExpHist_Entry32Fund,
+                    Trans_Advice_Print3_2 = i.GOExpHist_Entry32AdvcPrnt,
+                    Trans_Details3_2 = i.GOExpHist_Entry32Details,
+                    Trans_Entity3_2 = i.GOExpHist_Entry32Entity,
+                    Trans_Division3_2 = i.GOExpHist_Entry32Division,
+                    Trans_InterAmount3_2 = i.GOExpHist_Entry32InterAmt,
+                    Trans_InterRate3_2 = i.GOExpHist_Entry32InterRate,
+                    Trans_DebitCredit4_1 = i.GOExpHist_Entry41Type,
+                    Trans_Currency4_1 = i.GOExpHist_Entry41Ccy,
+                    Trans_Amount4_1 = i.GOExpHist_Entry41Amt,
+                    Trans_Customer4_1 = i.GOExpHist_Entry41Cust,
+                    Trans_Account_Code4_1 = i.GOExpHist_Entry41Actcde,
+                    Trans_Account_Name4_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number4_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde),
+                    Trans_Exchange_Rate4_1 = i.GOExpHist_Entry41ExchRate,
+                    Trans_Contra_Currency4_1 = i.GOExpHist_Entry41ExchCcy,
+                    Trans_Fund4_1 = i.GOExpHist_Entry41Fund,
+                    Trans_Advice_Print4_1 = i.GOExpHist_Entry41AdvcPrnt,
+                    Trans_Details4_1 = i.GOExpHist_Entry41Details,
+                    Trans_Entity4_1 = i.GOExpHist_Entry41Entity,
+                    Trans_Division4_1 = i.GOExpHist_Entry41Division,
+                    Trans_InterAmount4_1 = i.GOExpHist_Entry41InterAmt,
+                    Trans_InterRate4_1 = i.GOExpHist_Entry41InterRate,
+                    Trans_DebitCredit4_2 = i.GOExpHist_Entry42Type,
+                    Trans_Currency4_2 = i.GOExpHist_Entry42Ccy,
+                    Trans_Amount4_2 = i.GOExpHist_Entry42Amt,
+                    Trans_Customer4_2 = i.GOExpHist_Entry42Cust,
+                    Trans_Account_Code4_2 = i.GOExpHist_Entry42Actcde,
+                    Trans_Account_Name4_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number4_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde),
+                    Trans_Exchange_Rate4_2 = i.GOExpHist_Entry42ExchRate,
+                    Trans_Contra_Currency4_2 = i.GOExpHist_Entry42ExchCcy,
+                    Trans_Fund4_2 = i.GOExpHist_Entry42Fund,
+                    Trans_Advice_Print4_2 = i.GOExpHist_Entry42AdvcPrnt,
+                    Trans_Details4_2 = i.GOExpHist_Entry42Details,
+                    Trans_Entity4_2 = i.GOExpHist_Entry42Entity,
+                    Trans_Division4_2 = i.GOExpHist_Entry42Division,
+                    Trans_InterAmount4_2 = i.GOExpHist_Entry42InterAmt,
+                    Trans_InterRate4_2 = i.GOExpHist_Entry42InterRate,
+                    TransTL_ID = i.TL_ID,
+                    TransTL_GoExpress_ID = i.TL_GoExpress_ID,
+                    TransTL_TransID = i.TL_TransID
+
+                });
+            }
+
+
+            List<ExpenseEntryNCDtlViewModel> ncDtlList = GetEntryDetailAccountListForNonCash();
+
+            if (!String.IsNullOrEmpty(whereQuery))
+            {
+                whereQuery2 = "Expense_Type == @4 && " + whereQuery;
+            }
+            else
+            {
+                whereQuery2 = "Expense_Type == @4";
+            }
+            
+
+            var db2 = (from hist in _context.GOExpressHist
+                       join exp in _context.ExpenseEntry on hist.ExpenseEntryID equals exp.Expense_ID
+                       join ncDtl in _context.ExpenseEntryNonCashDetails on hist.ExpenseDetailID equals ncDtl.ExpNCDtl_ID
+                       join nc in _context.ExpenseEntryNonCash on ncDtl.ExpenseEntryNCModel.ExpNC_ID equals nc.ExpNC_ID
+                       join trans in _context.ExpenseTransLists on hist.GOExpHist_Id equals trans.TL_GoExpHist_ID
+                       select new
+                       {
+                           exp.Expense_ID,
+                           exp.Expense_Type,
+                           exp.Expense_Last_Updated,
+                           exp.Expense_Date,
+                           exp.Expense_Number,
+                           exp.Expense_CheckNo,
+                           hist.ExpenseEntryID,
+                           hist.ExpenseDetailID,
+                           hist.GOExpHist_Id,
+                           nc.ExpNC_Category_ID,
+                           hist.GOExpHist_ValueDate,
+                           hist.GOExpHist_ReferenceNo,
+                           hist.GOExpHist_Branchno,
+                           hist.GOExpHist_Section,
+                           hist.GOExpHist_Remarks,
+                           hist.GOExpHist_Entry11Type,
+                           hist.GOExpHist_Entry11Ccy,
+                           hist.GOExpHist_Entry11Amt,
+                           hist.GOExpHist_Entry11Cust,
+                           hist.GOExpHist_Entry11Actcde,
+                           hist.GOExpHist_Entry11ActType,
+                           hist.GOExpHist_Entry11ActNo,
+                           hist.GOExpHist_Entry11ExchRate,
+                           hist.GOExpHist_Entry11ExchCcy,
+                           hist.GOExpHist_Entry11Fund,
+                           hist.GOExpHist_Entry11AdvcPrnt,
+                           hist.GOExpHist_Entry11Details,
+                           hist.GOExpHist_Entry11Entity,
+                           hist.GOExpHist_Entry11Division,
+                           hist.GOExpHist_Entry11InterAmt,
+                           hist.GOExpHist_Entry11InterRate,
+                           hist.GOExpHist_Entry12Type,
+                           hist.GOExpHist_Entry12Ccy,
+                           hist.GOExpHist_Entry12Amt,
+                           hist.GOExpHist_Entry12Cust,
+                           hist.GOExpHist_Entry12Actcde,
+                           hist.GOExpHist_Entry12ActType,
+                           hist.GOExpHist_Entry12ActNo,
+                           hist.GOExpHist_Entry12ExchRate,
+                           hist.GOExpHist_Entry12ExchCcy,
+                           hist.GOExpHist_Entry12Fund,
+                           hist.GOExpHist_Entry12AdvcPrnt,
+                           hist.GOExpHist_Entry12Details,
+                           hist.GOExpHist_Entry12Entity,
+                           hist.GOExpHist_Entry12Division,
+                           hist.GOExpHist_Entry12InterAmt,
+                           hist.GOExpHist_Entry12InterRate,
+                           hist.GOExpHist_Entry21Type,
+                           hist.GOExpHist_Entry21Ccy,
+                           hist.GOExpHist_Entry21Amt,
+                           hist.GOExpHist_Entry21Cust,
+                           hist.GOExpHist_Entry21Actcde,
+                           hist.GOExpHist_Entry21ActType,
+                           hist.GOExpHist_Entry21ActNo,
+                           hist.GOExpHist_Entry21ExchRate,
+                           hist.GOExpHist_Entry21ExchCcy,
+                           hist.GOExpHist_Entry21Fund,
+                           hist.GOExpHist_Entry21AdvcPrnt,
+                           hist.GOExpHist_Entry21Details,
+                           hist.GOExpHist_Entry21Entity,
+                           hist.GOExpHist_Entry21Division,
+                           hist.GOExpHist_Entry21InterAmt,
+                           hist.GOExpHist_Entry21InterRate,
+                           hist.GOExpHist_Entry22Type,
+                           hist.GOExpHist_Entry22Ccy,
+                           hist.GOExpHist_Entry22Amt,
+                           hist.GOExpHist_Entry22Cust,
+                           hist.GOExpHist_Entry22Actcde,
+                           hist.GOExpHist_Entry22ActType,
+                           hist.GOExpHist_Entry22ActNo,
+                           hist.GOExpHist_Entry22ExchRate,
+                           hist.GOExpHist_Entry22ExchCcy,
+                           hist.GOExpHist_Entry22Fund,
+                           hist.GOExpHist_Entry22AdvcPrnt,
+                           hist.GOExpHist_Entry22Details,
+                           hist.GOExpHist_Entry22Entity,
+                           hist.GOExpHist_Entry22Division,
+                           hist.GOExpHist_Entry22InterAmt,
+                           hist.GOExpHist_Entry22InterRate,
+                           hist.GOExpHist_Entry31Type,
+                           hist.GOExpHist_Entry31Ccy,
+                           hist.GOExpHist_Entry31Amt,
+                           hist.GOExpHist_Entry31Cust,
+                           hist.GOExpHist_Entry31Actcde,
+                           hist.GOExpHist_Entry31ActType,
+                           hist.GOExpHist_Entry31ActNo,
+                           hist.GOExpHist_Entry31ExchRate,
+                           hist.GOExpHist_Entry31ExchCcy,
+                           hist.GOExpHist_Entry31Fund,
+                           hist.GOExpHist_Entry31AdvcPrnt,
+                           hist.GOExpHist_Entry31Details,
+                           hist.GOExpHist_Entry31Entity,
+                           hist.GOExpHist_Entry31Division,
+                           hist.GOExpHist_Entry31InterAmt,
+                           hist.GOExpHist_Entry31InterRate,
+                           hist.GOExpHist_Entry32Type,
+                           hist.GOExpHist_Entry32Ccy,
+                           hist.GOExpHist_Entry32Amt,
+                           hist.GOExpHist_Entry32Cust,
+                           hist.GOExpHist_Entry32Actcde,
+                           hist.GOExpHist_Entry32ActType,
+                           hist.GOExpHist_Entry32ActNo,
+                           hist.GOExpHist_Entry32ExchRate,
+                           hist.GOExpHist_Entry32ExchCcy,
+                           hist.GOExpHist_Entry32Fund,
+                           hist.GOExpHist_Entry32AdvcPrnt,
+                           hist.GOExpHist_Entry32Details,
+                           hist.GOExpHist_Entry32Entity,
+                           hist.GOExpHist_Entry32Division,
+                           hist.GOExpHist_Entry32InterAmt,
+                           hist.GOExpHist_Entry32InterRate,
+                           hist.GOExpHist_Entry41Type,
+                           hist.GOExpHist_Entry41Ccy,
+                           hist.GOExpHist_Entry41Amt,
+                           hist.GOExpHist_Entry41Cust,
+                           hist.GOExpHist_Entry41Actcde,
+                           hist.GOExpHist_Entry41ActType,
+                           hist.GOExpHist_Entry41ActNo,
+                           hist.GOExpHist_Entry41ExchRate,
+                           hist.GOExpHist_Entry41ExchCcy,
+                           hist.GOExpHist_Entry41Fund,
+                           hist.GOExpHist_Entry41AdvcPrnt,
+                           hist.GOExpHist_Entry41Details,
+                           hist.GOExpHist_Entry41Entity,
+                           hist.GOExpHist_Entry41Division,
+                           hist.GOExpHist_Entry41InterAmt,
+                           hist.GOExpHist_Entry41InterRate,
+                           hist.GOExpHist_Entry42Type,
+                           hist.GOExpHist_Entry42Ccy,
+                           hist.GOExpHist_Entry42Amt,
+                           hist.GOExpHist_Entry42Cust,
+                           hist.GOExpHist_Entry42Actcde,
+                           hist.GOExpHist_Entry42ActType,
+                           hist.GOExpHist_Entry42ActNo,
+                           hist.GOExpHist_Entry42ExchRate,
+                           hist.GOExpHist_Entry42ExchCcy,
+                           hist.GOExpHist_Entry42Fund,
+                           hist.GOExpHist_Entry42AdvcPrnt,
+                           hist.GOExpHist_Entry42Details,
+                           hist.GOExpHist_Entry42Entity,
+                           hist.GOExpHist_Entry42Division,
+                           hist.GOExpHist_Entry42InterAmt,
+                           hist.GOExpHist_Entry42InterRate,
+                           trans.TL_ID,
+                           trans.TL_GoExpress_ID,
+                           trans.TL_TransID
+                       }).Where(whereQuery2, startDT.Date, endDT.Date, model.PeriodFrom.Date, model.PeriodTo.Date, GlobalSystemValues.TYPE_NC).ToList();
+
+            //Convert to List object.
+            foreach (var i in db2)
+            {
+                list2.Add(new HomeReportTransactionListViewModel
+                {
+                    ExpExpense_ID = i.Expense_ID,
+                    ExpExpense_Type = i.Expense_Type,
+                    Trans_Last_Updated_Date = i.Expense_Last_Updated,
+                    ExpExpense_Date = i.Expense_Date.ToString(),
+                    Trans_Voucher_Number = i.Expense_Number.ToString(),
+                    Trans_Check_Number = i.Expense_CheckNo,
+                    HistExpenseEntryID = i.ExpenseEntryID,
+                    HistExpenseDetailID = i.ExpenseDetailID,
+                    HistGOExpHist_Id = i.GOExpHist_Id,
+                    NCExpNC_Category_ID = i.ExpNC_Category_ID,
+                    Trans_Value_Date = i.GOExpHist_ValueDate,
+                    Trans_Reference_No = i.GOExpHist_ReferenceNo,
+                    Trans_Section = i.GOExpHist_Section,
+                    Trans_Remarks = i.GOExpHist_Remarks,
+                    Trans_DebitCredit1_1 = i.GOExpHist_Entry11Type,
+                    Trans_Currency1_1 = i.GOExpHist_Entry11Ccy,
+                    Trans_Amount1_1 = i.GOExpHist_Entry11Amt,
+                    Trans_Customer1_1 = i.GOExpHist_Entry11Cust,
+                    Trans_Account_Code1_1 = i.GOExpHist_Entry11Actcde,
+                    Trans_Account_Name1_1 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde, ncDtlList, i.ExpenseDetailID),
+                    Trans_Account_Number1_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde),
+                    Trans_Exchange_Rate1_1 = i.GOExpHist_Entry11ExchRate,
+                    Trans_Contra_Currency1_1 = i.GOExpHist_Entry11ExchCcy,
+                    Trans_Fund1_1 = i.GOExpHist_Entry11Fund,
+                    Trans_Advice_Print1_1 = i.GOExpHist_Entry11AdvcPrnt,
+                    Trans_Details1_1 = i.GOExpHist_Entry11Details,
+                    Trans_Entity1_1 = i.GOExpHist_Entry11Entity,
+                    Trans_Division1_1 = i.GOExpHist_Entry11Division,
+                    Trans_InterAmount1_1 = i.GOExpHist_Entry11InterAmt,
+                    Trans_InterRate1_1 = i.GOExpHist_Entry11InterRate,
+                    Trans_DebitCredit1_2 = i.GOExpHist_Entry12Type,
+                    Trans_Currency1_2 = i.GOExpHist_Entry12Ccy,
+                    Trans_Amount1_2 = i.GOExpHist_Entry12Amt,
+                    Trans_Customer1_2 = i.GOExpHist_Entry12Cust,
+                    Trans_Account_Code1_2 = i.GOExpHist_Entry12Actcde,
+                    Trans_Account_Name1_2 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde, ncDtlList, i.ExpenseDetailID),
+                    Trans_Account_Number1_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde),
+                    Trans_Exchange_Rate1_2 = i.GOExpHist_Entry12ExchRate,
+                    Trans_Contra_Currency1_2 = i.GOExpHist_Entry12ExchCcy,
+                    Trans_Fund1_2 = i.GOExpHist_Entry12Fund,
+                    Trans_Advice_Print1_2 = i.GOExpHist_Entry12AdvcPrnt,
+                    Trans_Details1_2 = i.GOExpHist_Entry12Details,
+                    Trans_Entity1_2 = i.GOExpHist_Entry12Entity,
+                    Trans_Division1_2 = i.GOExpHist_Entry12Division,
+                    Trans_InterAmount1_2 = i.GOExpHist_Entry12InterAmt,
+                    Trans_InterRate1_2 = i.GOExpHist_Entry12InterRate,
+                    Trans_DebitCredit2_1 = i.GOExpHist_Entry21Type,
+                    Trans_Currency2_1 = i.GOExpHist_Entry21Ccy,
+                    Trans_Amount2_1 = i.GOExpHist_Entry21Amt,
+                    Trans_Customer2_1 = i.GOExpHist_Entry21Cust,
+                    Trans_Account_Code2_1 = i.GOExpHist_Entry21Actcde,
+                    Trans_Account_Name2_1 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde, ncDtlList, i.ExpenseDetailID),
+                    Trans_Account_Number2_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde),
+                    Trans_Exchange_Rate2_1 = i.GOExpHist_Entry21ExchRate,
+                    Trans_Contra_Currency2_1 = i.GOExpHist_Entry21ExchCcy,
+                    Trans_Fund2_1 = i.GOExpHist_Entry21Fund,
+                    Trans_Advice_Print2_1 = i.GOExpHist_Entry21AdvcPrnt,
+                    Trans_Details2_1 = i.GOExpHist_Entry21Details,
+                    Trans_Entity2_1 = i.GOExpHist_Entry21Entity,
+                    Trans_Division2_1 = i.GOExpHist_Entry21Division,
+                    Trans_InterAmount2_1 = i.GOExpHist_Entry21InterAmt,
+                    Trans_InterRate2_1 = i.GOExpHist_Entry21InterRate,
+                    Trans_DebitCredit2_2 = i.GOExpHist_Entry22Type,
+                    Trans_Currency2_2 = i.GOExpHist_Entry22Ccy,
+                    Trans_Amount2_2 = i.GOExpHist_Entry22Amt,
+                    Trans_Customer2_2 = i.GOExpHist_Entry22Cust,
+                    Trans_Account_Code2_2 = i.GOExpHist_Entry22Actcde,
+                    Trans_Account_Name2_2 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde, ncDtlList, i.ExpenseDetailID),
+                    Trans_Account_Number2_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde),
+                    Trans_Exchange_Rate2_2 = i.GOExpHist_Entry22ExchRate,
+                    Trans_Contra_Currency2_2 = i.GOExpHist_Entry22ExchCcy,
+                    Trans_Fund2_2 = i.GOExpHist_Entry22Fund,
+                    Trans_Advice_Print2_2 = i.GOExpHist_Entry22AdvcPrnt,
+                    Trans_Details2_2 = i.GOExpHist_Entry22Details,
+                    Trans_Entity2_2 = i.GOExpHist_Entry22Entity,
+                    Trans_Division2_2 = i.GOExpHist_Entry22Division,
+                    Trans_InterAmount2_2 = i.GOExpHist_Entry22InterAmt,
+                    Trans_InterRate2_2 = i.GOExpHist_Entry22InterRate,
+                    Trans_DebitCredit3_1 = i.GOExpHist_Entry31Type,
+                    Trans_Currency3_1 = i.GOExpHist_Entry31Ccy,
+                    Trans_Amount3_1 = i.GOExpHist_Entry31Amt,
+                    Trans_Customer3_1 = i.GOExpHist_Entry31Cust,
+                    Trans_Account_Code3_1 = i.GOExpHist_Entry31Actcde,
+                    Trans_Account_Name3_1 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde, ncDtlList, i.ExpenseDetailID),
+                    Trans_Account_Number3_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde),
+                    Trans_Exchange_Rate3_1 = i.GOExpHist_Entry31ExchRate,
+                    Trans_Contra_Currency3_1 = i.GOExpHist_Entry31ExchCcy,
+                    Trans_Fund3_1 = i.GOExpHist_Entry31Fund,
+                    Trans_Advice_Print3_1 = i.GOExpHist_Entry31AdvcPrnt,
+                    Trans_Details3_1 = i.GOExpHist_Entry31Details,
+                    Trans_Entity3_1 = i.GOExpHist_Entry31Entity,
+                    Trans_Division3_1 = i.GOExpHist_Entry31Division,
+                    Trans_InterAmount3_1 = i.GOExpHist_Entry31InterAmt,
+                    Trans_InterRate3_1 = i.GOExpHist_Entry31InterRate,
+                    Trans_DebitCredit3_2 = i.GOExpHist_Entry32Type,
+                    Trans_Currency3_2 = i.GOExpHist_Entry32Ccy,
+                    Trans_Amount3_2 = i.GOExpHist_Entry32Amt,
+                    Trans_Customer3_2 = i.GOExpHist_Entry32Cust,
+                    Trans_Account_Code3_2 = i.GOExpHist_Entry32Actcde,
+                    Trans_Account_Name3_2 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde, ncDtlList, i.ExpenseDetailID),
+                    Trans_Account_Number3_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde),
+                    Trans_Exchange_Rate3_2 = i.GOExpHist_Entry32ExchRate,
+                    Trans_Contra_Currency3_2 = i.GOExpHist_Entry32ExchCcy,
+                    Trans_Fund3_2 = i.GOExpHist_Entry32Fund,
+                    Trans_Advice_Print3_2 = i.GOExpHist_Entry32AdvcPrnt,
+                    Trans_Details3_2 = i.GOExpHist_Entry32Details,
+                    Trans_Entity3_2 = i.GOExpHist_Entry32Entity,
+                    Trans_Division3_2 = i.GOExpHist_Entry32Division,
+                    Trans_InterAmount3_2 = i.GOExpHist_Entry32InterAmt,
+                    Trans_InterRate3_2 = i.GOExpHist_Entry32InterRate,
+                    Trans_DebitCredit4_1 = i.GOExpHist_Entry41Type,
+                    Trans_Currency4_1 = i.GOExpHist_Entry41Ccy,
+                    Trans_Amount4_1 = i.GOExpHist_Entry41Amt,
+                    Trans_Customer4_1 = i.GOExpHist_Entry41Cust,
+                    Trans_Account_Code4_1 = i.GOExpHist_Entry41Actcde,
+                    Trans_Account_Name4_1 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde, ncDtlList, i.ExpenseDetailID),
+                    Trans_Account_Number4_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde),
+                    Trans_Exchange_Rate4_1 = i.GOExpHist_Entry41ExchRate,
+                    Trans_Contra_Currency4_1 = i.GOExpHist_Entry41ExchCcy,
+                    Trans_Fund4_1 = i.GOExpHist_Entry41Fund,
+                    Trans_Advice_Print4_1 = i.GOExpHist_Entry41AdvcPrnt,
+                    Trans_Details4_1 = i.GOExpHist_Entry41Details,
+                    Trans_Entity4_1 = i.GOExpHist_Entry41Entity,
+                    Trans_Division4_1 = i.GOExpHist_Entry41Division,
+                    Trans_InterAmount4_1 = i.GOExpHist_Entry41InterAmt,
+                    Trans_InterRate4_1 = i.GOExpHist_Entry41InterRate,
+                    Trans_DebitCredit4_2 = i.GOExpHist_Entry42Type,
+                    Trans_Currency4_2 = i.GOExpHist_Entry42Ccy,
+                    Trans_Amount4_2 = i.GOExpHist_Entry42Amt,
+                    Trans_Customer4_2 = i.GOExpHist_Entry42Cust,
+                    Trans_Account_Code4_2 = i.GOExpHist_Entry42Actcde,
+                    Trans_Account_Name4_2 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde, ncDtlList, i.ExpenseDetailID),
+                    Trans_Account_Number4_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde),
+                    Trans_Exchange_Rate4_2 = i.GOExpHist_Entry42ExchRate,
+                    Trans_Contra_Currency4_2 = i.GOExpHist_Entry42ExchCcy,
+                    Trans_Fund4_2 = i.GOExpHist_Entry42Fund,
+                    Trans_Advice_Print4_2 = i.GOExpHist_Entry42AdvcPrnt,
+                    Trans_Details4_2 = i.GOExpHist_Entry42Details,
+                    Trans_Entity4_2 = i.GOExpHist_Entry42Entity,
+                    Trans_Division4_2 = i.GOExpHist_Entry42Division,
+                    Trans_InterAmount4_2 = i.GOExpHist_Entry42InterAmt,
+                    Trans_InterRate4_2 = i.GOExpHist_Entry42InterRate,
+                    TransTL_ID = i.TL_ID,
+                    TransTL_GoExpress_ID = i.TL_GoExpress_ID,
+                    TransTL_TransID = i.TL_TransID
+
+                });
+            }
+
+            var newList = list1.Concat(list2);
+
+            List<HomeReportAccountSummaryViewModel> list = new List<HomeReportAccountSummaryViewModel>();
+
+            foreach (var i in newList)
+            {
+                if (!String.IsNullOrEmpty(i.Trans_Account_Number1_1))
+                {
+                    list.Add(new HomeReportAccountSummaryViewModel
+                    {
+                        Trans_Voucher_Number = i.Trans_Voucher_Number,
+                        Trans_Check_Number = i.Trans_Check_Number,
+                        Trans_Value_Date = i.Trans_Value_Date,
+                        Trans_Reference_No = i.Trans_Reference_No,
+                        Trans_Section = i.Trans_Section,
+                        Trans_Remarks = i.Trans_Remarks,
+                        Trans_DebitCredit = i.Trans_DebitCredit1_1,
+                        Trans_Currency = i.Trans_Currency1_1,
+                        Trans_Amount = i.Trans_Amount1_1,
+                        Trans_Customer = i.Trans_Customer1_1,
+                        Trans_Account_Code = i.Trans_Account_Code1_1,
+                        Trans_Account_Number = i.Trans_Account_Number1_1,
+                        Trans_Account_Name = i.Trans_Account_Name1_1,
+                        Trans_Exchange_Rate = i.Trans_Exchange_Rate1_1,
+                        Trans_Contra_Currency = i.Trans_Contra_Currency1_1,
+                        Trans_Fund = i.Trans_Fund1_1,
+                        Trans_Advice_Print = i.Trans_Advice_Print1_1,
+                        Trans_Details = i.Trans_Details1_1,
+                        Trans_Entity = i.Trans_Entity1_1,
+                        Trans_Division = i.Trans_Division1_1,
+                        Trans_InterAmount = i.Trans_InterAmount1_1,
+                        Trans_InterRate = i.Trans_InterRate1_1
+                    });
+                }
+
+                if (!String.IsNullOrEmpty(i.Trans_Account_Number1_2))
+                {
+                    list.Add(new HomeReportAccountSummaryViewModel
+                    {
+                        Trans_Voucher_Number = i.Trans_Voucher_Number,
+                        Trans_Check_Number = i.Trans_Check_Number,
+                        Trans_Value_Date = i.Trans_Value_Date,
+                        Trans_Reference_No = i.Trans_Reference_No,
+                        Trans_Section = i.Trans_Section,
+                        Trans_Remarks = i.Trans_Remarks,
+                        Trans_DebitCredit = i.Trans_DebitCredit1_2,
+                        Trans_Currency = i.Trans_Currency1_2,
+                        Trans_Amount = i.Trans_Amount1_2,
+                        Trans_Customer = i.Trans_Customer1_2,
+                        Trans_Account_Code = i.Trans_Account_Code1_2,
+                        Trans_Account_Number = i.Trans_Account_Number1_2,
+                        Trans_Account_Name = i.Trans_Account_Name1_2,
+                        Trans_Exchange_Rate = i.Trans_Exchange_Rate1_2,
+                        Trans_Contra_Currency = i.Trans_Contra_Currency1_2,
+                        Trans_Fund = i.Trans_Fund1_2,
+                        Trans_Advice_Print = i.Trans_Advice_Print1_2,
+                        Trans_Details = i.Trans_Details1_2,
+                        Trans_Entity = i.Trans_Entity1_2,
+                        Trans_Division = i.Trans_Division1_2,
+                        Trans_InterAmount = i.Trans_InterAmount1_2,
+                        Trans_InterRate = i.Trans_InterRate1_2
+                    });
+                }
+
+                if (!String.IsNullOrEmpty(i.Trans_Account_Number2_1))
+                {
+                    list.Add(new HomeReportAccountSummaryViewModel
+                    {
+                        Trans_Voucher_Number = i.Trans_Voucher_Number,
+                        Trans_Check_Number = i.Trans_Check_Number,
+                        Trans_Value_Date = i.Trans_Value_Date,
+                        Trans_Reference_No = i.Trans_Reference_No,
+                        Trans_Section = i.Trans_Section,
+                        Trans_Remarks = i.Trans_Remarks,
+                        Trans_DebitCredit = i.Trans_DebitCredit2_1,
+                        Trans_Currency = i.Trans_Currency2_1,
+                        Trans_Amount = i.Trans_Amount2_1,
+                        Trans_Customer = i.Trans_Customer2_1,
+                        Trans_Account_Code = i.Trans_Account_Code2_1,
+                        Trans_Account_Number = i.Trans_Account_Number2_1,
+                        Trans_Account_Name = i.Trans_Account_Name2_1,
+                        Trans_Exchange_Rate = i.Trans_Exchange_Rate2_1,
+                        Trans_Contra_Currency = i.Trans_Contra_Currency2_1,
+                        Trans_Fund = i.Trans_Fund2_1,
+                        Trans_Advice_Print = i.Trans_Advice_Print2_1,
+                        Trans_Details = i.Trans_Details2_1,
+                        Trans_Entity = i.Trans_Entity2_1,
+                        Trans_Division = i.Trans_Division2_1,
+                        Trans_InterAmount = i.Trans_InterAmount2_1,
+                        Trans_InterRate = i.Trans_InterRate2_1
+                    });
+                }
+
+                if (!String.IsNullOrEmpty(i.Trans_Account_Number2_2))
+                {
+                    list.Add(new HomeReportAccountSummaryViewModel
+                    {
+                        Trans_Voucher_Number = i.Trans_Voucher_Number,
+                        Trans_Check_Number = i.Trans_Check_Number,
+                        Trans_Value_Date = i.Trans_Value_Date,
+                        Trans_Reference_No = i.Trans_Reference_No,
+                        Trans_Section = i.Trans_Section,
+                        Trans_Remarks = i.Trans_Remarks,
+                        Trans_DebitCredit = i.Trans_DebitCredit2_2,
+                        Trans_Currency = i.Trans_Currency2_2,
+                        Trans_Amount = i.Trans_Amount2_2,
+                        Trans_Customer = i.Trans_Customer2_2,
+                        Trans_Account_Code = i.Trans_Account_Code2_2,
+                        Trans_Account_Number = i.Trans_Account_Number2_2,
+                        Trans_Account_Name = i.Trans_Account_Name2_2,
+                        Trans_Exchange_Rate = i.Trans_Exchange_Rate2_2,
+                        Trans_Contra_Currency = i.Trans_Contra_Currency2_2,
+                        Trans_Fund = i.Trans_Fund2_2,
+                        Trans_Advice_Print = i.Trans_Advice_Print2_2,
+                        Trans_Details = i.Trans_Details2_2,
+                        Trans_Entity = i.Trans_Entity2_2,
+                        Trans_Division = i.Trans_Division2_2,
+                        Trans_InterAmount = i.Trans_InterAmount2_2,
+                        Trans_InterRate = i.Trans_InterRate2_2
+                    });
+                }
+
+                if (!String.IsNullOrEmpty(i.Trans_Account_Number3_1))
+                {
+                    list.Add(new HomeReportAccountSummaryViewModel
+                    {
+                        Trans_Voucher_Number = i.Trans_Voucher_Number,
+                        Trans_Check_Number = i.Trans_Check_Number,
+                        Trans_Value_Date = i.Trans_Value_Date,
+                        Trans_Reference_No = i.Trans_Reference_No,
+                        Trans_Section = i.Trans_Section,
+                        Trans_Remarks = i.Trans_Remarks,
+                        Trans_DebitCredit = i.Trans_DebitCredit3_1,
+                        Trans_Currency = i.Trans_Currency3_1,
+                        Trans_Amount = i.Trans_Amount3_1,
+                        Trans_Customer = i.Trans_Customer3_1,
+                        Trans_Account_Code = i.Trans_Account_Code3_1,
+                        Trans_Account_Number = i.Trans_Account_Number3_1,
+                        Trans_Account_Name = i.Trans_Account_Name3_1,
+                        Trans_Exchange_Rate = i.Trans_Exchange_Rate3_1,
+                        Trans_Contra_Currency = i.Trans_Contra_Currency3_1,
+                        Trans_Fund = i.Trans_Fund3_1,
+                        Trans_Advice_Print = i.Trans_Advice_Print3_1,
+                        Trans_Details = i.Trans_Details3_1,
+                        Trans_Entity = i.Trans_Entity3_1,
+                        Trans_Division = i.Trans_Division3_1,
+                        Trans_InterAmount = i.Trans_InterAmount3_1,
+                        Trans_InterRate = i.Trans_InterRate3_1
+                    });
+                }
+
+                if (!String.IsNullOrEmpty(i.Trans_Account_Number3_2))
+                {
+                    list.Add(new HomeReportAccountSummaryViewModel
+                    {
+                        Trans_Voucher_Number = i.Trans_Voucher_Number,
+                        Trans_Check_Number = i.Trans_Check_Number,
+                        Trans_Value_Date = i.Trans_Value_Date,
+                        Trans_Reference_No = i.Trans_Reference_No,
+                        Trans_Section = i.Trans_Section,
+                        Trans_Remarks = i.Trans_Remarks,
+                        Trans_DebitCredit = i.Trans_DebitCredit3_2,
+                        Trans_Currency = i.Trans_Currency3_2,
+                        Trans_Amount = i.Trans_Amount3_2,
+                        Trans_Customer = i.Trans_Customer3_2,
+                        Trans_Account_Code = i.Trans_Account_Code3_2,
+                        Trans_Account_Number = i.Trans_Account_Number3_2,
+                        Trans_Account_Name = i.Trans_Account_Name3_2,
+                        Trans_Exchange_Rate = i.Trans_Exchange_Rate3_2,
+                        Trans_Contra_Currency = i.Trans_Contra_Currency3_2,
+                        Trans_Fund = i.Trans_Fund3_2,
+                        Trans_Advice_Print = i.Trans_Advice_Print3_2,
+                        Trans_Details = i.Trans_Details3_2,
+                        Trans_Entity = i.Trans_Entity3_2,
+                        Trans_Division = i.Trans_Division3_2,
+                        Trans_InterAmount = i.Trans_InterAmount3_2,
+                        Trans_InterRate = i.Trans_InterRate3_2
+                    });
+                }
+
+                if (!String.IsNullOrEmpty(i.Trans_Account_Number4_1))
+                {
+                    list.Add(new HomeReportAccountSummaryViewModel
+                    {
+                        Trans_Voucher_Number = i.Trans_Voucher_Number,
+                        Trans_Check_Number = i.Trans_Check_Number,
+                        Trans_Value_Date = i.Trans_Value_Date,
+                        Trans_Reference_No = i.Trans_Reference_No,
+                        Trans_Section = i.Trans_Section,
+                        Trans_Remarks = i.Trans_Remarks,
+                        Trans_DebitCredit = i.Trans_DebitCredit4_1,
+                        Trans_Currency = i.Trans_Currency4_1,
+                        Trans_Amount = i.Trans_Amount4_1,
+                        Trans_Customer = i.Trans_Customer4_1,
+                        Trans_Account_Code = i.Trans_Account_Code4_1,
+                        Trans_Account_Number = i.Trans_Account_Number4_1,
+                        Trans_Account_Name = i.Trans_Account_Name4_1,
+                        Trans_Exchange_Rate = i.Trans_Exchange_Rate4_1,
+                        Trans_Contra_Currency = i.Trans_Contra_Currency4_1,
+                        Trans_Fund = i.Trans_Fund4_1,
+                        Trans_Advice_Print = i.Trans_Advice_Print4_1,
+                        Trans_Details = i.Trans_Details4_1,
+                        Trans_Entity = i.Trans_Entity4_1,
+                        Trans_Division = i.Trans_Division4_1,
+                        Trans_InterAmount = i.Trans_InterAmount4_1,
+                        Trans_InterRate = i.Trans_InterRate4_1
+                    });
+                }
+
+                if (!String.IsNullOrEmpty(i.Trans_Account_Number4_2))
+                {
+                    list.Add(new HomeReportAccountSummaryViewModel
+                    {
+                        Trans_Voucher_Number = i.Trans_Voucher_Number,
+                        Trans_Check_Number = i.Trans_Check_Number,
+                        Trans_Value_Date = i.Trans_Value_Date,
+                        Trans_Reference_No = i.Trans_Reference_No,
+                        Trans_Section = i.Trans_Section,
+                        Trans_Remarks = i.Trans_Remarks,
+                        Trans_DebitCredit = i.Trans_DebitCredit4_2,
+                        Trans_Currency = i.Trans_Currency4_2,
+                        Trans_Amount = i.Trans_Amount4_2,
+                        Trans_Customer = i.Trans_Customer4_2,
+                        Trans_Account_Code = i.Trans_Account_Code4_2,
+                        Trans_Account_Number = i.Trans_Account_Number4_2,
+                        Trans_Account_Name = i.Trans_Account_Name4_2,
+                        Trans_Exchange_Rate = i.Trans_Exchange_Rate4_2,
+                        Trans_Contra_Currency = i.Trans_Contra_Currency4_2,
+                        Trans_Fund = i.Trans_Fund4_2,
+                        Trans_Advice_Print = i.Trans_Advice_Print4_2,
+                        Trans_Details = i.Trans_Details4_2,
+                        Trans_Entity = i.Trans_Entity4_2,
+                        Trans_Division = i.Trans_Division4_2,
+                        Trans_InterAmount = i.Trans_InterAmount4_2,
+                        Trans_InterRate = i.Trans_InterRate4_2
+                    });
+                }
+            }
+            if(selectedAccount != null)
+            {
+                return list.Where(x => x.Trans_Account_Number == selectedAccount.Account_No 
+                    && x.Trans_Account_Code == selectedAccount.Account_Code).OrderBy(x => x.Trans_Value_Date);
+            }
+            return list.OrderBy(x => x.Trans_Value_Date);
+        }
+
+        //Get account name for Non-cash related transaction for Transaction List report.
+        public string GetAccountNameForNonCash(List<DMAccountModel> accList, string accType, string accNo, string accCode, List<ExpenseEntryNCDtlViewModel> ncDtlList, int dtlID)
+        {
+            if (String.IsNullOrEmpty(accType) || String.IsNullOrEmpty(accNo) || String.IsNullOrEmpty(accCode))
+                return "";
+
+            var ncdata = ncDtlList.Where(x => x.ExpNCDtl_ID == dtlID).FirstOrDefault();
+
+            foreach(var i in ncdata.ExpenseEntryNCDtlAccs)
+            {
+                var acc = accList.Where(x => x.Account_ID == i.ExpNCDtlAcc_Acc_ID).FirstOrDefault();
+
+                if(acc.Account_No.Contains(accType) && acc.Account_No.Contains(accNo) && acc.Account_Code == accCode)
+                {
+                    return acc.Account_Name;
+                }
+            }
+
+            return "";
+        }
+
+        //Get Non-cash entry details and non-cash entry details accounts list. For report purpose.
+        public List<ExpenseEntryNCDtlViewModel> GetEntryDetailAccountListForNonCash()
+        {
+            List<ExpenseEntryNCDtlViewModel> list = new List<ExpenseEntryNCDtlViewModel>();
+
+            var ncdtl = (from g
+                        in _context.ExpenseEntryNonCashDetails
+                        select new
+                        {
+                            g,
+                            ExpenseEntryNCDtlAccs = from a
+                            in _context.ExpenseEntryNonCashDetailAccounts
+                            where a.ExpenseEntryNCDtlModel.ExpNCDtl_ID == g.ExpNCDtl_ID
+                            select new {
+                                a
+                            }
+                        }).ToList();
+
+            List<ExpenseEntryNCDtlViewModel> ncDtls = new List<ExpenseEntryNCDtlViewModel>();
+
+            foreach (var ncDtl in ncdtl)
+            {
+                List<ExpenseEntryNCDtlAccViewModel> ncDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>();
+
+                foreach (var ncDtlAcc in ncDtl.ExpenseEntryNCDtlAccs)
+                {
+                    ncDtlAccs.Add(new ExpenseEntryNCDtlAccViewModel()
+                    {
+                        ExpNCDtlAcc_Acc_ID = ncDtlAcc.a.ExpNCDtlAcc_Acc_ID
+                    });
+                }
+
+                ncDtls.Add(new ExpenseEntryNCDtlViewModel()
+                {
+                    ExpNCDtl_ID = ncDtl.g.ExpNCDtl_ID,
+                    ExpenseEntryNCDtlAccs = ncDtlAccs
+                });
+            }
+
+            return ncDtls;
+        }
+
+        //Get account name for CV, PC, DDV, SS for Transaction List report
+        public string GetAccountNameForCADDVPCSS(List<DMAccountModel> accList, string accType, string accNo, string accCode, int acc1, int? acc2, int? acc3, int expType, List<EntryDDVViewModel> entryDtlListDDV, int expID, int dtlID)
+        {
+            if (String.IsNullOrEmpty(accType) || String.IsNullOrEmpty(accNo))
+                return "";
+
             DMAccountModel accno1 = accList.Where(x => x.Account_ID == acc1).FirstOrDefault();
             DMAccountModel accno2 = (acc2 != 0) ? accList.Where(x => x.Account_ID == acc2).FirstOrDefault() : null;
             DMAccountModel accno3 = (acc3 != 0) ? accList.Where(x => x.Account_ID == acc3).FirstOrDefault() : null;
 
             if(expType == GlobalSystemValues.TYPE_CV || expType == GlobalSystemValues.TYPE_PC || expType == GlobalSystemValues.TYPE_SS)
             {
-                if (accno1.Account_No.Contains(accType) && accno1.Account_No.Contains(accNo))
+                if (accno1.Account_No.Contains(accType) && accno1.Account_No.Contains(accNo) && accno1.Account_Code == accCode)
                 {
                     return accno1.Account_Name;
                 }
 
-                if (accno2 != null && accno2.Account_No.Contains(accType) && accno2.Account_No.Contains(accNo))
+                if (accno2 != null && accno2.Account_No.Contains(accType) && accno2.Account_No.Contains(accNo) && accno2.Account_Code == accCode)
                 {
                     return accno2.Account_Name;
                 }
 
-                if (accno3 != null && accno3.Account_No.Contains(accType) && accno3.Account_No.Contains(accNo))
+                if (accno3 != null && accno3.Account_No.Contains(accType) && accno3.Account_No.Contains(accNo) && accno3.Account_Code == accCode)
                 {
                     return accno3.Account_Name;
                 }
@@ -3650,7 +4805,117 @@ namespace ExpenseProcessingSystem.Services
 
             if(expType == GlobalSystemValues.TYPE_DDV)
             {
+                var ddvData = entryDtlListDDV.Where(x => x.dtlID == dtlID).FirstOrDefault();
 
+                if (ddvData.inter_entity)
+                {
+                    foreach(var i in ddvData.interDetails.interPartList)
+                    {
+                        foreach(var j in i.ExpenseEntryInterEntityAccs)
+                        {
+                            DMAccountModel interAcc = accList.Where(x => x.Account_ID == j.Inter_Acc_ID).FirstOrDefault();
+
+                            if (interAcc.Account_No.Contains(accType) && interAcc.Account_No.Contains(accNo) && interAcc.Account_Code == accCode)
+                            {
+                                return interAcc.Account_Name;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (accno1.Account_No.Contains(accType) && accno1.Account_No.Contains(accNo) && accno1.Account_Code == accCode)
+                    {
+                        return accno1.Account_Name;
+                    }
+
+                    if (accno2 != null && accno2.Account_No.Contains(accType) && accno2.Account_No.Contains(accNo) && accno2.Account_Code == accCode)
+                    {
+                        return accno2.Account_Name;
+                    }
+
+                    if (accno3 != null && accno3.Account_No.Contains(accType) && accno3.Account_No.Contains(accNo) && accno3.Account_Code == accCode)
+                    {
+                        return accno3.Account_Name;
+                    }
+                }
+            }
+
+            //For FBT purpose.
+            var fbt_Debit = accList.Where(x => x.Account_ID == int.Parse(xelemAcc.Element("D_FBT").Value)).FirstOrDefault();
+            var fbt_Credit = accList.Where(x => x.Account_ID == int.Parse(xelemAcc.Element("C_FBT").Value)).FirstOrDefault();
+            if (fbt_Debit != null && fbt_Debit.Account_No.Contains(accType) && fbt_Debit.Account_No.Contains(accNo) && fbt_Debit.Account_Code == accCode)
+            {
+                return fbt_Debit.Account_Name;
+            }
+            else if (fbt_Credit != null && fbt_Credit.Account_No.Contains(accType) && fbt_Credit.Account_No.Contains(accNo) && fbt_Credit.Account_Code == accCode)
+            {
+                return fbt_Credit.Account_Name;
+            }
+
+            //For Liquidation purpose.
+            if (expType == GlobalSystemValues.TYPE_SS)
+            {
+                var liqDtl = _context.LiquidationInterEntity.Where(x => x.ExpenseEntryDetailModel.ExpDtl_ID == dtlID);
+                if (liqDtl.Count() > 0)
+                {
+                    foreach(var i in liqDtl)
+                    {
+                        if(i.Liq_AccountID_1_1 != 0)
+                        {
+                            var liq = accList.Where(x => x.Account_ID == i.Liq_AccountID_1_1).FirstOrDefault();
+                            if(liq.Account_No.Contains(accType) && liq.Account_No.Contains(accNo) && liq.Account_Code == accCode)
+                            {
+                                return liq.Account_Name;
+                            }
+                        }
+                        
+                        if(i.Liq_AccountID_1_2 != 0)
+                        {
+                            var liq = accList.Where(x => x.Account_ID == i.Liq_AccountID_1_2).FirstOrDefault();
+                            if (liq.Account_No.Contains(accType) && liq.Account_No.Contains(accNo) && liq.Account_Code == accCode)
+                            {
+                                return liq.Account_Name;
+                            }
+                        }
+
+                        if(i.Liq_AccountID_2_1 != 0)
+                        {
+                            var liq = accList.Where(x => x.Account_ID == i.Liq_AccountID_2_1).FirstOrDefault();
+                            if (liq.Account_No.Contains(accType) && liq.Account_No.Contains(accNo) && liq.Account_Code == accCode)
+                            {
+                                return liq.Account_Name;
+                            }
+                        }
+
+                        if(i.Liq_AccountID_2_2 != 0)
+                        {
+                            var liq = accList.Where(x => x.Account_ID == i.Liq_AccountID_2_2).FirstOrDefault();
+                            if (liq.Account_No.Contains(accType) && liq.Account_No.Contains(accNo) && liq.Account_Code == accCode)
+                            {
+                                return liq.Account_Name;
+                            }
+                        }
+
+                        if (i.Liq_AccountID_3_1 != 0)
+                        {
+                            var liq = accList.Where(x => x.Account_ID == i.Liq_AccountID_3_1).FirstOrDefault();
+                            if (liq.Account_No.Contains(accType) && liq.Account_No.Contains(accNo) && liq.Account_Code == accCode)
+                            {
+                                return liq.Account_Name;
+                            }
+                        }
+
+                        if(i.Liq_AccountID_3_2 != 0)
+                        {
+                            var liq = accList.Where(x => x.Account_ID == i.Liq_AccountID_3_2).FirstOrDefault();
+                            if (liq.Account_No.Contains(accType) && liq.Account_No.Contains(accNo) && liq.Account_Code == accCode)
+                            {
+                                return liq.Account_Name;
+                            }
+                        }   
+                    }
+                }
             }
 
             return "";
@@ -3748,6 +5013,20 @@ namespace ExpenseProcessingSystem.Services
 
             return ddvList;
         }   
+
+        //Get Account number based on its acc no, acc type and acc code.
+        public string GetAccountNoByAccNoAccTypeAccCde(List<DMAccountModel> accList, string accType, string accNo, string accCode)
+        {
+
+            if (!String.IsNullOrEmpty(accType) && !String.IsNullOrEmpty(accNo) && !String.IsNullOrEmpty(accCode))
+            {
+                return accList.Where(x => x.Account_No.Contains(accType) && x.Account_No.Contains(accNo) && x.Account_Code == accCode).FirstOrDefault().Account_No;
+            }
+            else
+            {
+                return "";
+            }
+        }
 
         public DateTime GetSelectedYearMonthOfTerm(int month, int year)
         {
@@ -4061,6 +5340,7 @@ namespace ExpenseProcessingSystem.Services
                     chkEwt = dtl.d.ExpDtl_isEwt,
                     ewt = dtl.d.ExpDtl_Ewt,
                     ccy = dtl.d.ExpDtl_Ccy,
+                    ccyMasterID = getCurrencyByMasterID(dtl.d.ExpDtl_Ccy).Curr_MasterID,
                     debitGross = dtl.d.ExpDtl_Debit,
                     credEwt = dtl.d.ExpDtl_Credit_Ewt,
                     credCash = dtl.d.ExpDtl_Credit_Cash,
@@ -4630,6 +5910,10 @@ namespace ExpenseProcessingSystem.Services
                             expenseGbase.Add(remarks);
                         }
                     }
+                    XElement xelem = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
+                    int creditAccMasterID1 = creditAccMasterID1 = int.Parse(xelem.Element("C_CV1").Value);
+                    int creditAccMasterID2 = creditAccMasterID2 = int.Parse(xelem.Element("C_CV2").Value);
+
                     ExpenseEntryDetailModel expenseDetails = new ExpenseEntryDetailModel
                     {
                         ExpDtl_Gbase_Remarks = ddv.GBaseRemarks,
@@ -4644,6 +5928,8 @@ namespace ExpenseProcessingSystem.Services
                         ExpDtl_Debit = ddv.debitGross,
                         ExpDtl_Credit_Ewt = ddv.credEwt,
                         ExpDtl_Credit_Cash = ddv.credCash,
+                        ExpDtl_CreditAccount1 = (ddv.credEwt > 0) ? getAccountByMasterID(creditAccMasterID1).Account_ID : 0,
+                        ExpDtl_CreditAccount2 = getAccountByMasterID(creditAccMasterID2).Account_ID,
                         ExpDtl_Ewt_Payor_Name_ID = ddv.ewt_Payor_Name_ID,
                         ExpenseEntryInterEntity = expenseInter,
                         ExpDtl_isEwt = ddv.chkEwt,
@@ -5022,6 +6308,7 @@ namespace ExpenseProcessingSystem.Services
                     ewtID = dtl.d.ExpDtl_Ewt,
                     ewtValue = (dtl.d.ExpDtl_Ewt <= 0) ? 0 : GetEWTValue(dtl.d.ExpDtl_Ewt),
                     ccyID = dtl.d.ExpDtl_Ccy,
+                    ccyMasterID = GetCurrency(dtl.d.ExpDtl_Ccy).Curr_MasterID,
                     ccyAbbrev = GetCurrencyAbbrv(dtl.d.ExpDtl_Ccy),
                     debitGross = dtl.d.ExpDtl_Debit,
                     credEwt = dtl.d.ExpDtl_Credit_Ewt,
@@ -5071,7 +6358,7 @@ namespace ExpenseProcessingSystem.Services
             {
                 ExpenseEntryDetailModel dtlModel = _context.ExpenseEntryDetails.Where(x => x.ExpDtl_ID == i.EntryDetailsID).FirstOrDefault();
 
-                if(i.ccyAbbrev == xelem.Element("CURRENCY_PHP").Value)
+                if(getCurrency(i.ccyID).Curr_MasterID == int.Parse(xelem.Element("CURRENCY_PHP").Value))
                 {
                     foreach (var j in i.liqCashBreakdown)
                     {
@@ -5309,7 +6596,7 @@ namespace ExpenseProcessingSystem.Services
                     tempGbase.entries.Add(credit);
 
                     goExpData = InsertGbaseEntry(tempGbase, expID);
-                    goExpHistData = new GOExpressHistModel();
+                    goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.expenseDtlID);
                     list.Add(new { expEntryID = expID, goExp = goExpData, goExpHist = goExpHistData });
                 }
             }
@@ -5363,7 +6650,7 @@ namespace ExpenseProcessingSystem.Services
                         {
                             type = item.liqInterEntity[0].Liq_DebitCred_1_1,
                             amount = item.liqInterEntity[0].Liq_Amount_1_1,
-                            account = getAccountID(item.liqInterEntity[0].Liq_AccountID_1_1),
+                            account = item.liqInterEntity[0].Liq_AccountID_1_1,
                         });
                     }
                     if (item.liqInterEntity[0].Liq_Amount_1_2 != 0)
@@ -5372,7 +6659,7 @@ namespace ExpenseProcessingSystem.Services
                         {
                             type = item.liqInterEntity[0].Liq_DebitCred_1_2,
                             amount = item.liqInterEntity[0].Liq_Amount_1_2,
-                            account = getAccountID(item.liqInterEntity[0].Liq_AccountID_1_2),
+                            account = item.liqInterEntity[0].Liq_AccountID_1_2,
                         });
                     }
                     if (item.liqInterEntity[0].Liq_Amount_2_1 != 0)
@@ -5381,7 +6668,7 @@ namespace ExpenseProcessingSystem.Services
                         {
                             type = item.liqInterEntity[0].Liq_DebitCred_2_1,
                             amount = item.liqInterEntity[0].Liq_Amount_2_1,
-                            account = getAccountID(item.liqInterEntity[0].Liq_AccountID_2_1),
+                            account = item.liqInterEntity[0].Liq_AccountID_2_1,
                         });
                     }
                     if (item.liqInterEntity[0].Liq_Amount_2_2 != 0)
@@ -5390,7 +6677,7 @@ namespace ExpenseProcessingSystem.Services
                         {
                             type = item.liqInterEntity[0].Liq_DebitCred_2_2,
                             amount = item.liqInterEntity[0].Liq_Amount_2_2,
-                            account = getAccountID(item.liqInterEntity[0].Liq_AccountID_2_2),
+                            account = item.liqInterEntity[0].Liq_AccountID_2_2,
                         });
                     }
                     if (item.liqInterEntity[0].Liq_Amount_3_1 != 0)
@@ -5399,7 +6686,7 @@ namespace ExpenseProcessingSystem.Services
                         {
                             type = item.liqInterEntity[0].Liq_DebitCred_3_1,
                             amount = item.liqInterEntity[0].Liq_Amount_3_1,
-                            account = getAccountID(item.liqInterEntity[0].Liq_AccountID_3_1),
+                            account = item.liqInterEntity[0].Liq_AccountID_3_1,
                         });
                     }
 
@@ -5425,15 +6712,15 @@ namespace ExpenseProcessingSystem.Services
                             tempGbase.entries.Add(new entryContainer
                             {
                                 type = i.Liq_DebitCred_1_1,
-                                ccy = getCurrencyID(i.Liq_CCY_1_1),
+                                ccy = i.Liq_CCY_1_1,
                                 amount = i.Liq_Amount_1_1,
-                                account = getAccountID(i.Liq_AccountID_1_1),
+                                account = i.Liq_AccountID_1_1,
                                 interate = i.Liq_InterRate_1_1
                             });
                         }
                         double amount = i.Liq_Amount_1_2;
-                        string contraCcy = "";
-                        string ccy = i.Liq_CCY_1_2;
+                        int contraCcy = 0;
+                        int ccy = i.Liq_CCY_1_2;
 
                         if (i.Liq_CCY_1_1 != i.Liq_CCY_1_2)
                         {
@@ -5446,11 +6733,11 @@ namespace ExpenseProcessingSystem.Services
                             tempGbase.entries.Add(new entryContainer
                             {
                                 type = i.Liq_DebitCred_1_2,
-                                ccy = getCurrencyID(ccy),
+                                ccy = ccy,
                                 amount = amount,
-                                account = getAccountID(i.Liq_AccountID_1_2),
+                                account = i.Liq_AccountID_1_2,
                                 interate = i.Liq_InterRate_1_2,
-                                contraCcy = getCurrencyID(contraCcy)
+                                contraCcy = contraCcy
                             });
                         }
                         if(i.Liq_Amount_2_1 > 0 || i.Liq_Amount_2_2 > 0)
@@ -5460,14 +6747,14 @@ namespace ExpenseProcessingSystem.Services
                                 tempGbase.entries.Add(new entryContainer
                                 {
                                     type = i.Liq_DebitCred_2_1,
-                                    ccy = getCurrencyID(i.Liq_CCY_2_1),
+                                    ccy = i.Liq_CCY_2_1,
                                     amount = i.Liq_Amount_2_1,
-                                    account = getAccountID(i.Liq_AccountID_2_1),
+                                    account = i.Liq_AccountID_2_1,
                                     interate = i.Liq_InterRate_2_1
                                 });
                             }
                             amount = i.Liq_Amount_2_2;
-                            contraCcy = "";
+                            contraCcy = 0;
                             ccy = i.Liq_CCY_2_2;
 
                             if (i.Liq_CCY_2_1 != i.Liq_CCY_2_2)
@@ -5481,11 +6768,11 @@ namespace ExpenseProcessingSystem.Services
                                 tempGbase.entries.Add(new entryContainer
                                 {
                                     type = i.Liq_DebitCred_2_2,
-                                    ccy = getCurrencyID(ccy),
+                                    ccy = ccy,
                                     amount = amount,
-                                    account = getAccountID(i.Liq_AccountID_2_2),
+                                    account = i.Liq_AccountID_2_2,
                                     interate = i.Liq_InterRate_2_2,
-                                    contraCcy = getCurrencyID(contraCcy)
+                                    contraCcy = contraCcy
                                 });
                             }
                         }
@@ -5495,17 +6782,6 @@ namespace ExpenseProcessingSystem.Services
                         list.Add(new { expEntryID = expID, goExp = goExpData, goExpHist = goExpHistData });
                     }
                 }
-
-                //if (item.fbt)
-                //{
-                //    tempGbase.entries = new List<entryContainer>();
-
-                //    //var fbt = getAccount()
-
-
-                //    credit.amount = Convert.ToDouble(new DataTable().Compute("(3+3)*2+1", null));
-                //    debit.amount = Convert.ToDouble(new DataTable().Compute("(3+3)*2+1", null));
-                //}
             }
 
             _GOContext.SaveChanges();
@@ -5614,7 +6890,7 @@ namespace ExpenseProcessingSystem.Services
                     tempGbase.entries.Add(credit);
 
                     goExpData = InsertGbaseEntry(tempGbase, expID);
-                    goExpHistData = new GOExpressHistModel();
+                    goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.expenseDtlID);
                     list.Add(new { expEntryID = expID, goExp = goExpData, goExpHist = goExpHistData });
                 }
             }
@@ -5783,7 +7059,7 @@ namespace ExpenseProcessingSystem.Services
                         tempGbase.entries.Add(credit);
 
                         goExpData = InsertGbaseEntry(tempGbase, expID);
-                        goExpHistData = new GOExpressHistModel();
+                        goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.dtlID);
                         list.Add(new { expEntryID = expID, goExp = goExpData, goExpHist = goExpHistData });
                     }
                 }
@@ -6518,6 +7794,18 @@ namespace ExpenseProcessingSystem.Services
 
             return name.User_UserName;
         }
+        //get userName
+        public string getName(int id)
+        {
+            var name = _context.User.SingleOrDefault(q => q.User_ID == id);
+
+            if (name == null)
+            {
+                return null;
+            }
+
+            return name.User_LName.Substring(0)+", "+name.User_FName;
+        }
         //get vat value
         public float getVat()
         {
@@ -6543,6 +7831,17 @@ namespace ExpenseProcessingSystem.Services
         public string GetCurrencyAbbrv(int id)
         {
             return (id != 0 ) ? _context.DMCurrency.Where(x => x.Curr_ID == id).First().Curr_CCY_ABBR : "PHP";
+        }
+        //get currency
+        public DMCurrencyModel GetCurrency(int id)
+        {
+            return _context.DMCurrency.Where(x => x.Curr_ID == id).First();
+        }
+        //Get lastest currency by its currency master ID.
+        public DMCurrencyModel getCurrencyByMasterID(int masterID)
+        {
+            return _context.DMCurrency.Where(x => x.Curr_MasterID == masterID && x.Curr_isActive == true
+                    && x.Curr_isDeleted == false).FirstOrDefault();
         }
         //get Tax Rate list for specific user
         public SelectList getVendorTaxRate(int vendorID)
@@ -6592,6 +7891,11 @@ namespace ExpenseProcessingSystem.Services
         {
             return _context.DMCurrency.Where(x => x.Curr_CCY_ABBR == ccyAbbr && x.Curr_isActive == true
             && x.Curr_isDeleted == false).DefaultIfEmpty(new DMCurrencyModel { Curr_ID = 0 }).FirstOrDefault().Curr_ID;
+        }
+        //get all currency active only
+        public List<DMCurrencyModel> getAllCurrency()
+        {
+            return _context.DMCurrency.Where(x => x.Curr_isActive == true && x.Curr_isDeleted == false).OrderBy(x => x.Curr_ID).ToList();
         }
         //retrieve vendor list
         public List<SelectList> getEntrySystemVals()
@@ -6649,7 +7953,7 @@ namespace ExpenseProcessingSystem.Services
             } while (maxNumber != _context.ExpenseEntry
                                         .Where(y => y.Expense_Date.Year == DateTime.Now.Year && y.Expense_Number != 0)
                                         .Max(y => y.Expense_Number));
-            _context.Entry<ExpenseEntryModel>(transNoMax).State = EntityState.Detached;
+            //_context.Entry<ExpenseEntryModel>(transNoMax).State = EntityState.Detached;
             return transno;
         }
 
