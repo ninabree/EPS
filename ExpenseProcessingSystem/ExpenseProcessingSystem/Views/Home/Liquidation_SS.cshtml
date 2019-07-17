@@ -114,6 +114,7 @@
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_InterRate_2_2)
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_InterRate_3_1)
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_InterRate_3_2)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_Tax_Rate)
                                     }
                                 </div>
                             </td>
@@ -204,35 +205,38 @@
                         <colgroup>
                             <col style="width:45%" />
                             <col style="width:15%" />
-                            <col style="width:20%" />
-                            <col style="width:20%" />
+                            <col style="width:10%" />
+                            <col style="width:15%" />
+                            <col style="width:15%" />
                         </colgroup>
                         <tr>
                             <th style="text-align:center"><label>ACCOUNT NO.</label></th>
                             <th style="text-align:center"><label>ACCONT CODE</label></th>
+                            <th style="text-align:center"><label>Tax Rate(%)</label></th>
                             <th style="text-align:center"><label>DEBIT</label></th>
                             <th style="text-align:center"><label>CREDIT</label></th>
                         </tr>
                         <tr>
                             <td>
-                                @Html.DropDownListFor(x => Model.accList, new SelectList(Model.accList, "Account_No", "Account_Name"), new { @id = "ddlLiqPhpAccount1", @style = "width:100%", @class = "input100 selectDisabled" })
+                                @Html.DropDownListFor(x => Model.acc, new SelectList(Model.accList, "Account_ID", "Account_Name"), new { @id = "ddlLiqPhpAccount1", @style = "width:100%", @class = "input100 selectDisabled ddlLiqPhpAccount" })
                             </td>
                             <td>
-                                <input id="txtLiqAccCode" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="">
+                                <input id="txtLiqAccCode1" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="">
                             </td>
+                            <td></td>
                             <td>
                                 <input id="txtLiqPhpInput1" class="input100 txtLiqPhpInput number-input" style="width:100%;text-align:center" type="text" value="0" />
                             </td>
-                            <td>
-                            </td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>
-                                <select id="ddlLiqPhpAccount2" style="width:100%" class="input100 selectDisabled"></select>
+                                <select id="ddlLiqPhpAccount2" style="width:100%" class="input100 selectDisabled ddlLiqPhpAccount"></select>
                             </td>
                             <td>
-                                <input id="txtLiqAccCode" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="">
+                                <input id="txtLiqAccCode2" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="">
                             </td>
+                            <td></td>
                             <td>
                                 <input id="txtLiqPhpInput2" class="input100 LiqPhpBDOPettyInput txtLiqPhpInput number-input" style="width:100%;text-align:center" type="text" value="0" />
                             </td>
@@ -242,31 +246,33 @@
                         </tr>
                         <tr>
                             <td style="text-align:left;">
-                                @Html.DropDownListFor(x => Model.accList, new SelectList(Model.accAllList, "Account_ID", "Account_Name", null, "Account_MasterID"), new { @id = "lblAccount1_PHP", @style = "width:100%", @class = "input100 selectDisabled", @disabled = "disabled" })
+                                @Html.DropDownListFor(x => Model.accAllList, new SelectList(Model.accAllList, "Account_ID", "Account_Name", null, "Account_MasterID"), new { @id = "lblAccount1_PHP", @style = "width:100%", @class = "input100 selectDisabled", @disabled = "disabled" })
                             </td>
                             <td>
-                                <input id="txtLiqAccCode" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="">
+                                <input id="txtLiqAccCode3" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="">
                             </td>
                             <td>
+                                <input id="txtLiqTaxRate" class="input100 txtLiqPhpInput number-input" style="width:100%;text-align:center" type="text" value="0">
                             </td>
+                            <td></td>
                             <td>
                                 <input id="txtLiqPhpInput4" class="input100 txtLiqPhpInput number-input" style="width:100%;text-align:center" type="text" value="0" />
                             </td>
                         </tr>
                         <tr>
                             <td style="text-align:left;">
-                                @Html.DropDownListFor(x => Model.accList, new SelectList(Model.accAllList, "Account_ID", "Account_Name", null, "Account_MasterID"), new { @id = "lblAccount2_PHP", @style = "width:100%", @class = "input100 selectDisabled", @disabled = "disabled" })
+                                @Html.DropDownListFor(x => Model.acc, new SelectList(Model.accAllList, "Account_ID", "Account_Name", null, "Account_MasterID"), new { @id = "lblAccount2_PHP", @style = "width:100%", @class = "input100 selectDisabled", @disabled = "disabled" })
                             <td>
-                                <input id="txtLiqAccCode" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="">
+                                <input id="txtLiqAccCode4" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="">
                             </td>
-                            <td>
-                            </td>
+                            <td></td>
+                            <td></td>
                             <td>
                                 <input id="txtLiqPhpInput5" class="input100 txtLiqPhpInput number-input" style="width:100%;text-align:center" type="text" value="0" />
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="2" style="text-align:right;">
+                            <td colspan="3" style="text-align:right;">
                                 <label>Total:</label>
                             </td>
                             <td>
@@ -421,7 +427,7 @@
                         <tbody>
                             <tr>
                                 <td rowspan="2"><label class="lblParticular"></label></td>
-                                <td style="text-align:left">@Html.DropDownListFor(x => Model.accList, new SelectList(Model.accAllList, "Account_ID", "Account_Name", null, "Account_MasterID"), new { @id = "lblAccount1", @style = "width:100%", @class = "selectDisabled", @disabled="disabled" })</td>
+                                <td style="text-align:left">@Html.DropDownListFor(x => Model.acc, new SelectList(Model.accAllList, "Account_ID", "Account_Name", null, "Account_MasterID"), new { @id = "lblAccount1", @style = "width:100%", @class = "selectDisabled", @disabled="disabled" })</td>
                                 <td></td>
                                 <td><label class="lblCurrency"></label></td>
                                 <td><label class="lblIEInput" id="lblIEInput1"></label></td>
@@ -429,7 +435,7 @@
                                 <td></td>
                             </tr>
                             <tr>
-                                <td style="text-align:left">@Html.DropDownListFor(x => Model.accList, new SelectList(Model.accAllList, "Account_ID", "Account_Name", null, "Account_MasterID"), new { @id = "lblAccount2", @style = "width:100%", @class = "selectDisabled", @disabled = "disabled" })</td>
+                                <td style="text-align:left">@Html.DropDownListFor(x => Model.acc, new SelectList(Model.accAllList, "Account_ID", "Account_Name", null, "Account_MasterID"), new { @id = "lblAccount2", @style = "width:100%", @class = "selectDisabled", @disabled = "disabled" })</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -448,7 +454,7 @@
                             <tr>
                                 <td rowspan="3"><label class="lblParticular"></label></td>
                                 <td style="text-align:left">
-                                    @Html.DropDownListFor(x => Model.accList, new SelectList(Model.accList, "Account_ID", "Account_Name"), new { @id = "ddlAccount3", @style = "width:100%", @class= "selectDisabled" })
+                                    @Html.DropDownListFor(x => Model.acc, new SelectList(Model.accList, "Account_ID", "Account_Name"), new { @id = "ddlAccount3", @style = "width:100%", @class= "selectDisabled" })
                                 </td>
                                 <td></td>
                                 <td><label>PHP</label></td>
@@ -467,7 +473,7 @@
                                 <td><input id="txtIEInput4" class="txtIEInput number-input IEBDOPettyInput" style="width:100%;text-align:center" type="text" value="0" /></td>
                             </tr>
                             <tr>
-                                <td style="text-align:left">@Html.DropDownListFor(x => Model.accList, new SelectList(Model.accAllList, "Account_ID", "Account_Name", null, "Account_MasterID"), new { @id = "lblAccount3", @style = "width:100%", @class = "selectDisabled", @disabled = "disabled" })</td>
+                                <td style="text-align:left">@Html.DropDownListFor(x => Model.acc, new SelectList(Model.accAllList, "Account_ID", "Account_Name", null, "Account_MasterID"), new { @id = "lblAccount3", @style = "width:100%", @class = "selectDisabled", @disabled = "disabled" })</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -485,7 +491,7 @@
                             </tr>
                             <tr>
                                 <td rowspan="2"><label class="lblParticular"></label></td>
-                                <td style="text-align:left">@Html.DropDownListFor(x => Model.accList, new SelectList(Model.accAllList, "Account_ID", "Account_Name", null, "Account_MasterID"), new { @id = "lblAccount4", @style = "width:100%", @class = "selectDisabled", @disabled = "disabled" })</td>
+                                <td style="text-align:left">@Html.DropDownListFor(x => Model.acc, new SelectList(Model.accAllList, "Account_ID", "Account_Name", null, "Account_MasterID"), new { @id = "lblAccount4", @style = "width:100%", @class = "selectDisabled", @disabled = "disabled" })</td>
                                 <td></td>
                                 <td><label>PHP</label></td>
                                 <td><label class="lblIEInput" id="lblIEInput3"></label></td>
@@ -493,7 +499,7 @@
                                 <td></td>
                             </tr>
                             <tr>
-                                <td style="text-align:left">@Html.DropDownListFor(x => Model.accList, new SelectList(Model.accAllList, "Account_ID", "Account_Name", null, "Account_MasterID"), new { @id = "lblAccount5", @style = "width:100%", @class = "selectDisabled", @disabled = "disabled" })</td>
+                                <td style="text-align:left">@Html.DropDownListFor(x => Model.acc, new SelectList(Model.accAllList, "Account_ID", "Account_Name", null, "Account_MasterID"), new { @id = "lblAccount5", @style = "width:100%", @class = "selectDisabled", @disabled = "disabled" })</td>
                                 <td><label class="lblIEInput" id="lblIEInput9"></label></td>
                                 <td></td>
                                 <td></td>
@@ -511,7 +517,7 @@
                             </tr>
                             <tr>
                                 <td rowspan="2"><label class="lblParticular"></label></td>
-                                <td style="text-align:left">@Html.DropDownListFor(x => Model.accList, new SelectList(Model.accAllList, "Account_ID", "Account_Name", null, "Account_MasterID"), new { @id = "lblAccount6", @style = "width:100%", @class = "selectDisabled", @disabled = "disabled" })</td>
+                                <td style="text-align:left">@Html.DropDownListFor(x => Model.acc, new SelectList(Model.accAllList, "Account_ID", "Account_Name", null, "Account_MasterID"), new { @id = "lblAccount6", @style = "width:100%", @class = "selectDisabled", @disabled = "disabled" })</td>
                                 <td></td>
                                 <td><label class="lblCurrency"></label></td>
                                 <td><label class="lblIEInput" id="lblIEInput5"></label></td>
@@ -519,7 +525,7 @@
                                 <td></td>
                             </tr>
                             <tr>
-                                <td style="text-align:left">@Html.DropDownListFor(x => Model.accList, new SelectList(Model.accAllList, "Account_ID", "Account_Name", null, "Account_MasterID"), new { @id = "lblAccount7", @style = "width:100%", @class = "selectDisabled", @disabled = "disabled" })</td>
+                                <td style="text-align:left">@Html.DropDownListFor(x => Model.acc, new SelectList(Model.accAllList, "Account_ID", "Account_Name", null, "Account_MasterID"), new { @id = "lblAccount7", @style = "width:100%", @class = "selectDisabled", @disabled = "disabled" })</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -540,7 +546,7 @@
                             </tr>
                             <tr>
                                 <td></td>
-                                <td style="text-align:left">@Html.DropDownListFor(x => Model.accList, new SelectList(Model.accAllList, "Account_ID", "Account_Name", null, "Account_MasterID"), new { @id = "lblAccount8", @style = "width:100%", @class = "selectDisabled", @disabled = "disabled" })</td>
+                                <td style="text-align:left">@Html.DropDownListFor(x => Model.acc, new SelectList(Model.accAllList, "Account_ID", "Account_Name", null, "Account_MasterID"), new { @id = "lblAccount8", @style = "width:100%", @class = "selectDisabled", @disabled = "disabled" })</td>
                                 <td></td>
                                 <td><label class="lblCurrency"></label></td>
                                 <td><label class="lblIEInput" id="lblIEInput7"></label></td>
@@ -549,7 +555,7 @@
                             </tr>
                             <tr>
                                 <td></td>
-                                <td style="text-align:left">@Html.DropDownListFor(x => Model.accList, new SelectList(Model.accAllList, "Account_ID", "Account_Name", null, "Account_MasterID"), new { @id = "lblAccount9", @style = "width:100%", @class = "selectDisabled", @disabled = "disabled" })</td>
+                                <td style="text-align:left">@Html.DropDownListFor(x => Model.acc, new SelectList(Model.accAllList, "Account_ID", "Account_Name", null, "Account_MasterID"), new { @id = "lblAccount9", @style = "width:100%", @class = "selectDisabled", @disabled = "disabled" })</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -659,7 +665,6 @@
         //Liquidation DIV display/Hide
         $("table").on("click", ".liqudationBtn", function (e) {
             e.stopImmediatePropagation();
-
             var pid = $(this.parentNode)[0].parentNode.id;
             var idx = pid.replace('item_', '');
     
@@ -679,11 +684,11 @@
             $('#divForeign').find(':input[type="number"]').val(0);
             $('#ddlAccount3').val($("#ddlAccount3 option:first").val());
             
-            var currency = $('#' + pid).find('.txtCcyAbbrev').val();
             if ($('#' + pid).find('.currMasterID').val() == getXMLLiqValue("CURRENCY_PHP")) {
                 $('#divForeign').hide();
                 $('#divPHP').show();
                 displayInfoCashBD($(this.parentNode)[0].parentNode.id);
+                assignAccCodeLiqPhp();
             } else {
                 $('#divForeign').show();
                 $('#divPHP').hide();
@@ -868,7 +873,10 @@
             $('#txtLiqPhpInput6').val(AC(parseFloat($('#txtLiqPhpInput1').val()) + parseFloat($('#txtLiqPhpInput2').val())));
             $('#txtLiqPhpInput7').val(AC(parseFloat($('#txtLiqPhpInput3').val()) + parseFloat($('#txtLiqPhpInput4').val()) + parseFloat($('#txtLiqPhpInput5').val())));
         });
-
+        $('.tableLiqPhp').on('change', '.ddlLiqPhpAccount', function (e) {
+            assignAccCodeLiqPhp();
+        });
+        
     });
 </script>
 <script type="text/javascript" src="~/js/EntryScripts.js"></script>

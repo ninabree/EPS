@@ -179,7 +179,7 @@ function appendInputIEtoDiv(ret) {
                     id: 'LiquidationDetails_' + ret + '__liqInterEntity_' + a + '__Liq_AccountID_' + b + '_' + c,
                     type: 'hidden',
                     name: 'LiquidationDetails[' + ret + '].liqInterEntity[' + a + '].Liq_AccountID_' + b + '_' + c,
-                    value: ""
+                    value: 0
                 }));
                 //AMOUNT
                 $('#divLiqIE_' + ret).append($('<input/>', {
@@ -193,7 +193,7 @@ function appendInputIEtoDiv(ret) {
                     id: 'LiquidationDetails_' + ret + '__liqInterEntity_' + a + '__Liq_CCY_' + b + '_' + c,
                     type: 'hidden',
                     name: 'LiquidationDetails[' + ret + '].liqInterEntity[' + a + '].Liq_CCY_' + b + '_' + c,
-                    value: ""
+                    value: 0
                 }));
                 //DEBIT/CREDIT
                 $('#divLiqIE_' + ret).append($('<input/>', {
@@ -211,6 +211,13 @@ function appendInputIEtoDiv(ret) {
                 }));
             }
         }
+        //TAX RATE
+        $('#divLiqIE_' + ret).append($('<input/>', {
+            id: 'LiquidationDetails_' + ret + '__liqInterEntity_' + a + '__Liq_Tax_Rate',
+            type: 'hidden',
+            name: 'LiquidationDetails[' + ret + '].liqInterEntity[' + a + '].Liq_Tax_Rate',
+            value: 0
+        }));
     }
 };
 
@@ -235,11 +242,11 @@ function setIEValuetoDivInput(ret) {
     $('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_CCY_1_2').val($('#item_' + ret).find('.currID').val());
 
     $.getJSON('getCurrency', { masterID: getXMLLiqValue("CURRENCY_PHP") }, function (data) {
-        $('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_CCY_1_1').val(data["Curr_ID"]);
-        $('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_CCY_1_2').val(data["Curr_ID"]);
-        $('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_CCY_2_1').val(data["Curr_ID"]);
-        $('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_CCY_2_2').val(data["Curr_ID"]);
-        $('#LiquidationDetails_' + ret + '__liqInterEntity_2__Liq_CCY_1_1').val(data["Curr_ID"]);
+        $('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_CCY_1_1').val(data["curr_ID"]);
+        $('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_CCY_1_2').val(data["curr_ID"]);
+        $('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_CCY_2_1').val(data["curr_ID"]);
+        $('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_CCY_2_2').val(data["curr_ID"]);
+        $('#LiquidationDetails_' + ret + '__liqInterEntity_2__Liq_CCY_1_1').val(data["curr_ID"]);
     }); 
 
 
@@ -291,23 +298,23 @@ function assignDivValuesIE(pid) {
     $('#lblIEInput9').text($('#LiquidationDetails_' + ret + '__liqInterEntity_2__Liq_InterRate_1_2').val());
 
     //AMOUNT
-    $('#lblIEInput1').text(AC(round($('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Amount_1_1').val())));
-    $('#txtIEInput1').val(AC(round($('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Amount_1_2').val())));
-    $('#txtIEInput2').val(round($('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_1_1').val()));
-    $('#txtIEInput4').val(round($('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_1_2').val()));
-    $('#txtIEInput3').val(round($('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_2_1').val()));
-    $('#lblIEInput2').text(AC(round($('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_2_2').val())));
-    $('#lblIEInput3').text(AC(round($('#LiquidationDetails_' + ret + '__liqInterEntity_2__Liq_Amount_1_1').val())));
-    $('#lblIEInput4').text(AC(round($('#LiquidationDetails_' + ret + '__liqInterEntity_2__Liq_Amount_1_2').val())));
-    $('#lblIEInput5').text(AC(round($('#LiquidationDetails_' + ret + '__liqInterEntity_3__Liq_Amount_1_1').val())));
-    $('#lblIEInput6').text(AC(round($('#LiquidationDetails_' + ret + '__liqInterEntity_3__Liq_Amount_1_2').val())));
+    $('#lblIEInput1').text(AC($('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Amount_1_1').val()));
+    $('#txtIEInput1').val(AC($('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Amount_1_2').val()));
+    $('#txtIEInput2').val($('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_1_1').val());
+    $('#txtIEInput4').val($('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_1_2').val());
+    $('#txtIEInput3').val($('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_2_1').val());
+    $('#lblIEInput2').text(AC($('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_2_2').val()));
+    $('#lblIEInput3').text(AC($('#LiquidationDetails_' + ret + '__liqInterEntity_2__Liq_Amount_1_1').val()));
+    $('#lblIEInput4').text(AC($('#LiquidationDetails_' + ret + '__liqInterEntity_2__Liq_Amount_1_2').val()));
+    $('#lblIEInput5').text(AC($('#LiquidationDetails_' + ret + '__liqInterEntity_3__Liq_Amount_1_1').val()));
+    $('#lblIEInput6').text(AC($('#LiquidationDetails_' + ret + '__liqInterEntity_3__Liq_Amount_1_2').val()));
 
     $('#txtIEAmount').val($('#lblIEInput4').text().replace(',', ''));
     $('#txtIEExRate').val($('#lblIEInput9').text());
-    $('#txtIEExRatePhp').val(AC(round(parseFloat($('#txtIEAmount').val() * $('#txtIEExRate').val()))));
+    $('#txtIEExRatePhp').val(AC(roundExceptionJPY(parseFloat($('#txtIEAmount').val() * $('#txtIEExRate').val()), 2)));
 
-    $('#lblIEInput7').text(AC(round($("#txtIEAmount").val(), 2)));
-    $('#lblIEInput8').text(AC(round($("#txtIEAmount").val(), 2)));
+    $('#lblIEInput7').text(AC($("#txtIEAmount").val(), 2));
+    $('#lblIEInput8').text(AC($("#txtIEAmount").val(), 2));
 };
 
 function setLiqPhpValuetoDivInput(ret) {
@@ -331,6 +338,9 @@ function setLiqPhpValuetoDivInput(ret) {
     $('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Amount_2_1').val($('#txtLiqPhpInput3').val());
     $('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Amount_2_2').val($('#txtLiqPhpInput4').val());
     $('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Amount_3_1').val($('#txtLiqPhpInput5').val());
+
+    //Tax RATE
+    $('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Tax_Rate').val(parseFloat($('#txtLiqTaxRate').val()) / 100);
 };
 
 function assignDivValuesLiqPhp(pid) {
@@ -353,6 +363,28 @@ function assignDivValuesLiqPhp(pid) {
     $('#txtLiqPhpInput6').val(AC(parseFloat($('#txtLiqPhpInput1').val()) + parseFloat($('#txtLiqPhpInput2').val())));
     $('#txtLiqPhpInput7').val(AC(parseFloat($('#txtLiqPhpInput3').val()) + parseFloat($('#txtLiqPhpInput4').val()) + parseFloat($('#txtLiqPhpInput5').val())));
 
+
+    //Tax RATE
+    $('#txtLiqTaxRate').val(parseFloat($('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Tax_Rate').val()) * 100);
+};
+
+function assignAccCodeLiqPhp() {
+    $.getJSON('getAllAccount', function (data) {
+        $.each(data, function (index, item) {
+            if (item["account_ID"] == $('#ddlLiqPhpAccount1').val()) {
+                $('#txtLiqAccCode1').val(item["account_Code"]);
+            }
+            if (item["account_ID"] == $('#ddlLiqPhpAccount2').val()) {
+                $('#txtLiqAccCode2').val(item["account_Code"]);
+            }
+            if (item["account_ID"] == $('#lblAccount1_PHP').val()) {
+                $('#txtLiqAccCode3').val(item["account_Code"]);
+            }
+            if (item["account_ID"] == $('#lblAccount2_PHP').val()) {
+                $('#txtLiqAccCode4').val(item["account_Code"]);
+            }
+        });
+    }); 
 };
 
 $('.number-inputExceptionJPY').keyup(function () {
@@ -361,7 +393,7 @@ $('.number-inputExceptionJPY').keyup(function () {
         event.preventDefault();
     }
 
-    if ($('.highlight').find('.txtCcyAbbrev').val() == getXMLLiqValue("CURRENCY_Yen")) {
+    if ($('.highlight').find('.currMasterID').val() == getXMLLiqValue("CURRENCY_Yen")) {
         $(this).val($(this).val().replace(/\D/g, ''));
     };
 });

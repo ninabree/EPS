@@ -16,4 +16,10 @@ string value4 = xelem.Element("ADDRESS").Value
   <TIN>004-669-467-000</TIN>
   <ADDRESS>25th Floor, The Zuellig Building, Makati Avenue corner Paseo de Roxas, Makati City</ADDRESS>
   <LOGO>https://localhost:5001/images/mizuho-logo-2.png</LOGO>
+  
+<!--CSV Default/Fixed values-->
+  <FormType>SRS</FormType>
+  <WHAgentTIN>004669467</WHAgentTIN>
+  <WHAgentBranchCode>0000</WHAgentBranchCode>
+
 </ReportHeader>

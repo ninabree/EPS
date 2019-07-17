@@ -109,7 +109,8 @@
                             </td>
                             <td>
                                 @Html.DropDownListFor(x => Model.EntryCV[i].ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100 txtccy selectDisabled", disabled = "disabled" })
-                                @Html.HiddenFor(x => Model.EntryCV[i].ccyAbbrev, new { @class= "txtCcyAbbrev" })
+                                @Html.HiddenFor(x => Model.EntryCV[i].ccyAbbrev, new { @class = "txtCcyAbbrev" })
+                                @Html.HiddenFor(x => Model.EntryCV[i].ccyAbbrev, new { @class = "txtCcyAbbrev" })
                             </td>
                             <td>
                                 <input value="@Model.EntryCV[i].debitGross" class="input100 txtGross" disabled />
@@ -122,8 +123,8 @@
                             </td>
                             <td id="req_@i">
                                 <a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#"></a>
-                                @if (Model.EntryCV[i].ccyAbbrev != XElement.Load("wwwroot/xml/LiquidationValue.xml").Element("CURRENCY_PHP").Value 
-                                    && (Model.statusID == GlobalSystemValues.STATUS_APPROVED || Model.statusID == GlobalSystemValues.STATUS_POSTED))
+                                @if (Model.EntryCV[i].ccyMasterID != int.Parse(XElement.Load("wwwroot/xml/LiquidationValue.xml").Element("CURRENCY_PHP").Value)
+                                   && (Model.statusID == GlobalSystemValues.STATUS_APPROVED || Model.statusID == GlobalSystemValues.STATUS_POSTED))
                                 {
                                     <a class="cddISBtn" href="#"><img id="imgCDD" src="~/images/cddLogo.png" style="width:100%;height:70%" /></a>
                                 }

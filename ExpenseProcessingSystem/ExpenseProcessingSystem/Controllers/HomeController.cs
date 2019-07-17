@@ -543,15 +543,9 @@ namespace ExpenseProcessingSystem.Controllers
         [AcceptVerbs("GET")]
         public JsonResult GetReportSubType(int ReportTypeID)
         {
-            if(ReportTypeID == 8)
+            if(ReportTypeID == HomeReportConstantValue.AccSummaryReport)
             {
-                var accounts = _service.getAccountListIncHist();
-
-                List<string> accList = new List<string>();
-                foreach (var i in accounts)
-                {
-                    accList.Add(i.Account_No + " - " + i.Account_Name);
-                }
+                var accounts = _service.getAccountList();
 
                 List<HomeReportSubTypeAccModel> subtypes = new List<HomeReportSubTypeAccModel>();
 
@@ -560,13 +554,35 @@ namespace ExpenseProcessingSystem.Controllers
                     Id = "0",
                     SubTypeName = "All"
                 });
-                foreach (var i in accList.Distinct())
+                foreach (var i in accounts)
                 {
                     subtypes.Add(new HomeReportSubTypeAccModel
                     {
-                        Id = i.Replace("-", "").Replace(" ", "").Substring(0, 12),
-                        SubTypeName = i
+                        Id = i.Account_ID.ToString(),
+                        SubTypeName = i.Account_No + " - " + i.Account_Name
                     });
+                }
+                return Json(subtypes);
+            }
+
+            if (ReportTypeID == HomeReportConstantValue.OutstandingAdvances)
+            {
+                var accounts = _service.getAccountListIncHist();
+
+                List<HomeReportSubTypeAccModel> subtypes = new List<HomeReportSubTypeAccModel>();
+                XElement xelem = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
+                for(int i = 1; i <= 5; i++)
+                {
+                    var acc = accounts.Where(x => x.Account_MasterID == int.Parse(xelem.Element("Report_OA_Acc" + i).Value)
+                                && x.Account_isActive == true && x.Account_isDeleted == false).FirstOrDefault();
+                    if (acc != null)
+                    {
+                        subtypes.Add(new HomeReportSubTypeAccModel
+                        {
+                            Id = acc.Account_ID.ToString(),
+                            SubTypeName = acc.Account_No + " - " + acc.Account_Name
+                        });
+                    }
                 }
                 return Json(subtypes);
             }
@@ -607,12 +623,12 @@ namespace ExpenseProcessingSystem.Controllers
             switch (model.ReportType)
             {
                 //For Alphalist of Payees Subject to Withholding Tax (Monthly)
-                case ConstantData.HomeReportConstantValue.APSWT_M:
+                case HomeReportConstantValue.APSWT_M:
 
                     fileName = "AlphalistOfPayeesSubjectToWithholdingTax_Monthly_" + dateNow;
-                    layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
+                    layoutName = HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
 
-                    model.MonthName = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName;
+                    model.MonthName = HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName;
 
                     //Get the necessary data from Database
                     data = new HomeReportDataFilterViewModel
@@ -623,11 +639,11 @@ namespace ExpenseProcessingSystem.Controllers
                     };
                     break;
                 //For Alphalist of Suppliers by top 10000 corporation
-                case ConstantData.HomeReportConstantValue.AST1000:
+                case HomeReportConstantValue.AST1000:
                     fileName = "AlphalistOfSuppliersByTop10000Corporation_" + dateNow;
-                    layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
-                    model.MonthName = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName;
-                    model.MonthNameTo = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.MonthTo).Single().MonthName;
+                    layoutName = HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
+                    model.MonthName = HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName;
+                    model.MonthNameTo = HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.MonthTo).Single().MonthName;
 
                     if (!string.IsNullOrEmpty(model.TaxRateArray))
                     {
@@ -665,11 +681,11 @@ namespace ExpenseProcessingSystem.Controllers
 
                     break;
                 //For Actual Budget Report
-                case ConstantData.HomeReportConstantValue.ActualBudgetReport:
+                case HomeReportConstantValue.ActualBudgetReport:
                     fileName = "ActualBudgetReport_" + dateNow;
                     layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
   
-                    model.MonthName = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName;
+                    model.MonthName = HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName;
 
                     //Get the necessary data from Database
                     data = new HomeReportDataFilterViewModel
@@ -680,9 +696,9 @@ namespace ExpenseProcessingSystem.Controllers
                     };
                     break;
                 //For Transaction List
-                case ConstantData.HomeReportConstantValue.TransListReport:
+                case HomeReportConstantValue.TransListReport:
                     fileName = "TransactionList_" + dateNow;
-                    layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
+                    layoutName = HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
 
                     //Get the necessary data from Database
                     data = new HomeReportDataFilterViewModel
@@ -692,9 +708,26 @@ namespace ExpenseProcessingSystem.Controllers
                         ReportCommonVM = repComVM
                     };
                     break;
-                case ConstantData.HomeReportConstantValue.WTS:
+
+                //For Account Summary
+                case HomeReportConstantValue.AccSummaryReport:
+                    fileName = "AccountSummary_" + dateNow;
+                    layoutName = HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
+
+                    //Get the necessary data from Database
+                    data = new HomeReportDataFilterViewModel
+                    {
+                        HomeReportOutputAccountSummary = _service.GetAccountSummaryData(model),
+                        HomeReportFilter = model,
+                        ReportCommonVM = repComVM
+                    };
+
+                    break;
+
+                //For Alphalist of Payees Subject to Withholding Tax Summary
+                case HomeReportConstantValue.WTS:
                     fileName = "WithholdingTaxSummary_" + dateNow;
-                    layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
+                    layoutName = HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
                     data = new HomeReportDataFilterViewModel();
                     //Get the necessary data from Database
                     switch (model.PeriodOption)
@@ -707,16 +740,16 @@ namespace ExpenseProcessingSystem.Controllers
                                 HomeReportFilter = model,
                                 ReportCommonVM = repComVM
                             };
-                            model.ReportFrom = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName
+                            model.ReportFrom = HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName
                                                 + " " + model.Year;
-                            model.ReportTo = ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.MonthTo).Single().MonthName
+                            model.ReportTo = HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.MonthTo).Single().MonthName
                                                 + " " + model.YearTo;
                             break;
                         case 3:
                             data = new HomeReportDataFilterViewModel
                             {
-                                HomeReportOutputWTS = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Period(model.PeriodFrom, model.PeriodTo,
-                                    ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType),
+                                HomeReportOutputWTS = TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Period(model.PeriodFrom, model.PeriodTo,
+                                    TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType),
                                 HomeReportFilter = model,
                                 ReportCommonVM = repComVM
                             };
@@ -725,9 +758,24 @@ namespace ExpenseProcessingSystem.Controllers
                             break;
                     }
                     break;
+
+                //For Oustanding Advances
+                case HomeReportConstantValue.OutstandingAdvances:
+                    fileName = "OutstandingAdvances_" + dateNow;
+                    layoutName = HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
+
+                    //Get the necessary data from Database
+                    data = new HomeReportDataFilterViewModel
+                    {
+                        HomeReportOutputAccountSummary = _service.GetAccountSummaryData(model).Where(x => x.Trans_DebitCredit == "D"),
+                        HomeReportFilter = model,
+                        ReportCommonVM = repComVM
+                    };
+
+                    break;
             }
 
-            if (model.FileFormat == ConstantData.HomeReportConstantValue.EXCELID)
+            if (model.FileFormat == HomeReportConstantValue.EXCELID)
             {
                 ExcelGenerateService excelGenerate = new ExcelGenerateService();
                 fileName = fileName + ".xlsx";
@@ -735,14 +783,14 @@ namespace ExpenseProcessingSystem.Controllers
                 //Return Excel file
                 return File(excelGenerate.ExcelGenerateData(layoutName, fileName, data), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
             }
-            else if (model.FileFormat == ConstantData.HomeReportConstantValue.PDFID)
+            else if (model.FileFormat == HomeReportConstantValue.PDFID)
             {
                 //Return PDF file
                 return OutputPDF(ConstantData.HomeReportConstantValue.ReportPdfPrevLayoutPath, layoutName, data, fileName, pdfFooterFormat);
             }
-            else if (model.FileFormat == ConstantData.HomeReportConstantValue.PreviewID)
+            else if (model.FileFormat == HomeReportConstantValue.PreviewID)
             {
-                string pdfLayoutFilePath = ConstantData.HomeReportConstantValue.ReportPdfPrevLayoutPath + layoutName;
+                string pdfLayoutFilePath = HomeReportConstantValue.ReportPdfPrevLayoutPath + layoutName;
 
                 //Return Preview
                 return View(pdfLayoutFilePath, data);
@@ -1897,6 +1945,11 @@ namespace ExpenseProcessingSystem.Controllers
             if (!ModelState.IsValid)
             {
                 vm.accList = _service.getAccountList();
+                vm.accAllList = _service.getAccountListIncHist();
+                foreach (var i in vm.accAllList)
+                {
+                    i.Account_Name = i.Account_No + " - " + i.Account_Name;
+                }
                 return View("Liquidation_SS", vm);
             }
 
@@ -1940,6 +1993,11 @@ namespace ExpenseProcessingSystem.Controllers
 
             LiquidationViewModel ssList = _service.getExpenseToLiqudate(entryID);
             ssList.accList = _service.getAccountList();
+            ssList.accAllList = _service.getAccountListIncHist();
+            foreach (var i in ssList.accAllList)
+            {
+                i.Account_Name = i.Account_No + " - " + i.Account_Name;
+            }
             foreach (var i in ssList.LiquidationDetails)
             {
                 i.screenCode = "Liquidation_SS";
@@ -2014,6 +2072,11 @@ namespace ExpenseProcessingSystem.Controllers
 
             ssList = _service.getExpenseToLiqudate(entryID);
             ssList.accList = _service.getAccountList();
+            ssList.accAllList = _service.getAccountListIncHist();
+            foreach (var i in ssList.accAllList)
+            {
+                i.Account_Name = i.Account_No + " - " + i.Account_Name;
+            }
 
             foreach (var i in ssList.LiquidationDetails)
             {
@@ -2905,7 +2968,6 @@ namespace ExpenseProcessingSystem.Controllers
 
             return Json(trList.ToList());
         }
-
         [HttpPost]
         [AcceptVerbs("GET")]
         public JsonResult getAllTRList()
@@ -2947,6 +3009,14 @@ namespace ExpenseProcessingSystem.Controllers
 
             return Json(acc);
         }
+        [AcceptVerbs("GET")]
+        public JsonResult getAllAccount()
+        {
+            var acc = _service.getAccountList();
+
+            return Json(acc);
+        }
+
         public IActionResult GenerateVoucher(EntryCVViewModelList model)
         {
             VoucherViewModelList vvm = new VoucherViewModelList();
