@@ -220,7 +220,7 @@
                                 @Html.DropDownListFor(x => Model.acc, new SelectList(Model.accList, "Account_ID", "Account_Name"), new { @id = "ddlLiqPhpAccount1", @style = "width:100%", @class = "input100 selectDisabled", @disabled = "disabled" })
                             </td>
                             <td>
-                                <input id="txtLiqAccCode" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="">
+                                <input id="txtLiqAccCode1" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="">
                             </td>
                             <td>
                                 <input id="txtLiqPhpInput1" class="input100" readonly="readonly" style="width:100%;text-align:center" type="text" value="0" />
@@ -232,7 +232,7 @@
                                 <select id="ddlLiqPhpAccount2" style="width:100%" class="input100 selectDisabled" disabled="disabled"></select>
                             </td>
                             <td>
-                                <input id="txtLiqAccCode" class="input100" readonly="readonly" style="width:100%;text-align:center" type="text" value="">
+                                <input id="txtLiqAccCode2" class="input100" readonly="readonly" style="width:100%;text-align:center" type="text" value="">
                             </td>
                             <td>
                                 <input id="txtLiqPhpInput2" class="input100" readonly="readonly" style="width:100%;text-align:center" type="text" value="0" />
@@ -246,7 +246,7 @@
                                 @Html.DropDownListFor(x => Model.accAllList, new SelectList(Model.accAllList, "Account_ID", "Account_Name", null, "Account_MasterID"), new { @id = "lblAccount1_PHP", @style = "width:100%", @class = "input100 selectDisabled", @disabled = "disabled" })
                             </td>
                             <td>
-                                <input id="txtLiqAccCode" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="">
+                                <input id="txtLiqAccCode3" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="">
                             </td>
                             <td></td>
                             <td>
@@ -257,7 +257,7 @@
                             <td style="text-align:left;">
                                 @Html.DropDownListFor(x => Model.accAllList, new SelectList(Model.accAllList, "Account_ID", "Account_Name", null, "Account_MasterID"), new { @id = "lblAccount2_PHP", @style = "width:100%", @class = "input100 selectDisabled", @disabled = "disabled" })
                             <td>
-                                <input id="txtLiqAccCode" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="">
+                                <input id="txtLiqAccCode4" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="">
                             </td>
                             <td></td>
                             <td>
@@ -728,11 +728,12 @@
             $('#cashBDLiqTable').find('#txtCashBDTotal').val(0);
             $('#ddlLiqPhpAccount1').val($("#ddlLiqPhpAccount1 option:first").val());
             $('#ddlAccount3').val($("#ddlAccount3 option:first").val());
-            var currency = $('#' + pid).find('.txtCcyAbbrev').val();
-            if (currency == "PHP") {
+
+            if ($('#' + pid).find('.currMasterID').val() == getXMLLiqValue("CURRENCY_PHP")) {
                 $('#divForeign').hide();
                 $('#divPHP').show();
                 displayInfoCashBD($(this.parentNode)[0].parentNode.id);
+                assignAccCodeLiqPhp();
             } else {
                 $('#divForeign').show();
                 $('#divPHP').hide();

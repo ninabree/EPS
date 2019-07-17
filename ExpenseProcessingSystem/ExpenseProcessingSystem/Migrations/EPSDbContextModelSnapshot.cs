@@ -1498,6 +1498,8 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<double>("Liq_InterRate_3_2");
 
+                    b.Property<double>("Liq_TaxRate");
+
                     b.HasKey("id");
 
                     b.HasIndex("ExpenseEntryDetailModelExpDtl_ID");

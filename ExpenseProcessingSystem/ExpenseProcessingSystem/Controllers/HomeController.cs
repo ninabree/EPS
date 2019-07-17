@@ -544,7 +544,7 @@ namespace ExpenseProcessingSystem.Controllers
         {
             if(ReportTypeID == HomeReportConstantValue.AccSummaryReport)
             {
-                var accounts = _service.getAccountListIncHist();
+                var accounts = _service.getAccountList();
 
                 List<HomeReportSubTypeAccModel> subtypes = new List<HomeReportSubTypeAccModel>();
 
@@ -2965,7 +2965,6 @@ namespace ExpenseProcessingSystem.Controllers
 
             return Json(trList.ToList());
         }
-
         [HttpPost]
         [AcceptVerbs("GET")]
         public JsonResult getVendorVatList(int vendorID)
@@ -2988,6 +2987,14 @@ namespace ExpenseProcessingSystem.Controllers
 
             return Json(acc);
         }
+        [AcceptVerbs("GET")]
+        public JsonResult getAllAccount()
+        {
+            var acc = _service.getAccountList();
+
+            return Json(acc);
+        }
+
         public IActionResult GenerateVoucher(EntryCVViewModelList model)
         {
             VoucherViewModelList vvm = new VoucherViewModelList();

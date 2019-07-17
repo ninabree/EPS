@@ -355,6 +355,25 @@ function assignDivValuesLiqPhp(pid) {
 
 };
 
+function assignAccCodeLiqPhp() {
+    $.getJSON('getAllAccount', function (data) {
+        $.each(data, function (index, item) {
+            if (item["account_ID"] == $('#ddlLiqPhpAccount1').val()) {
+                $('#txtLiqAccCode1').val(item["account_Code"]);
+            }
+            if (item["account_ID"] == $('#ddlLiqPhpAccount2').val()) {
+                $('#txtLiqAccCode2').val(item["account_Code"]);
+            }
+            if (item["account_ID"] == $('#lblAccount1_PHP').val()) {
+                $('#txtLiqAccCode3').val(item["account_Code"]);
+            }
+            if (item["account_ID"] == $('#lblAccount2_PHP').val()) {
+                $('#txtLiqAccCode4').val(item["account_Code"]);
+            }
+        });
+    }); 
+};
+
 $('.number-inputExceptionJPY').keyup(function () {
     $(this).val($(this).val().replace(/[^0-9\.]/g,''));
     if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
