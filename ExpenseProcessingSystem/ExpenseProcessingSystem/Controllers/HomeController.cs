@@ -168,8 +168,9 @@ namespace ExpenseProcessingSystem.Controllers
                         Hist_Maker = "",
                         Hist_Status = "",
                         Hist_Updated_Date = new DateTime(),
-                        Hist_Voucher_No = ""
-
+                        Hist_Voucher_No = "",
+                        Hist_Voucher_Type = "",
+                        Hist_Voucher_Year = ""
                     }
                 };
             }else
@@ -181,18 +182,18 @@ namespace ExpenseProcessingSystem.Controllers
                     Hist_Maker = vm.Filters.HistoryFil.Hist_Maker ?? "",
                     Hist_Status = vm.Filters.HistoryFil.Hist_Status ?? "",
                     Hist_Updated_Date = vm.Filters.HistoryFil.Hist_Updated_Date != new DateTime() ? vm.Filters.HistoryFil.Hist_Updated_Date : new DateTime(),
-                    Hist_Voucher_No = vm.Filters.HistoryFil.Hist_Voucher_No ??  ""
-
+                    Hist_Voucher_No = vm.Filters.HistoryFil.Hist_Voucher_No ??  "",
+                    Hist_Voucher_Type = vm.Filters.HistoryFil.Hist_Voucher_Type ?? "",
+                    Hist_Voucher_Year = vm.Filters.HistoryFil.Hist_Voucher_Year ?? ""
                 };
             }
 
             //populate and sort
             var sortedVals = _sortService.SortData(_service.getHistory(int.Parse(GetUserID()), tempFil), sortOrder);
             ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
-
             HomeIndexViewModel VM = new HomeIndexViewModel()
             {
-                Filters = vm.Filters,
+                Filters = tempFil,
                 HistoryList = PaginatedList<AppHistoryViewModel>.CreateAsync(
                         (sortedVals.list).Cast<AppHistoryViewModel>().AsQueryable().AsNoTracking(), page ?? 1, pageSize)
             };
@@ -893,7 +894,9 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.systemValues.ewt = _service.getVendorTaxRate(firstId);
             viewModel.systemValues.vat = _service.getVendorVat(firstId);
             viewModel.systemValues.acc = _service.getAccDetailsEntry();
-
+            //TEMP for DDV
+            viewModel.systemValues.payee_type = new SelectList(GlobalSystemValues.PAYEETYPE_SELECT_DDV, "Value", "Text", GlobalSystemValues.PAYEETYPE_SELECT_DDV.First());
+            viewModel.systemValues.employees = listOfSysVals[GlobalSystemValues.SELECT_LIST_REGEMPLOYEE];
             //for NC
 
             if (viewModel.GetType() != typeof(EntryNCViewModelList))
@@ -2905,12 +2908,31 @@ namespace ExpenseProcessingSystem.Controllers
 
         [HttpPost]
         [AcceptVerbs("GET")]
+        public JsonResult getAllTRList()
+        {
+            var trList = _service.getAllTaxRate();
+
+            return Json(trList.ToList());
+        }
+
+        [HttpPost]
+        [AcceptVerbs("GET")]
         public JsonResult getVendorVatList(int vendorID)
         {
             var vatList = _service.getVendorVat(vendorID);
 
             return Json(vatList.ToList());
         }
+
+        [HttpPost]
+        [AcceptVerbs("GET")]
+        public JsonResult getAllVatList()
+        {
+            var vatList = _service.getAllVat();
+
+            return Json(vatList.ToList());
+        }
+
         [AcceptVerbs("GET")]
         public JsonResult getAccount(int masterID)
         {

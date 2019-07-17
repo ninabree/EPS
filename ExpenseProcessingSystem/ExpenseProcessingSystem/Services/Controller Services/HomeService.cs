@@ -272,61 +272,78 @@ namespace ExpenseProcessingSystem.Services
             foreach (var property in properties)
             {
                 var propertyName = property.Name;
-                var subStr = propertyName.Substring(propertyName.IndexOf("_") + 1);
-                var toStr = property.GetValue(filters.HistoryFil).ToString();
-                if (toStr != "")
+                if (propertyName != "Hist_YearList" && propertyName != "Hist_Type_Select")
                 {
-                    if (toStr != "0")
+                    var subStr = propertyName.Substring(propertyName.IndexOf("_") + 1);
+                    var toStr = property.GetValue(filters.HistoryFil).ToString();
+                    if (toStr != "")
                     {
-                        if (subStr == "Maker" || subStr == "Approver" || subStr == "Status")
+                        if (toStr != "0")
                         {
-                            //get all userIDs of creator or approver that contains string
-                            var names = _context.User
-                              .Where(x => (x.User_FName.Contains(property.GetValue(filters.HistoryFil).ToString())
-                              || x.User_LName.Contains(property.GetValue(filters.HistoryFil).ToString())))
-                              .Select(x => x.User_ID).ToList();
-                            //get all status IDs that contains string
-                            var status = _context.StatusList
-                              .Where(x => (x.Status_Name.Contains(property.GetValue(filters.HistoryFil).ToString())))
-                              .Select(x => x.Status_ID).ToList();
-                            if (subStr == "Approver")
+                            if (subStr == "Maker" || subStr == "Approver" || subStr == "Status")
                             {
-                                dbHistory = dbHistory.Where(x => (names.Contains(x.Expense_Approver) || names.Contains(x.Liq_Approver_ID)))
-                                         .Select(e => e).AsQueryable();
-                            }
-                            else if (subStr == "Maker")
-                            {
-                                dbHistory = dbHistory.Where(x => (names.Contains(x.Expense_Creator_ID) || names.Contains(x.Liq_Created_UserID)))
-                                         .Select(e => e).AsQueryable();
-                            }
-                            else if (subStr == "Status")
-                            {
-                                dbHistory = dbHistory.Where(x => (status.Contains(x.Expense_Status) || status.Contains(x.Liq_Status)))
-                                         .Select(e => e).AsQueryable();
-                            }
-                        }else if (subStr == "Created_Date" || subStr == "Updated_Date")
-                        {
-                            if (toStr != new DateTime().ToString())
-                            {
-                                if (subStr == "Created_Date")
+                                //get all userIDs of creator or approver that contains string
+                                var names = _context.User
+                                  .Where(x => (x.User_FName.Contains(property.GetValue(filters.HistoryFil).ToString())
+                                  || x.User_LName.Contains(property.GetValue(filters.HistoryFil).ToString())))
+                                  .Select(x => x.User_ID).ToList();
+                                //get all status IDs that contains string
+                                var status = _context.StatusList
+                                  .Where(x => (x.Status_Name.Contains(property.GetValue(filters.HistoryFil).ToString())))
+                                  .Select(x => x.Status_ID).ToList();
+                                if (subStr == "Approver")
                                 {
-                                    dbHistory = dbHistory.Where(x => (x.Expense_Date.ToString() ==  subStr|| x.Liq_Created_Date.ToString() == subStr))
+                                    dbHistory = dbHistory.Where(x => (names.Contains(x.Expense_Approver) || names.Contains(x.Liq_Approver_ID)))
                                              .Select(e => e).AsQueryable();
                                 }
-                                else
+                                else if (subStr == "Maker")
                                 {
-                                    dbHistory = dbHistory.Where(x => (x.Expense_Last_Updated.ToString() == subStr || x.Liq_LastUpdated_Date.ToString() == subStr))
+                                    dbHistory = dbHistory.Where(x => (names.Contains(x.Expense_Creator_ID) || names.Contains(x.Liq_Created_UserID)))
+                                             .Select(e => e).AsQueryable();
+                                }
+                                else if (subStr == "Status")
+                                {
+                                    dbHistory = dbHistory.Where(x => (status.Contains(x.Expense_Status) || status.Contains(x.Liq_Status)))
                                              .Select(e => e).AsQueryable();
                                 }
                             }
-                        }else if (subStr == "Voucher_No")
-                        {
-
-                        }
-                        else // IF STRING VALUE
-                        {
-                            dbHistory = dbHistory.Where("Expense_" + subStr + ".Contains(@0) or Liq_" + subStr + ".Contains(@1)", toStr, toStr)
-                                    .Select(e => e).AsQueryable();
+                            else if (subStr == "Created_Date" || subStr == "Updated_Date")
+                            {
+                                if (toStr != new DateTime().ToString())
+                                {
+                                    if (subStr == "Created_Date")
+                                    {
+                                        dbHistory = dbHistory.Where(x => (x.Expense_Date.Date.ToString("yyyy/MM/dd") + " 0:00:00" == toStr || (x.Liq_Status != 0 && x.Liq_Created_Date.Date.ToString("yyyy/MM/dd") + " 0:00:00" == toStr)))
+                                                 .Select(e => e).AsQueryable();
+                                    }
+                                    else
+                                    {
+                                        var tryy = dbHistory.Select(x => (x.Expense_Last_Updated.Date.ToString("yyyy/MM/dd") + " 0:00:00")).LastOrDefault();
+                                        dbHistory = dbHistory.Where(x => (x.Expense_Last_Updated.Date.ToString("yyyy/MM/dd") + " 0:00:00" == toStr || (x.Liq_Status != 0 && x.Liq_LastUpdated_Date.Date.ToString("yyyy/MM/dd") + " 0:00:00" == toStr)))
+                                                 .Select(e => e).AsQueryable();
+                                    }
+                                }
+                            }
+                            else if (subStr == "Voucher_Type")
+                            {
+                                dbHistory = dbHistory.Where(x => GlobalSystemValues.getApplicationCode(x.Expense_Type) == toStr)
+                                        .Select(e => e).AsQueryable();
+                            }
+                            else if (subStr == "Voucher_Year")
+                            {
+                                dbHistory = dbHistory.Where(x => x.Expense_Date.Year.ToString() == toStr)
+                                        .Select(e => e).AsQueryable();
+                            }
+                            else if (subStr == "Voucher_No")
+                            {
+                                dbHistory = dbHistory.Where(x => x.Expense_Number.ToString().PadLeft(5, '0') == toStr)
+                                        .Select(e => e).AsQueryable();
+                            }
+                            else // IF STRING VALUE
+                            {
+                                dbHistory = dbHistory.Where("Expense_" + subStr + ".Contains(@0) or Liq_" + subStr + ".Contains(@1)", toStr, toStr)
+                                        .Select(e => e).AsQueryable();
+                            }
                         }
                     }
                 }
@@ -4947,6 +4964,7 @@ namespace ExpenseProcessingSystem.Services
                     Expense_Type = expenseType,
                     Expense_Date = entryModel.expenseDate,
                     Expense_Payee = entryModel.vendor,
+                    Expense_Payee_Type = entryModel.payee_type,
                     Expense_Debit_Total = TotalDebit,
                     Expense_Credit_Total = credEwtTotal + credCashTotal,
                     Expense_Creator_ID = userId,
@@ -6670,6 +6688,26 @@ namespace ExpenseProcessingSystem.Services
 
             return select;
         }
+        //get Tax Rate list for specific user
+        public SelectList getAllTaxRate()
+        {
+            var select = new SelectList(_context.DMTR.Where(x => x.TR_isActive == true
+                                                            && x.TR_isDeleted == false)
+                                                     .Select(q => new { q.TR_ID, TR_Tax_Rate = (q.TR_Tax_Rate * 100) }),
+                        "TR_ID", "TR_Tax_Rate");
+
+            return select;
+        }
+        //get Vat list for specific user
+        public SelectList getAllVat()
+        {
+            var select = new SelectList(_context.DMVAT.Where(x=> x.VAT_isActive == true
+                                                             && x.VAT_isDeleted == false)
+                                                      .Select(q => new { q.VAT_ID, VAT_Rate = (q.VAT_Rate * 100) }),
+                        "VAT_ID", "VAT_Rate");
+            return select;
+        }
+
         //get Vat list for specific user
         public SelectList getVendorVat(int vendorID)
         {
@@ -6725,6 +6763,8 @@ namespace ExpenseProcessingSystem.Services
             listOfLists.Add(new SelectList(_context.DMTR.Where(x => x.TR_isActive == true && x.TR_isDeleted == false).Select(q => new { q.TR_ID, q.TR_Tax_Rate }),
                         "TR_ID", "TR_Tax_Rate"));
 
+            listOfLists.Add(new SelectList(_context.DMEmp.Where(x => x.Emp_isActive == true && x.Emp_isDeleted == false && x.Emp_Type == "Regular").Select(q => new { q.Emp_ID, q.Emp_Name }),
+                        "Emp_ID", "Emp_Name"));
             return listOfLists;
         }
         //retrieve account details
