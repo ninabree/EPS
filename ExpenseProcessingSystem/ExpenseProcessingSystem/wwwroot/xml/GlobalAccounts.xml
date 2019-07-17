@@ -59,4 +59,18 @@ string value4 = xelem.Element("ADDRESS").Value
   
   <!--Closing Petty Cash-->
   <PC_MASTERID id="PC_MASTERID">95</PC_MASTERID>
+
+<!--Report filter screen-->
+  <!--Outstanding advances accounts-->
+  <!--H79767151446 - ADV EXP HO-PHP-->
+  <Report_OA_Acc1 id="Report_OA_Acc1">111</Report_OA_Acc1>
+  <!--F79789151446 - EXPENSE HO (US$)-->
+  <Report_OA_Acc2 id="Report_OA_Acc2">135</Report_OA_Acc2>
+  <!--F79789810008 - REIMBURSE (US$)-->
+  <Report_OA_Acc3 id="Report_OA_Acc3">87</Report_OA_Acc3>
+  <!--H30767110005 - SUNDRY DEPOSIT STANDARD-->
+  <Report_OA_Acc4 id="Report_OA_Acc4">90</Report_OA_Acc4>
+  <!--H79767151137 - SUSPENSE (GE)-->
+  <Report_OA_Acc5 id="Report_OA_Acc5">96</Report_OA_Acc5>
+
 </GlobalAccount>

@@ -81,8 +81,6 @@
         dtPeriodFrom.val(today);
         dtPeriodTo.val(today);
 
-        alert(ReportType);
-
         if (ReportType == 2) {
             radioPeriod1.prop('checked', true);
             radioPeriod1.removeAttr("disabled");

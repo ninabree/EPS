@@ -36,6 +36,9 @@ namespace ExpenseProcessingSystem.ConstantData
         //Alphalist of Payees Subject to Withholding Tax Summary
         public const int WTS = 10;
 
+        //Outstanding Advances
+        public const int OutstandingAdvances = 11;
+
         //EXCEL, PDF, Preview format ID
         public const int EXCELID = 1;
         public const int PDFID = 2;
@@ -55,8 +58,17 @@ namespace ExpenseProcessingSystem.ConstantData
 
         //Non-Cash category distinguish value
         public static readonly int REP_NC_LS_PAYROLL = GlobalSystemValues.NC_LS_PAYROLL + 50;
-        public static readonly int REP_NC_JS_PAYROLL = GlobalSystemValues.NC_JS_PAYROLL + 50;
         public static readonly int REP_NC_TAX_REMITTANCE = GlobalSystemValues.NC_TAX_REMITTANCE + 50;
+        public static readonly int REP_NC_MONTHLY_ROSS_BILL = GlobalSystemValues.NC_MONTHLY_ROSS_BILL + 50;
+        public static readonly int REP_NC_PSSC = GlobalSystemValues.NC_PSSC + 50;
+        public static readonly int REP_NC_PCHC = GlobalSystemValues.NC_PCHC + 50;
+        public static readonly int REP_NC_DEPRECIATION = GlobalSystemValues.NC_DEPRECIATION + 50;
+        public static readonly int REP_NC_PETTY_CASH_REPLENISHMENT = GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT + 50;
+        public static readonly int REP_NC_JS_PAYROLL = GlobalSystemValues.NC_JS_PAYROLL + 50;
+        public static readonly int REP_NC_RETURN_OF_JS_PAYROLL = GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL + 50;
+        public static readonly int REP_NC_MISCELLANEOUS_ENTRIES = GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES + 50;
+
+        public static readonly int REP_LIQUIDATION = 10;
 
         //========================================================================
         //Public IEnumerable class constant values
@@ -306,20 +318,68 @@ namespace ExpenseProcessingSystem.ConstantData
                 },
                 new HomeReportSubTypesModel
                 {
+                    Id = REP_LIQUIDATION,
+                    SubTypeName = "Liquidation",
+                    ParentTypeId = 7
+                },
+                new HomeReportSubTypesModel
+                {
                     Id = REP_NC_LS_PAYROLL,
                     SubTypeName = "Local Payroll",
                     ParentTypeId = 7
                 },
                 new HomeReportSubTypesModel
                 {
-                    Id = REP_NC_JS_PAYROLL,
-                    SubTypeName = "Japanese Payroll",
+                    Id = REP_NC_TAX_REMITTANCE,
+                    SubTypeName = "Tax Remittance",
                     ParentTypeId = 7
                 },
                 new HomeReportSubTypesModel
                 {
-                    Id = REP_NC_TAX_REMITTANCE,
-                    SubTypeName = "Tax Remittances",
+                    Id = REP_NC_MONTHLY_ROSS_BILL,
+                    SubTypeName = "Monthly Ross Bill",
+                    ParentTypeId = 7
+                },
+                new HomeReportSubTypesModel
+                {
+                    Id = REP_NC_PSSC,
+                    SubTypeName = "PSSC",
+                    ParentTypeId = 7
+                },
+                new HomeReportSubTypesModel
+                {
+                    Id = REP_NC_PCHC,
+                    SubTypeName = "PCHC",
+                    ParentTypeId = 7
+                },
+                new HomeReportSubTypesModel
+                {
+                    Id = REP_NC_DEPRECIATION,
+                    SubTypeName = "Depreciation",
+                    ParentTypeId = 7
+                },
+                new HomeReportSubTypesModel
+                {
+                    Id = REP_NC_PETTY_CASH_REPLENISHMENT,
+                    SubTypeName = "Petty Cash Replenishment",
+                    ParentTypeId = 7
+                },
+                new HomeReportSubTypesModel
+                {
+                    Id = REP_NC_JS_PAYROLL,
+                    SubTypeName = "JS Payroll",
+                    ParentTypeId = 7
+                },
+                new HomeReportSubTypesModel
+                {
+                    Id = REP_NC_RETURN_OF_JS_PAYROLL,
+                    SubTypeName = "Return of JS Payroll",
+                    ParentTypeId = 7
+                },
+                new HomeReportSubTypesModel
+                {
+                    Id = REP_NC_MISCELLANEOUS_ENTRIES,
+                    SubTypeName = "Miscellaneous Entries",
                     ParentTypeId = 7
                 },
                 new HomeReportSubTypesModel

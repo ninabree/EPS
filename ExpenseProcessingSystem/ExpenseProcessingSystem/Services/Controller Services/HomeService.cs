@@ -3031,8 +3031,16 @@ namespace ExpenseProcessingSystem.Services
 
             int[] expType1 = { GlobalSystemValues.TYPE_CV, GlobalSystemValues.TYPE_PC,
                         GlobalSystemValues.TYPE_DDV, GlobalSystemValues.TYPE_SS };
-            int[] expType2 = { HomeReportConstantValue.REP_NC_LS_PAYROLL - 50, HomeReportConstantValue.REP_NC_JS_PAYROLL - 50,
-                        HomeReportConstantValue.REP_NC_TAX_REMITTANCE - 50};
+            int[] expType2 = { GlobalSystemValues.NC_LS_PAYROLL,
+                                GlobalSystemValues.NC_TAX_REMITTANCE,
+                                GlobalSystemValues.NC_MONTHLY_ROSS_BILL,
+                                GlobalSystemValues.NC_PSSC,
+                                GlobalSystemValues.NC_PCHC,
+                                GlobalSystemValues.NC_DEPRECIATION,
+                                GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT,
+                                GlobalSystemValues.NC_JS_PAYROLL,
+                                GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL,
+                                GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES};
 
             List<HomeReportTransactionListViewModel> list1 = new List<HomeReportTransactionListViewModel>();
             List<HomeReportTransactionListViewModel> list2 = new List<HomeReportTransactionListViewModel>();
@@ -3099,8 +3107,18 @@ namespace ExpenseProcessingSystem.Services
 
             if (model.ReportSubType == 0 || model.ReportSubType == GlobalSystemValues.TYPE_CV ||
                 model.ReportSubType == GlobalSystemValues.TYPE_PC || model.ReportSubType == GlobalSystemValues.TYPE_DDV ||
-                model.ReportSubType == GlobalSystemValues.TYPE_SS)
+                model.ReportSubType == GlobalSystemValues.TYPE_SS || model.ReportSubType == HomeReportConstantValue.REP_LIQUIDATION)
             {
+                int subType = 0;
+
+                if(model.ReportSubType == HomeReportConstantValue.REP_LIQUIDATION)
+                {
+                    subType = GlobalSystemValues.TYPE_SS;
+                }
+                else
+                {
+                    subType = model.ReportSubType;
+                }
                 //Get DDV entry detail list. include inter entity
                 List<EntryDDVViewModel> ddvDetails = GetEntryDetailsListForDDV();
 
@@ -3281,16 +3299,33 @@ namespace ExpenseProcessingSystem.Services
                                trans.TL_ID,
                                trans.TL_GoExpress_ID,
                                trans.TL_TransID
-                           }).Where(whereQuery1, model.ReportSubType, startDT.Date, endDT.Date, model.PeriodFrom.Date,
+                           }).Where(whereQuery1, subType, startDT.Date, endDT.Date, model.PeriodFrom.Date,
                                    model.PeriodTo.Date, model.CheckNoFrom, model.CheckNoTo, model.VoucherNoFrom, model.VoucherNoTo,
                                    model.TransNoFrom, model.TransNoTo, model.SubjName, expType1).ToList();
 
                 //Convert to List object.
                 foreach(var i in db1)
                 {
-                    if (_context.LiquidationEntryDetails.Where(x => x.ExpenseEntryModel.Expense_ID == i.ExpenseEntryID).Count() > 0)
+                    //if (_context.LiquidationEntryDetails.Where(x => x.ExpenseEntryModel.Expense_ID == i.ExpenseEntryID).Count() > 0)
+                    //{
+                    //    continue;
+                    //}
+                    
+                    //Ignore Liquidation record if Filter is Cash Advance only
+                    if(model.ReportSubType == GlobalSystemValues.TYPE_SS)
                     {
-                        continue;
+                        if(i.GOExpHist_Remarks == "S" + _context.ExpenseEntryDetails.Where(x => x.ExpDtl_ID == i.ExpenseDetailID).FirstOrDefault().ExpDtl_Gbase_Remarks)
+                        {
+                            continue;
+                        }
+                    }
+                    //Ignore Cash advance record if Filter is Liquidation only
+                    if (model.ReportSubType == HomeReportConstantValue.REP_LIQUIDATION)
+                    {
+                        if (i.GOExpHist_Remarks != "S" + _context.ExpenseEntryDetails.Where(x => x.ExpDtl_ID == i.ExpenseDetailID).FirstOrDefault().ExpDtl_Gbase_Remarks)
+                        {
+                            continue;
+                        }
                     }
 
                     list1.Add(new HomeReportTransactionListViewModel
@@ -3442,11 +3477,19 @@ namespace ExpenseProcessingSystem.Services
 
                     });
                 }
-            }                          
-                                       
+            }
+
             if(model.ReportSubType == 0 || model.ReportSubType == HomeReportConstantValue.REP_NC_LS_PAYROLL ||
+                model.ReportSubType == HomeReportConstantValue.REP_NC_TAX_REMITTANCE ||
+                model.ReportSubType == HomeReportConstantValue.REP_NC_MONTHLY_ROSS_BILL ||
+                model.ReportSubType == HomeReportConstantValue.REP_NC_PSSC ||
+                model.ReportSubType == HomeReportConstantValue.REP_NC_PCHC ||
+                model.ReportSubType == HomeReportConstantValue.REP_NC_DEPRECIATION ||
+                model.ReportSubType == HomeReportConstantValue.REP_NC_PETTY_CASH_REPLENISHMENT || 
                 model.ReportSubType == HomeReportConstantValue.REP_NC_JS_PAYROLL ||
-                model.ReportSubType == HomeReportConstantValue.REP_NC_TAX_REMITTANCE)
+                model.ReportSubType == HomeReportConstantValue.REP_NC_RETURN_OF_JS_PAYROLL ||
+                model.ReportSubType == HomeReportConstantValue.REP_NC_MISCELLANEOUS_ENTRIES
+                )
             {
                 List<ExpenseEntryNCDtlViewModel> ncDtlList = GetEntryDetailAccountListForNonCash();
 
@@ -3797,10 +3840,10 @@ namespace ExpenseProcessingSystem.Services
             DateTime startDT = DateTime.ParseExact(model.Year + "-" + model.Month, "yyyy-M", CultureInfo.InvariantCulture);
             DateTime endDT = DateTime.ParseExact(model.YearTo + "-" + model.MonthTo, "yyyy-M", CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
 
-            int[] expType1 = { GlobalSystemValues.TYPE_CV, GlobalSystemValues.TYPE_PC,
-                GlobalSystemValues.TYPE_DDV, GlobalSystemValues.TYPE_SS };
-            int[] expType2 = { HomeReportConstantValue.REP_NC_LS_PAYROLL - 50, HomeReportConstantValue.REP_NC_JS_PAYROLL - 50,
-                HomeReportConstantValue.REP_NC_TAX_REMITTANCE - 50};
+            //int[] expType1 = { GlobalSystemValues.TYPE_CV, GlobalSystemValues.TYPE_PC,
+            //    GlobalSystemValues.TYPE_DDV, GlobalSystemValues.TYPE_SS };
+            //int[] expType2 = { HomeReportConstantValue.REP_NC_LS_PAYROLL - 50, HomeReportConstantValue.REP_NC_JS_PAYROLL - 50,
+            //    HomeReportConstantValue.REP_NC_TAX_REMITTANCE - 50};
 
             List<HomeReportTransactionListViewModel> list1 = new List<HomeReportTransactionListViewModel>();
             List<HomeReportTransactionListViewModel> list2 = new List<HomeReportTransactionListViewModel>();
@@ -4704,7 +4747,7 @@ namespace ExpenseProcessingSystem.Services
                     });
                 }
             }
-            if(selectedAccount != null)
+            if(!String.IsNullOrEmpty(selectedAccount.Account_No))
             {
                 return list.Where(x => x.Trans_Account_Number == selectedAccount.Account_No 
                     && x.Trans_Account_Code == selectedAccount.Account_Code).OrderBy(x => x.Trans_Value_Date);
@@ -5340,7 +5383,7 @@ namespace ExpenseProcessingSystem.Services
                     chkEwt = dtl.d.ExpDtl_isEwt,
                     ewt = dtl.d.ExpDtl_Ewt,
                     ccy = dtl.d.ExpDtl_Ccy,
-                    ccyMasterID = getCurrencyByMasterID(dtl.d.ExpDtl_Ccy).Curr_MasterID,
+                    ccyMasterID = (dtl.d.ExpDtl_Ccy != 0) ? getCurrencyByMasterID(dtl.d.ExpDtl_Ccy).Curr_MasterID : 0,
                     debitGross = dtl.d.ExpDtl_Debit,
                     credEwt = dtl.d.ExpDtl_Credit_Ewt,
                     credCash = dtl.d.ExpDtl_Credit_Cash,
@@ -7619,7 +7662,8 @@ namespace ExpenseProcessingSystem.Services
                 {
                     Account_ID = i.Account_ID,
                     Account_Name = i.Account_No + " - " + i.Account_Name,
-                    Account_No = i.Account_No
+                    Account_No = i.Account_No,
+                    Account_Code = i.Account_Code
                 });
             }
 

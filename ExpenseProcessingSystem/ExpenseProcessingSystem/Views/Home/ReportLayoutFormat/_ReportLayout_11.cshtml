@@ -1,0 +1,103 @@
+﻿@model ExpenseProcessingSystem.ViewModels.HomeReportDataFilterViewModel
+
+@{
+    Layout = null;
+}
+
+<style>
+    .table-PDF {
+        border-collapse: collapse;
+        border-width: 1px;
+        border-style: solid;
+        border-color: black;
+        margin-top: 20px;
+        width: auto;
+    }
+
+    thead {
+        display: table-header-group
+    }
+
+    tfoot {
+        display: table-row-group
+    }
+
+    .tr-PDF {
+        page-break-inside: avoid;
+        border-width: 1px;
+        width: auto;
+    }
+
+    .th-PDF {
+        border-width: 1px;
+        border-style: solid;
+        border-color: black;
+        font-weight: bold;
+        width: auto;
+    }
+
+    .td-PDF {
+        border-width: 1px;
+        border-style: solid;
+        border-color: black;
+        width: auto;
+    }
+</style>
+
+<table class="table-PDF">
+    <thead>
+        <tr style="vertical-align:top" class="tr-PDF">
+            <th class="th-PDF">VoucherNumber</th>
+            <th class="th-PDF">CheckNumber</th>
+            <th class="th-PDF">ValueDate</th>
+            <th class="th-PDF">ReferenceNo.</th>
+            <th class="th-PDF">Section</th>
+            <th class="th-PDF">Remarks</th>
+            <th class="th-PDF">Debit</th>
+            <th class="th-PDF">Currency</th>
+            <th class="th-PDF">Amount</th>
+            <th class="th-PDF">Customer</th>
+            <th class="th-PDF">AccountCode</th>
+            <th class="th-PDF">AccountNumber</th>
+            <th class="th-PDF">AccountName</th>
+            <th class="th-PDF">ExchangeRate</th>
+            <th class="th-PDF">ContraCurrency</th>
+            <th class="th-PDF">Fund</th>
+            <th class="th-PDF">AdvicePrint</th>
+            <th class="th-PDF">Details</th>
+            <th class="th-PDF">Entity</th>
+            <th class="th-PDF">Division</th>
+            <th class="th-PDF">Inter-Amount</th>
+            <th class="th-PDF">Inter-Rate</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var i in Model.HomeReportOutputAccountSummary)
+        {
+            <tr class="tr-PDF">
+                <td style="text-align:center" class="td-PDF">@i.Trans_Voucher_Number</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Check_Number</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Value_Date</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Reference_No</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Section</td>
+                <td style="text-align:left" class="td-PDF">@i.Trans_Remarks</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_DebitCredit</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Currency</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_Amount</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Customer</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Account_Code</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Account_Number</td>
+                <td style="text-align:left" class="td-PDF">@i.Trans_Account_Name</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_Exchange_Rate</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Contra_Currency</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Fund</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Advice_Print</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Details</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Entity</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Division</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_InterAmount</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_InterRate</td>
+            </tr>
+        }
+    </tbody>
+</table>

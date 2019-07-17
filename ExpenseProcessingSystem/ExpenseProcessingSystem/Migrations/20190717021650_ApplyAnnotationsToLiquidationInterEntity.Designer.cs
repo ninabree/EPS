@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    [Migration("20190715071721_ApplyAnnotationsToLiquidationInterEntity")]
+    [Migration("20190717021650_ApplyAnnotationsToLiquidationInterEntity")]
     partial class ApplyAnnotationsToLiquidationInterEntity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1499,6 +1499,8 @@ namespace ExpenseProcessingSystem.Migrations
                     b.Property<double>("Liq_InterRate_3_1");
 
                     b.Property<double>("Liq_InterRate_3_2");
+
+                    b.Property<double>("Liq_TaxRate");
 
                     b.HasKey("id");
 
