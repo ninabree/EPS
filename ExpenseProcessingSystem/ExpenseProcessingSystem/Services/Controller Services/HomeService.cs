@@ -7185,173 +7185,32 @@ namespace ExpenseProcessingSystem.Services
 
         public ClosingViewModel ClosingGetRecords()
         {
+            DateTime opening = DateTime.Today.AddHours(00).AddDays(-1);
+            DateTime closing = DateTime.Today.AddHours(23.9999).AddDays(-1);
             ClosingViewModel closeVM = new ClosingViewModel();
 
             XElement xelem = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
             int pcMasterID = int.Parse(xelem.Element("PC_MASTERID").Value);
 
             ClosingModel closingItemsRBU = _context.Closing.Where(x => x.Close_Type == GlobalSystemValues.BRANCH_RBU)
-                                                           .OrderByDescending(x=>x.Close_Open_Date).FirstOrDefault();
+                                                           .OrderByDescending(x => x.Close_Open_Date).FirstOrDefault();
             ClosingModel closingItemsFCDU = _context.Closing.Where(x => x.Close_Type == GlobalSystemValues.BRANCH_FCDU)
                                                .OrderByDescending(x => x.Close_Open_Date).FirstOrDefault();
 
             closeVM.fcduStatus = GlobalSystemValues.getStatus(closingItemsFCDU.Close_Status);
             closeVM.rbuStatus = GlobalSystemValues.getStatus(closingItemsRBU.Close_Status);
-            //MMddyy
-            var rbuItems = _context.GOExpressHist.Where(x => DateTime.ParseExact(x.GOExpHist_ValueDate, "MMddyy", CultureInfo.InvariantCulture) <= closingItemsRBU.Close_Open_Date
-                                                          && x.GOExpHist_Branchno == "767").ToList();
-            var fcduItems = _context.GOExpressHist.Where(x => DateTime.ParseExact(x.GOExpHist_ValueDate, "MMddyy", CultureInfo.InvariantCulture) <= closingItemsRBU.Close_Open_Date
-                                                          && x.GOExpHist_Branchno == "789").ToList();
+
+            var rbuNormal = _context.ExpenseEntry.Where(x => (opening <= x.Expense_Date
+                                                          && closing >= x.Expense_Date)
+                                                          && (x.Expense_Type == GlobalSystemValues.TYPE_CV
+                                                          || x.Expense_Type == GlobalSystemValues.TYPE_DDV
+                                                          || x.Expense_Type == GlobalSystemValues.TYPE_PC));
+
 
 
 
             Dictionary<int, List<int>> expenseRbuId = new Dictionary<int, List<int>>();
             Dictionary<int, List<int>> expenseFcduId = new Dictionary<int, List<int>>();
-
-            foreach (var item in rbuItems)
-            {
-                if(expenseRbuId.ContainsKey(item.ExpenseEntryID))
-                {
-                    expenseRbuId[item.ExpenseEntryID].Add(item.ExpenseDetailID);
-                }
-                else
-                {
-                    expenseRbuId.Add(item.ExpenseEntryID, new List<int>() { item.ExpenseDetailID });
-                }
-            }
-            foreach (var item in fcduItems)
-            {
-                if (expenseFcduId.ContainsKey(item.ExpenseEntryID))
-                {
-                    expenseFcduId[item.ExpenseEntryID].Add(item.ExpenseDetailID);
-                }
-                else
-                {
-                    expenseFcduId.Add(item.ExpenseEntryID, new List<int>() { item.ExpenseDetailID });
-                }
-            }
-
-            foreach (int key in expenseRbuId.Keys)
-            {
-                CloseItems clModel = new CloseItems();
-                ExpenseEntryModel expModel = _context.ExpenseEntry.FirstOrDefault(x=>x.Expense_ID == key);
-
-                List<string> gbaseTrans = _context.ExpenseTransLists.Where(x => x.TL_ExpenseID == key).Select(x => x.TL_TransID.ToString()).ToList();
-
-                clModel.gBaseTrans = gbaseTrans.Aggregate((i, j) => i + "," + j);
-                clModel.status = GlobalSystemValues.getStatus(expModel.Expense_Status);
-                clModel.transCount = gbaseTrans.Count();
-
-                clModel.expTrans = GlobalSystemValues.getApplicationCode(expModel.Expense_Type) + "-" +
-                                          expModel.Expense_Date.Year + "-" +
-                                          expModel.Expense_Number.ToString().PadLeft(5,'0');
-
-                if(expModel.Expense_Type == GlobalSystemValues.TYPE_NC)
-                {
-                    foreach (int expDtl in expenseRbuId[key])
-                    {
-                        CloseItems holder = clModel;
-                        var ncDtl = _context.ExpenseEntryNonCashDetails.FirstOrDefault(x => x.ExpNCDtl_ID == expDtl);
-                        var ncDtlAcc = _context.ExpenseEntryNonCashDetailAccounts.Where(x => x.ExpenseEntryNCDtlModel.ExpNCDtl_ID == expDtl
-                                                                                          && x.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT).ToList();
-
-                        holder.ccy = getCurrency(ncDtlAcc.Select(x=>x.ExpNCDtlAcc_Curr_ID).FirstOrDefault()).Curr_CCY_ABBR;
-
-                        holder.particulars = ncDtl.ExpNCDtl_Remarks_Desc + ncDtl.ExpNCDtl_Remarks_Period;
-                        foreach(var item in ncDtlAcc)
-                        {
-                            holder.amount += item.ExpNCDtlAcc_Amount;
-                        }
-                        closeVM.rbuItems.Add(holder);
-                    }
-                }
-                else
-                {
-                   foreach(int expDtl in expenseRbuId[key])
-                    {
-                        CloseItems holder = clModel;
-                        var dtl = _context.ExpenseEntryDetails.FirstOrDefault(x=>x.ExpDtl_ID == expDtl);
-
-                        holder.amount = dtl.ExpDtl_Debit;
-                        holder.particulars = dtl.ExpDtl_Gbase_Remarks;
-                        holder.ccy = getCurrency(dtl.ExpDtl_Ccy).Curr_CCY_ABBR;
-
-                        closeVM.rbuItems.Add(holder);
-                    }
-                    
-                }
-            }
-            foreach (int key in expenseFcduId.Keys)
-            {
-                CloseItems clModel = new CloseItems();
-                ExpenseEntryModel expModel = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == key);
-
-                List<string> gbaseTrans = _context.ExpenseTransLists.Where(x => x.TL_ExpenseID == key).Select(x => x.TL_TransID.ToString()).ToList();
-
-                clModel.gBaseTrans = gbaseTrans.Aggregate((i, j) => i + "," + j);
-                clModel.status = GlobalSystemValues.getStatus(expModel.Expense_Status);
-                clModel.transCount = gbaseTrans.Count();
-
-                clModel.expTrans = GlobalSystemValues.getApplicationCode(expModel.Expense_Type) + "-" +
-                                          expModel.Expense_Date.Year + "-" +
-                                          expModel.Expense_Number.ToString().PadLeft(5, '0');
-
-                if (expModel.Expense_Type == GlobalSystemValues.TYPE_NC)
-                {
-                    foreach (int expDtl in expenseFcduId[key])
-                    {
-                        CloseItems holder = clModel;
-                        var ncDtl = _context.ExpenseEntryNonCashDetails.FirstOrDefault(x => x.ExpNCDtl_ID == expDtl);
-                        var ncDtlAcc = _context.ExpenseEntryNonCashDetailAccounts.Where(x => x.ExpenseEntryNCDtlModel.ExpNCDtl_ID == expDtl
-                                                                                          && x.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT).ToList();
-
-                        holder.ccy = getCurrency(ncDtlAcc.Select(x => x.ExpNCDtlAcc_Curr_ID).FirstOrDefault()).Curr_CCY_ABBR;
-
-                        holder.particulars = ncDtl.ExpNCDtl_Remarks_Desc + ncDtl.ExpNCDtl_Remarks_Period;
-                        foreach (var item in ncDtlAcc)
-                        {
-                            holder.amount += item.ExpNCDtlAcc_Amount;
-                        }
-                        closeVM.fcduItems.Add(holder);
-                    }
-                }
-                else
-                {
-                    foreach (int expDtl in expenseFcduId[key])
-                    {
-                        CloseItems holder = clModel;
-                        var dtl = _context.ExpenseEntryDetails.FirstOrDefault(x => x.ExpDtl_ID == expDtl);
-
-                        holder.amount = dtl.ExpDtl_Debit;
-                        holder.particulars = dtl.ExpDtl_Gbase_Remarks;
-                        holder.ccy = getCurrency(dtl.ExpDtl_Ccy).Curr_CCY_ABBR;
-
-                        closeVM.fcduItems.Add(holder);
-                    }
-
-                }
-            }
-
-            List<int> pettyCash = _context.DMAccount.Where(x => x.Account_MasterID == pcMasterID).Select(x=>x.Account_ID).ToList();
-
-            var pcDisbursement = _context.ExpenseEntryDetails.Where(x => pettyCash.Contains(x.ExpDtl_CreditAccount1)
-                                                                     && pettyCash.Contains(x.ExpDtl_CreditAccount2))
-                                                             .Select(x=> x.ExpDtl_Credit_Cash );
-            var pcNCDisbursement = _context.ExpenseEntryNonCashDetailAccounts.Where(x => pettyCash.Contains(x.ExpNCDtlAcc_Acc_ID)
-                                                                                      && x.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_CREDIT)
-                                                                             .Select(x=>x.ExpNCDtlAcc_Amount);
-
-            var pcRecieved = _context.ExpenseEntryDetails.Where(x => pettyCash.Contains(x.ExpDtl_Account)).Select(x => x.ExpDtl_Debit);
-            var pcNCRecieved = _context.ExpenseEntryNonCashDetailAccounts.Where(x => pettyCash.Contains(x.ExpNCDtlAcc_Acc_ID)
-                                                                                  && x.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
-                                                                         .Select(x=>x.ExpNCDtlAcc_Amount);
-
-            PettyCashModel pcModel = _context.PettyCash.FirstOrDefault(x => x.PC_ID == (_context.PettyCash.Max(y=>y.PC_ID) - 1));
-
-            closeVM.pettyBegBalance = pcModel.PC_EndBal;
-            closeVM.recieve = pcRecieved.Sum() + pcNCRecieved.Sum();
-            closeVM.Disbursed = pcDisbursement.Sum() + pcNCDisbursement.Sum();
-            closeVM.closeBal = (closeVM.pettyBegBalance - closeVM.Disbursed) + closeVM.recieve;
 
             return closeVM;
         }
