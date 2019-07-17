@@ -211,6 +211,13 @@ function appendInputIEtoDiv(ret) {
                 }));
             }
         }
+        //TAX RATE
+        $('#divLiqIE_' + ret).append($('<input/>', {
+            id: 'LiquidationDetails_' + ret + '__liqInterEntity_' + a + '__Liq_Tax_Rate',
+            type: 'hidden',
+            name: 'LiquidationDetails[' + ret + '].liqInterEntity[' + a + '].Liq_Tax_Rate',
+            value: 0
+        }));
     }
 };
 
@@ -331,6 +338,9 @@ function setLiqPhpValuetoDivInput(ret) {
     $('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Amount_2_1').val($('#txtLiqPhpInput3').val());
     $('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Amount_2_2').val($('#txtLiqPhpInput4').val());
     $('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Amount_3_1').val($('#txtLiqPhpInput5').val());
+
+    //Tax RATE
+    $('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Tax_Rate').val(parseFloat($('#txtLiqTaxRate').val()) / 100);
 };
 
 function assignDivValuesLiqPhp(pid) {
@@ -353,6 +363,9 @@ function assignDivValuesLiqPhp(pid) {
     $('#txtLiqPhpInput6').val(AC(parseFloat($('#txtLiqPhpInput1').val()) + parseFloat($('#txtLiqPhpInput2').val())));
     $('#txtLiqPhpInput7').val(AC(parseFloat($('#txtLiqPhpInput3').val()) + parseFloat($('#txtLiqPhpInput4').val()) + parseFloat($('#txtLiqPhpInput5').val())));
 
+
+    //Tax RATE
+    $('#txtLiqTaxRate').val(parseFloat($('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Tax_Rate').val()) * 100);
 };
 
 function assignAccCodeLiqPhp() {

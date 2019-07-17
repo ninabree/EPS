@@ -6317,7 +6317,8 @@ namespace ExpenseProcessingSystem.Services
                         Liq_InterRate_2_1 = liqIE.Liq_InterRate_2_1,
                         Liq_InterRate_2_2 = liqIE.Liq_InterRate_2_2,
                         Liq_InterRate_3_1 = liqIE.Liq_InterRate_3_1,
-                        Liq_InterRate_3_2 = liqIE.Liq_InterRate_3_2
+                        Liq_InterRate_3_2 = liqIE.Liq_InterRate_3_2,
+                        Liq_Tax_Rate = liqIE.Liq_TaxRate
                     };
 
                     liqInterEntity.Add(liqIETemp);
@@ -6436,6 +6437,7 @@ namespace ExpenseProcessingSystem.Services
                         Liq_DebitCred_3_2 = i.liqInterEntity[0].Liq_DebitCred_3_2,
                         Liq_AccountID_3_2 = i.liqInterEntity[0].Liq_AccountID_3_2,
                         Liq_Amount_3_2 = i.liqInterEntity[0].Liq_Amount_3_2,
+                        Liq_TaxRate = i.liqInterEntity[0].Liq_Tax_Rate
                     });
                     _context.SaveChanges();
                 }
@@ -6465,7 +6467,8 @@ namespace ExpenseProcessingSystem.Services
                             Liq_AccountID_2_2 = j.Liq_AccountID_2_2,
                             Liq_InterRate_2_2 = j.Liq_InterRate_2_2,
                             Liq_CCY_2_2 = j.Liq_CCY_2_2,
-                            Liq_Amount_2_2 = j.Liq_Amount_2_2
+                            Liq_Amount_2_2 = j.Liq_Amount_2_2,
+                            Liq_TaxRate = j.Liq_Tax_Rate
                         });
                         _context.SaveChanges();
                     }
