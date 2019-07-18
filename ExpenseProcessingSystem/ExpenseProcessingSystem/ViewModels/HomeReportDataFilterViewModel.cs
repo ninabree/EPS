@@ -19,6 +19,10 @@ namespace ExpenseProcessingSystem.ViewModels
 
         public IEnumerable<HomeReportAccountSummaryViewModel> HomeReportOutputAccountSummary { get; set; }
 
+        public IEnumerable<HomeReportOutputAPSWT_MModel> HomeReportOutputBIRWTCSV { get; set; }
+
+        public string ReturnPeriod_CSV { get; set; }
+
         public IEnumerable<Temp_RepWTSViewModel> HomeReportOutputWTS { get; set; }
 
         public IEnumerable<Temp_RepCSBViewModel> HomeReportOutputCSB { get; set; }

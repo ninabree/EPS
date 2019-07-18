@@ -14,19 +14,16 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Localization;
-using OfficeOpenXml;
 using Rotativa.AspNetCore;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using ExpenseProcessingSystem.ViewModels.Entry;
-using System.Diagnostics;
-using System.Text;
 using System.Xml.Linq;
 using ExpenseProcessingSystem.ViewModels.Search_Filters.Home;
+using System.Text;
 
 namespace ExpenseProcessingSystem.Controllers
 {
@@ -543,11 +540,12 @@ namespace ExpenseProcessingSystem.Controllers
         [AcceptVerbs("GET")]
         public JsonResult GetReportSubType(int ReportTypeID)
         {
-            if(ReportTypeID == HomeReportConstantValue.AccSummaryReport)
+            List<HomeReportSubTypeAccModel> subtypes = new List<HomeReportSubTypeAccModel>();
+
+            if (ReportTypeID == HomeReportConstantValue.AccSummaryReport)
             {
                 var accounts = _service.getAccountList();
 
-                List<HomeReportSubTypeAccModel> subtypes = new List<HomeReportSubTypeAccModel>();
 
                 subtypes.Add(new HomeReportSubTypeAccModel
                 {
@@ -568,8 +566,7 @@ namespace ExpenseProcessingSystem.Controllers
             if (ReportTypeID == HomeReportConstantValue.OutstandingAdvances)
             {
                 var accounts = _service.getAccountListIncHist();
-
-                List<HomeReportSubTypeAccModel> subtypes = new List<HomeReportSubTypeAccModel>();
+                
                 XElement xelem = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
                 for(int i = 1; i <= 5; i++)
                 {
@@ -586,6 +583,19 @@ namespace ExpenseProcessingSystem.Controllers
                 }
                 return Json(subtypes);
             }
+            if(ReportTypeID == HomeReportConstantValue.BIRWTCSV)
+            {
+                foreach(var i in HomeReportConstantValue.GetTerm_BIRCSV())
+                {
+                    subtypes.Add(new HomeReportSubTypeAccModel
+                    {
+                        Id = i.ID,
+                        SubTypeName = i.YearTerm
+                    });
+                }
+                return Json(subtypes);
+            }
+
             if (ReportTypeID != 0)
             {
                 return Json(ConstantData.HomeReportConstantValue.GetReportSubTypeData()
@@ -599,6 +609,7 @@ namespace ExpenseProcessingSystem.Controllers
         {
             string layoutName = "";
             string fileName = "";
+            string returnPeriod = "";
             //string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmsstt"); // ORIGINAL
             string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmss");
             string pdfFooterFormat = HomeReportConstantValue.PdfFooter2;
@@ -694,6 +705,47 @@ namespace ExpenseProcessingSystem.Controllers
                         HomeReportFilter = model,
                         ReportCommonVM = repComVM
                     };
+                    break;
+
+                //For BIR Withholding Tax Reporting CSV
+                case HomeReportConstantValue.BIRWTCSV:
+                    layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
+
+                    if (model.ReportSubType.ToString().Substring(4, 1) == "1")
+                    {
+                        returnPeriod = "06/30/" + model.ReportSubType.ToString().Substring(0, 4);
+                        model.Month = 1;
+                        model.Year = int.Parse(model.ReportSubType.ToString().Substring(0, 4));
+                        model.MonthTo = 6;
+                        model.YearTo = int.Parse(model.ReportSubType.ToString().Substring(0, 4));
+                    }
+                    else
+                    {
+                        returnPeriod = "12/31/" + model.ReportSubType.ToString().Substring(0, 4);
+                        model.Month = 7;
+                        model.Year = int.Parse(model.ReportSubType.ToString().Substring(0, 4));
+                        model.MonthTo = 12;
+                        model.YearTo = int.Parse(model.ReportSubType.ToString().Substring(0, 4));
+                    }
+
+                    fileName = xelem.Element("WHAgentTIN").Value + xelem.Element("WHAgentBranchCode").Value
+                                    + returnPeriod.Replace("/", "") + xelem.Element("FormType").Value.ToLower() + ".csv";
+
+                    //Get the necessary data from Database
+                    data = new HomeReportDataFilterViewModel
+                    {
+                        HomeReportOutputBIRWTCSV = _service.GetBIRWTCSVData(model),
+                        HomeReportFilter = model,
+                        ReportCommonVM = repComVM,
+                        ReturnPeriod_CSV = returnPeriod
+                    };
+                    int seq = 1;
+                    foreach (var i in data.HomeReportOutputBIRWTCSV)
+                    {
+                        i.SeqNo = seq;
+                        seq = seq + 1;
+                    }
+
                     break;
                 //For Transaction List
                 case HomeReportConstantValue.TransListReport:
@@ -794,6 +846,16 @@ namespace ExpenseProcessingSystem.Controllers
 
                 //Return Preview
                 return View(pdfLayoutFilePath, data);
+            }
+            else if (model.FileFormat == HomeReportConstantValue.CSVID)
+            {
+                ExcelGenerateService excelGenerate = new ExcelGenerateService();
+
+                byte[] csvData = excelGenerate.CSVOutput(data);
+                Console.WriteLine(Encoding.Default.GetString(csvData));
+
+                //Return CSV file
+                return File(csvData, "text/csv", fileName);
             }
 
             //Temporary return
@@ -1283,7 +1345,12 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 return View("Entry_PCV", PopulateEntry((EntryCVViewModelList)EntryCVViewModelList));
             }
-
+            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
+            var phpID = _service.getAccountByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value)).Account_ID;
+            foreach (var i in EntryCVViewModelList.EntryCV)
+            {
+                i.ccy = phpID;
+            }
             EntryCVViewModelList pcvList = new EntryCVViewModelList();
 
             int id = 0;

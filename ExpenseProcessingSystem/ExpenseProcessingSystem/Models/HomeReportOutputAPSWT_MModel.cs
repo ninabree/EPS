@@ -27,5 +27,9 @@ namespace ExpenseProcessingSystem.Models
 
         public int Payee_SS_ID { get; set; }
         public int Payee_ID { get; set; }
+
+        public DateTime Last_Update_Date { get; set; }
+
+        public int SeqNo { get; set; }
     }
 }
