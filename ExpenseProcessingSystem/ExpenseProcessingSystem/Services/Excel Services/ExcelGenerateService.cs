@@ -1,15 +1,19 @@
 ﻿using ExpenseProcessingSystem.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System;
 using System.Drawing;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Xml.Linq;
 
 namespace ExpenseProcessingSystem.Services.Excel_Services
 {
     public class ExcelGenerateService
     {
+        XElement xelem = XElement.Load("wwwroot/xml/ReportHeader.xml");
         public string ExcelGenerateData(string layoutName, string fileName, HomeReportDataFilterViewModel data)
         {
             string excelTemplateName = layoutName + ".xlsx";
@@ -703,6 +707,48 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 }
             }
             return destPath + newFileName;
+        }
+
+        public byte[] CSVOutput(HomeReportDataFilterViewModel data)
+        {
+            var header = new string[]
+            {
+            xelem.Element("FormType").Value,
+            xelem.Element("WHAgentTIN").Value,
+            xelem.Element("WHAgentBranchCode").Value,
+            data.ReturnPeriod_CSV
+            };
+
+            int c = 1;
+
+            var content = (from i in data.HomeReportOutputBIRWTCSV
+                                   select new object[]
+                                   {
+                                            xelem.Element("FormType").Value,//1
+                                            $"{xelem.Element("WHAgentTIN").Value.Replace("-", "")}", //2
+                                            $"{xelem.Element("WHAgentBranchCode").Value}", //3
+                                            $"{data.ReturnPeriod_CSV}", //4
+                                            $"{i.SeqNo.ToString().PadLeft(6, '0')}", //5
+                                            $"{i.Tin.Replace("-", "")}", //6
+                                            $"{xelem.Element("WHAgentBranchCode").Value}", //7
+                                            $"{i.Payee}", //8
+                                            $"{""}", //9
+                                            $"{""}", //10
+                                            $"{"".Replace(",","").Replace(")","").Replace("(","").Replace("&","").Replace("!","")}", //11
+                                            $"{i.ATC.Replace(",","").Replace(")","").Replace("(","").Replace("&","").Replace("!","")}", //12
+                                            $"{string.Format("{0:0.00}", i.AOIP)}", //13
+                                            $"{string.Format("{0:0.00}", i.RateOfTax)}", //14
+                                            string.Format("{0:0.00}", i.AOTW) //15
+                                   }).ToList();
+            //// Build the file content
+            var csvContent = new StringBuilder();
+            content.ForEach(line =>
+            {
+                csvContent.AppendLine(string.Join(",", line));
+            });
+            
+            return Encoding.ASCII.GetBytes($"{string.Join(",", header)}\r\n{csvContent.ToString()}");
+
         }
     }
 }

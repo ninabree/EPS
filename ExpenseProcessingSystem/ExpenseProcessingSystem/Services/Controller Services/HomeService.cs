@@ -21,7 +21,6 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Reflection;
 using System.Xml.Linq;
-using System.Data.SqlClient;
 using System.Xml;
 using ExpenseProcessingSystem.ViewModels.Reports;
 
@@ -2771,23 +2770,28 @@ namespace ExpenseProcessingSystem.Services
         {
             int[] status = { GlobalSystemValues.STATUS_APPROVED, GlobalSystemValues.STATUS_POSTED };
             var vendList = _context.DMVendor.ToList();
-            var dbAPSWT_M = (from expEntryDetl in _context.ExpenseEntryDetails
-                             join expense in _context.ExpenseEntry on expEntryDetl.ExpenseEntryModel.Expense_ID equals expense.Expense_ID
-                             join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
-                             where status.Contains(expense.Expense_Status)
-                             && expense.Expense_Last_Updated.Month == month
-                             && expense.Expense_Last_Updated.Year == year
-                             orderby expense.Expense_Last_Updated
-                             select new HomeReportOutputAPSWT_MModel
-                             {
-                                 Payee_ID = expense.Expense_Payee,
-                                 Payee_SS_ID = expEntryDetl.ExpDtl_SS_Payee,
-                                 ATC = tr.TR_ATC,
-                                 NOIP = tr.TR_Nature,
-                                 AOIP = expEntryDetl.ExpDtl_Credit_Cash,
-                                 RateOfTax = tr.TR_Tax_Rate,
-                                 AOTW = expEntryDetl.ExpDtl_Credit_Ewt
-                             }).ToList();
+            List<HomeReportOutputAPSWT_MModel> dbAPSWT_M = new List<HomeReportOutputAPSWT_MModel>();
+            List<HomeReportOutputAPSWT_MModel> dbAPSWT_M_LIQ = new List<HomeReportOutputAPSWT_MModel>();
+
+            //Get data from Taxable expense table.
+            dbAPSWT_M = (from expEntryDetl in _context.ExpenseEntryDetails
+                            join expense in _context.ExpenseEntry on expEntryDetl.ExpenseEntryModel.Expense_ID equals expense.Expense_ID
+                            join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
+                            where status.Contains(expense.Expense_Status)
+                            && expense.Expense_Last_Updated.Month == month
+                            && expense.Expense_Last_Updated.Year == year
+                            orderby expense.Expense_Last_Updated
+                            select new HomeReportOutputAPSWT_MModel
+                            {
+                                Payee_ID = expense.Expense_Payee,
+                                Payee_SS_ID = expEntryDetl.ExpDtl_SS_Payee,
+                                ATC = tr.TR_ATC,
+                                NOIP = tr.TR_Nature,
+                                AOIP = expEntryDetl.ExpDtl_Debit,
+                                RateOfTax = tr.TR_Tax_Rate,
+                                AOTW = expEntryDetl.ExpDtl_Credit_Ewt,
+                                Last_Update_Date = expense.Expense_Last_Updated
+                            }).ToList();
 
             foreach (var i in dbAPSWT_M)
             {
@@ -2797,7 +2801,33 @@ namespace ExpenseProcessingSystem.Services
                 i.Payee = vendorRecord.Vendor_Name;
             }
 
-            return dbAPSWT_M;
+            //Get data from Taxable liquidation table.
+            dbAPSWT_M_LIQ = (from ie in _context.LiquidationInterEntity
+                             join expDtl in _context.ExpenseEntryDetails on ie.ExpenseEntryDetailModel.ExpDtl_ID equals expDtl.ExpDtl_ID
+                             join liqDtl in _context.LiquidationEntryDetails on expDtl.ExpenseEntryModel.Expense_ID equals liqDtl.ExpenseEntryModel.Expense_ID
+                             where status.Contains(liqDtl.Liq_Status)
+                             && ie.Liq_TaxRate > 0
+                             && liqDtl.Liq_LastUpdated_Date.Month == month
+                             && liqDtl.Liq_LastUpdated_Date.Year == year
+                             select new HomeReportOutputAPSWT_MModel
+                             {
+                                 Payee_SS_ID = expDtl.ExpDtl_SS_Payee,
+                                 ATC = "LIQ",
+                                 NOIP = "UIDATION",
+                                 AOIP = ie.Liq_Amount_2_1 + ie.Liq_Amount_2_2 + ie.Liq_Amount_3_1,
+                                 RateOfTax = ie.Liq_TaxRate,
+                                 AOTW = ie.Liq_Amount_2_2,
+                                 Last_Update_Date = liqDtl.Liq_LastUpdated_Date
+                             }).ToList();
+            foreach (var i in dbAPSWT_M_LIQ)
+            {
+                var vendorRecord = vendList.Where(x => x.Vendor_ID == i.Payee_ID || x.Vendor_ID == i.Payee_SS_ID).FirstOrDefault();
+
+                i.Tin = vendorRecord.Vendor_TIN;
+                i.Payee = vendorRecord.Vendor_Name;
+            }
+
+            return dbAPSWT_M.Concat(dbAPSWT_M_LIQ).OrderBy(x => x.Payee);
         }
 
         public IEnumerable<HomeReportOutputAST1000Model> GetAST1000_Data(HomeReportViewModel model)
@@ -2807,13 +2837,17 @@ namespace ExpenseProcessingSystem.Services
             DateTime startDT = DateTime.ParseExact(model.Year + "-" + model.Month, format, CultureInfo.InvariantCulture);
             DateTime endDT = DateTime.ParseExact(model.YearTo + "-" + model.MonthTo, format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
             var vendList = _context.DMVendor.ToList();
-            var dbAST1000 = (from expEntryDetl in _context.ExpenseEntryDetails
+            List<HomeReportOutputAST1000Model> dbAST1000 = new List<HomeReportOutputAST1000Model>();
+            List<HomeReportOutputAST1000Model> dbAST1000_LIQ = new List<HomeReportOutputAST1000Model>();
+
+            //Get data from Taxable expense table.
+            dbAST1000 = (from expEntryDetl in _context.ExpenseEntryDetails
                              join expense in _context.ExpenseEntry on expEntryDetl.ExpenseEntryModel.Expense_ID equals expense.Expense_ID
                              join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
                              where status.Contains(expense.Expense_Status)
                              && model.TaxRateList.Contains(tr.TR_Tax_Rate)
-                             && startDT.Date <= expense.Expense_Last_Updated
-                             && expense.Expense_Last_Updated <= endDT.Date
+                             && startDT.Date <= expense.Expense_Last_Updated.Date
+                             && expense.Expense_Last_Updated.Date <= endDT.Date
                              orderby expense.Expense_Last_Updated
                              select new HomeReportOutputAST1000Model
                              {
@@ -2834,7 +2868,34 @@ namespace ExpenseProcessingSystem.Services
                 i.SupplierName = vendorRecord.Vendor_Name;
             }
 
-            return dbAST1000;
+            //Get data from Taxable liquidation table.
+            dbAST1000_LIQ = (from ie in _context.LiquidationInterEntity
+                             join expDtl in _context.ExpenseEntryDetails on ie.ExpenseEntryDetailModel.ExpDtl_ID equals expDtl.ExpDtl_ID
+                             join liqDtl in _context.LiquidationEntryDetails on expDtl.ExpenseEntryModel.Expense_ID equals liqDtl.ExpenseEntryModel.Expense_ID
+                             where status.Contains(liqDtl.Liq_Status)
+                             && model.TaxRateList.Contains(float.Parse(ie.Liq_TaxRate.ToString()))
+                             && startDT.Date <= liqDtl.Liq_LastUpdated_Date
+                             && liqDtl.Liq_LastUpdated_Date <= endDT.Date
+                             select new HomeReportOutputAST1000Model
+                             {
+                                 Payee_SS_ID = expDtl.ExpDtl_SS_Payee,
+                                 ATC = "LIQ",
+                                 NOIP = "UIDATION",
+                                 TaxBase = ie.Liq_Amount_2_1 + ie.Liq_Amount_2_2 + ie.Liq_Amount_3_1,
+                                 RateOfTax = ie.Liq_TaxRate,
+                                 AOTW = ie.Liq_Amount_2_2,
+                                 Last_Update_Date = liqDtl.Liq_LastUpdated_Date
+                             }).ToList();
+
+            foreach (var i in dbAST1000_LIQ)
+            {
+                var vendorRecord = vendList.Where(x => x.Vendor_ID == i.Payee_ID || x.Vendor_ID == i.Payee_SS_ID).FirstOrDefault();
+
+                i.Tin = vendorRecord.Vendor_TIN;
+                i.SupplierName = vendorRecord.Vendor_Name;
+            }
+
+            return dbAST1000.Concat(dbAST1000_LIQ).OrderBy(x => x.SupplierName);
         }
 
         public ReportLOIViewModel GetLOIData(HomeReportViewModel model)
@@ -4815,6 +4876,73 @@ namespace ExpenseProcessingSystem.Services
                     && x.Trans_Account_Code == selectedAccount.Account_Code).OrderBy(x => x.Trans_Value_Date);
             }
             return list.OrderBy(x => x.Trans_Value_Date);
+        }
+
+        public IEnumerable<HomeReportOutputAPSWT_MModel> GetBIRWTCSVData(HomeReportViewModel model)
+        {
+            int[] status = { GlobalSystemValues.STATUS_APPROVED, GlobalSystemValues.STATUS_POSTED };
+            string format = "yyyy-M";
+            DateTime startDT = DateTime.ParseExact(model.Year + "-" + model.Month, format, CultureInfo.InvariantCulture);
+            DateTime endDT = DateTime.ParseExact(model.YearTo + "-" + model.MonthTo, format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
+
+            var vendList = _context.DMVendor.ToList();
+            List<HomeReportOutputAPSWT_MModel> dbBIRCSV = new List<HomeReportOutputAPSWT_MModel>();
+            List<HomeReportOutputAPSWT_MModel> dbBIRCSV_LIQ = new List<HomeReportOutputAPSWT_MModel>();
+
+            //Get data from Taxable expense table.
+            dbBIRCSV = (from expEntryDetl in _context.ExpenseEntryDetails
+                         join expense in _context.ExpenseEntry on expEntryDetl.ExpenseEntryModel.Expense_ID equals expense.Expense_ID
+                         join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
+                         where status.Contains(expense.Expense_Status)
+                                && startDT.Date <= expense.Expense_Last_Updated.Date
+                                && expense.Expense_Last_Updated.Date <= endDT.Date
+                         orderby expense.Expense_Last_Updated
+                         select new HomeReportOutputAPSWT_MModel
+                         {
+                             Payee_ID = expense.Expense_Payee,
+                             Payee_SS_ID = expEntryDetl.ExpDtl_SS_Payee,
+                             ATC = tr.TR_ATC,
+                             NOIP = tr.TR_Nature,
+                             AOIP = expEntryDetl.ExpDtl_Debit,
+                             RateOfTax = tr.TR_Tax_Rate,
+                             AOTW = expEntryDetl.ExpDtl_Credit_Ewt,
+                             Last_Update_Date = expense.Expense_Last_Updated
+                         }).ToList();
+
+            foreach (var i in dbBIRCSV)
+            {
+                var vendorRecord = vendList.Where(x => x.Vendor_ID == i.Payee_ID || x.Vendor_ID == i.Payee_SS_ID).FirstOrDefault();
+
+                i.Tin = vendorRecord.Vendor_TIN;
+                i.Payee = vendorRecord.Vendor_Name;
+            }
+
+            //Get data from Taxable liquidation table.
+            dbBIRCSV_LIQ = (from ie in _context.LiquidationInterEntity
+                             join expDtl in _context.ExpenseEntryDetails on ie.ExpenseEntryDetailModel.ExpDtl_ID equals expDtl.ExpDtl_ID
+                             join liqDtl in _context.LiquidationEntryDetails on expDtl.ExpenseEntryModel.Expense_ID equals liqDtl.ExpenseEntryModel.Expense_ID
+                             where status.Contains(liqDtl.Liq_Status)
+                                && startDT.Date <= liqDtl.Liq_LastUpdated_Date.Date
+                                && liqDtl.Liq_LastUpdated_Date.Date <= endDT.Date
+                            select new HomeReportOutputAPSWT_MModel
+                             {
+                                 Payee_SS_ID = expDtl.ExpDtl_SS_Payee,
+                                 ATC = "LIQUI",
+                                 NOIP = "UIDA",
+                                 AOIP = ie.Liq_Amount_2_1 + ie.Liq_Amount_2_2 + ie.Liq_Amount_3_1,
+                                 RateOfTax = ie.Liq_TaxRate,
+                                 AOTW = ie.Liq_Amount_2_2,
+                                 Last_Update_Date = liqDtl.Liq_LastUpdated_Date
+                             }).ToList();
+            foreach (var i in dbBIRCSV_LIQ)
+            {
+                var vendorRecord = vendList.Where(x => x.Vendor_ID == i.Payee_ID || x.Vendor_ID == i.Payee_SS_ID).FirstOrDefault();
+
+                i.Tin = vendorRecord.Vendor_TIN;
+                i.Payee = vendorRecord.Vendor_Name;
+            }
+
+            return dbBIRCSV.Concat(dbBIRCSV_LIQ).OrderBy(x => x.Payee);
         }
 
         //Get account name for Non-cash related transaction for Transaction List report.
