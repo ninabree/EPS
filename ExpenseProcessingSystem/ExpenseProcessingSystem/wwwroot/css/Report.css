@@ -1,0 +1,20 @@
+﻿.rep-tab-cont {
+    background-color: #fafafa;
+    width: 100%;
+}
+/*.rep-voucher-cont {
+}
+    .rep-voucher-cont > .rep-voucher-tbl {
+        /*background-color: red;
+    }*/
+    .rep-voucher-cont > .rep-voucher-tbl-left {
+        /*float: left;*/
+        width: 30%;
+        display: inline-block;
+    }
+
+    .rep-voucher-cont > .rep-voucher-tbl-right {
+        /*float: right;*/
+        width: 70%;
+        display: inline-block;
+    }

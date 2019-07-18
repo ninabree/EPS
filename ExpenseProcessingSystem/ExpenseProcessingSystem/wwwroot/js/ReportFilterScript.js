@@ -280,7 +280,7 @@
 $(document).ready(function () {
     $("#btnGenerateFile").click(function (e) {
         e.preventDefault();
-
+        var reportType = $('#ddlReportType').val();
         var chkList = [];
         $.each($("input[name='chkTaxRate']:checked"), function () {
             chkList.push($(this).val());
@@ -298,13 +298,13 @@ $(document).ready(function () {
                 ReportType: $('#ddlReportType').val(),
                 ReportSubType: $('#ddlSubType').val(),
                 FileFormat: $('#ddlFileFormat').val(),
-                Year: $('#ddlYear').val(),
-                Month: $('#ddlMonth').val(),
-                YearTo: $('#ddlYearTo').val(),
-                MonthTo: $('#ddlMonthTo').val(),
-                PeriodOption: $('.radioPeriodOption:checked').val(),
-                PeriodFrom: $('#PeriodFrom').val(),
-                PeriodTo: $('#PeriodTo').val()
+                Year: $('#ddlYear_' + reportType).val(),
+                Month: $('#ddlMonth_' + reportType).val(),
+                YearTo: $('#ddlYearTo_' + reportType).val(),
+                MonthTo: $('#ddlMonthTo_' + reportType).val(),
+                PeriodOption: $('.radioPeriodOption_' + reportType + ':checked').val(),
+                PeriodFrom: $('#PeriodFrom_' + reportType).val(),
+                PeriodTo: $('#PeriodTo_' + reportType).val()
             },
             success: function (result) {
                 if (result.message == "Invalid") {
@@ -320,24 +320,24 @@ $(document).ready(function () {
                     window.location.href = "/Home/GenerateFilePreview?ReportType=" + $('#ddlReportType').val()
                         + "&ReportSubType=" + $('#ddlSubType').val()
                         + "&FileFormat=" + $('#ddlFileFormat').val()
-                        + "&Year=" + $('#ddlYear').val()
-                        + "&Month=" + $('#ddlMonth').val()
-                        + "&YearTo=" + $('#ddlYearTo').val()
-                        + "&MonthTo=" + $('#ddlMonthTo').val()
-                        + "&PeriodOption=" + $('.radioPeriodOption:checked').val()
-                        + "&PeriodFrom=" + $('#PeriodFrom').val()
-                        + "&PeriodTo=" + $('#PeriodTo').val()
+                        + "&Year=" + $('#ddlYear_' + reportType).val()
+                        + "&Month=" + $('#ddlMonth_' + reportType).val()
+                        + "&YearTo=" + $('#ddlYearTo_' + reportType).val()
+                        + "&MonthTo=" + $('#ddlMonthTo_' + reportType).val()
+                        + "&PeriodOption=" + $('.radioPeriodOption_' + $('#ddlReportType').val()+':checked').val()
+                        + "&PeriodFrom=" + $('#PeriodFrom_' + reportType).val()
+                        + "&PeriodTo=" + $('#PeriodTo_' + reportType).val()
                         + "&TaxRateArray=" + chkList
                         + "&VoucherArray=" + voucherList
-                        + "&VoucherNoList=" + $('#VoucherNoList').val()
-                        + "&SignatoryID=" + $('#ddlSignatory').val()
-                        + "&CheckNoFrom=" + $('#CheckNoFrom').val()
-                        + "&CheckNoTo=" + $('#CheckNoTo').val()
-                        + "&VoucherNoFrom=" + $('#VoucherNoFrom').val()
-                        + "&VoucherNoTo=" + $('#VoucherNoTo').val()
-                        + "&TransNoFrom=" + $('#TransNoFrom').val()
-                        + "&TransNoTo=" + $('#TransNoTo').val()
-                        + "&SubjName=" + $('#SubjName').val();
+                        + "&VoucherNoList=" + $('#VoucherNoList_' + reportType).val()
+                        + "&SignatoryID=" + $('#ddlSignatory_' + reportType).val()
+                        + "&CheckNoFrom=" + $('#CheckNoFrom_' + reportType).val()
+                        + "&CheckNoTo=" + $('#CheckNoTo_' + reportType).val()
+                        + "&VoucherNoFrom=" + $('#VoucherNoFrom_' + reportType).val()
+                        + "&VoucherNoTo=" + $('#VoucherNoTo_' + reportType).val()
+                        + "&TransNoFrom=" + $('#TransNoFrom_' + reportType).val()
+                        + "&TransNoTo=" + $('#TransNoTo_' + reportType).val()
+                        + "&SubjName=" + $('#SubjName_' + reportType).val();
                 }
             }, 
             error: function (result) {
@@ -348,6 +348,7 @@ $(document).ready(function () {
     $("#btnGeneratePreview").click(function (e) {
         e.preventDefault();
 
+        var reportType = $('#ddlReportType').val();
         var chkList = [];
         $.each($("input[name='chkTaxRate']:checked"), function () {
             chkList.push($(this).val());
@@ -362,13 +363,13 @@ $(document).ready(function () {
                 ReportType: $('#ddlReportType').val(),
                 ReportSubType: $('#ddlSubType').val(),
                 FileFormat: '3',
-                Year: $('#ddlYear').val(),
-                Month: $('#ddlMonth').val(),
-                YearTo: $('#ddlYearTo').val(),
-                MonthTo: $('#ddlMonthTo').val(),
-                PeriodOption: $('.radioPeriodOption:checked').val(),
-                PeriodFrom: $('#PeriodFrom').val(),
-                PeriodTo: $('#PeriodTo').val()
+                Year: $('#ddlYear_' + reportType).val(),
+                Month: $('#ddlMonth_' + reportType).val(),
+                YearTo: $('#ddlYearTo_' + reportType).val(),
+                MonthTo: $('#ddlMonthTo_' + reportType).val(),
+                PeriodOption: $('.radioPeriodOption_' + reportType + ':checked').val(),
+                PeriodFrom: $('#PeriodFrom_' + reportType).val(),
+                PeriodTo: $('#PeriodTo_' + reportType).val()
             },
             success: function (result) {
                 if (result.message == "Invalid") {
@@ -384,22 +385,22 @@ $(document).ready(function () {
                     $('#iframePreview').prop('src', "/Home/GenerateFilePreview?ReportType=" + $('#ddlReportType').val()
                         + "&ReportSubType=" + $('#ddlSubType').val()
                         + "&FileFormat=3"
-                        + "&Year=" + $('#ddlYear').val()
-                        + "&Month=" + $('#ddlMonth').val()
-                        + "&YearTo=" + $('#ddlYearTo').val()
-                        + "&MonthTo=" + $('#ddlMonthTo').val()
-                        + "&PeriodOption=" + $('.radioPeriodOption:checked').val()
-                        + "&PeriodFrom=" + $('#PeriodFrom').val()
-                        + "&PeriodTo=" + $('#PeriodTo').val()
+                        + "&Year=" + $('#ddlYear_' + reportType).val()
+                        + "&Month=" + $('#ddlMonth_' + reportType).val()
+                        + "&YearTo=" + $('#ddlYearTo_' + reportType).val()
+                        + "&MonthTo=" + $('#ddlMonthTo_' + reportType).val()
+                        + "&PeriodOption=" + $('.radioPeriodOption_' + reportType + ':checked').val()
+                        + "&PeriodFrom=" + $('#PeriodFrom_' + reportType).val()
+                        + "&PeriodTo=" + $('#PeriodTo_' + reportType).val()
                         + "&TaxRateArray=" + chkList
-                        + "&SignatoryID=" + $('#ddlSignatory').val()
-                        + "&CheckNoFrom=" + $('#CheckNoFrom').val()
-                        + "&CheckNoTo=" + $('#CheckNoTo').val()
-                        + "&VoucherNoFrom=" + $('#VoucherNoFrom').val()
-                        + "&VoucherNoTo=" + $('#VoucherNoTo').val()
-                        + "&TransNoFrom=" + $('#TransNoFrom').val()
-                        + "&TransNoTo=" + $('#TransNoTo').val()
-                        + "&SubjName=" + $('#SubjName').val());
+                        + "&SignatoryID=" + $('#ddlSignatory_' + reportType).val()
+                        + "&CheckNoFrom=" + $('#CheckNoFrom_' + reportType).val()
+                        + "&CheckNoTo=" + $('#CheckNoTo_' + reportType).val()
+                        + "&VoucherNoFrom=" + $('#VoucherNoFrom_' + reportType).val()
+                        + "&VoucherNoTo=" + $('#VoucherNoTo_' + reportType).val()
+                        + "&TransNoFrom=" + $('#TransNoFrom_' + reportType).val()
+                        + "&TransNoTo=" + $('#TransNoTo_' + reportType).val()
+                        + "&SubjName=" + $('#SubjName_' + reportType).val());
 
                     var dt = new Date();
                     var date_time = ('0' + (dt.getMonth() + 1)).slice(-2) + "/" + dt.getDate() + "/" + dt.getFullYear() + " " + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();

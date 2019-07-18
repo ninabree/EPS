@@ -217,8 +217,13 @@
         $(".curr2").on("change", function (e) {
             e.stopImmediatePropagation();
             var val = $(this).find("option:selected").text();
+            var id = $(this).find("option:selected").val();
+            alert(id);
             $("#convertCurr1").text(val);
             $(".curr2-abbr").text(val);
+            $('#interPartList_0__Inter_Particular2_1__Particular_CredCurr_ID').val(id);
+            $('#interPartList_0__Inter_Particular3_0__Particular_CredCurr_ID').val(id);
+            $('#interPartList_0__Inter_Particular3_1__Particular_CredCurr_ID').val(id);
         });
         $(".modal-footer2").on("click", "#saveBtnEntry", function (e) {
             e.stopImmediatePropagation();

@@ -626,7 +626,7 @@ namespace ExpenseProcessingSystem.Controllers
             //string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmsstt"); // ORIGINAL
             string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmss");
             string pdfFooterFormat = HomeReportConstantValue.PdfFooter2;
-            var signatory = _service.GetSignatoryInfo(model.SignatoryID);
+            var signatory = model.SignatoryID != 0 ? _service.GetSignatoryInfo(model.SignatoryID) : new DMBIRCertSignModel();
 
             XElement xelem = XElement.Load("wwwroot/xml/ReportHeader.xml");
 
@@ -2997,8 +2997,6 @@ namespace ExpenseProcessingSystem.Controllers
         {
             List<String> errors = new List<String>();
             string format = "yyyy-M";
-            DateTime fromDate = DateTime.ParseExact(model.Year + "-" + model.Month, format, CultureInfo.InvariantCulture);
-            DateTime toDate = DateTime.ParseExact(model.YearTo + "-" + model.MonthTo, format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
 
 
             if (model.ReportType != 0)
@@ -3006,6 +3004,8 @@ namespace ExpenseProcessingSystem.Controllers
                 switch (model.ReportType)
                 {
                     case ConstantData.HomeReportConstantValue.AST1000:
+                        DateTime fromDate = DateTime.ParseExact(model.Year + "-" + model.Month, format, CultureInfo.InvariantCulture);
+                        DateTime toDate = DateTime.ParseExact(model.YearTo + "-" + model.MonthTo, format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
                         if (fromDate.Date > toDate.Date)
                         {
                             errors.Add("Year,Month(TO) must be later than Year,Month(FROM)");
