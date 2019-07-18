@@ -158,6 +158,7 @@ namespace ExpenseProcessingSystem.Services
                                 p.Expense_Type,
                                 p.Expense_Debit_Total,
                                 p.Expense_Payee,
+                                p.Expense_Payee_Type,
                                 p.Expense_Creator_ID,
                                 p.Expense_Verifier_1,
                                 p.Expense_Verifier_2,
@@ -214,7 +215,7 @@ namespace ExpenseProcessingSystem.Services
                     App_ID = item.Expense_ID,
                     App_Type = (item.Liq_Status == 0) ? GlobalSystemValues.getApplicationType(item.Expense_Type) : GlobalSystemValues.getApplicationType(item.Expense_Type) + " (Liquidation)",
                     App_Amount = item.Expense_Debit_Total,
-                    App_Payee = getVendorName(item.Expense_Payee),
+                    App_Payee = getVendorName(item.Expense_Payee, item.Expense_Payee_Type),
                     App_Maker = (item.Liq_Status == 0) ? getUserName(item.Expense_Creator_ID) : getUserName(item.Liq_Created_UserID),
                     App_Verifier_ID_List = new List<string> { ver1, ver2 },
                     App_Date = (item.Liq_Status == 0) ? item.Expense_Date : item.Liq_Created_Date,
@@ -5431,6 +5432,7 @@ namespace ExpenseProcessingSystem.Services
                     Expense_Type = expenseType,
                     Expense_Date = entryModel.expenseDate,
                     Expense_Payee = entryModel.vendor,
+                    Expense_Payee_Type = GlobalSystemValues.PAYEETYPE_VENDOR,
                     Expense_Debit_Total = TotalDebit,
                     Expense_Credit_Total = credEwtTotal + credCashTotal,
                     Expense_Creator_ID = userId,
@@ -5752,6 +5754,9 @@ namespace ExpenseProcessingSystem.Services
                 verifier_1 = (EntryDetails.e.Expense_Status == 1) ? "" : getUserName(EntryDetails.e.Expense_Verifier_1),
                 verifier_2 = (EntryDetails.e.Expense_Status == 1) ? "" : getUserName(EntryDetails.e.Expense_Verifier_2),
                 maker = EntryDetails.e.Expense_Creator_ID,
+                vendor_Name = (EntryDetails.e.Expense_Payee == 0) ? "" : getVendorName(EntryDetails.e.Expense_Payee, EntryDetails.e.Expense_Payee_Type),
+                payee_type = EntryDetails.e.Expense_Payee_Type,
+                payee_type_Name = (EntryDetails.e.Expense_Payee_Type == 0) ? "" : getPayeeTypeName(EntryDetails.e.Expense_Payee_Type),
                 EntryDDV = ddvList
             };
 
@@ -6310,6 +6315,7 @@ namespace ExpenseProcessingSystem.Services
                                     p.Expense_Type,
                                     p.Expense_Debit_Total,
                                     p.Expense_Payee,
+                                    p.Expense_Payee_Type,
                                     p.Expense_Creator_ID,
                                     p.Expense_Approver,
                                     p.Expense_Last_Updated,
@@ -6338,7 +6344,7 @@ namespace ExpenseProcessingSystem.Services
                     App_ID = item.Expense_ID,
                     App_Type = GlobalSystemValues.getApplicationType(item.Expense_Type),
                     App_Amount = item.Expense_Debit_Total,
-                    App_Payee = getVendorName(item.Expense_Payee),
+                    App_Payee = getVendorName(item.Expense_Payee, item.Expense_Payee_Type),
                     App_Maker = getUserName(item.Expense_Creator_ID),
                     App_Approver = getUserName(item.Expense_Approver),
                     App_Date = item.Expense_Created_Date,
@@ -6504,7 +6510,7 @@ namespace ExpenseProcessingSystem.Services
                     credEwt = dtl.d.ExpDtl_Credit_Ewt,
                     credCash = dtl.d.ExpDtl_Credit_Cash,
                     dtlSSPayee = dtl.d.ExpDtl_SS_Payee,
-                    dtlSSPayeeName = getVendorName(dtl.d.ExpDtl_SS_Payee),
+                    dtlSSPayeeName = getVendorName(dtl.d.ExpDtl_SS_Payee, GlobalSystemValues.PAYEETYPE_VENDOR),
                     gBaseRemarksDetails = remarksDtl,
                     cashBreakdown = cashBreakdown,
                     liqCashBreakdown = liqCashBreakdown,
@@ -7896,16 +7902,25 @@ namespace ExpenseProcessingSystem.Services
             return select;
         }
         //get vendor name
-        public string getVendorName(int vendorID)
+        public string getVendorName(int vendorID, int payeeTypeID)
         {
-            var vendor = _context.DMVendor.SingleOrDefault(x => x.Vendor_ID == vendorID);
-
-            if (vendor == null)
-            {
-                return null;
+            if (payeeTypeID == GlobalSystemValues.PAYEETYPE_VENDOR) {
+                return _context.DMVendor.Where(x => x.Vendor_ID == vendorID).Select(x => x.Vendor_Name).FirstOrDefault();
             }
-
-            return vendor.Vendor_Name;
+            if (payeeTypeID == GlobalSystemValues.PAYEETYPE_REGEMP || payeeTypeID == GlobalSystemValues.PAYEETYPE_TEMPEMP)
+            {
+                return _context.DMEmp.Where(x => x.Emp_ID == vendorID).Select(x => x.Emp_Name).FirstOrDefault();
+            }
+            if (payeeTypeID == GlobalSystemValues.PAYEETYPE_CUST)
+            {
+                return _context.DMCust.Where(x => x.Cust_ID == vendorID).Select(x => x.Cust_Name).FirstOrDefault();
+            }
+            return null;
+        }
+        //get payee type name
+        public string getPayeeTypeName(int payeeTypeID)
+        {
+             return GlobalSystemValues.PAYEETYPE_SELECT_ALL.Where(x=> x.Value == payeeTypeID.ToString()).Select(x=> x.Text).FirstOrDefault();
         }
         public int getCurrencyID(string ccyAbbr)
         {

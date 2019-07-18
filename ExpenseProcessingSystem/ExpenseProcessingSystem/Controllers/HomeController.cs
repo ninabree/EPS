@@ -3099,7 +3099,7 @@ namespace ExpenseProcessingSystem.Controllers
             vvm.maker = GetUserID();
 
             vvm.voucherNo = DateTime.Now.Year.ToString("YY") + "-" + model.expenseId;
-            vvm.payee = _service.getVendorName(model.vendor);
+            vvm.payee = _service.getVendorName(model.vendor, model.payee_type);
 
             List<ewtAmtList> _ewtList = new List<ewtAmtList>();
 
