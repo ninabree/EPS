@@ -273,22 +273,22 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                                  ApproverName = (c == null) ? "" : c.User_LName + ", " + c.User_FName }).ToList();
             var trList = (from a in _context.DMVendorTRVAT
                           join c in _context.DMTR on a.VTV_TR_ID equals c.TR_MasterID
-                          where mListIDs.Contains(a.VTV_Vendor_ID) && c.TR_isActive == true
+                          where mListIDs.Contains(a.VTV_Vendor_ID) && c.TR_isActive == true && c.TR_isDeleted == false
                           select new { a.VTV_Vendor_ID, c.TR_ID, c.TR_Tax_Rate, c.TR_WT_Title }).ToList();
 
             var trpendingList = (from a in _context.DMVendorTRVAT_Pending
                                  join c in _context.DMTR on a.Pending_VTV_TR_ID equals c.TR_MasterID
-                                 where mListIDs.Contains(a.Pending_VTV_Vendor_ID) && c.TR_isActive == true
+                                 where mListIDs.Contains(a.Pending_VTV_Vendor_ID) && c.TR_isActive == true && c.TR_isDeleted == false
                                  select new { a.Pending_VTV_Vendor_ID, c.TR_ID, c.TR_Tax_Rate, c.TR_WT_Title }).ToList();
 
             var vatList = (from a in _context.DMVendorTRVAT
                           join d in _context.DMVAT on a.VTV_VAT_ID equals d.VAT_MasterID
-                           where mListIDs.Contains(a.VTV_Vendor_ID) && d.VAT_isActive == true
+                           where mListIDs.Contains(a.VTV_Vendor_ID) && d.VAT_isActive == true && d.VAT_isDeleted == false
                            select new { a.VTV_Vendor_ID, d.VAT_ID, d.VAT_Rate, d.VAT_Name }).ToList();
 
             var vatpendingList = (from a in _context.DMVendorTRVAT_Pending
                            join d in _context.DMVAT on a.Pending_VTV_VAT_ID equals d.VAT_MasterID
-                                  where mListIDs.Contains(a.Pending_VTV_Vendor_ID) && d.VAT_isActive == true
+                                  where mListIDs.Contains(a.Pending_VTV_Vendor_ID) && d.VAT_isActive == true && d.VAT_isDeleted == false
                                   select new { a.Pending_VTV_Vendor_ID, d.VAT_ID, d.VAT_Rate, d.VAT_Name }).ToList();
 
             var statusList = (from a in mList

@@ -39,6 +39,9 @@ namespace ExpenseProcessingSystem.ConstantData
         //Outstanding Advances
         public const int OutstandingAdvances = 11;
 
+        //List of Instructions
+        public const int LOI = 13;
+
         //EXCEL, PDF, Preview format ID
         public const int EXCELID = 1;
         public const int PDFID = 2;
@@ -278,6 +281,12 @@ namespace ExpenseProcessingSystem.ConstantData
                     Id = 12,
                     TypeName = "Prepaid Amortization Schedule",
                     SubTypeAvail = true
+                },
+                new HomeReportTypesModel
+                {
+                    Id = 13,
+                    TypeName = "Letter of Instructions (LOI)",
+                    SubTypeAvail = false
                 }
             };
         }
