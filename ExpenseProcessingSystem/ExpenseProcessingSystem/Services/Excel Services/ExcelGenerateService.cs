@@ -74,36 +74,36 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 {
                     lastRow += 1;
                     worksheet.Cells["A" + lastRow].Value = i.Tin;
-                    worksheet.Cells["A" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["A" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["B" + lastRow].Value = i.Payee;
-                    worksheet.Cells["B" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["B" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["C" + lastRow].Value = i.ATC;
-                    worksheet.Cells["C" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["C" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["D" + lastRow].Value = i.NOIP;
-                    worksheet.Cells["D" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["D" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["E" + lastRow].Value = i.AOIP;
-                    worksheet.Cells["E" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["E" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["F" + lastRow].Value = i.RateOfTax;
-                    worksheet.Cells["F" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["F" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["G" + lastRow].Value = i.AOTW;
-                    worksheet.Cells["G" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["G" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                 }
                 dataEndRow = lastRow;
                 lastRow += 1;
 
                 worksheet.Cells["E" + lastRow].Formula = "SUM(E"+ dataStartRow + ":E" + dataEndRow + ")";
-                worksheet.Cells["E" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                worksheet.Cells["E" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                 worksheet.Cells["G" + lastRow].Formula = "SUM(G" + dataStartRow + ":G" + dataEndRow + ")";
-                worksheet.Cells["G" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                worksheet.Cells["G" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
 
                 lastRow += 3;
-                worksheet.Cells["C" + lastRow].Value = "ALBERT ADVINCULA";
-                worksheet.Cells["C" + lastRow].Style.Font.Bold = true;
-                worksheet.Cells["C" + lastRow].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                lastRow += 1;
-                worksheet.Cells["C" + lastRow].Value = "VP-Manager/ AdministrationDepartment";
+                worksheet.Cells["C" + lastRow].Value = data.ReportCommonVM.Signatory_Name;
                 worksheet.Cells["C" + lastRow].Style.Font.Bold = true;
                 worksheet.Cells["C" + lastRow].Style.Font.UnderLine = true;
+                worksheet.Cells["C" + lastRow].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                lastRow += 1;
+                worksheet.Cells["C" + lastRow].Value = data.ReportCommonVM.Signatory_Position;
+                worksheet.Cells["C" + lastRow].Style.Font.Bold = true;
                 worksheet.Cells["C" + lastRow].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
                 //footer
@@ -135,21 +135,21 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 {
                     lastRow += 1;
                     worksheet.Cells["A" + lastRow].Value = i.SeqNo;
-                    worksheet.Cells["A" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["A" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["B" + lastRow].Value = i.Tin;
-                    worksheet.Cells["B" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["B" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["C" + lastRow].Value = i.SupplierName;
-                    worksheet.Cells["C" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["C" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["D" + lastRow].Value = i.NOIP;
-                    worksheet.Cells["D" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["D" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["E" + lastRow].Value = i.ATC;
-                    worksheet.Cells["E" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["E" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["F" + lastRow].Value = i.TaxBase;
-                    worksheet.Cells["F" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["F" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["G" + lastRow].Value = i.RateOfTax;
-                    worksheet.Cells["G" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["G" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["H" + lastRow].Value = i.AOTW;
-                    worksheet.Cells["H" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["H" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                 }
 
                 dataEndRow = lastRow;
@@ -160,19 +160,19 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 worksheet.Cells["E" + lastRow].Value = "TOTAL =>";
                 worksheet.Cells["E" + lastRow].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                 worksheet.Cells["F" + lastRow].Formula = "SUM(F" + dataStartRow + ":F" + dataEndRow + ")";
-                worksheet.Cells["F" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                worksheet.Cells["F" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                 worksheet.Cells["H" + lastRow].Formula = "SUM(H" + dataStartRow + ":H" + dataEndRow + ")";
-                worksheet.Cells["H" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                worksheet.Cells["H" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
 
                 lastRow += 3;
-                worksheet.Cells["F" + lastRow].Value = "ALBERT ADVINCULA";
+                worksheet.Cells["F" + lastRow].Value = data.ReportCommonVM.Signatory_Name;
                 worksheet.Cells["F" + lastRow].Style.Font.Bold = true;
-                worksheet.Cells["E" + lastRow].Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Medium;
-                worksheet.Cells["F" + lastRow].Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Medium;
-                worksheet.Cells["G" + lastRow].Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Medium;
+                worksheet.Cells["E" + lastRow].Style.Border.Bottom.Style = ExcelBorderStyle.Medium;
+                worksheet.Cells["F" + lastRow].Style.Border.Bottom.Style = ExcelBorderStyle.Medium;
+                worksheet.Cells["G" + lastRow].Style.Border.Bottom.Style = ExcelBorderStyle.Medium;
                 worksheet.Cells["F" + lastRow].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                 lastRow += 1;
-                worksheet.Cells["F" + lastRow].Value = "VP-Manager/ AdministrationDepartment";
+                worksheet.Cells["F" + lastRow].Value = data.ReportCommonVM.Signatory_Position;
                 worksheet.Cells["F" + lastRow].Style.Font.Bold = true;
                 worksheet.Cells["F" + lastRow].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                 
@@ -202,47 +202,47 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 {
                     worksheet.Cells["A" + lastRow + ":F" + lastRow].Style.Fill.PatternType = ExcelFillStyle.Solid;
                     worksheet.Cells["A" + lastRow + ":F" + lastRow].Style.Fill.BackgroundColor.SetColor(Color.White);
-                    worksheet.Cells["A" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                    worksheet.Cells["A" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
 
                     if (i.Category == "BREAK")
                     {
                         worksheet.Cells["A" + lastRow + ":F" + lastRow].Merge = true;
-                        worksheet.Cells["A" + lastRow].Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#484f4f"));
+                        worksheet.Cells["A" + lastRow].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#484f4f"));
                         worksheet.Cells["A" + lastRow].Style.Font.Color.SetColor(Color.White);
                     }
                     else if (!string.IsNullOrEmpty(i.Category))
                     {
                         worksheet.Cells["A" + lastRow].Value = i.ValueDate;
-                        worksheet.Cells["A" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
-                        worksheet.Cells["A" + lastRow].Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#c8c3cc"));
+                        worksheet.Cells["A" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                        worksheet.Cells["A" + lastRow].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#c8c3cc"));
                         worksheet.Cells["B" + lastRow].Value = i.Category;
-                        worksheet.Cells["B" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
-                        worksheet.Cells["B" + lastRow].Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#c8c3cc"));
+                        worksheet.Cells["B" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                        worksheet.Cells["B" + lastRow].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#c8c3cc"));
                         worksheet.Cells["C" + lastRow].Value = i.Remarks;
-                        worksheet.Cells["C" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
-                        worksheet.Cells["C" + lastRow].Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#c8c3cc"));
-                        worksheet.Cells["D" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
-                        worksheet.Cells["D" + lastRow].Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#c8c3cc"));
-                        worksheet.Cells["E" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
-                        worksheet.Cells["E" + lastRow].Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#c8c3cc"));
+                        worksheet.Cells["C" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                        worksheet.Cells["C" + lastRow].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#c8c3cc"));
+                        worksheet.Cells["D" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                        worksheet.Cells["D" + lastRow].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#c8c3cc"));
+                        worksheet.Cells["E" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                        worksheet.Cells["E" + lastRow].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#c8c3cc"));
                         worksheet.Cells["F" + lastRow].Value = i.BudgetBalance;
-                        worksheet.Cells["F" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
-                        worksheet.Cells["F" + lastRow].Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml("#c8c3cc"));
+                        worksheet.Cells["F" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                        worksheet.Cells["F" + lastRow].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#c8c3cc"));
                     }
                     else
                     {
                         worksheet.Cells["A" + lastRow].Value = i.ValueDate;
-                        worksheet.Cells["A" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                        worksheet.Cells["A" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
                         worksheet.Cells["B" + lastRow].Value = i.Category;
-                        worksheet.Cells["B" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                        worksheet.Cells["B" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
                         worksheet.Cells["C" + lastRow].Value = i.Remarks;
-                        worksheet.Cells["C" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                        worksheet.Cells["C" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
                         worksheet.Cells["D" + lastRow].Value = i.Department;
-                        worksheet.Cells["D" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                        worksheet.Cells["D" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
                         worksheet.Cells["E" + lastRow].Value = i.ExpenseAmount;
-                        worksheet.Cells["E" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                        worksheet.Cells["E" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
                         worksheet.Cells["F" + lastRow].Value = i.BudgetBalance;
-                        worksheet.Cells["F" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                        worksheet.Cells["F" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
                     }
                     lastRow += 1;
                 }
@@ -469,49 +469,49 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 {
                     lastRow += 1;
                     worksheet.Cells["A" + lastRow].Value = i.WTS_Voucher_No;
-                    worksheet.Cells["A" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["A" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["B" + lastRow].Value = i.WTS_Check_No;
-                    worksheet.Cells["B" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["B" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["C" + lastRow].Value = i.WTS_Val_Date;
-                    worksheet.Cells["C" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["C" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["D" + lastRow].Value = i.WTS_Ref_No;
-                    worksheet.Cells["D" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["D" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["E" + lastRow].Value = i.WTS_Section;
-                    worksheet.Cells["E" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["E" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["F" + lastRow].Value = i.WTS_Remarks;
-                    worksheet.Cells["F" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["F" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["G" + lastRow].Value = i.WTS_Deb_Cred;
-                    worksheet.Cells["G" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["G" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["H" + lastRow].Value = i.WTS_Currency_Name;
-                    worksheet.Cells["H" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["H" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["I" + lastRow].Value = i.WTS_Amount;
-                    worksheet.Cells["I" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["I" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["J" + lastRow].Value = i.WTS_Cust;
-                    worksheet.Cells["J" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["J" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["K" + lastRow].Value = i.WTS_Acc_Code;
-                    worksheet.Cells["K" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["K" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["L" + lastRow].Value = i.WTS_Acc_No;
-                    worksheet.Cells["L" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["L" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["M" + lastRow].Value = i.WTS_Acc_Name;
-                    worksheet.Cells["M" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["M" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["N" + lastRow].Value = i.WTS_Exchange_Rate;
-                    worksheet.Cells["N" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["N" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["O" + lastRow].Value = i.WTS_Contra_Currency_Name;
-                    worksheet.Cells["O" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["O" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["P" + lastRow].Value = i.WTS_Fund;
-                    worksheet.Cells["P" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["P" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["Q" + lastRow].Value = i.WTS_Advice_Print;
-                    worksheet.Cells["Q" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["Q" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["R" + lastRow].Value = i.WTS_Details;
-                    worksheet.Cells["R" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["R" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["S" + lastRow].Value = i.WTS_Entity;
-                    worksheet.Cells["S" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["S" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["T" + lastRow].Value = i.WTS_Division;
-                    worksheet.Cells["T" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["T" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["U" + lastRow].Value = i.WTS_Inter_Amount;
-                    worksheet.Cells["U" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["U" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["V" + lastRow].Value = i.WTS_Inter_Rate;
-                    worksheet.Cells["V" + lastRow].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                    worksheet.Cells["V" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                 }
                 dataEndRow = lastRow;
 
