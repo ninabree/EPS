@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Close";
-    string prevCcyRBU = Model.rbuItems.Count > 0 ? Model.rbuItems[0].ccy : "";
-    string prevCcyFCDU = Model.fcduItems.Count > 0 ? Model.fcduItems[0].ccy : "";
+    string prevCcyRBU = Model.rbuItems.Count > 0 ? Model.rbuItems.OrderBy(x => x.ccy).ThenBy(x => x.expTrans).ToList()[0].ccy : "";
+    string prevCcyFCDU = Model.fcduItems.Count > 0 ? Model.fcduItems.OrderBy(x => x.ccy).ThenBy(x => x.expTrans).ToList()[0].ccy : "";
     double totalAmount = 0;
     int totalTransCount = 0;
     int index = 0;
@@ -41,7 +41,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.rbuItems)
+                @foreach (var item in Model.rbuItems.OrderBy(x => x.ccy).ThenBy(x => x.expTrans).ToList())
                 {
                     if (prevCcyRBU == item.ccy)
                     {
@@ -127,7 +127,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.rbuItems)
+                @foreach (var item in Model.fcduItems.OrderBy(x => x.ccy).ThenBy(x => x.expTrans).ToList())
                 {
                     if (prevCcyFCDU == item.ccy)
                     {
