@@ -3149,9 +3149,6 @@ namespace ExpenseProcessingSystem.Services
             string whereQuery1 = "";
             string whereQuery2 = "";
 
-            DateTime startDT = DateTime.ParseExact(model.Year + "-" + model.Month, "yyyy-M", CultureInfo.InvariantCulture);
-            DateTime endDT = DateTime.ParseExact(model.YearTo + "-" + model.MonthTo, "yyyy-M", CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
-
             int[] expType1 = { GlobalSystemValues.TYPE_CV, GlobalSystemValues.TYPE_PC,
                         GlobalSystemValues.TYPE_DDV, GlobalSystemValues.TYPE_SS };
             int[] expType2 = { GlobalSystemValues.NC_LS_PAYROLL,
@@ -3232,6 +3229,8 @@ namespace ExpenseProcessingSystem.Services
                 model.ReportSubType == GlobalSystemValues.TYPE_PC || model.ReportSubType == GlobalSystemValues.TYPE_DDV ||
                 model.ReportSubType == GlobalSystemValues.TYPE_SS || model.ReportSubType == HomeReportConstantValue.REP_LIQUIDATION)
             {
+                DateTime startDT = DateTime.ParseExact(model.Year + "-" + model.Month, "yyyy-M", CultureInfo.InvariantCulture);
+                DateTime endDT = DateTime.ParseExact(model.YearTo + "-" + model.MonthTo, "yyyy-M", CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
                 int subType = 0;
 
                 if(model.ReportSubType == HomeReportConstantValue.REP_LIQUIDATION)
@@ -3614,6 +3613,8 @@ namespace ExpenseProcessingSystem.Services
                 model.ReportSubType == HomeReportConstantValue.REP_NC_MISCELLANEOUS_ENTRIES
                 )
             {
+                DateTime startDT = DateTime.ParseExact(model.Year + "-" + model.Month, "yyyy-M", CultureInfo.InvariantCulture);
+                DateTime endDT = DateTime.ParseExact(model.YearTo + "-" + model.MonthTo, "yyyy-M", CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
                 List<ExpenseEntryNCDtlViewModel> ncDtlList = GetEntryDetailAccountListForNonCash();
 
                 if (model.ReportSubType != 0)
