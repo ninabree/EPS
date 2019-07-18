@@ -31,5 +31,7 @@ namespace ExpenseProcessingSystem.ViewModels
 
         public ReportCommonViewModel ReportCommonVM { get; set; }
 
+        public ReportLOIViewModel ReportLOI { get; set; }
+
     }
 }

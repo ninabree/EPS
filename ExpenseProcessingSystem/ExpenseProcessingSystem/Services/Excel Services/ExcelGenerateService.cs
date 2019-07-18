@@ -48,6 +48,9 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 case ConstantData.HomeReportConstantValue.WTS:
                     ExcelWTS(newFile, templateFile, data);
                     break;
+                case ConstantData.HomeReportConstantValue.LOI:
+                    ExcelLOI(newFile, templateFile, data);
+                    break;
             }
 
             return destPath + fileName;
@@ -558,6 +561,67 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
 
                     lastRow += 1;
                 }
+
+                package.Save();
+            }
+        }
+
+
+        public void ExcelLOI(FileInfo newFile, FileInfo templateFile, HomeReportDataFilterViewModel data)
+        {
+            using (ExcelPackage package = new ExcelPackage(newFile, templateFile))
+            {
+                ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
+                string[] col = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P",
+                "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB", "AC", "AD", "AE", "AF", "AG",
+                "AH", "AI", "AJ", "AK", "AL", "AM", "AN", "AO", "AP", "AQ", "AR", "AS", "AT", "AU", "AV",
+                "AW", "AX", "AY", "AZ" };
+                int colpnt = 3;
+                foreach (var num in data.ReportLOI.Rep_DDVNoList) {
+                    worksheet.Cells[col[colpnt] + "17"].Value = num;
+                    colpnt++;
+                };
+
+                worksheet.Cells["C21"].Value = data.ReportLOI.Rep_AmountInString;
+                int colpnt2 = 26;
+                int count = 1;
+                foreach (var rec in data.ReportLOI.Rep_LOIAccList)
+                {
+                    worksheet.Cells["B" + colpnt2 + ":D" + colpnt2].Merge = true;
+                    worksheet.Cells["E" + colpnt2 + ":F" + colpnt2].Merge = true;
+                    worksheet.Cells["G" + colpnt2 + ":I" + colpnt2].Merge = true;
+                    worksheet.Cells["J" + colpnt2 + ":L" + colpnt2].Merge = true;
+                    worksheet.Cells["B" + colpnt2 + ":L" + colpnt2].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+
+                    worksheet.Cells["A" + colpnt2].Value = count;
+                    worksheet.Cells["B" + colpnt2 + ":D" + colpnt2].Value = rec.loi_Emp_Name;
+                    worksheet.Cells["E" + colpnt2 + ":F" + colpnt2].Value = rec.loi_Acc_Type;
+                    worksheet.Cells["G" + colpnt2 + ":I" + colpnt2].Value = rec.loi_Acc_No;
+                    worksheet.Cells["J" + colpnt2 + ":L" + colpnt2].Value = rec.loi_Amount;
+                    colpnt2++;
+                    count++;
+                };
+
+                worksheet.Cells["J" + colpnt2 + ":L" + colpnt2].Merge = true;
+                worksheet.Cells["J" + colpnt2 + ":L" + colpnt2].Style.Border.Bottom.Style = ExcelBorderStyle.Double;
+                worksheet.Cells["J" + colpnt2 + ":L" + colpnt2].Value = data.ReportLOI.Rep_Amount;
+
+                colpnt2 = (colpnt2 > 30) ? colpnt2 + 2 : 33;
+                worksheet.Cells["A" + colpnt2 + ":L" + colpnt2].Merge = true;
+                worksheet.Cells["A" + colpnt2 + ":L" + colpnt2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                worksheet.Cells["A" + colpnt2 + ":L" + colpnt2].Value = data.ReportLOI.Rep_String1;
+                colpnt2 += 1;
+                worksheet.Cells["A" + colpnt2 + ":L" + colpnt2].Merge = true;
+                worksheet.Cells["A" + colpnt2 + ":L" + colpnt2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                worksheet.Cells["A" + colpnt2].Value = data.ReportLOI.Rep_String2;
+                colpnt2 += 4;
+                worksheet.Cells["A" + colpnt2 + ":L" + colpnt2].Merge = true;
+                worksheet.Cells["A" + colpnt2 + ":L" + colpnt2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                worksheet.Cells["A" + colpnt2].Value = data.ReportLOI.Rep_String3;
+                colpnt2 += 2;
+                worksheet.Cells["A" + colpnt2 + ":L" + colpnt2].Merge = true;
+                worksheet.Cells["A" + colpnt2 + ":L" + colpnt2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                worksheet.Cells["A" + colpnt2].Value = data.ReportLOI.Rep_String4;
 
                 package.Save();
             }

@@ -22,6 +22,7 @@ using System.Linq.Dynamic.Core;
 using System.Reflection;
 using System.Xml.Linq;
 using System.Xml;
+using ExpenseProcessingSystem.ViewModels.Reports;
 
 namespace ExpenseProcessingSystem.Services
 {
@@ -37,6 +38,7 @@ namespace ExpenseProcessingSystem.Services
         private ModalService _modalservice;
         XElement xelemAcc = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
         private ModelStateDictionary _modelState;
+        private NumberToText _class;
         public HomeService(IHttpContextAccessor httpContextAccessor, EPSDbContext context, GOExpressContext goContext, GWriteContext gWriteContext ,ModelStateDictionary modelState, IHostingEnvironment hostingEnvironment)
         {
             _httpContextAccessor = httpContextAccessor;
@@ -46,6 +48,7 @@ namespace ExpenseProcessingSystem.Services
             _modelState = modelState;
             _hostingEnvironment = hostingEnvironment;
             _modalservice = new ModalService(_httpContextAccessor, _context);
+            _class = new NumberToText();
         }
         public string getUserRole(string id)
         {
@@ -2895,6 +2898,47 @@ namespace ExpenseProcessingSystem.Services
             return dbAST1000.Concat(dbAST1000_LIQ).OrderBy(x => x.SupplierName);
         }
 
+        public ReportLOIViewModel GetLOIData(HomeReportViewModel model)
+        {
+            List<LOIAccount> accs = new List<LOIAccount>();
+            double totalAmount = 0;
+            List<string> voucherNoList = model.VoucherArray.Split(',').ToList();
+            List<int> entryIDs = voucherNoList.Select(x=> int.Parse(x)).ToList();
+
+            model.VoucherNoList = PopulateVoucherNo(entryIDs);
+
+            var entryList = (from e in _context.ExpenseEntry
+                            join emp in _context.DMEmp on e.Expense_Payee equals emp.Emp_ID
+                            where entryIDs.Contains(e.Expense_ID)
+                            select new { e, emp }).ToList();
+            entryList.ForEach(x =>
+                accs.Add(
+                    new LOIAccount {
+                        loi_Emp_Name = x.emp.Emp_Name,
+                        loi_Acc_Type = x.emp.Emp_Acc_No.Substring(0, 2),
+                        loi_Acc_No = x.emp.Emp_Acc_No.Substring(2, x.emp.Emp_Acc_No.Length - 2),
+                        loi_Amount = x.e.Expense_Debit_Total
+                    })
+            );
+            entryList.ForEach(x => totalAmount += x.e.Expense_Debit_Total);
+            var stringNum = _class.DoubleNumberToWords(totalAmount);
+            return new ReportLOIViewModel()
+            {
+                Rep_DDVNoList = model.VoucherNoList.Select(x => x.vchr_No).ToList(),
+                Rep_Amount = (float) totalAmount,
+                Rep_AmountInString = stringNum,
+                Rep_LOIAccList = accs,
+                Rep_Approver_Name = "",
+                Rep_Verifier1_Name = "",
+                Rep_Verifier2_Name = "",
+                Rep_String1 = "This authority to debit and credit is issued pursuant to and subject to the terms and conditions of the Company's",
+                Rep_String2 = "Regular Payroll Agreement with the Bank.",
+                Rep_String3 = "Thank you and best regards.",
+                Rep_String4 = "Very truly yours, "
+            };
+        }
+
+
         public IEnumerable<HomeReportOutputAST1000Model> GetAST1000_AData(int year, int month, int yearTo, int monthTo)
         {
             int[] status = { 3, 4 };
@@ -5254,6 +5298,48 @@ namespace ExpenseProcessingSystem.Services
             return taxRateList;
         }
 
+        public List<VoucherNoOptions> PopulateVoucherNo()
+        {
+            //List<VoucherNoOptions> vnList = _context.ExpenseEntry
+            //                                .Where(x=> x.Expense_Payee_Type == GlobalSystemValues.PAYEETYPE_REGEMP)
+            //                                .Select(x => new VoucherNoOptions {
+            //                                    vchr_No = GlobalSystemValues.getApplicationCode(x.Expense_Type) + "-" + x.Expense_Date.Year + "-" + x.Expense_Number.ToString().PadLeft(5, '0'),
+            //                                    vchr_EmployeeName = getVendorName(x.Expense_Payee, x.Expense_Payee_Type)
+            //                                }).ToList();
+            var vn = _context.ExpenseEntry
+                .Where(x => x.Expense_Payee_Type == GlobalSystemValues.PAYEETYPE_REGEMP 
+                        && x.Expense_Status != GlobalSystemValues.STATUS_PENDING)
+                .ToList().Distinct();
+            List<VoucherNoOptions> vnList = new List<VoucherNoOptions>();
+            foreach (var x in vn)
+            {
+                vnList.Add(new VoucherNoOptions
+                {
+                    vchr_ID = x.Expense_ID,
+                    vchr_No = GlobalSystemValues.getApplicationCode(x.Expense_Type) + "-" + x.Expense_Date.Year + "-" + x.Expense_Number.ToString().PadLeft(5, '0'),
+                    vchr_EmployeeName = getVendorName(x.Expense_Payee, x.Expense_Payee_Type)
+                });
+            }
+            return vnList;
+        }
+        public List<VoucherNoOptions> PopulateVoucherNo(List<int> ids)
+        {
+            var vn = _context.ExpenseEntry
+                .Where(x => x.Expense_Payee_Type == GlobalSystemValues.PAYEETYPE_REGEMP
+                        && x.Expense_Status != GlobalSystemValues.STATUS_PENDING && ids.Contains(x.Expense_ID))
+                .ToList().Distinct();
+            List<VoucherNoOptions> vnList = new List<VoucherNoOptions>();
+            foreach (var x in vn)
+            {
+                vnList.Add(new VoucherNoOptions
+                {
+                    vchr_ID = x.Expense_ID,
+                    vchr_No = GlobalSystemValues.getApplicationCode(x.Expense_Type) + "-" + x.Expense_Date.Year + "-" + x.Expense_Number.ToString().PadLeft(5, '0'),
+                    vchr_EmployeeName = getVendorName(x.Expense_Payee, x.Expense_Payee_Type)
+                });
+            }
+            return vnList;
+        }
         public IEnumerable<DMBIRCertSignModel> PopulateSignatoryList()
         {
             return _context.DMBCS.Where(x => x.BCS_isActive == true && x.BCS_isDeleted == false).OrderBy(x => x.BCS_Name).ToList();

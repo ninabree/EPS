@@ -285,7 +285,10 @@ $(document).ready(function () {
         $.each($("input[name='chkTaxRate']:checked"), function () {
             chkList.push($(this).val());
         });
-
+        var voucherList = [];
+        $.each($("input[name='chkVoucherNo']:checked"), function () {
+            voucherList.push($(this).val());
+        });
         $.ajax({
             type: 'POST',
             url: '/Home/HomeReportValidation',
@@ -325,6 +328,8 @@ $(document).ready(function () {
                         + "&PeriodFrom=" + $('#PeriodFrom').val()
                         + "&PeriodTo=" + $('#PeriodTo').val()
                         + "&TaxRateArray=" + chkList
+                        + "&VoucherArray=" + voucherList
+                        + "&VoucherNoList=" + $('#VoucherNoList').val()
                         + "&SignatoryID=" + $('#ddlSignatory').val()
                         + "&CheckNoFrom=" + $('#CheckNoFrom').val()
                         + "&CheckNoTo=" + $('#CheckNoTo').val()
