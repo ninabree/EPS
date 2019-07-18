@@ -23,6 +23,8 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly int STATUS_EDIT = 8;
         public static readonly int STATUS_DELETE = 9;
         public static readonly int STATUS_REVERSED = 10;
+        public static readonly int STATUS_CLOSED = 11;
+        public static readonly int STATUS_OPEN = 12;
 
         //Static values for the index of certain lists that are to be stored inside a list object.
         //i.e: Retrieving system values for the dropdown boxes of entry views.
@@ -70,6 +72,12 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly int TYPE_PC = 4;
         public static readonly int TYPE_NC = 5;
 
+        //Static value for branch Type/Name/Code
+        //i.e: determining what is the branch code for the transaction
+        //Example : RBU = 767, FCDU = 789
+        public static readonly string BRANCH_RBU = "RBU";
+        public static readonly string BRANCH_FCDU = "FCDU";
+
         //Static value for application codes used for Expense Transactio No.
         //Example : [CV]-2019-100001
         private static readonly Dictionary<int, string> codeDictio = new Dictionary<int, string>
@@ -83,6 +91,27 @@ namespace ExpenseProcessingSystem.ConstantData
 
         //Static value for the view path of voucher layout
         public static readonly string VOUCHER_LAYOUT = "EntryReports/_Voucherlayout";
+
+        public static string getStatus(int statusCode)
+        {
+            switch (statusCode)
+            {
+                case 1: return "PENDING";
+                case 2: return "VERIFIED";
+                case 3: return "APPROVED";
+                case 4: return "POSTED";
+                case 5: return "REJECTED";
+                case 6: return "DELETED";
+                case 7: return "NEW";
+                case 8: return "EDIT";
+                case 9: return "DELETE";
+                case 10: return "REVERSED";
+                case 11: return "CLOSED";
+                case 12: return "OPEN";
+            };
+
+            return "";
+    }
 
         public static string getApplicationCode(int appType)
         {

@@ -56,6 +56,9 @@ string value4 = xelem.Element("ADDRESS").Value
 <!--Prepaid Amortization-->
   <!--EXP PREPAY GEXP-->
   <C_Amort id="C_Amort">73</C_Amort>
+  
+  <!--Closing Petty Cash-->
+  <PC_MASTERID id="PC_MASTERID">95</PC_MASTERID>
 
 <!--Report filter screen-->
   <!--Outstanding advances accounts-->

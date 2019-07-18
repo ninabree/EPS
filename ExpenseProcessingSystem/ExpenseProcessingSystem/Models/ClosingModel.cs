@@ -11,7 +11,8 @@ namespace ExpenseProcessingSystem.Models
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Close_ID { get; set; }
-        public DateTime Close_Date { get; set; }
+        public string Close_Type { get; set; }
+        public DateTime? Close_Date { get; set; }
         public DateTime Close_Open_Date { get; set; }
         public int Close_Status { get; set; }
         public int Close_User { get; set; }
