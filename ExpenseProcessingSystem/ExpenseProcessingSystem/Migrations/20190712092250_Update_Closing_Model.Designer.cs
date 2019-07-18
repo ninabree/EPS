@@ -4,18 +4,20 @@ using ExpenseProcessingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    partial class EPSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190712092250_Update_Closing_Model")]
+    partial class Update_Closing_Model
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.0-rtm-35687")
+                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -863,8 +865,6 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("Expense_Payee");
 
-                    b.Property<int>("Expense_Payee_Type");
-
                     b.Property<int>("Expense_Status");
 
                     b.Property<int>("Expense_Type");
@@ -1442,17 +1442,17 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int?>("ExpenseEntryDetailModelExpDtl_ID");
 
-                    b.Property<int>("Liq_AccountID_1_1");
+                    b.Property<string>("Liq_AccountID_1_1");
 
-                    b.Property<int>("Liq_AccountID_1_2");
+                    b.Property<string>("Liq_AccountID_1_2");
 
-                    b.Property<int>("Liq_AccountID_2_1");
+                    b.Property<string>("Liq_AccountID_2_1");
 
-                    b.Property<int>("Liq_AccountID_2_2");
+                    b.Property<string>("Liq_AccountID_2_2");
 
-                    b.Property<int>("Liq_AccountID_3_1");
+                    b.Property<string>("Liq_AccountID_3_1");
 
-                    b.Property<int>("Liq_AccountID_3_2");
+                    b.Property<string>("Liq_AccountID_3_2");
 
                     b.Property<double>("Liq_Amount_1_1");
 
@@ -1466,17 +1466,17 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<double>("Liq_Amount_3_2");
 
-                    b.Property<int>("Liq_CCY_1_1");
+                    b.Property<string>("Liq_CCY_1_1");
 
-                    b.Property<int>("Liq_CCY_1_2");
+                    b.Property<string>("Liq_CCY_1_2");
 
-                    b.Property<int>("Liq_CCY_2_1");
+                    b.Property<string>("Liq_CCY_2_1");
 
-                    b.Property<int>("Liq_CCY_2_2");
+                    b.Property<string>("Liq_CCY_2_2");
 
-                    b.Property<int>("Liq_CCY_3_1");
+                    b.Property<string>("Liq_CCY_3_1");
 
-                    b.Property<int>("Liq_CCY_3_2");
+                    b.Property<string>("Liq_CCY_3_2");
 
                     b.Property<string>("Liq_DebitCred_1_1");
 
@@ -1501,8 +1501,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.Property<double>("Liq_InterRate_3_1");
 
                     b.Property<double>("Liq_InterRate_3_2");
-
-                    b.Property<double>("Liq_TaxRate");
 
                     b.HasKey("id");
 

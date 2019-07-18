@@ -11,6 +11,11 @@ namespace ExpenseProcessingSystem.ViewModels
         public List<CloseItems> rbuItems { get; set; }
         public List<CloseItems> fcduItems { get; set; }
 
+        public List<String> messages { get; set; }
+
+        public string rbuStatus { get; set; }
+        public string fcduStatus { get; set; }
+
         public double pettyBegBalance { get; set; }
         public double cashIn { get; set; }
         public double cashOut { get; set; }
@@ -52,19 +57,20 @@ namespace ExpenseProcessingSystem.ViewModels
 
         public ClosingViewModel()
         {
+            messages = new List<string>();
             rbuItems = new List<CloseItems>();
             fcduItems = new List<CloseItems>();
         }
     }
-    
+
     public class CloseItems
     {
         public string gBaseTrans { get; set; }
         public string expTrans { get; set; }
-        public string particulars { get; set; }
-        public string ccy { get; set; }
-        public double amount { get; set; }
-        public int transCount { get; set; }
+        public string particulars { get; set; } 
+        public string ccy { get; set; } 
+        public double amount { get; set; } 
+        public int transCount { get; set; } 
         public string status { get; set; }
     }
 }
