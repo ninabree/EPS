@@ -116,33 +116,62 @@
     });
     $("#vendorName").on("change", function (e) {
         var vendorId = { vendorID: $("#vendorName").val() };
+        var payeeID = $("#payeeType option:selected").val();
+        if (payeeID == "1") {
+            ajaxCall("/Home/getVendorVatList", vendorId)
+                .done(function (vatData) {
+                    if (vatData.length) {
+                        ajaxCall("/Home/getVendorTRList", vendorId)
+                            .done(function (ewtData) {
+                                if (ewtData.length) {
+                                    $(".txtVat").empty();
+                                    $(".txtEwt").empty();
 
-        ajaxCall("/Home/getVendorVatList", vendorId)
-            .done(function (vatData) {
-                if (vatData.length) {
-                    ajaxCall("/Home/getVendorTRList", vendorId)
-                        .done(function (ewtData) {
-                            if (ewtData.length) {
-                                $(".txtVat").empty();
-                                $(".txtEwt").empty();
+                                    for (var i = 0; i < vatData.length; i++) {
+                                        var option = $("<option></option>").attr("value", vatData[i].value).text(vatData[i].text);
+                                        $(".txtVat").append(option);
+                                    }
 
-                                for (var i = 0; i < vatData.length; i++) {
-                                    var option = $("<option></option>").attr("value", vatData[i].value).text(vatData[i].text);
-                                    $(".txtVat").append(option);
+                                    for (var i = 0; i < ewtData.length; i++) {
+                                        var option = $("<option></option>").attr("value", ewtData[i].value).text(ewtData[i].text);
+                                        $(".txtEwt").append(option);
+                                    }
+                                } else {
+                                    alert("oops something went wrong!");
                                 }
+                            });
+                    } else {
+                        alert("oops something went wrong!");
+                    }
+                });
+        } else if (payeeID == "2") {
+            ajaxCall("/Home/getAllVatList")
+                .done(function (vatData) {
+                    if (vatData.length) {
+                        ajaxCall("/Home/getAllTRList")
+                            .done(function (ewtData) {
+                                if (ewtData.length) {
+                                    $(".txtVat").empty();
+                                    $(".txtEwt").empty();
 
-                                for (var i = 0; i < ewtData.length; i++) {
-                                    var option = $("<option></option>").attr("value", ewtData[i].value).text(ewtData[i].text);
-                                    $(".txtEwt").append(option);
+                                    for (var i = 0; i < vatData.length; i++) {
+                                        var option = $("<option></option>").attr("value", vatData[i].value).text(vatData[i].text);
+                                        $(".txtVat").append(option);
+                                    }
+
+                                    for (var i = 0; i < ewtData.length; i++) {
+                                        var option = $("<option></option>").attr("value", ewtData[i].value).text(ewtData[i].text);
+                                        $(".txtEwt").append(option);
+                                    }
+                                } else {
+                                    alert("oops something went wrong!");
                                 }
-                            } else {
-                                alert("oops something went wrong!");
-                            }
-                        });
-                } else {
-                    alert("oops something went wrong!");
-                }
-            });
+                            });
+                    } else {
+                        alert("oops something went wrong!");
+                    }
+                });
+        }
     });
 
     /////--------------------functions--------------------------------

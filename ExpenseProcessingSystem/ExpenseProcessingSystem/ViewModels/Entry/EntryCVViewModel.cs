@@ -93,6 +93,9 @@ namespace ExpenseProcessingSystem.ViewModels
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime expenseDate { get; set; }
         public int vendor { get; set; }
+        public string vendor_Name { get; set; }
+        public int payee_type { get; set; }
+        public string payee_type_Name { get; set; }
         public string expenseYear { get; set; }
         public string expenseId { get; set; }
         public string checkNo { get; set; }

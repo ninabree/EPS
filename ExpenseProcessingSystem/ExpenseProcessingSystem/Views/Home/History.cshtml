@@ -9,15 +9,19 @@
                     <table class="table">
                         <tr>
                             <td>@Html.LabelFor(model => model.Filters.HistoryFil.Hist_Voucher_No)</td>
-                            <td>@Html.EditorFor(model => model.Filters.HistoryFil.Hist_Voucher_No)</td>
+                            <td>
+                                @Html.DropDownListFor(model => model.Filters.HistoryFil.Hist_Voucher_Type, new SelectList(Model.Filters.HistoryFil.Hist_Type_Select, "Value", "Text", 1), null, new { @class = "dis-inline-block w-49"})                              
+                                @Html.DropDownListFor(model => model.Filters.HistoryFil.Hist_Voucher_Year, new SelectList(Model.Filters.HistoryFil.Hist_YearList, "YearID", "YearID", DateTime.Now.Year), null, new { @class = "dis-inline-block w-49"})
+                                @Html.EditorFor(model => model.Filters.HistoryFil.Hist_Voucher_No)
+                            </td>
                             <td>@Html.LabelFor(model => model.Filters.HistoryFil.Hist_Maker)</td>
                             <td>@Html.TextBoxFor(model => model.Filters.HistoryFil.Hist_Maker, new { @class = "input" })</td>
                             <td>@Html.LabelFor(model => model.Filters.HistoryFil.Hist_Approver)</td>
                             <td>@Html.TextBoxFor(model => model.Filters.HistoryFil.Hist_Approver, new { @class = "input" })</td>
                             <td>@Html.LabelFor(model => model.Filters.HistoryFil.Hist_Created_Date)</td>
-                            <td>@Html.TextBoxFor(model => model.Filters.HistoryFil.Hist_Created_Date, new { @class = "input" })</td>
+                            <td>@Html.TextBoxFor(model => model.Filters.HistoryFil.Hist_Created_Date, new { @class = "input", @type = "date" })</td>
                             <td>@Html.LabelFor(model => model.Filters.HistoryFil.Hist_Updated_Date)</td>
-                            <td>@Html.TextBoxFor(model => model.Filters.HistoryFil.Hist_Updated_Date, new { @class = "input" })</td>
+                            <td>@Html.TextBoxFor(model => model.Filters.HistoryFil.Hist_Updated_Date, new { @class = "input", @type = "date" })</td>
                             <td>@Html.LabelFor(model => model.Filters.HistoryFil.Hist_Status)</td>
                             <td>@Html.TextBoxFor(model => model.Filters.HistoryFil.Hist_Status, new { @class = "input" })</td>
                             <td colspan="2" style="text-align: right;">
@@ -32,7 +36,7 @@
     </div>
     <div class="flex-c p-t-10">
         <table class="table table-striped tab-tbl table-bordered table-hover w-97">
-            <colgroup>
+            @*<colgroup>
                 <col style="width:10%" />
                 <col style="width:8%" />
                 <col style="width:29%" />
@@ -41,7 +45,7 @@
                 <col style="width:12%" />
                 <col style="width:12%" />
                 <col style="width:10%" />
-            </colgroup>
+            </colgroup>*@
             <thead>
                 <tr>
                     <th><a asp-action="History" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["HistVoucherSortParm"]">Voucher No<p class="btn-xs glyphicon @ViewData["glyph-1"]"></p></a></th>
@@ -121,5 +125,17 @@
             form.attr("action", "/Home/" + link)
             form.submit();
         });
+    });
+    //reset search filter values
+    $(document).on("click", "#full-list-btn", function (e) {
+        e.stopImmediatePropagation();
+        $('input[id^= "Filters_HistoryFil_"]').each(function (i, obj) {
+            $(this).val("");
+            if ($(this).attr('type') == "date") {
+                $(this).val("0001-01-01T00:00:00.000");
+            }
+        });
+        $("option:selected").prop("selected", false)
+        $('#search-frm').submit();
     });
 </script>

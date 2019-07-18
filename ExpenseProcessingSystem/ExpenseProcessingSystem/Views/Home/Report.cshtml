@@ -112,7 +112,21 @@
                 <td>Remarks</td>
                 <td><input id="SubjName" class="input h-20 fs-11" type="text" disabled="disabled" /></td>
                 <td></td>
-                <td></td>
+                <td>
+                    <div>
+                        @if(Model.VoucherNoList.Count > 0)
+                        {
+                            foreach(var vchr in Model.VoucherNoList)
+                            {
+                                <div class="dis-inline-block">
+                                    @Html.CheckBox("chkVoucherNo", false, new { @Value = vchr.vchr_ID, @class = "chkVoucherNo" })<label>@vchr.vchr_No  - @vchr.vchr_EmployeeName</label>
+                                </div>
+                            }
+                            @Html.HiddenFor(x=> x.VoucherNoList)
+                        }
+                    </div>
+
+                </td>
                 <td></td>
                 <td>File Format: </td>
                 <td>

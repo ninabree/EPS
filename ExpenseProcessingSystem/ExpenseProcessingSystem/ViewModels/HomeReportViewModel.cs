@@ -35,6 +35,8 @@ namespace ExpenseProcessingSystem.ViewModels
 
         public List<float> TaxRateList { get; set; }
 
+        public List<VoucherNoOptions> VoucherNoList { get; set; }
+
         public IEnumerable<DMBIRCertSignModel> SignatoryList { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
@@ -97,6 +99,14 @@ namespace ExpenseProcessingSystem.ViewModels
 
         public string TaxRateArray { get; set; }
 
+        public string VoucherArray { get; set; }
+
         public int SignatoryID { get; set; }
+    }
+    public class VoucherNoOptions
+    {
+        public int vchr_ID { get; set; }
+        public string vchr_No { get; set; }
+        public string vchr_EmployeeName { get; set; }
     }
 }

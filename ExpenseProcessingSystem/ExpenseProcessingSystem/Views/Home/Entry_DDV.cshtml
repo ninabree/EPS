@@ -16,7 +16,10 @@
             <div class="dis-inline-block float-r"></div>
         </div>
         <div id="tbl-lbl">
-            <div class="dis-inline-block"><p>Payee:</p></div>
+            <div class="dis-inline-block"><p>Payee:</p> </div>
+            <div class="dis-inline-block">
+                @Html.DropDownListFor(m => m.payee_type, new SelectList(Model.systemValues.payee_type, "Value", "Text", Model.systemValues.payee_type.SelectedValue), new { @id = "payeeType" })
+            </div>
             <div class="dis-inline-block">
                 @Html.DropDownListFor(m => m.vendor, new SelectList(Model.systemValues.vendors, "Value", "Text", Model.systemValues.vendors.SelectedValue), new { @id = "vendorName" })
             </div>
@@ -223,7 +226,11 @@
         //checks each checkbox and enables corresponding modals
         CheckEachEWT();
         CheckEachInter();
+        updatePayeeSelect();
 
+        $("#payeeType").change(function (e) {
+            updatePayeeSelect();
+        });
         $("#addRow").click(function (e) {
             var itemCount = document.getElementById('inputTable').getElementsByTagName('tbody')[0].childElementCount - 4;
             var tableRef = document.getElementById('inputTable').getElementsByTagName('tbody')[0];
@@ -417,6 +424,23 @@
     });
     //--------------------------------------------------------------------------------------------
     // [[ FUNCTIONS ]]
+    function updatePayeeSelect() {
+        var paytype = $("#payeeType option:selected").val();
+        var options = "";
+        if (paytype == "1") {
+            var opt = @Html.Raw(Json.Serialize(Model.systemValues.vendors));
+            for (var i = 0; i < opt.length; i++) {
+                options += '<option value="' + opt[i].value + '">' + opt[i].text + '</option>';
+            }
+        }else if (paytype == "2") {
+            var opt = @Html.Raw(Json.Serialize(Model.systemValues.employees));
+            for (var i = 0; i < opt.length; i++) {
+                options += '<option value="' + opt[i].value + '">' + opt[i].text + '</option>';
+            }
+        }
+        $("#vendorName").empty();
+        $("#vendorName").append($(options));
+    }
     function updateExpenseEWTDDV(chkEwt) {
         var pNode = String($(chkEwt.parentNode)[0].parentNode.id);
         var btnAttr = $("#" + pNode).find(".reqEWTBtn");

@@ -33,8 +33,27 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly int SELECT_LIST_DEPARTMENT = 1;
         public static readonly int SELECT_LIST_CURRENCY = 2;
         public static readonly int SELECT_LIST_TAXRATE = 3;
-        public static readonly int SELECT_LIST_CATEGORY = 4;
+        //public static readonly int SELECT_LIST_CATEGORY = 4;
+        public static readonly int SELECT_LIST_REGEMPLOYEE = 4;
 
+        //Static values for payee type use for checking or adding payee type to expense entries.
+        //i.e: Checking payee type
+        //Example: instead of [if (type == "vendor")] use [if (type == GlobalSystemValues.PAYEETYPE_VENDOR)]
+        public static readonly int PAYEETYPE_VENDOR = 1;
+        public static readonly int PAYEETYPE_REGEMP = 2;
+        public static readonly int PAYEETYPE_TEMPEMP = 3;
+        public static readonly int PAYEETYPE_CUST = 4;
+
+        public static readonly List<SelectListItem> PAYEETYPE_SELECT_ALL = new List<SelectListItem> {
+                new SelectListItem { Text = "VENDOR", Value = PAYEETYPE_VENDOR.ToString(), Selected = true },
+                new SelectListItem { Text = "REGULAR EMPLOYEE", Value = PAYEETYPE_REGEMP.ToString(), Selected = false },
+                new SelectListItem { Text = "TEMPORARY EMPLOYEE", Value = PAYEETYPE_REGEMP.ToString(), Selected = false },
+                new SelectListItem { Text = "CUSTOMER", Value = PAYEETYPE_REGEMP.ToString(), Selected = false }
+        };
+        public static readonly List<SelectListItem> PAYEETYPE_SELECT_DDV = new List<SelectListItem> {
+                new SelectListItem { Text = "VENDOR", Value = PAYEETYPE_VENDOR.ToString(), Selected = true },
+                new SelectListItem { Text = "REGULAR EMPLOYEE", Value = PAYEETYPE_REGEMP.ToString(), Selected = false }
+        };
         //Static values for user roles use for checking or adding user roles to users.
         //i.e: Checking user access rights
         //Example: instead of [if (role == "admin")] use [if (role == GlobalSystemValues.ROLE_ADMIN)]

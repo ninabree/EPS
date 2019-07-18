@@ -1,0 +1,38 @@
+﻿@model ExpenseProcessingSystem.ViewModels.HomeReportDataFilterViewModel
+@using System.Xml.Linq;
+
+@{
+    Layout = null;
+}
+
+@{
+    XElement xelem = XElement.Load("wwwroot/xml/ReportHeader.xml");
+}
+<text>
+    @xelem.Element("FormType").Value,
+    @xelem.Element("WHAgentTIN").Value,
+    @xelem.Element("WHAgentBranchCode").Value,
+    @Model.ReturnPeriod_CSV
+    <br />
+</text>
+@foreach (var i in Model.HomeReportOutputBIRWTCSV)
+    {
+        <text>
+            @xelem.Element("FormType").Value,
+            @xelem.Element("WHAgentTIN").Value.Replace("-", ""),
+            @xelem.Element("WHAgentBranchCode").Value,
+            @Model.ReturnPeriod_CSV,
+            @i.SeqNo.ToString().PadLeft(6, '0'),
+            @i.Tin.Replace("-", ""),
+            @xelem.Element("WHAgentBranchCode").Value,
+            @i.Payee,
+            ,
+            ,
+            @("".Replace(",", "").Replace(")", "").Replace("(", "").Replace("&", "").Replace("!", "")),
+            @i.ATC.Replace(",", "").Replace(")", "").Replace("(", "").Replace("&", "").Replace("!", ""),
+            @string.Format("{0:0.00}", i.AOIP),
+            @string.Format("{0:0.00}", i.RateOfTax),
+            @string.Format("{0:0.00}", i.AOTW)
+            <br />
+        </text>
+    }

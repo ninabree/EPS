@@ -116,6 +116,7 @@
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_InterRate_2_2)
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_InterRate_3_1)
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_InterRate_3_2)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_Tax_Rate)
                                     }
                                 </div>
                             </td>
@@ -206,12 +207,14 @@
                         <colgroup>
                             <col style="width:45%" />
                             <col style="width:15%" />
-                            <col style="width:20%" />
-                            <col style="width:20%" />
+                            <col style="width:10%" />
+                            <col style="width:15%" />
+                            <col style="width:15%" />
                         </colgroup>
                         <tr>
                             <th style="text-align:center"><label>ACCOUNT NO.</label></th>
                             <th style="text-align:center"><label>ACCONT CODE</label></th>
+                            <th style="text-align:center"><label>Tax Rate(%)</label></th>
                             <th style="text-align:center"><label>DEBIT</label></th>
                             <th style="text-align:center"><label>CREDIT</label></th>
                         </tr>
@@ -222,6 +225,7 @@
                             <td>
                                 <input id="txtLiqAccCode1" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="">
                             </td>
+                            <td></td>
                             <td>
                                 <input id="txtLiqPhpInput1" class="input100" readonly="readonly" style="width:100%;text-align:center" type="text" value="0" />
                             </td>
@@ -234,6 +238,7 @@
                             <td>
                                 <input id="txtLiqAccCode2" class="input100" readonly="readonly" style="width:100%;text-align:center" type="text" value="">
                             </td>
+                            <td></td>
                             <td>
                                 <input id="txtLiqPhpInput2" class="input100" readonly="readonly" style="width:100%;text-align:center" type="text" value="0" />
                             </td>
@@ -248,6 +253,9 @@
                             <td>
                                 <input id="txtLiqAccCode3" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="">
                             </td>
+                            <td>
+                                <input id="txtLiqTaxRate" class="input100" readonly="readonly" style="width:90%;background:transparent;text-align:center" type="text" value="0">
+                            </td>
                             <td></td>
                             <td>
                                 <input id="txtLiqPhpInput4" class="input100" readonly="readonly" style="width:100%;text-align:center" type="text" value="0" />
@@ -260,12 +268,13 @@
                                 <input id="txtLiqAccCode4" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="">
                             </td>
                             <td></td>
+                            <td></td>
                             <td>
                                 <input id="txtLiqPhpInput5" class="input100" readonly="readonly" style="width:100%;text-align:center" type="text" value="0" />
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="2" style="text-align:right;">
+                            <td colspan="3" style="text-align:right;">
                                 <label>Total:</label>
                             </td>
                             <td>

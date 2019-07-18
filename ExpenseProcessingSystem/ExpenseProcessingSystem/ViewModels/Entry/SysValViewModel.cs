@@ -15,6 +15,8 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         public SelectList dept { get; set; }
         public List<accDetails> acc { get; set; }
         public SelectList currency { get; set; }
+        public SelectList payee_type { get; set; }
+        public SelectList employees { get; set; }
     }
 
     public class accDetails

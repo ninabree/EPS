@@ -1,6 +1,8 @@
 ﻿
 @{
     ViewData["Title"] = "Entry_DDV";
+
+    var uid = ViewBag.userID;
 }
 @using ExpenseProcessingSystem.ViewModels.Entry
 @using ExpenseProcessingSystem.ConstantData
@@ -17,9 +19,16 @@
         <div class="dis-inline-block float-r">@*Check No : <p class="dis-inline-block">@Html.TextBoxFor(model => model.checkNo, new { @readonly = "true", @class = "input" })</p>*@</div>
     </div>
     <div id="tbl-lbl">
-        <div class="dis-inline-block"><p>Payee:</p></div>
+        <div class="dis-inline-block"><p>Payee:</p> </div>
         <div class="dis-inline-block">
-            @Html.DropDownListFor(m => m.vendor, new SelectList(Model.systemValues.vendors, "Value", "Text", Model.systemValues.vendors.SelectedValue), new { @id = "vendorName" })
+            <select data-val="true" data-val-required="The payee_type field is required." id="payeeType" name="payee_type">
+                <option value="@Model.payee_type" selected="selected">"@Model.payee_type_Name</option>
+            </select>
+        </div>
+        <div class="dis-inline-block">
+            <select data-val="true" data-val-required="The vendor field is required." id="vendorName" name="vendor">
+                <option selected="selected" value="@Model.vendor">@Model.vendor_Name</option>
+            </select>
         </div>
     </div>
     <div class="flex-c">
@@ -228,13 +237,13 @@
             </div>
             <div class="flex-sb">
                 <div>
-                    @if (HttpContextAccessor.HttpContext.Session.GetString("accessType") == GlobalSystemValues.ROLE_MAKER)
+                    @if (HttpContextAccessor.HttpContext.Session.GetString("accessType") == GlobalSystemValues.ROLE_MAKER && uid == Model.maker.ToString())
                     {
                         <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
                     }
                     else
                     {
-                        @if ((Model.statusID == GlobalSystemValues.STATUS_APPROVED) || (Model.statusID == GlobalSystemValues.STATUS_REJECTED) || (Model.statusID == GlobalSystemValues.STATUS_REVERSED))
+                        @if (uid == Model.maker.ToString() || (Model.statusID == GlobalSystemValues.STATUS_APPROVED) || (Model.statusID == GlobalSystemValues.STATUS_REJECTED) || (Model.statusID == GlobalSystemValues.STATUS_REVERSED))
                         {
                             <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
                         }
@@ -243,7 +252,7 @@
                             <div class="dis-inline-block tbl-btn"><button value="@HttpContextAccessor.HttpContext.Session.GetString("accessType")" name="command">Approve/Verify</button></div>
                         }
                     }
-                    @if ((Model.statusID == GlobalSystemValues.STATUS_APPROVED) || (Model.statusID == GlobalSystemValues.STATUS_REJECTED) || (Model.statusID == GlobalSystemValues.STATUS_REVERSED))
+                    @if (uid == Model.maker.ToString() || (Model.statusID == GlobalSystemValues.STATUS_APPROVED) || (Model.statusID == GlobalSystemValues.STATUS_REJECTED) || (Model.statusID == GlobalSystemValues.STATUS_REVERSED))
                     {
                         <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
                     }

@@ -80,6 +80,8 @@
         lblValidation.hide();
         dtPeriodFrom.val(today);
         dtPeriodTo.val(today);
+        ddlFileFormat.children('option').show();
+        ddlFileFormat.children('option[value=4]').css('display', 'none');
 
         if (ReportType == 2) {
             radioPeriod1.prop('checked', true);
@@ -105,9 +107,17 @@
             ddlYear.removeAttr("disabled");
             ddlMonth.removeAttr("disabled");
 
+        } else if (ReportType == 6) {
+            ddlFileFormat.children('option').css('display', 'none');
+            ddlFileFormat.children('option[value=4]').show();
+            ddlFileFormat.val($("#ddlFileFormat option[value=4]").val());
+
         } else if (ReportType == 7) {
             radioPeriod1.removeAttr("disabled");
             radioPeriod3.removeAttr("disabled");
+            ddlFileFormat.children('option').css('display', 'none');
+            ddlFileFormat.children('option[value=1]').show();
+            ddlFileFormat.val($("#ddlFileFormat option[value=1]").val());
 
         } else if (ReportType == 8) {
             radioPeriod1.prop('checked', true);
@@ -117,6 +127,9 @@
             ddlMonth.removeAttr("disabled");
             ddlMonthTo.removeAttr("disabled");
             ddlYearTo.removeAttr("disabled");
+            ddlFileFormat.children('option').css('display', 'none');
+            ddlFileFormat.children('option[value=1]').show();
+            ddlFileFormat.val($("#ddlFileFormat option[value=1]").val());
 
         } else if (ReportType == 10) {
             radioPeriod1.prop('checked', true);
@@ -126,7 +139,6 @@
             ddlMonth.removeAttr("disabled");
             ddlMonthTo.removeAttr("disabled");
             ddlYearTo.removeAttr("disabled");
-
         }
 
         if (ReportType != 0 || ReportType != '') {
@@ -273,7 +285,10 @@ $(document).ready(function () {
         $.each($("input[name='chkTaxRate']:checked"), function () {
             chkList.push($(this).val());
         });
-
+        var voucherList = [];
+        $.each($("input[name='chkVoucherNo']:checked"), function () {
+            voucherList.push($(this).val());
+        });
         $.ajax({
             type: 'POST',
             url: '/Home/HomeReportValidation',
@@ -313,6 +328,8 @@ $(document).ready(function () {
                         + "&PeriodFrom=" + $('#PeriodFrom').val()
                         + "&PeriodTo=" + $('#PeriodTo').val()
                         + "&TaxRateArray=" + chkList
+                        + "&VoucherArray=" + voucherList
+                        + "&VoucherNoList=" + $('#VoucherNoList').val()
                         + "&SignatoryID=" + $('#ddlSignatory').val()
                         + "&CheckNoFrom=" + $('#CheckNoFrom').val()
                         + "&CheckNoTo=" + $('#CheckNoTo').val()
