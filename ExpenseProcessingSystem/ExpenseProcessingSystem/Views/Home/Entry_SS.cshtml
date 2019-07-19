@@ -80,7 +80,7 @@
                                 </div>
                             </td>
                             <td>
-                                @Html.DropDownListFor(m => Model.EntryCV[i].dtlSSPayee, new SelectList(Model.systemValues.vendors, "Value", "Text", Model.systemValues.vendors.SelectedValue), new { @class = "input100 txtPayee" })
+                                @Html.DropDownListFor(m => Model.EntryCV[i].dtlSSPayee, new SelectList(Model.systemValues.employees, "Value", "Text", Model.systemValues.employees.SelectedValue), new { @class = "input100 txtPayee" })
                             </td>
                             <td>
                                 @Html.DropDownListFor(x => Model.EntryCV[i].account, new SelectList(Model.systemValues.acc, "accId", "accName"), new { @class = "input100 txtAcc" })
@@ -141,6 +141,7 @@
                         <td colspan="8" style="text-align:right; border:none; background-color:#f2f2f2 ">Total:</td>
                         <td colspan="2"><div class="flex-c"><input type="text" class="input100" readonly id="credTotal" /></div></td>
                     </tr>
+
                 </tbody>
             </table>
         </div>
@@ -170,6 +171,7 @@
         </div>
         @Html.HiddenFor(x => Model.entryID)
         @Html.HiddenFor(x => Model.createdDate)
+        @Html.HiddenFor(x => x.payee_type)
     }
     <div id="modalDiv">
         @Html.Partial("ModalGBase")
@@ -225,7 +227,7 @@
                 var curr = @Html.Raw(Json.Serialize(Model.systemValues.currency));
                 var ewt = @Html.Raw(Json.Serialize(Model.systemValues.ewt));
                 var vat = @Html.Raw(Json.Serialize(Model.systemValues.vat));
-                var payee = @Html.Raw(Json.Serialize(Model.systemValues.vendors));
+                var payee = @Html.Raw(Json.Serialize(Model.systemValues.employees));
 
                 // Insert a row in the table at the last row
                 var newRow = tableRef.insertRow(itemCount);

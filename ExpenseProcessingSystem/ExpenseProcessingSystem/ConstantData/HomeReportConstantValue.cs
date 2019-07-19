@@ -32,7 +32,7 @@ namespace ExpenseProcessingSystem.ConstantData
 
         //Transaction List Report
         public const int TransListReport = 7;
-        
+
         //Account Summary Report
         public const int AccSummaryReport = 8;
 
@@ -45,8 +45,8 @@ namespace ExpenseProcessingSystem.ConstantData
         //Outstanding Advances
         public const int OutstandingAdvances = 11;
 
-        //Prepaid Ammortization report
-        public const int PrepaidAmmortization = 12;
+        //Prepaid Amortization Report
+        public const int PrepaidAmortReport = 12;
 
         //List of Instructions
         public const int LOI = 13;

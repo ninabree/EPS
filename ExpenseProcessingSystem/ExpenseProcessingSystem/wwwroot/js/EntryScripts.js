@@ -116,7 +116,10 @@
     });
     $("#vendorName").on("change", function (e) {
         var vendorId = { vendorID: $("#vendorName").val() };
-        var payeeID = $("#payeeType option:selected").val();
+        var payeeID = $("#payee_type").val();
+        if ($("#payeeTypeSel").length > 0) {
+            payeeID = $("#payeeTypeSel option:selected").val();
+        }
         if (payeeID == "1") {
             ajaxCall("/Home/getVendorVatList", vendorId)
                 .done(function (vatData) {
@@ -144,7 +147,7 @@
                         alert("oops something went wrong!");
                     }
                 });
-        } else if (payeeID == "2") {
+        } else if (payeeID == "2" || payeeID == "5") {
             ajaxCall("/Home/getAllVatList")
                 .done(function (vatData) {
                     if (vatData.length) {
