@@ -28,7 +28,7 @@
         <div id="tbl-lbl">
             <div class="dis-inline-block"><p>Payee:</p></div>
             <div class="dis-inline-block">
-                @Html.DropDownListFor(m => m.vendor, new SelectList(Model.systemValues.vendors, "Value", "Text", Model.systemValues.vendors.SelectedValue), new { @id = "vendorName" })
+                @Html.DropDownListFor(m => m.vendor, new SelectList(Model.systemValues.employeesAll, "Value", "Text", Model.systemValues.employeesAll.SelectedValue), new { @id = "vendorName" })
             </div>
         </div>
         <div class="flex-c">
@@ -173,6 +173,7 @@
         </div>
         @Html.HiddenFor(x => Model.entryID);
         @Html.HiddenFor(x => Model.createdDate);
+        @Html.HiddenFor(x => x.payee_type)
     }
     <div id="modalDiv">
         @Html.Partial("ModalGBase")

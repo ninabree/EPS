@@ -8891,6 +8891,9 @@ namespace ExpenseProcessingSystem.Services
 
             listOfLists.Add(new SelectList(_context.DMEmp.Where(x => x.Emp_isActive == true && x.Emp_isDeleted == false && x.Emp_Type == "Regular").Select(q => new { q.Emp_ID, q.Emp_Name }),
                         "Emp_ID", "Emp_Name"));
+
+            listOfLists.Add(new SelectList(_context.DMEmp.Where(x => x.Emp_isActive == true && x.Emp_isDeleted == false).Select(q => new { q.Emp_ID, q.Emp_Name }),
+                        "Emp_ID", "Emp_Name"));
             return listOfLists;
         }
         //retrieve account details

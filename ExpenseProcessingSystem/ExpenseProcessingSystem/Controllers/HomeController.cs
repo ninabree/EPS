@@ -1029,11 +1029,11 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.systemValues.ewt = _service.getVendorTaxRate(firstId);
             viewModel.systemValues.vat = _service.getVendorVat(firstId);
             viewModel.systemValues.acc = _service.getAccDetailsEntry();
-            //TEMP for DDV
-            viewModel.systemValues.payee_type = new SelectList(GlobalSystemValues.PAYEETYPE_SELECT_DDV, "Value", "Text", GlobalSystemValues.PAYEETYPE_SELECT_DDV.First());
-            viewModel.systemValues.employees = listOfSysVals[GlobalSystemValues.SELECT_LIST_REGEMPLOYEE];
+            //TEMP for CV
+            viewModel.systemValues.payee_type_sel = new SelectList(GlobalSystemValues.PAYEETYPE_SELECT_CV, "Value", "Text", GlobalSystemValues.PAYEETYPE_SELECT_CV.First());
+            viewModel.systemValues.employees = listOfSysVals[GlobalSystemValues.SELECT_LIST_REGEMPLOYEE]; 
+            viewModel.systemValues.employeesAll = listOfSysVals[GlobalSystemValues.SELECT_LIST_ALLEMPLOYEE];
             //for NC
-
             if (viewModel.GetType() != typeof(EntryNCViewModelList))
             {
                 viewModel.expenseYear = DateTime.Today.Year.ToString();
@@ -1054,7 +1054,9 @@ namespace ExpenseProcessingSystem.Controllers
 
             viewModel.systemValues.ewt = _service.getVendorTaxRate(firstId);
             viewModel.systemValues.vat = _service.getVendorVat(firstId);
-            if(screenCode == GlobalSystemValues.TYPE_SS)
+            viewModel.systemValues.employees = listOfSysVals[GlobalSystemValues.SELECT_LIST_REGEMPLOYEE];
+
+            if (screenCode == GlobalSystemValues.TYPE_SS)
             {
                 DMAccountModel acc = new DMAccountModel();
                 List<accDetails> acclist = new List<accDetails>();
@@ -1228,6 +1230,9 @@ namespace ExpenseProcessingSystem.Controllers
                 });
             }
             viewModel = PopulateEntry((EntryDDVViewModelList)viewModel);
+            viewModel.payee_type = GlobalSystemValues.PAYEETYPE_REGEMP;
+            viewModel.systemValues.vat = _service.getAllVat();
+            viewModel.systemValues.ewt = _service.getAllTaxRate();
             return View(viewModel);
         }
         [ExportModelState]
@@ -1356,6 +1361,10 @@ namespace ExpenseProcessingSystem.Controllers
 
             viewModel.EntryCV.Add(new EntryCVViewModel { screenCode = "PCV"});
 
+            //select values for reg employee payee
+            viewModel.payee_type = GlobalSystemValues.PAYEETYPE_EMP_ALL;
+            viewModel.systemValues.vat = _service.getAllVat();
+            viewModel.systemValues.ewt = _service.getAllTaxRate();
             return View(viewModel);
         }
 
@@ -1535,6 +1544,10 @@ namespace ExpenseProcessingSystem.Controllers
 
             viewModel.EntryCV.Add(new EntryCVViewModel { screenCode = "SS" });
 
+            //select values for reg employee payee
+            viewModel.payee_type = GlobalSystemValues.PAYEETYPE_REGEMP;
+            viewModel.systemValues.vat = _service.getAllVat();
+            viewModel.systemValues.ewt = _service.getAllTaxRate();
             return View(viewModel);
         }
 

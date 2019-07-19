@@ -32,15 +32,21 @@ namespace ExpenseProcessingSystem.ConstantData
 
         //Transaction List Report
         public const int TransListReport = 7;
-        
+
         //Account Summary Report
         public const int AccSummaryReport = 8;
+
+        //BIR Forms
+        public const int BIRForms = 9;
 
         //Alphalist of Payees Subject to Withholding Tax Summary
         public const int WTS = 10;
 
         //Outstanding Advances
         public const int OutstandingAdvances = 11;
+
+        //Prepaid Amortization Report
+        public const int PrepaidAmortReport = 12;
 
         //List of Instructions
         public const int LOI = 13;
