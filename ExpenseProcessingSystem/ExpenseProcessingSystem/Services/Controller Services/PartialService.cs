@@ -1179,6 +1179,8 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     {
                         Emp_ID = m.Pending_Emp_ID,
                         Emp_MasterID = m.Pending_Emp_MasterID,
+                        Emp_FBT_MasterID = m.Pending_Emp_FBT_MasterID,
+                        Emp_Category_ID = m.Pending_Emp_Category_ID,
                         Emp_Name = m.Pending_Emp_Name,
                         Emp_Acc_No = m.Pending_Emp_Acc_No,
                         Emp_Creator_ID = m.Pending_Emp_Creator_ID,
@@ -1258,9 +1260,15 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 var creator = userList.Where(a => a.Emp_ID == m.Emp_ID && a.Emp_MasterID == m.Emp_MasterID).Select(a => a.CreatorName).FirstOrDefault();
                 var approver = userList.Where(a => a.Emp_ID == m.Emp_ID && a.Emp_MasterID == m.Emp_MasterID).Select(a => a.ApproverName).FirstOrDefault();
                 var stat = statusList.Where(a => a.Emp_ID == m.Emp_ID && a.Emp_MasterID == m.Emp_MasterID).Select(a => a.Status_Name).FirstOrDefault();
+                var fbt = _context.DMFBT.Where(a => a.FBT_MasterID == m.Emp_FBT_MasterID).Select(a => a.FBT_Name + "-" + a.FBT_Tax_Rate ).FirstOrDefault();
+                var cat = m.Emp_Category_ID == GlobalSystemValues.EMPCAT_LOCAL ? "LOCAL" : m.Emp_Category_ID == GlobalSystemValues.EMPCAT_EXPAT ? "EXPAT" : "N/A"; 
                 DMEmpViewModel vm = new DMEmpViewModel
                 {
                     Emp_MasterID = m.Emp_MasterID,
+                    Emp_FBT_MasterID = m.Emp_MasterID,
+                    Emp_Category_ID = m.Emp_Category_ID,
+                    Emp_FBT_Name = fbt,
+                    Emp_Category_Name = cat,
                     Emp_Name = m.Emp_Name,
                     Emp_Acc_No = m.Emp_Acc_No,
                     Emp_Creator_Name = creator ?? "N/A",

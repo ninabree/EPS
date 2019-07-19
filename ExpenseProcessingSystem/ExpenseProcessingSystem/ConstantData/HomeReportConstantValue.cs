@@ -21,8 +21,8 @@ namespace ExpenseProcessingSystem.ConstantData
         //Alphalist of Suppliers by top 10000 corporations
         public const int AST1000 = 3;
 
-        //Reserved
-        public const int AST1000_A = 4;
+        //ESAMS (Electronic Sundry Account Management System)
+        public const int ESAMS = 4;
 
         //Actual Budget Report
         public const int ActualBudgetReport = 5;
@@ -32,15 +32,21 @@ namespace ExpenseProcessingSystem.ConstantData
 
         //Transaction List Report
         public const int TransListReport = 7;
-        
+
         //Account Summary Report
         public const int AccSummaryReport = 8;
+
+        //Reserved
+        public const int Reserved = 9;
 
         //Alphalist of Payees Subject to Withholding Tax Summary
         public const int WTS = 10;
 
         //Outstanding Advances
         public const int OutstandingAdvances = 11;
+
+        //Prepaid Amortization Report
+        public const int PrepaidAmortReport = 12;
 
         //List of Instructions
         public const int LOI = 13;
@@ -241,73 +247,73 @@ namespace ExpenseProcessingSystem.ConstantData
             {
                 new HomeReportTypesModel
                 {
-                    Id = 2,
+                    Id = APSWT_M,
                     TypeName = "Alphalist of Payees Subject to Withholding Tax (Monthly)",
                     SubTypeAvail = false
                 },
                 new HomeReportTypesModel
                 {
-                    Id = 3,
+                    Id = AST1000,
                     TypeName = "Alphalist of Suppliers by top 10000 corporation",
                     SubTypeAvail = false
                 },
                 new HomeReportTypesModel
                 {
-                    Id = 4,
-                    TypeName = "Reserved",
+                    Id = ESAMS,
+                    TypeName = "ESAMS",
                     SubTypeAvail = false
                 },
                 new HomeReportTypesModel
                 {
-                    Id = 5,
-                    TypeName = "Actual Budget Report",
+                    Id = ActualBudgetReport,
+                    TypeName = "Actual Budget",
                     SubTypeAvail = false
                 },
                 new HomeReportTypesModel
                 {
-                    Id = 6,
-                    TypeName = "BIR Withholding Tax Report(CSV)",
+                    Id = BIRWTCSV,
+                    TypeName = "BIR Withholding Tax (CSV)",
                     SubTypeAvail = true
                 },
                 new HomeReportTypesModel
                 {
-                    Id = 7,
+                    Id = TransListReport,
                     TypeName = "Transaction List",
                     SubTypeAvail = true
                 },
                 new HomeReportTypesModel
                 {
-                    Id = 8,
+                    Id = AccSummaryReport,
                     TypeName = "Account Summary",
                     SubTypeAvail = true
                 },
                 new HomeReportTypesModel
                 {
-                    Id = 9,
-                    TypeName = "BIR Forms",
+                    Id = Reserved,
+                    TypeName = "Reserved",
                     SubTypeAvail = true
                 },
                 new HomeReportTypesModel
                 {
-                    Id = 10,
+                    Id = WTS,
                     TypeName = "Withholding Taxes Summary",
                     SubTypeAvail = true
                 },
                 new HomeReportTypesModel
                 {
-                    Id = 11,
+                    Id = OutstandingAdvances,
                     TypeName = "Outstanding Advances",
                     SubTypeAvail = true
                 },
                 new HomeReportTypesModel
                 {
-                    Id = 12,
+                    Id = PrepaidAmmortization,
                     TypeName = "Prepaid Amortization Schedule",
                     SubTypeAvail = true
                 },
                 new HomeReportTypesModel
                 {
-                    Id = 13,
+                    Id = LOI,
                     TypeName = "Letter of Instructions (LOI)",
                     SubTypeAvail = false
                 }

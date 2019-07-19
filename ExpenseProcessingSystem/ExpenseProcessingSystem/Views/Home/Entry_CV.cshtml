@@ -18,6 +18,9 @@
         <div id="tbl-lbl">
             <div class="dis-inline-block"><p>Payee:</p></div>
             <div class="dis-inline-block">
+                @Html.DropDownListFor(m => m.payee_type, new SelectList(Model.systemValues.payee_type_sel, "Value", "Text", Model.systemValues.payee_type_sel.SelectedValue), new { @id = "payeeTypeSel" })
+            </div>
+            <div class="dis-inline-block">
                 @Html.DropDownListFor(m => m.vendor, new SelectList(Model.systemValues.vendors, "Value", "Text", Model.systemValues.vendors.SelectedValue), new { @id = "vendorName" })
             </div>
         </div>
@@ -249,6 +252,10 @@
             $('#iframePreview').prop('src', "/Home/GenerateVoucher");
         });
 
+        updatePayeeSelect();
+        $("#payeeTypeSel").change(function (e) {
+            updatePayeeSelect();
+        });
         $("#addRow").click(function (e) {
             var itemCount = document.getElementById('inputTable').getElementsByTagName('tbody')[0].childElementCount - 2;
             var tableRef = document.getElementById('inputTable').getElementsByTagName('tbody')[0];
@@ -385,7 +392,27 @@
         });
     });
 </script>
-<script type="text/javascript">
+<script type="text/javascript"> 
+    // [[ FUNCTIONS ]]
+     function updatePayeeSelect() {
+         var paytype = $("#payeeTypeSel option:selected").val();
+        var options = "";
+        if (paytype == "1") {
+            var opt = @Html.Raw(Json.Serialize(Model.systemValues.vendors));
+            for (var i = 0; i < opt.length; i++) {
+                options += '<option value="' + opt[i].value + '">' + opt[i].text + '</option>';
+            }
+        } else if (paytype == "2") {
+            var opt = @Html.Raw(Json.Serialize(Model.systemValues.employees));
+            for (var i = 0; i < opt.length; i++) {
+                options += '<option value="' + opt[i].value + '">' + opt[i].text + '</option>';
+            }
+        }
+        $("#vendorName").empty();
+        $("#vendorName").append($(options));
+
+        $("#vendorName").trigger("change");
+    } 
     function tblBuilder(tableRef, begMonth, day, duration, grossAmount) {
         var dvdAmount = roundNumber((grossAmount / duration), 2);
 

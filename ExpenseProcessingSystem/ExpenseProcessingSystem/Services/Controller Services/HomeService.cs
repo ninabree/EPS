@@ -159,6 +159,8 @@ namespace ExpenseProcessingSystem.Services
                             && (l.Liq_Status == GlobalSystemValues.STATUS_PENDING
                             || l.Liq_Status == GlobalSystemValues.STATUS_VERIFIED)
                             )
+                            ||
+                            (p.Expense_Status == GlobalSystemValues.STATUS_PRINT_LOI)
                             select new
                             {
                                 p.Expense_ID,
@@ -2753,6 +2755,7 @@ namespace ExpenseProcessingSystem.Services
                 //Get latest account information of saved account ID.
                 var accInfo = accList.Where(x => x.Account_MasterID == i.Account_MasterID && x.Account_isActive == true
                                             && x.Account_isDeleted == false).FirstOrDefault();
+                if (accInfo == null) continue;
 
                 bmvmList.Add(new BMViewModel()
                 {
@@ -2942,7 +2945,6 @@ namespace ExpenseProcessingSystem.Services
             };
         }
 
-
         public IEnumerable<HomeReportOutputAST1000Model> GetAST1000_AData(int year, int month, int yearTo, int monthTo)
         {
             int[] status = { 3, 4 };
@@ -2981,6 +2983,8 @@ namespace ExpenseProcessingSystem.Services
             DateTime startOfTerm = GetSelectedYearMonthOfTerm(filterMonth, filterYear);
             DateTime startDT;
             DateTime endDT;
+            DateTime StartFiscal = GetStartOfFiscal(filterMonth, filterYear, true);
+            DateTime EndFiscal = GetStartOfFiscal(filterMonth, filterYear, false);
             int termYear = startOfTerm.Year;
             int termMonth = startOfTerm.Month;
             double budgetBalance;
@@ -2990,18 +2994,20 @@ namespace ExpenseProcessingSystem.Services
 
             endDT = DateTime.ParseExact(filterYear + "-" + filterMonth, format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
 
-            //Get latest Budget that until end of the selected month of each account
+            //Get latest Budget of fiscal year of selected month/year of each account
             var accountList = _context.DMAccount.Where(x => x.Account_isActive == true && x.Account_isDeleted == false
                                                         && x.Account_Fund == true).OrderBy(x => x.Account_Group_MasterID);
             var accountGrpList = _context.DMAccountGroup.Where(x => x.AccountGroup_isActive == true && x.AccountGroup_isDeleted == false);
-            var budgetList = _context.Budget.Where(x => x.Budget_Date_Registered.Date <= endDT.Date)
-                                                    .OrderByDescending(x => x.Budget_Date_Registered);
+            var budgetList = _context.Budget.Where(x => x.Budget_Date_Registered.Date <= EndFiscal.Date)
+                                                        .OrderByDescending(x => x.Budget_Date_Registered);
             int currGroup = accountList.First().Account_Group_MasterID;
             double budgetAmount = 0.0;
 
+
             if (budgetList.Count() == 0)
             {
-                actualBudgetData.Add(new HomeReportActualBudgetModel {
+                actualBudgetData.Add(new HomeReportActualBudgetModel
+                {
                     BudgetBalance = 0.0,
                     ExpenseAmount = 0.0,
                     Remarks = "NO_RECORD",
@@ -3013,7 +3019,8 @@ namespace ExpenseProcessingSystem.Services
             foreach (var i in accountList)
             {
                 var budget = budgetList.Where(x => x.Budget_Account_MasterID == i.Account_MasterID)
-                    .DefaultIfEmpty(new BudgetModel {
+                    .DefaultIfEmpty(new BudgetModel
+                    {
                         Budget_Account_MasterID = i.Account_MasterID,
                         Budget_Amount = 0.0
                     }).OrderByDescending(x => x.Budget_Date_Registered).First();
@@ -3035,67 +3042,165 @@ namespace ExpenseProcessingSystem.Services
 
                     budgetAmount = budget.Budget_Amount;
                     currGroup = i.Account_Group_MasterID;
-
                 }
             }
 
-            //Add the last account group info and budget to List.
-            accountCategory.Add(new AccGroupBudgetModel
-            {
-                StartOfTerm = startOfTerm,
-                AccountGroupName = accountGrpList.Where(x => x.AccountGroup_MasterID == currGroup).FirstOrDefault().AccountGroup_Name,
-                AccountGroupMasterID = currGroup,
-                Remarks = "Budget Amount - This Term",
-                Budget = budgetAmount
-            });
+            //Get all expenses with in the term of selected month/year
+            var GOExpHist = _context.GOExpressHist.Where(x => startOfTerm <= DateTime.Parse(x.GOExpHist_ValueDate.Substring(0, 2) + "/" + x.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(x.GOExpHist_ValueDate.Substring(4, 2))))  
+                            && DateTime.Parse(x.GOExpHist_ValueDate.Substring(0, 2) + "/" + x.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(x.GOExpHist_ValueDate.Substring(4, 2)))) <= endDT).ToList();
 
-            ////Get all expenses amount data between start of term date and last day of before filter month, year from DB
-            var expOfPrevMonthsList = (from expDtl in _context.ExpenseEntryDetails
-                                       join acc in _context.DMAccount on expDtl.ExpDtl_Account equals acc.Account_ID
-                                       join accgroup in _context.DMAccountGroup on acc.Account_Group_MasterID equals accgroup.AccountGroup_MasterID
-                                       join exp in _context.ExpenseEntry on expDtl.ExpenseEntryModel.Expense_ID equals exp.Expense_ID
-                                       join dept in _context.DMDept on expDtl.ExpDtl_Dept equals dept.Dept_ID
-                                       where exp.Expense_Last_Updated.Date >= startOfTerm.Date
-                                       && exp.Expense_Last_Updated.Date <= DateTime.ParseExact(filterYear + "-" + filterMonth, format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1).Date
-                                       && accgroup.AccountGroup_isActive == true && accgroup.AccountGroup_isDeleted == false
-                                       orderby exp.Expense_Last_Updated
-                                       select new
-                                       {
-                                           exp.Expense_Last_Updated,
-                                           accgroup.AccountGroup_MasterID,
-                                           accgroup.AccountGroup_Name,
-                                           expDtl.ExpDtl_Gbase_Remarks,
-                                           dept.Dept_Name,
-                                           expDtl.ExpDtl_Credit_Cash
-                                       }).ToList();
+            //Get total expenses of each Account GROUP
+            //Flow:
+            //1. Loop account filtered by account group
+            //1.1. Get all expenses from GOExpressHist table from start of term until Prev monthend of selected month/year
+            //1.2. Loop #1 section until all account.
+            //1.3. Subtract the total expenses amount of start of term until Prev monthend of selected month/year then add to the List()
+            //2. Loop account filtered by account group for expenses of selected month/year
+            //2.1. Get all expenses from GOExpressHist table of selected month/year
+            //2.2. Subtract the expenses amount of each budget account. at the same time, add to sub-total.
+            //2.3. Loop #2 section until all account.
+            //3. Add sub-total to the list.
+            //4. Add break to the list.
+            //5. Loop Flow until all Account Group.
 
-            foreach (var a in accountCategory)
+            foreach (var category in accountCategory)
             {
                 startDT = DateTime.ParseExact(termYear + "-" + termMonth, format, CultureInfo.InvariantCulture);
                 endDT = DateTime.ParseExact(filterYear + "-" + filterMonth, format, CultureInfo.InvariantCulture);
                 subTotal = 0.00;
                 totalExpenseThisTermToPrevMonthend = 0.00;
 
-                budgetBalance = a.Budget;
+                budgetBalance = category.Budget;
 
                 actualBudgetData.Add(new HomeReportActualBudgetModel()
                 {
-                    Category = a.AccountGroupName,
+                    Category = category.AccountGroupName,
                     BudgetBalance = budgetBalance,
-                    Remarks = a.Remarks,
-                    ValueDate = a.StartOfTerm
+                    Remarks = category.Remarks,
+                    ValueDate = category.StartOfTerm
                 });
 
-                //Get total expenses from start of term to Prev monthend of selected month, year
-
-                var expensesOfTermMonthToBeforeFilterMonth = expOfPrevMonthsList.Where(c => c.AccountGroup_MasterID == a.AccountGroupMasterID && c.Expense_Last_Updated.Date >= startOfTerm.Date
-                                       && c.Expense_Last_Updated.Date <= endDT.AddDays(-1).Date);
-
-                foreach (var i in expensesOfTermMonthToBeforeFilterMonth)
+                //#1
+                //Get total expenses of each account from start of term to Prev monthend of selected month, year
+                foreach (var acc in accountList.Where(x => x.Account_Group_MasterID == category.AccountGroupMasterID))
                 {
-                    totalExpenseThisTermToPrevMonthend += i.ExpDtl_Credit_Cash;
+                    foreach (var hist in GOExpHist.Where(x => startOfTerm <= DateTime.Parse(x.GOExpHist_ValueDate.Substring(0, 2) + "/" + x.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(x.GOExpHist_ValueDate.Substring(4, 2))))
+                             && DateTime.Parse(x.GOExpHist_ValueDate.Substring(0, 2) + "/" + x.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(x.GOExpHist_ValueDate.Substring(4, 2)))) <= endDT.AddDays(-1).Date))
+                    {
+                        if (!String.IsNullOrEmpty(hist.GOExpHist_Entry11ActNo)
+                            && acc.Account_No.Contains(hist.GOExpHist_Entry11ActType)
+                            && acc.Account_No.Contains(hist.GOExpHist_Entry11ActNo)
+                            && acc.Account_Code == hist.GOExpHist_Entry11Actcde)
+                        {
+                            if (hist.GOExpHist_Entry11Type == "D")
+                            {
+                                totalExpenseThisTermToPrevMonthend += double.Parse(hist.GOExpHist_Entry11Amt);
+                            }
+                            else
+                            {
+                                totalExpenseThisTermToPrevMonthend -= double.Parse(hist.GOExpHist_Entry11Amt);
+                            }
+                        }
+                        if (!String.IsNullOrEmpty(hist.GOExpHist_Entry12ActNo)
+                            && acc.Account_No.Contains(hist.GOExpHist_Entry12ActType)
+                            && acc.Account_No.Contains(hist.GOExpHist_Entry12ActNo)
+                            && acc.Account_Code == hist.GOExpHist_Entry12Actcde)
+                        {
+                            if (hist.GOExpHist_Entry12Type == "D")
+                            {
+                                totalExpenseThisTermToPrevMonthend += double.Parse(hist.GOExpHist_Entry12Amt);
+                            }
+                            else
+                            {
+                                totalExpenseThisTermToPrevMonthend -= double.Parse(hist.GOExpHist_Entry12Amt);
+                            }
+                        }
+                        if (!String.IsNullOrEmpty(hist.GOExpHist_Entry21ActNo)
+                            && acc.Account_No.Contains(hist.GOExpHist_Entry21ActType)
+                            && acc.Account_No.Contains(hist.GOExpHist_Entry21ActNo)
+                            && acc.Account_Code == hist.GOExpHist_Entry21Actcde)
+                        {
+                            if (hist.GOExpHist_Entry21Type == "D")
+                            {
+                                totalExpenseThisTermToPrevMonthend += double.Parse(hist.GOExpHist_Entry21Amt);
+                            }
+                            else
+                            {
+                                totalExpenseThisTermToPrevMonthend -= double.Parse(hist.GOExpHist_Entry21Amt);
+                            }
+                        }
+                        if (!String.IsNullOrEmpty(hist.GOExpHist_Entry22ActNo)
+                            && acc.Account_No.Contains(hist.GOExpHist_Entry22ActType)
+                            && acc.Account_No.Contains(hist.GOExpHist_Entry22ActNo)
+                            && acc.Account_Code == hist.GOExpHist_Entry22Actcde)
+                        {
+                            if (hist.GOExpHist_Entry22Type == "D")
+                            {
+                                totalExpenseThisTermToPrevMonthend += double.Parse(hist.GOExpHist_Entry22Amt);
+                            }
+                            else
+                            {
+                                totalExpenseThisTermToPrevMonthend -= double.Parse(hist.GOExpHist_Entry22Amt);
+                            }
+                        }
+                        if (!String.IsNullOrEmpty(hist.GOExpHist_Entry31ActNo)
+                            && acc.Account_No.Contains(hist.GOExpHist_Entry31ActType)
+                            && acc.Account_No.Contains(hist.GOExpHist_Entry31ActNo)
+                            && acc.Account_Code == hist.GOExpHist_Entry31Actcde)
+                        {
+                            if (hist.GOExpHist_Entry31Type == "D")
+                            {
+                                totalExpenseThisTermToPrevMonthend += double.Parse(hist.GOExpHist_Entry31Amt);
+                            }
+                            else
+                            {
+                                totalExpenseThisTermToPrevMonthend -= double.Parse(hist.GOExpHist_Entry31Amt);
+                            }
+                        }
+                        if (!String.IsNullOrEmpty(hist.GOExpHist_Entry32ActNo)
+                            && acc.Account_No.Contains(hist.GOExpHist_Entry32ActType)
+                            && acc.Account_No.Contains(hist.GOExpHist_Entry32ActNo)
+                            && acc.Account_Code == hist.GOExpHist_Entry32Actcde)
+                        {
+                            if (hist.GOExpHist_Entry32Type == "D")
+                            {
+                                totalExpenseThisTermToPrevMonthend += double.Parse(hist.GOExpHist_Entry32Amt);
+                            }
+                            else
+                            {
+                                totalExpenseThisTermToPrevMonthend -= double.Parse(hist.GOExpHist_Entry32Amt);
+                            }
+                        }
+                        if (!String.IsNullOrEmpty(hist.GOExpHist_Entry41ActNo)
+                            && acc.Account_No.Contains(hist.GOExpHist_Entry41ActType)
+                            && acc.Account_No.Contains(hist.GOExpHist_Entry41ActNo)
+                            && acc.Account_Code == hist.GOExpHist_Entry41Actcde)
+                        {
+                            if (hist.GOExpHist_Entry41Type == "D")
+                            {
+                                totalExpenseThisTermToPrevMonthend += double.Parse(hist.GOExpHist_Entry41Amt);
+                            }
+                            else
+                            {
+                                totalExpenseThisTermToPrevMonthend -= double.Parse(hist.GOExpHist_Entry41Amt);
+                            }
+                        }
+                        if (!String.IsNullOrEmpty(hist.GOExpHist_Entry42ActNo)
+                            && acc.Account_No.Contains(hist.GOExpHist_Entry42ActType)
+                            && acc.Account_No.Contains(hist.GOExpHist_Entry42ActNo)
+                            && acc.Account_Code == hist.GOExpHist_Entry42Actcde)
+                        {
+                            if (hist.GOExpHist_Entry42Type == "D")
+                            {
+                                totalExpenseThisTermToPrevMonthend += double.Parse(hist.GOExpHist_Entry42Amt);
+                            }
+                            else
+                            {
+                                totalExpenseThisTermToPrevMonthend -= double.Parse(hist.GOExpHist_Entry42Amt);
+                            }
+                        }
+                    }
                 }
-
                 budgetBalance -= totalExpenseThisTermToPrevMonthend;
 
                 actualBudgetData.Add(new HomeReportActualBudgetModel()
@@ -3106,25 +3211,301 @@ namespace ExpenseProcessingSystem.Services
                     ValueDate = endDT.AddDays(-1)
                 });
 
-                //Get all expenses of selected month and year
-                var expensesOfFilterYearMonth = expOfPrevMonthsList.Where(c => c.AccountGroup_MasterID == a.AccountGroupMasterID
-                && c.Expense_Last_Updated.Month == filterMonth && c.Expense_Last_Updated.Year == filterYear);
-
-                foreach (var i in expensesOfFilterYearMonth)
+                var deptInfo = (from dtl in _context.ExpenseEntryDetails
+                                join exp in _context.ExpenseEntry on dtl.ExpenseEntryModel.Expense_ID equals exp.Expense_ID
+                                join dept in _context.DMDept on dtl.ExpDtl_Dept equals dept.Dept_ID
+                                where exp.Expense_Last_Updated.Month == filterMonth
+                                   && exp.Expense_Last_Updated.Year == filterYear
+                                select new {
+                                    exp.Expense_ID,
+                                    dtl.ExpDtl_ID,
+                                    dept.Dept_ID,
+                                    dept.Dept_Name
+                                });
+                                   
+                                   
+                //#2
+                foreach (var acc in accountList.Where(x => x.Account_Group_MasterID == category.AccountGroupMasterID))
                 {
-                    budgetBalance -= i.ExpDtl_Credit_Cash;
-                    subTotal += i.ExpDtl_Credit_Cash;
-
-                    actualBudgetData.Add(new HomeReportActualBudgetModel()
+                    foreach (var hist in GOExpHist.Where(x => x.GOExpHist_ValueDate.Substring(0, 2) == filterMonth.ToString().ToString().PadLeft(2, '0')
+                                                        && (2000 + int.Parse(x.GOExpHist_ValueDate.Substring(4, 2))) == filterYear))
                     {
-                        BudgetBalance = budgetBalance,
-                        ExpenseAmount = i.ExpDtl_Credit_Cash,
-                        Remarks = i.ExpDtl_Gbase_Remarks,
-                        Department = i.Dept_Name,
-                        ValueDate = i.Expense_Last_Updated
-                    });
+                        if (!String.IsNullOrEmpty(hist.GOExpHist_Entry11ActNo)
+                            && acc.Account_No.Contains(hist.GOExpHist_Entry11ActType)
+                            && acc.Account_No.Contains(hist.GOExpHist_Entry11ActNo)
+                            && acc.Account_Code == hist.GOExpHist_Entry11Actcde)
+                        {
+                            if (hist.GOExpHist_Entry11Type == "D")
+                            {
+                                budgetBalance -= double.Parse(hist.GOExpHist_Entry11Amt);
+                                subTotal += double.Parse(hist.GOExpHist_Entry11Amt);
+
+                                actualBudgetData.Add(new HomeReportActualBudgetModel()
+                                {
+                                    BudgetBalance = budgetBalance,
+                                    ExpenseAmount = double.Parse(hist.GOExpHist_Entry11Amt),
+                                    Remarks = hist.GOExpHist_Remarks,
+                                    Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
+                                    ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
+                                });
+                            }
+                            else
+                            {
+                                budgetBalance += double.Parse(hist.GOExpHist_Entry11Amt);
+                                subTotal -= double.Parse(hist.GOExpHist_Entry11Amt);
+
+                                actualBudgetData.Add(new HomeReportActualBudgetModel()
+                                {
+                                    BudgetBalance = budgetBalance,
+                                    ExpenseAmount = double.Parse(hist.GOExpHist_Entry11Amt),
+                                    Remarks = hist.GOExpHist_Remarks,
+                                    Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
+                                    ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
+                                });
+                            }
+                        }
+                        if (!String.IsNullOrEmpty(hist.GOExpHist_Entry12ActNo)
+                        && acc.Account_No.Contains(hist.GOExpHist_Entry12ActType)
+                        && acc.Account_No.Contains(hist.GOExpHist_Entry12ActNo)
+                        && acc.Account_Code == hist.GOExpHist_Entry12Actcde)
+                        {
+                            if (hist.GOExpHist_Entry12Type == "D")
+                            {
+                                budgetBalance -= double.Parse(hist.GOExpHist_Entry12Amt);
+                                subTotal += double.Parse(hist.GOExpHist_Entry12Amt);
+
+                                actualBudgetData.Add(new HomeReportActualBudgetModel()
+                                {
+                                    BudgetBalance = budgetBalance,
+                                    ExpenseAmount = double.Parse(hist.GOExpHist_Entry12Amt),
+                                    Remarks = hist.GOExpHist_Remarks,
+                                    Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
+                                    ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
+                                });
+                            }
+                            else
+                            {
+                                budgetBalance += double.Parse(hist.GOExpHist_Entry12Amt);
+                                subTotal -= double.Parse(hist.GOExpHist_Entry12Amt);
+
+                                actualBudgetData.Add(new HomeReportActualBudgetModel()
+                                {
+                                    BudgetBalance = budgetBalance,
+                                    ExpenseAmount = double.Parse(hist.GOExpHist_Entry12Amt),
+                                    Remarks = hist.GOExpHist_Remarks,
+                                    Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
+                                    ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
+                                });
+                            }
+                        }
+                        if (!String.IsNullOrEmpty(hist.GOExpHist_Entry21ActNo)
+                        && acc.Account_No.Contains(hist.GOExpHist_Entry21ActType)
+                        && acc.Account_No.Contains(hist.GOExpHist_Entry21ActNo)
+                        && acc.Account_Code == hist.GOExpHist_Entry21Actcde)
+                        {
+                            if (hist.GOExpHist_Entry21Type == "D")
+                            {
+                                budgetBalance -= double.Parse(hist.GOExpHist_Entry21Amt);
+                                subTotal += double.Parse(hist.GOExpHist_Entry21Amt);
+
+                                actualBudgetData.Add(new HomeReportActualBudgetModel()
+                                {
+                                    BudgetBalance = budgetBalance,
+                                    ExpenseAmount = double.Parse(hist.GOExpHist_Entry21Amt),
+                                    Remarks = hist.GOExpHist_Remarks,
+                                    Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
+                                    ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
+                                });
+                            }
+                            else
+                            {
+                                budgetBalance += double.Parse(hist.GOExpHist_Entry21Amt);
+                                subTotal -= double.Parse(hist.GOExpHist_Entry21Amt);
+
+                                actualBudgetData.Add(new HomeReportActualBudgetModel()
+                                {
+                                    BudgetBalance = budgetBalance,
+                                    ExpenseAmount = double.Parse(hist.GOExpHist_Entry21Amt),
+                                    Remarks = hist.GOExpHist_Remarks,
+                                    Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
+                                    ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
+                                });
+                            }
+                        }
+                        if (!String.IsNullOrEmpty(hist.GOExpHist_Entry22ActNo)
+                        && acc.Account_No.Contains(hist.GOExpHist_Entry22ActType)
+                        && acc.Account_No.Contains(hist.GOExpHist_Entry22ActNo)
+                        && acc.Account_Code == hist.GOExpHist_Entry22Actcde)
+                        {
+                            if (hist.GOExpHist_Entry22Type == "D")
+                            {
+                                budgetBalance -= double.Parse(hist.GOExpHist_Entry22Amt);
+                                subTotal += double.Parse(hist.GOExpHist_Entry22Amt);
+
+                                actualBudgetData.Add(new HomeReportActualBudgetModel()
+                                {
+                                    BudgetBalance = budgetBalance,
+                                    ExpenseAmount = double.Parse(hist.GOExpHist_Entry22Amt),
+                                    Remarks = hist.GOExpHist_Remarks,
+                                    Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
+                                    ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
+                                });
+                            }
+                            else
+                            {
+                                budgetBalance += double.Parse(hist.GOExpHist_Entry22Amt);
+                                subTotal -= double.Parse(hist.GOExpHist_Entry22Amt);
+
+                                actualBudgetData.Add(new HomeReportActualBudgetModel()
+                                {
+                                    BudgetBalance = budgetBalance,
+                                    ExpenseAmount = double.Parse(hist.GOExpHist_Entry22Amt),
+                                    Remarks = hist.GOExpHist_Remarks,
+                                    Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
+                                    ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
+                                });
+                            }
+                        }
+                        if (!String.IsNullOrEmpty(hist.GOExpHist_Entry31ActNo)
+                        && acc.Account_No.Contains(hist.GOExpHist_Entry31ActType)
+                        && acc.Account_No.Contains(hist.GOExpHist_Entry31ActNo)
+                        && acc.Account_Code == hist.GOExpHist_Entry31Actcde)
+                        {
+                            if (hist.GOExpHist_Entry31Type == "D")
+                            {
+                                budgetBalance -= double.Parse(hist.GOExpHist_Entry31Amt);
+                                subTotal += double.Parse(hist.GOExpHist_Entry31Amt);
+
+                                actualBudgetData.Add(new HomeReportActualBudgetModel()
+                                {
+                                    BudgetBalance = budgetBalance,
+                                    ExpenseAmount = double.Parse(hist.GOExpHist_Entry31Amt),
+                                    Remarks = hist.GOExpHist_Remarks,
+                                    Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
+                                    ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
+                                });
+                            }
+                            else
+                            {
+                                budgetBalance += double.Parse(hist.GOExpHist_Entry31Amt);
+                                subTotal -= double.Parse(hist.GOExpHist_Entry31Amt);
+
+                                actualBudgetData.Add(new HomeReportActualBudgetModel()
+                                {
+                                    BudgetBalance = budgetBalance,
+                                    ExpenseAmount = double.Parse(hist.GOExpHist_Entry31Amt),
+                                    Remarks = hist.GOExpHist_Remarks,
+                                    Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
+                                    ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
+                                });
+                            }
+                        }
+                        if (!String.IsNullOrEmpty(hist.GOExpHist_Entry32ActNo)
+                        && acc.Account_No.Contains(hist.GOExpHist_Entry32ActType)
+                        && acc.Account_No.Contains(hist.GOExpHist_Entry32ActNo)
+                        && acc.Account_Code == hist.GOExpHist_Entry32Actcde)
+                        {
+                            if (hist.GOExpHist_Entry32Type == "D")
+                            {
+                                budgetBalance -= double.Parse(hist.GOExpHist_Entry32Amt);
+                                subTotal += double.Parse(hist.GOExpHist_Entry32Amt);
+
+                                actualBudgetData.Add(new HomeReportActualBudgetModel()
+                                {
+                                    BudgetBalance = budgetBalance,
+                                    ExpenseAmount = double.Parse(hist.GOExpHist_Entry32Amt),
+                                    Remarks = hist.GOExpHist_Remarks,
+                                    Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
+                                    ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
+                                });
+                            }
+                            else
+                            {
+                                budgetBalance += double.Parse(hist.GOExpHist_Entry32Amt);
+                                subTotal -= double.Parse(hist.GOExpHist_Entry32Amt);
+
+                                actualBudgetData.Add(new HomeReportActualBudgetModel()
+                                {
+                                    BudgetBalance = budgetBalance,
+                                    ExpenseAmount = double.Parse(hist.GOExpHist_Entry32Amt),
+                                    Remarks = hist.GOExpHist_Remarks,
+                                    Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
+                                    ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
+                                });
+                            }
+                        }
+                        if (!String.IsNullOrEmpty(hist.GOExpHist_Entry41ActNo)
+                        && acc.Account_No.Contains(hist.GOExpHist_Entry41ActType)
+                        && acc.Account_No.Contains(hist.GOExpHist_Entry41ActNo)
+                        && acc.Account_Code == hist.GOExpHist_Entry41Actcde)
+                        {
+                            if (hist.GOExpHist_Entry41Type == "D")
+                            {
+                                budgetBalance -= double.Parse(hist.GOExpHist_Entry41Amt);
+                                subTotal += double.Parse(hist.GOExpHist_Entry41Amt);
+
+                                actualBudgetData.Add(new HomeReportActualBudgetModel()
+                                {
+                                    BudgetBalance = budgetBalance,
+                                    ExpenseAmount = double.Parse(hist.GOExpHist_Entry41Amt),
+                                    Remarks = hist.GOExpHist_Remarks,
+                                    Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
+                                    ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
+                                });
+                            }
+                            else
+                            {
+                                budgetBalance += double.Parse(hist.GOExpHist_Entry41Amt);
+                                subTotal -= double.Parse(hist.GOExpHist_Entry41Amt);
+
+                                actualBudgetData.Add(new HomeReportActualBudgetModel()
+                                {
+                                    BudgetBalance = budgetBalance,
+                                    ExpenseAmount = double.Parse(hist.GOExpHist_Entry41Amt),
+                                    Remarks = hist.GOExpHist_Remarks,
+                                    Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
+                                    ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
+                                });
+                            }
+                        }
+                        if (!String.IsNullOrEmpty(hist.GOExpHist_Entry42ActNo)
+                        && acc.Account_No.Contains(hist.GOExpHist_Entry42ActType)
+                        && acc.Account_No.Contains(hist.GOExpHist_Entry42ActNo)
+                        && acc.Account_Code == hist.GOExpHist_Entry42Actcde)
+                        {
+                            if (hist.GOExpHist_Entry42Type == "D")
+                            {
+                                budgetBalance -= double.Parse(hist.GOExpHist_Entry42Amt);
+                                subTotal += double.Parse(hist.GOExpHist_Entry42Amt);
+
+                                actualBudgetData.Add(new HomeReportActualBudgetModel()
+                                {
+                                    BudgetBalance = budgetBalance,
+                                    ExpenseAmount = double.Parse(hist.GOExpHist_Entry42Amt),
+                                    Remarks = hist.GOExpHist_Remarks,
+                                    Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
+                                    ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
+                                });
+                            }
+                            else
+                            {
+                                budgetBalance += double.Parse(hist.GOExpHist_Entry42Amt);
+                                subTotal -= double.Parse(hist.GOExpHist_Entry42Amt);
+
+                                actualBudgetData.Add(new HomeReportActualBudgetModel()
+                                {
+                                    BudgetBalance = budgetBalance,
+                                    ExpenseAmount = double.Parse(hist.GOExpHist_Entry42Amt),
+                                    Remarks = hist.GOExpHist_Remarks,
+                                    Department = deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).DefaultIfEmpty("").FirstOrDefault().Dept_Name,
+                                    ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
+                                });
+                            }
+                        }
+                    }
                 }
 
+                //#3
                 //Add Sub-Total to List
                 if (subTotal != 0)
                 {
@@ -3137,11 +3518,13 @@ namespace ExpenseProcessingSystem.Services
                     });
                 }
 
+                //#4
                 //Insert break or seperation of row
                 actualBudgetData.Add(new HomeReportActualBudgetModel()
                 {
                     Category = "BREAK"
                 });
+
             }
 
             return actualBudgetData;
@@ -3964,10 +4347,13 @@ namespace ExpenseProcessingSystem.Services
             string whereQuery = "";
             string whereQuery1 = "";
             string whereQuery2 = "";
-
-            DateTime startDT = DateTime.ParseExact(model.Year + "-" + model.Month, "yyyy-M", CultureInfo.InvariantCulture);
-            DateTime endDT = DateTime.ParseExact(model.YearTo + "-" + model.MonthTo, "yyyy-M", CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
-
+            DateTime startDT = new DateTime();
+            DateTime endDT = new DateTime();
+            if (model.ReportType != HomeReportConstantValue.OutstandingAdvances)
+            {
+                startDT = DateTime.ParseExact(model.Year + "-" + model.Month, "yyyy-M", CultureInfo.InvariantCulture);
+                endDT = DateTime.ParseExact(model.YearTo + "-" + model.MonthTo, "yyyy-M", CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
+            }
             //int[] expType1 = { GlobalSystemValues.TYPE_CV, GlobalSystemValues.TYPE_PC,
             //    GlobalSystemValues.TYPE_DDV, GlobalSystemValues.TYPE_SS };
             //int[] expType2 = { HomeReportConstantValue.REP_NC_LS_PAYROLL - 50, HomeReportConstantValue.REP_NC_JS_PAYROLL - 50,
@@ -5291,6 +5677,35 @@ namespace ExpenseProcessingSystem.Services
             return startOfTermDate;
         }
 
+        public DateTime GetStartOfFiscal(int month, int year, bool opt)
+        {
+            int[] firstTermMonths = { 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+            int[] secodnTermNextYearMonths = { 1, 2, 3 };
+
+            if(opt == true)
+            {
+                if (firstTermMonths.Contains(month))
+                {
+                    return DateTime.ParseExact(year + "-04-01", "yyyy-M-dd", CultureInfo.InvariantCulture);
+                }
+                else
+                {
+                    return DateTime.ParseExact((year - 1) + "-04-01", "yyyy-M-dd", CultureInfo.InvariantCulture);
+                }
+            }
+            else
+            {
+                if (firstTermMonths.Contains(month))
+                {
+                    return DateTime.ParseExact((year + 1) + "-03-31", "yyyy-M-dd", CultureInfo.InvariantCulture);
+                }
+                else
+                {
+                    return DateTime.ParseExact((year) + "-03-31", "yyyy-M-dd", CultureInfo.InvariantCulture);
+                }
+            }
+        }
+
         public List<float> PopulateTaxRaxListIncludeHist()
         {
             var taxRate = _context.DMTR.OrderBy(x => x.TR_Tax_Rate).Select(x => x.TR_Tax_Rate).ToList().Distinct();
@@ -5509,7 +5924,7 @@ namespace ExpenseProcessingSystem.Services
                         ExpDtl_Amor_Month = cv.month,
                         ExpDtl_Amor_Day = cv.day,
                         ExpDtl_Amor_Duration = cv.duration,
-                        ExpDtl_CreditAccount1 = (cv.credEwt > 0) ? getAccountByMasterID(creditAccMasterID1).Account_ID : 0,
+                        ExpDtl_CreditAccount1 = (cv.credEwt > 0 && expenseType != GlobalSystemValues.TYPE_SS) ? getAccountByMasterID(creditAccMasterID1).Account_ID : 0,
                         ExpDtl_CreditAccount2 = getAccountByMasterID(creditAccMasterID2).Account_ID,
                         ExpenseEntryAmortizations = expenseAmor,
                         ExpenseEntryGbaseDtls = expenseGbase,
@@ -8669,7 +9084,15 @@ namespace ExpenseProcessingSystem.Services
 
             listOfLists.Add(new SelectList(_context.DMEmp.Where(x => x.Emp_isActive == true && x.Emp_isDeleted == false && x.Emp_Type == "Regular").Select(q => new { q.Emp_ID, q.Emp_Name }),
                         "Emp_ID", "Emp_Name"));
+
+            listOfLists.Add(new SelectList(_context.DMEmp.Where(x => x.Emp_isActive == true && x.Emp_isDeleted == false).Select(q => new { q.Emp_ID, q.Emp_Name }),
+                        "Emp_ID", "Emp_Name"));
             return listOfLists;
+        }
+        //Get all active tax rates
+        public List<DMTRModel> getAllTaxRateList()
+        {
+            return _context.DMTR.Where(x => x.TR_isActive == true && x.TR_isDeleted == false).OrderBy(x => x.TR_Tax_Rate).ToList();
         }
         //retrieve account details
         public ExpenseEntryModel getExpenseDetail(int entryID)

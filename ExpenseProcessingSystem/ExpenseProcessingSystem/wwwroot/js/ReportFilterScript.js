@@ -1,29 +1,54 @@
 ﻿$(document).ready(function () {
+    var reportType = $('#ddlReportType').val();
     // set fields
-    var radioPeriod1 = $('#radioPeriodOption1');
-    var radioPeriod2 = $('#radioPeriodOption2');
-    var radioPeriod3 = $('#radioPeriodOption3');
-    var ddlMonth = $('#ddlMonth');
-    var ddlYear = $('#ddlYear');
-    var ddlMonthTo = $('#ddlMonthTo');
-    var ddlYearTo = $('#ddlYearTo');
+    var radioPeriod1 = $('#radioPeriodOption1_' + reportType);
+    var radioPeriod2 = $('#radioPeriodOption2_' + reportType);
+    var radioPeriod3 = $('#radioPeriodOption3_' + reportType);
+    var ddlMonth = $('#ddlMonth_' + reportType);
+    var ddlYear = $('#ddlYear_' + reportType);
+    var ddlMonthTo = $('#ddlMonthTo_' + reportType);
+    var ddlYearTo = $('#ddlYearTo_' + reportType);
     var ddlFileFormat = $('#ddlFileFormat');
-    var ddlSignatory = $('#ddlSignatory');
-    var dtPeriodFrom = $('#PeriodFrom');
-    var dtPeriodTo = $('#PeriodTo');
-    var txtCheckNoFrom = $('#CheckNoFrom');
-    var txtCheckNoTo = $('#CheckNoTo');
-    var txtVoucherNoFrom = $('#VoucherNoFrom');
-    var txtVoucherNoTo = $('#VoucherNoTo');
-    var txtTransNoFrom = $('#TransNoFrom');
-    var txtTransNoTo = $('#TransNoTo');
-    var txtSubjName = $('#SubjName');
+    var ddlSignatory = $('#ddlSignatory_' + reportType);
+    var dtPeriodFrom = $('#PeriodFrom_' + reportType);
+    var dtPeriodTo = $('#PeriodTo_' + reportType);
+    var txtCheckNoFrom = $('#CheckNoFrom_' + reportType);
+    var txtCheckNoTo = $('#CheckNoTo_' + reportType);
+    var txtVoucherNoFrom = $('#VoucherNoFrom_' + reportType);
+    var txtVoucherNoTo = $('#VoucherNoTo_' + reportType);
+    var txtTransNoFrom = $('#TransNoFrom_' + reportType);
+    var txtTransNoTo = $('#TransNoTo_' + reportType);
+    var txtSubjName = $('#SubjName_' + reportType);
     var btnGenerateFile = $("#btnGenerateFile");
     var btnGeneratePreview = $("#btnGeneratePreview");
     var lblValidation = $('#ValidationSummary');
     var dt = new Date();
     var today = dt.getFullYear() + "-" + ('0' + (dt.getMonth() + 1)).slice(-2) + "-" + ('0' + (dt.getDate())).slice(-2);
     var divChkTax = $('#divChkTax');
+
+    function UpdateFileds() {
+        reportType = $('#ddlReportType').val();
+        // set fields
+        radioPeriod1 = $('#radioPeriodOption1_' + reportType);
+        radioPeriod2 = $('#radioPeriodOption2_' + reportType);
+        radioPeriod3 = $('#radioPeriodOption3_' + reportType);
+        ddlMonth = $('#ddlMonth_' + reportType);
+        ddlYear = $('#ddlYear_' + reportType);
+        ddlMonthTo = $('#ddlMonthTo_' + reportType);
+        ddlYearTo = $('#ddlYearTo_' + reportType);
+        //ddlFileFormat = $('#ddlFileFormat_' + reportType);
+        ddlSignatory = $('#ddlSignatory_' + reportType);
+        dtPeriodFrom = $('#PeriodFrom_' + reportType);
+        dtPeriodTo = $('#PeriodTo_' + reportType);
+        txtCheckNoFrom = $('#CheckNoFrom_' + reportType);
+        txtCheckNoTo = $('#CheckNoTo_' + reportType);
+        txtVoucherNoFrom = $('#VoucherNoFrom_' + reportType);
+        txtVoucherNoTo = $('#VoucherNoTo_' + reportType);
+        txtTransNoFrom = $('#TransNoFrom_' + reportType);
+        txtTransNoTo = $('#TransNoTo_' + reportType);
+        txtSubjName = $('#SubjName_' + reportType);
+        //divChkTax = $('#divChkTax_' + reportType);
+    }
 
     $("#ddlReportType").change(function () {
         var ReportType = $(this).val();
@@ -38,48 +63,49 @@
         }
 
         //Default fields filter
+        UpdateFileds();
 
-        radioPeriod1.attr("disabled", "disabled");
-        radioPeriod3.attr("disabled", "disabled");
-        ddlMonth.attr("disabled", "disabled");
-        ddlYear.attr("disabled", "disabled");
-        ddlMonthTo.attr("disabled", "disabled");
-        ddlYearTo.attr("disabled", "disabled");
-        ddlFileFormat.attr("disabled", "disabled");
-        ddlSignatory.attr("disabled", "disabled");
-        dtPeriodFrom.attr("disabled", "disabled");
-        dtPeriodTo.attr("disabled", "disabled");
-        txtCheckNoFrom.attr("disabled", "disabled");
-        txtCheckNoTo.attr("disabled", "disabled");
-        txtVoucherNoFrom.attr("disabled", "disabled");
-        txtVoucherNoTo.attr("disabled", "disabled");
-        txtTransNoFrom.attr("disabled", "disabled");
-        txtTransNoTo.attr("disabled", "disabled");
-        txtSubjName.attr("disabled", "disabled");
-        btnGenerateFile.attr("disabled", "disabled");
-        btnGeneratePreview.attr("disabled", "disabled");
-        divChkTax.css('pointer-events', 'none');
-        divChkTax.css('background-color', '#ccc');
-        $('.chkTaxRate').prop("checked", false);
-        radioPeriod1.prop('checked', false);
-        radioPeriod2.prop('checked', false);
-        radioPeriod3.prop('checked', false);
-        txtCheckNoFrom.val("");
-        txtCheckNoTo.val("");
-        txtVoucherNoFrom.val("");
-        txtVoucherNoTo.val("");
-        txtTransNoFrom.val("");
-        txtTransNoTo.val("");
-        txtSubjName.val("");
-        ddlMonth.val(dt.getMonth() + 1);
-        ddlYear.val(dt.getFullYear());
-        ddlMonthTo.val(dt.getMonth() + 1);
-        ddlYearTo.val(dt.getFullYear());
+        //radioPeriod1.attr("disabled", "disabled");
+        //radioPeriod3.attr("disabled", "disabled");
+        //ddlMonth.attr("disabled", "disabled");
+        //ddlYear.attr("disabled", "disabled");
+        //ddlMonthTo.attr("disabled", "disabled");
+        //ddlYearTo.attr("disabled", "disabled");
+        ////ddlFileFormat.attr("disabled", "disabled");
+        //ddlSignatory.attr("disabled", "disabled");
+        //dtPeriodFrom.attr("disabled", "disabled");
+        //dtPeriodTo.attr("disabled", "disabled");
+        //txtCheckNoFrom.attr("disabled", "disabled");
+        //txtCheckNoTo.attr("disabled", "disabled");
+        //txtVoucherNoFrom.attr("disabled", "disabled");
+        //txtVoucherNoTo.attr("disabled", "disabled");
+        //txtTransNoFrom.attr("disabled", "disabled");
+        //txtTransNoTo.attr("disabled", "disabled");
+        //txtSubjName.attr("disabled", "disabled");
+        //btnGenerateFile.attr("disabled", "disabled");
+        //btnGeneratePreview.attr("disabled", "disabled");
+        //divChkTax.css('pointer-events', 'none');
+        //divChkTax.css('background-color', '#ccc');
+        //$('.chkTaxRate').prop("checked", false);
+        //radioPeriod1.prop('checked', false);
+        //radioPeriod2.prop('checked', false);
+        //radioPeriod3.prop('checked', false);
+        //txtCheckNoFrom.val("");
+        //txtCheckNoTo.val("");
+        //txtVoucherNoFrom.val("");
+        //txtVoucherNoTo.val("");
+        //txtTransNoFrom.val("");
+        //txtTransNoTo.val("");
+        //txtSubjName.val("");
+        //ddlMonth.val(dt.getMonth() + 1);
+        //ddlYear.val(dt.getFullYear());
+        //ddlMonthTo.val(dt.getMonth() + 1);
+        //ddlYearTo.val(dt.getFullYear());
         ddlFileFormat.val($("#ddlFileFormat option:first").val());
-        ddlSignatory.val($("#ddlSignatory option:first").val());
+        ddlSignatory.val($("#ddlSignatory_" + reportType + " option:first").val());
         lblValidation.hide();
-        dtPeriodFrom.val(today);
-        dtPeriodTo.val(today);
+        //dtPeriodFrom.val(today);
+        //dtPeriodTo.val(today);
         ddlFileFormat.children('option').show();
         ddlFileFormat.children('option[value=4]').css('display', 'none');
 
@@ -119,7 +145,7 @@
             ddlFileFormat.children('option[value=1]').show();
             ddlFileFormat.val($("#ddlFileFormat option[value=1]").val());
 
-        } else if (ReportType == 8) {
+        } else if (ReportType == 8 || ReportType == 9 || ReportType == 10) {
             radioPeriod1.prop('checked', true);
             radioPeriod1.removeAttr("disabled");
             radioPeriod3.removeAttr("disabled");
@@ -131,16 +157,7 @@
             ddlFileFormat.children('option[value=1]').show();
             ddlFileFormat.val($("#ddlFileFormat option[value=1]").val());
 
-        } else if (ReportType == 10) {
-            radioPeriod1.prop('checked', true);
-            radioPeriod1.removeAttr("disabled");
-            radioPeriod3.removeAttr("disabled");
-            ddlYear.removeAttr("disabled");
-            ddlMonth.removeAttr("disabled");
-            ddlMonthTo.removeAttr("disabled");
-            ddlYearTo.removeAttr("disabled");
         }
-
         if (ReportType != 0 || ReportType != '') {
             btnGenerateFile.removeAttr("disabled");
             btnGeneratePreview.removeAttr("disabled");
@@ -171,6 +188,21 @@
         if ($("#ddlReportType").val() != 7) {
             return false;
         }
+        ddlMonth = $('#ddlMonth_7');
+        ddlYear = $('#ddlYear_7');
+        ddlMonthTo = $('#ddlMonthTo_7');
+        ddlYearTo = $('#ddlYearTo_7');
+        ddlFileFormat = $('#ddlFileFormat_7');
+        ddlSignatory = $('#ddlSignatory_7');
+        dtPeriodFrom = $('#PeriodFrom_7');
+        dtPeriodTo = $('#PeriodTo_7');
+        txtCheckNoFrom = $('#CheckNoFrom_7');
+        txtCheckNoTo = $('#CheckNoTo_7');
+        txtVoucherNoFrom = $('#VoucherNoFrom_7');
+        txtVoucherNoTo = $('#VoucherNoTo_7');
+        txtTransNoFrom = $('#TransNoFrom_7');
+        txtTransNoTo = $('#TransNoTo_7');
+        txtSubjName = $('#SubjName_7');
 
         radioPeriod1.removeAttr("disabled");
         radioPeriod3.removeAttr("disabled");
@@ -222,7 +254,7 @@
     });
 
     $(".radioPeriodOption").change(function () {
-
+        UpdateFileds();
         //Default fields filter
         ddlMonth.attr("disabled", "disabled");
         ddlYear.attr("disabled", "disabled");
@@ -260,7 +292,8 @@
         }
     });
 
-    $('#deselectRadio').click(function () {
+    $('.deselectRadio').click(function () {
+        UpdateFileds();
         $('.radioPeriodOption').prop('checked', false);
         dtPeriodFrom.val(today);
         dtPeriodTo.val(today);
@@ -302,7 +335,7 @@ $(document).ready(function () {
                 Month: $('#ddlMonth_' + reportType).val(),
                 YearTo: $('#ddlYearTo_' + reportType).val(),
                 MonthTo: $('#ddlMonthTo_' + reportType).val(),
-                PeriodOption: $('.radioPeriodOption_' + reportType + ':checked').val(),
+                PeriodOption: $('.radioPeriodOption:checked').val(),
                 PeriodFrom: $('#PeriodFrom_' + reportType).val(),
                 PeriodTo: $('#PeriodTo_' + reportType).val()
             },
@@ -324,7 +357,7 @@ $(document).ready(function () {
                         + "&Month=" + $('#ddlMonth_' + reportType).val()
                         + "&YearTo=" + $('#ddlYearTo_' + reportType).val()
                         + "&MonthTo=" + $('#ddlMonthTo_' + reportType).val()
-                        + "&PeriodOption=" + $('.radioPeriodOption_' + $('#ddlReportType').val()+':checked').val()
+                        + "&PeriodOption=" + $('.radioPeriodOption:checked').val()
                         + "&PeriodFrom=" + $('#PeriodFrom_' + reportType).val()
                         + "&PeriodTo=" + $('#PeriodTo_' + reportType).val()
                         + "&TaxRateArray=" + chkList
@@ -367,7 +400,7 @@ $(document).ready(function () {
                 Month: $('#ddlMonth_' + reportType).val(),
                 YearTo: $('#ddlYearTo_' + reportType).val(),
                 MonthTo: $('#ddlMonthTo_' + reportType).val(),
-                PeriodOption: $('.radioPeriodOption_' + reportType + ':checked').val(),
+                PeriodOption: $('.radioPeriodOption:checked').val(),
                 PeriodFrom: $('#PeriodFrom_' + reportType).val(),
                 PeriodTo: $('#PeriodTo_' + reportType).val()
             },
@@ -389,7 +422,7 @@ $(document).ready(function () {
                         + "&Month=" + $('#ddlMonth_' + reportType).val()
                         + "&YearTo=" + $('#ddlYearTo_' + reportType).val()
                         + "&MonthTo=" + $('#ddlMonthTo_' + reportType).val()
-                        + "&PeriodOption=" + $('.radioPeriodOption_' + reportType + ':checked').val()
+                        + "&PeriodOption=" + $('.radioPeriodOption:checked').val()
                         + "&PeriodFrom=" + $('#PeriodFrom_' + reportType).val()
                         + "&PeriodTo=" + $('#PeriodTo_' + reportType).val()
                         + "&TaxRateArray=" + chkList

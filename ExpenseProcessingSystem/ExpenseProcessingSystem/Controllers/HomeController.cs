@@ -583,7 +583,7 @@ namespace ExpenseProcessingSystem.Controllers
                 XElement xelem = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
                 for(int i = 1; i <= 5; i++)
                 {
-                    var acc = accounts.Where(x => x.Account_MasterID == int.Parse(xelem.Element("Report_OA_Acc" + i).Value)
+                    var acc = accounts.Where(x => x.Account_MasterID == int.Parse(xelem.Element("D_SS" + i).Value)
                                 && x.Account_isActive == true && x.Account_isDeleted == false).FirstOrDefault();
                     if (acc != null)
                     {
@@ -596,19 +596,7 @@ namespace ExpenseProcessingSystem.Controllers
                 }
                 return Json(subtypes);
             }
-            if(ReportTypeID == HomeReportConstantValue.BIRWTCSV)
-            {
-                foreach(var i in HomeReportConstantValue.GetTerm_BIRCSV())
-                {
-                    subtypes.Add(new HomeReportSubTypeAccModel
-                    {
-                        Id = i.ID,
-                        SubTypeName = i.YearTerm
-                    });
-                }
-                return Json(subtypes);
-            }
-
+            
             if (ReportTypeID != 0)
             {
                 return Json(ConstantData.HomeReportConstantValue.GetReportSubTypeData()
@@ -1029,11 +1017,11 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.systemValues.ewt = _service.getVendorTaxRate(firstId);
             viewModel.systemValues.vat = _service.getVendorVat(firstId);
             viewModel.systemValues.acc = _service.getAccDetailsEntry();
-            //TEMP for DDV
-            viewModel.systemValues.payee_type = new SelectList(GlobalSystemValues.PAYEETYPE_SELECT_DDV, "Value", "Text", GlobalSystemValues.PAYEETYPE_SELECT_DDV.First());
-            viewModel.systemValues.employees = listOfSysVals[GlobalSystemValues.SELECT_LIST_REGEMPLOYEE];
+            //TEMP for CV
+            viewModel.systemValues.payee_type_sel = new SelectList(GlobalSystemValues.PAYEETYPE_SELECT_CV, "Value", "Text", GlobalSystemValues.PAYEETYPE_SELECT_CV.First());
+            viewModel.systemValues.employees = listOfSysVals[GlobalSystemValues.SELECT_LIST_REGEMPLOYEE]; 
+            viewModel.systemValues.employeesAll = listOfSysVals[GlobalSystemValues.SELECT_LIST_ALLEMPLOYEE];
             //for NC
-
             if (viewModel.GetType() != typeof(EntryNCViewModelList))
             {
                 viewModel.expenseYear = DateTime.Today.Year.ToString();
@@ -1054,7 +1042,9 @@ namespace ExpenseProcessingSystem.Controllers
 
             viewModel.systemValues.ewt = _service.getVendorTaxRate(firstId);
             viewModel.systemValues.vat = _service.getVendorVat(firstId);
-            if(screenCode == GlobalSystemValues.TYPE_SS)
+            viewModel.systemValues.employees = listOfSysVals[GlobalSystemValues.SELECT_LIST_REGEMPLOYEE];
+
+            if (screenCode == GlobalSystemValues.TYPE_SS)
             {
                 DMAccountModel acc = new DMAccountModel();
                 List<accDetails> acclist = new List<accDetails>();
@@ -1228,6 +1218,9 @@ namespace ExpenseProcessingSystem.Controllers
                 });
             }
             viewModel = PopulateEntry((EntryDDVViewModelList)viewModel);
+            viewModel.payee_type = GlobalSystemValues.PAYEETYPE_REGEMP;
+            viewModel.systemValues.vat = _service.getAllVat();
+            viewModel.systemValues.ewt = _service.getAllTaxRate();
             return View(viewModel);
         }
         [ExportModelState]
@@ -1274,6 +1267,8 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         _service.postDDV(entryID, "P");
                         ViewBag.Success = 1;
+                        _service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_PRINT_LOI, int.Parse(GetUserID()));
+
                     }
                     else
                     {
@@ -1356,6 +1351,10 @@ namespace ExpenseProcessingSystem.Controllers
 
             viewModel.EntryCV.Add(new EntryCVViewModel { screenCode = "PCV"});
 
+            //select values for reg employee payee
+            viewModel.payee_type = GlobalSystemValues.PAYEETYPE_EMP_ALL;
+            viewModel.systemValues.vat = _service.getAllVat();
+            viewModel.systemValues.ewt = _service.getAllTaxRate();
             return View(viewModel);
         }
 
@@ -1535,6 +1534,10 @@ namespace ExpenseProcessingSystem.Controllers
 
             viewModel.EntryCV.Add(new EntryCVViewModel { screenCode = "SS" });
 
+            //select values for reg employee payee
+            viewModel.payee_type = GlobalSystemValues.PAYEETYPE_REGEMP;
+            viewModel.systemValues.vat = _service.getAllVat();
+            viewModel.systemValues.ewt = _service.getAllTaxRate();
             return View(viewModel);
         }
 
@@ -2015,7 +2018,11 @@ namespace ExpenseProcessingSystem.Controllers
             LiquidationViewModel ssList = _service.getExpenseToLiqudate(entryID);
             ssList.accList = _service.getAccountList();
             ssList.accAllList = _service.getAccountListIncHist();
-
+            ssList.taxRateList = _service.getAllTaxRateList();
+            foreach (var i in ssList.taxRateList)
+            {
+                i.TR_WT_Title = (i.TR_Tax_Rate * 100) + "% " + i.TR_WT_Title;
+            }
             foreach (var i in ssList.accAllList)
             {
                 i.Account_Name = i.Account_No + " - " + i.Account_Name;
@@ -2038,6 +2045,11 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 vm.accList = _service.getAccountList();
                 vm.accAllList = _service.getAccountListIncHist();
+                vm.taxRateList = _service.getAllTaxRateList();
+                foreach (var i in vm.taxRateList)
+                {
+                    i.TR_WT_Title = (i.TR_Tax_Rate * 100) + "% " + i.TR_WT_Title;
+                }
                 foreach (var i in vm.accAllList)
                 {
                     i.Account_Name = i.Account_No + " - " + i.Account_Name;
@@ -2086,6 +2098,11 @@ namespace ExpenseProcessingSystem.Controllers
             LiquidationViewModel ssList = _service.getExpenseToLiqudate(entryID);
             ssList.accList = _service.getAccountList();
             ssList.accAllList = _service.getAccountListIncHist();
+            ssList.taxRateList = _service.getAllTaxRateList();
+            foreach (var i in ssList.taxRateList)
+            {
+                i.TR_WT_Title = (i.TR_Tax_Rate * 100) + "% " + i.TR_WT_Title;
+            }
             foreach (var i in ssList.accAllList)
             {
                 i.Account_Name = i.Account_No + " - " + i.Account_Name;
@@ -2165,6 +2182,11 @@ namespace ExpenseProcessingSystem.Controllers
             ssList = _service.getExpenseToLiqudate(entryID);
             ssList.accList = _service.getAccountList();
             ssList.accAllList = _service.getAccountListIncHist();
+            ssList.taxRateList = _service.getAllTaxRateList();
+            foreach (var i in ssList.taxRateList)
+            {
+                i.TR_WT_Title = (i.TR_Tax_Rate * 100) + "% " + i.TR_WT_Title;
+            }
             foreach (var i in ssList.accAllList)
             {
                 i.Account_Name = i.Account_No + " - " + i.Account_Name;

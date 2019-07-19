@@ -25,6 +25,7 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly int STATUS_REVERSED = 10;
         public static readonly int STATUS_CLOSED = 11;
         public static readonly int STATUS_OPEN = 12;
+        public static readonly int STATUS_PRINT_LOI = 13;
 
         //Static values for the index of certain lists that are to be stored inside a list object.
         //i.e: Retrieving system values for the dropdown boxes of entry views.
@@ -35,6 +36,7 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly int SELECT_LIST_TAXRATE = 3;
         //public static readonly int SELECT_LIST_CATEGORY = 4;
         public static readonly int SELECT_LIST_REGEMPLOYEE = 4;
+        public static readonly int SELECT_LIST_ALLEMPLOYEE = 5;
 
         //Static values for payee type use for checking or adding payee type to expense entries.
         //i.e: Checking payee type
@@ -43,17 +45,25 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly int PAYEETYPE_REGEMP = 2;
         public static readonly int PAYEETYPE_TEMPEMP = 3;
         public static readonly int PAYEETYPE_CUST = 4;
+        public static readonly int PAYEETYPE_EMP_ALL = 5;
 
         public static readonly List<SelectListItem> PAYEETYPE_SELECT_ALL = new List<SelectListItem> {
                 new SelectListItem { Text = "VENDOR", Value = PAYEETYPE_VENDOR.ToString(), Selected = true },
                 new SelectListItem { Text = "REGULAR EMPLOYEE", Value = PAYEETYPE_REGEMP.ToString(), Selected = false },
                 new SelectListItem { Text = "TEMPORARY EMPLOYEE", Value = PAYEETYPE_REGEMP.ToString(), Selected = false },
-                new SelectListItem { Text = "CUSTOMER", Value = PAYEETYPE_REGEMP.ToString(), Selected = false }
+                new SelectListItem { Text = "CUSTOMER", Value = PAYEETYPE_REGEMP.ToString(), Selected = false },
+                new SelectListItem { Text = "ALL EMPLOYEE", Value = PAYEETYPE_EMP_ALL.ToString(), Selected = false }
         };
-        public static readonly List<SelectListItem> PAYEETYPE_SELECT_DDV = new List<SelectListItem> {
+        public static readonly List<SelectListItem> PAYEETYPE_SELECT_CV = new List<SelectListItem> {
                 new SelectListItem { Text = "VENDOR", Value = PAYEETYPE_VENDOR.ToString(), Selected = true },
                 new SelectListItem { Text = "REGULAR EMPLOYEE", Value = PAYEETYPE_REGEMP.ToString(), Selected = false }
         };
+        //Static values for payee type use for checking or adding employee category.
+        //i.e: Checking category type
+        //Example: instead of [if (type == "local")] use [if (type == GlobalSystemValues.EMPCAT_LOCAL)]
+        public static readonly int EMPCAT_LOCAL = 1;
+        public static readonly int EMPCAT_EXPAT = 2;
+
         //Static values for user roles use for checking or adding user roles to users.
         //i.e: Checking user access rights
         //Example: instead of [if (role == "admin")] use [if (role == GlobalSystemValues.ROLE_ADMIN)]
@@ -108,6 +118,7 @@ namespace ExpenseProcessingSystem.ConstantData
                 case 10: return "REVERSED";
                 case 11: return "CLOSED";
                 case 12: return "OPEN";
+                case 13: return "PRINT LOI";
             };
 
             return "";
