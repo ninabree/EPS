@@ -8,13 +8,15 @@
         /*background-color: red;
     }*/
     .rep-voucher-cont > .rep-voucher-tbl-left {
-        float: left;
-        width: 50%;
-        display: inline-block;
+        width: 60%;
     }
 
-    .rep-voucher-cont > .rep-voucher-tbl-right {
-        float: right;
-        width: 50%;
-        display: inline-block;
-    }
+.td-center{
+    text-align:center;
+}
+.td-left{
+    text-align:left;
+}
+.td-right {
+    text-align: right;
+}
