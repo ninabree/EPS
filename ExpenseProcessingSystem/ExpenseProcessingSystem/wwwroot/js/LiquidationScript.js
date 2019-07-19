@@ -340,7 +340,7 @@ function setLiqPhpValuetoDivInput(ret) {
     $('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Amount_3_1').val($('#txtLiqPhpInput5').val());
 
     //Tax RATE
-    $('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Tax_Rate').val(parseFloat($('#txtLiqTaxRate').val()) / 100);
+    $('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Tax_Rate').val($('#txtLiqTaxRate').val());
 };
 
 function assignDivValuesLiqPhp(pid) {
@@ -365,7 +365,7 @@ function assignDivValuesLiqPhp(pid) {
 
 
     //Tax RATE
-    $('#txtLiqTaxRate').val(parseFloat($('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Tax_Rate').val()) * 100);
+    $('#txtLiqTaxRate').val($('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Tax_Rate').val());
 };
 
 function assignAccCodeLiqPhp() {

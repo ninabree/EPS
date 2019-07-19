@@ -4346,10 +4346,13 @@ namespace ExpenseProcessingSystem.Services
             string whereQuery = "";
             string whereQuery1 = "";
             string whereQuery2 = "";
-
-            DateTime startDT = DateTime.ParseExact(model.Year + "-" + model.Month, "yyyy-M", CultureInfo.InvariantCulture);
-            DateTime endDT = DateTime.ParseExact(model.YearTo + "-" + model.MonthTo, "yyyy-M", CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
-
+            DateTime startDT = new DateTime();
+            DateTime endDT = new DateTime();
+            if (model.ReportType != HomeReportConstantValue.OutstandingAdvances)
+            {
+                startDT = DateTime.ParseExact(model.Year + "-" + model.Month, "yyyy-M", CultureInfo.InvariantCulture);
+                endDT = DateTime.ParseExact(model.YearTo + "-" + model.MonthTo, "yyyy-M", CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
+            }
             //int[] expType1 = { GlobalSystemValues.TYPE_CV, GlobalSystemValues.TYPE_PC,
             //    GlobalSystemValues.TYPE_DDV, GlobalSystemValues.TYPE_SS };
             //int[] expType2 = { HomeReportConstantValue.REP_NC_LS_PAYROLL - 50, HomeReportConstantValue.REP_NC_JS_PAYROLL - 50,
@@ -5920,7 +5923,7 @@ namespace ExpenseProcessingSystem.Services
                         ExpDtl_Amor_Month = cv.month,
                         ExpDtl_Amor_Day = cv.day,
                         ExpDtl_Amor_Duration = cv.duration,
-                        ExpDtl_CreditAccount1 = (cv.credEwt > 0) ? getAccountByMasterID(creditAccMasterID1).Account_ID : 0,
+                        ExpDtl_CreditAccount1 = (cv.credEwt > 0 && expenseType != GlobalSystemValues.TYPE_SS) ? getAccountByMasterID(creditAccMasterID1).Account_ID : 0,
                         ExpDtl_CreditAccount2 = getAccountByMasterID(creditAccMasterID2).Account_ID,
                         ExpenseEntryAmortizations = expenseAmor,
                         ExpenseEntryGbaseDtls = expenseGbase,
@@ -8897,6 +8900,11 @@ namespace ExpenseProcessingSystem.Services
             listOfLists.Add(new SelectList(_context.DMEmp.Where(x => x.Emp_isActive == true && x.Emp_isDeleted == false).Select(q => new { q.Emp_ID, q.Emp_Name }),
                         "Emp_ID", "Emp_Name"));
             return listOfLists;
+        }
+        //Get all active tax rates
+        public List<DMTRModel> getAllTaxRateList()
+        {
+            return _context.DMTR.Where(x => x.TR_isActive == true && x.TR_isDeleted == false).OrderBy(x => x.TR_Tax_Rate).ToList();
         }
         //retrieve account details
         public ExpenseEntryModel getExpenseDetail(int entryID)

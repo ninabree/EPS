@@ -1,5 +1,4 @@
 ﻿$(document).ready(function () {
-
     var reportType = $('#ddlReportType').val();
     // set fields
     var radioPeriod1 = $('#radioPeriodOption1_' + reportType);

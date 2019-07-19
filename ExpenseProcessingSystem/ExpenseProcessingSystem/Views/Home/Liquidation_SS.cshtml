@@ -32,14 +32,14 @@
             <table class="table table-bordered table-striped voucher-tbl w-97 table-hover" id="inputTable">
                 <colgroup>
                     <col style="width:4%;" />
-                    <col style="width:20%;" />
-                    <col style="width:18%;" />
+                    <col style="width:13%;" />
+                    <col style="width:13%;" />
                     <col style="width:15%;" />
                     <col style="width:10%" />
                     <col style="width:2%;" />
-                    <col style="width:4%;" />
+                    <col style="width:5%;" />
                     <col style="width:2%;" />
-                    <col style="width:4%;" />
+                    <col style="width:5%;" />
                     <col style="width:5%;" />
                     <col style="width:8%;" />
                     <col style="width:8%;" />
@@ -200,12 +200,12 @@
                 <div style="display:inline-block;width:100%">
                     <label>Liquidation for PHP currency</label>
                 </div>
-                <div style="display:inline-block;text-align:center;width:45%;vertical-align:top">
+                <div style="display:inline-block;text-align:center;width:55%;vertical-align:top">
                     <table style="width:100%;" class="tableLiqPhp table-bordered table-striped voucher-tbl">
                         <colgroup>
-                            <col style="width:45%" />
-                            <col style="width:15%" />
+                            <col style="width:35%" />
                             <col style="width:10%" />
+                            <col style="width:25%" />
                             <col style="width:15%" />
                             <col style="width:15%" />
                         </colgroup>
@@ -252,7 +252,7 @@
                                 <input id="txtLiqAccCode3" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="">
                             </td>
                             <td>
-                                <input id="txtLiqTaxRate" class="input100 txtLiqPhpInput number-input" style="width:100%;text-align:center" type="text" value="0">
+                                @Html.DropDownListFor(x => Model.taxRateList, new SelectList(Model.taxRateList, "TR_ID", "TR_WT_Title"), new { @id = "txtLiqTaxRate", @style = "width:100%;text-align:center", @class = "input100 txtLiqPhpInput number-input"})
                             </td>
                             <td></td>
                             <td>
