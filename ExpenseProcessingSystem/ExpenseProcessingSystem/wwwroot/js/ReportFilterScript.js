@@ -4,6 +4,7 @@
     var radioPeriod1 = $('#radioPeriodOption1_' + reportType);
     var radioPeriod2 = $('#radioPeriodOption2_' + reportType);
     var radioPeriod3 = $('#radioPeriodOption3_' + reportType);
+    var radioPeriodOption = $('.radioPeriodOption_' + reportType);
     var ddlMonth = $('#ddlMonth_' + reportType);
     var ddlYear = $('#ddlYear_' + reportType);
     var ddlMonthTo = $('#ddlMonthTo_' + reportType);
@@ -32,6 +33,7 @@
         radioPeriod1 = $('#radioPeriodOption1_' + reportType);
         radioPeriod2 = $('#radioPeriodOption2_' + reportType);
         radioPeriod3 = $('#radioPeriodOption3_' + reportType);
+        radioPeriodOption = $('.radioPeriodOption_' + reportType);
         ddlMonth = $('#ddlMonth_' + reportType);
         ddlYear = $('#ddlYear_' + reportType);
         ddlMonthTo = $('#ddlMonthTo_' + reportType);
@@ -236,7 +238,7 @@
         ddlYearTo.val(dt.getFullYear());
     };
 
-    $(".radioPeriodOption").change(function () {
+    radioPeriodOption.change(function () {
         UpdateFileds();
         //Default fields filter
         ddlMonth.attr("disabled", "disabled");
@@ -277,7 +279,7 @@
 
     $('.deselectRadio').click(function () {
         UpdateFileds();
-        $('.radioPeriodOption').prop('checked', false);
+        radioPeriodOption.prop('checked', false);
         dtPeriodFrom.val(today);
         dtPeriodTo.val(today);
         ddlMonth.val(dt.getMonth() + 1);
@@ -318,7 +320,7 @@ $(document).ready(function () {
                 Month: $('#ddlMonth_' + reportType).val(),
                 YearTo: $('#ddlYearTo_' + reportType).val(),
                 MonthTo: $('#ddlMonthTo_' + reportType).val(),
-                PeriodOption: $('.radioPeriodOption:checked').val(),
+                PeriodOption: $('.radioPeriodOption_' + $('#ddlReportType').val() + ':checked').val(),
                 PeriodFrom: $('#PeriodFrom_' + reportType).val(),
                 PeriodTo: $('#PeriodTo_' + reportType).val()
             },
@@ -340,7 +342,7 @@ $(document).ready(function () {
                         + "&Month=" + $('#ddlMonth_' + reportType).val()
                         + "&YearTo=" + $('#ddlYearTo_' + reportType).val()
                         + "&MonthTo=" + $('#ddlMonthTo_' + reportType).val()
-                        + "&PeriodOption=" + $('.radioPeriodOption:checked').val()
+                        + "&PeriodOption=" + $('.radioPeriodOption_' + $('#ddlReportType').val() + ':checked').val()
                         + "&PeriodFrom=" + $('#PeriodFrom_' + reportType).val()
                         + "&PeriodTo=" + $('#PeriodTo_' + reportType).val()
                         + "&TaxRateArray=" + chkList
@@ -383,7 +385,7 @@ $(document).ready(function () {
                 Month: $('#ddlMonth_' + reportType).val(),
                 YearTo: $('#ddlYearTo_' + reportType).val(),
                 MonthTo: $('#ddlMonthTo_' + reportType).val(),
-                PeriodOption: $('.radioPeriodOption:checked').val(),
+                PeriodOption: $('.radioPeriodOption_' + $('#ddlReportType').val() + ':checked').val(),
                 PeriodFrom: $('#PeriodFrom_' + reportType).val(),
                 PeriodTo: $('#PeriodTo_' + reportType).val()
             },
@@ -405,7 +407,7 @@ $(document).ready(function () {
                         + "&Month=" + $('#ddlMonth_' + reportType).val()
                         + "&YearTo=" + $('#ddlYearTo_' + reportType).val()
                         + "&MonthTo=" + $('#ddlMonthTo_' + reportType).val()
-                        + "&PeriodOption=" + $('.radioPeriodOption:checked').val()
+                        + "&PeriodOption=" + $('.radioPeriodOption_' + $('#ddlReportType').val() + ':checked').val()
                         + "&PeriodFrom=" + $('#PeriodFrom_' + reportType).val()
                         + "&PeriodTo=" + $('#PeriodTo_' + reportType).val()
                         + "&TaxRateArray=" + chkList

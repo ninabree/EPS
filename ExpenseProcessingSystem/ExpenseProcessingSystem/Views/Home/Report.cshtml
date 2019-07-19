@@ -68,7 +68,7 @@
             <tr id="" class="rep_alpha_10000 hidden">
                 <td class="td-center"></td>
                 <td class="td-center">
-                    @Html.RadioButton("radioTimePeriod", "1", true, new { id = "radioPeriodOption1_" + @HomeReportConstantValue.AST1000, @class = "radioPeriodOption" })
+                    @Html.RadioButton("radioTimePeriod_" + @HomeReportConstantValue.AST1000, "1", true, new { id = "radioPeriodOption1_" + @HomeReportConstantValue.AST1000, @class = "radioPeriodOption_" + @HomeReportConstantValue.AST1000 })
                 </td>
                 <td class="td-right">
                     Year/Month :
@@ -89,7 +89,7 @@
             <tr id="" class="rep_alpha_10000 hidden">
                 <td class="td-center"></td>
                 <td class="td-center">
-                    @Html.RadioButton("radioTimePeriod", "3", false, new { id = "radioPeriodOption3_" + @HomeReportConstantValue.AST1000, @class = "radioPeriodOption" })
+                    @Html.RadioButton("radioTimePeriod_" + @HomeReportConstantValue.AST1000, "3", false, new { id = "radioPeriodOption3_" + @HomeReportConstantValue.AST1000, @class = "radioPeriodOption_" + @HomeReportConstantValue.AST1000 })
                 </td>
                 <td class="td-right">
                     Period :
@@ -175,7 +175,7 @@
                     <a href="#" class="deselectRadio"><img src="~/images/deselect.png" style="width:30%; vertical-align:middle" /></a>
                 </td>
                 <td class="td-center">
-                    @Html.RadioButton("radioTimePeriod", "1", false, new { id = "radioPeriodOption1_" + @HomeReportConstantValue.TransListReport, @class = "radioPeriodOption" })
+                    @Html.RadioButton("radioTimePeriod", "1", false, new { id = "radioPeriodOption1_" + @HomeReportConstantValue.TransListReport, @class = "radioPeriodOption_" + @HomeReportConstantValue.TransListReport })
                 </td>
                 <td class="td-right">
                     Year/Month :
@@ -195,7 +195,7 @@
             <tr id="" class="rep_trans hidden">
                 <td class="td-center"></td>
                 <td class="td-center">
-                    @Html.RadioButton("radioTimePeriod", "3", false, new { id = "radioPeriodOption3_" + @HomeReportConstantValue.TransListReport, @class = "radioPeriodOption" })
+                    @Html.RadioButton("radioTimePeriod", "3", false, new { id = "radioPeriodOption3_" + @HomeReportConstantValue.TransListReport, @class = "radioPeriodOption_" + @HomeReportConstantValue.TransListReport })
                 </td>
                 <td class="td-right">
                     Period :
@@ -280,7 +280,7 @@
                     <a href="#" class="deselectRadio"><img src="~/images/deselect.png" style="width:20%; vertical-align:middle" /></a>
                 </td>
                 <td class="td-center">
-                    @Html.RadioButton("radioTimePeriod", "1", false, new { id = "radioPeriodOption1_" + @HomeReportConstantValue.AccSummaryReport, @class = "radioPeriodOption", disabled = "disabled" })
+                    @Html.RadioButton("radioTimePeriod", "1", false, new { id = "radioPeriodOption1_" + @HomeReportConstantValue.AccSummaryReport, @class = "radioPeriodOption_" + @HomeReportConstantValue.AccSummaryReport})
                 </td>
                 <td class="td-right">
                     Year/Month :
@@ -302,7 +302,7 @@
                 <td class="td-center">
                 </td>
                 <td class="td-center">
-                    @Html.RadioButton("radioTimePeriod", "3", false, new { id = "radioPeriodOption3_" + @HomeReportConstantValue.AccSummaryReport, @class = "radioPeriodOption" })
+                    @Html.RadioButton("radioTimePeriod", "3", false, new { id = "radioPeriodOption3_" + @HomeReportConstantValue.AccSummaryReport, @class = "radioPeriodOption_" + @HomeReportConstantValue.AccSummaryReport })
                 </td>
                 <td class="td-right">
                     Period :
@@ -321,7 +321,7 @@
             <tr id="" class="rep_WTS hidden">
                 <td class="td-center"></td>
                 <td class="td-center">
-                    @Html.RadioButton("radioTimePeriod", "1", true, new { id = "radioPeriodOption1_" + @HomeReportConstantValue.WTS, @class = "radioPeriodOption" })
+                    @Html.RadioButton("radioTimePeriod_" + @HomeReportConstantValue.WTS, "1", true, new { id = "radioPeriodOption1_" + @HomeReportConstantValue.WTS, @class = "radioPeriodOption_" + @HomeReportConstantValue.WTS })
                 </td>
                 <td class="td-right">
                     Year/Month :
@@ -342,7 +342,7 @@
             <tr id="" class="rep_WTS hidden">
                 <td class="td-center"></td>
                 <td class="td-center">
-                    @Html.RadioButton("radioTimePeriod", "3", false, new { id = "radioPeriodOption3_" + @HomeReportConstantValue.WTS, @class = "radioPeriodOption" })
+                    @Html.RadioButton("radioTimePeriod_" + @HomeReportConstantValue.WTS, "3", false, new { id = "radioPeriodOption3_" + @HomeReportConstantValue.WTS, @class = "radioPeriodOption_" + @HomeReportConstantValue.WTS })
                 </td>
                 <td class="td-right">
                     Period :
