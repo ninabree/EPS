@@ -25,6 +25,7 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly int STATUS_REVERSED = 10;
         public static readonly int STATUS_CLOSED = 11;
         public static readonly int STATUS_OPEN = 12;
+        public static readonly int STATUS_PRINT_LOI = 13;
 
         //Static values for the index of certain lists that are to be stored inside a list object.
         //i.e: Retrieving system values for the dropdown boxes of entry views.
@@ -57,7 +58,11 @@ namespace ExpenseProcessingSystem.ConstantData
                 new SelectListItem { Text = "VENDOR", Value = PAYEETYPE_VENDOR.ToString(), Selected = true },
                 new SelectListItem { Text = "REGULAR EMPLOYEE", Value = PAYEETYPE_REGEMP.ToString(), Selected = false }
         };
-
+        //Static values for payee type use for checking or adding employee category.
+        //i.e: Checking category type
+        //Example: instead of [if (type == "local")] use [if (type == GlobalSystemValues.EMPCAT_LOCAL)]
+        public static readonly int EMPCAT_LOCAL = 1;
+        public static readonly int EMPCAT_EXPAT = 2;
 
         //Static values for user roles use for checking or adding user roles to users.
         //i.e: Checking user access rights
@@ -113,6 +118,7 @@ namespace ExpenseProcessingSystem.ConstantData
                 case 10: return "REVERSED";
                 case 11: return "CLOSED";
                 case 12: return "OPEN";
+                case 13: return "PRINT LOI";
             };
 
             return "";

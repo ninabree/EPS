@@ -1279,6 +1279,8 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         _service.postDDV(entryID, "P");
                         ViewBag.Success = 1;
+                        _service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_PRINT_LOI, int.Parse(GetUserID()));
+
                     }
                     else
                     {
