@@ -12,9 +12,11 @@ namespace ExpenseProcessingSystem.Models.Pending
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Pending_Emp_ID { get; set; }
         public int Pending_Emp_MasterID { get; set; }
+        public int Pending_Emp_FBT_MasterID { get; set; }
         public string Pending_Emp_Name { get; set; }
         public string Pending_Emp_Acc_No { get; set; }
         public string Pending_Emp_Type { get; set; }
+        public int Pending_Emp_Category_ID { get; set; } // local or expat
         public int Pending_Emp_Creator_ID { get; set; }
         public int Pending_Emp_Approver_ID { get; set; }
         public DateTime Pending_Emp_Filed_Date { get; set; }

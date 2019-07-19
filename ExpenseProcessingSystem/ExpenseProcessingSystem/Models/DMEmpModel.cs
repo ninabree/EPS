@@ -9,9 +9,11 @@ namespace ExpenseProcessingSystem.Models
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Emp_ID { get; set; }
         public int Emp_MasterID { get; set; }
+        public int Emp_FBT_MasterID { get; set; }
         public string Emp_Name { get; set; }
         public string Emp_Acc_No { get; set; }
         public string Emp_Type { get; set; }
+        public int Emp_Category_ID { get; set; } // local or expat
         public int Emp_Creator_ID { get; set; }
         public int Emp_Approver_ID { get; set; }
         public DateTime Emp_Created_Date { get; set; }

@@ -13,6 +13,12 @@ namespace ExpenseProcessingSystem.ViewModels
         public string Emp_Name { get; set; }
         [Display(Name = "Employee Number")]
         public string Emp_Acc_No { get; set; }
+        [Display(Name = "Employee FBT")]
+        public int Emp_FBT_MasterID { get; set; }
+        public string Emp_FBT_Name { get; set; }
+        [Display(Name = "Employee Category")]
+        public int Emp_Category_ID { get; set; }
+        public string Emp_Category_Name { get; set; }
         [Display(Name = "Employee Type")]
         public string Emp_Type { get; set; }
         public int Emp_Creator_ID { get; set; }

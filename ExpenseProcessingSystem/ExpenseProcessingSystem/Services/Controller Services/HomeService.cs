@@ -158,6 +158,8 @@ namespace ExpenseProcessingSystem.Services
                             && (l.Liq_Status == GlobalSystemValues.STATUS_PENDING
                             || l.Liq_Status == GlobalSystemValues.STATUS_VERIFIED)
                             )
+                            ||
+                            (p.Expense_Status == GlobalSystemValues.STATUS_PRINT_LOI)
                             select new
                             {
                                 p.Expense_ID,

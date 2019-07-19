@@ -17,15 +17,12 @@
         </div>
         <div id="tbl-lbl">
             <div class="dis-inline-block"><p>Payee:</p> </div>
-            @*<div class="dis-inline-block">
-                @Html.DropDownListFor(m => m.payee_type, new SelectList(Model.systemValues.payee_type_sel, "Value", "Text", Model.systemValues.payee_type_sel.SelectedValue), new { @id = "payeeType" })
-            </div>*@
             <div class="dis-inline-block">
                 @Html.DropDownListFor(m => m.vendor, new SelectList(Model.systemValues.employees, "Value", "Text", Model.systemValues.employees.SelectedValue), new { @id = "vendorName" })
             </div>
         </div>
         <div class="flex-c">
-            <table class="table table-bordered table-striped voucher-tbl w-97" id="inputTable">
+            <table class="table table-bordered table-striped voucher-tbl w-97 ddv-tbl" id="inputTable">
                 <colgroup>
                     <col style="width:20%;" />
                     <col style="width:9%;" />
@@ -112,7 +109,7 @@
                             </td>
                             <td style="text-align:center"><a class="reqEWTBtn glyphicon glyphicon-list-alt"></a></td>
                             <td>
-                                @Html.DropDownListFor(x => Model.EntryDDV[i].ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100" })
+                                @Html.DropDownListFor(x => Model.EntryDDV[i].ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100 ddv-curr-sel" })
                             </td>
                             <td>@Html.TextBoxFor(x => Model.EntryDDV[i].debitGross, new { @class = "input100 txtGross", @readonly = "readonly" })</td>
                             <td>@Html.TextBoxFor(x => Model.EntryDDV[i].credEwt, new { @class = "input100 txtCredEwt", @readonly = "readonly" })</td>
@@ -216,6 +213,8 @@
         var trs = $("#inputTable").find("tbody").find("tr");
         for (var cnt = 0; cnt < trs.length - 2; cnt++) {
             ddlEnabled(cnt);
+            var currId = $("#" + cnt).find("select[id$='__ccy']  option:selected").val() + "";
+            currenableVATEWT("item_" + cnt, currId);
         }
 
         var myModal2 = $('.myModal2');
@@ -227,11 +226,7 @@
         //checks each checkbox and enables corresponding modals
         CheckEachEWT();
         CheckEachInter();
-        //updatePayeeSelect();
 
-        //$("#payeeType").change(function (e) {
-        //    updatePayeeSelect();
-        //});
         $("#addRow").click(function (e) {
             var itemCount = document.getElementById('inputTable').getElementsByTagName('tbody')[0].childElementCount - 4;
             var tableRef = document.getElementById('inputTable').getElementsByTagName('tbody')[0];
@@ -298,7 +293,6 @@
             $('#EntryDDV_' + itemCount + '__vat').append($("#EntryDDV_0__vat > option").clone());
             $('#EntryDDV_' + itemCount + '__ewt').append($("#EntryDDV_0__ewt > option").clone());
         });
-
         //Inter Entity
         $("table").on("click", ".expenseInterEntity", function (e) {
             e.stopImmediatePropagation();
@@ -396,17 +390,17 @@
                     $(this).remove();
                 });
                 resetDebitCredit(pNode);
-                //computeValuesDDV($(this.parentNode)[0]);
             } else {
                 btnAttr.removeAttr("href");
                 btnAttr.attr("class", "reqBtn glyphicon glyphicon-list-alt");
                 //enable GBase remarks
                 $("#" + pNode).find("#remark_" + pNode.substring(5)).find("a").addClass("gRemarks");
-                $("#" + pNode).find("#req_" + pNode.substring(5)).find("input[id^='EntryDDV_" + value + "__interDetails_']").each(function () {
+                $("#" + pNode).find("#req_" + pNode.substring(5)).find("input[id^='EntryDDV_" + pNode.substring(5) + "__interDetails_']").each(function () {
                     $(this).val();
                 });
                 resetDebitCredit(pNode);
             }
+            interenableVATEWT(pNode, this.checked);
         });
 
         $("table").on("change", "input.chkEwt", function (e) {
@@ -422,26 +416,55 @@
                 btnAttr.removeClass("expenseEWT");
             }
         });
+        $("table").on("change", ".ddv-curr-sel", function (e) {
+            var pNode = String($(this.parentNode)[0].parentNode.id);
+            currenableVATEWT(pNode, $(this).val());
+        });
     });
     //--------------------------------------------------------------------------------------------
     // [[ FUNCTIONS ]]
-    @*function updatePayeeSelect() {
-        var paytype = $("#payee_type").val();
-        var options = "";
-        if (paytype == "1") {
-            var opt = @Html.Raw(Json.Serialize(Model.systemValues.vendors));
-            for (var i = 0; i < opt.length; i++) {
-                options += '<option value="' + opt[i].value + '">' + opt[i].text + '</option>';
-            }
-        }else if (paytype == "2") {
-            var opt = @Html.Raw(Json.Serialize(Model.systemValues.employees));
-            for (var i = 0; i < opt.length; i++) {
-                options += '<option value="' + opt[i].value + '">' + opt[i].text + '</option>';
-            }
+
+    function interenableVATEWT(pNode, ischecked) {
+
+        var curr1_ID = $("#" + pNode).find("select[id$='__ccy']  option:selected").val() + "";
+        if (curr1_ID == "31" && (!ischecked)) {
+            //enable VAT and EWT when INTER ENTITY
+            $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkVat").prop('disabled', false);
+            $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkEwt").prop('disabled', false);
+            $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkVat").trigger("change");
+            $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkEwt").trigger("change");
+        } else {
+            //disable VAT and EWT when INTER ENTITY
+            $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkVat").prop('disabled', true);
+            $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkEwt").prop('disabled', true);
+            $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkVat").prop("checked", false);
+            $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkEwt").prop("checked", false);
+            $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkVat").trigger("change");
+            $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkEwt").trigger("change");
+
         }
-        $("#vendorName").empty();
-        $("#vendorName").append($(options));
-    }*@
+    }
+    function currenableVATEWT(pNode, val) {
+
+        var inter = $("#EntryDDV_" + pNode.substring(5) + "__inter_entity");
+        var isInter = $(inter).is(":checked");
+        if (val == "31" && (!isInter)) {
+            //enable VAT and EWT when INTER ENTITY
+            $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkVat").prop('disabled', false);
+            $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkEwt").prop('disabled', false);
+            $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkVat").trigger("change");
+            $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkEwt").trigger("change");
+        } else {
+            //disable VAT and EWT when INTER ENTITY
+            $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkVat").prop('disabled', true);
+            $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkEwt").prop('disabled', true);
+            $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkVat").prop("checked", false);
+            $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkEwt").prop("checked", false);
+            $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkVat").trigger("change");
+            $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkEwt").trigger("change");
+
+        }
+    }
     function updateExpenseEWTDDV(chkEwt) {
         var pNode = String($(chkEwt.parentNode)[0].parentNode.id);
         var btnAttr = $("#" + pNode).find(".reqEWTBtn");
