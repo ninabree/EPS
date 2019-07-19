@@ -583,7 +583,7 @@ namespace ExpenseProcessingSystem.Controllers
                 XElement xelem = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
                 for(int i = 1; i <= 5; i++)
                 {
-                    var acc = accounts.Where(x => x.Account_MasterID == int.Parse(xelem.Element("Report_OA_Acc" + i).Value)
+                    var acc = accounts.Where(x => x.Account_MasterID == int.Parse(xelem.Element("D_SS" + i).Value)
                                 && x.Account_isActive == true && x.Account_isDeleted == false).FirstOrDefault();
                     if (acc != null)
                     {
@@ -596,19 +596,7 @@ namespace ExpenseProcessingSystem.Controllers
                 }
                 return Json(subtypes);
             }
-            if(ReportTypeID == HomeReportConstantValue.BIRWTCSV)
-            {
-                foreach(var i in HomeReportConstantValue.GetTerm_BIRCSV())
-                {
-                    subtypes.Add(new HomeReportSubTypeAccModel
-                    {
-                        Id = i.ID,
-                        SubTypeName = i.YearTerm
-                    });
-                }
-                return Json(subtypes);
-            }
-
+            
             if (ReportTypeID != 0)
             {
                 return Json(ConstantData.HomeReportConstantValue.GetReportSubTypeData()
@@ -2015,7 +2003,11 @@ namespace ExpenseProcessingSystem.Controllers
             LiquidationViewModel ssList = _service.getExpenseToLiqudate(entryID);
             ssList.accList = _service.getAccountList();
             ssList.accAllList = _service.getAccountListIncHist();
-
+            ssList.taxRateList = _service.getAllTaxRateList();
+            foreach (var i in ssList.taxRateList)
+            {
+                i.TR_WT_Title = (i.TR_Tax_Rate * 100) + "% " + i.TR_WT_Title;
+            }
             foreach (var i in ssList.accAllList)
             {
                 i.Account_Name = i.Account_No + " - " + i.Account_Name;
@@ -2038,6 +2030,11 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 vm.accList = _service.getAccountList();
                 vm.accAllList = _service.getAccountListIncHist();
+                vm.taxRateList = _service.getAllTaxRateList();
+                foreach (var i in vm.taxRateList)
+                {
+                    i.TR_WT_Title = (i.TR_Tax_Rate * 100) + "% " + i.TR_WT_Title;
+                }
                 foreach (var i in vm.accAllList)
                 {
                     i.Account_Name = i.Account_No + " - " + i.Account_Name;
@@ -2086,6 +2083,11 @@ namespace ExpenseProcessingSystem.Controllers
             LiquidationViewModel ssList = _service.getExpenseToLiqudate(entryID);
             ssList.accList = _service.getAccountList();
             ssList.accAllList = _service.getAccountListIncHist();
+            ssList.taxRateList = _service.getAllTaxRateList();
+            foreach (var i in ssList.taxRateList)
+            {
+                i.TR_WT_Title = (i.TR_Tax_Rate * 100) + "% " + i.TR_WT_Title;
+            }
             foreach (var i in ssList.accAllList)
             {
                 i.Account_Name = i.Account_No + " - " + i.Account_Name;
@@ -2165,6 +2167,11 @@ namespace ExpenseProcessingSystem.Controllers
             ssList = _service.getExpenseToLiqudate(entryID);
             ssList.accList = _service.getAccountList();
             ssList.accAllList = _service.getAccountListIncHist();
+            ssList.taxRateList = _service.getAllTaxRateList();
+            foreach (var i in ssList.taxRateList)
+            {
+                i.TR_WT_Title = (i.TR_Tax_Rate * 100) + "% " + i.TR_WT_Title;
+            }
             foreach (var i in ssList.accAllList)
             {
                 i.Account_Name = i.Account_No + " - " + i.Account_Name;
