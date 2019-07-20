@@ -2812,6 +2812,7 @@ namespace ExpenseProcessingSystem.Services
             dbAPSWT_M_LIQ = (from ie in _context.LiquidationInterEntity
                              join expDtl in _context.ExpenseEntryDetails on ie.ExpenseEntryDetailModel.ExpDtl_ID equals expDtl.ExpDtl_ID
                              join liqDtl in _context.LiquidationEntryDetails on expDtl.ExpenseEntryModel.Expense_ID equals liqDtl.ExpenseEntryModel.Expense_ID
+                             join tr in _context.DMTR on ie.Liq_TaxRate equals tr.TR_ID
                              where status.Contains(liqDtl.Liq_Status)
                              && ie.Liq_TaxRate > 0
                              && liqDtl.Liq_LastUpdated_Date.Month == month
@@ -2822,7 +2823,7 @@ namespace ExpenseProcessingSystem.Services
                                  ATC = "LIQ",
                                  NOIP = "UIDATION",
                                  AOIP = ie.Liq_Amount_2_1 + ie.Liq_Amount_2_2 + ie.Liq_Amount_3_1,
-                                 RateOfTax = ie.Liq_TaxRate,
+                                 RateOfTax = tr.TR_Tax_Rate,
                                  AOTW = ie.Liq_Amount_2_2,
                                  Last_Update_Date = liqDtl.Liq_LastUpdated_Date
                              }).ToList();
@@ -2879,6 +2880,7 @@ namespace ExpenseProcessingSystem.Services
             dbAST1000_LIQ = (from ie in _context.LiquidationInterEntity
                              join expDtl in _context.ExpenseEntryDetails on ie.ExpenseEntryDetailModel.ExpDtl_ID equals expDtl.ExpDtl_ID
                              join liqDtl in _context.LiquidationEntryDetails on expDtl.ExpenseEntryModel.Expense_ID equals liqDtl.ExpenseEntryModel.Expense_ID
+                             join tr in _context.DMTR on ie.Liq_TaxRate equals tr.TR_ID
                              where status.Contains(liqDtl.Liq_Status)
                              && model.TaxRateList.Contains(float.Parse(ie.Liq_TaxRate.ToString()))
                              && startDT.Date <= liqDtl.Liq_LastUpdated_Date
@@ -2889,7 +2891,7 @@ namespace ExpenseProcessingSystem.Services
                                  ATC = "LIQ",
                                  NOIP = "UIDATION",
                                  TaxBase = ie.Liq_Amount_2_1 + ie.Liq_Amount_2_2 + ie.Liq_Amount_3_1,
-                                 RateOfTax = ie.Liq_TaxRate,
+                                 RateOfTax = tr.TR_Tax_Rate,
                                  AOTW = ie.Liq_Amount_2_2,
                                  Last_Update_Date = liqDtl.Liq_LastUpdated_Date
                              }).ToList();
@@ -2943,37 +2945,6 @@ namespace ExpenseProcessingSystem.Services
                 Rep_String3 = "Thank you and best regards.",
                 Rep_String4 = "Very truly yours, "
             };
-        }
-
-        public IEnumerable<HomeReportOutputAST1000Model> GetAST1000_AData(int year, int month, int yearTo, int monthTo)
-        {
-            int[] status = { 3, 4 };
-            float[] taxRateConsider = { 0.01f, 0.02f };
-            string format = "yyyy-M";
-            DateTime fromDate = DateTime.ParseExact(year + "-" + month, format, CultureInfo.InvariantCulture);
-            DateTime toDate = DateTime.ParseExact(yearTo + "-" + monthTo, format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
-
-            var dbAST1000_A = (from vendor in _context.DMVendor
-                               join expense in _context.ExpenseEntry on vendor.Vendor_ID equals expense.Expense_Payee
-                               join expEntryDetl in _context.ExpenseEntryDetails on expense.Expense_ID equals expEntryDetl.ExpenseEntryModel.Expense_ID
-                               join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
-                               where status.Contains(expense.Expense_Status)
-                               && expense.Expense_Last_Updated.Date >= fromDate.Date
-                               && expense.Expense_Last_Updated.Date <= toDate.Date
-                               && taxRateConsider.Contains(tr.TR_Tax_Rate)
-                               orderby vendor.Vendor_Name
-                               select new HomeReportOutputAST1000Model
-                               {
-                                   Tin = vendor.Vendor_TIN,
-                                   SupplierName = vendor.Vendor_Name,
-                                   ATC = tr.TR_ATC,
-                                   NOIP = tr.TR_Nature,
-                                   TaxBase = expEntryDetl.ExpDtl_Credit_Cash,
-                                   RateOfTax = tr.TR_Tax_Rate,
-                                   AOTW = expEntryDetl.ExpDtl_Credit_Ewt
-                               }).ToList();
-
-            return dbAST1000_A;
         }
 
         public IEnumerable<HomeReportActualBudgetModel> GetActualReportData(int filterMonth, int filterYear)
