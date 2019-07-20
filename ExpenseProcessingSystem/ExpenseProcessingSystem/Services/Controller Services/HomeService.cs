@@ -8482,20 +8482,31 @@ namespace ExpenseProcessingSystem.Services
             var caItems = from expense in (from a in _context.ExpenseEntry
                                            from b in _context.ExpenseEntryDetails
                                            where a.Expense_ID == b.ExpenseEntryModel.Expense_ID
-                                           select new { a.Expense_ID,b.ExpDtl_ID,a.Expense_Number })
+                                           && opening <= a.Expense_Date && closing >= a.Expense_Date
+                                           && a.Expense_Type == GlobalSystemValues.TYPE_SS
+                                           select new { a.Expense_ID,b.ExpDtl_ID,a.Expense_Number,a.Expense_Date,
+                                                        a.Expense_Status,b.ExpDtl_Ccy,b.ExpDtl_Debit,b.ExpDtl_Account})
                           join goHist in _context.GOExpressHist 
                           on new { expenseId = expense.Expense_ID, dtlId = expense.ExpDtl_ID} 
                           equals new { expenseId = goHist.ExpenseEntryID, dtlId = goHist.ExpenseDetailID }
-                          into x
-                          from goHist in x.DefaultIfEmpty()
-                          select new {
-                              expense.Expense_ID,
-                              expense.ExpDtl_ID,
-                              expense.Expense_Number,
-                              histId = goHist.GOExpHist_Id == null ? 0 : goHist.GOExpHist_Id,
-                              goHist.GOExpHist_SystemName
-                          };
-                                                 
+                          into x from goHist in x.DefaultIfEmpty()
+                          join acc in _context.DMAccount
+                          on expense.ExpDtl_Account equals acc.Account_ID
+                          into accCode from acc in accCode.DefaultIfEmpty()
+                          join ccy in _context.DMCurrency
+                          on expense.ExpDtl_Ccy equals ccy.Curr_ID
+                          into ccyAbbr from ccy in ccyAbbr.DefaultIfEmpty()
+                          select new { expense.Expense_ID, expense.ExpDtl_ID, expense.Expense_Number,
+                                       acc.Account_No, ccy.Curr_CCY_ABBR, expense.Expense_Date,
+                                       expense.Expense_Status, expense.ExpDtl_Debit,
+                                       histId = goHist.GOExpHist_Id == null ? 0 : goHist.GOExpHist_Id};
+
+            foreach (var item in caItems)
+            {
+                int transNo = _context.ExpenseTransLists.Select(x => new { x.TL_TransID, x.TL_GoExpHist_ID, x.TL_ExpenseID })
+                                                        .Where(x => x.TL_ExpenseID == item.Expense_ID
+                                                                 && x.TL_GoExpHist_ID == item.histId).FirstOrDefault().TL_ExpenseID;
+            }
             return caDic;
         }
 
