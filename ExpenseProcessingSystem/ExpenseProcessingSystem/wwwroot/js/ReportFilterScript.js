@@ -238,7 +238,19 @@
         ddlYearTo.val(dt.getFullYear());
     };
 
-    radioPeriodOption.change(function () {
+    $('.radioPeriodOption_3').change(function () {
+        radioAction();
+    });
+    $('.radioPeriodOption_7').change(function () {
+        radioAction();
+    });
+    $('.radioPeriodOption_8').change(function () {
+        radioAction();
+    });
+    $('.radioPeriodOption_10').change(function () {
+        radioAction();
+    });
+    function radioAction() {
         UpdateFileds();
         //Default fields filter
         ddlMonth.attr("disabled", "disabled");
@@ -248,7 +260,7 @@
         dtPeriodFrom.attr("disabled", "disabled");
         dtPeriodTo.attr("disabled", "disabled");
 
-        switch ($(this).val()) {
+        switch ($('.radioPeriodOption_' + $('#ddlReportType').val() + ':checked').val()) {
             case "1":
                 ddlYear.removeAttr("disabled");
                 ddlMonth.removeAttr("disabled");
@@ -260,7 +272,7 @@
                 dtPeriodTo.removeAttr("disabled");
                 break;
         }
-    });
+    }
 
     $('#chkAllTax').change(function () {
         if ($('#chkAllTax').prop("checked")) {
