@@ -835,6 +835,8 @@ namespace ExpenseProcessingSystem.Controllers
             if (ModelState.IsValid)
             {
                 vmList = _service.editDeleteEmp(IdsArr);
+                ViewBag.fbtList = _service.getFbtSelectList();
+                ViewBag.catList = _service.getEmpCategorySelectList();
             }
             return View(vmList);
         }
@@ -873,6 +875,8 @@ namespace ExpenseProcessingSystem.Controllers
             if (ModelState.IsValid)
             {
                 vmList = _service.editDeleteEmp(IdsArr);
+                ViewBag.fbtList = _service.getFbtSelectList();
+                ViewBag.catList = _service.getEmpCategorySelectList();
             }
             return View(vmList);
         }

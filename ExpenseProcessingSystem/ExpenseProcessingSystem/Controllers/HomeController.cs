@@ -472,7 +472,9 @@ namespace ExpenseProcessingSystem.Controllers
                     //Employee
                     _session.SetString("EMF_Name", vm.DMFilters.EMF.EMF_Name ?? "");
                     _session.SetString("EMF_Acc_No", vm.DMFilters.EMF.EMF_Acc_No ?? "");
-                    _session.SetString("EMF_Type", vm.DMFilters.EMF.EMF_Type ?? "");
+                    _session.SetString("EMF_Name", vm.DMFilters.EMF.EMF_Name ?? "");
+                    _session.SetString("EMF_Category_Name", vm.DMFilters.EMF.EMF_Category_Name ?? "");
+                    _session.SetString("EMF_FBT_Name", vm.DMFilters.EMF.EMF_FBT_Name ?? "");
                     _session.SetString("EMF_Creator_Name", vm.DMFilters.EMF.EMF_Creator_Name ?? "");
                     _session.SetString("EMF_Approver_Name", vm.DMFilters.EMF.EMF_Approver_Name ?? "");
                     _session.SetString("EMF_Status", vm.DMFilters.EMF.EMF_Status ?? "");

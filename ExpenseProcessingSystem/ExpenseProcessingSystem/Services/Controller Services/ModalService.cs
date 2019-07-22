@@ -695,6 +695,12 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         {
                             Emp_MasterID = m.Pending_Emp_MasterID,
                             Emp_Name = m.Pending_Emp_Name,
+                            Emp_FBT_MasterID = m.Pending_Emp_FBT_MasterID,
+                            Emp_FBT_Name = _context.DMFBT.Where(x => x.FBT_MasterID == m.Pending_Emp_FBT_MasterID)
+                                            .Select(x => x.FBT_Name).FirstOrDefault(),
+                            Emp_Category_ID = m.Pending_Emp_Category_ID,
+                            Emp_Category_Name = GlobalSystemValues.EMPCATEGORY_SELECT.Where(x => x.Value == m.Pending_Emp_Category_ID+"")
+                                            .Select(x => x.Text).FirstOrDefault(),
                             Emp_Acc_No = m.Pending_Emp_Acc_No ?? "",
                             Emp_Creator_ID = m.Pending_Emp_Creator_ID,
                             Emp_Approver_ID = m.Pending_Emp_Approver_ID.Equals(null) ? 0 : m.Pending_Emp_Approver_ID,
@@ -726,6 +732,12 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             Emp_MasterID = m.Pending_Emp_MasterID,
                             Emp_Name = m.Pending_Emp_Name,
                             Emp_Acc_No = m.Pending_Emp_Acc_No ?? "",
+                            Emp_FBT_MasterID = m.Pending_Emp_FBT_MasterID,
+                            Emp_FBT_Name = _context.DMFBT.Where(x => x.FBT_MasterID == m.Pending_Emp_FBT_MasterID)
+                                            .Select(x => x.FBT_Name).FirstOrDefault(),
+                            Emp_Category_ID = m.Pending_Emp_Category_ID,
+                            Emp_Category_Name = GlobalSystemValues.EMPCATEGORY_SELECT.Where(x => x.Value == m.Pending_Emp_Category_ID + "")
+                                            .Select(x => x.Text).FirstOrDefault(),
                             Emp_Creator_ID = m.Pending_Emp_Creator_ID,
                             Emp_Approver_ID = m.Pending_Emp_Approver_ID.Equals(null) ? 0 : m.Pending_Emp_Approver_ID,
                             Emp_Created_Date = m.Pending_Emp_Filed_Date,
@@ -973,6 +985,8 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             NewEmpViewModel vm = new NewEmpViewModel();
             vmList.Add(vm);
             mod.NewEmpVM = vmList;
+            mod.FbtList = getFbtSelectList();
+            mod.CatList = getEmpCategorySelectList();
             return mod;
         }
         public NewCustListViewModel addCust()
@@ -1316,6 +1330,10 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             var statList = (from a in mList
                             join d in _context.StatusList on a.Emp_Status_ID equals d.Status_ID
                             select new { a.Emp_ID, d.Status_Name }).ToList();
+            var FBTList = (from a in mList
+                           join d in _context.DMFBT on a.Emp_FBT_MasterID equals d.FBT_MasterID
+                           where d.FBT_isActive == true && d.FBT_isDeleted == false
+                           select new { a.Emp_ID, d.FBT_Name }).ToList();
             List<DMEmpViewModel> tempList = new List<DMEmpViewModel>();
             foreach (DMEmpModel m in mList)
             {
@@ -1328,6 +1346,10 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             Emp_MasterID = m.Emp_MasterID,
                             Emp_Name = m.Emp_Name,
                             Emp_Acc_No = m.Emp_Acc_No,
+                            Emp_Category_ID = m.Emp_Category_ID,
+                            Emp_FBT_MasterID = m.Emp_FBT_MasterID,
+                            Emp_Category_Name = GlobalSystemValues.EMPCATEGORY_SELECT.Where(a => a.Value == m.Emp_Category_ID + "").Select(x => x.Text).FirstOrDefault() ?? "",
+                            Emp_FBT_Name = FBTList.Where(a => a.Emp_ID == m.Emp_ID).Select(x => x.FBT_Name).FirstOrDefault() ?? "N/A",
                             Emp_Creator_ID = m.Emp_Creator_ID,
                             Emp_Created_Date = m.Emp_Created_Date,
                             Emp_Last_Updated = DateTime.Now,
@@ -1437,6 +1459,10 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 fbtList.Add(new SelectListItem() { Text = x.FBT_Name, Value = x.FBT_MasterID + "" });
             });
             return fbtList;
+        }
+        public List<SelectListItem> getEmpCategorySelectList()
+        {
+            return GlobalSystemValues.EMPCATEGORY_SELECT;
         }
         public List<SelectListItem> getAccGroupSelectList()
         {

@@ -191,6 +191,8 @@ namespace ExpenseProcessingSystem.Services
                     EMF_Name = ctx.Session.GetString("EMF_Name") ?? "",
                     EMF_Acc_No = ctx.Session.GetString("EMF_Acc_No") ?? "",
                     EMF_Type = ctx.Session.GetString("EMF_Type") ?? "",
+                    EMF_Category_Name = ctx.Session.GetString("EMF_Category_Name") ?? "",
+                    EMF_FBT_Name = ctx.Session.GetString("EMF_FBT_Name") ?? "",
                     EMF_Creator_Name = ctx.Session.GetString("EMF_Creator_Name") ?? "",
                     EMF_Approver_Name = ctx.Session.GetString("EMF_Approver_Name") ?? "",
                     EMF_Status = ctx.Session.GetString("EMF_Status") ?? ""

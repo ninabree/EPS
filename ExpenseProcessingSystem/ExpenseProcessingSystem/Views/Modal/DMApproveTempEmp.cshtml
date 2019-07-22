@@ -11,8 +11,10 @@
         {
             <table class="table table-bordered editable-th">
                 <tr>
-                    <th>Employee Name</th>
-                    <th>Status</th>
+                <th>Employee Name</th>
+                <th colspan="2">Employee Category</th>
+                <th colspan="2">Employee FBT</th>
+                <th>Status</th>
                 </tr>
                 @if (Model != null)
                 {
@@ -20,9 +22,10 @@
                     {
                         <tr>
                             <td>@Html.TextBoxFor(item => item[i].Emp_Name, new { @class = "w-full", @readonly = "readonly" })</td>
+                            <td colspan="2">@Html.TextBoxFor(item => item[i].Emp_Category_Name, new { @class = "w-full", @readonly = "readonly" })</td>
+                            <td colspan="2">@Html.TextBoxFor(item => item[i].Emp_FBT_Name, new { @class = "w-full", @readonly = "readonly" })</td>
                             <td>@Html.TextBoxFor(item => item[i].Emp_Status, new { @class = "w-full", @readonly = "readonly" })</td>
                             @Html.HiddenFor(item => item[i].Emp_MasterID)
-                            @Html.HiddenFor(item => item[i].Emp_Acc_No)
                         </tr>
                     }
                 }

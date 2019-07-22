@@ -307,7 +307,7 @@ namespace ExpenseProcessingSystem.ConstantData
                 },
                 new HomeReportTypesModel
                 {
-                    Id = PrepaidAmmortization,
+                    Id = PrepaidAmortReport,
                     TypeName = "Prepaid Amortization Schedule",
                     SubTypeAvail = true
                 },
