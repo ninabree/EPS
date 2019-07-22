@@ -102,6 +102,7 @@ namespace ExpenseProcessingSystem.ViewModels
         public string VoucherArray { get; set; }
 
         public int SignatoryID { get; set; }
+        public int SignatoryIDVerifier { get; set; }
     }
     public class VoucherNoOptions
     {
