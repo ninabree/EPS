@@ -570,7 +570,7 @@ namespace ExpenseProcessingSystem.Controllers
                     subtypes.Add(new HomeReportSubTypeAccModel
                     {
                         Id = i.Account_ID.ToString(),
-                        SubTypeName = i.Account_No + " - " + i.Account_Name
+                        SubTypeName = i.Account_Name
                     });
                 }
                 return Json(subtypes);
@@ -593,6 +593,19 @@ namespace ExpenseProcessingSystem.Controllers
                             SubTypeName = acc.Account_No + " - " + acc.Account_Name
                         });
                     }
+                }
+                return Json(subtypes);
+            }
+            if(ReportTypeID == HomeReportConstantValue.WTS)
+            {
+                var taxList = _service.getAllTaxRateList();
+                foreach (var i in taxList)
+                {
+                    subtypes.Add(new HomeReportSubTypeAccModel
+                    {
+                        Id = i.TR_MasterID.ToString(),
+                        SubTypeName = (i.TR_Tax_Rate * 100) + "% " + i.TR_WT_Title
+                    });
                 }
                 return Json(subtypes);
             }
@@ -771,8 +784,7 @@ namespace ExpenseProcessingSystem.Controllers
                         case 1:
                             data = new HomeReportDataFilterViewModel
                             {
-                                HomeReportOutputWTS = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Month(model.Year, model.Month,
-                                    ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType),
+                                HomeReportOutputWTS = _service.GetWithHoldingSummaryData(model),
                                 HomeReportFilter = model,
                                 ReportCommonVM = repComVM
                             };
@@ -784,8 +796,7 @@ namespace ExpenseProcessingSystem.Controllers
                         case 3:
                             data = new HomeReportDataFilterViewModel
                             {
-                                HomeReportOutputWTS = TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Period(model.PeriodFrom, model.PeriodTo,
-                                    TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType),
+                                HomeReportOutputWTS = _service.GetWithHoldingSummaryData(model),
                                 HomeReportFilter = model,
                                 ReportCommonVM = repComVM
                             };

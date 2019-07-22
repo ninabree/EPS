@@ -23,7 +23,7 @@ namespace ExpenseProcessingSystem.ViewModels
 
         public string ReturnPeriod_CSV { get; set; }
 
-        public IEnumerable<Temp_RepWTSViewModel> HomeReportOutputWTS { get; set; }
+        public IEnumerable<HomeReportAccountSummaryViewModel> HomeReportOutputWTS { get; set; }
 
         public IEnumerable<Temp_RepCSBViewModel> HomeReportOutputCSB { get; set; }
 

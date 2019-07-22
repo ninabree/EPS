@@ -13,15 +13,15 @@
 @using (Html.BeginForm())
 {
     <div class="m-t-10 rep-voucher-cont" style="height:100px">
-        <table class="table rep-voucher-tbl rep-voucher-tbl-left">
-            <colgroup>
+        <table class="table table-bordered rep-voucher-tbl rep-voucher-tbl-left">
+            <colgroup >
                 <col style="width:5%" />
                 <col style="width:5%" />
                 <col style="width:14%" />
                 <col style="width:30%" />
                 <col style="width:14%" />
                 <col style="width:30%" />
-                <col style="width:7%" />
+                <col style="width:2%" />
             </colgroup>
             <tr>
                 <td class="td-center"></td>
@@ -171,7 +171,7 @@
                 <td></td>
             </tr>
             <tr id="" class="rep_trans hidden">
-                <td class="td-center">
+                <td class="td-center" style="width:5%">
                     <a href="#" class="deselectRadio"><img src="~/images/deselect.png" style="width:30%; vertical-align:middle" /></a>
                 </td>
                 <td class="td-center">
@@ -277,7 +277,7 @@
             </tr>
             <tr id="" class="rep_acc_sum hidden">
                 <td class="td-center">
-                    <a href="#" class="deselectRadio"><img src="~/images/deselect.png" style="width:20%; vertical-align:middle" /></a>
+                    <a href="#" class="deselectRadio"><img src="~/images/deselect.png" style="width:30%; vertical-align:middle" /></a>
                 </td>
                 <td class="td-center">
                     @Html.RadioButton("radioTimePeriod", "1", false, new { id = "radioPeriodOption1_" + @HomeReportConstantValue.AccSummaryReport, @class = "radioPeriodOption_" + @HomeReportConstantValue.AccSummaryReport})
