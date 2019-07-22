@@ -714,23 +714,6 @@ namespace ExpenseProcessingSystem.Controllers
                 case HomeReportConstantValue.BIRWTCSV:
                     layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
 
-                    if (model.ReportSubType.ToString().Substring(4, 1) == "1")
-                    {
-                        returnPeriod = "06/30/" + model.ReportSubType.ToString().Substring(0, 4);
-                        model.Month = 1;
-                        model.Year = int.Parse(model.ReportSubType.ToString().Substring(0, 4));
-                        model.MonthTo = 6;
-                        model.YearTo = int.Parse(model.ReportSubType.ToString().Substring(0, 4));
-                    }
-                    else
-                    {
-                        returnPeriod = "12/31/" + model.ReportSubType.ToString().Substring(0, 4);
-                        model.Month = 7;
-                        model.Year = int.Parse(model.ReportSubType.ToString().Substring(0, 4));
-                        model.MonthTo = 12;
-                        model.YearTo = int.Parse(model.ReportSubType.ToString().Substring(0, 4));
-                    }
-
                     fileName = xelem.Element("WHAgentTIN").Value + xelem.Element("WHAgentBranchCode").Value
                                     + returnPeriod.Replace("/", "") + xelem.Element("FormType").Value.ToLower() + ".csv";
 

@@ -26,6 +26,7 @@ using System.Xml;
 using ExpenseProcessingSystem.ViewModels.Reports;
 using System.Threading.Tasks;
 using System.Collections;
+using System.Diagnostics;
 
 namespace ExpenseProcessingSystem.Services
 {
@@ -2821,6 +2822,7 @@ namespace ExpenseProcessingSystem.Services
             dbAPSWT_M_LIQ = (from ie in _context.LiquidationInterEntity
                              join expDtl in _context.ExpenseEntryDetails on ie.ExpenseEntryDetailModel.ExpDtl_ID equals expDtl.ExpDtl_ID
                              join liqDtl in _context.LiquidationEntryDetails on expDtl.ExpenseEntryModel.Expense_ID equals liqDtl.ExpenseEntryModel.Expense_ID
+                             join tr in _context.DMTR on ie.Liq_TaxRate equals tr.TR_ID
                              where status.Contains(liqDtl.Liq_Status)
                              && ie.Liq_TaxRate > 0
                              && liqDtl.Liq_LastUpdated_Date.Month == month
@@ -2831,7 +2833,7 @@ namespace ExpenseProcessingSystem.Services
                                  ATC = "LIQ",
                                  NOIP = "UIDATION",
                                  AOIP = ie.Liq_Amount_2_1 + ie.Liq_Amount_2_2 + ie.Liq_Amount_3_1,
-                                 RateOfTax = ie.Liq_TaxRate,
+                                 RateOfTax = tr.TR_Tax_Rate,
                                  AOTW = ie.Liq_Amount_2_2,
                                  Last_Update_Date = liqDtl.Liq_LastUpdated_Date
                              }).ToList();
@@ -2888,6 +2890,7 @@ namespace ExpenseProcessingSystem.Services
             dbAST1000_LIQ = (from ie in _context.LiquidationInterEntity
                              join expDtl in _context.ExpenseEntryDetails on ie.ExpenseEntryDetailModel.ExpDtl_ID equals expDtl.ExpDtl_ID
                              join liqDtl in _context.LiquidationEntryDetails on expDtl.ExpenseEntryModel.Expense_ID equals liqDtl.ExpenseEntryModel.Expense_ID
+                             join tr in _context.DMTR on ie.Liq_TaxRate equals tr.TR_ID
                              where status.Contains(liqDtl.Liq_Status)
                              && model.TaxRateList.Contains(float.Parse(ie.Liq_TaxRate.ToString()))
                              && startDT.Date <= liqDtl.Liq_LastUpdated_Date
@@ -2898,7 +2901,7 @@ namespace ExpenseProcessingSystem.Services
                                  ATC = "LIQ",
                                  NOIP = "UIDATION",
                                  TaxBase = ie.Liq_Amount_2_1 + ie.Liq_Amount_2_2 + ie.Liq_Amount_3_1,
-                                 RateOfTax = ie.Liq_TaxRate,
+                                 RateOfTax = tr.TR_Tax_Rate,
                                  AOTW = ie.Liq_Amount_2_2,
                                  Last_Update_Date = liqDtl.Liq_LastUpdated_Date
                              }).ToList();
@@ -2952,37 +2955,6 @@ namespace ExpenseProcessingSystem.Services
                 Rep_String3 = "Thank you and best regards.",
                 Rep_String4 = "Very truly yours, "
             };
-        }
-
-        public IEnumerable<HomeReportOutputAST1000Model> GetAST1000_AData(int year, int month, int yearTo, int monthTo)
-        {
-            int[] status = { 3, 4 };
-            float[] taxRateConsider = { 0.01f, 0.02f };
-            string format = "yyyy-M";
-            DateTime fromDate = DateTime.ParseExact(year + "-" + month, format, CultureInfo.InvariantCulture);
-            DateTime toDate = DateTime.ParseExact(yearTo + "-" + monthTo, format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
-
-            var dbAST1000_A = (from vendor in _context.DMVendor
-                               join expense in _context.ExpenseEntry on vendor.Vendor_ID equals expense.Expense_Payee
-                               join expEntryDetl in _context.ExpenseEntryDetails on expense.Expense_ID equals expEntryDetl.ExpenseEntryModel.Expense_ID
-                               join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
-                               where status.Contains(expense.Expense_Status)
-                               && expense.Expense_Last_Updated.Date >= fromDate.Date
-                               && expense.Expense_Last_Updated.Date <= toDate.Date
-                               && taxRateConsider.Contains(tr.TR_Tax_Rate)
-                               orderby vendor.Vendor_Name
-                               select new HomeReportOutputAST1000Model
-                               {
-                                   Tin = vendor.Vendor_TIN,
-                                   SupplierName = vendor.Vendor_Name,
-                                   ATC = tr.TR_ATC,
-                                   NOIP = tr.TR_Nature,
-                                   TaxBase = expEntryDetl.ExpDtl_Credit_Cash,
-                                   RateOfTax = tr.TR_Tax_Rate,
-                                   AOTW = expEntryDetl.ExpDtl_Credit_Ewt
-                               }).ToList();
-
-            return dbAST1000_A;
         }
 
         public IEnumerable<HomeReportActualBudgetModel> GetActualReportData(int filterMonth, int filterYear)
@@ -7898,7 +7870,7 @@ namespace ExpenseProcessingSystem.Services
 
         public ClosingViewModel ClosingGetRecords()
         {
-            DateTime opening = DateTime.Today.AddHours(00).AddDays(-1);
+            DateTime opening = DateTime.Today.AddHours(00).AddDays(-10);
             DateTime closing = DateTime.Today.AddHours(23.9999);
 
             ClosingViewModel closeVM = new ClosingViewModel();
@@ -7916,6 +7888,7 @@ namespace ExpenseProcessingSystem.Services
 
             var nmItems = getNM(opening, closing);
             var ddvItems = getDDV(opening, closing);
+            var ncvItems = getNCV(opening, closing);
 
             //add results of getter methods to the return view model
             closeVM.fcduItems.AddRange(nmItems[GlobalSystemValues.BRANCH_FCDU]);
@@ -7923,6 +7896,9 @@ namespace ExpenseProcessingSystem.Services
 
             closeVM.fcduItems.AddRange(ddvItems[GlobalSystemValues.BRANCH_FCDU]);
             closeVM.rbuItems.AddRange(ddvItems[GlobalSystemValues.BRANCH_RBU]);
+
+            closeVM.fcduItems.AddRange(ncvItems[GlobalSystemValues.BRANCH_FCDU]);
+            closeVM.rbuItems.AddRange(ncvItems[GlobalSystemValues.BRANCH_RBU]);
 
             Dictionary<int, List<int>> expenseRbuId = new Dictionary<int, List<int>>();
             Dictionary<int, List<int>> expenseFcduId = new Dictionary<int, List<int>>();
@@ -7932,6 +7908,11 @@ namespace ExpenseProcessingSystem.Services
 
         public Dictionary<string,List<CloseItems>> getNM(DateTime opening, DateTime closing)
         {
+            #region diagnostic runtime checker begin
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+            #endregion
+
             Dictionary<string, List<CloseItems>> nmDic = new Dictionary<string, List<CloseItems>>();
             List<CloseItems> nmCloseItemsRBU = new List<CloseItems>();
             List<CloseItems> nmCloseItemsFCDU = new List<CloseItems>();
@@ -7948,7 +7929,7 @@ namespace ExpenseProcessingSystem.Services
                                                      x.Expense_Status,
                                                      x.ExpenseEntryDetails,
                                                      x.Expense_Date
-                                                 });
+                                                 }).AsNoTracking().ToList();
 
             foreach (var item in nmEntries)
             {
@@ -7993,10 +7974,26 @@ namespace ExpenseProcessingSystem.Services
             nmDic.Add(GlobalSystemValues.BRANCH_RBU, nmCloseItemsRBU);
             nmDic.Add(GlobalSystemValues.BRANCH_FCDU, nmCloseItemsFCDU);
 
+            #region diagnostic runtime checker end
+            stopWatch.Stop();
+            // Get the elapsed time as a TimeSpan value.
+            TimeSpan ts = stopWatch.Elapsed;
+            // Format and display the TimeSpan value.
+            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+            ts.Hours, ts.Minutes, ts.Seconds,
+            ts.Milliseconds / 10);
+            Console.WriteLine("NM Runtime ======>>> " + elapsedTime);
+            #endregion
+
             return nmDic;
         }
-        public Dictionary<string, List<CloseItems>> getDDV(DateTime opening, DateTime closing)
+        public Dictionary<string,List<CloseItems>> getDDV(DateTime opening, DateTime closing)
         {
+            #region diagnostic runtime checker begin
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+            #endregion
+
             Dictionary<string, List<CloseItems>> ddvDic = new Dictionary<string, List<CloseItems>>();
             List<CloseItems> ddvCloseItemsRBU = new List<CloseItems>();
             List<CloseItems> ddvCloseItemsFCDU = new List<CloseItems>();
@@ -8005,48 +8002,54 @@ namespace ExpenseProcessingSystem.Services
             var ddvInter = _context.ExpenseEntry.Join(_context.ExpenseEntryDetails,
                                                             a => a.Expense_ID,
                                                             b => b.ExpenseEntryModel.Expense_ID,
-                                                            (a, b) => new{a,b})
+                                                            (a, b) => new { a, b })
                                                   .Join(_context.ExpenseEntryInterEntity,
                                                             b => b.b.ExpDtl_ID,
                                                             c => c.ExpenseEntryDetailModel.ExpDtl_ID,
-                                                            (b,c) => new {b,c})
+                                                            (b, c) => new { b, c })
                                                   .Join(_context.ExpenseEntryInterEntityParticular,
                                                             c => c.c.ExpDtl_DDVInter_ID,
                                                             d => d.ExpenseEntryInterEntityModel.ExpDtl_DDVInter_ID,
-                                                            (c,d) => new {c,d})
+                                                            (c, d) => new { c, d })
                                                   .Join(_context.ExpenseEntryInterEntityAccs,
                                                             d => d.d.InterPart_ID,
                                                             e => e.ExpenseEntryInterEntityParticular.InterPart_ID,
-                                                            (d,e) => new { d.c.b.a.Expense_ID,
-                                                                           d.c.b.a.Expense_Number,
-                                                                           d.c.b.a.Expense_Date,
-                                                                           d.c.b.a.Expense_Status,
-                                                                           d.c.b.a.Expense_Type,
-                                                                           d.c.b.b.ExpDtl_ID,
-                                                                           d.c.b.b.ExpDtl_Gbase_Remarks,
-                                                                           d.c.b.b.ExpDtl_Inter_Entity,
-                                                                           d.c.c.ExpDtl_DDVInter_ID,
-                                                                           d.d.InterPart_ID,
-                                                                           e.InterAcc_Acc_ID,
-                                                                           e.InterAcc_Curr_ID,
-                                                                           e.InterAcc_Amount,
-                                                                           e.InterAcc_Type_ID})
-                                                  .Join(_context.DMAccount,e => e.InterAcc_Acc_ID,f => f.Account_ID,
-                                                            (e,f) => new {  e.Expense_ID,
-                                                                            e.Expense_Number,
-                                                                            e.Expense_Date,
-                                                                            e.Expense_Status,
-                                                                            e.Expense_Type,
-                                                                            e.ExpDtl_ID,
-                                                                            e.ExpDtl_Gbase_Remarks,
-                                                                            e.ExpDtl_Inter_Entity,
-                                                                            e.ExpDtl_DDVInter_ID,
-                                                                            e.InterPart_ID,
-                                                                            f.Account_No,
-                                                                            f.Account_Code,
-                                                                            e.InterAcc_Curr_ID,
-                                                                            e.InterAcc_Amount,
-                                                                            e.InterAcc_Type_ID})
+                                                            (d, e) => new
+                                                            {
+                                                                d.c.b.a.Expense_ID,
+                                                                d.c.b.a.Expense_Number,
+                                                                d.c.b.a.Expense_Date,
+                                                                d.c.b.a.Expense_Status,
+                                                                d.c.b.a.Expense_Type,
+                                                                d.c.b.b.ExpDtl_ID,
+                                                                d.c.b.b.ExpDtl_Gbase_Remarks,
+                                                                d.c.b.b.ExpDtl_Inter_Entity,
+                                                                d.c.c.ExpDtl_DDVInter_ID,
+                                                                d.d.InterPart_ID,
+                                                                e.InterAcc_Acc_ID,
+                                                                e.InterAcc_Curr_ID,
+                                                                e.InterAcc_Amount,
+                                                                e.InterAcc_Type_ID
+                                                            })
+                                                  .Join(_context.DMAccount, e => e.InterAcc_Acc_ID, f => f.Account_ID,
+                                                            (e, f) => new
+                                                            {
+                                                                e.Expense_ID,
+                                                                e.Expense_Number,
+                                                                e.Expense_Date,
+                                                                e.Expense_Status,
+                                                                e.Expense_Type,
+                                                                e.ExpDtl_ID,
+                                                                e.ExpDtl_Gbase_Remarks,
+                                                                e.ExpDtl_Inter_Entity,
+                                                                e.ExpDtl_DDVInter_ID,
+                                                                e.InterPart_ID,
+                                                                f.Account_No,
+                                                                f.Account_Code,
+                                                                e.InterAcc_Curr_ID,
+                                                                e.InterAcc_Amount,
+                                                                e.InterAcc_Type_ID
+                                                            })
                                                   .Where(x => x.ExpDtl_Inter_Entity == true
                                                            && x.Expense_Type == GlobalSystemValues.TYPE_DDV
                                                            && x.InterAcc_Type_ID == GlobalSystemValues.NC_DEBIT
@@ -8060,7 +8063,13 @@ namespace ExpenseProcessingSystem.Services
             foreach (var item in interRbu)
             {
                 CloseItems temp = new CloseItems();
-                var goHist = _context.GOExpressHist.FirstOrDefault(x => x.ExpenseEntryID == item.Expense_ID
+                var goHist = _context.GOExpressHist.Select(x=>new {x.GOExpHist_Id,
+                                                                   x.GOExpHist_Entry11Amt,
+                                                                   x.ExpenseEntryID,
+                                                                   x.ExpenseDetailID,
+                                                                   x.GOExpHist_Entry11Actcde,
+                                                                   x.GOExpHist_Entry11ActNo })
+                                                   .FirstOrDefault(x => x.ExpenseEntryID == item.Expense_ID
                                                                      && x.ExpenseDetailID == item.ExpDtl_ID
                                                                      && x.GOExpHist_Entry11ActNo == item.Account_No.Substring(Math.Max(0, item.Account_No.Length - 6))
                                                                      && x.GOExpHist_Entry11Actcde == item.Account_Code);
@@ -8069,6 +8078,7 @@ namespace ExpenseProcessingSystem.Services
 
                 if (goHist != null)
                     index = ddvCloseItemsRBU.FindIndex(x => x.ccy == GetCurrencyAbbrv(item.InterAcc_Curr_ID)
+                                                         && x.expTrans != ""
                                                          && int.Parse(x.expTrans.Substring(9)) == item.Expense_Number);
                 else
                     index = -1;
@@ -8111,13 +8121,25 @@ namespace ExpenseProcessingSystem.Services
             foreach (var item in interFcdu)
             {
                 CloseItems temp = new CloseItems();
-                var goHist = _context.GOExpressHist.FirstOrDefault(x => x.ExpenseEntryID == item.Expense_ID
+                var goHist = _context.GOExpressHist.Select(x => new {x.GOExpHist_Id,
+                                                                     x.GOExpHist_Entry11Amt,
+                                                                     x.ExpenseEntryID,
+                                                                     x.ExpenseDetailID,
+                                                                     x.GOExpHist_Entry11Actcde,
+                                                                     x.GOExpHist_Entry11ActNo})
+                                                   .FirstOrDefault(x => x.ExpenseEntryID == item.Expense_ID
                                                                      && x.ExpenseDetailID == item.ExpDtl_ID
                                                                      && x.GOExpHist_Entry11ActNo == item.Account_No.Substring(Math.Max(0, item.Account_No.Length - 6))
                                                                      && x.GOExpHist_Entry11Actcde == item.Account_Code);
 
-                var index = ddvCloseItemsFCDU.FindIndex(x => x.ccy == GetCurrencyAbbrv(item.InterAcc_Curr_ID)
+                var index = 0;
+
+                if (goHist != null)
+                    index = ddvCloseItemsFCDU.FindIndex(x => x.ccy == GetCurrencyAbbrv(item.InterAcc_Curr_ID)
+                                                         && x.expTrans != ""
                                                          && int.Parse(x.expTrans.Substring(9)) == item.Expense_Number);
+                else
+                    index = -1;
 
                 if (index < 0)
                 {
@@ -8205,7 +8227,8 @@ namespace ExpenseProcessingSystem.Services
                 temp.expTrans = "";
 
                 var goHist = _context.GOExpressHist.Where(x => x.ExpenseDetailID == item.ExpDtl_ID
-                                            && x.ExpenseEntryID == item.Expense_ID).ToList();
+                                                            && x.ExpenseEntryID == item.Expense_ID)
+                                                  .Select(x=>new {x.GOExpHist_Id,x.GOExpHist_Entry11Amt }).ToList();
 
                 if (item.ExpDtl_Fbt)
                 {
@@ -8263,7 +8286,8 @@ namespace ExpenseProcessingSystem.Services
                 temp.expTrans = "";
 
                 var goHist = _context.GOExpressHist.Where(x => x.ExpenseDetailID == item.ExpDtl_ID
-                                            && x.ExpenseEntryID == item.Expense_ID).ToList();
+                                                            && x.ExpenseEntryID == item.Expense_ID)
+                                                   .Select(x => new { x.GOExpHist_Id, x.GOExpHist_Entry11Amt }).ToList();
 
                 if (item.ExpDtl_Fbt)
                 {
@@ -8318,7 +8342,153 @@ namespace ExpenseProcessingSystem.Services
             ddvDic.Add(GlobalSystemValues.BRANCH_RBU, ddvCloseItemsRBU);
             ddvDic.Add(GlobalSystemValues.BRANCH_FCDU, ddvCloseItemsFCDU);
 
+            #region diagnostic runtime checker end
+            stopWatch.Stop();
+            // Get the elapsed time as a TimeSpan value.
+            TimeSpan ts = stopWatch.Elapsed;
+            // Format and display the TimeSpan value.
+            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+            ts.Hours, ts.Minutes, ts.Seconds,
+            ts.Milliseconds / 10);
+            Console.WriteLine("DDV Runtime ======>>> " + elapsedTime);
+            #endregion
+
             return ddvDic;
+        }
+        public Dictionary<string,List<CloseItems>> getNCV(DateTime opening, DateTime closing)
+        {
+            #region diagnostic runtime checker begin
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+            #endregion
+
+            Dictionary<string, List<CloseItems>> ncvDic = new Dictionary<string, List<CloseItems>>();
+            List<CloseItems> ncvCloseItemsRBU = new List<CloseItems>();
+            List<CloseItems> ncvCloseItemsFCDU = new List<CloseItems>();
+            #region Data retrieval linq
+            var ncItems = _context.ExpenseEntry
+                                  .Join(_context.ExpenseEntryNonCash,
+                                        a => a.Expense_ID,
+                                        b => b.ExpenseEntryModel.Expense_ID,
+                                        (a, b) => new { a, b })
+                                  .Join(_context.ExpenseEntryNonCashDetails,
+                                        b => b.b.ExpNC_ID,
+                                        c => c.ExpenseEntryNCModel.ExpNC_ID,
+                                        (b, c) => new { b, c })
+                                  .Join(_context.ExpenseEntryNonCashDetailAccounts,
+                                        c => c.c.ExpNCDtl_ID,
+                                        d => d.ExpenseEntryNCDtlModel.ExpNCDtl_ID,
+                                        (c, d) => new { c, d })
+                                  .Join(_context.DMAccount,
+                                        d => d.d.ExpNCDtlAcc_Acc_ID,
+                                        acc => acc.Account_ID,
+                                        (d, acc) => new { d, acc.Account_No, acc.Account_Code })
+                                  .Join(_context.DMCurrency,
+                                        d => d.d.d.ExpNCDtlAcc_Curr_ID,
+                                        ccy => ccy.Curr_ID,
+                                        (d, ccy) => new { d.d.c.b.a.Expense_ID,
+                                                          d.d.c.b.a.Expense_Number,
+                                                          d.d.c.b.a.Expense_Date,
+                                                          d.d.c.b.a.Expense_Status,
+                                                          d.d.c.b.a.Expense_Type,
+                                                          d.d.c.b.b.ExpNC_ID,
+                                                          d.d.c.c.ExpNCDtl_ID,
+                                                          d.d.c.c.ExpNCDtl_Remarks_Desc,
+                                                          d.d.c.c.ExpNCDtl_Remarks_Period,
+                                                          d.d.d.ExpNCDtlAcc_ID,
+                                                          d.d.d.ExpNCDtlAcc_Type_ID,
+                                                          d.d.d.ExpNCDtlAcc_Amount,
+                                                          d.Account_Code,
+                                                          d.Account_No,
+                                                          ccy.Curr_CCY_ABBR})
+                                  .Where(x => x.Expense_Type == GlobalSystemValues.TYPE_NC
+                                           && (opening <= x.Expense_Date
+                                           && closing >= x.Expense_Date)
+                                           && x.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT);
+            #endregion
+            foreach (var item in ncItems)
+            {
+                CloseItems temp = new CloseItems();
+
+                var gh = _context.GOExpressHist.FirstOrDefault(x => x.ExpenseEntryID == item.Expense_ID
+                                                                       && x.ExpenseDetailID == item.ExpNCDtl_ID);
+
+                if (gh != null)
+                {
+                    temp.gBaseTrans = _context.ExpenseTransLists.FirstOrDefault(x => x.TL_ExpenseID == item.Expense_ID
+                                    && x.TL_GoExpHist_ID == gh.GOExpHist_Id).TL_TransID.ToString();
+                    temp.expTrans = "DDV-" + GetSelectedYearMonthOfTerm(item.Expense_Date.Month, item.Expense_Date.Year).Year + "-" +
+                                        item.Expense_Number.ToString().PadLeft(5, '0');
+                }
+                else
+                {
+                    temp.gBaseTrans = "";
+                    temp.expTrans = "";
+                }
+
+                temp.amount = item.ExpNCDtlAcc_Amount;
+                temp.ccy = item.Curr_CCY_ABBR;
+                temp.status = GlobalSystemValues.getStatus(item.Expense_Status);
+                temp.particulars = item.ExpNCDtl_Remarks_Desc + item.ExpNCDtl_Remarks_Period;
+                temp.transCount = 1;
+
+                if (getBranchNo(item.Account_No) == GlobalSystemValues.BRANCH_RBU)
+                    ncvCloseItemsRBU.Add(temp);
+                else
+                    ncvCloseItemsFCDU.Add(temp);
+            }
+
+            ncvDic.Add(GlobalSystemValues.BRANCH_RBU, ncvCloseItemsRBU);
+            ncvDic.Add(GlobalSystemValues.BRANCH_FCDU, ncvCloseItemsFCDU);
+
+            #region diagnostic runtime checker end
+            stopWatch.Stop();
+            // Get the elapsed time as a TimeSpan value.
+            TimeSpan ts = stopWatch.Elapsed;
+            // Format and display the TimeSpan value.
+            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+            ts.Hours, ts.Minutes, ts.Seconds,
+            ts.Milliseconds / 10);
+            Console.WriteLine("NCV Runtime ======>>> " + elapsedTime);
+            #endregion
+
+            return ncvDic;
+        }
+        public Dictionary<string,List<CloseItems>> getCA(DateTime opening, DateTime closing)
+        {
+            Dictionary<string, List<CloseItems>> caDic = new Dictionary<string, List<CloseItems>>();
+            List<CloseItems> caCloseItemsRBU = new List<CloseItems>();
+            List<CloseItems> caCloseItemsFCDU = new List<CloseItems>();
+
+            var caItems = from expense in (from a in _context.ExpenseEntry
+                                           from b in _context.ExpenseEntryDetails
+                                           where a.Expense_ID == b.ExpenseEntryModel.Expense_ID
+                                           && opening <= a.Expense_Date && closing >= a.Expense_Date
+                                           && a.Expense_Type == GlobalSystemValues.TYPE_SS
+                                           select new { a.Expense_ID,b.ExpDtl_ID,a.Expense_Number,a.Expense_Date,
+                                                        a.Expense_Status,b.ExpDtl_Ccy,b.ExpDtl_Debit,b.ExpDtl_Account})
+                          join goHist in _context.GOExpressHist 
+                          on new { expenseId = expense.Expense_ID, dtlId = expense.ExpDtl_ID} 
+                          equals new { expenseId = goHist.ExpenseEntryID, dtlId = goHist.ExpenseDetailID }
+                          into x from goHist in x.DefaultIfEmpty()
+                          join acc in _context.DMAccount
+                          on expense.ExpDtl_Account equals acc.Account_ID
+                          into accCode from acc in accCode.DefaultIfEmpty()
+                          join ccy in _context.DMCurrency
+                          on expense.ExpDtl_Ccy equals ccy.Curr_ID
+                          into ccyAbbr from ccy in ccyAbbr.DefaultIfEmpty()
+                          select new { expense.Expense_ID, expense.ExpDtl_ID, expense.Expense_Number,
+                                       acc.Account_No, ccy.Curr_CCY_ABBR, expense.Expense_Date,
+                                       expense.Expense_Status, expense.ExpDtl_Debit,
+                                       histId = goHist.GOExpHist_Id == null ? 0 : goHist.GOExpHist_Id};
+
+            foreach (var item in caItems)
+            {
+                int transNo = _context.ExpenseTransLists.Select(x => new { x.TL_TransID, x.TL_GoExpHist_ID, x.TL_ExpenseID })
+                                                        .Where(x => x.TL_ExpenseID == item.Expense_ID
+                                                                 && x.TL_GoExpHist_ID == item.histId).FirstOrDefault().TL_ExpenseID;
+            }
+            return caDic;
         }
 
         public ClosingViewModel ClosingOpenDailyBook()
