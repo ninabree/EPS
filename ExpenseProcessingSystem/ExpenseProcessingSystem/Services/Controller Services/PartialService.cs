@@ -186,29 +186,179 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         //----------------------------------- [[ Populate DM ]] -------------------------------------//
         public List<DMVendorViewModel> populateVendor(DMFiltersViewModel filters)
         {
-            IQueryable<DMVendorModel> mList = _context.DMVendor.Where(x=>x.Vendor_isDeleted == false && x.Vendor_isActive == true).ToList().AsQueryable();
             var properties = filters.PF.GetType().GetProperties();
+            var mList = (from rate in (from ven in _context.DMVendor
+                                       from trvat in _context.DMVendorTRVAT
+                                       where ven.Vendor_MasterID == trvat.VTV_Vendor_ID
+                                       && ven.Vendor_isDeleted == false && ven.Vendor_isActive == true
+                                       select new
+                                       {
+                                           ven.Vendor_ID,
+                                           ven.Vendor_MasterID,
+                                           ven.Vendor_TIN,
+                                           ven.Vendor_Address,
+                                           ven.Vendor_Name,
+                                           trvat.VTV_TR_ID,
+                                           trvat.VTV_VAT_ID,
+                                           ven.Vendor_Creator_ID,
+                                           ven.Vendor_Approver_ID,
+                                           ven.Vendor_Status_ID,
+                                           ven.Vendor_Created_Date,
+                                           ven.Vendor_Last_Updated
+                                       })
+                         join tr in _context.DMTR
+                         on new { masterID = rate.VTV_TR_ID, isActive = true, isDeleted = false }
+                         equals new { masterID = tr.TR_MasterID, isActive = tr.TR_isActive, isDeleted = tr.TR_isDeleted }
+                         into withTr
+                         from tr in withTr.DefaultIfEmpty()
+                         join vat in _context.DMVAT
+                         on new { masterID = rate.VTV_VAT_ID, isActive = true, isDeleted = false }
+                         equals new { masterID = vat.VAT_MasterID, isActive = vat.VAT_isActive, isDeleted = vat.VAT_isDeleted }
+                         into withVat
+                         from vat in withVat.DefaultIfEmpty()
+                         join user in _context.User
+                         on rate.Vendor_Creator_ID
+                         equals user.User_ID
+                         into c
+                         from user in c.DefaultIfEmpty()
+                         join apprv in _context.User
+                         on rate.Vendor_Approver_ID
+                         equals apprv.User_ID
+                         into a
+                         from apprv in a.DefaultIfEmpty()
+                         join stat in _context.StatusList
+                         on rate.Vendor_Status_ID
+                         equals stat.Status_ID
+                         into s
+                         from stat in s.DefaultIfEmpty()
+                         select new
+                         {
+                             rate.Vendor_ID,
+                             rate.Vendor_MasterID,
+                             rate.Vendor_Name,
+                             rate.Vendor_TIN,
+                             rate.Vendor_Address,
+                             rate.VTV_TR_ID,
+                             rate.VTV_VAT_ID,
+                             tr.TR_WT_Title,
+                             TRRAte = tr.TR_Tax_Rate > 0 ? tr.TR_Tax_Rate : 0,
+                             vat.VAT_Name,
+                             VATRAte = vat.VAT_Rate > 0 ? vat.VAT_Rate : 0,
+                             rate.Vendor_Creator_ID,
+                             ApproverID = rate.Vendor_Approver_ID,
+                             CreatorName = user.User_LName + ", " + user.User_FName,
+                             ApproverName = rate.Vendor_Approver_ID > 0 ? apprv.User_LName + ", " + apprv.User_FName : "",
+                             rate.Vendor_Created_Date,
+                             rate.Vendor_Last_Updated,
+                             stat.Status_ID,
+                             stat.Status_Name
+                         }).ToList();
 
-            var pendingList = _context.DMVendor_Pending.ToList();
-            foreach (var m in pendingList)
-            {
-                mList = mList.Concat(new DMVendorModel[] {
-                    new DMVendorModel
-                    {
-                        Vendor_ID = m.Pending_ID,
-                        Vendor_MasterID = m.Pending_Vendor_MasterID,
-                        Vendor_Name = m.Pending_Vendor_Name,
-                        Vendor_TIN = m.Pending_Vendor_TIN,
-                        Vendor_Address = m.Pending_Vendor_Address,
-                        Vendor_Creator_ID = m.Pending_Vendor_Creator_ID,
-                        Vendor_Approver_ID = m.Pending_Vendor_Approver_ID.Equals(null) ? 0 : m.Pending_Vendor_Approver_ID,
-                        Vendor_Created_Date = m.Pending_Vendor_Filed_Date,
-                        Vendor_Last_Updated = m.Pending_Vendor_Filed_Date,
-                        Vendor_Status_ID = m.Pending_Vendor_Status_ID
-                    }
-                });
-            }
+            var pendingList = (from rate in (from ven in _context.DMVendor_Pending
+                                             select new
+                                             {
+                                                 ven.Pending_ID,
+                                                 ven.Pending_Vendor_MasterID,
+                                                 ven.Pending_Vendor_Name,
+                                                 ven.Pending_Vendor_TIN,
+                                                 ven.Pending_Vendor_Address,
+                                                 ven.Pending_Vendor_Creator_ID,
+                                                 ven.Pending_Vendor_Approver_ID,
+                                                 ven.Pending_Vendor_Status_ID,
+                                                 ven.Pending_Vendor_Filed_Date
+                                             })
+                               join trvat in _context.DMVendorTRVAT_Pending
+                               on rate.Pending_Vendor_MasterID
+                               equals trvat.Pending_VTV_Vendor_ID
+                               into withTrVat
+                               from trvat in withTrVat.DefaultIfEmpty()
+                               join tr in _context.DMTR
+                               on new { masterID = trvat != null ? trvat.Pending_VTV_TR_ID : 0, isActive = true, isDeleted = false }
+                               equals new { masterID = tr.TR_MasterID, isActive = tr.TR_isActive, isDeleted = tr.TR_isDeleted }
+                               into withTr
+                               from tr in withTr.DefaultIfEmpty()
+                               join vat in _context.DMVAT
+                               on new { masterID = trvat != null ? trvat.Pending_VTV_VAT_ID : 0, isActive = true, isDeleted = false }
+                               equals new { masterID = vat.VAT_MasterID, isActive = vat.VAT_isActive, isDeleted = vat.VAT_isDeleted }
+                               into withVat
+                               from vat in withVat.DefaultIfEmpty()
+                               join user in _context.User
+                               on rate.Pending_Vendor_Creator_ID
+                               equals user.User_ID
+                               into c
+                               from user in c.DefaultIfEmpty()
+                               join apprv in _context.User
+                               on rate.Pending_Vendor_Approver_ID
+                               equals apprv.User_ID
+                               into a
+                               from apprv in a.DefaultIfEmpty()
+                               join stat in _context.StatusList
+                               on rate.Pending_Vendor_Status_ID
+                               equals stat.Status_ID
+                               into s
+                               from stat in s.DefaultIfEmpty()
+                               select new
+                               {
+                                   rate.Pending_ID,
+                                   rate.Pending_Vendor_MasterID,
+                                   rate.Pending_Vendor_Name,
+                                   VTV_TRID = trvat != null ? trvat.Pending_VTV_TR_ID : 0,
+                                   VTV_VATID = trvat != null ? trvat.Pending_VTV_VAT_ID : 0,
+                                   tr.TR_WT_Title,
+                                   TRRAte = tr.TR_Tax_Rate > 0 ? tr.TR_Tax_Rate : 0,
+                                   vat.VAT_Name,
+                                   VATRAte = vat.VAT_Rate > 0 ? vat.VAT_Rate : 0,
+                                   rate.Pending_Vendor_TIN,
+                                   rate.Pending_Vendor_Address,
+                                   rate.Pending_Vendor_Creator_ID,
+                                   rate.Pending_Vendor_Approver_ID,
+                                   CreatorName = user.User_LName + ", " + user.User_FName,
+                                   ApproverName = rate.Pending_Vendor_Approver_ID > 0 ? apprv.User_LName + ", " + apprv.User_FName : "",
+                                   Vendor_Created_Date = rate.Pending_Vendor_Filed_Date,
+                                   Vendor_Last_Updated = rate.Pending_Vendor_Filed_Date,
+                                   stat.Status_ID,
+                                   stat.Status_Name
+                               }).ToList();
 
+            List<DMVendorViewModel> vmList = new List<DMVendorViewModel>();
+            mList.GroupBy(o=> o.Vendor_ID).Select(o=> o.FirstOrDefault()).ToList().ForEach(m =>
+                vmList.Add(new DMVendorViewModel
+                {
+                    Vendor_MasterID = m.Vendor_MasterID,
+                    Vendor_Name = m.Vendor_Name,
+                    Vendor_TIN = m.Vendor_TIN,
+                    Vendor_Address = m.Vendor_Address,
+                    Vendor_Creator_Name = m.CreatorName ?? "N/A",
+                    Vendor_Approver_Name = m.ApproverName ?? "",
+                    Vendor_Created_Date = m.Vendor_Created_Date,
+                    Vendor_Creator_ID = m.Vendor_Creator_ID,
+                    Vendor_Last_Updated = m.Vendor_Last_Updated,
+                    Vendor_Status_ID = m.Status_ID,
+                    Vendor_Status = m.Status_Name ?? "N/A",
+                    Vendor_Tax_Rates = mList.Where(x=> x.Vendor_ID == m.Vendor_ID).Select(x => (x.TRRAte * 100) + "% - " + x.TR_WT_Title).ToList(),
+                    Vendor_VAT = mList.Where(x => x.Vendor_ID == m.Vendor_ID).Select(x => (x.VATRAte * 100) + "% - " + x.VAT_Name).ToList()
+                })
+            );
+
+            pendingList.GroupBy(o => o.Pending_ID).Select(o => o.FirstOrDefault()).ToList().ForEach(m =>
+                 vmList.Add(new DMVendorViewModel
+                 {
+                     Vendor_MasterID = m.Pending_Vendor_MasterID,
+                     Vendor_Name = m.Pending_Vendor_Name,
+                     Vendor_TIN = m.Pending_Vendor_TIN,
+                     Vendor_Address = m.Pending_Vendor_Address,
+                     Vendor_Creator_Name = m.CreatorName ?? "N/A",
+                     Vendor_Approver_Name = m.ApproverName ?? "",
+                     Vendor_Created_Date = m.Vendor_Created_Date,
+                     Vendor_Creator_ID = m.Pending_Vendor_Creator_ID,
+                     Vendor_Last_Updated = m.Vendor_Last_Updated,
+                     Vendor_Status_ID = m.Status_ID,
+                     Vendor_Status = m.Status_Name ?? "N/A",
+                     Vendor_Tax_Rates = pendingList.Where(x => x.Pending_ID == m.Pending_ID).Select(x => (x.TRRAte * 100) + "% - " + x.TR_WT_Title).ToList(),
+                     Vendor_VAT = pendingList.Where(x => x.Pending_ID == m.Pending_ID).Select(x => (x.VATRAte * 100) + "% - " + x.VAT_Name).ToList()
+                 })
+            );
+            var vmList2 = vmList.AsQueryable();
             //FILTER
             foreach (var property in properties)
             {
@@ -222,7 +372,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     {
                         if (colArr.Contains(subStr)) // IF INT VAL
                         {
-                            mList = mList.Where("Vendor_" + subStr + " = @0 AND  Vendor_isDeleted == @1", property.GetValue(filters.PF), false)
+                            vmList2 = vmList2.Where("Vendor_" + subStr + " = @0 AND  Vendor_isDeleted == @1", property.GetValue(filters.PF), false)
                                         .Select(e => e).AsQueryable();
                         }
                         else if (subStr == "Creator" || subStr == "Approver" || subStr == "Status")
@@ -238,98 +388,31 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                               .Select(x => x.Status_ID).ToList();
                             if (subStr == "Approver")
                             {
-                                mList = mList.Where(x => names.Contains(x.Vendor_Approver_ID) && x.Vendor_isDeleted == false)
+                                vmList2 = vmList2.Where(x => names.Contains(x.Vendor_Approver_ID))
                                             .Select(e => e).AsQueryable();
                             }
                             else if (subStr == "Creator")
                             {
-                                mList = mList.Where(x => names.Contains(x.Vendor_Creator_ID) && x.Vendor_isDeleted == false)
+                                vmList2 = vmList2.Where(x => names.Contains(x.Vendor_Creator_ID))
                                             .Select(e => e).AsQueryable();
                             }
                             else if (subStr == "Status")
                             {
-                                mList = mList.Where(x => status.Contains(x.Vendor_Status_ID) && x.Vendor_isDeleted == false)
+                                vmList2 = vmList2.Where(x => status.Contains(x.Vendor_Status_ID))
                                          .Select(e => e).AsQueryable();
                             }
 
                         }
                         else // IF STRING VALUE
                         {
-                            mList = mList.Where("Vendor_" + subStr + ".Contains(@0) AND  Vendor_isDeleted == @1", property.GetValue(filters.PF).ToString(), false)
+                            vmList2 = vmList2.Where("Vendor_" + subStr + ".Contains(@0) AND  Vendor_isDeleted == @1", property.GetValue(filters.PF).ToString(), false)
                                     .Select(e => e).AsQueryable();
                         }
                     }
                 }
             }
 
-            List<int> mListIDs = mList.Select(x => x.Vendor_MasterID).ToList();
-            var userList = (from a in mList
-                               from b in _context.User.Where(x=> a.Vendor_Creator_ID == x.User_ID).DefaultIfEmpty()
-                               from c in _context.User.Where(x => a.Vendor_Approver_ID == x.User_ID).DefaultIfEmpty()
-                               select new
-                               { a.Vendor_ID,
-                                 a.Vendor_MasterID,
-                                 CreatorName = b.User_LName + ", " + b.User_FName,
-                                 ApproverName = (c == null) ? "" : c.User_LName + ", " + c.User_FName }).ToList();
-            var trList = (from a in _context.DMVendorTRVAT
-                          join c in _context.DMTR on a.VTV_TR_ID equals c.TR_MasterID
-                          where mListIDs.Contains(a.VTV_Vendor_ID) && c.TR_isActive == true && c.TR_isDeleted == false
-                          select new { a.VTV_Vendor_ID, c.TR_ID, c.TR_Tax_Rate, c.TR_WT_Title }).ToList();
-
-            var trpendingList = (from a in _context.DMVendorTRVAT_Pending
-                                 join c in _context.DMTR on a.Pending_VTV_TR_ID equals c.TR_MasterID
-                                 where mListIDs.Contains(a.Pending_VTV_Vendor_ID) && c.TR_isActive == true && c.TR_isDeleted == false
-                                 select new { a.Pending_VTV_Vendor_ID, c.TR_ID, c.TR_Tax_Rate, c.TR_WT_Title }).ToList();
-
-            var vatList = (from a in _context.DMVendorTRVAT
-                          join d in _context.DMVAT on a.VTV_VAT_ID equals d.VAT_MasterID
-                           where mListIDs.Contains(a.VTV_Vendor_ID) && d.VAT_isActive == true && d.VAT_isDeleted == false
-                           select new { a.VTV_Vendor_ID, d.VAT_ID, d.VAT_Rate, d.VAT_Name }).ToList();
-
-            var vatpendingList = (from a in _context.DMVendorTRVAT_Pending
-                           join d in _context.DMVAT on a.Pending_VTV_VAT_ID equals d.VAT_MasterID
-                                  where mListIDs.Contains(a.Pending_VTV_Vendor_ID) && d.VAT_isActive == true && d.VAT_isDeleted == false
-                                  select new { a.Pending_VTV_Vendor_ID, d.VAT_ID, d.VAT_Rate, d.VAT_Name }).ToList();
-
-            var statusList = (from a in mList
-                              join c in _context.StatusList on a.Vendor_Status_ID equals c.Status_ID
-                              select new { a.Vendor_ID, a.Vendor_MasterID, c.Status_Name }).ToList();
-            //assign values
-            List<DMVendorModel> mList2 = mList.ToList();
-            List <DMVendorViewModel> vmList = new List<DMVendorViewModel>();
-            foreach (DMVendorModel m in mList2)
-            {
-                var MasterId = m.Vendor_MasterID;
-                DMVendorViewModel vm = new DMVendorViewModel
-                {
-                    Vendor_MasterID = m.Vendor_MasterID,
-                    Vendor_Name = m.Vendor_Name,
-                    Vendor_TIN = m.Vendor_TIN,
-                    Vendor_Address = m.Vendor_Address,
-                    Vendor_Creator_Name = userList.Where(a => a.Vendor_MasterID == m.Vendor_MasterID && a.Vendor_ID == m.Vendor_ID).Select(a => a.CreatorName).FirstOrDefault() ?? "N/A",
-                    Vendor_Approver_Name = userList.Where(a => a.Vendor_MasterID == m.Vendor_MasterID && a.Vendor_ID == m.Vendor_ID).Select(a => a.ApproverName).FirstOrDefault() ?? "",
-                    Vendor_Created_Date = m.Vendor_Created_Date,
-                    Vendor_Creator_ID = m.Vendor_Creator_ID,
-                    Vendor_Last_Updated = m.Vendor_Last_Updated,
-                    Vendor_Tax_Rates = new List<string>(),
-                    Vendor_VAT = new List<string>(),
-                    Vendor_Status_ID = m.Vendor_Status_ID,
-                    Vendor_Status = statusList.Where(a => a.Vendor_ID == m.Vendor_ID && a.Vendor_MasterID == m.Vendor_MasterID).Select(a => a.Status_Name).FirstOrDefault() ?? "N/A"
-                };
-                //temp -- in case the entry is an Approved record
-                if (vm.Vendor_Status_ID != 3)
-                {
-                    //add values from pending VTV List
-                    vm.Vendor_Tax_Rates.AddRange(trpendingList.Where(x => x.Pending_VTV_Vendor_ID == m.Vendor_MasterID).Select(x => (x.TR_Tax_Rate * 100) + "% - " + x.TR_WT_Title).ToList());
-                    vm.Vendor_VAT.AddRange(vatpendingList.Where(x => x.Pending_VTV_Vendor_ID == m.Vendor_MasterID).Select(x => (x.VAT_Rate * 100) + "% - " + x.VAT_Name).ToList());
-                }
-                else {
-                    vm.Vendor_Tax_Rates = trList.Where(x => x.VTV_Vendor_ID == m.Vendor_MasterID).Select(x => (x.TR_Tax_Rate * 100) + "% - " + x.TR_WT_Title).ToList();
-                    vm.Vendor_VAT = vatList.Where(x => x.VTV_Vendor_ID == m.Vendor_MasterID).Select(x => (x.VAT_Rate * 100) + "% - " + x.VAT_Name).ToList();
-                }
-                vmList.Add(vm);
-            }
-            return vmList;
+            return vmList2.ToList();
         }
 
         public List<DMDeptViewModel> populateDept(DMFiltersViewModel filters)
