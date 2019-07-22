@@ -16,6 +16,10 @@
                     <tr>
                         <td>@Html.LabelFor(model => model.DMFilters.EMF.EMF_Name)</td>
                         <td>@Html.TextBoxFor(model => model.DMFilters.EMF.EMF_Name, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.EMF.EMF_Category_Name)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.EMF.EMF_Category_Name, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.EMF.EMF_FBT_Name)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.EMF.EMF_FBT_Name, new { @class = "input" })</td>
                         <td>@Html.HiddenFor(model => model.DMFilters.EMF.EMF_Acc_No, new { @class = "input" })</td>
                         <td><input id="filterPartialName" name="partialName" value="DMPartial_TempEmp" type="hidden" /></td>
                     </tr>
@@ -41,6 +45,8 @@
             <tr>
                 <th></th>
                 <th id="Name"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["TempEmpSortParm"]">Employee Name<p class="btn-xs glyphicon @ViewData["glyph-1"]"></p></a></th>
+                <th id="Category_Name"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["TempEmpCatSortParm"]">Employee Category<p class="btn-xs glyphicon @ViewData["glyph-7"]"></p></a></th>
+                <th id="FBT_Name"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["TempEmpFbtSortParm"]">Employee FBT<p class="btn-xs glyphicon @ViewData["glyph-8"]"></p></a></th>
                 <th id="Creator_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["TempEmpCreatorSortParm"]">Input By<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
                 <th id="Approver_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["TempEmpApproverSortParm"]">Approved By<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
                 <th id="Last_Updated"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["TempEmpLastUpdatedSortParm"]">Last Updated<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
@@ -58,6 +64,8 @@
                             @Html.HiddenFor(modelItem => item.Emp_Creator_ID)
                         </td>
                         <td>@Html.DisplayFor(modelItem => item.Emp_Name)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Emp_Category_Name)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Emp_FBT_Name)</td>
                         <td>@Html.DisplayFor(modelItem => item.Emp_Creator_Name)</td>
                         <td>@Html.DisplayFor(modelItem => item.Emp_Approver_Name)</td>
                         <td>@Html.DisplayFor(modelItem => item.Emp_Last_Updated)</td>

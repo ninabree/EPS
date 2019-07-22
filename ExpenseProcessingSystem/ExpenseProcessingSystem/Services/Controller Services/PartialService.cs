@@ -429,6 +429,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     Dept_Approver_Name = userList.Where(a => a.Dept_MasterID == m.Dept_MasterID && a.Dept_ID == m.Dept_ID).Select(a => a.ApproverName).FirstOrDefault() ?? "",
                     Dept_Created_Date = m.Dept_Created_Date,
                     Dept_Last_Updated = m.Dept_Last_Updated,
+                    Dept_Creator_ID = m.Dept_Creator_ID,
                     Dept_Status_ID = m.Dept_Status_ID,
                     Dept_Status = statusList.Where(a => a.Dept_ID == m.Dept_ID).Select(a => a.Status_Name).FirstOrDefault() ?? "N/A"
                 };
@@ -543,6 +544,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     Check_Approver_Name = userList.Where(a => a.Check_ID == m.Check_ID && a.Check_MasterID == m.Check_MasterID).Select(a => a.ApproverName).FirstOrDefault() ?? "",
                     Check_Created_Date = m.Check_Created_Date,
                     Check_Last_Updated = m.Check_Last_Updated,
+                    Check_Creator_ID = m.Check_Creator_ID,
                     Check_Status_ID = m.Check_Status_ID,
                     Check_Status = statusList.Where(a => a.Check_ID == m.Check_ID && a.Check_MasterID == m.Check_MasterID).Select(a => a.Status_Name).FirstOrDefault() ?? "N/A"
                 };
@@ -816,6 +818,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     VAT_Rate = m.VAT_Rate,
                     VAT_Creator_Name = creator ?? "N/A",
                     VAT_Approver_Name = approver ?? "",
+                    VAT_Creator_ID = m.VAT_Creator_ID,
                     VAT_Created_Date = m.VAT_Created_Date,
                     VAT_Last_Updated = m.VAT_Last_Updated,
                     VAT_Status_ID = m.VAT_Status_ID,
@@ -929,6 +932,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     FBT_Tax_Rate = m.FBT_Tax_Rate,
                     FBT_Creator_Name = creator ?? "N/A",
                     FBT_Approver_Name = approver ?? "",
+                    FBT_Creator_ID = m.FBT_Creator_ID,
                     FBT_Created_Date = m.FBT_Created_Date,
                     FBT_Last_Updated = m.FBT_Last_Updated,
                     FBT_Status_ID = m.FBT_Status_ID,
@@ -1046,6 +1050,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     TR_Nature_Income_Payment = m.TR_Nature_Income_Payment,
                     TR_Creator_Name = creator ?? "N/A",
                     TR_Approver_Name = approver ?? "",
+                    TR_Creator_ID = m.TR_Creator_ID,
                     TR_Created_Date = m.TR_Created_Date,
                     TR_Last_Updated = m.TR_Last_Updated,
                     TR_Status_ID = m.TR_Status_ID,
@@ -1157,6 +1162,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     Curr_CCY_ABBR = m.Curr_CCY_ABBR,
                     Curr_Creator_Name = creator ?? "N/A",
                     Curr_Approver_Name = approver ?? "",
+                    Curr_Creator_ID = m.Curr_Creator_ID,
                     Curr_Created_Date = m.Curr_Created_Date,
                     Curr_Last_Updated = m.Curr_Last_Updated,
                     Curr_Status_ID = m.Curr_Status_ID,
@@ -1199,37 +1205,56 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 var propertyName = property.Name;
                 var subStr = propertyName.Substring(propertyName.IndexOf("_")+1);
                 var toStr = property.GetValue(filters.EMF).ToString();
-                string[] colArr = { "Creator_ID", "Approver_ID" };
                 if (toStr != "")
                 {
                     if (toStr != "0")
                     {
-                        if (subStr == "Creator_Name" || subStr == "Approver_Name" || subStr == "Status")
+                        if (subStr == "Creator_Name")
                         {
                             //get all userIDs of creator or approver that contains string
                             var names = _context.User
                               .Where(x => (x.User_FName.Contains(property.GetValue(filters.EMF).ToString())
                               || x.User_LName.Contains(property.GetValue(filters.EMF).ToString())))
                               .Select(x => x.User_ID).ToList();
+                            mList = mList.Where(x => names.Contains(x.Emp_Creator_ID) && x.Emp_isDeleted == false)
+                                        .Select(e => e).AsQueryable();
+                        }
+                        else if (subStr == "Approver_Name")
+                        {
+                            //get all userIDs of creator or approver that contains string
+                            var names = _context.User
+                              .Where(x => (x.User_FName.Contains(property.GetValue(filters.EMF).ToString())
+                              || x.User_LName.Contains(property.GetValue(filters.EMF).ToString())))
+                              .Select(x => x.User_ID).ToList();
+                            mList = mList.Where(x => names.Contains(x.Emp_Approver_ID) && x.Emp_isDeleted == false)
+                                         .Select(e => e).AsQueryable();
+                        }
+                        else if (subStr == "Status")
+                        {
                             //get all status IDs that contains string
                             var status = _context.StatusList
                               .Where(x => (x.Status_Name.Contains(property.GetValue(filters.EMF).ToString())))
                               .Select(x => x.Status_ID).ToList();
-                            if (subStr == "Approver_Name")
-                            {
-                                mList = mList.Where(x => names.Contains(x.Emp_Approver_ID) && x.Emp_isDeleted == false)
+                            mList = mList.Where(x => status.Contains(x.Emp_Status_ID) && x.Emp_isDeleted == false)
                                          .Select(e => e).AsQueryable();
-                            }
-                            else if (subStr == "Creator_Name")
-                            {
-                                mList = mList.Where(x => names.Contains(x.Emp_Creator_ID) && x.Emp_isDeleted == false)
+                        }
+                        else if (subStr == "FBT_Name")
+                        {
+                            //get all fbt ids fbt name that contains string
+                            var ids = _context.DMFBT
+                              .Where(x => (x.FBT_Name.Contains(property.GetValue(filters.EMF).ToString())))
+                              .Select(x => x.FBT_MasterID).ToList();
+                            mList = mList.Where(x => ids.Contains(x.Emp_FBT_MasterID) && x.Emp_isDeleted == false)
                                          .Select(e => e).AsQueryable();
-                            }
-                            else if (subStr == "Status")
-                            {
-                                mList = mList.Where(x => status.Contains(x.Emp_Status_ID) && x.Emp_isDeleted == false)
+                        }
+                        else if (subStr == "Category_Name")
+                        {
+                            //get all cat ids fbt cat that contains string
+                            var ids = GlobalSystemValues.EMPCATEGORY_SELECT
+                              .Where(x => (x.Text.Contains(property.GetValue(filters.EMF).ToString())))
+                              .Select(x => x.Value).ToList();
+                            mList = mList.Where(x => ids.Contains(x.Emp_Category_ID + "") && x.Emp_isDeleted == false)
                                          .Select(e => e).AsQueryable();
-                            }
                         }
                         else // IF STRING VALUE
                         {
@@ -1271,6 +1296,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     Emp_Category_Name = cat,
                     Emp_Name = m.Emp_Name,
                     Emp_Acc_No = m.Emp_Acc_No,
+                    Emp_Creator_ID = m.Emp_Creator_ID,
                     Emp_Creator_Name = creator ?? "N/A",
                     Emp_Approver_Name = approver ?? "",
                     Emp_Created_Date = m.Emp_Created_Date,
@@ -1297,6 +1323,8 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         Emp_MasterID = m.Pending_Emp_MasterID,
                         Emp_Name = m.Pending_Emp_Name,
                         Emp_Acc_No = m.Pending_Emp_Acc_No,
+                        Emp_FBT_MasterID = m.Pending_Emp_FBT_MasterID,
+                        Emp_Category_ID = m.Pending_Emp_Category_ID,
                         Emp_Creator_ID = m.Pending_Emp_Creator_ID,
                         Emp_Approver_ID = m.Pending_Emp_Approver_ID.Equals(null) ? 0 : m.Pending_Emp_Approver_ID,
                         Emp_Created_Date = m.Pending_Emp_Filed_Date,
@@ -1318,32 +1346,52 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 {
                     if (toStr != "0")
                     {
-                        if (subStr == "Creator_Name" || subStr == "Approver_Name" || subStr == "Status")
+                        if (subStr == "Creator_Name")
                         {
                             //get all userIDs of creator or approver that contains string
                             var names = _context.User
                               .Where(x => (x.User_FName.Contains(property.GetValue(filters.EMF).ToString())
                               || x.User_LName.Contains(property.GetValue(filters.EMF).ToString())))
                               .Select(x => x.User_ID).ToList();
+                            mList = mList.Where(x => names.Contains(x.Emp_Creator_ID) && x.Emp_isDeleted == false)
+                                        .Select(e => e).AsQueryable();
+                        }
+                        else if (subStr == "Approver_Name")
+                        {
+                            //get all userIDs of creator or approver that contains string
+                            var names = _context.User
+                              .Where(x => (x.User_FName.Contains(property.GetValue(filters.EMF).ToString())
+                              || x.User_LName.Contains(property.GetValue(filters.EMF).ToString())))
+                              .Select(x => x.User_ID).ToList();
+                            mList = mList.Where(x => names.Contains(x.Emp_Approver_ID) && x.Emp_isDeleted == false)
+                                         .Select(e => e).AsQueryable();
+                        }
+                        else if (subStr == "Status")
+                        {
                             //get all status IDs that contains string
                             var status = _context.StatusList
                               .Where(x => (x.Status_Name.Contains(property.GetValue(filters.EMF).ToString())))
                               .Select(x => x.Status_ID).ToList();
-                            if (subStr == "Approver_Name")
-                            {
-                                mList = mList.Where(x => names.Contains(x.Emp_Approver_ID) && x.Emp_isDeleted == false)
+                            mList = mList.Where(x => status.Contains(x.Emp_Status_ID) && x.Emp_isDeleted == false)
                                          .Select(e => e).AsQueryable();
-                            }
-                            else if (subStr == "Creator_Name")
-                            {
-                                mList = mList.Where(x => names.Contains(x.Emp_Creator_ID) && x.Emp_isDeleted == false)
+                        }
+                        else if (subStr == "FBT_Name")
+                        {
+                            //get all fbt ids fbt name that contains string
+                            var ids = _context.DMFBT
+                              .Where(x => (x.FBT_Name.Contains(property.GetValue(filters.EMF).ToString())))
+                              .Select(x => x.FBT_MasterID).ToList();
+                            mList = mList.Where(x => ids.Contains(x.Emp_FBT_MasterID) && x.Emp_isDeleted == false)
                                          .Select(e => e).AsQueryable();
-                            }
-                            else if (subStr == "Status")
-                            {
-                                mList = mList.Where(x => status.Contains(x.Emp_Status_ID) && x.Emp_isDeleted == false)
+                        }
+                        else if (subStr == "Category_Name")
+                        {
+                            //get all cat ids fbt cat that contains string
+                            var ids = GlobalSystemValues.EMPCATEGORY_SELECT
+                              .Where(x => (x.Text.Contains(property.GetValue(filters.EMF).ToString())))
+                              .Select(x => x.Value).ToList();
+                            mList = mList.Where(x => ids.Contains(x.Emp_Category_ID + "") && x.Emp_isDeleted == false)
                                          .Select(e => e).AsQueryable();
-                            }
                         }
                         else // IF STRING VALUE
                         {
@@ -1375,13 +1423,18 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 var creator = userList.Where(a => a.Emp_ID == m.Emp_ID && a.Emp_MasterID == m.Emp_MasterID).Select(a => a.CreatorName).FirstOrDefault();
                 var approver = userList.Where(a => a.Emp_ID == m.Emp_ID && a.Emp_MasterID == m.Emp_MasterID).Select(a => a.ApproverName).FirstOrDefault();
                 var stat = statusList.Where(a => a.Emp_ID == m.Emp_ID && a.Emp_MasterID == m.Emp_MasterID).Select(a => a.Status_Name).FirstOrDefault();
+                var fbt = _context.DMFBT.Where(a => a.FBT_MasterID == m.Emp_FBT_MasterID).Select(a => a.FBT_Name + "-" + a.FBT_Tax_Rate).FirstOrDefault();
+                var cat = m.Emp_Category_ID == GlobalSystemValues.EMPCAT_LOCAL ? "LOCAL" : m.Emp_Category_ID == GlobalSystemValues.EMPCAT_EXPAT ? "EXPAT" : "N/A";
                 DMEmpViewModel vm = new DMEmpViewModel
                 {
                     Emp_MasterID = m.Emp_MasterID,
                     Emp_Name = m.Emp_Name,
                     Emp_Acc_No = m.Emp_Acc_No ?? "",
                     Emp_Creator_Name = creator ?? "N/A",
+                    Emp_Category_Name = cat ?? "",
+                    Emp_FBT_Name = fbt ?? "N/A",
                     Emp_Approver_Name = approver ?? "",
+                    Emp_Creator_ID = m.Emp_Creator_ID,
                     Emp_Created_Date = m.Emp_Created_Date,
                     Emp_Last_Updated = m.Emp_Last_Updated,
                     Emp_Status_ID = m.Emp_Status_ID,
@@ -1489,6 +1542,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     Cust_Name = m.Cust_Name,
                     Cust_Abbr = m.Cust_Abbr,
                     Cust_No = m.Cust_No,
+                    Cust_Creator_ID = m.Cust_Creator_ID,
                     Cust_Creator_Name = creator ?? "N/A",
                     Cust_Approver_Name = approver ?? "",
                     Cust_Created_Date = m.Cust_Created_Date,
@@ -1603,6 +1657,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     BCS_Signatures = m.BCS_Signatures,
                     BCS_Creator_Name = creator ?? "N/A",
                     BCS_Approver_Name = approver ?? "",
+                    BCS_Creator_ID = m.BCS_Creator_ID,
                     BCS_Created_Date = m.BCS_Created_Date,
                     BCS_Last_Updated = m.BCS_Last_Updated,
                     BCS_Status_ID = m.BCS_Status_ID,
@@ -1711,6 +1766,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     AccountGroup_Code = m.AccountGroup_Code,
                     AccountGroup_Creator_Name = creator ?? "N/A",
                     AccountGroup_Approver_Name = approver ?? "",
+                    AccountGroup_Creator_ID = m.AccountGroup_Creator_ID,
                     AccountGroup_Created_Date = m.AccountGroup_Created_Date,
                     AccountGroup_Last_Updated = m.AccountGroup_Last_Updated,
                     AccountGroup_Status_ID = m.AccountGroup_Status_ID,

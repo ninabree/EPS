@@ -64,6 +64,11 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly int EMPCAT_LOCAL = 1;
         public static readonly int EMPCAT_EXPAT = 2;
 
+        public static readonly List<SelectListItem> EMPCATEGORY_SELECT = new List<SelectListItem> {
+                new SelectListItem { Text = "LOCAL", Value = EMPCAT_LOCAL.ToString(), Selected = true },
+                new SelectListItem { Text = "EXPAT", Value = EMPCAT_EXPAT.ToString(), Selected = false }
+        };
+
         //Static values for user roles use for checking or adding user roles to users.
         //i.e: Checking user access rights
         //Example: instead of [if (role == "admin")] use [if (role == GlobalSystemValues.ROLE_ADMIN)]
