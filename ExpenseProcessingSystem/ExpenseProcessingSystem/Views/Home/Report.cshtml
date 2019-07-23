@@ -9,442 +9,443 @@
     @* custom css *@
     <link rel="stylesheet" href="~/css/Report.css" />
 }
+<body>
+    @using (Html.BeginForm())
+    {
+        <div class="m-t-10 rep-voucher-cont" style="height:100px">
+            <table class="table table-bordered rep-voucher-tbl rep-voucher-tbl-left">
+                <colgroup>
+                    <col style="width:5%" />
+                    <col style="width:5%" />
+                    <col style="width:14%" />
+                    <col style="width:30%" />
+                    <col style="width:14%" />
+                    <col style="width:30%" />
+                    <col style="width:2%" />
+                </colgroup>
+                <tr>
+                    <td class="td-center"></td>
+                    <td class="td-center"></td>
+                    <td class="td-right">
+                        @Html.LabelFor(m => m.ReportTypesList)
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(m => m.ReportTypesList, new SelectList(Model.ReportTypesList, "Id", "TypeName"), "----Select Report Type----", new { @class = "dis-inline-block", id = "ddlReportType" })
+                    </td>
+                    <td class="td-right">
+                        @Html.LabelFor(m => m.ReportSubTypesList)
+                    </td>
+                    <td colspan="2">
+                        @Html.DropDownListFor(m => m.ReportTypesList, new SelectList(Model.ReportSubTypesList, "Id", "SubTypeName"), "----Select Report Sub-Type----", new { @class = "dis-inline-block", id = "ddlSubType", disabled = "disabled" })
+                    </td>
+                </tr>
+                <tr id="" class="rep_alpha_m hidden">
+                    <td class="td-center"></td>
+                    <td class="td-center"></td>
+                    <td class="td-right">Year/Month : </td>
+                    <td>
+                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-49", id = "ddlYear_" + @HomeReportConstantValue.APSWT_M })
+                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-49", id = "ddlMonth_" + @HomeReportConstantValue.APSWT_M })
+                    </td>
+                    <td class="td-right"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr id="" class="rep_alpha_m hidden">
+                    <td class="td-center"></td>
+                    <td class="td-center"></td>
+                    <td class="td-right">
+                        Signatory :
 
-@using (Html.BeginForm())
-{
-    <div class="m-t-10 rep-voucher-cont" style="height:100px">
-        <table class="table table-bordered rep-voucher-tbl rep-voucher-tbl-left">
-            <colgroup >
-                <col style="width:5%" />
-                <col style="width:5%" />
-                <col style="width:14%" />
-                <col style="width:30%" />
-                <col style="width:14%" />
-                <col style="width:30%" />
-                <col style="width:2%" />
-            </colgroup>
-            <tr>
-                <td class="td-center"></td>
-                <td class="td-center"></td>
-                <td class="td-right">
-                    @Html.LabelFor(m => m.ReportTypesList)
-                </td>
-                <td>
-                    @Html.DropDownListFor(m => m.ReportTypesList, new SelectList(Model.ReportTypesList, "Id", "TypeName"), "----Select Report Type----", new { @class = "dis-inline-block", id = "ddlReportType" })
-                </td>
-                <td class="td-right">
-                    @Html.LabelFor(m => m.ReportSubTypesList)
-                </td>
-                <td colspan="2">
-                    @Html.DropDownListFor(m => m.ReportTypesList, new SelectList(Model.ReportSubTypesList, "Id", "SubTypeName"), "----Select Report Sub-Type----", new { @class = "dis-inline-block", id = "ddlSubType", disabled = "disabled" })
-                </td>
-            </tr>
-            <tr id="" class="rep_alpha_m hidden">
-                <td class="td-center"></td>
-                <td class="td-center"></td>
-                <td class="td-right">Year/Month : </td>
-                <td>
-                    @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-49", id = "ddlYear_" + @HomeReportConstantValue.APSWT_M })
-                    @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-49", id = "ddlMonth_" + @HomeReportConstantValue.APSWT_M })
-                </td>
-                <td class="td-right"></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr id="" class="rep_alpha_m hidden">
-                <td class="td-center"></td>
-                <td class="td-center"></td>
-                <td class="td-right">
-                    Signatory :
-
-                </td>
-                <td>
-                    @Html.DropDownListFor(m => m.SignatoryList, new SelectList(Model.SignatoryList, "BCS_ID", "BCS_Name"), null, new { @class = "dis-inline-block", id = "ddlSignatory_" + @HomeReportConstantValue.APSWT_M })
-                </td>
-                <td class="td-right"></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr id="" class="rep_alpha_10000 hidden">
-                <td class="td-center"></td>
-                <td class="td-center">
-                    @Html.RadioButton("radioTimePeriod_" + @HomeReportConstantValue.AST1000, "1", true, new { id = "radioPeriodOption1_" + @HomeReportConstantValue.AST1000, @class = "radioPeriodOption_" + @HomeReportConstantValue.AST1000 })
-                </td>
-                <td class="td-right">
-                    Year/Month :
-                </td>
-                <td>
-                    @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-49", id = "ddlYear_" + @HomeReportConstantValue.AST1000 })
-                    @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-49", id = "ddlMonth_" + @HomeReportConstantValue.AST1000 })
-                </td>
-                <td class="td-right">
-                    To :
-                </td>
-                <td>
-                    @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-49", id = "ddlYearTo_" + @HomeReportConstantValue.AST1000 })
-                    @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-49", id = "ddlMonthTo_" + @HomeReportConstantValue.AST1000 })
-                </td>
-                <td></td>
-            </tr>
-            <tr id="" class="rep_alpha_10000 hidden">
-                <td class="td-center"></td>
-                <td class="td-center">
-                    @Html.RadioButton("radioTimePeriod_" + @HomeReportConstantValue.AST1000, "3", false, new { id = "radioPeriodOption3_" + @HomeReportConstantValue.AST1000, @class = "radioPeriodOption_" + @HomeReportConstantValue.AST1000 })
-                </td>
-                <td class="td-right">
-                    Period :
-                </td>
-                <td>
-                    @Html.EditorFor(m => m.PeriodFrom, new { htmlAttributes = new { id = "PeriodFrom_" + @HomeReportConstantValue.AST1000, @class = "input h-20 fs-11 form-control dis-inline-block w-49", @type = "date", disabled = "disabled" } })
-                </td>
-                <td class="td-right">
-                    To :
-                </td>
-                <td>
-                    @Html.EditorFor(m => m.PeriodTo, new { htmlAttributes = new { id = "PeriodTo_" + @HomeReportConstantValue.AST1000, @class = "input h-20 fs-11 form-control dis-inline-block w-49", @type = "date", disabled = "disabled" } })
-                </td>
-                <td></td>
-            </tr>
-            <tr id="" class="rep_alpha_10000 hidden">
-                <td class="td-center"></td>
-                <td class="td-center"></td>
-                <td class="td-right">
-                    Tax Rate :
-                </td>
-                <td>
-                    <div style="overflow-y:scroll;white-space:normal;height:22px" id="divChkTax">
-                        <label><input type="checkbox" id="chkAllTax" /> All:</label>
-                        @foreach (var i in Model.TaxRateList)
-                        {
-                            <label>@Html.CheckBox("chkTaxRate_" + @HomeReportConstantValue.AST1000, false, new { @Value = i, @class = "chkTaxRate" })@((i * 100))%</label>
-                        }
-                    </div>
-                </td>
-                <td class="td-right"></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr id="" class="rep_alpha_10000 hidden">
-                <td class="td-center"></td>
-                <td class="td-center"></td>
-                <td class="td-right">
-                    Signatory :
-                </td>
-                <td>
-                    @Html.DropDownListFor(m => m.SignatoryList, new SelectList(Model.SignatoryList, "BCS_ID", "BCS_Name"), null, new { @class = "dis-inline-block", id = "ddlSignatory_" + @HomeReportConstantValue.AST1000 })
-                </td>
-                <td class="td-right"></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr id="" class="rep_actual hidden">
-                <td class="td-center"></td>
-                <td class="td-center"></td>
-                <td class="td-right">
-                    Year/Month :
-                </td>
-                <td>
-                    @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-49", id = "ddlYear_" + @HomeReportConstantValue.ActualBudgetReport })
-                    @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-49", id = "ddlMonth_" + @HomeReportConstantValue.ActualBudgetReport })
-                </td>
-                <td class="td-right"></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr id="" class="rep_BIRCSV hidden">
-                <td class="td-center"></td>
-                <td class="td-center"></td>
-                <td class="td-right">
-                    Year/Month :
-                </td>
-                <td>
-                    @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-49", id = "ddlYear_" + @HomeReportConstantValue.BIRWTCSV })
-                    @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-49", id = "ddlMonth_" + @HomeReportConstantValue.BIRWTCSV })
-                </td>
-                <td class="td-right">
-                    To :
-                </td>
-                <td>
-                    @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-49", id = "ddlYearTo_" + @HomeReportConstantValue.BIRWTCSV })
-                    @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-49", id = "ddlMonthTo_" + @HomeReportConstantValue.BIRWTCSV })
-                </td>
-                <td></td>
-            </tr>
-            <tr id="" class="rep_trans hidden">
-                <td class="td-center" style="width:5%">
-                    <a href="#" class="deselectRadio"><img src="~/images/deselect.png" style="width:30%; vertical-align:middle" /></a>
-                </td>
-                <td class="td-center">
-                    @Html.RadioButton("radioTimePeriod", "1", false, new { id = "radioPeriodOption1_" + @HomeReportConstantValue.TransListReport, @class = "radioPeriodOption_" + @HomeReportConstantValue.TransListReport })
-                </td>
-                <td class="td-right">
-                    Year/Month :
-                </td>
-                <td>
-                    @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-40", id = "ddlYear_" + @HomeReportConstantValue.TransListReport, disabled = "disabled" })
-                    @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-40", id = "ddlMonth_" + @HomeReportConstantValue.TransListReport, disabled = "disabled" })
-                <td class="td-right">
-                    To :
-                </td>
-                <td>
-                    @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-40", id = "ddlYearTo_" + @HomeReportConstantValue.TransListReport, disabled = "disabled" })
-                    @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-40", id = "ddlMonthTo_" + @HomeReportConstantValue.TransListReport, disabled = "disabled" })
-                </td>
-                <td></td>
-            </tr>
-            <tr id="" class="rep_trans hidden">
-                <td class="td-center"></td>
-                <td class="td-center">
-                    @Html.RadioButton("radioTimePeriod", "3", false, new { id = "radioPeriodOption3_" + @HomeReportConstantValue.TransListReport, @class = "radioPeriodOption_" + @HomeReportConstantValue.TransListReport })
-                </td>
-                <td class="td-right">
-                    Period :
-                </td>
-                <td>
-                    @Html.EditorFor(m => m.PeriodFrom, new { htmlAttributes = new { id = "PeriodFrom_" + @HomeReportConstantValue.TransListReport, @class = "input h-20 fs-11 form-control", @type = "date", disabled = "disabled" } })
-                </td>
-                <td class="td-right">
-                    To :
-                </td>
-                <td>
-                    @Html.EditorFor(m => m.PeriodTo, new { htmlAttributes = new { id = "PeriodTo_" + @HomeReportConstantValue.TransListReport, @class = "input h-20 fs-11 form-control", @type = "date", disabled = "disabled" } })
-                </td>
-                <td></td>
-            </tr>
-            <tr id="" class="rep_trans hidden">
-                <td class="td-center"></td>
-                <td class="td-center"></td>
-                <td class="td-right">
-                    Check No. :
-                </td>
-                <td>
-                    <input id="CheckNoFrom_@HomeReportConstantValue.TransListReport" class="number-inputNoDecimal input h-20 fs-11" type="text" disabled="disabled" />
-                </td>
-                <td class="td-right">
-                    To :
-                </td>
-                <td>
-                    <input id="CheckNoTo_@HomeReportConstantValue.TransListReport" class="number-inputNoDecimal input h-20 fs-11" type="text" disabled="disabled" />
-                </td>
-                <td></td>
-            </tr>
-            <tr id="" class="rep_trans hidden">
-                <td class="td-center"></td>
-                <td class="td-center"></td>
-                <td class="td-right">
-                    Voucher No. :
-                </td>
-                <td>
-                    <input id="VoucherNoFrom_@HomeReportConstantValue.TransListReport" class="number-inputNoDecimal input h-20 fs-11" type="text" disabled="disabled" />
-                </td>
-                <td class="td-right">
-                    To :
-                </td>
-                <td>
-                    <input id="VoucherNoTo_@HomeReportConstantValue.TransListReport" class="number-inputNoDecimal input h-20 fs-11" type="text" disabled="disabled" />
-                </td>
-                <td></td>
-            </tr>
-            <tr id="" class="rep_trans hidden">
-                <td class="td-center"></td>
-                <td class="td-center"></td>
-                <td class="td-right">
-                    Covered Trans No. :
-                </td>
-                <td>
-                    <input id="TransNoFrom_@HomeReportConstantValue.TransListReport" class="number-inputNoDecimal input h-20 fs-11" type="text" disabled="disabled" />
-                </td>
-                <td class="td-right">
-                    To :
-                </td>
-                <td>
-                    <input id="TransNoTo_@HomeReportConstantValue.TransListReport" class="number-inputNoDecimal input h-20 fs-11" type="text" disabled="disabled" />
-                </td>
-                <td></td>
-            </tr>
-            <tr id="" class="rep_trans hidden">
-                <td class="td-center"></td>
-                <td class="td-center"></td>
-                <td class="td-right">
-                    Remarks :
-                </td>
-                <td>
-                    <input id="SubjName_@HomeReportConstantValue.TransListReport" class="input h-20 fs-11" type="text" disabled="disabled" />
-                </td>
-                <td class="td-right"></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr id="" class="rep_acc_sum hidden">
-                <td class="td-center">
-                    <a href="#" class="deselectRadio"><img src="~/images/deselect.png" style="width:30%; vertical-align:middle" /></a>
-                </td>
-                <td class="td-center">
-                    @Html.RadioButton("radioTimePeriod", "1", false, new { id = "radioPeriodOption1_" + @HomeReportConstantValue.AccSummaryReport, @class = "radioPeriodOption_" + @HomeReportConstantValue.AccSummaryReport })
-                </td>
-                <td class="td-right">
-                    Year/Month :
-                </td>
-                <td>
-                    @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-40", id = "ddlYear_" + @HomeReportConstantValue.AccSummaryReport, disabled = "disabled" })
-                    @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-40", id = "ddlMonth_" + @HomeReportConstantValue.AccSummaryReport, disabled = "disabled" })
-                </td>
-                <td class="td-right">
-                    To :
-                </td>
-                <td>
-                    @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-40", id = "ddlYearTo_" + @HomeReportConstantValue.AccSummaryReport, disabled = "disabled" })
-                    @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-40", id = "ddlMonthTo_" + @HomeReportConstantValue.AccSummaryReport, disabled = "disabled" })
-                </td>
-                <td></td>
-            </tr>
-            <tr id="" class="rep_acc_sum hidden">
-                <td class="td-center"></td>
-                <td class="td-center">
-                    @Html.RadioButton("radioTimePeriod", "3", false, new { id = "radioPeriodOption3_" + @HomeReportConstantValue.AccSummaryReport, @class = "radioPeriodOption_" + @HomeReportConstantValue.AccSummaryReport })
-                </td>
-                <td class="td-right">
-                    Period :
-                </td>
-                <td>
-                    @Html.EditorFor(m => m.PeriodFrom, new { htmlAttributes = new { id = "PeriodFrom_" + @HomeReportConstantValue.AccSummaryReport, @class = "input h-20 fs-11 form-control", @type = "date", disabled = "disabled" } })
-                </td>
-                <td class="td-right">
-                    To :
-                </td>
-                <td>
-                    @Html.EditorFor(m => m.PeriodTo, new { htmlAttributes = new { id = "PeriodTo_" + @HomeReportConstantValue.AccSummaryReport, @class = "input h-20 fs-11 form-control", @type = "date", disabled = "disabled" } })
-                </td>
-                <td></td>
-            </tr>
-            <tr id="" class="rep_WTS hidden">
-                <td class="td-center"></td>
-                <td class="td-center">
-                    @Html.RadioButton("radioTimePeriod_" + @HomeReportConstantValue.WTS, "1", true, new { id = "radioPeriodOption1_" + @HomeReportConstantValue.WTS, @class = "radioPeriodOption_" + @HomeReportConstantValue.WTS })
-                </td>
-                <td class="td-right">
-                    Year/Month :
-                </td>
-                <td>
-                    @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-40", id = "ddlYear_" + @HomeReportConstantValue.WTS })
-                    @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-40", id = "ddlMonth_" + @HomeReportConstantValue.WTS })
-                </td>
-                <td class="td-right">
-                    To :
-                </td>
-                <td>
-                    @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-40", id = "ddlYearTo_" + @HomeReportConstantValue.WTS })
-                    @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-40", id = "ddlMonthTo_" + @HomeReportConstantValue.WTS })
-                </td>
-                <td></td>
-            </tr>
-            <tr id="" class="rep_WTS hidden">
-                <td class="td-center"></td>
-                <td class="td-center">
-                    @Html.RadioButton("radioTimePeriod_" + @HomeReportConstantValue.WTS, "3", false, new { id = "radioPeriodOption3_" + @HomeReportConstantValue.WTS, @class = "radioPeriodOption_" + @HomeReportConstantValue.WTS })
-                </td>
-                <td class="td-right">
-                    Period :
-                </td>
-                <td>
-                    @Html.EditorFor(m => m.PeriodFrom, new { htmlAttributes = new { id = "PeriodFrom_" + @HomeReportConstantValue.WTS, @class = "input h-20 fs-11 form-control", @type = "date", disabled = "disabled" } })
-                </td>
-                <td class="td-right">
-                    To :
-                </td>
-                <td>
-                    @Html.EditorFor(m => m.PeriodTo, new { htmlAttributes = new { id = "PeriodTo_" + @HomeReportConstantValue.WTS, @class = "input h-20 fs-11 form-control", @type = "date", disabled = "disabled" } })
-                </td>
-                <td></td>
-            </tr>
-            <tr id="" class="rep_WTS hidden">
-                <td class="td-center"></td>
-                <td class="td-center"></td>
-                <td class="td-right">
-                    Signatory :
-                </td>
-                <td>
-                    @Html.DropDownListFor(m => m.SignatoryList, new SelectList(Model.SignatoryList, "BCS_ID", "BCS_Name"), null, new { @class = "dis-inline-block", id = "ddlSignatory_" + @HomeReportConstantValue.WTS })
-                </td>
-                <td class="td-right"></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr id="" class="rep_paid_amort hidden">
-                <td class="td-center"></td>
-                <td class="td-center"></td>
-                <td class="td-right">Voucher No:</td>
-                <td>
-                    @Html.DropDownListFor(m => m.VoucherNo, new SelectList(Model.VoucherNoList, "vchr_ID", "vchr_No"), null, new { @class = "dis-inline-block w-49", id = "ddlVoucherNo_" + @HomeReportConstantValue.PrepaidAmortReport })
-                </td>
-                <td class="td-right"></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr id="" class="rep_loi hidden">
-                <td class="td-center"></td>
-                <td class="td-center"></td>
-                <td class="td-right">Voucher No : </td>
-                <td>
-                    <div>
-                        @if (Model.VoucherNoList.Count > 0)
-                        {
-                            foreach (var vchr in Model.VoucherNoList)
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(m => m.SignatoryList, new SelectList(Model.SignatoryList, "BCS_ID", "BCS_Name"), null, new { @class = "dis-inline-block", id = "ddlSignatory_" + @HomeReportConstantValue.APSWT_M })
+                    </td>
+                    <td class="td-right"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr id="" class="rep_alpha_10000 hidden">
+                    <td class="td-center"></td>
+                    <td class="td-center">
+                        @Html.RadioButton("radioTimePeriod_" + @HomeReportConstantValue.AST1000, "1", true, new { id = "radioPeriodOption1_" + @HomeReportConstantValue.AST1000, @class = "radioPeriodOption_" + @HomeReportConstantValue.AST1000 })
+                    </td>
+                    <td class="td-right">
+                        Year/Month :
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-49", id = "ddlYear_" + @HomeReportConstantValue.AST1000 })
+                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-49", id = "ddlMonth_" + @HomeReportConstantValue.AST1000 })
+                    </td>
+                    <td class="td-right">
+                        To :
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-49", id = "ddlYearTo_" + @HomeReportConstantValue.AST1000 })
+                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-49", id = "ddlMonthTo_" + @HomeReportConstantValue.AST1000 })
+                    </td>
+                    <td></td>
+                </tr>
+                <tr id="" class="rep_alpha_10000 hidden">
+                    <td class="td-center"></td>
+                    <td class="td-center">
+                        @Html.RadioButton("radioTimePeriod_" + @HomeReportConstantValue.AST1000, "3", false, new { id = "radioPeriodOption3_" + @HomeReportConstantValue.AST1000, @class = "radioPeriodOption_" + @HomeReportConstantValue.AST1000 })
+                    </td>
+                    <td class="td-right">
+                        Period :
+                    </td>
+                    <td>
+                        @Html.EditorFor(m => m.PeriodFrom, new { htmlAttributes = new { id = "PeriodFrom_" + @HomeReportConstantValue.AST1000, @class = "input h-20 fs-11 form-control dis-inline-block w-49", @type = "date", disabled = "disabled" } })
+                    </td>
+                    <td class="td-right">
+                        To :
+                    </td>
+                    <td>
+                        @Html.EditorFor(m => m.PeriodTo, new { htmlAttributes = new { id = "PeriodTo_" + @HomeReportConstantValue.AST1000, @class = "input h-20 fs-11 form-control dis-inline-block w-49", @type = "date", disabled = "disabled" } })
+                    </td>
+                    <td></td>
+                </tr>
+                <tr id="" class="rep_alpha_10000 hidden">
+                    <td class="td-center"></td>
+                    <td class="td-center"></td>
+                    <td class="td-right">
+                        Tax Rate :
+                    </td>
+                    <td>
+                        <div style="overflow-y:scroll;white-space:normal;height:22px" id="divChkTax">
+                            <label><input type="checkbox" id="chkAllTax" /> All:</label>
+                            @foreach (var i in Model.TaxRateList)
                             {
-                                <div class="dis-inline-block">
-                                    @Html.CheckBox("chkVoucherNo", false, new { @Value = vchr.vchr_ID, @class = "chkVoucherNo", id= "chkVoucherNo_" + @HomeReportConstantValue.LOI })<label>@vchr.vchr_No  - @vchr.vchr_EmployeeName</label>
-                                </div>
+                                <label>@Html.CheckBox("chkTaxRate_" + @HomeReportConstantValue.AST1000, false, new { @Value = i, @class = "chkTaxRate" })@((i * 100))%</label>
                             }
-                            @Html.HiddenFor(x => x.VoucherNoList)
-                        }
-                    </div>
-                </td>
-                <td class="td-right"></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr id="" class="rep_loi hidden">
-                <td class="td-center"></td>
-                <td class="td-center"></td>
-                <td class="td-right">
-                    Signatory 1:
-                </td>
-                <td>
-                    @Html.DropDownListFor(m => m.SignatoryID, new SelectList(Model.SignatoryList, "BCS_ID", "BCS_Name"), null, new { @class = "dis-inline-block", id = "ddlSignatory1_" + @HomeReportConstantValue.LOI })
-                </td>
-                <td class="td-right">
-                    Signatory 2:
-                </td>
-                <td>
-                    @Html.DropDownListFor(m => m.SignatoryIDVerifier, new SelectList(Model.SignatoryList, "BCS_ID", "BCS_Name"), null, new { @class = "dis-inline-block", id = "ddlSignatory2_" + @HomeReportConstantValue.LOI })
-                </td>
-                <td></td>
-            </tr>
-        </table>
+                        </div>
+                    </td>
+                    <td class="td-right"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr id="" class="rep_alpha_10000 hidden">
+                    <td class="td-center"></td>
+                    <td class="td-center"></td>
+                    <td class="td-right">
+                        Signatory :
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(m => m.SignatoryList, new SelectList(Model.SignatoryList, "BCS_ID", "BCS_Name"), null, new { @class = "dis-inline-block", id = "ddlSignatory_" + @HomeReportConstantValue.AST1000 })
+                    </td>
+                    <td class="td-right"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr id="" class="rep_actual hidden">
+                    <td class="td-center"></td>
+                    <td class="td-center"></td>
+                    <td class="td-right">
+                        Year/Month :
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-49", id = "ddlYear_" + @HomeReportConstantValue.ActualBudgetReport })
+                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-49", id = "ddlMonth_" + @HomeReportConstantValue.ActualBudgetReport })
+                    </td>
+                    <td class="td-right"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr id="" class="rep_BIRCSV hidden">
+                    <td class="td-center"></td>
+                    <td class="td-center"></td>
+                    <td class="td-right">
+                        Year/Month :
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-49", id = "ddlYear_" + @HomeReportConstantValue.BIRWTCSV })
+                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-49", id = "ddlMonth_" + @HomeReportConstantValue.BIRWTCSV })
+                    </td>
+                    <td class="td-right">
+                        To :
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-49", id = "ddlYearTo_" + @HomeReportConstantValue.BIRWTCSV })
+                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-49", id = "ddlMonthTo_" + @HomeReportConstantValue.BIRWTCSV })
+                    </td>
+                    <td></td>
+                </tr>
+                <tr id="" class="rep_trans hidden">
+                    <td class="td-center" style="width:5%">
+                        <a href="#" class="deselectRadio"><img src="~/images/deselect.png" style="width:30%; vertical-align:middle" /></a>
+                    </td>
+                    <td class="td-center">
+                        @Html.RadioButton("radioTimePeriod", "1", false, new { id = "radioPeriodOption1_" + @HomeReportConstantValue.TransListReport, @class = "radioPeriodOption_" + @HomeReportConstantValue.TransListReport })
+                    </td>
+                    <td class="td-right">
+                        Year/Month :
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-40", id = "ddlYear_" + @HomeReportConstantValue.TransListReport, disabled = "disabled" })
+                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-40", id = "ddlMonth_" + @HomeReportConstantValue.TransListReport, disabled = "disabled" })
+                    <td class="td-right">
+                        To :
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-40", id = "ddlYearTo_" + @HomeReportConstantValue.TransListReport, disabled = "disabled" })
+                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-40", id = "ddlMonthTo_" + @HomeReportConstantValue.TransListReport, disabled = "disabled" })
+                    </td>
+                    <td></td>
+                </tr>
+                <tr id="" class="rep_trans hidden">
+                    <td class="td-center"></td>
+                    <td class="td-center">
+                        @Html.RadioButton("radioTimePeriod", "3", false, new { id = "radioPeriodOption3_" + @HomeReportConstantValue.TransListReport, @class = "radioPeriodOption_" + @HomeReportConstantValue.TransListReport })
+                    </td>
+                    <td class="td-right">
+                        Period :
+                    </td>
+                    <td>
+                        @Html.EditorFor(m => m.PeriodFrom, new { htmlAttributes = new { id = "PeriodFrom_" + @HomeReportConstantValue.TransListReport, @class = "input h-20 fs-11 form-control", @type = "date", disabled = "disabled" } })
+                    </td>
+                    <td class="td-right">
+                        To :
+                    </td>
+                    <td>
+                        @Html.EditorFor(m => m.PeriodTo, new { htmlAttributes = new { id = "PeriodTo_" + @HomeReportConstantValue.TransListReport, @class = "input h-20 fs-11 form-control", @type = "date", disabled = "disabled" } })
+                    </td>
+                    <td></td>
+                </tr>
+                <tr id="" class="rep_trans hidden">
+                    <td class="td-center"></td>
+                    <td class="td-center"></td>
+                    <td class="td-right">
+                        Check No. :
+                    </td>
+                    <td>
+                        <input id="CheckNoFrom_@HomeReportConstantValue.TransListReport" class="number-inputNoDecimal input h-20 fs-11" type="text" disabled="disabled" />
+                    </td>
+                    <td class="td-right">
+                        To :
+                    </td>
+                    <td>
+                        <input id="CheckNoTo_@HomeReportConstantValue.TransListReport" class="number-inputNoDecimal input h-20 fs-11" type="text" disabled="disabled" />
+                    </td>
+                    <td></td>
+                </tr>
+                <tr id="" class="rep_trans hidden">
+                    <td class="td-center"></td>
+                    <td class="td-center"></td>
+                    <td class="td-right">
+                        Voucher No. :
+                    </td>
+                    <td>
+                        <input id="VoucherNoFrom_@HomeReportConstantValue.TransListReport" class="number-inputNoDecimal input h-20 fs-11" type="text" disabled="disabled" />
+                    </td>
+                    <td class="td-right">
+                        To :
+                    </td>
+                    <td>
+                        <input id="VoucherNoTo_@HomeReportConstantValue.TransListReport" class="number-inputNoDecimal input h-20 fs-11" type="text" disabled="disabled" />
+                    </td>
+                    <td></td>
+                </tr>
+                <tr id="" class="rep_trans hidden">
+                    <td class="td-center"></td>
+                    <td class="td-center"></td>
+                    <td class="td-right">
+                        Covered Trans No. :
+                    </td>
+                    <td>
+                        <input id="TransNoFrom_@HomeReportConstantValue.TransListReport" class="number-inputNoDecimal input h-20 fs-11" type="text" disabled="disabled" />
+                    </td>
+                    <td class="td-right">
+                        To :
+                    </td>
+                    <td>
+                        <input id="TransNoTo_@HomeReportConstantValue.TransListReport" class="number-inputNoDecimal input h-20 fs-11" type="text" disabled="disabled" />
+                    </td>
+                    <td></td>
+                </tr>
+                <tr id="" class="rep_trans hidden">
+                    <td class="td-center"></td>
+                    <td class="td-center"></td>
+                    <td class="td-right">
+                        Remarks :
+                    </td>
+                    <td>
+                        <input id="SubjName_@HomeReportConstantValue.TransListReport" class="input h-20 fs-11" type="text" disabled="disabled" />
+                    </td>
+                    <td class="td-right"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr id="" class="rep_acc_sum hidden">
+                    <td class="td-center">
+                        <a href="#" class="deselectRadio"><img src="~/images/deselect.png" style="width:30%; vertical-align:middle" /></a>
+                    </td>
+                    <td class="td-center">
+                        @Html.RadioButton("radioTimePeriod", "1", false, new { id = "radioPeriodOption1_" + @HomeReportConstantValue.AccSummaryReport, @class = "radioPeriodOption_" + @HomeReportConstantValue.AccSummaryReport })
+                    </td>
+                    <td class="td-right">
+                        Year/Month :
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-40", id = "ddlYear_" + @HomeReportConstantValue.AccSummaryReport, disabled = "disabled" })
+                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-40", id = "ddlMonth_" + @HomeReportConstantValue.AccSummaryReport, disabled = "disabled" })
+                    </td>
+                    <td class="td-right">
+                        To :
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-40", id = "ddlYearTo_" + @HomeReportConstantValue.AccSummaryReport, disabled = "disabled" })
+                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-40", id = "ddlMonthTo_" + @HomeReportConstantValue.AccSummaryReport, disabled = "disabled" })
+                    </td>
+                    <td></td>
+                </tr>
+                <tr id="" class="rep_acc_sum hidden">
+                    <td class="td-center"></td>
+                    <td class="td-center">
+                        @Html.RadioButton("radioTimePeriod", "3", false, new { id = "radioPeriodOption3_" + @HomeReportConstantValue.AccSummaryReport, @class = "radioPeriodOption_" + @HomeReportConstantValue.AccSummaryReport })
+                    </td>
+                    <td class="td-right">
+                        Period :
+                    </td>
+                    <td>
+                        @Html.EditorFor(m => m.PeriodFrom, new { htmlAttributes = new { id = "PeriodFrom_" + @HomeReportConstantValue.AccSummaryReport, @class = "input h-20 fs-11 form-control", @type = "date", disabled = "disabled" } })
+                    </td>
+                    <td class="td-right">
+                        To :
+                    </td>
+                    <td>
+                        @Html.EditorFor(m => m.PeriodTo, new { htmlAttributes = new { id = "PeriodTo_" + @HomeReportConstantValue.AccSummaryReport, @class = "input h-20 fs-11 form-control", @type = "date", disabled = "disabled" } })
+                    </td>
+                    <td></td>
+                </tr>
+                <tr id="" class="rep_WTS hidden">
+                    <td class="td-center"></td>
+                    <td class="td-center">
+                        @Html.RadioButton("radioTimePeriod_" + @HomeReportConstantValue.WTS, "1", true, new { id = "radioPeriodOption1_" + @HomeReportConstantValue.WTS, @class = "radioPeriodOption_" + @HomeReportConstantValue.WTS })
+                    </td>
+                    <td class="td-right">
+                        Year/Month :
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-40", id = "ddlYear_" + @HomeReportConstantValue.WTS })
+                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-40", id = "ddlMonth_" + @HomeReportConstantValue.WTS })
+                    </td>
+                    <td class="td-right">
+                        To :
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-40", id = "ddlYearTo_" + @HomeReportConstantValue.WTS })
+                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-40", id = "ddlMonthTo_" + @HomeReportConstantValue.WTS })
+                    </td>
+                    <td></td>
+                </tr>
+                <tr id="" class="rep_WTS hidden">
+                    <td class="td-center"></td>
+                    <td class="td-center">
+                        @Html.RadioButton("radioTimePeriod_" + @HomeReportConstantValue.WTS, "3", false, new { id = "radioPeriodOption3_" + @HomeReportConstantValue.WTS, @class = "radioPeriodOption_" + @HomeReportConstantValue.WTS })
+                    </td>
+                    <td class="td-right">
+                        Period :
+                    </td>
+                    <td>
+                        @Html.EditorFor(m => m.PeriodFrom, new { htmlAttributes = new { id = "PeriodFrom_" + @HomeReportConstantValue.WTS, @class = "input h-20 fs-11 form-control", @type = "date", disabled = "disabled" } })
+                    </td>
+                    <td class="td-right">
+                        To :
+                    </td>
+                    <td>
+                        @Html.EditorFor(m => m.PeriodTo, new { htmlAttributes = new { id = "PeriodTo_" + @HomeReportConstantValue.WTS, @class = "input h-20 fs-11 form-control", @type = "date", disabled = "disabled" } })
+                    </td>
+                    <td></td>
+                </tr>
+                <tr id="" class="rep_WTS hidden">
+                    <td class="td-center"></td>
+                    <td class="td-center"></td>
+                    <td class="td-right">
+                        Signatory :
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(m => m.SignatoryList, new SelectList(Model.SignatoryList, "BCS_ID", "BCS_Name"), null, new { @class = "dis-inline-block", id = "ddlSignatory_" + @HomeReportConstantValue.WTS })
+                    </td>
+                    <td class="td-right"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr id="" class="rep_paid_amort hidden">
+                    <td class="td-center"></td>
+                    <td class="td-center"></td>
+                    <td class="td-right">Voucher No:</td>
+                    <td>
+                        @Html.DropDownListFor(m => m.VoucherNo, new SelectList(Model.VoucherNoList, "vchr_ID", "vchr_No"), null, new { @class = "dis-inline-block w-49", id = "ddlVoucherNo_" + @HomeReportConstantValue.PrepaidAmortReport })
+                    </td>
+                    <td class="td-right"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr id="" class="rep_loi hidden">
+                    <td class="td-center"></td>
+                    <td class="td-center"></td>
+                    <td class="td-right">Voucher No : </td>
+                    <td>
+                        <div>
+                            @if (Model.VoucherNoList.Count > 0)
+                            {
+                                foreach (var vchr in Model.VoucherNoList)
+                                {
+                                    <div class="dis-inline-block">
+                                        @Html.CheckBox("chkVoucherNo", false, new { @Value = vchr.vchr_ID, @class = "chkVoucherNo", id = "chkVoucherNo_" + @HomeReportConstantValue.LOI })<label>@vchr.vchr_No  - @vchr.vchr_EmployeeName</label>
+                                    </div>
+                                }
+                                @Html.HiddenFor(x => x.VoucherNoList)
+                            }
+                        </div>
+                    </td>
+                    <td class="td-right"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr id="" class="rep_loi hidden">
+                    <td class="td-center"></td>
+                    <td class="td-center"></td>
+                    <td class="td-right">
+                        Signatory 1:
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(m => m.SignatoryID, new SelectList(Model.SignatoryList, "BCS_ID", "BCS_Name"), null, new { @class = "dis-inline-block", id = "ddlSignatory1_" + @HomeReportConstantValue.LOI })
+                    </td>
+                    <td class="td-right">
+                        Signatory 2:
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(m => m.SignatoryIDVerifier, new SelectList(Model.SignatoryList, "BCS_ID", "BCS_Name"), null, new { @class = "dis-inline-block", id = "ddlSignatory2_" + @HomeReportConstantValue.LOI })
+                    </td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+    }
+    @*validation message*@
+    <div id="ValidationSummary" style="display:none" class="">
+        @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
     </div>
-}
-@*validation message*@
-<div id="ValidationSummary" style="display:none" class="">
-    @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
-</div>
 
-<div id="" class="m-t-70">
-    <div style="float:left;">
-        <p>Preview Report: <text id="txtAsOfLabel"></text><text id="txtDatePreviewShow"></text></p>
+    <div id="" class="m-t-70">
+        <div style="float:left;">
+            <p>Preview Report: <text id="txtAsOfLabel"></text><text id="txtDatePreviewShow"></text></p>
+        </div>
+        <div style="float:right;">
+            <label>File Format: </label>
+            @Html.DropDownListFor(m => m.FileFormatList, new SelectList(Model.FileFormatList, "FileFormatID", "FileFormatName"), null, new { @class = "dis-inline-block", id = "ddlFileFormat", disabled = "disabled" })
+            <button class="btn" id="btnGenerateFile" disabled="disabled">Generate File</button>
+            <button class="btn m-r-10" id="btnGeneratePreview" disabled="disabled">Generate Preview</button>
+        </div>
     </div>
-    <div style="float:right;">
-        <label>File Format: </label>
-        @Html.DropDownListFor(m => m.FileFormatList, new SelectList(Model.FileFormatList, "FileFormatID", "FileFormatName"), null, new { @class = "dis-inline-block", id = "ddlFileFormat", disabled = "disabled" })
-        <button class="btn" id="btnGenerateFile" disabled="disabled">Generate File</button>
-        <button class="btn m-r-10" id="btnGeneratePreview" disabled="disabled">Generate Preview</button>
+    <div class="tabContent rep-tab-cont">
+        <div id="voucherPreview" style="min-height: 50vh; max-height: 100%;">
+            <iframe id="iframePreview" frameborder="0" src="" style="position: relative; min-height: 50vh; max-height: 100%; width: 100%;"></iframe>
+        </div>
     </div>
-</div>
-<div class="tabContent rep-tab-cont">
-    <div id="voucherPreview" style="min-height: 50vh; max-height: 100%;">
-        <iframe id="iframePreview" frameborder="0" src="" style="position: relative; min-height: 50vh; max-height: 100%; width: 100%;"></iframe>
-    </div>
-</div>
-
+    <div class="modal"></div>
+</body>
 @Html.AntiForgeryToken()
 @Html.Hidden("hiddenCurrentSemester", Model.CurrentSemester.ToString(), new { @id = "hiddenCurrentSemester" })
 
@@ -471,10 +472,10 @@
             var rep_trans = $(".rep_trans");
             var rep_acc_sum = $(".rep_acc_sum");
             var rep_BIR = $(".rep_BIR");
-            var rep_WTS = $(".rep_WTS"); 
-            var rep_paid_amort = $(".rep_paid_amort"); 
+            var rep_WTS = $(".rep_WTS");
+            var rep_paid_amort = $(".rep_paid_amort");
             var rep_loi = $(".rep_loi");
-            
+
             //signatory
             var sign = $("#rep_sign");
 
