@@ -91,6 +91,7 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         public int verifier_1_id { get; set; }
         public int verifier_2_id { get; set; }
         public int maker { get; set; }
+        public DateTime lastUpdatedDate { get; set; }
         public List<EntryDDVViewModel> EntryDDV { get; set; }
 
         public EntryDDVViewModelList()

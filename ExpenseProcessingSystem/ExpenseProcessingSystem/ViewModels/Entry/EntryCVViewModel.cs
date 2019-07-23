@@ -109,6 +109,7 @@ namespace ExpenseProcessingSystem.ViewModels
         public int verifier_1_id { get; set; }
         public int verifier_2_id { get; set; }
         public int maker { get; set; }
+        public DateTime lastUpdatedDate { get; set; }
         public DateTime createdDate { get; set; }
         public List<EntryCVViewModel> EntryCV { get; set; }
         public temp template { get; set; }

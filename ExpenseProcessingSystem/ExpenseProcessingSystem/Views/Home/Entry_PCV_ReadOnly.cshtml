@@ -180,7 +180,7 @@
                     }
                 </div>
                 <div>
-                    @if (Model.statusID == GlobalSystemValues.STATUS_POSTED)
+                    @if (Model.statusID == GlobalSystemValues.STATUS_POSTED && Model.lastUpdatedDate.Date < DateTime.Now.Date)
                     {
                         if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker
                             || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id

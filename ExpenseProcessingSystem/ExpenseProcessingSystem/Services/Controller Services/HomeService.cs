@@ -7005,6 +7005,7 @@ namespace ExpenseProcessingSystem.Services
                 verifier_1 = (EntryDetails.e.Expense_Status == 1) ? "" : getUserName(EntryDetails.e.Expense_Verifier_1),
                 verifier_2 = (EntryDetails.e.Expense_Status == 1) ? "" : getUserName(EntryDetails.e.Expense_Verifier_2),
                 maker = EntryDetails.e.Expense_Creator_ID,
+                lastUpdatedDate = EntryDetails.e.Expense_Last_Updated,
                 createdDate = EntryDetails.e.Expense_Created_Date,
                 expenseType = EntryDetails.e.Expense_Type,
                 EntryCV = cvList
@@ -7201,6 +7202,7 @@ namespace ExpenseProcessingSystem.Services
                 verifier_1_id = EntryDetails.e.Expense_Verifier_1,
                 verifier_2_id = EntryDetails.e.Expense_Verifier_2,
                 maker = EntryDetails.e.Expense_Creator_ID,
+                lastUpdatedDate = EntryDetails.e.Expense_Last_Updated,
                 vendor_Name = (EntryDetails.e.Expense_Payee == 0) ? "" : getVendorName(EntryDetails.e.Expense_Payee, EntryDetails.e.Expense_Payee_Type),
                 payee_type = EntryDetails.e.Expense_Payee_Type,
                 payee_type_Name = (EntryDetails.e.Expense_Payee_Type == 0) ? "" : getPayeeTypeName(EntryDetails.e.Expense_Payee_Type),
@@ -7310,6 +7312,7 @@ namespace ExpenseProcessingSystem.Services
                 verifier_1_id = EntryDetails.e.Expense_Verifier_1,
                 verifier_2_id = EntryDetails.e.Expense_Verifier_2,
                 maker = EntryDetails.e.Expense_Creator_ID,
+                lastUpdatedDate = EntryDetails.e.Expense_Last_Updated,
                 EntryNC = ncDtlVM
             };
 
