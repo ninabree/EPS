@@ -392,6 +392,10 @@ $(document).ready(function () {
             chkList.push($(this).val());
         });
 
+        var voucherList = [];
+        $.each($("input[id='chkVoucherNo_" + reportType + "']:checked"), function () {
+            voucherList.push($(this).val());
+        });
         $.ajax({
             type: 'POST',
             url: '/Home/HomeReportValidation',
@@ -431,6 +435,7 @@ $(document).ready(function () {
                         + "&PeriodFrom=" + $('#PeriodFrom_' + reportType).val()
                         + "&PeriodTo=" + $('#PeriodTo_' + reportType).val()
                         + "&TaxRateArray=" + chkList
+                        + "&VoucherArray=" + voucherList
                         + "&SignatoryID=" + $('#ddlSignatory_' + reportType).val()
                         + "&CheckNoFrom=" + $('#CheckNoFrom_' + reportType).val()
                         + "&CheckNoTo=" + $('#CheckNoTo_' + reportType).val()

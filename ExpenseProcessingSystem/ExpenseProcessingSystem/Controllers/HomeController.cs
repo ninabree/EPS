@@ -543,7 +543,7 @@ namespace ExpenseProcessingSystem.Controllers
                 PeriodFrom = Convert.ToDateTime(ConstantData.HomeReportConstantValue.DateToday),
                 PeriodTo = Convert.ToDateTime(ConstantData.HomeReportConstantValue.DateToday),
                 TaxRateList = _service.PopulateTaxRaxListIncludeHist(),
-                VoucherNoList = _service.PopulateVoucherNo(),
+                VoucherNoList = /*_service.PopulateVoucherNo()*/ _service.PopulateVoucherNoDDV(),
                 SignatoryList = _service.PopulateSignatoryList()
             };
 

@@ -6634,15 +6634,27 @@ namespace ExpenseProcessingSystem.Services
 
         public List<VoucherNoOptions> PopulateVoucherNo()
         {
-            //List<VoucherNoOptions> vnList = _context.ExpenseEntry
-            //                                .Where(x=> x.Expense_Payee_Type == GlobalSystemValues.PAYEETYPE_REGEMP)
-            //                                .Select(x => new VoucherNoOptions {
-            //                                    vchr_No = GlobalSystemValues.getApplicationCode(x.Expense_Type) + "-" + x.Expense_Date.Year + "-" + x.Expense_Number.ToString().PadLeft(5, '0'),
-            //                                    vchr_EmployeeName = getVendorName(x.Expense_Payee, x.Expense_Payee_Type)
-            //                                }).ToList();
             var vn = _context.ExpenseEntry
                 .Where(x => x.Expense_Payee_Type == GlobalSystemValues.PAYEETYPE_REGEMP
                         && x.Expense_Status != GlobalSystemValues.STATUS_PENDING)
+                .ToList().Distinct();
+            List<VoucherNoOptions> vnList = new List<VoucherNoOptions>();
+            foreach (var x in vn)
+            {
+                vnList.Add(new VoucherNoOptions
+                {
+                    vchr_ID = x.Expense_ID,
+                    vchr_No = GlobalSystemValues.getApplicationCode(x.Expense_Type) + "-" + x.Expense_Date.Year + "-" + x.Expense_Number.ToString().PadLeft(5, '0'),
+                    vchr_EmployeeName = getVendorName(x.Expense_Payee, x.Expense_Payee_Type)
+                });
+            }
+            return vnList;
+        }
+        public List<VoucherNoOptions> PopulateVoucherNoDDV()
+        {
+            var vn = _context.ExpenseEntry
+                .Where(x => x.Expense_Payee_Type == GlobalSystemValues.PAYEETYPE_REGEMP
+                        && x.Expense_Status == GlobalSystemValues.STATUS_PRINT_LOI)
                 .ToList().Distinct();
             List<VoucherNoOptions> vnList = new List<VoucherNoOptions>();
             foreach (var x in vn)
