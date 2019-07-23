@@ -86,6 +86,7 @@ namespace ExpenseProcessingSystem.Data
         //GOExpress table history
         public DbSet<GOExpressHistModel> GOExpressHist { get; set; }
 
-
+        //REVERSAL ENTRY HISTORY TABLE
+        public DbSet<ReversalEntryModel> ReversalEntry { get; set; }
     }
 }
