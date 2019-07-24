@@ -581,11 +581,12 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     count++;
                 };
 
+                colpnt2 = (colpnt2 > 29) ? colpnt2 : 30;
                 worksheet.Cells["J" + colpnt2 + ":L" + colpnt2].Merge = true;
                 worksheet.Cells["J" + colpnt2 + ":L" + colpnt2].Style.Border.Bottom.Style = ExcelBorderStyle.Double;
                 worksheet.Cells["J" + colpnt2 + ":L" + colpnt2].Value = data.ReportLOI.Rep_Amount;
 
-                colpnt2 = (colpnt2 > 30) ? colpnt2 + 2 : 33;
+                colpnt2 += 2;
                 worksheet.Cells["A" + colpnt2 + ":L" + colpnt2].Merge = true;
                 worksheet.Cells["A" + colpnt2 + ":L" + colpnt2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                 worksheet.Cells["A" + colpnt2 + ":L" + colpnt2].Value = data.ReportLOI.Rep_String1;
@@ -601,6 +602,24 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 worksheet.Cells["A" + colpnt2 + ":L" + colpnt2].Merge = true;
                 worksheet.Cells["A" + colpnt2 + ":L" + colpnt2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                 worksheet.Cells["A" + colpnt2].Value = data.ReportLOI.Rep_String4;
+                colpnt2 += 2;
+                worksheet.Cells["A" + colpnt2 + ":L" + colpnt2].Merge = true;
+                worksheet.Cells["A" + colpnt2 + ":L" + colpnt2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                worksheet.Cells["A" + colpnt2 + ":C" + colpnt2].Style.Border.Bottom.Style = ExcelBorderStyle.Medium;
+                colpnt2 += 1;
+                worksheet.Cells["A" + colpnt2 + ":L" + colpnt2].Merge = true;
+                worksheet.Cells["A" + colpnt2 + ":L" + colpnt2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                worksheet.Cells["A" + colpnt2 + ":L" + colpnt2].Style.Font.Bold = true;
+                worksheet.Cells["A" + colpnt2].Value = data.ReportLOI.Rep_Approver_Name;
+                colpnt2 += 3;
+                worksheet.Cells["A" + colpnt2 + ":L" + colpnt2].Merge = true;
+                worksheet.Cells["A" + colpnt2 + ":L" + colpnt2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                worksheet.Cells["A" + colpnt2 + ":C" + colpnt2].Style.Border.Bottom.Style = ExcelBorderStyle.Medium;
+                colpnt2 += 1;
+                worksheet.Cells["A" + colpnt2 + ":L" + colpnt2].Merge = true;
+                worksheet.Cells["A" + colpnt2 + ":L" + colpnt2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                worksheet.Cells["A" + colpnt2 + ":L" + colpnt2].Style.Font.Bold = true;
+                worksheet.Cells["A" + colpnt2].Value = data.ReportLOI.Rep_Verifier1_Name;
 
                 package.Save();
             }

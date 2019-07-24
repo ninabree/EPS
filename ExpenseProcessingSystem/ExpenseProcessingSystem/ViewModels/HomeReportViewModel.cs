@@ -37,6 +37,8 @@ namespace ExpenseProcessingSystem.ViewModels
 
         public List<VoucherNoOptions> VoucherNoList { get; set; }
 
+        public List<VoucherNoOptions> VoucherNoListPrepaidAmort { get; set; }
+
         public IEnumerable<DMBIRCertSignModel> SignatoryList { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
@@ -109,5 +111,6 @@ namespace ExpenseProcessingSystem.ViewModels
         public int vchr_ID { get; set; }
         public string vchr_No { get; set; }
         public string vchr_EmployeeName { get; set; }
+        public string vchr_Status { get; set; }
     }
 }

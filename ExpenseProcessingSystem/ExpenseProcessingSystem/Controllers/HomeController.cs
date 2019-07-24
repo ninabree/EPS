@@ -544,6 +544,7 @@ namespace ExpenseProcessingSystem.Controllers
                 PeriodTo = Convert.ToDateTime(ConstantData.HomeReportConstantValue.DateToday),
                 TaxRateList = _service.PopulateTaxRaxListIncludeHist(),
                 VoucherNoList = /*_service.PopulateVoucherNo()*/ _service.PopulateVoucherNoDDV(),
+                VoucherNoListPrepaidAmort = _service.PopulateVoucherNoDDV(),
                 SignatoryList = _service.PopulateSignatoryList()
             };
 
@@ -840,12 +841,27 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 ExcelGenerateService excelGenerate = new ExcelGenerateService();
                 fileName = fileName + ".xlsx";
-
+                //TEMP
+                if(model.ReportType == HomeReportConstantValue.LOI)
+                {
+                    foreach (var accs in data.ReportLOI.Rep_LOIEntryIDList)
+                    {
+                        _service.updateExpenseStatus(accs, GlobalSystemValues.STATUS_POSTED, int.Parse(GetUserID()));
+                    }
+                }
                 //Return Excel file
                 return File(excelGenerate.ExcelGenerateData(layoutName, fileName, data), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
             }
             else if (model.FileFormat == HomeReportConstantValue.PDFID)
             {
+                //TEMP
+                if (model.ReportType == HomeReportConstantValue.LOI)
+                {
+                    foreach (var accs in data.ReportLOI.Rep_LOIEntryIDList)
+                    {
+                        _service.updateExpenseStatus(accs, GlobalSystemValues.STATUS_POSTED, int.Parse(GetUserID()));
+                    }
+                }
                 //Return PDF file
                 return OutputPDF(ConstantData.HomeReportConstantValue.ReportPdfPrevLayoutPath, layoutName, data, fileName, pdfFooterFormat);
             }
