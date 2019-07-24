@@ -13,10 +13,22 @@
         <table class="table table-bordered editable-th">
             <tr>
                 <th>Employee Name</th>
+                <th colspan="2">Employee Category</th>
+                <th colspan="2">Employee FBT</th>
                 <th></th>
             </tr>
             <tr id="NewEmp-Tr-0">
                 <td>@Html.TextBoxFor(m => m.NewEmpVM[0].Emp_Name, new { @class = "w-full" })</td>
+                <td colspan="2">
+                    @Html.DropDownListFor(m => m.NewEmpVM[0].Emp_Category_ID,
+                    Model.CatList,
+                    new { @class = "w-full input" })
+                </td>
+                <td colspan="2">
+                    @Html.DropDownListFor(m => m.NewEmpVM[0].Emp_FBT_MasterID,
+                    Model.FbtList,
+                    new { @class = "w-full input" })
+                </td>
                 <td>
                     <span class="table-remove glyphicon glyphicon-remove"></span>
                 </td>

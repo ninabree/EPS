@@ -503,6 +503,8 @@ namespace ExpenseProcessingSystem.Controllers
             ViewData["CurrentSort"] = sortOrder;
             ViewData["RegEmpStatusSortParm"] = String.IsNullOrEmpty(sortOrder) ? "regemp_stat" : "";
             ViewData["RegEmpCodeSortParm"] = sortOrder == "regemp_no_desc" ? "regemp_no" : "regemp_no_desc";
+            ViewData["RegEmpCatSortParm"] = sortOrder == "regemp_cat_desc" ? "regemp_cat" : "regemp_cat_desc";
+            ViewData["RegEmpFbtSortParm"] = sortOrder == "regemp_fbt_desc" ? "regemp_fbt" : "regemp_fbt_desc";
             ViewData["RegEmpCreatorSortParm"] = sortOrder == "regemp_creatr_desc" ? "regemp_creatr" : "regemp_creatr_desc";
             ViewData["RegEmpApproverSortParm"] = sortOrder == "regemp_approvr_desc" ? "regemp_approvr" : "regemp_approvr_desc";
             ViewData["RegEmpLastUpdatedSortParm"] = sortOrder == "regemp_last_updte_desc" ? "regemp_last_updte" : "regemp_last_updte_desc";
@@ -545,6 +547,8 @@ namespace ExpenseProcessingSystem.Controllers
             //set sort vals
             ViewData["CurrentSort"] = sortOrder;
             ViewData["TempEmpStatusSortParm"] = String.IsNullOrEmpty(sortOrder) ? "tempemp_stat" : "";
+            ViewData["TempEmpCatSortParm"] = sortOrder == "tempemp_cat_desc" ? "tempemp_cat" : "tempemp_cat_desc";
+            ViewData["TempEmpFbtSortParm"] = sortOrder == "tempemp_fbt_desc" ? "tempemp_fbt" : "tempemp_fbt_desc";
             ViewData["TempEmpCreatorSortParm"] = sortOrder == "tempemp_creatr_desc" ? "tempemp_creatr" : "tempemp_creatr_desc";
             ViewData["TempEmpApproverSortParm"] = sortOrder == "tempemp_approvr_desc" ? "tempemp_approvr" : "tempemp_approvr_desc";
             ViewData["TempEmpLastUpdatedSortParm"] = sortOrder == "tempemp_last_updte_desc" ? "tempemp_last_updte" : "tempemp_last_updte_desc";

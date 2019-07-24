@@ -470,51 +470,30 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 //Content
                 foreach (var i in data.HomeReportOutputWTS)
                 {
+                    worksheet.Cells["A" + lastRow].Value = i.Trans_Voucher_Number;
+                    worksheet.Cells["B" + lastRow].Value = i.Trans_Check_Number;
+                    worksheet.Cells["C" + lastRow].Value = i.Trans_Value_Date;
+                    worksheet.Cells["D" + lastRow].Value = i.Trans_Reference_No;
+                    worksheet.Cells["E" + lastRow].Value = i.Trans_Section;
+                    worksheet.Cells["F" + lastRow].Value = i.Trans_Remarks;
+                    worksheet.Cells["G" + lastRow].Value = i.Trans_DebitCredit;
+                    worksheet.Cells["H" + lastRow].Value = i.Trans_Currency;
+                    worksheet.Cells["I" + lastRow].Value = i.Trans_Amount;
+                    worksheet.Cells["J" + lastRow].Value = i.Trans_Customer;
+                    worksheet.Cells["K" + lastRow].Value = i.Trans_Account_Code;
+                    worksheet.Cells["L" + lastRow].Value = i.Trans_Account_Number;
+                    worksheet.Cells["M" + lastRow].Value = i.Trans_Account_Name;
+                    worksheet.Cells["N" + lastRow].Value = i.Trans_Exchange_Rate;
+                    worksheet.Cells["O" + lastRow].Value = i.Trans_Contra_Currency;
+                    worksheet.Cells["P" + lastRow].Value = i.Trans_Fund;
+                    worksheet.Cells["Q" + lastRow].Value = i.Trans_Advice_Print;
+                    worksheet.Cells["R" + lastRow].Value = i.Trans_Details;
+                    worksheet.Cells["S" + lastRow].Value = i.Trans_Entity;
+                    worksheet.Cells["T" + lastRow].Value = i.Trans_Division;
+                    worksheet.Cells["U" + lastRow].Value = i.Trans_InterAmount;
+                    worksheet.Cells["V" + lastRow].Value = i.Trans_InterRate;
+
                     lastRow += 1;
-                    worksheet.Cells["A" + lastRow].Value = i.WTS_Voucher_No;
-                    worksheet.Cells["A" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
-                    worksheet.Cells["B" + lastRow].Value = i.WTS_Check_No;
-                    worksheet.Cells["B" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
-                    worksheet.Cells["C" + lastRow].Value = i.WTS_Val_Date;
-                    worksheet.Cells["C" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
-                    worksheet.Cells["D" + lastRow].Value = i.WTS_Ref_No;
-                    worksheet.Cells["D" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
-                    worksheet.Cells["E" + lastRow].Value = i.WTS_Section;
-                    worksheet.Cells["E" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
-                    worksheet.Cells["F" + lastRow].Value = i.WTS_Remarks;
-                    worksheet.Cells["F" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
-                    worksheet.Cells["G" + lastRow].Value = i.WTS_Deb_Cred;
-                    worksheet.Cells["G" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
-                    worksheet.Cells["H" + lastRow].Value = i.WTS_Currency_Name;
-                    worksheet.Cells["H" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
-                    worksheet.Cells["I" + lastRow].Value = i.WTS_Amount;
-                    worksheet.Cells["I" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
-                    worksheet.Cells["J" + lastRow].Value = i.WTS_Cust;
-                    worksheet.Cells["J" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
-                    worksheet.Cells["K" + lastRow].Value = i.WTS_Acc_Code;
-                    worksheet.Cells["K" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
-                    worksheet.Cells["L" + lastRow].Value = i.WTS_Acc_No;
-                    worksheet.Cells["L" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
-                    worksheet.Cells["M" + lastRow].Value = i.WTS_Acc_Name;
-                    worksheet.Cells["M" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
-                    worksheet.Cells["N" + lastRow].Value = i.WTS_Exchange_Rate;
-                    worksheet.Cells["N" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
-                    worksheet.Cells["O" + lastRow].Value = i.WTS_Contra_Currency_Name;
-                    worksheet.Cells["O" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
-                    worksheet.Cells["P" + lastRow].Value = i.WTS_Fund;
-                    worksheet.Cells["P" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
-                    worksheet.Cells["Q" + lastRow].Value = i.WTS_Advice_Print;
-                    worksheet.Cells["Q" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
-                    worksheet.Cells["R" + lastRow].Value = i.WTS_Details;
-                    worksheet.Cells["R" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
-                    worksheet.Cells["S" + lastRow].Value = i.WTS_Entity;
-                    worksheet.Cells["S" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
-                    worksheet.Cells["T" + lastRow].Value = i.WTS_Division;
-                    worksheet.Cells["T" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
-                    worksheet.Cells["U" + lastRow].Value = i.WTS_Inter_Amount;
-                    worksheet.Cells["U" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
-                    worksheet.Cells["V" + lastRow].Value = i.WTS_Inter_Rate;
-                    worksheet.Cells["V" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                 }
                 dataEndRow = lastRow;
 

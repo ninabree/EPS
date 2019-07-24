@@ -101,10 +101,15 @@ namespace ExpenseProcessingSystem.ViewModels
         public string checkNo { get; set; }
         public int statusID { get; set; }
         public string status { get; set; }
+        public int expenseType { get; set; }
         public string approver { get; set; }
         public string verifier_1 { get; set; }
         public string verifier_2 { get; set; }
+        public int approver_id { get; set; }
+        public int verifier_1_id { get; set; }
+        public int verifier_2_id { get; set; }
         public int maker { get; set; }
+        public DateTime lastUpdatedDate { get; set; }
         public DateTime createdDate { get; set; }
         public List<EntryCVViewModel> EntryCV { get; set; }
         public temp template { get; set; }

@@ -12,6 +12,8 @@
                 <tr>
                     <th>Employee Name</th>
                     <th>Employee Account No</th>
+                    <th colspan="2">Employee Category</th>
+                    <th colspan="2">Employee FBT</th>
                     <th>Status</th>
                 </tr>
                 @if (Model != null)
@@ -21,6 +23,36 @@
                         <tr>
                             <td>@Html.TextBoxFor(item => item[i].Emp_Name, new { @class = "w-full" })</td>
                             <td>@Html.TextBoxFor(item => item[i].Emp_Acc_No, new { @class = "w-full" })</td>
+                        <td colspan="2">
+                            @{
+                                List<SelectListItem> empCat = new List<SelectListItem>();
+                                empCat.Add(new SelectListItem
+                                {
+                                    Text = "--" + Model[i].Emp_Category_Name + "--",
+                                    Value = Model[i].Emp_Category_ID + "",
+                                    Selected = true
+                                });
+                                empCat = (List<SelectListItem>)@ViewBag.catList;
+                            }
+                            @Html.DropDownListFor(item => item[i].Emp_Category_ID,
+                                                empCat,
+                                                new { @class = "w-full input" })
+                        </td>
+                        <td colspan="2">
+                            @{
+                                List<SelectListItem> fbtList = new List<SelectListItem>();
+                                fbtList.Add(new SelectListItem
+                                {
+                                    Text = "--" + Model[i].Emp_FBT_Name + "--",
+                                    Value = Model[i].Emp_FBT_MasterID + "",
+                                    Selected = true
+                                });
+                                fbtList = (List<SelectListItem>)@ViewBag.fbtList;
+                            }
+                            @Html.DropDownListFor(item => item[i].Emp_FBT_MasterID,
+                                                fbtList,
+                                                new { @class = "w-full input" })
+                        </td>
                             <td>@Html.TextBoxFor(item => item[i].Emp_Status, new { @class = "w-full", @readonly = "readonly" })</td>
                             @Html.HiddenFor(item => item[i].Emp_MasterID)
                         </tr>

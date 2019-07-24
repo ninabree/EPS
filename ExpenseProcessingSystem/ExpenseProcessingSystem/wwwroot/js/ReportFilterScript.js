@@ -1,4 +1,5 @@
 ﻿$(document).ready(function () {
+
     var reportType = $('#ddlReportType').val();
     // set fields
     var radioPeriod1 = $('#radioPeriodOption1_' + reportType);
@@ -238,7 +239,19 @@
         ddlYearTo.val(dt.getFullYear());
     };
 
-    radioPeriodOption.change(function () {
+    $('.radioPeriodOption_3').change(function () {
+        radioAction();
+    });
+    $('.radioPeriodOption_7').change(function () {
+        radioAction();
+    });
+    $('.radioPeriodOption_8').change(function () {
+        radioAction();
+    });
+    $('.radioPeriodOption_10').change(function () {
+        radioAction();
+    });
+    function radioAction() {
         UpdateFileds();
         //Default fields filter
         ddlMonth.attr("disabled", "disabled");
@@ -248,7 +261,7 @@
         dtPeriodFrom.attr("disabled", "disabled");
         dtPeriodTo.attr("disabled", "disabled");
 
-        switch ($(this).val()) {
+        switch ($('.radioPeriodOption_' + $('#ddlReportType').val() + ':checked').val()) {
             case "1":
                 ddlYear.removeAttr("disabled");
                 ddlMonth.removeAttr("disabled");
@@ -260,7 +273,7 @@
                 dtPeriodTo.removeAttr("disabled");
                 break;
         }
-    });
+    }
 
     $('#chkAllTax').change(function () {
         if ($('#chkAllTax').prop("checked")) {
@@ -295,12 +308,16 @@
 
     });
 });
+
 $(document).ready(function () {
+    function ajaxStart() { $('body').addClass("loading"); }
+    function ajaxStop() { $('body').removeClass("loading"); } 
     $("#btnGenerateFile").click(function (e) {
         e.preventDefault();
+        ajaxStart();
         var reportType = $('#ddlReportType').val();
         var chkList = [];
-        $.each($("input[name='chkTaxRate']:checked"), function () {
+        $.each($("input[name='chkTaxRate_" + reportType + "']:checked"), function () {
             chkList.push($(this).val());
         });
         var voucherList = [];
@@ -357,21 +374,28 @@ $(document).ready(function () {
                         + "&TransNoTo=" + $('#TransNoTo_' + reportType).val()
                         + "&SubjName=" + $('#SubjName_' + reportType).val();
                 }
+                ajaxStop();
             }, 
             error: function (result) {
                 alert('Error');
+                ajaxStop();
             }
         });
     });
     $("#btnGeneratePreview").click(function (e) {
         e.preventDefault();
+        ajaxStart();
 
         var reportType = $('#ddlReportType').val();
         var chkList = [];
-        $.each($("input[name='chkTaxRate']:checked"), function () {
+        $.each($("input[name='chkTaxRate_" + reportType + "']:checked"), function () {
             chkList.push($(this).val());
         });
 
+        var voucherList = [];
+        $.each($("input[id='chkVoucherNo_" + reportType + "']:checked"), function () {
+            voucherList.push($(this).val());
+        });
         $.ajax({
             type: 'POST',
             url: '/Home/HomeReportValidation',
@@ -411,6 +435,7 @@ $(document).ready(function () {
                         + "&PeriodFrom=" + $('#PeriodFrom_' + reportType).val()
                         + "&PeriodTo=" + $('#PeriodTo_' + reportType).val()
                         + "&TaxRateArray=" + chkList
+                        + "&VoucherArray=" + voucherList
                         + "&SignatoryID=" + $('#ddlSignatory_' + reportType).val()
                         + "&CheckNoFrom=" + $('#CheckNoFrom_' + reportType).val()
                         + "&CheckNoTo=" + $('#CheckNoTo_' + reportType).val()
@@ -426,9 +451,11 @@ $(document).ready(function () {
                     $('#txtAsOfLabel').text("As of ");
                     $('#txtDatePreviewShow').text(date_time);
                 }
+                ajaxStop();
             },
             error: function (result) {
                 alert('Error');
+                ajaxStop();
             }
         });
     });

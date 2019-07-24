@@ -96,31 +96,31 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.HomeReportOutputWTS)
+        @foreach (var i in Model.HomeReportOutputWTS)
         {
             <tr class="tr-PDF">
-                <td style="text-align:center" class="td-PDF">@item.WTS_Voucher_No</td>
-                <td style="text-align:left" class="td-PDF">@item.WTS_Check_No</td>
-                <td style="text-align:center" class="td-PDF">@item.WTS_Val_Date</td>
-                <td style="text-align:center" class="td-PDF">@item.WTS_Ref_No</td>
-                <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => item.WTS_Section)</td>
-                <td style="text-align:center" class="td-PDF">@Html.DisplayFor(model => item.WTS_Remarks)</td>
-                <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => item.WTS_Deb_Cred)</td>
-                <td style="text-align:center" class="td-PDF">@item.WTS_Currency_Name</td>
-                <td style="text-align:left" class="td-PDF">@item.WTS_Amount</td>
-                <td style="text-align:center" class="td-PDF">@item.WTS_Cust</td>
-                <td style="text-align:center" class="td-PDF">@item.WTS_Acc_Code</td>
-                <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => item.WTS_Acc_No)</td>
-                <td style="text-align:center" class="td-PDF">@Html.DisplayFor(model => item.WTS_Acc_Name)</td>
-                <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => item.WTS_Exchange_Rate)</td>
-                <td style="text-align:center" class="td-PDF">@item.WTS_Contra_Currency_Name</td>
-                <td style="text-align:left" class="td-PDF">@item.WTS_Fund</td>
-                <td style="text-align:center" class="td-PDF">@item.WTS_Advice_Print</td>
-                <td style="text-align:center" class="td-PDF">@item.WTS_Details</td>
-                <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => item.WTS_Entity)</td>
-                <td style="text-align:center" class="td-PDF">@Html.DisplayFor(model => item.WTS_Division)</td>
-                <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => item.WTS_Inter_Amount)</td>
-                <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => item.WTS_Inter_Rate)</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Voucher_Number</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Check_Number</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Value_Date</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Reference_No</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Section</td>
+                <td style="text-align:left" class="td-PDF">@i.Trans_Remarks</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_DebitCredit</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Currency</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_Amount</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Customer</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Account_Code</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Account_Number</td>
+                <td style="text-align:left" class="td-PDF">@i.Trans_Account_Name</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_Exchange_Rate</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Contra_Currency</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Fund</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Advice_Print</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Details</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Entity</td>
+                <td style="text-align:center" class="td-PDF">@i.Trans_Division</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_InterAmount</td>
+                <td style="text-align:right" class="td-PDF">@i.Trans_InterRate</td>
             </tr>
         }
     </tbody>

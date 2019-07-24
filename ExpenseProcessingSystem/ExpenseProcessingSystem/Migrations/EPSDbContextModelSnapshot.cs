@@ -15,7 +15,7 @@ namespace ExpenseProcessingSystem.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.0-rtm-35687")
+                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -921,6 +921,10 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("ExpNCDtl_Remarks_Period");
 
+                    b.Property<int>("ExpNCDtl_TR_ID");
+
+                    b.Property<int>("ExpNCDtl_Vendor_ID");
+
                     b.Property<int?>("ExpenseEntryNCModelExpNC_ID");
 
                     b.HasKey("ExpNCDtl_ID");
@@ -1508,6 +1512,8 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<double>("Liq_TaxRate");
 
+                    b.Property<double>("Liq_VendorID");
+
                     b.HasKey("id");
 
                     b.HasIndex("ExpenseEntryDetailModelExpDtl_ID");
@@ -1841,6 +1847,66 @@ namespace ExpenseProcessingSystem.Migrations
                     b.HasKey("PC_ID");
 
                     b.ToTable("PettyCash");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.PrintStatusModel", b =>
+                {
+                    b.Property<int>("PS_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("PS_BIR2307");
+
+                    b.Property<bool>("PS_CDD");
+
+                    b.Property<bool>("PS_Check");
+
+                    b.Property<int>("PS_EntryDtlID");
+
+                    b.Property<int>("PS_EntryID");
+
+                    b.Property<bool>("PS_LOI");
+
+                    b.Property<int>("PS_Type");
+
+                    b.Property<bool>("PS_Voucher");
+
+                    b.HasKey("PS_ID");
+
+                    b.ToTable("PrintStatus");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.ReversalEntryModel", b =>
+                {
+                    b.Property<int>("Reversal_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Reversal_ExpenseDtlID");
+
+                    b.Property<int>("Reversal_ExpenseEntryID");
+
+                    b.Property<int>("Reversal_ExpenseType");
+
+                    b.Property<int>("Reversal_GOExpressHistID");
+
+                    b.Property<int>("Reversal_GOExpressID");
+
+                    b.Property<int>("Reversal_LiqDtlID");
+
+                    b.Property<int>("Reversal_LiqInterEntityID");
+
+                    b.Property<int>("Reversal_NonCashDtlID");
+
+                    b.Property<DateTime>("Reversal_ReversedDate");
+
+                    b.Property<int>("Reversal_ReversedUserID");
+
+                    b.Property<int>("Reversal_TransNo");
+
+                    b.HasKey("Reversal_ID");
+
+                    b.ToTable("ReversalEntry");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.StatusListModel", b =>

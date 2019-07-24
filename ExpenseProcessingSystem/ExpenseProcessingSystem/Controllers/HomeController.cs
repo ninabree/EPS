@@ -472,7 +472,9 @@ namespace ExpenseProcessingSystem.Controllers
                     //Employee
                     _session.SetString("EMF_Name", vm.DMFilters.EMF.EMF_Name ?? "");
                     _session.SetString("EMF_Acc_No", vm.DMFilters.EMF.EMF_Acc_No ?? "");
-                    _session.SetString("EMF_Type", vm.DMFilters.EMF.EMF_Type ?? "");
+                    _session.SetString("EMF_Name", vm.DMFilters.EMF.EMF_Name ?? "");
+                    _session.SetString("EMF_Category_Name", vm.DMFilters.EMF.EMF_Category_Name ?? "");
+                    _session.SetString("EMF_FBT_Name", vm.DMFilters.EMF.EMF_FBT_Name ?? "");
                     _session.SetString("EMF_Creator_Name", vm.DMFilters.EMF.EMF_Creator_Name ?? "");
                     _session.SetString("EMF_Approver_Name", vm.DMFilters.EMF.EMF_Approver_Name ?? "");
                     _session.SetString("EMF_Status", vm.DMFilters.EMF.EMF_Status ?? "");
@@ -541,7 +543,7 @@ namespace ExpenseProcessingSystem.Controllers
                 PeriodFrom = Convert.ToDateTime(ConstantData.HomeReportConstantValue.DateToday),
                 PeriodTo = Convert.ToDateTime(ConstantData.HomeReportConstantValue.DateToday),
                 TaxRateList = _service.PopulateTaxRaxListIncludeHist(),
-                VoucherNoList = _service.PopulateVoucherNo(),
+                VoucherNoList = /*_service.PopulateVoucherNo()*/ _service.PopulateVoucherNoDDV(),
                 SignatoryList = _service.PopulateSignatoryList()
             };
 
@@ -570,7 +572,7 @@ namespace ExpenseProcessingSystem.Controllers
                     subtypes.Add(new HomeReportSubTypeAccModel
                     {
                         Id = i.Account_ID.ToString(),
-                        SubTypeName = i.Account_No + " - " + i.Account_Name
+                        SubTypeName = i.Account_Name
                     });
                 }
                 return Json(subtypes);
@@ -593,6 +595,19 @@ namespace ExpenseProcessingSystem.Controllers
                             SubTypeName = acc.Account_No + " - " + acc.Account_Name
                         });
                     }
+                }
+                return Json(subtypes);
+            }
+            if(ReportTypeID == HomeReportConstantValue.WTS)
+            {
+                var taxList = _service.getAllTaxRateList();
+                foreach (var i in taxList)
+                {
+                    subtypes.Add(new HomeReportSubTypeAccModel
+                    {
+                        Id = i.TR_MasterID.ToString(),
+                        SubTypeName = (i.TR_Tax_Rate * 100) + "% " + i.TR_WT_Title
+                    });
                 }
                 return Json(subtypes);
             }
@@ -771,8 +786,7 @@ namespace ExpenseProcessingSystem.Controllers
                         case 1:
                             data = new HomeReportDataFilterViewModel
                             {
-                                HomeReportOutputWTS = ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Month(model.Year, model.Month,
-                                    ConstantData.TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType),
+                                HomeReportOutputWTS = _service.GetWithHoldingSummaryData(model),
                                 HomeReportFilter = model,
                                 ReportCommonVM = repComVM
                             };
@@ -784,8 +798,7 @@ namespace ExpenseProcessingSystem.Controllers
                         case 3:
                             data = new HomeReportDataFilterViewModel
                             {
-                                HomeReportOutputWTS = TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData_Period(model.PeriodFrom, model.PeriodTo,
-                                    TEMP_HomeReportWTSDummyData.GetTEMP_HomeReportWTSOutputModelData(), model.ReportSubType),
+                                HomeReportOutputWTS = _service.GetWithHoldingSummaryData(model),
                                 HomeReportFilter = model,
                                 ReportCommonVM = repComVM
                             };
@@ -1248,7 +1261,7 @@ namespace ExpenseProcessingSystem.Controllers
                 case "approver":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_APPROVED, int.Parse(GetUserID())))
                     {
-                        _service.postDDV(entryID, "P");
+                        _service.postDDV(entryID, "P", int.Parse(GetUserID()));
                         ViewBag.Success = 1;
                         _service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_PRINT_LOI, int.Parse(GetUserID()));
 
@@ -1295,7 +1308,7 @@ namespace ExpenseProcessingSystem.Controllers
                 case "Reversal":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
                     {
-                        _service.postDDV(entryID, "R");
+                        _service.postDDV(entryID, "R", int.Parse(GetUserID()));
                         ViewBag.Success = 1;
                     }
                     else
@@ -1452,7 +1465,18 @@ namespace ExpenseProcessingSystem.Controllers
                     }
                     viewLink = "Entry_PCV_ReadOnly";
                     break;
-
+                case "Reversal":
+                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
+                    {
+                        _service.postCV(entryID, "R", int.Parse(GetUserID()));
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Entry_PCV_ReadOnly";
+                    break;
                 default:
                     break;
             }
@@ -1630,7 +1654,18 @@ namespace ExpenseProcessingSystem.Controllers
                     }
                     viewLink = "Entry_SS_ReadOnly";
                     break;
-
+                case "Reversal":
+                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
+                    {
+                        _service.postCV(entryID, "R", int.Parse(GetUserID()));
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Entry_SS_ReadOnly";
+                    break;
                 default:
                     break;
             }
@@ -1807,7 +1842,7 @@ namespace ExpenseProcessingSystem.Controllers
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_APPROVED, int.Parse(GetUserID())))
                     {
                         //"P" for Normal Posting, "R" for Reversal
-                        _service.postNC(entryID,"P");
+                        _service.postNC(entryID,"P", int.Parse(GetUserID()));
                         ViewBag.Success = 1;
                     }
                     else
@@ -1853,7 +1888,7 @@ namespace ExpenseProcessingSystem.Controllers
                 case "Reversal":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
                     {
-                        _service.postNC(entryID, "R");
+                        _service.postNC(entryID, "R", int.Parse(GetUserID()));
                         ViewBag.Success = 1;
                     }
                     else
@@ -2115,7 +2150,7 @@ namespace ExpenseProcessingSystem.Controllers
                 case "approver":
                     if (_service.updateLiquidateStatus(entryID, GlobalSystemValues.STATUS_APPROVED, int.Parse(GetUserID())))
                     {
-                        _service.postLiq_SS(entryID);
+                        _service.postLiq_SS(entryID, command, int.Parse(GetUserID()));
                         ViewBag.Success = 1;
                     }
                     else
@@ -2157,7 +2192,18 @@ namespace ExpenseProcessingSystem.Controllers
                     }
                     viewLink = "Liquidation_SS_ReadOnly";
                     break;
-
+                case "Reversal":
+                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
+                    {
+                        _service.postLiq_SS(entryID, "R", int.Parse(GetUserID()));
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "Entry_PCV_ReadOnly";
+                    break;
                 default:
                     break;
             }

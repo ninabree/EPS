@@ -130,7 +130,7 @@
             //get table name
             var tblName = $('#dm-tbl').find(":selected").text();
 
-            var creatorId = $(this).parent().find("#item_Vendor_Creator_ID").val();
+            var creatorId = $(this).parent().find("[id$='_Creator_ID']").val();
             var userId = $("#UI").val();
             //check if all selected chkboxs have same statuses
             var isSameStat = true;
@@ -141,7 +141,7 @@
                     return false;
                 }
             });
-
+            //alert(creatorId + " ------ " + userId);
             if (!isSameStat && chkCount <= 2) {
                 alert("Kindly check rows with the same status only.");
                 $('.rec').prop('disabled', true);

@@ -13,6 +13,8 @@ namespace ExpenseProcessingSystem.Models
         public int ExpNCDtl_ID { get; set; }
         public string ExpNCDtl_Remarks_Desc { get; set; }
         public string ExpNCDtl_Remarks_Period { get; set; }
+        public int ExpNCDtl_Vendor_ID { get; set; }
+        public int ExpNCDtl_TR_ID { get; set; }
         public ExpenseEntryNCModel ExpenseEntryNCModel { get; set; }
 
         public ICollection<ExpenseEntryNCDtlAccModel> ExpenseEntryNCDtlAccs { get; set; }

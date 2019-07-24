@@ -159,7 +159,24 @@
                     }
                 </div>
                 <div>
-                    <div class="dis-inline-block tbl-btn"><button id="reversal_entry" disabled>Create Reversal Entry</button></div>
+                    @if (Model.statusID == GlobalSystemValues.STATUS_POSTED && Model.lastUpdatedDate.Date < DateTime.Now.Date)
+                    {
+                        if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker
+                            || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id
+                            || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id
+                            || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.approver_id)
+                        {
+                            <div class="dis-inline-block tbl-btn"><button id="reversal_entry" value="Reversal" name="command">Create Reversal Entry</button></div>
+                        }
+                        else
+                        {
+                            <div class="dis-inline-block tbl-btn"><button id="reversal_entry" disabled>Create Reversal Entry</button></div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="dis-inline-block tbl-btn"><button id="reversal_entry" disabled>Create Reversal Entry</button></div>
+                    }
                 </div>
                 <div>
                     <div class="dis-inline-block tbl-btn m-l-41"><button disabled>Print Check</button></div>
@@ -174,19 +191,18 @@
                     }
                     else
                     {
-                        if (Model.statusID == GlobalSystemValues.STATUS_APPROVED)
+                        if (Model.statusID != GlobalSystemValues.STATUS_PENDING &&
+                            Model.statusID != GlobalSystemValues.STATUS_VERIFIED)
                         {
                             <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
+                            <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
                         }
                         else
                         {
                             <div class="dis-inline-block tbl-btn"><button value="@HttpContextAccessor.HttpContext.Session.GetString("accessType")" name="command">Approve/Verify</button></div>
+                            <div class="dis-inline-block tbl-btn"><button value="Reject" name="command">Reject</button></div>
                         }
                     }
-                    <div class="dis-inline-block tbl-btn"><button value="Reject" name="command">Reject</button></div>
-                </div>
-                <div>
-                    <div class="dis-inline-block tbl-btn"><button disabled>Delete GBase Post</button></div>
                 </div>
                 <div>
                     <div class="dis-inline-block tbl-btn"><button disabled>Print BIR Certificate</button></div>

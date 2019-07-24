@@ -1081,6 +1081,26 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     viewData = "glyph-1";
                     vdInfo = "glyphicon-menu-up";
                     break;
+                case "regemp_cat":
+                    tempList = tempList.OrderBy(s => s.Emp_Category_Name);
+                    viewData = "glyph-7";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "regemp_cat_desc":
+                    tempList = tempList.OrderByDescending(s => s.Emp_Category_Name);
+                    viewData = "glyph-7";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "regemp_fbt":
+                    tempList = tempList.OrderBy(s => s.Emp_FBT_Name);
+                    viewData = "glyph-8";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "regemp_fbt_desc":
+                    tempList = tempList.OrderByDescending(s => s.Emp_FBT_Name);
+                    viewData = "glyph-8";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
                 default:
                     tempList = tempList.OrderByDescending(x => statusIDs.Contains(x.Emp_Status_ID));
                     viewData = "glyph-6";
@@ -1145,6 +1165,26 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 case "name_desc":
                     tempList = tempList.OrderByDescending(s => s.Emp_Name);
                     viewData = "glyph-1";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "tempemp_cat":
+                    tempList = tempList.OrderBy(s => s.Emp_Category_Name);
+                    viewData = "glyph-7";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "tempemp_cat_desc":
+                    tempList = tempList.OrderByDescending(s => s.Emp_Category_Name);
+                    viewData = "glyph-7";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "tempemp_fbt":
+                    tempList = tempList.OrderBy(s => s.Emp_FBT_Name);
+                    viewData = "glyph-8";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "tempemp_fbt_desc":
+                    tempList = tempList.OrderByDescending(s => s.Emp_FBT_Name);
+                    viewData = "glyph-8";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 default:

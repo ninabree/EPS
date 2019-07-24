@@ -14,6 +14,10 @@ namespace ExpenseProcessingSystem.ViewModels.Search_Filters
         public string EMF_Acc_No { get; set; }
         [Display(Name = "Employee Type")]
         public string EMF_Type { get; set; }
+        [Display(Name = "Employee Category")]
+        public string EMF_Category_Name { get; set; }
+        [Display(Name = "Employee FBT")]
+        public string EMF_FBT_Name{ get; set; }
         [Display(Name = "Creator Name")]
         public string EMF_Creator_Name { get; set; }
         [Display(Name = "Approver Name")]
