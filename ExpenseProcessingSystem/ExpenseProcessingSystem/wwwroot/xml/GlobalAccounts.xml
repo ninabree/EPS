@@ -48,10 +48,15 @@ string value4 = xelem.Element("ADDRESS").Value
   <C_SS2 id="C_SS2">76</C_SS2>
 
 <!--FBT debit/credit account-->
-  <!--FBT debit-->
-  <D_FBT id="D_FBT">122</D_FBT>
+  <!--FBT For House Rent-->
+  <D_FBT id="D_FBT_RENT">122</D_FBT>
+  <!--FBT For Expat-->
+  <D_FBT id="D_FBT_EXPAT">122</D_FBT>
+  <!--FBT For Local-->
+  <D_FBT id="D_FBT_LOCAL">125</D_FBT>
   <!--FBT credit-->
   <C_FBT id="C_FBT">104</C_FBT>
+
 
 <!--Prepaid Amortization-->
   <!--EXP PREPAY GEXP-->
