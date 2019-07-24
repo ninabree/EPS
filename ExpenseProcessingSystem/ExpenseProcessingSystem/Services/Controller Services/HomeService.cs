@@ -6775,7 +6775,9 @@ namespace ExpenseProcessingSystem.Services
                             ExpenseEntryAmortizationModel amortization = new ExpenseEntryAmortizationModel
                             {
                                 Amor_Sched_Date = amorSchedule.amtDate,
-                                Amor_Price = amorSchedule.amtAmount
+                                Amor_Price = amorSchedule.amtAmount,
+                                Amor_Status = GlobalSystemValues.getStatus(GlobalSystemValues.STATUS_PENDING),
+                                Amor_Number = "21"
                             };
 
                             expenseAmor.Add(amortization);
@@ -6873,6 +6875,8 @@ namespace ExpenseProcessingSystem.Services
                     Expense_Last_Updated = DateTime.Now,
                     Expense_isDeleted = false,
                     Expense_Status = 1,
+                    Expense_CheckNo = "111",
+                    Expense_CheckId = 1,
                     ExpenseEntryDetails = expenseDtls
                 };
 
@@ -9066,6 +9070,7 @@ namespace ExpenseProcessingSystem.Services
                                                  exp.Expense_Date,
                                                  exp.Expense_Type,
                                                  exp.Expense_Status,
+                                                 exp.Expense_Payee,
                                                  acc.Account_No,
                                                  dtl.ExpDtl_Gbase_Remarks,
                                                  acc.Account_Code,
@@ -9091,12 +9096,56 @@ namespace ExpenseProcessingSystem.Services
                                 expense.Expense_Type,
                                 expense.ExpDtl_Fbt,
                                 expense.ExpDtl_Gbase_Remarks,
+                                expense.Expense_Payee,
                                 histId = goHist.GOExpHist_Id == null ? 0 : goHist.GOExpHist_Id
                             };
 
             foreach(var item in nmEntries)
             {
-                
+                CloseItems temp = new CloseItems();
+                if (item.histId > 0)
+                {
+                    int transNo = _context.ExpenseTransLists.Select(x => new { x.TL_TransID, x.TL_GoExpHist_ID, x.TL_ExpenseID })
+                                                            .Where(x => x.TL_ExpenseID == item.Expense_ID
+                                                                     && x.TL_GoExpHist_ID == item.histId).FirstOrDefault().TL_TransID;
+                    temp.expTrans = GlobalSystemValues.getApplicationCode(item.Expense_Type)+ "-" + GetSelectedYearMonthOfTerm(item.Expense_Date.Month, item.Expense_Date.Year).Year + "-" +
+                                        item.Expense_Number.ToString().PadLeft(5, '0');
+                    temp.gBaseTrans = transNo.ToString();
+                }
+                else
+                {
+                    temp.expTrans = "";
+                    temp.gBaseTrans = "";
+                }
+
+                temp.amount = item.ExpDtl_Debit;
+                temp.ccy = item.Curr_CCY_ABBR;
+                temp.status = GlobalSystemValues.getStatus(item.Expense_Status);
+                temp.particulars = item.ExpDtl_Gbase_Remarks;
+                temp.transCount = 1;
+
+                CloseItems fbtItem = new CloseItems();
+
+                if (item.ExpDtl_Fbt)
+                {
+                    if(getBranchNo(item.Account_No) == GlobalSystemValues.BRANCH_RBU){
+
+                        int userType = _context.DMEmp.FirstOrDefault(x => x.Emp_ID == item.Expense_Payee).Emp_Category_ID;
+
+
+                        //var gTrans = _context.GOExpressHist.Where(x => x.ExpenseEntryID == item.Expense_ID
+                        //                                            && x.ExpenseDetailID == item.ExpDtl_ID
+                        //                                            && x.GOExpHist_Entry11ActNo == )
+                    }
+                    else{
+
+                    }
+                }
+
+                if (getBranchNo(item.Account_No) == GlobalSystemValues.BRANCH_RBU)
+                    nmCloseItemsRBU.Add(temp);
+                else
+                    nmCloseItemsFCDU.Add(temp);
             }
 
             nmDic.Add(GlobalSystemValues.BRANCH_RBU, nmCloseItemsRBU);
@@ -9308,171 +9357,6 @@ namespace ExpenseProcessingSystem.Services
                     ddvCloseItemsFCDU[index].amount += item.InterAcc_Amount;
                     ddvCloseItemsFCDU[index].transCount += 1;
                 }
-            }
-
-            #region Data Retrieval Linq for Non InterRate DDV
-            var ddvNonInter = _context.ExpenseEntry
-                                      .Join(_context.ExpenseEntryDetails,
-                                            a => a.Expense_ID,
-                                            b => b.ExpenseEntryModel.Expense_ID,
-                                            (a, b) => new {
-                                                a.Expense_ID,
-                                                b.ExpDtl_ID,
-                                                a.Expense_Number,
-                                                a.Expense_Status,
-                                                a.Expense_Type,
-                                                a.Expense_Date,
-                                                b.ExpDtl_Inter_Entity,
-                                                b.ExpDtl_Ccy,
-                                                b.ExpDtl_Account,
-                                                b.ExpDtl_Debit,
-                                                b.ExpDtl_Fbt,
-                                                b.ExpDtl_Gbase_Remarks
-                                            })
-                                      .Join(_context.DMAccount,
-                                            b => b.ExpDtl_Account,
-                                            c => c.Account_ID,
-                                            (b, c) => new {
-                                                b.Expense_ID,
-                                                b.ExpDtl_ID,
-                                                b.Expense_Number,
-                                                b.Expense_Status,
-                                                b.Expense_Type,
-                                                b.Expense_Date,
-                                                b.ExpDtl_Inter_Entity,
-                                                b.ExpDtl_Ccy,
-                                                c.Account_No,
-                                                c.Account_Code,
-                                                b.ExpDtl_Debit,
-                                                b.ExpDtl_Fbt,
-                                                b.ExpDtl_Gbase_Remarks
-                                            })
-                                      .Where(x => x.ExpDtl_Inter_Entity == false
-                                                           && x.Expense_Type == GlobalSystemValues.TYPE_DDV
-                                                           && (opening <= x.Expense_Date
-                                                           && closing >= x.Expense_Date));
-            #endregion
-
-            var rbu = ddvNonInter.Where(x => x.Account_No.Substring(4, 3) == "767");
-            var fcdu = ddvNonInter.Where(x => x.Account_No.Substring(4, 3) == "789");
-
-            foreach (var item in rbu)
-            {
-                CloseItems temp = new CloseItems();
-                temp.gBaseTrans = "";
-                temp.expTrans = "";
-
-                var goHist = _context.GOExpressHist.Where(x => x.ExpenseDetailID == item.ExpDtl_ID
-                                                            && x.ExpenseEntryID == item.Expense_ID)
-                                                  .Select(x => new { x.GOExpHist_Id, x.GOExpHist_Entry11Amt }).ToList();
-
-                if (item.ExpDtl_Fbt)
-                {
-                    if (goHist.Count() > 0)
-                    {
-                        for (int i = 0; i < goHist.Count(); i++)
-                        {
-                            if (i == goHist.Count() - 1)
-                            {
-                                temp.gBaseTrans += _context.ExpenseTransLists.FirstOrDefault(x => x.TL_GoExpHist_ID == goHist[i].GOExpHist_Id
-                                  && x.TL_ExpenseID == item.Expense_ID).TL_TransID;
-                            }
-                            else
-                            {
-                                temp.gBaseTrans += _context.ExpenseTransLists.FirstOrDefault(x => x.TL_GoExpHist_ID == goHist[i].GOExpHist_Id
-                                  && x.TL_ExpenseID == item.Expense_ID).TL_TransID + ", ";
-                            }
-                            temp.amount += double.Parse(goHist[i].GOExpHist_Entry11Amt);
-                        }
-                        temp.expTrans = GlobalSystemValues.getApplicationCode(item.Expense_Type) + "-" +
-                                        GetSelectedYearMonthOfTerm(item.Expense_Date.Month, item.Expense_Date.Year).Year + "-" +
-                                        item.Expense_Number.ToString().PadLeft(5, '0');
-                    }
-                    else
-                    {
-                        temp.amount = item.ExpDtl_Debit;
-                    }
-                }
-                else
-                {
-                    temp.amount = item.ExpDtl_Debit;
-                    if (goHist.Count() > 0)
-                    {
-                        temp.gBaseTrans = _context.ExpenseTransLists.FirstOrDefault(x => x.TL_ExpenseID == item.Expense_ID
-                                                    && x.TL_GoExpHist_ID == goHist[0].GOExpHist_Id).TL_TransID.ToString();
-
-                        temp.expTrans = GlobalSystemValues.getApplicationCode(item.Expense_Type) + "-" +
-                                        GetSelectedYearMonthOfTerm(item.Expense_Date.Month, item.Expense_Date.Year).Year + "-" +
-                                        item.Expense_Number.ToString().PadLeft(5, '0');
-                    }
-                    temp.amount = item.ExpDtl_Debit;
-                }
-
-                temp.particulars = item.ExpDtl_Gbase_Remarks;
-                temp.ccy = GetCurrencyAbbrv(item.ExpDtl_Ccy);
-                temp.transCount = 2;
-                temp.status = GlobalSystemValues.getStatus(item.Expense_Status);
-
-                ddvCloseItemsRBU.Add(temp);
-            }
-            foreach (var item in fcdu)
-            {
-                CloseItems temp = new CloseItems();
-                temp.gBaseTrans = "";
-                temp.expTrans = "";
-
-                var goHist = _context.GOExpressHist.Where(x => x.ExpenseDetailID == item.ExpDtl_ID
-                                                            && x.ExpenseEntryID == item.Expense_ID)
-                                                   .Select(x => new { x.GOExpHist_Id, x.GOExpHist_Entry11Amt }).ToList();
-
-                if (item.ExpDtl_Fbt)
-                {
-                    if (goHist.Count() > 0)
-                    {
-                        for (int i = 0; i < goHist.Count(); i++)
-                        {
-                            if (i == goHist.Count() - 1)
-                            {
-                                temp.gBaseTrans += _context.ExpenseTransLists.FirstOrDefault(x => x.TL_GoExpHist_ID == goHist[i].GOExpHist_Id
-                                  && x.TL_ExpenseID == item.Expense_ID).TL_TransID;
-                            }
-                            else
-                            {
-                                temp.gBaseTrans += _context.ExpenseTransLists.FirstOrDefault(x => x.TL_GoExpHist_ID == goHist[i].GOExpHist_Id
-                                  && x.TL_ExpenseID == item.Expense_ID).TL_TransID + ", ";
-                            }
-                            temp.amount += double.Parse(goHist[i].GOExpHist_Entry11Amt);
-                        }
-                        temp.expTrans = GlobalSystemValues.getApplicationCode(item.Expense_Type) + "-" +
-                                        GetSelectedYearMonthOfTerm(item.Expense_Date.Month, item.Expense_Date.Year).Year + "-" +
-                                        item.Expense_Number.ToString().PadLeft(5, '0');
-                    }
-                    else
-                    {
-                        temp.amount = item.ExpDtl_Debit;
-                    }
-                }
-                else
-                {
-                    temp.amount = item.ExpDtl_Debit;
-                    if (goHist.Count() > 0)
-                    {
-                        temp.gBaseTrans = _context.ExpenseTransLists.FirstOrDefault(x => x.TL_ExpenseID == item.Expense_ID
-                                                    && x.TL_GoExpHist_ID == goHist[0].GOExpHist_Id).TL_TransID.ToString();
-
-                        temp.expTrans = GlobalSystemValues.getApplicationCode(item.Expense_Type) + "-" +
-                                        GetSelectedYearMonthOfTerm(item.Expense_Date.Month, item.Expense_Date.Year).Year + "-" +
-                                        item.Expense_Number.ToString().PadLeft(5, '0');
-                    }
-                    temp.amount = item.ExpDtl_Debit;
-                }
-
-                temp.particulars = item.ExpDtl_Gbase_Remarks;
-                temp.ccy = GetCurrencyAbbrv(item.ExpDtl_Ccy);
-                temp.transCount = 2;
-                temp.status = GlobalSystemValues.getStatus(item.Expense_Status);
-
-                ddvCloseItemsFCDU.Add(temp);
             }
 
             ddvDic.Add(GlobalSystemValues.BRANCH_RBU, ddvCloseItemsRBU);
@@ -9858,7 +9742,7 @@ namespace ExpenseProcessingSystem.Services
 
             //goModel.Id = -1;
             goModel.SystemName = "EXPRESS";
-            goModel.Branchno = getBranchNo(getAccount(containerModel.entries[0].account).Account_No);
+            goModel.Branchno = getAccount(containerModel.entries[0].account).Account_No.Substring(4, 3);
             goModel.AutoApproved = "Y";
             goModel.ValueDate = DateTime.Now.ToString("MMddyy");
             goModel.Section = "10";
