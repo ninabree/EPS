@@ -1431,8 +1431,25 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
                                 ExpNCDtlAcc_Inter_Rate = 0,
                                 ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_CREDIT
-                            }
-                        }
+                            },
+                            new ExpenseEntryNCDtlAccViewModel{
+                                ExpNCDtlAcc_Acc_ID = 0,
+                                ExpNCDtlAcc_Acc_Name = "",
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_CREDIT
+                            },
+                            new ExpenseEntryNCDtlAccViewModel{
+                                ExpNCDtlAcc_Acc_ID = 0,
+                                ExpNCDtlAcc_Acc_Name = "",
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_CREDIT
+                            }                        }
                     }
                 }
             };

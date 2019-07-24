@@ -2947,9 +2947,10 @@ namespace ExpenseProcessingSystem.Services
                 Rep_Amount = (float) totalAmount,
                 Rep_AmountInString = stringNum,
                 Rep_LOIAccList = accs,
-                Rep_Approver_Name = "",
-                Rep_Verifier1_Name = "",
-                Rep_Verifier2_Name = "",
+                Rep_LOIEntryIDList = entryIDs,
+                Rep_Approver_Name = getBCSName(model.SignatoryID),
+                Rep_Verifier1_Name = getBCSName(model.SignatoryIDVerifier),
+                //Rep_Verifier2_Name = "",
                 Rep_String1 = "This authority to debit and credit is issued pursuant to and subject to the terms and conditions of the Company's",
                 Rep_String2 = "Regular Payroll Agreement with the Bank.",
                 Rep_String3 = "Thank you and best regards.",
@@ -6624,7 +6625,7 @@ namespace ExpenseProcessingSystem.Services
         {
             var vn = _context.ExpenseEntry
                 .Where(x => x.Expense_Payee_Type == GlobalSystemValues.PAYEETYPE_REGEMP
-                        && x.Expense_Status == GlobalSystemValues.STATUS_PRINT_LOI)
+                        && x.Expense_Last_Updated.Date == DateTime.Now.Date)
                 .ToList().Distinct();
             List<VoucherNoOptions> vnList = new List<VoucherNoOptions>();
             foreach (var x in vn)
@@ -6633,7 +6634,27 @@ namespace ExpenseProcessingSystem.Services
                 {
                     vchr_ID = x.Expense_ID,
                     vchr_No = GlobalSystemValues.getApplicationCode(x.Expense_Type) + "-" + x.Expense_Date.Year + "-" + x.Expense_Number.ToString().PadLeft(5, '0'),
-                    vchr_EmployeeName = getVendorName(x.Expense_Payee, x.Expense_Payee_Type)
+                    vchr_EmployeeName = getVendorName(x.Expense_Payee, x.Expense_Payee_Type),
+                    vchr_Status = getStatus(x.Expense_Status)
+                });
+            }
+            return vnList;
+        }
+        public List<VoucherNoOptions> PopulateVoucherNoCV()
+        {
+            var vn = _context.ExpenseEntry
+                .Where(x => x.Expense_Payee_Type == GlobalSystemValues.PAYEETYPE_REGEMP
+                        && x.Expense_Last_Updated.Date == DateTime.Now.Date)
+                .ToList().Distinct();
+            List<VoucherNoOptions> vnList = new List<VoucherNoOptions>();
+            foreach (var x in vn)
+            {
+                vnList.Add(new VoucherNoOptions
+                {
+                    vchr_ID = x.Expense_ID,
+                    vchr_No = GlobalSystemValues.getApplicationCode(x.Expense_Type) + "-" + x.Expense_Date.Year + "-" + x.Expense_Number.ToString().PadLeft(5, '0'),
+                    vchr_EmployeeName = getVendorName(x.Expense_Payee, x.Expense_Payee_Type),
+                    vchr_Status = getStatus(x.Expense_Status)
                 });
             }
             return vnList;
@@ -9856,6 +9877,18 @@ namespace ExpenseProcessingSystem.Services
             }
 
             return name.User_LName.Substring(0)+", "+name.User_FName;
+        }
+        //get bcs name
+        public string getBCSName(int id)
+        {
+            var name = _context.DMBCS.SingleOrDefault(q => q.BCS_ID == id);
+
+            if (name == null)
+            {
+                return null;
+            }
+
+            return name.BCS_Name.ToUpper();
         }
         //get vat value
         public float getVat()

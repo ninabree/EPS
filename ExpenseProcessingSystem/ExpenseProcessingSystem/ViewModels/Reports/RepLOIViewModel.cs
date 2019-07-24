@@ -7,6 +7,7 @@ namespace ExpenseProcessingSystem.ViewModels.Reports
 {
     public class ReportLOIViewModel
     {
+        public List<int> Rep_LOIEntryIDList { get; set; }
         public List<string> Rep_DDVNoList { get; set; }
         public string Rep_AmountInString { get; set; }
         public float Rep_Amount { get; set; }
@@ -20,7 +21,7 @@ namespace ExpenseProcessingSystem.ViewModels.Reports
         //signatories
         public string Rep_Approver_Name { get; set; }
         public string Rep_Verifier1_Name { get; set; }
-        public string Rep_Verifier2_Name { get; set; }
+        //public string Rep_Verifier2_Name { get; set; }
     }
     public class LOIAccount
     {

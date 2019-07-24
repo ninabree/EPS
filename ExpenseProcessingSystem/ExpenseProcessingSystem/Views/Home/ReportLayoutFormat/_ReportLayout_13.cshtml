@@ -1,0 +1,151 @@
+﻿@model ExpenseProcessingSystem.ViewModels.HomeReportDataFilterViewModel
+
+@{
+    Layout = null;
+    var dateNow = DateTime.Now.ToShortDateString();
+    var cnt = 1;
+}
+
+<style>
+    .fw-bold {
+        font-weight: bold;
+    }
+    .fw-italic{
+        font-style: italic;
+    }
+    .fw-underline{
+        text-decoration: underline;
+    }
+    .fw-doub-underline {
+        text-decoration: double;
+    }
+    .fw-thk-underline{
+        font-weight: bolder;
+    }
+</style>
+
+<table border="0" style="width:100%">
+    <colgroup>
+        <col style="width:8.33%" />
+        <col style="width:8.33%" />
+        <col style="width:8.33%" />
+        <col style="width:8.33%" />
+        <col style="width:8.33%" />
+        <col style="width:8.33%" />
+        <col style="width:8.33%" />
+        <col style="width:8.33%" />
+        <col style="width:8.33%" />
+        <col style="width:8.33%" />
+        <col style="width:8.33%" />
+        <col style="width:8.33%" />
+    </colgroup>
+    <tbody>
+        <tr>
+            <td colspan="12">@dateNow</td>
+        </tr>
+        <tr><td colspan="12"><p></p></td></tr>
+        <tr><td colspan="12"><p></p></td></tr>
+        <tr><td colspan="12"><p></p></td></tr>
+        <tr>
+            <td colspan="12"><p class="fw-bold">MS. MARI ROSE G. SIOSON</p></td>
+        </tr>
+        <tr>
+            <td colspan="12"><p class="fw-bold">Senior Asst. Vice President/Branch Head</p></td>
+        </tr>
+        <tr>
+            <td colspan="12"><p class="">Banco de Oro Unibank, Inc. - Main Office Branch</p></td>
+        </tr>
+        <tr>
+            <td colspan="12"><p class="">BDO Corporate Center</p></td>
+        </tr>
+        <tr>
+            <td colspan="12"><p class="">7899 Makati Avenue, Makati City 0726</p></td>
+        </tr>
+        <tr><td colspan="12"><p></p></td></tr>
+        <tr><td colspan="12"><p></p></td></tr>
+        <tr>
+            <td colspan="12"><p class="fw-bold">Re: Letter of Instructions </p></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><p class="">DDV No/s. </p></td>
+            <td colspan="10" class="float-l">
+                @foreach (var val in Model.ReportLOI.Rep_DDVNoList)
+                {
+                    <p class="ddv_no">@val</p>
+                }
+            </td>
+        </tr>
+        <tr><td colspan="12"><p></p></td></tr>
+        <tr>
+            <td colspan="12">This is to authorize BDO Universal Bank - Corporate Center Branch to debit MIZUHO BANK, LTD. - </td>
+        </tr>
+        <tr>
+            <td colspan="12">MANILA BRANCH ACCT. No. 003008019974 today, @dateNow for the total amount of</td>
+        </tr>
+        <tr>
+            <td colspan="12">Philippine Pesos: @Model.ReportLOI.Rep_AmountInString</td>
+        </tr>
+        <tr>
+            <td colspan="12">(PHP @Model.ReportLOI.Rep_Amount), and credit to the account of:</td>
+        </tr>
+        <tr><td colspan="12"><p></p></td></tr>
+        <tr class="text-center">
+            <td></td>
+            <td colspan="3"><p class="fw-bold">Name</p></td>
+            <td colspan="2"><p class="fw-bold">Account Type</p></td>
+            <td colspan="3"><p class="fw-bold">Account No.</p></td>
+            <td colspan="3"><p class="fw-bold">Amount(PHP)</p></td>
+        </tr>
+        @foreach (var vals in Model.ReportLOI.Rep_LOIAccList)
+        {
+            <tr class="text-center">
+                <td>@cnt</td>
+                <td colspan="3" class="fw-underline"><p>@vals.loi_Emp_Name</p></td>
+                <td colspan="2" class="fw-underline"><p>@vals.loi_Acc_Type</p></td>
+                <td colspan="3" class="fw-underline"><p>@vals.loi_Acc_No</p></td>
+                <td colspan="3" class="fw-underline"><p>@vals.loi_Amount</p></td>
+            </tr>
+        }
+        <tr>
+            <td colspan="9"></td>
+            <td colspan="3" class="fw-doub-underline">@Model.ReportLOI.Rep_Amount</td>
+        </tr>
+        <tr><td colspan="12"><p></p></td></tr>
+        <tr>
+            <td colspan="12"><p>This authority to debit and credit is issued pursuant to and subject to the terms and conditions of the Company's</p></td>
+        </tr>
+        <tr>
+            <td colspan="12"><p>Regular Payroll Agreement with the Bank.</p></td>
+        </tr>
+        <tr><td colspan="12"><p></p></td></tr>
+        <tr><td colspan="12"><p></p></td></tr>
+        <tr><td colspan="12"><p></p></td></tr>
+        <tr>
+            <td colspan="12"><p>Thank you and best regards.</p></td>
+        </tr>
+        <tr><td colspan="12"><p></p></td></tr>
+        <tr>
+            <td colspan="12"><p>Very truly yours, </p></td>
+        </tr>
+        <tr><td colspan="12"><p></p></td></tr>
+        <tr>
+            <td colspan="3" class="fw-thk-underline"></td>
+            <td colspan="9"></td>
+        </tr>
+        <tr>
+            <td colspan="3" class="fw-bold">@Model.ReportLOI.Rep_Approver_Name.ToUpper()</td>
+            <td colspan="9"></td>
+        </tr>
+        <tr><td colspan="12"><p></p></td></tr>
+        <tr><td colspan="12"><p></p></td></tr>
+        <tr>
+            <td colspan="3" class="fw-thk-underline"></td>
+            <td colspan="9"></td>
+        </tr>
+        <tr>
+            <td colspan="3" class="fw-bold">@Model.ReportLOI.Rep_Verifier1_Name.ToUpper()</td>
+            <td colspan="9"></td>
+        </tr>
+    </tbody>
+</table>
