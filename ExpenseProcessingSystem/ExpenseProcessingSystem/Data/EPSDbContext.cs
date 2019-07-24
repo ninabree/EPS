@@ -88,5 +88,8 @@ namespace ExpenseProcessingSystem.Data
 
         //REVERSAL ENTRY HISTORY TABLE
         public DbSet<ReversalEntryModel> ReversalEntry { get; set; }
+
+        //STATUS TABLE OF ALL PRINT RELATED FUNCTION
+        public DbSet<PrintStatusModel> PrintStatus { get; set; }
     }
 }
