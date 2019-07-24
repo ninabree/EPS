@@ -1,4 +1,5 @@
 ﻿$(document).ready(function () {
+
     var reportType = $('#ddlReportType').val();
     // set fields
     var radioPeriod1 = $('#radioPeriodOption1_' + reportType);
@@ -307,12 +308,16 @@
 
     });
 });
+
 $(document).ready(function () {
+    function ajaxStart() { $('body').addClass("loading"); }
+    function ajaxStop() { $('body').removeClass("loading"); } 
     $("#btnGenerateFile").click(function (e) {
         e.preventDefault();
+        ajaxStart();
         var reportType = $('#ddlReportType').val();
         var chkList = [];
-        $.each($("input[name='chkTaxRate']:checked"), function () {
+        $.each($("input[name='chkTaxRate_" + reportType + "']:checked"), function () {
             chkList.push($(this).val());
         });
         var voucherList = [];
@@ -371,18 +376,21 @@ $(document).ready(function () {
                         + "&TransNoTo=" + $('#TransNoTo_' + reportType).val()
                         + "&SubjName=" + $('#SubjName_' + reportType).val();
                 }
+                ajaxStop();
             }, 
             error: function (result) {
                 alert('Error');
+                ajaxStop();
             }
         });
     });
     $("#btnGeneratePreview").click(function (e) {
         e.preventDefault();
+        ajaxStart();
 
         var reportType = $('#ddlReportType').val();
         var chkList = [];
-        $.each($("input[name='chkTaxRate']:checked"), function () {
+        $.each($("input[name='chkTaxRate_" + reportType + "']:checked"), function () {
             chkList.push($(this).val());
         });
 
@@ -446,9 +454,11 @@ $(document).ready(function () {
                     $('#txtAsOfLabel').text("As of ");
                     $('#txtDatePreviewShow').text(date_time);
                 }
+                ajaxStop();
             },
             error: function (result) {
                 alert('Error');
+                ajaxStop();
             }
         });
     });

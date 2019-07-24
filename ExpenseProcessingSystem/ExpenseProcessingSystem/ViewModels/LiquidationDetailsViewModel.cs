@@ -64,6 +64,7 @@ namespace ExpenseProcessingSystem.ViewModels
 
     public class LiquidationInterEntity
     {
+        public int Liq_InterEntityID { get; set; }
         public string Liq_DebitCred_1_1 { get; set; }
         public int Liq_AccountID_1_1 { get; set; }
         public double Liq_InterRate_1_1 { get; set; }

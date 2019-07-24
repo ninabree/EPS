@@ -21,6 +21,9 @@ namespace ExpenseProcessingSystem.ViewModels
         public string approver { get; set; }
         public string verifier_1 { get; set; }
         public string verifier_2 { get; set; }
+        public int approver_id { get; set; }
+        public int verifier_1_id { get; set; }
+        public int verifier_2_id { get; set; }
         public int maker { get; set; }
         public DateTime createdDate { get; set; }
         public List<LiquidationDetailsViewModel> LiquidationDetails { get; set; }

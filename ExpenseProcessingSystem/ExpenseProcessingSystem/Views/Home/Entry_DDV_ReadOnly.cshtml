@@ -206,33 +206,29 @@
                     }
                 </div>
 
-                @if ((Model.statusID == GlobalSystemValues.STATUS_APPROVED) || (Model.statusID == GlobalSystemValues.STATUS_REJECTED))
-                {
-                    <div>
-                        <div class="dis-inline-block tbl-btn"><button value="Reversal" name="command">Create Reversal Entry</button></div>
-                    </div>
-                    <div>
-                        <div class="dis-inline-block tbl-btn m-l-41"><button value="PrintBIR" name="command">Print BIR Certificate</button></div>
-                    </div>
-                }
-                else if (Model.statusID == GlobalSystemValues.STATUS_REVERSED)
-                {
-                    <div>
-                        <div class="dis-inline-block tbl-btn"><button disabled>Create Reversal Entry</button></div>
-                    </div>
-                    <div>
-                        <div class="dis-inline-block tbl-btn m-l-41"><button value="PrintBIR" name="command">Print BIR Certificate</button></div>
-                    </div>
-                }
-                else
-                {
-                    <div>
-                        <div class="dis-inline-block tbl-btn"><button disabled>Create Reversal Entry</button></div>
-                    </div>
-                    <div>
-                        <div class="dis-inline-block tbl-btn m-l-41"><button disabled>Print BIR Certificate</button></div>
-                    </div>
-                }
+                <div>
+                    @if (Model.statusID == GlobalSystemValues.STATUS_POSTED && Model.lastUpdatedDate.Date < DateTime.Now.Date)
+                    {
+                        if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker
+                            || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id
+                            || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id
+                            || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.approver_id)
+                        {
+                            <div class="dis-inline-block tbl-btn"><button id="reversal_entry" value="Reversal" name="command">Create Reversal Entry</button></div>
+                        }
+                        else
+                        {
+                            <div class="dis-inline-block tbl-btn"><button id="reversal_entry" disabled>Create Reversal Entry</button></div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="dis-inline-block tbl-btn"><button id="reversal_entry" disabled>Create Reversal Entry</button></div>
+                    }
+                </div>
+                <div>
+                    <div class="dis-inline-block tbl-btn m-l-41"><button disabled>Print BIR Certificate</button></div>
+                </div>
 
             </div>
             <div class="flex-sb">
@@ -243,22 +239,17 @@
                     }
                     else
                     {
-                        @if (uid == Model.maker.ToString() || (Model.statusID == GlobalSystemValues.STATUS_APPROVED) || (Model.statusID == GlobalSystemValues.STATUS_REJECTED) || (Model.statusID == GlobalSystemValues.STATUS_REVERSED))
+                        if (Model.statusID != GlobalSystemValues.STATUS_PENDING &&
+                            Model.statusID != GlobalSystemValues.STATUS_VERIFIED)
                         {
                             <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
+                            <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
                         }
                         else
                         {
                             <div class="dis-inline-block tbl-btn"><button value="@HttpContextAccessor.HttpContext.Session.GetString("accessType")" name="command">Approve/Verify</button></div>
+                            <div class="dis-inline-block tbl-btn"><button value="Reject" name="command">Reject</button></div>
                         }
-                    }
-                    @if (uid == Model.maker.ToString() || (Model.statusID == GlobalSystemValues.STATUS_APPROVED) || (Model.statusID == GlobalSystemValues.STATUS_REJECTED) || (Model.statusID == GlobalSystemValues.STATUS_REVERSED))
-                    {
-                        <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
-                    }
-                    else
-                    {
-                        <div class="dis-inline-block tbl-btn"><button value="Reject" name="command">Reject</button></div>
                     }
                 </div>
                 <div>

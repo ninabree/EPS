@@ -62,7 +62,11 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         public string approver { get; set; }
         public string verifier_1 { get; set; }
         public string verifier_2 { get; set; }
+        public int approver_id { get; set; }
+        public int verifier_1_id { get; set; }
+        public int verifier_2_id { get; set; }
         public int maker { get; set; }
+        public DateTime lastUpdatedDate { get; set; }
         public EntryNCViewModel EntryNC { get; set; }
         public List<SelectListItem> category_of_entry { get; set; }
         public List<SelectListItem> accountList { get; set; }

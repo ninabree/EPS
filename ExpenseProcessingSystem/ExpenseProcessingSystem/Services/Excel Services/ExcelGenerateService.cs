@@ -468,7 +468,7 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 worksheet.Cells["C5"].Value = data.ReportCommonVM.Header_Address;
 
                 //Content
-                foreach (var i in data.HomeReportOutputAccountSummary)
+                foreach (var i in data.HomeReportOutputWTS)
                 {
                     worksheet.Cells["A" + lastRow].Value = i.Trans_Voucher_Number;
                     worksheet.Cells["B" + lastRow].Value = i.Trans_Check_Number;

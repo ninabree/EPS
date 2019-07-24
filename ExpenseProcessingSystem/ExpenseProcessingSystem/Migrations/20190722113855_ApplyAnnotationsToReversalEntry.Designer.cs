@@ -4,14 +4,16 @@ using ExpenseProcessingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    partial class EPSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190722113855_ApplyAnnotationsToReversalEntry")]
+    partial class ApplyAnnotationsToReversalEntry
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -921,10 +923,6 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("ExpNCDtl_Remarks_Period");
 
-                    b.Property<int>("ExpNCDtl_TR_ID");
-
-                    b.Property<int>("ExpNCDtl_Vendor_ID");
-
                     b.Property<int?>("ExpenseEntryNCModelExpNC_ID");
 
                     b.HasKey("ExpNCDtl_ID");
@@ -1512,8 +1510,6 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<double>("Liq_TaxRate");
 
-                    b.Property<double>("Liq_VendorID");
-
                     b.HasKey("id");
 
                     b.HasIndex("ExpenseEntryDetailModelExpDtl_ID");
@@ -1847,33 +1843,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.HasKey("PC_ID");
 
                     b.ToTable("PettyCash");
-                });
-
-            modelBuilder.Entity("ExpenseProcessingSystem.Models.PrintStatusModel", b =>
-                {
-                    b.Property<int>("PS_ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("PS_BIR2307");
-
-                    b.Property<bool>("PS_CDD");
-
-                    b.Property<bool>("PS_Check");
-
-                    b.Property<int>("PS_EntryDtlID");
-
-                    b.Property<int>("PS_EntryID");
-
-                    b.Property<bool>("PS_LOI");
-
-                    b.Property<int>("PS_Type");
-
-                    b.Property<bool>("PS_Voucher");
-
-                    b.HasKey("PS_ID");
-
-                    b.ToTable("PrintStatus");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ReversalEntryModel", b =>

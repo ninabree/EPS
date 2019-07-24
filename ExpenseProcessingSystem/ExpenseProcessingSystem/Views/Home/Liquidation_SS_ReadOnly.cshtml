@@ -641,7 +641,8 @@
                     }
                     else
                     {
-                        if (Model.statusID == GlobalSystemValues.STATUS_APPROVED || Model.statusID == GlobalSystemValues.STATUS_REJECTED)
+                        if (Model.statusID != GlobalSystemValues.STATUS_PENDING &&
+                            Model.statusID != GlobalSystemValues.STATUS_VERIFIED)
                         {
                             <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
                             <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
@@ -652,9 +653,6 @@
                             <div class="dis-inline-block tbl-btn"><button value="Reject" name="command">Reject</button></div>
                         }
                     }
-                </div>
-                <div>
-                    <div class="dis-inline-block tbl-btn"><button disabled>Delete GBase Post</button></div>
                 </div>
                 <div>
                     <div class="dis-inline-block tbl-btn"><button disabled>Print BIR Certificate</button></div>
