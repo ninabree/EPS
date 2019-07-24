@@ -7667,6 +7667,8 @@ namespace ExpenseProcessingSystem.Services
                         {
                             ExpNCDtl_Remarks_Desc = ncDtls.ExpNCDtl_Remarks_Desc,
                             ExpNCDtl_Remarks_Period = ncDtls.ExpNCDtl_Remarks_Period,
+                            ExpNCDtl_Vendor_ID = ncDtls.ExpNCDtl_Vendor_ID,
+                            ExpNCDtl_TR_ID = ncDtls.ExpNCDtl_TR_ID,
                             ExpenseEntryNCDtlAccs = accountDtls
                         };
                         expenseDtls.Add(expenseDetail);

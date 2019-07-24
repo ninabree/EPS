@@ -45,8 +45,8 @@ namespace ExpenseProcessingSystem.Controllers
         {
             var userId = _session.GetString("UserID");
             EntryNCViewModelList viewModel = new EntryNCViewModelList();
-            DMCurrencyModel currDtl = _context.DMCurrency.Where(x => x.Curr_MasterID == 1 && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
-            DMCurrencyModel currDtlUSD = _context.DMCurrency.Where(x => x.Curr_MasterID == 2 && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
+            DMCurrencyModel currDtl = _context.DMCurrency.Where(x => x.Curr_MasterID == 31 && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
+            DMCurrencyModel currDtlUSD = _context.DMCurrency.Where(x => x.Curr_MasterID == 1 && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
 
 
             if ((entryID != "0") && (entryID != null) && (categoryID != null))
@@ -120,6 +120,8 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.expenseDate = DateTime.Parse(expenseDate);
             viewModel.accountList = _service.getAccountSelectList();
             viewModel.currList = _service.getCurrencySelectList();
+            viewModel.vendorList = _service.getVendorSelectList();
+            viewModel.trList = _service.getTaxRateSelectList();
             return viewModel;
         }
         

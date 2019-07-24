@@ -113,13 +113,13 @@
             var $clone = tblName == "1" ? forma1RowFormat(itemCount, getAccsOptions(itemCount), getValueAccsOptions(), getCurrOptions(itemCount)) :
                 tblName == "2" ? forma1RowFormat(itemCount, getAccsOptions(itemCount), getValueAccsOptions(), getCurrOptions(itemCount)) :
                 tblName == "3" ? forma1RowFormat(itemCount, getAccsOptions(itemCount), getValueAccsOptions(), getCurrOptions(itemCount)) :
-                tblName == "4" ? forma2RowFormat(($(tblRow).length / 3), getAccsPCROptions(itemCount, "1"), getAccsPCROptions(itemCount, "2"), getAccsPCROptions(itemCount, "3"), getOneValueAccsOption(itemCount, "1"), getOneValueAccsOption(itemCount, "2"), getOneValueAccsOption(itemCount, "3"), getCurrOptions(itemCount)) :
-                tblName == "5" ? forma2RowFormat(($(tblRow).length / 3), getAccsPCROptions(itemCount, "1"), getAccsPCROptions(itemCount, "2"), getAccsPCROptions(itemCount, "3"), getOneValueAccsOption(itemCount, "1"), getOneValueAccsOption(itemCount, "2"), getOneValueAccsOption(itemCount, "3"), getCurrOptions(itemCount)) :
+                tblName == "4" ? forma2RowFormat(($(tblRow).length / 3), getAccsPCROptions(itemCount, "1"), getAccsPCROptions(itemCount, "2"), getAccsPCROptions(itemCount, "3"), getOneValueAccsOption(itemCount, "1"), getOneValueAccsOption(itemCount, "2"), getOneValueAccsOption(itemCount, "3"), getCurrOptions(itemCount), getVendorOptions(itemCount), getTROptions(itemCount)) :
+                tblName == "5" ? forma2RowFormat(($(tblRow).length / 3), getAccsPCROptions(itemCount, "1"), getAccsPCROptions(itemCount, "2"), getAccsPCROptions(itemCount, "3"), getOneValueAccsOption(itemCount, "1"), getOneValueAccsOption(itemCount, "2"), getOneValueAccsOption(itemCount, "3"), getCurrOptions(itemCount), getVendorOptions(itemCount), getTROptions(itemCount)) :
                 tblName == "6" ? forma1RowFormat(itemCount, getAccsOptions(itemCount), getValueAccsOptions(), getCurrOptions(itemCount)) :
                 tblName == "7" ? forma1RowFormat(itemCount, getAccsOptions(itemCount), getValueAccsOptions(), getCurrOptions(itemCount)) :
                 tblName == "8" ? forma1RowFormat(itemCount, getAccsOptions(itemCount), getValueAccsOptions(), getCurrOptions(itemCount)) :
                 tblName == "9" ? forma1RowFormat(itemCount, getAccsOptions(itemCount), getValueAccsOptions(), getCurrOptions(itemCount)) :
-                tblName == "11" ? forma3RowFormat(itemCount, getAccsOptions(itemCount), getCurrOptions(itemCount), getValueAccsOptions(), getValueCurrsOptions()) :
+                tblName == "11" ? forma3RowFormat(($(tblRow).length / 4), getAccsOptions(($(tblRow).length / 4)), getCurrOptions(($(tblRow).length / 4)), getValueAccsOptions(), getValueCurrsOptions(), getVendorOptions(($(tblRow).length / 4)), getTROptions(($(tblRow).length / 4))) :
                 $('');
             $('#NCPartialTbl').find('tbody tr:last').before($clone);
             //$('#NCPartialTbl').find('tbody').append($clone);
@@ -208,6 +208,34 @@
             }
             return curroptions;
         }
+        //set values for Vendor Dropdown List
+        function getVendorOptions(itemCount) {
+            var venoptions = "";
+            if (itemCount > 0) {
+                $("#venOptions option").each(function (index, item) {
+                    if (index == 0) {
+                        venoptions += '<option value="' + item.value + '" selected>' + item.text + '</option>';
+                    } else {
+                        venoptions += '<option value="' + item.value + '">' + item.text + '</option>';
+                    }
+                });
+            }
+            return venoptions;
+        }
+        //set values for Tax Rates Dropdown List
+        function getTROptions(itemCount) {
+            var trptions = "";
+            if (itemCount > 0) {
+                $("#trOptions option").each(function (index, item) {
+                    if (index == 0) {
+                        trptions += '<option value="' + item.value + '" selected>' + item.text + '</option>';
+                    } else {
+                        trptions += '<option value="' + item.value + '">' + item.text + '</option>';
+                    }
+                });
+            }
+            return trptions;
+        }
         //set values for Accounts Dropdown List
         function getAccsOptions(itemCount) {
             var accoptions = "";
@@ -271,6 +299,12 @@
                 + '<select class= "w-full input acc-sel" data-val="true" data-val- required="The Account field is required." id = "EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Acc_Name" name = "EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name"> '
                 + accoptions
                 + '</select> </td>'
+                + '<td class="" colspan="1" rowspan="2">'
+                + '<input class= "w-full" data - val="true" data - val - required="The Vendor field is required." id = "EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_Vendor_ID" name = "EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_Vendor_ID" readonly = "true" type = "text" value = "0" >'
+                + '</td>'
+                + '<td class="" colspan="1" rowspan="2">'
+                + '<input class= "w-full" data - val="true" data - val - required="The Tax Rate field is required." id = "EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_TR_ID" name = "EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_TR_ID" readonly = "true" type = "text" value = "0" >'
+                + '</td>'
                 + '<td class="voucher-inter"><input class="ncVar" data-val="true" data-val-number="The field Inter-Rate must be a number." data-val-required="The Inter-Rate field is required." disabled="disabled" id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Inter_Rate" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Inter_Rate"  type="text" value="0"></td>'
                 + '<td> <select id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Curr_ID" class="w-full input curr-sel" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID">'
                 + curroptions
@@ -300,7 +334,7 @@
                 + '<input data-val="true" data-val-required="The CCY field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Curr_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Curr_ID" type="hidden" value="' + CurrIDOfFirstRow + '">'
                 + '<input data-val="true" data-val-required="The Type field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Type_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Type_ID" type="hidden" value="2">'
                 + '</tr>'
-                + '<tr class="NC_spacing_row"><td colspan="11"></td></tr>');
+                + '<tr class="NC_spacing_row"><td colspan="13"></td></tr>');
         }
         function forma1RowFormat2(itemCount, accoptions1, accoptions2, accID1, accID2, curroptions) {
             var dt = new Date();
@@ -347,9 +381,9 @@
                 + '<input data-val="true" data-val-required="The CCY field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Curr_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Curr_ID" type="hidden" value="' + CurrIDOfFirstRow + '">'
                 + '<input data-val="true" data-val-required="The Type field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Type_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Type_ID" type="hidden" value="2">'
                 + '</tr>'
-                + '<tr class="NC_spacing_row"><td colspan="11"></td></tr>');
+                + '<tr class="NC_spacing_row"><td colspan="13"></td></tr>');
         }
-        function forma2RowFormat(itemCount, accoptions1, accoptions2, accoptions3, accID1, accID2, accID3, curroptions) {
+        function forma2RowFormat(itemCount, accoptions1, accoptions2, accoptions3, accID1, accID2, accID3, curroptions, venOptions, trOptions) {
             var dt = new Date();
             var formatMonth = (dt.getMonth() + 1).length == 2 ? (dt.getMonth() + 1) : "0" + (dt.getMonth() + 1);
             var dtFormatted = dt.getFullYear() + "-" + formatMonth + "-" + dt.getDate();
@@ -365,6 +399,16 @@
                 +' <select class= "w-full input acc-sel" data - val="true" data - val - required="The Account field is required." id = "EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Acc_Name" name = "EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name" >'
                 + accoptions1
                 + '</select> </td>'
+                + '<td class="" colspan="1" rowspan="3">'
+                + '<select id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_Vendor_ID" class="w-full input ven-sel" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_Vendor_ID">'
+                + venOptions
+                + '</select >'
+                + '</td>'
+                + '<td class="" colspan="1" rowspan="3">'
+                + '<select id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_TR_ID" class="w-full input ven-sel" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_TR_ID">'
+                + trOptions
+                + '</select >'
+                + '</td>'
                 + '<td class=""><input class="ncVar" data-val="true" data-val-number="The field Inter-Rate must be a number." data-val-required="The Inter-Rate field is required." disabled="disabled" id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Inter_Rate" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Inter_Rate" readonly="true" type="text" value="0"></td>'
                 + '<td> <select id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Curr_ID" class="w-full input curr-sel" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID">'
                 + curroptions
@@ -408,10 +452,12 @@
                 + '<input data-val="true" data-val-required="The Account field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_2__ExpNCDtlAcc_Acc_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[2].ExpNCDtlAcc_Acc_ID" type="hidden" value="' + accID3 + '">'
                 + '<input data-val="true" data-val-required="The CCY field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_2__ExpNCDtlAcc_Curr_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[2].ExpNCDtlAcc_Curr_ID" type="hidden" value="' + CurrIDOfFirstRow + '">'
                 + '<input data-val="true" data-val-required="The Type field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_2__ExpNCDtlAcc_Type_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[2].ExpNCDtlAcc_Type_ID" type="hidden" value="2">'
-                + '</tr>');
+                + '</tr>'
+                + '<tr class="NC_spacing_row"><td colspan="13"></td></tr>');
         }
 
-        function forma3RowFormat(itemCount, accoptions, curroptions, accFirstID, currFirstID) {
+        function forma3RowFormat(itemCount, accoptions, curroptions, accFirstID, currFirstID, venOptions, trOptions) {
+            alert(itemCount);
             var dt = new Date();
             var formatMonth = (dt.getMonth() + 1).length == 2 ? (dt.getMonth() + 1) : "0" + (dt.getMonth() + 1);
             var dtFormatted = dt.getFullYear() + "-" + formatMonth + "-" + dt.getDate();
@@ -426,6 +472,16 @@
                 + '<select class= "w-full input acc-sel" data-val="true" data-val- required="The Account field is required." id = "EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Acc_Name" name = "EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name"> '
                 + accoptions
                 + '</select> </td>'
+                + '<td class="" colspan="1" rowspan="4">'
+                + '<select id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_Vendor_ID" class="w-full input ven-sel" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_Vendor_ID">'
+                + venOptions
+                + '</select >'
+                + '</td>'
+                + '<td class="" colspan="1" rowspan="4">'
+                + '<select id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_TR_ID" class="w-full input ven-sel" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_TR_ID">'
+                + trOptions
+                + '</select >'
+                + '</td>'
                 + '<td class="voucher-input"><input class="ncVar" data-val="true" data-val-number="The field Inter-Rate must be a number." data-val-required="The Inter-Rate field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Inter_Rate" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Inter_Rate" type="text" value="0"></td>'
                 + '<td> <select id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Curr_ID" class="w-full input curr-sel" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID">'
                 + curroptions
@@ -450,12 +506,58 @@
                 + '<td> <select id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Curr_ID" class="w-full input curr-sel" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Curr_ID">'
                 + curroptions
                 + '</select></td>'
-                + '<td class="" id="cred_' + itemCount + '"><input class="ncVar" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Amount" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Amount"  type="text" readonly="true" value="0"></td>'
+                + '<td class="voucher-input" id="cred_' + itemCount + '"><input class="ncVar" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Amount" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Amount"  type="text" value="0"></td>'
                 + '<input data-val="true" data-val-required="The Account field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Acc_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Acc_ID" type="hidden" value="' + accFirstID + '">'
                 + '<input data-val="true" data-val-required="The CCY field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Curr_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Curr_ID" type="hidden" value="' + currFirstID + '">'
                 + '<input data-val="true" data-val-required="The Type field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Type_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Type_ID" type="hidden" value="2">'
                 + '</tr>'
-                + '<tr class="NC_spacing_row"><td colspan="11"></td></tr>');
+                + '<tr id="item_' + itemCount + '">'
+                + '<td></td>'
+                + '<td colspan="2"></td>'
+                + '<td colspan="3" class="voucher-input">'
+                + '<select id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_2__ExpNCDtlAcc_Acc_Name" class="w-full input acc-sel" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[2].ExpNCDtlAcc_Acc_Name">'
+                + accoptions
+                + '</select>'
+                + '</td>'
+                + '<td></td>'
+                + '<td></td>'
+                + '<td></td>'
+                + '<td>'
+                + '<select id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_2__ExpNCDtlAcc_Curr_ID" class="w-full input curr-sel" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[2].ExpNCDtlAcc_Curr_ID">'
+                + curroptions
+                + '</select>'
+                + '</td>'
+                + '<td class="voucher-input" id="cred_' + itemCount + '">'
+                + '<input class="ncVar " data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_2__ExpNCDtlAcc_Amount" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[2].ExpNCDtlAcc_Amount" type="text" value="0">'
+                + '</td>'
+                + '<input data-val="true" data-val-required="The Account field is required." id="EntryNC_ExpenseEntryNCDtls_' + accFirstID + '__ExpenseEntryNCDtlAccs_2__ExpNCDtlAcc_Acc_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[2].ExpNCDtlAcc_Acc_ID" type="hidden" value="' + accFirstID + '">'
+                + '<input data-val="true" data-val-required="The CCY field is required." id="EntryNC_ExpenseEntryNCDtls_' + accFirstID + '__ExpenseEntryNCDtlAccs_2__ExpNCDtlAcc_Curr_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[2].ExpNCDtlAcc_Curr_ID" type="hidden" value="' + currFirstID + '">'
+                + '<input data-val="true" data-val-required="The Type field is required." id="EntryNC_ExpenseEntryNCDtls_' + accFirstID + '__ExpenseEntryNCDtlAccs_2__ExpNCDtlAcc_Type_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[2].ExpNCDtlAcc_Type_ID" type="hidden" value="2">'
+                + '</tr>'
+                + '<tr id="item_' + itemCount + '">'
+                + '<td></td>'
+                + '<td colspan="2"></td>'
+                + '<td colspan="3" class="voucher-input">'
+                + '<select id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_3__ExpNCDtlAcc_Acc_Name" class="w-full input acc-sel" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[3].ExpNCDtlAcc_Acc_Name">'
+                + accoptions
+                + '</select>'
+                + '</td>'
+                + '<td></td>'
+                + '<td></td>'
+                + '<td></td>'
+                + '<td>'
+                + '<select id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_3__ExpNCDtlAcc_Curr_ID" class="w-full input curr-sel" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[3].ExpNCDtlAcc_Curr_ID">'
+                + curroptions
+                + '</select>'
+                + '</td>'
+                + '<td class="voucher-input" id="cred_' + itemCount + '">'
+                + '<input class="ncVar " data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_3__ExpNCDtlAcc_Amount" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[3].ExpNCDtlAcc_Amount" type="text" value="0">'
+                + '</td>'
+                + '<input data-val="true" data-val-required="The Account field is required." id="EntryNC_ExpenseEntryNCDtls_' + accFirstID + '__ExpenseEntryNCDtlAccs_3__ExpNCDtlAcc_Acc_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[3].ExpNCDtlAcc_Acc_ID" type="hidden" value="' + accFirstID + '">'
+                + '<input data-val="true" data-val-required="The CCY field is required." id="EntryNC_ExpenseEntryNCDtls_' + accFirstID + '__ExpenseEntryNCDtlAccs_3__ExpNCDtlAcc_Curr_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[3].ExpNCDtlAcc_Curr_ID" type="hidden" value="' + currFirstID + '">'
+                + '<input data-val="true" data-val-required="The Type field is required." id="EntryNC_ExpenseEntryNCDtls_' + accFirstID + '__ExpenseEntryNCDtlAccs_3__ExpNCDtlAcc_Type_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[3].ExpNCDtlAcc_Type_ID" type="hidden" value="2">'
+                + '</tr>'
+                + '<tr class="NC_spacing_row"><td colspan="13"></td></tr>');
         }
     });
 </script>
