@@ -71,6 +71,8 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         public List<SelectListItem> category_of_entry { get; set; }
         public List<SelectListItem> accountList { get; set; }
         public List<SelectListItem> currList { get; set; }
+        public List<SelectListItem> vendorList { get; set; }
+        public List<SelectListItem> trList { get; set; }
 
         public EntryNCViewModelList()
         {

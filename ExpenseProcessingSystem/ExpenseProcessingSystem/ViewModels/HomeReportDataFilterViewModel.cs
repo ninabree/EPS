@@ -33,5 +33,7 @@ namespace ExpenseProcessingSystem.ViewModels
 
         public ReportLOIViewModel ReportLOI { get; set; }
 
+        public List<RepAmortViewModel> ReportAmort { get; set; }
+
     }
 }

@@ -364,8 +364,10 @@ $(document).ready(function () {
                         + "&PeriodTo=" + $('#PeriodTo_' + reportType).val()
                         + "&TaxRateArray=" + chkList
                         + "&VoucherArray=" + voucherList
+                        + "&VoucherNo=" + $('#ddlVoucherNo_' + reportType).val()
                         + "&VoucherNoList=" + $('#VoucherNoList_' + reportType).val()
                         + "&SignatoryID=" + $('#ddlSignatory_' + reportType).val()
+                        + "&SignatoryIDVerifier=" + $('#ddlSignatoryVer_' + reportType).val()
                         + "&CheckNoFrom=" + $('#CheckNoFrom_' + reportType).val()
                         + "&CheckNoTo=" + $('#CheckNoTo_' + reportType).val()
                         + "&VoucherNoFrom=" + $('#VoucherNoFrom_' + reportType).val()
@@ -436,7 +438,9 @@ $(document).ready(function () {
                         + "&PeriodTo=" + $('#PeriodTo_' + reportType).val()
                         + "&TaxRateArray=" + chkList
                         + "&VoucherArray=" + voucherList
+                        + "&VoucherNo=" + $('#ddlVoucherNo_' + reportType).val()
                         + "&SignatoryID=" + $('#ddlSignatory_' + reportType).val()
+                        + "&SignatoryIDVerifier=" + $('#ddlSignatoryVer_' + reportType).val()
                         + "&CheckNoFrom=" + $('#CheckNoFrom_' + reportType).val()
                         + "&CheckNoTo=" + $('#CheckNoTo_' + reportType).val()
                         + "&VoucherNoFrom=" + $('#VoucherNoFrom_' + reportType).val()

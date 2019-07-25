@@ -134,10 +134,6 @@
                             </td>
                         </tr>
                     }
-
-                    @Html.HiddenFor(x => x.entryID)
-                    @Html.HiddenFor(x => x.payee_type)
-                    <input value="DDV" id="expenseType" type="hidden" />
                     <tr>
                         <td style="border:none; background-color:#f2f2f2" rowspan="2"><a id="addRow" href="#" class="glyphicon glyphicon-plus"></a></td>
                         <td colspan="9" style="text-align:right; border:none; background-color:#f2f2f2">Subtotal : </td>
@@ -148,6 +144,10 @@
                     <tr>
                         <td colspan="9" style="text-align:right; border:none; background-color:#f2f2f2 ">Total : </td>
                         <td colspan="2"><div class="flex-c"><input type="text" class="input100" readonly id="credTotal" /></div></td>
+
+                        @Html.HiddenFor(x => x.entryID)
+                        @Html.HiddenFor(x => x.payee_type)
+                    <input value="DDV" id="expenseType" type="hidden" />
                     </tr>
                 </tbody>
             </table>
@@ -209,26 +209,28 @@
 </div>
 <script>
     $(document).ready(function () {
-        //Enable VAT/EWT dropdown list if corresponding checkbox is checked
-        var trs = $("#inputTable").find("tbody").find("tr");
-        for (var cnt = 0; cnt < trs.length - 2; cnt++) {
-            ddlEnabled(cnt);
-            var currId = $("#" + cnt).find("select[id$='__ccy']  option:selected").val() + "";
-            currenableVATEWT("item_" + cnt, currId);
-        }
-
+        eachTr();
         var myModal2 = $('.myModal2');
         var modalDiv2 = $(myModal2).find('div div');
         var modalDivHeader2 = $(modalDiv2).find('.modal-header2');
         var modalDivBody2 = $(modalDiv2).find('.modal-body2');
         var modalDivFooter2 = $(modalDiv2).find('.modal-footer2');
 
+        function eachTr() {
+            //Enable VAT/EWT dropdown list if corresponding checkbox is checked
+            var trs = $("#inputTable").find("tbody").find("tr");
+            for (var cnt = 0; cnt < trs.length - 2; cnt++) {
+                ddlEnabled(cnt);
+                var currId = $("#item_" + cnt).find("#EntryDDV_" + cnt + "__ccy  option:selected").val() + "";
+                currenableVATEWT("item_" + cnt, currId);
+            }
+        }
         //checks each checkbox and enables corresponding modals
         CheckEachEWT();
         CheckEachInter();
 
         $("#addRow").click(function (e) {
-            var itemCount = document.getElementById('inputTable').getElementsByTagName('tbody')[0].childElementCount - 4;
+            var itemCount = document.getElementById('inputTable').getElementsByTagName('tbody')[0].childElementCount - 2;
             var tableRef = document.getElementById('inputTable').getElementsByTagName('tbody')[0];
             var acc = @Html.Raw(Json.Serialize(Model.systemValues.acc));
             var dept = @Html.Raw(Json.Serialize(Model.systemValues.dept));
@@ -264,12 +266,12 @@
                 '<td><select class="input100 txtEwt  comVar" data-val="true" data-val-required="The ewt field is required." id="EntryDDV_' + itemCount + '__ewt" name="EntryDDV[' + itemCount + '].ewt" disabled="disabled">';
             htmlContent += '</select></td>' +
                 '<td style="text-align:center"><a class="reqEWTBtn glyphicon glyphicon-list-alt"></a></td>' +
-                '<td><select class="input100" data-val="true" data-val-required="The ccy field is required." id="EntryDDV_' + itemCount + '__ccy" name="EntryDDV[' + itemCount + '].ccy">';
+                '<td><select class="input100 ddv-curr-sel" data-val="true" data-val-required="The ccy field is required." id="EntryDDV_' + itemCount + '__ccy" name="EntryDDV[' + itemCount + '].ccy">';
             for (var i = 0; i < curr.length; i++) {
                 htmlContent += '<option value="' + curr[i]["value"] + '">' + curr[i]["text"] + '</option>';
             }
             htmlContent += '</select></td>' +
-                '<td><input class="input100 txtGross" data-val="true" data-val-number="The field debitGross must be a number." data-val-required="The debitGross field is required." id="EntryDDV_' + itemCount + '__debitGross" name="EntryDDV[' + itemCount + '].debitGross" type="number" min="0" value="0"></td>' +
+                '<td><input class="input100 txtGross" readonly="readonly" data-val="true" data-val-number="The field debitGross must be a number." data-val-required="The debitGross field is required." id="EntryDDV_' + itemCount + '__debitGross" name="EntryDDV[' + itemCount + '].debitGross" type="number" min="0" value="0"></td>' +
                 '<td><input class="input100  txtCredEwt" data-val="true" data-val-number="The field credEwt must be a number." data-val-required="The credEwt field is required." id="EntryDDV_' + itemCount + '__credEwt" name="EntryDDV[' + itemCount + '].credEwt" type="text" readonly="true" value="0"></td>' +
                 '<td><input class="input100 txtCredCash" data-val="true" data-val-number="The field credCash must be a number." data-val-required="The credCash field is required." id="EntryDDV_' + itemCount + '__credCash" name="EntryDDV[' + itemCount + '].credCash" type="text" readonly="true" value="0"></td>' +
                 '<td id="req_' + itemCount + '"><a class="reqBtn glyphicon glyphicon-list-alt"></a>'
@@ -292,6 +294,8 @@
             newRow.innerHTML = htmlContent;
             $('#EntryDDV_' + itemCount + '__vat').append($("#EntryDDV_0__vat > option").clone());
             $('#EntryDDV_' + itemCount + '__ewt').append($("#EntryDDV_0__ewt > option").clone());
+
+            eachTr();
         });
         //Inter Entity
         $("table").on("click", ".expenseInterEntity", function (e) {

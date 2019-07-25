@@ -375,33 +375,47 @@
                     <td class="td-center"></td>
                     <td class="td-right">Voucher No:</td>
                     <td>
-                        @Html.DropDownListFor(m => m.VoucherNo, new SelectList(Model.VoucherNoList, "vchr_ID", "vchr_No"), null, new { @class = "dis-inline-block w-49", id = "ddlVoucherNo_" + @HomeReportConstantValue.PrepaidAmortReport })
+                        @Html.DropDownListFor(m => m.VoucherNo, new SelectList(Model.VoucherNoListPrepaidAmort, "vchr_ID", "vchr_No"), null, new { @class = "dis-inline-block w-49", id = "ddlVoucherNo_" + @HomeReportConstantValue.PrepaidAmortReport })
                     </td>
                     <td class="td-right"></td>
                     <td></td>
                     <td></td>
                 </tr>
-                <tr id="" class="rep_loi hidden">
+                <tr id="" class="rep_loi hidden" style="height: 65px;">
                     <td class="td-center"></td>
                     <td class="td-center"></td>
                     <td class="td-right">Voucher No : </td>
-                    <td>
-                        <div>
-                            @if (Model.VoucherNoList.Count > 0)
-                            {
-                                foreach (var vchr in Model.VoucherNoList)
-                                {
-                                    <div class="dis-inline-block">
-                                        @Html.CheckBox("chkVoucherNo", false, new { @Value = vchr.vchr_ID, @class = "chkVoucherNo", id = "chkVoucherNo_" + @HomeReportConstantValue.LOI })<label>@vchr.vchr_No  - @vchr.vchr_EmployeeName</label>
-                                    </div>
-                                }
-                                @Html.HiddenFor(x => x.VoucherNoList)
-                            }
+                    <td colspan="4">
+                        <div style="overflow-y: scroll;height: 100%;">
+                            <table class="table table-bordered table-striped w-80">
+                                <thead>
+                                    <tr class="rep_loi table">
+                                        <td></td>
+                                        <td>Voucher No</td>
+                                        <td>Employee Name</td>
+                                        <td>Status</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.VoucherNoList.Count > 0)
+                                    {
+                                        foreach (var vchr in Model.VoucherNoList)
+                                        {
+                                            <tr class="rep_loi">
+                                                <td>
+                                                    @Html.CheckBox("chkVoucherNo", false, new { @Value = vchr.vchr_ID, @class = "chkVoucherNo", id = "chkVoucherNo_" + @HomeReportConstantValue.LOI })
+                                                </td>
+                                                <td>@vchr.vchr_No</td>
+                                                <td>@vchr.vchr_EmployeeName</td>
+                                                <td>@vchr.vchr_Status</td>
+                                            </tr>
+                                        }
+                                        @Html.HiddenFor(x => x.VoucherNoList)
+                                    }
+                                </tbody>
+                            </table>
                         </div>
                     </td>
-                    <td class="td-right"></td>
-                    <td></td>
-                    <td></td>
                 </tr>
                 <tr id="" class="rep_loi hidden">
                     <td class="td-center"></td>
@@ -410,13 +424,13 @@
                         Signatory 1:
                     </td>
                     <td>
-                        @Html.DropDownListFor(m => m.SignatoryID, new SelectList(Model.SignatoryList, "BCS_ID", "BCS_Name"), null, new { @class = "dis-inline-block", id = "ddlSignatory1_" + @HomeReportConstantValue.LOI })
+                        @Html.DropDownListFor(m => m.SignatoryID, new SelectList(Model.SignatoryList, "BCS_ID", "BCS_Name"), null, new { @class = "dis-inline-block", id = "ddlSignatory_" + @HomeReportConstantValue.LOI })
                     </td>
                     <td class="td-right">
                         Signatory 2:
                     </td>
                     <td>
-                        @Html.DropDownListFor(m => m.SignatoryIDVerifier, new SelectList(Model.SignatoryList, "BCS_ID", "BCS_Name"), null, new { @class = "dis-inline-block", id = "ddlSignatory2_" + @HomeReportConstantValue.LOI })
+                        @Html.DropDownListFor(m => m.SignatoryIDVerifier, new SelectList(Model.SignatoryList, "BCS_ID", "BCS_Name"), null, new { @class = "dis-inline-block", id = "ddlSignatoryVer_" + @HomeReportConstantValue.LOI })
                     </td>
                     <td></td>
                 </tr>

@@ -12,23 +12,23 @@ namespace ExpenseProcessingSystem
 
         private static readonly string[] CurrencyMap = new[]
         {
-            "PESOS ONLY", "US DOLLAR ONLY", "YEN ONLY"
+            "Pesos ONLY", "US Dollar ONLY", "Yen ONLY"
         };
         private static readonly string[] UnitsMap = new[]
         {
-            "ZERO", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "TEN",
-            "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN", "FIFTEEN", "SIXTEEN", "SEVENTEEN",
-            "EIGHTEEN", "NINETEEN"
+            "Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
+            "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen",
+            "Eigteen", "Nineteen"
         };
 
         private static readonly string[] TensMap = new[]
         {
-            "ZERO", "TEN", "TWENTY", "THIRTY", "FORTY",
-            "FIFTY", "SIXTY", "SEVENTY", "EIGHTY", "NINETY"
+            "Zero", "Ten", "Twenty", "Thirty", "Forty",
+            "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"
         };
 
         private static readonly string[] ScaleMap = new[]
-        { "", " THOUSAND", " MILLION", " BILLION", " TRILLION", " QUADRILLION" };
+        { "", " Thousand", " Million", " Billion", " Trillion", " Quadrillion" };
 
         static IEnumerable<int> SplitIntoThousands(long number)
         {
@@ -56,7 +56,7 @@ namespace ExpenseProcessingSystem
                 {
                     num[1] += 0;
                 }
-                decword.Append(" AND " + num[1] + "/100");
+                decword.Append(" & " + float.Parse(num[1]).ToString("0.00") + "/100");
             }
             return decword;
         }
@@ -72,7 +72,7 @@ namespace ExpenseProcessingSystem
                     var hundrets = SmallNumberToWords(number / 100);
                     var tens = SmallNumberToWords(number % 100);
 
-                    result = hundrets + " HUNDRED";
+                    result = hundrets + " Hundred";
 
                     if (tens != null)
                         result += ' ' + tens;
@@ -93,7 +93,7 @@ namespace ExpenseProcessingSystem
         public string DoubleNumberToWords(double number)
         {
             if (number == 0)
-                return "ZERO";
+                return "Zero";
 
             if (number < 0)
                 return "MINUS " + DoubleNumberToWords(-number);
@@ -124,7 +124,7 @@ namespace ExpenseProcessingSystem
         public string DoubleNumberToWords(double number, string currency)
         {
             if (number == 0)
-                return "ZERO";
+                return "Zero";
 
             if (number < 0)
                 return "MINUS " + DoubleNumberToWords(-number, currency);
