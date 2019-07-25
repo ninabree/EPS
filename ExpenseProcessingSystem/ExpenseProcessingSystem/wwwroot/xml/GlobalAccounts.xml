@@ -48,12 +48,14 @@ string value4 = xelem.Element("ADDRESS").Value
   <C_SS2 id="C_SS2">76</C_SS2>
 
 <!--FBT debit/credit account-->
+  <!--Master ID For House Rent-->
+  <HOUSE_RENT id="HOUSE_RENT">2</HOUSE_RENT>
   <!--FBT For House Rent-->
-  <D_FBT id="D_FBT_RENT">122</D_FBT>
+  <D_FBT_RENT id="D_FBT_RENT">122</D_FBT_RENT>
   <!--FBT For Expat-->
-  <D_FBT id="D_FBT_EXPAT">122</D_FBT>
+  <D_FBT_EXPAT id="D_FBT_EXPAT">122</D_FBT_EXPAT>
   <!--FBT For Local-->
-  <D_FBT id="D_FBT_LOCAL">125</D_FBT>
+  <D_FBT_LOCAL id="D_FBT_LOCAL">125</D_FBT_LOCAL>
   <!--FBT credit-->
   <C_FBT id="C_FBT">104</C_FBT>
 
@@ -64,5 +66,6 @@ string value4 = xelem.Element("ADDRESS").Value
   
   <!--Closing Petty Cash-->
   <PC_MASTERID id="PC_MASTERID">95</PC_MASTERID>
+
 
 </GlobalAccount>

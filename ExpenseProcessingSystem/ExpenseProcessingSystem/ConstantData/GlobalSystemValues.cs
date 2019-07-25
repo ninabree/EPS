@@ -61,8 +61,8 @@ namespace ExpenseProcessingSystem.ConstantData
         //Static values for payee type use for checking or adding employee category.
         //i.e: Checking category type
         //Example: instead of [if (type == "local")] use [if (type == GlobalSystemValues.EMPCAT_LOCAL)]
-        public static readonly int EMPCAT_LOCAL = 1;
-        public static readonly int EMPCAT_EXPAT = 2;
+        public const int EMPCAT_LOCAL = 1;
+        public const int EMPCAT_EXPAT = 2;
 
         public static readonly List<SelectListItem> EMPCATEGORY_SELECT = new List<SelectListItem> {
                 new SelectListItem { Text = "LOCAL", Value = EMPCAT_LOCAL.ToString(), Selected = true },
@@ -90,8 +90,8 @@ namespace ExpenseProcessingSystem.ConstantData
         //Static value for branch Type/Name/Code
         //i.e: determining what is the branch code for the transaction
         //Example : RBU = 767, FCDU = 789
-        public static readonly string BRANCH_RBU = "RBU";
-        public static readonly string BRANCH_FCDU = "FCDU";
+        public static readonly string BRANCH_RBU = "767";
+        public static readonly string BRANCH_FCDU = "789";
 
         //Static value for application codes used for Expense Transactio No.
         //Example : [CV]-2019-100001

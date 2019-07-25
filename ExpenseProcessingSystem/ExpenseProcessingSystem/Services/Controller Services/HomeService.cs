@@ -8601,21 +8601,10 @@ namespace ExpenseProcessingSystem.Services
                 {
                     tempGbase.entries = new List<entryContainer>();
 
-                    //((ExpenseAmount*.50)/.65)*.35
-                    string fbt = getFbtFormula(getAccount(item.account).Account_FBT_MasterID);
+                    Dictionary<string, entryContainer> fbt = createFbt(expenseDetails.vendor,item.account,item.debitGross,credit, debit);
 
-                    string equation = fbt.Replace("ExpenseAmount", item.debitGross.ToString());
-                    double fbtAmount = Math.Round(Convert.ToDouble(new DataTable().Compute(equation, null)), 2);
-                    Console.WriteLine("-=-=-=-=-=->" + equation);
-
-                    debit.account = getAccountByMasterID(int.Parse(xelemAcc.Element("D_FBT").Value)).Account_ID;
-                    debit.amount = fbtAmount;
-
-                    credit.account = getAccountByMasterID(int.Parse(xelemAcc.Element("C_FBT").Value)).Account_ID;
-                    credit.amount = fbtAmount;
-
-                    tempGbase.entries.Add(debit);
-                    tempGbase.entries.Add(credit);
+                    tempGbase.entries.Add(fbt["credit"]);
+                    tempGbase.entries.Add(fbt["debit"]);
 
                     goExpData = InsertGbaseEntry(tempGbase, expID);
                     goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.expenseDtlID);
@@ -8937,6 +8926,57 @@ namespace ExpenseProcessingSystem.Services
 
             return true;
         }
+
+        internal Dictionary<string, entryContainer> createFbt(int payee,int acc,double gross,entryContainer d, entryContainer c)
+        {
+            //((ExpenseAmount*.50)/.65)*.35
+            string fbt = getFbtFormula(getAccount(acc).Account_FBT_MasterID);
+
+            string equation = fbt.Replace("ExpenseAmount", gross.ToString());
+            double fbtAmount = Math.Round(Convert.ToDouble(new DataTable().Compute(equation, null)), 2);
+            Console.WriteLine("-=-=-=-=-=->" + equation);
+
+            #region Get elements fron xml (ohr,rentDebit,expatDebit,localDebit,fbtCred)
+            XElement xelem = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
+            int ohr = int.Parse(xelem.Element("HOUSE_RENT").Value);
+            int rentDebit = int.Parse(xelem.Element("D_FBT_RENT").Value);
+            int expatDebit = int.Parse(xelem.Element("D_FBT_EXPAT").Value);
+            int localDebit = int.Parse(xelem.Element("D_FBT_LOCAL").Value);
+            int fbtCred = int.Parse(xelem.Element("C_FBT").Value);
+            #endregion
+
+            int masterId = _context.DMAccount.FirstOrDefault(x => x.Account_ID == acc).Account_MasterID;
+            int userType = _context.DMEmp.FirstOrDefault(x => x.Emp_ID == payee).Emp_Category_ID;
+            if (masterId == ohr)
+            {
+                d.account = rentDebit;
+            }
+            else
+            {
+                switch (userType)
+                {
+                    case GlobalSystemValues.EMPCAT_EXPAT:
+                        d.account = expatDebit;
+                        break;
+                    case GlobalSystemValues.EMPCAT_LOCAL:
+                        d.account = localDebit;
+                        break;
+                };
+            }
+
+            
+            d.amount = fbtAmount;
+
+            c.account = getAccountByMasterID(int.Parse(xelemAcc.Element("C_FBT").Value)).Account_ID;
+            c.amount = fbtAmount;
+
+            Dictionary<string, entryContainer> fbtDic = new Dictionary<string, entryContainer>();
+
+            fbtDic.Add("credit", c);
+            fbtDic.Add("debit", d);
+
+            return fbtDic;
+        }
         ///============[End Post Entries]============
 
         ///================[Closing]=================
@@ -9092,6 +9132,7 @@ namespace ExpenseProcessingSystem.Services
                                                  exp.Expense_Type,
                                                  exp.Expense_Status,
                                                  exp.Expense_Payee,
+                                                 acc.Account_MasterID,
                                                  acc.Account_No,
                                                  dtl.ExpDtl_Gbase_Remarks,
                                                  acc.Account_Code,
@@ -9118,6 +9159,7 @@ namespace ExpenseProcessingSystem.Services
                                 expense.ExpDtl_Fbt,
                                 expense.ExpDtl_Gbase_Remarks,
                                 expense.Expense_Payee,
+                                expense.Account_MasterID,
                                 histId = goHist.GOExpHist_Id == null ? 0 : goHist.GOExpHist_Id
                             };
 
@@ -9145,21 +9187,75 @@ namespace ExpenseProcessingSystem.Services
                 temp.particulars = item.ExpDtl_Gbase_Remarks;
                 temp.transCount = 1;
 
-                CloseItems fbtItem = new CloseItems();
-
-                if (item.ExpDtl_Fbt)
+                if (item.ExpDtl_Fbt && temp.expTrans != "")
                 {
-                    if(getBranchNo(item.Account_No) == GlobalSystemValues.BRANCH_RBU){
+                    CloseItems fbtItem = new CloseItems();
+                    #region Get elements fron xml (ohr,rentDebit,expatDebit,localDebit,fbtCred)
+                    XElement xelem = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
+                    int ohr = int.Parse(xelem.Element("HOUSE_RENT").Value);
+                    int rentDebit = int.Parse(xelem.Element("D_FBT_RENT").Value);
+                    int expatDebit = int.Parse(xelem.Element("D_FBT_EXPAT").Value);
+                    int localDebit = int.Parse(xelem.Element("D_FBT_LOCAL").Value);
+                    int fbtCred = int.Parse(xelem.Element("C_FBT").Value);
+                    #endregion
 
-                        int userType = _context.DMEmp.FirstOrDefault(x => x.Emp_ID == item.Expense_Payee).Emp_Category_ID;
+                    #region assign fbtAcc
+                    string fbtAcc = "";
 
-
-                        //var gTrans = _context.GOExpressHist.Where(x => x.ExpenseEntryID == item.Expense_ID
-                        //                                            && x.ExpenseDetailID == item.ExpDtl_ID
-                        //                                            && x.GOExpHist_Entry11ActNo == )
+                    int userType = _context.DMEmp.FirstOrDefault(x => x.Emp_ID == item.Expense_Payee).Emp_Category_ID;
+                    if (item.Account_MasterID == ohr)
+                    {
+                        fbtAcc = _context.DMAccount.Where(x => x.Account_MasterID == rentDebit)
+                                                   .OrderByDescending(x => x.Account_ID)
+                                                   .FirstOrDefault().Account_No;
                     }
-                    else{
+                    else
+                    {
+                        switch (userType)
+                        {
+                            case GlobalSystemValues.EMPCAT_EXPAT:
+                                fbtAcc = _context.DMAccount.Where(x => x.Account_MasterID == expatDebit)
+                                               .OrderByDescending(x => x.Account_ID)
+                                               .FirstOrDefault().Account_No;
+                                break;
+                            case GlobalSystemValues.EMPCAT_LOCAL:
+                                fbtAcc = _context.DMAccount.Where(x => x.Account_MasterID == localDebit)
+                                                       .OrderByDescending(x => x.Account_ID)
+                                                       .FirstOrDefault().Account_No;
+                                break;
+                        };
+                    }
+                    #endregion
 
+                    var gTrans = (from tran in _context.ExpenseTransLists
+                                 join hist in _context.GOExpressHist
+                                 on tran.TL_GoExpHist_ID equals hist.GOExpHist_Id
+                                 where hist.ExpenseDetailID == item.ExpDtl_ID
+                                 && hist.ExpenseEntryID == item.Expense_ID
+                                 && hist.GOExpHist_Entry11ActNo == fbtAcc.Substring(Math.Max(0, fbtAcc.Length - 6))
+                                 select new { tran.TL_GoExpress_ID, hist.GOExpHist_Entry11Amt }).FirstOrDefault();
+
+                    if(gTrans != null)
+                    {
+
+                        if (getBranchNo(item.Account_No) == GlobalSystemValues.BRANCH_RBU)
+                        {
+                            temp.gBaseTrans += "," + gTrans.TL_GoExpress_ID;
+                            temp.amount += double.Parse(gTrans.GOExpHist_Entry11Amt);
+                            temp.transCount = 2;
+                        }
+                        else
+                        {
+                            fbtItem.expTrans = temp.expTrans;
+                            fbtItem.gBaseTrans = gTrans.TL_GoExpress_ID.ToString();
+                            fbtItem.amount = double.Parse(gTrans.GOExpHist_Entry11Amt);
+                            fbtItem.ccy = item.Curr_CCY_ABBR;
+                            fbtItem.status = GlobalSystemValues.getStatus(item.Expense_Status);
+                            fbtItem.particulars = item.ExpDtl_Gbase_Remarks;
+                            fbtItem.transCount = 1;
+
+                            nmCloseItemsFCDU.Add(temp);
+                        }
                     }
                 }
 
@@ -10339,10 +10435,7 @@ namespace ExpenseProcessingSystem.Services
         //check if account no. is RBU or FCDU account.
         public string getBranchNo(string accountNo)
         {
-            if (accountNo.Substring(4, 3) == "767")
-                return "767";
-            else
-                return "789";
+            return accountNo.Substring(4, 3);
         }
         public GOExpressHistModel convertTblCm10ToGOExHist(TblCm10 tblcm10, int entryID, int entryDtlID)
         {
