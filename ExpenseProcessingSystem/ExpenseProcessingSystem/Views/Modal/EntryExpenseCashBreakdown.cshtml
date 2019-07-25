@@ -37,7 +37,7 @@
                         }
                         <tr>
                             <td colspan="2" style="text-align:right">Total:</td>
-                            <td><input type="number" class="input100 cashBDAmountTotal" style="text-align:center" value="0" readonly="readonly" /></td>
+                            <td><input type="number" id="cashBDAmountTotal" class="input100 cashBDAmountTotal" style="text-align:center" value="0" readonly="readonly" /></td>
                         </tr>
                     </tbody>
                 </table>
@@ -60,7 +60,7 @@
                 header = "EntryCV_";
             }
 
-            for (var count = 0; count < trs.length - 1; count++) {
+            for (var count = 0; count < 13; count++) {
                 $("#" + trs[count].id).find('.txtNoPCS').val($("#" + header + ret + "__cashBreakdown_" + count + "__cashNoPC").val());
                 $("#" + trs[count].id).find('.txtAmount').val($("#" + header + ret + "__cashBreakdown_" + count + "__cashAmount").val());
 
@@ -68,10 +68,10 @@
 
                 if ($("#item_" + ret).find(".txtgbaseRemarks").prop('disabled') || header == "LiquidationDetails_") {
                     $("#" + trs[count].id).find('.txtNoPCS').attr("readonly", "readonly");
-                    $("#saveGbase").attr("disabled", "disabled");
+                    $("#saveGbase").css("display", "none");
                 }
             }
-            $(".cashBDAmountTotal").val(round(amountTotal, 2));
+            $('.cashBDAmountTotal').val(round(amountTotal, 2));
         }
 
         $(function () {
@@ -80,20 +80,19 @@
 
                 var cashBDModalitemNo = cashBDModalpNode.id; //jquery obj
 
-                var txtDenomination = $("#" + cashBDModalitemNo).find('.txtDenomination').val();
-                var txtNoPCS = $("#" + cashBDModalitemNo).find('.txtNoPCS').val();
+                var txtDenomination = $('#' + cashBDModalitemNo).find('.txtDenomination').val();
+                var txtNoPCS = $('#' + cashBDModalitemNo).find('.txtNoPCS').val();
 
-                $("#" + cashBDModalitemNo).find('.txtAmount').val(round(parseFloat(txtDenomination) * parseFloat(txtNoPCS), 2));
+                $('#' + cashBDModalitemNo).find('.txtAmount').val(round(parseFloat(txtDenomination) * parseFloat(txtNoPCS), 2));
 
                 var amountTotal = 0;
-                var trs = $(".cashBreakdowntable").find("tbody").find("tr");
-
+                var trs = $('.cashBreakdowntable').find("tbody").find("tr");
+                
                 for (var count = 0; count < trs.length - 1; count++) {
-                    var subTotal = parseFloat($("#" + trs[count].id).find('.txtNoPCS').val()) * parseFloat($("#" + trs[count].id).find('.txtDenomination').val());
+                    var subTotal = parseFloat($('#' + trs[count].id).find('.txtNoPCS').val()) * parseFloat($('#' + trs[count].id).find('.txtDenomination').val());
                     amountTotal = parseFloat(amountTotal) + parseFloat(subTotal);
                 }
-
-                $(".cashBDAmountTotal").val(round(amountTotal, 2));
+                $('.cashBDAmountTotal').val(round(amountTotal, 2));
             });
 
             $(".modal-footer").on("click", "#saveGbase", function (e) {
@@ -111,7 +110,7 @@
 
                 $('#divCashBD_' + ret).empty();
 
-                for (var count = 0; count < trs.length - 1; count++) {
+                for (var count = 0; count < 13; count++) {
                     var denom = $("#" + trs[count].id).find('.txtDenomination').val();
                     var pcs = $("#" + trs[count].id).find('.txtNoPCS').val();
                     var amount = $("#" + trs[count].id).find('.txtAmount').val();

@@ -33,5 +33,6 @@ namespace ExpenseProcessingSystem.ViewModels
         public List<DMAccountModel> accAllList { get; set; }
         public List<DMCurrencyModel> currList { get; set; }
         public List<DMTRModel> taxRateList { get; set; }
+        public List<DMVendorModel> vendorList { get; set; }
     }
 }

@@ -1512,7 +1512,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<double>("Liq_TaxRate");
 
-                    b.Property<double>("Liq_VendorID");
+                    b.Property<int>("Liq_VendorID");
 
                     b.HasKey("id");
 

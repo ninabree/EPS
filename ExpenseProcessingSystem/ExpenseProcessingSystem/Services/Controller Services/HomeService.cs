@@ -60,6 +60,7 @@ namespace ExpenseProcessingSystem.Services
                 .Select(x => x.User_Role).FirstOrDefault() ?? "";
             return data;
         }
+        private int[] status = { GlobalSystemValues.STATUS_APPROVED, GlobalSystemValues.STATUS_POSTED };
 
         //-----------------------------------Populate-------------------------------------//
         //[ Home ]
@@ -2800,8 +2801,6 @@ namespace ExpenseProcessingSystem.Services
         // [Report]
         public IEnumerable<HomeReportOutputAPSWT_MModel> GetAPSWT_MData(int month, int year)
         {
-            int[] status = { GlobalSystemValues.STATUS_APPROVED, GlobalSystemValues.STATUS_POSTED };
-            var vendList = _context.DMVendor.ToList();
             List<HomeReportOutputAPSWT_MModel> dbAPSWT_M = new List<HomeReportOutputAPSWT_MModel>();
             List<HomeReportOutputAPSWT_MModel> dbAPSWT_M_LIQ = new List<HomeReportOutputAPSWT_MModel>();
 
@@ -2809,14 +2808,15 @@ namespace ExpenseProcessingSystem.Services
             dbAPSWT_M = (from expEntryDetl in _context.ExpenseEntryDetails
                          join expense in _context.ExpenseEntry on expEntryDetl.ExpenseEntryModel.Expense_ID equals expense.Expense_ID
                          join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
+                         join vend in _context.DMVendor on expEntryDetl.ExpDtl_Ewt_Payor_Name_ID equals vend.Vendor_ID
                          where status.Contains(expense.Expense_Status)
                          && expense.Expense_Last_Updated.Month == month
                          && expense.Expense_Last_Updated.Year == year
                          orderby expense.Expense_Last_Updated
                          select new HomeReportOutputAPSWT_MModel
                          {
-                             Payee_ID = expense.Expense_Payee,
-                             Payee_SS_ID = expEntryDetl.ExpDtl_SS_Payee,
+                             Payee = vend.Vendor_Name,
+                             Tin = vend.Vendor_TIN,
                              ATC = tr.TR_ATC,
                              NOIP = tr.TR_Nature,
                              AOIP = expEntryDetl.ExpDtl_Debit,
@@ -2825,26 +2825,19 @@ namespace ExpenseProcessingSystem.Services
                              Last_Update_Date = expense.Expense_Last_Updated
                          }).ToList();
 
-            foreach (var i in dbAPSWT_M)
-            {
-                var vendorRecord = vendList.Where(x => x.Vendor_ID == i.Payee_ID || x.Vendor_ID == i.Payee_SS_ID).FirstOrDefault();
-
-                i.Tin = vendorRecord.Vendor_TIN;
-                i.Payee = vendorRecord.Vendor_Name;
-            }
-
             //Get data from Taxable liquidation table.
             dbAPSWT_M_LIQ = (from ie in _context.LiquidationInterEntity
                              join expDtl in _context.ExpenseEntryDetails on ie.ExpenseEntryDetailModel.ExpDtl_ID equals expDtl.ExpDtl_ID
                              join liqDtl in _context.LiquidationEntryDetails on expDtl.ExpenseEntryModel.Expense_ID equals liqDtl.ExpenseEntryModel.Expense_ID
                              join tr in _context.DMTR on ie.Liq_TaxRate equals tr.TR_ID
+                             join vend in _context.DMVendor on ie.Liq_VendorID equals vend.Vendor_ID
                              where status.Contains(liqDtl.Liq_Status)
-                             && ie.Liq_TaxRate > 0
                              && liqDtl.Liq_LastUpdated_Date.Month == month
                              && liqDtl.Liq_LastUpdated_Date.Year == year
                              select new HomeReportOutputAPSWT_MModel
                              {
-                                 Payee_SS_ID = expDtl.ExpDtl_SS_Payee,
+                                 Payee = vend.Vendor_Name,
+                                 Tin = vend.Vendor_TIN,
                                  ATC = tr.TR_ATC,
                                  NOIP = tr.TR_Nature_Income_Payment,
                                  AOIP = ie.Liq_Amount_2_1 + ie.Liq_Amount_2_2 + ie.Liq_Amount_3_1,
@@ -2852,20 +2845,12 @@ namespace ExpenseProcessingSystem.Services
                                  AOTW = ie.Liq_Amount_2_2,
                                  Last_Update_Date = liqDtl.Liq_LastUpdated_Date
                              }).ToList();
-            foreach (var i in dbAPSWT_M_LIQ)
-            {
-                var vendorRecord = vendList.Where(x => x.Vendor_ID == i.Payee_ID || x.Vendor_ID == i.Payee_SS_ID).FirstOrDefault();
-
-                i.Tin = vendorRecord.Vendor_TIN;
-                i.Payee = vendorRecord.Vendor_Name;
-            }
 
             return dbAPSWT_M.Concat(dbAPSWT_M_LIQ).OrderBy(x => x.Payee);
         }
 
         public IEnumerable<HomeReportOutputAST1000Model> GetAST1000_Data(HomeReportViewModel model)
         {
-            int[] status = { GlobalSystemValues.STATUS_APPROVED, GlobalSystemValues.STATUS_POSTED };
             string format = "yyyy-M";
             DateTime startDT = new DateTime();
             DateTime endDT = new DateTime();
@@ -2879,8 +2864,7 @@ namespace ExpenseProcessingSystem.Services
                 startDT = model.PeriodFrom;
                 endDT = model.PeriodTo;
             }
-
-            var vendList = _context.DMVendor.ToList();
+            
             List<HomeReportOutputAST1000Model> dbAST1000 = new List<HomeReportOutputAST1000Model>();
             List<HomeReportOutputAST1000Model> dbAST1000_LIQ = new List<HomeReportOutputAST1000Model>();
 
@@ -2888,6 +2872,7 @@ namespace ExpenseProcessingSystem.Services
             dbAST1000 = (from expEntryDetl in _context.ExpenseEntryDetails
                          join expense in _context.ExpenseEntry on expEntryDetl.ExpenseEntryModel.Expense_ID equals expense.Expense_ID
                          join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
+                         join vend in _context.DMVendor on expEntryDetl.ExpDtl_Ewt_Payor_Name_ID equals vend.Vendor_ID
                          where status.Contains(expense.Expense_Status)
                          && model.TaxRateList.Contains(tr.TR_Tax_Rate)
                          && startDT.Date <= expense.Expense_Last_Updated.Date
@@ -2895,35 +2880,29 @@ namespace ExpenseProcessingSystem.Services
                          orderby expense.Expense_Last_Updated
                          select new HomeReportOutputAST1000Model
                          {
-                             Payee_ID = expense.Expense_Payee,
-                             Payee_SS_ID = expEntryDetl.ExpDtl_SS_Payee,
+                             SupplierName = vend.Vendor_Name,
+                             Tin = vend.Vendor_TIN,
                              ATC = tr.TR_ATC,
                              NOIP = tr.TR_Nature,
                              TaxBase = expEntryDetl.ExpDtl_Credit_Cash,
                              RateOfTax = tr.TR_Tax_Rate,
                              AOTW = expEntryDetl.ExpDtl_Credit_Ewt
                          }).ToList();
-            Console.WriteLine("########" + dbAST1000.Count());
-            foreach (var i in dbAST1000)
-            {
-                var vendorRecord = vendList.Where(x => x.Vendor_ID == i.Payee_ID || x.Vendor_ID == i.Payee_SS_ID).FirstOrDefault();
-
-                i.Tin = vendorRecord.Vendor_TIN;
-                i.SupplierName = vendorRecord.Vendor_Name;
-            }
 
             //Get data from Taxable liquidation table.
             dbAST1000_LIQ = (from ie in _context.LiquidationInterEntity
                              join expDtl in _context.ExpenseEntryDetails on ie.ExpenseEntryDetailModel.ExpDtl_ID equals expDtl.ExpDtl_ID
                              join liqDtl in _context.LiquidationEntryDetails on expDtl.ExpenseEntryModel.Expense_ID equals liqDtl.ExpenseEntryModel.Expense_ID
                              join tr in _context.DMTR on ie.Liq_TaxRate equals tr.TR_ID
+                             join vend in _context.DMVendor on ie.Liq_VendorID equals vend.Vendor_ID
                              where status.Contains(liqDtl.Liq_Status)
                              && model.TaxRateList.Contains(float.Parse(ie.Liq_TaxRate.ToString()))
                              && startDT.Date <= liqDtl.Liq_LastUpdated_Date
                              && liqDtl.Liq_LastUpdated_Date <= endDT.Date
                              select new HomeReportOutputAST1000Model
                              {
-                                 Payee_SS_ID = expDtl.ExpDtl_SS_Payee,
+                                 SupplierName = vend.Vendor_Name,
+                                 Tin = vend.Vendor_TIN,
                                  ATC = tr.TR_ATC,
                                  NOIP = tr.TR_Nature_Income_Payment,
                                  TaxBase = ie.Liq_Amount_2_1 + ie.Liq_Amount_2_2 + ie.Liq_Amount_3_1,
@@ -2931,15 +2910,6 @@ namespace ExpenseProcessingSystem.Services
                                  AOTW = ie.Liq_Amount_2_2,
                                  Last_Update_Date = liqDtl.Liq_LastUpdated_Date
                              }).ToList();
-
-            Console.WriteLine("########" + dbAST1000_LIQ.Count());
-            foreach (var i in dbAST1000_LIQ)
-            {
-                var vendorRecord = vendList.Where(x => x.Vendor_ID == i.Payee_ID || x.Vendor_ID == i.Payee_SS_ID).FirstOrDefault();
-
-                i.Tin = vendorRecord.Vendor_TIN;
-                i.SupplierName = vendorRecord.Vendor_Name;
-            }
 
             return dbAST1000.Concat(dbAST1000_LIQ).OrderBy(x => x.SupplierName);
         }
@@ -5280,8 +5250,7 @@ namespace ExpenseProcessingSystem.Services
             string format = "yyyy-M";
             DateTime startDT = DateTime.ParseExact(model.Year + "-" + model.Month, format, CultureInfo.InvariantCulture);
             DateTime endDT = DateTime.ParseExact(model.YearTo + "-" + model.MonthTo, format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
-
-            var vendList = _context.DMVendor.ToList();
+            
             List<HomeReportOutputAPSWT_MModel> dbBIRCSV = new List<HomeReportOutputAPSWT_MModel>();
             List<HomeReportOutputAPSWT_MModel> dbBIRCSV_LIQ = new List<HomeReportOutputAPSWT_MModel>();
 
@@ -5289,14 +5258,15 @@ namespace ExpenseProcessingSystem.Services
             dbBIRCSV = (from expEntryDetl in _context.ExpenseEntryDetails
                         join expense in _context.ExpenseEntry on expEntryDetl.ExpenseEntryModel.Expense_ID equals expense.Expense_ID
                         join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
+                        join vend in _context.DMVendor on expEntryDetl.ExpDtl_Ewt_Payor_Name_ID equals vend.Vendor_ID
                         where status.Contains(expense.Expense_Status)
                                && startDT.Date <= expense.Expense_Last_Updated.Date
                                && expense.Expense_Last_Updated.Date <= endDT.Date
                         orderby expense.Expense_Last_Updated
                         select new HomeReportOutputAPSWT_MModel
                         {
-                            Payee_ID = expense.Expense_Payee,
-                            Payee_SS_ID = expEntryDetl.ExpDtl_SS_Payee,
+                            Payee = vend.Vendor_Name,
+                            Tin = vend.Vendor_TIN,
                             ATC = tr.TR_ATC,
                             NOIP = tr.TR_Nature,
                             AOIP = expEntryDetl.ExpDtl_Debit,
@@ -5305,25 +5275,19 @@ namespace ExpenseProcessingSystem.Services
                             Last_Update_Date = expense.Expense_Last_Updated
                         }).ToList();
 
-            foreach (var i in dbBIRCSV)
-            {
-                var vendorRecord = vendList.Where(x => x.Vendor_ID == i.Payee_ID || x.Vendor_ID == i.Payee_SS_ID).FirstOrDefault();
-
-                i.Tin = vendorRecord.Vendor_TIN;
-                i.Payee = vendorRecord.Vendor_Name;
-            }
-
             //Get data from Taxable liquidation table.
             dbBIRCSV_LIQ = (from ie in _context.LiquidationInterEntity
                             join expDtl in _context.ExpenseEntryDetails on ie.ExpenseEntryDetailModel.ExpDtl_ID equals expDtl.ExpDtl_ID
                             join liqDtl in _context.LiquidationEntryDetails on expDtl.ExpenseEntryModel.Expense_ID equals liqDtl.ExpenseEntryModel.Expense_ID
                             join tr in _context.DMTR on ie.Liq_TaxRate equals tr.TR_ID
+                            join vend in _context.DMVendor on ie.Liq_VendorID equals vend.Vendor_ID
                             where status.Contains(liqDtl.Liq_Status)
                                 && startDT.Date <= liqDtl.Liq_LastUpdated_Date.Date
                                 && liqDtl.Liq_LastUpdated_Date.Date <= endDT.Date
                             select new HomeReportOutputAPSWT_MModel
                             {
-                                Payee_SS_ID = expDtl.ExpDtl_SS_Payee,
+                                Payee = vend.Vendor_Name,
+                                Tin = vend.Vendor_TIN,
                                 ATC = tr.TR_ATC,
                                 NOIP = tr.TR_Nature_Income_Payment,
                                 AOIP = ie.Liq_Amount_2_1 + ie.Liq_Amount_2_2 + ie.Liq_Amount_3_1,
@@ -5331,13 +5295,6 @@ namespace ExpenseProcessingSystem.Services
                                 AOTW = ie.Liq_Amount_2_2,
                                 Last_Update_Date = liqDtl.Liq_LastUpdated_Date
                             }).ToList();
-            foreach (var i in dbBIRCSV_LIQ)
-            {
-                var vendorRecord = vendList.Where(x => x.Vendor_ID == i.Payee_ID || x.Vendor_ID == i.Payee_SS_ID).FirstOrDefault();
-
-                i.Tin = vendorRecord.Vendor_TIN;
-                i.Payee = vendorRecord.Vendor_Name;
-            }
 
             return dbBIRCSV.Concat(dbBIRCSV_LIQ).OrderBy(x => x.Payee);
         }
@@ -6242,10 +6199,6 @@ namespace ExpenseProcessingSystem.Services
                     });
                 }
             }
-
-            Console.WriteLine("#####" + list1.Count());
-            Console.WriteLine("#####" + list.Count());
-
             return list.OrderBy(x => x.Trans_Value_Date);
         }
 
@@ -6855,6 +6808,7 @@ namespace ExpenseProcessingSystem.Services
                         ExpDtl_CreditAccount2 = getAccountByMasterID(creditAccMasterID2).Account_ID,
                         ExpenseEntryAmortizations = expenseAmor,
                         ExpenseEntryGbaseDtls = expenseGbase,
+                        ExpDtl_Ewt_Payor_Name_ID = cv.dtl_Ewt_Payor_Name_ID,
                         ExpenseEntryCashBreakdowns = expenseCashBreakdown
                     };
                     expenseDtls.Add(expenseDetails);
@@ -6977,6 +6931,7 @@ namespace ExpenseProcessingSystem.Services
                     creditAccount1 = dtl.d.ExpDtl_CreditAccount1,
                     creditAccount2 = dtl.d.ExpDtl_CreditAccount2,
                     dtlSSPayee = dtl.d.ExpDtl_SS_Payee,
+                    dtl_Ewt_Payor_Name_ID = dtl.d.ExpDtl_Ewt_Payor_Name_ID,
                     month = dtl.d.ExpDtl_Amor_Month,
                     day = dtl.d.ExpDtl_Amor_Day,
                     duration = dtl.d.ExpDtl_Amor_Duration,
@@ -7924,7 +7879,8 @@ namespace ExpenseProcessingSystem.Services
                         Liq_InterRate_2_2 = liqIE.Liq_InterRate_2_2,
                         Liq_InterRate_3_1 = liqIE.Liq_InterRate_3_1,
                         Liq_InterRate_3_2 = liqIE.Liq_InterRate_3_2,
-                        Liq_Tax_Rate = liqIE.Liq_TaxRate
+                        Liq_Tax_Rate = liqIE.Liq_TaxRate,
+                        Liq_VendorID = liqIE.Liq_VendorID
                     };
 
                     liqInterEntity.Add(liqIETemp);
@@ -8046,7 +8002,8 @@ namespace ExpenseProcessingSystem.Services
                         Liq_DebitCred_3_2 = i.liqInterEntity[0].Liq_DebitCred_3_2,
                         Liq_AccountID_3_2 = i.liqInterEntity[0].Liq_AccountID_3_2,
                         Liq_Amount_3_2 = i.liqInterEntity[0].Liq_Amount_3_2,
-                        Liq_TaxRate = i.liqInterEntity[0].Liq_Tax_Rate
+                        Liq_TaxRate = i.liqInterEntity[0].Liq_Tax_Rate,
+                        Liq_VendorID = i.liqInterEntity[0].Liq_VendorID
                     });
                     _context.SaveChanges();
                 }
@@ -8077,7 +8034,8 @@ namespace ExpenseProcessingSystem.Services
                             Liq_InterRate_2_2 = j.Liq_InterRate_2_2,
                             Liq_CCY_2_2 = j.Liq_CCY_2_2,
                             Liq_Amount_2_2 = j.Liq_Amount_2_2,
-                            Liq_TaxRate = j.Liq_Tax_Rate
+                            Liq_TaxRate = j.Liq_Tax_Rate,
+                            Liq_VendorID = j.Liq_VendorID
                         });
                         _context.SaveChanges();
                     }
@@ -9922,6 +9880,17 @@ namespace ExpenseProcessingSystem.Services
         {
             return _context.DMVendor.FirstOrDefault(x => x.Vendor_ID == id);
         }
+        //get vendor list
+        public List<DMVendorModel> getVendorList()
+        {
+            return _context.DMVendor.Where(x => x.Vendor_isActive == true && x.Vendor_isDeleted == false)
+                                        .OrderBy(x => x.Vendor_Name).ToList();
+        }
+        //get all vendor list
+        public List<DMVendorModel> getAllVendorList()
+        {
+            return _context.DMVendor.OrderBy(x => x.Vendor_Name).ToList();
+        }
         //get account
         public DMAccountModel getAccount(int id)
         {
@@ -10070,6 +10039,21 @@ namespace ExpenseProcessingSystem.Services
             return _context.DMCurrency.Where(x => x.Curr_MasterID == masterID && x.Curr_isActive == true
                     && x.Curr_isDeleted == false).FirstOrDefault();
         }
+        //get Tax Rate list for specific vendor in List<T>
+        public List<DMTRModel> getVendorTaxList(int vendorMasterID)
+        {
+            return (from vendTr in _context.DMVendorTRVAT
+                    join tr in _context.DMTR on vendTr.VTV_TR_ID equals tr.TR_ID
+                    where tr.TR_isActive == true && tr.TR_isDeleted == false 
+                        && vendTr.VTV_Vendor_ID == vendorMasterID
+                    select new DMTRModel
+                    {
+                        TR_ID =  tr.TR_ID,
+                        TR_MasterID = tr.TR_MasterID,
+                        TR_Tax_Rate = tr.TR_Tax_Rate * 100,
+                        TR_WT_Title = tr.TR_WT_Title
+                    }).ToList();
+        }
         //get Tax Rate list for specific user
         public SelectList getVendorTaxRate(int vendorID)
         {
@@ -10096,6 +10080,11 @@ namespace ExpenseProcessingSystem.Services
 
             return select;
         }
+        //get all Tax Rate including history
+        public List<DMTRModel> getAllTRList()
+        {
+            return _context.DMTR.OrderBy(x => x.TR_Tax_Rate).ToList();
+        }
         //get Vat list for specific user
         public SelectList getAllVat()
         {
@@ -10105,7 +10094,26 @@ namespace ExpenseProcessingSystem.Services
                         "VAT_ID", "VAT_Rate");
             return select;
         }
-
+        //get VAT Rate list for specific vendor in List<T>
+        public List<DMVATModel> getVendorVatList(int vendorMasterID)
+        {
+            return (from vendTr in _context.DMVendorTRVAT
+                    join vat in _context.DMVAT on vendTr.VTV_VAT_ID equals vat.VAT_ID
+                    where vat.VAT_isActive == true && vat.VAT_isDeleted == false
+                        && vendTr.VTV_Vendor_ID == vendorMasterID
+                    select new DMVATModel
+                    {
+                        VAT_ID = vat.VAT_ID,
+                        VAT_MasterID = vat.VAT_MasterID,
+                        VAT_Rate = vat.VAT_Rate * 100,
+                        VAT_Name = vat.VAT_Name
+                    }).ToList();
+        }
+        //get all VAT including history
+        public List<DMVATModel> getAllVATList()
+        {
+            return _context.DMVAT.OrderBy(x => x.VAT_Rate).ToList();
+        }
         //get Vat list for specific user
         public SelectList getVendorVat(int vendorID)
         {

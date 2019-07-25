@@ -96,5 +96,6 @@ namespace ExpenseProcessingSystem.ViewModels
         public int Liq_CCY_3_2 { get; set; }
         public double Liq_Amount_3_2 { get; set; }
         public double Liq_Tax_Rate { get; set; }
+        public int Liq_VendorID { get; set; }
     }
 }

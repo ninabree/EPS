@@ -34,7 +34,7 @@
         <div class="flex-c">
             <table class="table table-bordered table-striped voucher-tbl w-97" id="inputTable">
                 <colgroup>
-                    <col style="width:22%;" />
+                    <col style="width:20%;" />
                     <col style="width:15%;" />
                     <col style="width:3%;" />
                     <col style="width:10%" />
@@ -42,6 +42,7 @@
                     <col style="width:7%;" />
                     <col style="width:2%;" />
                     <col style="width:7%;" />
+                    <col style="width:2%;" />
                     <col style="width:10%;" />
                     <col style="width:10%;" />
                     <col style="width:10%;" />
@@ -54,7 +55,7 @@
                         <th rowspan="2">FBT</th>
                         <th rowspan="2">Dept</th>
                         <th rowspan="2" colspan="2">VAT</th>
-                        <th rowspan="2" colspan="2">EWT</th>
+                        <th rowspan="2" colspan="3">EWT</th>
                         <th colspan="1">Debit</th>
                         <th colspan="2">Credit</th>
                     </tr>
@@ -97,13 +98,17 @@
                             </td>
                             <td>
                                 @*@Html.TextBoxFor(x => Model.EntryCV[i].vat, new { @class = "input100 txtVat", @readonly = "true" })*@
-                                @Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.systemValues.vat.SelectedValue), new { @class = "input100 txtVat comVar", @disabled = "true" })
+                                @Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.EntryCV[i].vendVATList, "VAT_ID", "VAT_Rate", Model.EntryCV[i].vat), new { @class = "input100 txtVat comVar", @disabled = "true" })
                             </td>
                             <td style="text-align:center">
                                 @Html.CheckBoxFor(x => Model.EntryCV[i].chkEwt, new { @class = "chkEwt comVar" })
                             </td>
                             <td>
-                                @Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt comVar", @disabled = "true" })
+                                @Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.EntryCV[i].vendTRList, "TR_ID", "TR_Tax_Rate", Model.EntryCV[i].ewt), new { @class = "input100 txtEwt comVar", @disabled = "true" })
+                            </td>
+                            <td style="text-align:center">
+                                <a class="reqEWTBtn glyphicon glyphicon-list-alt expenseEWT" href="#" style="pointer-events:none;"></a>
+                                @Html.HiddenFor(x => Model.EntryCV[i].dtl_Ewt_Payor_Name_ID, new { @class = "txtPayor" })
                             </td>
                             <td>
                                 @Html.TextBoxFor(x => Model.EntryCV[i].debitGross, new { @class = "input100 txtGross", @type = "number", @min = "0", @readonly = "readonly" })
@@ -135,13 +140,13 @@
                         <td style="border:none; background-color:#f2f2f2" rowspan="2"></td>
                         <td style="border:none; background-color:#f2f2f2" rowspan="2"></td>
                         <td style="border:none; background-color:#f2f2f2" rowspan="2"></td>
-                        <td style="border:none; background-color:#f2f2f2;text-align:right" colspan="3">Sub-total:</td>
+                        <td style="border:none; background-color:#f2f2f2;text-align:right" colspan="4">Sub-total:</td>
                         <td rowspan="2"><input type="text" class="input100" readonly id="grossTotal" /></td>
                         <td><input type="text" readonly class="input100" id="credEwtTotal" /></td>
                         <td><input type="text" readonly class="input100" id="credCashTotal" /></td>
                     </tr>
                     <tr>
-                        <td style="border:none; background-color: #f2f2f2;text-align:right" colspan="3">Total:</td>
+                        <td style="border:none; background-color: #f2f2f2;text-align:right" colspan="4">Total:</td>
                         <td colspan="2"><div class="flex-c"><input type="text" class="input100" readonly id="credTotal" /></div></td>
                     </tr>
                 </tbody>
@@ -177,6 +182,9 @@
     }
     <div id="modalDiv">
         @Html.Partial("ModalGBase")
+    </div>
+    <div id="modalDiv2">
+        @Html.Partial("ModalPartial2")
     </div>
 </div>
 @*validation message*@
@@ -252,23 +260,25 @@
 
             htmlContent += '</select></td>' +
                 '<td style="text-align:center"><input class="chkVat comVar" data-val="true" data-val-required="The chkVat field is required." id="EntryCV_' + itemCount + '__chkVat" name="EntryCV[' + itemCount + '].chkVat" type="checkbox" value="true"></td>' +
-                //'<td><input class="input100 txtVat" data-val="true" data-val-number="The field vat must be a number." data-val-required="The vat field is required." id="EntryCV_' + itemCount + '__vat" name="EntryCV[' + itemCount + '].vat" readonly="true" type="text" value="0"></td>' +
                 '<td><select class="input100 txtVat comVar" data-val="true" data-val-required="The vat field is required." id="EntryCV_' + itemCount + '__vat" name="EntryCV[' + itemCount + '].vat" disabled="disabled">';
-
+            for (var i = 0; i < vat.length; i++) {
+                htmlContent += '<option value="' + vat[i]["value"] + '">' + vat[i]["text"] + '</option>';
+            }
             htmlContent += '</select></td>' +
                 '<td style="text-align:center"><input class="chkEwt comVar" data-val="true" data-val-required="The chkEwt field is required." id="EntryCV_' + itemCount + '__chkEwt" name="EntryCV[' + itemCount + '].chkEwt" type="checkbox" value="true"></td>' +
                 '<td><select class="input100 txtEwt comVar" data-val="true" data-val-required="The ewt field is required." id="EntryCV_' + itemCount + '__ewt" name="EntryCV[' + itemCount + '].ewt" disabled="disabled">';
-
+            for (var i = 0; i < ewt.length; i++) {
+                htmlContent += '<option value="' + ewt[i]["value"] + '">' + ewt[i]["text"] + '</option>';
+            }
             htmlContent += '</select></td>' +
+                '<td style="text-align:center"><a class="reqEWTBtn glyphicon glyphicon-list-alt expenseEWT" href="#" style="pointer-events:none;"></a><input data-val="true" data-val-required="The dtl_Ewt_Payor_Name_ID field is required." id="EntryCV_' + itemCount + '__dtl_Ewt_Payor_Name_ID" name="EntryCV[' + itemCount + '].dtl_Ewt_Payor_Name_ID" class = "txtPayor" type="hidden" value="0"></td>' +
                 '<td><input class="input100 txtGross" data-val="true" data-val-number="The field debitGross must be a number." data-val-required="The debitGross field is required." id="EntryCV_' + itemCount + '__debitGross" name="EntryCV[' + itemCount + '].debitGross" type="number" readonly="true" min="0" value="0"></td>' +
                 '<td><input class="input100  txtCredEwt" data-val="true" data-val-number="The field credEwt must be a number." data-val-required="The credEwt field is required." id="EntryCV_' + itemCount + '__credEwt" name="EntryCV[' + itemCount + '].credEwt" type="number" readonly="true" min="0" value="0"></td>' +
                 '<td><input class="input100 txtCredCash" data-val="true" data-val-number="The field credCash must be a number." data-val-required="The credCash field is required." id="EntryCV_' + itemCount + '__credCash" name="EntryCV[' + itemCount + '].credCash" type="number" readonly="true" min="0" value="0"></td>' +
                 '<td id="req_' + itemCount + '"><a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#"></a><input class="hiddenItem" data-val="true" data-val-required="The modalInputFlag field is required." id="EntryCV_' + itemCount + '__modalInputFlag" name="EntryCV[' + itemCount + '].modalInputFlag" type="hidden" value="0"><input id="EntryCV_' + itemCount + '__screenCode" name="EntryCV[' + itemCount + '].screenCode" type="hidden" value="PCV"><div id="divCashBD_' + itemCount + '"></div></td>';
 
             newRow.innerHTML = htmlContent;
-
-            $('#EntryCV_' + itemCount + '__vat').append($("#EntryCV_0__vat > option").clone());
-            $('#EntryCV_' + itemCount + '__ewt').append($("#EntryCV_0__ewt > option").clone());
+            
         });
 
         //Cash Breakdown Modal
@@ -282,7 +292,7 @@
 
             $('.modal-header').find('.modal-title').remove();
             $('.modal-header').append('<h4 class="modal-title">Cash Breakdown</h4>');
-
+            modalDivBody.empty();
             modalDivBody.load("@Url.Action("EntryExpenseCashBreakdown", "Modal")", {
                 "id": id,
                 "vendor": $("#vendorName option:selected").text(),
@@ -312,8 +322,36 @@
             var ret = itemNo.replace('item_', '');
             $('#divCashBD_' + ret).empty();
             $('#EntryCV_' + ret + '__modalInputFlag').val(0);
-        
         });
+        $("table").on("click", ".expenseEWT", function (e) {
+                e.stopImmediatePropagation();
+                var myModal2 = $('.myModal2');
+                var modalDiv2 = $(myModal2).find('div div');
+                var modalDivHeader2 = $(modalDiv2).find('.modal-header2');
+                var modalDivBody2 = $(modalDiv2).find('.modal-body2');
+                var modalDivFooter2 = $(modalDiv2).find('.modal-footer2');
+
+                var pNode = $(this.parentNode)[0].parentNode;
+                var taxpayor = $("#" + pNode.id).find(".txtPayor").val()
+
+                //remove prev contents
+                modalDivBody2.empty();
+                modalDivHeader2.find('h4').remove();
+                modalDivFooter2.find("#add_row_btn").remove();
+
+                //set modal header title
+                modalDivHeader2.append('<h4 class="modal-title">EWT Information</h4>');
+                modalDivBody2.load("@Url.Action("EntryExpenseEWT", "Modal")", {
+                    "id": pNode.id,
+                    "taxpayor": taxpayor
+                }, function (response, status, xhr) {
+                    if (status == "error") {
+                        alert("Something went wrong.");
+                    }
+                });
+
+                $(myModal2).modal('show');
+            });
     });
 </script>
 <script type="text/javascript">
@@ -368,12 +406,27 @@
     };
 
     function ddlEnabled(idx) {
-        if ($('#item_' + idx).find('.chkVat').is(':checked')) {
-            $('#item_' + idx).find('.txtVat').removeAttr('disabled');
+        var pid = "#item_" + idx;
+        if (!$(pid).find(".chkEwt").is(':checked')) {
+            if ($(pid).find(".chkVat").is(':checked')) {
+                $(pid).find('.reqEWTBtn').css("pointer-events", "auto");
+            } else {
+                $(pid).find('.reqEWTBtn').css("pointer-events", "none");
+            }
+        } else {
+            $(pid).find('.reqEWTBtn').css("pointer-events", "auto");
+            $('#item_' + idx).find('.txtEwt').removeAttr('disabled');
         }
 
-        if ($('#item_' + idx).find('.chkEwt').is(':checked')) {
-            $('#item_' + idx).find('.txtEwt').removeAttr('disabled');
+        if (!$(pid).find(".chkVat").is(':checked')) {
+            if ($(pid).find(".chkEwt").is(':checked')) {
+                $(pid).find('.reqEWTBtn').css("pointer-events", "auto");
+            } else {
+                $(pid).find('.reqEWTBtn').css("pointer-events", "none");
+            }
+        } else {
+            $(pid).find('.reqEWTBtn').css("pointer-events", "auto");
+            $('#item_' + idx).find('.txtVat').removeAttr('disabled');
         }
     };
 </script>

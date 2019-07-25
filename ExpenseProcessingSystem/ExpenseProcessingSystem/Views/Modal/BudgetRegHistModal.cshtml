@@ -73,10 +73,10 @@
         $('#saveBtnEntry').css('display', 'none');
 
         $(".ddlYear").change(function () {
-            var modalDivBody = $('.modal-body');
+            var modalDivBody = $('.modal-body2');
 
-            if ($('.modal-header').find(".modal-title")[0] == null) {
-                $('.modal-header').append('<h4 class="modal-title">History of Budget Registration</h4>');
+            if ($('.modal-header2').find(".modal-title")[0] == null) {
+                $('.modal-header2').append('<h4 class="modal-title">History of Budget Registration</h4>');
             }
 
              modalDivBody.load("@Url.Action("BudgetRegHistModal", "Modal")", {

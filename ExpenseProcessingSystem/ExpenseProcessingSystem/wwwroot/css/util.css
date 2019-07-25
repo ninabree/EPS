@@ -1,10 +1,10 @@
 /*[ MODAL ]
 ///////////////////////////////////////////////////////////
 */
-.modal-dialog {
+.modal-dialog, .modal-dialog2 {
     max-width: 75% !important;
 }
-.modal-body {
+.modal-body, .modal-body2 {
     /*max-height: 300px;*/
     /*overflow-y: scroll;*/
 }

@@ -6,18 +6,20 @@ namespace ExpenseProcessingSystem.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<double>(
-                name: "Liq_TaxRate",
+            migrationBuilder.AlterColumn<int>(
+                name: "Liq_VendorID",
                 table: "LiquidationInterEntity",
                 nullable: false,
-                defaultValue: 0.0);
+                oldClrType: typeof(double));
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Liq_TaxRate",
-                table: "LiquidationInterEntity");
+            migrationBuilder.AlterColumn<double>(
+                name: "Liq_VendorID",
+                table: "LiquidationInterEntity",
+                nullable: false,
+                oldClrType: typeof(int));
         }
     }
 }
