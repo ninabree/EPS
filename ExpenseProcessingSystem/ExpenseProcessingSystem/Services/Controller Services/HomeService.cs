@@ -2986,6 +2986,64 @@ namespace ExpenseProcessingSystem.Services
             };
         }
 
+        public List<RepAmortViewModel> GetPrepaidAmortSchedule(HomeReportViewModel model)
+        {
+            List<RepAmortViewModel> repAmortVMs = new List<RepAmortViewModel>();
+            List<AmortSched> amorts = new List<AmortSched>();
+            var entryList = (from ent in _context.ExpenseEntry
+                             from dtls in _context.ExpenseEntryDetails
+                             where ent.Expense_ID == dtls.ExpenseEntryModel.Expense_ID
+                             && dtls.ExpenseEntryAmortizations.Count > 0
+                             && ent.Expense_ID == int.Parse(model.VoucherNo)
+                             select new {
+                                 ent,
+                                 ExpenseEntryDetails = from d
+                                                      in _context.ExpenseEntryDetails
+                                                      where d.ExpenseEntryModel.Expense_ID == ent.Expense_ID
+                                                      select new
+                                                      {
+                                                          d,
+                                                          ExpenseEntryAmortizations = from a
+                                                                                      in _context.ExpenseEntryAmortizations
+                                                                                      where a.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
+                                                                                      select a
+                                                      }
+
+                        }).ToList();
+            if (entryList.Count > 0)
+            {
+                foreach (var list in entryList)
+                {
+                    foreach (var dtl in list.ExpenseEntryDetails)
+                    {
+                        amorts = new List<AmortSched>();
+                        dtl.ExpenseEntryAmortizations.ToList().ForEach(a =>
+                            amorts.Add(new AmortSched
+                            {
+                                as_Amort_Name = a.Amor_Sched_Date.ToShortDateString(),
+                                as_Amount = a.Amor_Price
+                            })
+                        );
+                        repAmortVMs.Add(new RepAmortViewModel()
+                        {
+                            PA_AmortScheds = amorts,
+                            PA_VoucherNo = GlobalSystemValues.getApplicationCode(list.ent.Expense_Type) + "-" + list.ent.Expense_Date.Year + "-" + list.ent.Expense_Number.ToString().PadLeft(5, '0'),
+                            PA_CheckNo = list.ent.Expense_CheckNo,
+                            PA_RefNo = "",
+                            PA_Value_Date = list.ent.Expense_Last_Updated,
+                            PA_Section = "10",
+                            PA_Remarks = dtl.d.ExpDtl_Gbase_Remarks,
+                            PA_Vendor_Name = getVendorName(list.ent.Expense_Payee, list.ent.Expense_Payee_Type),
+                            PA_Total_Amt = dtl.d.ExpDtl_Debit,
+                            PA_Day = dtl.d.ExpDtl_Amor_Day,
+                            PA_Month = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(dtl.d.ExpDtl_Amor_Month),
+                            PA_No_Of_Months = dtl.d.ExpDtl_Amor_Duration
+                        });
+                    }
+                };
+            }
+            return repAmortVMs;
+        }
         public IEnumerable<HomeReportActualBudgetModel> GetActualReportData(int filterMonth, int filterYear)
         {
             List<HomeReportActualBudgetModel> actualBudgetData = new List<HomeReportActualBudgetModel>();
@@ -6672,19 +6730,29 @@ namespace ExpenseProcessingSystem.Services
         }
         public List<VoucherNoOptions> PopulateVoucherNoCV()
         {
-            var vn = _context.ExpenseEntry
-                .Where(x => x.Expense_Payee_Type == GlobalSystemValues.PAYEETYPE_REGEMP
-                        && x.Expense_Last_Updated.Date == DateTime.Now.Date)
-                .ToList().Distinct();
+            var vn = (from recs in (from ent in _context.ExpenseEntry
+                                    from dtls in _context.ExpenseEntryDetails
+                                    where ent.Expense_ID == dtls.ExpenseEntryModel.Expense_ID
+                                    select new
+                                    {
+                                        ent,
+                                        dtls
+                                    })
+                      from amort in _context.ExpenseEntryAmortizations
+                      where recs.dtls.ExpDtl_ID == amort.ExpenseEntryDetailModel.ExpDtl_ID
+                      select new
+                      {
+                          recs
+                      }).ToList().Distinct();
             List<VoucherNoOptions> vnList = new List<VoucherNoOptions>();
             foreach (var x in vn)
             {
                 vnList.Add(new VoucherNoOptions
                 {
-                    vchr_ID = x.Expense_ID,
-                    vchr_No = GlobalSystemValues.getApplicationCode(x.Expense_Type) + "-" + x.Expense_Date.Year + "-" + x.Expense_Number.ToString().PadLeft(5, '0'),
-                    vchr_EmployeeName = getVendorName(x.Expense_Payee, x.Expense_Payee_Type),
-                    vchr_Status = getStatus(x.Expense_Status)
+                    vchr_ID = x.recs.ent.Expense_ID,
+                    vchr_No = GlobalSystemValues.getApplicationCode(x.recs.ent.Expense_Type) + "-" + x.recs.ent.Expense_Date.Year + "-" + x.recs.ent.Expense_Number.ToString().PadLeft(5, '0'),
+                    vchr_EmployeeName = getVendorName(x.recs.ent.Expense_Payee, x.recs.ent.Expense_Payee_Type),
+                    vchr_Status = getStatus(x.recs.ent.Expense_Status)
                 });
             }
             return vnList;

@@ -1,0 +1,104 @@
+﻿@model ExpenseProcessingSystem.ViewModels.HomeReportDataFilterViewModel
+
+@{
+    Layout = null;
+}
+<link rel="stylesheet" href="~/css/util.css" />
+<style>
+    .bordered-td {
+        border: 1px solid #000000;
+    }
+</style>
+<table class="table" style="width:100%">
+    <tr>
+        <td style="width:10%" rowspan="2"><img src="@Model.ReportCommonVM.Header_Logo" style="width:100%;height:40%" /></td>
+        <td colspan="5" style="text-align:center"><b>Prepaid Amortization Schedule Report</b></td>
+        <td style="width:10%"></td>
+    </tr>
+    <tr>
+        <td colspan="7"></td>
+    </tr>
+    <tr>
+        <td style="padding-left:3%">Name</td>
+        <td colspan="2">@Model.ReportCommonVM.Header_Name</td>
+        <td colspan="4"></td>
+    </tr>
+    <tr>
+        <td style="padding-left:3%">TIN</td>
+        <td colspan="2">@Model.ReportCommonVM.Header_TIN</td>
+        <td colspan="4"></td>
+    </tr>
+    <tr>
+        <td style="padding-left:3%">Address</td>
+        <td colspan="2">@Model.ReportCommonVM.Header_Address</td>
+        <td colspan="4"></td>
+    </tr>
+</table>
+<div class="w-full">
+
+    @foreach (var ent in Model.ReportAmort)
+    {
+        <div class="bordered-td" style="margin: 2% 10% 0% 10%; padding: 2%;">
+
+            <table class="table w-full">
+                <tr>
+                    <td><b>Check Number</b></td>
+                    <td colspan="1" class="bordered-td">@ent.PA_CheckNo</td>
+                    <td colspan="4"><p></p></td>
+                </tr>
+                <tr>
+                    <td><b>Value Date</b></td>
+                    <td colspan="1" class="bordered-td">@ent.PA_Value_Date.ToShortDateString()</td>
+                    <td><b>Reference No.</b></td>
+                    <td colspan="1" class="bordered-td">@ent.PA_RefNo</td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <td><b>Section</b></td>
+                    <td colspan="1" class="bordered-td">@ent.PA_Section</td>
+                    <td><b>Remarks</b></td>
+                    <td colspan="3" class="bordered-td float-l">@ent.PA_Remarks</td>
+                </tr>
+                <tr>
+                    <td><b>Amount</b></td>
+                    <td colspan="1" class="bordered-td">@ent.PA_Total_Amt</td>
+                    <td colspan="4"><p></p></td>
+                </tr>
+                <tr>
+                    <td><b>Vendor</b></td>
+                    <td colspan="1" class="bordered-td">@ent.PA_Vendor_Name</td>
+                    <td colspan="4"><p></p></td>
+                </tr>
+                <tr>
+                    <td><b>First Month Of Amortization</b></td>
+                    <td colspan="1" class="bordered-td">@ent.PA_Month</td>
+                    <td><b>Day</b></td>
+                    <td colspan="1" class="bordered-td">@ent.PA_Day</td>
+                    <td><b>No. of Months</b></td>
+                    <td colspan="1" class="bordered-td">@ent.PA_No_Of_Months</td>
+                </tr>
+                <tr><td colspan="6"><p></p></td></tr>
+                <tr>
+                    <td colspan="2" class="bordered-td"><b>Schedule of Amortization</b></td>
+                    <td colspan="1" class="bordered-td"><b>Amount</b></td>
+                    <td colspan="4"></td>
+                </tr>
+                @if (ent.PA_AmortScheds.Count > 0)
+                {
+                    foreach (var a in ent.PA_AmortScheds)
+                    {
+
+                        <tr>
+                            <td colspan="2" class="bordered-td">@a.as_Amort_Name</td>
+                            <td colspan="1" class="bordered-td">@a.as_Amount</td>
+                            <td colspan="4"></td>
+                        </tr>
+                    }
+                }
+
+                <tr><td colspan="6"><p></p></td></tr>
+                <tr><td colspan="6"><p></p></td></tr>
+            </table>
+        </div>
+    }
+</div>

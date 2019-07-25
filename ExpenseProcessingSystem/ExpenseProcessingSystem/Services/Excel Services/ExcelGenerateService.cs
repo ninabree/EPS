@@ -1,4 +1,5 @@
 ﻿using ExpenseProcessingSystem.ViewModels;
+using ExpenseProcessingSystem.ViewModels.Reports;
 using Microsoft.AspNetCore.Mvc;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
@@ -47,6 +48,9 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     break;
                 case ConstantData.HomeReportConstantValue.WTS:
                     ExcelWTS(newFile, templateFile, data);
+                    break;
+                case ConstantData.HomeReportConstantValue.PrepaidAmortReport:
+                    ExcelPAR(newFile, templateFile, data);
                     break;
                 case ConstantData.HomeReportConstantValue.LOI:
                     ExcelLOI(newFile, templateFile, data);
@@ -545,6 +549,115 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
             }
         }
 
+        public void ExcelPAR (FileInfo newFile, FileInfo templateFile, HomeReportDataFilterViewModel data)
+        {
+            using (ExcelPackage package = new ExcelPackage(newFile, templateFile))
+            {
+                ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
+                string[] col = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P",
+                "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB", "AC", "AD", "AE", "AF", "AG",
+                "AH", "AI", "AJ", "AK", "AL", "AM", "AN", "AO", "AP", "AQ", "AR", "AS", "AT", "AU", "AV",
+                "AW", "AX", "AY", "AZ" };
+
+                //Header
+                worksheet.Cells["A2:H2"].Merge = true;
+                worksheet.Cells["A2:H2"].Value = data.HomeReportFilter.ReportFrom + " - " + data.HomeReportFilter.ReportTo;
+                worksheet.Cells["B3:F3"].Merge = true;
+                worksheet.Cells["B3:F3"].Value = data.ReportCommonVM.Header_Name;
+                worksheet.Cells["B4:F4"].Merge = true;
+                worksheet.Cells["B4:F4"].Value = data.ReportCommonVM.Header_TIN;
+                worksheet.Cells["B5:F5"].Merge = true;
+                worksheet.Cells["B5:F5"].Value = data.ReportCommonVM.Header_Address;
+
+                var startrow = 8;
+                foreach (RepAmortViewModel vm in data.ReportAmort)
+                {
+                    var upprleft = "B" + (startrow - 1);
+                    //Header Info
+                    worksheet.Cells["C" + startrow].Style.Font.Bold = true;
+                    worksheet.Cells["C" + startrow].Value = "Check Number";
+                    worksheet.Cells["D" + startrow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    worksheet.Cells["D" + startrow].Value = vm.PA_CheckNo;
+
+                    startrow += 1;
+                    worksheet.Cells["C" + startrow].Style.Font.Bold = true;
+                    worksheet.Cells["C" + startrow].Value = "Value Date";
+                    worksheet.Cells["D" + startrow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    worksheet.Cells["D" + startrow].Value = vm.PA_Value_Date;
+                    worksheet.Cells["E" + startrow].Style.Font.Bold = true;
+                    worksheet.Cells["E" + startrow].Value = "Reference No.";
+                    worksheet.Cells["F" + startrow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    worksheet.Cells["F" + startrow].Value = vm.PA_RefNo;
+
+                    startrow += 1;
+                    worksheet.Cells["C" + startrow].Style.Font.Bold = true;
+                    worksheet.Cells["C" + startrow].Value = "Section";
+                    worksheet.Cells["D" + startrow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    worksheet.Cells["D" + startrow].Value = vm.PA_Section;
+                    worksheet.Cells["E" + startrow].Style.Font.Bold = true;
+                    worksheet.Cells["E" + startrow].Value = "Remarks";
+                    worksheet.Cells["F" + startrow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    worksheet.Cells["F" + startrow].Value = vm.PA_Remarks;
+
+                    startrow += 1;
+                    worksheet.Cells["C" + startrow].Style.Font.Bold = true;
+                    worksheet.Cells["C" + startrow].Value = "Amount";
+                    worksheet.Cells["D" + startrow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    worksheet.Cells["D" + startrow].Value = vm.PA_Total_Amt;
+
+                    startrow += 1;
+                    worksheet.Cells["C" + startrow].Style.Font.Bold = true;
+                    worksheet.Cells["C" + startrow].Value = "Vendor";
+                    worksheet.Cells["D" + startrow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    worksheet.Cells["D" + startrow].Value = vm.PA_Vendor_Name;
+
+                    startrow += 1;
+                    worksheet.Cells["C" + startrow].Style.Font.Bold = true;
+                    worksheet.Cells["C" + startrow].Value = "First Month of Amortization";
+                    worksheet.Cells["D" + startrow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    worksheet.Cells["D" + startrow].Value = vm.PA_Month;
+                    worksheet.Cells["E" + startrow].Style.Font.Bold = true;
+                    worksheet.Cells["E" + startrow].Value = "Day";
+                    worksheet.Cells["F" + startrow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    worksheet.Cells["F" + startrow].Value = vm.PA_Day;
+                    worksheet.Cells["G" + startrow].Style.Font.Bold = true;
+                    worksheet.Cells["G" + startrow].Value = "No. of Months";
+                    worksheet.Cells["H" + startrow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    worksheet.Cells["H" + startrow].Value = vm.PA_No_Of_Months;
+
+                    //Table Info
+                    startrow += 2;
+                    worksheet.Cells["C" + startrow + ":D" + startrow].Style.Font.Bold = true;
+                    worksheet.Cells["C" + startrow + ":D" + startrow].Merge = true;
+                    worksheet.Cells["C" + startrow + ":D" + startrow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    worksheet.Cells["C" + startrow + ":D" + startrow].Value = "First Month of Amortization";
+                    worksheet.Cells["E" + startrow].Style.Font.Bold = true;
+                    worksheet.Cells["E" + startrow].Merge = true;
+                    worksheet.Cells["E" + startrow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    worksheet.Cells["E" + startrow].Value = "Amount";
+
+                    //Table Contents
+                    foreach(var amorts in vm.PA_AmortScheds)
+                    {
+                        startrow += 1;
+                        worksheet.Cells["C" + startrow + ":D" + startrow].Merge = true;
+                        worksheet.Cells["C" + startrow + ":D" + startrow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                        worksheet.Cells["C" + startrow + ":D" + startrow].Value = amorts.as_Amort_Name;
+                        worksheet.Cells["E" + startrow].Merge = true;
+                        worksheet.Cells["E" + startrow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                        worksheet.Cells["E" + startrow].Value = amorts.as_Amount;
+
+                    }
+
+                    startrow += 1;
+                    var lowrright = "I" + startrow;
+
+                    worksheet.Cells[upprleft+":"+lowrright].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    startrow += 3;
+                }
+                package.Save();
+            }
+        }
 
         public void ExcelLOI(FileInfo newFile, FileInfo templateFile, HomeReportDataFilterViewModel data)
         {

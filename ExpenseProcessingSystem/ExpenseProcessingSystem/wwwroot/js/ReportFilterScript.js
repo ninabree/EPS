@@ -324,7 +324,6 @@ $(document).ready(function () {
         $.each($("input[name='chkVoucherNo']:checked"), function () {
             voucherList.push($(this).val());
         });
-        alert($('#ddlSignatoryVer_' + reportType).val());
         $.ajax({
             type: 'POST',
             url: '/Home/HomeReportValidation',
@@ -365,6 +364,7 @@ $(document).ready(function () {
                         + "&PeriodTo=" + $('#PeriodTo_' + reportType).val()
                         + "&TaxRateArray=" + chkList
                         + "&VoucherArray=" + voucherList
+                        + "&VoucherNo=" + $('#ddlVoucherNo_' + reportType).val()
                         + "&VoucherNoList=" + $('#VoucherNoList_' + reportType).val()
                         + "&SignatoryID=" + $('#ddlSignatory_' + reportType).val()
                         + "&SignatoryIDVerifier=" + $('#ddlSignatoryVer_' + reportType).val()
@@ -438,6 +438,7 @@ $(document).ready(function () {
                         + "&PeriodTo=" + $('#PeriodTo_' + reportType).val()
                         + "&TaxRateArray=" + chkList
                         + "&VoucherArray=" + voucherList
+                        + "&VoucherNo=" + $('#ddlVoucherNo_' + reportType).val()
                         + "&SignatoryID=" + $('#ddlSignatory_' + reportType).val()
                         + "&SignatoryIDVerifier=" + $('#ddlSignatoryVer_' + reportType).val()
                         + "&CheckNoFrom=" + $('#CheckNoFrom_' + reportType).val()

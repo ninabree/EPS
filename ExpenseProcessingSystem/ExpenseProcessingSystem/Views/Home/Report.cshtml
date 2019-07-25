@@ -375,7 +375,7 @@
                     <td class="td-center"></td>
                     <td class="td-right">Voucher No:</td>
                     <td>
-                        @Html.DropDownListFor(m => m.VoucherNo, new SelectList(Model.VoucherNoList, "vchr_ID", "vchr_No"), null, new { @class = "dis-inline-block w-49", id = "ddlVoucherNo_" + @HomeReportConstantValue.PrepaidAmortReport })
+                        @Html.DropDownListFor(m => m.VoucherNo, new SelectList(Model.VoucherNoListPrepaidAmort, "vchr_ID", "vchr_No"), null, new { @class = "dis-inline-block w-49", id = "ddlVoucherNo_" + @HomeReportConstantValue.PrepaidAmortReport })
                     </td>
                     <td class="td-right"></td>
                     <td></td>

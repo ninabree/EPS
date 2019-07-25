@@ -543,8 +543,8 @@ namespace ExpenseProcessingSystem.Controllers
                 PeriodFrom = Convert.ToDateTime(ConstantData.HomeReportConstantValue.DateToday),
                 PeriodTo = Convert.ToDateTime(ConstantData.HomeReportConstantValue.DateToday),
                 TaxRateList = _service.PopulateTaxRaxListIncludeHist(),
-                VoucherNoList = /*_service.PopulateVoucherNo()*/ _service.PopulateVoucherNoDDV(),
-                VoucherNoListPrepaidAmort = _service.PopulateVoucherNoDDV(),
+                VoucherNoList =  _service.PopulateVoucherNoDDV(),
+                VoucherNoListPrepaidAmort = _service.PopulateVoucherNoCV(),
                 SignatoryList = _service.PopulateSignatoryList()
             };
 
@@ -818,6 +818,20 @@ namespace ExpenseProcessingSystem.Controllers
                     data = new HomeReportDataFilterViewModel
                     {
                         HomeReportOutputAccountSummary = _service.GetAccountSummaryData(model).Where(x => x.Trans_DebitCredit == "D"),
+                        HomeReportFilter = model,
+                        ReportCommonVM = repComVM
+                    };
+
+                    break;
+                //For Prepaid Amortization Schedule Report
+                case HomeReportConstantValue.PrepaidAmortReport:
+                    fileName = "PrepaidAmortSched_" + dateNow;
+                    layoutName = HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
+
+                    //Get the necessary data from Database
+                    data = new HomeReportDataFilterViewModel
+                    {
+                        ReportAmort = _service.GetPrepaidAmortSchedule(model),
                         HomeReportFilter = model,
                         ReportCommonVM = repComVM
                     };
