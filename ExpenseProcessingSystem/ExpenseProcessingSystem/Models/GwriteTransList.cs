@@ -12,6 +12,7 @@ namespace ExpenseProcessingSystem.Models
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int GW_ID { get; set; }
         public int GW_GWrite_ID { get; set; }
-        public string GW_Status { get; set; }
+        public int GW_TransID { get; set; }
+        public int GW_Status { get; set; }
     }
 }

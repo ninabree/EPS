@@ -31,7 +31,7 @@
 </table>
 <script>
     $(document).ready(function () {
-        if ($('#' + $('#parentIdEWT').val()).find('.txtccy').is('[disabled]')) {
+        if ($('#' + $('#parentIdEWT').val()).find('.txtccy').is('[disabled]') || $('#' + $('#parentIdEWT').val()).find('.txtCcyAbbrev').is('[readonly]')) {
             $('#tax_payor').attr('disabled', 'disabled');
             $('#tax_payor').addClass('selectDisabled');
             $('#saveBtnEntry').css('display', 'none');

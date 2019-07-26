@@ -934,6 +934,8 @@ namespace ExpenseProcessingSystem.Controllers
             ViewData["GBaseBudgetCodeSortParm"] = sortOrder == "gbase_budget_code_desc" ? "gbase_budget_code" : "gbase_budget_code_desc";
             ViewData["AccountNumberSortParm"] = sortOrder == "acc_num_desc" ? "acc_num" : "acc_num_desc";
             ViewData["BudgetSortParm"] = sortOrder == "budget_desc" ? "budget" : "budget_desc";
+            ViewData["BudgetNewSortParm"] = sortOrder == "budget_new_desc" ? "budget_new" : "budget_new_desc";
+            ViewData["GWriteStatusParm"] = sortOrder == "gwrite_status_desc" ? "gwrite_status" : "gwrite_status_desc";
             ViewData["DateRegisteredSortParm"] = sortOrder == "date_registered_desc" ? "date_registered" : "date_registered_desc";
 
             if (searchString != null)
@@ -1526,28 +1528,25 @@ namespace ExpenseProcessingSystem.Controllers
                 pcvList.systemValues.acc.AddRange(_service.getAccDetailsEntry(i.account));
                 i.screenCode = "PCV";
 
-                if (command == "Modify")
+                var vend = _service.getVendor(i.dtl_Ewt_Payor_Name_ID);
+                if (vend != null)
                 {
-                    var vend = _service.getVendor(i.dtl_Ewt_Payor_Name_ID);
-                    if (vend != null)
+                    i.vendTRList = _service.getVendorTaxList(vend.Vendor_MasterID).ToList();
+                    i.vendVATList = _service.getVendorVatList(vend.Vendor_MasterID).ToList();
+                    if (i.vendTRList == null)
                     {
-                        i.vendTRList = _service.getVendorTaxList(vend.Vendor_MasterID).ToList();
-                        i.vendVATList = _service.getVendorVatList(vend.Vendor_MasterID).ToList();
-                        if (i.vendTRList == null)
-                        {
-                            i.vendTRList.Add(new DMTRModel { TR_ID = 0, TR_Tax_Rate = 0 });
-                        }
-                        if (i.vendVATList == null)
-                        {
-                            i.vendVATList.Add(new DMVATModel { VAT_ID = 0, VAT_Rate = 0 });
-                        }
+                        i.vendTRList.Add(new DMTRModel { TR_ID = 0, TR_Tax_Rate = 0 });
                     }
-                    else
+                    if (i.vendVATList == null)
                     {
-                        i.vendTRList = new List<DMTRModel> { new DMTRModel { TR_ID = 0, TR_Tax_Rate = 0 } };
-                        i.vendVATList = new List<DMVATModel> { new DMVATModel { VAT_ID = 0, VAT_Rate = 0 } };
+                        i.vendVATList.Add(new DMVATModel { VAT_ID = 0, VAT_Rate = 0 });
                     }
                 }
+                else
+                {
+                    i.vendTRList = new List<DMTRModel> { new DMTRModel { TR_ID = 0, TR_Tax_Rate = 0 } };
+                    i.vendVATList = new List<DMVATModel> { new DMVATModel { VAT_ID = 0, VAT_Rate = 0 } };
+                } 
             }
             pcvList.systemValues.ewt = new SelectList("0", "0");
             pcvList.systemValues.vat = new SelectList("0", "0");
@@ -1758,27 +1757,24 @@ namespace ExpenseProcessingSystem.Controllers
                 ssList.systemValues.acc.AddRange(_service.getAccDetailsEntry(i.account));
                 i.screenCode = "SS";
 
-                if (command == "Modify")
+                var vend = _service.getVendor(i.dtl_Ewt_Payor_Name_ID);
+                if(vend != null)
                 {
-                    var vend = _service.getVendor(i.dtl_Ewt_Payor_Name_ID);
-                    if(vend != null)
+                    i.vendTRList = _service.getVendorTaxList(vend.Vendor_MasterID).ToList();
+                    i.vendVATList = _service.getVendorVatList(vend.Vendor_MasterID).ToList();
+                    if(i.vendTRList == null)
                     {
-                        i.vendTRList = _service.getVendorTaxList(vend.Vendor_MasterID).ToList();
-                        i.vendVATList = _service.getVendorVatList(vend.Vendor_MasterID).ToList();
-                        if(i.vendTRList == null)
-                        {
-                            i.vendTRList.Add(new DMTRModel { TR_ID = 0, TR_Tax_Rate = 0});
-                        }
-                        if(i.vendVATList == null)
-                        {
-                            i.vendVATList.Add(new DMVATModel { VAT_ID = 0, VAT_Rate = 0 });
-                        }
+                        i.vendTRList.Add(new DMTRModel { TR_ID = 0, TR_Tax_Rate = 0});
                     }
-                    else
+                    if(i.vendVATList == null)
                     {
-                        i.vendTRList = new List<DMTRModel> { new DMTRModel { TR_ID = 0, TR_Tax_Rate = 0 } };
-                        i.vendVATList = new List<DMVATModel> { new DMVATModel { VAT_ID = 0, VAT_Rate = 0 } };
+                        i.vendVATList.Add(new DMVATModel { VAT_ID = 0, VAT_Rate = 0 });
                     }
+                }
+                else
+                {
+                    i.vendTRList = new List<DMTRModel> { new DMTRModel { TR_ID = 0, TR_Tax_Rate = 0 } };
+                    i.vendVATList = new List<DMVATModel> { new DMVATModel { VAT_ID = 0, VAT_Rate = 0 } };
                 }
             }
             ssList.systemValues.ewt = new SelectList("0", "0");
@@ -2155,16 +2151,13 @@ namespace ExpenseProcessingSystem.Controllers
         public IActionResult Liquidation_SS(int entryID)
         {
             var userId = GetUserID();
+            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
 
             LiquidationViewModel ssList = _service.getExpenseToLiqudate(entryID);
             ssList.accList = _service.getAccountList();
             ssList.accAllList = _service.getAccountListIncHist();
             ssList.vendorList = _service.getVendorList().OrderBy(x => x.Vendor_Name).ToList();
-            ssList.taxRateList = _service.getVendorTaxList(ssList.vendorList[0].Vendor_MasterID);
-            foreach (var i in ssList.taxRateList)
-            {
-                i.TR_WT_Title = (i.TR_Tax_Rate * 100) + "% " + i.TR_WT_Title;
-            }
+
             foreach (var i in ssList.accAllList)
             {
                 i.Account_Name = i.Account_No + " - " + i.Account_Name;
@@ -2173,6 +2166,11 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 i.screenCode = "Liquidation_SS";
             }
+
+            var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
+            ssList.LiquidationDetails[0].ccyID = ccyPHP.Curr_ID;
+            ssList.LiquidationDetails[0].ccyMasterID = ccyPHP.Curr_MasterID;
+            ssList.LiquidationDetails[0].ccyAbbrev = ccyPHP.Curr_CCY_ABBR;
 
             return View("Liquidation_SS", ssList);
         }
@@ -2228,6 +2226,8 @@ namespace ExpenseProcessingSystem.Controllers
         public IActionResult View_Liquidation_SS(int entryID)
         {
             var userId = GetUserID();
+            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
+
             if (entryID == 0 && TempData["entryIDAddtoView"] != null)
             {
                 entryID = (int)TempData["entryIDAddtoView"];
@@ -2242,11 +2242,7 @@ namespace ExpenseProcessingSystem.Controllers
             ssList.accList = _service.getAccountList();
             ssList.accAllList = _service.getAccountListIncHist();
             ssList.vendorList = _service.getAllVendorList();
-            ssList.taxRateList = _service.getVendorTaxList(ssList.vendorList[0].Vendor_MasterID);
-            foreach (var i in ssList.taxRateList)
-            {
-                i.TR_WT_Title = (i.TR_Tax_Rate * 100) + "% " + i.TR_WT_Title;
-            }
+
             foreach (var i in ssList.accAllList)
             {
                 i.Account_Name = i.Account_No + " - " + i.Account_Name;
@@ -2256,6 +2252,11 @@ namespace ExpenseProcessingSystem.Controllers
                 i.screenCode = "Liquidation_SS";
             }
 
+            var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
+            ssList.LiquidationDetails[0].ccyID = ccyPHP.Curr_ID;
+            ssList.LiquidationDetails[0].ccyMasterID = ccyPHP.Curr_MasterID;
+            ssList.LiquidationDetails[0].ccyAbbrev = ccyPHP.Curr_CCY_ABBR;
+
             return View("Liquidation_SS_ReadOnly", ssList);
         }
 
@@ -2264,6 +2265,7 @@ namespace ExpenseProcessingSystem.Controllers
         public IActionResult Liquidation_VerAppModSS(int entryID, string command)
         {
             var userId = GetUserID();
+            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
 
             string viewLink = "Liquidation_SS";
             LiquidationViewModel ssList;
@@ -2346,11 +2348,6 @@ namespace ExpenseProcessingSystem.Controllers
                 ssList.vendorList = _service.getAllVendorList();
             }
             
-            ssList.taxRateList = _service.getVendorTaxList(ssList.vendorList[0].Vendor_MasterID);
-            foreach (var i in ssList.taxRateList)
-            {
-                i.TR_WT_Title = (i.TR_Tax_Rate * 100) + "% " + i.TR_WT_Title;
-            }
             foreach (var i in ssList.accAllList)
             {
                 i.Account_Name = i.Account_No + " - " + i.Account_Name;
@@ -2360,6 +2357,11 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 i.screenCode = "Liquidation_SS";
             }
+
+            var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
+            ssList.LiquidationDetails[0].ccyID = ccyPHP.Curr_ID;
+            ssList.LiquidationDetails[0].ccyMasterID = ccyPHP.Curr_MasterID;
+            ssList.LiquidationDetails[0].ccyAbbrev = ccyPHP.Curr_CCY_ABBR;
 
             return View(viewLink, ssList);
         }
@@ -3254,7 +3256,7 @@ namespace ExpenseProcessingSystem.Controllers
             var trList = _service.getVendorTaxList(_service.getVendor(vendorID).Vendor_MasterID);
             foreach (var i in trList)
             {
-                i.TR_WT_Title = (i.TR_Tax_Rate * 100) + "% " + i.TR_WT_Title;
+                i.TR_WT_Title = i.TR_Tax_Rate + "% " + i.TR_WT_Title;
             }
             return Json(trList.ToList());
         }

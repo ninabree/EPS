@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    [Migration("20190606030607_ApplyAnnotationsToBudget")]
-    partial class ApplyAnnotationsToBudget
+    [Migration("20190726044647_ApplyAnnotationsToGWriteTransList")]
+    partial class ApplyAnnotationsToGWriteTransList
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -37,13 +37,38 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<DateTime>("Budget_Date_Registered");
 
+                    b.Property<int>("Budget_GWrite_Status");
+
                     b.Property<bool>("Budget_IsActive");
+
+                    b.Property<double>("Budget_New_Amount");
 
                     b.Property<bool>("Budget_isDeleted");
 
                     b.HasKey("Budget_ID");
 
                     b.ToTable("Budget");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.ClosingModel", b =>
+                {
+                    b.Property<int>("Close_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime?>("Close_Date");
+
+                    b.Property<DateTime>("Close_Open_Date");
+
+                    b.Property<int>("Close_Status");
+
+                    b.Property<string>("Close_Type");
+
+                    b.Property<int>("Close_User");
+
+                    b.HasKey("Close_ID");
+
+                    b.ToTable("Closing");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.DMAccountGroupModel", b =>
@@ -410,9 +435,13 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("Emp_Approver_ID");
 
+                    b.Property<int>("Emp_Category_ID");
+
                     b.Property<DateTime>("Emp_Created_Date");
 
                     b.Property<int>("Emp_Creator_ID");
+
+                    b.Property<int>("Emp_FBT_MasterID");
 
                     b.Property<DateTime>("Emp_Last_Updated");
 
@@ -625,9 +654,13 @@ namespace ExpenseProcessingSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Amor_Number");
+
                     b.Property<float>("Amor_Price");
 
                     b.Property<DateTime>("Amor_Sched_Date");
+
+                    b.Property<string>("Amor_Status");
 
                     b.Property<int?>("ExpenseEntryDetailModelExpDtl_ID");
 
@@ -648,7 +681,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<double>("CashBreak_Denomination");
 
-                    b.Property<double>("CashBreak_NoPcs");
+                    b.Property<int>("CashBreak_NoPcs");
 
                     b.Property<int?>("ExpenseEntryDetailModelExpDtl_ID");
 
@@ -675,6 +708,10 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("ExpDtl_Ccy");
 
+                    b.Property<int>("ExpDtl_CreditAccount1");
+
+                    b.Property<int>("ExpDtl_CreditAccount2");
+
                     b.Property<float>("ExpDtl_Credit_Cash");
 
                     b.Property<float>("ExpDtl_Credit_Ewt");
@@ -685,9 +722,11 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("ExpDtl_Ewt");
 
-                    b.Property<string>("ExpDtl_Ewt_Payor_Name");
+                    b.Property<int>("ExpDtl_Ewt_Payor_Name_ID");
 
                     b.Property<bool>("ExpDtl_Fbt");
+
+                    b.Property<int>("ExpDtl_FbtID");
 
                     b.Property<string>("ExpDtl_Gbase_Remarks");
 
@@ -731,30 +770,79 @@ namespace ExpenseProcessingSystem.Migrations
                     b.ToTable("ExpenseEntryGbaseDtls");
                 });
 
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryInterEntityAccsModel", b =>
+                {
+                    b.Property<int>("InterAcc_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("ExpenseEntryInterEntityParticularInterPart_ID");
+
+                    b.Property<int>("InterAcc_Acc_ID");
+
+                    b.Property<float>("InterAcc_Amount");
+
+                    b.Property<int>("InterAcc_Curr_ID");
+
+                    b.Property<float>("InterAcc_Rate");
+
+                    b.Property<int>("InterAcc_Type_ID");
+
+                    b.HasKey("InterAcc_ID");
+
+                    b.HasIndex("ExpenseEntryInterEntityParticularInterPart_ID");
+
+                    b.ToTable("ExpenseEntryInterEntityAccs");
+                });
+
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryInterEntityModel", b =>
                 {
-                    b.Property<string>("Inter_ID")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("ExpDtl_DDVInter_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<float>("ExpDtl_DDVInter_Amount1");
+
+                    b.Property<float>("ExpDtl_DDVInter_Amount2");
+
+                    b.Property<bool>("ExpDtl_DDVInter_Check1");
+
+                    b.Property<bool>("ExpDtl_DDVInter_Check2");
+
+                    b.Property<float>("ExpDtl_DDVInter_Conv_Amount1");
+
+                    b.Property<float>("ExpDtl_DDVInter_Conv_Amount2");
+
+                    b.Property<int>("ExpDtl_DDVInter_Curr1_ID");
+
+                    b.Property<int>("ExpDtl_DDVInter_Curr2_ID");
+
+                    b.Property<float>("ExpDtl_DDVInter_Rate");
 
                     b.Property<int?>("ExpenseEntryDetailModelExpDtl_ID");
 
-                    b.Property<string>("Inter_Currency1_ABBR");
-
-                    b.Property<string>("Inter_Currency1_Amount");
-
-                    b.Property<string>("Inter_Currency2_ABBR");
-
-                    b.Property<string>("Inter_Currency2_Amount");
-
-                    b.Property<string>("Inter_Particular_Title");
-
-                    b.Property<string>("Inter_Rate");
-
-                    b.HasKey("Inter_ID");
+                    b.HasKey("ExpDtl_DDVInter_ID");
 
                     b.HasIndex("ExpenseEntryDetailModelExpDtl_ID");
 
                     b.ToTable("ExpenseEntryInterEntity");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryInterEntityParticularModel", b =>
+                {
+                    b.Property<int>("InterPart_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("ExpenseEntryInterEntityModelExpDtl_DDVInter_ID");
+
+                    b.Property<string>("InterPart_Particular_Title");
+
+                    b.HasKey("InterPart_ID");
+
+                    b.HasIndex("ExpenseEntryInterEntityModelExpDtl_DDVInter_ID");
+
+                    b.ToTable("ExpenseEntryInterEntityParticular");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryModel", b =>
@@ -781,9 +869,11 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<DateTime>("Expense_Last_Updated");
 
-                    b.Property<string>("Expense_Number");
+                    b.Property<int>("Expense_Number");
 
                     b.Property<int>("Expense_Payee");
+
+                    b.Property<int>("Expense_Payee_Type");
 
                     b.Property<int>("Expense_Status");
 
@@ -818,11 +908,11 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("ExpNCDtlAcc_Type_ID");
 
-                    b.Property<int?>("ExpenseEntryNCModelExpNCDtl_ID");
+                    b.Property<int?>("ExpenseEntryNCDtlModelExpNCDtl_ID");
 
                     b.HasKey("ExpNCDtlAcc_ID");
 
-                    b.HasIndex("ExpenseEntryNCModelExpNCDtl_ID");
+                    b.HasIndex("ExpenseEntryNCDtlModelExpNCDtl_ID");
 
                     b.ToTable("ExpenseEntryNonCashDetailAccounts");
                 });
@@ -835,9 +925,11 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<string>("ExpNCDtl_Remarks_Desc");
 
-                    b.Property<DateTime>("ExpNCDtl_Remarks_Period");
+                    b.Property<string>("ExpNCDtl_Remarks_Period");
 
-                    b.Property<DateTime>("ExpNCDtl_Remarks_Period_To");
+                    b.Property<int>("ExpNCDtl_TR_ID");
+
+                    b.Property<int>("ExpNCDtl_Vendor_ID");
 
                     b.Property<int?>("ExpenseEntryNCModelExpNC_ID");
 
@@ -854,7 +946,19 @@ namespace ExpenseProcessingSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<float>("ExpNC_CS_CredAmt");
+
+                    b.Property<float>("ExpNC_CS_DebitAmt");
+
                     b.Property<int>("ExpNC_Category_ID");
+
+                    b.Property<float>("ExpNC_CredAmt");
+
+                    b.Property<float>("ExpNC_DebitAmt");
+
+                    b.Property<float>("ExpNC_IE_CredAmt");
+
+                    b.Property<float>("ExpNC_IE_DebitAmt");
 
                     b.Property<int?>("ExpenseEntryModelExpense_ID");
 
@@ -863,6 +967,27 @@ namespace ExpenseProcessingSystem.Migrations
                     b.HasIndex("ExpenseEntryModelExpense_ID");
 
                     b.ToTable("ExpenseEntryNonCash");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseTransList", b =>
+                {
+                    b.Property<int>("TL_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("TL_ExpenseID");
+
+                    b.Property<int>("TL_GoExpHist_ID");
+
+                    b.Property<int>("TL_GoExpress_ID");
+
+                    b.Property<bool>("TL_Liquidation");
+
+                    b.Property<int>("TL_TransID");
+
+                    b.HasKey("TL_ID");
+
+                    b.ToTable("ExpenseTransLists");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.FileLocationModel", b =>
@@ -878,6 +1003,374 @@ namespace ExpenseProcessingSystem.Migrations
                     b.HasKey("FL_ID");
 
                     b.ToTable("FileLocation");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.GOExpressHistModel", b =>
+                {
+                    b.Property<int>("GOExpHist_Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ExpenseDetailID");
+
+                    b.Property<int>("ExpenseEntryID");
+
+                    b.Property<string>("GOExpHist_AutoApproved");
+
+                    b.Property<string>("GOExpHist_Branchno");
+
+                    b.Property<string>("GOExpHist_CcyFormat");
+
+                    b.Property<string>("GOExpHist_Comment");
+
+                    b.Property<string>("GOExpHist_Entry11ActNo");
+
+                    b.Property<string>("GOExpHist_Entry11ActType");
+
+                    b.Property<string>("GOExpHist_Entry11Actcde");
+
+                    b.Property<string>("GOExpHist_Entry11AdvcPrnt");
+
+                    b.Property<string>("GOExpHist_Entry11Amt");
+
+                    b.Property<string>("GOExpHist_Entry11Available");
+
+                    b.Property<string>("GOExpHist_Entry11Ccy");
+
+                    b.Property<string>("GOExpHist_Entry11CheckNo");
+
+                    b.Property<string>("GOExpHist_Entry11Cust");
+
+                    b.Property<string>("GOExpHist_Entry11Details");
+
+                    b.Property<string>("GOExpHist_Entry11Division");
+
+                    b.Property<string>("GOExpHist_Entry11Entity");
+
+                    b.Property<string>("GOExpHist_Entry11ExchCcy");
+
+                    b.Property<string>("GOExpHist_Entry11ExchRate");
+
+                    b.Property<string>("GOExpHist_Entry11Fund");
+
+                    b.Property<string>("GOExpHist_Entry11IbfCode");
+
+                    b.Property<string>("GOExpHist_Entry11InterAmt");
+
+                    b.Property<string>("GOExpHist_Entry11InterRate");
+
+                    b.Property<string>("GOExpHist_Entry11Type");
+
+                    b.Property<string>("GOExpHist_Entry12ActNo");
+
+                    b.Property<string>("GOExpHist_Entry12ActType");
+
+                    b.Property<string>("GOExpHist_Entry12Actcde");
+
+                    b.Property<string>("GOExpHist_Entry12AdvcPrnt");
+
+                    b.Property<string>("GOExpHist_Entry12Amt");
+
+                    b.Property<string>("GOExpHist_Entry12Available");
+
+                    b.Property<string>("GOExpHist_Entry12Ccy");
+
+                    b.Property<string>("GOExpHist_Entry12CheckNo");
+
+                    b.Property<string>("GOExpHist_Entry12Cust");
+
+                    b.Property<string>("GOExpHist_Entry12Details");
+
+                    b.Property<string>("GOExpHist_Entry12Division");
+
+                    b.Property<string>("GOExpHist_Entry12Entity");
+
+                    b.Property<string>("GOExpHist_Entry12ExchCcy");
+
+                    b.Property<string>("GOExpHist_Entry12ExchRate");
+
+                    b.Property<string>("GOExpHist_Entry12Fund");
+
+                    b.Property<string>("GOExpHist_Entry12IbfCode");
+
+                    b.Property<string>("GOExpHist_Entry12InterAmt");
+
+                    b.Property<string>("GOExpHist_Entry12InterRate");
+
+                    b.Property<string>("GOExpHist_Entry12Type");
+
+                    b.Property<string>("GOExpHist_Entry21ActNo");
+
+                    b.Property<string>("GOExpHist_Entry21ActType");
+
+                    b.Property<string>("GOExpHist_Entry21Actcde");
+
+                    b.Property<string>("GOExpHist_Entry21AdvcPrnt");
+
+                    b.Property<string>("GOExpHist_Entry21Amt");
+
+                    b.Property<string>("GOExpHist_Entry21Available");
+
+                    b.Property<string>("GOExpHist_Entry21Ccy");
+
+                    b.Property<string>("GOExpHist_Entry21CheckNo");
+
+                    b.Property<string>("GOExpHist_Entry21Cust");
+
+                    b.Property<string>("GOExpHist_Entry21Details");
+
+                    b.Property<string>("GOExpHist_Entry21Division");
+
+                    b.Property<string>("GOExpHist_Entry21Entity");
+
+                    b.Property<string>("GOExpHist_Entry21ExchCcy");
+
+                    b.Property<string>("GOExpHist_Entry21ExchRate");
+
+                    b.Property<string>("GOExpHist_Entry21Fund");
+
+                    b.Property<string>("GOExpHist_Entry21IbfCode");
+
+                    b.Property<string>("GOExpHist_Entry21InterAmt");
+
+                    b.Property<string>("GOExpHist_Entry21InterRate");
+
+                    b.Property<string>("GOExpHist_Entry21Type");
+
+                    b.Property<string>("GOExpHist_Entry22ActNo");
+
+                    b.Property<string>("GOExpHist_Entry22ActType");
+
+                    b.Property<string>("GOExpHist_Entry22Actcde");
+
+                    b.Property<string>("GOExpHist_Entry22AdvcPrnt");
+
+                    b.Property<string>("GOExpHist_Entry22Amt");
+
+                    b.Property<string>("GOExpHist_Entry22Available");
+
+                    b.Property<string>("GOExpHist_Entry22Ccy");
+
+                    b.Property<string>("GOExpHist_Entry22CheckNo");
+
+                    b.Property<string>("GOExpHist_Entry22Cust");
+
+                    b.Property<string>("GOExpHist_Entry22Details");
+
+                    b.Property<string>("GOExpHist_Entry22Division");
+
+                    b.Property<string>("GOExpHist_Entry22Entity");
+
+                    b.Property<string>("GOExpHist_Entry22ExchCcy");
+
+                    b.Property<string>("GOExpHist_Entry22ExchRate");
+
+                    b.Property<string>("GOExpHist_Entry22Fund");
+
+                    b.Property<string>("GOExpHist_Entry22IbfCode");
+
+                    b.Property<string>("GOExpHist_Entry22InterAmt");
+
+                    b.Property<string>("GOExpHist_Entry22InterRate");
+
+                    b.Property<string>("GOExpHist_Entry22Type");
+
+                    b.Property<string>("GOExpHist_Entry31ActNo");
+
+                    b.Property<string>("GOExpHist_Entry31ActType");
+
+                    b.Property<string>("GOExpHist_Entry31Actcde");
+
+                    b.Property<string>("GOExpHist_Entry31AdvcPrnt");
+
+                    b.Property<string>("GOExpHist_Entry31Amt");
+
+                    b.Property<string>("GOExpHist_Entry31Available");
+
+                    b.Property<string>("GOExpHist_Entry31Ccy");
+
+                    b.Property<string>("GOExpHist_Entry31CheckNo");
+
+                    b.Property<string>("GOExpHist_Entry31Cust");
+
+                    b.Property<string>("GOExpHist_Entry31Details");
+
+                    b.Property<string>("GOExpHist_Entry31Division");
+
+                    b.Property<string>("GOExpHist_Entry31Entity");
+
+                    b.Property<string>("GOExpHist_Entry31ExchCcy");
+
+                    b.Property<string>("GOExpHist_Entry31ExchRate");
+
+                    b.Property<string>("GOExpHist_Entry31Fund");
+
+                    b.Property<string>("GOExpHist_Entry31IbfCode");
+
+                    b.Property<string>("GOExpHist_Entry31InterAmt");
+
+                    b.Property<string>("GOExpHist_Entry31InterRate");
+
+                    b.Property<string>("GOExpHist_Entry31Type");
+
+                    b.Property<string>("GOExpHist_Entry32ActNo");
+
+                    b.Property<string>("GOExpHist_Entry32ActType");
+
+                    b.Property<string>("GOExpHist_Entry32Actcde");
+
+                    b.Property<string>("GOExpHist_Entry32AdvcPrnt");
+
+                    b.Property<string>("GOExpHist_Entry32Amt");
+
+                    b.Property<string>("GOExpHist_Entry32Available");
+
+                    b.Property<string>("GOExpHist_Entry32Ccy");
+
+                    b.Property<string>("GOExpHist_Entry32CheckNo");
+
+                    b.Property<string>("GOExpHist_Entry32Cust");
+
+                    b.Property<string>("GOExpHist_Entry32Details");
+
+                    b.Property<string>("GOExpHist_Entry32Division");
+
+                    b.Property<string>("GOExpHist_Entry32Entity");
+
+                    b.Property<string>("GOExpHist_Entry32ExchCcy");
+
+                    b.Property<string>("GOExpHist_Entry32ExchRate");
+
+                    b.Property<string>("GOExpHist_Entry32Fund");
+
+                    b.Property<string>("GOExpHist_Entry32IbfCode");
+
+                    b.Property<string>("GOExpHist_Entry32InterAmt");
+
+                    b.Property<string>("GOExpHist_Entry32InterRate");
+
+                    b.Property<string>("GOExpHist_Entry32Type");
+
+                    b.Property<string>("GOExpHist_Entry41ActNo");
+
+                    b.Property<string>("GOExpHist_Entry41ActType");
+
+                    b.Property<string>("GOExpHist_Entry41Actcde");
+
+                    b.Property<string>("GOExpHist_Entry41AdvcPrnt");
+
+                    b.Property<string>("GOExpHist_Entry41Amt");
+
+                    b.Property<string>("GOExpHist_Entry41Available");
+
+                    b.Property<string>("GOExpHist_Entry41Ccy");
+
+                    b.Property<string>("GOExpHist_Entry41CheckNo");
+
+                    b.Property<string>("GOExpHist_Entry41Cust");
+
+                    b.Property<string>("GOExpHist_Entry41Details");
+
+                    b.Property<string>("GOExpHist_Entry41Division");
+
+                    b.Property<string>("GOExpHist_Entry41Entity");
+
+                    b.Property<string>("GOExpHist_Entry41ExchCcy");
+
+                    b.Property<string>("GOExpHist_Entry41ExchRate");
+
+                    b.Property<string>("GOExpHist_Entry41Fund");
+
+                    b.Property<string>("GOExpHist_Entry41IbfCode");
+
+                    b.Property<string>("GOExpHist_Entry41InterAmt");
+
+                    b.Property<string>("GOExpHist_Entry41InterRate");
+
+                    b.Property<string>("GOExpHist_Entry41Type");
+
+                    b.Property<string>("GOExpHist_Entry42ActNo");
+
+                    b.Property<string>("GOExpHist_Entry42ActType");
+
+                    b.Property<string>("GOExpHist_Entry42Actcde");
+
+                    b.Property<string>("GOExpHist_Entry42AdvcPrnt");
+
+                    b.Property<string>("GOExpHist_Entry42Amt");
+
+                    b.Property<string>("GOExpHist_Entry42Available");
+
+                    b.Property<string>("GOExpHist_Entry42Ccy");
+
+                    b.Property<string>("GOExpHist_Entry42CheckNo");
+
+                    b.Property<string>("GOExpHist_Entry42Cust");
+
+                    b.Property<string>("GOExpHist_Entry42Details");
+
+                    b.Property<string>("GOExpHist_Entry42Division");
+
+                    b.Property<string>("GOExpHist_Entry42Entity");
+
+                    b.Property<string>("GOExpHist_Entry42ExchCcy");
+
+                    b.Property<string>("GOExpHist_Entry42ExchRate");
+
+                    b.Property<string>("GOExpHist_Entry42Fund");
+
+                    b.Property<string>("GOExpHist_Entry42IbfCode");
+
+                    b.Property<string>("GOExpHist_Entry42InterAmt");
+
+                    b.Property<string>("GOExpHist_Entry42InterRate");
+
+                    b.Property<string>("GOExpHist_Entry42Type");
+
+                    b.Property<string>("GOExpHist_Groupcode");
+
+                    b.Property<string>("GOExpHist_Memo");
+
+                    b.Property<string>("GOExpHist_OpeBranch");
+
+                    b.Property<string>("GOExpHist_OpeKind");
+
+                    b.Property<string>("GOExpHist_ReferenceNo");
+
+                    b.Property<string>("GOExpHist_ReferenceType");
+
+                    b.Property<string>("GOExpHist_Remarks");
+
+                    b.Property<string>("GOExpHist_SchemeNo");
+
+                    b.Property<string>("GOExpHist_Section");
+
+                    b.Property<string>("GOExpHist_SystemName");
+
+                    b.Property<string>("GOExpHist_ValueDate");
+
+                    b.Property<string>("GOExpHist_WarningOverride");
+
+                    b.HasKey("GOExpHist_Id");
+
+                    b.ToTable("GOExpressHist");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.GwriteTransList", b =>
+                {
+                    b.Property<int>("GW_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("GW_GWrite_ID");
+
+                    b.Property<int>("GW_Status");
+
+                    b.Property<int>("GW_TransID");
+
+                    b.HasKey("GW_ID");
+
+                    b.ToTable("GwriteTransLists");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.HomeNotifModel", b =>
@@ -905,6 +1398,135 @@ namespace ExpenseProcessingSystem.Migrations
                     b.HasKey("Notif_ID");
 
                     b.ToTable("HomeNotif");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.LiquidationCashBreakdownModel", b =>
+                {
+                    b.Property<int>("LiqCashBreak_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("ExpenseEntryDetailModelExpDtl_ID");
+
+                    b.Property<double>("LiqCashBreak_Amount");
+
+                    b.Property<double>("LiqCashBreak_Denomination");
+
+                    b.Property<int>("LiqCashBreak_NoPcs");
+
+                    b.HasKey("LiqCashBreak_ID");
+
+                    b.HasIndex("ExpenseEntryDetailModelExpDtl_ID");
+
+                    b.ToTable("LiquidationCashBreakdown");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.LiquidationEntryDetailModel", b =>
+                {
+                    b.Property<int>("Liq_DtlID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("ExpenseEntryModelExpense_ID");
+
+                    b.Property<int>("Liq_Approver");
+
+                    b.Property<DateTime>("Liq_Created_Date");
+
+                    b.Property<int>("Liq_Created_UserID");
+
+                    b.Property<DateTime>("Liq_LastUpdated_Date");
+
+                    b.Property<int>("Liq_Status");
+
+                    b.Property<int>("Liq_Verifier1");
+
+                    b.Property<int>("Liq_Verifier2");
+
+                    b.HasKey("Liq_DtlID");
+
+                    b.HasIndex("ExpenseEntryModelExpense_ID");
+
+                    b.ToTable("LiquidationEntryDetails");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.LiquidationInterEntityModel", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("ExpenseEntryDetailModelExpDtl_ID");
+
+                    b.Property<int>("Liq_AccountID_1_1");
+
+                    b.Property<int>("Liq_AccountID_1_2");
+
+                    b.Property<int>("Liq_AccountID_2_1");
+
+                    b.Property<int>("Liq_AccountID_2_2");
+
+                    b.Property<int>("Liq_AccountID_3_1");
+
+                    b.Property<int>("Liq_AccountID_3_2");
+
+                    b.Property<double>("Liq_Amount_1_1");
+
+                    b.Property<double>("Liq_Amount_1_2");
+
+                    b.Property<double>("Liq_Amount_2_1");
+
+                    b.Property<double>("Liq_Amount_2_2");
+
+                    b.Property<double>("Liq_Amount_3_1");
+
+                    b.Property<double>("Liq_Amount_3_2");
+
+                    b.Property<int>("Liq_CCY_1_1");
+
+                    b.Property<int>("Liq_CCY_1_2");
+
+                    b.Property<int>("Liq_CCY_2_1");
+
+                    b.Property<int>("Liq_CCY_2_2");
+
+                    b.Property<int>("Liq_CCY_3_1");
+
+                    b.Property<int>("Liq_CCY_3_2");
+
+                    b.Property<string>("Liq_DebitCred_1_1");
+
+                    b.Property<string>("Liq_DebitCred_1_2");
+
+                    b.Property<string>("Liq_DebitCred_2_1");
+
+                    b.Property<string>("Liq_DebitCred_2_2");
+
+                    b.Property<string>("Liq_DebitCred_3_1");
+
+                    b.Property<string>("Liq_DebitCred_3_2");
+
+                    b.Property<double>("Liq_InterRate_1_1");
+
+                    b.Property<double>("Liq_InterRate_1_2");
+
+                    b.Property<double>("Liq_InterRate_2_1");
+
+                    b.Property<double>("Liq_InterRate_2_2");
+
+                    b.Property<double>("Liq_InterRate_3_1");
+
+                    b.Property<double>("Liq_InterRate_3_2");
+
+                    b.Property<double>("Liq_TaxRate");
+
+                    b.Property<int>("Liq_VendorID");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("ExpenseEntryDetailModelExpDtl_ID");
+
+                    b.ToTable("LiquidationInterEntity");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.Pending.DMAccountGroupModel_Pending", b =>
@@ -1039,7 +1661,11 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("Pending_Emp_Approver_ID");
 
+                    b.Property<int>("Pending_Emp_Category_ID");
+
                     b.Property<int>("Pending_Emp_Creator_ID");
+
+                    b.Property<int>("Pending_Emp_FBT_MasterID");
 
                     b.Property<DateTime>("Pending_Emp_Filed_Date");
 
@@ -1174,6 +1800,123 @@ namespace ExpenseProcessingSystem.Migrations
                     b.ToTable("DMVendorTRVAT_Pending");
                 });
 
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.PettyCashModel", b =>
+                {
+                    b.Property<int>("PC_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("PCB_Fifty");
+
+                    b.Property<int>("PCB_Five");
+
+                    b.Property<int>("PCB_FiveCents");
+
+                    b.Property<int>("PCB_FiveHundred");
+
+                    b.Property<int>("PCB_ID");
+
+                    b.Property<int>("PCB_One");
+
+                    b.Property<int>("PCB_OneCents");
+
+                    b.Property<int>("PCB_OneHundred");
+
+                    b.Property<int>("PCB_OneThousand");
+
+                    b.Property<int>("PCB_Ten");
+
+                    b.Property<int>("PCB_TenCents");
+
+                    b.Property<int>("PCB_Twenty");
+
+                    b.Property<int>("PCB_TwentyFiveCents");
+
+                    b.Property<int>("PCB_TwoHundred");
+
+                    b.Property<DateTime>("PC_CloseDate");
+
+                    b.Property<int>("PC_CloseUser");
+
+                    b.Property<string>("PC_ConfirmComment");
+
+                    b.Property<double>("PC_Disbursed");
+
+                    b.Property<double>("PC_EndBal");
+
+                    b.Property<bool>("PC_OpenConfirm");
+
+                    b.Property<DateTime>("PC_OpenDate");
+
+                    b.Property<int>("PC_OpenUser");
+
+                    b.Property<double>("PC_StartBal");
+
+                    b.HasKey("PC_ID");
+
+                    b.ToTable("PettyCash");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.PrintStatusModel", b =>
+                {
+                    b.Property<int>("PS_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("PS_BIR2307");
+
+                    b.Property<bool>("PS_CDD");
+
+                    b.Property<bool>("PS_Check");
+
+                    b.Property<int>("PS_EntryDtlID");
+
+                    b.Property<int>("PS_EntryID");
+
+                    b.Property<bool>("PS_LOI");
+
+                    b.Property<int>("PS_Type");
+
+                    b.Property<bool>("PS_Voucher");
+
+                    b.HasKey("PS_ID");
+
+                    b.ToTable("PrintStatus");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.ReversalEntryModel", b =>
+                {
+                    b.Property<int>("Reversal_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Reversal_ExpenseDtlID");
+
+                    b.Property<int>("Reversal_ExpenseEntryID");
+
+                    b.Property<int>("Reversal_ExpenseType");
+
+                    b.Property<int>("Reversal_GOExpressHistID");
+
+                    b.Property<int>("Reversal_GOExpressID");
+
+                    b.Property<int>("Reversal_LiqDtlID");
+
+                    b.Property<int>("Reversal_LiqInterEntityID");
+
+                    b.Property<int>("Reversal_NonCashDtlID");
+
+                    b.Property<DateTime>("Reversal_ReversedDate");
+
+                    b.Property<int>("Reversal_ReversedUserID");
+
+                    b.Property<int>("Reversal_TransNo");
+
+                    b.HasKey("Reversal_ID");
+
+                    b.ToTable("ReversalEntry");
+                });
+
             modelBuilder.Entity("ExpenseProcessingSystem.Models.StatusListModel", b =>
                 {
                     b.Property<int>("Status_ID")
@@ -1268,6 +2011,13 @@ namespace ExpenseProcessingSystem.Migrations
                         .HasForeignKey("ExpenseEntryDetailModelExpDtl_ID");
                 });
 
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryInterEntityAccsModel", b =>
+                {
+                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryInterEntityParticularModel", "ExpenseEntryInterEntityParticular")
+                        .WithMany("ExpenseEntryInterEntityAccs")
+                        .HasForeignKey("ExpenseEntryInterEntityParticularInterPart_ID");
+                });
+
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryInterEntityModel", b =>
                 {
                     b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel", "ExpenseEntryDetailModel")
@@ -1275,11 +2025,18 @@ namespace ExpenseProcessingSystem.Migrations
                         .HasForeignKey("ExpenseEntryDetailModelExpDtl_ID");
                 });
 
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryInterEntityParticularModel", b =>
+                {
+                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryInterEntityModel", "ExpenseEntryInterEntityModel")
+                        .WithMany("ExpenseEntryInterEntityParticular")
+                        .HasForeignKey("ExpenseEntryInterEntityModelExpDtl_DDVInter_ID");
+                });
+
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryNCDtlAccModel", b =>
                 {
-                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryNCDtlModel", "ExpenseEntryNCModel")
+                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryNCDtlModel", "ExpenseEntryNCDtlModel")
                         .WithMany("ExpenseEntryNCDtlAccs")
-                        .HasForeignKey("ExpenseEntryNCModelExpNCDtl_ID");
+                        .HasForeignKey("ExpenseEntryNCDtlModelExpNCDtl_ID");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.ExpenseEntryNCDtlModel", b =>
@@ -1294,6 +2051,27 @@ namespace ExpenseProcessingSystem.Migrations
                     b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryModel", "ExpenseEntryModel")
                         .WithMany("ExpenseEntryNC")
                         .HasForeignKey("ExpenseEntryModelExpense_ID");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.LiquidationCashBreakdownModel", b =>
+                {
+                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel", "ExpenseEntryDetailModel")
+                        .WithMany()
+                        .HasForeignKey("ExpenseEntryDetailModelExpDtl_ID");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.LiquidationEntryDetailModel", b =>
+                {
+                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryModel", "ExpenseEntryModel")
+                        .WithMany()
+                        .HasForeignKey("ExpenseEntryModelExpense_ID");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.LiquidationInterEntityModel", b =>
+                {
+                    b.HasOne("ExpenseProcessingSystem.Models.ExpenseEntryDetailModel", "ExpenseEntryDetailModel")
+                        .WithMany()
+                        .HasForeignKey("ExpenseEntryDetailModelExpDtl_ID");
                 });
 #pragma warning restore 612, 618
         }

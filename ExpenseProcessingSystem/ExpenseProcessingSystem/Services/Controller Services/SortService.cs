@@ -58,23 +58,43 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     vdInfo = "glyphicon-menu-down";
                     break;
                 case "budget":
-                    tempList = tempList.OrderBy(s => s.BM_Budget_Amount);
+                    tempList = tempList.OrderBy(s => s.BM_Budget_Current);
                     viewData = "glyph-5";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "budget_desc":
-                    tempList = tempList.OrderByDescending(s => s.BM_Budget_Amount);
+                    tempList = tempList.OrderByDescending(s => s.BM_Budget_Current);
                     viewData = "glyph-5";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "budget_new":
+                    tempList = tempList.OrderBy(s => s.BM_Budget_Amount);
+                    viewData = "glyph-6";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "budget_new_desc":
+                    tempList = tempList.OrderByDescending(s => s.BM_Budget_Amount);
+                    viewData = "glyph-6";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "gwrite_status":
+                    tempList = tempList.OrderBy(s => s.BM_GWrite_Status);
+                    viewData = "glyph-7";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "gwrite_status_desc":
+                    tempList = tempList.OrderByDescending(s => s.BM_GWrite_Status);
+                    viewData = "glyph-7";
                     vdInfo = "glyphicon-menu-down";
                     break;
                 case "date_registered":
                     tempList = tempList.OrderBy(s => s.BM_Date_Registered);
-                    viewData = "glyph-6";
+                    viewData = "glyph-8";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "date_registered_desc":
                     tempList = tempList.OrderByDescending(s => s.BM_Date_Registered);
-                    viewData = "glyph-6";
+                    viewData = "glyph-8";
                     vdInfo = "glyphicon-menu-down";
                     break;
             }
