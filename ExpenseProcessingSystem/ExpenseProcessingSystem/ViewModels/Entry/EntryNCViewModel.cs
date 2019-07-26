@@ -1,4 +1,5 @@
-﻿using ExpenseProcessingSystem.Services.Validations;
+﻿using ExpenseProcessingSystem.ConstantData;
+using ExpenseProcessingSystem.Services.Validations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -73,6 +74,7 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         public List<SelectListItem> currList { get; set; }
         public List<SelectListItem> vendorList { get; set; }
         public List<SelectListItem> trList { get; set; }
+        public List<CONSTANT_NC_VALS> accList { get; set; }
 
         public EntryNCViewModelList()
         {

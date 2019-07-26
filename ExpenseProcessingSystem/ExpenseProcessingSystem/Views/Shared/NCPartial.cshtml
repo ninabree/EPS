@@ -8,7 +8,7 @@
 @functions{
     public string SetClassCompSusp(int catID, int csID, string suffix)
     {
-        return (csID == 454) ? "nc-comp-susp-" + suffix : ((csID == 487 && catID == 8) || ((csID == 495 || csID == 487) && catID == 9)) ? "nc-comp-susp-" + suffix : (csID == 492) ? "nc-inter-" + suffix : (csID == 486) ? "nc-cdd-petty-" + suffix : (csID == 487 && catID == 7) ? "nc-cdd-comp-" + suffix : "";
+        return (csID == 454) ? "nc-comp-susp-" + suffix : ((csID == 487 && catID == 8) || ((csID == 495 || csID == 487) && catID == 9)) ? "nc-comp-susp-" + suffix : (csID == 492) ? "nc-inter-" + suffix : (csID == 95) ? "nc-cdd-petty-" + suffix : (csID == 68 && catID == 7) ? "nc-cdd-comp-" + suffix : "";
     }
     object getHtmlAttributes(int catID, int count)
     {

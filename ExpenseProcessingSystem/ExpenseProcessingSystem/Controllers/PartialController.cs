@@ -109,7 +109,8 @@ namespace ExpenseProcessingSystem.Controllers
                     viewModel.EntryNC = CONSTANT_NC_MISC_ENTRIES.Populate_MISC_ENTRIES(currDtl);
                 }
             }
-            
+
+            //viewModel.accList = _service.getNCAccs("/NONCASHACCOUNTS/PCR/ACCOUNT");
             viewModel = PopulateEntryNC(viewModel, expenseDate);
             return View("NCPartial", viewModel);
         }

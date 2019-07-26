@@ -2071,7 +2071,7 @@ namespace ExpenseProcessingSystem.Controllers
                 }
             }
             viewModel.CDDContents = cddContents;
-            return File(excelGenerate.ExcelCDDIS(viewModel, newFileName, "CDDIS_template.xlsx"), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", newFileName);
+            return File(excelGenerate.ExcelCDDIS_PRC(viewModel, newFileName, "CDDIS_NC_PCR.xlsx"), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", newFileName);
 
         }
         //[* Entry Non Cash *]

@@ -105,8 +105,8 @@ string value1 = xNC.Element("LOGO").Value
   </DEPRECIATION>
 
   <PCR>
-    <ACCOUNT class="entry1" id="ACCOUNT1">104</ACCOUNT>
-    <ACCOUNT class="entry1" id="ACCOUNT2">105</ACCOUNT>
+    <ACCOUNT class="entry1" id="ACCOUNT1">95</ACCOUNT>
+    <ACCOUNT class="entry1" id="ACCOUNT2">68</ACCOUNT>
   </PCR>
 
   <JSPAYROLL>
