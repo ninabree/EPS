@@ -51,7 +51,7 @@ namespace ExpenseProcessingSystem.Services
             _gWriteContext = gWriteContext;
             _modelState = modelState;
             _hostingEnvironment = hostingEnvironment;
-            _modalservice = new ModalService(_httpContextAccessor, _context);
+            _modalservice = new ModalService(_httpContextAccessor, _context, _gWriteContext);
             _class = new NumberToText();
         }
         public string getUserRole(string id)
@@ -2773,7 +2773,9 @@ namespace ExpenseProcessingSystem.Services
                                 acc.Account_MasterID,
                                 accGrp.AccountGroup_Name,
                                 bud.Budget_Amount,
-                                bud.Budget_Date_Registered
+                                bud.Budget_Date_Registered,
+                                bud.Budget_New_Amount,
+                                bud.Budget_GWrite_Status
                             }).ToList();
 
             foreach (var i in dbBudget)
@@ -2790,7 +2792,9 @@ namespace ExpenseProcessingSystem.Services
                     BM_Acc_Name = accInfo.Account_Name,
                     BM_GBase_Code = accInfo.Account_Budget_Code,
                     BM_Acc_Num = accInfo.Account_No,
-                    BM_Budget_Amount = i.Budget_Amount,
+                    BM_Budget_Current = i.Budget_Amount,
+                    BM_Budget_Amount = i.Budget_New_Amount,
+                    BM_GWrite_Status = GlobalSystemValues.getStatus(i.Budget_GWrite_Status),
                     BM_Date_Registered = i.Budget_Date_Registered
                 });
             };
@@ -8981,7 +8985,7 @@ namespace ExpenseProcessingSystem.Services
             rqDtl = postToGwrite(closeCommand, username, password);
 
             gWriteModel.GW_GWrite_ID = int.Parse(rqDtl.RequestId.ToString());
-            gWriteModel.GW_Status = "pending";
+            gWriteModel.GW_Status = GlobalSystemValues.STATUS_PENDING;
 
             return true;
         }

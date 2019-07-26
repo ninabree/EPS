@@ -1,10 +1,11 @@
 ﻿@model List<ExpenseProcessingSystem.ViewModels.BMViewModel>
-
+@using ExpenseProcessingSystem.ConstantData;
 @{
     ViewData["Title"] = "BudgetRegistrationModal";
     Layout = "~/Views/Shared/_ModalLayout.cshtml";
 }
-@using (Html.BeginForm("RegisterNewBudget", "Modal", FormMethod.Post, new { @id = "tsForm" }))
+
+@using (Html.BeginForm("RegisterNewBudget", "Modal", FormMethod.Post, new { @id = "submitNewBudgetForm" }))
 {
     <div style="height:450px;overflow-y: scroll">
         <table class="table tableBudReg table-striped tab-tbl table-hover" style="width:100%">
@@ -23,26 +24,55 @@
                 {
                     @for (var i = 0; i < Model.Count(); i++)
                     {
-                        <tr id="budRegId_@i">
-                            <td>
-                                @Html.HiddenFor(x => Model[i].BM_Account_ID)
-                                @Html.HiddenFor(x => Model[i].BM_Account_MasterID)
-                                @Html.TextBoxFor(x => Model[i].BM_Acc_Name, new { @class = "input100 txtAccName", @readonly = "readonly", tabindex = -1 })
-                            </td>
-                            <td>
-                                @Html.TextBoxFor(x => Model[i].BM_Acc_Num, new { @class = "input100 txtAccNum", @readonly = "readonly", tabindex = -1 })
-                            </td>
-                            <td>
-                                @Html.TextBoxFor(x => Model[i].BM_GBase_Code, new { @class = "input100 txtGbaseCode", @readonly = "readonly", tabindex = -1 })
-                            </td>
-                            <td>
-                                @Html.TextBoxFor(x => Model[i].BM_Budget_Current, "{0:#,##0.00#}", new { @class = "input100 txtCurrBudget", style = "text-align:right;", @readonly = "readonly", tabindex = -1 })
-                            </td>
-                            <td>
-                                @Html.TextBoxFor(x => Model[i].BM_Budget_Amount, "{0:#,##0.00#}", new { @class = "input100 txtNewBudget", @type = "Number", @min = "0", style = "text-align:right;", tabindex = @i + 1 })
-                            </td>
-                            <td style="text-align:center"><input type="checkbox" id="chk_@i" class="chkRetain"></td>
-                        </tr>
+                        if (Model[i].BM_GWrite_StatusID != GlobalSystemValues.STATUS_PENDING)
+                        {
+
+                            <tr id="budRegId_@i">
+                                <td>
+                                    @Html.HiddenFor(x => Model[i].BM_Account_ID)
+                                    @Html.HiddenFor(x => Model[i].BM_Account_MasterID)
+                                    @Html.TextBoxFor(x => Model[i].BM_Acc_Name, new { @class = "input100 txtAccName", @readonly = "readonly", tabindex = -1 })
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(x => Model[i].BM_Acc_Num, new { @class = "input100 txtAccNum", @readonly = "readonly", tabindex = -1 })
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(x => Model[i].BM_GBase_Code, new { @class = "input100 txtGbaseCode", @readonly = "readonly", tabindex = -1 })
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(x => Model[i].BM_Budget_Current, "{0:#,##0.00#}", new { @class = "input100 txtCurrBudget", style = "text-align:right;", @readonly = "readonly", tabindex = -1 })
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(x => Model[i].BM_Budget_Amount, "{0:#,##0.00#}", new { @class = "input100 txtNewBudget", @type = "Number", @min = "0", style = "text-align:right;", tabindex = @i + 1 })
+                                </td>
+                                <td style="text-align:center"><input type="checkbox" id="chk_@i" class="chkRetain"></td>
+                            </tr>
+
+                        }
+                        else
+                        {
+                            <tr id="budRegId_@i">
+                                <td>
+                                    @Html.HiddenFor(x => Model[i].BM_Account_ID)
+                                    @Html.HiddenFor(x => Model[i].BM_Account_MasterID)
+                                    @Html.TextBoxFor(x => Model[i].BM_Acc_Name, new { @class = "input100 txtAccName", @readonly = "readonly", tabindex = -1, @style = "color:red" })
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(x => Model[i].BM_Acc_Num, new { @class = "input100 txtAccNum", @readonly = "readonly", tabindex = -1, @style = "color:red" })
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(x => Model[i].BM_GBase_Code, new { @class = "input100 txtGbaseCode", @readonly = "readonly", tabindex = -1, @style = "color:red" })
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(x => Model[i].BM_Budget_Current, "{0:#,##0.00#}", new { @class = "input100 txtCurrBudget", style = "text-align:right;color:red", @readonly = "readonly", tabindex = -1 })
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(x => Model[i].BM_Budget_Amount, "{0:#,##0.00#}", new { @class = "input100 txtNewBudget", @min = "0", @readonly = "readonly", style = "text-align:right;color:red", tabindex = @i + 1 })
+                                </td>
+                                <td style="text-align:center"><input type="checkbox" id="chk_@i" class="chkRetain" disabled="disabled"></td>
+                            </tr>
+                        }
+                        @Html.HiddenFor(x => Model[i].BM_GWrite_StatusID, new { @id = "gwriteStatusID_" + @i })
                     }
                 }
                 else
@@ -54,6 +84,40 @@
             </tbody>
         </table>
     </div>
+    <div class="modal fade" id="login" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="vertical-alignment-helper">
+                <div class="modal-dialog vertical-align-center">
+                    <div class="modal-content w-30">
+                        <div class="modal-header">
+                            <h4 style="display:inline">Login</h4>
+                            <button type="button" class="close" onclick="$('#login').modal('hide');">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <table style="margin:5px;">
+                                <tr>
+                                    <td>Username : </td>
+                                    <td>&nbsp;<input type="text" id="userName" name="username" class="input" /></td>
+                                </tr>
+                                <tr>
+                                    <td>&nbsp;&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td>Password : </td>
+                                    <td>&nbsp;<input type="password" id="passWord" name="password" class="input" /></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn float-r" onclick="$('#login').modal('hide');">Close</button>
+                            <button class="btn float-r comVar" id="loginSubmit">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 
 <script>
@@ -62,6 +126,15 @@
         var trsInit = $(".tableBudReg").find("tbody").find("tr");
         if (trsInit.length == 1) {
             $('#saveBtnEntry').attr("disabled", "disabled");
+        }
+        $('#chkAll').prop("checked", true);
+        var trs = $(".tableBudReg").find("tbody").find("tr");
+        var currAllStat = $('#chkAll').is(':checked');
+        for (var i = 0; i < trs.length; i++) {
+            if ($('#gwriteStatusID_' + i).val() != 1) {
+                $('#chk_' + i).prop("checked", currAllStat);
+                checkedOrNotChange(i, currAllStat);
+            }
         }
 
         $(function () {
@@ -78,8 +151,10 @@
                 var trs = $(".tableBudReg").find("tbody").find("tr");
                 var currAllStat = $('#chkAll').is(':checked');
                 for (var i = 0; i < trs.length; i++) {
-                    $('#chk_' + i).prop("checked", currAllStat);
-                    checkedOrNotChange(i, currAllStat);
+                    if ($('#gwriteStatusID_' + i).val() != 1) {
+                        $('#chk_' + i).prop("checked", currAllStat);
+                        checkedOrNotChange(i, currAllStat);
+                    }
                 }
             });
 
@@ -89,8 +164,12 @@
                 var budRegItemNo = budRegPNode.id; //jquery obj
                 var selectedChk = $("#" + budRegItemNo).find('.chkRetain');
                 var currSelectedStat = selectedChk.is(':checked');
-                
+
                 checkedOrNotChange(selectedChk.attr('id').replace('chk_', ''), currSelectedStat);
+            });
+
+            $(".modal-footer2").on("click", "#saveBtnEntry", function (e) {
+                $('#login').modal('show');
             });
         });
 

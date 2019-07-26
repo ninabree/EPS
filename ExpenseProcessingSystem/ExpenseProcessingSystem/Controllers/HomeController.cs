@@ -934,6 +934,8 @@ namespace ExpenseProcessingSystem.Controllers
             ViewData["GBaseBudgetCodeSortParm"] = sortOrder == "gbase_budget_code_desc" ? "gbase_budget_code" : "gbase_budget_code_desc";
             ViewData["AccountNumberSortParm"] = sortOrder == "acc_num_desc" ? "acc_num" : "acc_num_desc";
             ViewData["BudgetSortParm"] = sortOrder == "budget_desc" ? "budget" : "budget_desc";
+            ViewData["BudgetNewSortParm"] = sortOrder == "budget_new_desc" ? "budget_new" : "budget_new_desc";
+            ViewData["GWriteStatusParm"] = sortOrder == "gwrite_status_desc" ? "gwrite_status" : "gwrite_status_desc";
             ViewData["DateRegisteredSortParm"] = sortOrder == "date_registered_desc" ? "date_registered" : "date_registered_desc";
 
             if (searchString != null)
@@ -1584,6 +1586,14 @@ namespace ExpenseProcessingSystem.Controllers
                 {
                     i.vendTRList = _service.getAllTRList();
                     i.vendVATList = _service.getAllVATList();
+                    foreach (var j in i.vendTRList)
+                    {
+                        j.TR_Tax_Rate = j.TR_Tax_Rate * 100;
+                    }
+                    foreach (var j in i.vendVATList)
+                    {
+                        j.VAT_Rate = j.VAT_Rate * 100;
+                    }
                 }
                 else
                 {
@@ -1841,6 +1851,15 @@ namespace ExpenseProcessingSystem.Controllers
                 {
                     i.vendTRList = _service.getAllTRList();
                     i.vendVATList = _service.getAllVATList();
+
+                    foreach(var j in i.vendTRList)
+                    {
+                        j.TR_Tax_Rate = j.TR_Tax_Rate * 100;
+                    }
+                    foreach (var j in i.vendVATList)
+                    {
+                        j.VAT_Rate = j.VAT_Rate * 100;
+                    }
                 }
                 else
                 {
