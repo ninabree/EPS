@@ -52,8 +52,12 @@
         var chkVatVal = $(this).is(':checked');
         if (chkVatVal) {
             $("#" + itemNo).find(".txtVat").attr("disabled", false);
+            $('#' + itemNo).find('.reqEWTBtn').css("pointer-events", "auto");
         } else {
             $("#" + itemNo).find(".txtVat").attr("disabled", true);
+            if (!$("#" + itemNo).find(".chkEwt").is(':checked')) {
+                $('#' + itemNo).find('.reqEWTBtn').css("pointer-events", "none");
+            }
         }
     });
 
@@ -64,8 +68,12 @@
         var chkEwtVal = $(this).is(':checked');
         if (chkEwtVal) {
             $("#" + itemNo).find(".txtEwt").attr("disabled", false);
+            $('#' + itemNo).find('.reqEWTBtn').css("pointer-events", "auto");
         } else {
             $("#" + itemNo).find(".txtEwt").attr("disabled", true);
+            if (!$("#" + itemNo).find(".chkVat").is(':checked')) {
+                $('#' + itemNo).find('.reqEWTBtn').css("pointer-events", "none");
+            }
         }
     });
 
@@ -202,33 +210,32 @@
 
     function computeValues(parent) {
         var pNode = parent;
-        var isInter = $("#" + pNode.id).find("#EntryDDV_" + pNode.id.substring(5) + "__inter_entity").is(':checked');
         var amounts = $("");
         var grossAmt = 0;
         var origGrossAmt = 0;
-        //check if Inter Entity
-        if (isInter) {
-            var grossAmt = $("#" + pNode.id + " td .txtGross").val();
-        } else {
-            amounts = $("#" + pNode.id + " .amount");
-            grossAmt = 0;
-            origGrossAmt = $("#" + pNode.id + " .txtGross").val();
-            for (var i = 0; i < amounts.length; i++) {
-                grossAmt += Number(amounts[i].value);
-            }
 
-            //For PCS,SS - resetting of Cash breakdown list.
-            if ($(".hiddenScreencode").val() == "PCV" || $(".hiddenScreencode").val() == "SS") {
-                if (origGrossAmt != grossAmt) {
-                    var ret = pNode.id.replace('item_', '');
-                    $('#divCashBD_' + ret).empty();
-                    $('#EntryCV_' + ret + '__modalInputFlag').val(0);
-                }
-            }
+        amounts = $("#" + pNode.id + " .amount");
+        grossAmt = 0;
+        origGrossAmt = $("#" + pNode.id + " .txtGross").val();
+        for (var i = 0; i < amounts.length; i++) {
+            grossAmt += Number(amounts[i].value);
         }
 
-        $("#" + pNode.id + " td .txtGross").val(grossAmt);
+        //For PCS,SS - resetting of Cash breakdown list.
+        if ($(".hiddenScreencode").val() == "PCV" || $(".hiddenScreencode").val() == "SS") {
+            if (origGrossAmt != grossAmt) {
+                var ret = pNode.id.replace('item_', '');
+                $('#divCashBD_' + ret).empty();
+                $('#EntryCV_' + ret + '__modalInputFlag').val(0);
+            }
+        }
+        
 
+        $("#" + pNode.id + " td .txtGross").val(grossAmt);
+        if ($(".hiddenScreencode").val() == "SS") {
+            $("#" + pNode.id).find(".txtCredCash").val(grossAmt);
+            return false;
+        }
         //$("#" + pNode.id + " .txtGross").attr("value", grossAmt);
 
         var itemNo = pNode.id; //jquery obj

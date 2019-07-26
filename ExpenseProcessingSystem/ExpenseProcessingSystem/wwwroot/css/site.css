@@ -635,10 +635,10 @@ div[aria-describedby=validationSummary] {
 }
 /*//////////////////////////////////////////////////////////////////
 [ Modal ]*/
-.modal-header, .modal-body, .modal-footer {
+.modal-header, .modal-body, .modal-footer, .modal-header2, .modal-body2, .modal-footer2 {
     padding: 5px;
 }
-    .modal-footer > .btn {
+    .modal-footer, .modal-footer2 > .btn {
         margin-bottom: 0;
         margin-left: 5px;
     }
@@ -757,7 +757,7 @@ div.sticky {
     .selectDisabled[disabled].simple-control::-ms-expand {
         display: none;
     }
-.txtIEInput, .txtIEInfoInput, .txtLiqPhpInput {
+.txtIEInput, .txtIEInfoInput, .txtLiqPhpInput, .ddlLiqPhp {
     background-color: #FFFBD5;
 }
 input[type=date]::-webkit-inner-spin-button {
@@ -794,7 +794,7 @@ input[type=date]::-ms-clear {
     pointer-events: none;
 }
 
-.modal-content {
+.modal-content, .modal-content2 {
     /* Bootstrap sets the size of the modal in the modal-dialog class, we need to inherit it */
     width: inherit;
     max-width: inherit; /* For Bootstrap 4 - to avoid the modal window stretching 

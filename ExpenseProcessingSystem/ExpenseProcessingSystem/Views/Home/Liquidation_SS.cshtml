@@ -115,6 +115,7 @@
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_InterRate_3_1)
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_InterRate_3_2)
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_Tax_Rate)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_VendorID)
                                     }
                                 </div>
                             </td>
@@ -210,15 +211,21 @@
                             <col style="width:15%" />
                         </colgroup>
                         <tr>
+                            <td colspan="5" style="text-align:left">
+                                <label style="width:auto">VENDOR: </label>
+                                <label style="width:80%">@Html.DropDownListFor(x => Model.vendorList, new SelectList(Model.vendorList, "Vendor_ID", "Vendor_Name"), new { @id = "txtLiqVendor", @class = "input100 ddlLiqPhp", @style = "width:auto;min-width:30%;text-align:center" })</label>
+</td>
+                        </tr>
+                        <tr>
                             <th style="text-align:center"><label>ACCOUNT NO.</label></th>
                             <th style="text-align:center"><label>ACCONT CODE</label></th>
-                            <th style="text-align:center"><label>Tax Rate(%)</label></th>
+                            <th style="text-align:center"><label>EWT(%)</label></th>
                             <th style="text-align:center"><label>DEBIT</label></th>
                             <th style="text-align:center"><label>CREDIT</label></th>
                         </tr>
                         <tr>
                             <td>
-                                @Html.DropDownListFor(x => Model.acc, new SelectList(Model.accList, "Account_ID", "Account_Name"), new { @id = "ddlLiqPhpAccount1", @style = "width:100%", @class = "input100 selectDisabled ddlLiqPhpAccount" })
+                                @Html.DropDownListFor(x => Model.acc, new SelectList(Model.accList, "Account_ID", "Account_Name"), new { @id = "ddlLiqPhpAccount1", @style = "width:100%", @class = "input100 selectDisabled ddlLiqPhp ddlLiqPhpAccount" })
                             </td>
                             <td>
                                 <input id="txtLiqAccCode1" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="">
@@ -231,7 +238,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <select id="ddlLiqPhpAccount2" style="width:100%" class="input100 selectDisabled ddlLiqPhpAccount"></select>
+                                <select id="ddlLiqPhpAccount2" style="width:100%" class="input100 selectDisabled ddlLiqPhp ddlLiqPhpAccount"></select>
                             </td>
                             <td>
                                 <input id="txtLiqAccCode2" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="">
@@ -252,7 +259,7 @@
                                 <input id="txtLiqAccCode3" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="">
                             </td>
                             <td>
-                                @Html.DropDownListFor(x => Model.taxRateList, new SelectList(Model.taxRateList, "TR_ID", "TR_WT_Title"), new { @id = "txtLiqTaxRate", @style = "width:100%;text-align:center", @class = "input100 txtLiqPhpInput number-input"})
+                                @Html.DropDownListFor(x => Model.taxRateList, new SelectList(Model.taxRateList, "TR_ID", "TR_WT_Title"), new { @id = "txtLiqTaxRate", @style = "width:100%;text-align:center", @class = "input100 ddlLiqPhp"})
                             </td>
                             <td></td>
                             <td>
@@ -876,7 +883,9 @@
         $('.tableLiqPhp').on('change', '.ddlLiqPhpAccount', function (e) {
             assignAccCodeLiqPhp();
         });
-        
+        $('.tableLiqPhp').on('change', '#txtLiqVendor', function (e) {
+            getVendorTaxRate($('#txtLiqVendor').val());
+        });
     });
 </script>
 <script type="text/javascript" src="~/js/EntryScripts.js"></script>

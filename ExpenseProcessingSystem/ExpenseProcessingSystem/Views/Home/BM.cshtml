@@ -75,10 +75,12 @@
         $(".divBtn").on("click", ".btnBudgetReg", function (e) {
             e.stopImmediatePropagation();
 
-            var modalDivBody = $('.modal-body');
-
-            if ($('.modal-header').find(".modal-title")[0] == null) {
-                $('.modal-header').append('<h4 class="modal-title">Budget Registration</h4>');
+            var modalDivBody = $('.modal-body2');
+            modalDivBody.empty();
+            if ($('.modal-header2').find(".modal-title")[0] == null) {
+                $('.modal-header2').append('<h4 class="modal-title">Budget Registration</h4>');
+            } else {
+                $('.modal-title').text("Budget Registration");
             }
 
             modalDivBody.load("@Url.Action("BudgetRegistrationModal", "Modal")", {
@@ -98,10 +100,13 @@
         $(".divBtn").on("click", ".btnBudgetRegHist", function (e) {
             e.stopImmediatePropagation();
 
-            var modalDivBody = $('.modal-body');
+            var modalDivBody = $('.modal-body2');
+            modalDivBody.empty();
 
-            if ($('.modal-header').find(".modal-title")[0] == null) {
-                $('.modal-header').append('<h4 class="modal-title">History of Budget Registration</h4>');
+            if ($('.modal-header2').find(".modal-title")[0] == null) {
+                $('.modal-header2').append('<h4 class="modal-title">History of Budget Registration</h4>');
+            } else {
+                $('.modal-title').text("History of Budget Registration");
             }
 
             modalDivBody.load("@Url.Action("BudgetRegHistModal", "Modal")", {

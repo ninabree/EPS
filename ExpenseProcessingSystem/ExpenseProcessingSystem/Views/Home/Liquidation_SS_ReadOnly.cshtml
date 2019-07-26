@@ -117,6 +117,7 @@
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_InterRate_3_1)
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_InterRate_3_2)
                                         @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_Tax_Rate)
+                                        @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInterEntity[y].Liq_VendorID)
                                     }
                                 </div>
                             </td>
@@ -202,7 +203,7 @@
                 <div style="display:inline-block;width:100%">
                     <label>Liquidation for PHP currency</label>
                 </div>
-                <div style="display:inline-block;text-align:center;width:45%;vertical-align:top">
+                <div style="display:inline-block;text-align:center;width:55%;vertical-align:top">
                     <table style="width:100%;" class="table-bordered table-striped voucher-tbl">
                         <colgroup>
                             <col style="width:35%" />
@@ -212,9 +213,15 @@
                             <col style="width:15%" />
                         </colgroup>
                         <tr>
+                            <td colspan="5" style="text-align:left">
+                                <label style="width:auto">VENDOR: </label>
+                                <label width:80%>@Html.DropDownListFor(x => Model.vendorList, new SelectList(Model.vendorList, "Vendor_ID", "Vendor_Name"), new { @id = "txtLiqVendor", @class = "input100 selectDisabled ", @style = "width:auto;text-align:center", @disabled = "disabled" })</label>
+                            </td>
+                        </tr>
+                        <tr>
                             <th style="text-align:center"><label>ACCOUNT NO.</label></th>
                             <th style="text-align:center"><label>ACCONT CODE</label></th>
-                            <th style="text-align:center"><label>Tax Rate(%)</label></th>
+                            <th style="text-align:center"><label>EWT(%)</label></th>
                             <th style="text-align:center"><label>DEBIT</label></th>
                             <th style="text-align:center"><label>CREDIT</label></th>
                         </tr>
