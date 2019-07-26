@@ -8008,10 +8008,10 @@ namespace ExpenseProcessingSystem.Services
                     deptName = GetDeptName(dtl.d.ExpDtl_Dept),
                     chkVat = (dtl.d.ExpDtl_Vat <= 0) ? false : true,
                     vatID = dtl.d.ExpDtl_Vat,
-                    vatValue = (dtl.d.ExpDtl_Vat <= 0) ? 0 : getVat(dtl.d.ExpDtl_Vat),
+                    vatValue = (dtl.d.ExpDtl_Vat <= 0) ? 0 : getVat(dtl.d.ExpDtl_Vat) * 100,
                     chkEwt = dtl.d.ExpDtl_isEwt,
                     ewtID = dtl.d.ExpDtl_Ewt,
-                    ewtValue = (dtl.d.ExpDtl_Ewt <= 0) ? 0 : GetEWTValue(dtl.d.ExpDtl_Ewt),
+                    ewtValue = (dtl.d.ExpDtl_Ewt <= 0) ? 0 : GetEWTValue(dtl.d.ExpDtl_Ewt) * 100,
                     ccyID = dtl.d.ExpDtl_Ccy,
                     ccyMasterID = getCurrency(dtl.d.ExpDtl_Ccy).Curr_MasterID,
                     ccyAbbrev = GetCurrencyAbbrv(dtl.d.ExpDtl_Ccy),
@@ -8019,7 +8019,9 @@ namespace ExpenseProcessingSystem.Services
                     credEwt = dtl.d.ExpDtl_Credit_Ewt,
                     credCash = dtl.d.ExpDtl_Credit_Cash,
                     dtlSSPayee = dtl.d.ExpDtl_SS_Payee,
-                    dtlSSPayeeName = getVendorName(dtl.d.ExpDtl_SS_Payee, GlobalSystemValues.PAYEETYPE_VENDOR),
+                    dtl_Ewt_Payor_Name_ID = dtl.d.ExpDtl_Ewt_Payor_Name_ID,
+                    dtlSSPayeeName = getVendorName(dtl.d.ExpDtl_SS_Payee, GlobalSystemValues.PAYEETYPE_REGEMP),
+                    vendTRList = getVendorTaxList(getVendor(dtl.d.ExpDtl_Ewt_Payor_Name_ID).Vendor_MasterID),
                     gBaseRemarksDetails = remarksDtl,
                     cashBreakdown = cashBreakdown,
                     liqCashBreakdown = liqCashBreakdown,
@@ -10256,7 +10258,13 @@ namespace ExpenseProcessingSystem.Services
         //get all Tax Rate including history
         public List<DMTRModel> getAllTRList()
         {
-            return _context.DMTR.OrderBy(x => x.TR_Tax_Rate).ToList();
+            return _context.DMTR.OrderBy(x => x.TR_Tax_Rate).Select(x => new DMTRModel
+            {
+                TR_ID = x.TR_ID,
+                TR_MasterID = x.TR_MasterID,
+                TR_Tax_Rate = x.TR_Tax_Rate * 100,
+                TR_WT_Title = x.TR_WT_Title
+            }).ToList();
         }
         //get Vat list for specific user
         public SelectList getAllVat()
@@ -10285,7 +10293,13 @@ namespace ExpenseProcessingSystem.Services
         //get all VAT including history
         public List<DMVATModel> getAllVATList()
         {
-            return _context.DMVAT.OrderBy(x => x.VAT_Rate).ToList();
+            return _context.DMVAT.OrderBy(x => x.VAT_Rate).Select(x => new DMVATModel
+            {
+                VAT_ID = x.VAT_ID,
+                VAT_MasterID = x.VAT_MasterID,
+                VAT_Rate = x.VAT_Rate * 100,
+                VAT_Name = x.VAT_Name
+            }).ToList();
         }
         //get Vat list for specific user
         public SelectList getVendorVat(int vendorID)
@@ -10362,7 +10376,14 @@ namespace ExpenseProcessingSystem.Services
         //Get all active tax rates
         public List<DMTRModel> getAllTaxRateList()
         {
-            return _context.DMTR.Where(x => x.TR_isActive == true && x.TR_isDeleted == false).OrderBy(x => x.TR_Tax_Rate).ToList();
+            return _context.DMTR.Where(x => x.TR_isActive == true && x.TR_isDeleted == false)
+                .OrderBy(x => x.TR_Tax_Rate)
+                .Select(x => new  DMTRModel {
+                    TR_ID = x.TR_ID,
+                    TR_MasterID = x.TR_MasterID,
+                    TR_Tax_Rate = x.TR_Tax_Rate * 100,
+                    TR_WT_Title = x.TR_Tax_Rate * 100 + " " + x.TR_WT_Title
+                }).ToList();
         }
         //retrieve account details
         public ExpenseEntryModel getExpenseDetail(int entryID)

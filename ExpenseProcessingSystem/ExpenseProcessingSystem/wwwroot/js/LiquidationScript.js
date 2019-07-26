@@ -41,10 +41,12 @@ function roundExceptionJPY(value, exp) {
 };
 
 function reqBtnDisable(idx) {
-    if ($('#LiquidationDetails_' + idx + '__ccyAbbrev').val() != "PHP") {
+    if ($('#LiquidationDetails_' + idx + '__ccyAbbrev').val() != $('#phpAbbrv').val()) {
         $('#req_' + idx).find('.reqBtn').css("pointer-events", "none");
+        $('#item_' + idx).find('.reqEWTBtn').css("pointer-events", "none");
     } else {
         $('#req_' + idx).find('.reqBtn').css("pointer-events", "auto");
+        $('#item_' + idx).find('.reqEWTBtn').css("pointer-events", "auto");
     }
 };
 
@@ -65,11 +67,14 @@ function displayInfoCashBD(pid) {
     $('#ddlLiqPhpAccount2').val($("#ddlLiqPhpAccount2 option:first").val());
     $('#txtLiqTaxRate').val($("#txtLiqTaxRate option:first").val());
 
+    var ret = pid.replace('item_', '');
+
+    getVendorTaxRate($('#' + pid).find('.txtPayor').val(), ret);
+
     if ($('#' + pid).find('.hiddenLiqFlag').val() == 0) {
         return false;
     }
 
-    var ret = pid.replace('item_', '');
     var cashBDInput = $('#divLiqCashBD_' + ret).find("input");
     var totalAmount = 0.0;
 
@@ -357,10 +362,9 @@ function setLiqPhpValuetoDivInput(ret) {
 
 function assignDivValuesLiqPhp(pid) {
     var ret = pid.replace('item_', '');
+
     //Vendor ID
     $('#txtLiqVendor').val($('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_VendorID').val());
-
-    getVendorTaxRate($('#txtLiqVendor').val(), ret);
 
     //ACCONT
     $('#ddlLiqPhpAccount1').val($('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_AccountID_1_1').val());
