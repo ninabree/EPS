@@ -1356,6 +1356,9 @@ namespace ExpenseProcessingSystem.Controllers
             ddvList = _service.getExpenseDDV(entryID);
 
             ddvList = PopulateEntry((EntryDDVViewModelList)ddvList);
+            ddvList.payee_type = GlobalSystemValues.PAYEETYPE_REGEMP;
+            ddvList.systemValues.vat = _service.getAllVat();
+            ddvList.systemValues.ewt = _service.getAllTaxRate();
 
             foreach (var acc in ddvList.EntryDDV)
             {

@@ -7216,7 +7216,7 @@ namespace ExpenseProcessingSystem.Services
                     //vat_Name is actually the rate
                     vat_Name = _context.DMVAT.Where(x => x.VAT_ID == dtl.d.ExpDtl_Vat && x.VAT_isActive == true).Select(x => x.VAT_Rate.ToString()).FirstOrDefault(),
                     chkEwt = (dtl.d.ExpDtl_Ewt <= 0) ? false : true,
-                    ewt = dtl.d.ExpDtl_isEwt ? 0 : dtl.d.ExpDtl_Ewt,
+                    ewt = dtl.d.ExpDtl_Ewt,
                     ewt_Name = _context.DMTR.Where(x => x.TR_ID == dtl.d.ExpDtl_Ewt).Select(x => x.TR_Tax_Rate.ToString()).FirstOrDefault(),
                     ewt_Payor_Name = (dtl.d.ExpDtl_Ewt_Payor_Name_ID >= 0) ? _context.DMVendor.Where(x => x.Vendor_ID == dtl.d.ExpDtl_Ewt_Payor_Name_ID).Select(x => x.Vendor_Name).FirstOrDefault() : "",
                     ccy = dtl.d.ExpDtl_Ccy,
