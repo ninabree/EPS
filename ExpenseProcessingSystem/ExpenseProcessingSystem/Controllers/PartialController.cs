@@ -110,7 +110,7 @@ namespace ExpenseProcessingSystem.Controllers
                 }
             }
 
-            //viewModel.accList = _service.getNCAccs("/NONCASHACCOUNTS/PCR/ACCOUNT");
+            viewModel.accList = _service.getNCAccsForFilter();
             viewModel = PopulateEntryNC(viewModel, expenseDate);
             return View("NCPartial", viewModel);
         }

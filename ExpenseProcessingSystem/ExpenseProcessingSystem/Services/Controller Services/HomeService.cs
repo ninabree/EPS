@@ -8723,7 +8723,8 @@ namespace ExpenseProcessingSystem.Services
                         foreach (var accs in particular.ExpenseEntryInterEntityAccs)
                         {
                             var entryType = (accs.Inter_Type_ID == GlobalSystemValues.NC_DEBIT) ? "D" :
-                                            (accs.Inter_Type_ID == GlobalSystemValues.NC_CREDIT) ? "C" : "";
+                                            (accs.Inter_Type_ID == GlobalSystemValues.NC_CREDIT ||
+                                            accs.Inter_Type_ID == GlobalSystemValues.NC_EWT) ? "C" : "";
                             if (command == "R")
                             {
                                 entryType = (entryType == "D") ? "C" : (entryType == "C") ? "D" : "";
@@ -8902,7 +8903,7 @@ namespace ExpenseProcessingSystem.Services
                 tempGbase.approver = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == expID).Expense_Approver;
                 foreach (var item in dtls.ExpenseEntryNCDtlAccs)
                 {
-                    if (item.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_CREDIT)
+                    if (item.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_CREDIT || item.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_EWT)
                     {
                         entryContainer credit = new entryContainer
                         {
@@ -8936,7 +8937,7 @@ namespace ExpenseProcessingSystem.Services
                                 goExp = goExpData, goExpHist = goExpHistData });
             }
 
-            _GOContext.SaveChanges();
+            //_GOContext.SaveChanges();
             _context.SaveChanges();
 
             List<ExpenseTransList> transactions = new List<ExpenseTransList>();

@@ -49,6 +49,57 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             }
             return valList;
         }
+        public List<CONSTANT_NC_VALS> getNCAccsForFilter()
+        {
+            List<CONSTANT_NC_VALS> ts = new List<CONSTANT_NC_VALS>
+            {
+                //accId is really MasterId
+                new CONSTANT_NC_VALS()
+                {
+                    accID = 68,
+                    accName = "COMPUTER SUSPENSE"
+                },
+                new CONSTANT_NC_VALS()
+                {
+                    accID = 76,
+                    accName = "COMPUTER SUSPENSE (US$)"
+                },
+                new CONSTANT_NC_VALS()
+                {
+                    accID = 72,
+                    accName = "INTER ENTITY REG to FCDU"
+                },
+                new CONSTANT_NC_VALS()
+                {
+                    accID = 77,
+                    accName = "	INTER ENTITY FCDU to REG"
+                },
+                new CONSTANT_NC_VALS()
+                {
+                    accID = 95,
+                    accName = "PETTY CASH"
+                },
+                new CONSTANT_NC_VALS()
+                {
+                    accID = 98,
+                    accName = "EWT TAX"
+                }
+            };
+            List<CONSTANT_NC_VALS> valList = new List<CONSTANT_NC_VALS>();
+            foreach (CONSTANT_NC_VALS val in ts)
+            {
+                var acc = _context.DMAccount.Where(x => (x.Account_MasterID == val.accID)
+                                                    && x.Account_isActive == true && x.Account_isDeleted == false).FirstOrDefault();
+                CONSTANT_NC_VALS vals = new CONSTANT_NC_VALS
+                {
+                    accID = acc.Account_ID,
+                    accNo = acc.Account_MasterID+"",
+                    accName = acc.Account_Name
+                };
+                valList.Add(vals);
+            }
+            return valList;
+        }
         //----------------------------------- [[ Populate Non Cash ]] -------------------------------------////
         // [RETRIEVE NC EXPENSE DETAILS]
         public EntryNCViewModelList getExpenseNC(int transID)
@@ -423,7 +474,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         }
                         else // IF STRING VALUE
                         {
-                            vmList2 = vmList2.Where("Vendor_" + subStr + ".Contains(@0) AND  Vendor_isDeleted == @1", property.GetValue(filters.PF).ToString(), false)
+                            vmList2 = vmList2.Where("Vendor_" + subStr + ".Contains(@0)", property.GetValue(filters.PF).ToString())
                                     .Select(e => e).AsQueryable();
                         }
                     }
@@ -656,35 +707,221 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
 
         public List<DMAccountViewModel> populateAccount(DMFiltersViewModel filters)
         {
-            IQueryable<DMAccountModel> mList = _context.DMAccount.Where(x => x.Account_isDeleted == false && x.Account_isActive == true).ToList().AsQueryable();
             var properties = filters.AF.GetType().GetProperties();
+            var mList = (from data in (from accs in _context.DMAccount
+                                       where accs.Account_isDeleted == false && accs.Account_isActive == true
+                                       select new
+                                       {
+                                           accs.Account_ID,
+                                           accs.Account_MasterID,
+                                           accs.Account_Name,
+                                           accs.Account_Code,
+                                           accs.Account_Budget_Code,
+                                           accs.Account_No,
+                                           accs.Account_Cust,
+                                           accs.Account_Div,
+                                           accs.Account_Fund,
+                                           accs.Account_Created_Date,
+                                           accs.Account_Last_Updated,
+                                           accs.Account_Creator_ID,
+                                           accs.Account_Approver_ID,
+                                           accs.Account_Currency_MasterID,
+                                           accs.Account_Group_MasterID,
+                                           accs.Account_FBT_MasterID,
+                                           accs.Account_Status_ID
+                                       })
+                         join grp in _context.DMAccountGroup
+                         on new { masterID = data.Account_Group_MasterID, isActive = true, isDeleted = false }
+                         equals new { masterID = grp.AccountGroup_MasterID, isActive = grp.AccountGroup_isActive, isDeleted = grp.AccountGroup_isDeleted }
+                         into withgroup
+                         from grp in withgroup.DefaultIfEmpty()
 
-            var pendingList = _context.DMAccount_Pending.ToList();
-            foreach (var m in pendingList)
-            {
-                mList = mList.Concat(new DMAccountModel[] {
-                    new DMAccountModel
-                    {
-                        Account_ID = m.Pending_Account_ID,
-                        Account_MasterID = m.Pending_Account_MasterID,
-                        Account_Name = m.Pending_Account_Name,
-                        Account_Code = m.Pending_Account_Code,
-                        Account_Budget_Code = m.Pending_Account_Budget_Code,
-                        Account_No = m.Pending_Account_No,
-                        Account_Cust = m.Pending_Account_Cust,
-                        Account_Div = m.Pending_Account_Div,
-                        Account_Fund = m.Pending_Account_Fund,
-                        Account_FBT_MasterID = m.Pending_Account_FBT_MasterID,
-                        Account_Group_MasterID = m.Pending_Account_Group_MasterID,
-                        Account_Currency_MasterID = m.Pending_Account_Currency_MasterID,
-                        Account_Creator_ID = m.Pending_Account_Creator_ID,
-                        Account_Approver_ID = m.Pending_Account_Approver_ID.Equals(null) ? 0 : m.Pending_Account_Approver_ID,
-                        Account_Created_Date = m.Pending_Account_Filed_Date,
-                        Account_Last_Updated = m.Pending_Account_Filed_Date,
-                        Account_Status_ID = m.Pending_Account_Status_ID
-                    }
-                });
-            }
+                         join fbt in _context.DMFBT
+                         on new { masterID = data.Account_FBT_MasterID, isActive = true, isDeleted = false }
+                         equals new { masterID = fbt.FBT_MasterID, isActive = fbt.FBT_isActive, isDeleted = fbt.FBT_isDeleted }
+                         into withFbt
+                         from fbt in withFbt.DefaultIfEmpty()
+
+                         join curr in _context.DMCurrency
+                         on new { masterID = data.Account_Currency_MasterID, isActive = true, isDeleted = false }
+                         equals new { masterID = curr.Curr_MasterID, isActive = curr.Curr_isActive, isDeleted = curr.Curr_isDeleted }
+                         into withCurr
+                         from curr in withCurr.DefaultIfEmpty()
+
+                         join user in _context.User
+                         on data.Account_Creator_ID
+                         equals user.User_ID
+                         into c
+                         from user in c.DefaultIfEmpty()
+
+                         join apprv in _context.User
+                         on data.Account_Approver_ID
+                         equals apprv.User_ID
+                         into a
+                         from apprv in a.DefaultIfEmpty()
+
+                         join stat in _context.StatusList
+                         on data.Account_Status_ID
+                         equals stat.Status_ID
+                         into s
+                         from stat in s.DefaultIfEmpty()
+                         select new
+                         {
+                             data.Account_MasterID,
+                             data.Account_ID,
+                             data.Account_Name,
+                             data.Account_Code,
+                             data.Account_Budget_Code,
+                             data.Account_No,
+                             data.Account_Cust,
+                             data.Account_Div,
+                             data.Account_Fund,
+                             data.Account_Created_Date,
+                             data.Account_Last_Updated,
+                             data.Account_Creator_ID,
+                             data.Account_Approver_ID,
+                             data.Account_Status_ID,
+                             CreatorName = user.User_LName + ", " + user.User_FName,
+                             ApproverName = data.Account_Approver_ID > 0 ? apprv.User_LName + ", " + apprv.User_FName : "",
+                             curr.Curr_CCY_ABBR,
+                             grp.AccountGroup_Name,
+                             FBT = fbt.FBT_Name + " - " + fbt.FBT_Tax_Rate,
+                             stat.Status_ID,
+                             stat.Status_Name
+                         }).ToList();
+
+            var pendingList = (from data in (from accs in _context.DMAccount_Pending
+                           select new
+                           {
+                               accs.Pending_Account_ID,
+                               accs.Pending_Account_MasterID,
+                               accs.Pending_Account_Name,
+                               accs.Pending_Account_Code,
+                               accs.Pending_Account_Budget_Code,
+                               accs.Pending_Account_No,
+                               accs.Pending_Account_Cust,
+                               accs.Pending_Account_Div,
+                               accs.Pending_Account_Fund,
+                               accs.Pending_Account_Filed_Date,
+                               accs.Pending_Account_Creator_ID,
+                               accs.Pending_Account_Approver_ID,
+                               accs.Pending_Account_Currency_MasterID,
+                               accs.Pending_Account_Group_MasterID,
+                               accs.Pending_Account_FBT_MasterID,
+                               accs.Pending_Account_Status_ID
+                           })
+             join grp in _context.DMAccountGroup
+             on new { masterID = data.Pending_Account_Group_MasterID, isActive = true, isDeleted = false }
+             equals new { masterID = grp.AccountGroup_MasterID, isActive = grp.AccountGroup_isActive, isDeleted = grp.AccountGroup_isDeleted }
+             into withgroup
+             from grp in withgroup.DefaultIfEmpty()
+
+             join fbt in _context.DMFBT
+             on new { masterID = data.Pending_Account_FBT_MasterID, isActive = true, isDeleted = false }
+             equals new { masterID = fbt.FBT_MasterID, isActive = fbt.FBT_isActive, isDeleted = fbt.FBT_isDeleted }
+             into withFbt
+             from fbt in withFbt.DefaultIfEmpty()
+
+             join curr in _context.DMCurrency
+             on new { masterID = data.Pending_Account_Currency_MasterID, isActive = true, isDeleted = false }
+             equals new { masterID = curr.Curr_MasterID, isActive = curr.Curr_isActive, isDeleted = curr.Curr_isDeleted }
+             into withCurr
+             from curr in withCurr.DefaultIfEmpty()
+
+             join user in _context.User
+             on data.Pending_Account_Creator_ID
+             equals user.User_ID
+             into c
+             from user in c.DefaultIfEmpty()
+
+             join apprv in _context.User
+             on data.Pending_Account_Approver_ID
+             equals apprv.User_ID
+             into a
+             from apprv in a.DefaultIfEmpty()
+
+             join stat in _context.StatusList
+             on data.Pending_Account_Status_ID
+             equals stat.Status_ID
+             into s
+             from stat in s.DefaultIfEmpty()
+             select new
+             {
+                 data.Pending_Account_ID,
+                 data.Pending_Account_MasterID,
+                 data.Pending_Account_Name,
+                 data.Pending_Account_Code,
+                 data.Pending_Account_Budget_Code,
+                 data.Pending_Account_No,
+                 data.Pending_Account_Cust,
+                 data.Pending_Account_Div,
+                 data.Pending_Account_Fund,
+                 data.Pending_Account_Filed_Date,
+                 data.Pending_Account_Creator_ID,
+                 data.Pending_Account_Approver_ID,
+                 data.Pending_Account_Status_ID,
+                 CreatorName = user.User_LName + ", " + user.User_FName,
+                 ApproverName = data.Pending_Account_Approver_ID > 0 ? apprv.User_LName + ", " + apprv.User_FName : "",
+                 curr.Curr_CCY_ABBR,
+                 grp.AccountGroup_Name,
+                 FBT = fbt.FBT_Name + " - " + fbt.FBT_Tax_Rate,
+                 stat.Status_ID,
+                 stat.Status_Name
+             }).ToList();
+
+            //TEMP where clause until FBT is updated
+            var defaultFBT = _context.DMFBT.Where(x => x.FBT_MasterID == 1).Select(x => x.FBT_Name).FirstOrDefault();
+
+            List<DMAccountViewModel> vmList = new List<DMAccountViewModel>();
+            mList.GroupBy(o => o.Account_ID).Select(o => o.FirstOrDefault()).ToList().ForEach(m =>
+                  vmList.Add(new DMAccountViewModel
+                  {
+                      Account_MasterID = m.Account_MasterID,
+                      Account_Name = m.Account_Name,
+                      Account_Code = m.Account_Code,
+                      Account_Budget_Code = m.Account_Budget_Code,
+                      Account_No = m.Account_No,
+                      Account_Cust = m.Account_Cust,
+                      Account_Div = m.Account_Div,
+                      Account_Fund = m.Account_Fund,
+                      Account_Group_Name = m.AccountGroup_Name ?? "",
+                      Account_FBT_Name = m.FBT ?? defaultFBT,
+                      Account_Creator_Name = m.CreatorName ?? "N/A",
+                      Account_Approver_Name = m.ApproverName ?? "",
+                      Account_Created_Date = m.Account_Created_Date,
+                      Account_Last_Updated = m.Account_Last_Updated,
+                      Account_Status_ID = m.Account_Status_ID,
+                      Account_Creator_ID = m.Account_Creator_ID,
+                      Account_Currency_Name = m.Curr_CCY_ABBR ?? "",
+                      Account_Status = m.Status_Name ?? "N/A"
+                  })
+            );
+
+            pendingList.GroupBy(o => o.Pending_Account_ID).Select(o => o.FirstOrDefault()).ToList().ForEach(m =>
+                 vmList.Add(new DMAccountViewModel
+                 {
+                     Account_MasterID = m.Pending_Account_MasterID,
+                     Account_Name = m.Pending_Account_Name,
+                     Account_Code = m.Pending_Account_Code,
+                     Account_Budget_Code = m.Pending_Account_Budget_Code,
+                     Account_No = m.Pending_Account_No,
+                     Account_Cust = m.Pending_Account_Cust,
+                     Account_Div = m.Pending_Account_Div,
+                     Account_Fund = m.Pending_Account_Fund,
+                     Account_Group_Name = m.AccountGroup_Name ?? "",
+                     Account_FBT_Name = m.FBT ?? defaultFBT,
+                     Account_Creator_Name = m.CreatorName ?? "N/A",
+                     Account_Approver_Name = m.ApproverName ?? "",
+                     Account_Created_Date = m.Pending_Account_Filed_Date,
+                     Account_Last_Updated = m.Pending_Account_Filed_Date,
+                     Account_Status_ID = m.Pending_Account_Status_ID,
+                     Account_Creator_ID = m.Pending_Account_Creator_ID,
+                     Account_Currency_Name = m.Curr_CCY_ABBR ?? "",
+                     Account_Status = m.Status_Name ?? "N/A"
+                 })
+            );
+
+            var vmList2 = vmList.AsQueryable();
             //FILTER
             foreach (var property in properties)
             {
@@ -698,53 +935,55 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     {
                         if (colArr.Contains(subStr)) // IF INT VAL
                         {
-                            mList = mList.Where("Account_" + subStr + " = @0 AND  Account_isDeleted == @1", property.GetValue(filters.AF), false)
+                            vmList2 = vmList2.Where("Account_" + subStr + " = @0 AND  Account_isDeleted == @1", property.GetValue(filters.AF), false)
                                      .Select(e => e).AsQueryable();
                         }
-                        else if (subStr == "Creator_Name" || subStr == "Approver_Name" || subStr == "Status" || subStr == "Group" || subStr == "Currency")
+                        else if (subStr == "Creator_Name")
                         {
                             //get all userIDs of creator or approver that contains string
                             var names = _context.User
                               .Where(x => (x.User_FName.Contains(property.GetValue(filters.AF).ToString())
                               || x.User_LName.Contains(property.GetValue(filters.AF).ToString())))
                               .Select(x => x.User_ID).ToList();
+                            vmList2 = vmList2.Where(x => names.Contains(x.Account_Creator_ID) && x.Account_isDeleted == false)
+                                        .Select(e => e).AsQueryable();
+                        }
+                        else if (subStr == "Approver_Name")
+                        {
+                            //get all userIDs of creator or approver that contains string
+                            var names = _context.User
+                              .Where(x => (x.User_FName.Contains(property.GetValue(filters.AF).ToString())
+                              || x.User_LName.Contains(property.GetValue(filters.AF).ToString())))
+                              .Select(x => x.User_ID).ToList();
+                            vmList2 = vmList2.Where(x => names.Contains(x.Account_Approver_ID) && x.Account_isDeleted == false)
+                                        .Select(e => e).AsQueryable();
+                        }
+                        else if (subStr == "Status")
+                        {
                             //get all status IDs that contains string
                             var status = _context.StatusList
                               .Where(x => (x.Status_Name.Contains(property.GetValue(filters.AF).ToString())))
                               .Select(x => x.Status_ID).ToList();
+                            vmList2 = vmList2.Where(x => status.Contains(x.Account_Status_ID) && x.Account_isDeleted == false)
+                                        .Select(e => e).AsQueryable();
+                        }
+                        else if (subStr == "Group")
+                        {
                             //get all account group IDs that contains string
                             var grp = _context.DMAccountGroup
                               .Where(x => (x.AccountGroup_Name.Contains(property.GetValue(filters.AF).ToString())))
                               .Select(x => x.AccountGroup_MasterID).ToList();
+                            vmList2 = vmList2.Where(x => grp.Contains(x.Account_Group_MasterID) && x.Account_isDeleted == false)
+                                        .Select(e => e).AsQueryable();
+                        }
+                        else if (subStr == "Currency")
+                        {
                             //get all currenct IDs that contains string
                             var curr = _context.DMCurrency
                               .Where(x => (x.Curr_Name.Contains(property.GetValue(filters.AF).ToString())))
                               .Select(x => x.Curr_MasterID).ToList();
-                            if (subStr == "Approver_Name")
-                            {
-                                mList = mList.Where(x => names.Contains(x.Account_Approver_ID) && x.Account_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                            else if (subStr == "Creator_Name")
-                            {
-                                mList = mList.Where(x => names.Contains(x.Account_Creator_ID) && x.Account_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                            else if (subStr == "Status")
-                            {
-                                mList = mList.Where(x => status.Contains(x.Account_Status_ID) && x.Account_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                            else if (subStr == "Group")
-                            {
-                                mList = mList.Where(x => grp.Contains(x.Account_Group_MasterID) && x.Account_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                            else if (subStr == "Currency")
-                            {
-                                mList = mList.Where(x => curr.Contains(x.Account_Currency_MasterID) && x.Account_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
+                            vmList2 = vmList2.Where(x => curr.Contains(x.Account_Currency_MasterID) && x.Account_isDeleted == false)
+                                        .Select(e => e).AsQueryable();
                         }
                         else if (subStr == "FBT")
                         {
@@ -752,70 +991,19 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             var names = _context.DMFBT
                               .Where(x => (x.FBT_Name.Contains(property.GetValue(filters.AF).ToString())))
                               .Select(x => x.FBT_MasterID).ToList();
-                            mList = mList.Where(x => names.Contains(x.Account_FBT_MasterID) && x.Account_isDeleted == false)
+                            vmList2 = vmList2.Where(x => names.Contains(x.Account_FBT_MasterID) && x.Account_isDeleted == false)
                                          .Select(e => e).AsQueryable();
                         }
                         else // IF STRING VALUE
                         {
-                            mList = mList.Where("Account_" + subStr + ".Contains(@0) AND  Account_isDeleted == @1", property.GetValue(filters.AF).ToString(), false)
+                            vmList2 = vmList2.Where("Account_" + subStr + ".Contains(@0)", property.GetValue(filters.AF).ToString())
                                     .Select(e => e).AsQueryable();
                         }
                     }
                 }
             }
-            var userList = (from a in mList
-                            from b in _context.User.Where(x => a.Account_Creator_ID == x.User_ID).DefaultIfEmpty()
-                            from c in _context.User.Where(x => a.Account_Approver_ID == x.User_ID).DefaultIfEmpty()
-                            select new
-                            {
-                                a.Account_ID,
-                                a.Account_MasterID,
-                                CreatorName = b.User_LName + ", " + b.User_FName,
-                                ApproverName = (c == null) ? "" : c.User_LName + ", " + c.User_FName
-                            }).ToList();
-            var statusList = (from a in mList
-                              join c in _context.StatusList on a.Account_Status_ID equals c.Status_ID
-                              select new { a.Account_ID, a.Account_MasterID, c.Status_Name }).ToList();
-            var fbtList = (from a in mList
-                           join d in _context.DMFBT on a.Account_FBT_MasterID equals d.FBT_MasterID
-                           select new { a.Account_ID, d.FBT_Name }).ToList();
-            var groupList = (from a in mList
-                           join d in _context.DMAccountGroup on a.Account_Group_MasterID equals d.AccountGroup_MasterID
-                             select new { a.Account_ID, d.AccountGroup_Name }).ToList();
-            var currList = (from a in mList
-                             join d in _context.DMCurrency on a.Account_Currency_MasterID equals d.Curr_MasterID
-                            where d.Curr_isActive == true
-                             select new { a.Account_ID, d.Curr_Name }).ToList();
-            //TEMP where clause until FBT is updated
-            var defaultFBT = _context.DMFBT.Where(x => x.FBT_MasterID == 1).Select(x=> x.FBT_Name).FirstOrDefault();
 
-            List<DMAccountViewModel> vmList = new List<DMAccountViewModel>();
-            foreach (DMAccountModel m in mList)
-            {
-                DMAccountViewModel vm = new DMAccountViewModel
-                {
-                    Account_MasterID = m.Account_MasterID,
-                    Account_Name = m.Account_Name,
-                    Account_Code = m.Account_Code,
-                    Account_Budget_Code = m.Account_Budget_Code,
-                    Account_No = m.Account_No,
-                    Account_Cust = m.Account_Cust,
-                    Account_Div = m.Account_Div,
-                    Account_Fund = m.Account_Fund,
-                    Account_Group_Name = groupList.Where(a => a.Account_ID == m.Account_ID).Select(a => a.AccountGroup_Name).FirstOrDefault() ?? "",
-                    Account_FBT_Name = fbtList.Where(a => a.Account_ID == m.Account_ID).Select(a => a.FBT_Name).FirstOrDefault() ?? defaultFBT,
-                    Account_Creator_Name = userList.Where(a => a.Account_ID == m.Account_ID && a.Account_MasterID == m.Account_MasterID).Select(a => a.CreatorName).FirstOrDefault() ?? "N/A",
-                    Account_Approver_Name = userList.Where(a => a.Account_ID == m.Account_ID && a.Account_MasterID == m.Account_MasterID).Select(a => a.ApproverName).FirstOrDefault() ?? "",
-                    Account_Created_Date = m.Account_Created_Date,
-                    Account_Last_Updated = m.Account_Last_Updated,
-                    Account_Status_ID = m.Account_Status_ID,
-                    Account_Creator_ID = m.Account_Creator_ID,
-                    Account_Currency_Name = currList.Where(a => a.Account_ID == m.Account_ID).Select(a => a.Curr_Name).FirstOrDefault() ?? "",
-                    Account_Status = statusList.Where(a => a.Account_ID == m.Account_ID && a.Account_MasterID == m.Account_MasterID).Select(a => a.Status_Name).FirstOrDefault() ?? "N/A"
-                };
-                vmList.Add(vm);
-            }
-            return vmList;
+            return vmList2.ToList();
         }
 
         public List<DMVATViewModel> populateVAT(DMFiltersViewModel filters)
