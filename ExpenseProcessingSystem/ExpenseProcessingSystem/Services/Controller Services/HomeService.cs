@@ -8330,8 +8330,8 @@ namespace ExpenseProcessingSystem.Services
                     {
                         tempGbase.entries.Add(new entryContainer
                         {
-                            type = (item.liqInterEntity[0].Liq_DebitCred_1_1 == "D") ? 
-                                (command != "R") ? item.liqInterEntity[0].Liq_DebitCred_1_1 : "C" : 
+                            type = (item.liqInterEntity[0].Liq_DebitCred_1_1 == "D") ?
+                                (command != "R") ? item.liqInterEntity[0].Liq_DebitCred_1_1 : "C" :
                                 (command != "R") ? item.liqInterEntity[0].Liq_DebitCred_1_1 : "D",
                             amount = item.liqInterEntity[0].Liq_Amount_1_1,
                             account = item.liqInterEntity[0].Liq_AccountID_1_1,
@@ -8385,9 +8385,9 @@ namespace ExpenseProcessingSystem.Services
                     goExpData = InsertGbaseEntry(tempGbase, expID);
                     goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.EntryDetailsID);
                     list.Add(new { expEntryID = expID, expDtl = item.EntryDetailsID, expType = GlobalSystemValues.TYPE_SS,
-                                LiqDtlID = liquidationDetails.LiqEntryDetails.Liq_DtlID,
-                                LiqInterEntityID = item.liqInterEntity[0].Liq_InterEntityID,
-                                goExp = goExpData, goExpHist = goExpHistData });
+                        LiqDtlID = liquidationDetails.LiqEntryDetails.Liq_DtlID,
+                        LiqInterEntityID = item.liqInterEntity[0].Liq_InterEntityID,
+                        goExp = goExpData, goExpHist = goExpHistData });
                 }
                 else if (item.liqInterEntity.Count() != 0 && item.liqCashBreakdown.Count() == 0)
                 {
@@ -8603,7 +8603,7 @@ namespace ExpenseProcessingSystem.Services
                 {
                     tempGbase.entries = new List<entryContainer>();
 
-                    Dictionary<string, entryContainer> fbt = createFbt(expenseDetails.vendor,item.account,item.debitGross,credit, debit);
+                    Dictionary<string, entryContainer> fbt = createFbt(expenseDetails.vendor, item.account, item.debitGross, credit, debit);
 
                     tempGbase.entries.Add(fbt["credit"]);
                     tempGbase.entries.Add(fbt["debit"]);
@@ -8890,7 +8890,7 @@ namespace ExpenseProcessingSystem.Services
                 goExpData = InsertGbaseEntry(tempGbase, expID);
                 goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, dtls.ExpNCDtl_ID);
                 list.Add(new { expEntryID = expID, nonCashDtlID = dtls.ExpNCDtl_ID, expType = GlobalSystemValues.TYPE_NC,
-                                goExp = goExpData, goExpHist = goExpHistData });
+                    goExp = goExpData, goExpHist = goExpHistData });
             }
 
             _GOContext.SaveChanges();
@@ -8929,7 +8929,7 @@ namespace ExpenseProcessingSystem.Services
             return true;
         }
 
-        internal Dictionary<string, entryContainer> createFbt(int payee,int acc,double gross,entryContainer d, entryContainer c)
+        internal Dictionary<string, entryContainer> createFbt(int payee, int acc, double gross, entryContainer d, entryContainer c)
         {
             //((ExpenseAmount*.50)/.65)*.35
             string fbt = getFbtFormula(getAccount(acc).Account_FBT_MasterID);
@@ -8966,7 +8966,7 @@ namespace ExpenseProcessingSystem.Services
                 };
             }
 
-            
+
             d.amount = fbtAmount;
 
             c.account = getAccountByMasterID(int.Parse(xelemAcc.Element("C_FBT").Value)).Account_ID;
@@ -9165,7 +9165,7 @@ namespace ExpenseProcessingSystem.Services
                                 histId = goHist.GOExpHist_Id == null ? 0 : goHist.GOExpHist_Id
                             };
 
-            foreach(var item in nmEntries)
+            foreach (var item in nmEntries)
             {
                 CloseItems temp = new CloseItems();
                 if (item.histId > 0)
@@ -9173,7 +9173,7 @@ namespace ExpenseProcessingSystem.Services
                     int transNo = _context.ExpenseTransLists.Select(x => new { x.TL_TransID, x.TL_GoExpHist_ID, x.TL_ExpenseID })
                                                             .Where(x => x.TL_ExpenseID == item.Expense_ID
                                                                      && x.TL_GoExpHist_ID == item.histId).FirstOrDefault().TL_TransID;
-                    temp.expTrans = GlobalSystemValues.getApplicationCode(item.Expense_Type)+ "-" + GetSelectedYearMonthOfTerm(item.Expense_Date.Month, item.Expense_Date.Year).Year + "-" +
+                    temp.expTrans = GlobalSystemValues.getApplicationCode(item.Expense_Type) + "-" + GetSelectedYearMonthOfTerm(item.Expense_Date.Month, item.Expense_Date.Year).Year + "-" +
                                         item.Expense_Number.ToString().PadLeft(5, '0');
                     temp.gBaseTrans = transNo.ToString();
                 }
@@ -9230,14 +9230,14 @@ namespace ExpenseProcessingSystem.Services
                     #endregion
 
                     var gTrans = (from tran in _context.ExpenseTransLists
-                                 join hist in _context.GOExpressHist
-                                 on tran.TL_GoExpHist_ID equals hist.GOExpHist_Id
-                                 where hist.ExpenseDetailID == item.ExpDtl_ID
-                                 && hist.ExpenseEntryID == item.Expense_ID
-                                 && hist.GOExpHist_Entry11ActNo == fbtAcc.Substring(Math.Max(0, fbtAcc.Length - 6))
-                                 select new { tran.TL_GoExpress_ID, hist.GOExpHist_Entry11Amt }).FirstOrDefault();
+                                  join hist in _context.GOExpressHist
+                                  on tran.TL_GoExpHist_ID equals hist.GOExpHist_Id
+                                  where hist.ExpenseDetailID == item.ExpDtl_ID
+                                  && hist.ExpenseEntryID == item.Expense_ID
+                                  && hist.GOExpHist_Entry11ActNo == fbtAcc.Substring(Math.Max(0, fbtAcc.Length - 6))
+                                  select new { tran.TL_GoExpress_ID, hist.GOExpHist_Entry11Amt }).FirstOrDefault();
 
-                    if(gTrans != null)
+                    if (gTrans != null)
                     {
 
                         if (getBranchNo(item.Account_No) == GlobalSystemValues.BRANCH_RBU)
@@ -9611,10 +9611,10 @@ namespace ExpenseProcessingSystem.Services
                                            where a.Expense_ID == b.ExpenseEntryModel.Expense_ID
                                            && opening <= a.Expense_Date && closing >= a.Expense_Date
                                            && a.Expense_Type == GlobalSystemValues.TYPE_SS
-                                           select new { a.Expense_ID,b.ExpDtl_ID,a.Expense_Number,a.Expense_Date,b.ExpDtl_Gbase_Remarks,
-                                                        a.Expense_Status,b.ExpDtl_Ccy,b.ExpDtl_Debit,b.ExpDtl_Account})
-                          join goHist in _context.GOExpressHist 
-                          on new { expenseId = expense.Expense_ID, dtlId = expense.ExpDtl_ID} 
+                                           select new { a.Expense_ID, b.ExpDtl_ID, a.Expense_Number, a.Expense_Date, b.ExpDtl_Gbase_Remarks,
+                                               a.Expense_Status, b.ExpDtl_Ccy, b.ExpDtl_Debit, b.ExpDtl_Account })
+                          join goHist in _context.GOExpressHist
+                          on new { expenseId = expense.Expense_ID, dtlId = expense.ExpDtl_ID }
                           equals new { expenseId = goHist.ExpenseEntryID, dtlId = goHist.ExpenseDetailID }
                           into x
                           from goHist in x.DefaultIfEmpty()
@@ -9626,14 +9626,14 @@ namespace ExpenseProcessingSystem.Services
                           on expense.ExpDtl_Ccy equals ccy.Curr_ID
                           into ccyAbbr from ccy in ccyAbbr.DefaultIfEmpty()
                           select new { expense.Expense_ID, expense.ExpDtl_ID, expense.Expense_Number,
-                                       acc.Account_No, ccy.Curr_CCY_ABBR, expense.Expense_Date,
-                                       expense.Expense_Status, expense.ExpDtl_Debit,expense.ExpDtl_Gbase_Remarks,
-                                       histId = goHist.GOExpHist_Id == null ? 0 : goHist.GOExpHist_Id};
+                              acc.Account_No, ccy.Curr_CCY_ABBR, expense.Expense_Date,
+                              expense.Expense_Status, expense.ExpDtl_Debit, expense.ExpDtl_Gbase_Remarks,
+                              histId = goHist.GOExpHist_Id == null ? 0 : goHist.GOExpHist_Id };
 
             foreach (var item in caItems)
             {
                 CloseItems temp = new CloseItems();
-                if(item.histId > 0)
+                if (item.histId > 0)
                 {
                     int transNo = _context.ExpenseTransLists.Select(x => new { x.TL_TransID, x.TL_GoExpHist_ID, x.TL_ExpenseID })
                                                             .Where(x => x.TL_ExpenseID == item.Expense_ID
@@ -9676,7 +9676,7 @@ namespace ExpenseProcessingSystem.Services
 
             return caDic;
         }
-        public Dictionary<string,List<CloseItems>> getLiq(DateTime opening, DateTime closing)
+        public Dictionary<string, List<CloseItems>> getLiq(DateTime opening, DateTime closing)
         {
             #region diagnostic runtime checker begin
             Stopwatch stopWatch = new Stopwatch();
@@ -9702,24 +9702,24 @@ namespace ExpenseProcessingSystem.Services
                                             && (opening <= liqDtl.Liq_Created_Date
                                             && closing >= liqDtl.Liq_Created_Date)
                                             select new
-                                            {exp.Expense_ID,expDtl.ExpDtl_ID,exp.Expense_Number,liqDtl.Liq_Created_Date,
-                                             remarks = string.Concat('S',expDtl.ExpDtl_Gbase_Remarks),
-                                             liqDtl.Liq_Status,ccy.Curr_CCY_ABBR,acc.Account_No,acc.Account_Code,
-                                             liqInter.Liq_Amount_1_1,liqInter.Liq_DebitCred_1_1,liqInter.Liq_DebitCred_1_2,
-                                             liqInter.Liq_Amount_1_2})
+                                            { exp.Expense_ID, expDtl.ExpDtl_ID, exp.Expense_Number, liqDtl.Liq_Created_Date,
+                                                remarks = string.Concat('S', expDtl.ExpDtl_Gbase_Remarks),
+                                                liqDtl.Liq_Status, ccy.Curr_CCY_ABBR, acc.Account_No, acc.Account_Code,
+                                                liqInter.Liq_Amount_1_1, liqInter.Liq_DebitCred_1_1, liqInter.Liq_DebitCred_1_2,
+                                                liqInter.Liq_Amount_1_2 })
                            join goHist in _context.GOExpressHist
-                           on new{expenseId = expense.Expense_ID,dtlId = expense.ExpDtl_ID,
-                                  rmrk = expense.remarks,acc = expense.Account_No.Substring(Math.Max(0, expense.Account_No.Length - 6)),
-                                  cde = expense.Account_Code}
-                           equals new{expenseId = goHist.ExpenseEntryID,dtlId = goHist.ExpenseDetailID,
-                                      rmrk = goHist.GOExpHist_Remarks,acc = goHist.GOExpHist_Entry11ActNo,
-                                      cde = goHist.GOExpHist_Entry11Actcde}
+                           on new { expenseId = expense.Expense_ID, dtlId = expense.ExpDtl_ID,
+                               rmrk = expense.remarks, acc = expense.Account_No.Substring(Math.Max(0, expense.Account_No.Length - 6)),
+                               cde = expense.Account_Code }
+                           equals new { expenseId = goHist.ExpenseEntryID, dtlId = goHist.ExpenseDetailID,
+                               rmrk = goHist.GOExpHist_Remarks, acc = goHist.GOExpHist_Entry11ActNo,
+                               cde = goHist.GOExpHist_Entry11Actcde }
                            into x
                            from goHist in x.DefaultIfEmpty()
                            select new
-                           {expense.Expense_ID,expense.ExpDtl_ID,expense.Expense_Number,expense.Account_No,expense.Liq_DebitCred_1_2,
-                            expense.Curr_CCY_ABBR,expense.Liq_Created_Date,expense.Liq_Status,expense.Liq_Amount_1_1,
-                            expense.Liq_Amount_1_2,expense.remarks,histId = goHist.GOExpHist_Id == null ? 0 : goHist.GOExpHist_Id};
+                           { expense.Expense_ID, expense.ExpDtl_ID, expense.Expense_Number, expense.Account_No, expense.Liq_DebitCred_1_2,
+                               expense.Curr_CCY_ABBR, expense.Liq_Created_Date, expense.Liq_Status, expense.Liq_Amount_1_1,
+                               expense.Liq_Amount_1_2, expense.remarks, histId = goHist.GOExpHist_Id == null ? 0 : goHist.GOExpHist_Id };
 
             foreach (var item in liqItems)
             {
@@ -9769,7 +9769,7 @@ namespace ExpenseProcessingSystem.Services
             #endregion
 
             return liqDic;
-        } 
+        }
 
         public ClosingViewModel ClosingOpenDailyBook()
         {
@@ -10249,12 +10249,21 @@ namespace ExpenseProcessingSystem.Services
         }
         public float getVat(int id)
         {
-            return _context.DMVAT.Where(x => x.VAT_ID == id).First().VAT_Rate;
+            var vat = _context.DMVAT.Where(x => x.VAT_ID == id).FirstOrDefault();
+            if (vat == null)
+            {
+                return 0;
+            }
+            return vat.VAT_Rate;
         }
         //get EWT(Tax Rate) value
         public float GetEWTValue(int id)
         {
             return _context.DMTR.Where(x => x.TR_ID == id).First().TR_Tax_Rate;
+        }
+        public DMTRModel GetEWT(int id)
+        {
+            return _context.DMTR.Where(x => x.TR_ID == id).FirstOrDefault();
         }
         //get currency abbreviation
         public string GetCurrencyAbbrv(int id)
@@ -10301,6 +10310,13 @@ namespace ExpenseProcessingSystem.Services
                                                       .Select(q => new { q.VAT_ID, VAT_Rate = (q.VAT_Rate * 100) }),
                         "VAT_ID", "VAT_Rate");
             return select;
+        }
+        //get user account without username and password
+        public string getUserFullName(int id)
+        {
+            var user = _context.User.FirstOrDefault(x=>x.User_ID == id);
+
+            return user.User_FName + " " + user.User_LName;
         }
 
         //get Vat list for specific user
@@ -10618,6 +10634,18 @@ namespace ExpenseProcessingSystem.Services
             _context.GOExpressHist.Add(goExpHist);
 
             return goExpHist;
+        }
+
+        public string getVoucherNo(int type, DateTime year, int number, bool liq = false)
+        {
+            string type_code = "";
+            if (liq == false)
+                type_code = GlobalSystemValues.getApplicationCode(type);
+            else
+                type_code = "LIQ";
+
+            return type_code + "-" + GetSelectedYearMonthOfTerm(year.Month, year.Year).Year + "-" +
+                                       number.ToString().PadLeft(5, '0'); ;
         }
         ///========[End of Other Functions]============
     }

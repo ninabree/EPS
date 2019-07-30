@@ -80,12 +80,12 @@ namespace ExpenseProcessingSystem.ConstantData
         //Static value for application types used for checking application type
         //i.e: displaying pending applications
         //Example : [Expense.Type = TYPE_CV] instead of [Expense.Type = 1]
-        public static readonly int TYPE_DM = 0;
-        public static readonly int TYPE_CV = 1;
-        public static readonly int TYPE_DDV = 2;
-        public static readonly int TYPE_SS = 3;
-        public static readonly int TYPE_PC = 4;
-        public static readonly int TYPE_NC = 5;
+        public const int TYPE_DM = 0;
+        public const int TYPE_CV = 1;
+        public const int TYPE_DDV = 2;
+        public const int TYPE_SS = 3;
+        public const int TYPE_PC = 4;
+        public const int TYPE_NC = 5;
 
         //Static value for branch Type/Name/Code
         //i.e: determining what is the branch code for the transaction

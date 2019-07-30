@@ -75,15 +75,15 @@
                                 </div>
                             </div>
                         </td>
-                        <td><input value="@Model.EntryCV[i].account" class="input100" disabled /></td>
-                        <td style="text-align:center">@Html.DisplayFor(x => Model.EntryCV[i].fbt)</td>
-                        <td><input value="@Model.EntryCV[i].dept" class="input100" disabled /></td>
-                        <td style="text-align:center">@Html.DisplayFor(x => Model.EntryCV[i].chkVat, new { @class = "chkVat" })</td>
-                        <td><input value="@Model.EntryCV[i].vat" class="input100" disabled /></td>
-                        <td style="text-align:center">@Html.DisplayFor(x => Model.EntryCV[i].chkEwt, new { @class = "chkEwt" })</td>
-                        <td><input value="@Model.EntryCV[i].ewt" class="input100" disabled /></td>
-                        <td><input value="@Model.EntryCV[i].ccy" class="input100" disabled /></td>
-                        <td><input value="@Model.EntryCV[i].debitGross" class="input100" disabled /></td>
+                        <td>@Html.DropDownListFor(x => Model.EntryCV[i].account, new SelectList(Model.systemValues.acc, "accId", "accName"), new { @class = "input100 txtAcc", disabled = "disabled" })</td>
+                        <td style="text-align:center">@Html.EditorFor(x => Model.EntryCV[i].fbt,new { @disabled = "disabled"})</td>
+                        <td>@Html.DropDownListFor(x => Model.EntryCV[i].dept, new SelectList(Model.systemValues.dept, "Value", "Text", Model.systemValues.dept.SelectedValue), new { @class = "input100 selectDisabled", disabled = "disabled" })</td>
+                        <td style="text-align:center">@Html.EditorFor(x => Model.EntryCV[i].chkVat, new { @class = "chkVat" })</td>
+                        <td>@Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.systemValues.vat.SelectedValue), new { @class = "input100 txtVat selectDisabled", disabled = "disabled" })</td>
+                        <td style="text-align:center">@Html.EditorFor(x => Model.EntryCV[i].chkEwt, new { @class = "chkEwt" })</td>
+                        <td>@Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt selectDisabled", disabled = "disabled" })</td>
+                        <td><input value="@Model.EntryCV[i].ccyAbbrev" class="input100" disabled /></td>
+                        <td><input value="@Model.EntryCV[i].debitGross" class="input100" disabled/></td>
                         <td><input value="@Model.EntryCV[i].credEwt" class="input100" disabled /></td>
                         <td><input value="@Model.EntryCV[i].credCash" class="input100" disabled /></td>
                         <td id="req_@i">
@@ -205,7 +205,13 @@
                     }
                 </div>
                 <div>
-                    <div class="dis-inline-block tbl-btn"><button disabled>Print BIR Certificate</button></div>
+                    @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker
+                    || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id
+                    || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id
+                    || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.approver_id)
+                    {
+                    <div class="dis-inline-block tbl-btn"><button id="printBir" value="printBir">Print BIR Certificate</button></div>
+                    }
                 </div>
             </div>
         }
@@ -218,12 +224,40 @@
 <script type="text/javascript" src="~/js/EntryScripts.js"></script>
 <script type="text/javascript">
     $(function () {
-        $(window).on("load", function () {
+        @*$(window).on("load", function () {
             if (@ViewBag.Success == 1) {
                 alert("Entry Approved");
             } else if (@ViewBag.Success == 0){
                 alert("Entry Failed");
             }
-        });
+        });*@
+        @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker
+          || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id
+          || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id
+          || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.approver_id)
+        {
+            <Text>
+            $("#entry-controls").on("click", "#printBir", function (e) {
+                var vendorID = @Model.vendor;
+                var approverID = @Model.approver_id;
+                var link = [
+                @foreach (var item in Model.birForms)
+                {
+                    <Text>
+                         "/Home/Generate2307File?_vendor=@item.vendor&_ewt=@item.ewt&_tax=@item.vat&amount=@item.amount&approver=@item.approver&expID=@Model.entryID",
+                    </Text>
+                }
+                    ""
+                ];
+
+                for (var i = 0; i < link.length-1;i++) {
+                    window.open(link[i]);
+                }
+
+                return false;
+            });
+            </Text>
+        }
+
     });
 </script>
