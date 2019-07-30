@@ -71,10 +71,10 @@
                                         <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
                                         @for (int y = 0; y < Model.EntryDDV[i].gBaseRemarksDetails.Count(); y++)
                                         {
-                                            @Html.HiddenFor(x => Model.EntryDDV[i].gBaseRemarksDetails[y].docType);
-                                            @Html.HiddenFor(x => Model.EntryDDV[i].gBaseRemarksDetails[y].desc);
-                                            @Html.HiddenFor(x => Model.EntryDDV[i].gBaseRemarksDetails[y].invNo);
-                                            @Html.HiddenFor(x => Model.EntryDDV[i].gBaseRemarksDetails[y].amount);
+                                            @Html.HiddenFor(x => Model.EntryDDV[i].gBaseRemarksDetails[y].docType, new { @class = "docType" });
+                                            @Html.HiddenFor(x => Model.EntryDDV[i].gBaseRemarksDetails[y].desc, new { @class = "desc" });
+                                            @Html.HiddenFor(x => Model.EntryDDV[i].gBaseRemarksDetails[y].invNo, new { @class = "invNo" });
+                                            @Html.HiddenFor(x => Model.EntryDDV[i].gBaseRemarksDetails[y].amount, new { @class = "amount" });
                                         }
                                     </div>
                                 </div>
@@ -101,11 +101,11 @@
                             </td>
                             <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryDDV[i].chkVat, new { @class = "chkVat comVar" })</td>
                             <td>
-                                @Html.DropDownListFor(x => Model.EntryDDV[i].vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.systemValues.vat.SelectedValue), new { @class = "input100 txtVat comVar", @disabled = "true" })
+                                @Html.DropDownListFor(x => Model.EntryDDV[i].vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.EntryDDV[i].vat), new { @class = "input100 txtVat comVar", @disabled = "true" })
                             </td>
                             <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryDDV[i].chkEwt, new { @class = "chkEwt comVar" })</td>
                             <td>
-                                @Html.DropDownListFor(x => Model.EntryDDV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt comVar", @disabled = "true" })
+                                @Html.DropDownListFor(x => Model.EntryDDV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.EntryDDV[i].ewt), new { @class = "input100 txtEwt comVar", @disabled = "true" })
                             </td>
                             <td style="text-align:center"><a class="reqEWTBtn glyphicon glyphicon-list-alt"></a></td>
                             <td>
@@ -464,9 +464,28 @@
             $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkEwt").prop('disabled', true);
             $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkVat").prop("checked", false);
             $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkEwt").prop("checked", false);
+            //set ddl value to zero then recompute
+            var zeroewt = $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__ewt").find("option[value=0]");
+            var zerovat = $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__vat").find("option[value=0]");
+            if (zeroewt.length > 0) {
+                $(zeroewt).remove();
+            }
+            if (zerovat.length > 0) {
+                $(zerovat).remove();
+            }
+            $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__ewt").append($('<option/>', {
+                value: 0,
+                text: 0,
+                selected: true
+            }));
+            $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__vat").append($('<option/>', {
+                value: 0,
+                text: 0,
+                selected: true
+            }));
             $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkVat").trigger("change");
             $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkEwt").trigger("change");
-
+            computeValuesDDV($("#" + pNode)[0]);
         }
     }
     function updateExpenseEWTDDV(chkEwt) {
@@ -508,9 +527,73 @@
             computeValuesDDV($(chkInter.parentNode)[0].parentNode);
         }
     }
+
+    function CheckEWTPayor(pNode) {
+        var taxpayor = $("#" + pNode.id).find(".txtPayor").val();
+        if (taxpayor > 0) {
+            //Get EWT and VAT of selected vendor.
+            var ddlVAT = $('#' + pNode.id).find('.txtVat');
+            var ddlEWT = $('#' + pNode.id).find('.txtEwt');
+            $.getJSON('getVendorVatList', { vendorID: taxpayor }, function (data) {
+                var sel = ddlVAT.find("option:selected");
+                ddlVAT.empty();
+                if (data.length == 0) {
+                    ddlVAT.append($('<option/>', {
+                        value: 0,
+                        text: "N/A"
+                    }));
+                }
+                $.each(data, function (index, itemData) {
+                    if (itemData["vaT_ID"] == sel.val()) {
+                        ddlVAT.append($('<option/>', {
+                            value: itemData["vaT_ID"],
+                            text: itemData["vaT_Rate"],
+                            selected: true
+                        }));
+                    } else {
+                        ddlVAT.append($('<option/>', {
+                            value: itemData["vaT_ID"],
+                            text: itemData["vaT_Rate"]
+                        }));
+                    }
+                });
+                computeValuesDDV(pNode);
+            });
+
+            $.getJSON('getVendorTRList', { vendorID: taxpayor }, function (data) {
+                var sel = ddlEWT.find("option:selected");
+                ddlEWT.empty();
+                if (data.length == 0) {
+                    ddlEWT.append($('<option/>', {
+                        value: 0,
+                        text: "N/A"
+                    }));
+                }
+                //ddlEWT.append($(sel));
+                $.each(data, function (index, itemData) {
+                    if (itemData["tR_ID"] == sel.val()) {
+                        ddlEWT.append($('<option/>', {
+                            value: itemData["tR_ID"],
+                            text: itemData["tR_Tax_Rate"],
+                            selected: true
+                        }));
+                    } else {
+                        ddlEWT.append($('<option/>', {
+                            value: itemData["tR_ID"],
+                            text: itemData["tR_Tax_Rate"]
+                        }));
+                    }
+                });
+                computeValuesDDV(pNode);
+            });
+        }
+    }
     function CheckEachEWT() {
         $(".chkEwt").each(function (index, item) {
             updateExpenseEWTDDV(item);
+
+            //checks if ewt payor name is not null, if yes, update tr and vat
+            CheckEWTPayor($(item.parentNode)[0].parentNode);
         });
     }
 
@@ -529,7 +612,7 @@
         $("#" + itemNo).find(".txtCredCash").val(0);
     }
     function computeValuesDDV(pNode) {
-        var grossAmt = $("#" + pNode.id + " .txtGross").val();
+        var grossAmt = 0;
         var isInter = $("#" + pNode.id).find("#EntryDDV_" + pNode.id.substring(5) + "__inter_entity").is(':checked');
 
         if (!isInter) {
@@ -538,6 +621,7 @@
                 grossAmt += Number(amounts[i].value);
             }
         } else {
+            grossAmt = $("#" + pNode.id + " .txtGross").val();
             var btnAttr = $("#" + pNode.id).find("#req_" + pNode.id.substring(5)).find(".reqBtn");
             btnAttr.attr("href", "#");
             btnAttr.attr("class", "expenseInterEntity reqBtn glyphicon glyphicon-list-alt");

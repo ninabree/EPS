@@ -7326,7 +7326,7 @@ namespace ExpenseProcessingSystem.Services
                     //vat_Name is actually the rate
                     vat_Name = _context.DMVAT.Where(x => x.VAT_ID == dtl.d.ExpDtl_Vat && x.VAT_isActive == true).Select(x => x.VAT_Rate.ToString()).FirstOrDefault(),
                     chkEwt = (dtl.d.ExpDtl_Ewt <= 0) ? false : true,
-                    ewt = dtl.d.ExpDtl_isEwt ? 0 : dtl.d.ExpDtl_Ewt,
+                    ewt = dtl.d.ExpDtl_Ewt,
                     ewt_Name = _context.DMTR.Where(x => x.TR_ID == dtl.d.ExpDtl_Ewt).Select(x => x.TR_Tax_Rate.ToString()).FirstOrDefault(),
                     ewt_Payor_Name = (dtl.d.ExpDtl_Ewt_Payor_Name_ID >= 0) ? _context.DMVendor.Where(x => x.Vendor_ID == dtl.d.ExpDtl_Ewt_Payor_Name_ID).Select(x => x.Vendor_Name).FirstOrDefault() : "",
                     ccy = dtl.d.ExpDtl_Ccy,
@@ -8829,7 +8829,8 @@ namespace ExpenseProcessingSystem.Services
                         foreach (var accs in particular.ExpenseEntryInterEntityAccs)
                         {
                             var entryType = (accs.Inter_Type_ID == GlobalSystemValues.NC_DEBIT) ? "D" :
-                                            (accs.Inter_Type_ID == GlobalSystemValues.NC_CREDIT) ? "C" : "";
+                                            (accs.Inter_Type_ID == GlobalSystemValues.NC_CREDIT ||
+                                            accs.Inter_Type_ID == GlobalSystemValues.NC_EWT) ? "C" : "";
                             if (command == "R")
                             {
                                 entryType = (entryType == "D") ? "C" : (entryType == "C") ? "D" : "";
@@ -9008,7 +9009,7 @@ namespace ExpenseProcessingSystem.Services
                 tempGbase.approver = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == expID).Expense_Approver;
                 foreach (var item in dtls.ExpenseEntryNCDtlAccs)
                 {
-                    if (item.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_CREDIT)
+                    if (item.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_CREDIT || item.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_EWT)
                     {
                         entryContainer credit = new entryContainer
                         {
@@ -9042,7 +9043,7 @@ namespace ExpenseProcessingSystem.Services
                                 goExp = goExpData, goExpHist = goExpHistData });
             }
 
-            _GOContext.SaveChanges();
+            //_GOContext.SaveChanges();
             _context.SaveChanges();
 
             List<ExpenseTransList> transactions = new List<ExpenseTransList>();

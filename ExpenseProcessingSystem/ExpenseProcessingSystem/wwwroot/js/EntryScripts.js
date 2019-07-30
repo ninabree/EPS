@@ -3,6 +3,9 @@
         if (event.target.classList.contains("comVar")) {
             computeValues(event.target.parentNode.parentNode);
         }
+        if (event.target.classList.contains("comVarDDV")) {
+            computeValuesDDV(event.target.parentNode.parentNode);
+        }
         var payee = $("#vendorName option:selected").text();
         var amount = $("#grossTotal").val();
         var checkNo = $("#checkNo").val();
