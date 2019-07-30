@@ -41,10 +41,12 @@ function roundExceptionJPY(value, exp) {
 };
 
 function reqBtnDisable(idx) {
-    if ($('#LiquidationDetails_' + idx + '__ccyAbbrev').val() != "PHP") {
+    if ($('#LiquidationDetails_' + idx + '__ccyAbbrev').val() != $('#phpAbbrv').val()) {
         $('#req_' + idx).find('.reqBtn').css("pointer-events", "none");
+        $('#item_' + idx).find('.reqEWTBtn').css("pointer-events", "none");
     } else {
         $('#req_' + idx).find('.reqBtn').css("pointer-events", "auto");
+        $('#item_' + idx).find('.reqEWTBtn').css("pointer-events", "auto");
     }
 };
 
@@ -61,12 +63,18 @@ function displayInfoCashBD(pid) {
     $('#lblAccount2_PHP optgroup[label=' + getXMLLiqValue("ACCOUNT2_PHP") + '] option:first').prop('selected', true);
 
     $('.tableLiqPhp').find('.txtLiqPhpInput').val(0);
+    $('#ddlLiqPhpAccount1').val($("#ddlLiqPhpAccount1 option:first").val());
+    $('#ddlLiqPhpAccount2').val($("#ddlLiqPhpAccount2 option:first").val());
+    $('#txtLiqTaxRate').val($("#txtLiqTaxRate option:first").val());
+
+    var ret = pid.replace('item_', '');
+
+    getVendorTaxRate($('#' + pid).find('.txtPayor').val(), ret);
 
     if ($('#' + pid).find('.hiddenLiqFlag').val() == 0) {
         return false;
     }
 
-    var ret = pid.replace('item_', '');
     var cashBDInput = $('#divLiqCashBD_' + ret).find("input");
     var totalAmount = 0.0;
 
@@ -218,6 +226,13 @@ function appendInputIEtoDiv(ret) {
             name: 'LiquidationDetails[' + ret + '].liqInterEntity[' + a + '].Liq_Tax_Rate',
             value: 0
         }));
+        //Vendor ID
+        $('#divLiqIE_' + ret).append($('<input/>', {
+            id: 'LiquidationDetails_' + ret + '__liqInterEntity_' + a + '__Liq_VendorID',
+            type: 'hidden',
+            name: 'LiquidationDetails[' + ret + '].liqInterEntity[' + a + '].Liq_VendorID',
+            value: 0
+        }));
     }
 };
 
@@ -341,10 +356,15 @@ function setLiqPhpValuetoDivInput(ret) {
 
     //Tax RATE
     $('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Tax_Rate').val($('#txtLiqTaxRate').val());
+    //Vendor ID
+    $('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_VendorID').val($('#txtLiqVendor').val());
 };
 
 function assignDivValuesLiqPhp(pid) {
     var ret = pid.replace('item_', '');
+
+    //Vendor ID
+    $('#txtLiqVendor').val($('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_VendorID').val());
 
     //ACCONT
     $('#ddlLiqPhpAccount1').val($('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_AccountID_1_1').val());
@@ -363,9 +383,8 @@ function assignDivValuesLiqPhp(pid) {
     $('#txtLiqPhpInput6').val(AC(parseFloat($('#txtLiqPhpInput1').val()) + parseFloat($('#txtLiqPhpInput2').val())));
     $('#txtLiqPhpInput7').val(AC(parseFloat($('#txtLiqPhpInput3').val()) + parseFloat($('#txtLiqPhpInput4').val()) + parseFloat($('#txtLiqPhpInput5').val())));
 
-
     //Tax RATE
-    $('#txtLiqTaxRate').val($('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Tax_Rate').val());
+    setDivTaxRateToLiqPhp(ret);
 };
 
 function assignAccCodeLiqPhp() {
@@ -385,6 +404,25 @@ function assignAccCodeLiqPhp() {
             }
         });
     }); 
+};
+
+function getVendorTaxRate(vendorID, ret) {
+    $('#txtLiqTaxRate').empty();
+    $.getJSON('getVendorTaxRate', { vendorID: vendorID }, function (data) {
+        $.each(data, function (index, item) {
+            $('#txtLiqTaxRate').append($('<option/>', {
+                value: item["tR_ID"],
+                text: item["tR_WT_Title"]
+            }));
+        });
+        if ($('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Tax_Rate').val() > 0) {
+            setDivTaxRateToLiqPhp(ret);
+        };
+    }); 
+};
+
+function setDivTaxRateToLiqPhp(ret) {
+    $('#txtLiqTaxRate').val($('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Tax_Rate').val());
 };
 
 $('.number-inputExceptionJPY').keyup(function () {

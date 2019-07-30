@@ -1,6 +1,7 @@
 ﻿using ExpenseProcessingSystem.ConstantData;
 using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Models;
+using ExpenseProcessingSystem.Models.Gbase;
 using ExpenseProcessingSystem.Models.Pending;
 using ExpenseProcessingSystem.ViewModels;
 using ExpenseProcessingSystem.ViewModels.Entry;
@@ -20,12 +21,14 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly EPSDbContext _context;
+        private readonly GWriteContext _gWriteContext;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
 
-        public ModalService(IHttpContextAccessor httpContextAccessor, EPSDbContext context)
+        public ModalService(IHttpContextAccessor httpContextAccessor, EPSDbContext context, GWriteContext gWriteContext)
         {
             _httpContextAccessor = httpContextAccessor;
             _context = context;
+            _gWriteContext = gWriteContext;
         }
         public List<CONSTANT_NC_VALS> getInterEntityAccs(string Loc)
         {
@@ -1521,40 +1524,97 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         }
 
         //[ Budget Monitoring ]
-        public void AddNewBudget(List<BMViewModel> vmList, int userid)
+        public void AddNewBudget(List<BMViewModel> vmList, int userid, string gwriteUsername, string gwritePassword)
         {
+            string gCommand = "";
+            TblRequestDetails gwriteDtl = new TblRequestDetails();
+            TblRequestItem gwriteItem = new TblRequestItem();
+            List<BudgetModel> dbList = new List<BudgetModel>();
+
+            var list = new[] {
+                new { listBudget = new BudgetModel(), listGwriteDtl = new TblRequestDetails() }
+            }.ToList();
+            list.Clear();
             //Get all current budget information.
             var allCurrBudgetInfo = _context.Budget.Where(x => x.Budget_IsActive == true && x.Budget_isDeleted == false).ToList();
             //Get all "Fund == True" account information.
             var allAccountInfo = _context.DMAccount.Where(x => x.Account_isActive == true && x.Account_isDeleted == false
                                                         && x.Account_Fund == true ).ToList();
+            //Get user account information.
+            var userInfo = _context.User.Where(x => x.User_ID == userid).FirstOrDefault();
 
-            //Change IsActive and IsDeleted status of all current budget information
+            //Change IsActive and IsDeleted status of all changed budget information
             if(allCurrBudgetInfo.Count() != 0) { 
-                foreach (var i in allCurrBudgetInfo)
+                foreach (var i in vmList)
                 {
-                    i.Budget_IsActive = false;
-                    i.Budget_isDeleted = true;
-                    _context.Entry(i).State = EntityState.Modified;
+                    if(i.BM_Budget_Current != i.BM_Budget_Amount && i.BM_GWrite_StatusID != GlobalSystemValues.STATUS_PENDING)
+                    {
+                        var currentInfo = allCurrBudgetInfo.Where(x => x.Budget_Account_ID == i.BM_Account_ID).FirstOrDefault();
+                        if(currentInfo != null)
+                        {
+                            currentInfo.Budget_IsActive = false;
+                            currentInfo.Budget_isDeleted = true;
+                            _context.Entry(currentInfo).State = EntityState.Modified;
+                        }
+                    }
                 }
                 _context.SaveChanges();
             }
 
-            //Add all new budget information.
+            //Add all inputted budget information.
+            //Insert command to G-Write side.
+            //Status of inputted budget will be pending.
             foreach(var i in vmList)
             {
-                _context.Budget.Add(new BudgetModel
+                Console.WriteLine("#######" + i.BM_Account_ID);
+                BudgetModel dbBudget = new BudgetModel();
+                if (i.BM_Budget_Current != i.BM_Budget_Amount && i.BM_GWrite_StatusID != GlobalSystemValues.STATUS_PENDING)
                 {
-                    Budget_Account_ID = i.BM_Account_ID,
-                    Budget_Account_MasterID = i.BM_Account_MasterID,
-                    Budget_Amount = i.BM_Budget_Amount,
-                    Budget_Creator_ID = userid,
-                    Budget_IsActive = true,
-                    Budget_isDeleted = false,
-                    Budget_Date_Registered = DateTime.Now
+                    var acc = allAccountInfo.Where(x => x.Account_ID == i.BM_Account_ID).FirstOrDefault();
+
+                    dbBudget.Budget_Account_ID = i.BM_Account_ID;
+                    dbBudget.Budget_Account_MasterID = i.BM_Account_MasterID;
+                    dbBudget.Budget_Amount = i.BM_Budget_Current;
+                    dbBudget.Budget_Creator_ID = userid;
+                    dbBudget.Budget_IsActive = true;
+                    dbBudget.Budget_isDeleted = false;
+                    dbBudget.Budget_Date_Registered = DateTime.Now;
+                    dbBudget.Budget_GWrite_Status = GlobalSystemValues.STATUS_PENDING;
+                    dbBudget.Budget_New_Amount = i.BM_Budget_Amount;
+
+                    dbList.Add(dbBudget);
+                    
+                    gCommand = "cm00@E"
+                                + acc.Account_No.Replace("-", "").Substring(3, 3)
+                                +"1@E@E11"
+                                + gwriteUsername.Substring(gwriteUsername.Length - 4)
+                                + "@E5@E1"
+                                + acc.Account_Budget_Code
+                                + "@E"
+                                + @String.Format("{0:N}", i.BM_Budget_Amount)
+                                + "@E@E";
+
+                    gwriteDtl = postToGwrite(gCommand, gwriteUsername, gwritePassword);
+
+                    list.Add(new { listBudget = dbBudget, listGwriteDtl = gwriteDtl });
+
+                }
+            }
+            _context.Budget.AddRange(dbList);
+            _gWriteContext.SaveChanges();
+            _context.SaveChanges();
+
+            List<GwriteTransList> gtransList = new List<GwriteTransList>();
+            foreach (var i in list)
+            {
+                gtransList.Add(new GwriteTransList
+                {
+                    GW_GWrite_ID = int.Parse(i.listGwriteDtl.RequestId.ToString()),
+                    GW_TransID = int.Parse(i.listBudget.Budget_ID.ToString()),
+                    GW_Status = GlobalSystemValues.STATUS_PENDING
                 });
             }
-            
+            _context.GwriteTransLists.AddRange(gtransList);
             _context.SaveChanges();
         }
 
@@ -1571,6 +1631,10 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 new BudgetModel { Budget_Amount = 0.00 }).First().Budget_Amount;
         }
 
+        public List<BudgetModel> GetAllCurrentBudget()
+        {
+            return _context.Budget.Where(x => x.Budget_IsActive == true && x.Budget_isDeleted == false).ToList();
+        }
         public IEnumerable<BMViewModel> PopulateBudgetRegHist(int? year)
         {
             List<BMViewModel> bmvmList = new List<BMViewModel>();
@@ -1610,6 +1674,44 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             };
 
             return bmvmList;
+        }
+
+        ///============[Post to GWrite]==============
+        public TblRequestDetails postToGwrite(string command, string username, string password)
+        {
+            TblRequestDetails rqDtlModel = new TblRequestDetails();
+            rqDtlModel.tblRequestItems = new List<TblRequestItem>();
+            TblRequestItem rqItemModel = new TblRequestItem();
+
+            byte[] asciiBytes = System.Text.Encoding.ASCII.GetBytes(password);
+            string encodedPass = "";
+            int index = 0;
+
+            foreach (byte b in asciiBytes)
+            {
+                string hexValue = b.ToString("X");
+                encodedPass += hexValue + ",0";
+                if (index != asciiBytes.Length - 1)
+                    encodedPass += ",";
+                index++;
+            }
+
+            rqDtlModel.RacfId = username;
+            rqDtlModel.RacfPassword = encodedPass;
+            rqDtlModel.RequestCreated = DateTime.Now;
+            rqDtlModel.Status = "SCRIPTING";
+            rqDtlModel.SystemAbbr = "EXPRESS";
+            rqDtlModel.Priority = 1;
+
+            rqItemModel.SequenceNo = 1;
+            rqItemModel.ReturnFlag = true;
+            rqItemModel.Command = command;
+
+            rqDtlModel.tblRequestItems.Add(rqItemModel);
+
+            _gWriteContext.Add(rqDtlModel);
+
+            return rqDtlModel;
         }
     }
 }

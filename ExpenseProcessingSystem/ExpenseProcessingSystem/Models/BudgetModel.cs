@@ -18,5 +18,7 @@ namespace ExpenseProcessingSystem.Models
         public bool Budget_IsActive { get; set; }
         public bool Budget_isDeleted { get; set; }
         public DateTime Budget_Date_Registered { get; set; }
+        public double Budget_New_Amount { get; set; }
+        public int Budget_GWrite_Status { get; set; }
     }
 }

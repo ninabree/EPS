@@ -30,18 +30,153 @@
     </tr>
 </table>
 <script>
-    $(function () {
-        $(".modal-footer2").on("click", "#saveBtnEntry", function () {
-            //var modalBody = $(this).parent().siblings().find('.modal-body2');
-            if ($(this).parent().siblings().find('h4.modal-title', this).text() == "EWT Information") {
-                var itemNo = $("#parentIdEWT").val().substr(5);
-                $("#EntryDDV_" + itemNo + "__ewt_Payor_Name_ID").val($("table").find("#tax_payor option:selected").val());
-                $("#EntryDDV_" + itemNo + "__ewt_Payor_Name").val($("table").find("#tax_payor option:selected").text());
-                $('.modal-body2').empty();
-                $('.myModal2').modal('hide');
-            } else {
-                //alert("Error: EWT Form");
-            }
+    $(document).ready(function () {
+        if ($('#' + $('#parentIdEWT').val()).find('.txtccy').is('[disabled]') || $('#' + $('#parentIdEWT').val()).find('.txtCcyAbbrev').is('[readonly]')) {
+            $('#tax_payor').attr('disabled', 'disabled');
+            $('#tax_payor').addClass('selectDisabled');
+            $('#saveBtnEntry').css('display', 'none');
+        } else {
+            $('#tax_payor').removeAttr('disabled');
+            $('#saveBtnEntry').show();
+            $('#tax_payor').removeClass('selectDisabled');
+        }
+
+        $(function () {
+            $(".modal-footer2").on("click", "#saveBtnEntry", function () {
+                //var modalBody = $(this).parent().siblings().find('.modal-body2');
+                if ($(this).parent().siblings().find('h4.modal-title', this).text() == "EWT Information") {
+                    //var itemNo = $("#parentIdEWT").val().substr(5);
+                    $("#" + $('#parentIdEWT').val()).find('.txtPayor').val($("table").find("#tax_payor option:selected").val());
+                    $("#" + $('#parentIdEWT').val()).find('.txtPayorName').val($("table").find("#tax_payor option:selected").text());
+
+                    //Get EWT and VAT of selected vendor.
+                    var ddlVAT = $('#' + $('#parentIdEWT').val()).find('.txtVat');
+                    var ddlEWT = $('#' + $('#parentIdEWT').val()).find('.txtEwt');
+                    ddlVAT.empty();
+                    ddlEWT.empty();
+
+                    $.getJSON('getVendorVatList', { vendorID: $("#" + $('#parentIdEWT').val()).find('.txtPayor').val() }, function (data) {
+                        ddlVAT.empty();
+                        if (data.length == 0) {
+                            ddlVAT.append($('<option/>', {
+                                value: 0,
+                                text: "N/A"
+                            }));
+                        }
+                        $.each(data, function (index, itemData) {
+                            ddlVAT.append($('<option/>', {
+                                value: itemData["vaT_ID"],
+                                text: itemData["vaT_Rate"]
+                            }));
+                        });
+                        computeValuesByParentID($('#parentIdEWT').val());
+                    });
+
+                    $.getJSON('getVendorTRList', { vendorID: $("#" + $('#parentIdEWT').val()).find('.txtPayor').val() }, function (data) {
+                        ddlEWT.empty();
+                        if (data.length == 0) {
+                            ddlEWT.append($('<option/>', {
+                                value: 0,
+                                text: "N/A"
+                            }));
+                        }
+                        $.each(data, function (index, itemData) {
+                            ddlEWT.append($('<option/>', {
+                                value: itemData["tR_ID"],
+                                text: itemData["tR_Tax_Rate"]
+                            }));
+                        });
+                        computeValuesByParentID($('#parentIdEWT').val());
+                    });
+                    
+                    $('.myModal2').modal('hide');
+                } else {
+                    //alert("Error: EWT Form");
+                }
+            });
         });
+
+        function computeValuesByParentID(parentID) {
+            //var isInter = $("#" + parentID).find("#EntryDDV_" + parentID.substring(5) + "__inter_entity").is(':checked');
+            var amounts = $("");
+            var grossAmt = 0;
+            var origGrossAmt = 0;
+
+            ////check if Inter Entity
+            //if (isInter) {
+            //    var grossAmt = $("#" + parentID + " td .txtGross").val();
+            //} else {
+            amounts = $("#" + parentID + " .amount");
+            grossAmt = 0;
+            origGrossAmt = $("#" + parentID + " .txtGross").val();
+            for (var i = 0; i < amounts.length; i++) {
+                grossAmt += Number(amounts[i].value);
+            }
+
+            //For PCS,SS - resetting of Cash breakdown list.
+            if ($(".hiddenScreencode").val() == "PCV" || $(".hiddenScreencode").val() == "SS") {
+                if (origGrossAmt != grossAmt) {
+                    var ret = parentID.replace('item_', '');
+                    $('#divCashBD_' + ret).empty();
+                    $('#EntryCV_' + ret + '__modalInputFlag').val(0);
+                }
+            }
+            //}
+
+            $("#" + parentID + " td .txtGross").val(grossAmt);
+            if ($(".hiddenScreencode").val() == "SS") {
+                $("#" + parentID).find(".txtCredCash").val(grossAmt);
+                return false;
+            }
+            //$("#" + pNode.id + " .txtGross").attr("value", grossAmt);
+
+            var itemNo = parentID; //jquery obj
+            var chkEwtVal = $("#" + itemNo).find(".chkEwt").is(':checked');
+            var vatable = $("#" + itemNo).find(".chkVat").is(':checked');
+            if (chkEwtVal) {
+                if (vatable) {
+                    var vatRate = (Number($("#" + itemNo).find(".txtVat option:selected").text()) / 100);
+                    var ewtRate = (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100);
+                    var netVat = roundNumber(grossAmt / (1 + vatRate), 2);
+                    var ewt = roundNumber(netVat * ewtRate, 2);
+                    var netEwt = grossAmt - ewt;
+
+                    $("#" + itemNo).find(".txtCredEwt").val(ewt);
+                    $("#" + itemNo).find(".txtCredCash").val(netEwt);
+                } else {
+                    var ewtAmount = grossAmt * (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100);
+                    $("#" + itemNo).find(".txtCredEwt").val(roundNumber(ewtAmount, 2));
+                    $("#" + itemNo).find(".txtCredCash").val(roundNumber((grossAmt - ewtAmount), 2));
+                }
+            } else {
+                $("#" + itemNo).find(".txtCredEwt").val(0);
+                $("#" + itemNo).find(".txtCredCash").val(grossAmt);
+            }
+
+            var gross = $(".txtGross");
+            var credEwt = $(".txtCredEwt");
+            var credCash = $(".txtCredCash");
+
+            var grossTotal = 0;
+            var ewtSubTotal = 0;
+            var cashSubTotal = 0;
+
+            for (var i = 0; i < gross.length; i++) {
+                grossTotal += Number(gross[i].value);
+            }
+
+            for (var i = 0; i < credEwt.length; i++) {
+                ewtSubTotal += Number(credEwt[i].value);
+            }
+
+            for (var i = 0; i < credCash.length; i++) {
+                cashSubTotal += Number(credCash[i].value);
+            }
+
+            $("#grossTotal").val(grossTotal);
+            $("#credEwtTotal").val(ewtSubTotal);
+            $("#credCashTotal").val(cashSubTotal);
+            $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
+        };
     });
 </script>

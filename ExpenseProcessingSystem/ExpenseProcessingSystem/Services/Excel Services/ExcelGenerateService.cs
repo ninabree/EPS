@@ -1,4 +1,5 @@
 ﻿using ExpenseProcessingSystem.ViewModels;
+using ExpenseProcessingSystem.ViewModels.Reports;
 using Microsoft.AspNetCore.Mvc;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
@@ -47,6 +48,9 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     break;
                 case ConstantData.HomeReportConstantValue.WTS:
                     ExcelWTS(newFile, templateFile, data);
+                    break;
+                case ConstantData.HomeReportConstantValue.PrepaidAmortReport:
+                    ExcelPAR(newFile, templateFile, data);
                     break;
                 case ConstantData.HomeReportConstantValue.LOI:
                     ExcelLOI(newFile, templateFile, data);
@@ -545,6 +549,115 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
             }
         }
 
+        public void ExcelPAR (FileInfo newFile, FileInfo templateFile, HomeReportDataFilterViewModel data)
+        {
+            using (ExcelPackage package = new ExcelPackage(newFile, templateFile))
+            {
+                ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
+                string[] col = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P",
+                "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB", "AC", "AD", "AE", "AF", "AG",
+                "AH", "AI", "AJ", "AK", "AL", "AM", "AN", "AO", "AP", "AQ", "AR", "AS", "AT", "AU", "AV",
+                "AW", "AX", "AY", "AZ" };
+
+                //Header
+                worksheet.Cells["A2:H2"].Merge = true;
+                worksheet.Cells["A2:H2"].Value = data.HomeReportFilter.ReportFrom + " - " + data.HomeReportFilter.ReportTo;
+                worksheet.Cells["B3:F3"].Merge = true;
+                worksheet.Cells["B3:F3"].Value = data.ReportCommonVM.Header_Name;
+                worksheet.Cells["B4:F4"].Merge = true;
+                worksheet.Cells["B4:F4"].Value = data.ReportCommonVM.Header_TIN;
+                worksheet.Cells["B5:F5"].Merge = true;
+                worksheet.Cells["B5:F5"].Value = data.ReportCommonVM.Header_Address;
+
+                var startrow = 8;
+                foreach (RepAmortViewModel vm in data.ReportAmort)
+                {
+                    var upprleft = "B" + (startrow - 1);
+                    //Header Info
+                    worksheet.Cells["C" + startrow].Style.Font.Bold = true;
+                    worksheet.Cells["C" + startrow].Value = "Check Number";
+                    worksheet.Cells["D" + startrow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    worksheet.Cells["D" + startrow].Value = vm.PA_CheckNo;
+
+                    startrow += 1;
+                    worksheet.Cells["C" + startrow].Style.Font.Bold = true;
+                    worksheet.Cells["C" + startrow].Value = "Value Date";
+                    worksheet.Cells["D" + startrow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    worksheet.Cells["D" + startrow].Value = vm.PA_Value_Date;
+                    worksheet.Cells["E" + startrow].Style.Font.Bold = true;
+                    worksheet.Cells["E" + startrow].Value = "Reference No.";
+                    worksheet.Cells["F" + startrow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    worksheet.Cells["F" + startrow].Value = vm.PA_RefNo;
+
+                    startrow += 1;
+                    worksheet.Cells["C" + startrow].Style.Font.Bold = true;
+                    worksheet.Cells["C" + startrow].Value = "Section";
+                    worksheet.Cells["D" + startrow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    worksheet.Cells["D" + startrow].Value = vm.PA_Section;
+                    worksheet.Cells["E" + startrow].Style.Font.Bold = true;
+                    worksheet.Cells["E" + startrow].Value = "Remarks";
+                    worksheet.Cells["F" + startrow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    worksheet.Cells["F" + startrow].Value = vm.PA_Remarks;
+
+                    startrow += 1;
+                    worksheet.Cells["C" + startrow].Style.Font.Bold = true;
+                    worksheet.Cells["C" + startrow].Value = "Amount";
+                    worksheet.Cells["D" + startrow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    worksheet.Cells["D" + startrow].Value = vm.PA_Total_Amt;
+
+                    startrow += 1;
+                    worksheet.Cells["C" + startrow].Style.Font.Bold = true;
+                    worksheet.Cells["C" + startrow].Value = "Vendor";
+                    worksheet.Cells["D" + startrow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    worksheet.Cells["D" + startrow].Value = vm.PA_Vendor_Name;
+
+                    startrow += 1;
+                    worksheet.Cells["C" + startrow].Style.Font.Bold = true;
+                    worksheet.Cells["C" + startrow].Value = "First Month of Amortization";
+                    worksheet.Cells["D" + startrow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    worksheet.Cells["D" + startrow].Value = vm.PA_Month;
+                    worksheet.Cells["E" + startrow].Style.Font.Bold = true;
+                    worksheet.Cells["E" + startrow].Value = "Day";
+                    worksheet.Cells["F" + startrow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    worksheet.Cells["F" + startrow].Value = vm.PA_Day;
+                    worksheet.Cells["G" + startrow].Style.Font.Bold = true;
+                    worksheet.Cells["G" + startrow].Value = "No. of Months";
+                    worksheet.Cells["H" + startrow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    worksheet.Cells["H" + startrow].Value = vm.PA_No_Of_Months;
+
+                    //Table Info
+                    startrow += 2;
+                    worksheet.Cells["C" + startrow + ":D" + startrow].Style.Font.Bold = true;
+                    worksheet.Cells["C" + startrow + ":D" + startrow].Merge = true;
+                    worksheet.Cells["C" + startrow + ":D" + startrow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    worksheet.Cells["C" + startrow + ":D" + startrow].Value = "First Month of Amortization";
+                    worksheet.Cells["E" + startrow].Style.Font.Bold = true;
+                    worksheet.Cells["E" + startrow].Merge = true;
+                    worksheet.Cells["E" + startrow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    worksheet.Cells["E" + startrow].Value = "Amount";
+
+                    //Table Contents
+                    foreach(var amorts in vm.PA_AmortScheds)
+                    {
+                        startrow += 1;
+                        worksheet.Cells["C" + startrow + ":D" + startrow].Merge = true;
+                        worksheet.Cells["C" + startrow + ":D" + startrow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                        worksheet.Cells["C" + startrow + ":D" + startrow].Value = amorts.as_Amort_Name;
+                        worksheet.Cells["E" + startrow].Merge = true;
+                        worksheet.Cells["E" + startrow].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                        worksheet.Cells["E" + startrow].Value = amorts.as_Amount;
+
+                    }
+
+                    startrow += 1;
+                    var lowrright = "I" + startrow;
+
+                    worksheet.Cells[upprleft+":"+lowrright].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    startrow += 3;
+                }
+                package.Save();
+            }
+        }
 
         public void ExcelLOI(FileInfo newFile, FileInfo templateFile, HomeReportDataFilterViewModel data)
         {
@@ -695,6 +808,88 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     for (int c = 0; c < strLength; c++)
                     {
                         ws.Cells[col[colpnt] + "25"].Value = amount_2.Substring(c, 1);
+                        colpnt++;
+                    }
+
+                    package.Save();
+                    count1 += 2;
+                    count2 += 2;
+                    loopCount++;
+                }
+            }
+            return destPath + newFileName;
+        }
+
+        public string ExcelCDDIS_PRC(CDDISValuesVIewModel data, string newFileName, string excelTemplateName)
+        {
+            string rootFolder = "wwwroot";
+            string sourcePath = "/ExcelTemplates/";
+            string destPath = "/ExcelTemplatesTempFolder/";
+            System.IO.File.Copy(rootFolder + sourcePath + excelTemplateName, rootFolder + destPath + newFileName, true);
+
+            FileInfo templateFile = new FileInfo(rootFolder + sourcePath + excelTemplateName);
+            FileInfo newFile = new FileInfo(rootFolder + destPath + newFileName);
+
+            string[] col = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P",
+                "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB", "AC", "AD", "AE", "AF", "AG",
+                "AH", "AI", "AJ", "AK", "AL", "AM", "AN", "AO", "AP", "AQ", "AR", "AS", "AT", "AU", "AV",
+                "AW", "AX", "AY", "AZ" };
+            int colpnt = 0;
+            int strLength = 0;
+            int count1 = 0;
+            int count2 = 1;
+            int loopCount = 1;
+            using (ExcelPackage package = new ExcelPackage(newFile, templateFile))
+            {
+                while (loopCount <= (data.CDDContents.Count / 2))
+                {
+                    ExcelWorksheet ws;
+                    if (loopCount > 1)
+                    {
+                        ws = package.Workbook.Worksheets.Add("WorkSheet_" + loopCount, package.Workbook.Worksheets[1]);
+                    }
+                    else
+                    {
+                        ws = package.Workbook.Worksheets[loopCount];
+                        //ws.Name = "WorkSheet_1";
+                    }
+
+                    //Content
+                    ws.Cells["V5"].Value = DateTime.Now.ToShortDateString();
+
+                    //VALUE DATE
+                    ws.Cells["E10"].Value = data.VALUE_DATE.Month.ToString("d2").Substring(0, 1);
+                    ws.Cells["F10"].Value = data.VALUE_DATE.Month.ToString("d2").Substring(1, 1);
+                    ws.Cells["H10"].Value = data.VALUE_DATE.Date.ToString("dd").Substring(0, 1);
+                    ws.Cells["I10"].Value = data.VALUE_DATE.Date.ToString("dd").Substring(1, 1);
+                    ws.Cells["K10"].Value = data.VALUE_DATE.Year.ToString().Substring(2, 1);
+                    ws.Cells["L10"].Value = data.VALUE_DATE.Year.ToString().Substring(3, 1);
+
+                    //REMARKS
+                    colpnt = 10;
+                    strLength = (data.REMARKS.Length <= 29) ? data.REMARKS.Length : 29;
+                    for (int c = 0; c < strLength; c++)
+                    {
+                        ws.Cells[col[colpnt] + "11"].Value = data.REMARKS.Substring(c, 1);
+                        colpnt++;
+                    }
+
+                    //AMOUNT 1 & 2
+                    string amount_1 = String.Format("{0:#,##0.##}", data.CDDContents[count1].AMOUNT);
+                    string amount_2 = String.Format("{0:#,##0.##}", data.CDDContents[count2].AMOUNT);
+
+                    colpnt = 23;
+                    strLength = (amount_1.Length <= 16) ? amount_1.Length : 16;
+                    for (int c = 0; c < strLength; c++)
+                    {
+                        ws.Cells[col[colpnt] + "16"].Value = amount_1.Substring(c, 1);
+                        colpnt++;
+                    }
+                    colpnt = 23;
+                    strLength = (amount_2.Length <= 16) ? amount_2.Length : 16;
+                    for (int c = 0; c < strLength; c++)
+                    {
+                        ws.Cells[col[colpnt] + "27"].Value = amount_2.Substring(c, 1);
                         colpnt++;
                     }
 

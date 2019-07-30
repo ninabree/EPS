@@ -35,7 +35,11 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<DateTime>("Budget_Date_Registered");
 
+                    b.Property<int>("Budget_GWrite_Status");
+
                     b.Property<bool>("Budget_IsActive");
+
+                    b.Property<double>("Budget_New_Amount");
 
                     b.Property<bool>("Budget_isDeleted");
 
@@ -1358,7 +1362,9 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("GW_GWrite_ID");
 
-                    b.Property<string>("GW_Status");
+                    b.Property<int>("GW_Status");
+
+                    b.Property<int>("GW_TransID");
 
                     b.HasKey("GW_ID");
 
@@ -1512,7 +1518,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<double>("Liq_TaxRate");
 
-                    b.Property<double>("Liq_VendorID");
+                    b.Property<int>("Liq_VendorID");
 
                     b.HasKey("id");
 

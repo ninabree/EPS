@@ -17,14 +17,16 @@ namespace ExpenseProcessingSystem.Controllers
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly EPSDbContext _context;
+        private readonly GWriteContext _gWriteContext;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
         private ModalService _service;
 
-        public ModalController(IHttpContextAccessor httpContextAccessor, EPSDbContext context)
+        public ModalController(IHttpContextAccessor httpContextAccessor, EPSDbContext context, GWriteContext gWriteContext)
         {
             _httpContextAccessor = httpContextAccessor;
             _context = context;
-            _service = new ModalService(_httpContextAccessor, _context);
+            _gWriteContext = gWriteContext;
+            _service = new ModalService(_httpContextAccessor, _context, _gWriteContext);
         }
 
         //Entry_DDV
@@ -38,17 +40,23 @@ namespace ExpenseProcessingSystem.Controllers
         public IActionResult BudgetRegistrationModal()
         {
             var accountList = _service.GetAccountListForBudgetMonitoring();
+            var budgetList = _service.GetAllCurrentBudget();
             List<BMViewModel> vm = new List<BMViewModel>();
 
             foreach(var i in accountList)
             {
+
+                var bud = budgetList.Where(x => x.Budget_Account_MasterID == i.Account_MasterID).FirstOrDefault();
+
                 vm.Add(new BMViewModel {
                     BM_Account_ID = i.Account_ID,
                     BM_Account_MasterID = i.Account_MasterID,
                     BM_Acc_Name = i.Account_Name,
                     BM_Acc_Num = i.Account_No,
                     BM_GBase_Code = i.Account_Budget_Code,
-                    BM_Budget_Current = _service.GetCurrentBudget(i.Account_MasterID)
+                    BM_Budget_Current = (bud != null) ? bud.Budget_Amount : 0,
+                    BM_Budget_Amount = (bud != null) ? bud.Budget_New_Amount : 0,
+                    BM_GWrite_StatusID = (bud != null) ? bud.Budget_GWrite_Status : GlobalSystemValues.STATUS_APPROVED
                 });
             }
 
@@ -78,11 +86,11 @@ namespace ExpenseProcessingSystem.Controllers
         }
 
         //Register new budget from Budget Monitoring screen
-        public IActionResult RegisterNewBudget(List<BMViewModel> vmList)
+        public IActionResult RegisterNewBudget(List<BMViewModel> vmList, string username, string password)
         {
             var userId = GetUserID();
 
-            _service.AddNewBudget(vmList, int.Parse(GetUserID()));
+            _service.AddNewBudget(vmList, int.Parse(GetUserID()), username, password);
 
             return RedirectToAction("BM", "Home");
         }

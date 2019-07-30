@@ -33,12 +33,14 @@ namespace ExpenseProcessingSystem.ViewModels
         public float credCash { get; set; }
         public int dtlSSPayee { get; set; }
         public string dtlSSPayeeName { get; set; }
+        public int dtl_Ewt_Payor_Name_ID { get; set; }
         public int month { get; set; }
         public int day { get; set; }
         public int duration { get; set; }
         public int modalInputFlag { get; set; }
         public int liqInputFlag { get; set; }
         public string screenCode { get; set; }
+        public List<DMTRModel> vendTRList { get; set; }
         public List<EntryGbaseRemarksViewModel> gBaseRemarksDetails { get; set; }
         public List<LiquidationCashBreakdown> cashBreakdown { get; set; }
         [EmptyLiquidationCashBreakdown("ccyAbbrev", "liqInputFlag")]
@@ -96,5 +98,6 @@ namespace ExpenseProcessingSystem.ViewModels
         public int Liq_CCY_3_2 { get; set; }
         public double Liq_Amount_3_2 { get; set; }
         public double Liq_Tax_Rate { get; set; }
+        public int Liq_VendorID { get; set; }
     }
 }

@@ -253,6 +253,7 @@ namespace ExpenseProcessingSystem.ConstantData
         //Static values for account types of entries use for Non Cash.
         public static readonly int NC_DEBIT = 1;
         public static readonly int NC_CREDIT = 2;
+        public static readonly int NC_EWT = 3;
     }
     public class CONSTANT_NC_VALS
     {
@@ -856,7 +857,7 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
                                 ExpNCDtlAcc_Inter_Rate = 0,
-                                ExpNCDtlAcc_Type_ID = 1
+                                ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_DEBIT
                             },
                             new ExpenseEntryNCDtlAccViewModel{
                                 ExpNCDtlAcc_Acc_ID = accList[1].accID,
@@ -865,7 +866,7 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
                                 ExpNCDtlAcc_Inter_Rate = 0,
-                                ExpNCDtlAcc_Type_ID = 2
+                                ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_EWT
                             },
                             new ExpenseEntryNCDtlAccViewModel{
                                 ExpNCDtlAcc_Acc_ID = accList[2].accID,
@@ -874,7 +875,7 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
                                 ExpNCDtlAcc_Inter_Rate = 0,
-                                ExpNCDtlAcc_Type_ID = 2
+                                ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_CREDIT
                             }
                         }
                     }
@@ -905,7 +906,7 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
                                 ExpNCDtlAcc_Inter_Rate = 0,
-                                ExpNCDtlAcc_Type_ID = 1
+                                ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_DEBIT
                             },
                             new ExpenseEntryNCDtlAccViewModel{
                                 ExpNCDtlAcc_Acc_ID = accList[1].accID,
@@ -914,7 +915,7 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
                                 ExpNCDtlAcc_Inter_Rate = 0,
-                                ExpNCDtlAcc_Type_ID = 2
+                                ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_EWT
                             },
                             new ExpenseEntryNCDtlAccViewModel{
                                 ExpNCDtlAcc_Acc_ID = accList[2].accID,
@@ -923,7 +924,7 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
                                 ExpNCDtlAcc_Inter_Rate = 0,
-                                ExpNCDtlAcc_Type_ID = 2
+                                ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_CREDIT
                             }
                         }
                     },
@@ -940,7 +941,7 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
                                 ExpNCDtlAcc_Inter_Rate = 0,
-                                ExpNCDtlAcc_Type_ID = 1
+                                ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_DEBIT
                             },
                             new ExpenseEntryNCDtlAccViewModel{
                                 ExpNCDtlAcc_Acc_ID = accList[4].accID,
@@ -949,7 +950,7 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
                                 ExpNCDtlAcc_Inter_Rate = 0,
-                                ExpNCDtlAcc_Type_ID = 2
+                                ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_EWT
                             },
                             new ExpenseEntryNCDtlAccViewModel{
                                 ExpNCDtlAcc_Acc_ID = accList[5].accID,
@@ -958,7 +959,7 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Curr_ID = currDetails.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetails.Curr_CCY_ABBR,
                                 ExpNCDtlAcc_Inter_Rate = 0,
-                                ExpNCDtlAcc_Type_ID = 2
+                                ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_CREDIT
                             }
                         }
                     }

@@ -1,4 +1,5 @@
-﻿using ExpenseProcessingSystem.Services.Validations;
+﻿using ExpenseProcessingSystem.Models;
+using ExpenseProcessingSystem.Services.Validations;
 using ExpenseProcessingSystem.ViewModels.Entry;
 using System;
 using System.Collections.Generic;
@@ -48,6 +49,7 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "Credit - Cash")]
         public float credCash { get; set; }
         public int dtlSSPayee { get; set; }
+        public int dtl_Ewt_Payor_Name_ID { get; set; }
         [Display(Name = "Month")]
         public int month { get; set; }
         [Display(Name = "Day")]
@@ -59,6 +61,8 @@ namespace ExpenseProcessingSystem.ViewModels
         public string ccyAbbrev { get; set; }
         public int ccyMasterID { get; set; }
         public int expenseDtlID { get; set; }
+        public List<DMTRModel> vendTRList { get; set; }
+        public List<DMVATModel> vendVATList { get; set; }
         public List<amortizationSchedule> amtDetails { get; set; }
         public List<EntryGbaseRemarksViewModel> gBaseRemarksDetails { get; set; }
         [EmptyCashBreakdown("screenCode", "ccyAbbrev")]
