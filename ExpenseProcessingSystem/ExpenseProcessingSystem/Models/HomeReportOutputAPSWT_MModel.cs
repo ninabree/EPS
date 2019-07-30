@@ -25,8 +25,8 @@ namespace ExpenseProcessingSystem.Models
         [DisplayFormat(DataFormatString = "{0:#,##0.00#}", ApplyFormatInEditMode = true)]
         public double AOTW { get; set; }
 
-        public int Payee_SS_ID { get; set; }
-        public int Payee_ID { get; set; }
+        public int VAT_ID { get; set; }
+        public int Vendor_masterID { get; set; }
 
         public DateTime Last_Update_Date { get; set; }
 

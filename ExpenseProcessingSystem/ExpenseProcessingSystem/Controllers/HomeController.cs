@@ -24,6 +24,8 @@ using ExpenseProcessingSystem.ViewModels.Entry;
 using System.Xml.Linq;
 using ExpenseProcessingSystem.ViewModels.Search_Filters.Home;
 using System.Text;
+using BIR_Form_Filler.Functions;
+using BIR_Form_Filler.Models;
 
 namespace ExpenseProcessingSystem.Controllers
 {
@@ -607,7 +609,7 @@ namespace ExpenseProcessingSystem.Controllers
                     subtypes.Add(new HomeReportSubTypeAccModel
                     {
                         Id = i.TR_MasterID.ToString(),
-                        SubTypeName = (i.TR_Tax_Rate * 100) + "% " + i.TR_WT_Title
+                        SubTypeName = i.TR_WT_Title
                     });
                 }
                 return Json(subtypes);
@@ -670,8 +672,6 @@ namespace ExpenseProcessingSystem.Controllers
                 case HomeReportConstantValue.AST1000:
                     fileName = "AlphalistOfSuppliersByTop10000Corporation_" + dateNow;
                     layoutName = HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
-                    model.MonthName = HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName;
-                    model.MonthNameTo = HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.MonthTo).Single().MonthName;
 
                     if (!string.IsNullOrEmpty(model.TaxRateArray))
                     {
@@ -692,6 +692,17 @@ namespace ExpenseProcessingSystem.Controllers
                         model.TaxRateList = new List<float> { 0f };
                     }
 
+                    if(model.PeriodOption == 1)
+                    {
+                        model.MonthName = HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName + " " + model.Year;
+                        model.MonthNameTo = HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.MonthTo).Single().MonthName + " " + model.YearTo;
+
+                    }
+                    else
+                    {
+                        model.MonthName = model.PeriodFrom.ToShortDateString();
+                        model.MonthNameTo = model.PeriodTo.ToShortDateString();
+                    }
                     //Get the necessary data from Database
                     data = new HomeReportDataFilterViewModel
                     {
@@ -915,6 +926,82 @@ namespace ExpenseProcessingSystem.Controllers
             };
         }
 
+        [OnlineUserCheck]
+        public IActionResult Generate2307File(int _vendor, int _ewt, int _tax, double amount, DateTime date, string approver,int expID)
+        {
+            string path = "";
+            XElement xelem = XElement.Load("wwwroot/xml/ReportHeader.xml");
+
+            var Header_Name = xelem.Element("NAME").Value;
+            var Header_TIN = xelem.Element("TIN").Value;
+            var Header_Address = xelem.Element("ADDRESS").Value;
+
+            try
+            {
+                BIRExcelFiller exlFiller = new BIRExcelFiller();
+                FirstPartBIRForm fp = new FirstPartBIRForm();
+
+                var vendor = _service.getVendor(_vendor);
+                var ewt = _service.GetEWT(_ewt);
+                float vat = _service.getVat(_tax);
+
+                var payItem = new PaymentInfo();
+
+                if (new List<int> { 1, 4, 7, 10 }.Contains(date.Month))
+                {
+                    if (vat > 0)
+                        payItem.M1Quarter = amount / (1 + vat);
+                }
+                else if (new List<int> { 2, 5, 8, 11 }.Contains(date.Month))
+                {
+                    if (vat > 0)
+                        payItem.M2Quarter = amount / (1 + vat);
+                }
+                else if (new List<int> { 3, 6, 9, 12 }.Contains(date.Month))
+                {
+                    if (vat > 0)
+                        payItem.M3Quarter = amount / (1 + vat);
+                }
+
+                //payitem
+                payItem.Atc = ewt.TR_ATC;
+                payItem.Payments = ewt.TR_Nature_Income_Payment;
+                payItem.TaxWithheld = amount * ewt.TR_Tax_Rate;
+
+                fp.IncomePay.Add(payItem);
+
+                //payor
+                fp.OrRegAddress = Header_Address;
+                fp.OrTin = Header_TIN;
+                fp.PayorName = Header_Name;
+
+                //payee
+                fp.EeRegAddress = vendor.Vendor_Address;
+                fp.EeTin = vendor.Vendor_TIN;
+                fp.PayeeName = vendor.Vendor_Name;
+                fp.From_Date = DateTime.Now;
+                fp.To_Date = DateTime.Now;
+
+                //signatory
+                fp.PayorSig = new Signatories {
+                    Name = approver
+                };
+                fp.PayeeSig = new Signatories();
+
+                var entry = _service.getExpense(expID);
+
+                fp.VoucherNo = _service.getVoucherNo(entry.expenseType,entry.expenseDate,int.Parse(entry.expenseId),false);
+
+                path = exlFiller.FillBirForm(fp);
+            }
+            catch (Exception e) {
+                //redirect to Error Screen
+                Console.WriteLine(e.Message);
+            };
+
+            return File(path, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", path.Substring(26));
+        }
+
         //public IActionResult MizuhoLogo2Image()
         //{
         //    var dir = _env.WebRootPath;
@@ -1127,6 +1214,7 @@ namespace ExpenseProcessingSystem.Controllers
                 cvList.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
                 cvList.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
                 cvList.systemValues.acc = _service.getAccDetailsEntry();
+                cvList.systemValues.vat = _service.getVendorVat(cvList.systemValues.vendors.DataValueField[0]);
                 ViewBag.Status = cvList.status;
             }
 
@@ -1186,6 +1274,31 @@ namespace ExpenseProcessingSystem.Controllers
                 cvList.systemValues.acc.AddRange(_service.getAccDetailsEntry(acc.account));
             }
 
+            List<cvBirForm> birForms = new List<cvBirForm>();
+            foreach (var item in cvList.EntryCV)
+            {
+                if (birForms.Any(x => x.ewt == item.ewt))
+                {
+                    int index = birForms.FindIndex(x => x.ewt == item.ewt);
+                    birForms[index].amount += item.debitGross;
+                }
+                else
+                {
+                    cvBirForm temp = new cvBirForm
+                    {
+                        amount = item.debitGross,
+                        ewt = item.ewt,
+                        vat = item.vat,
+                        vendor = cvList.vendor,
+                        approver = cvList.approver,
+                        date = cvList.createdDate
+                    };
+
+                    birForms.Add(temp);
+                }
+            }
+            cvList.birForms.AddRange(birForms);
+
             return View(viewLink, cvList);
         }
 
@@ -1198,11 +1311,36 @@ namespace ExpenseProcessingSystem.Controllers
             EntryCVViewModelList cvList;
             cvList = _service.getExpense(entryID);
             List<SelectList> listOfSysVals = _service.getEntrySystemVals();
-            cvList.systemValues.vendors = listOfSysVals[0];
-            cvList.systemValues.dept = listOfSysVals[1];
-            cvList.systemValues.currency = listOfSysVals[2];
-            cvList.systemValues.ewt = listOfSysVals[3];
+            cvList.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
+            cvList.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
+            cvList.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
+            cvList.systemValues.ewt =_service.getVendorTaxRate(cvList.vendor);
+            cvList.systemValues.vat = _service.getVendorVat(cvList.vendor);
             cvList.systemValues.acc = _service.getAccDetailsEntry();
+
+            List<cvBirForm> birForms = new List<cvBirForm>();
+            foreach (var item in cvList.EntryCV)
+            {
+                if (birForms.Any(x => x.ewt == item.ewt))
+                {
+                    int index = birForms.FindIndex(x => x.ewt == item.ewt);
+                    birForms[index].amount += item.debitGross;
+                }
+                else
+                {
+                    cvBirForm temp = new cvBirForm {
+                        amount = item.debitGross,
+                        ewt = item.ewt,
+                        vat = item.vat,
+                        vendor = cvList.vendor,
+                        approver = cvList.approver,
+                        date = cvList.createdDate
+                    };
+
+                    birForms.Add(temp);
+                }
+            }
+            cvList.birForms.AddRange(birForms);
 
             return View("Entry_CV_ReadOnly", cvList);
         }
@@ -3316,7 +3454,7 @@ namespace ExpenseProcessingSystem.Controllers
             var trList = _service.getVendorTaxList(_service.getVendor(vendorID).Vendor_MasterID);
             foreach (var i in trList)
             {
-                i.TR_WT_Title = i.TR_Tax_Rate + "% " + i.TR_WT_Title;
+                i.TR_WT_Title = i.TR_Tax_Rate + "%";
             }
             return Json(trList.ToList());
         }

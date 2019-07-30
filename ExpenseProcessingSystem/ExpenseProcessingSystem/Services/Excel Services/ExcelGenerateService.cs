@@ -131,8 +131,8 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 int dataEndRow = 0;
 
                 //Header
-                worksheet.Cells["A2"].Value = data.HomeReportFilter.MonthName + " " + data.HomeReportFilter.Year + " - "
-                                            + data.HomeReportFilter.MonthNameTo + " " + data.HomeReportFilter.YearTo;
+                worksheet.Cells["A2"].Value = data.HomeReportFilter.MonthName + " - "
+                                            + data.HomeReportFilter.MonthNameTo;
                 worksheet.Cells["B3"].Value = data.ReportCommonVM.Header_Name;
                 worksheet.Cells["B4"].Value = data.ReportCommonVM.Header_TIN;
                 worksheet.Cells["B5"].Value = data.ReportCommonVM.Header_Address;

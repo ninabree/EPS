@@ -60,7 +60,7 @@ function displayInfoCashBD(pid) {
     $('#ddlLiqPhpAccount2').append($('<option></option>').val($('#lblAccount1_PHP optgroup[label=' + getXMLLiqValue('ACCOUNT11_2') + '] option:first').val()).html($('#lblAccount1_PHP optgroup[label=' + getXMLLiqValue('ACCOUNT11_2') + '] option:first').text()));
 
     $('#lblAccount1_PHP optgroup[label=' + getXMLLiqValue("ACCOUNT1_PHP") + '] option:first').prop('selected', true);
-    $('#lblAccount2_PHP optgroup[label=' + getXMLLiqValue("ACCOUNT2_PHP") + '] option:first').prop('selected', true);
+    //$('#lblAccount2_PHP optgroup[label=' + getXMLLiqValue("ACCOUNT2_PHP") + '] option:first').prop('selected', true);
 
     $('.tableLiqPhp').find('.txtLiqPhpInput').val(0);
     $('#ddlLiqPhpAccount1').val($("#ddlLiqPhpAccount1 option:first").val());
@@ -121,7 +121,7 @@ function displayInfoIE(pid) {
     }
 };
 
-function printDivCashBD(divID) {
+function printDivCashLiqBD(divID) {
 
     //Set Cash Breakdown Liquidation table value(property) to table attribute value.
     var tableCnt = $('#cashBDLiqTable').find('tbody').find('tr');
@@ -130,40 +130,48 @@ function printDivCashBD(divID) {
         $('#cashbdliqid_' + count).find('.txtLiqNoPCS').attr('value', $('#cashbdliqid_' + count).find('.txtLiqNoPCS').val());
         $('#cashbdliqid_' + count).find('.txtLiqAmount').attr('value', $('#cashbdliqid_' + count).find('.txtLiqAmount').val());
     }
+    $('#txtCashBDTotal').attr('value', $('#txtCashBDTotal').val());
 
-    var css = '<style>table, td, th {  ' +
+    $('#cashbdDatePrintLiq').val();
+    $('#cashbdAmountPrintLiq').attr('value', $('#txtCashBDTotal').val());
+
+    var cssjs = '<style>.tablePrintLiq, .tdPrintLiq, .thPrintLiq {  ' +
         '  border: 1px solid #ddd;' +
         '  text-align: center;' +
+        '  width: 60%;' +
+        '  height: auto;' +
         '}' +
 
         'table {' +
         '  border-collapse: collapse;' +
         '}' +
 
-        'th, td {' +
-        '  padding: 15px;' +
+        '.tdPrintLiq, .thPrintLiq {' +
+        '  width: 20%;' +
         '}' +
 
         'input {' +
         '	outline:none;' +
         '    border:none;' +
-        '}</style>';
+        '}' +
+        '</style>';
     
     var printContent = document.getElementById(divID);
 
     var WinPrint = window.open('', '', 'width=900,height=650');
     WinPrint.document.write(printContent.innerHTML);
-    WinPrint.document.head.innerHTML = css;
+    WinPrint.document.head.innerHTML = cssjs;
     WinPrint.document.close();
     WinPrint.focus();
     WinPrint.print();
-    WinPrint.close();
+    //WinPrint.close();
 
     //Rollback the Cash Breakdown Liquidation table attribute value to default(0).
     for (var count = 0; count < tableCnt.length; count++) {
         $('#cashbdliqid_' + count).find('.txtLiqNoPCS').attr('value', 0);
         $('#cashbdliqid_' + count).find('.txtLiqAmount').attr('value', 0);
     }
+    $('#txtCashBDTotal').attr('value', 0)
 };
 
 function AC(nStr) {
@@ -378,7 +386,7 @@ function assignDivValuesLiqPhp(pid) {
     $('#txtLiqPhpInput2').val($('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Amount_1_2').val());
     $('#txtLiqPhpInput3').val($('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Amount_2_1').val());
     $('#txtLiqPhpInput4').val($('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Amount_2_2').val());
-    $('#txtLiqPhpInput5').val($('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Amount_3_1').val());
+    //$('#txtLiqPhpInput5').val($('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Amount_3_1').val());
 
     $('#txtLiqPhpInput6').val(AC(parseFloat($('#txtLiqPhpInput1').val()) + parseFloat($('#txtLiqPhpInput2').val())));
     $('#txtLiqPhpInput7').val(AC(parseFloat($('#txtLiqPhpInput3').val()) + parseFloat($('#txtLiqPhpInput4').val()) + parseFloat($('#txtLiqPhpInput5').val())));

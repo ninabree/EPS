@@ -117,12 +117,14 @@ namespace ExpenseProcessingSystem.ViewModels
         public DateTime createdDate { get; set; }
         public List<EntryCVViewModel> EntryCV { get; set; }
         public temp template { get; set; }
+        public List<cvBirForm> birForms { get; set; }
 
         public EntryCVViewModelList()
         {
             systemValues = new SysValViewModel();
             EntryCV = new List<EntryCVViewModel>();
             template = new temp();
+            birForms = new List<cvBirForm>();
         }
     }
 
@@ -163,11 +165,21 @@ namespace ExpenseProcessingSystem.ViewModels
         public List<amortizationSchedule> amtDetails { get; set; }
         public List<EntryGbaseRemarksViewModel> gBaseRemarksDetails { get; set; }
 
-
         public temp()
         {
             gBaseRemarksDetails = new List<EntryGbaseRemarksViewModel>();
             amtDetails = new List<amortizationSchedule>();
         }
     }
+
+    public class cvBirForm
+    {
+        public double amount { get; set; }
+        public int vat { get; set; }
+        public int ewt { get; set; }
+        public int vendor { get; set; }
+        public string approver { get; set; }
+        public DateTime date { get; set; }
+    }
+
 }

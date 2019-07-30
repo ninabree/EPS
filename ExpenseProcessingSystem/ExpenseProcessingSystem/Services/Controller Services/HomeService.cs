@@ -2807,8 +2807,13 @@ namespace ExpenseProcessingSystem.Services
         {
             List<HomeReportOutputAPSWT_MModel> dbAPSWT_M = new List<HomeReportOutputAPSWT_MModel>();
             List<HomeReportOutputAPSWT_MModel> dbAPSWT_M_LIQ = new List<HomeReportOutputAPSWT_MModel>();
+            List<HomeReportOutputAPSWT_MModel> dbAPSWT_M_NC = new List<HomeReportOutputAPSWT_MModel>();
+            List<HomeReportOutputAPSWT_MModel> finalOutput = new List<HomeReportOutputAPSWT_MModel>();
+            var vendorMasterIDList = _context.DMVendor.OrderBy(x => x.Vendor_MasterID).Select(x => x.Vendor_MasterID).Distinct();
+            var taxRatesList = _context.DMTR.OrderBy(x => x.TR_Tax_Rate).Select(x => x.TR_Tax_Rate).Distinct();
+            var vatList = _context.DMVAT.ToList();
 
-            //Get data from Taxable expense table.
+            //Get data from Taxable expense table except cash advance(SS)
             dbAPSWT_M = (from expEntryDetl in _context.ExpenseEntryDetails
                          join expense in _context.ExpenseEntry on expEntryDetl.ExpenseEntryModel.Expense_ID equals expense.Expense_ID
                          join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
@@ -2816,6 +2821,7 @@ namespace ExpenseProcessingSystem.Services
                          where status.Contains(expense.Expense_Status)
                          && expense.Expense_Last_Updated.Month == month
                          && expense.Expense_Last_Updated.Year == year
+                         && expense.Expense_Type != GlobalSystemValues.TYPE_SS
                          orderby expense.Expense_Last_Updated
                          select new HomeReportOutputAPSWT_MModel
                          {
@@ -2823,10 +2829,14 @@ namespace ExpenseProcessingSystem.Services
                              Tin = vend.Vendor_TIN,
                              ATC = tr.TR_ATC,
                              NOIP = tr.TR_Nature,
-                             AOIP = expEntryDetl.ExpDtl_Debit,
+                             //B. AMOUNT NET OF VAT = (GROSS AMOUNT/( 1 + VAT RATE))
+                             //Example: 45,000 / 1.12 = 40,178.57
+                             AOIP = (expEntryDetl.ExpDtl_Vat != 0) ? (expEntryDetl.ExpDtl_Debit / (1 + vatList
+                                    .Where(x => x.VAT_ID == expEntryDetl.ExpDtl_Vat).FirstOrDefault().VAT_Rate)) : expEntryDetl.ExpDtl_Debit,
                              RateOfTax = tr.TR_Tax_Rate,
                              AOTW = expEntryDetl.ExpDtl_Credit_Ewt,
-                             Last_Update_Date = expense.Expense_Last_Updated
+                             Last_Update_Date = expense.Expense_Last_Updated,
+                             Vendor_masterID = vend.Vendor_MasterID
                          }).ToList();
 
             //Get data from Taxable liquidation table.
@@ -2843,14 +2853,57 @@ namespace ExpenseProcessingSystem.Services
                                  Payee = vend.Vendor_Name,
                                  Tin = vend.Vendor_TIN,
                                  ATC = tr.TR_ATC,
-                                 NOIP = tr.TR_Nature_Income_Payment,
+                                 NOIP = tr.TR_Nature,
                                  AOIP = ie.Liq_Amount_2_1 + ie.Liq_Amount_2_2 + ie.Liq_Amount_3_1,
                                  RateOfTax = tr.TR_Tax_Rate,
                                  AOTW = ie.Liq_Amount_2_2,
-                                 Last_Update_Date = liqDtl.Liq_LastUpdated_Date
+                                 Last_Update_Date = liqDtl.Liq_LastUpdated_Date,
+                                 Vendor_masterID = vend.Vendor_MasterID
                              }).ToList();
 
-            return dbAPSWT_M.Concat(dbAPSWT_M_LIQ).OrderBy(x => x.Payee);
+            var dbAPSWT_Conc = dbAPSWT_M.Concat(dbAPSWT_M_LIQ).OrderBy(x => x.Payee);
+
+
+            foreach (var i in vendorMasterIDList)
+            {
+                string payee = "";
+                string tin = "";
+                string atc = "";
+                string noip = "";
+
+                foreach (var j in taxRatesList)
+                {
+                    //NATURE OF INCOME PAYMENT
+                    double aoipTotal = 0;
+                    //AMOUNT OF TAX WITHHELD
+                    double aotwTotal = 0;
+                    foreach (var k in dbAPSWT_Conc.Where(x => x.Vendor_masterID == i && x.RateOfTax == j))
+                    {
+                        aoipTotal = aoipTotal + k.AOIP;
+                        aotwTotal = aotwTotal + k.AOTW;
+
+                        payee = k.Payee;
+                        tin = k.Tin;
+                        atc = k.ATC;
+                        noip = k.NOIP;
+                    }
+                    if(aoipTotal != 0 && aotwTotal != 0)
+                    {
+                        finalOutput.Add(new HomeReportOutputAPSWT_MModel
+                        {
+                            Payee = payee,
+                            Tin = tin,
+                            ATC = atc,
+                            NOIP = noip,
+                            AOIP = aoipTotal,
+                            RateOfTax = j,
+                            AOTW = aotwTotal
+                        });
+                    }
+                }
+            }
+
+            return finalOutput;
         }
 
         public IEnumerable<HomeReportOutputAST1000Model> GetAST1000_Data(HomeReportViewModel model)
@@ -2871,6 +2924,12 @@ namespace ExpenseProcessingSystem.Services
             
             List<HomeReportOutputAST1000Model> dbAST1000 = new List<HomeReportOutputAST1000Model>();
             List<HomeReportOutputAST1000Model> dbAST1000_LIQ = new List<HomeReportOutputAST1000Model>();
+            List<HomeReportOutputAST1000Model> dbAST1000_NC = new List<HomeReportOutputAST1000Model>();
+            List<HomeReportOutputAST1000Model> finalOutput = new List<HomeReportOutputAST1000Model>();
+
+            var vendorMasterIDList = _context.DMVendor.OrderBy(x => x.Vendor_MasterID).Select(x => x.Vendor_MasterID).Distinct();
+            var taxRatesList = _context.DMTR.OrderBy(x => x.TR_Tax_Rate).Select(x => x.TR_Tax_Rate).Distinct();
+            var vatList = _context.DMVAT.ToList();
 
             //Get data from Taxable expense table.
             dbAST1000 = (from expEntryDetl in _context.ExpenseEntryDetails
@@ -2888,9 +2947,13 @@ namespace ExpenseProcessingSystem.Services
                              Tin = vend.Vendor_TIN,
                              ATC = tr.TR_ATC,
                              NOIP = tr.TR_Nature,
-                             TaxBase = expEntryDetl.ExpDtl_Credit_Cash,
+                             //B. AMOUNT NET OF VAT = (GROSS AMOUNT/( 1 + VAT RATE))
+                             //Example: 45,000 / 1.12 = 40,178.57
+                             TaxBase = (expEntryDetl.ExpDtl_Vat != 0) ? (expEntryDetl.ExpDtl_Debit / (1 + vatList
+                                    .Where(x => x.VAT_ID == expEntryDetl.ExpDtl_Vat).FirstOrDefault().VAT_Rate)) : expEntryDetl.ExpDtl_Debit,
                              RateOfTax = tr.TR_Tax_Rate,
-                             AOTW = expEntryDetl.ExpDtl_Credit_Ewt
+                             AOTW = expEntryDetl.ExpDtl_Credit_Ewt,
+                             Vendor_masterID = vend.Vendor_MasterID
                          }).ToList();
 
             //Get data from Taxable liquidation table.
@@ -2908,14 +2971,56 @@ namespace ExpenseProcessingSystem.Services
                                  SupplierName = vend.Vendor_Name,
                                  Tin = vend.Vendor_TIN,
                                  ATC = tr.TR_ATC,
-                                 NOIP = tr.TR_Nature_Income_Payment,
+                                 NOIP = tr.TR_Nature,
                                  TaxBase = ie.Liq_Amount_2_1 + ie.Liq_Amount_2_2 + ie.Liq_Amount_3_1,
                                  RateOfTax = tr.TR_Tax_Rate,
                                  AOTW = ie.Liq_Amount_2_2,
-                                 Last_Update_Date = liqDtl.Liq_LastUpdated_Date
+                                 Last_Update_Date = liqDtl.Liq_LastUpdated_Date,
+                                 Vendor_masterID = vend.Vendor_MasterID
                              }).ToList();
 
-            return dbAST1000.Concat(dbAST1000_LIQ).OrderBy(x => x.SupplierName);
+            var dbAPSWT_Conc = dbAST1000.Concat(dbAST1000_LIQ).OrderBy(x => x.SupplierName);
+
+            foreach (var i in vendorMasterIDList)
+            {
+                string payee = "";
+                string tin = "";
+                string atc = "";
+                string noip = "";
+
+                foreach (var j in taxRatesList)
+                {
+                    //NATURE OF INCOME PAYMENT
+                    double aoipTotal = 0;
+                    //AMOUNT OF TAX WITHHELD
+                    double aotwTotal = 0;
+                    foreach (var k in dbAPSWT_Conc.Where(x => x.Vendor_masterID == i && x.RateOfTax == j))
+                    {
+                        aoipTotal = aoipTotal + k.TaxBase;
+                        aotwTotal = aotwTotal + k.AOTW;
+
+                        payee = k.SupplierName;
+                        tin = k.Tin;
+                        atc = k.ATC;
+                        noip = k.NOIP;
+                    }
+                    if (aoipTotal != 0 && aotwTotal != 0)
+                    {
+                        finalOutput.Add(new HomeReportOutputAST1000Model
+                        {
+                            SupplierName = payee,
+                            Tin = tin,
+                            ATC = atc,
+                            NOIP = noip,
+                            TaxBase = aoipTotal,
+                            RateOfTax = j,
+                            AOTW = aotwTotal
+                        });
+                    }
+                }
+            }
+
+            return finalOutput;
         }
 
         public ReportLOIViewModel GetLOIData(HomeReportViewModel model)
@@ -3018,6 +3123,7 @@ namespace ExpenseProcessingSystem.Services
             }
             return repAmortVMs;
         }
+
         public IEnumerable<HomeReportActualBudgetModel> GetActualReportData(int filterMonth, int filterYear)
         {
             List<HomeReportActualBudgetModel> actualBudgetData = new List<HomeReportActualBudgetModel>();
@@ -5352,7 +5458,7 @@ namespace ExpenseProcessingSystem.Services
                                 Payee = vend.Vendor_Name,
                                 Tin = vend.Vendor_TIN,
                                 ATC = tr.TR_ATC,
-                                NOIP = tr.TR_Nature_Income_Payment,
+                                NOIP = tr.TR_Nature,
                                 AOIP = ie.Liq_Amount_2_1 + ie.Liq_Amount_2_2 + ie.Liq_Amount_3_1,
                                 RateOfTax = tr.TR_Tax_Rate,
                                 AOTW = ie.Liq_Amount_2_2,
@@ -8362,8 +8468,8 @@ namespace ExpenseProcessingSystem.Services
                     {
                         tempGbase.entries.Add(new entryContainer
                         {
-                            type = (item.liqInterEntity[0].Liq_DebitCred_1_1 == "D") ? 
-                                (command != "R") ? item.liqInterEntity[0].Liq_DebitCred_1_1 : "C" : 
+                            type = (item.liqInterEntity[0].Liq_DebitCred_1_1 == "D") ?
+                                (command != "R") ? item.liqInterEntity[0].Liq_DebitCred_1_1 : "C" :
                                 (command != "R") ? item.liqInterEntity[0].Liq_DebitCred_1_1 : "D",
                             amount = item.liqInterEntity[0].Liq_Amount_1_1,
                             account = item.liqInterEntity[0].Liq_AccountID_1_1,
@@ -8417,9 +8523,9 @@ namespace ExpenseProcessingSystem.Services
                     goExpData = InsertGbaseEntry(tempGbase, expID);
                     goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.EntryDetailsID);
                     list.Add(new { expEntryID = expID, expDtl = item.EntryDetailsID, expType = GlobalSystemValues.TYPE_SS,
-                                LiqDtlID = liquidationDetails.LiqEntryDetails.Liq_DtlID,
-                                LiqInterEntityID = item.liqInterEntity[0].Liq_InterEntityID,
-                                goExp = goExpData, goExpHist = goExpHistData });
+                        LiqDtlID = liquidationDetails.LiqEntryDetails.Liq_DtlID,
+                        LiqInterEntityID = item.liqInterEntity[0].Liq_InterEntityID,
+                        goExp = goExpData, goExpHist = goExpHistData });
                 }
                 else if (item.liqInterEntity.Count() != 0 && item.liqCashBreakdown.Count() == 0)
                 {
@@ -8635,21 +8741,10 @@ namespace ExpenseProcessingSystem.Services
                 {
                     tempGbase.entries = new List<entryContainer>();
 
-                    //((ExpenseAmount*.50)/.65)*.35
-                    string fbt = getFbtFormula(getAccount(item.account).Account_FBT_MasterID);
+                    Dictionary<string, entryContainer> fbt = createFbt(expenseDetails.vendor, item.account, item.debitGross, credit, debit);
 
-                    string equation = fbt.Replace("ExpenseAmount", item.debitGross.ToString());
-                    double fbtAmount = Math.Round(Convert.ToDouble(new DataTable().Compute(equation, null)), 2);
-                    Console.WriteLine("-=-=-=-=-=->" + equation);
-
-                    debit.account = getAccountByMasterID(int.Parse(xelemAcc.Element("D_FBT").Value)).Account_ID;
-                    debit.amount = fbtAmount;
-
-                    credit.account = getAccountByMasterID(int.Parse(xelemAcc.Element("C_FBT").Value)).Account_ID;
-                    credit.amount = fbtAmount;
-
-                    tempGbase.entries.Add(debit);
-                    tempGbase.entries.Add(credit);
+                    tempGbase.entries.Add(fbt["credit"]);
+                    tempGbase.entries.Add(fbt["debit"]);
 
                     goExpData = InsertGbaseEntry(tempGbase, expID);
                     goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.expenseDtlID);
@@ -8934,7 +9029,7 @@ namespace ExpenseProcessingSystem.Services
                 goExpData = InsertGbaseEntry(tempGbase, expID);
                 goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, dtls.ExpNCDtl_ID);
                 list.Add(new { expEntryID = expID, nonCashDtlID = dtls.ExpNCDtl_ID, expType = GlobalSystemValues.TYPE_NC,
-                                goExp = goExpData, goExpHist = goExpHistData });
+                    goExp = goExpData, goExpHist = goExpHistData });
             }
 
             //_GOContext.SaveChanges();
@@ -8971,6 +9066,57 @@ namespace ExpenseProcessingSystem.Services
             _context.SaveChanges();
 
             return true;
+        }
+
+        internal Dictionary<string, entryContainer> createFbt(int payee, int acc, double gross, entryContainer d, entryContainer c)
+        {
+            //((ExpenseAmount*.50)/.65)*.35
+            string fbt = getFbtFormula(getAccount(acc).Account_FBT_MasterID);
+
+            string equation = fbt.Replace("ExpenseAmount", gross.ToString());
+            double fbtAmount = Math.Round(Convert.ToDouble(new DataTable().Compute(equation, null)), 2);
+            Console.WriteLine("-=-=-=-=-=->" + equation);
+
+            #region Get elements fron xml (ohr,rentDebit,expatDebit,localDebit,fbtCred)
+            XElement xelem = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
+            int ohr = int.Parse(xelem.Element("HOUSE_RENT").Value);
+            int rentDebit = int.Parse(xelem.Element("D_FBT_RENT").Value);
+            int expatDebit = int.Parse(xelem.Element("D_FBT_EXPAT").Value);
+            int localDebit = int.Parse(xelem.Element("D_FBT_LOCAL").Value);
+            int fbtCred = int.Parse(xelem.Element("C_FBT").Value);
+            #endregion
+
+            int masterId = _context.DMAccount.FirstOrDefault(x => x.Account_ID == acc).Account_MasterID;
+            int userType = _context.DMEmp.FirstOrDefault(x => x.Emp_ID == payee).Emp_Category_ID;
+            if (masterId == ohr)
+            {
+                d.account = rentDebit;
+            }
+            else
+            {
+                switch (userType)
+                {
+                    case GlobalSystemValues.EMPCAT_EXPAT:
+                        d.account = expatDebit;
+                        break;
+                    case GlobalSystemValues.EMPCAT_LOCAL:
+                        d.account = localDebit;
+                        break;
+                };
+            }
+
+
+            d.amount = fbtAmount;
+
+            c.account = getAccountByMasterID(int.Parse(xelemAcc.Element("C_FBT").Value)).Account_ID;
+            c.amount = fbtAmount;
+
+            Dictionary<string, entryContainer> fbtDic = new Dictionary<string, entryContainer>();
+
+            fbtDic.Add("credit", c);
+            fbtDic.Add("debit", d);
+
+            return fbtDic;
         }
         ///============[End Post Entries]============
 
@@ -9127,6 +9273,7 @@ namespace ExpenseProcessingSystem.Services
                                                  exp.Expense_Type,
                                                  exp.Expense_Status,
                                                  exp.Expense_Payee,
+                                                 acc.Account_MasterID,
                                                  acc.Account_No,
                                                  dtl.ExpDtl_Gbase_Remarks,
                                                  acc.Account_Code,
@@ -9153,10 +9300,11 @@ namespace ExpenseProcessingSystem.Services
                                 expense.ExpDtl_Fbt,
                                 expense.ExpDtl_Gbase_Remarks,
                                 expense.Expense_Payee,
+                                expense.Account_MasterID,
                                 histId = goHist.GOExpHist_Id == null ? 0 : goHist.GOExpHist_Id
                             };
 
-            foreach(var item in nmEntries)
+            foreach (var item in nmEntries)
             {
                 CloseItems temp = new CloseItems();
                 if (item.histId > 0)
@@ -9164,7 +9312,7 @@ namespace ExpenseProcessingSystem.Services
                     int transNo = _context.ExpenseTransLists.Select(x => new { x.TL_TransID, x.TL_GoExpHist_ID, x.TL_ExpenseID })
                                                             .Where(x => x.TL_ExpenseID == item.Expense_ID
                                                                      && x.TL_GoExpHist_ID == item.histId).FirstOrDefault().TL_TransID;
-                    temp.expTrans = GlobalSystemValues.getApplicationCode(item.Expense_Type)+ "-" + GetSelectedYearMonthOfTerm(item.Expense_Date.Month, item.Expense_Date.Year).Year + "-" +
+                    temp.expTrans = GlobalSystemValues.getApplicationCode(item.Expense_Type) + "-" + GetSelectedYearMonthOfTerm(item.Expense_Date.Month, item.Expense_Date.Year).Year + "-" +
                                         item.Expense_Number.ToString().PadLeft(5, '0');
                     temp.gBaseTrans = transNo.ToString();
                 }
@@ -9180,21 +9328,75 @@ namespace ExpenseProcessingSystem.Services
                 temp.particulars = item.ExpDtl_Gbase_Remarks;
                 temp.transCount = 1;
 
-                CloseItems fbtItem = new CloseItems();
-
-                if (item.ExpDtl_Fbt)
+                if (item.ExpDtl_Fbt && temp.expTrans != "")
                 {
-                    if(getBranchNo(item.Account_No) == GlobalSystemValues.BRANCH_RBU){
+                    CloseItems fbtItem = new CloseItems();
+                    #region Get elements fron xml (ohr,rentDebit,expatDebit,localDebit,fbtCred)
+                    XElement xelem = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
+                    int ohr = int.Parse(xelem.Element("HOUSE_RENT").Value);
+                    int rentDebit = int.Parse(xelem.Element("D_FBT_RENT").Value);
+                    int expatDebit = int.Parse(xelem.Element("D_FBT_EXPAT").Value);
+                    int localDebit = int.Parse(xelem.Element("D_FBT_LOCAL").Value);
+                    int fbtCred = int.Parse(xelem.Element("C_FBT").Value);
+                    #endregion
 
-                        int userType = _context.DMEmp.FirstOrDefault(x => x.Emp_ID == item.Expense_Payee).Emp_Category_ID;
+                    #region assign fbtAcc
+                    string fbtAcc = "";
 
-
-                        //var gTrans = _context.GOExpressHist.Where(x => x.ExpenseEntryID == item.Expense_ID
-                        //                                            && x.ExpenseDetailID == item.ExpDtl_ID
-                        //                                            && x.GOExpHist_Entry11ActNo == )
+                    int userType = _context.DMEmp.FirstOrDefault(x => x.Emp_ID == item.Expense_Payee).Emp_Category_ID;
+                    if (item.Account_MasterID == ohr)
+                    {
+                        fbtAcc = _context.DMAccount.Where(x => x.Account_MasterID == rentDebit)
+                                                   .OrderByDescending(x => x.Account_ID)
+                                                   .FirstOrDefault().Account_No;
                     }
-                    else{
+                    else
+                    {
+                        switch (userType)
+                        {
+                            case GlobalSystemValues.EMPCAT_EXPAT:
+                                fbtAcc = _context.DMAccount.Where(x => x.Account_MasterID == expatDebit)
+                                               .OrderByDescending(x => x.Account_ID)
+                                               .FirstOrDefault().Account_No;
+                                break;
+                            case GlobalSystemValues.EMPCAT_LOCAL:
+                                fbtAcc = _context.DMAccount.Where(x => x.Account_MasterID == localDebit)
+                                                       .OrderByDescending(x => x.Account_ID)
+                                                       .FirstOrDefault().Account_No;
+                                break;
+                        };
+                    }
+                    #endregion
 
+                    var gTrans = (from tran in _context.ExpenseTransLists
+                                  join hist in _context.GOExpressHist
+                                  on tran.TL_GoExpHist_ID equals hist.GOExpHist_Id
+                                  where hist.ExpenseDetailID == item.ExpDtl_ID
+                                  && hist.ExpenseEntryID == item.Expense_ID
+                                  && hist.GOExpHist_Entry11ActNo == fbtAcc.Substring(Math.Max(0, fbtAcc.Length - 6))
+                                  select new { tran.TL_GoExpress_ID, hist.GOExpHist_Entry11Amt }).FirstOrDefault();
+
+                    if (gTrans != null)
+                    {
+
+                        if (getBranchNo(item.Account_No) == GlobalSystemValues.BRANCH_RBU)
+                        {
+                            temp.gBaseTrans += "," + gTrans.TL_GoExpress_ID;
+                            temp.amount += double.Parse(gTrans.GOExpHist_Entry11Amt);
+                            temp.transCount = 2;
+                        }
+                        else
+                        {
+                            fbtItem.expTrans = temp.expTrans;
+                            fbtItem.gBaseTrans = gTrans.TL_GoExpress_ID.ToString();
+                            fbtItem.amount = double.Parse(gTrans.GOExpHist_Entry11Amt);
+                            fbtItem.ccy = item.Curr_CCY_ABBR;
+                            fbtItem.status = GlobalSystemValues.getStatus(item.Expense_Status);
+                            fbtItem.particulars = item.ExpDtl_Gbase_Remarks;
+                            fbtItem.transCount = 1;
+
+                            nmCloseItemsFCDU.Add(temp);
+                        }
                     }
                 }
 
@@ -9548,10 +9750,10 @@ namespace ExpenseProcessingSystem.Services
                                            where a.Expense_ID == b.ExpenseEntryModel.Expense_ID
                                            && opening <= a.Expense_Date && closing >= a.Expense_Date
                                            && a.Expense_Type == GlobalSystemValues.TYPE_SS
-                                           select new { a.Expense_ID,b.ExpDtl_ID,a.Expense_Number,a.Expense_Date,b.ExpDtl_Gbase_Remarks,
-                                                        a.Expense_Status,b.ExpDtl_Ccy,b.ExpDtl_Debit,b.ExpDtl_Account})
-                          join goHist in _context.GOExpressHist 
-                          on new { expenseId = expense.Expense_ID, dtlId = expense.ExpDtl_ID} 
+                                           select new { a.Expense_ID, b.ExpDtl_ID, a.Expense_Number, a.Expense_Date, b.ExpDtl_Gbase_Remarks,
+                                               a.Expense_Status, b.ExpDtl_Ccy, b.ExpDtl_Debit, b.ExpDtl_Account })
+                          join goHist in _context.GOExpressHist
+                          on new { expenseId = expense.Expense_ID, dtlId = expense.ExpDtl_ID }
                           equals new { expenseId = goHist.ExpenseEntryID, dtlId = goHist.ExpenseDetailID }
                           into x
                           from goHist in x.DefaultIfEmpty()
@@ -9563,14 +9765,14 @@ namespace ExpenseProcessingSystem.Services
                           on expense.ExpDtl_Ccy equals ccy.Curr_ID
                           into ccyAbbr from ccy in ccyAbbr.DefaultIfEmpty()
                           select new { expense.Expense_ID, expense.ExpDtl_ID, expense.Expense_Number,
-                                       acc.Account_No, ccy.Curr_CCY_ABBR, expense.Expense_Date,
-                                       expense.Expense_Status, expense.ExpDtl_Debit,expense.ExpDtl_Gbase_Remarks,
-                                       histId = goHist.GOExpHist_Id == null ? 0 : goHist.GOExpHist_Id};
+                              acc.Account_No, ccy.Curr_CCY_ABBR, expense.Expense_Date,
+                              expense.Expense_Status, expense.ExpDtl_Debit, expense.ExpDtl_Gbase_Remarks,
+                              histId = goHist.GOExpHist_Id == null ? 0 : goHist.GOExpHist_Id };
 
             foreach (var item in caItems)
             {
                 CloseItems temp = new CloseItems();
-                if(item.histId > 0)
+                if (item.histId > 0)
                 {
                     int transNo = _context.ExpenseTransLists.Select(x => new { x.TL_TransID, x.TL_GoExpHist_ID, x.TL_ExpenseID })
                                                             .Where(x => x.TL_ExpenseID == item.Expense_ID
@@ -9613,7 +9815,7 @@ namespace ExpenseProcessingSystem.Services
 
             return caDic;
         }
-        public Dictionary<string,List<CloseItems>> getLiq(DateTime opening, DateTime closing)
+        public Dictionary<string, List<CloseItems>> getLiq(DateTime opening, DateTime closing)
         {
             #region diagnostic runtime checker begin
             Stopwatch stopWatch = new Stopwatch();
@@ -9639,24 +9841,24 @@ namespace ExpenseProcessingSystem.Services
                                             && (opening <= liqDtl.Liq_Created_Date
                                             && closing >= liqDtl.Liq_Created_Date)
                                             select new
-                                            {exp.Expense_ID,expDtl.ExpDtl_ID,exp.Expense_Number,liqDtl.Liq_Created_Date,
-                                             remarks = string.Concat('S',expDtl.ExpDtl_Gbase_Remarks),
-                                             liqDtl.Liq_Status,ccy.Curr_CCY_ABBR,acc.Account_No,acc.Account_Code,
-                                             liqInter.Liq_Amount_1_1,liqInter.Liq_DebitCred_1_1,liqInter.Liq_DebitCred_1_2,
-                                             liqInter.Liq_Amount_1_2})
+                                            { exp.Expense_ID, expDtl.ExpDtl_ID, exp.Expense_Number, liqDtl.Liq_Created_Date,
+                                                remarks = string.Concat('S', expDtl.ExpDtl_Gbase_Remarks),
+                                                liqDtl.Liq_Status, ccy.Curr_CCY_ABBR, acc.Account_No, acc.Account_Code,
+                                                liqInter.Liq_Amount_1_1, liqInter.Liq_DebitCred_1_1, liqInter.Liq_DebitCred_1_2,
+                                                liqInter.Liq_Amount_1_2 })
                            join goHist in _context.GOExpressHist
-                           on new{expenseId = expense.Expense_ID,dtlId = expense.ExpDtl_ID,
-                                  rmrk = expense.remarks,acc = expense.Account_No.Substring(Math.Max(0, expense.Account_No.Length - 6)),
-                                  cde = expense.Account_Code}
-                           equals new{expenseId = goHist.ExpenseEntryID,dtlId = goHist.ExpenseDetailID,
-                                      rmrk = goHist.GOExpHist_Remarks,acc = goHist.GOExpHist_Entry11ActNo,
-                                      cde = goHist.GOExpHist_Entry11Actcde}
+                           on new { expenseId = expense.Expense_ID, dtlId = expense.ExpDtl_ID,
+                               rmrk = expense.remarks, acc = expense.Account_No.Substring(Math.Max(0, expense.Account_No.Length - 6)),
+                               cde = expense.Account_Code }
+                           equals new { expenseId = goHist.ExpenseEntryID, dtlId = goHist.ExpenseDetailID,
+                               rmrk = goHist.GOExpHist_Remarks, acc = goHist.GOExpHist_Entry11ActNo,
+                               cde = goHist.GOExpHist_Entry11Actcde }
                            into x
                            from goHist in x.DefaultIfEmpty()
                            select new
-                           {expense.Expense_ID,expense.ExpDtl_ID,expense.Expense_Number,expense.Account_No,expense.Liq_DebitCred_1_2,
-                            expense.Curr_CCY_ABBR,expense.Liq_Created_Date,expense.Liq_Status,expense.Liq_Amount_1_1,
-                            expense.Liq_Amount_1_2,expense.remarks,histId = goHist.GOExpHist_Id == null ? 0 : goHist.GOExpHist_Id};
+                           { expense.Expense_ID, expense.ExpDtl_ID, expense.Expense_Number, expense.Account_No, expense.Liq_DebitCred_1_2,
+                               expense.Curr_CCY_ABBR, expense.Liq_Created_Date, expense.Liq_Status, expense.Liq_Amount_1_1,
+                               expense.Liq_Amount_1_2, expense.remarks, histId = goHist.GOExpHist_Id == null ? 0 : goHist.GOExpHist_Id };
 
             foreach (var item in liqItems)
             {
@@ -9706,7 +9908,7 @@ namespace ExpenseProcessingSystem.Services
             #endregion
 
             return liqDic;
-        } 
+        }
 
         public ClosingViewModel ClosingOpenDailyBook()
         {
@@ -10246,12 +10448,21 @@ namespace ExpenseProcessingSystem.Services
         }
         public float getVat(int id)
         {
-            return _context.DMVAT.Where(x => x.VAT_ID == id).First().VAT_Rate;
+            var vat = _context.DMVAT.Where(x => x.VAT_ID == id).FirstOrDefault();
+            if (vat == null)
+            {
+                return 0;
+            }
+            return vat.VAT_Rate;
         }
         //get EWT(Tax Rate) value
         public float GetEWTValue(int id)
         {
             return _context.DMTR.Where(x => x.TR_ID == id).First().TR_Tax_Rate;
+        }
+        public DMTRModel GetEWT(int id)
+        {
+            return _context.DMTR.Where(x => x.TR_ID == id).FirstOrDefault();
         }
         //get currency abbreviation
         public string GetCurrencyAbbrv(int id)
@@ -10268,7 +10479,7 @@ namespace ExpenseProcessingSystem.Services
         public List<DMTRModel> getVendorTaxList(int vendorMasterID)
         {
             return (from vendTr in _context.DMVendorTRVAT
-                    join tr in _context.DMTR on vendTr.VTV_TR_ID equals tr.TR_ID
+                    join tr in _context.DMTR on vendTr.VTV_TR_ID equals tr.TR_MasterID
                     where tr.TR_isActive == true && tr.TR_isDeleted == false 
                         && vendTr.VTV_Vendor_ID == vendorMasterID
                     select new DMTRModel
@@ -10329,7 +10540,7 @@ namespace ExpenseProcessingSystem.Services
         public List<DMVATModel> getVendorVatList(int vendorMasterID)
         {
             return (from vendTr in _context.DMVendorTRVAT
-                    join vat in _context.DMVAT on vendTr.VTV_VAT_ID equals vat.VAT_ID
+                    join vat in _context.DMVAT on vendTr.VTV_VAT_ID equals vat.VAT_MasterID
                     where vat.VAT_isActive == true && vat.VAT_isDeleted == false
                         && vendTr.VTV_Vendor_ID == vendorMasterID
                     select new DMVATModel
@@ -10351,6 +10562,14 @@ namespace ExpenseProcessingSystem.Services
                 VAT_Name = x.VAT_Name
             }).ToList();
         }
+        //get user account without username and password
+        public string getUserFullName(int id)
+        {
+            var user = _context.User.FirstOrDefault(x=>x.User_ID == id);
+
+            return user.User_FName + " " + user.User_LName;
+        }
+
         //get Vat list for specific user
         public SelectList getVendorVat(int vendorID)
         {
@@ -10432,7 +10651,7 @@ namespace ExpenseProcessingSystem.Services
                     TR_ID = x.TR_ID,
                     TR_MasterID = x.TR_MasterID,
                     TR_Tax_Rate = x.TR_Tax_Rate * 100,
-                    TR_WT_Title = x.TR_Tax_Rate * 100 + " " + x.TR_WT_Title
+                    TR_WT_Title = x.TR_Tax_Rate * 100 + "% " + x.TR_WT_Title
                 }).ToList();
         }
         //retrieve account details
@@ -10492,10 +10711,7 @@ namespace ExpenseProcessingSystem.Services
         //check if account no. is RBU or FCDU account.
         public string getBranchNo(string accountNo)
         {
-            if (accountNo.Substring(4, 3) == "767")
-                return "767";
-            else
-                return "789";
+            return accountNo.Substring(4, 3);
         }
         public GOExpressHistModel convertTblCm10ToGOExHist(TblCm10 tblcm10, int entryID, int entryDtlID)
         {
@@ -10676,6 +10892,18 @@ namespace ExpenseProcessingSystem.Services
             _context.GOExpressHist.Add(goExpHist);
 
             return goExpHist;
+        }
+
+        public string getVoucherNo(int type, DateTime year, int number, bool liq = false)
+        {
+            string type_code = "";
+            if (liq == false)
+                type_code = GlobalSystemValues.getApplicationCode(type);
+            else
+                type_code = "LIQ";
+
+            return type_code + "-" + GetSelectedYearMonthOfTerm(year.Month, year.Year).Year + "-" +
+                                       number.ToString().PadLeft(5, '0'); ;
         }
         ///========[End of Other Functions]============
     }
