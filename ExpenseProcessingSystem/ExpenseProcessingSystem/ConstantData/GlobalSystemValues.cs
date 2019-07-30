@@ -261,6 +261,12 @@ namespace ExpenseProcessingSystem.ConstantData
         public string accNo { get; set; }
         public string accName { get; set; }
     }
+    public class CONSTANT_CCY_VALS
+    {
+        public int currID { get; set; }
+        public int currMasterID { get; set; }
+        public string currABBR { get; set; }
+    }
     //NON CASH CONSTANT VALUES
     public class CONSTANT_NC_LSPAYROLL
     {

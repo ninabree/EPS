@@ -10039,6 +10039,55 @@ namespace ExpenseProcessingSystem.Services
         {
             return _context.DMCurrency.FirstOrDefault(x => x.Curr_ID == id);
         }
+        //get currency master id
+        public int getCurrencyMasterID(int id)
+        {
+            return _context.DMCurrency.FirstOrDefault(x => x.Curr_ID == id).Curr_MasterID;
+        }
+        //get xml currency details
+        public List<CONSTANT_CCY_VALS> getXMLCurrency()
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load("wwwroot/xml/NonCashAccounts.xml");
+            XmlNodeList nodeList = doc.SelectNodes("/NONCASHACCOUNTS/GLOBALCCY/CCY");
+            List<CONSTANT_CCY_VALS> valList = new List<CONSTANT_CCY_VALS>();
+            foreach (XmlNode no in nodeList)
+            {
+                var rawVal = no.InnerText;
+                var acc = _context.DMCurrency.Where(x => (x.Curr_MasterID == int.Parse(rawVal))
+                                                    && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
+                CONSTANT_CCY_VALS vals = new CONSTANT_CCY_VALS
+                {
+                    currID = acc.Curr_ID,
+                    currMasterID = acc.Curr_MasterID,
+                    currABBR = acc.Curr_CCY_ABBR
+                };
+                valList.Add(vals);
+            }
+            return valList;
+        }
+        //get specific xml currency details
+        public List<CONSTANT_CCY_VALS> getXMLCurrency(string type)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load("wwwroot/xml/NonCashAccounts.xml");
+            XmlNodeList nodeList = doc.SelectNodes("/NONCASHACCOUNTS/GLOBALCCY/CCY[@id="+type+"']");
+            List<CONSTANT_CCY_VALS> valList = new List<CONSTANT_CCY_VALS>();
+            foreach (XmlNode no in nodeList)
+            {
+                var rawVal = no.InnerText;
+                var acc = _context.DMCurrency.Where(x => (x.Curr_MasterID == int.Parse(rawVal))
+                                                    && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
+                CONSTANT_CCY_VALS vals = new CONSTANT_CCY_VALS
+                {
+                    currID = acc.Curr_ID,
+                    currMasterID = acc.Curr_MasterID,
+                    currABBR = acc.Curr_CCY_ABBR
+                };
+                valList.Add(vals);
+            }
+            return valList;
+        }
         //get vendor
         public DMVendorModel getVendor(int id)
         {
