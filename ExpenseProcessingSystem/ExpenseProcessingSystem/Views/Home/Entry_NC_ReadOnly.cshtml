@@ -3,6 +3,9 @@
     ViewData["Title"] = "Entry_NC";
 
     var uid = ViewBag.userID;
+    var usd = ViewBag.USDmstr;
+    var jpy = ViewBag.JPYmstr;
+    var php = ViewBag.PHPmstr;
 }
 @using ExpenseProcessingSystem.ViewModels.Entry
 @using ExpenseProcessingSystem.ConstantData
@@ -350,18 +353,23 @@
                     <div>
                         <div class="dis-inline-block tbl-btn"><button value="Reversal" name="command">Create Reversal Entry</button></div>
                     </div>
-                    if (Model.EntryNC.NC_Category_ID != GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT &&
-                        (Model.EntryNC.NC_Category_ID != GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL /*&&
-                        Model.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID != 1 /*MASTER ID OF USD*/))
+                    if (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT)
                     {
                         <div>
-                            <div class="dis-inline-block tbl-btn m-l-41"><button disabled>Print CDD Instruction Sheet</button></div>
+                            <div class="dis-inline-block tbl-btn m-l-41"><button value="PrintCDD" name="command">Print CDD Instruction Sheet</button></div>
+                        </div>
+                    }else if (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL &&
+                        (Model.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID == @usd ||
+                        Model.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID == jpy))
+                    {
+                        <div>
+                            <div class="dis-inline-block tbl-btn m-l-41"><button value="PrintCDD_RET" name="command">Print CDD Instruction Sheet</button></div>
                         </div>
                     }
                     else
                     {
                         <div>
-                            <div class="dis-inline-block tbl-btn m-l-41"><button value="PrintCDD_RET" name="command">Print CDD Instruction Sheet</button></div>
+                            <div class="dis-inline-block tbl-btn m-l-41"><button disabled>Print CDD Instruction Sheet</button></div>
                         </div>
                     }
                 }
