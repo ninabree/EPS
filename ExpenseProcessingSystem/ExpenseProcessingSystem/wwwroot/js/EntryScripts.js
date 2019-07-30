@@ -123,6 +123,9 @@
         computeFunction(e);
     });
     $("#vendorName").on("change", function (e) {
+        if ($('.hiddenScreencode').val() == "PCV" || $('.hiddenScreencode').val() == "PC") {
+            return false;
+        }
         var vendorId = { vendorID: $("#vendorName").val() };
         var payeeID = $("#payee_type").val();
         if ($("#payeeTypeSel").length > 0) {

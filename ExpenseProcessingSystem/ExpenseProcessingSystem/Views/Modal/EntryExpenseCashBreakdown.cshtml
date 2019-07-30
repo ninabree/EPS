@@ -10,39 +10,95 @@
     <body>
         <div id="cashBreakdownBody">
             @Html.HiddenFor(x => Model.id, new { @id = "parentIdPCVSSTable" })
-            <div id="divVendor">@if (Model.screencode != "SS" || Model.screencode != "Liquidation_SS") {<text>Vendor/Employee :</text> }else{<text>Payee :</text>} <p class="dis-inline-block w-49">@Html.TextBoxFor(x => Model.vendor, new { @id = "reqVendor", @readonly = "readonly", @class = "input" })</p></div>
-            <div>Account :<p class="dis-inline-block w-49">@Html.TextBoxFor(x => Model.accountName, new { @id = "reqAccount", @readonly = "readonly", @class = "input" })</p></div>
-            <div>Amount :<p class="dis-inline-block w-49">@Html.TextBoxFor(x => Model.amount, new { @id = "reqAmount", @readonly = "readonly", @class = "input" })</p></div>
-            <div class="flex-c">
-                <table id="modalTable" class="cashBreakdowntable table-bordered table-striped voucher-tbl w-70">
-                    <colgroup>
-                        <col />
-                        <col />
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th style="text-align:center">Denomination</th>
-                            <th style="text-align:center">No. of Pcs.</th>
-                            <th style="text-align:center">Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for (int a = 0; a < Model.cashBreakdown.Count(); a++)
-                        {
-                            <tr id="cashbreakdownid_@a">
-                                <td>@Html.TextBoxFor(x => Model.cashBreakdown[a].CashBreak_Denomination, new { @class = "input100 txtDenomination", @type = "number", @readonly = "true", @style = "text-align:center" })</td>
-                                <td>@Html.TextBoxFor(x => Model.cashBreakdown[a].CashBreak_NoPcs, new { @class = "input100 txtNoPCS", @type = "number", @min = "0", @style = "text-align:center" })</td>
-                                <td>@Html.TextBoxFor(x => Model.cashBreakdown[a].CashBreak_Amount, new { @class = "input100 txtAmount", @type = "number", @style = "text-align:center", @readonly = "true" })</td>
-                            </tr>
-                        }
-                        <tr>
-                            <td colspan="2" style="text-align:right">Total:</td>
-                            <td><input type="number" id="cashBDAmountTotal" class="input100 cashBDAmountTotal" style="text-align:center" value="0" readonly="readonly" /></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <div id="divVendor">@if (Model.screencode != "SS" || Model.screencode != "Liquidation_SS")
+            {<text>Vendor/Employee :</text> }
+        else
+        {<text>Payee :</text>} <p class="dis-inline-block w-49">@Html.TextBoxFor(x => Model.vendor, new { @id = "reqVendor", @readonly = "readonly", @class = "input" })</p></div>
+        <div>Account :<p class="dis-inline-block w-49">@Html.TextBoxFor(x => Model.accountName, new { @id = "reqAccount", @readonly = "readonly", @class = "input" })</p></div>
+        <div>
+            Amount :
+            <p class="dis-inline-block w-49">
+                @Html.TextBoxFor(x => Model.amount, new { @id = "reqAmount", @readonly = "readonly", @class = "input" })
+            </p>
         </div>
+        <div id="divCashBD" class="flex-c">
+            <table style="width:100%;" id="tableTitlePrint" border="0" class="tblHidePrint">
+                <tr>
+                    <td style="text-align:left"><img src="~/images/mizuho-logo.png" style="width:50%;height:30%" /></td>
+                    <td style="text-align:right">PETTY CASH BREAKDOWN</td>
+                </tr>
+                <tr style="border-top:solid">
+                    <td style="text-align:left"></td>
+                    <td style="text-align:right">Mizuho Bank, Ltd - Manila Branch</td>
+                </tr>
+            </table>
+            <table style="width:60%;" id="tableHeaderPrint" border="0" class="tblHidePrint">
+                <tr>
+                    <td style="width:5%;text-align:left">Date : </td>
+                    <td><input id="cashbdDatePrint" style="text-align:center" /></td>
+                </tr>
+                <tr>
+                    <td style="width:5%;text-align:left">Amount: </td>
+                    <td><input id="cashbdAmountPrint" style="text-align:center" /></td>
+                </tr>
+            </table>
+            <table id="modalTable" class="cashBreakdowntable table-bordered table-striped voucher-tbl w-70 tablePrint">
+                <thead>
+                    <tr>
+                        <th style="text-align:center" class="thPrint">Denomination</th>
+                        <th style="text-align:center" class="thPrint">No. of Pcs.</th>
+                        <th style="text-align:center" class="thPrint">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int a = 0; a < Model.cashBreakdown.Count(); a++)
+                    {
+                        <tr id="cashbreakdownid_@a">
+                            <td class="tdPrint">@Html.TextBoxFor(x => Model.cashBreakdown[a].CashBreak_Denomination, new { @class = "input100 txtDenomination", @type = "number", @readonly = "true", @style = "text-align:center" })</td>
+                            <td class="tdPrint">@Html.TextBoxFor(x => Model.cashBreakdown[a].CashBreak_NoPcs, new { @class = "input100 txtNoPCS", @type = "number", @min = "0", @style = "text-align:center" })</td>
+                            <td class="tdPrint">@Html.TextBoxFor(x => Model.cashBreakdown[a].CashBreak_Amount, new { @class = "input100 txtAmount", @type = "number", @style = "text-align:center", @readonly = "true" })</td>
+                        </tr>
+                    }
+                    <tr>
+                        <td colspan="2" style="text-align:right" class="tdPrint">Total:</td>
+                        <td class="tdPrint"><input type="text" id="cashBDAmountTotal" class="input100 cashBDAmountTotal" style="text-align:center" value="0" readonly="readonly" /></td>
+                    </tr>
+                </tbody>
+            </table>
+            <table style="width:60%;" id="tableOptionPrint" border="0" class="tblHidePrint">
+                <tr>
+                    <td style="width:5%;text-align:left">EXPENSE</td>
+                    <td style="text-align:center"><input style="font-size:x-large;text-align:center" value="&#9645;"></td>
+                </tr>
+                <tr>
+                    <td style="width:5%;text-align:left">REVERSAL</td>
+                    <td style="text-align:center"><input style="font-size:x-large;text-align:center" value="&#9645;"></td>
+                </tr>
+            </table>
+            <table style="width:60%;" id="tableSignPrint" border="1" class="tblHidePrint">
+                <colgroup>
+                    <col style="width:20%" />
+                    <col style="width:10%" />
+                    <col style="width:30%" />
+                </colgroup>
+                <tr>
+                    <td colspan="2">PAYMENT RECEIVED BY :</td>
+                    <td style="text-align:center">FLORA</td>
+                </tr>
+                <tr>
+                    <td colspan="2">PAYMENT PAID BY :</td>
+                    <td style="text-align:center">BUARAO</td>
+                </tr>
+                <tr>
+                    <td>PAYMENT FOR :</td>
+                    <td colspan="2" style="text-align:center">PARKING FEE VF6597</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+        <label style="text-align:right; width:100%">
+            <input type="button" class="printCashBDBtn btn" value="Print Cash Breakdown" onclick='printDivCashBD("divCashBD");' />
+        </label>
     </body>
 </html>
 <script>
@@ -71,7 +127,7 @@
                     $("#saveGbase").css("display", "none");
                 }
             }
-            $('.cashBDAmountTotal').val(round(amountTotal, 2));
+            $('.cashBDAmountTotal').val(AC(round(amountTotal, 2)));
         }
 
         $(function () {
@@ -92,7 +148,7 @@
                     var subTotal = parseFloat($('#' + trs[count].id).find('.txtNoPCS').val()) * parseFloat($('#' + trs[count].id).find('.txtDenomination').val());
                     amountTotal = parseFloat(amountTotal) + parseFloat(subTotal);
                 }
-                $('.cashBDAmountTotal').val(round(amountTotal, 2));
+                $('.cashBDAmountTotal').val(AC(round(amountTotal, 2)));
             });
 
             $(".modal-footer").on("click", "#saveGbase", function (e) {
@@ -100,7 +156,7 @@
                     return;
                 }
                 e.stopImmediatePropagation();
-                if ($(".cashBDAmountTotal").val() != $("#reqAmount").val()) {
+                if ($(".cashBDAmountTotal").val().replace(",", "") != $("#reqAmount").val()) {
                     alert("Amount do not match.");
                     return false;
                 }
@@ -143,5 +199,72 @@
                 $('#myModal').modal('hide');
             });
         });
+
+        
     });
+</script>
+<script>
+    function printDivCashBD(divID) {
+
+        //Set Cash Breakdown Liquidation table value(property) to table attribute value.
+        var tableCnt = $('#modalTable').find('tbody').find('tr');
+
+        for (var count = 0; count < tableCnt.length; count++) {
+            $('#cashbreakdownid_' + count).find('.txtNoPCS').attr('value', $('#cashbreakdownid_' + count).find('.txtNoPCS').val());
+            $('#cashbreakdownid_' + count).find('.txtAmount').attr('value', $('#cashbreakdownid_' + count).find('.txtAmount').val());
+        }
+        $('#cashBDAmountTotal').attr('value', $('#cashBDAmountTotal').val());
+
+        $('#cashbdDatePrint').val();
+        $('#cashbdAmountPrint').attr('value', $('#cashBDAmountTotal').val());
+
+        var cssjs = '<style>.tablePrint, .tdPrint, .thPrint {  ' +
+            '  border: 1px solid #ddd;' +
+            '  text-align: center;' +
+            '  width: 60%;' +
+            '  height: auto;' +
+            '}' +
+
+            'table {' +
+            '  border-collapse: collapse;' +
+            '}' +
+
+            '.tdPrint, .thPrint {' +
+            '  width: 20%;' +
+            '}' +
+
+            'input {' +
+            '	outline:none;' +
+            '    border:none;' +
+            '}' +
+            '</style>';
+
+        var printContent = document.getElementById(divID);
+
+        var WinPrint = window.open('', '', 'width=900,height=650');
+        WinPrint.document.write(printContent.innerHTML);
+        WinPrint.document.head.innerHTML = cssjs;
+        WinPrint.document.close();
+        WinPrint.focus();
+        WinPrint.print();
+        //WinPrint.close();
+
+        //Rollback the Cash Breakdown Liquidation table attribute value to default(0).
+        for (var count = 0; count < tableCnt.length; count++) {
+            $('#cashbreakdownid_' + count).find('.txtNoPCS').attr('value', 0);
+            $('#cashbreakdownid_' + count).find('.txtAmount').attr('value', 0);
+        }
+        $('#cashBDAmountTotal').attr('value', 0)
+    };
+    function AC(nStr) {
+        nStr += '';
+        x = nStr.split('.');
+        x1 = x[0];
+        x2 = x.length > 1 ? '.' + x[1] : '';
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        }
+        return x1 + x2;
+    };
 </script>

@@ -71,7 +71,7 @@
                         <tr id="item_@i">
                             <td class="p-b-1 p-t-1">
                                 <div class="flex-sb">
-                                    @Html.TextBoxFor(x => Model.EntryCV[i].GBaseRemarks, new { @class = "input100 w-80" })
+                                    @Html.TextBoxFor(x => Model.EntryCV[i].GBaseRemarks, new { @class = "input100 w-80", @maxlength = "30" })
                                     <div id="remark_@i">
                                         <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
                                         @for (int y = 0; y < Model.EntryCV[i].gBaseRemarksDetails.Count(); y++)
@@ -169,7 +169,7 @@
                     <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
                 </div>
                 <div>
-                    <div class="dis-inline-block tbl-btn"><button disabled>Delete GBase Post</button></div>
+                    <div></div>
                 </div>
                 <div>
                     <div class="dis-inline-block tbl-btn"><button disabled>Print BIR Certificate</button></div>

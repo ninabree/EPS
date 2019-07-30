@@ -140,6 +140,7 @@
                         </td>
                         <td>
                             @Html.TextBoxFor(m => Model.LiquidationDetails[i].accountName, new { @class = "txtAcc", @readonly = "true", @style = "width:100%;background:transparent" })
+                            @Html.HiddenFor(m => Model.LiquidationDetails[i].accountID, new { @class = "hidAccID" })
                             @Html.HiddenFor(m => Model.LiquidationDetails[i].accountNumber, new { @class = "hidAccNo" })
                             @Html.HiddenFor(m => Model.LiquidationDetails[i].accountCode, new { @class = "hidAccCode" })
                         </td>
@@ -209,11 +210,11 @@
             <div style="display:inline-block;text-align:center;width:55%;vertical-align:top">
                 <table style="width:100%;" class="tableLiqPhp table-bordered table-striped voucher-tbl">
                     <colgroup>
-                        <col style="width:35%" />
+                        <col style="width:40%" />
                         <col style="width:10%" />
-                        <col style="width:25%" />
                         <col style="width:15%" />
-                        <col style="width:15%" />
+                        <col style="width:17.5%" />
+                        <col style="width:17.5%" />
                     </colgroup>
                     <tr>
                         <td colspan="5" style="text-align:left">
@@ -281,7 +282,7 @@
                         <td></td>
                         <td></td>
                         <td>
-                            <input id="txtLiqPhpInput5" class="input100 txtLiqPhpInput number-input" style="width:100%;text-align:center" type="text" value="0" />
+                            <input id="txtLiqPhpInput5" class="input100" readonly="readonly" style="width:100%;text-align:center" type="text" value="0" />
                         </td>
                     </tr>
                     <tr>
@@ -307,22 +308,38 @@
                             <input type="button" id="saveLiqPhp" class="saveLiqPhpBtn btn" value="Save Liquidation" />
                         </td>
                         <td>
-                            <input type="button" class="printCashBDBtn btn" value="Print Cash Breakdown" onclick='printDivCashBD("divCashBDLiq");' />
+                            <input type="button" class="printCashBDBtn btn" value="Print Cash Breakdown" onclick='printDivCashLiqBD("divCashBDLiq");' />
                         </td>
                     </tr>
                 </table>
             </div>
             <div id="divCashBDLiq" style="display:inline-block;text-align:center;width:35%">
-                <table id="cashBDLiqTable" class="cashBDLiqTable table-bordered table-striped voucher-tbl w-70">
-                    <colgroup>
-                        <col />
-                        <col />
-                    </colgroup>
+                <table style="width:100%;" id="tableTitlePrint" border="0" class="tblHidePrintLiq">
+                    <tr>
+                        <td style="text-align:left"><img src="~/images/mizuho-logo.png" style="width:50%;height:30%" /></td>
+                        <td style="text-align:right">PETTY CASH BREAKDOWN</td>
+                    </tr>
+                    <tr style="border-top:solid">
+                        <td style="text-align:left"></td>
+                        <td style="text-align:right">Mizuho Bank, Ltd - Manila Branch</td>
+                    </tr>
+                </table>
+                <table style="width:60%;" id="tableHeaderPrint" border="0" class="tblHidePrintLiq">
+                    <tr>
+                        <td style="width:5%;text-align:left">Date : </td>
+                        <td><input id="cashbdDatePrintLiq" style="text-align:center"/></td>
+                    </tr>
+                    <tr>
+                        <td style="width:5%;text-align:left" >Amount: </td>
+                        <td><input id="cashbdAmountPrintLiq" style="text-align:center" /></td>
+                    </tr>
+                </table>
+                <table id="cashBDLiqTable" class="cashBDLiqTable table-bordered table-striped voucher-tbl w-70 tablePrintLiq">
                     <thead>
                         <tr>
-                            <th style="text-align:center"><label>Denomination</label></th>
-                            <th style="text-align:center"><label>No. of Pcs.</label></th>
-                            <th style="text-align:center"><label>Amount</label></th>
+                            <th style="text-align:center" class="thPrint"><label>Denomination</label></th>
+                            <th style="text-align:center" class="thPrint"><label>No. of Pcs.</label></th>
+                            <th style="text-align:center" class="thPrint"><label>Amount</label></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -332,25 +349,25 @@
                             {
 
                                 <tr id="cashbdliqid_@cnt">
-                                    <td>
+                                    <td class="tdPrintLiq">
                                         <input type="number" class="txtLiqDenomination" readonly="readonly" style="width:100%;background:transparent;text-align:center" value="@i.CashBreak_Denomination" />
 
                                     </td>
-                                    <td>
+                                    <td class="tdPrintLiq">
                                         <input type="number" class="txtLiqNoPCS number-inputNoDecimal txtLiqPhpInput" style="width:100%;text-align:center" min="0" value="0" />
 
                                     </td>
-                                    <td>
+                                    <td class="tdPrintLiq">
                                         <input type="number" class="txtLiqAmount" readonly="readonly" style="width:100%;background:transparent;text-align:center" value="0" />
                                     </td>
                                 </tr>
                                 cnt = cnt + 1;
                             }
                             <tr>
-                                <td colspan="2" style="text-align:right;">
+                                <td colspan="2" style="text-align:right;" class="tdPrintLiq">
                                     <label>Total: </label>
                                 </td>
-                                <td>
+                                <td class="tdPrintLiq">
                                     <label style="width:100%;">
                                         <input type="text" id="txtCashBDTotal" class="txtCashBDTotal" readonly="readonly" style="width:100%;background:transparent;text-align:center" value="0" />
                                     </label>
@@ -358,6 +375,35 @@
                             </tr>
                         }
                     </tbody>
+                </table>
+                <table style="width:60%;" id="tableOptionPrint" border="0" class="tblHidePrintLiq">
+                    <tr>
+                        <td style="width:5%;text-align:left">EXPENSE</td>
+                        <td style="text-align:center"><input style="font-size:x-large;text-align:center" value="&#9645;"></td>
+                    </tr>
+                    <tr>
+                        <td style="width:5%;text-align:left">REVERSAL</td>
+                        <td style="text-align:center"><input style="font-size:x-large;text-align:center" value="&#9645;"></td>
+                    </tr>
+                </table>
+                <table style="width:60%;" id="tableSignPrint" border="1" class="tblHidePrintLiq">
+                    <colgroup>
+                        <col style="width:20%"/>
+                        <col style="width:10%" />
+                        <col style="width:30%" />
+                    </colgroup>
+                    <tr>
+                        <td colspan="2">PAYMENT RECEIVED BY :</td>
+                        <td style="text-align:center">FLORA</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">PAYMENT PAID BY :</td>
+                        <td style="text-align:center">BUARAO</td>
+                    </tr>
+                    <tr>
+                        <td>PAYMENT FOR :</td>
+                        <td colspan="2" style="text-align:center">PARKING FEE VF6597</td>
+                    </tr>
                 </table>
             </div>
         </div>
@@ -711,6 +757,9 @@
                 $('#divForeign').hide();
                 $('#divPHP').show();
                 $('#txtLiqVendor').val($('#' + pid).find('.txtPayor').val());
+                $('#txtLiqPhpInput5').val($('#' + pid).find('.txtGross').val());
+                $('#lblAccount2_PHP').val($('#' + pid).find('.hidAccID').val());
+
                 displayInfoCashBD($(this.parentNode)[0].parentNode.id);
                 assignAccCodeLiqPhp();
             } else {
@@ -767,36 +816,37 @@
             var value1 = parseFloat($('#txtLiqPhpInput1').val()) + parseFloat($('#txtLiqPhpInput2').val());
             var value2 = parseFloat($('#txtLiqPhpInput3').val()) + parseFloat($('#txtLiqPhpInput4').val()) + parseFloat($('#txtLiqPhpInput5').val());
 
-            if (value2 != $('#' + selectedRow).find(".txtGross").val()) {
-                $('#alert').text("Credit Amount and Cash advance Debit amount do not match.");
-                $('#divcss').show();
-                return false;
-            }
-
             if (value1 != value2) {
                 $('#alert').text("The total amount of Debit and Credit did not match.");
                 $('#divcss').show();
                 return false;
             }
+            var ddlPhp = $('#lblAccount1_PHP optgroup[label=' + getXMLLiqValue('ACCOUNT11_2') + '] option:first').val();
+            if (ddlPhp == $('#ddlLiqPhpAccount2').val()) {
 
-            if (value1 != value2) {
-                $('#alert').text("The total amount of Debit and Credit did not match.");
-                $('#divcss').show();
-                return false;
+                if ($('#txtLiqPhpInput2').val() > 0) {
+                    if ($('#txtCashBDTotal').val().replace(',', '') != $('#txtLiqPhpInput2').val()) {
+                        $('#alert').text("The total Amount of cash breakdown and Petty cash amount do not match.");
+                        $('#divcss').show();
+                        return false;
+                    }
+                }
+
+                if ($('#txtLiqPhpInput3').val() > 0) {
+                    if ($('#txtCashBDTotal').val().replace(',', '') != $('#txtLiqPhpInput3').val()) {
+                        $('#alert').text("The total Amount of cash breakdown and Petty cash amount do not match.");
+                        $('#divcss').show();
+                        return false;
+                    }
+                }
+                
             }
-
-            if ($('#txtCashBDTotal').val().replace(',', '') != value2) {
-                $('#alert').text("The total Amount of bill breakdown and credit amount do not match.");
-                $('#divcss').show();
-                return false;
-            }
-
             var ret = selectedRow.replace('item_', '');
             var trs = $('#cashBDLiqTable').find("tbody").find("tr");
 
             $('#divLiqCashBD_' + ret).empty();
             $('#divLiqIE_' + ret).empty();
-
+            
             for (var count = 0; count < trs.length - 1; count++) {
                 var denim = $("#" + trs[count].id).find('.txtLiqDenomination').val();
                 var pcs = $("#" + trs[count].id).find('.txtLiqNoPCS').val();
@@ -821,11 +871,11 @@
                     value: amount
                 }));
             }
-
+            
             appendInputIEtoDiv(ret);
             setLiqPhpValuetoDivInput(ret)
-
-            if ($('#txtCashBDTotal').val() == 0 || ($('#txtLiqPhpInput6').val() != $('#txtLiqPhpInput7').val())) {
+            
+            if (($('#txtLiqPhpInput6').val() != $('#txtLiqPhpInput7').val())) {
                 $('#' + selectedRow).find(".hiddenLiqFlag").val(0);
             } else {
                 $('#' + selectedRow).find(".hiddenLiqFlag").val(1);

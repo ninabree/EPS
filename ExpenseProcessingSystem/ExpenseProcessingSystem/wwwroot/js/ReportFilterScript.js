@@ -112,6 +112,8 @@
         ddlFileFormat.children('option').show();
         ddlFileFormat.children('option[value=4]').css('display', 'none');
 
+        $('#iframePreview').attr('src', '');
+
         if (ReportType == 2) {
 
         } else if (ReportType == 3) {

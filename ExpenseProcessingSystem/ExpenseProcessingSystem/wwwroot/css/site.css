@@ -1066,3 +1066,11 @@ full width */
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     -webkit-border-image: none;
 }
+
+.tblHidePrint {
+    display: none;
+}
+
+.tblHidePrintLiq {
+    display: none;
+}

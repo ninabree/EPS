@@ -607,7 +607,7 @@ namespace ExpenseProcessingSystem.Controllers
                     subtypes.Add(new HomeReportSubTypeAccModel
                     {
                         Id = i.TR_MasterID.ToString(),
-                        SubTypeName = (i.TR_Tax_Rate * 100) + "% " + i.TR_WT_Title
+                        SubTypeName = i.TR_WT_Title
                     });
                 }
                 return Json(subtypes);
@@ -670,8 +670,6 @@ namespace ExpenseProcessingSystem.Controllers
                 case HomeReportConstantValue.AST1000:
                     fileName = "AlphalistOfSuppliersByTop10000Corporation_" + dateNow;
                     layoutName = HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
-                    model.MonthName = HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName;
-                    model.MonthNameTo = HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.MonthTo).Single().MonthName;
 
                     if (!string.IsNullOrEmpty(model.TaxRateArray))
                     {
@@ -692,6 +690,17 @@ namespace ExpenseProcessingSystem.Controllers
                         model.TaxRateList = new List<float> { 0f };
                     }
 
+                    if(model.PeriodOption == 1)
+                    {
+                        model.MonthName = HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.Month).Single().MonthName + " " + model.Year;
+                        model.MonthNameTo = HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == model.MonthTo).Single().MonthName + " " + model.YearTo;
+
+                    }
+                    else
+                    {
+                        model.MonthName = model.PeriodFrom.ToShortDateString();
+                        model.MonthNameTo = model.PeriodTo.ToShortDateString();
+                    }
                     //Get the necessary data from Database
                     data = new HomeReportDataFilterViewModel
                     {
@@ -3253,7 +3262,7 @@ namespace ExpenseProcessingSystem.Controllers
             var trList = _service.getVendorTaxList(_service.getVendor(vendorID).Vendor_MasterID);
             foreach (var i in trList)
             {
-                i.TR_WT_Title = i.TR_Tax_Rate + "% " + i.TR_WT_Title;
+                i.TR_WT_Title = i.TR_Tax_Rate + "%";
             }
             return Json(trList.ToList());
         }

@@ -2807,8 +2807,13 @@ namespace ExpenseProcessingSystem.Services
         {
             List<HomeReportOutputAPSWT_MModel> dbAPSWT_M = new List<HomeReportOutputAPSWT_MModel>();
             List<HomeReportOutputAPSWT_MModel> dbAPSWT_M_LIQ = new List<HomeReportOutputAPSWT_MModel>();
+            List<HomeReportOutputAPSWT_MModel> dbAPSWT_M_NC = new List<HomeReportOutputAPSWT_MModel>();
+            List<HomeReportOutputAPSWT_MModel> finalOutput = new List<HomeReportOutputAPSWT_MModel>();
+            var vendorMasterIDList = _context.DMVendor.OrderBy(x => x.Vendor_MasterID).Select(x => x.Vendor_MasterID).Distinct();
+            var taxRatesList = _context.DMTR.OrderBy(x => x.TR_Tax_Rate).Select(x => x.TR_Tax_Rate).Distinct();
+            var vatList = _context.DMVAT.ToList();
 
-            //Get data from Taxable expense table.
+            //Get data from Taxable expense table except cash advance(SS)
             dbAPSWT_M = (from expEntryDetl in _context.ExpenseEntryDetails
                          join expense in _context.ExpenseEntry on expEntryDetl.ExpenseEntryModel.Expense_ID equals expense.Expense_ID
                          join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
@@ -2816,6 +2821,7 @@ namespace ExpenseProcessingSystem.Services
                          where status.Contains(expense.Expense_Status)
                          && expense.Expense_Last_Updated.Month == month
                          && expense.Expense_Last_Updated.Year == year
+                         && expense.Expense_Type != GlobalSystemValues.TYPE_SS
                          orderby expense.Expense_Last_Updated
                          select new HomeReportOutputAPSWT_MModel
                          {
@@ -2823,10 +2829,14 @@ namespace ExpenseProcessingSystem.Services
                              Tin = vend.Vendor_TIN,
                              ATC = tr.TR_ATC,
                              NOIP = tr.TR_Nature,
-                             AOIP = expEntryDetl.ExpDtl_Debit,
+                             //B. AMOUNT NET OF VAT = (GROSS AMOUNT/( 1 + VAT RATE))
+                             //Example: 45,000 / 1.12 = 40,178.57
+                             AOIP = (expEntryDetl.ExpDtl_Vat != 0) ? (expEntryDetl.ExpDtl_Debit / (1 + vatList
+                                    .Where(x => x.VAT_ID == expEntryDetl.ExpDtl_Vat).FirstOrDefault().VAT_Rate)) : expEntryDetl.ExpDtl_Debit,
                              RateOfTax = tr.TR_Tax_Rate,
                              AOTW = expEntryDetl.ExpDtl_Credit_Ewt,
-                             Last_Update_Date = expense.Expense_Last_Updated
+                             Last_Update_Date = expense.Expense_Last_Updated,
+                             Vendor_masterID = vend.Vendor_MasterID
                          }).ToList();
 
             //Get data from Taxable liquidation table.
@@ -2843,14 +2853,57 @@ namespace ExpenseProcessingSystem.Services
                                  Payee = vend.Vendor_Name,
                                  Tin = vend.Vendor_TIN,
                                  ATC = tr.TR_ATC,
-                                 NOIP = tr.TR_Nature_Income_Payment,
+                                 NOIP = tr.TR_Nature,
                                  AOIP = ie.Liq_Amount_2_1 + ie.Liq_Amount_2_2 + ie.Liq_Amount_3_1,
                                  RateOfTax = tr.TR_Tax_Rate,
                                  AOTW = ie.Liq_Amount_2_2,
-                                 Last_Update_Date = liqDtl.Liq_LastUpdated_Date
+                                 Last_Update_Date = liqDtl.Liq_LastUpdated_Date,
+                                 Vendor_masterID = vend.Vendor_MasterID
                              }).ToList();
 
-            return dbAPSWT_M.Concat(dbAPSWT_M_LIQ).OrderBy(x => x.Payee);
+            var dbAPSWT_Conc = dbAPSWT_M.Concat(dbAPSWT_M_LIQ).OrderBy(x => x.Payee);
+
+
+            foreach (var i in vendorMasterIDList)
+            {
+                string payee = "";
+                string tin = "";
+                string atc = "";
+                string noip = "";
+
+                foreach (var j in taxRatesList)
+                {
+                    //NATURE OF INCOME PAYMENT
+                    double aoipTotal = 0;
+                    //AMOUNT OF TAX WITHHELD
+                    double aotwTotal = 0;
+                    foreach (var k in dbAPSWT_Conc.Where(x => x.Vendor_masterID == i && x.RateOfTax == j))
+                    {
+                        aoipTotal = aoipTotal + k.AOIP;
+                        aotwTotal = aotwTotal + k.AOTW;
+
+                        payee = k.Payee;
+                        tin = k.Tin;
+                        atc = k.ATC;
+                        noip = k.NOIP;
+                    }
+                    if(aoipTotal != 0 && aotwTotal != 0)
+                    {
+                        finalOutput.Add(new HomeReportOutputAPSWT_MModel
+                        {
+                            Payee = payee,
+                            Tin = tin,
+                            ATC = atc,
+                            NOIP = noip,
+                            AOIP = aoipTotal,
+                            RateOfTax = j,
+                            AOTW = aotwTotal
+                        });
+                    }
+                }
+            }
+
+            return finalOutput;
         }
 
         public IEnumerable<HomeReportOutputAST1000Model> GetAST1000_Data(HomeReportViewModel model)
@@ -2871,6 +2924,12 @@ namespace ExpenseProcessingSystem.Services
             
             List<HomeReportOutputAST1000Model> dbAST1000 = new List<HomeReportOutputAST1000Model>();
             List<HomeReportOutputAST1000Model> dbAST1000_LIQ = new List<HomeReportOutputAST1000Model>();
+            List<HomeReportOutputAST1000Model> dbAST1000_NC = new List<HomeReportOutputAST1000Model>();
+            List<HomeReportOutputAST1000Model> finalOutput = new List<HomeReportOutputAST1000Model>();
+
+            var vendorMasterIDList = _context.DMVendor.OrderBy(x => x.Vendor_MasterID).Select(x => x.Vendor_MasterID).Distinct();
+            var taxRatesList = _context.DMTR.OrderBy(x => x.TR_Tax_Rate).Select(x => x.TR_Tax_Rate).Distinct();
+            var vatList = _context.DMVAT.ToList();
 
             //Get data from Taxable expense table.
             dbAST1000 = (from expEntryDetl in _context.ExpenseEntryDetails
@@ -2888,9 +2947,13 @@ namespace ExpenseProcessingSystem.Services
                              Tin = vend.Vendor_TIN,
                              ATC = tr.TR_ATC,
                              NOIP = tr.TR_Nature,
-                             TaxBase = expEntryDetl.ExpDtl_Credit_Cash,
+                             //B. AMOUNT NET OF VAT = (GROSS AMOUNT/( 1 + VAT RATE))
+                             //Example: 45,000 / 1.12 = 40,178.57
+                             TaxBase = (expEntryDetl.ExpDtl_Vat != 0) ? (expEntryDetl.ExpDtl_Debit / (1 + vatList
+                                    .Where(x => x.VAT_ID == expEntryDetl.ExpDtl_Vat).FirstOrDefault().VAT_Rate)) : expEntryDetl.ExpDtl_Debit,
                              RateOfTax = tr.TR_Tax_Rate,
-                             AOTW = expEntryDetl.ExpDtl_Credit_Ewt
+                             AOTW = expEntryDetl.ExpDtl_Credit_Ewt,
+                             Vendor_masterID = vend.Vendor_MasterID
                          }).ToList();
 
             //Get data from Taxable liquidation table.
@@ -2908,14 +2971,56 @@ namespace ExpenseProcessingSystem.Services
                                  SupplierName = vend.Vendor_Name,
                                  Tin = vend.Vendor_TIN,
                                  ATC = tr.TR_ATC,
-                                 NOIP = tr.TR_Nature_Income_Payment,
+                                 NOIP = tr.TR_Nature,
                                  TaxBase = ie.Liq_Amount_2_1 + ie.Liq_Amount_2_2 + ie.Liq_Amount_3_1,
                                  RateOfTax = tr.TR_Tax_Rate,
                                  AOTW = ie.Liq_Amount_2_2,
-                                 Last_Update_Date = liqDtl.Liq_LastUpdated_Date
+                                 Last_Update_Date = liqDtl.Liq_LastUpdated_Date,
+                                 Vendor_masterID = vend.Vendor_MasterID
                              }).ToList();
 
-            return dbAST1000.Concat(dbAST1000_LIQ).OrderBy(x => x.SupplierName);
+            var dbAPSWT_Conc = dbAST1000.Concat(dbAST1000_LIQ).OrderBy(x => x.SupplierName);
+
+            foreach (var i in vendorMasterIDList)
+            {
+                string payee = "";
+                string tin = "";
+                string atc = "";
+                string noip = "";
+
+                foreach (var j in taxRatesList)
+                {
+                    //NATURE OF INCOME PAYMENT
+                    double aoipTotal = 0;
+                    //AMOUNT OF TAX WITHHELD
+                    double aotwTotal = 0;
+                    foreach (var k in dbAPSWT_Conc.Where(x => x.Vendor_masterID == i && x.RateOfTax == j))
+                    {
+                        aoipTotal = aoipTotal + k.TaxBase;
+                        aotwTotal = aotwTotal + k.AOTW;
+
+                        payee = k.SupplierName;
+                        tin = k.Tin;
+                        atc = k.ATC;
+                        noip = k.NOIP;
+                    }
+                    if (aoipTotal != 0 && aotwTotal != 0)
+                    {
+                        finalOutput.Add(new HomeReportOutputAST1000Model
+                        {
+                            SupplierName = payee,
+                            Tin = tin,
+                            ATC = atc,
+                            NOIP = noip,
+                            TaxBase = aoipTotal,
+                            RateOfTax = j,
+                            AOTW = aotwTotal
+                        });
+                    }
+                }
+            }
+
+            return finalOutput;
         }
 
         public ReportLOIViewModel GetLOIData(HomeReportViewModel model)
@@ -3018,6 +3123,7 @@ namespace ExpenseProcessingSystem.Services
             }
             return repAmortVMs;
         }
+
         public IEnumerable<HomeReportActualBudgetModel> GetActualReportData(int filterMonth, int filterYear)
         {
             List<HomeReportActualBudgetModel> actualBudgetData = new List<HomeReportActualBudgetModel>();
@@ -5352,7 +5458,7 @@ namespace ExpenseProcessingSystem.Services
                                 Payee = vend.Vendor_Name,
                                 Tin = vend.Vendor_TIN,
                                 ATC = tr.TR_ATC,
-                                NOIP = tr.TR_Nature_Income_Payment,
+                                NOIP = tr.TR_Nature,
                                 AOIP = ie.Liq_Amount_2_1 + ie.Liq_Amount_2_2 + ie.Liq_Amount_3_1,
                                 RateOfTax = tr.TR_Tax_Rate,
                                 AOTW = ie.Liq_Amount_2_2,
@@ -10218,7 +10324,7 @@ namespace ExpenseProcessingSystem.Services
         public List<DMTRModel> getVendorTaxList(int vendorMasterID)
         {
             return (from vendTr in _context.DMVendorTRVAT
-                    join tr in _context.DMTR on vendTr.VTV_TR_ID equals tr.TR_ID
+                    join tr in _context.DMTR on vendTr.VTV_TR_ID equals tr.TR_MasterID
                     where tr.TR_isActive == true && tr.TR_isDeleted == false 
                         && vendTr.VTV_Vendor_ID == vendorMasterID
                     select new DMTRModel
@@ -10279,7 +10385,7 @@ namespace ExpenseProcessingSystem.Services
         public List<DMVATModel> getVendorVatList(int vendorMasterID)
         {
             return (from vendTr in _context.DMVendorTRVAT
-                    join vat in _context.DMVAT on vendTr.VTV_VAT_ID equals vat.VAT_ID
+                    join vat in _context.DMVAT on vendTr.VTV_VAT_ID equals vat.VAT_MasterID
                     where vat.VAT_isActive == true && vat.VAT_isDeleted == false
                         && vendTr.VTV_Vendor_ID == vendorMasterID
                     select new DMVATModel
@@ -10382,7 +10488,7 @@ namespace ExpenseProcessingSystem.Services
                     TR_ID = x.TR_ID,
                     TR_MasterID = x.TR_MasterID,
                     TR_Tax_Rate = x.TR_Tax_Rate * 100,
-                    TR_WT_Title = x.TR_Tax_Rate * 100 + " " + x.TR_WT_Title
+                    TR_WT_Title = x.TR_Tax_Rate * 100 + "% " + x.TR_WT_Title
                 }).ToList();
         }
         //retrieve account details
