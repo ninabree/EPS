@@ -9141,7 +9141,7 @@ namespace ExpenseProcessingSystem.Services
 
         public ClosingViewModel ClosingGetRecords()
         {
-            DateTime opening = DateTime.Today.AddHours(00).AddDays(-10);
+            DateTime opening = DateTime.Today.AddHours(00);
             DateTime closing = DateTime.Today.AddHours(23.9999);
 
             ClosingViewModel closeVM = new ClosingViewModel();
@@ -9261,7 +9261,7 @@ namespace ExpenseProcessingSystem.Services
                                              && dtl.ExpDtl_Inter_Entity == false
                                              && new List<int> { GlobalSystemValues.TYPE_CV,
                                                                 GlobalSystemValues.TYPE_PC,
-                                                                GlobalSystemValues.TYPE_CV }.Contains(exp.Expense_Type)
+                                                                GlobalSystemValues.TYPE_DDV }.Contains(exp.Expense_Type)
                                              && (opening <= exp.Expense_Date
                                              && closing >= exp.Expense_Date)
                                              select new
@@ -9936,6 +9936,13 @@ namespace ExpenseProcessingSystem.Services
             ClosingViewModel closeVM = ClosingGetRecords();
 
             return closeVM;
+        }
+        public bool ClosingCheckStatusRBU()
+        {
+
+
+
+            return true;
         }
 
         public bool ClosingCheckStatus()

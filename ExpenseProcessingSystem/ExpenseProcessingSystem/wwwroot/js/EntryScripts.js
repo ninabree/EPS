@@ -145,12 +145,12 @@
                                     $(".txtEwt").empty();
 
                                     for (var i = 0; i < vatData.length; i++) {
-                                        var option = $("<option></option>").attr("value", vatData[i].value).text(vatData[i].text);
+                                        var option = $("<option></option>").attr("value", vatData[i].vaT_ID).text(vatData[i].vaT_Rate);
                                         $(".txtVat").append(option);
                                     }
 
                                     for (var i = 0; i < ewtData.length; i++) {
-                                        var option = $("<option></option>").attr("value", ewtData[i].value).text(ewtData[i].text);
+                                        var option = $("<option></option>").attr("value", ewtData[i].tR_ID).text(ewtData[i].tR_Tax_Rate);
                                         $(".txtEwt").append(option);
                                     }
                                 } else {

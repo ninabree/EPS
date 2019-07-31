@@ -927,7 +927,7 @@ namespace ExpenseProcessingSystem.Controllers
         }
 
         [OnlineUserCheck]
-        public IActionResult Generate2307File(int _vendor, int _ewt, int _tax, double amount, DateTime date, string approver,int expID)
+        public IActionResult Generate2307File(int _vendor, int _ewt, int _tax, double _amount, DateTime date, string approver,int expID)
         {
             string path = "";
             XElement xelem = XElement.Load("wwwroot/xml/ReportHeader.xml");
@@ -946,21 +946,23 @@ namespace ExpenseProcessingSystem.Controllers
                 float vat = _service.getVat(_tax);
 
                 var payItem = new PaymentInfo();
+                double amount;
 
+                if (vat > 0)
+                    amount = _amount / (1 + vat);
+                else
+                    amount = _amount;
                 if (new List<int> { 1, 4, 7, 10 }.Contains(date.Month))
                 {
-                    if (vat > 0)
-                        payItem.M1Quarter = amount / (1 + vat);
+                    payItem.M1Quarter = amount;
                 }
                 else if (new List<int> { 2, 5, 8, 11 }.Contains(date.Month))
                 {
-                    if (vat > 0)
-                        payItem.M2Quarter = amount / (1 + vat);
+                    payItem.M2Quarter = amount;
                 }
                 else if (new List<int> { 3, 6, 9, 12 }.Contains(date.Month))
                 {
-                    if (vat > 0)
-                        payItem.M3Quarter = amount / (1 + vat);
+                    payItem.M3Quarter = amount;
                 }
 
                 //payitem
