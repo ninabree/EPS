@@ -9141,7 +9141,7 @@ namespace ExpenseProcessingSystem.Services
 
         public ClosingViewModel ClosingGetRecords()
         {
-            DateTime opening = DateTime.Today.AddHours(00);
+            DateTime opening = DateTime.Today.AddHours(00).AddDays(-4);
             DateTime closing = DateTime.Today.AddHours(23.9999);
 
             ClosingViewModel closeVM = new ClosingViewModel();
