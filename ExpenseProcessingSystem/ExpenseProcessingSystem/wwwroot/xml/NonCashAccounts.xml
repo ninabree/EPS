@@ -137,5 +137,11 @@ string value1 = xNC.Element("LOGO").Value
     <ACCOUNT class="entry3" id="ACCOUNT1">68</ACCOUNT>
     <ACCOUNT class="entry3" id="ACCOUNT2">117</ACCOUNT>
   </RETURNOFJSPAYROLL>
-
+  
+  <!-- Global currencies master ID -->
+  <GLOBALCCY>
+    <CCY id="USD">1</CCY>
+    <CCY id="YEN">50</CCY>
+    <CCY id="PHP">31</CCY>
+  </GLOBALCCY>
 </NONCASHACCOUNTS>

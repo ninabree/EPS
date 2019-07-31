@@ -121,24 +121,5 @@
     </div>
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/js/UserMaintenance.js" asp-append-version="true"></script>
     </environment>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            var rows = $('#um-tbl tbody tr');
-            $('#clear-btn').click(function (e) {
-                e.stopImmediatePropagation();
-                $('#NewUser_User_UserName').val("");
-                $('#NewUser_User_FName').val("");
-                $('#NewUser_User_LName').val("");
-                $('#NewUser_User_DeptID').val("");
-                $('#NewUser_User_Email').val("");
-                $('#NewUser_User_Role').val("");
-                $('#NewUser_User_UserID').val("");
-                $('#NewUser_User_Comment').val("");
-                $('#NewUser_User_InUse').prop('checked', false);
-                $('#validationSummary').empty();
-                rows.removeClass('highlight');
-                return false;
-            });
-        });
-    </script>

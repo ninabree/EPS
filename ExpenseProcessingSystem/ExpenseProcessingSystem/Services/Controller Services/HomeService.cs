@@ -10248,6 +10248,106 @@ namespace ExpenseProcessingSystem.Services
         {
             return _context.DMCurrency.FirstOrDefault(x => x.Curr_ID == id);
         }
+        //get currency master id
+        public int getCurrencyMasterID(int id)
+        {
+            return _context.DMCurrency.FirstOrDefault(x => x.Curr_ID == id).Curr_MasterID;
+        }
+        //get xml currency details
+        public List<CONSTANT_CCY_VALS> getXMLCurrency()
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load("wwwroot/xml/NonCashAccounts.xml");
+            XmlNodeList nodeList = doc.SelectNodes("/NONCASHACCOUNTS/GLOBALCCY/CCY");
+            List<CONSTANT_CCY_VALS> valList = new List<CONSTANT_CCY_VALS>();
+            foreach (XmlNode no in nodeList)
+            {
+                var rawVal = no.InnerText;
+                var acc = _context.DMCurrency.Where(x => (x.Curr_MasterID == int.Parse(rawVal))
+                                                    && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
+                CONSTANT_CCY_VALS vals = new CONSTANT_CCY_VALS
+                {
+                    currID = acc.Curr_ID,
+                    currMasterID = acc.Curr_MasterID,
+                    currABBR = acc.Curr_CCY_ABBR
+                };
+                valList.Add(vals);
+            }
+            return valList;
+        }
+        //get specific xml currency details
+        public List<CONSTANT_CCY_VALS> getXMLCurrency(string type)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load("wwwroot/xml/NonCashAccounts.xml");
+            XmlNodeList nodeList = doc.SelectNodes("/NONCASHACCOUNTS/GLOBALCCY/CCY[@id='" + type + "']");
+            List<CONSTANT_CCY_VALS> valList = new List<CONSTANT_CCY_VALS>();
+            foreach (XmlNode no in nodeList)
+            {
+                var rawVal = no.InnerText;
+                var acc = _context.DMCurrency.Where(x => (x.Curr_MasterID == int.Parse(rawVal))
+                                                    && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
+                CONSTANT_CCY_VALS vals = new CONSTANT_CCY_VALS
+                {
+                    currID = acc.Curr_ID,
+                    currMasterID = acc.Curr_MasterID,
+                    currABBR = acc.Curr_CCY_ABBR
+                };
+                valList.Add(vals);
+            }
+            return valList;
+        }
+        public List<CONSTANT_NC_VALS> getNCAccsForFilter()
+        {
+            List<CONSTANT_NC_VALS> ts = new List<CONSTANT_NC_VALS>
+            {
+                //accId is really MasterId
+                new CONSTANT_NC_VALS()
+                {
+                    accID = 68,
+                    accName = "COMPUTER SUSPENSE"
+                },
+                new CONSTANT_NC_VALS()
+                {
+                    accID = 76,
+                    accName = "COMPUTER SUSPENSE (US$)"
+                },
+                new CONSTANT_NC_VALS()
+                {
+                    accID = 72,
+                    accName = "INTER ENTITY REG to FCDU"
+                },
+                new CONSTANT_NC_VALS()
+                {
+                    accID = 77,
+                    accName = "	INTER ENTITY FCDU to REG"
+                },
+                new CONSTANT_NC_VALS()
+                {
+                    accID = 95,
+                    accName = "PETTY CASH"
+                },
+                new CONSTANT_NC_VALS()
+                {
+                    accID = 98,
+                    accName = "EWT TAX"
+                }
+            };
+            List<CONSTANT_NC_VALS> valList = new List<CONSTANT_NC_VALS>();
+            foreach (CONSTANT_NC_VALS val in ts)
+            {
+                var acc = _context.DMAccount.Where(x => (x.Account_MasterID == val.accID)
+                                                    && x.Account_isActive == true && x.Account_isDeleted == false).FirstOrDefault();
+                CONSTANT_NC_VALS vals = new CONSTANT_NC_VALS
+                {
+                    accID = acc.Account_ID,
+                    accNo = acc.Account_MasterID + "",
+                    accName = acc.Account_Name
+                };
+                valList.Add(vals);
+            }
+            return valList;
+        }
         //get vendor
         public DMVendorModel getVendor(int id)
         {
