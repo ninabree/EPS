@@ -2861,7 +2861,35 @@ namespace ExpenseProcessingSystem.Services
                                  Vendor_masterID = vend.Vendor_MasterID
                              }).ToList();
 
-            var dbAPSWT_Conc = dbAPSWT_M.Concat(dbAPSWT_M_LIQ).OrderBy(x => x.Payee);
+            //Get data from Taxable Non-cash  table.
+            dbAPSWT_M_NC = (from ncDtl in _context.ExpenseEntryNonCashDetails
+                            join ncAcc in _context.ExpenseEntryNonCashDetailAccounts on ncDtl.ExpNCDtl_ID equals ncAcc.ExpenseEntryNCDtlModel.ExpNCDtl_ID
+                            join nc in _context.ExpenseEntryNonCash on ncDtl.ExpenseEntryNCModel.ExpNC_ID equals nc.ExpNC_ID
+                            join exp in _context.ExpenseEntry on nc.ExpenseEntryModel.Expense_ID equals exp.Expense_ID
+                            join tr in _context.DMTR on ncDtl.ExpNCDtl_TR_ID equals tr.TR_ID
+                            join vend in _context.DMVendor on ncDtl.ExpNCDtl_Vendor_ID equals vend.Vendor_ID
+                            join ncAcc2 in (from ncDtl2 in _context.ExpenseEntryNonCashDetails
+                                            join ncAcc2 in _context.ExpenseEntryNonCashDetailAccounts on ncDtl2.ExpNCDtl_ID equals ncAcc2.ExpenseEntryNCDtlModel.ExpNCDtl_ID
+                                            where ncAcc2.ExpNCDtlAcc_Type_ID == 3
+                                            select new { ncAcc2.ExpNCDtlAcc_Amount, ncAcc2.ExpenseEntryNCDtlModel.ExpNCDtl_ID }) on ncAcc.ExpenseEntryNCDtlModel.ExpNCDtl_ID equals ncAcc2.ExpNCDtl_ID
+                            where status.Contains(exp.Expense_Status)
+                            && ncAcc.ExpNCDtlAcc_Type_ID == 1
+                            && exp.Expense_Last_Updated.Month == month
+                            && exp.Expense_Last_Updated.Year == year
+                            select new HomeReportOutputAPSWT_MModel
+                            {
+                                Payee = vend.Vendor_Name,
+                                Tin = vend.Vendor_TIN,
+                                RateOfTax = tr.TR_Tax_Rate,
+                                ATC = tr.TR_ATC,
+                                NOIP = tr.TR_Nature,
+                                AOIP = ncAcc.ExpNCDtlAcc_Amount,
+                                AOTW = ncAcc2.ExpNCDtlAcc_Amount,
+                                Last_Update_Date = exp.Expense_Last_Updated,
+                                Vendor_masterID = vend.Vendor_MasterID
+                            }).Where(x => x.AOTW > 0).ToList();
+
+            var dbAPSWT_Conc = dbAPSWT_M.Concat(dbAPSWT_M_LIQ).Concat(dbAPSWT_M_NC).OrderBy(x => x.Payee);
 
 
             foreach (var i in vendorMasterIDList)
@@ -2940,6 +2968,7 @@ namespace ExpenseProcessingSystem.Services
                          && model.TaxRateList.Contains(tr.TR_Tax_Rate)
                          && startDT.Date <= expense.Expense_Last_Updated.Date
                          && expense.Expense_Last_Updated.Date <= endDT.Date
+                         && expense.Expense_Type != GlobalSystemValues.TYPE_SS
                          orderby expense.Expense_Last_Updated
                          select new HomeReportOutputAST1000Model
                          {
@@ -2963,7 +2992,7 @@ namespace ExpenseProcessingSystem.Services
                              join tr in _context.DMTR on ie.Liq_TaxRate equals tr.TR_ID
                              join vend in _context.DMVendor on ie.Liq_VendorID equals vend.Vendor_ID
                              where status.Contains(liqDtl.Liq_Status)
-                             && model.TaxRateList.Contains(float.Parse(ie.Liq_TaxRate.ToString()))
+                             && model.TaxRateList.Contains(tr.TR_Tax_Rate)
                              && startDT.Date <= liqDtl.Liq_LastUpdated_Date
                              && liqDtl.Liq_LastUpdated_Date <= endDT.Date
                              select new HomeReportOutputAST1000Model
@@ -2979,7 +3008,36 @@ namespace ExpenseProcessingSystem.Services
                                  Vendor_masterID = vend.Vendor_MasterID
                              }).ToList();
 
-            var dbAPSWT_Conc = dbAST1000.Concat(dbAST1000_LIQ).OrderBy(x => x.SupplierName);
+            //Get data from Taxable Non-cash  table.
+            dbAST1000_NC = (from ncDtl in _context.ExpenseEntryNonCashDetails
+                            join ncAcc in _context.ExpenseEntryNonCashDetailAccounts on ncDtl.ExpNCDtl_ID equals ncAcc.ExpenseEntryNCDtlModel.ExpNCDtl_ID
+                            join nc in _context.ExpenseEntryNonCash on ncDtl.ExpenseEntryNCModel.ExpNC_ID equals nc.ExpNC_ID
+                            join exp in _context.ExpenseEntry on nc.ExpenseEntryModel.Expense_ID equals exp.Expense_ID
+                            join tr in _context.DMTR on ncDtl.ExpNCDtl_TR_ID equals tr.TR_ID
+                            join vend in _context.DMVendor on ncDtl.ExpNCDtl_Vendor_ID equals vend.Vendor_ID
+                            join ncAcc2 in (from ncDtl2 in _context.ExpenseEntryNonCashDetails
+                                            join ncAcc2 in _context.ExpenseEntryNonCashDetailAccounts on ncDtl2.ExpNCDtl_ID equals ncAcc2.ExpenseEntryNCDtlModel.ExpNCDtl_ID
+                                            where ncAcc2.ExpNCDtlAcc_Type_ID == 3
+                                            select new { ncAcc2.ExpNCDtlAcc_Amount, ncAcc2.ExpenseEntryNCDtlModel.ExpNCDtl_ID }) on ncAcc.ExpenseEntryNCDtlModel.ExpNCDtl_ID equals ncAcc2.ExpNCDtl_ID
+                            where status.Contains(exp.Expense_Status)
+                            && ncAcc.ExpNCDtlAcc_Type_ID == 1
+                            && model.TaxRateList.Contains(tr.TR_Tax_Rate)
+                            && startDT.Date <= exp.Expense_Last_Updated.Date
+                            && exp.Expense_Last_Updated.Date <= endDT.Date
+                            select new HomeReportOutputAST1000Model
+                            {
+                                SupplierName = vend.Vendor_Name,
+                                Tin = vend.Vendor_TIN,
+                                RateOfTax = tr.TR_Tax_Rate,
+                                ATC = tr.TR_ATC,
+                                NOIP = tr.TR_Nature,
+                                TaxBase = ncAcc.ExpNCDtlAcc_Amount,
+                                AOTW = ncAcc2.ExpNCDtlAcc_Amount,
+                                Last_Update_Date = exp.Expense_Last_Updated,
+                                Vendor_masterID = vend.Vendor_MasterID
+                            }).Where(x => x.AOTW > 0).ToList();
+
+            var dbAPSWT_Conc = dbAST1000.Concat(dbAST1000_LIQ).Concat(dbAST1000_NC).OrderBy(x => x.SupplierName);
 
             foreach (var i in vendorMasterIDList)
             {
@@ -6502,15 +6560,30 @@ namespace ExpenseProcessingSystem.Services
             }
 
             //For FBT purpose.
-            var fbt_Debit = accList.Where(x => x.Account_ID == int.Parse(xelemAcc.Element("D_FBT").Value)).FirstOrDefault();
-            var fbt_Credit = accList.Where(x => x.Account_ID == int.Parse(xelemAcc.Element("C_FBT").Value)).FirstOrDefault();
-            if (fbt_Debit != null && fbt_Debit.Account_No.Contains(accType) && fbt_Debit.Account_No.Contains(accNo) && fbt_Debit.Account_Code == accCode)
+            var fbt_Account = accList.Where(x => x.Account_MasterID == int.Parse(xelemAcc.Element("HOUSE_RENT").Value)).FirstOrDefault();
+            if (fbt_Account != null && fbt_Account.Account_No.Contains(accType) && fbt_Account.Account_No.Contains(accNo) && fbt_Account.Account_Code == accCode)
             {
-                return fbt_Debit.Account_Name;
+                return fbt_Account.Account_Name;
             }
-            else if (fbt_Credit != null && fbt_Credit.Account_No.Contains(accType) && fbt_Credit.Account_No.Contains(accNo) && fbt_Credit.Account_Code == accCode)
+            fbt_Account = accList.Where(x => x.Account_MasterID == int.Parse(xelemAcc.Element("D_FBT_RENT").Value)).FirstOrDefault();
+            if (fbt_Account != null && fbt_Account.Account_No.Contains(accType) && fbt_Account.Account_No.Contains(accNo) && fbt_Account.Account_Code == accCode)
             {
-                return fbt_Credit.Account_Name;
+                return fbt_Account.Account_Name;
+            }
+            fbt_Account = accList.Where(x => x.Account_MasterID == int.Parse(xelemAcc.Element("D_FBT_EXPAT").Value)).FirstOrDefault();
+            if (fbt_Account != null && fbt_Account.Account_No.Contains(accType) && fbt_Account.Account_No.Contains(accNo) && fbt_Account.Account_Code == accCode)
+            {
+                return fbt_Account.Account_Name;
+            }
+            fbt_Account = accList.Where(x => x.Account_MasterID == int.Parse(xelemAcc.Element("D_FBT_LOCAL").Value)).FirstOrDefault();
+            if (fbt_Account != null && fbt_Account.Account_No.Contains(accType) && fbt_Account.Account_No.Contains(accNo) && fbt_Account.Account_Code == accCode)
+            {
+                return fbt_Account.Account_Name;
+            }
+            fbt_Account = accList.Where(x => x.Account_MasterID == int.Parse(xelemAcc.Element("C_FBT").Value)).FirstOrDefault();
+            if (fbt_Account != null && fbt_Account.Account_No.Contains(accType) && fbt_Account.Account_No.Contains(accNo) && fbt_Account.Account_Code == accCode)
+            {
+                return fbt_Account.Account_Name;
             }
 
             //For Liquidation purpose.

@@ -158,6 +158,7 @@
                         </td>
                         <td>
                             @Html.TextBoxFor(m => Model.LiquidationDetails[i].ewtValue, new { @readonly = "true", @style = "width:100%;background:transparent" })
+                            @Html.HiddenFor(m => Model.LiquidationDetails[i].ewtID, new { @class="ewtID"})
                         </td>
                         <td style="text-align:center">
                             <a class="reqEWTBtn glyphicon glyphicon-list-alt expenseEWT" href="#" style="pointer-events:none;"></a>

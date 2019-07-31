@@ -118,7 +118,14 @@ namespace ExpenseProcessingSystem.Controllers
                     _session.SetString("isAdmin", acc.User_Role == "admin" ? "true" : "false");
 
                     Log.Information("User Logged In");
-                    return RedirectToAction("Index", "Home");
+                    if(acc.User_Role == "admin")
+                    {
+                        return RedirectToAction("UM", "Home");
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
                 }
             }
             ViewData["message"] += "There's an error but you can't see me";

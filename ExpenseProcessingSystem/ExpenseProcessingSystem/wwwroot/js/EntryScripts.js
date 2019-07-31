@@ -237,11 +237,12 @@
         }
         
 
-        $("#" + pNode.id + " td .txtGross").val(grossAmt);
-        if ($(".hiddenScreencode").val() == "SS") {
-            $("#" + pNode.id).find(".txtCredCash").val(grossAmt);
-            return false;
-        }
+        $("#" + pNode.id + " td .txtGross").val(roundNumber(grossAmt,2));
+        //if ($(".hiddenScreencode").val() == "SS") {
+        //    $("#" + pNode.id).find(".hidDebit").val(grossAmt);
+
+        //    return false;
+        //}
         //$("#" + pNode.id + " .txtGross").attr("value", grossAmt);
 
         var itemNo = pNode.id; //jquery obj
@@ -255,16 +256,27 @@
                 var ewt = roundNumber(netVat * ewtRate,2);
                 var netEwt = grossAmt - ewt;
 
-                $("#" + itemNo).find(".txtCredEwt").val(ewt);
-                $("#" + itemNo).find(".txtCredCash").val(netEwt);
+                $("#" + itemNo).find(".txtCredEwt").val(roundNumber(ewt, 2));
+                $("#" + itemNo).find(".txtCredCash").val(roundNumber(netEwt, 2));
+                if ($(".hiddenScreencode").val() == "SS") {
+                    $("#" + itemNo).find(".txtCredEwt").val(0);
+                    $("#" + pNode.id).find(".txtGross").val(roundNumber(netEwt, 2));
+                }
             } else {
                 var ewtAmount = grossAmt * (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100);
                 $("#" + itemNo).find(".txtCredEwt").val(roundNumber(ewtAmount, 2));
                 $("#" + itemNo).find(".txtCredCash").val(roundNumber((grossAmt - ewtAmount), 2));
+                if ($(".hiddenScreencode").val() == "SS") {
+                    $("#" + itemNo).find(".txtCredEwt").val(0);
+                    $("#" + pNode.id).find(".txtGross").val(roundNumber((grossAmt - ewtAmount), 2));
+                }
             }
         } else {
             $("#" + itemNo).find(".txtCredEwt").val(0);
-            $("#" + itemNo).find(".txtCredCash").val(grossAmt);
+            $("#" + itemNo).find(".txtCredCash").val(roundNumber(grossAmt, 2));
+            if ($(".hiddenScreencode").val() == "SS") {
+                $("#" + pNode.id).find(".txtGross").val(roundNumber(grossAmt, 2));
+            }
         }
 
         var gross = $(".txtGross");
