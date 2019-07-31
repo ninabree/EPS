@@ -819,6 +819,87 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
             }
             return destPath + newFileName;
         }
+        public string ExcelCDDIS_RET(CDDISValuesVIewModel data, string newFileName, string excelTemplateName)
+        {
+            string rootFolder = "wwwroot";
+            string sourcePath = "/ExcelTemplates/";
+            string destPath = "/ExcelTemplatesTempFolder/";
+            System.IO.File.Copy(rootFolder + sourcePath + excelTemplateName, rootFolder + destPath + newFileName, true);
+
+            FileInfo templateFile = new FileInfo(rootFolder + sourcePath + excelTemplateName);
+            FileInfo newFile = new FileInfo(rootFolder + destPath + newFileName);
+
+            string[] col = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P",
+                "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB", "AC", "AD", "AE", "AF", "AG",
+                "AH", "AI", "AJ", "AK", "AL", "AM", "AN", "AO", "AP", "AQ", "AR", "AS", "AT", "AU", "AV",
+                "AW", "AX", "AY", "AZ" };
+            int colpnt = 0;
+            int strLength = 0;
+            int count1 = 0;
+            int count2 = 1;
+            int loopCount = 1;
+            using (ExcelPackage package = new ExcelPackage(newFile, templateFile))
+            {
+                while (loopCount <= (data.CDDContents.Count / 2))
+                {
+                    ExcelWorksheet ws;
+                    if (loopCount > 1)
+                    {
+                        ws = package.Workbook.Worksheets.Add("WorkSheet_" + loopCount, package.Workbook.Worksheets[1]);
+                    }
+                    else
+                    {
+                        ws = package.Workbook.Worksheets[loopCount];
+                        //ws.Name = "WorkSheet_1";
+                    }
+
+                    //Content
+                    ws.Cells["V5"].Value = DateTime.Now.ToShortDateString();
+
+                    //VALUE DATE
+                    ws.Cells["E8"].Value = data.VALUE_DATE.Month.ToString("d2").Substring(0, 1);
+                    ws.Cells["F8"].Value = data.VALUE_DATE.Month.ToString("d2").Substring(1, 1);
+                    ws.Cells["H8"].Value = data.VALUE_DATE.Date.ToString("dd").Substring(0, 1);
+                    ws.Cells["I8"].Value = data.VALUE_DATE.Date.ToString("dd").Substring(1, 1);
+                    ws.Cells["K8"].Value = data.VALUE_DATE.Year.ToString().Substring(2, 1);
+                    ws.Cells["L8"].Value = data.VALUE_DATE.Year.ToString().Substring(3, 1);
+
+                    //REMARKS
+                    colpnt = 10;
+                    strLength = (data.REMARKS.Length <= 29) ? data.REMARKS.Length : 29;
+                    for (int c = 0; c < strLength; c++)
+                    {
+                        ws.Cells[col[colpnt] + "9"].Value = data.REMARKS.Substring(c, 1);
+                        colpnt++;
+                    }
+
+                    //AMOUNT 1 & 2
+                    string amount_1 = String.Format("{0:#,##0.##}", data.CDDContents[0].AMOUNT);
+                    string amount_2 = String.Format("{0:#,##0.##}", data.CDDContents[1].AMOUNT);
+
+                    colpnt = 23;
+                    strLength = (amount_1.Length <= 16) ? amount_1.Length : 16;
+                    for (int c = 0; c < strLength; c++)
+                    {
+                        ws.Cells[col[colpnt] + "14"].Value = amount_1.Substring(c, 1);
+                        colpnt++;
+                    }
+                    colpnt = 23;
+                    strLength = (amount_2.Length <= 16) ? amount_2.Length : 16;
+                    for (int c = 0; c < strLength; c++)
+                    {
+                        ws.Cells[col[colpnt] + "24"].Value = amount_2.Substring(c, 1);
+                        colpnt++;
+                    }
+
+                    package.Save();
+                    count1 += 2;
+                    count2 += 2;
+                    loopCount++;
+                }
+            }
+            return destPath + newFileName;
+        }
 
         public string ExcelCDDIS_PRC(CDDISValuesVIewModel data, string newFileName, string excelTemplateName)
         {

@@ -2092,10 +2092,17 @@ namespace ExpenseProcessingSystem.Controllers
             }else if (ncList.EntryNC.NC_Category_ID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL)
             {
                 ncList.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_RETURN_OF_JSPAYROLL.Populate_CDD_Instruc_Sheet(currDtl, currDtlUSD);
+                var currDtls = ncList.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0];
+                ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID = currDtls.ExpNCDtlAcc_Curr_ID;
+                ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Curr_ID = currDtls.ExpNCDtlAcc_Curr_ID;
+                ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_Name = currDtls.ExpNCDtlAcc_Curr_Name;
+                ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Curr_Name = currDtls.ExpNCDtlAcc_Curr_Name;
                 ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount = ncList.EntryNC.NC_CS_DebitAmt;
                 ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Amount = ncList.EntryNC.NC_CS_CredAmt;
             }
-
+            ViewData["USDmstr"] = _service.getXMLCurrency("USD").FirstOrDefault().currMasterID;
+            ViewData["JPYmstr"] = _service.getXMLCurrency("YEN").FirstOrDefault().currMasterID;
+            ViewData["PHPmstr"] = _service.getXMLCurrency("PHP").FirstOrDefault().currMasterID;
             return View("Entry_NC_ReadOnly", ncList);
         }
         [OnlineUserCheck]
@@ -2159,6 +2166,8 @@ namespace ExpenseProcessingSystem.Controllers
                     return RedirectToAction("Entry_NC", new EntryNCViewModelList());
                 case "PrintCDD":
                     return RedirectToAction("CDD_IS_NC_PCR", new { entryID = entryID });
+                case "PrintCDD_RET":
+                    return RedirectToAction("CDD_IS_NC_RET", new { entryID = entryID }); 
                 case "Reversal":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
                     {
@@ -2229,6 +2238,71 @@ namespace ExpenseProcessingSystem.Controllers
             return File(excelGenerate.ExcelCDDIS_PRC(viewModel, newFileName, "CDDIS_NC_PCR.xlsx"), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", newFileName);
 
         }
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
+        public IActionResult CDD_IS_NC_RET(int entryID)
+        {
+            var entryVals = _service.getExpenseNC(entryID);
+            List<CONSTANT_CCY_VALS> currUSD = _service.getXMLCurrency("USD");
+            List<CONSTANT_CCY_VALS> currJPY = _service.getXMLCurrency("YEN");
+            var masterid = _service.getCurrencyMasterID(entryVals.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID);
+            DMCurrencyModel currModel = _service.getCurrency(entryVals.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID);
+
+            string newFileName = "CDD_IS_NC_RET_" + DateTime.Now.ToString("MM-dd-yyyy_hhmmss") + ".xlsx";
+            ExcelGenerateService excelGenerate = new ExcelGenerateService();
+            CDDISValuesVIewModel viewModel = new CDDISValuesVIewModel
+            {
+                VALUE_DATE = DateTime.Now, //TEMP VALUE
+                COMMENT = "  ",
+                SECTION = "09",
+                REMARKS = "",
+                SCHEME_NO = "  ",
+                MEMO = " "
+            };
+            List<CDDISValueContentsViewModel> cddContents = new List<CDDISValueContentsViewModel>();
+            float totalDeb = 0;
+            float totalCred = 0;
+            entryVals.EntryNC.ExpenseEntryNCDtls.ForEach(x =>
+            {
+                x.ExpenseEntryNCDtlAccs.ForEach(a =>
+                {
+                    //check if acc is Computer Suspense or Computer Suspense(USD)
+                    var filterAccs = _service.getNCAccsForFilter().ToList();
+                   if(filterAccs.Where(f=> f.accName.ToLower().Contains("comp")).Select(n => n.accID).Contains(a.ExpNCDtlAcc_Acc_ID))
+                    {
+                        if(a.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
+                        {
+                            totalDeb += a.ExpNCDtlAcc_Amount;
+                        }
+                        else
+                        {
+                            totalCred += a.ExpNCDtlAcc_Amount;
+                        }
+                    }
+                });
+            });
+
+            CDDISValueContentsViewModel vm = new CDDISValueContentsViewModel
+            {
+                DEBIT_CREDIT = "D",
+                CCY = currModel.Curr_CCY_ABBR,
+                AMOUNT = totalDeb
+            };
+            CDDISValueContentsViewModel vm2 = new CDDISValueContentsViewModel
+            {
+                DEBIT_CREDIT = "C",
+                CCY = currModel.Curr_CCY_ABBR,
+                AMOUNT = totalCred
+            };
+            cddContents.Add(vm);
+            cddContents.Add(vm2);
+            viewModel.CDDContents = cddContents;
+            var xlFileName = masterid == currUSD.FirstOrDefault().currMasterID
+                ? "CDDIS_NC_RET_USD.xlsx" : masterid == currJPY.FirstOrDefault().currMasterID ? "CDDIS_NC_RET_YEN.xlsx" : "CDDIS_NC_PCR.xlsx";
+            return File(excelGenerate.ExcelCDDIS_RET(viewModel, newFileName, xlFileName), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", newFileName);
+
+        }
+
         //[* Entry Non Cash *]
         //------------------------------------------------------------------
 

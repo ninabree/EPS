@@ -26,7 +26,6 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             _httpContextAccessor = httpContextAccessor;
             _context = context;
         }
-
         public List<CONSTANT_NC_VALS> getNCAccs(string Loc)
         {
             XmlDocument doc = new XmlDocument();
