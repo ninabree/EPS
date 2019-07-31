@@ -1428,7 +1428,7 @@ namespace ExpenseProcessingSystem.Controllers
             List<cvBirForm> birForms = new List<cvBirForm>();
             foreach (var item in ddvList.EntryDDV)
             {
-                if (birForms.Any(x => x.ewt == item.ewt))
+                if (birForms.Any(x => x.ewt == item.ewt && x.vendor == item.ewt_Payor_Name_ID))
                 {
                     int index = birForms.FindIndex(x => x.ewt == item.ewt);
                     birForms[index].amount += item.debitGross;
@@ -1440,7 +1440,7 @@ namespace ExpenseProcessingSystem.Controllers
                         amount = item.debitGross,
                         ewt = item.ewt,
                         vat = item.vat,
-                        vendor = ddvList.vendor,
+                        vendor = item.ewt_Payor_Name_ID,
                         approver = ddvList.approver,
                         date = ddvList.expenseDate
                     };
@@ -2134,6 +2134,46 @@ namespace ExpenseProcessingSystem.Controllers
             ViewData["USDmstr"] = _service.getXMLCurrency("USD").FirstOrDefault().currMasterID;
             ViewData["JPYmstr"] = _service.getXMLCurrency("YEN").FirstOrDefault().currMasterID;
             ViewData["PHPmstr"] = _service.getXMLCurrency("PHP").FirstOrDefault().currMasterID;
+
+
+            List<cvBirForm> birForms = new List<cvBirForm>();
+            foreach (var item in ncList.EntryNC.ExpenseEntryNCDtls)
+            {
+                if (birForms.Any(x => x.ewt == item.ExpNCDtl_TR_ID && x.vendor == item.ExpNCDtl_Vendor_ID))
+                {
+                    int index = birForms.FindIndex(x => x.ewt == item.ExpNCDtl_TR_ID);
+                    foreach (var a in item.ExpenseEntryNCDtlAccs)
+                    {
+                        if (a.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
+                        {
+                            birForms[index].amount += a.ExpNCDtlAcc_Amount;
+                        }
+                    }
+                }
+                else
+                {
+                    double amt = 0;
+                    foreach (var a in item.ExpenseEntryNCDtlAccs)
+                    {
+                        if (a.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
+                        {
+                            amt += a.ExpNCDtlAcc_Amount;
+                        }
+                    }
+                    cvBirForm temp = new cvBirForm
+                    {
+                        amount = amt,
+                        ewt = item.ExpNCDtl_TR_ID,
+                        //vat = item.vat,
+                        vendor = item.ExpNCDtl_Vendor_ID,
+                        approver = ncList.approver,
+                        date = ncList.expenseDate
+                    };
+
+                    birForms.Add(temp);
+                }
+            }
+            ncList.birForms.AddRange(birForms);
             return View("Entry_NC_ReadOnly", ncList);
         }
         [OnlineUserCheck]

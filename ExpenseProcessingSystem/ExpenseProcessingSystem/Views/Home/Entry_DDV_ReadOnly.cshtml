@@ -500,8 +500,6 @@
         {
             <Text>
             $("#entry-controls").on("click", "#printBir", function (e) {
-                var vendorID = @Model.vendor;
-                var approverID = @Model.approver_id;
                 var link = [
                 @foreach (var item in Model.birForms)
                 {

@@ -7560,6 +7560,8 @@ namespace ExpenseProcessingSystem.Services
                         ExpNCDtl_ID = ncDtl.g.ExpNCDtl_ID,
                         ExpNCDtl_Remarks_Desc = ncDtl.g.ExpNCDtl_Remarks_Desc,
                         ExpNCDtl_Remarks_Period = ncDtl.g.ExpNCDtl_Remarks_Period,
+                        ExpNCDtl_TR_ID = ncDtl.g.ExpNCDtl_TR_ID,
+                        ExpNCDtl_Vendor_ID = ncDtl.g.ExpNCDtl_Vendor_ID,
                         ExpenseEntryNCDtlAccs = ncDtlAccs
                     };
                     ncDtls.Add(entryNCDtl);
