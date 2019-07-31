@@ -238,7 +238,13 @@
                     }
                 </div>
                 <div>
-                    <div class="dis-inline-block tbl-btn m-l-41"><button disabled>Print BIR Certificate</button></div>
+                    @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker
+                   || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id
+                   || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id
+                   || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.approver_id)
+                    {
+                        <div class="dis-inline-block tbl-btn"><button id="printBir" value="printBir">Print BIR Certificate</button></div>
+                    }
                 </div>
 
             </div>
@@ -483,5 +489,37 @@
             $("#credCashTotal").val(cashSubTotal);
             $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
         }
+    });
+</script>
+<script type="text/javascript">
+    $(function () {
+        @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker
+          || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id
+          || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id
+          || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.approver_id)
+        {
+            <Text>
+            $("#entry-controls").on("click", "#printBir", function (e) {
+                var vendorID = @Model.vendor;
+                var approverID = @Model.approver_id;
+                var link = [
+                @foreach (var item in Model.birForms)
+                {
+                    <Text>
+                         "/Home/Generate2307File?_vendor=@item.vendor&_ewt=@item.ewt&_tax=@item.vat&amount=@item.amount&approver=@item.approver&expID=@Model.entryID",
+                    </Text>
+                }
+                    ""
+                ];
+
+                for (var i = 0; i < link.length-1;i++) {
+                    window.open(link[i]);
+                }
+
+                return false;
+            });
+            </Text>
+        }
+
     });
 </script>

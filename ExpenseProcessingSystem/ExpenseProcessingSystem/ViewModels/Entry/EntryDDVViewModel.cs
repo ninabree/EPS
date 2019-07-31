@@ -93,11 +93,13 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         public int maker { get; set; }
         public DateTime lastUpdatedDate { get; set; }
         public List<EntryDDVViewModel> EntryDDV { get; set; }
+        public List<cvBirForm> birForms { get; set; }
 
         public EntryDDVViewModelList()
         {
             systemValues = new SysValViewModel();
             EntryDDV = new List<EntryDDVViewModel>();
+            birForms = new List<cvBirForm>();
         }
     }
 }

@@ -65,11 +65,11 @@ namespace ExpenseProcessingSystem.Services
         //-----------------------------------Populate-------------------------------------//
         //[ Home ]
         //[Notification]
-        public List<HomeNotifViewModel> populateNotif(FiltersViewModel filters)
+        public List<HomeNotifViewModel> populateNotif(FiltersViewModel filters, int loggedUID)
         {
             var mList = (from notifs in (from n in _context.HomeNotif
-                                             //               where n.Vendor_isDeleted == false && n.Vendor_isActive == true
-                                         select n)
+                        where n.Notif_UserFor_ID == loggedUID || (n.Notif_UserFor_ID == 0 && n.Notif_Application_Maker_ID != loggedUID)
+                        select n)
                          join user in _context.User
                          on notifs.Notif_Application_Maker_ID
                          equals user.User_ID
@@ -95,15 +95,6 @@ namespace ExpenseProcessingSystem.Services
 
 
             //assign values
-            Dictionary<int, string> linktionary = new Dictionary<int, string>
-                    {
-                        {GlobalSystemValues.TYPE_DM,"Data Maintenance" },
-                        {GlobalSystemValues.TYPE_CV,"Check"},
-                        {GlobalSystemValues.TYPE_DDV,"Direct Deposit"},
-                        {GlobalSystemValues.TYPE_NC,"Non Cash"},
-                        {GlobalSystemValues.TYPE_PC,"Petty Cash"},
-                        {GlobalSystemValues.TYPE_SS,"Suspense Sundry"},
-                    };
             List<HomeNotifViewModel> vmList = new List<HomeNotifViewModel>();
             foreach (var m in mList)
             {
@@ -111,7 +102,7 @@ namespace ExpenseProcessingSystem.Services
                 {
                     Notif_ID = m.Notif_ID,
                     Notif_Application_Type_ID = m.Notif_Application_Type_ID,
-                    Notif_Application_Type_Name = linktionary[m.Notif_Application_Type_ID],
+                    Notif_Application_Type_Name = NotificationMessageValues.TYTIONARY[m.Notif_Application_Type_ID],
                     Notif_Application_Maker_ID = m.Notif_Application_Maker_ID,
                     Notif_Application_Maker_Name = m.CreatorName,
                     Notif_UserFor_ID = m.Notif_UserFor_ID,
@@ -157,6 +148,39 @@ namespace ExpenseProcessingSystem.Services
             //}
 
             return vmList;
+        }
+        //Insert new records in Notif
+        public bool insertIntoNotif(int UserID, int TypeID, int StatusID, int Maker_UserID = 0)
+        {
+            string uName = getName(UserID);
+            string strMessPers = "You " + NotificationMessageValues.action[StatusID] + NotificationMessageValues.commonstr + NotificationMessageValues.TYTIONARY[TypeID];
+            string strMessGen = uName+ " " + NotificationMessageValues.action[StatusID] + NotificationMessageValues.commonstr + NotificationMessageValues.TYTIONARY[TypeID];
+
+            List<HomeNotifModel> model = new List<HomeNotifModel>()
+            {
+                new HomeNotifModel()
+                {
+                    Notif_Application_Type_ID = TypeID,
+                    Notif_Application_Maker_ID = UserID,
+                    Notif_UserFor_ID = UserID,
+                    Notif_Message = strMessPers,
+                    Notif_Date = DateTime.Now,
+                    Notif_Status_ID = StatusID
+                },
+                new HomeNotifModel()
+                {
+                    Notif_Application_Type_ID = TypeID,
+                    Notif_Application_Maker_ID = UserID,
+                    Notif_UserFor_ID = Maker_UserID,
+                    Notif_Message = strMessGen,
+                    Notif_Date = DateTime.Now,
+                    Notif_Status_ID = StatusID
+
+                }
+            };
+            _context.HomeNotif.AddRange(model);
+            _context.SaveChanges();
+            return true;
         }
         //Pending
         public PaginatedList<ApplicationsViewModel> getPending(int userID)
@@ -7860,6 +7884,9 @@ namespace ExpenseProcessingSystem.Services
                 if (entryModel.entryID == 0)
                 {
                     _context.ExpenseEntry.Add(expenseEntry);
+                    //----------------------------- NOTIF----------------------------------
+                    insertIntoNotif(userId, GlobalSystemValues.TYPE_DDV, GlobalSystemValues.STATUS_NEW, 0);
+                    //----------------------------- NOTIF----------------------------------
                 }
                 else
                 {
@@ -7867,6 +7894,9 @@ namespace ExpenseProcessingSystem.Services
                     expenseEntry.Expense_ID = entryModel.entryID;
                     removeDDVChild(entryModel.entryID);
                     _context.ExpenseEntry.Update(expenseEntry);
+                    //----------------------------- NOTIF----------------------------------
+                    insertIntoNotif(userId, GlobalSystemValues.TYPE_DDV, GlobalSystemValues.STATUS_EDIT, 0);
+                    //----------------------------- NOTIF----------------------------------
                 }
                 _context.SaveChanges();
                 return expenseEntry.Expense_ID;
@@ -9044,6 +9074,10 @@ namespace ExpenseProcessingSystem.Services
             _GOContext.SaveChanges();
             _context.SaveChanges();
 
+            //----------------------------- NOTIF----------------------------------
+            var stats = command != "R" ? GlobalSystemValues.STATUS_APPROVED : GlobalSystemValues.STATUS_REVERSED;
+            insertIntoNotif(userID, GlobalSystemValues.TYPE_DDV, stats, expenseDDV.maker);
+            //----------------------------- NOTIF----------------------------------
             List<ExpenseTransList> transactions = new List<ExpenseTransList>();
 
             foreach (var item in list)
@@ -10342,6 +10376,11 @@ namespace ExpenseProcessingSystem.Services
         }
         //get currency master id
         public int getCurrencyMasterID(int id)
+        {
+            return _context.DMCurrency.FirstOrDefault(x => x.Curr_ID == id).Curr_MasterID;
+        }
+        //get currency master id
+        public int getMasterID(int id)
         {
             return _context.DMCurrency.FirstOrDefault(x => x.Curr_ID == id).Curr_MasterID;
         }

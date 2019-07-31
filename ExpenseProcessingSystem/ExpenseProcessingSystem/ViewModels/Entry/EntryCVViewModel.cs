@@ -175,10 +175,10 @@ namespace ExpenseProcessingSystem.ViewModels
     public class cvBirForm
     {
         public double amount { get; set; }
-        public int vat { get; set; }
-        public int ewt { get; set; }
-        public int vendor { get; set; }
-        public string approver { get; set; }
+        public int vat { get; set; } //id
+        public int ewt { get; set; } //id
+        public int vendor { get; set; } //name
+        public string approver { get; set; } //id
         public DateTime date { get; set; }
     }
 
