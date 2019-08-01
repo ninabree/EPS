@@ -683,9 +683,9 @@
 <script type="text/javascript" src="~/js/LiquidationScript.js"></script>
 <script>
     $(document).ready(function () {
-        var phpID = @Html.Raw(Json.Serialize(Model.LiquidationDetails[0].ccyID));
-        var phpAbbrv = @Html.Raw(Json.Serialize(Model.LiquidationDetails[0].ccyAbbrev));
-        var phpMasterID = @Html.Raw(Json.Serialize(Model.LiquidationDetails[0].ccyMasterID));
+        var phpID = @Html.Raw(Json.Serialize(Model.phpCurrID));
+        var phpAbbrv = @Html.Raw(Json.Serialize(Model.phpAbbrev));
+        var phpMasterID = @Html.Raw(Json.Serialize(Model.phpCurrMasterID));
         $('#phpID').val(phpID);
         $('#phpAbbrv').val(phpAbbrv);
         $('#phpMasterID').val(phpMasterID);

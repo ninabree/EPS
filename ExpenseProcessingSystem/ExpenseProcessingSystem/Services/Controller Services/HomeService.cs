@@ -11627,7 +11627,6 @@ namespace ExpenseProcessingSystem.Services
 
             return goExpHist;
         }
-        
         public string getVoucherNo(int type, DateTime year, int number, bool liq = false)
         {
             string type_code = "";
@@ -11639,6 +11638,23 @@ namespace ExpenseProcessingSystem.Services
             return type_code + "-" + GetSelectedYearMonthOfTerm(year.Month, year.Year).Year + "-" +
                                        number.ToString().PadLeft(5, '0'); ;
         }
+        public bool UpdateCDDPrintingStatus(int entryID, int entryDtlID, int type)
+        {
+            var cddStatus = _context.PrintStatus.Where(x => x.PS_EntryID == entryID && x.PS_EntryDtlID == entryDtlID
+                                        && x.PS_Type == type).FirstOrDefault();
+            if(cddStatus != null)
+            {
+                cddStatus.PS_CDD = true;
+                _context.Entry(cddStatus).State = EntityState.Modified;
+                _context.SaveChanges();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         ///========[End of Other Functions]============
     }
 

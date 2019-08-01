@@ -87,6 +87,7 @@ namespace ExpenseProcessingSystem.ConstantData
         public const int TYPE_SS = 3;
         public const int TYPE_PC = 4;
         public const int TYPE_NC = 5;
+        public const int TYPE_LIQ = 6;
 
         //Static value for branch Type/Name/Code
         //i.e: determining what is the branch code for the transaction

@@ -126,6 +126,10 @@ namespace ExpenseProcessingSystem.ViewModels
             template = new temp();
             birForms = new List<cvBirForm>();
         }
+
+        public int phpCurrID { get; set; }
+        public int phpCurrMasterID { get; set; }
+        public string phpAbbrev { get; set; }
     }
 
     public class temp

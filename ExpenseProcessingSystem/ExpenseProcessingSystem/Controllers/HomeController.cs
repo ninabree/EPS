@@ -1822,9 +1822,9 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.systemValues.ewt = new SelectList("0","0");
             viewModel.systemValues.vat = new SelectList("0", "0");
             var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
-            viewModel.EntryCV[0].ccy = ccyPHP.Curr_ID;
-            viewModel.EntryCV[0].ccyMasterID = ccyPHP.Curr_MasterID;
-            viewModel.EntryCV[0].ccyAbbrev = ccyPHP.Curr_CCY_ABBR;
+            viewModel.phpCurrID = ccyPHP.Curr_ID;
+            viewModel.phpCurrMasterID = ccyPHP.Curr_MasterID;
+            viewModel.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
             return View(viewModel);
         }
 
@@ -1983,9 +1983,9 @@ namespace ExpenseProcessingSystem.Controllers
 
             XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
             var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
-            ssList.EntryCV[0].ccy = ccyPHP.Curr_ID;
-            ssList.EntryCV[0].ccyMasterID = ccyPHP.Curr_MasterID;
-            ssList.EntryCV[0].ccyAbbrev = ccyPHP.Curr_CCY_ABBR;
+            ssList.phpCurrID = ccyPHP.Curr_ID;
+            ssList.phpCurrMasterID = ccyPHP.Curr_MasterID;
+            ssList.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
 
             return View(viewLink, ssList);
         }
@@ -2015,9 +2015,9 @@ namespace ExpenseProcessingSystem.Controllers
 
             XElement xelemliq = XElement.Load("wwwroot/xml/LiquidationValue.xml");
             var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelemliq.Element("CURRENCY_PHP").Value));
-            ssList.EntryCV[0].ccy = ccyPHP.Curr_ID;
-            ssList.EntryCV[0].ccyMasterID = ccyPHP.Curr_MasterID;
-            ssList.EntryCV[0].ccyAbbrev = ccyPHP.Curr_CCY_ABBR;
+            ssList.phpCurrID = ccyPHP.Curr_ID;
+            ssList.phpCurrMasterID = ccyPHP.Curr_MasterID;
+            ssList.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
 
             DMAccountModel acc = new DMAccountModel();
             List<accDetails> acclist = new List<accDetails>();
@@ -2081,6 +2081,8 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.CDDContents = cddContents;
             XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
             string excelTemplateName = (viewModel.CURRENCY == xelem.Element("CURRENCY_Yen").Value) ? "CDDIS_Yen.xlsx" : "CDDIS_USD.xlsx";
+
+            bool result = _service.UpdateCDDPrintingStatus(entryID, entryDtlID, GlobalSystemValues.TYPE_SS);
 
             return File(excelGenerate.ExcelCDDIS(viewModel, newFileName, excelTemplateName), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", newFileName);
 
@@ -2484,9 +2486,9 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
-            ssList.LiquidationDetails[0].ccyID = ccyPHP.Curr_ID;
-            ssList.LiquidationDetails[0].ccyMasterID = ccyPHP.Curr_MasterID;
-            ssList.LiquidationDetails[0].ccyAbbrev = ccyPHP.Curr_CCY_ABBR;
+            ssList.phpCurrID = ccyPHP.Curr_ID;
+            ssList.phpCurrMasterID = ccyPHP.Curr_MasterID;
+            ssList.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
 
             return View("Liquidation_SS", ssList);
         }
@@ -2569,9 +2571,9 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
-            ssList.LiquidationDetails[0].ccyID = ccyPHP.Curr_ID;
-            ssList.LiquidationDetails[0].ccyMasterID = ccyPHP.Curr_MasterID;
-            ssList.LiquidationDetails[0].ccyAbbrev = ccyPHP.Curr_CCY_ABBR;
+            ssList.phpCurrID = ccyPHP.Curr_ID;
+            ssList.phpCurrMasterID = ccyPHP.Curr_MasterID;
+            ssList.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
 
             return View("Liquidation_SS_ReadOnly", ssList);
         }
@@ -2675,9 +2677,9 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
-            ssList.LiquidationDetails[0].ccyID = ccyPHP.Curr_ID;
-            ssList.LiquidationDetails[0].ccyMasterID = ccyPHP.Curr_MasterID;
-            ssList.LiquidationDetails[0].ccyAbbrev = ccyPHP.Curr_CCY_ABBR;
+            ssList.phpCurrID = ccyPHP.Curr_ID;
+            ssList.phpCurrMasterID = ccyPHP.Curr_MasterID;
+            ssList.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
 
             return View(viewLink, ssList);
         }
@@ -2714,6 +2716,8 @@ namespace ExpenseProcessingSystem.Controllers
 
             XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
             string excelTemplateName = (viewModel.CURRENCY == xelem.Element("CURRENCY_Yen").Value) ? "CDDIS_Liq_Yen.xlsx" : "CDDIS_Liq_USD.xlsx";
+
+            bool result = _service.UpdateCDDPrintingStatus(entryID, entryDtlID, GlobalSystemValues.TYPE_LIQ);
 
             return File(excelGenerate.ExcelCDDIS(viewModel, newFileName, excelTemplateName), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", newFileName);
 

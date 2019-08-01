@@ -34,5 +34,8 @@ namespace ExpenseProcessingSystem.ViewModels
         public List<DMCurrencyModel> currList { get; set; }
         public List<DMTRModel> taxRateList { get; set; }
         public List<DMVendorModel> vendorList { get; set; }
+        public int phpCurrID { get; set; }
+        public int phpCurrMasterID { get; set; }
+        public string phpAbbrev { get; set; }
     }
 }
