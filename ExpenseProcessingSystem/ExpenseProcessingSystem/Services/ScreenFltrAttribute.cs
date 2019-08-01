@@ -35,21 +35,22 @@ namespace ExpenseProcessingSystem.Services
             var controllerName = (string)filterContext.RouteData.Values["controller"];
             var actionName = (string)filterContext.RouteData.Values["action"];
 
-            //FOR Home
-            if (actionName == "Index" && controllerName == "Home")
-            {
-                FiltersViewModel filters = new FiltersViewModel();
-                NotifFiltersViewModel NotifFil = new NotifFiltersViewModel();
-                NotifFil = new NotifFiltersViewModel
-                {
-                    Notif_Last_Updated = DateTime.Parse(ctx.Session.GetString("Notif_Last_Updated") ?? DateTime.Now.ToString()),
-                    NotifFil_Message = ctx.Session.GetString("NotifFil_Message") ?? "",
-                    NotifFil_Status = ctx.Session.GetString("NotifFil_Status") ?? "",
-                    NotifFil_Verifier_Approver_Name = ctx.Session.GetString("NotifFil_Verifier_Approver_Name") ?? ""
-                };
-                filters.NotifFil = NotifFil;
-                controller.TempData["filters"] = filters;
-            }
+            ////FOR Home
+            //if (actionName == "Index" && controllerName == "Home")
+            //{
+            //    FiltersViewModel filters = new FiltersViewModel();
+            //    NotifFiltersViewModel NotifFil = new NotifFiltersViewModel();
+            //    NotifFil = new NotifFiltersViewModel
+            //    {
+            //        Notif_Date = DateTime.Parse(ctx.Session.GetString("Notif_Date") ?? new DateTime().ToShortDateString()),
+            //        NotifFil_Message = ctx.Session.GetString("NotifFil_Message") ?? "",
+            //        NotifFil_Status_Name = ctx.Session.GetString("NotifFil_Status") ?? "",
+            //        NotifFil_Application_Maker_Name = ctx.Session.GetString("NotifFil_Application_Maker_Name") ?? "",
+            //        NotifFil_Application_Type_Name = ctx.Session.GetString("NotifFil_Application_Type_Name") ?? ""
+            //    };
+            //    filters.NotifFil = NotifFil;
+            //    controller.TempData["filters"] = filters;
+            //}
             //FOR DM
 
             if (actionName == "DMPartial_Vendor")

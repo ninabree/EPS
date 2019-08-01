@@ -9,7 +9,7 @@ namespace ExpenseProcessingSystem.Models
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int BCS_ID { get; set; }
         public int BCS_MasterID { get; set; }
-        public string BCS_Name { get; set; }
+        public int BCS_User_ID { get; set; }
         public string BCS_TIN { get; set; }
         public string BCS_Position { get; set; }
         public string BCS_Signatures { get; set; }

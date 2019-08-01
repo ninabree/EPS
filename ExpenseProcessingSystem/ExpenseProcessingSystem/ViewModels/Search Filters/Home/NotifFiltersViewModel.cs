@@ -8,13 +8,15 @@ namespace ExpenseProcessingSystem.ViewModels.Search_Filters.Home
 {
     public class NotifFiltersViewModel
     {
+        [Display(Name = "Application Type")]
+        public string NotifFil_Application_Type_Name { get; set; }
         [Display(Name = "Message Contains")]
         public string NotifFil_Message { get; set; }
         [Display(Name = "Date")]
-        public DateTime Notif_Last_Updated { get; set; }
+        public DateTime Notif_Date { get; set; }
         [Display(Name = "Notification Status")]
-        public string NotifFil_Status { get; set; }
-        [Display(Name = "Verifier/Approver Name")]
-        public string NotifFil_Verifier_Approver_Name { get; set; }
+        public string NotifFil_Status_Name { get; set; }
+        [Display(Name = "Application Maker Name")]
+        public string NotifFil_Application_Maker_Name { get; set; }
     }
 }

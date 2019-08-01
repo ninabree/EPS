@@ -12,7 +12,7 @@ namespace ExpenseProcessingSystem.Models.Pending
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Pending_BCS_ID { get; set; }
         public int Pending_BCS_MasterID { get; set; }
-        public string Pending_BCS_Name { get; set; }
+        public int Pending_BCS_User_ID { get; set; }
         public string Pending_BCS_TIN { get; set; }
         public string Pending_BCS_Position { get; set; }
         public string Pending_BCS_Signatures { get; set; }

@@ -39,7 +39,7 @@ namespace ExpenseProcessingSystem.ViewModels
 
         public List<VoucherNoOptions> VoucherNoListPrepaidAmort { get; set; }
 
-        public IEnumerable<DMBIRCertSignModel> SignatoryList { get; set; }
+        public IEnumerable<DMBCSViewModel> SignatoryList { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime PeriodFrom { get; set; }

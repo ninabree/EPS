@@ -12,14 +12,21 @@
     {
         <table class="table table-bordered editable-th">
             <tr>
-                <th>Employee Name</th>
+                <th colspan="2">Employee Name</th>
                 <th>TIN</th>
                 <th>Position</th>
                 <th colspan="2">Signatures</th>
                 <th></th>
             </tr>
             <tr>
-                <td>@Html.TextBoxFor(m => m.BCS_Name, new { @class = "w-full" })</td>
+                <td colspan="2">
+                    @{
+                        List<SelectListItem> emp = (List<SelectListItem>)@ViewBag.empList;
+                    }
+                    @Html.DropDownListFor(m => m.BCS_User_ID,
+                                        emp,
+                                        new { @class = "w-full input" })
+                </td>
                 <td>@Html.TextBoxFor(m => m.BCS_TIN, new { @class = "w-full" })</td>
                 <td>@Html.TextBoxFor(m => m.BCS_Position, new { @class = "w-full" })</td>
                 <td colspan="2"><input type="file" asp-for="BCS_Signatures"></td>

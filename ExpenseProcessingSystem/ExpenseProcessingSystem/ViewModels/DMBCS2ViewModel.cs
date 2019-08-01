@@ -16,6 +16,7 @@ namespace ExpenseProcessingSystem.ViewModels
         public int BCS_MasterID { get; set; }
         [Display(Name = "BCS Name")]
         public string BCS_Name { get; set; }
+        public int BCS_User_ID { get; set; }
         [Display(Name = "BCS TIN")]
         public string BCS_TIN { get; set; }
         [Display(Name = "BCS Position")]

@@ -11,14 +11,16 @@
                     Find by:
                     <table class="table">
                         <tr>
-                            <td>@Html.LabelFor(model => model.Filters.NotifFil.Notif_Last_Updated)</td>
-                            <td>@Html.EditorFor(model => model.Filters.NotifFil.Notif_Last_Updated, new { htmlAttributes = new { @class = "input h-20 w-97 fs-11 form -control" } })</td>
+                            <td>@Html.LabelFor(model => model.Filters.NotifFil.NotifFil_Application_Type_Name)</td>
+                            <td>@Html.EditorFor(model => model.Filters.NotifFil.NotifFil_Application_Type_Name, new { @class = "input" })</td>
                             <td>@Html.LabelFor(model => model.Filters.NotifFil.NotifFil_Message)</td>
                             <td>@Html.TextBoxFor(model => model.Filters.NotifFil.NotifFil_Message, new { @class = "input" })</td>
-                            <td>@Html.LabelFor(model => model.Filters.NotifFil.NotifFil_Verifier_Approver_Name)</td>
-                            <td>@Html.TextBoxFor(model => model.Filters.NotifFil.NotifFil_Verifier_Approver_Name, new { @class = "input" })</td>
-                            <td>@Html.LabelFor(model => model.Filters.NotifFil.NotifFil_Status)</td>
-                            <td>@Html.TextBoxFor(model => model.Filters.NotifFil.NotifFil_Status, new { @class = "input" })</td>
+                            <td>@Html.LabelFor(model => model.Filters.NotifFil.NotifFil_Application_Maker_Name)</td>
+                            <td>@Html.TextBoxFor(model => model.Filters.NotifFil.NotifFil_Application_Maker_Name, new { @class = "input" })</td>
+                            <td>@Html.LabelFor(model => model.Filters.NotifFil.Notif_Date)</td>
+                            <td>@Html.TextBoxFor(model => model.Filters.NotifFil.Notif_Date, new { @class = "input" })</td>
+                            <td>@Html.LabelFor(model => model.Filters.NotifFil.NotifFil_Status_Name)</td>
+                            <td>@Html.TextBoxFor(model => model.Filters.NotifFil.NotifFil_Status_Name, new { @class = "input" })</td>
                             <td colspan="2" style="text-align: right;">
                                 <input type="submit" value="Search" class="btn btn-default" id="search-btn" />
                                 <input type="button" value="Back to Full List" id="full-list-btn" class="btn btn-default" />
@@ -32,11 +34,11 @@
         <table class="table table-striped tab-tbl table-bordered">
             <thead>
                 <tr>
-                    <th id="Application_Type_Name"><a asp-action="Index" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["NotifAppIDSortParm"]">Application Type<p class="btn-xs glyphicon @ViewData["glyph-1"]"></p></a></th>
+                    <th id="Application_Type_Name"><a asp-action="Index" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["NotifAppTypeSortParm"]">Application Type<p class="btn-xs glyphicon @ViewData["glyph-1"]"></p></a></th>
                     <th colspan="3" id="Message"><a asp-action="Index" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["NotifMessageSortParm"]">Notification Message<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
-                    <th id="Application_Maker_Name"><a asp-action="Index" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["NotifLastUpdatedSortParm"]">Application Owner/Maker<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
-                    <th id="Date"><a asp-action="Index" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["NotifApproverSortParm"]">Application Date<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
-                    <th id="Status_Name"><a asp-action="Index" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["NotifTypeStatSortParm"]">Status<p class="btn-xs glyphicon @ViewData["glyph-5"]"></p></a></th>
+                    <th id="Application_Maker_Name"><a asp-action="Index" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["NotifMakerSortParm"]">Application Owner/Maker<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
+                    <th id="Date"><a asp-action="Index" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["NotifDateSortParm"]">Application Date<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
+                    <th id="Status_Name"><a asp-action="Index" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["NotifStatSortParm"]">Status<p class="btn-xs glyphicon @ViewData["glyph-5"]"></p></a></th>
                 </tr>
             </thead>
             <tbody>

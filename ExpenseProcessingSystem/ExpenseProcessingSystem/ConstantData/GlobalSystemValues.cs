@@ -26,6 +26,7 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly int STATUS_CLOSED = 11;
         public static readonly int STATUS_OPEN = 12;
         public static readonly int STATUS_PRINT_LOI = 13;
+        public static readonly int STATUS_TEMP = 14;
 
         //Static values for the index of certain lists that are to be stored inside a list object.
         //i.e: Retrieving system values for the dropdown boxes of entry views.

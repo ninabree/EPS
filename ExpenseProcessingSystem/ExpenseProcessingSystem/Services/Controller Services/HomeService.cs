@@ -40,6 +40,7 @@ namespace ExpenseProcessingSystem.Services
         private ISession _session => _httpContextAccessor.HttpContext.Session;
         private readonly IHostingEnvironment _hostingEnvironment;
         private ModalService _modalservice;
+        private FilterQueryService _filterservice;
         XElement xelemAcc = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
         private ModelStateDictionary _modelState;
         private NumberToText _class;
@@ -52,6 +53,7 @@ namespace ExpenseProcessingSystem.Services
             _modelState = modelState;
             _hostingEnvironment = hostingEnvironment;
             _modalservice = new ModalService(_httpContextAccessor, _context, _gWriteContext);
+            _filterservice = new FilterQueryService();
             _class = new NumberToText();
         }
         public string getUserRole(string id)
@@ -115,7 +117,8 @@ namespace ExpenseProcessingSystem.Services
             }
 
             PropertyInfo[] properties = filters.NotifFil.GetType().GetProperties();
-
+            string str = _filterservice.generateFilterQuery(properties, vmList.Cast<dynamic>().ToList(), filters, "Notif");
+            if (str.Length > 0) { vmList = vmList.AsQueryable().Where(str).Select(e => e).ToList(); }
             ////FILTER
             //foreach (var property in properties)
             //{
@@ -140,8 +143,8 @@ namespace ExpenseProcessingSystem.Services
             //            }
             //            else // IF STRING VALUE
             //            {
-            //                mList = mList.Where("Notif_" + subStr + ".Contains(@0) AND  Notif_isDeleted == @1", property.GetValue(filters.NotifFil).ToString(), false)
-            //                        .Select(e => e).AsQueryable();
+            //mList = mList.Where("Notif_" + subStr + ".Contains(@0) AND  Notif_isDeleted == @1", property.GetValue(filters.NotifFil).ToString(), false)
+            //        .Select(e => e).AsQueryable();
             //            }
             //        }
             //    }
@@ -1476,7 +1479,7 @@ namespace ExpenseProcessingSystem.Services
                                select new
                                {
                                    pp.Pending_BCS_MasterID,
-                                   pp.Pending_BCS_Name,
+                                   pp.Pending_BCS_User_ID,
                                    pp.Pending_BCS_TIN,
                                    pp.Pending_BCS_Position,
                                    pp.Pending_BCS_Signatures,
@@ -1501,7 +1504,7 @@ namespace ExpenseProcessingSystem.Services
             {
                 DMBIRCertSignModel m = new DMBIRCertSignModel
                 {
-                    BCS_Name = pending.Pending_BCS_Name,
+                    BCS_User_ID = pending.Pending_BCS_User_ID,
                     BCS_MasterID = pending.Pending_BCS_MasterID,
                     BCS_TIN = pending.Pending_BCS_TIN,
                     BCS_Position = pending.Pending_BCS_Position,
@@ -2712,7 +2715,7 @@ namespace ExpenseProcessingSystem.Services
 
             DMBIRCertSignModel_Pending m = new DMBIRCertSignModel_Pending
             {
-                Pending_BCS_Name = model.BCS_Name,
+                Pending_BCS_User_ID = model.BCS_User_ID,
                 Pending_BCS_MasterID = ++masterIDMax,
                 Pending_BCS_TIN = model.BCS_TIN,
                 Pending_BCS_Position = model.BCS_Position,
@@ -2750,7 +2753,7 @@ namespace ExpenseProcessingSystem.Services
             }
             DMBIRCertSignModel_Pending m = new DMBIRCertSignModel_Pending
             {
-                Pending_BCS_Name = model.BCS_Name,
+                Pending_BCS_User_ID = model.BCS_User_ID,
                 Pending_BCS_TIN = model.BCS_TIN,
                 Pending_BCS_Position = model.BCS_Position,
                 Pending_BCS_MasterID = model.BCS_MasterID,
@@ -2782,7 +2785,7 @@ namespace ExpenseProcessingSystem.Services
             {
                 DMBIRCertSignModel_Pending m = new DMBIRCertSignModel_Pending
                 {
-                    Pending_BCS_Name = dm.BCS_Name,
+                    Pending_BCS_User_ID = dm.BCS_User_ID,
                     Pending_BCS_TIN = dm.BCS_TIN,
                     Pending_BCS_Position = dm.BCS_Position,
                     Pending_BCS_MasterID = dm.BCS_MasterID,
@@ -6961,14 +6964,18 @@ namespace ExpenseProcessingSystem.Services
             }
             return vnList;
         }
-        public IEnumerable<DMBIRCertSignModel> PopulateSignatoryList()
+        public IEnumerable<DMBCSViewModel> PopulateSignatoryList()
         {
-            return _context.DMBCS.Where(x => x.BCS_isActive == true && x.BCS_isDeleted == false).OrderBy(x => x.BCS_Name).ToList();
+            return _context.DMBCS.Where(x => x.BCS_isActive == true && x.BCS_isDeleted == false).Join(_context.DMEmp, b => b.BCS_User_ID,
+                e => e.Emp_MasterID, (b, e) => new DMBCSViewModel
+                { BCS_Name = e.Emp_Name }).OrderBy(x => x.BCS_Name).ToList();
         }
 
-        public DMBIRCertSignModel GetSignatoryInfo(int id)
+        public DMBCSViewModel GetSignatoryInfo(int id)
         {
-            return _context.DMBCS.Where(x => x.BCS_ID == id).FirstOrDefault();
+            return _context.DMBCS.Where(x => x.BCS_ID == id).Join(_context.DMEmp, b=> b.BCS_User_ID,
+                e=> e.Emp_MasterID, (b,e) => new DMBCSViewModel
+                {  BCS_Position= b.BCS_Position, BCS_Name = e.Emp_Name }).FirstOrDefault();
         }
 
         // [Entry Petty Cash Voucher]
@@ -9167,7 +9174,7 @@ namespace ExpenseProcessingSystem.Services
                     goExp = goExpData, goExpHist = goExpHistData });
             }
 
-            //_GOContext.SaveChanges();
+            _GOContext.SaveChanges();
             _context.SaveChanges();
 
             List<ExpenseTransList> transactions = new List<ExpenseTransList>();
@@ -10616,7 +10623,9 @@ namespace ExpenseProcessingSystem.Services
         //get bcs name
         public string getBCSName(int id)
         {
-            var name = _context.DMBCS.SingleOrDefault(q => q.BCS_ID == id);
+            var name = _context.DMBCS.Where(q => q.BCS_ID == id).Join(_context.DMEmp, b => b.BCS_User_ID,
+                e => e.Emp_MasterID, (b, e) => new DMBCSViewModel
+                { BCS_Name = e.Emp_Name }).SingleOrDefault();
 
             if (name == null)
             {

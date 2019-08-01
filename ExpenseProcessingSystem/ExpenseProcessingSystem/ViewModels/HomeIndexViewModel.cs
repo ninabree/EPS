@@ -19,6 +19,17 @@ namespace ExpenseProcessingSystem.ViewModels
         //public PendingPerFiltersViewModel PersPendFil { get; set; }
         public PendingGenFiltersViewModel GenPendFil { get; set; }
         public HistoryFiltersViewModel HistoryFil { get; set; }
+        public FiltersViewModel()
+        {
+            NotifFil = new NotifFiltersViewModel
+            {
+                NotifFil_Application_Maker_Name = "",
+                NotifFil_Application_Type_Name = "",
+                NotifFil_Message = "",
+                NotifFil_Status_Name = "",
+                Notif_Date = new DateTime()
+            };
+        }
     }
     public class AppHistoryViewModel
     {

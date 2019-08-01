@@ -81,40 +81,51 @@ namespace ExpenseProcessingSystem.Controllers
 
             //sort
             ViewData["CurrentSort"] = sortOrder;
-            ViewData["NotifTypeStatSortParm"] = String.IsNullOrEmpty(sortOrder) ? "notif_type_status" : "";
-            ViewData["NotifAppIDSortParm"] = sortOrder == "notif_app_id_desc" ? "notif_app_id" : "notif_app_id_desc";
+            ViewData["NotifStatSortParm"] = String.IsNullOrEmpty(sortOrder) ? "notif_type_status" : "";
+            ViewData["NotifAppTypeSortParm"] = sortOrder == "notif_type_desc" ? "notif_type" : "notif_type_desc";
             ViewData["NotifMessageSortParm"] = sortOrder == "notif_message_desc" ? "notif_message" : "notif_message_desc";
-            ViewData["NotifApproverSortParm"] = sortOrder == "notif_approvr_desc" ? "notif_approvr" : "notif_approvr_desc";
-            ViewData["NotifLastUpdatedSortParm"] = sortOrder == "notif_last_updte_desc" ? "notif_last_updte" : "notif_last_updte_desc";
+            ViewData["NotifMakerSortParm"] = sortOrder == "notif_mkr_desc" ? "notif_mkr" : "notif_mkr_desc";
+            ViewData["NotifDateSortParm"] = sortOrder == "notif_date_desc" ? "notif_date" : "notif_date_desc";
 
             if (searchString != null) { pg = 1; }
             else { searchString = currentFilter; }
 
             ViewData["CurrentFilter"] = searchString;
-            FiltersViewModel filters = new FiltersViewModel();
-            if (TempData.ContainsKey("filters"))
+            //FiltersViewModel filters = new FiltersViewModel();
+            
+            //FiltersViewModel filterVM = new FiltersViewModel();
+            if (vm.Filters == null || vm.Filters.NotifFil == null)
             {
-                filters = (FiltersViewModel)TempData["filters"];
+                vm.Filters = new FiltersViewModel {
+                    NotifFil = new NotifFiltersViewModel {
+                        NotifFil_Application_Maker_Name = "",
+                        NotifFil_Application_Type_Name = "",
+                        NotifFil_Message = "",
+                        NotifFil_Status_Name = "",
+                        Notif_Date = new DateTime()
+                    }
+                };
             }
-            FiltersViewModel filterVM = new FiltersViewModel();
-            if (vm.Filters != null)
-            {
-                if (vm.Filters.NotifFil != null)
+            else{
+                vm.Filters = new FiltersViewModel
                 {
-                    //Notifications
-                    _session.SetString("Notif_Last_Updated", vm.Filters.NotifFil.Notif_Last_Updated.ToShortDateString() ?? "");
-                    _session.SetString("NotifFil_Message", vm.Filters.NotifFil.NotifFil_Message ?? "");
-                    _session.SetString("NotifFil_Status", vm.Filters.NotifFil.NotifFil_Status ?? "");
-                    _session.SetString("NotifFil_Verifier_Approver_Name", vm.Filters.NotifFil.NotifFil_Verifier_Approver_Name ?? "");
-                }
+                    NotifFil = new NotifFiltersViewModel
+                    {
+                        NotifFil_Application_Maker_Name = vm.Filters.NotifFil.NotifFil_Application_Maker_Name ?? "",
+                        NotifFil_Application_Type_Name = vm.Filters.NotifFil.NotifFil_Application_Type_Name ?? "",
+                        NotifFil_Message = vm.Filters.NotifFil.NotifFil_Message ?? "",
+                        NotifFil_Status_Name = vm.Filters.NotifFil.NotifFil_Status_Name ?? "",
+                        Notif_Date = vm.Filters.NotifFil.Notif_Date != new DateTime() ? vm.Filters.NotifFil.Notif_Date : new DateTime()
+                    }
+                };
             }
             //populate and sort
-            var sortedVals = _sortService.SortData(_service.populateNotif(filters, int.Parse(GetUserID())), sortOrder);
+            var sortedVals = _sortService.SortData(_service.populateNotif(vm.Filters, int.Parse(GetUserID())), sortOrder);
             ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
 
             HomeIndexViewModel VM = new HomeIndexViewModel()
             {
-                Filters = filters,
+                Filters = vm.Filters,
                 NotifList = PaginatedList<HomeNotifViewModel>.CreateAsync(
                         (sortedVals.list).Cast<HomeNotifViewModel>().AsQueryable().AsNoTracking(), pg ?? 1, pageSize)
             };
@@ -640,7 +651,7 @@ namespace ExpenseProcessingSystem.Controllers
             //string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmsstt"); // ORIGINAL
             string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmss");
             string pdfFooterFormat = HomeReportConstantValue.PdfFooter2;
-            var signatory = model.SignatoryID != 0 ? _service.GetSignatoryInfo(model.SignatoryID) : new DMBIRCertSignModel();
+            var signatory = model.SignatoryID != 0 ? _service.GetSignatoryInfo(model.SignatoryID) : new DMBCSViewModel();
 
             XElement xelem = XElement.Load("wwwroot/xml/ReportHeader.xml");
 

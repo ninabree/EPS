@@ -835,7 +835,8 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         DMBCSViewModel vm = new DMBCSViewModel
                         {
                             BCS_MasterID = m.Pending_BCS_MasterID,
-                            BCS_Name = m.Pending_BCS_Name,
+                            BCS_User_ID = m.Pending_BCS_User_ID,
+                            BCS_Name = getBCSName(m.Pending_BCS_ID),
                             BCS_TIN = m.Pending_BCS_TIN,
                             BCS_Position = m.Pending_BCS_Position,
                             BCS_Signatures = m.Pending_BCS_Signatures,
@@ -867,7 +868,8 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         DMBCSViewModel vm = new DMBCSViewModel
                         {
                             BCS_MasterID = m.Pending_BCS_MasterID,
-                            BCS_Name = m.Pending_BCS_Name,
+                            BCS_User_ID = m.Pending_BCS_User_ID,
+                            BCS_Name = getBCSName(m.Pending_BCS_ID),
                             BCS_TIN = m.Pending_BCS_TIN,
                             BCS_Position = m.Pending_BCS_Position,
                             BCS_Signatures = m.Pending_BCS_Signatures,
@@ -1408,7 +1410,8 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             vm = new DMBCS2ViewModel
             {
                 BCS_MasterID = mList.First().BCS_MasterID,
-                BCS_Name = mList.First().BCS_Name,
+                BCS_User_ID = mList.First().BCS_User_ID,
+                BCS_Name = getBCSName(mList.First().BCS_ID),
                 BCS_TIN = mList.First().BCS_TIN,
                 BCS_Position = mList.First().BCS_Position,
                 BCS_Signatures_Name = mList.First().BCS_Signatures,
@@ -1438,7 +1441,8 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         vm = new DMBCSViewModel
                         {
                             BCS_MasterID = m.BCS_MasterID,
-                            BCS_Name = m.BCS_Name,
+                            BCS_User_ID = m.BCS_User_ID,
+                            BCS_Name = getBCSName(m.BCS_ID),
                             BCS_TIN = m.BCS_TIN,
                             BCS_Position = m.BCS_Position,
                             BCS_Signatures = m.BCS_Signatures,
@@ -1462,6 +1466,14 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 fbtList.Add(new SelectListItem() { Text = x.FBT_Name, Value = x.FBT_MasterID + "" });
             });
             return fbtList;
+        }
+        public List<SelectListItem> getEmpSelectList()
+        {
+            List<SelectListItem> empList = new List<SelectListItem>();
+            _context.User.Where(x => x.User_InUse == true && (x.User_Role != "admin" || x.User_Role != "maker")).ToList().ForEach(x => {
+                empList.Add(new SelectListItem() { Text = x.User_LName+", " + x.User_FName, Value = x.User_ID + "" });
+            });
+            return empList;
         }
         public List<SelectListItem> getEmpCategorySelectList()
         {
@@ -1712,6 +1724,22 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             _gWriteContext.Add(rqDtlModel);
 
             return rqDtlModel;
+        }
+        //====================================================
+
+        //get bcs name
+        public string getBCSName(int id)
+        {
+            var name = _context.DMBCS.Where(q => q.BCS_ID == id).Join(_context.DMEmp, b => b.BCS_User_ID,
+                e => e.Emp_MasterID, (b, e) => new DMBCSViewModel
+                { BCS_Name = e.Emp_Name }).SingleOrDefault();
+
+            if (name == null)
+            {
+                return null;
+            }
+
+            return name.BCS_Name.ToUpper();
         }
     }
 }
