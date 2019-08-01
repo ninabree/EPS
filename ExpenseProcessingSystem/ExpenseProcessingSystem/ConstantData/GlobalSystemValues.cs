@@ -254,6 +254,9 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly int NC_DEBIT = 1;
         public static readonly int NC_CREDIT = 2;
         public static readonly int NC_EWT = 3;
+
+        //Static values for Notification.
+        public static readonly int UF_ALL = 0; // For General Messages; Notif for someone creating changes in
     }
     public class CONSTANT_NC_VALS
     {
@@ -267,6 +270,8 @@ namespace ExpenseProcessingSystem.ConstantData
         public int currMasterID { get; set; }
         public string currABBR { get; set; }
     }
+
+
     //NON CASH CONSTANT VALUES
     public class CONSTANT_NC_LSPAYROLL
     {

@@ -65,72 +65,122 @@ namespace ExpenseProcessingSystem.Services
         //-----------------------------------Populate-------------------------------------//
         //[ Home ]
         //[Notification]
-        public List<HomeNotifViewModel> populateNotif(FiltersViewModel filters)
+        public List<HomeNotifViewModel> populateNotif(FiltersViewModel filters, int loggedUID)
         {
-            IQueryable<HomeNotifModel> mList = _context.HomeNotif.ToList().AsQueryable();
-            PropertyInfo[] properties = filters.NotifFil.GetType().GetProperties();
+            var mList = (from notifs in (from n in _context.HomeNotif
+                        where n.Notif_UserFor_ID == loggedUID || (n.Notif_UserFor_ID == 0 && n.Notif_Application_Maker_ID != loggedUID)
+                        select n)
+                         join user in _context.User
+                         on notifs.Notif_Application_Maker_ID
+                         equals user.User_ID
+                         into c
+                         from user in c.DefaultIfEmpty()
+                         join stat in _context.StatusList
+                         on notifs.Notif_Status_ID
+                         equals stat.Status_ID
+                         into s
+                         from stat in s.DefaultIfEmpty()
+                         select new
+                         {
+                             notifs.Notif_ID,
+                             notifs.Notif_Application_Type_ID,
+                             notifs.Notif_Application_Maker_ID,
+                             CreatorName = user.User_LName + ", " + user.User_FName,
+                             notifs.Notif_UserFor_ID,
+                             notifs.Notif_Message,
+                             notifs.Notif_Date,
+                             stat.Status_ID,
+                             stat.Status_Name
+                         }).ToList();
 
-            //FILTER
-            foreach (var property in properties)
-            {
-                var propertyName = property.Name;
-                string subStr = propertyName.Substring(propertyName.IndexOf('_') + 1);
-                var toStr = property.GetValue(filters.NotifFil).ToString();
-                string[] colArr = { "No", "Creator_ID", "Approver_ID" };
-                if (toStr != "")
-                {
-                    if (toStr != "0")
-                    {
-                        if (colArr.Contains(subStr)) // IF INT VAL
-                        {
-                            mList = mList.Where("Notif_" + subStr + " = @0 AND  Notif_isDeleted == @1", property.GetValue(filters.NotifFil), false)
-                                     .Select(e => e).AsQueryable();
-                        }
-                        else if (subStr == "Last_Updated")
-                        {
-                            mList = mList
-                               .Where(x => (x.Notif_Last_Updated.ToShortDateString() == property.GetValue(filters.NotifFil).ToString()))
-                              .Select(e => e).AsQueryable();
-                        }
-                        else // IF STRING VALUE
-                        {
-                            mList = mList.Where("Notif_" + subStr + ".Contains(@0) AND  Notif_isDeleted == @1", property.GetValue(filters.NotifFil).ToString(), false)
-                                    .Select(e => e).AsQueryable();
-                        }
-                    }
-                }
-            }
-
-            var creatorList = (from a in mList
-                               join b in _context.User on a.Notif_Verifr_Apprvr_ID equals b.User_ID
-                               let CreatorName = b.User_LName + ", " + b.User_FName
-                               select new
-                               { a.Notif_ID, CreatorName }).ToList();
-            var apprvrList = (from a in mList
-                              join c in _context.User on a.Notif_Verifr_Apprvr_ID equals c.User_ID
-                              let ApproverName = c.User_LName + ", " + c.User_FName
-                              select new
-                              { a.Notif_ID, ApproverName }).ToList();
 
             //assign values
-            List<HomeNotifModel> mList2 = mList.ToList();
             List<HomeNotifViewModel> vmList = new List<HomeNotifViewModel>();
-            foreach (HomeNotifModel m in mList2)
+            foreach (var m in mList)
             {
-                var creator = creatorList.Where(a => a.Notif_ID == m.Notif_ID).Select(a => a.CreatorName).FirstOrDefault();
-                var approver = apprvrList.Where(a => a.Notif_ID == m.Notif_ID).Select(a => a.ApproverName).FirstOrDefault();
                 HomeNotifViewModel vm = new HomeNotifViewModel
                 {
-                    Notif_Application_ID = m.Notif_Application_ID,
+                    Notif_ID = m.Notif_ID,
+                    Notif_Application_Type_ID = m.Notif_Application_Type_ID,
+                    Notif_Application_Type_Name = NotificationMessageValues.TYTIONARY[m.Notif_Application_Type_ID],
+                    Notif_Application_Maker_ID = m.Notif_Application_Maker_ID,
+                    Notif_Application_Maker_Name = m.CreatorName,
+                    Notif_UserFor_ID = m.Notif_UserFor_ID,
                     Notif_Message = m.Notif_Message,
-                    Notif_Verifier_Approver = approver ?? "",
-                    Notif_Type_Status = m.Notif_Type_Status,
-                    Notif_Last_Updated = m.Notif_Last_Updated,
-                    Notif_Status = m.Notif_Status.ToString()
+                    Notif_Date = m.Notif_Date,
+                    Notif_Status_ID = m.Status_ID,
+                    Notif_Status_Name = m.Status_Name
                 };
                 vmList.Add(vm);
             }
+
+            PropertyInfo[] properties = filters.NotifFil.GetType().GetProperties();
+
+            ////FILTER
+            //foreach (var property in properties)
+            //{
+            //    var propertyName = property.Name;
+            //    string subStr = propertyName.Substring(propertyName.IndexOf('_') + 1);
+            //    var toStr = property.GetValue(filters.NotifFil).ToString();
+            //    string[] colArr = { "No", "Creator_ID", "Approver_ID" };
+            //    if (toStr != "")
+            //    {
+            //        if (toStr != "0")
+            //        {
+            //            if (colArr.Contains(subStr)) // IF INT VAL
+            //            {
+            //                mList = mList.Where("Notif_" + subStr + " = @0 AND  Notif_isDeleted == @1", property.GetValue(filters.NotifFil), false)
+            //                         .Select(e => e).AsQueryable();
+            //            }
+            //            else if (subStr == "Last_Updated")
+            //            {
+            //                mList = mList
+            //                   .Where(x => (x.Notif_Last_Updated.ToShortDateString() == property.GetValue(filters.NotifFil).ToString()))
+            //                  .Select(e => e).AsQueryable();
+            //            }
+            //            else // IF STRING VALUE
+            //            {
+            //                mList = mList.Where("Notif_" + subStr + ".Contains(@0) AND  Notif_isDeleted == @1", property.GetValue(filters.NotifFil).ToString(), false)
+            //                        .Select(e => e).AsQueryable();
+            //            }
+            //        }
+            //    }
+            //}
+
             return vmList;
+        }
+        //Insert new records in Notif
+        public bool insertIntoNotif(int UserID, int TypeID, int StatusID, int Maker_UserID = 0)
+        {
+            string uName = getName(UserID);
+            string strMessPers = "You " + NotificationMessageValues.action[StatusID] + NotificationMessageValues.commonstr + NotificationMessageValues.TYTIONARY[TypeID];
+            string strMessGen = uName+ " " + NotificationMessageValues.action[StatusID] + NotificationMessageValues.commonstr + NotificationMessageValues.TYTIONARY[TypeID];
+
+            List<HomeNotifModel> model = new List<HomeNotifModel>()
+            {
+                new HomeNotifModel()
+                {
+                    Notif_Application_Type_ID = TypeID,
+                    Notif_Application_Maker_ID = UserID,
+                    Notif_UserFor_ID = UserID,
+                    Notif_Message = strMessPers,
+                    Notif_Date = DateTime.Now,
+                    Notif_Status_ID = StatusID
+                },
+                new HomeNotifModel()
+                {
+                    Notif_Application_Type_ID = TypeID,
+                    Notif_Application_Maker_ID = UserID,
+                    Notif_UserFor_ID = Maker_UserID,
+                    Notif_Message = strMessGen,
+                    Notif_Date = DateTime.Now,
+                    Notif_Status_ID = StatusID
+
+                }
+            };
+            _context.HomeNotif.AddRange(model);
+            _context.SaveChanges();
+            return true;
         }
         //Pending
         public PaginatedList<ApplicationsViewModel> getPending(int userID)
@@ -8012,6 +8062,8 @@ namespace ExpenseProcessingSystem.Services
                         ExpNCDtl_ID = ncDtl.g.ExpNCDtl_ID,
                         ExpNCDtl_Remarks_Desc = ncDtl.g.ExpNCDtl_Remarks_Desc,
                         ExpNCDtl_Remarks_Period = ncDtl.g.ExpNCDtl_Remarks_Period,
+                        ExpNCDtl_TR_ID = ncDtl.g.ExpNCDtl_TR_ID,
+                        ExpNCDtl_Vendor_ID = ncDtl.g.ExpNCDtl_Vendor_ID,
                         ExpenseEntryNCDtlAccs = ncDtlAccs
                     };
                     ncDtls.Add(entryNCDtl);
@@ -8336,6 +8388,9 @@ namespace ExpenseProcessingSystem.Services
                 if (entryModel.entryID == 0)
                 {
                     _context.ExpenseEntry.Add(expenseEntry);
+                    //----------------------------- NOTIF----------------------------------
+                    insertIntoNotif(userId, GlobalSystemValues.TYPE_DDV, GlobalSystemValues.STATUS_NEW, 0);
+                    //----------------------------- NOTIF----------------------------------
                 }
                 else
                 {
@@ -8343,6 +8398,9 @@ namespace ExpenseProcessingSystem.Services
                     expenseEntry.Expense_ID = entryModel.entryID;
                     removeDDVChild(entryModel.entryID);
                     _context.ExpenseEntry.Update(expenseEntry);
+                    //----------------------------- NOTIF----------------------------------
+                    insertIntoNotif(userId, GlobalSystemValues.TYPE_DDV, GlobalSystemValues.STATUS_EDIT, 0);
+                    //----------------------------- NOTIF----------------------------------
                 }
                 _context.SaveChanges();
                 return expenseEntry.Expense_ID;
@@ -9520,6 +9578,10 @@ namespace ExpenseProcessingSystem.Services
             _GOContext.SaveChanges();
             _context.SaveChanges();
 
+            //----------------------------- NOTIF----------------------------------
+            var stats = command != "R" ? GlobalSystemValues.STATUS_APPROVED : GlobalSystemValues.STATUS_REVERSED;
+            insertIntoNotif(userID, GlobalSystemValues.TYPE_DDV, stats, expenseDDV.maker);
+            //----------------------------- NOTIF----------------------------------
             List<ExpenseTransList> transactions = new List<ExpenseTransList>();
 
             foreach (var item in list)
@@ -10818,6 +10880,11 @@ namespace ExpenseProcessingSystem.Services
         }
         //get currency master id
         public int getCurrencyMasterID(int id)
+        {
+            return _context.DMCurrency.FirstOrDefault(x => x.Curr_ID == id).Curr_MasterID;
+        }
+        //get currency master id
+        public int getMasterID(int id)
         {
             return _context.DMCurrency.FirstOrDefault(x => x.Curr_ID == id).Curr_MasterID;
         }

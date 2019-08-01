@@ -10,18 +10,12 @@ namespace ExpenseProcessingSystem.Models
     public class HomeNotifModel
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Notif_ID { get; set; } // auto increment
-        public int Notif_Application_ID { get; set; } // like master ID
-        public int Notif_User_ID { get; set; }
-        public int Notif_Verifr_Apprvr_ID { get; set; }
-        public string Notif_Message { get; set; } // ex. You have (1) approved Check Voucher Application/s.
-        //where to redirect user to view the application being notified 
-        //public string Notif_Link_Address { get; set; }//ex.Entry_CV/Home/apprv
-        public DateTime Notif_Created_Date { get; set; }
-        public DateTime Notif_Last_Updated { get; set; }
-        public bool Notif_Status { get; set; } // if already seen
-        public string Notif_Type_Status { get; set; } // ex. Verified
-        //public string Notif_Type_Screen { get; set; } // ex. Entry_CV
-        //public string Notif_Type_User { get; set; } // ex. Maker
+        public int Notif_ID { get; set; }
+        public int Notif_Application_Type_ID { get; set; } // in GlobalValuesSystem ex.Type_CV...
+        public int Notif_Application_Maker_ID { get; set; }
+        public int Notif_UserFor_ID { get; set; } // in GLobalValuesSystem ex. UF_ALL == 0, each for the involved maker, verifier and approver
+        public string Notif_Message { get; set; } // ex. You have (1) approved Check Voucher Application/s. from dbo.SystemMessages
+        public DateTime Notif_Date { get; set; }
+        public int Notif_Status_ID { get; set; } // in GlobalValuesSystem ex.Status_Pending
     }
 }
