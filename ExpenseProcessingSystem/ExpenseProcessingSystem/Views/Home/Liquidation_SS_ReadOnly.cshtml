@@ -18,7 +18,7 @@
     <div id="tbl-lbl">
         <div class="dis-inline-block"><p>Date:</p></div>
         <div class="dis-inline-block">
-            @(((DateTime)Model.expenseDate).ToString("MM/dd/yyyy"))
+            <input id="expenseDate" value="@(((DateTime)Model.expenseDate).ToString("MM/dd/yyyy"))" style="background-color:transparent"/>
         </div>
         <div class="dis-inline-block" style="float:right">
             <p class="dis-inline-block">
@@ -178,7 +178,7 @@
                             @Html.HiddenFor(m => Model.LiquidationDetails[i].ewtID, new { @class = "ewtID" })
                         </td>
                         <td>
-                            @Html.TextBoxFor(m => Model.LiquidationDetails[i].credCash, new { @class = "txtCredit", @readonly = "true", @style = "width:100%;background:transparent" })
+                            @Html.TextBoxFor(m => Model.LiquidationDetails[i].credCash, new { @class = "txtCredit txtCredCash", @readonly = "true", @style = "width:100%;background:transparent" })
                         </td>
                         <td id="req_@i">
                             <a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#"></a>
@@ -328,11 +328,11 @@
                 <table style="width:60%;" id="tableHeaderPrint" border="0" class="tblHidePrintLiq">
                     <tr>
                         <td style="width:5%;text-align:left">Date : </td>
-                        <td><input id="cashbdDatePrint" style="text-align:center" /></td>
+                        <td><input id="cashbdDatePrintLiq" style="text-align:center" /></td>
                     </tr>
                     <tr>
                         <td style="width:5%;text-align:left">Amount: </td>
-                        <td><input id="cashbdAmountPrint" style="text-align:center" /></td>
+                        <td><input id="cashbdAmountPrintLiq" style="text-align:center" /></td>
                     </tr>
                 </table>
                 <table id="cashBDLiqTable" class="cashBDLiqTable table-bordered table-striped voucher-tbl w-70 tablePrintLiq">
@@ -384,11 +384,11 @@
                 <table style="width:60%;" id="tableOptionPrint" border="0" class="tblHidePrint">
                     <tr>
                         <td style="width:5%;text-align:left">EXPENSE</td>
-                        <td style="text-align:center"><input style="font-size:x-large;text-align:center" value="&#9645;"></td>
+                        <td style="text-align:center"><label style="font-size:x-large;text-align:center" value="&#9645;" id="printOptExpense"></label></td>
                     </tr>
                     <tr>
                         <td style="width:5%;text-align:left">REVERSAL</td>
-                        <td style="text-align:center"><input style="font-size:x-large;text-align:center" value="&#9645;"></td>
+                        <td style="text-align:center"><label style="font-size:x-large;text-align:center" value="&#9645;" id="printOptReverse"></label></td>
                     </tr>
                 </table>
                 <table style="width:60%;" id="tableSignPrint" border="1" class="tblHidePrint">
@@ -399,15 +399,15 @@
                     </colgroup>
                     <tr>
                         <td colspan="2">PAYMENT RECEIVED BY :</td>
-                        <td style="text-align:center">FLORA</td>
+                        <td style="text-align:center"></td>
                     </tr>
                     <tr>
                         <td colspan="2">PAYMENT PAID BY :</td>
-                        <td style="text-align:center">BUARAO</td>
+                        <td style="text-align:center"></td>
                     </tr>
                     <tr>
                         <td>PAYMENT FOR :</td>
-                        <td colspan="2" style="text-align:center">PARKING FEE VF6597</td>
+                        <td colspan="2" style="text-align:center"><input id="paymentFor" /></td>
                     </tr>
                 </table>
             </div>
@@ -663,6 +663,7 @@
     </div>
     <div id="entry-controls" class="m-b-10">
         @Html.HiddenFor(x => Model.entryID, new { @class = "entryID" })
+        <input type="hidden" id="LiqEntryDetails_Liq_Created_Date" value="@(((DateTime)Model.LiqEntryDetails.Liq_Created_Date).ToString("MM/dd/yyyy"))" style="background-color:transparent" />
         <div class="flex-sb">
             <div>
                 <div class="dis-inline-block tbl-btn"><button disabled>Save</button></div>
@@ -773,7 +774,7 @@
                 "id": id,
                 "vendor": $("#" + pNode.id).find(".txtPayee").val(),
                 "account": $("#" + pNode.id).find(".txtAcc").val(),
-                "amount": $("#" + pNode.id).find(".txtGross").val(),
+                "amount": $("#" + pNode.id).find(".txtCredCash").val(),
                 "screencode": $("#" + pNode.id).find(".hiddenScreencode").val()
             }, function (response, status, xhr) {
                 if (status == "error") {
@@ -821,6 +822,7 @@
                 assignAccCodeLiqPhp();
                 $('#txtLiqTaxRate').attr('disabled', 'disabled');
                 $('#txtLiqPhpInput4').attr('disabled', 'disabled');
+                ChangeOptionMarkForPrint();
             } else {
                 $('#divForeign').show();
                 $('#divPHP').hide();

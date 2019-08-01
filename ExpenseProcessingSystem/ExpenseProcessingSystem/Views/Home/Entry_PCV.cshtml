@@ -71,7 +71,7 @@
                         <tr id="item_@i">
                             <td class="p-b-1 p-t-1">
                                 <div class="flex-sb">
-                                    @Html.TextBoxFor(x => Model.EntryCV[i].GBaseRemarks, new { @class = "input100 w-80", @maxlength = "30" })
+                                    @Html.TextBoxFor(x => Model.EntryCV[i].GBaseRemarks, new { @class = "input100 w-80 txtGBaseRemark", @maxlength = "30" })
                                     <div id="remark_@i">
                                         <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
                                         @for (int y = 0; y < Model.EntryCV[i].gBaseRemarksDetails.Count(); y++)
@@ -243,7 +243,7 @@
             newRow.id = "item_" + itemCount
 
             var htmlContent = '<td class="p-b-1 p-t-1"><div class="flex-sb">' +
-                '<input class="input100 w-80" id="EntryCV_' + itemCount + '__GBaseRemarks" name="EntryCV[' + itemCount + '].GBaseRemarks" type="text" value="">' +
+                '<input class="input100 w-80 txtGBaseRemark" id="EntryCV_' + itemCount + '__GBaseRemarks" name="EntryCV[' + itemCount + '].GBaseRemarks" type="text" value="">' +
                 '<div id="remark_' + itemCount + '"><a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a></div></div></td>' +
                 '<td><select class="input100 txtAcc" id="EntryCV_' + itemCount + '__account" name="EntryCV[' + itemCount + '].account">';
 
@@ -297,7 +297,7 @@
                 "id": id,
                 "vendor": $("#vendorName option:selected").text(),
                 "account": $("#" + pNode.id).find(".txtAcc option:selected").text(),
-                "amount": $("#" + pNode.id).find(".txtGross").val(),
+                "amount": $("#" + pNode.id).find(".txtCredCash").val(),
                 "screencode": $("#" + pNode.id).find(".hiddenScreencode").val()
             }, function (response, status, xhr) {
                 if (status == "error") {

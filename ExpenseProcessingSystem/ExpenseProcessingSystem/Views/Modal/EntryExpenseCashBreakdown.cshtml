@@ -68,7 +68,7 @@
             <table style="width:60%;" id="tableOptionPrint" border="0" class="tblHidePrint">
                 <tr>
                     <td style="width:5%;text-align:left">EXPENSE</td>
-                    <td style="text-align:center"><input style="font-size:x-large;text-align:center" value="&#9645;"></td>
+                    <td style="text-align:center"><input style="font-size:x-large;text-align:center" value="&#8999;"></td>
                 </tr>
                 <tr>
                     <td style="width:5%;text-align:left">REVERSAL</td>
@@ -83,15 +83,15 @@
                 </colgroup>
                 <tr>
                     <td colspan="2">PAYMENT RECEIVED BY :</td>
-                    <td style="text-align:center">FLORA</td>
+                    <td style="text-align:center"></td>
                 </tr>
                 <tr>
                     <td colspan="2">PAYMENT PAID BY :</td>
-                    <td style="text-align:center">BUARAO</td>
+                    <td style="text-align:center"></td>
                 </tr>
                 <tr>
                     <td>PAYMENT FOR :</td>
-                    <td colspan="2" style="text-align:center">PARKING FEE VF6597</td>
+                    <td colspan="2" style="text-align:center"><input id="paymentFor" /></td>
                 </tr>
             </table>
         </div>
@@ -215,9 +215,9 @@
         }
         $('#cashBDAmountTotal').attr('value', $('#cashBDAmountTotal').val());
 
-        $('#cashbdDatePrint').val();
+        $('#cashbdDatePrint').attr('value', $('#expenseDate').val());
         $('#cashbdAmountPrint').attr('value', $('#cashBDAmountTotal').val());
-
+        $('#paymentFor').attr('value', $('#' + $('#parentIdPCVSSTable').val()).find('.txtGBaseRemark').val());
         var cssjs = '<style>.tablePrint, .tdPrint, .thPrint {  ' +
             '  border: 1px solid #ddd;' +
             '  text-align: center;' +

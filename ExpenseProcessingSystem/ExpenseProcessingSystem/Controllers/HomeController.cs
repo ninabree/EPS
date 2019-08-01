@@ -2472,6 +2472,7 @@ namespace ExpenseProcessingSystem.Controllers
             ssList.accList = _service.getAccountList();
             ssList.accAllList = _service.getAccountListIncHist();
             ssList.vendorList = _service.getVendorList().OrderBy(x => x.Vendor_Name).ToList();
+            ssList.LiqEntryDetails.Liq_Created_Date = DateTime.Now.Date;
 
             foreach (var i in ssList.accAllList)
             {

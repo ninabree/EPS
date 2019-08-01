@@ -16,7 +16,7 @@
     <div id="tbl-lbl">
         <div class="dis-inline-block"><p>Expense Entry Registered Date:</p></div>
         <div class="dis-inline-block">
-            @(((DateTime)Model.expenseDate).ToString("MM/dd/yyyy"))
+            <input id="expenseDate" value="@(((DateTime)Model.expenseDate).ToString("MM/dd/yyyy"))" style="background-color:transparent" />
         </div>
         <div class="dis-inline-block" style="float:right">
             <p class="dis-inline-block">
@@ -176,7 +176,7 @@
                             @Html.TextBoxFor(m => Model.LiquidationDetails[i].credEwt, new { @readonly = "true", @style = "width:100%;background:transparent" })
                         </td>
                         <td>
-                            @Html.TextBoxFor(m => Model.LiquidationDetails[i].credCash, new { @class = "txtCredit", @readonly = "true", @style = "width:100%;background:transparent" })
+                            @Html.TextBoxFor(m => Model.LiquidationDetails[i].credCash, new { @class = "txtCredit txtCredCash", @readonly = "true", @style = "width:100%;background:transparent" })
                         </td>
                         <td id="req_@i">
                             <a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#"></a>
@@ -380,11 +380,11 @@
                 <table style="width:60%;" id="tableOptionPrint" border="0" class="tblHidePrintLiq">
                     <tr>
                         <td style="width:5%;text-align:left">EXPENSE</td>
-                        <td style="text-align:center"><input style="font-size:x-large;text-align:center" value="&#9645;"></td>
+                        <td style="text-align:center"><label style="font-size:x-large;text-align:center" value="&#9645;" id="printOptExpense"></label></td>
                     </tr>
                     <tr>
                         <td style="width:5%;text-align:left">REVERSAL</td>
-                        <td style="text-align:center"><input style="font-size:x-large;text-align:center" value="&#9645;"></td>
+                        <td style="text-align:center"><label style="font-size:x-large;text-align:center" value="&#9645;" id="printOptReverse"></label></td>
                     </tr>
                 </table>
                 <table style="width:60%;" id="tableSignPrint" border="1" class="tblHidePrintLiq">
@@ -395,15 +395,15 @@
                     </colgroup>
                     <tr>
                         <td colspan="2">PAYMENT RECEIVED BY :</td>
-                        <td style="text-align:center">FLORA</td>
+                        <td style="text-align:center"></td>
                     </tr>
                     <tr>
                         <td colspan="2">PAYMENT PAID BY :</td>
-                        <td style="text-align:center">BUARAO</td>
+                        <td style="text-align:center"></td>
                     </tr>
                     <tr>
                         <td>PAYMENT FOR :</td>
-                        <td colspan="2" style="text-align:center">PARKING FEE VF6597</td>
+                        <td colspan="2" style="text-align:center"><input id="paymentFor" /></td>
                     </tr>
                 </table>
             </div>
@@ -640,7 +640,7 @@
     </div>
     <div id="entry-controls" class="m-b-10">
         @Html.HiddenFor(x => Model.entryID, new { @class = "entryID" })
-        @Html.HiddenFor(x => Model.LiqEntryDetails.Liq_Created_Date)
+        <input type="hidden" id="LiqEntryDetails_Liq_Created_Date" value="@(((DateTime)Model.LiqEntryDetails.Liq_Created_Date).ToString("MM/dd/yyyy"))" style="background-color:transparent" />
         <div class="flex-sb">
             <div>
                 <div class="dis-inline-block tbl-btn"><button>Save</button></div>
@@ -716,7 +716,7 @@
                 "id": id,
                 "vendor": $("#" + pNode.id).find(".txtPayee").val(),
                 "account": $("#" + pNode.id).find(".txtAcc").val(),
-                "amount": $("#" + pNode.id).find(".txtGross").val(),
+                "amount": $("#" + pNode.id).find(".txtCredCash").val(),
                 "screencode": $("#" + pNode.id).find(".hiddenScreencode").val()
             }, function (response, status, xhr) {
                 if (status == "error") {
@@ -763,6 +763,8 @@
 
                 displayInfoCashBD($(this.parentNode)[0].parentNode.id);
                 assignAccCodeLiqPhp();
+                HideCashBreakdownTable();
+                ChangeOptionMarkForPrint();
             } else {
                 $('#divForeign').show();
                 $('#divPHP').hide();
@@ -947,9 +949,12 @@
             $(this).val(round($(this).val(), 2));
             $('#txtLiqPhpInput6').val(AC(parseFloat($('#txtLiqPhpInput1').val()) + parseFloat($('#txtLiqPhpInput2').val())));
             $('#txtLiqPhpInput7').val(AC(parseFloat($('#txtLiqPhpInput3').val()) + parseFloat($('#txtLiqPhpInput4').val()) + parseFloat($('#txtLiqPhpInput5').val())));
+
+            ChangeOptionMarkForPrint();
         });
         $('.tableLiqPhp').on('change', '.ddlLiqPhpAccount', function (e) {
             assignAccCodeLiqPhp();
+            HideCashBreakdownTable();
         });
         $('.tableLiqPhp').on('change', '#txtLiqVendor', function (e) {
             getVendorTaxRate($('#txtLiqVendor').val());
