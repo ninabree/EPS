@@ -175,6 +175,7 @@
                         </td>
                         <td>
                             @Html.TextBoxFor(m => Model.LiquidationDetails[i].credEwt, new { @readonly = "true", @style = "width:100%;background:transparent" })
+                            @Html.HiddenFor(m => Model.LiquidationDetails[i].ewtID, new { @class = "ewtID" })
                         </td>
                         <td>
                             @Html.TextBoxFor(m => Model.LiquidationDetails[i].credCash, new { @class = "txtCredit", @readonly = "true", @style = "width:100%;background:transparent" })
@@ -818,6 +819,8 @@
                 $('#lblAccount2_PHP').val($('#' + pid).find('.hidAccID').val());
                 displayInfoCashBD($(this.parentNode)[0].parentNode.id);
                 assignAccCodeLiqPhp();
+                $('#txtLiqTaxRate').attr('disabled', 'disabled');
+                $('#txtLiqPhpInput4').attr('disabled', 'disabled');
             } else {
                 $('#divForeign').show();
                 $('#divPHP').hide();

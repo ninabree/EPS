@@ -244,6 +244,9 @@
     $('.radioPeriodOption_3').change(function () {
         radioAction();
     });
+    $('.radioPeriodOption_4').change(function () {
+        radioAction();
+    });
     $('.radioPeriodOption_7').change(function () {
         radioAction();
     });

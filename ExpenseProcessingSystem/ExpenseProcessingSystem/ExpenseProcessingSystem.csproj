@@ -82,7 +82,7 @@
     <Content Update="Views\Home\ReportLayoutFormat\_ReportLayout_11.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Home\ReportLayoutFormat\_ReportLayout_4.cshtml">
+    <Content Update="Views\Home\ReportLayoutFormat\bk_ReportLayout_4.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Partial\DMPartial_Vendor.cshtml">

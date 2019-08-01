@@ -10,6 +10,10 @@
     <link rel="stylesheet" href="~/css/Report.css" />
 }
 <body>
+    @*validation message*@
+    <div id="ValidationSummary" style="display:none" class="">
+        @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
+    </div>
     @using (Html.BeginForm())
     {
         <div class="m-t-10 rep-voucher-cont" style="height:100px">
@@ -132,6 +136,59 @@
                     </td>
                     <td>
                         @Html.DropDownListFor(m => m.SignatoryList, new SelectList(Model.SignatoryList, "BCS_ID", "BCS_Name"), null, new { @class = "dis-inline-block", id = "ddlSignatory_" + @HomeReportConstantValue.AST1000 })
+                    </td>
+                    <td class="td-right"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr id="" class="rep_esams hidden">
+                    <td class="td-center"></td>
+                    <td class="td-center">
+                        @Html.RadioButton("radioTimePeriod_" + @HomeReportConstantValue.ESAMS, "1", true, new { id = "radioPeriodOption1_" + @HomeReportConstantValue.ESAMS, @class = "radioPeriodOption_" + @HomeReportConstantValue.ESAMS })
+                    </td>
+                    <td class="td-right">
+                        Year/Month :
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-49", id = "ddlYear_" + @HomeReportConstantValue.ESAMS })
+                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-49", id = "ddlMonth_" + @HomeReportConstantValue.ESAMS })
+                    </td>
+                    <td class="td-right">
+                        To :
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-49", id = "ddlYearTo_" + @HomeReportConstantValue.ESAMS })
+                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-49", id = "ddlMonthTo_" + @HomeReportConstantValue.ESAMS })
+                    </td>
+                    <td></td>
+                </tr>
+                <tr id="" class="rep_esams hidden">
+                    <td class="td-center"></td>
+                    <td class="td-center">
+                        @Html.RadioButton("radioTimePeriod_" + @HomeReportConstantValue.ESAMS, "3", false, new { id = "radioPeriodOption3_" + @HomeReportConstantValue.ESAMS, @class = "radioPeriodOption_" + @HomeReportConstantValue.ESAMS })
+                    </td>
+                    <td class="td-right">
+                        Period :
+                    </td>
+                    <td>
+                        @Html.EditorFor(m => m.PeriodFrom, new { htmlAttributes = new { id = "PeriodFrom_" + @HomeReportConstantValue.ESAMS, @class = "input h-20 fs-11 form-control dis-inline-block w-49", @type = "date", disabled = "disabled" } })
+                    </td>
+                    <td class="td-right">
+                        To :
+                    </td>
+                    <td>
+                        @Html.EditorFor(m => m.PeriodTo, new { htmlAttributes = new { id = "PeriodTo_" + @HomeReportConstantValue.ESAMS, @class = "input h-20 fs-11 form-control dis-inline-block w-49", @type = "date", disabled = "disabled" } })
+                    </td>
+                    <td></td>
+                </tr>
+                <tr id="" class="rep_esams hidden">
+                    <td class="td-center"></td>
+                    <td class="td-center"></td>
+                    <td class="td-right">
+                        Signatory :
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(m => m.SignatoryList, new SelectList(Model.SignatoryList, "BCS_ID", "BCS_Name"), null, new { @class = "dis-inline-block", id = "ddlSignatory_" + @HomeReportConstantValue.ESAMS })
                     </td>
                     <td class="td-right"></td>
                     <td></td>
@@ -437,11 +494,6 @@
             </table>
         </div>
     }
-    @*validation message*@
-    <div id="ValidationSummary" style="display:none" class="">
-        @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
-    </div>
-
     <div id="" class="m-t-70">
         <div style="float:left;">
             <p>Preview Report: <text id="txtAsOfLabel"></text><text id="txtDatePreviewShow"></text></p>
@@ -481,6 +533,7 @@
             //fields
             var rep_alpha_m = $(".rep_alpha_m");
             var rep_alpha_10000 = $(".rep_alpha_10000");
+            var rep_esams = $(".rep_esams");
             var rep_actual = $(".rep_actual");
             var rep_BIRcsv = $(".rep_BIRCSV");
             var rep_trans = $(".rep_trans");
@@ -498,6 +551,9 @@
             }
             if (reptype == "3") {
                 rep_alpha_10000.removeClass("hidden");
+            }
+            if (reptype == "4") {
+                rep_esams.removeClass("hidden");
             }
             if (reptype == "5") {
                 rep_actual.removeClass("hidden");
