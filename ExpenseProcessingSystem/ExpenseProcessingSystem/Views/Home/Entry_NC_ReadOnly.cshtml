@@ -22,7 +22,7 @@
     <div id="tbl-lbl">
         <div class="dis-inline-block"><p>Category of Entries:</p></div>
         <div class="dis-inline-block">
-            @Html.DisplayFor(x=> x.EntryNC.NC_Category_Name)
+            @Html.DisplayFor(x => x.EntryNC.NC_Category_Name)
             @*@Html.DropDownListFor(m => m.category_of_entry, Model.systemValues.category_of_entries, new { id = "categoryName" })*@
         </div>
     </div>
@@ -254,30 +254,30 @@
 
                 @for (int j = 1; j < Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs.Count; j++)
                 {
-                <tr id="NC_PCR2">
-                    <td></td>
-                    <td colspan="2"></td>
-                    <td colspan="3">@Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_Name, new { @readonly = "true", @class = "w-full" })</td>
-                    <td></td>
-                    @if (Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
-                    {
-                        <td>@Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_Name, new { @readonly = "true" })</td>
-                        <td class="" id="">@Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Amount, new { @class = "ncVar", @readonly = "true" })</td>
+                    <tr id="NC_PCR2">
                         <td></td>
+                        <td colspan="2"></td>
+                        <td colspan="3">@Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_Name, new { @readonly = "true", @class = "w-full" })</td>
                         <td></td>
-                    }
-                    else if (Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_CREDIT ||
-                        Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_EWT)
-                    {
-                        <td></td>
-                        <td></td>
-                        <td>@Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_Name, new { @readonly = "true" })</td>
-                        <td>@Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Amount, new { @class = "ncVar", @readonly = "true" })</td>
-                    }
-                    @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_ID)
-                    @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_ID)
-                    @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Type_ID)
-                </tr>
+                        @if (Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
+                        {
+                            <td>@Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_Name, new { @readonly = "true" })</td>
+                            <td class="" id="">@Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Amount, new { @class = "ncVar", @readonly = "true" })</td>
+                            <td></td>
+                            <td></td>
+                        }
+                        else if (Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_CREDIT ||
+                            Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_EWT)
+                        {
+                            <td></td>
+                            <td></td>
+                            <td>@Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_Name, new { @readonly = "true" })</td>
+                            <td>@Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Amount, new { @class = "ncVar", @readonly = "true" })</td>
+                        }
+                        @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_ID)
+                        @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_ID)
+                        @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Type_ID)
+                    </tr>
                 }
                 @Html.HiddenFor(x => x.EntryNC.NC_IE_DebitAmt)
                 @Html.HiddenFor(x => x.EntryNC.NC_IE_CredAmt)
@@ -307,7 +307,7 @@
             </table>
         }
     </div>
-   
+
     <div id="entry-status" class="m-t-10 m-b-10">
         <div class="dis-inline-block"><label>Status: </label></div>
         <div class="dis-inline-block">@Html.DisplayFor(x => x.status, new { @readonly = "true", @class = "input" })</div>
@@ -353,14 +353,29 @@
                     <div>
                         <div class="dis-inline-block tbl-btn"><button value="Reversal" name="command">Create Reversal Entry</button></div>
                     </div>
+
+                    <div>
+                        @{
+                            var isEWT = (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PSSC || Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PCHC ||
+                                Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES);
+                        }
+                        @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker
+                     || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id
+                     || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id
+                     || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.approver_id && isEWT)
+                        {
+                            <div class="dis-inline-block tbl-btn"><button id="printBir" value="printBir">Print BIR Certificate</button></div>
+                        }
+                    </div>
                     if (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT)
                     {
                         <div>
                             <div class="dis-inline-block tbl-btn m-l-41"><button value="PrintCDD" name="command">Print CDD Instruction Sheet</button></div>
                         </div>
-                    }else if (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL &&
-                        (Model.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID == @usd ||
-                        Model.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID == jpy))
+                    }
+                    else if (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL &&
+                       (Model.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID == @usd ||
+                       Model.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID == jpy))
                     {
                         <div>
                             <div class="dis-inline-block tbl-btn m-l-41"><button value="PrintCDD_RET" name="command">Print CDD Instruction Sheet</button></div>
@@ -381,6 +396,9 @@
                     <div>
                         <div class="dis-inline-block tbl-btn m-l-41"><button disabled>Print CDD Instruction Sheet</button></div>
                     </div>
+                    <div>
+                        <div class="dis-inline-block tbl-btn"><button id="printBir" disabled>Print BIR Certificate</button></div>
+                    </div>
                 }
                 else if (Model.statusID == GlobalSystemValues.STATUS_REVERSED)
                 {
@@ -389,6 +407,9 @@
                     </div>
                     <div>
                         <div class="dis-inline-block tbl-btn m-l-41"><button value="PrintCDD" name="command">Print CDD Instruction Sheet</button></div>
+                    </div>
+                    <div>
+                        <div class="dis-inline-block tbl-btn"><button id="printBir" disabled>Print BIR Certificate</button></div>
                     </div>
                 }
                 else
@@ -407,14 +428,30 @@
                             {
                                 <div class="dis-inline-block tbl-btn"><button id="reversal_entry" disabled>Create Reversal Entry</button></div>
                             }
+
+                            <div>
+                                @{
+                                    var isEWT = (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PSSC || Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PCHC ||
+                                        Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES);
+                                }
+                                @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker
+                           || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id
+                           || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id
+                           || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.approver_id && isEWT)
+                                {
+                                    <div class="dis-inline-block tbl-btn"><button id="printBir" value="printBir">Print BIR Certificate</button></div>
+                                }
+                            </div>
                         }
                         else
                         {
                             <div class="dis-inline-block tbl-btn"><button id="reversal_entry" disabled>Create Reversal Entry</button></div>
+                            <div class="dis-inline-block tbl-btn"><button id="printBir" disabled>Print BIR Certificate</button></div>
                         }
                     </div>
                     <div>
                         <div class="dis-inline-block tbl-btn m-l-41"><button disabled>Print CDD Instruction Sheet</button></div>
+                        <div class="dis-inline-block tbl-btn"><button id="printBir" disabled>Print BIR Certificate</button></div>
                     </div>
                 }
 
@@ -455,18 +492,31 @@
 <script type="text/javascript" src="~/js/EntryScripts.js"></script>
 <script type="text/javascript">
     $(function () {
+        @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker
+          || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id
+          || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id
+          || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.approver_id)
+        {
+            <Text>
+            $("#entry-controls").on("click", "#printBir", function (e) {
+                var link = [
+                @foreach (var item in Model.birForms)
+                {
+                    <Text>
+                         "/Home/Generate2307File?_vendor=@item.vendor&_ewt=@item.ewt&_tax=@item.vat&amount=@item.amount&approver=@item.approver&expID=@Model.entryID",
+                    </Text>
+                }
+                    ""
+                ];
 
-        //$(".printCDD_IS").click(function (e) {
-        //    e.preventDefault();
+                for (var i = 0; i < link.length-1;i++) {
+                    window.open(link[i]);
+                }
 
-        //    window.location.href = "/Home/CDD_IS_NC_PCR";
-        //});
-        $(window).on("load", function () {
-            if (@ViewBag.Success == 1) {
-                alert("Entry Approved");
-            } else if (@ViewBag.Success == 0){
-                alert("Entry Failed");
-            }
-        });
+                return false;
+            });
+            </Text>
+        }
+
     });
 </script>

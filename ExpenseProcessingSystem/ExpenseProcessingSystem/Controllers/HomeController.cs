@@ -109,7 +109,7 @@ namespace ExpenseProcessingSystem.Controllers
                 }
             }
             //populate and sort
-            var sortedVals = _sortService.SortData(_service.populateNotif(filters), sortOrder);
+            var sortedVals = _sortService.SortData(_service.populateNotif(filters, int.Parse(GetUserID())), sortOrder);
             ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
 
             HomeIndexViewModel VM = new HomeIndexViewModel()
@@ -503,14 +503,14 @@ namespace ExpenseProcessingSystem.Controllers
                     ParentTypeId = 0
                     }
                 },
-                MonthList = ConstantData.HomeReportConstantValue.GetMonthList(),
-                FileFormatList = ConstantData.HomeReportConstantValue.GetFileFormatList(),
-                YearList = ConstantData.HomeReportConstantValue.GetYearList(),
-                YearSemList = ConstantData.HomeReportConstantValue.GetYearList(),
-                SemesterList = ConstantData.HomeReportConstantValue.GetSemesterList(),
-                PeriodOptionList = ConstantData.HomeReportConstantValue.GetPeriodOptionList(),
-                PeriodFrom = Convert.ToDateTime(ConstantData.HomeReportConstantValue.DateToday),
-                PeriodTo = Convert.ToDateTime(ConstantData.HomeReportConstantValue.DateToday),
+                MonthList = HomeReportConstantValue.GetMonthList(),
+                FileFormatList = HomeReportConstantValue.GetFileFormatList(),
+                YearList = HomeReportConstantValue.GetYearList(),
+                YearSemList = HomeReportConstantValue.GetYearList(),
+                SemesterList = HomeReportConstantValue.GetSemesterList(),
+                PeriodOptionList = HomeReportConstantValue.GetPeriodOptionList(),
+                PeriodFrom = Convert.ToDateTime(HomeReportConstantValue.DateToday),
+                PeriodTo = Convert.ToDateTime(HomeReportConstantValue.DateToday),
                 TaxRateList = _service.PopulateTaxRaxListIncludeHist(),
                 VoucherNoList =  _service.PopulateVoucherNoDDV(),
                 VoucherNoListPrepaidAmort = _service.PopulateVoucherNoCV(),
@@ -528,6 +528,25 @@ namespace ExpenseProcessingSystem.Controllers
         public JsonResult GetReportSubType(int ReportTypeID)
         {
             List<HomeReportSubTypeAccModel> subtypes = new List<HomeReportSubTypeAccModel>();
+
+            if (ReportTypeID == HomeReportConstantValue.ESAMS)
+            {
+                var accounts = _service.getAccountList();
+                XElement xelem = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
+                for(int i = 1; i <=5; i++)
+                {
+                    var acc = accounts.Where(x => x.Account_MasterID == int.Parse(xelem.Element("D_SS" + i).Value)).FirstOrDefault();
+                    if(acc != null)
+                    {
+                        subtypes.Add(new HomeReportSubTypeAccModel
+                        {
+                            Id = acc.Account_ID.ToString(),
+                            SubTypeName = acc.Account_Name
+                        });
+                    }
+                }
+                return Json(subtypes);
+            }
 
             if (ReportTypeID == HomeReportConstantValue.AccSummaryReport)
             {
@@ -570,6 +589,7 @@ namespace ExpenseProcessingSystem.Controllers
                 }
                 return Json(subtypes);
             }
+
             if(ReportTypeID == HomeReportConstantValue.WTS)
             {
                 var taxList = _service.getAllTaxRateList();
@@ -689,6 +709,36 @@ namespace ExpenseProcessingSystem.Controllers
                         cnt += 1;
                     }
 
+                    break;
+
+                //For ESAMS Report
+                case HomeReportConstantValue.ESAMS:
+                    fileName = "ESAMSReport_" + dateNow;
+                    layoutName = HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
+                    DateTime DateFromLayout = model.PeriodFrom;
+                    DateTime DateToLayout = model.PeriodTo;
+                    string format = "yyyy-M";
+                    if (model.PeriodOption == 1)
+                    {
+                        DateFromLayout = DateTime.ParseExact(model.Year + "-" + model.Month, format, CultureInfo.InvariantCulture);
+                        DateToLayout = DateTime.ParseExact(model.YearTo + "-" + model.MonthTo, format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
+                        model.PeriodFrom = DateFromLayout;
+                        model.PeriodTo = DateToLayout;
+                    }
+                    var accountno = _service.getAccount(model.ReportSubType);
+                    var currency = _service.getCurrencyByMasterID(accountno.Account_Currency_MasterID);
+                    //Get the necessary data from Database
+                    data = new HomeReportDataFilterViewModel
+                    {
+                        HomeReportOutputESAMS = _service.GetESAMSData(model),
+                        HomeReportFilter = model,
+                        ReportCommonVM = repComVM,
+                        ReportAccountNo = accountno.Account_No,
+                        ReportCurrency = currency.Curr_CCY_ABBR,
+                        DateFrom = DateFromLayout,
+                        DateTo = DateToLayout
+                    };
+                    
                     break;
                 //For Actual Budget Report
                 case HomeReportConstantValue.ActualBudgetReport:
@@ -1390,6 +1440,30 @@ namespace ExpenseProcessingSystem.Controllers
             EntryDDVViewModelList ddvList = _service.getExpenseDDV(entryID);
             ddvList = PopulateEntry((EntryDDVViewModelList)ddvList);
 
+            List<cvBirForm> birForms = new List<cvBirForm>();
+            foreach (var item in ddvList.EntryDDV)
+            {
+                if (birForms.Any(x => x.ewt == item.ewt && x.vendor == item.ewt_Payor_Name_ID))
+                {
+                    int index = birForms.FindIndex(x => x.ewt == item.ewt);
+                    birForms[index].amount += item.debitGross;
+                }
+                else
+                {
+                    cvBirForm temp = new cvBirForm
+                    {
+                        amount = item.debitGross,
+                        ewt = item.ewt,
+                        vat = item.vat,
+                        vendor = item.ewt_Payor_Name_ID,
+                        approver = ddvList.approver,
+                        date = ddvList.expenseDate
+                    };
+
+                    birForms.Add(temp);
+                }
+            }
+            ddvList.birForms.AddRange(birForms);
             return View("Entry_DDV_ReadOnly", ddvList);
         }
         [OnlineUserCheck]
@@ -1397,7 +1471,7 @@ namespace ExpenseProcessingSystem.Controllers
         public IActionResult VerAppModDDV(int entryID, string command)
         {
             var userId = GetUserID();
-
+            var intUser = int.Parse(userId);
             string viewLink = "Entry_DDV";
             EntryDDVViewModelList ddvList;
 
@@ -1407,7 +1481,7 @@ namespace ExpenseProcessingSystem.Controllers
                     viewLink = "Entry_DDV";
                     break;
                 case "approver":
-                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_APPROVED, int.Parse(GetUserID())))
+                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_APPROVED, intUser))
                     {
                         _service.postDDV(entryID, "P", int.Parse(GetUserID()));
                         ViewBag.Success = 1;
@@ -1421,7 +1495,7 @@ namespace ExpenseProcessingSystem.Controllers
                     viewLink = "Entry_DDV_ReadOnly";
                     break;
                 case "verifier":
-                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_VERIFIED, int.Parse(GetUserID())))
+                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_VERIFIED, intUser))
                     {
                         ViewBag.Success = 1;
                     }
@@ -1432,9 +1506,13 @@ namespace ExpenseProcessingSystem.Controllers
                     viewLink = "Entry_DDV_ReadOnly";
                     break;
                 case "Reject":
-                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REJECTED, int.Parse(GetUserID())))
+                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REJECTED, intUser))
                     {
                         ViewBag.Success = 1;
+                        var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == entryID).Expense_Creator_ID;
+                        //----------------------------- NOTIF----------------------------------
+                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_DDV, GlobalSystemValues.STATUS_REJECTED, makerId);
+                        //----------------------------- NOTIF----------------------------------
                     }
                     else
                     {
@@ -1446,6 +1524,9 @@ namespace ExpenseProcessingSystem.Controllers
                     if (_service.deleteExpenseEntry(entryID, GlobalSystemValues.TYPE_DDV))
                     {
                         ViewBag.Success = 1;
+                        //----------------------------- NOTIF----------------------------------
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DDV, GlobalSystemValues.STATUS_DELETE, 0);
+                        //----------------------------- NOTIF----------------------------------
                     }
                     else
                     {
@@ -2068,6 +2149,46 @@ namespace ExpenseProcessingSystem.Controllers
             ViewData["USDmstr"] = _service.getXMLCurrency("USD").FirstOrDefault().currMasterID;
             ViewData["JPYmstr"] = _service.getXMLCurrency("YEN").FirstOrDefault().currMasterID;
             ViewData["PHPmstr"] = _service.getXMLCurrency("PHP").FirstOrDefault().currMasterID;
+
+
+            List<cvBirForm> birForms = new List<cvBirForm>();
+            foreach (var item in ncList.EntryNC.ExpenseEntryNCDtls)
+            {
+                if (birForms.Any(x => x.ewt == item.ExpNCDtl_TR_ID && x.vendor == item.ExpNCDtl_Vendor_ID))
+                {
+                    int index = birForms.FindIndex(x => x.ewt == item.ExpNCDtl_TR_ID);
+                    foreach (var a in item.ExpenseEntryNCDtlAccs)
+                    {
+                        if (a.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
+                        {
+                            birForms[index].amount += a.ExpNCDtlAcc_Amount;
+                        }
+                    }
+                }
+                else
+                {
+                    double amt = 0;
+                    foreach (var a in item.ExpenseEntryNCDtlAccs)
+                    {
+                        if (a.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
+                        {
+                            amt += a.ExpNCDtlAcc_Amount;
+                        }
+                    }
+                    cvBirForm temp = new cvBirForm
+                    {
+                        amount = amt,
+                        ewt = item.ExpNCDtl_TR_ID,
+                        //vat = item.vat,
+                        vendor = item.ExpNCDtl_Vendor_ID,
+                        approver = ncList.approver,
+                        date = ncList.expenseDate
+                    };
+
+                    birForms.Add(temp);
+                }
+            }
+            ncList.birForms.AddRange(birForms);
             return View("Entry_NC_ReadOnly", ncList);
         }
         [OnlineUserCheck]
