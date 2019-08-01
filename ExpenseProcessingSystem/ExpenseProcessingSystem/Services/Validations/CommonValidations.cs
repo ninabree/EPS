@@ -437,7 +437,7 @@ namespace ExpenseProcessingSystem.Services.Validations
             var val2 = validationContext.ObjectType.GetProperty(_CheckBoxProperty2).GetValue(validationContext.ObjectInstance, null);
             XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
 
-            int flag = 0;
+            //int flag = 0;
 
             if ((int)val2 == 0 && (string)val != xelem.Element("CURRENCY_PHP").Value)
             {

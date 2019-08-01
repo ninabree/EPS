@@ -208,14 +208,13 @@ namespace ExpenseProcessingSystem.Controllers
         }
         //-----------Closing Screen-----------------
         [OnlineUserCheck]
+        [NonAdminRoleCheck]
         public IActionResult Close(string username, string password, string command = "load")
         {
             ClosingViewModel model = new ClosingViewModel();
+            bool closeFail = false;
             switch (command)
             {
-                case "load":
-                    model = _service.ClosingGetRecords();
-                    break;
                 case "openBook":
                     if (_service.ClosingCheckStatus())
                     {
@@ -227,12 +226,43 @@ namespace ExpenseProcessingSystem.Controllers
                     }
                     break;
                 case "CloseRBU":
-                    model = CloseRBU(username,password);
+                    closeFail = _service.ClosingCheckStatus(GlobalSystemValues.BRANCH_RBU);
+                    if (!closeFail) {
+                        if(!_service.closeTransaction(GlobalSystemValues.BRANCH_RBU, username, password,"close"))
+                        {
+                            closeFail = true;
+                        }
+                    }
                     break;
-                case "reOpenRBU": break;
-                case "CloseFCDU": break;
-                case "reOpenFCDU": break;
+                case "reOpenRBU":
+                    if (!_service.closeTransaction(GlobalSystemValues.BRANCH_RBU, username, password, "reopen"))
+                    {
+                        closeFail = true;
+                    }
+                    break;
+                case "CloseFCDU":
+                    closeFail = _service.ClosingCheckStatus(GlobalSystemValues.BRANCH_FCDU);
+                    if (!closeFail)
+                    {
+                        if (!_service.closeTransaction(GlobalSystemValues.BRANCH_FCDU, username, password, "close"))
+                        {
+                            closeFail = true;
+                        }
+                    }
+                    break;
+                case "reOpenFCDU":
+                    if (!_service.closeTransaction(GlobalSystemValues.BRANCH_FCDU, username, password, "reopen"))
+                    {
+                        closeFail = true;
+                    }
+                    break;
             }
+
+            model = _service.ClosingGetRecords();
+
+            if (closeFail)
+                model.messages.Add("Can't close book there are still ongoing transactions!");
+
             return View(model);
         }
 
@@ -297,73 +327,6 @@ namespace ExpenseProcessingSystem.Controllers
                 index++;
                 model.fcduItems.Add(temp);
             } while (index != 10);
-
-            return model;
-        }
-        public ClosingViewModel CloseRBU(string username, string password)
-        {
-            ClosingViewModel model = new ClosingViewModel();
-            model.date = DateTime.Now;
-            int index = 0;
-            if (_service.closeTransaction("767",username,password)) {
-                do
-                {
-                    CloseItems temp = new CloseItems();
-                    temp.gBaseTrans = "111,222,333";
-                    temp.expTrans = "CLOSING TIME!";
-                    temp.particulars = "THIS IS A PARTICULAR!";
-                    temp.ccy = "PHP";
-                    temp.amount = Math.Round(1000 + ((135 * index) / 2.6),2);
-                    temp.transCount = 2;
-                    temp.status = "Posted";
-                    index++;
-                    model.rbuItems.Add(temp);
-                } while (index != 10);
-                index = 0;
-                do
-                {
-                    CloseItems temp = new CloseItems();
-                    temp.gBaseTrans = "111,222,333";
-                    temp.expTrans = "CLOSING TIME!";
-                    temp.particulars = "THIS IS A PARTICULAR!";
-                    temp.ccy = "PHP";
-                    temp.amount = Math.Round(1000 + ((135 * index) / 2.6),2);
-                    temp.transCount = 2;
-                    temp.status = "Posted";
-                    index++;
-                    model.fcduItems.Add(temp);
-                } while (index != 10);
-            }
-            else
-            {
-                do
-                {
-                    CloseItems temp = new CloseItems();
-                    temp.gBaseTrans = "111,222,333";
-                    temp.expTrans = "OPENING TIME!";
-                    temp.particulars = "THIS IS A PARTICULAR!";
-                    temp.ccy = "PHP";
-                    temp.amount = Math.Round(1000 + ((135 * index) / 2.6),2);
-                    temp.transCount = 2;
-                    temp.status = "Posted";
-                    index++;
-                    model.rbuItems.Add(temp);
-                } while (index != 10);
-                index = 0;
-                do
-                {
-                    CloseItems temp = new CloseItems();
-                    temp.gBaseTrans = "111,222,333";
-                    temp.expTrans = "OPENING TIME!";
-                    temp.particulars = "THIS IS A PARTICULAR!";
-                    temp.ccy = "PHP";
-                    temp.amount = Math.Round(1000 + ((135 * index) / 2.6),2);
-                    temp.transCount = 2;
-                    temp.status = "Posted";
-                    index++;
-                    model.fcduItems.Add(temp);
-                } while (index != 10);
-            }
 
             return model;
         }
@@ -988,7 +951,7 @@ namespace ExpenseProcessingSystem.Controllers
 
         [OnlineUserCheck]
         [NonAdminRoleCheck]
-        public IActionResult Generate2307File(int _vendor, int _ewt, int _tax, double amount, DateTime date, string approver,int expID)
+        public IActionResult Generate2307File(int _vendor, int _ewt, int _tax, double _amount, DateTime date, string approver,int expID)
         {
             string path = "";
             XElement xelem = XElement.Load("wwwroot/xml/ReportHeader.xml");
@@ -1007,21 +970,23 @@ namespace ExpenseProcessingSystem.Controllers
                 float vat = _service.getVat(_tax);
 
                 var payItem = new PaymentInfo();
+                double amount;
 
+                if (vat > 0)
+                    amount = _amount / (1 + vat);
+                else
+                    amount = _amount;
                 if (new List<int> { 1, 4, 7, 10 }.Contains(date.Month))
                 {
-                    if (vat > 0)
-                        payItem.M1Quarter = amount / (1 + vat);
+                    payItem.M1Quarter = amount;
                 }
                 else if (new List<int> { 2, 5, 8, 11 }.Contains(date.Month))
                 {
-                    if (vat > 0)
-                        payItem.M2Quarter = amount / (1 + vat);
+                    payItem.M2Quarter = amount;
                 }
                 else if (new List<int> { 3, 6, 9, 12 }.Contains(date.Month))
                 {
-                    if (vat > 0)
-                        payItem.M3Quarter = amount / (1 + vat);
+                    payItem.M3Quarter = amount;
                 }
 
                 //payitem
@@ -1520,7 +1485,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         _service.postDDV(entryID, "P", int.Parse(GetUserID()));
                         ViewBag.Success = 1;
-                        _service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_PRINT_LOI, intUser);
+                        _service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_FOR_PRINTING, int.Parse(GetUserID()));
 
                     }
                     else

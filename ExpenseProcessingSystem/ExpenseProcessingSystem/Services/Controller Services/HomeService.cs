@@ -211,7 +211,7 @@ namespace ExpenseProcessingSystem.Services
                             || l.Liq_Status == GlobalSystemValues.STATUS_VERIFIED)
                             )
                             ||
-                            (p.Expense_Status == GlobalSystemValues.STATUS_PRINT_LOI)
+                            (p.Expense_Status == GlobalSystemValues.STATUS_FOR_PRINTING)
                             select new
                             {
                                 p.Expense_ID,
@@ -9787,15 +9787,17 @@ namespace ExpenseProcessingSystem.Services
         ///============[End Post Entries]============
 
         ///================[Closing]=================
-        public bool closeTransaction(string transactionType, string username, string password)
+        public bool closeTransaction(string transactionType, string username, string password,string operation)
         {
-            string closeCommand = "cm00@E*1@E@E17-@E1210@E";
+            string closeCommand = "cm00@E*1@E@E17-@E1_10@E";
 
             TblRequestDetails rqDtl = new TblRequestDetails();
             GwriteTransList gWriteModel = new GwriteTransList();
 
             closeCommand = closeCommand.Replace("*", transactionType);
             closeCommand = closeCommand.Replace("-", username.Substring(username.Length - 4));
+            closeCommand = operation.Equals("close") ? closeCommand.Replace("_", "2") : closeCommand.Replace("_", "3");
+
 
             rqDtl = postToGwrite(closeCommand, username, password);
 
@@ -9807,7 +9809,9 @@ namespace ExpenseProcessingSystem.Services
 
         public ClosingViewModel ClosingGetRecords()
         {
-            DateTime opening = DateTime.Today.AddHours(00).AddDays(-10);
+            var closeModel = _context.Closing.Where(x => x.Close_Status == GlobalSystemValues.STATUS_OPEN).FirstOrDefault();
+
+            DateTime opening = closeModel.Close_Open_Date.Date + new TimeSpan(0,0,0);
             DateTime closing = DateTime.Today.AddHours(23.9999);
 
             ClosingViewModel closeVM = new ClosingViewModel();
@@ -9861,62 +9865,6 @@ namespace ExpenseProcessingSystem.Services
             List<CloseItems> nmCloseItemsRBU = new List<CloseItems>();
             List<CloseItems> nmCloseItemsFCDU = new List<CloseItems>();
 
-            #region old code
-            //var nmEntries = _context.ExpenseEntry.Include(x => x.ExpenseEntryDetails)
-            //                                     .Where(x => (opening <= x.Expense_Date
-            //                                              && closing >= x.Expense_Date)
-            //                                              && (x.Expense_Type == GlobalSystemValues.TYPE_CV
-            //                                              || x.Expense_Type == GlobalSystemValues.TYPE_PC))
-            //                                     .Select(x => new {
-            //                                         x.Expense_ID,
-            //                                         x.Expense_Type,
-            //                                         x.Expense_Number,
-            //                                         x.Expense_Status,
-            //                                         x.ExpenseEntryDetails,
-            //                                         x.Expense_Date
-            //                                     }).AsNoTracking().ToList();
-
-            //foreach (var item in nmEntries)
-            //{
-            //    foreach (var dtl in item.ExpenseEntryDetails)
-            //    {
-            //        CloseItems temp = new CloseItems();
-            //        temp.amount = dtl.ExpDtl_Debit;
-            //        temp.ccy = GetCurrencyAbbrv(dtl.ExpDtl_Ccy);
-            //        temp.status = GlobalSystemValues.getStatus(item.Expense_Status);
-            //        temp.particulars = dtl.ExpDtl_Gbase_Remarks;
-            //        temp.transCount = 1;
-            //        if (item.Expense_Status == GlobalSystemValues.STATUS_PENDING ||
-            //           item.Expense_Status == GlobalSystemValues.STATUS_VERIFIED)
-            //        {
-            //            temp.expTrans = "";
-            //            temp.gBaseTrans = "";
-
-            //        }
-            //        else
-            //        {
-            //            temp.expTrans = GlobalSystemValues.getApplicationCode(item.Expense_Type) + "-" +
-            //                            GetSelectedYearMonthOfTerm(item.Expense_Date.Month, item.Expense_Date.Year).Year + "-" +
-            //                            item.Expense_Number.ToString().PadLeft(5, '0');
-
-            //            if (item.Expense_Status == GlobalSystemValues.STATUS_POSTED)
-            //                temp.gBaseTrans = getGbaseTransNo(item.Expense_ID, dtl.ExpDtl_ID).ToString();
-            //            else
-            //                temp.gBaseTrans = "";
-            //        }
-
-            //        if (getBranchNo(getAccount(dtl.ExpDtl_Account).Account_No) == GlobalSystemValues.BRANCH_RBU)
-            //        {
-            //            nmCloseItemsRBU.Add(temp);
-            //        }
-            //        else
-            //        {
-            //            nmCloseItemsFCDU.Add(temp);
-            //        }
-            //    }
-            //}
-            #endregion
-
             var nmEntries = from expense in (from exp in _context.ExpenseEntry
                                              from dtl in _context.ExpenseEntryDetails
                                              from acc in _context.DMAccount
@@ -9927,7 +9875,7 @@ namespace ExpenseProcessingSystem.Services
                                              && dtl.ExpDtl_Inter_Entity == false
                                              && new List<int> { GlobalSystemValues.TYPE_CV,
                                                                 GlobalSystemValues.TYPE_PC,
-                                                                GlobalSystemValues.TYPE_CV }.Contains(exp.Expense_Type)
+                                                                GlobalSystemValues.TYPE_DDV }.Contains(exp.Expense_Type)
                                              && (opening <= exp.Expense_Date
                                              && closing >= exp.Expense_Date)
                                              select new
@@ -10602,6 +10550,65 @@ namespace ExpenseProcessingSystem.Services
             ClosingViewModel closeVM = ClosingGetRecords();
 
             return closeVM;
+        }
+        public bool ClosingCheckStatus(string branchCode)
+        {
+            var closeModel = _context.Closing.Where(x => x.Close_Status == GlobalSystemValues.STATUS_OPEN).FirstOrDefault();
+
+            DateTime opening = closeModel.Close_Open_Date.AddHours(00);
+            DateTime closing = closeModel.Close_Open_Date.AddHours(23.9999);
+
+            var nmStatus = (from exp in _context.ExpenseEntry
+                           from dtl in _context.ExpenseEntryDetails
+                           from acc in _context.DMAccount
+                           where exp.Expense_ID == dtl.ExpenseEntryModel.Expense_ID
+                           && dtl.ExpDtl_Account == acc.Account_ID
+                           && dtl.ExpDtl_Inter_Entity == false
+                           && new List<int> { 1, 2, 4, 3 }.Contains(exp.Expense_Type)
+                           && acc.Account_No.Substring(4, 3) == branchCode
+                           && exp.Expense_Status != 14
+                           && (opening <= exp.Expense_Date && closing >= exp.Expense_Date)
+                           select new { exp.Expense_ID, exp.Expense_Number, dtl.ExpDtl_ID, acc.Account_No, exp.Expense_Status }).ToList().Count;
+
+            var ddvInterStatus = (from exp in _context.ExpenseEntry
+                                  from dtl in _context.ExpenseEntryDetails
+                                  from inter in _context.ExpenseEntryInterEntity
+                                  from parts in _context.ExpenseEntryInterEntityParticular
+                                  from interAcc in _context.ExpenseEntryInterEntityAccs
+                                  from acc in _context.DMAccount
+                                  where exp.Expense_ID == dtl.ExpenseEntryModel.Expense_ID
+                                  && dtl.ExpDtl_ID == inter.ExpenseEntryDetailModel.ExpDtl_ID
+                                  && inter.ExpDtl_DDVInter_ID == parts.ExpenseEntryInterEntityModel.ExpDtl_DDVInter_ID
+                                  && parts.InterPart_ID == interAcc.ExpenseEntryInterEntityParticular.InterPart_ID
+                                  && interAcc.InterAcc_Acc_ID == acc.Account_ID
+                                  && interAcc.InterAcc_Type_ID == 1
+                                  && dtl.ExpDtl_Inter_Entity == true
+                                  && exp.Expense_Type == 2
+                                  && acc.Account_No.Substring(4, 3) == branchCode
+                                  && exp.Expense_Status != 14
+                                  && (opening <= exp.Expense_Date && closing >= exp.Expense_Date)
+                                  select new { exp.Expense_ID, dtl.ExpDtl_ID, acc.Account_No, exp.Expense_Status }).ToList().Count;
+
+            var liqStatus = (from exp in _context.ExpenseEntry
+                            from expDtl in _context.ExpenseEntryDetails
+                            from liqDtl in _context.LiquidationEntryDetails
+                            from liqInter in _context.LiquidationInterEntity
+                            from acc in _context.DMAccount
+                            where exp.Expense_ID == expDtl.ExpenseEntryModel.Expense_ID
+                            && exp.Expense_ID == liqDtl.ExpenseEntryModel.Expense_ID
+                            && expDtl.ExpDtl_ID == liqInter.ExpenseEntryDetailModel.ExpDtl_ID
+                            && acc.Account_ID == liqInter.Liq_AccountID_1_1
+                            && liqInter.Liq_Amount_1_1 > 0
+                            && acc.Account_No.Substring(4, 3) == branchCode
+                            && liqDtl.Liq_Status != 14
+                            && (opening <= exp.Expense_Date && closing >= exp.Expense_Date)
+                            select new
+                            { exp.Expense_ID,expDtl.ExpDtl_ID,exp.Expense_Number,liqDtl.Liq_Status,acc.Account_No}).ToList().Count;
+
+            if (liqStatus > 0 || ddvInterStatus > 0 || nmStatus > 0)
+                return true;
+
+            return false;
         }
 
         public bool ClosingCheckStatus()
