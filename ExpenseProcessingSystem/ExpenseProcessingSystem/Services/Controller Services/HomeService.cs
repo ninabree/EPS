@@ -9181,7 +9181,7 @@ namespace ExpenseProcessingSystem.Services
                             account = item.liqInterEntity[0].Liq_AccountID_3_1,
                         });
                     }
-                    tempGbase.entries.OrderByDescending(x => x.type).ToList();
+                    tempGbase.entries = tempGbase.entries.OrderByDescending(x => x.type).ToList();
                     goExpData = InsertGbaseEntry(tempGbase, expID);
                     goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.EntryDetailsID);
                     list.Add(new { expEntryID = expID, expDtl = item.EntryDetailsID, expType = GlobalSystemValues.TYPE_SS,
@@ -9281,7 +9281,7 @@ namespace ExpenseProcessingSystem.Services
                             }
                         }
 
-                        tempGbase.entries.OrderByDescending(x => x.type).ToList();
+                        tempGbase.entries = tempGbase.entries.OrderByDescending(x => x.type).ToList();
                         goExpData = InsertGbaseEntry(tempGbase, expID);
                         goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.EntryDetailsID);
                         list.Add(new
@@ -11655,6 +11655,22 @@ namespace ExpenseProcessingSystem.Services
             }
         }
 
+        public bool UpdateCDDPrintingStatus(int entryID)
+        {
+            var cddStatus = _context.PrintStatus.Where(x => x.PS_EntryID == entryID).ToList();
+            foreach(var i in cddStatus)
+            {
+                i.PS_BIR2307 = true;
+                _context.Entry(i).State = EntityState.Modified;
+            }
+
+            if(cddStatus != null)
+            {
+                _context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
         ///========[End of Other Functions]============
     }
 

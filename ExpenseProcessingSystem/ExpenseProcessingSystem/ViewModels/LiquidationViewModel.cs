@@ -37,5 +37,6 @@ namespace ExpenseProcessingSystem.ViewModels
         public int phpCurrID { get; set; }
         public int phpCurrMasterID { get; set; }
         public string phpAbbrev { get; set; }
+        public List<cvBirForm> birForms { get; set; }
     }
 }

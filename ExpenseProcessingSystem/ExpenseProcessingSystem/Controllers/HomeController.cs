@@ -1750,6 +1750,33 @@ namespace ExpenseProcessingSystem.Controllers
             pcvList.systemValues.ewt = new SelectList("0", "0");
             pcvList.systemValues.vat = new SelectList("0", "0");
 
+            List<cvBirForm> birForms = new List<cvBirForm>();
+            foreach (var item in pcvList.EntryCV)
+            {
+                if (birForms.Any(x => x.ewt == item.ewt && x.vendor == item.dtl_Ewt_Payor_Name_ID))
+                {
+                    int index = birForms.FindIndex(x => x.ewt == item.ewt);
+                    birForms[index].amount += item.debitGross;
+                }
+                else
+                {
+                    cvBirForm temp = new cvBirForm
+                    {
+                        amount = item.debitGross,
+                        ewt = item.ewt,
+                        vat = item.vat,
+                        vendor = item.dtl_Ewt_Payor_Name_ID,
+                        approver = pcvList.approver,
+                        date = pcvList.createdDate
+                    };
+                    if (item.ewt > 0)
+                    {
+                        birForms.Add(temp);
+                    }
+                }
+            }
+            pcvList.birForms.AddRange(birForms);
+
             return View(viewLink, pcvList);
         }
 
@@ -1794,6 +1821,34 @@ namespace ExpenseProcessingSystem.Controllers
                 }
             }
 
+            List<cvBirForm> birForms = new List<cvBirForm>();
+            foreach (var item in pcvList.EntryCV)
+            {
+                if (birForms.Any(x => x.ewt == item.ewt && x.vendor == item.dtl_Ewt_Payor_Name_ID))
+                {
+                    int index = birForms.FindIndex(x => x.ewt == item.ewt);
+                    birForms[index].amount += item.debitGross;
+                }
+                else
+                {
+                    cvBirForm temp = new cvBirForm
+                    {
+                        amount = item.debitGross,
+                        ewt = item.ewt,
+                        vat = item.vat,
+                        vendor = item.dtl_Ewt_Payor_Name_ID,
+                        approver = pcvList.approver,
+                        date = pcvList.createdDate
+                    };
+                    if(item.ewt > 0)
+                    {
+                        birForms.Add(temp);
+                    }
+                }
+            }
+            pcvList.birForms.AddRange(birForms);
+
+
             return View("Entry_PCV_ReadOnly", pcvList);
         }
         //[* Entry Petty Cash *]
@@ -1825,6 +1880,8 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.phpCurrID = ccyPHP.Curr_ID;
             viewModel.phpCurrMasterID = ccyPHP.Curr_MasterID;
             viewModel.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
+            viewModel.EntryCV[0].ccy = ccyPHP.Curr_ID;
+
             return View(viewModel);
         }
 
@@ -1987,6 +2044,35 @@ namespace ExpenseProcessingSystem.Controllers
             ssList.phpCurrMasterID = ccyPHP.Curr_MasterID;
             ssList.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
 
+            List<cvBirForm> birForms = new List<cvBirForm>();
+            foreach (var item in ssList.EntryCV)
+            {
+                double grossOrig = item.gBaseRemarksDetails.Sum(x => x.amount);
+
+                if (birForms.Any(x => x.ewt == item.ewt && x.vendor == item.dtl_Ewt_Payor_Name_ID))
+                {
+                    int index = birForms.FindIndex(x => x.ewt == item.ewt);
+                    birForms[index].amount += grossOrig;
+                }
+                else
+                {
+                    cvBirForm temp = new cvBirForm
+                    {
+                        amount = grossOrig,
+                        ewt = item.ewt,
+                        vat = item.vat,
+                        vendor = item.dtl_Ewt_Payor_Name_ID,
+                        approver = ssList.approver,
+                        date = ssList.createdDate
+                    };
+                    if (item.ewt > 0)
+                    {
+                        birForms.Add(temp);
+                    }
+                }
+            }
+            ssList.birForms.AddRange(birForms);
+
             return View(viewLink, ssList);
         }
 
@@ -2048,6 +2134,36 @@ namespace ExpenseProcessingSystem.Controllers
                     i.vendVATList = new List<DMVATModel> { new DMVATModel { VAT_ID = 0, VAT_Rate = 0 } };
                 }
             }
+
+            List<cvBirForm> birForms = new List<cvBirForm>();
+            foreach (var item in ssList.EntryCV)
+            {
+                double grossOrig = item.gBaseRemarksDetails.Sum(x => x.amount);
+
+                if (birForms.Any(x => x.ewt == item.ewt && x.vendor == item.dtl_Ewt_Payor_Name_ID))
+                {
+                    int index = birForms.FindIndex(x => x.ewt == item.ewt);
+                    birForms[index].amount += grossOrig;
+                }
+                else
+                {
+                    cvBirForm temp = new cvBirForm
+                    {
+                        amount = grossOrig,
+                        ewt = item.ewt,
+                        vat = item.vat,
+                        vendor = item.dtl_Ewt_Payor_Name_ID,
+                        approver = ssList.approver,
+                        date = ssList.createdDate
+                    };
+                    if (item.ewt > 0)
+                    {
+                        birForms.Add(temp);
+                    }
+                }
+            }
+            ssList.birForms.AddRange(birForms);
+
             return View("Entry_SS_ReadOnly", ssList);
         }
 
@@ -2490,6 +2606,39 @@ namespace ExpenseProcessingSystem.Controllers
             ssList.phpCurrMasterID = ccyPHP.Curr_MasterID;
             ssList.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
 
+            List<cvBirForm> birForms = new List<cvBirForm>();
+            ssList.birForms = new List<cvBirForm>();
+            foreach (var item in ssList.LiquidationDetails)
+            {
+                double grossOrig = item.gBaseRemarksDetails.Sum(x => x.amount);
+
+                if (birForms.Any(x => x.ewt == item.ewtID && x.vendor == item.dtl_Ewt_Payor_Name_ID))
+                {
+                    int index = birForms.FindIndex(x => x.ewt == item.ewtID);
+                    birForms[index].amount += grossOrig;
+                }
+                else
+                {
+                    cvBirForm temp = new cvBirForm
+                    {
+                        amount = grossOrig,
+                        ewt = item.ewtID,
+                        vat = item.vatID,
+                        vendor = item.dtl_Ewt_Payor_Name_ID,
+                        approver = ssList.approver,
+                        date = ssList.createdDate
+                    };
+                    if (item.ewtID > 0)
+                    {
+                        birForms.Add(temp);
+                    }
+                }
+            }
+            if (birForms.Count() > 0)
+            {
+                ssList.birForms.AddRange(birForms);
+            }
+
             return View("Liquidation_SS", ssList);
         }
 
@@ -2575,6 +2724,39 @@ namespace ExpenseProcessingSystem.Controllers
             ssList.phpCurrMasterID = ccyPHP.Curr_MasterID;
             ssList.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
 
+            List<cvBirForm> birForms = new List<cvBirForm>();
+            ssList.birForms = new List<cvBirForm>();
+            foreach (var item in ssList.LiquidationDetails)
+            {
+                double grossOrig = item.gBaseRemarksDetails.Sum(x => x.amount);
+
+                if (birForms.Any(x => x.ewt == item.ewtID && x.vendor == item.dtl_Ewt_Payor_Name_ID))
+                {
+                    int index = birForms.FindIndex(x => x.ewt == item.ewtID);
+                    birForms[index].amount += grossOrig;
+                }
+                else
+                {
+                    cvBirForm temp = new cvBirForm
+                    {
+                        amount = grossOrig,
+                        ewt = item.ewtID,
+                        vat = item.vatID,
+                        vendor = item.dtl_Ewt_Payor_Name_ID,
+                        approver = ssList.approver,
+                        date = ssList.createdDate
+                    };
+                    if (item.ewtID > 0)
+                    {
+                        birForms.Add(temp);
+                    }
+                }
+            }
+            if(birForms.Count() > 0)
+            {
+                ssList.birForms.AddRange(birForms);
+            }
+
             return View("Liquidation_SS_ReadOnly", ssList);
         }
 
@@ -2639,7 +2821,7 @@ namespace ExpenseProcessingSystem.Controllers
                     viewLink = "Liquidation_SS_ReadOnly";
                     break;
                 case "Reversal":
-                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
+                    if (_service.updateLiquidateStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
                     {
                         _service.postLiq_SS(entryID, "R", int.Parse(GetUserID()));
                         ViewBag.Success = 1;
@@ -2648,7 +2830,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "Entry_PCV_ReadOnly";
+                    viewLink = "Liquidation_SS_ReadOnly";
                     break;
                 default:
                     break;
@@ -2680,6 +2862,39 @@ namespace ExpenseProcessingSystem.Controllers
             ssList.phpCurrID = ccyPHP.Curr_ID;
             ssList.phpCurrMasterID = ccyPHP.Curr_MasterID;
             ssList.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
+
+            List<cvBirForm> birForms = new List<cvBirForm>();
+            ssList.birForms = new List<cvBirForm>();
+            foreach (var item in ssList.LiquidationDetails)
+            {
+                double grossOrig = item.gBaseRemarksDetails.Sum(x => x.amount);
+
+                if (birForms.Any(x => x.ewt == item.ewtID && x.vendor == item.dtl_Ewt_Payor_Name_ID))
+                {
+                    int index = birForms.FindIndex(x => x.ewt == item.ewtID);
+                    birForms[index].amount += grossOrig;
+                }
+                else
+                {
+                    cvBirForm temp = new cvBirForm
+                    {
+                        amount = grossOrig,
+                        ewt = item.ewtID,
+                        vat = item.vatID,
+                        vendor = item.dtl_Ewt_Payor_Name_ID,
+                        approver = ssList.approver,
+                        date = ssList.createdDate
+                    };
+                    if (item.ewtID > 0)
+                    {
+                        birForms.Add(temp);
+                    }
+                }
+            }
+            if (birForms.Count() > 0)
+            {
+                ssList.birForms.AddRange(birForms);
+            }
 
             return View(viewLink, ssList);
         }
@@ -3629,7 +3844,20 @@ namespace ExpenseProcessingSystem.Controllers
 
             return Json(acc);
         }
+        [AcceptVerbs("GET")]
+        public JsonResult UpdateCDDPrintingStatus(int entryID)
+        {
+            bool result = _service.UpdateCDDPrintingStatus(entryID);
 
+            if (result)
+            {
+                return Json(true);
+            }
+            else
+            {
+                return Json(false);
+            }
+        }
         public IActionResult GenerateVoucher(EntryCVViewModelList model)
         {
             VoucherViewModelList vvm = new VoucherViewModelList();
