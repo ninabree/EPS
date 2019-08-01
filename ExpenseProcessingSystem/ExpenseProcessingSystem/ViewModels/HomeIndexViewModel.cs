@@ -50,13 +50,15 @@ namespace ExpenseProcessingSystem.ViewModels
     public class HomeNotifViewModel
     {
         public int Notif_ID { get; set; }
-        public int Notif_Application_ID { get; set; }
+        public int Notif_Application_Type_ID { get; set; }
+        public string Notif_Application_Type_Name { get; set; }
+        public int Notif_Application_Maker_ID { get; set; }
+        public string Notif_Application_Maker_Name { get; set; }
+        public int Notif_UserFor_ID { get; set; } 
         public string Notif_Message { get; set; }
-        public DateTime Notif_Last_Updated { get; set; }
-        public string Notif_Status { get; set; }
-        public string Notif_Type_Status { get; set; }
-        public string Notif_Verifier_Approver { get; set; }
-        public int Notif_Verifier_Approver_ID { get; set; }
+        public DateTime Notif_Date { get; set; }
+        public int Notif_Status_ID { get; set; }
+        public string Notif_Status_Name { get; set; }
     }
     public class AccessViewModel
     {

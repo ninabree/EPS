@@ -69,7 +69,20 @@ function displayInfoCashBD(pid) {
 
     var ret = pid.replace('item_', '');
 
-    getVendorTaxRate($('#' + pid).find('.txtPayor').val(), ret);
+    if ($('#' + pid).find('.ewtID').val() > 0) {
+        $('#txtLiqTaxRate').removeAttr('disabled');
+        $('#txtLiqPhpInput4').removeAttr('disabled');
+        getVendorTaxRate($('#' + pid).find('.txtPayor').val(), ret);
+    } else {
+        $('#txtLiqTaxRate').empty();
+        $('#txtLiqTaxRate').append($('<option/>', {
+            value: 0,
+            text: "0%"
+        }));
+        $('#txtLiqTaxRate').attr('disabled', 'disabled');
+        $('#txtLiqPhpInput4').attr('disabled', 'disabled');
+    }
+    
 
     if ($('#' + pid).find('.hiddenLiqFlag').val() == 0) {
         return false;

@@ -110,6 +110,7 @@
                             </td>
                             <td>
                                 @Html.TextBoxFor(x => Model.EntryCV[i].debitGross, new { @class = "input100 txtGross", @type = "number", @min = "0", @readonly = "readonly" })
+                                <input type="hidden" id="hidDebit" class="hidDebit" />
                             </td>
                             <td>
                                 @Html.TextBoxFor(x => Model.EntryCV[i].credEwt, new { @class = "input100 txtCredEwt", @type = "number", @min = "0", @readonly = "readonly" })
@@ -359,6 +360,7 @@
                         $('#' + pos).find('.reqEWTBtn').css("pointer-events", "auto");
                     }
                 }
+                computeValuesSSByParentID(pos);
             });
 
             $("table").on("click", ".expenseEWT", function (e) {
@@ -481,5 +483,95 @@
             $(pid).find('.reqEWTBtn').css("pointer-events", "auto");
             $(pid).find('.txtVat').removeAttr('disabled');
         }
+    };
+
+    function computeValuesSSByParentID(parentID) {
+        //var isInter = $("#" + parentID).find("#EntryDDV_" + parentID.substring(5) + "__inter_entity").is(':checked');
+        var amounts = $("");
+        var grossAmt = 0;
+        var origGrossAmt = 0;
+
+        ////check if Inter Entity
+        //if (isInter) {
+        //    var grossAmt = $("#" + parentID + " td .txtGross").val();
+        //} else {
+        amounts = $("#" + parentID + " .amount");
+        grossAmt = 0;
+        origGrossAmt = $("#" + parentID + " .txtGross").val();
+        for (var i = 0; i < amounts.length; i++) {
+            grossAmt += Number(amounts[i].value);
+        }
+
+        //For PCS,SS - resetting of Cash breakdown list.
+        if ($(".hiddenScreencode").val() == "PCV" || $(".hiddenScreencode").val() == "SS") {
+            if (origGrossAmt != grossAmt) {
+                var ret = parentID.replace('item_', '');
+                $('#divCashBD_' + ret).empty();
+                $('#EntryCV_' + ret + '__modalInputFlag').val(0);
+            }
+        }
+        //}
+
+        $("#" + parentID + " td .txtGross").val(roundNumber(grossAmt, 2));
+        //$("#" + pNode.id + " .txtGross").attr("value", grossAmt);
+
+        var itemNo = parentID; //jquery obj
+        var chkEwtVal = $("#" + itemNo).find(".chkEwt").is(':checked');
+        var vatable = $("#" + itemNo).find(".chkVat").is(':checked');
+        if (chkEwtVal) {
+            if (vatable) {
+                var vatRate = (Number($("#" + itemNo).find(".txtVat option:selected").text()) / 100);
+                var ewtRate = (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100);
+                var netVat = roundNumber(grossAmt / (1 + vatRate), 2);
+                var ewt = roundNumber(netVat * ewtRate, 2);
+                var netEwt = grossAmt - ewt;
+
+                $("#" + itemNo).find(".txtCredEwt").val(roundNumber(ewt, 2));
+                $("#" + itemNo).find(".txtCredCash").val(roundNumber(netEwt, 2));
+                if ($(".hiddenScreencode").val() == "SS") {
+                    $("#" + itemNo).find(".txtCredEwt").val(0);
+                    $("#" + itemNo).find(".txtGross").val(roundNumber(netEwt, 2));
+                }
+            } else {
+                var ewtAmount = grossAmt * (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100);
+                $("#" + itemNo).find(".txtCredEwt").val(roundNumber(ewtAmount, 2));
+                $("#" + itemNo).find(".txtCredCash").val(roundNumber((grossAmt - ewtAmount), 2));
+                if ($(".hiddenScreencode").val() == "SS") {
+                    $("#" + itemNo).find(".txtCredEwt").val(0);
+                    $("#" + itemNo).find(".txtGross").val(roundNumber((grossAmt - ewtAmount), 2));
+                }
+            }
+        } else {
+            $("#" + itemNo).find(".txtCredEwt").val(0);
+            $("#" + itemNo).find(".txtCredCash").val(roundNumber(grossAmt, 2));
+            if ($(".hiddenScreencode").val() == "SS") {
+                $("#" + itemNo).find(".txtGross").val(roundNumber(grossAmt, 2));
+            }
+        }
+
+        var gross = $(".txtGross");
+        var credEwt = $(".txtCredEwt");
+        var credCash = $(".txtCredCash");
+
+        var grossTotal = 0;
+        var ewtSubTotal = 0;
+        var cashSubTotal = 0;
+
+        for (var i = 0; i < gross.length; i++) {
+            grossTotal += Number(gross[i].value);
+        }
+
+        for (var i = 0; i < credEwt.length; i++) {
+            ewtSubTotal += Number(credEwt[i].value);
+        }
+
+        for (var i = 0; i < credCash.length; i++) {
+            cashSubTotal += Number(credCash[i].value);
+        }
+
+        $("#grossTotal").val(grossTotal);
+        $("#credEwtTotal").val(ewtSubTotal);
+        $("#credCashTotal").val(cashSubTotal);
+        $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
     };
 </script>

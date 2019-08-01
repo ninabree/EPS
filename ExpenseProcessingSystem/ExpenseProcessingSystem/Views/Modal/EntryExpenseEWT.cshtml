@@ -60,13 +60,13 @@
                         if (data.length == 0) {
                             ddlVAT.append($('<option/>', {
                                 value: 0,
-                                text: "N/A"
+                                text: "0"
                             }));
                         }
                         $.each(data, function (index, itemData) {
                             ddlVAT.append($('<option/>', {
                                 value: itemData["vaT_ID"],
-                                text: itemData["vaT_Rate"]
+                                text: roundNumber(itemData["vaT_Rate"],2)
                             }));
                         });
                         computeValuesByParentID($('#parentIdEWT').val());
@@ -77,13 +77,13 @@
                         if (data.length == 0) {
                             ddlEWT.append($('<option/>', {
                                 value: 0,
-                                text: "N/A"
+                                text: "0"
                             }));
                         }
                         $.each(data, function (index, itemData) {
                             ddlEWT.append($('<option/>', {
                                 value: itemData["tR_ID"],
-                                text: itemData["tR_Tax_Rate"]
+                                text: roundNumber(itemData["tR_Tax_Rate"],2)
                             }));
                         });
                         computeValuesByParentID($('#parentIdEWT').val());
@@ -123,11 +123,7 @@
             }
             //}
 
-            $("#" + parentID + " td .txtGross").val(grossAmt);
-            if ($(".hiddenScreencode").val() == "SS") {
-                $("#" + parentID).find(".txtCredCash").val(grossAmt);
-                return false;
-            }
+            $("#" + parentID + " td .txtGross").val(roundNumber(grossAmt, 2));
             //$("#" + pNode.id + " .txtGross").attr("value", grossAmt);
 
             var itemNo = parentID; //jquery obj
@@ -141,16 +137,27 @@
                     var ewt = roundNumber(netVat * ewtRate, 2);
                     var netEwt = grossAmt - ewt;
 
-                    $("#" + itemNo).find(".txtCredEwt").val(ewt);
-                    $("#" + itemNo).find(".txtCredCash").val(netEwt);
+                    $("#" + itemNo).find(".txtCredEwt").val(roundNumber(ewt, 2));
+                    $("#" + itemNo).find(".txtCredCash").val(roundNumber(netEwt, 2));
+                    if ($(".hiddenScreencode").val() == "SS") {
+                        $("#" + itemNo).find(".txtCredEwt").val(0);
+                        $("#" + itemNo).find(".txtGross").val(roundNumber(netEwt, 2));
+                    }
                 } else {
                     var ewtAmount = grossAmt * (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100);
                     $("#" + itemNo).find(".txtCredEwt").val(roundNumber(ewtAmount, 2));
                     $("#" + itemNo).find(".txtCredCash").val(roundNumber((grossAmt - ewtAmount), 2));
+                    if ($(".hiddenScreencode").val() == "SS") {
+                        $("#" + itemNo).find(".txtCredEwt").val(0);
+                        $("#" + itemNo).find(".txtGross").val(roundNumber((grossAmt - ewtAmount), 2));
+                    }
                 }
             } else {
                 $("#" + itemNo).find(".txtCredEwt").val(0);
-                $("#" + itemNo).find(".txtCredCash").val(grossAmt);
+                $("#" + itemNo).find(".txtCredCash").val(roundNumber(grossAmt, 2));
+                if ($(".hiddenScreencode").val() == "SS") {
+                    $("#" + itemNo).find(".txtGross").val(roundNumber(grossAmt, 2));
+                }
             }
 
             var gross = $(".txtGross");

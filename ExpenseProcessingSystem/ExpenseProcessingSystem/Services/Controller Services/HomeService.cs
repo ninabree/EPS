@@ -67,69 +67,95 @@ namespace ExpenseProcessingSystem.Services
         //[Notification]
         public List<HomeNotifViewModel> populateNotif(FiltersViewModel filters)
         {
-            IQueryable<HomeNotifModel> mList = _context.HomeNotif.ToList().AsQueryable();
-            PropertyInfo[] properties = filters.NotifFil.GetType().GetProperties();
+            var mList = (from notifs in (from n in _context.HomeNotif
+                                             //               where n.Vendor_isDeleted == false && n.Vendor_isActive == true
+                                         select n)
+                         join user in _context.User
+                         on notifs.Notif_Application_Maker_ID
+                         equals user.User_ID
+                         into c
+                         from user in c.DefaultIfEmpty()
+                         join stat in _context.StatusList
+                         on notifs.Notif_Status_ID
+                         equals stat.Status_ID
+                         into s
+                         from stat in s.DefaultIfEmpty()
+                         select new
+                         {
+                             notifs.Notif_ID,
+                             notifs.Notif_Application_Type_ID,
+                             notifs.Notif_Application_Maker_ID,
+                             CreatorName = user.User_LName + ", " + user.User_FName,
+                             notifs.Notif_UserFor_ID,
+                             notifs.Notif_Message,
+                             notifs.Notif_Date,
+                             stat.Status_ID,
+                             stat.Status_Name
+                         }).ToList();
 
-            //FILTER
-            foreach (var property in properties)
-            {
-                var propertyName = property.Name;
-                string subStr = propertyName.Substring(propertyName.IndexOf('_') + 1);
-                var toStr = property.GetValue(filters.NotifFil).ToString();
-                string[] colArr = { "No", "Creator_ID", "Approver_ID" };
-                if (toStr != "")
-                {
-                    if (toStr != "0")
-                    {
-                        if (colArr.Contains(subStr)) // IF INT VAL
-                        {
-                            mList = mList.Where("Notif_" + subStr + " = @0 AND  Notif_isDeleted == @1", property.GetValue(filters.NotifFil), false)
-                                     .Select(e => e).AsQueryable();
-                        }
-                        else if (subStr == "Last_Updated")
-                        {
-                            mList = mList
-                               .Where(x => (x.Notif_Last_Updated.ToShortDateString() == property.GetValue(filters.NotifFil).ToString()))
-                              .Select(e => e).AsQueryable();
-                        }
-                        else // IF STRING VALUE
-                        {
-                            mList = mList.Where("Notif_" + subStr + ".Contains(@0) AND  Notif_isDeleted == @1", property.GetValue(filters.NotifFil).ToString(), false)
-                                    .Select(e => e).AsQueryable();
-                        }
-                    }
-                }
-            }
-
-            var creatorList = (from a in mList
-                               join b in _context.User on a.Notif_Verifr_Apprvr_ID equals b.User_ID
-                               let CreatorName = b.User_LName + ", " + b.User_FName
-                               select new
-                               { a.Notif_ID, CreatorName }).ToList();
-            var apprvrList = (from a in mList
-                              join c in _context.User on a.Notif_Verifr_Apprvr_ID equals c.User_ID
-                              let ApproverName = c.User_LName + ", " + c.User_FName
-                              select new
-                              { a.Notif_ID, ApproverName }).ToList();
 
             //assign values
-            List<HomeNotifModel> mList2 = mList.ToList();
+            Dictionary<int, string> linktionary = new Dictionary<int, string>
+                    {
+                        {GlobalSystemValues.TYPE_DM,"Data Maintenance" },
+                        {GlobalSystemValues.TYPE_CV,"Check"},
+                        {GlobalSystemValues.TYPE_DDV,"Direct Deposit"},
+                        {GlobalSystemValues.TYPE_NC,"Non Cash"},
+                        {GlobalSystemValues.TYPE_PC,"Petty Cash"},
+                        {GlobalSystemValues.TYPE_SS,"Suspense Sundry"},
+                    };
             List<HomeNotifViewModel> vmList = new List<HomeNotifViewModel>();
-            foreach (HomeNotifModel m in mList2)
+            foreach (var m in mList)
             {
-                var creator = creatorList.Where(a => a.Notif_ID == m.Notif_ID).Select(a => a.CreatorName).FirstOrDefault();
-                var approver = apprvrList.Where(a => a.Notif_ID == m.Notif_ID).Select(a => a.ApproverName).FirstOrDefault();
                 HomeNotifViewModel vm = new HomeNotifViewModel
                 {
-                    Notif_Application_ID = m.Notif_Application_ID,
+                    Notif_ID = m.Notif_ID,
+                    Notif_Application_Type_ID = m.Notif_Application_Type_ID,
+                    Notif_Application_Type_Name = linktionary[m.Notif_Application_Type_ID],
+                    Notif_Application_Maker_ID = m.Notif_Application_Maker_ID,
+                    Notif_Application_Maker_Name = m.CreatorName,
+                    Notif_UserFor_ID = m.Notif_UserFor_ID,
                     Notif_Message = m.Notif_Message,
-                    Notif_Verifier_Approver = approver ?? "",
-                    Notif_Type_Status = m.Notif_Type_Status,
-                    Notif_Last_Updated = m.Notif_Last_Updated,
-                    Notif_Status = m.Notif_Status.ToString()
+                    Notif_Date = m.Notif_Date,
+                    Notif_Status_ID = m.Status_ID,
+                    Notif_Status_Name = m.Status_Name
                 };
                 vmList.Add(vm);
             }
+
+            PropertyInfo[] properties = filters.NotifFil.GetType().GetProperties();
+
+            ////FILTER
+            //foreach (var property in properties)
+            //{
+            //    var propertyName = property.Name;
+            //    string subStr = propertyName.Substring(propertyName.IndexOf('_') + 1);
+            //    var toStr = property.GetValue(filters.NotifFil).ToString();
+            //    string[] colArr = { "No", "Creator_ID", "Approver_ID" };
+            //    if (toStr != "")
+            //    {
+            //        if (toStr != "0")
+            //        {
+            //            if (colArr.Contains(subStr)) // IF INT VAL
+            //            {
+            //                mList = mList.Where("Notif_" + subStr + " = @0 AND  Notif_isDeleted == @1", property.GetValue(filters.NotifFil), false)
+            //                         .Select(e => e).AsQueryable();
+            //            }
+            //            else if (subStr == "Last_Updated")
+            //            {
+            //                mList = mList
+            //                   .Where(x => (x.Notif_Last_Updated.ToShortDateString() == property.GetValue(filters.NotifFil).ToString()))
+            //                  .Select(e => e).AsQueryable();
+            //            }
+            //            else // IF STRING VALUE
+            //            {
+            //                mList = mList.Where("Notif_" + subStr + ".Contains(@0) AND  Notif_isDeleted == @1", property.GetValue(filters.NotifFil).ToString(), false)
+            //                        .Select(e => e).AsQueryable();
+            //            }
+            //        }
+            //    }
+            //}
+
             return vmList;
         }
         //Pending
@@ -2861,7 +2887,35 @@ namespace ExpenseProcessingSystem.Services
                                  Vendor_masterID = vend.Vendor_MasterID
                              }).ToList();
 
-            var dbAPSWT_Conc = dbAPSWT_M.Concat(dbAPSWT_M_LIQ).OrderBy(x => x.Payee);
+            //Get data from Taxable Non-cash  table.
+            dbAPSWT_M_NC = (from ncDtl in _context.ExpenseEntryNonCashDetails
+                            join ncAcc in _context.ExpenseEntryNonCashDetailAccounts on ncDtl.ExpNCDtl_ID equals ncAcc.ExpenseEntryNCDtlModel.ExpNCDtl_ID
+                            join nc in _context.ExpenseEntryNonCash on ncDtl.ExpenseEntryNCModel.ExpNC_ID equals nc.ExpNC_ID
+                            join exp in _context.ExpenseEntry on nc.ExpenseEntryModel.Expense_ID equals exp.Expense_ID
+                            join tr in _context.DMTR on ncDtl.ExpNCDtl_TR_ID equals tr.TR_ID
+                            join vend in _context.DMVendor on ncDtl.ExpNCDtl_Vendor_ID equals vend.Vendor_ID
+                            join ncAcc2 in (from ncDtl2 in _context.ExpenseEntryNonCashDetails
+                                            join ncAcc2 in _context.ExpenseEntryNonCashDetailAccounts on ncDtl2.ExpNCDtl_ID equals ncAcc2.ExpenseEntryNCDtlModel.ExpNCDtl_ID
+                                            where ncAcc2.ExpNCDtlAcc_Type_ID == 3
+                                            select new { ncAcc2.ExpNCDtlAcc_Amount, ncAcc2.ExpenseEntryNCDtlModel.ExpNCDtl_ID }) on ncAcc.ExpenseEntryNCDtlModel.ExpNCDtl_ID equals ncAcc2.ExpNCDtl_ID
+                            where status.Contains(exp.Expense_Status)
+                            && ncAcc.ExpNCDtlAcc_Type_ID == 1
+                            && exp.Expense_Last_Updated.Month == month
+                            && exp.Expense_Last_Updated.Year == year
+                            select new HomeReportOutputAPSWT_MModel
+                            {
+                                Payee = vend.Vendor_Name,
+                                Tin = vend.Vendor_TIN,
+                                RateOfTax = tr.TR_Tax_Rate,
+                                ATC = tr.TR_ATC,
+                                NOIP = tr.TR_Nature,
+                                AOIP = ncAcc.ExpNCDtlAcc_Amount,
+                                AOTW = ncAcc2.ExpNCDtlAcc_Amount,
+                                Last_Update_Date = exp.Expense_Last_Updated,
+                                Vendor_masterID = vend.Vendor_MasterID
+                            }).Where(x => x.AOTW > 0).ToList();
+
+            var dbAPSWT_Conc = dbAPSWT_M.Concat(dbAPSWT_M_LIQ).Concat(dbAPSWT_M_NC).OrderBy(x => x.Payee);
 
 
             foreach (var i in vendorMasterIDList)
@@ -2940,6 +2994,7 @@ namespace ExpenseProcessingSystem.Services
                          && model.TaxRateList.Contains(tr.TR_Tax_Rate)
                          && startDT.Date <= expense.Expense_Last_Updated.Date
                          && expense.Expense_Last_Updated.Date <= endDT.Date
+                         && expense.Expense_Type != GlobalSystemValues.TYPE_SS
                          orderby expense.Expense_Last_Updated
                          select new HomeReportOutputAST1000Model
                          {
@@ -2963,7 +3018,7 @@ namespace ExpenseProcessingSystem.Services
                              join tr in _context.DMTR on ie.Liq_TaxRate equals tr.TR_ID
                              join vend in _context.DMVendor on ie.Liq_VendorID equals vend.Vendor_ID
                              where status.Contains(liqDtl.Liq_Status)
-                             && model.TaxRateList.Contains(float.Parse(ie.Liq_TaxRate.ToString()))
+                             && model.TaxRateList.Contains(tr.TR_Tax_Rate)
                              && startDT.Date <= liqDtl.Liq_LastUpdated_Date
                              && liqDtl.Liq_LastUpdated_Date <= endDT.Date
                              select new HomeReportOutputAST1000Model
@@ -2979,7 +3034,36 @@ namespace ExpenseProcessingSystem.Services
                                  Vendor_masterID = vend.Vendor_MasterID
                              }).ToList();
 
-            var dbAPSWT_Conc = dbAST1000.Concat(dbAST1000_LIQ).OrderBy(x => x.SupplierName);
+            //Get data from Taxable Non-cash  table.
+            dbAST1000_NC = (from ncDtl in _context.ExpenseEntryNonCashDetails
+                            join ncAcc in _context.ExpenseEntryNonCashDetailAccounts on ncDtl.ExpNCDtl_ID equals ncAcc.ExpenseEntryNCDtlModel.ExpNCDtl_ID
+                            join nc in _context.ExpenseEntryNonCash on ncDtl.ExpenseEntryNCModel.ExpNC_ID equals nc.ExpNC_ID
+                            join exp in _context.ExpenseEntry on nc.ExpenseEntryModel.Expense_ID equals exp.Expense_ID
+                            join tr in _context.DMTR on ncDtl.ExpNCDtl_TR_ID equals tr.TR_ID
+                            join vend in _context.DMVendor on ncDtl.ExpNCDtl_Vendor_ID equals vend.Vendor_ID
+                            join ncAcc2 in (from ncDtl2 in _context.ExpenseEntryNonCashDetails
+                                            join ncAcc2 in _context.ExpenseEntryNonCashDetailAccounts on ncDtl2.ExpNCDtl_ID equals ncAcc2.ExpenseEntryNCDtlModel.ExpNCDtl_ID
+                                            where ncAcc2.ExpNCDtlAcc_Type_ID == 3
+                                            select new { ncAcc2.ExpNCDtlAcc_Amount, ncAcc2.ExpenseEntryNCDtlModel.ExpNCDtl_ID }) on ncAcc.ExpenseEntryNCDtlModel.ExpNCDtl_ID equals ncAcc2.ExpNCDtl_ID
+                            where status.Contains(exp.Expense_Status)
+                            && ncAcc.ExpNCDtlAcc_Type_ID == 1
+                            && model.TaxRateList.Contains(tr.TR_Tax_Rate)
+                            && startDT.Date <= exp.Expense_Last_Updated.Date
+                            && exp.Expense_Last_Updated.Date <= endDT.Date
+                            select new HomeReportOutputAST1000Model
+                            {
+                                SupplierName = vend.Vendor_Name,
+                                Tin = vend.Vendor_TIN,
+                                RateOfTax = tr.TR_Tax_Rate,
+                                ATC = tr.TR_ATC,
+                                NOIP = tr.TR_Nature,
+                                TaxBase = ncAcc.ExpNCDtlAcc_Amount,
+                                AOTW = ncAcc2.ExpNCDtlAcc_Amount,
+                                Last_Update_Date = exp.Expense_Last_Updated,
+                                Vendor_masterID = vend.Vendor_MasterID
+                            }).Where(x => x.AOTW > 0).ToList();
+
+            var dbAPSWT_Conc = dbAST1000.Concat(dbAST1000_LIQ).Concat(dbAST1000_NC).OrderBy(x => x.SupplierName);
 
             foreach (var i in vendorMasterIDList)
             {
@@ -6502,15 +6586,30 @@ namespace ExpenseProcessingSystem.Services
             }
 
             //For FBT purpose.
-            var fbt_Debit = accList.Where(x => x.Account_ID == int.Parse(xelemAcc.Element("D_FBT").Value)).FirstOrDefault();
-            var fbt_Credit = accList.Where(x => x.Account_ID == int.Parse(xelemAcc.Element("C_FBT").Value)).FirstOrDefault();
-            if (fbt_Debit != null && fbt_Debit.Account_No.Contains(accType) && fbt_Debit.Account_No.Contains(accNo) && fbt_Debit.Account_Code == accCode)
+            var fbt_Account = accList.Where(x => x.Account_MasterID == int.Parse(xelemAcc.Element("HOUSE_RENT").Value)).FirstOrDefault();
+            if (fbt_Account != null && fbt_Account.Account_No.Contains(accType) && fbt_Account.Account_No.Contains(accNo) && fbt_Account.Account_Code == accCode)
             {
-                return fbt_Debit.Account_Name;
+                return fbt_Account.Account_Name;
             }
-            else if (fbt_Credit != null && fbt_Credit.Account_No.Contains(accType) && fbt_Credit.Account_No.Contains(accNo) && fbt_Credit.Account_Code == accCode)
+            fbt_Account = accList.Where(x => x.Account_MasterID == int.Parse(xelemAcc.Element("D_FBT_RENT").Value)).FirstOrDefault();
+            if (fbt_Account != null && fbt_Account.Account_No.Contains(accType) && fbt_Account.Account_No.Contains(accNo) && fbt_Account.Account_Code == accCode)
             {
-                return fbt_Credit.Account_Name;
+                return fbt_Account.Account_Name;
+            }
+            fbt_Account = accList.Where(x => x.Account_MasterID == int.Parse(xelemAcc.Element("D_FBT_EXPAT").Value)).FirstOrDefault();
+            if (fbt_Account != null && fbt_Account.Account_No.Contains(accType) && fbt_Account.Account_No.Contains(accNo) && fbt_Account.Account_Code == accCode)
+            {
+                return fbt_Account.Account_Name;
+            }
+            fbt_Account = accList.Where(x => x.Account_MasterID == int.Parse(xelemAcc.Element("D_FBT_LOCAL").Value)).FirstOrDefault();
+            if (fbt_Account != null && fbt_Account.Account_No.Contains(accType) && fbt_Account.Account_No.Contains(accNo) && fbt_Account.Account_Code == accCode)
+            {
+                return fbt_Account.Account_Name;
+            }
+            fbt_Account = accList.Where(x => x.Account_MasterID == int.Parse(xelemAcc.Element("C_FBT").Value)).FirstOrDefault();
+            if (fbt_Account != null && fbt_Account.Account_No.Contains(accType) && fbt_Account.Account_No.Contains(accNo) && fbt_Account.Account_Code == accCode)
+            {
+                return fbt_Account.Account_Name;
             }
 
             //For Liquidation purpose.

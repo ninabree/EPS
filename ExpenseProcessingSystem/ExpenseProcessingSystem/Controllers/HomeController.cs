@@ -74,6 +74,7 @@ namespace ExpenseProcessingSystem.Controllers
 
         //Home Screen Block---------------------------------------------------------------------------------------
         [OnlineUserCheck]
+        [NonAdminRoleCheck]
         public IActionResult Index(HomeIndexViewModel vm, string sortOrder, string currentFilter, string colName, string searchString, string page)
         {
             int? pg = (page == null) ? 1 : int.Parse(page);
@@ -134,6 +135,7 @@ namespace ExpenseProcessingSystem.Controllers
         }
 
         [OnlineUserCheck]
+        [NonAdminRoleCheck]
         public IActionResult History(HomeIndexViewModel vm, string sortOrder, string currentFilter, string searchString, int? page)
         {
             var role = _service.getUserRole(GetUserID());
@@ -368,6 +370,7 @@ namespace ExpenseProcessingSystem.Controllers
         //----------End Closing Screen--------------
         [OnlineUserCheck]
         [ImportModelState]
+        [NonAdminRoleCheck]
         public IActionResult DM(DMViewModel vm, string sortOrder, string currentFilter, string tblName, string colName, string searchString, int? page, string partialName)
         {
             ViewData["sortOrder"] = sortOrder;
@@ -517,6 +520,7 @@ namespace ExpenseProcessingSystem.Controllers
 
         //--------------------------[* REPORT *]----------------------------------------
         [OnlineUserCheck]
+        [NonAdminRoleCheck]
         public IActionResult Report()
         {
             //Get list of report types from the constant data file:HomeReportTypesModel.cs
@@ -555,6 +559,8 @@ namespace ExpenseProcessingSystem.Controllers
         }
 
         //Populate the Report sub-type list to dropdownlist depends on the selected Report Type
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
         [AcceptVerbs("GET")]
         public JsonResult GetReportSubType(int ReportTypeID)
         {
@@ -624,6 +630,8 @@ namespace ExpenseProcessingSystem.Controllers
         }
 
         //[ExportModelState]
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
         public IActionResult GenerateFilePreview(HomeReportViewModel model)
         {
             string layoutName = "";
@@ -912,6 +920,8 @@ namespace ExpenseProcessingSystem.Controllers
             return View("Report");
         }
 
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
         public IActionResult OutputPDF(string layoutPath, string layoutName, HomeReportDataFilterViewModel data, string fileName, string footerFormat)
         {
             string pdfLayoutFilePath = layoutPath + layoutName;
@@ -927,7 +937,8 @@ namespace ExpenseProcessingSystem.Controllers
         }
 
         [OnlineUserCheck]
-        public IActionResult Generate2307File(int _vendor, int _ewt, int _tax, double _amount, DateTime date, string approver,int expID)
+        [NonAdminRoleCheck]
+        public IActionResult Generate2307File(int _vendor, int _ewt, int _tax, double amount, DateTime date, string approver,int expID)
         {
             string path = "";
             XElement xelem = XElement.Load("wwwroot/xml/ReportHeader.xml");
@@ -1014,6 +1025,7 @@ namespace ExpenseProcessingSystem.Controllers
         //-----------------------[* BUDGET MONITORING *]-------------------------------------------
         [OnlineUserCheck]
         [ImportModelState]
+        [NonAdminRoleCheck]
         public IActionResult BM(string sortOrder, string currentFilter, string searchString, int? page)
         {
             //set sort vals
@@ -1048,6 +1060,7 @@ namespace ExpenseProcessingSystem.Controllers
 
         [OnlineUserCheck]
         [ImportModelState]
+        [NonAdminRoleCheck]
         public IActionResult BM_PrintList()
         {
             return new ViewAsPdf("BM_PrintPDF", _service.PopulateBM())
@@ -1512,6 +1525,7 @@ namespace ExpenseProcessingSystem.Controllers
 
         //-----------------[* Entry Petty Cash *]-----------------------------
         [OnlineUserCheck]
+        [NonAdminRoleCheck]
         [ImportModelState]
         public IActionResult Entry_PCV()
         {
@@ -1586,6 +1600,7 @@ namespace ExpenseProcessingSystem.Controllers
         }
 
         [OnlineUserCheck]
+        [NonAdminRoleCheck]
         [NonAdminRoleCheck]
         public IActionResult VerAppModPCV(int entryID, string command)
         {
@@ -1696,6 +1711,7 @@ namespace ExpenseProcessingSystem.Controllers
 
         [OnlineUserCheck]
         [NonAdminRoleCheck]
+        [NonAdminRoleCheck]
         public IActionResult View_PCV(int entryID)
         {
             var userId = GetUserID();
@@ -1741,6 +1757,7 @@ namespace ExpenseProcessingSystem.Controllers
 
         //-------------[* Entry Cash Advance(SS) *]--------------------------
         [OnlineUserCheck]
+        [NonAdminRoleCheck]
         [ImportModelState]
         public IActionResult Entry_SS()
         {
@@ -2360,7 +2377,7 @@ namespace ExpenseProcessingSystem.Controllers
             return View(PaginatedList<LiquidationMainListViewModel>.CreateAsync(
                 (sortedVals.list).Cast<LiquidationMainListViewModel>().AsQueryable().AsNoTracking(), page ?? 1, pageSize));
         }
-
+        [OnlineUserCheck]
         [NonAdminRoleCheck]
         public IActionResult Liquidation_SS(int entryID)
         {
