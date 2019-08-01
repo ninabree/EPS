@@ -10,7 +10,7 @@
     {
         <table class="table table-bordered editable-th">
             <tr>
-                <th>Employee Name</th>
+                <th colspan="2">Employee Name</th>
                 <th>TIN</th>
                 <th>Position</th>
                 <th colspan="3">Signatures</th>
@@ -19,7 +19,22 @@
             @if (Model != null)
             {
                 <tr>
-                    <td>@Html.TextBoxFor(item => item.BCS_Name, new { @class = "w-full" })</td>
+                    <td colspan="2">
+                        @{
+                            List<SelectListItem> emp = new List<SelectListItem>();
+                            emp.Add(new SelectListItem
+                            {
+                                Text = "--" + Model.BCS_Name + "--",
+                                Value = Model.BCS_User_ID + "",
+                                Selected = true
+                            });
+                            emp = (List<SelectListItem>)@ViewBag.empList;
+                        }
+                        @Html.DropDownListFor(m => m.BCS_User_ID,
+                                            emp,
+                                            "-- Select from List --",
+                                            new { @class = "w-full input" })
+                    </td>
                     <td>@Html.TextBoxFor(item => item.BCS_TIN, new { @class = "w-full" })</td>
                     <td>@Html.TextBoxFor(item => item.BCS_Position, new { @class = "w-full" })</td>
                     <td colspan="3">

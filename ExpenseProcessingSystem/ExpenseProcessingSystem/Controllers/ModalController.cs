@@ -948,7 +948,7 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-
+            ViewBag.empList = _service.getEmpSelectList();
             return View(_service.addBCS());
         }
         public IActionResult DMEditBCS_Pending(string[] IdsArr)
@@ -962,6 +962,7 @@ namespace ExpenseProcessingSystem.Controllers
             if (ModelState.IsValid)
             {
                 vmList = _service.editBCS(IdsArr);
+                ViewBag.empList = _service.getEmpSelectList();
             }
             return View(vmList);
         }

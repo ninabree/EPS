@@ -16,8 +16,8 @@ namespace ExpenseProcessingSystem.ViewModels.NewRecord
     {
         [Display(Name = "BCS Name")]
         [NotNullValidations, TextValidation]
-        public string BCS_Name { get; set; }
         public int BCS_User_ID { get; set; }
+        public string BCS_Name { get; set; }
         [Display(Name = "BCS TIN")]
         [NotNullValidations, TINLengthValidation]
         public string BCS_TIN { get; set; }

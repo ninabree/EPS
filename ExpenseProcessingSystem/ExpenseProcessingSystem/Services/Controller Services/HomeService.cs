@@ -2698,6 +2698,14 @@ namespace ExpenseProcessingSystem.Services
             return true;
         }
         //[ BIR Cert Signatory ]
+        public List<SelectListItem> getEmpSelectList()
+        {
+            List<SelectListItem> empList = new List<SelectListItem>();
+            _context.User.Where(x => x.User_InUse == true && (x.User_Role != "admin" || x.User_Role != "maker")).ToList().ForEach(x => {
+                empList.Add(new SelectListItem() { Text = x.User_LName + ", " + x.User_FName, Value = x.User_ID + "" });
+            });
+            return empList;
+        }
         public bool addBCS_Pending(NewBCSViewModel model, string userId)
         {
             List<DMBIRCertSignModel_Pending> vmList = new List<DMBIRCertSignModel_Pending>();
@@ -2711,7 +2719,8 @@ namespace ExpenseProcessingSystem.Services
             var uploads = Path.Combine(_hostingEnvironment.WebRootPath, _context.FileLocation.Where(x => x.FL_Type == "BCS").Select(x => x.FL_Location).FirstOrDefault());
             //save file to uploads folder
             FileService objFile = new FileService();
-            string strFilePath = objFile.SaveFile(model.BCS_Signatures, uploads, model.BCS_Name);
+            string empName = getEmpSelectList().Where(x => x.Value == model.BCS_User_ID + "").FirstOrDefault().Value;
+            string strFilePath = objFile.SaveFile(model.BCS_Signatures, uploads, empName);
 
             DMBIRCertSignModel_Pending m = new DMBIRCertSignModel_Pending
             {
@@ -2749,7 +2758,8 @@ namespace ExpenseProcessingSystem.Services
             {
 
                 FileService objFile = new FileService();
-                strFilePath = objFile.SaveFile(model.BCS_Signatures, uploads, model.BCS_Name);
+                string empName = getEmpSelectList().Where(x => x.Value == model.BCS_User_ID + "").FirstOrDefault().Value;
+                strFilePath = objFile.SaveFile(model.BCS_Signatures, uploads, empName);
             }
             DMBIRCertSignModel_Pending m = new DMBIRCertSignModel_Pending
             {

@@ -204,6 +204,8 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("BCS_Creator_ID");
 
+                    b.Property<int>("BCS_Emp_MasterID");
+
                     b.Property<DateTime>("BCS_Last_Updated");
 
                     b.Property<int>("BCS_MasterID");
@@ -215,8 +217,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.Property<int>("BCS_Status_ID");
 
                     b.Property<string>("BCS_TIN");
-
-                    b.Property<int>("BCS_User_ID");
 
                     b.Property<bool>("BCS_isActive");
 
@@ -1562,6 +1562,8 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("Pending_BCS_Creator_ID");
 
+                    b.Property<int>("Pending_BCS_Emp_MasterID");
+
                     b.Property<DateTime>("Pending_BCS_Filed_Date");
 
                     b.Property<int>("Pending_BCS_MasterID");
@@ -1573,8 +1575,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.Property<int>("Pending_BCS_Status_ID");
 
                     b.Property<string>("Pending_BCS_TIN");
-
-                    b.Property<int>("Pending_BCS_User_ID");
 
                     b.Property<bool>("Pending_BCS_isActive");
 

@@ -836,7 +836,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         {
                             BCS_MasterID = m.Pending_BCS_MasterID,
                             BCS_User_ID = m.Pending_BCS_User_ID,
-                            BCS_Name = getBCSName(m.Pending_BCS_ID),
+                            BCS_Name = getBCSNamePending(m.Pending_BCS_ID),
                             BCS_TIN = m.Pending_BCS_TIN,
                             BCS_Position = m.Pending_BCS_Position,
                             BCS_Signatures = m.Pending_BCS_Signatures,
@@ -869,7 +869,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         {
                             BCS_MasterID = m.Pending_BCS_MasterID,
                             BCS_User_ID = m.Pending_BCS_User_ID,
-                            BCS_Name = getBCSName(m.Pending_BCS_ID),
+                            BCS_Name = getBCSNamePending(m.Pending_BCS_ID),
                             BCS_TIN = m.Pending_BCS_TIN,
                             BCS_Position = m.Pending_BCS_Position,
                             BCS_Signatures = m.Pending_BCS_Signatures,
@@ -1730,9 +1730,22 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         //get bcs name
         public string getBCSName(int id)
         {
-            var name = _context.DMBCS.Where(q => q.BCS_ID == id).Join(_context.DMEmp, b => b.BCS_User_ID,
-                e => e.Emp_MasterID, (b, e) => new DMBCSViewModel
-                { BCS_Name = e.Emp_Name }).SingleOrDefault();
+            var name = _context.DMBCS.Where(q => q.BCS_ID == id).Join(_context.User, b => b.BCS_User_ID,
+                e => e.User_ID, (b, e) => new DMBCSViewModel
+                { BCS_Name = e.User_LName + ", " + e.User_FName }).SingleOrDefault();
+
+            if (name == null)
+            {
+                return null;
+            }
+
+            return name.BCS_Name.ToUpper();
+        }
+        public string getBCSNamePending(int id)
+        {
+            var name = _context.DMBCS_Pending.Where(q => q.Pending_BCS_ID == id).Join(_context.User, b => b.Pending_BCS_User_ID,
+                e => e.User_ID, (b, e) => new DMBCSViewModel
+                { BCS_Name = e.User_LName + ", " + e.User_FName }).SingleOrDefault();
 
             if (name == null)
             {
