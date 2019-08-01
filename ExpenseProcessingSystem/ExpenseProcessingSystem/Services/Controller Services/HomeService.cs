@@ -5603,7 +5603,7 @@ namespace ExpenseProcessingSystem.Services
                                 Vendor_masterID = vend.Vendor_MasterID
                             }).Where(x => x.AOTW > 0).ToList();
 
-            return dbBIRCSV.Concat(dbBIRCSV_LIQ).Concat(dbBIRCSV_NC).OrderBy(x => x.Payee);
+            return dbBIRCSV.Concat(dbBIRCSV_LIQ).Concat(dbBIRCSV_NC).OrderBy(x => x.Payee).ThenBy(x => x.RateOfTax);
         }
 
         public IEnumerable<HomeReportAccountSummaryViewModel> GetWithHoldingSummaryData(HomeReportViewModel model)
