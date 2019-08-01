@@ -1735,28 +1735,127 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
 
         public List<DMCustViewModel> populateCust(DMFiltersViewModel filters)
         {
-            IQueryable<DMCustModel> mList = _context.DMCust.Where(x => x.Cust_isDeleted == false && x.Cust_isActive == true).ToList().AsQueryable();
-            var pendingList = _context.DMCust_Pending.ToList();
+            var mList = (from rate in (from c in _context.DMCust
+                                       join user in _context.User
+                                       on c.Cust_Creator_ID equals user.User_ID
+                                       join stat in _context.StatusList
+                                       on c.Cust_Status_ID equals stat.Status_ID
+                                       where c.Cust_isDeleted == false && c.Cust_isActive == true
+                                       select new
+                                       {
+                                           c.Cust_ID,
+                                           c.Cust_MasterID,
+                                           c.Cust_Name,
+                                           c.Cust_Abbr,
+                                           c.Cust_No,
+                                           c.Cust_Creator_ID,
+                                           CreatorName = user.User_LName + ", " + user.User_FName,
+                                           c.Cust_Approver_ID,
+                                           stat.Status_ID,
+                                           stat.Status_Name,
+                                           c.Cust_Created_Date,
+                                           c.Cust_Last_Updated
+                                       })
+                         join apprv in _context.User
+                         on rate.Cust_Approver_ID
+                         equals apprv.User_ID
+                         into a
+                         from apprv in a.DefaultIfEmpty()
+                         select new
+                         {
+                             rate.Cust_ID,
+                             rate.Cust_MasterID,
+                             rate.Cust_Name,
+                             rate.Cust_Abbr,
+                             rate.Cust_No,
+                             rate.Cust_Creator_ID,
+                             rate.CreatorName,
+                             ApproverID = rate.Cust_Approver_ID,
+                             ApproverName = rate.Cust_Approver_ID > 0 ? apprv.User_LName + ", " + apprv.User_FName : "",
+                             rate.Cust_Created_Date,
+                             rate.Cust_Last_Updated,
+                             rate.Status_ID,
+                             rate.Status_Name
+                         }).ToList();
+            var pendingList = (from rate in (from c in _context.DMCust_Pending
+                                             join user in _context.User
+                                             on c.Pending_Cust_Creator_ID equals user.User_ID
+                                             join stat in _context.StatusList
+                                             on c.Pending_Cust_Status_ID equals stat.Status_ID
+                                             where c.Pending_Cust_isDeleted == false && c.Pending_Cust_isActive == true
+                                             select new
+                                             {
+                                                 c.Pending_Cust_ID,
+                                                 c.Pending_Cust_MasterID,
+                                                 c.Pending_Cust_Name,
+                                                 c.Pending_Cust_Abbr,
+                                                 c.Pending_Cust_No,
+                                                 c.Pending_Cust_Creator_ID,
+                                                 CreatorName = user.User_LName + ", " + user.User_FName,
+                                                 c.Pending_Cust_Approver_ID,
+                                                 stat.Status_ID,
+                                                 stat.Status_Name,
+                                                 c.Pending_Cust_Filed_Date
+                                             })
+                               join apprv in _context.User
+                               on rate.Pending_Cust_Approver_ID
+                               equals apprv.User_ID
+                               into a
+                               from apprv in a.DefaultIfEmpty()
+                               select new
+                               {
+                                   rate.Pending_Cust_ID,
+                                   rate.Pending_Cust_MasterID,
+                                   rate.Pending_Cust_Name,
+                                   rate.Pending_Cust_Abbr,
+                                   rate.Pending_Cust_No,
+                                   rate.Pending_Cust_Creator_ID,
+                                   rate.CreatorName,
+                                   ApproverID = rate.Pending_Cust_Approver_ID,
+                                   ApproverName = rate.Pending_Cust_Approver_ID > 0 ? apprv.User_LName + ", " + apprv.User_FName : "",
+                                   rate.Pending_Cust_Filed_Date,
+                                   rate.Status_ID,
+                                   rate.Status_Name
+                               }).ToList();
+            List<DMCustViewModel> vmList = new List<DMCustViewModel>();
+            foreach (var m in mList)
+            {
+                DMCustViewModel vm = new DMCustViewModel
+                {
+                    Cust_MasterID = m.Cust_MasterID,
+                    Cust_Name = m.Cust_Name,
+                    Cust_Abbr = m.Cust_Abbr,
+                    Cust_No = m.Cust_No,
+                    Cust_Creator_ID = m.Cust_Creator_ID,
+                    Cust_Creator_Name = m.CreatorName ?? "N/A",
+                    Cust_Approver_Name = m.ApproverName ?? "",
+                    Cust_Created_Date = m.Cust_Created_Date,
+                    Cust_Last_Updated = m.Cust_Last_Updated,
+                    Cust_Status_ID = m.Status_ID,
+                    Cust_Status = m.Status_Name ?? "N/A"
+                };
+                vmList.Add(vm);
+            }
             foreach (var m in pendingList)
             {
-                mList = mList.Concat(new DMCustModel[] {
-                    new DMCustModel
-                    {
-                        Cust_ID = m.Pending_Cust_ID,
-                        Cust_MasterID = m.Pending_Cust_MasterID,
-                        Cust_Name = m.Pending_Cust_Name,
-                        Cust_Abbr = m.Pending_Cust_Abbr,
-                        Cust_No = m.Pending_Cust_No,
-                        Cust_Creator_ID = m.Pending_Cust_Creator_ID,
-                        Cust_Approver_ID = m.Pending_Cust_Approver_ID.Equals(null) ? 0 : m.Pending_Cust_Approver_ID,
-                        Cust_Created_Date = m.Pending_Cust_Filed_Date,
-                        Cust_Last_Updated = m.Pending_Cust_Filed_Date,
-                        Cust_Status_ID = m.Pending_Cust_Status_ID
-                    }
-                });
+                DMCustViewModel vm = new DMCustViewModel
+                {
+                    Cust_MasterID = m.Pending_Cust_MasterID,
+                    Cust_Name = m.Pending_Cust_Name,
+                    Cust_Abbr = m.Pending_Cust_Abbr,
+                    Cust_No = m.Pending_Cust_No,
+                    Cust_Creator_ID = m.Pending_Cust_Creator_ID,
+                    Cust_Creator_Name = m.CreatorName ?? "N/A",
+                    Cust_Approver_Name = m.ApproverName ?? "",
+                    Cust_Created_Date = m.Pending_Cust_Filed_Date,
+                    Cust_Last_Updated = m.Pending_Cust_Filed_Date,
+                    Cust_Status_ID = m.Status_ID,
+                    Cust_Status = m.Status_Name ?? "N/A"
+                };
+                vmList.Add(vm);
             }
             var properties = filters.CUF.GetType().GetProperties();
-
+            IQueryable<DMCustViewModel> vmList2 = vmList.AsQueryable();
             //FILTER
             foreach (var property in properties)
             {
@@ -1781,66 +1880,29 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                               .Select(x => x.Status_ID).ToList();
                             if (subStr == "Approver_Name")
                             {
-                                mList = mList.Where(x => names.Contains(x.Cust_Approver_ID) && x.Cust_isDeleted == false)
+                                vmList2 = vmList2.Where(x => names.Contains(x.Cust_Approver_ID) && x.Cust_isDeleted == false)
                                          .Select(e => e).AsQueryable();
                             }
                             else if (subStr == "Creator_Name")
                             {
-                                mList = mList.Where(x => names.Contains(x.Cust_Creator_ID) && x.Cust_isDeleted == false)
+                                vmList2 = vmList2.Where(x => names.Contains(x.Cust_Creator_ID) && x.Cust_isDeleted == false)
                                          .Select(e => e).AsQueryable();
                             }
                             else if (subStr == "Status")
                             {
-                                mList = mList.Where(x => status.Contains(x.Cust_Status_ID) && x.Cust_isDeleted == false)
+                                vmList2 = vmList2.Where(x => status.Contains(x.Cust_Status_ID) && x.Cust_isDeleted == false)
                                          .Select(e => e).AsQueryable();
                             }
                         }
                         else // IF STRING VALUE
                         {
-                            mList = mList.Where("Cust_" + subStr + ".Contains(@0)", toStr)
+                            vmList2 = vmList2.Where("Cust_" + subStr + ".Contains(@0)", toStr)
                                     .Select(e => e).AsQueryable();
                         }
                     }
                 }
             }
-
-            var userList = (from a in mList
-                            from b in _context.User.Where(x => a.Cust_Creator_ID == x.User_ID).DefaultIfEmpty()
-                            from c in _context.User.Where(x => a.Cust_Approver_ID == x.User_ID).DefaultIfEmpty()
-                            select new
-                            {
-                                a.Cust_ID,
-                                a.Cust_MasterID,
-                                CreatorName = b.User_LName + ", " + b.User_FName,
-                                ApproverName = (c == null) ? "" : c.User_LName + ", " + c.User_FName
-                            }).ToList();
-            var statusList = (from a in mList
-                              join c in _context.StatusList on a.Cust_Status_ID equals c.Status_ID
-                              select new { a.Cust_ID, a.Cust_MasterID, c.Status_Name }).ToList();
-
-            List<DMCustViewModel> vmList = new List<DMCustViewModel>();
-            foreach (DMCustModel m in mList)
-            {
-                var creator = userList.Where(a => a.Cust_ID == m.Cust_ID && a.Cust_MasterID == m.Cust_MasterID).Select(a => a.CreatorName).FirstOrDefault();
-                var approver = userList.Where(a => a.Cust_ID == m.Cust_ID && a.Cust_MasterID == m.Cust_MasterID).Select(a => a.ApproverName).FirstOrDefault();
-                var stat = statusList.Where(a => a.Cust_ID == m.Cust_ID && a.Cust_MasterID == m.Cust_MasterID).Select(a => a.Status_Name).FirstOrDefault();
-                DMCustViewModel vm = new DMCustViewModel
-                {
-                    Cust_MasterID = m.Cust_MasterID,
-                    Cust_Name = m.Cust_Name,
-                    Cust_Abbr = m.Cust_Abbr,
-                    Cust_No = m.Cust_No,
-                    Cust_Creator_ID = m.Cust_Creator_ID,
-                    Cust_Creator_Name = creator ?? "N/A",
-                    Cust_Approver_Name = approver ?? "",
-                    Cust_Created_Date = m.Cust_Created_Date,
-                    Cust_Last_Updated = m.Cust_Last_Updated,
-                    Cust_Status_ID = m.Cust_Status_ID,
-                    Cust_Status = stat ?? "N/A"
-                };
-                vmList.Add(vm);
-            }
-            return vmList;
+            return vmList2.ToList();
         }
 
         public List<DMBCSViewModel> populateBCS(DMFiltersViewModel filters)
