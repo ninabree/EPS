@@ -199,7 +199,7 @@ namespace ExpenseProcessingSystem.Controllers
                 GeneralPendingList = PaginatedList<ApplicationsViewModel>.CreateAsync(
                         (sortedVals.list).Cast<ApplicationsViewModel>().AsQueryable().AsNoTracking(), page ?? 1, pageSize)
             };
-            ViewBag.printStat = _service.getStatus(GlobalSystemValues.STATUS_PRINT);
+            ViewBag.printStat = _service.getStatus(GlobalSystemValues.STATUS_FOR_PRINTING);
             ViewBag.loi = HomeReportConstantValue.LOI;
             return View(VM);
         }
