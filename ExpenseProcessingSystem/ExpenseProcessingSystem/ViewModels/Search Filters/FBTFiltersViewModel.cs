@@ -13,8 +13,7 @@ namespace ExpenseProcessingSystem.ViewModels.Search_Filters
         [Display(Name = "FBT Formula")]
         public string FF_Formula { get; set; }
         [Display(Name = "FBT Tax Rate")]
-        [Range(0, int.MaxValue, ErrorMessage = "Please enter a valid Tax Rate")]
-        public int FF_Tax_Rate { get; set; }
+        public string FF_Tax_Rate { get; set; }
         [Display(Name = "Creator Name")]
         public string FF_Creator_Name { get; set; }
         [Display(Name = "Approver Name")]

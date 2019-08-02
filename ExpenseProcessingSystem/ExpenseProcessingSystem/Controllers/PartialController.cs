@@ -250,10 +250,6 @@ namespace ExpenseProcessingSystem.Controllers
             //populate and sort
             var sortedVals = _sortService.SortData(_service.populateCheck(filters), sortOrder);
             ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
-            if (filters.CKF.CKF_Input_Date == new DateTime())
-            {
-                filters.CKF.CKF_Input_Date = DateTime.Now;
-            }
             //pagination
             DMViewModel VM = new DMViewModel()
             {

@@ -426,61 +426,24 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                      Vendor_VAT = pendingList.Where(x => x.Pending_ID == m.Pending_ID).Select(x => (x.VATRAte * 100) + "% - " + x.VAT_Name).ToList()
                  })
             );
-            var vmList2 = vmList.AsQueryable();
             //FILTER
             foreach (var property in properties)
             {
                 var propertyName = property.Name;
                 var subStr = propertyName.Substring(propertyName.IndexOf("_") + 1);
                 var toStr = property.GetValue(filters.PF).ToString();
-                string[] colArr = { "No", "Creator_ID", "Approver_ID" };
                 if (toStr.Length > 0)
                 {
                     if (toStr != "" && toStr != "0")
                     {
-                        if (colArr.Contains(subStr)) // IF INT VAL
-                        {
-                            vmList2 = vmList2.Where("Vendor_" + subStr + " = @0 AND  Vendor_isDeleted == @1", property.GetValue(filters.PF), false)
-                                        .Select(e => e).AsQueryable();
-                        }
-                        else if (subStr == "Creator" || subStr == "Approver" || subStr == "Status")
-                        {
-                            //get all userIDs of creator or approver that contains string
-                            var names = _context.User
-                                .Where(x => (x.User_FName.Contains(property.GetValue(filters.PF).ToString())
-                                || x.User_LName.Contains(property.GetValue(filters.PF).ToString())))
-                                .Select(x => x.User_ID).ToList();
-                            //get all status IDs that contains string
-                            var status = _context.StatusList
-                              .Where(x => (x.Status_Name.Contains(property.GetValue(filters.PF).ToString())))
-                              .Select(x => x.Status_ID).ToList();
-                            if (subStr == "Approver")
-                            {
-                                vmList2 = vmList2.Where(x => names.Contains(x.Vendor_Approver_ID))
-                                            .Select(e => e).AsQueryable();
-                            }
-                            else if (subStr == "Creator")
-                            {
-                                vmList2 = vmList2.Where(x => names.Contains(x.Vendor_Creator_ID))
-                                            .Select(e => e).AsQueryable();
-                            }
-                            else if (subStr == "Status")
-                            {
-                                vmList2 = vmList2.Where(x => status.Contains(x.Vendor_Status_ID))
-                                         .Select(e => e).AsQueryable();
-                            }
 
-                        }
-                        else // IF STRING VALUE
-                        {
-                            vmList2 = vmList2.Where("Vendor_" + subStr + ".Contains(@0)", property.GetValue(filters.PF).ToString())
-                                    .Select(e => e).AsQueryable();
-                        }
+                        vmList = vmList.AsQueryable().Where("Vendor_" + subStr + ".Contains(@0)", toStr)
+                                .Select(e => e).ToList();
                     }
                 }
             }
 
-            return vmList2.ToList();
+            return vmList;
         }
 
         public List<DMDeptViewModel> populateDept(DMFiltersViewModel filters)

@@ -440,7 +440,6 @@ namespace ExpenseProcessingSystem.Controllers
                 else if (vm.DMFilters.CKF != null)
                 {
                     //Check
-                    _session.SetString("CKF_Input_Date", vm.DMFilters.CKF.CKF_Input_Date.ToString() ?? new DateTime().ToString());
                     _session.SetString("CKF_Series_From", vm.DMFilters.CKF.CKF_Series_From ?? "");
                     _session.SetString("CKF_Series_To", vm.DMFilters.CKF.CKF_Series_To ?? "");
                     _session.SetString("CKF_Name", vm.DMFilters.CKF.CKF_Name ?? "");
@@ -455,11 +454,11 @@ namespace ExpenseProcessingSystem.Controllers
                     _session.SetString("AF_Name", vm.DMFilters.AF.AF_Name ?? "");
                     _session.SetString("AF_Code", vm.DMFilters.AF.AF_Code ?? "");
                     _session.SetString("AF_Budget_Code", vm.DMFilters.AF.AF_Budget_Code ?? "");
-                    _session.SetString("AF_No", vm.DMFilters.AF.AF_No.ToString() ?? "0");
+                    _session.SetString("AF_No", vm.DMFilters.AF.AF_No ?? "");
                     _session.SetString("AF_Cust", vm.DMFilters.AF.AF_Cust ?? "");
                     _session.SetString("AF_Div", vm.DMFilters.AF.AF_Div ?? "");
                     _session.SetString("AF_Group", vm.DMFilters.AF.AF_Group ?? "");
-                    _session.SetString("AF_FBT", vm.DMFilters.AF.AF_FBT ?? "0");
+                    _session.SetString("AF_FBT", vm.DMFilters.AF.AF_FBT ?? "");
                     _session.SetString("AF_Creator_Name", vm.DMFilters.AF.AF_Creator_Name ?? "");
                     _session.SetString("AF_Approver_Name", vm.DMFilters.AF.AF_Approver_Name ?? "");
                     _session.SetString("AF_Status", vm.DMFilters.AF.AF_Status ?? "");
@@ -478,7 +477,7 @@ namespace ExpenseProcessingSystem.Controllers
                     //FBT
                     _session.SetString("FF_Name", vm.DMFilters.FF.FF_Name ?? "");
                     _session.SetString("FF_Formula", vm.DMFilters.FF.FF_Formula ?? "");
-                    _session.SetString("FF_Tax_Rate", vm.DMFilters.FF.FF_Tax_Rate.ToString() ?? "0");
+                    _session.SetString("FF_Tax_Rate", vm.DMFilters.FF.FF_Tax_Rate ?? "");
                     _session.SetString("FF_Creator_Name", vm.DMFilters.FF.FF_Creator_Name ?? "");
                     _session.SetString("FF_Approver_Name", vm.DMFilters.FF.FF_Approver_Name ?? "");
                     _session.SetString("FF_Status", vm.DMFilters.FF.FF_Status ?? "");

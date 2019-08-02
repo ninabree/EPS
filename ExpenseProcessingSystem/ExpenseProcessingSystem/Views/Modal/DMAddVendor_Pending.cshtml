@@ -11,19 +11,27 @@
     @using (Html.BeginForm("AddVendor_Pending", "Home", FormMethod.Post, new { @class = "validate-form addVendorForm", @id = "tsForm" }))
     {
         <table class="table table-bordered editable-th">
+            <colgroup>
+                <col style="width: 12.5%" />
+                <col style="width: 12.5%" />
+                <col style="width: 12.5%" />
+                <col style="width: 22.5%" />
+                <col style="width: 22.5%" />
+                <col style="width: 2.5%" />
+            </colgroup>
             <tr>
                 <th>Vendor</th>
                 <th>TIN</th>
                 <th>Address</th>
-                <th colspan="2">Tax Rate/s</th>
-                <th colspan="2">VAT/s</th>
+                <th>Tax Rate/s</th>
+                <th>VAT/s</th>
                 <th></th>
             </tr>
             <tr id="NewVendor-Tr-0">
                 <td>@Html.TextBoxFor(m => m.NewVendorVM[0].Vendor_Name, new { @class = "w-full" })</td>
                 <td>@Html.TextBoxFor(m => m.NewVendorVM[0].Vendor_TIN, new { @class = "w-full" })</td>
                 <td>@Html.TextBoxFor(m => m.NewVendorVM[0].Vendor_Address, new { @class = "w-full" })</td>
-                <td colspan="2">
+                <td>
                     <div style="height:80px; overflow-y:scroll">
                         @if (Model.Vendor_Tax_Rates.Count > 0)
                         {
@@ -37,7 +45,7 @@
                         }
                     </div>
                 </td>
-                <td colspan="2">
+                <td>
                     <div style="height:80px; overflow-y:scroll">
                         @if (Model.Vendor_VAT.Count > 0)
                         {

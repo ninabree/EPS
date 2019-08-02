@@ -15,8 +15,7 @@ namespace ExpenseProcessingSystem.ViewModels.Search_Filters
         [Display(Name = "Account Budget Code")]
         public string AF_Budget_Code { get; set; }
         [Display(Name = "Account No")]
-        [Range(0, int.MaxValue, ErrorMessage = "Please enter a valid Account number")]
-        public int AF_No { get; set; }
+        public string AF_No { get; set; }
         [Display(Name = "Account Cust")]
         public string AF_Cust { get; set; }
         [Display(Name = "Account Div")]

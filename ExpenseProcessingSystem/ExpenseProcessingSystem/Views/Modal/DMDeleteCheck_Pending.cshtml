@@ -11,7 +11,7 @@
     {
         <table class="table table-bordered editable-th">
             <tr>
-                <th colspan="3">Check Input Date</th>
+                <th>Check Input Date</th>
                 <th>Check Series From</th>
                 <th>Check Series To</th>
                 <th>Check Bank Information</th>
@@ -22,7 +22,7 @@
                 @for (int i = 0; i < Model.Count(); i++)
                 {
                     <tr>
-                        <td contenteditable="false" colspan="3">@Html.TextBoxFor(item => item[i].Check_Input_Date, new { @class = "h-20" })</td>
+                        <td>@Html.TextBoxFor(item => item[i].Check_Input_Date, new { @readonly = true, @class = "w-full" })</td>
                         <td>@Html.TextBoxFor(item => item[i].Check_Series_From, new { @class = "w-full", @readonly = "readonly" })</td>
                         <td>@Html.TextBoxFor(item => item[i].Check_Series_To, new { @class = "w-full", @readonly = "readonly" })</td>
                         <td>@Html.TextBoxFor(item => item[i].Check_Bank_Info, new { @class = "w-full", @readonly = "readonly" })</td>

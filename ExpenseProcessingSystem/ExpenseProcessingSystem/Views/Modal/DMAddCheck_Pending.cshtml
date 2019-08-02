@@ -18,7 +18,7 @@
                 <th></th>
             </tr>
             <tr id="NewCheck-Tr-0">
-                <td>@Html.EditorFor(m => m.NewCheckVM[0].Check_Input_Date, new { htmlAttributes = new { @class = "h-20 form-control", @type = "date", @Value = DateTime.Today } })</td>
+                <td>@Html.TextBoxFor(m => m.NewCheckVM[0].Check_Input_Date, new { @readonly = true, @class = "w-full" })</td>
                 <td>@Html.TextBoxFor(m => m.NewCheckVM[0].Check_Series_From, new { @class = "w-full" })</td>
                 <td>@Html.TextBoxFor(m => m.NewCheckVM[0].Check_Series_To, new { @class = "w-full" })</td>
                 <td>@Html.TextBoxFor(m => m.NewCheckVM[0].Check_Bank_Info, new { @class = "w-full" })</td>

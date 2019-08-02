@@ -35,24 +35,7 @@ namespace ExpenseProcessingSystem.Services
             var controllerName = (string)filterContext.RouteData.Values["controller"];
             var actionName = (string)filterContext.RouteData.Values["action"];
 
-            ////FOR Home
-            //if (actionName == "Index" && controllerName == "Home")
-            //{
-            //    FiltersViewModel filters = new FiltersViewModel();
-            //    NotifFiltersViewModel NotifFil = new NotifFiltersViewModel();
-            //    NotifFil = new NotifFiltersViewModel
-            //    {
-            //        Notif_Date = DateTime.Parse(ctx.Session.GetString("Notif_Date") ?? new DateTime().ToShortDateString()),
-            //        NotifFil_Message = ctx.Session.GetString("NotifFil_Message") ?? "",
-            //        NotifFil_Status_Name = ctx.Session.GetString("NotifFil_Status") ?? "",
-            //        NotifFil_Application_Maker_Name = ctx.Session.GetString("NotifFil_Application_Maker_Name") ?? "",
-            //        NotifFil_Application_Type_Name = ctx.Session.GetString("NotifFil_Application_Type_Name") ?? ""
-            //    };
-            //    filters.NotifFil = NotifFil;
-            //    controller.TempData["filters"] = filters;
-            //}
             //FOR DM
-
             if (actionName == "DMPartial_Vendor")
             {
                 DMFiltersViewModel filters = new DMFiltersViewModel();
@@ -91,7 +74,6 @@ namespace ExpenseProcessingSystem.Services
                 //var tmp = DateTime.Parse(tmp2);
                 CheckFiltersViewModel CKF = new CheckFiltersViewModel
                 {
-                    CKF_Input_Date = DateTime.Parse(ctx.Session.GetString("CKF_Input_Date") ?? new DateTime().ToString()),
                     CKF_Series_From = ctx.Session.GetString("CKF_Series_From") ?? "",
                     CKF_Series_To = ctx.Session.GetString("CKF_Series_To") ?? "",
                     CKF_Name = ctx.Session.GetString("CKF_Name") ?? "",
@@ -111,7 +93,7 @@ namespace ExpenseProcessingSystem.Services
                     AF_Name = ctx.Session.GetString("AF_Name") ?? "",
                     AF_Code = ctx.Session.GetString("AF_Code") ?? "",
                     AF_Budget_Code = ctx.Session.GetString("AF_Budget_Code") ?? "",
-                    AF_No = int.Parse(ctx.Session.GetString("AF_No") ?? "0"),
+                    AF_No = ctx.Session.GetString("AF_No") ?? "",
                     AF_Cust = ctx.Session.GetString("AF_Cust") ?? "",
                     AF_Div = ctx.Session.GetString("AF_Div") ?? "",
                     AF_Group = ctx.Session.GetString("AF_Group") ?? "",
@@ -145,7 +127,7 @@ namespace ExpenseProcessingSystem.Services
                 {
                     FF_Name = ctx.Session.GetString("FF_Name") ?? "",
                     FF_Formula = ctx.Session.GetString("FF_Formula") ?? "",
-                    FF_Tax_Rate = int.Parse(ctx.Session.GetString("FF_Tax_Rate")?? "0"),
+                    FF_Tax_Rate = ctx.Session.GetString("FF_Tax_Rate")?? "",
                     FF_Creator_Name = ctx.Session.GetString("FF_Creator_Name") ?? "",
                     FF_Approver_Name = ctx.Session.GetString("FF_Approver_Name") ?? "",
                     FF_Status = ctx.Session.GetString("FF_Status") ?? ""
