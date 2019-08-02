@@ -18,7 +18,7 @@
                             <td>@Html.LabelFor(model => model.Filters.NotifFil.NotifFil_Application_Maker_Name)</td>
                             <td>@Html.TextBoxFor(model => model.Filters.NotifFil.NotifFil_Application_Maker_Name, new { @class = "input" })</td>
                             <td>@Html.LabelFor(model => model.Filters.NotifFil.Notif_Date)</td>
-                            <td>@Html.TextBoxFor(model => model.Filters.NotifFil.Notif_Date, new { @class = "input" })</td>
+                            <td>@Html.TextBoxFor(model => model.Filters.NotifFil.Notif_Date, new { @class = "input", @type = "date" })</td>
                             <td>@Html.LabelFor(model => model.Filters.NotifFil.NotifFil_Status_Name)</td>
                             <td>@Html.TextBoxFor(model => model.Filters.NotifFil.NotifFil_Status_Name, new { @class = "input" })</td>
                             <td colspan="2" style="text-align: right;">
@@ -85,3 +85,18 @@
         </a>
         @Html.Partial("ModalPartial")
     </div>
+    <script>
+        //reset search filter values
+        $(document).on("click", "#full-list-btn", function (e) {
+            e.stopImmediatePropagation();
+            $('input[id^= "Filters_NotifFil_"]').each(function (i, obj) {
+                $(this).val("");
+                if ($(this).attr('data-val-range-min') == "0") {
+                    $(this).val("0");
+                } else if ($(this).attr('type') == "datetime-local") {
+                    $(this).val("0001-01-01T00:00:00.000");
+                }
+            });
+            $('#search-frm').submit();
+        });
+    </script>

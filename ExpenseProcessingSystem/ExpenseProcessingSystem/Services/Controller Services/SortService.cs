@@ -1410,54 +1410,54 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             var vdInfo = "";
             switch (sortOrder)
             {
-                //case "notif_stat":
-                //    tempList = tempList.OrderBy(x => x.Notif_Status_Name == "PENDING");
-                //    viewData = "glyph-6";
-                //    vdInfo = "glyphicon-menu-up";
-                //    break;
-                //case "notif_app_id":
-                //    tempList = tempList.OrderBy(s => s.Notif_Application_ID);
-                //    viewData = "glyph-2";
-                //    vdInfo = "glyphicon-menu-down";
-                //    break;
-                //case "notif_app_id_desc":
-                //    tempList = tempList.OrderByDescending(s => s.Notif_Application_ID);
-                //    viewData = "glyph-2";
-                //    vdInfo = "glyphicon-menu-up";
-                //    break;
-                //case "notif_message":
-                //    tempList = tempList.OrderBy(s => s.Notif_Message);
-                //    viewData = "glyph-3";
-                //    vdInfo = "glyphicon-menu-down";
-                //    break;
-                //case "notif_message_desc":
-                //    tempList = tempList.OrderByDescending(s => s.Notif_Message);
-                //    viewData = "glyph-3";
-                //    vdInfo = "glyphicon-menu-up";
-                //    break;
-                //case "notif_approvr":
-                //    tempList = tempList.OrderBy(s => s.Notif_Verifier_Approver);
-                //    viewData = "glyph-4";
-                //    vdInfo = "glyphicon-menu-down";
-                //    break;
-                //case "notif_approvr_desc":
-                //    tempList = tempList.OrderByDescending(s => s.Notif_Verifier_Approver);
-                //    viewData = "glyph-4";
-                //    vdInfo = "glyphicon-menu-up";
-                //    break;
-                //case "notif_last_updte":
-                //    tempList = tempList.OrderBy(s => s.Notif_Last_Updated);
-                //    viewData = "glyph-5";
-                //    vdInfo = "glyphicon-menu-down";
-                //    break;
-                //case "notif_last_updte_desc":
-                //    tempList = tempList.OrderByDescending(s => s.Notif_Last_Updated);
-                //    viewData = "glyph-5";
-                //    vdInfo = "glyphicon-menu-up";
-                //    break;
+                case "notif_type_status":
+                    tempList = tempList.OrderBy(x => x.Notif_Status_Name == "PENDING");
+                    viewData = "glyph-5";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "notif_type":
+                    tempList = tempList.OrderBy(s => s.Notif_Application_Type_Name);
+                    viewData = "glyph-1";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "notif_type_desc":
+                    tempList = tempList.OrderByDescending(s => s.Notif_Application_Type_Name);
+                    viewData = "glyph-1";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "notif_message":
+                    tempList = tempList.OrderBy(s => s.Notif_Message);
+                    viewData = "glyph-2";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "notif_message_desc":
+                    tempList = tempList.OrderByDescending(s => s.Notif_Message);
+                    viewData = "glyph-2";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "notif_mkr":
+                    tempList = tempList.OrderBy(s => s.Notif_Application_Maker_Name);
+                    viewData = "glyph-3";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "notif_mkr_desc":
+                    tempList = tempList.OrderByDescending(s => s.Notif_Application_Maker_Name);
+                    viewData = "glyph-3";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "notif_date":
+                    tempList = tempList.OrderBy(s => s.Notif_Date);
+                    viewData = "glyph-4";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "notif_date_desc":
+                    tempList = tempList.OrderByDescending(s => s.Notif_Date);
+                    viewData = "glyph-4";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
                 default:
                     tempList = tempList.OrderByDescending(x => x.Notif_Application_Type_Name == "PENDING");
-                    viewData = "glyph-6";
+                    viewData = "glyph-5";
                     vdInfo = "glyphicon-menu-down";
                     break;
             }
@@ -1554,9 +1554,9 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             switch (sortOrder)
             {
                 case "hist_voucher":
-                    tempList = tempList.OrderBy(x => x.App_Voucher_No);
+                    tempList = tempList.OrderBy(x => x.App_Voucher_No == "PENDING");
                     viewData = "glyph-1";
-                    vdInfo = "glyphicon-menu-up";
+                    vdInfo = "glyphicon-menu-down";
                     break;
                 case "hist_maker":
                     tempList = tempList.OrderBy(s => s.App_Maker_Name);
@@ -1603,15 +1603,101 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     viewData = "glyph-6";
                     vdInfo = "glyphicon-menu-down";
                     break;
-                case "hist_status_desc":
-                    tempList = tempList.OrderByDescending(s => s.App_Status);
-                    viewData = "glyph-6";
+                case "hist_voucher_desc":
+                    tempList = tempList.OrderByDescending(x => x.App_Voucher_No);
+                    viewData = "glyph-1";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 default:
-                    tempList = tempList.OrderByDescending(x => x.App_Voucher_No);
+                    tempList = tempList.OrderByDescending(s => s.App_Status == "PENDING");
+                    viewData = "glyph-6";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+            }
+            SortViewModel vm = new SortViewModel
+            {
+                list = tempList.Cast<dynamic>().ToList(),
+                viewData = viewData,
+                viewDataInfo = vdInfo
+            };
+            return vm;
+        }
+        public SortViewModel SortData(List<ApplicationsViewModel> list, string sortOrder)
+        {
+            var tempList = list.AsQueryable();
+            var viewData = "";
+            var vdInfo = "";
+            switch (sortOrder)
+            {
+                case "pend_status":
+                    tempList = tempList.OrderBy(x => x.App_Status == "PENDING");
+                    viewData = "glyph-8";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "pend_type":
+                    tempList = tempList.OrderBy(s => s.App_Type);
                     viewData = "glyph-1";
                     vdInfo = "glyphicon-menu-down";
+                    break;
+                case "pend_type_desc":
+                    tempList = tempList.OrderByDescending(s => s.App_Type);
+                    viewData = "glyph-1";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "pend_amt":
+                    tempList = tempList.OrderBy(s => s.App_Amount);
+                    viewData = "glyph-2";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "pend_amt_desc":
+                    tempList = tempList.OrderByDescending(s => s.App_Amount);
+                    viewData = "glyph-2";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "pend_payee":
+                    tempList = tempList.OrderBy(s => s.App_Payee);
+                    viewData = "glyph-3";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "pend_payee_desc":
+                    tempList = tempList.OrderByDescending(s => s.App_Payee);
+                    viewData = "glyph-3";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "pend_maker":
+                    tempList = tempList.OrderBy(s => s.App_Maker);
+                    viewData = "glyph-4";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "pend_maker_desc":
+                    tempList = tempList.OrderByDescending(s => s.App_Maker);
+                    viewData = "glyph-4";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "pend_date_created":
+                    tempList = tempList.OrderBy(s => s.App_Date);
+                    viewData = "glyph-6";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "pend_date_created_desc":
+                    tempList = tempList.OrderByDescending(s => s.App_Date);
+                    viewData = "glyph-6";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                case "pend_last_updte":
+                    tempList = tempList.OrderBy(s => s.App_Last_Updated);
+                    viewData = "glyph-7";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                case "pend_last_updte_desc":
+                    tempList = tempList.OrderByDescending(s => s.App_Last_Updated);
+                    viewData = "glyph-7";
+                    vdInfo = "glyphicon-menu-up";
+                    break;
+                default:
+                    tempList = tempList.OrderByDescending(s => s.App_Status == "PENDING");
+                    viewData = "glyph-8";
+                    vdInfo = "glyphicon-menu-up";
                     break;
             }
             SortViewModel vm = new SortViewModel

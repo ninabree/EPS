@@ -4,22 +4,23 @@
     <div class="p-t-10 p-l-20 p-r-20">
         <form asp-action="History" asp-controller="Home" method="get" id="search-frm">
             <div class="form-actions no-color">
-                <p>
-                    Find by:
+                <p class="">Filter by:</p>
                     <table class="table">
                         <tr>
                             <td>@Html.LabelFor(model => model.Filters.HistoryFil.Hist_Voucher_No)</td>
                             <td>
-                                @Html.DropDownListFor(model => model.Filters.HistoryFil.Hist_Voucher_Type, new SelectList(Model.Filters.HistoryFil.Hist_Type_Select, "Value", "Text", 1), null, new { @class = "dis-inline-block w-49"})                              
-                                @Html.DropDownListFor(model => model.Filters.HistoryFil.Hist_Voucher_Year, new SelectList(Model.Filters.HistoryFil.Hist_YearList, "YearID", "YearID", DateTime.Now.Year), null, new { @class = "dis-inline-block w-49"})
-                                @Html.EditorFor(model => model.Filters.HistoryFil.Hist_Voucher_No)
+                                @Html.DropDownListFor(model => model.Filters.HistoryFil.Hist_Voucher_Type, new SelectList(Model.Filters.HistoryFil.Hist_Type_Select, "Value", "Text", "1"), "-- Voucher Type --", new { @class = "dis-inline-block" })
+                                @Html.DropDownListFor(model => model.Filters.HistoryFil.Hist_Voucher_Year, new SelectList(Model.Filters.HistoryFil.Hist_YearList, "YearID", "YearID", DateTime.Now.Year), "-- Voucher Year --", new { @class = "dis-inline-block" })
+                                @Html.EditorFor(model => model.Filters.HistoryFil.Hist_Voucher_No, new { @class = "dis-inline-block" })
                             </td>
                             <td>@Html.LabelFor(model => model.Filters.HistoryFil.Hist_Maker)</td>
                             <td>@Html.TextBoxFor(model => model.Filters.HistoryFil.Hist_Maker, new { @class = "input" })</td>
                             <td>@Html.LabelFor(model => model.Filters.HistoryFil.Hist_Approver)</td>
                             <td>@Html.TextBoxFor(model => model.Filters.HistoryFil.Hist_Approver, new { @class = "input" })</td>
+                        </tr>
+                        <tr>
                             <td>@Html.LabelFor(model => model.Filters.HistoryFil.Hist_Created_Date)</td>
-                            <td>@Html.TextBoxFor(model => model.Filters.HistoryFil.Hist_Created_Date, new { @class = "input", @type = "date" })</td>
+                            <td>@Html.TextBoxFor(model => model.Filters.HistoryFil.Hist_Created_Date, new { @class = "input w-49", @type = "date" })</td>
                             <td>@Html.LabelFor(model => model.Filters.HistoryFil.Hist_Updated_Date)</td>
                             <td>@Html.TextBoxFor(model => model.Filters.HistoryFil.Hist_Updated_Date, new { @class = "input", @type = "date" })</td>
                             <td>@Html.LabelFor(model => model.Filters.HistoryFil.Hist_Status)</td>
@@ -30,22 +31,11 @@
                             </td>
                         </tr>
                     </table>
-                </p>
             </div>
         </form>
     </div>
     <div class="flex-c p-t-10">
         <table class="table table-striped tab-tbl table-bordered table-hover w-97">
-            @*<colgroup>
-                <col style="width:10%" />
-                <col style="width:8%" />
-                <col style="width:29%" />
-                <col style="width:8%" />
-                <col style="width:8%" />
-                <col style="width:12%" />
-                <col style="width:12%" />
-                <col style="width:10%" />
-            </colgroup>*@
             <thead>
                 <tr>
                     <th><a asp-action="History" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["HistVoucherSortParm"]">Voucher No<p class="btn-xs glyphicon @ViewData["glyph-1"]"></p></a></th>
@@ -93,7 +83,7 @@
         var prevDisabled = !Model.HistoryList.HasPreviousPage ? "disabled" : "";
         var nextDisabled = !Model.HistoryList.HasNextPage ? "disabled" : "";
     }
-    <a asp-action="Pending"
+    <a asp-action="History"
        asp-route-sortOrder="@ViewData["CurrentSort"]"
        asp-route-page="@(Model.HistoryList.PageIndex - 1)"
        asp-controller="Home"
@@ -102,8 +92,8 @@
        class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left">
     </a>
     <input type="text" class="pagination-input" id="paginationInput" val="" />
-    <input type="text" class="pagination-input" value="of @(Model.HistoryList.TotalPages)" disabled />
-    <a asp-action="Pending"
+    <input type="text" class="pagination-input" value="@(Model.HistoryList.PageIndex) of @(Model.HistoryList.TotalPages)" disabled />
+    <a asp-action="History"
        asp-route-sortOrder="@ViewData["CurrentSort"]"
        asp-controller="Home"
        asp-route-partialName="@ViewData["Title"]"

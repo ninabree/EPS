@@ -117,38 +117,31 @@ namespace ExpenseProcessingSystem.Services
             }
 
             PropertyInfo[] properties = filters.NotifFil.GetType().GetProperties();
-            string str = _filterservice.generateFilterQuery(properties, vmList.Cast<dynamic>().ToList(), filters, "Notif");
-            if (str.Length > 0) { vmList = vmList.AsQueryable().Where(str).Select(e => e).ToList(); }
-            ////FILTER
-            //foreach (var property in properties)
-            //{
-            //    var propertyName = property.Name;
-            //    string subStr = propertyName.Substring(propertyName.IndexOf('_') + 1);
-            //    var toStr = property.GetValue(filters.NotifFil).ToString();
-            //    string[] colArr = { "No", "Creator_ID", "Approver_ID" };
-            //    if (toStr != "")
-            //    {
-            //        if (toStr != "0")
-            //        {
-            //            if (colArr.Contains(subStr)) // IF INT VAL
-            //            {
-            //                mList = mList.Where("Notif_" + subStr + " = @0 AND  Notif_isDeleted == @1", property.GetValue(filters.NotifFil), false)
-            //                         .Select(e => e).AsQueryable();
-            //            }
-            //            else if (subStr == "Last_Updated")
-            //            {
-            //                mList = mList
-            //                   .Where(x => (x.Notif_Last_Updated.ToShortDateString() == property.GetValue(filters.NotifFil).ToString()))
-            //                  .Select(e => e).AsQueryable();
-            //            }
-            //            else // IF STRING VALUE
-            //            {
-            //mList = mList.Where("Notif_" + subStr + ".Contains(@0) AND  Notif_isDeleted == @1", property.GetValue(filters.NotifFil).ToString(), false)
-            //        .Select(e => e).AsQueryable();
-            //            }
-            //        }
-            //    }
-            //}
+            //string str = _filterservice.generateFilterQuery(properties, vmList.Cast<dynamic>().ToList(), filters, "Notif");
+            //if (str.Length > 0) { vmList = vmList.AsQueryable().Where(str).Select(e => e).ToList(); }
+
+            //FILTER
+            foreach (var property in properties)
+            {
+                var propertyName = property.Name;
+                var subStr = propertyName.Substring(propertyName.IndexOf("_") + 1);
+                var toStr = property.GetValue(filters.NotifFil).ToString();
+                if (toStr != "" && toStr != "0" && toStr != "1/1/0001 12:00:00 AM")
+                {                    
+                    if (subStr == "Date")
+                    {
+                        var filterDate = DateTime.Parse(toStr).ToShortDateString();
+                        vmList = vmList.AsQueryable()
+                           .Where(x => (x.Notif_Date.ToShortDateString() == filterDate))
+                          .Select(e => e).ToList();
+                    }
+                    else // IF STRING VALUE
+                    {
+                        vmList = vmList.AsQueryable().Where("Notif_" + subStr + ".Contains(@0)", toStr)
+                            .Select(e => e).ToList();
+                    }
+                }
+            }
 
             return vmList;
         }
@@ -186,7 +179,7 @@ namespace ExpenseProcessingSystem.Services
             return true;
         }
         //Pending
-        public PaginatedList<ApplicationsViewModel> getPending(int userID)
+        public List<ApplicationsViewModel> getPending(int userID, FiltersViewModel filters)
         {
             List<ApplicationsViewModel> pendingList = new List<ApplicationsViewModel>();
 
@@ -214,7 +207,7 @@ namespace ExpenseProcessingSystem.Services
                             || l.Liq_Status == GlobalSystemValues.STATUS_VERIFIED)
                             )
                             ||
-                            (p.Expense_Status == GlobalSystemValues.STATUS_PRINT_LOI)
+                            (p.Expense_Status == GlobalSystemValues.STATUS_PRINT)
                             select new
                             {
                                 p.Expense_ID,
@@ -278,7 +271,7 @@ namespace ExpenseProcessingSystem.Services
                     App_ID = item.Expense_ID,
                     App_Type = (item.Liq_Status == 0) ? GlobalSystemValues.getApplicationType(item.Expense_Type) : GlobalSystemValues.getApplicationType(item.Expense_Type) + " (Liquidation)",
                     App_Amount = item.Expense_Debit_Total,
-                    App_Payee = getVendorName(item.Expense_Payee, item.Expense_Payee_Type),
+                    App_Payee = getVendorName(item.Expense_Payee, item.Expense_Payee_Type) ?? "",
                     App_Maker = (item.Liq_Status == 0) ? getUserName(item.Expense_Creator_ID) : getUserName(item.Liq_Created_UserID),
                     App_Verifier_ID_List = new List<string> { ver1, ver2 },
                     App_Date = (item.Liq_Status == 0) ? item.Expense_Date : item.Liq_Created_Date,
@@ -289,10 +282,55 @@ namespace ExpenseProcessingSystem.Services
 
                 pendingList.Add(tempPending);
             }
+            //FILTER
 
-            PaginatedList<ApplicationsViewModel> pgPendingList = new PaginatedList<ApplicationsViewModel>(pendingList, pendingList.Count, 1, 10);
+            var properties = filters.GenPendFil.GetType().GetProperties();
+            foreach (var property in properties)
+            {
+                var propertyName = property.Name;
+                var subStr = propertyName.Substring(propertyName.IndexOf("_") + 1);
+                var toStr = property.GetValue(filters.GenPendFil).ToString();
+                if (toStr != "")
+                {
+                    if (toStr != "0")
+                    {
+                        if (subStr == "Created_Date" || subStr == "Updated_Date")
+                        {
+                            if (toStr != new DateTime().ToString())
+                            {
+                                if (subStr == "Created_Date")
+                                {
+                                    var filterDate = DateTime.Parse(toStr).ToShortDateString();
+                                    pendingList = pendingList.Where(x => (x.App_Date.ToShortDateString() == filterDate))
+                                                .Select(e => e).ToList();
+                                }
+                                else
+                                {
+                                    var filterDate = DateTime.Parse(toStr).ToShortDateString();
+                                    pendingList = pendingList.Where(x => (x.App_Last_Updated.ToShortDateString() == filterDate))
+                                                .Select(e => e).ToList();
+                                }
+                            }
+                        }else if (subStr == "Type_Select")
+                        {
 
-            return pgPendingList;
+                        }
+                        else if (subStr == "Amount")
+                        {
+                            pendingList = pendingList.Where(x => (x.App_Amount.ToString().Contains(toStr)))
+                                                .Select(e => e).ToList();
+                        }
+                        else // IF STRING VALUE
+                        {
+                            pendingList = pendingList.AsQueryable().Where("App_" + subStr + ".Contains(@0)", toStr)
+                                    .Select(e => e).ToList();
+                        }
+                    }
+                }
+            }
+            //PaginatedList<ApplicationsViewModel> pgPendingList = new PaginatedList<ApplicationsViewModel>(pendingList, pendingList.Count, 1, 10);
+
+            return pendingList;
         }
 
         //History
@@ -331,86 +369,6 @@ namespace ExpenseProcessingSystem.Services
                                 Liq_Approver_ID = l == null ? 0 : l.Liq_Approver,
                                 Liq_LastUpdated_Date = l == null ? DateTime.Now : l.Liq_LastUpdated_Date
                             };
-            //FILTER
-            foreach (var property in properties)
-            {
-                var propertyName = property.Name;
-                if (propertyName != "Hist_YearList" && propertyName != "Hist_Type_Select")
-                {
-                    var subStr = propertyName.Substring(propertyName.IndexOf("_") + 1);
-                    var toStr = property.GetValue(filters.HistoryFil).ToString();
-                    if (toStr != "")
-                    {
-                        if (toStr != "0")
-                        {
-                            if (subStr == "Maker" || subStr == "Approver" || subStr == "Status")
-                            {
-                                //get all userIDs of creator or approver that contains string
-                                var names = _context.User
-                                  .Where(x => (x.User_FName.Contains(property.GetValue(filters.HistoryFil).ToString())
-                                  || x.User_LName.Contains(property.GetValue(filters.HistoryFil).ToString())))
-                                  .Select(x => x.User_ID).ToList();
-                                //get all status IDs that contains string
-                                var status = _context.StatusList
-                                  .Where(x => (x.Status_Name.Contains(property.GetValue(filters.HistoryFil).ToString())))
-                                  .Select(x => x.Status_ID).ToList();
-                                if (subStr == "Approver")
-                                {
-                                    dbHistory = dbHistory.Where(x => (names.Contains(x.Expense_Approver) || names.Contains(x.Liq_Approver_ID)))
-                                             .Select(e => e).AsQueryable();
-                                }
-                                else if (subStr == "Maker")
-                                {
-                                    dbHistory = dbHistory.Where(x => (names.Contains(x.Expense_Creator_ID) || names.Contains(x.Liq_Created_UserID)))
-                                             .Select(e => e).AsQueryable();
-                                }
-                                else if (subStr == "Status")
-                                {
-                                    dbHistory = dbHistory.Where(x => (status.Contains(x.Expense_Status) || status.Contains(x.Liq_Status)))
-                                             .Select(e => e).AsQueryable();
-                                }
-                            }
-                            else if (subStr == "Created_Date" || subStr == "Updated_Date")
-                            {
-                                if (toStr != new DateTime().ToString())
-                                {
-                                    if (subStr == "Created_Date")
-                                    {
-                                        dbHistory = dbHistory.Where(x => (x.Expense_Date.Date.ToString("yyyy/MM/dd") + " 0:00:00" == toStr || (x.Liq_Status != 0 && x.Liq_Created_Date.Date.ToString("yyyy/MM/dd") + " 0:00:00" == toStr)))
-                                                 .Select(e => e).AsQueryable();
-                                    }
-                                    else
-                                    {
-                                        var tryy = dbHistory.Select(x => (x.Expense_Last_Updated.Date.ToString("yyyy/MM/dd") + " 0:00:00")).LastOrDefault();
-                                        dbHistory = dbHistory.Where(x => (x.Expense_Last_Updated.Date.ToString("yyyy/MM/dd") + " 0:00:00" == toStr || (x.Liq_Status != 0 && x.Liq_LastUpdated_Date.Date.ToString("yyyy/MM/dd") + " 0:00:00" == toStr)))
-                                                 .Select(e => e).AsQueryable();
-                                    }
-                                }
-                            }
-                            else if (subStr == "Voucher_Type")
-                            {
-                                dbHistory = dbHistory.Where(x => GlobalSystemValues.getApplicationCode(x.Expense_Type) == toStr)
-                                        .Select(e => e).AsQueryable();
-                            }
-                            else if (subStr == "Voucher_Year")
-                            {
-                                dbHistory = dbHistory.Where(x => x.Expense_Date.Year.ToString() == toStr)
-                                        .Select(e => e).AsQueryable();
-                            }
-                            else if (subStr == "Voucher_No")
-                            {
-                                dbHistory = dbHistory.Where(x => x.Expense_Number.ToString().PadLeft(5, '0') == toStr)
-                                        .Select(e => e).AsQueryable();
-                            }
-                            else // IF STRING VALUE
-                            {
-                                dbHistory = dbHistory.Where("Expense_" + subStr + ".Contains(@0) or Liq_" + subStr + ".Contains(@1)", toStr, toStr)
-                                        .Select(e => e).AsQueryable();
-                            }
-                        }
-                    }
-                }
-            }
 
             foreach (var item in dbHistory)
             {
@@ -463,6 +421,78 @@ namespace ExpenseProcessingSystem.Services
 
                 historyList.Add(tempHistory);
             }
+            //FILTER
+            foreach (var property in properties)
+            {
+                var propertyName = property.Name;
+                if (propertyName != "Hist_YearList" && propertyName != "Hist_Type_Select")
+                {
+                    var subStr = propertyName.Substring(propertyName.IndexOf("_") + 1);
+                    var toStr = property.GetValue(filters.HistoryFil).ToString();
+                    if (toStr != "")
+                    {
+                        if (toStr != "0")
+                        {
+                            if (subStr == "Maker" || subStr == "Approver" || subStr == "Status")
+                            {
+                                //get all userIDs of creator or approver that contains string
+                                var names = _context.User
+                                  .Where(x => (x.User_FName.Contains(property.GetValue(filters.HistoryFil).ToString())
+                                  || x.User_LName.Contains(property.GetValue(filters.HistoryFil).ToString())))
+                                  .Select(x => x.User_ID).ToList();
+                                //get all status IDs that contains string
+                                var status = _context.StatusList
+                                  .Where(x => (x.Status_Name.Contains(property.GetValue(filters.HistoryFil).ToString())))
+                                  .Select(x => x.Status_ID).ToList();
+                                if (subStr == "Approver")
+                                {
+                                    historyList = historyList.Where(x => x.App_Approver_Name.Contains(toStr))
+                                             .Select(e => e).ToList();
+                                }
+                                else if (subStr == "Maker")
+                                {
+                                    historyList = historyList.Where(x => x.App_Maker_Name.Contains(toStr))
+                                             .Select(e => e).ToList();
+                                }
+                                else if (subStr == "Status")
+                                {
+                                    historyList = historyList.Where(x => x.App_Status.Contains(toStr))
+                                             .Select(e => e).ToList();
+                                }
+                            }
+                            else if (subStr == "Created_Date" || subStr == "Updated_Date")
+                            {
+                                if (toStr != new DateTime().ToString())
+                                {
+                                    if (subStr == "Created_Date")
+                                    {
+                                        var filterDate = DateTime.Parse(toStr).ToShortDateString();
+                                        historyList = historyList.Where(x => (x.App_Date.ToShortDateString() == filterDate))
+                                                 .Select(e => e).ToList();
+                                    }
+                                    else
+                                    {
+                                        var filterDate = DateTime.Parse(toStr).ToShortDateString();
+                                        historyList = historyList.Where(x => (x.App_Last_Updated.ToShortDateString() == filterDate))
+                                                 .Select(e => e).ToList();
+                                    }
+                                }
+                            }
+                            else if (subStr == "Voucher_Type" || subStr == "Voucher_Year" || subStr == "Voucher_No")
+                            {
+                                historyList = historyList.Where(x => x.App_Voucher_No.Contains(toStr))
+                                        .Select(e => e).ToList();
+                            }
+                            else // IF STRING VALUE
+                            {
+                                historyList = historyList.AsQueryable().Where("App_" + subStr + ".Contains(@0)", toStr)
+                                        .Select(e => e).ToList();
+                            }
+                        }
+                    }
+                }
+            }
+
 
             PaginatedList<AppHistoryViewModel> pgHistoryList = new PaginatedList<AppHistoryViewModel>(historyList, historyList.Count, 1, 10);
 

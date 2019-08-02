@@ -25,7 +25,7 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly int STATUS_REVERSED = 10;
         public static readonly int STATUS_CLOSED = 11;
         public static readonly int STATUS_OPEN = 12;
-        public static readonly int STATUS_PRINT_LOI = 13;
+        public static readonly int STATUS_PRINT = 13;
         public static readonly int STATUS_TEMP = 14;
 
         //Static values for the index of certain lists that are to be stored inside a list object.
@@ -87,6 +87,7 @@ namespace ExpenseProcessingSystem.ConstantData
         public const int TYPE_SS = 3;
         public const int TYPE_PC = 4;
         public const int TYPE_NC = 5;
+        public const int TYPE_LIQ = 6;
 
         //Static value for branch Type/Name/Code
         //i.e: determining what is the branch code for the transaction
@@ -98,11 +99,13 @@ namespace ExpenseProcessingSystem.ConstantData
         //Example : [CV]-2019-100001
         private static readonly Dictionary<int, string> codeDictio = new Dictionary<int, string>
             {
+                {0,"DM" },
                 {1,"CV" },
                 {2,"DDV"},
                 {3,"SSV"},
                 {4,"PCV"},
                 {5,"NCV"},
+                {6,"LIQ"}
             };
 
         //Static value for the view path of voucher layout

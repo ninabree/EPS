@@ -134,15 +134,74 @@ namespace ExpenseProcessingSystem.Controllers
 
         [OnlineUserCheck]
         [NonAdminRoleCheck]
-        public IActionResult Pending(string sortOrder, string currentFilter, string searchString, int? page)
+        public IActionResult Pending(HomeIndexViewModel vm, string sortOrder, string currentFilter, string searchString, int? page)
         {
-            var userId = GetUserID();
+            var role = _service.getUserRole(GetUserID());
+            if (role == "admin")
+            {
+                return RedirectToAction("UM");
+            }
 
-            HomeIndexViewModel vm = new HomeIndexViewModel();
+            //sort
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["PendAppStatSortParm"] = String.IsNullOrEmpty(sortOrder) ? "pend_status" : "";
+            ViewData["PendAppIDSortParm"] = sortOrder == "pend_type_desc" ? "pend_type" : "pend_type_desc";
+            ViewData["PendAppAmtSortParm"] = sortOrder == "pend_amt_desc" ? "pend_amt" : "pend_amt_desc";
+            ViewData["PendAppPaySortParm"] = sortOrder == "pend_payee_desc" ? "pend_payee" : "pend_payee_desc";
+            ViewData["PendAppMkrSortParm"] = sortOrder == "pend_maker_desc" ? "pend_maker" : "pend_maker_desc";
+            //ViewData["PendAppVfrSortParm"] = sortOrder == "pend_ver_desc" ? "pend_ver" : "pend_ver_desc";
+            ViewData["PendDateSortParm"] = sortOrder == "pend_date_created_desc" ? "pend_date_created" : "pend_date_created_desc";
+            ViewData["PendUpdateSortParm"] = sortOrder == "pend_last_updte_desc" ? "pend_last_updte" : "pend_last_updte_desc";
 
-            vm.GeneralPendingList = _service.getPending(int.Parse(userId));
+            if (searchString != null) { page = 1; }
+            else { searchString = currentFilter; }
 
-            return View(vm);
+            ViewData["CurrentFilter"] = searchString;
+            FiltersViewModel tempFil = new FiltersViewModel();
+            if (vm.Filters == null || vm.Filters.GenPendFil == null)
+            {
+                tempFil = new FiltersViewModel
+                {
+                    GenPendFil = new PendingGenFiltersViewModel
+                    {
+                        Pending_Amount = "",
+                        Pending_Created_Date = new DateTime(),
+                        Pending_Maker = "",
+                        Pending_Status = "",
+                        Pending_Updated_Date = new DateTime(),
+                        Pending_Payee = "",
+                        Pending_Type = ""
+                        //Pending_Type_Select = ""
+                    }
+                };
+            }
+            else
+            {
+                tempFil.GenPendFil = new PendingGenFiltersViewModel
+                {
+                    Pending_Amount = vm.Filters.GenPendFil.Pending_Amount ?? "",
+                    Pending_Created_Date = vm.Filters.GenPendFil.Pending_Created_Date != new DateTime() ? vm.Filters.GenPendFil.Pending_Created_Date : new DateTime(),
+                    Pending_Maker = vm.Filters.GenPendFil.Pending_Maker ?? "",
+                    Pending_Status = vm.Filters.GenPendFil.Pending_Status ?? "",
+                    Pending_Updated_Date = vm.Filters.GenPendFil.Pending_Updated_Date != new DateTime() ? vm.Filters.GenPendFil.Pending_Updated_Date : new DateTime(),
+                    Pending_Payee = vm.Filters.GenPendFil.Pending_Payee ?? "",
+                    Pending_Type = vm.Filters.GenPendFil.Pending_Type ?? ""
+
+                };
+            }
+
+            //populate and sort
+            var sortedVals = _sortService.SortData(_service.getPending(int.Parse(GetUserID()), tempFil), sortOrder);
+            ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
+            HomeIndexViewModel VM = new HomeIndexViewModel()
+            {
+                Filters = tempFil,
+                GeneralPendingList = PaginatedList<ApplicationsViewModel>.CreateAsync(
+                        (sortedVals.list).Cast<ApplicationsViewModel>().AsQueryable().AsNoTracking(), page ?? 1, pageSize)
+            };
+            ViewBag.printStat = _service.getStatus(GlobalSystemValues.STATUS_PRINT);
+            ViewBag.loi = HomeReportConstantValue.LOI;
+            return View(VM);
         }
 
         [OnlineUserCheck]
@@ -157,20 +216,19 @@ namespace ExpenseProcessingSystem.Controllers
 
             //sort
             ViewData["CurrentSort"] = sortOrder;
-            ViewData["HistVoucherSortParm"] = String.IsNullOrEmpty(sortOrder) ? "hist_voucher" : "";
+            ViewData["HistStatusSortParm"] = String.IsNullOrEmpty(sortOrder) ? "hist_status" : "";
             ViewData["HistMakerSortParm"] = sortOrder == "hist_maker_desc" ? "hist_maker" : "hist_maker_desc";
             ViewData["HistApproverSortParm"] = sortOrder == "hist_approver_desc" ? "hist_approver" : "hist_approver_desc";
             ViewData["HistDateCreatedSortParm"] = sortOrder == "hist_date_created_desc" ? "hist_date_created" : "hist_date_created_desc";
             ViewData["HistLastUpdatedSortParm"] = sortOrder == "hist_last_updte_desc" ? "hist_last_updte" : "hist_last_updte_desc";
-            ViewData["HistStatusSortParm"] = sortOrder == "hist_status_desc" ? "hist_status" : "hist_status_desc";
+            ViewData["HistVoucherSortParm"] = sortOrder == "hist_voucher_desc" ? "hist_voucher" : "hist_voucher_desc";
 
             if (searchString != null) { page = 1; }
             else { searchString = currentFilter; }
 
             ViewData["CurrentFilter"] = searchString;
-            ViewData["CurrentFilter"] = searchString;
             FiltersViewModel tempFil = new FiltersViewModel();
-            if (vm.Filters == null)
+            if (vm.Filters == null || vm.Filters.HistoryFil == null)
             {
                 tempFil = new FiltersViewModel {
                     HistoryFil = new HistoryFiltersViewModel
@@ -532,7 +590,7 @@ namespace ExpenseProcessingSystem.Controllers
         //--------------------------[* REPORT *]----------------------------------------
         [OnlineUserCheck]
         [NonAdminRoleCheck]
-        public IActionResult Report()
+        public IActionResult Report(int reportType)
         {
             //Get list of report types from the constant data file:HomeReportTypesModel.cs
             //uses in Dropdownlist(Report Type)
@@ -566,6 +624,8 @@ namespace ExpenseProcessingSystem.Controllers
             };
 
             //Return ViewModel
+            //ViewBag.reportType = reportViewModel.ReportTypesList.Where(x => x.Id == reportType);
+            ViewBag.reportType = reportType;
             return View(reportViewModel);
         }
 
@@ -1481,7 +1541,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         _service.postDDV(entryID, "P", int.Parse(GetUserID()));
                         ViewBag.Success = 1;
-                        _service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_PRINT_LOI, intUser);
+                        _service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_PRINT, intUser);
 
                     }
                     else

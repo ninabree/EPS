@@ -2,6 +2,7 @@
 @using ExpenseProcessingSystem.ConstantData
 @{
     ViewData["Title"] = "Report";
+    int type = ViewBag.reportType;
 }
 
 @section Scripts {
@@ -465,11 +466,22 @@
 
 <script>
     $(document).ready(function () {
+        gotoLOI();
         $("#ddlReportType").on("change", function (e) {
             removeFilEl();
             repTypeChange();
         });
         //FUNCTIONS
+        function gotoLOI() {
+            if (@type > 0) {
+                $("#ddlReportType option:selected").prop("selected", false);
+                $("#ddlReportType option[value=" +@type+"]").attr("selected", "selected");
+
+                removeFilEl();
+                repTypeChange();
+            }
+        }
+
         function removeFilEl() {
             var tbl = $(".rep-voucher-tbl-left").find("tbody");
             $(tbl).find("tr:gt(0)").addClass("hidden");

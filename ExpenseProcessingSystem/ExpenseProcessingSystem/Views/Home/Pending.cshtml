@@ -1,6 +1,42 @@
 ﻿@using ExpenseProcessingSystem.ViewModels
 @model HomeIndexViewModel
+
+@{ 
+    var printStat = ViewBag.printStat ?? "";
+    int loi = ViewBag.loi > 0 ? ViewBag.loi : 13;
+}
 <div class="tabContent">
+    <div class="p-t-10 p-l-20 p-r-20">
+        <form asp-action="Pending" asp-controller="Home" method="get" id="search-frm">
+            <div class="form-actions no-color">
+                <p class="">Filter by:</p>
+                <table class="table">
+                    <tr>
+                        <td>@Html.LabelFor(model => model.Filters.GenPendFil.Pending_Type)</td>
+                        <td>
+                            @Html.DropDownListFor(model => model.Filters.GenPendFil.Pending_Type, new SelectList(Model.Filters.GenPendFil.Pending_Type_Select, "Value", "Text", "1"), "-- Voucher Type --", new { @class="w-49"})
+                        </td>
+                        <td>@Html.LabelFor(model => model.Filters.GenPendFil.Pending_Amount)</td>
+                        <td>@Html.TextBoxFor(model => model.Filters.GenPendFil.Pending_Amount, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.Filters.GenPendFil.Pending_Payee)</td>
+                        <td>@Html.TextBoxFor(model => model.Filters.GenPendFil.Pending_Payee, new { @class = "input" })</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(model => model.Filters.GenPendFil.Pending_Created_Date)</td>
+                        <td>@Html.TextBoxFor(model => model.Filters.GenPendFil.Pending_Created_Date, new { @class = "input w-49", @type = "date" })</td>
+                        <td>@Html.LabelFor(model => model.Filters.GenPendFil.Pending_Updated_Date)</td>
+                        <td>@Html.TextBoxFor(model => model.Filters.GenPendFil.Pending_Updated_Date, new { @class = "input", @type = "date" })</td>
+                        <td>@Html.LabelFor(model => model.Filters.GenPendFil.Pending_Status)</td>
+                        <td>@Html.TextBoxFor(model => model.Filters.GenPendFil.Pending_Status, new { @class = "input" })</td>
+                        <td colspan="2" style="text-align: right;">
+                            <input type="submit" value="Search" class="btn btn-default" id="search-btn" />
+                            <input type="button" value="Back to Full List" id="full-list-btn" class="btn btn-default" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </form>
+    </div>
     <div class="flex-c p-t-10">
         <table class="table table-striped tab-tbl table-bordered table-hover w-97">
             <colgroup>
@@ -15,38 +51,52 @@
             </colgroup>
             <thead>
                 <tr>
-                    <th><a asp-action="Index" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["NotifAppIDSortParm"]">Application Type<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
-                    <th>Amount</th>
-                    <th>Payee</th>
-                    <th>Maker</th>
-                    <th>Verifier/s</th>
-                    <th>Date Submitted</th>
-                    <th>Last Updated Date</th>
-                    <th>Status</th>
+                    <th><a asp-action="Pending" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PendAppIDSortParm"]">Application Type<p class="btn-xs glyphicon @ViewData["glyph-1"]"></p></a></th>
+                    <th><a asp-action="Pending" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PendAppAmtSortParm"]">Application Amount<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
+                    <th><a asp-action="Pending" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PendAppPaySortParm"]">Application Payee<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
+                    <th><a asp-action="Pending" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PendAppMkrSortParm"]">Application Maker<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
+                    <th>Application Verifier/s</th>
+                    <th><a asp-action="Pending" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PendDateSortParm"]">Date Submitted<p class="btn-xs glyphicon @ViewData["glyph-6"]"></p></a></th>
+                    <th><a asp-action="Pending" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PendUpdateSortParm"]">Last Updated Date<p class="btn-xs glyphicon @ViewData["glyph-7"]"></p></a></th>
+                    <th><a asp-action="Pending" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PendAppStatSortParm"]">Application Status<p class="btn-xs glyphicon @ViewData["glyph-8"]"></p></a></th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (ApplicationsViewModel item in Model.GeneralPendingList)
                 {
-                <tr data-href="@String.Concat(item.App_Link,"/",item.App_ID)">
-                    <td>@Html.DisplayFor(model => item.App_Type)</td>
-                    <td>@Html.DisplayFor(model => item.App_Amount)</td>
-                    <td>@Html.DisplayFor(model => item.App_Payee)</td>
-                    <td>@Html.DisplayFor(model => item.App_Maker)</td>
-                    <td>
-                        @if (item.App_Verifier_ID_List[0] != null && item.App_Verifier_ID_List[1] != null)
-                        {
-                            <text>@item.App_Verifier_ID_List[0] / @item.App_Verifier_ID_List[1]</text>
-                        }
-                        else
-                        {
-                            <text>@item.App_Verifier_ID_List[0]</text>
-                        }
-                    </td>
-                    <td>@Html.DisplayFor(model => item.App_Date)</td>
-                    <td>@Html.DisplayFor(model => item.App_Last_Updated)</td>
-                    <td>@Html.DisplayFor(model => item.App_Status)</td>
-                </tr>
+                    <tr data-href="@String.Concat(item.App_Link,"/",item.App_ID)">
+                        <td>@Html.DisplayFor(model => item.App_Type)</td>
+                        <td>@Html.DisplayFor(model => item.App_Amount)</td>
+                        <td>@Html.DisplayFor(model => item.App_Payee)</td>
+                        <td>@Html.DisplayFor(model => item.App_Maker)</td>
+                        <td>
+                            @if (item.App_Verifier_ID_List[0] != null && item.App_Verifier_ID_List[1] != null)
+                            {
+                                <text>@item.App_Verifier_ID_List[0] / @item.App_Verifier_ID_List[1]</text>
+                            }
+                            else
+                            {
+                                <text>@item.App_Verifier_ID_List[0]</text>
+                            }
+                        </td>
+                        <td>@Html.DisplayFor(model => item.App_Date)</td>
+                        <td>@Html.DisplayFor(model => item.App_Last_Updated)</td>
+                        <td>@Html.DisplayFor(model => item.App_Status)</td>
+                        <th>
+                            @if (item.App_Status == printStat)
+                            {
+                                <a asp-action="Report"
+                                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                   asp-route-reportType="@loi"
+                                   asp-controller="Home"
+                                   asp-route-partialName="@ViewData["Title"]"
+                                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                                   class="btn pagination-btn btn-xs btn-defaul glyphicon glyphicon-download">
+                                </a>
+                            }
+                        </th>
+                    </tr>
                 }
             </tbody>
         </table>
@@ -91,5 +141,17 @@
             form.attr("action", "/Home/" + link)
             form.submit();
         });
+    });
+    //reset search filter values
+    $(document).on("click", "#full-list-btn", function (e) {
+        e.stopImmediatePropagation();
+        $('input[id^= "Filters_GenPendFil_"]').each(function (i, obj) {
+            $(this).val("");
+            if ($(this).attr('type') == "date") {
+                $(this).val("0001-01-01T00:00:00.000");
+            }
+        });
+        $("option:selected").prop("selected", false);
+        $('#search-frm').submit();
     });
 </script>
