@@ -51,7 +51,7 @@
                                                 @fbtList,
                                                 new { @class = "w-full input" })
                         </td>
-                        <td colspan="2">
+                        <td colspan="2" class="grp">
                             @{
                                 List<SelectListItem> grpList = new List<SelectListItem>();
                                 grpList.Add(new SelectListItem
@@ -90,3 +90,22 @@
     }
 </div>
 
+<script>
+    $("[id$='_Account_Fund']").each(function (e) {
+        if ($(this).is(':checked')) {
+            $(this).parent().siblings("td.grp").find("select").prop("disabled", false);
+        } else {
+
+            $(this).parent().siblings("td.grp").find("select").prop("disabled", true);
+        }
+    });
+    $("[id$='_Account_Fund']").on("change", function (e) {
+        e.stopImmediatePropagation();
+        if ($(this).is(':checked')) {
+            $(this).parent().siblings("td.grp").find("select").prop("disabled", false);
+        } else {
+
+            $(this).parent().siblings("td.grp").find("select").prop("disabled", true);
+        }
+    });
+</script>

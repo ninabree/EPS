@@ -37,10 +37,10 @@
                     Model.FbtList,
                     new { @class = "w-full input" })
                 </td>
-                <td colspan="2">
+                <td colspan="2" class="grp">
                     @Html.DropDownListFor(m => m.NewAccountVM[0].Account_Group_MasterID,
                     Model.AccGrp,
-                    new { @class = "w-full input" })
+                    new { @class = "w-full input", @disabled = true})
                 </td>
                 <td colspan="2">
                     @Html.DropDownListFor(m => m.NewAccountVM[0].Account_Currency_MasterID,
@@ -57,3 +57,22 @@
         <input id="currList" type="hidden" value="@Model.CurrList" />
     }
 </div>
+<script>
+    $("[id$='_Account_Fund']").each(function (e) {
+        if ($(this).is(':checked')) {
+            $(this).parent().siblings("td.grp").find("select").prop("disabled", false);
+        } else {
+
+            $(this).parent().siblings("td.grp").find("select").prop("disabled", true);
+        }
+    });
+    $("[id$='_Account_Fund']").on("change", function (e) {
+        e.stopImmediatePropagation();
+        if ($(this).is(':checked')) {
+            $(this).parent().siblings("td.grp").find("select").prop("disabled", false);
+        } else {
+
+            $(this).parent().siblings("td.grp").find("select").prop("disabled", true);
+        }
+    });
+</script>

@@ -2001,7 +2001,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Account_Name = dm.Account_Name,
                     Pending_Account_MasterID = ++masterIDMax,
                     Pending_Account_FBT_MasterID = dm.Account_FBT_MasterID,
-                    Pending_Account_Group_MasterID = dm.Account_Group_MasterID,
+                    Pending_Account_Group_MasterID = dm.Account_Group_MasterID > 0 ? dm.Account_Group_MasterID : 0,
                     Pending_Account_Currency_MasterID = dm.Account_Currency_MasterID,
                     Pending_Account_Code = dm.Account_Code,
                     Pending_Account_Budget_Code = dm.Account_Budget_Code,
