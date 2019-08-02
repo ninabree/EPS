@@ -6852,7 +6852,7 @@ namespace ExpenseProcessingSystem.Services
                         CRAmount = (i.Trans_DebitCredit1_1 == "C") ? Double.Parse(i.Trans_Amount1_1) : 0,
                         BudgetAmount = 0,
                         Balance = balance,
-                        DHName = (signatory != null) ? signatory.BCS_Name : "",
+                        DHName = (signatory != null) ? getBCSName(signatory.BCS_ID) : "",
                         ApprvName = i.ESAMS_ApprvName,
                         MakerName = i.ESAMS_MakerName
                     });
@@ -6879,7 +6879,7 @@ namespace ExpenseProcessingSystem.Services
                         CRAmount = (i.Trans_DebitCredit1_2 == "C") ? Double.Parse(i.Trans_Amount1_2) : 0,
                         BudgetAmount = 0,
                         Balance = balance,
-                        DHName = (signatory != null) ? signatory.BCS_Name : "",
+                        DHName = (signatory != null) ? getBCSName(signatory.BCS_ID) : "",
                         ApprvName = i.ESAMS_ApprvName,
                         MakerName = i.ESAMS_MakerName
                     });
@@ -6906,7 +6906,7 @@ namespace ExpenseProcessingSystem.Services
                         CRAmount = (i.Trans_DebitCredit2_1 == "C") ? Double.Parse(i.Trans_Amount2_1) : 0,
                         BudgetAmount = 0,
                         Balance = balance,
-                        DHName = (signatory != null) ? signatory.BCS_Name : "",
+                        DHName = (signatory != null) ? getBCSName(signatory.BCS_ID) : "",
                         ApprvName = i.ESAMS_ApprvName,
                         MakerName = i.ESAMS_MakerName
                     });
@@ -6933,7 +6933,7 @@ namespace ExpenseProcessingSystem.Services
                         CRAmount = (i.Trans_DebitCredit2_2 == "C") ? Double.Parse(i.Trans_Amount2_2) : 0,
                         BudgetAmount = 0,
                         Balance = balance,
-                        DHName = (signatory != null) ? signatory.BCS_Name : "",
+                        DHName = (signatory != null) ? getBCSName(signatory.BCS_ID) : "",
                         ApprvName = i.ESAMS_ApprvName,
                         MakerName = i.ESAMS_MakerName
                     });
@@ -6960,7 +6960,7 @@ namespace ExpenseProcessingSystem.Services
                         CRAmount = (i.Trans_DebitCredit3_1 == "C") ? Double.Parse(i.Trans_Amount3_1) : 0,
                         BudgetAmount = 0,
                         Balance = balance,
-                        DHName = (signatory != null) ? signatory.BCS_Name : "",
+                        DHName = (signatory != null) ? getBCSName(signatory.BCS_ID) : "",
                         ApprvName = i.ESAMS_ApprvName,
                         MakerName = i.ESAMS_MakerName
                     });
@@ -6987,7 +6987,7 @@ namespace ExpenseProcessingSystem.Services
                         CRAmount = (i.Trans_DebitCredit3_2 == "C") ? Double.Parse(i.Trans_Amount3_2) : 0,
                         BudgetAmount = 0,
                         Balance = balance,
-                        DHName = (signatory != null) ? signatory.BCS_Name : "",
+                        DHName = (signatory != null) ? getBCSName(signatory.BCS_ID) : "",
                         ApprvName = i.ESAMS_ApprvName,
                         MakerName = i.ESAMS_MakerName
                     });
@@ -7014,7 +7014,7 @@ namespace ExpenseProcessingSystem.Services
                         CRAmount = (i.Trans_DebitCredit4_1 == "C") ? Double.Parse(i.Trans_Amount4_1) : 0,
                         BudgetAmount = 0,
                         Balance = balance,
-                        DHName = (signatory != null) ? signatory.BCS_Name : "",
+                        DHName = (signatory != null) ? getBCSName(signatory.BCS_ID) : "",
                         ApprvName = i.ESAMS_ApprvName,
                         MakerName = i.ESAMS_MakerName
                     });
@@ -7041,7 +7041,7 @@ namespace ExpenseProcessingSystem.Services
                         CRAmount = (i.Trans_DebitCredit4_2 == "C") ? Double.Parse(i.Trans_Amount4_2) : 0,
                         BudgetAmount = 0,
                         Balance = balance,
-                        DHName = (signatory != null) ? signatory.BCS_Name : "",
+                        DHName = (signatory != null) ? getBCSName(signatory.BCS_ID) : "",
                         ApprvName = i.ESAMS_ApprvName,
                         MakerName = i.ESAMS_MakerName
                     });
