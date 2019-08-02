@@ -42,31 +42,33 @@
 
 <table border="0" style="width:100%">
     <tr>
-        <td style="width:10%" rowspan="2"><img src="@Model.ReportCommonVM.Header_Logo" style="width:100%;height:40%" /></td>
-        <td style="text-align:center"><b>ALPHALIST OF REGULAR SUPPLIERS BY TOP 10,000 PRIVATE CORPORATIONS</b></td>
-        <td style="width:10%"></td>
+        <td style="font-weight:bold;font-size:large;text-align:center" colspan="3">ALPHALIST OF REGULAR SUPPLIERS BY TOP 10,000 PRIVATE CORPORATIONS</td>
     </tr>
     <tr>
-        <td style="text-align:center">
+        <td colspan="3" style="font-weight:bold;text-align:center;text-decoration:underline">
             <text>
-                @Html.DisplayFor(Model => Model.HomeReportFilter.MonthName)
+                @Html.DisplayFor(Model => Model.HomeReportFilter.MonthName) @Html.DisplayFor(Model => Model.HomeReportFilter.Year)
                 -
-                @Html.DisplayFor(Model => Model.HomeReportFilter.MonthNameTo)
+                @Html.DisplayFor(Model => Model.HomeReportFilter.MonthNameTo) @Html.DisplayFor(Model => Model.HomeReportFilter.YearTo)
             </text>
         </td>
-        <td></td>
     </tr>
     <tr>
-        <td style="padding-left:3%">Name</td>
-        <td colspan="2">@Model.ReportCommonVM.Header_Name</td>
+        <td style="width:8%">NAME:</td>
+        <td colspan="2" style="font-weight:bold">MIZUHO BANK, LTD. - MANILA BRANCH</td>
     </tr>
     <tr>
-        <td style="padding-left:3%">TIN</td>
-        <td colspan="2">@Model.ReportCommonVM.Header_TIN</td>
+        <td>ADDRESS:</td>
+        <td colspan="2" style="font-weight:bold">25th Floor, The Zuellig Building, Makati Avenue corner Paseo de Roxas, Makati City 1225</td>
     </tr>
     <tr>
-        <td style="padding-left:3%">Address</td>
-        <td colspan="2">@Model.ReportCommonVM.Header_Address</td>
+        <td>TIN:</td>
+        <td colspan="2" style="font-weight:bold">004-669-467</td>
+    </tr>
+    <tr>
+        <td>RDO NAME:</td>
+        <td style="font-weight:bold">Large Taxpayers Division</td>
+        <td style="text-align:right;font-weight:bold">RDO CODE: 0116</td>
     </tr>
 </table>
 
@@ -90,7 +92,7 @@
                 <td style="text-align:center" class="td-PDF">@i.SeqNo</td>
                 <td style="text-align:center" class="td-PDF">@i.Tin</td>
                 <td style="text-align:left" class="td-PDF">@i.SupplierName</td>
-                <td style="text-align:center" class="td-PDF">@i.NOIP</td>
+                <td style="text-align:left" class="td-PDF">@i.NOIP</td>
                 <td style="text-align:center" class="td-PDF">@i.ATC</td>
                 <td style="text-align:right" class="td-PDF">@Html.DisplayFor(model => i.TaxBase)</td>
                 <td style="text-align:center" class="td-PDF">@Html.DisplayFor(model => i.RateOfTax)</td>
@@ -105,16 +107,14 @@
         <th width="37.5%"></th>
         <th width="12%"></th>
         <th width="8%" style="text-align:right">TOTAL =></th>
-        <th width="10%" class="th-PDF" style="text-align:right">@Model.HomeReportOutputAST1000.Sum(model => model.TaxBase).ToString("#,##0.00")</th>
+        <th width="10%" class="th-PDF" style="text-align:right">@Model.HomeReportOutputAST1000.Sum(model => model.TaxBase).ToString("#,##0.00#")</th>
         <th width="5%"></th>
-        <th width="10%" class="th-PDF" style="text-align:right">@Model.HomeReportOutputAST1000.Sum(x => x.AOTW).ToString("#,##0.00")</th>
+        <th width="10%" class="th-PDF" style="text-align:right">@Model.HomeReportOutputAST1000.Sum(x => x.AOTW).ToString("#,##0.00#")</th>
     </tr>
 </table>
 
-<div style="text-align:center">
-    <div style="margin-top:5%;text-align:center;display:inline-block;">
-        <text style="font-weight:bold">@Html.DisplayFor(x => Model.ReportCommonVM.Signatory_Name)</text>
-        <hr width="100%" color="black" />
-        <text style="font-weight:bold;">@Html.DisplayFor(x => Model.ReportCommonVM.Signatory_Position)</text>
-    </div>
+<div style="margin-top:5%;margin-right:5%;text-align:center;display: inline-block;float:right">
+    <text style="font-weight:bold">ALBERT ADVINCULA</text><br />
+    <text style="font-weight:bold">VP-Manager / Administration Department</text>
+    <hr width="400px" color="black" />
 </div>

@@ -1578,7 +1578,6 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             //Status of inputted budget will be pending.
             foreach(var i in vmList)
             {
-                Console.WriteLine("#######" + i.BM_Account_ID);
                 BudgetModel dbBudget = new BudgetModel();
                 if (i.BM_Budget_Current != i.BM_Budget_Amount && i.BM_GWrite_StatusID != GlobalSystemValues.STATUS_PENDING)
                 {

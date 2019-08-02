@@ -277,14 +277,13 @@ namespace ExpenseProcessingSystem.Controllers
         }
         //-----------Closing Screen-----------------
         [OnlineUserCheck]
+        [NonAdminRoleCheck]
         public IActionResult Close(string username, string password, string command = "load")
         {
             ClosingViewModel model = new ClosingViewModel();
+            bool closeFail = false;
             switch (command)
             {
-                case "load":
-                    model = _service.ClosingGetRecords();
-                    break;
                 case "openBook":
                     if (_service.ClosingCheckStatus())
                     {
@@ -296,12 +295,43 @@ namespace ExpenseProcessingSystem.Controllers
                     }
                     break;
                 case "CloseRBU":
-                    model = CloseRBU(username,password);
+                    closeFail = _service.ClosingCheckStatus(GlobalSystemValues.BRANCH_RBU);
+                    if (!closeFail) {
+                        if(!_service.closeTransaction(GlobalSystemValues.BRANCH_RBU, username, password,"close"))
+                        {
+                            closeFail = true;
+                        }
+                    }
                     break;
-                case "reOpenRBU": break;
-                case "CloseFCDU": break;
-                case "reOpenFCDU": break;
+                case "reOpenRBU":
+                    if (!_service.closeTransaction(GlobalSystemValues.BRANCH_RBU, username, password, "reopen"))
+                    {
+                        closeFail = true;
+                    }
+                    break;
+                case "CloseFCDU":
+                    closeFail = _service.ClosingCheckStatus(GlobalSystemValues.BRANCH_FCDU);
+                    if (!closeFail)
+                    {
+                        if (!_service.closeTransaction(GlobalSystemValues.BRANCH_FCDU, username, password, "close"))
+                        {
+                            closeFail = true;
+                        }
+                    }
+                    break;
+                case "reOpenFCDU":
+                    if (!_service.closeTransaction(GlobalSystemValues.BRANCH_FCDU, username, password, "reopen"))
+                    {
+                        closeFail = true;
+                    }
+                    break;
             }
+
+            model = _service.ClosingGetRecords();
+
+            if (closeFail)
+                model.messages.Add("Can't close book there are still ongoing transactions!");
+
             return View(model);
         }
 
@@ -366,73 +396,6 @@ namespace ExpenseProcessingSystem.Controllers
                 index++;
                 model.fcduItems.Add(temp);
             } while (index != 10);
-
-            return model;
-        }
-        public ClosingViewModel CloseRBU(string username, string password)
-        {
-            ClosingViewModel model = new ClosingViewModel();
-            model.date = DateTime.Now;
-            int index = 0;
-            if (_service.closeTransaction("767",username,password)) {
-                do
-                {
-                    CloseItems temp = new CloseItems();
-                    temp.gBaseTrans = "111,222,333";
-                    temp.expTrans = "CLOSING TIME!";
-                    temp.particulars = "THIS IS A PARTICULAR!";
-                    temp.ccy = "PHP";
-                    temp.amount = Math.Round(1000 + ((135 * index) / 2.6),2);
-                    temp.transCount = 2;
-                    temp.status = "Posted";
-                    index++;
-                    model.rbuItems.Add(temp);
-                } while (index != 10);
-                index = 0;
-                do
-                {
-                    CloseItems temp = new CloseItems();
-                    temp.gBaseTrans = "111,222,333";
-                    temp.expTrans = "CLOSING TIME!";
-                    temp.particulars = "THIS IS A PARTICULAR!";
-                    temp.ccy = "PHP";
-                    temp.amount = Math.Round(1000 + ((135 * index) / 2.6),2);
-                    temp.transCount = 2;
-                    temp.status = "Posted";
-                    index++;
-                    model.fcduItems.Add(temp);
-                } while (index != 10);
-            }
-            else
-            {
-                do
-                {
-                    CloseItems temp = new CloseItems();
-                    temp.gBaseTrans = "111,222,333";
-                    temp.expTrans = "OPENING TIME!";
-                    temp.particulars = "THIS IS A PARTICULAR!";
-                    temp.ccy = "PHP";
-                    temp.amount = Math.Round(1000 + ((135 * index) / 2.6),2);
-                    temp.transCount = 2;
-                    temp.status = "Posted";
-                    index++;
-                    model.rbuItems.Add(temp);
-                } while (index != 10);
-                index = 0;
-                do
-                {
-                    CloseItems temp = new CloseItems();
-                    temp.gBaseTrans = "111,222,333";
-                    temp.expTrans = "OPENING TIME!";
-                    temp.particulars = "THIS IS A PARTICULAR!";
-                    temp.ccy = "PHP";
-                    temp.amount = Math.Round(1000 + ((135 * index) / 2.6),2);
-                    temp.transCount = 2;
-                    temp.status = "Posted";
-                    index++;
-                    model.fcduItems.Add(temp);
-                } while (index != 10);
-            }
 
             return model;
         }
@@ -609,14 +572,14 @@ namespace ExpenseProcessingSystem.Controllers
                     ParentTypeId = 0
                     }
                 },
-                MonthList = ConstantData.HomeReportConstantValue.GetMonthList(),
-                FileFormatList = ConstantData.HomeReportConstantValue.GetFileFormatList(),
-                YearList = ConstantData.HomeReportConstantValue.GetYearList(),
-                YearSemList = ConstantData.HomeReportConstantValue.GetYearList(),
-                SemesterList = ConstantData.HomeReportConstantValue.GetSemesterList(),
-                PeriodOptionList = ConstantData.HomeReportConstantValue.GetPeriodOptionList(),
-                PeriodFrom = Convert.ToDateTime(ConstantData.HomeReportConstantValue.DateToday),
-                PeriodTo = Convert.ToDateTime(ConstantData.HomeReportConstantValue.DateToday),
+                MonthList = HomeReportConstantValue.GetMonthList(),
+                FileFormatList = HomeReportConstantValue.GetFileFormatList(),
+                YearList = HomeReportConstantValue.GetYearList(),
+                YearSemList = HomeReportConstantValue.GetYearList(),
+                SemesterList = HomeReportConstantValue.GetSemesterList(),
+                PeriodOptionList = HomeReportConstantValue.GetPeriodOptionList(),
+                PeriodFrom = Convert.ToDateTime(HomeReportConstantValue.DateToday),
+                PeriodTo = Convert.ToDateTime(HomeReportConstantValue.DateToday),
                 TaxRateList = _service.PopulateTaxRaxListIncludeHist(),
                 VoucherNoList =  _service.PopulateVoucherNoDDV(),
                 VoucherNoListPrepaidAmort = _service.PopulateVoucherNoCV(),
@@ -636,6 +599,25 @@ namespace ExpenseProcessingSystem.Controllers
         public JsonResult GetReportSubType(int ReportTypeID)
         {
             List<HomeReportSubTypeAccModel> subtypes = new List<HomeReportSubTypeAccModel>();
+
+            if (ReportTypeID == HomeReportConstantValue.ESAMS)
+            {
+                var accounts = _service.getAccountList();
+                XElement xelem = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
+                for(int i = 1; i <=5; i++)
+                {
+                    var acc = accounts.Where(x => x.Account_MasterID == int.Parse(xelem.Element("D_SS" + i).Value)).FirstOrDefault();
+                    if(acc != null)
+                    {
+                        subtypes.Add(new HomeReportSubTypeAccModel
+                        {
+                            Id = acc.Account_ID.ToString(),
+                            SubTypeName = acc.Account_Name
+                        });
+                    }
+                }
+                return Json(subtypes);
+            }
 
             if (ReportTypeID == HomeReportConstantValue.AccSummaryReport)
             {
@@ -678,6 +660,7 @@ namespace ExpenseProcessingSystem.Controllers
                 }
                 return Json(subtypes);
             }
+
             if(ReportTypeID == HomeReportConstantValue.WTS)
             {
                 var taxList = _service.getAllTaxRateList();
@@ -797,6 +780,36 @@ namespace ExpenseProcessingSystem.Controllers
                         cnt += 1;
                     }
 
+                    break;
+
+                //For ESAMS Report
+                case HomeReportConstantValue.ESAMS:
+                    fileName = "ESAMSReport_" + dateNow;
+                    layoutName = HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
+                    DateTime DateFromLayout = model.PeriodFrom;
+                    DateTime DateToLayout = model.PeriodTo;
+                    string format = "yyyy-M";
+                    if (model.PeriodOption == 1)
+                    {
+                        DateFromLayout = DateTime.ParseExact(model.Year + "-" + model.Month, format, CultureInfo.InvariantCulture);
+                        DateToLayout = DateTime.ParseExact(model.YearTo + "-" + model.MonthTo, format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
+                        model.PeriodFrom = DateFromLayout;
+                        model.PeriodTo = DateToLayout;
+                    }
+                    var accountno = _service.getAccount(model.ReportSubType);
+                    var currency = _service.getCurrencyByMasterID(accountno.Account_Currency_MasterID);
+                    //Get the necessary data from Database
+                    data = new HomeReportDataFilterViewModel
+                    {
+                        HomeReportOutputESAMS = _service.GetESAMSData(model),
+                        HomeReportFilter = model,
+                        ReportCommonVM = repComVM,
+                        ReportAccountNo = accountno.Account_No,
+                        ReportCurrency = currency.Curr_CCY_ABBR,
+                        DateFrom = DateFromLayout,
+                        DateTo = DateToLayout
+                    };
+                    
                     break;
                 //For Actual Budget Report
                 case HomeReportConstantValue.ActualBudgetReport:
@@ -1009,7 +1022,7 @@ namespace ExpenseProcessingSystem.Controllers
 
         [OnlineUserCheck]
         [NonAdminRoleCheck]
-        public IActionResult Generate2307File(int _vendor, int _ewt, int _tax, double amount, DateTime date, string approver,int expID)
+        public IActionResult Generate2307File(int _vendor, int _ewt, int _tax, double _amount, DateTime date, string approver,int expID)
         {
             string path = "";
             XElement xelem = XElement.Load("wwwroot/xml/ReportHeader.xml");
@@ -1028,21 +1041,23 @@ namespace ExpenseProcessingSystem.Controllers
                 float vat = _service.getVat(_tax);
 
                 var payItem = new PaymentInfo();
+                double amount;
 
+                if (vat > 0)
+                    amount = _amount / (1 + vat);
+                else
+                    amount = _amount;
                 if (new List<int> { 1, 4, 7, 10 }.Contains(date.Month))
                 {
-                    if (vat > 0)
-                        payItem.M1Quarter = amount / (1 + vat);
+                    payItem.M1Quarter = amount;
                 }
                 else if (new List<int> { 2, 5, 8, 11 }.Contains(date.Month))
                 {
-                    if (vat > 0)
-                        payItem.M2Quarter = amount / (1 + vat);
+                    payItem.M2Quarter = amount;
                 }
                 else if (new List<int> { 3, 6, 9, 12 }.Contains(date.Month))
                 {
-                    if (vat > 0)
-                        payItem.M3Quarter = amount / (1 + vat);
+                    payItem.M3Quarter = amount;
                 }
 
                 //payitem
@@ -1541,7 +1556,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         _service.postDDV(entryID, "P", int.Parse(GetUserID()));
                         ViewBag.Success = 1;
-                        _service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_PRINT, intUser);
+                        _service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_FOR_PRINTING, int.Parse(GetUserID()));
 
                     }
                     else
@@ -1806,6 +1821,33 @@ namespace ExpenseProcessingSystem.Controllers
             pcvList.systemValues.ewt = new SelectList("0", "0");
             pcvList.systemValues.vat = new SelectList("0", "0");
 
+            List<cvBirForm> birForms = new List<cvBirForm>();
+            foreach (var item in pcvList.EntryCV)
+            {
+                if (birForms.Any(x => x.ewt == item.ewt && x.vendor == item.dtl_Ewt_Payor_Name_ID))
+                {
+                    int index = birForms.FindIndex(x => x.ewt == item.ewt);
+                    birForms[index].amount += item.debitGross;
+                }
+                else
+                {
+                    cvBirForm temp = new cvBirForm
+                    {
+                        amount = item.debitGross,
+                        ewt = item.ewt,
+                        vat = item.vat,
+                        vendor = item.dtl_Ewt_Payor_Name_ID,
+                        approver = pcvList.approver,
+                        date = pcvList.createdDate
+                    };
+                    if (item.ewt > 0)
+                    {
+                        birForms.Add(temp);
+                    }
+                }
+            }
+            pcvList.birForms.AddRange(birForms);
+
             return View(viewLink, pcvList);
         }
 
@@ -1850,6 +1892,34 @@ namespace ExpenseProcessingSystem.Controllers
                 }
             }
 
+            List<cvBirForm> birForms = new List<cvBirForm>();
+            foreach (var item in pcvList.EntryCV)
+            {
+                if (birForms.Any(x => x.ewt == item.ewt && x.vendor == item.dtl_Ewt_Payor_Name_ID))
+                {
+                    int index = birForms.FindIndex(x => x.ewt == item.ewt);
+                    birForms[index].amount += item.debitGross;
+                }
+                else
+                {
+                    cvBirForm temp = new cvBirForm
+                    {
+                        amount = item.debitGross,
+                        ewt = item.ewt,
+                        vat = item.vat,
+                        vendor = item.dtl_Ewt_Payor_Name_ID,
+                        approver = pcvList.approver,
+                        date = pcvList.createdDate
+                    };
+                    if(item.ewt > 0)
+                    {
+                        birForms.Add(temp);
+                    }
+                }
+            }
+            pcvList.birForms.AddRange(birForms);
+
+
             return View("Entry_PCV_ReadOnly", pcvList);
         }
         //[* Entry Petty Cash *]
@@ -1878,9 +1948,11 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.systemValues.ewt = new SelectList("0","0");
             viewModel.systemValues.vat = new SelectList("0", "0");
             var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
+            viewModel.phpCurrID = ccyPHP.Curr_ID;
+            viewModel.phpCurrMasterID = ccyPHP.Curr_MasterID;
+            viewModel.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
             viewModel.EntryCV[0].ccy = ccyPHP.Curr_ID;
-            viewModel.EntryCV[0].ccyMasterID = ccyPHP.Curr_MasterID;
-            viewModel.EntryCV[0].ccyAbbrev = ccyPHP.Curr_CCY_ABBR;
+
             return View(viewModel);
         }
 
@@ -2039,9 +2111,38 @@ namespace ExpenseProcessingSystem.Controllers
 
             XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
             var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
-            ssList.EntryCV[0].ccy = ccyPHP.Curr_ID;
-            ssList.EntryCV[0].ccyMasterID = ccyPHP.Curr_MasterID;
-            ssList.EntryCV[0].ccyAbbrev = ccyPHP.Curr_CCY_ABBR;
+            ssList.phpCurrID = ccyPHP.Curr_ID;
+            ssList.phpCurrMasterID = ccyPHP.Curr_MasterID;
+            ssList.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
+
+            List<cvBirForm> birForms = new List<cvBirForm>();
+            foreach (var item in ssList.EntryCV)
+            {
+                double grossOrig = item.gBaseRemarksDetails.Sum(x => x.amount);
+
+                if (birForms.Any(x => x.ewt == item.ewt && x.vendor == item.dtl_Ewt_Payor_Name_ID))
+                {
+                    int index = birForms.FindIndex(x => x.ewt == item.ewt);
+                    birForms[index].amount += grossOrig;
+                }
+                else
+                {
+                    cvBirForm temp = new cvBirForm
+                    {
+                        amount = grossOrig,
+                        ewt = item.ewt,
+                        vat = item.vat,
+                        vendor = item.dtl_Ewt_Payor_Name_ID,
+                        approver = ssList.approver,
+                        date = ssList.createdDate
+                    };
+                    if (item.ewt > 0)
+                    {
+                        birForms.Add(temp);
+                    }
+                }
+            }
+            ssList.birForms.AddRange(birForms);
 
             return View(viewLink, ssList);
         }
@@ -2071,9 +2172,9 @@ namespace ExpenseProcessingSystem.Controllers
 
             XElement xelemliq = XElement.Load("wwwroot/xml/LiquidationValue.xml");
             var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelemliq.Element("CURRENCY_PHP").Value));
-            ssList.EntryCV[0].ccy = ccyPHP.Curr_ID;
-            ssList.EntryCV[0].ccyMasterID = ccyPHP.Curr_MasterID;
-            ssList.EntryCV[0].ccyAbbrev = ccyPHP.Curr_CCY_ABBR;
+            ssList.phpCurrID = ccyPHP.Curr_ID;
+            ssList.phpCurrMasterID = ccyPHP.Curr_MasterID;
+            ssList.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
 
             DMAccountModel acc = new DMAccountModel();
             List<accDetails> acclist = new List<accDetails>();
@@ -2104,6 +2205,36 @@ namespace ExpenseProcessingSystem.Controllers
                     i.vendVATList = new List<DMVATModel> { new DMVATModel { VAT_ID = 0, VAT_Rate = 0 } };
                 }
             }
+
+            List<cvBirForm> birForms = new List<cvBirForm>();
+            foreach (var item in ssList.EntryCV)
+            {
+                double grossOrig = item.gBaseRemarksDetails.Sum(x => x.amount);
+
+                if (birForms.Any(x => x.ewt == item.ewt && x.vendor == item.dtl_Ewt_Payor_Name_ID))
+                {
+                    int index = birForms.FindIndex(x => x.ewt == item.ewt);
+                    birForms[index].amount += grossOrig;
+                }
+                else
+                {
+                    cvBirForm temp = new cvBirForm
+                    {
+                        amount = grossOrig,
+                        ewt = item.ewt,
+                        vat = item.vat,
+                        vendor = item.dtl_Ewt_Payor_Name_ID,
+                        approver = ssList.approver,
+                        date = ssList.createdDate
+                    };
+                    if (item.ewt > 0)
+                    {
+                        birForms.Add(temp);
+                    }
+                }
+            }
+            ssList.birForms.AddRange(birForms);
+
             return View("Entry_SS_ReadOnly", ssList);
         }
 
@@ -2137,6 +2268,8 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.CDDContents = cddContents;
             XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
             string excelTemplateName = (viewModel.CURRENCY == xelem.Element("CURRENCY_Yen").Value) ? "CDDIS_Yen.xlsx" : "CDDIS_USD.xlsx";
+
+            bool result = _service.UpdateCDDPrintingStatus(entryID, entryDtlID, GlobalSystemValues.TYPE_SS);
 
             return File(excelGenerate.ExcelCDDIS(viewModel, newFileName, excelTemplateName), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", newFileName);
 
@@ -2528,6 +2661,7 @@ namespace ExpenseProcessingSystem.Controllers
             ssList.accList = _service.getAccountList();
             ssList.accAllList = _service.getAccountListIncHist();
             ssList.vendorList = _service.getVendorList().OrderBy(x => x.Vendor_Name).ToList();
+            ssList.LiqEntryDetails.Liq_Created_Date = DateTime.Now.Date;
 
             foreach (var i in ssList.accAllList)
             {
@@ -2539,9 +2673,42 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
-            ssList.LiquidationDetails[0].ccyID = ccyPHP.Curr_ID;
-            ssList.LiquidationDetails[0].ccyMasterID = ccyPHP.Curr_MasterID;
-            ssList.LiquidationDetails[0].ccyAbbrev = ccyPHP.Curr_CCY_ABBR;
+            ssList.phpCurrID = ccyPHP.Curr_ID;
+            ssList.phpCurrMasterID = ccyPHP.Curr_MasterID;
+            ssList.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
+
+            List<cvBirForm> birForms = new List<cvBirForm>();
+            ssList.birForms = new List<cvBirForm>();
+            foreach (var item in ssList.LiquidationDetails)
+            {
+                double grossOrig = item.gBaseRemarksDetails.Sum(x => x.amount);
+
+                if (birForms.Any(x => x.ewt == item.ewtID && x.vendor == item.dtl_Ewt_Payor_Name_ID))
+                {
+                    int index = birForms.FindIndex(x => x.ewt == item.ewtID);
+                    birForms[index].amount += grossOrig;
+                }
+                else
+                {
+                    cvBirForm temp = new cvBirForm
+                    {
+                        amount = grossOrig,
+                        ewt = item.ewtID,
+                        vat = item.vatID,
+                        vendor = item.dtl_Ewt_Payor_Name_ID,
+                        approver = ssList.approver,
+                        date = ssList.createdDate
+                    };
+                    if (item.ewtID > 0)
+                    {
+                        birForms.Add(temp);
+                    }
+                }
+            }
+            if (birForms.Count() > 0)
+            {
+                ssList.birForms.AddRange(birForms);
+            }
 
             return View("Liquidation_SS", ssList);
         }
@@ -2624,9 +2791,42 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
-            ssList.LiquidationDetails[0].ccyID = ccyPHP.Curr_ID;
-            ssList.LiquidationDetails[0].ccyMasterID = ccyPHP.Curr_MasterID;
-            ssList.LiquidationDetails[0].ccyAbbrev = ccyPHP.Curr_CCY_ABBR;
+            ssList.phpCurrID = ccyPHP.Curr_ID;
+            ssList.phpCurrMasterID = ccyPHP.Curr_MasterID;
+            ssList.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
+
+            List<cvBirForm> birForms = new List<cvBirForm>();
+            ssList.birForms = new List<cvBirForm>();
+            foreach (var item in ssList.LiquidationDetails)
+            {
+                double grossOrig = item.gBaseRemarksDetails.Sum(x => x.amount);
+
+                if (birForms.Any(x => x.ewt == item.ewtID && x.vendor == item.dtl_Ewt_Payor_Name_ID))
+                {
+                    int index = birForms.FindIndex(x => x.ewt == item.ewtID);
+                    birForms[index].amount += grossOrig;
+                }
+                else
+                {
+                    cvBirForm temp = new cvBirForm
+                    {
+                        amount = grossOrig,
+                        ewt = item.ewtID,
+                        vat = item.vatID,
+                        vendor = item.dtl_Ewt_Payor_Name_ID,
+                        approver = ssList.approver,
+                        date = ssList.createdDate
+                    };
+                    if (item.ewtID > 0)
+                    {
+                        birForms.Add(temp);
+                    }
+                }
+            }
+            if(birForms.Count() > 0)
+            {
+                ssList.birForms.AddRange(birForms);
+            }
 
             return View("Liquidation_SS_ReadOnly", ssList);
         }
@@ -2692,7 +2892,7 @@ namespace ExpenseProcessingSystem.Controllers
                     viewLink = "Liquidation_SS_ReadOnly";
                     break;
                 case "Reversal":
-                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
+                    if (_service.updateLiquidateStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
                     {
                         _service.postLiq_SS(entryID, "R", int.Parse(GetUserID()));
                         ViewBag.Success = 1;
@@ -2701,7 +2901,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "Entry_PCV_ReadOnly";
+                    viewLink = "Liquidation_SS_ReadOnly";
                     break;
                 default:
                     break;
@@ -2730,9 +2930,42 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
-            ssList.LiquidationDetails[0].ccyID = ccyPHP.Curr_ID;
-            ssList.LiquidationDetails[0].ccyMasterID = ccyPHP.Curr_MasterID;
-            ssList.LiquidationDetails[0].ccyAbbrev = ccyPHP.Curr_CCY_ABBR;
+            ssList.phpCurrID = ccyPHP.Curr_ID;
+            ssList.phpCurrMasterID = ccyPHP.Curr_MasterID;
+            ssList.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
+
+            List<cvBirForm> birForms = new List<cvBirForm>();
+            ssList.birForms = new List<cvBirForm>();
+            foreach (var item in ssList.LiquidationDetails)
+            {
+                double grossOrig = item.gBaseRemarksDetails.Sum(x => x.amount);
+
+                if (birForms.Any(x => x.ewt == item.ewtID && x.vendor == item.dtl_Ewt_Payor_Name_ID))
+                {
+                    int index = birForms.FindIndex(x => x.ewt == item.ewtID);
+                    birForms[index].amount += grossOrig;
+                }
+                else
+                {
+                    cvBirForm temp = new cvBirForm
+                    {
+                        amount = grossOrig,
+                        ewt = item.ewtID,
+                        vat = item.vatID,
+                        vendor = item.dtl_Ewt_Payor_Name_ID,
+                        approver = ssList.approver,
+                        date = ssList.createdDate
+                    };
+                    if (item.ewtID > 0)
+                    {
+                        birForms.Add(temp);
+                    }
+                }
+            }
+            if (birForms.Count() > 0)
+            {
+                ssList.birForms.AddRange(birForms);
+            }
 
             return View(viewLink, ssList);
         }
@@ -2769,6 +3002,8 @@ namespace ExpenseProcessingSystem.Controllers
 
             XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
             string excelTemplateName = (viewModel.CURRENCY == xelem.Element("CURRENCY_Yen").Value) ? "CDDIS_Liq_Yen.xlsx" : "CDDIS_Liq_USD.xlsx";
+
+            bool result = _service.UpdateCDDPrintingStatus(entryID, entryDtlID, GlobalSystemValues.TYPE_LIQ);
 
             return File(excelGenerate.ExcelCDDIS(viewModel, newFileName, excelTemplateName), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", newFileName);
 
@@ -3680,7 +3915,20 @@ namespace ExpenseProcessingSystem.Controllers
 
             return Json(acc);
         }
+        [AcceptVerbs("GET")]
+        public JsonResult UpdateCDDPrintingStatus(int entryID)
+        {
+            bool result = _service.UpdateCDDPrintingStatus(entryID);
 
+            if (result)
+            {
+                return Json(true);
+            }
+            else
+            {
+                return Json(false);
+            }
+        }
         public IActionResult GenerateVoucher(EntryCVViewModelList model)
         {
             VoucherViewModelList vvm = new VoucherViewModelList();

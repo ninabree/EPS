@@ -75,7 +75,7 @@
                     <tr id="item_@i">
                         <td class="p-b-1 p-t-1">
                             <div class="flex-sb">
-                                <input value="@Model.EntryCV[i].GBaseRemarks" class="input100 txtgbaseRemarks w-80" disabled="disabled" />
+                                <input value="@Model.EntryCV[i].GBaseRemarks" class="input100 txtgbaseRemarks txtGBaseRemark w-80" disabled="disabled" />
                                 <div id="remark_@i">
                                     <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
                                     @for (int y = 0; y < Model.EntryCV[i].gBaseRemarksDetails.Count(); y++)
@@ -121,7 +121,7 @@
                             <input value="@Model.EntryCV[i].credEwt" class="input100" disabled />
                         </td>
                         <td>
-                            <input value="@Model.EntryCV[i].credCash" class="input100" disabled />
+                            <input value="@Model.EntryCV[i].credCash" class="input100 txtCredCash" disabled />
                         </td>
                         <td id="req_@i">
                             <a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#"></a>
@@ -173,7 +173,7 @@
             <div>
                 <div class="dis-inline-block tbl-btn"><button disabled>Save</button></div>
 
-                @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker)
+                @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker && Model.statusID == 0 || Model.statusID == GlobalSystemValues.STATUS_REJECTED)
                 {
                     <div class="dis-inline-block tbl-btn"><button value="Delete" name="command">Delete</button></div>
                     <div class="dis-inline-block tbl-btn"><button value="Modify" name="command">Modify</button></div>
@@ -244,7 +244,13 @@
             <div>
             </div>
             <div>
-                <div class="dis-inline-block tbl-btn"><button disabled>Print BIR Certificate</button></div>
+                @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker
+                    || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id
+                    || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id
+                    || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.approver_id)
+                {
+                    <div class="dis-inline-block tbl-btn"><button id="printBir" value="printBir">Print BIR Certificate</button></div>
+                }
             </div>
         </div>
     </div>
@@ -333,7 +339,7 @@
                     "id": id,
                     "vendor": $("#vendor option:selected").text(),
                     "account": $("#" + pNode.id).find(".txtAcc option:selected").text(),
-                    "amount": $("#" + pNode.id).find(".txtGross").val(),
+                    "amount": $("#" + pNode.id).find(".txtCredCash").val(),
                     "screencode": $("#" + pNode.id).find(".hiddenScreencode").val()
                 }, function (response, status, xhr) {
                     if (status == "error") {
@@ -413,4 +419,45 @@
         value = value.toString().split('e');
         return +(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp));
     }
+</script>
+<script type="text/javascript">
+    $(function () {
+        @*$(window).on("load", function () {
+            if (@ViewBag.Success == 1) {
+                alert("Entry Approved");
+            } else if (@ViewBag.Success == 0){
+                alert("Entry Failed");
+            }
+        });*@
+        @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker
+          || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id
+          || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id
+          || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.approver_id)
+        {
+            <Text>
+            $("#entry-controls").on("click", "#printBir", function (e) {
+                var vendorID = @Model.vendor;
+                var approverID = @Model.approver_id;
+                var link = [
+                @foreach (var item in Model.birForms)
+                {
+                    <Text>
+                         "/Home/Generate2307File?_vendor=@item.vendor&_ewt=@item.ewt&_tax=@item.vat&_amount=@item.amount&approver=@item.approver&expID=@Model.entryID",
+                    </Text>
+                }
+                    ""
+                ];
+
+                for (var i = 0; i < link.length - 1; i++) {
+                    window.open(link[i]);
+                }
+                $.getJSON('UpdateCDDPrintingStatus', { entryID: @Html.Raw(Json.Serialize(Model.entryID)) }, function (data) {
+
+                });
+                return false;
+            });
+            </Text>
+        }
+
+    });
 </script>

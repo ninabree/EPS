@@ -4,7 +4,7 @@
     string prevCcyFCDU = Model.fcduItems.Count > 0 ? Model.fcduItems.OrderBy(x => x.ccy).ThenBy(x => x.expTrans).ToList()[0].ccy : "";
     double totalAmount = 0;
     int totalTransCount = 0;
-    int index = 0;
+  //  int index = 0;
 }
 
 @using ExpenseProcessingSystem.ViewModels
@@ -308,15 +308,15 @@
 @Html.Partial("PopupMessage")
     <script type="text/javascript">
     $(function () {
-
+         $(window).on("load", function () {
         @if (Model.messages.Count() > 0)
         {
             <text>
                 $('#alert').text("@Model.messages[0]");
                 $('#divcss').show();
-                return false;
             </text>
         }
+        });
 
         $("#closeBody").on("click", "#StartPettyCash", function (e) {
             var command = $(this).val();

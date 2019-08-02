@@ -18,7 +18,7 @@
     <div id="tbl-lbl">
         <div class="dis-inline-block"><p>Date:</p></div>
         <div class="dis-inline-block">
-            @(((DateTime)Model.expenseDate).ToString("MM/dd/yyyy"))
+            <input id="expenseDate" value="@(((DateTime)Model.expenseDate).ToString("MM/dd/yyyy"))" style="background-color:transparent"/>
         </div>
         <div class="dis-inline-block" style="float:right">
             <p class="dis-inline-block">
@@ -175,9 +175,10 @@
                         </td>
                         <td>
                             @Html.TextBoxFor(m => Model.LiquidationDetails[i].credEwt, new { @readonly = "true", @style = "width:100%;background:transparent" })
+                            @Html.HiddenFor(m => Model.LiquidationDetails[i].ewtID, new { @class = "ewtID" })
                         </td>
                         <td>
-                            @Html.TextBoxFor(m => Model.LiquidationDetails[i].credCash, new { @class = "txtCredit", @readonly = "true", @style = "width:100%;background:transparent" })
+                            @Html.TextBoxFor(m => Model.LiquidationDetails[i].credCash, new { @class = "txtCredit txtCredCash", @readonly = "true", @style = "width:100%;background:transparent" })
                         </td>
                         <td id="req_@i">
                             <a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#"></a>
@@ -327,11 +328,11 @@
                 <table style="width:60%;" id="tableHeaderPrint" border="0" class="tblHidePrintLiq">
                     <tr>
                         <td style="width:5%;text-align:left">Date : </td>
-                        <td><input id="cashbdDatePrint" style="text-align:center" /></td>
+                        <td><input id="cashbdDatePrintLiq" style="text-align:center" /></td>
                     </tr>
                     <tr>
                         <td style="width:5%;text-align:left">Amount: </td>
-                        <td><input id="cashbdAmountPrint" style="text-align:center" /></td>
+                        <td><input id="cashbdAmountPrintLiq" style="text-align:center" /></td>
                     </tr>
                 </table>
                 <table id="cashBDLiqTable" class="cashBDLiqTable table-bordered table-striped voucher-tbl w-70 tablePrintLiq">
@@ -383,11 +384,11 @@
                 <table style="width:60%;" id="tableOptionPrint" border="0" class="tblHidePrint">
                     <tr>
                         <td style="width:5%;text-align:left">EXPENSE</td>
-                        <td style="text-align:center"><input style="font-size:x-large;text-align:center" value="&#9645;"></td>
+                        <td style="text-align:center"><label style="font-size:x-large;text-align:center" value="&#9645;" id="printOptExpense"></label></td>
                     </tr>
                     <tr>
                         <td style="width:5%;text-align:left">REVERSAL</td>
-                        <td style="text-align:center"><input style="font-size:x-large;text-align:center" value="&#9645;"></td>
+                        <td style="text-align:center"><label style="font-size:x-large;text-align:center" value="&#9645;" id="printOptReverse"></label></td>
                     </tr>
                 </table>
                 <table style="width:60%;" id="tableSignPrint" border="1" class="tblHidePrint">
@@ -398,15 +399,15 @@
                     </colgroup>
                     <tr>
                         <td colspan="2">PAYMENT RECEIVED BY :</td>
-                        <td style="text-align:center">FLORA</td>
+                        <td style="text-align:center"></td>
                     </tr>
                     <tr>
                         <td colspan="2">PAYMENT PAID BY :</td>
-                        <td style="text-align:center">BUARAO</td>
+                        <td style="text-align:center"></td>
                     </tr>
                     <tr>
                         <td>PAYMENT FOR :</td>
-                        <td colspan="2" style="text-align:center">PARKING FEE VF6597</td>
+                        <td colspan="2" style="text-align:center"><input id="paymentFor" /></td>
                     </tr>
                 </table>
             </div>
@@ -460,11 +461,12 @@
                     <tr>
                         <td></td>
                         <td>
-                            @if (Model.statusID == GlobalSystemValues.STATUS_APPROVED || Model.statusID == GlobalSystemValues.STATUS_POSTED)
-                            {
-                                <a class="cddISLiqBtn" href="#"><img id="imgLiqCDD" src="~/images/cddLiqLogo.png" style="width:20%;height:30%" /></a>
-                            }
-                        </td>
+                            @if (Model.statusID != GlobalSystemValues.STATUS_PENDING || Model.statusID != GlobalSystemValues.STATUS_VERIFIED
+                                || Model.statusID != GlobalSystemValues.STATUS_REVERSED || Model.statusID != GlobalSystemValues.STATUS_REJECTED)
+                                {
+                                    <a class="cddISLiqBtn" href="#"><img id="imgLiqCDD" src="~/images/cddLiqLogo.png" style="width:20%;height:30%" /></a>
+                                }
+                            </td>
                     </tr>
                 </table>
             </div>
@@ -662,11 +664,12 @@
     </div>
     <div id="entry-controls" class="m-b-10">
         @Html.HiddenFor(x => Model.entryID, new { @class = "entryID" })
+        <input type="hidden" id="LiqEntryDetails_Liq_Created_Date" value="@(((DateTime)Model.LiqEntryDetails.Liq_Created_Date).ToString("MM/dd/yyyy"))" style="background-color:transparent" />
         <div class="flex-sb">
             <div>
                 <div class="dis-inline-block tbl-btn"><button disabled>Save</button></div>
 
-                @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker)
+                @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker && Model.statusID == 0 || Model.statusID == GlobalSystemValues.STATUS_REJECTED)
                 {
                     <div class="dis-inline-block tbl-btn"><button value="Delete" name="command">Delete</button></div>
                     <div class="dis-inline-block tbl-btn"><button value="Modify" name="command">Modify</button></div>
@@ -678,7 +681,24 @@
                 }
             </div>
             <div>
-                <div class="dis-inline-block tbl-btn"><button id="reversal_entry" disabled>Create Reversal Entry</button></div>
+                @if (Model.LiqEntryDetails.Liq_Status == GlobalSystemValues.STATUS_POSTED && Model.LiqEntryDetails.Liq_LastUpdated_Date.Date < DateTime.Now.Date)
+                {
+                    if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.LiqEntryDetails.Liq_Created_UserID
+                        || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.LiqEntryDetails.Liq_Verifier1
+                        || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.LiqEntryDetails.Liq_Verifier2
+                        || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.LiqEntryDetails.Liq_Approver)
+                    {
+                        <div class="dis-inline-block tbl-btn"><button id="reversal_entry" value="Reversal" name="command">Create Reversal Entry</button></div>
+                    }
+                    else
+                    {
+                        <div class="dis-inline-block tbl-btn"><button id="reversal_entry" disabled>Create Reversal Entry</button></div>
+                    }
+                }
+                else
+                {
+                    <div class="dis-inline-block tbl-btn"><button id="reversal_entry" disabled>Create Reversal Entry</button></div>
+                }
             </div>
         </div>
         <div class="flex-sb">
@@ -718,7 +738,13 @@
                 }
             </div>
             <div>
-                <div class="dis-inline-block tbl-btn"><button disabled>Print BIR Certificate</button></div>
+                @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker
+                 || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id
+                 || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id
+                 || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.approver_id)
+                {
+                    <div class="dis-inline-block tbl-btn"><button id="printBir" value="printBir">Print BIR Certificate</button></div>
+                }
             </div>
         </div>
     </div>
@@ -739,9 +765,9 @@
 <script type="text/javascript" src="~/js/LiquidationScript.js"></script>
 <script>
     $(document).ready(function () {
-        var phpID = @Html.Raw(Json.Serialize(Model.LiquidationDetails[0].ccyID));
-        var phpAbbrv = @Html.Raw(Json.Serialize(Model.LiquidationDetails[0].ccyAbbrev));
-        var phpMasterID = @Html.Raw(Json.Serialize(Model.LiquidationDetails[0].ccyMasterID));
+        var phpID = @Html.Raw(Json.Serialize(Model.phpCurrID));
+        var phpAbbrv = @Html.Raw(Json.Serialize(Model.phpAbbrev));
+        var phpMasterID = @Html.Raw(Json.Serialize(Model.phpCurrMasterID));
         $('#phpID').val(phpID);
         $('#phpAbbrv').val(phpAbbrv);
         $('#phpMasterID').val(phpMasterID);
@@ -772,7 +798,7 @@
                 "id": id,
                 "vendor": $("#" + pNode.id).find(".txtPayee").val(),
                 "account": $("#" + pNode.id).find(".txtAcc").val(),
-                "amount": $("#" + pNode.id).find(".txtGross").val(),
+                "amount": $("#" + pNode.id).find(".txtCredCash").val(),
                 "screencode": $("#" + pNode.id).find(".hiddenScreencode").val()
             }, function (response, status, xhr) {
                 if (status == "error") {
@@ -818,6 +844,9 @@
                 $('#lblAccount2_PHP').val($('#' + pid).find('.hidAccID').val());
                 displayInfoCashBD($(this.parentNode)[0].parentNode.id);
                 assignAccCodeLiqPhp();
+                $('#txtLiqTaxRate').attr('disabled', 'disabled');
+                $('#txtLiqPhpInput4').attr('disabled', 'disabled');
+                ChangeOptionMarkForPrint();
             } else {
                 $('#divForeign').show();
                 $('#divPHP').hide();
@@ -875,3 +904,44 @@
     });
 </script>
 <script type="text/javascript" src="~/js/EntryScripts.js"></script>
+<script type="text/javascript">
+    $(function () {
+        @*$(window).on("load", function () {
+            if (@ViewBag.Success == 1) {
+                alert("Entry Approved");
+            } else if (@ViewBag.Success == 0){
+                alert("Entry Failed");
+            }
+        });*@
+        @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker
+          || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id
+          || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id
+          || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.approver_id)
+        {
+            <Text>
+            $("#entry-controls").on("click", "#printBir", function (e) {
+                var vendorID = @Model.vendor;
+                var approverID = @Model.approver_id;
+                var link = [
+                @foreach (var item in Model.birForms)
+                {
+                    <Text>
+                         "/Home/Generate2307File?_vendor=@item.vendor&_ewt=@item.ewt&_tax=@item.vat&_amount=@item.amount&approver=@item.approver&expID=@Model.entryID",
+                    </Text>
+                }
+                    ""
+                ];
+
+                for (var i = 0; i < link.length - 1; i++) {
+                    window.open(link[i]);
+                }
+                $.getJSON('UpdateCDDPrintingStatus', { entryID: @Html.Raw(Json.Serialize(Model.entryID)) }, function (data) {
+
+                });
+                return false;
+            });
+            </Text>
+        }
+
+    });
+</script>

@@ -145,8 +145,9 @@ function printDivCashLiqBD(divID) {
     }
     $('#txtCashBDTotal').attr('value', $('#txtCashBDTotal').val());
 
-    $('#cashbdDatePrintLiq').val();
+    $('#cashbdDatePrintLiq').attr('value', $('#LiqEntryDetails_Liq_Created_Date').val());
     $('#cashbdAmountPrintLiq').attr('value', $('#txtCashBDTotal').val());
+    $('#paymentFor').attr('value', "S" + $('.highlight').find('.txtGBaseRemark').val());
 
     var cssjs = '<style>.tablePrintLiq, .tdPrintLiq, .thPrintLiq {  ' +
         '  border: 1px solid #ddd;' +
@@ -177,7 +178,7 @@ function printDivCashLiqBD(divID) {
     WinPrint.document.close();
     WinPrint.focus();
     WinPrint.print();
-    //WinPrint.close();
+    WinPrint.close();
 
     //Rollback the Cash Breakdown Liquidation table attribute value to default(0).
     for (var count = 0; count < tableCnt.length; count++) {
@@ -438,6 +439,8 @@ function getVendorTaxRate(vendorID, ret) {
         });
         if ($('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Tax_Rate').val() > 0) {
             setDivTaxRateToLiqPhp(ret);
+        } else {
+            $('#txtLiqTaxRate').val($('#item_' + ret).find('.ewtID').val());
         };
     }); 
 };
@@ -522,5 +525,26 @@ function LiqPhpBDOPettyInputChange() {
     if ($('#txtLiqPhpInput2').val() == 0 && $('#txtLiqPhpInput3').val() == 0) {
         $('.LiqPhpBDOPettyInput').css('background-color', '#FFFBD5');
         $('.LiqPhpBDOPettyInput').removeAttr('disabled');
+    }
+}
+
+function HideCashBreakdownTable() {
+    if ($('#ddlLiqPhpAccount2').val() != $('#lblAccount1_PHP optgroup[label=' + getXMLLiqValue('ACCOUNT11_2') + '] option:first').val()) {
+        $('#cashBDLiqTable').css('display', 'none');
+        $('.printCashBDBtn').css('display', 'none');
+    } else {
+        $('#cashBDLiqTable').show();
+        $('.printCashBDBtn').show();
+    }
+}
+
+function ChangeOptionMarkForPrint() {
+    if ($('#txtLiqPhpInput2').val() > 0) {
+        $('#printOptExpense').html("&#9645;");
+        $('#printOptReverse').html("&#8999;");
+    }
+    if ($('#txtLiqPhpInput3').val() > 0){
+        $('#printOptExpense').html("&#8999;");
+        $('#printOptReverse').html("&#9645;");
     }
 }

@@ -160,5 +160,10 @@ namespace ExpenseProcessingSystem.ViewModels
         public int TransTL_TransID { get; set; }
         public int NCExpNC_Category_ID { get; set; }
         public DateTime Trans_Last_Updated_Date { get; set; }
+
+        //For ESAMS Report
+        public string ESAMS_SeqNo { get; set; }
+        public string ESAMS_MakerName { get; set; }
+        public string ESAMS_ApprvName { get; set; }
     }
 }

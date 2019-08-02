@@ -34,6 +34,9 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 case ConstantData.HomeReportConstantValue.AST1000:
                     ExcelAST1000(newFile, templateFile, data);
                     break;
+                case ConstantData.HomeReportConstantValue.ESAMS:
+                    ExcelESAMS(newFile, templateFile, data);
+                    break;
                 case ConstantData.HomeReportConstantValue.ActualBudgetReport:
                     ExcelActualBudget(newFile, templateFile, data);
                     break;
@@ -190,6 +193,83 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
             }
         }
 
+        public void ExcelESAMS(FileInfo newFile, FileInfo templateFile, HomeReportDataFilterViewModel data)
+        {
+            using (ExcelPackage package = new ExcelPackage(newFile, templateFile))
+            {
+                ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
+
+                int lastRow = worksheet.Dimension.End.Row;
+                int dataStartRow = worksheet.Dimension.End.Row + 1;
+                int dataEndRow = 0;
+
+                //Header
+                worksheet.Cells["A2"].Value = data.DateFrom.ToShortDateString() + " - "
+                                            + data.DateTo.ToShortDateString();
+                worksheet.Cells["A3"].Value = worksheet.Cells["A3"].Value + data.ReportCommonVM.Header_Name;
+                worksheet.Cells["A4"].Value = worksheet.Cells["A4"].Value + data.ReportAccountNo;
+                worksheet.Cells["A5"].Value = worksheet.Cells["A5"].Value + data.ReportCurrency;
+                //Content
+                foreach (var i in data.HomeReportOutputESAMS)
+                {
+                    lastRow += 1;
+                    worksheet.Cells["A" + lastRow].Value = i.GbaseRemark;
+                    worksheet.Cells["A" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
+                    worksheet.Cells["B" + lastRow].Value = i.SeqNo;
+                    worksheet.Cells["B" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
+                    worksheet.Cells["C" + lastRow].Value = i.SettleDate;
+                    worksheet.Cells["C" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
+                    if(i.DebCredType == "D")
+                    {
+                        worksheet.Cells["D" + lastRow].Value = i.DRAmount;
+                    }
+                    worksheet.Cells["D" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
+                    if(i.DebCredType == "C")
+                    {
+                        worksheet.Cells["E" + lastRow].Value = i.CRAmount;
+                    }
+                    worksheet.Cells["E" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
+                    worksheet.Cells["F" + lastRow].Value = i.Balance;
+                    worksheet.Cells["F" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
+                    worksheet.Cells["G" + lastRow].Value = i.DHName;
+                    worksheet.Cells["G" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
+                    worksheet.Cells["H" + lastRow].Value = i.ApprvName;
+                    worksheet.Cells["H" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
+                    worksheet.Cells["I" + lastRow].Value = i.MakerName;
+                    worksheet.Cells["I" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
+                    worksheet.Cells["J" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
+                }
+
+                dataEndRow = lastRow;
+                lastRow += 1;
+
+                //worksheet.Cells["A" + lastRow].Value = "***End of Report***";
+                //worksheet.Cells["A" + lastRow].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                //worksheet.Cells["E" + lastRow].Value = "TOTAL =>";
+                //worksheet.Cells["E" + lastRow].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                //worksheet.Cells["F" + lastRow].Formula = "SUM(F" + dataStartRow + ":F" + dataEndRow + ")";
+                //worksheet.Cells["F" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
+                //worksheet.Cells["H" + lastRow].Formula = "SUM(H" + dataStartRow + ":H" + dataEndRow + ")";
+                //worksheet.Cells["H" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
+
+                //lastRow += 3;
+                //worksheet.Cells["F" + lastRow].Value = data.ReportCommonVM.Signatory_Name;
+                //worksheet.Cells["F" + lastRow].Style.Font.Bold = true;
+                //worksheet.Cells["E" + lastRow].Style.Border.Bottom.Style = ExcelBorderStyle.Medium;
+                //worksheet.Cells["F" + lastRow].Style.Border.Bottom.Style = ExcelBorderStyle.Medium;
+                //worksheet.Cells["G" + lastRow].Style.Border.Bottom.Style = ExcelBorderStyle.Medium;
+                //worksheet.Cells["F" + lastRow].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                //lastRow += 1;
+                //worksheet.Cells["F" + lastRow].Value = data.ReportCommonVM.Signatory_Position;
+                //worksheet.Cells["F" + lastRow].Style.Font.Bold = true;
+                //worksheet.Cells["F" + lastRow].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+                //footer
+                worksheet.HeaderFooter.OddFooter.LeftAlignedText = DateTime.Now.ToString("dddd, MMMM dd,yyyy h:mm:sstt");
+
+                package.Save();
+            }
+        }
         public void ExcelActualBudget(FileInfo newFile, FileInfo templateFile, HomeReportDataFilterViewModel data)
         {
             using (ExcelPackage package = new ExcelPackage(newFile, templateFile))
@@ -993,7 +1073,7 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
             data.ReturnPeriod_CSV
             };
 
-            int c = 1;
+//            int c = 1;
 
             var content = (from i in data.HomeReportOutputBIRWTCSV
                                    select new object[]

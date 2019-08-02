@@ -21,7 +21,7 @@ namespace ExpenseProcessingSystem.Services
 
             // You can write out the path name directly instead of using the Combine
             // method. Combine just makes the process easier.
-            string pathString2 = @"c:\Top-Level Folder\SubFolder2";
+            //string pathString2 = @"c:\Top-Level Folder\SubFolder2";
 
             // You can extend the depth of your path if you want to.
             //pathString = System.IO.Path.Combine(pathString, "SubSubFolder");
