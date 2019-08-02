@@ -2541,7 +2541,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Emp_MasterID = ++masterIDMax,
                     Pending_Emp_Acc_No = tempAccNo,
                     Pending_Emp_Category_ID = dm.Emp_Category_ID,
-                    Pending_Emp_FBT_MasterID = dm.Emp_FBT_MasterID,
+                    Pending_Emp_FBT_MasterID = dm.Emp_FBT_MasterID > 0 ? dm.Emp_FBT_MasterID : 0,
                     Pending_Emp_Type = tempAccNo.Length <= 0 ? "Temporary" : "Regular",
                     Pending_Emp_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_Emp_Filed_Date = DateTime.Now,

@@ -26,5 +26,9 @@ namespace ExpenseProcessingSystem.ViewModels.NewRecord
         public int Emp_Category_ID { get; set; }
         [Display(Name = "Employee FBT")]
         public int Emp_FBT_MasterID { get; set; }
+
+        public NewEmpViewModel(){
+            Emp_FBT_MasterID = 0;
+        }
     }
 }
