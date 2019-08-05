@@ -56,6 +56,9 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 viewModel = _service.getExpenseNC(int.Parse(entryID));
                 viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
+
+                viewModel.accList = accs;
+                viewModel = PopulateEntryNC(viewModel, expenseDate);
                 if (categoryID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT.ToString())
                 {
                     viewModel.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_PETTYCASHREPLENISHMENT.Populate_CDD_Instruc_Sheet(currDtl);

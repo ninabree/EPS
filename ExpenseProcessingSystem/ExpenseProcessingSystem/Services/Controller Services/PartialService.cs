@@ -160,7 +160,24 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         };
                         ncDtlAccList.Add(ncDtlAccVM);
                     }
-
+                    if(nc.d.ExpNC_Category_ID == GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES)
+                    {
+                        var copyAcc = ncDtlAccList[0];
+                        var emptyAccs = 4 - ncDtlAccList.Count;
+                        int z = 0;
+                        while(z < emptyAccs){
+                            ncDtlAccList.Add(new ExpenseEntryNCDtlAccViewModel {
+                                ExpNCDtlAcc_Acc_ID = copyAcc.ExpNCDtlAcc_Acc_ID,
+                                ExpNCDtlAcc_Acc_Name = copyAcc.ExpNCDtlAcc_Acc_Name,
+                                ExpNCDtlAcc_Curr_ID = copyAcc.ExpNCDtlAcc_Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = copyAcc.ExpNCDtlAcc_Curr_Name,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_CREDIT
+                            });
+                            z++;
+                        }
+                    }
                     ncDtlVM = new ExpenseEntryNCDtlViewModel()
                     {
                         ExpNCDtl_Remarks_Desc = ncDtl.g.ExpNCDtl_Remarks_Desc,

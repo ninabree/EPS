@@ -2462,6 +2462,8 @@ namespace ExpenseProcessingSystem.Controllers
             ncList = _service.getExpenseNC(entryID);
             ncList = PopulateEntryNC(ncList);
 
+            var accs = _service.getNCAccsForFilter();
+            ncList.accList = accs;
             ViewData["partialName"] = ncList.EntryNC.NC_Category_ID.ToString();
             return View(viewLink, ncList);
         }

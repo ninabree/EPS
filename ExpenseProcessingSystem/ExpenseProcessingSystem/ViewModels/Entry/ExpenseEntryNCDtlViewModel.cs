@@ -17,10 +17,10 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         public string ExpNCDtl_Remarks_Period { get; set; }
         [Display(Name = "Vendor")]
         public int ExpNCDtl_Vendor_ID { get; set; }
-        public int ExpNCDtl_Vendor_Name { get; set; }
+        public string ExpNCDtl_Vendor_Name { get; set; }
         [Display(Name = "Tax Rate")]
         public int ExpNCDtl_TR_ID { get; set; }
-        public int ExpNCDtl_TR_Title { get; set; }
+        public string ExpNCDtl_TR_Title { get; set; }
         public List<ExpenseEntryNCDtlAccViewModel> ExpenseEntryNCDtlAccs { get; set; }
 
 

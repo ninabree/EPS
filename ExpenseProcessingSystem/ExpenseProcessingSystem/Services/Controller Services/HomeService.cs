@@ -8139,7 +8139,9 @@ namespace ExpenseProcessingSystem.Services
                         ExpNCDtl_Remarks_Desc = ncDtl.g.ExpNCDtl_Remarks_Desc,
                         ExpNCDtl_Remarks_Period = ncDtl.g.ExpNCDtl_Remarks_Period,
                         ExpNCDtl_TR_ID = ncDtl.g.ExpNCDtl_TR_ID,
+                        ExpNCDtl_TR_Title = _context.DMTR.FirstOrDefault(x=> x.TR_ID == ncDtl.g.ExpNCDtl_TR_ID).TR_WT_Title,
                         ExpNCDtl_Vendor_ID = ncDtl.g.ExpNCDtl_Vendor_ID,
+                        ExpNCDtl_Vendor_Name = _context.DMVendor.FirstOrDefault(x => x.Vendor_ID == ncDtl.g.ExpNCDtl_Vendor_ID).Vendor_Name,
                         ExpenseEntryNCDtlAccs = ncDtlAccs
                     };
                     ncDtls.Add(entryNCDtl);

@@ -77,8 +77,8 @@
             <thead>
                 <tr>
                     <th rowspan="1" colspan="3">Remarks</th>
-                    <th rowspan="2" colspan="1" class="cat-hidden ">Vendor</th>
-                    <th rowspan="2" colspan="1" class="cat-hidden ">Tax Rate</th>
+                    <th rowspan="2" colspan="1" class="cat-hidden">Vendor</th>
+                    <th rowspan="2" colspan="1" class="cat-hidden">Tax Rate</th>
                     <th rowspan="2" colspan="3">Accounts</th>
                     <th rowspan="2">Inter-Rate</th>
                     <th rowspan="2">CCY</th>
@@ -105,7 +105,7 @@
                                 <td colspan="2" class="voucher-input">
                                     @Html.EditorFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Remarks_Period, new { @type = "date", @class = "" })
                                 </td>
-                                <td colspan="1" rowspan="4">
+                                <td colspan="1" rowspan="4" class="cat-hidden">
                                     <select id="@Html.IdFor(x => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Vendor_ID)" class="w-full input ven-sel" name="@Html.NameFor(x => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Vendor_ID)">
                                         @foreach (var groepModel in Model.vendorList)
                                         {
@@ -120,7 +120,7 @@
                                         }
                                     </select>
                                 </td>
-                                <td colspan="1" rowspan="4">
+                                <td colspan="1" rowspan="4" class="cat-hidden">
                                     <select id="@Html.IdFor(x => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_TR_ID)" class="w-full input ven-sel" name="@Html.NameFor(x => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_TR_ID)">
                                         @foreach (var groepModel in Model.trList)
                                         {
@@ -288,8 +288,8 @@
 
                                 @if (@Model.EntryNC.NC_Category_ID == 4 || @Model.EntryNC.NC_Category_ID == 5)
                                 {
-                                    <td colspan="1" rowspan="3">
-                                        <select id="@Html.IdFor(x => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Vendor_ID)" class="w-full input ven-sel" name="@Html.NameFor(x => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Vendor_ID)">
+                                    <td class="cat-hidden" colspan="1" rowspan="3">
+                                        <select id="@Html.IdFor(x => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Vendor_ID)" class="w-full input ven-sel cat-hidden" name="@Html.NameFor(x => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Vendor_ID)">
                                             @foreach (var groepModel in Model.vendorList)
                                             {
                                                 if (@groepModel.Value == @Model.vendorList[0].Value)
@@ -303,8 +303,8 @@
                                             }
                                         </select>
                                     </td>
-                                    <td colspan="1" rowspan="3">
-                                        <select id="@Html.IdFor(x => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_TR_ID)" class="w-full input ven-sel" name="@Html.NameFor(x => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_TR_ID)">
+                                    <td class="cat-hidden" colspan="1" rowspan="3">
+                                        <select id="@Html.IdFor(x => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_TR_ID)" class="w-full input ven-sel cat-hidden" name="@Html.NameFor(x => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_TR_ID)">
                                             @foreach (var groepModel in Model.trList)
                                             {
                                                 if (@groepModel.Value == @Model.trList[0].Value)
@@ -321,11 +321,11 @@
                                 }
                                 else
                                 {
-                                    <td class="" colspan="1" rowspan="2">
-                                        @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Vendor_ID, new { @readonly = "true", @class = "w-full" })
+                                    <td class="cat-hidden" colspan="1" rowspan="2">
+                                        @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Vendor_ID, new { @readonly = "true", @class = "w-full cat-hidden" })
                                     </td>
-                                    <td class="" colspan="1" rowspan="2">
-                                        @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_TR_ID, new { @readonly = "true", @class = "w-full" })
+                                    <td class="cat-hidden" colspan="1" rowspan="2">
+                                        @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_TR_ID, new { @readonly = "true", @class = "w-full cat-hidden" })
                                     </td>
                                 }
                                 <td colspan="3">
@@ -659,34 +659,45 @@
         }
         document.addEventListener("change", computeFunction, false);
         computeValsNC();
+        hiddencols();
+        function hiddencols() {
+            var catID = $("select#categoryName option:selected").val();
+            if (catID == @GlobalSystemValues.NC_PSSC +"" || catID == @GlobalSystemValues.NC_PCHC +"" || catID == @GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES +"") {
+                $('#NCPartialTbl').find(".cat-hidden").removeClass("hidden");
+            } else {
+                $('#NCPartialTbl').find(".cat-hidden").addClass("hidden");
+            }
+        }
+
+
         if ($("#entryID").val() == "") {
             $("#entryID").val(0);
         }
         $('#NCPartialTbl').on('change', '.misc-0', function () {
             var vals = $(this).val();
             var type = $(this).parent().hasClass("db") ? dbType : $(this).parent().hasClass("cd") ? cdType : $(this).parent().hasClass("ewt") ? ewtType : "";
-            $(".misc-0").not(this).val(0);
+            $(this).parent().parent().find("td .misc-0").not(this).val(0);
             $(this).parent().parent().siblings("[id$='ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount']").val(vals);
             $(this).parent().siblings("[id$='ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Type_ID']").val(type);
         });
         $('#NCPartialTbl').on('change', '.misc-1', function () {
             var vals = $(this).val();
             var type = $(this).parent().hasClass("db") ? dbType : $(this).parent().hasClass("cd") ? cdType : $(this).parent().hasClass("ewt") ? ewtType : "";
-            $(".misc-1").not(this).val(0);
+            $(this).parent().parent().find("td .misc-1").not(this).val(0);
             $(this).parent().parent().siblings("[id$='ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Amount']").val(vals);
             $(this).parent().siblings("[id$='ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Type_ID']").val(type);
         });
         $('#NCPartialTbl').on('change', '.misc-2', function () {
             var vals = $(this).val();
             var type = $(this).parent().hasClass("db") ? dbType : $(this).parent().hasClass("cd") ? cdType : $(this).parent().hasClass("ewt") ? ewtType : "";
-            $(".misc-2").not(this).val(0);
+            $(this).parent().parent().find("td .misc-2").not(this).val(0);
             $(this).parent().parent().siblings("[id$='ExpenseEntryNCDtlAccs_2__ExpNCDtlAcc_Amount']").val(vals);
             $(this).parent().siblings("[id$='ExpenseEntryNCDtlAccs_2__ExpNCDtlAcc_Type_ID']").val(type);
         });
         $('#NCPartialTbl').on('change', '.misc-3', function () {
             var vals = $(this).val();
             var type = $(this).parent().hasClass("db") ? dbType : $(this).parent().hasClass("cd") ? cdType : $(this).parent().hasClass("ewt") ? ewtType : "";
-            $(".misc-3").not(this).val(0);
+            $(this).parent().parent().find("td .misc-3").not(this).val(0);
             $(this).parent().parent().siblings("[id$='ExpenseEntryNCDtlAccs_3__ExpNCDtlAcc_Amount']").val(vals);
             $(this).parent().siblings("[id$='ExpenseEntryNCDtlAccs_3__ExpNCDtlAcc_Type_ID']").val(type);
         });
