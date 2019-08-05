@@ -8498,16 +8498,19 @@ namespace ExpenseProcessingSystem.Services
                         List<ExpenseEntryNCDtlAccModel> accountDtls = new List<ExpenseEntryNCDtlAccModel>();
                         foreach (var accDtls in ncDtls.ExpenseEntryNCDtlAccs)
                         {
-                            ExpenseEntryNCDtlAccModel acc = new ExpenseEntryNCDtlAccModel
+                            if (accDtls.ExpNCDtlAcc_Amount > 0)
                             {
-                                ExpNCDtlAcc_Acc_ID = accDtls.ExpNCDtlAcc_Acc_ID,
-                                ExpNCDtlAcc_Acc_Name = _context.DMAccount.Where(x => x.Account_ID == accDtls.ExpNCDtlAcc_Acc_ID).Select(x => x.Account_Name).FirstOrDefault(),
-                                ExpNCDtlAcc_Curr_ID = accDtls.ExpNCDtlAcc_Curr_ID,
-                                ExpNCDtlAcc_Amount = accDtls.ExpNCDtlAcc_Amount,
-                                ExpNCDtlAcc_Inter_Rate = accDtls.ExpNCDtlAcc_Inter_Rate,
-                                ExpNCDtlAcc_Type_ID = accDtls.ExpNCDtlAcc_Type_ID
-                            };
-                            accountDtls.Add(acc);
+                                ExpenseEntryNCDtlAccModel acc = new ExpenseEntryNCDtlAccModel
+                                {
+                                    ExpNCDtlAcc_Acc_ID = accDtls.ExpNCDtlAcc_Acc_ID,
+                                    ExpNCDtlAcc_Acc_Name = _context.DMAccount.Where(x => x.Account_ID == accDtls.ExpNCDtlAcc_Acc_ID).Select(x => x.Account_Name).FirstOrDefault(),
+                                    ExpNCDtlAcc_Curr_ID = accDtls.ExpNCDtlAcc_Curr_ID,
+                                    ExpNCDtlAcc_Amount = accDtls.ExpNCDtlAcc_Amount,
+                                    ExpNCDtlAcc_Inter_Rate = accDtls.ExpNCDtlAcc_Inter_Rate,
+                                    ExpNCDtlAcc_Type_ID = accDtls.ExpNCDtlAcc_Type_ID
+                                };
+                                accountDtls.Add(acc);
+                            }
                         }
                         ExpenseEntryNCDtlModel expenseDetail = new ExpenseEntryNCDtlModel
                         {
