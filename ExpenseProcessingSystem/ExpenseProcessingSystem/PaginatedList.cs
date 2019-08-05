@@ -19,9 +19,9 @@ namespace ExpenseProcessingSystem
         {
             this.items = items;
             this.count = count;
-            PageIndex = pageIndex;
             TotalPages = (int)Math.Ceiling(count / (double)pageSize);
 
+            PageIndex = TotalPages > 0 ? pageIndex : 0;
             this.AddRange(items);
         }
 
