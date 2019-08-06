@@ -645,7 +645,7 @@
             <input type="hidden" id="LiqEntryDetails_Liq_Created_Date" value="@(((DateTime)Model.LiqEntryDetails.Liq_Created_Date).ToString("MM/dd/yyyy"))" style="background-color:transparent" />
             <div class="flex-sb">
                 <div>
-                    <div class="dis-inline-block tbl-btn"><button>Save</button></div>
+                    <div class="dis-inline-block tbl-btn"><button class="btnEntryAction" name="command" value="Save">Save</button></div>
                     <div class="dis-inline-block tbl-btn"><button disabled>Delete</button></div>
                     <div class="dis-inline-block tbl-btn"><button disabled>Modify</button></div>
                 </div>
@@ -663,9 +663,9 @@
                 </div>
                 <div>
                     @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker
-                     || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id
-                     || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id
-                     || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.approver_id)
+                    || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id
+                    || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id
+                    || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.approver_id)
                     {
                         <div class="dis-inline-block tbl-btn"><button id="printBir" value="printBir">Print BIR Certificate</button></div>
                     }
@@ -680,6 +680,7 @@
     <input type="hidden" id="phpID" />
     <input type="hidden" id="phpAbbrv" />
     <input type="hidden" id="phpMasterID" />
+    <input type="hidden" name="command" id="btnID" />
 }
 @*validation message*@
 <div id="ValidationSummary" style="display:none" class="">

@@ -250,7 +250,36 @@ $(document).ready(function () {
     function ClearValidations() {
         $('#validationSummary').empty();
     };
+
+    
 });
+
+//Confirmation pop up
+function OpenConfirmationPopup(actCmd, command, specialMsg) {
+    //Assign action command
+    $("#confirmMsg").text(actCmd);
+
+    //Assign button command value to hidden input
+    $('#btnID').val(command);
+
+    //Show special message
+    if (specialMsg.length > 1) {
+        $.each(specialMsg, function (index, itemData) {
+            $('#specialMsgUL').show();
+            $('#specialMsgUL').append($('<li>' + itemData +'<li/>'));
+        });
+    } else if (specialMsg.length > 0) {
+        $('#specialMsgUL').show();
+        $("#specialMsg").text(specialMsg);
+    } else {
+        $('#specialMsgUL').hide();
+        $("#specialMsg").text("");
+    }
+
+}
+//Loading effect jquery
+function loadingEffectStart() { $('body').addClass("loading"); }
+function loadingEffectStop() { $('body').removeClass("loading"); } 
 
 function roundNumber(num, scale) {
     return Math.round(num * (Math.pow(10, scale))) / Math.pow(10, scale);

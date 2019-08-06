@@ -635,10 +635,10 @@ div[aria-describedby=validationSummary] {
 }
 /*//////////////////////////////////////////////////////////////////
 [ Modal ]*/
-.modal-header, .modal-body, .modal-footer, .modal-header2, .modal-body2, .modal-footer2 {
+.modal-header, .modal-body, .modal-footer, .modal-header2, .modal-body2, .modal-footer2, .divConfirmfooter {
     padding: 5px;
 }
-    .modal-footer, .modal-footer2 > .btn {
+    .modal-footer, .modal-footer2, .divConfirmfooter > .btn {
         margin-bottom: 0;
         margin-left: 5px;
     }
@@ -796,8 +796,8 @@ input[type=date]::-ms-clear {
 
 .modal-content, .modal-content2 {
     /* Bootstrap sets the size of the modal in the modal-dialog class, we need to inherit it */
-    width: inherit;
-    max-width: inherit; /* For Bootstrap 4 - to avoid the modal window stretching 
+    /*width: inherit;
+    max-width: inherit;*/ /* For Bootstrap 4 - to avoid the modal window stretching 
 full width */
     height: inherit;
     /* To center horizontally */
@@ -805,7 +805,16 @@ full width */
     pointer-events: all;
 }
 
-.divcss {
+.divConfirmWindow {
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.divcss, .divConfirmcss {
     background-attachment: scroll;
     background-color: rgb(255, 255, 255);
     background-image: none;
@@ -842,26 +851,21 @@ full width */
     height: 138.984px;
     left: 40.8%;
     line-height: 15.7143px;
-    margin-bottom: 0px;
-    margin-left: 0px;
-    margin-right: 0px;
-    margin-top: 0px;
+    margin: 0px;
     outline-color: rgb(51, 51, 51);
     outline-style: none;
     outline-width: 0px;
-    padding-bottom: 2.2px;
-    padding-left: 2.2px;
-    padding-right: 2.2px;
-    padding-top: 2.2px;
+    padding: 2.2px;
     position: absolute;
     text-size-adjust: 100%;
     top: 15%;
+    height: auto;
     width: 300px;
     z-index: 100;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-.divheader {
+.divheader, .divConfirmheader {
     background-attachment: scroll;
     background-color: rgb(233, 233, 233);
     background-image: none;
@@ -899,10 +903,7 @@ full width */
     font-weight: 700;
     height: 27.9688px;
     line-height: 15.7143px;
-    margin-bottom: 0px;
-    margin-left: 0px;
-    margin-right: 0px;
-    margin-top: 0px;
+    margin: 0px;
     padding-bottom: 4.4px;
     padding-left: 11px;
     padding-right: 11px;
@@ -915,7 +916,7 @@ full width */
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-.divContent {
+.divContent, .divConfirmContent {
     background-attachment: scroll;
     background-clip: border-box;
     background-color: rgba(0, 0, 0, 0);
@@ -946,15 +947,15 @@ full width */
     display: block;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 11px;
-    height: 104.641px;
+    /*height: 104.641px;*/
     line-height: 15.7143px;
     margin-bottom: 0px;
     margin-left: 0px;
     margin-right: 0px;
     margin-top: 0px;
-    max-height: none;
+    /*max-height: none;*/
     min-height: 104.656px;
-    overflow-x: auto;
+    /*overflow-x: auto;*/
     overflow-y: auto;
     padding-bottom: 5.5px;
     padding-left: 11px;
@@ -966,7 +967,7 @@ full width */
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-.spanTitle {
+.spanTitle, .spanConfirmTitle {
     box-sizing: border-box;
     color: rgb(51, 51, 51);
     cursor: move;
@@ -994,7 +995,7 @@ full width */
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-.buttonClose {
+.buttonClose, .buttonConfirmClose {
     align-items: flex-start;
     background-attachment: scroll;
     background-clip: border-box;
@@ -1073,4 +1074,28 @@ full width */
 
 .tblHidePrintLiq {
     display: none;
+}
+
+.popupConfirmUL{
+    color:black;
+}
+/*Loading effect CSS*/
+.loadingEffect {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    /*background: rgba( 255, 255, 255, .8 ) url('http://i.stack.imgur.com/FhHRx.gif') 50% 50% no-repeat;*/
+    background: rgba( 255, 255, 255, .8 )  url('../images/loading.gif') 50% 50% no-repeat;
+}
+
+body.loading .loadingEffect {
+    overflow: hidden;
+}
+
+body.loading .loadingEffect {
+    display: block;
 }

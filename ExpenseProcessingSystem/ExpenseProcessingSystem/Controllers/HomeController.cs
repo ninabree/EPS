@@ -2158,12 +2158,15 @@ namespace ExpenseProcessingSystem.Controllers
             for (int i = 1; i <= 5; i++)
             {
                 acc = _service.getAccountByMasterID(int.Parse(xelem.Element("D_SS" + i).Value));
-                acclist.Add(new accDetails
+                if(acc != null)
                 {
-                    accId = acc.Account_ID,
-                    accName = acc.Account_Name,
-                    accCode = acc.Account_Code
-                });
+                    acclist.Add(new accDetails
+                    {
+                        accId = acc.Account_ID,
+                        accName = acc.Account_Name,
+                        accCode = acc.Account_Code
+                    });
+                }
             }
             ssList.systemValues.acc = acclist;
 
@@ -2439,6 +2442,8 @@ namespace ExpenseProcessingSystem.Controllers
             ncList = _service.getExpenseNC(entryID);
             ncList = PopulateEntryNC(ncList);
 
+            var accs = _service.getNCAccsForFilter();
+            ncList.accList = accs;
             ViewData["partialName"] = ncList.EntryNC.NC_Category_ID.ToString();
             return View(viewLink, ncList);
         }

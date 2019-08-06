@@ -45,6 +45,9 @@ namespace ExpenseProcessingSystem.Controllers
         {
             var userId = _session.GetString("UserID");
             EntryNCViewModelList viewModel = new EntryNCViewModelList();
+            var accs = _service.getNCAccsForFilter();
+            viewModel.accList = accs;
+            viewModel = PopulateEntryNC(viewModel, expenseDate);
             DMCurrencyModel currDtl = _context.DMCurrency.Where(x => x.Curr_MasterID == 31 && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
             DMCurrencyModel currDtlUSD = _context.DMCurrency.Where(x => x.Curr_MasterID == 1 && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
 
@@ -53,6 +56,9 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 viewModel = _service.getExpenseNC(int.Parse(entryID));
                 viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
+
+                viewModel.accList = accs;
+                viewModel = PopulateEntryNC(viewModel, expenseDate);
                 if (categoryID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT.ToString())
                 {
                     viewModel.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_PETTYCASHREPLENISHMENT.Populate_CDD_Instruc_Sheet(currDtl);
@@ -106,12 +112,10 @@ namespace ExpenseProcessingSystem.Controllers
                 }
                 else if (categoryID == GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES.ToString())
                 {
-                    viewModel.EntryNC = CONSTANT_NC_MISC_ENTRIES.Populate_MISC_ENTRIES(currDtl);
+                    viewModel.EntryNC = CONSTANT_NC_MISC_ENTRIES.Populate_MISC_ENTRIES(currDtl, new DMAccountModel { Account_ID = accs[0].accID, Account_Name = accs[0].accName});
                 }
             }
 
-            viewModel.accList = _service.getNCAccsForFilter();
-            viewModel = PopulateEntryNC(viewModel, expenseDate);
             return View("NCPartial", viewModel);
         }
 

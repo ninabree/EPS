@@ -987,7 +987,10 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         {
             NewEmpListViewModel mod = new NewEmpListViewModel();
             List<NewEmpViewModel> vmList = new List<NewEmpViewModel>();
-            NewEmpViewModel vm = new NewEmpViewModel();
+            NewEmpViewModel vm = new NewEmpViewModel()
+            {
+                Emp_FBT_MasterID = 0
+            };
             vmList.Add(vm);
             mod.NewEmpVM = vmList;
             mod.FbtList = getFbtSelectList();
@@ -1462,6 +1465,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         public List<SelectListItem> getFbtSelectList()
         {
             List<SelectListItem> fbtList = new List<SelectListItem>();
+            fbtList.Add(new SelectListItem() { Text = "-- Select FBT if Applicable --", Value = "0", Selected = true  });
             _context.DMFBT.Where(x => x.FBT_isDeleted == false && x.FBT_isActive == true).ToList().ForEach(x => {
                 fbtList.Add(new SelectListItem() { Text = x.FBT_Name, Value = x.FBT_MasterID + "" });
             });

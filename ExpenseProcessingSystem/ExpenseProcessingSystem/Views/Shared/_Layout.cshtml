@@ -24,14 +24,17 @@
     <script src="~/lib/jquery-ui/jquery-ui.js"></script>
     <link type="text/css" rel="stylesheet" href="~/lib/jquery-ui/jquery-ui.css" />
     <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    @*<script src="~/lib/bootbox/bootbox.min.js""></script>
+        <script src="~/lib/bootbox//locales/"></script>*@
+    <script src="~/lib/bootbox/bootbox.min.js" asp-append-version="true"></script>
     @if (!isDM)
     {
-    <script src="~/js/site.js" asp-append-version="true"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
     }
     @*else
-    {
-    <script src="~/js/DMScript.js" asp-append-version="true"></script>
-    }*@
+        {
+        <script src="~/js/DMScript.js" asp-append-version="true"></script>
+        }*@
     @*<script src="~/js/site.min.js" asp-append-version="true"></script>*@
     <script src="~/js/editable-table.js" asp-append-version="true"></script>
     <script src="~/js/ModalPopup.js" asp-append-version="true"></script>
@@ -70,8 +73,8 @@
             <div class="tabContent">
                 @if (isEntry)
                 {@Html.Partial("EntityTabsPartial")}
-                else if (isHome)
-                {@Html.Partial("HomeTabsPartial")}
+            else if (isHome)
+            {@Html.Partial("HomeTabsPartial")}
                 @RenderBody()
             </div>
         </div>
@@ -90,5 +93,9 @@
             <p>&copy; 2019 - EPS</p>
         </footer>
     </div>
+    @*Confirmation pop up modal*@
+    @Html.Partial("PopupConfirmMessage")
+    @*Loading effect modal*@
+    <div class="loadingEffect"></div>
 </body>
 </html>
