@@ -1,0 +1,23 @@
+﻿<div id="divConfirmWindow" class="divConfirmWindow" style="display:none;">
+    <div class="divConfirmcss" id="divConfirmcss" style="z-index:1050">
+        <div class="divConfirmheader">
+            <span id="ui-id-1" class="spanConfirmTitle">Confirmation</span>
+            <button type="button" id="btnConfirmClose" class="buttonConfirmClose btnCloseConfirm">x</button>
+        </div>
+        <div class="divConfirmContent" style="width: 100%;">
+            <ul class="popupConfirmUL">
+                <li id="">Do You Want to Proceed?</li>
+                <li id="">Action:<label id="confirmMsg"></label></li>
+            </ul>
+            <ul id="specialMsgUL"style="display:none">
+                <li>Warning:</li>
+                <li id="specialMsg"></li>
+            </ul>
+            <div class="divConfirmfooter" style="bottom:0;position:relative;margin-top:10%">
+                <button type="button" class="btn float-r btnCloseConfirm" style="color:black">Cancel</button>
+                <button class="btn float-r" type="submit" id="btnProceedConfirm" style="color:black">Proceed</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="~/js/ConfirmPopup.js"></script>

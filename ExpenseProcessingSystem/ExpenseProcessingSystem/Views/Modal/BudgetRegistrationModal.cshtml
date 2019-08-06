@@ -8,15 +8,15 @@
 @using (Html.BeginForm("RegisterNewBudget", "Modal", FormMethod.Post, new { @id = "submitNewBudgetForm" }))
 {
     <div style="height:450px;overflow-y: scroll">
-        <table class="table tableBudReg table-striped tab-tbl table-hover" style="width:100%">
+        <table class="table tableBudReg table-striped tab-tbl table-hover table-bordered" style="width:100%">
             <thead>
                 <tr>
-                    <td class="p-l-150"><text>Account : </text></td>
-                    <td class="p-l-150"><text>Account Number : </text></td>
-                    <td class="p-l-150"><text>G-Base Budget Code : </text></td>
-                    <td><text>Current Budget : </text></td>
-                    <td><text>New Budget : </text></td>
-                    <td><text>Retain budget : </text><input type="checkbox" id="chkAll"></td>
+                    <td style="text-align:center" class="p-l-150"><text>Account : </text></td>
+                    <td style="text-align:center" class="p-l-150"><text>Account Number : </text></td>
+                    <td style="text-align:center" class="p-l-150"><text>G-Base Budget Code : </text></td>
+                    <td style="text-align:center"><text>Current Budget : </text></td>
+                    <td style="text-align:center"><text>New Budget : </text></td>
+                    <td style="text-align:center"><text>Retain budget : </text><input type="checkbox" id="chkAll"></td>
                 </tr>
             </thead>
             <tbody>
@@ -33,11 +33,11 @@
                                     @Html.HiddenFor(x => Model[i].BM_Account_MasterID)
                                     @Html.TextBoxFor(x => Model[i].BM_Acc_Name, new { @class = "input100 txtAccName", @readonly = "readonly", tabindex = -1 })
                                 </td>
-                                <td>
-                                    @Html.TextBoxFor(x => Model[i].BM_Acc_Num, new { @class = "input100 txtAccNum", @readonly = "readonly", tabindex = -1 })
+                                <td style="text-align:center">
+                                    @Html.TextBoxFor(x => Model[i].BM_Acc_Num, new { @class = "input100 txtAccNum", style = "text-align:center;", @readonly = "readonly", tabindex = -1 })
                                 </td>
-                                <td>
-                                    @Html.TextBoxFor(x => Model[i].BM_GBase_Code, new { @class = "input100 txtGbaseCode", @readonly = "readonly", tabindex = -1 })
+                                <td style="text-align:center">
+                                    @Html.TextBoxFor(x => Model[i].BM_GBase_Code, new { @class = "input100 txtGbaseCode", style = "text-align:center;", @readonly = "readonly", tabindex = -1 })
                                 </td>
                                 <td>
                                     @Html.TextBoxFor(x => Model[i].BM_Budget_Current, "{0:#,##0.00#}", new { @class = "input100 txtCurrBudget", style = "text-align:right;", @readonly = "readonly", tabindex = -1 })
@@ -58,10 +58,10 @@
                                     @Html.TextBoxFor(x => Model[i].BM_Acc_Name, new { @class = "input100 txtAccName", @readonly = "readonly", tabindex = -1, @style = "color:red" })
                                 </td>
                                 <td>
-                                    @Html.TextBoxFor(x => Model[i].BM_Acc_Num, new { @class = "input100 txtAccNum", @readonly = "readonly", tabindex = -1, @style = "color:red" })
+                                    @Html.TextBoxFor(x => Model[i].BM_Acc_Num, new { @class = "input100 txtAccNum", @readonly = "readonly", tabindex = -1, @style = "text-align:center;color:red" })
                                 </td>
                                 <td>
-                                    @Html.TextBoxFor(x => Model[i].BM_GBase_Code, new { @class = "input100 txtGbaseCode", @readonly = "readonly", tabindex = -1, @style = "color:red" })
+                                    @Html.TextBoxFor(x => Model[i].BM_GBase_Code, new { @class = "input100 txtGbaseCode", @readonly = "readonly", tabindex = -1, @style = "text-align:center;color:red" })
                                 </td>
                                 <td>
                                     @Html.TextBoxFor(x => Model[i].BM_Budget_Current, "{0:#,##0.00#}", new { @class = "input100 txtCurrBudget", style = "text-align:right;color:red", @readonly = "readonly", tabindex = -1 })
@@ -98,14 +98,14 @@
                             <table style="margin:5px;">
                                 <tr>
                                     <td>Username : </td>
-                                    <td>&nbsp;<input type="text" id="userName" name="username" class="input" /></td>
+                                    <td>&nbsp;<input type="text" id="userName" name="username" class="input" maxlength="8" /></td>
                                 </tr>
                                 <tr>
                                     <td>&nbsp;&nbsp;</td>
                                 </tr>
                                 <tr>
                                     <td>Password : </td>
-                                    <td>&nbsp;<input type="password" id="passWord" name="password" class="input" /></td>
+                                    <td>&nbsp;<input type="password" id="passWord" name="password" class="input" maxlength="10" /></td>
                                 </tr>
                             </table>
                         </div>
@@ -123,6 +123,7 @@
 <script>
     $(document).ready(function () {
         $('#saveBtnEntry').show();
+        $('.modal-dialog').css('width', '70%');
         var trsInit = $(".tableBudReg").find("tbody").find("tr");
         if (trsInit.length == 1) {
             $('#saveBtnEntry').attr("disabled", "disabled");

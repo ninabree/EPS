@@ -204,58 +204,60 @@
 
 </div>
 <script>
+    $(window).on("load", function () {
+        var gross = $(".txtGross");
+        var credEwt = $(".txtCredEwt");
+        var credCash = $(".txtCredCash");
+
+        var grossTotal = 0;
+        var ewtSubTotal = 0;
+        var cashSubTotal = 0;
+
+        for (var i = 0; i < gross.length; i++) {
+            grossTotal += Number(gross[i].value);
+        }
+
+        for (var i = 0; i < credEwt.length; i++) {
+            ewtSubTotal += Number(credEwt[i].value);
+        }
+
+        for (var i = 0; i < credCash.length; i++) {
+            cashSubTotal += Number(credCash[i].value);
+        }
+
+        $("#grossTotal").val(grossTotal);
+        $("#credEwtTotal").val(ewtSubTotal);
+        $("#credCashTotal").val(cashSubTotal);
+        $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
+
+        var rowTemplate = $("#rowTemplate")
+
+        $(rowTemplate).find("#template_duration").removeAttr("data-val-required");
+        $(rowTemplate).find("#template_GBaseRemarks").removeAttr("data-val-required");
+        $(rowTemplate).find("#template_account").removeAttr("data-val-required");
+        $(rowTemplate).find("#template_fbt").removeAttr("data-val-required");
+        $(rowTemplate).find("#template_dept").removeAttr("data-val-required");
+        $(rowTemplate).find("#template_chkVat").removeAttr("data-val-required");
+        $(rowTemplate).find("#template_vat").removeAttr("data-val-required");
+        $(rowTemplate).find("#template_chkEwt").removeAttr("data-val-required");
+        $(rowTemplate).find("#template_ewt").removeAttr("data-val-required");
+        $(rowTemplate).find("#template_ccy").removeAttr("data-val-required");
+        $(rowTemplate).find("#template_debitGross").removeAttr("data-val-required");
+        $(rowTemplate).find("#template_credEwt").removeAttr("data-val-required");
+        $(rowTemplate).find("#template_credCash").removeAttr("data-val-required");
+        $(rowTemplate).find("#template_month").removeAttr("data-val-required");
+        $(rowTemplate).find("#template_day").removeAttr("data-val-required");
+
+        $('#iframePreview').prop('src', "/Home/VoucherCV");
+    });
+
     $(function () {
-        $(window).on("load", function () {
-            var gross = $(".txtGross");
-            var credEwt = $(".txtCredEwt");
-            var credCash = $(".txtCredCash");
-
-            var grossTotal = 0;
-            var ewtSubTotal = 0;
-            var cashSubTotal = 0;
-
-            for (var i = 0; i < gross.length; i++) {
-                grossTotal += Number(gross[i].value);
-            }
-
-            for (var i = 0; i < credEwt.length; i++) {
-                ewtSubTotal += Number(credEwt[i].value);
-            }
-
-            for (var i = 0; i < credCash.length; i++) {
-                cashSubTotal += Number(credCash[i].value);
-            }
-
-            $("#grossTotal").val(grossTotal);
-            $("#credEwtTotal").val(ewtSubTotal);
-            $("#credCashTotal").val(cashSubTotal);
-            $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
-
-            var rowTemplate = $("#rowTemplate")
-
-            $(rowTemplate).find("#template_duration").removeAttr("data-val-required");
-            $(rowTemplate).find("#template_GBaseRemarks").removeAttr("data-val-required");
-            $(rowTemplate).find("#template_account").removeAttr("data-val-required");
-            $(rowTemplate).find("#template_fbt").removeAttr("data-val-required");
-            $(rowTemplate).find("#template_dept").removeAttr("data-val-required");
-            $(rowTemplate).find("#template_chkVat").removeAttr("data-val-required");
-            $(rowTemplate).find("#template_vat").removeAttr("data-val-required");
-            $(rowTemplate).find("#template_chkEwt").removeAttr("data-val-required");
-            $(rowTemplate).find("#template_ewt").removeAttr("data-val-required");
-            $(rowTemplate).find("#template_ccy").removeAttr("data-val-required");
-            $(rowTemplate).find("#template_debitGross").removeAttr("data-val-required");
-            $(rowTemplate).find("#template_credEwt").removeAttr("data-val-required");
-            $(rowTemplate).find("#template_credCash").removeAttr("data-val-required");
-            $(rowTemplate).find("#template_month").removeAttr("data-val-required");
-            $(rowTemplate).find("#template_day").removeAttr("data-val-required");
-
-            $('#iframePreview').prop('src', "/Home/GenerateVoucher");
-        });
-
         updatePayeeSelect();
+
         $("#payeeTypeSel").change(function (e) {
             updatePayeeSelect();
         });
+
         $("#addRow").click(function (e) {
             var itemCount = document.getElementById('inputTable').getElementsByTagName('tbody')[0].childElementCount - 2;
             var tableRef = document.getElementById('inputTable').getElementsByTagName('tbody')[0];
@@ -432,18 +434,7 @@
         }
     };
 
-    function roundNumber(num, scale) {
-        if (!("" + num).includes("e")) {
-            return +(Math.round(num + "e+" + scale) + "e-" + scale);
-        } else {
-            var arr = ("" + num).split("e");
-            var sig = ""
-            if (+arr[1] + scale > 0) {
-                sig = "+";
-            }
-            return +(Math.round(+arr[0] + "e" + sig + (+arr[1] + scale)) + "e-" + scale);
-        }
-    };
+
 </script>
 <script type="text/javascript" src="~/js/EntryScripts.js"></script>
 

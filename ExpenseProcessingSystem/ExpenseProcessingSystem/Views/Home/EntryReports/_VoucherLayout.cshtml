@@ -1,6 +1,7 @@
 ﻿@model ExpenseProcessingSystem.ViewModels.VoucherViewModelList
 @{
     Layout = null;
+    double totalAmountPay = Model.amountGross - Model.taxWithheld;
 }
 <!DOCTYPE html>
 <html>
@@ -31,8 +32,8 @@
         }
 
         .container {
-            width: 200px;
-            height: 100px;
+            width: 150px;
+            height: 75px;
         }
 
             .container img {
@@ -51,15 +52,15 @@
         /*end main body styles*/
 
         /*payment style*/
-        #payment table {
+        .payment table {
             width: 95%;
             float: right;
             margin-bottom: 30px;
         }
 
-        #payment table,
-        #payment tr,
-        #payment td {
+        .payment table,
+        .payment tr,
+        .payment td {
             border: 1px dotted black;
             border-collapse: collapse;
         }
@@ -67,13 +68,13 @@
 
         /*particulars style*/
         #particulars #tblParticular {
-            width: 70%;
+            width: 65%;
             float: left;
             margin-right: 0px;
         }
 
         #particulars #tblTaxInfo {
-            width: 30.05%;
+            width: 35.05%;
             float: right;
             margin-left: 0px;
         }
@@ -94,6 +95,10 @@
             border: 1px solid black;
         }
 
+        table{
+            margin: 0 auto;
+        }
+
         .flexContainer {
             display: flex;
         }
@@ -101,6 +106,16 @@
         .flexstuff {
             flex: 1;
         }
+
+        @@media print {
+            body {
+                width: 210mm;
+                height: 297mm;
+                margin: 0px 0px 0px 0px;
+                font-size: 10px
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -140,17 +155,17 @@
             </colgroup>
             <tr>
                 <td><a class="heading">Date</a> </td>
-                <td>@Html.TextBoxFor(x => x.date, new {@disabled = "disabled" })</td>
+                <td>@Html.TextBoxFor(x => x.date, new { @disabled = "disabled" })</td>
                 <td>
                     <div style="text-align:right;">
-                        <a class="heading">Check_Voucher_No.</a>
-                        @Html.TextBoxFor(x => x.voucherNo, new { @style = "margin-left:100px", @type = "text", @disabled="disabled" })
+                        <a class="heading">Voucher No.</a>
+                        @Html.TextBoxFor(x => x.voucherNo, new { @style = "margin-left:100px", @type = "text", @disabled = "disabled" })
                     </div>
                 </td>
             </tr>
             <tr>
                 <td><a class="heading">Payee</a></td>
-                <td colspan="2"><div class="flexContainer">@Html.TextBoxFor(x => x.payee, new { @class="flexstuff", @type="text", @disabled="disabled"})</div></td>
+                <td colspan="2"><div class="flexContainer">@Html.TextBoxFor(x => x.payee, new { @class = "flexstuff", @type = "text", @disabled = "disabled" })</div></td>
             </tr>
             <tr>
                 <td><a class="heading">Check Number</a></td>
@@ -161,7 +176,7 @@
             </tr>
             <tr>
                 <td><a class="heading">Payment Amount in Figures</a></td>
-                <td colspan="2"><div class="flexContainer">@Html.TextBoxFor(x => x.amount, new { @class = "flexstuff", @type = "text", @disabled = "disabled" })</div></td>
+                <td colspan="2"><div class="flexContainer">@Html.TextBoxFor(x => x.amountCredit, new { @class = "flexstuff", @type = "text", @disabled = "disabled" })</div></td>
             </tr>
             <tr>
                 <td><a class="heading">Payment Amount in Words</a> <br /><div><a> &nbsp; &nbsp;</a></div></td>
@@ -169,77 +184,35 @@
             </tr>
         </table>
     </div>
-    <div id="payment">
+    <div class="payment">
         <a class="heading">Payment for: </a><br />
         <table>
             <colgroup>
-                <col style="width:20%;" />
-                <col style="width:10%;" />
                 <col style="width:30%;" />
-                <col style="width:20%;" />
-                <col style="width:20%;" />
+                <col style="width:15%;" />
+                <col style="width:30%;" />
+                <col style="width:25%;" />
             </colgroup>
             <thead>
                 <tr>
                     <td>Particulars</td>
                     <td>Number</td>
-                    <td>Period Covered</td>
                     <td>Details</td>
                     <td>Amount</td>
                 </tr>
             </thead>
             <tbody>
+                @foreach (var item in Model.particulars)
+                {
                 <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
+                    <td>@Html.DisplayFor(x=>item.documentType)</td>
+                    <td>@Html.DisplayFor(x=>item.invoiceNo)</td>
+                    <td>@Html.DisplayFor(x=>item.description)</td>
+                    <td>@Html.DisplayFor(x=>item.amount)</td>
                 </tr>
+                }
                 <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td colspan="5" style="border:1px solid black">Total <a style="float:right;">PHP 20,000.00</a></td>
+                    <td colspan="4" style="border:1px solid black">Total <a style="float:right;">PHP @Html.DisplayFor(x=>x.amountGross)</a></td>
                 </tr>
             </tbody>
         </table>
@@ -249,74 +222,67 @@
         <table id="tblParticular" border="0" cellspacing="0">
             <colgroup>
                 <col style="width:50%;" />
-                <col style="width:10%;" />
-                <col style="width:20%;" />
-                <col style="width:20%;" />
+                <col style="width:25%;" />
+                <col style="width:25%;" />
             </colgroup>
             <thead>
                 <tr>
-                    <td colspan="4">Particulars</td>
+                    <td colspan="3">Particulars</td>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td style="text-align:center;" class="heading">Account</td>
-                    <td style="text-align:center;" class="heading">FBT?</td>
                     <td style="text-align:center;" class="heading">Debit</td>
                     <td style="text-align:center;" class="heading">Credit</td>
                 </tr>
+                @foreach (var item in Model.accountsDebit)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(x => item.account)</td>
+                        <td class="rightA">PHP @Html.DisplayFor(x => item.amount)</td>
+                        <td><!--Insert Value here--></td>
+                    </tr>
+                }
+
+                @foreach (var item in Model.accountCredit)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(x => item.account)</td>
+                        <td><!--Insert Value here--></td>
+                        <td class="rightA">PHP @Html.DisplayFor(x => item.amount)</td>
+                    </tr>
+                }
+
+                @for (int i = 4; i > Model.accountCredit.Count + Model.accountsDebit.Count; i--)
+                {
+                    <tr>
+                        <td><!--Insert Value here--></td>
+                        <td><!--Insert Value here--></td>
+                        <td><!--Insert Value here--></td>
+                    </tr>
+                }
                 <tr>
-                    <td>Motor Vehicle-Lease - H90767121503<!--Insert Value here--></td>
-                    <td>No<!--Insert Value here--></td>
-                    <td class="rightA">PHP 19,936.58<!--Insert Value here--></td>
-                    <td><!--Insert Value here--></td>
-                </tr>
-                <tr>
-                    <td>Motor Vehicle-Fuel -  H90767121498<!--Insert Value here--></td>
-                    <td>No<!--Insert Value here--></td>
-                    <td class="rightA">PHP 3,400.00<!--Insert Value here--></td>
-                    <td><!--Insert Value here--></td>
-                </tr>
-                <tr>
-                    <td>Transportation-Others - H90767121480<!--Insert Value here--></td>
-                    <td>No<!--Insert Value here--></td>
-                    <td class="rightA">PHP 2,031.00<!--Insert Value here--></td>
-                    <td><!--Insert Value here--></td>
-                </tr>
-                <tr>
-                    <td>BDO MNL<!--Insert Value here--></td>
-                    <td><!--Insert Value here--></td>
-                    <td><!--Insert Value here--></td>
-                    <td class="rightA">25,021.94<!--Insert Value here--></td>
-                </tr>
-                <tr>
-                    <td>EWT 2%<!--Insert Value here--></td>
-                    <td><!--Insert Value here--></td>
-                    <td><!--Insert Value here--></td>
-                    <td class="rightA">345.64<!--Insert Value here--></td>
-                </tr>
-                <tr>
-                    <td colspan="4"><!--Insert Value here--></td>
+                    <td colspan="3"><!--Insert Value here--></td>
                 </tr>
                 <tr>
                     <td>Total<!--Insert Value here--></td>
-                    <td style="border-top:1px solid black;border-bottom:3px double black;"><!--Insert Value here--></td>
-                    <td class="rightA" style="border-top:1px solid black;border-bottom:3px double black;">25,367.58<!--Insert Value here--></td>
-                    <td class="rightA" style="border-top:1px solid black;border-bottom:3px double black;">25,367.58<!--Insert Value here--></td>
+                    <td class="rightA" style="border-top:1px solid black;border-bottom:3px double black;">PHP @Html.DisplayFor(x => x.amountGross)</td>
+                    <td class="rightA" style="border-top:1px solid black;border-bottom:3px double black;">PHP @Html.DisplayFor(x => x.amountGross)</td>
                 </tr>
                 <tr>
-                    <td colspan="4"><!--Insert Value here--></td>
+                    <td colspan="3"><!--Insert Value here--></td>
                 </tr>
                 <tr>
-                    <td colspan="4"><!--Insert Value here--></td>
+                    <td colspan="3"><!--Insert Value here--></td>
                 </tr>
             </tbody>
         </table>
         <table id="tblTaxInfo" border="0" cellspacing="0">
             <colgroup>
-                <col style="width:60%;" />
-                <col style="width:20%;" />
-                <col style="width:20%;" />
+                <col style="width:30%;" />
+                <col style="width:35%;" />
+                <col style="width:35%;" />
             </colgroup>
             <thead>
                 <tr>
@@ -328,42 +294,218 @@
                 <tr>
                     <td>Gross</td>
                     <td><!--Insert Value here--></td>
-                    <td><!--Insert Value here--></td>
+                    <td>PHP @Html.DisplayFor(x => x.taxInfo_gross)</td>
                 </tr>
                 <tr>
                     <td>Vat</td>
                     <td><!--Insert Value here--></td>
-                    <td><!--Insert Value here--></td>
+                    <td>PHP @Html.DisplayFor(x => x.taxInfo_vat)</td>
                 </tr>
                 <tr>
                     <td>Tax Base</td>
                     <td><!--Insert Value here--></td>
-                    <td><!--Insert Value here--></td>
+                    <td>PHP @Html.DisplayFor(x => x.taxInfo_taxBase)</td>
                 </tr>
-                <tr>
-                    <td>EWT</td>
-                    <td><!--Insert Value here--></td>
-                    <td><!--Insert Value here--></td>
-                </tr>
+                @foreach (var item in Model.vatAmtList)
+                {
+                    <tr>
+                        <td>EWT @Html.DisplayFor(x => item.ewt)</td>
+                        <td>PHP @Html.DisplayFor(x => item.ewtAmt)</td>
+                        <td><!--Insert Value here--></td>
+                    </tr>
+                }
+
+                @for (int i = 3; i < Model.accountsDebit.Count; i++)
+                {
+                    <tr>
+                        <td colspan="3"></td>
+                    </tr>
+                }
                 <tr>
                     <td colspan="3"></td>
                 </tr>
-                <tr>
-                    <td colspan="3"></td>
-                </tr>
-                <tr>
+                @*<tr>
                     <td colspan="3" style="font-style:italic;padding-bottom:3px;">Fringe Benefit Tax</td>
                 </tr>
                 <tr>
                     <td colspan="2">Benefit Amount</td>
-                    <td class="rightA">-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                    <td class="rightA">222</td>
                 </tr>
                 <tr>
                     <td colspan="2">35% Tax</td>
                     <td class="rightA">-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                </tr>*@
+                @if (Model.isFbt)
+                {
+                    <tr>
+                        <td colspan="3" style="font-style:italic;padding-bottom:3px;">Fringe Benefit Tax</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">Benefit Amount</td>
+                        <td class="rightA">@Html.DisplayFor(x => x.fbtAmount)</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">35% Tax</td>
+                        <td class="rightA">-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3" style="font-style:italic;padding-bottom:3px;"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"></td>
+                        <td class="rightA"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"></td>
+                        <td class="rightA">-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div id="signatories" style="width:100%">
+        <table style="width:100%;">
+            <colgroup>
+                <col style="width:25%;" />
+                <col style="width:45%;" />
+                <col style="width:10%;" />
+                <col style="width:20%;" />
+            </colgroup>
+            <tbody>
+                <tr>
+                    <td>
+                        <a>Prepared By : </a>@Html.TextBoxFor(x => x.maker, new {@class="input100", @type = "text", @disabled = "disabled" })
+                    </td>
+                    <td>
+                        <a>Verified By : </a>@Html.TextBoxFor(x => x.verifier_1, new { @class = "input100 dis-inline", @type = "text", @disabled = "disabled" })
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        @Html.TextBoxFor(x => x.verifier_2, new { @class = "input100 dis-inline", @type = "text", @disabled = "disabled" })
+                    </td>
+                    <td>
+                        <a>Approved By : </a>
+                    </td>
+                    <td>@Html.TextBoxFor(x => x.approver, new {@class="input100", @type = "text", @disabled = "disabled" })</td>
+                </tr>
+                <tr>
+                    <td colspan="2" rowspan="2">
+                        <a>Payment Recieved By : </a>
+                        <input class="input100" disabled style = "width:70%;height:64px"/>
+                    </td>
+                    <td><a>Date : </a></td>
+                    <td>@Html.TextBoxFor(x => x.date, new { @class = "input100", @type = "text", @disabled = "disabled" })</td>
+                </tr>
+                <tr>
+                    <td><a>OR Number : </a></td>
+                    <td><input class="input100" disabled /></td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align:center;"><a>Name and Signature</a></td>
+                    <td></td>
+                    <td></td>
                 </tr>
             </tbody>
         </table>
+    </div>
+
+    <hr style="border-top: dashed 1px;" />
+
+    <div id="cutout">
+        <div class="heading">
+            <table style="width:100%">
+                <colgroup><col style="width:45%" /><col style="width:55%" /></colgroup>
+                <tbody>
+                    <tr>
+                        <td><div class="container"><a href="#" id="header-logo"><img src="~/images/ReportLogo.png"></a></div></td>
+                        <td><a>PAYMENT DETAILS</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="heading">
+            <table style="width:90%;">
+                <colgroup>
+                    <col style="width:40%" />
+                    <col style="width:30%" />
+                    <col style="width:30%" />
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <td colspan="2">
+                            <a>Date : </a>
+                            @Html.TextBoxFor(x => x.date, new { @class = "input100", @type = "text", @disabled = "disabled" })
+                        </td>
+                        <td>
+                            <a>Voucher No. : </a>
+                            @Html.TextBoxFor(x => x.voucherNo, new { @style = "float:right;", @class = "input100", @type = "text", @disabled = "disabled" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <a>Payee : </a>
+                            @Html.TextBoxFor(x => x.payee, new { @style = "width:93%;float:right;", @class = "input100", @type = "text", @disabled = "disabled" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <a>Check Number : </a>
+                            @Html.TextBoxFor(x => x.checkNo, new { @style = "width:60%", @class = "input100", @type = "text", @disabled = "disabled" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><a>Payment Amount : </a>@Html.TextBoxFor(x => totalAmountPay, new { @class = "input100", @type = "text", @disabled = "disabled" })</td>
+                        <td colspan="2"><a>Taxes Withheld : </a>@Html.TextBoxFor(x => x.taxWithheld, new { @class = "input100", @type = "text", @disabled = "disabled" })</td>
+                    </tr>
+                    <tr><td></td></tr>
+                    <tr><td></td></tr>
+                    <tr><td></td></tr>
+                    <tr>
+                        <td><a class="heading">Payment for: </a></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <div class="payment" style="width:100%;margin-right:0px;margin-left:auto;">
+                                <table>
+                                    <colgroup>
+                                        <col style="width:30%;" />
+                                        <col style="width:15%;" />
+                                        <col style="width:30%;" />
+                                        <col style="width:25%;" />
+                                    </colgroup>
+                                    <thead>
+                                        <tr>
+                                            <td>Particulars</td>
+                                            <td>Number</td>
+                                            <td>Details</td>
+                                            <td>Amount</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.particulars)
+                                        {
+                                            <tr>
+                                                <td>@Html.DisplayFor(x => item.documentType)</td>
+                                                <td>@Html.DisplayFor(x => item.invoiceNo)</td>
+                                                <td>@Html.DisplayFor(x => item.description)</td>
+                                                <td>@Html.DisplayFor(x => item.amount)</td>
+                                            </tr>
+                                        }
+                                        <tr>
+                                            <td colspan="4" style="border:1px solid black">Total <a style="float:right;">PHP @Html.DisplayFor(x=>x.amountGross)</a></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
     </div>
 </body>
 </html>

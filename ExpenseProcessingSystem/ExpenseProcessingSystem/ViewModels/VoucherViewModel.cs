@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace ExpenseProcessingSystem.ViewModels
 {
-    public class VoucherViewModel
+    public class accountList
     {
         public int accountid { get; set; }
         public string account { get; set; }
-        public double grossAmt { get; set; }
+        public double amount { get; set; }
     }
 
     public class ewtAmtList
@@ -32,10 +32,13 @@ namespace ExpenseProcessingSystem.ViewModels
         public headerVM headvm { get; set; }
         public int payeeID { get; set; }
         public string payee { get; set; }
-        public double amount { get; set; }
-        public double vat { get; set; }
-        public double gross { get; set; }
-        public double taxBase { get; set; }
+        public double amountCredit { get; set; }
+        public double amountGross { get; set; }
+        public double taxWithheld { get; set; }
+        public double taxInfo_vat { get; set; }
+        public double taxInfo_gross { get; set; }
+        public double taxInfo_taxBase { get; set; }
+        public double fbtAmount { get; set; }
         public string amountString { get; set; }
         public string checkNo { get; set; }
         public string voucherNo { get; set; }
@@ -46,6 +49,8 @@ namespace ExpenseProcessingSystem.ViewModels
         public string verifier_2 { get; set; }
         public string date { get; set; }
         public bool isFbt { get; set; }
+        public List<accountList> accountsDebit { get; set; }
+        public List<accountList> accountCredit { get; set; }
         public List<particulars> particulars { get; set; }
         public List<ewtAmtList> vatAmtList { get; set; }
 
@@ -53,6 +58,8 @@ namespace ExpenseProcessingSystem.ViewModels
         {
             particulars = new List<particulars>();
             vatAmtList = new List<ewtAmtList>();
+            accountsDebit = new List<accountList>();
+            accountCredit = new List<accountList>();
             headvm = new headerVM();
         }
     }

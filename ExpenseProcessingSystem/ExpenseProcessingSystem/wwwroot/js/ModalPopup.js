@@ -22,10 +22,10 @@
         ModalPopup('Modal', 'ForgotPW', 'Forgot Your Login Credentials?');
     });
     //Entry_DDV
-    $("#reversal_entry").click(function () {
-        //controller name, method name, modal header
-        ModalPopup('Modal', 'ReversalEntryModal', 'Reversal Entry');
-    });
+    //$("#reversal_entry").click(function () {
+    //    //controller name, method name, modal header
+    //    ModalPopup('Modal', 'ReversalEntryModal', 'Reversal Entry');
+    //});
 
     $(".adjust_btn").click(function () {
         var id = this.id;

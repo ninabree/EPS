@@ -44,4 +44,6 @@ function dragElement(elmnt) {
 
 $('#btnAlertClose').click(function () {
     $('#divcss').css('display', 'none');
+    $('#divcss').css('top', '');
+    $('#divcss').css('left', '');
 });
