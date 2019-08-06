@@ -8196,8 +8196,18 @@ namespace ExpenseProcessingSystem.Services
 
             if (_modelState.IsValid)
             {
-                //_context.ExpenseEntry.Attach(m);
+                List<int> forbiddenStatus = new List<int>{
+                    GlobalSystemValues.STATUS_APPROVED,
+                    GlobalSystemValues.STATUS_FOR_PRINTING,
+                    GlobalSystemValues.STATUS_REJECTED,
+                    GlobalSystemValues.STATUS_FOR_CLOSING
+                };
+
+
                 ExpenseEntryModel dbExpenseEntry = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == transID);
+
+                if (forbiddenStatus.Contains(dbExpenseEntry.Expense_Status))
+                    return false;
 
                 if (status == GlobalSystemValues.STATUS_VERIFIED)
                 {
@@ -8205,7 +8215,7 @@ namespace ExpenseProcessingSystem.Services
                     {
                         dbExpenseEntry.Expense_Verifier_1 = userid;
                     }
-                    else
+                    else if(dbExpenseEntry.Expense_Verifier_1 != userid)
                     {
                         if (dbExpenseEntry.Expense_Verifier_2 == 0)
                         {
@@ -8216,27 +8226,31 @@ namespace ExpenseProcessingSystem.Services
                             return false;
                         }
                     }
+                    else
+                    {
+                        return false;
+                    }
                 }
 
                 if (status == GlobalSystemValues.STATUS_APPROVED || status == GlobalSystemValues.STATUS_REJECTED)
                 {
                     dbExpenseEntry.Expense_Approver = userid;
-                    if (GlobalSystemValues.STATUS_PENDING == GetCurrentEntryStatus(dbExpenseEntry.Expense_ID))
-                    {
-                        dbExpenseEntry.Expense_Verifier_1 = userid;
-                    }
+                    dbExpenseEntry.Expense_Number = status == GlobalSystemValues.STATUS_APPROVED ? 
+                                getExpTransNo(dbExpenseEntry.Expense_Type) : 0;
+
+
                 }
-                dbExpenseEntry.Expense_Number = getExpTransNo(dbExpenseEntry.Expense_Type);
                 dbExpenseEntry.Expense_Status = status;
                 dbExpenseEntry.Expense_Last_Updated = DateTime.Now;
 
-                //m.Expense_Status = status;
-                //m.Expense_Last_Updated = DateTime.Now;
-
-                _context.SaveChanges();
+                if (dbExpenseEntry.Expense_Status == GetCurrentEntryStatus(transID))
+                {
+                    _context.SaveChanges();
+                    return true;
+                }
             }
-            else { return false; }
-            return true;
+
+            return false;
         }
 
         //Delete expense entry

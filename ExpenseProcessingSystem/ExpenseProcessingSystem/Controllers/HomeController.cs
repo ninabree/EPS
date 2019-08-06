@@ -1171,14 +1171,30 @@ namespace ExpenseProcessingSystem.Controllers
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         [ImportModelState]
-        public IActionResult Entry_CV()
+        public IActionResult Entry_CV(int entryID = 0)
         {
             var userId = GetUserID();
-
             EntryCVViewModelList viewModel = new EntryCVViewModelList();
-            viewModel = PopulateEntry((EntryCVViewModelList)viewModel);
-            //viewModel.vendor = 2;
-            viewModel.EntryCV.Add(new EntryCVViewModel());
+
+            if (entryID > 0)
+            {
+                viewModel = _service.getExpense(entryID);
+                List<SelectList> listOfSysVals = _service.getEntrySystemVals();
+                viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
+                viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
+                viewModel.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
+                viewModel.systemValues.ewt = _service.getVendorTaxRate(viewModel.vendor);
+                viewModel.systemValues.vat = _service.getVendorVat(viewModel.vendor);
+                viewModel.systemValues.acc = _service.getAccDetailsEntry();
+                viewModel.systemValues.payee_type_sel = new SelectList(GlobalSystemValues.PAYEETYPE_SELECT_CV, "Value", "Text", GlobalSystemValues.PAYEETYPE_SELECT_CV.First());
+            }
+            else
+            {
+                viewModel = PopulateEntry((EntryCVViewModelList)viewModel);
+                //viewModel.vendor = 2;
+                viewModel.EntryCV.Add(new EntryCVViewModel());
+            }
+
             return View(viewModel);
         }
 
@@ -1320,7 +1336,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "Entry_CV_ReadOnly";
+                    viewLink = "View_CV";
                     break;
                 case "verifier":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_VERIFIED, int.Parse(GetUserID())))
@@ -1331,19 +1347,29 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "Entry_CV_ReadOnly";
+                    viewLink = "View_CV";
                     break;
                 case "Reject":
-
-                    ////----------------------------- NOTIF----------------------------------
-                    //_service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_CV, GlobalSystemValues.STATUS_REJECTED, makerId);
-                    ////----------------------------- NOTIF----------------------------------
+                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REJECTED, int.Parse(GetUserID())))
+                    {
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "View_CV";
                     break;
                 case "Delete":
-
-                    ////----------------------------- NOTIF----------------------------------
-                    //_service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_CV, GlobalSystemValues.STATUS_DELETE, 0);
-                    ////----------------------------- NOTIF----------------------------------
+                    if (_service.deleteExpenseEntry(entryID))
+                    {
+                        return RedirectToAction("Entry_CV", "Home");
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "View_CV";
                     break;
                 default:
                     break;
@@ -1351,41 +1377,41 @@ namespace ExpenseProcessingSystem.Controllers
 
             ModelState.Clear();
 
-            cvList = _service.getExpense(entryID);
+            //cvList = _service.getExpense(entryID);
 
-            cvList = PopulateEntry((EntryCVViewModelList)cvList);
+            //cvList = PopulateEntry((EntryCVViewModelList)cvList);
 
-            foreach (var acc in cvList.EntryCV)
-            {
-                cvList.systemValues.acc.AddRange(_service.getAccDetailsEntry(acc.account));
-            }
+            //foreach (var acc in cvList.EntryCV)
+            //{
+            //    cvList.systemValues.acc.AddRange(_service.getAccDetailsEntry(acc.account));
+            //}
 
-            List<cvBirForm> birForms = new List<cvBirForm>();
-            foreach (var item in cvList.EntryCV)
-            {
-                if (birForms.Any(x => x.ewt == item.ewt))
-                {
-                    int index = birForms.FindIndex(x => x.ewt == item.ewt);
-                    birForms[index].amount += item.debitGross;
-                }
-                else
-                {
-                    cvBirForm temp = new cvBirForm
-                    {
-                        amount = item.debitGross,
-                        ewt = item.ewt,
-                        vat = item.vat,
-                        vendor = cvList.vendor,
-                        approver = cvList.approver,
-                        date = cvList.createdDate
-                    };
+            //List<cvBirForm> birForms = new List<cvBirForm>();
+            //foreach (var item in cvList.EntryCV)
+            //{
+            //    if (birForms.Any(x => x.ewt == item.ewt))
+            //    {
+            //        int index = birForms.FindIndex(x => x.ewt == item.ewt);
+            //        birForms[index].amount += item.debitGross;
+            //    }
+            //    else
+            //    {
+            //        cvBirForm temp = new cvBirForm
+            //        {
+            //            amount = item.debitGross,
+            //            ewt = item.ewt,
+            //            vat = item.vat,
+            //            vendor = cvList.vendor,
+            //            approver = cvList.approver,
+            //            date = cvList.createdDate
+            //        };
 
-                    birForms.Add(temp);
-                }
-            }
-            cvList.birForms.AddRange(birForms);
+            //        birForms.Add(temp);
+            //    }
+            //}
+            //cvList.birForms.AddRange(birForms);
 
-            return View(viewLink, cvList);
+            return RedirectToAction(viewLink, "Home", new { entryID = entryID });
         }
 
         [OnlineUserCheck]
@@ -4118,7 +4144,7 @@ namespace ExpenseProcessingSystem.Controllers
 
                 if (inputItem.chkEwt)
                 {
-                    double _ewt = Mizuho.round(_service.GetEWTValue(inputItem.ewt),2) * 100;
+                    double _ewt = Mizuho.round(_service.GetEWTValue(inputItem.ewt),2);
                     double _ewtAmount = Mizuho.round((inputItem.debitGross / (1 + _vat)) * _ewt, 2);
                     if (_ewtList.Any(x => x.ewt == _ewt))
                     {
@@ -4129,7 +4155,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         _ewtList.Add(new ewtAmtList
                         {
-                            ewt = _ewt,
+                            ewt = _ewt * 100,
                             ewtAmt = _ewtAmount
                         }
                         );
@@ -4137,7 +4163,7 @@ namespace ExpenseProcessingSystem.Controllers
                     amountCredit -= _ewtAmount;
                     vvm.accountCredit[0].amount += inputItem.debitGross - _ewtAmount;
                     vvm.accountCredit.Add(new accountList {
-                        account = _ewt.ToString(),
+                        account = (_ewt * 100).ToString(),
                         amount = _ewtAmount
                     });
                 }

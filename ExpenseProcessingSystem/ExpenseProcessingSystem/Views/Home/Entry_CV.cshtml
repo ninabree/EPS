@@ -7,12 +7,12 @@
 
 <div class="tabContent">
     <input id="_screen" type="hidden" value="cv" />
-    @using (Html.BeginForm("AddNewCV", "Home", FormMethod.Post, new { @class = "validate-form" , @id = "inputForm"}))
+    @using (Html.BeginForm("AddNewCV", "Home", FormMethod.Post, new { @class = "validate-form", @id = "inputForm" }))
     {
-        @Html.HiddenFor(model=>model.maker);
+        @Html.HiddenFor(model => model.maker);
         <div id="tbl-lbl" class="flex-sb">
-            <div class="dis-inline-block w-20">Date: <p class="dis-inline-block w-70">@Html.EditorFor(m => m.expenseDate, new { htmlAttributes = new { @class = "input w-97", @type = "date", @readonly = "readonly", @id="entryDate" } })</p> </div>
-            <div class="dis-inline-block"><p class="dis-inline-block">@Html.TextBoxFor(model => model.expenseYear, new { @readonly = "true", @class = "input" })</p> - <p class="dis-inline-block">@Html.TextBoxFor(model => model.expenseId, new { @readonly = "true", @class = "input", @id="voucherNo" })</p></div>
+            <div class="dis-inline-block w-20">Date: <p class="dis-inline-block w-70">@Html.EditorFor(m => m.expenseDate, new { htmlAttributes = new { @class = "input w-97", @type = "date", @readonly = "readonly", @id = "entryDate" } })</p> </div>
+            <div class="dis-inline-block"><p class="dis-inline-block">@Html.TextBoxFor(model => model.expenseYear, new { @readonly = "true", @class = "input" })</p> - <p class="dis-inline-block">@Html.TextBoxFor(model => model.expenseId, new { @readonly = "true", @class = "input", @id = "voucherNo" })</p></div>
             <div class="dis-inline-block float-r">Check No : <p class="dis-inline-block">@Html.TextBoxFor(model => model.checkNo, new { @readonly = "true", @class = "input", @id = "checkNo" })</p></div>
         </div>
         <div id="tbl-lbl">
@@ -62,69 +62,69 @@
                 <tbody>
                     @for (int i = 0; i < Model.EntryCV.Count; i++)
                     {
-                    <tr id="item_@i">
-                        <td class="p-b-1 p-t-1">
-                            <div class="flex-sb">
-                                @Html.TextBoxFor(x => Model.EntryCV[i].GBaseRemarks, new { @class = "input100 w-80" })
-                                <div id="remark_@i">
-                                    <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
-                                    @for (int y = 0; y < Model.EntryCV[i].gBaseRemarksDetails.Count(); y++)
-                                    {
-                                        @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].docType);
-                                        @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].desc);
-                                        @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].invNo);
-                                        @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].amount);
-                                    }
+                        <tr id="item_@i">
+                            <td class="p-b-1 p-t-1">
+                                <div class="flex-sb">
+                                    @Html.TextBoxFor(x => Model.EntryCV[i].GBaseRemarks, new { @class = "input100 w-80" })
+                                    <div id="remark_@i">
+                                        <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
+                                        @for (int y = 0; y < Model.EntryCV[i].gBaseRemarksDetails.Count(); y++)
+                                        {
+                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].docType);
+                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].desc);
+                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].invNo);
+                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].amount);
+                                        }
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                        <td>
-                            @*@Html.DropDownListFor(x => Model.EntryCV[i].account, new SelectList(Model.systemValues.acc, "accId", "accName", Model.systemValues.acc.Where(x=> x.accId == Model.EntryCV[i].account)), new { @class = "input100 txtAcc" })*@
-                            <select id="@Html.IdFor(x => Model.EntryCV[i].account)" class="input100 txtAcc" name="@Html.NameFor(x => Model.EntryCV[i].account)">
-                                @foreach (var groepModel in Model.systemValues.acc)
-                                {
-                                    if (@groepModel.accId == @Model.EntryCV[0].account)
+                            </td>
+                            <td>
+                                @*@Html.DropDownListFor(x => Model.EntryCV[i].account, new SelectList(Model.systemValues.acc, "accId", "accName", Model.systemValues.acc.Where(x=> x.accId == Model.EntryCV[i].account)), new { @class = "input100 txtAcc" })*@
+                                <select id="@Html.IdFor(x => Model.EntryCV[i].account)" class="input100 txtAcc" name="@Html.NameFor(x => Model.EntryCV[i].account)">
+                                    @foreach (var groepModel in Model.systemValues.acc)
                                     {
-                                        <option value="@groepModel.accId" class="@groepModel.accCode" selected>@groepModel.accName</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@groepModel.accId" class="@groepModel.accCode">@groepModel.accName</option>
-                                    }
+                                        if (@groepModel.accId == @Model.EntryCV[0].account)
+                                        {
+                                            <option value="@groepModel.accId" class="@groepModel.accCode" selected>@groepModel.accName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@groepModel.accId" class="@groepModel.accCode">@groepModel.accName</option>
+                                        }
 
+                                    }
+                                </select>
+                            </td>
+                            <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].fbt)</td>
+                            <td>
+                                @Html.DropDownListFor(x => Model.EntryCV[i].dept, new SelectList(Model.systemValues.dept, "Value", "Text", Model.systemValues.dept.SelectedValue), new { @class = "input100 txtDept" })
+                            </td>
+                            <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].chkVat, new { @class = "chkVat comVar" })</td>
+                            <td>
+                                @Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.systemValues.vat.SelectedValue), new { @class = "input100 txtVat comVar", @disabled = "true" })
+                            </td>
+                            <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].chkEwt, new { @class = "chkEwt comVar" })</td>
+                            <td>
+                                @Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt comVar", @disabled = "true" })
+                            </td>
+                            <td>
+                                @Html.DropDownListFor(x => Model.EntryCV[i].ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100" })
+                            </td>
+                            <td>@Html.TextBoxFor(x => Model.EntryCV[i].debitGross, new { @class = "input100 txtGross", @readonly = "readonly" })</td>
+                            <td>@Html.TextBoxFor(x => Model.EntryCV[i].credEwt, new { @class = "input100 txtCredEwt", @readonly = "readonly" })</td>
+                            <td>@Html.TextBoxFor(x => Model.EntryCV[i].credCash, new { @class = "input100 txtCredCash", @readonly = "readonly" })</td>
+                            <td id="req_@i">
+                                <a class="reqBtn glyphicon glyphicon-list-alt"></a>
+                                @Html.HiddenFor(x => Model.EntryCV[i].month, new { @class = "txtAmorMonth" })
+                                @Html.HiddenFor(x => Model.EntryCV[i].day, new { @class = "txtAmorDay" })
+                                @Html.HiddenFor(x => Model.EntryCV[i].duration, new { @class = "txtAmorDuration" })
+                                @for (int y = 0; y < Model.EntryCV[i].amtDetails.Count(); y++)
+                                {
+                                    @Html.HiddenFor(x => Model.EntryCV[i].amtDetails[y].amtDate);
+                                    @Html.HiddenFor(x => Model.EntryCV[i].amtDetails[y].amtAmount);
                                 }
-                            </select>
-                        </td>
-                        <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].fbt)</td>
-                        <td>
-                            @Html.DropDownListFor(x => Model.EntryCV[i].dept, new SelectList(Model.systemValues.dept, "Value", "Text", Model.systemValues.dept.SelectedValue), new { @class = "input100 txtDept" })
-                        </td>
-                        <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].chkVat, new { @class = "chkVat comVar" })</td>
-                        <td>
-                            @Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.systemValues.vat.SelectedValue), new { @class = "input100 txtVat comVar", @disabled = "true" })
-                        </td>
-                        <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].chkEwt, new { @class = "chkEwt comVar" })</td>
-                        <td>
-                            @Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt comVar", @disabled = "true" })
-                        </td>
-                        <td>
-                            @Html.DropDownListFor(x => Model.EntryCV[i].ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100" })
-                        </td>
-                        <td>@Html.TextBoxFor(x => Model.EntryCV[i].debitGross, new { @class = "input100 txtGross", @readonly = "readonly" })</td>
-                        <td>@Html.TextBoxFor(x => Model.EntryCV[i].credEwt, new { @class = "input100 txtCredEwt", @readonly = "readonly" })</td>
-                        <td>@Html.TextBoxFor(x => Model.EntryCV[i].credCash, new { @class = "input100 txtCredCash", @readonly = "readonly" })</td>
-                        <td id="req_@i">
-                            <a class="reqBtn glyphicon glyphicon-list-alt"></a>
-                            @Html.HiddenFor(x => Model.EntryCV[i].month, new { @class = "txtAmorMonth" })
-                            @Html.HiddenFor(x => Model.EntryCV[i].day, new { @class = "txtAmorDay" })
-                            @Html.HiddenFor(x => Model.EntryCV[i].duration, new { @class = "txtAmorDuration" })
-                            @for (int y = 0; y < Model.EntryCV[i].amtDetails.Count(); y++)
-                            {
-                                @Html.HiddenFor(x => Model.EntryCV[i].amtDetails[y].amtDate);
-                                @Html.HiddenFor(x => Model.EntryCV[i].amtDetails[y].amtAmount);
-                            }
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
                     }
 
                     <tr>
@@ -151,11 +151,11 @@
             <div class="dis-inline-block"><label>Status: </label></div>
             <div class="dis-inline-block">@Html.TextBoxFor(x => x.status, new { @readonly = "true", @class = "input" })</div>
             <div class="dis-inline-block"><label>Approver:</label></div>
-            <div class="dis-inline-block">@Html.TextBoxFor(model => model.approver, new { @readonly = "true", @class = "input", @id="approver" })</div>
+            <div class="dis-inline-block">@Html.TextBoxFor(model => model.approver, new { @readonly = "true", @class = "input", @id = "approver" })</div>
             <div class="dis-inline-block"><label>Verifier:</label></div>
             <div class="dis-inline-block">
-                <p class="dis-inline-block">@Html.TextBoxFor(model => model.verifier_1, new { @readonly = "true", @class = "m-l-5 input", @id="verifier1" })</p>
-                <p class="dis-inline-block">@Html.TextBoxFor(model => model.verifier_2, new { @readonly = "true", @class = "m-l-5 input", @id="verifier2" })</p>
+                <p class="dis-inline-block">@Html.TextBoxFor(model => model.verifier_1, new { @readonly = "true", @class = "m-l-5 input", @id = "verifier1" })</p>
+                <p class="dis-inline-block">@Html.TextBoxFor(model => model.verifier_2, new { @readonly = "true", @class = "m-l-5 input", @id = "verifier2" })</p>
             </div>
         </div>
         <div id="entry-controls" class="m-b-10">
@@ -186,15 +186,18 @@
                 </div>
             </div>
         </div>
+        @Html.HiddenFor(x => Model.entryID);
+        @Html.HiddenFor(x => Model.createdDate);
+        @Html.HiddenFor(x => x.payee_type)
     }
     @*@if (Html.ViewData.ModelState.IsValid)
-    {
-        <p style="height: 100px; color: green"> VALID</p>
-    }
-    else
-    {
-        <p style="height: 100px; color: red"> INVALID</p>
-    }*@
+        {
+            <p style="height: 100px; color: green"> VALID</p>
+        }
+        else
+        {
+            <p style="height: 100px; color: red"> INVALID</p>
+        }*@
     <div id="ValidationSummary" style="display: none" class="">
         @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
     </div>
