@@ -76,11 +76,11 @@
                             </div>
                         </td>
                         <td>@Html.DropDownListFor(x => Model.EntryCV[i].account, new SelectList(Model.systemValues.acc, "accId", "accName"), new { @class = "input100 txtAcc", disabled = "disabled" })</td>
-                        <td style="text-align:center">@Html.EditorFor(x => Model.EntryCV[i].fbt, new { @disabled = "disabled" })</td>
+                        <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].fbt, new { @disabled = "true" })</td>
                         <td>@Html.DropDownListFor(x => Model.EntryCV[i].dept, new SelectList(Model.systemValues.dept, "Value", "Text", Model.systemValues.dept.SelectedValue), new { @class = "input100 selectDisabled", disabled = "disabled" })</td>
-                        <td style="text-align:center">@Html.EditorFor(x => Model.EntryCV[i].chkVat, new { @class = "chkVat" })</td>
+                        <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].chkVat, new { @class = "chkVat" , @disabled = "true" })</td>
                         <td>@Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.systemValues.vat.SelectedValue), new { @class = "input100 txtVat selectDisabled", disabled = "disabled" })</td>
-                        <td style="text-align:center">@Html.EditorFor(x => Model.EntryCV[i].chkEwt, new { @class = "chkEwt" })</td>
+                        <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].chkEwt, new { @class = "chkEwt" , @disabled = "true" })</td>
                         <td>@Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt selectDisabled", disabled = "disabled" })</td>
                         <td><input value="@Model.EntryCV[i].ccyAbbrev" class="input100" disabled /></td>
                         <td><input value="@Model.EntryCV[i].debitGross" class="input100" disabled /></td>
