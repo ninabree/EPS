@@ -26,6 +26,7 @@ using ExpenseProcessingSystem.ViewModels.Search_Filters.Home;
 using System.Text;
 using BIR_Form_Filler.Functions;
 using BIR_Form_Filler.Models;
+using ExpenseProcessingSystem.Models.Check;
 
 namespace ExpenseProcessingSystem.Controllers
 {
@@ -335,70 +336,6 @@ namespace ExpenseProcessingSystem.Controllers
             return View(model);
         }
 
-        public ClosingViewModel CloseLoad()
-        {
-            ClosingViewModel model = new ClosingViewModel();
-            model.date = DateTime.Now;
-            int index = 0;
-            do
-            {
-                CloseItems temp = new CloseItems();
-                temp.gBaseTrans = "111,222,333";
-                temp.expTrans = "CV-2019-100001";
-                temp.particulars = "THIS IS A PARTICULAR!";
-                temp.ccy = "PHP";
-                temp.amount = Math.Round(1000 + ((135 * index) / 2.6),2);
-                temp.transCount = 2;
-                temp.status = "Posted";
-                index++;
-                model.rbuItems.Add(temp);
-            } while (index != 10);
-            index = 0;
-            do
-            {
-                CloseItems temp = new CloseItems();
-                temp.gBaseTrans = "111,222,333";
-                temp.expTrans = "CV-2019-100001";
-                temp.particulars = "THIS IS A PARTICULAR!";
-                temp.ccy = "USD";
-                temp.amount = Math.Round(1000 + ((135 * index) / 2.6),2);
-                temp.transCount = 2;
-                temp.status = "Posted";
-                index++;
-                model.rbuItems.Add(temp);
-            } while (index != 10);
-
-            index = 0;
-            do
-            {
-                CloseItems temp = new CloseItems();
-                temp.gBaseTrans = "111,222,333";
-                temp.expTrans = "CV-2019-100001";
-                temp.particulars = "THIS IS A PARTICULAR!";
-                temp.ccy = "PHP";
-                temp.amount = Math.Round(1000 + ((135 * index) / 2.6),2);
-                temp.transCount = 2;
-                temp.status = "Posted";
-                index++;
-                model.fcduItems.Add(temp);
-            } while (index != 10);
-            index = 0;
-            do
-            {
-                CloseItems temp = new CloseItems();
-                temp.gBaseTrans = "111,222,333";
-                temp.expTrans = "CV-2019-100001";
-                temp.particulars = "THIS IS A PARTICULAR!";
-                temp.ccy = "USD";
-                temp.amount = Math.Round(1000 + ((135 * index) / 2.6),2);
-                temp.transCount = 2;
-                temp.status = "Posted";
-                index++;
-                model.fcduItems.Add(temp);
-            } while (index != 10);
-
-            return model;
-        }
         //----------End Closing Screen--------------
         [OnlineUserCheck]
         [ImportModelState]
@@ -1098,6 +1035,33 @@ namespace ExpenseProcessingSystem.Controllers
             return File(path, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", path.Substring(26));
         }
 
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
+        public IActionResult GenerateCheckFile(int ExpenseID)
+        {
+            ChequeData cd = new ChequeData();
+            string filepath = "";
+
+            var expModel = _service.getExpense(ExpenseID);
+
+            cd.Date = DateTime.Now;
+            cd.Payee = _service.getVendor(expModel.vendor).Vendor_Name;
+
+            foreach(var item in expModel.EntryCV)
+            {
+                cd.Amount += item.credCash;
+            }
+
+            cd.Signatory1 = _service.getUserFullName(expModel.approver_id);
+            cd.Signatory2 = "";
+            cd.Voucher = _service.getVoucherNo(1, expModel.expenseDate, int.Parse(expModel.expenseId));
+
+            Services.Check.GenerateCheck gc = new Services.Check.GenerateCheck();
+
+            filepath = gc.Generate(cd);
+
+            return File(filepath, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", filepath.Substring(26));
+        }
         //public IActionResult MizuhoLogo2Image()
         //{
         //    var dir = _env.WebRootPath;
@@ -1302,7 +1266,20 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             EntryCVViewModelList cvList = new EntryCVViewModelList();
-            int id = _service.addExpense_CV(EntryCVViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_CV);
+
+            int id = 0;
+            if (EntryCVViewModelList.entryID == 0)
+            {
+                id = _service.addExpense_CV(EntryCVViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_CV);
+            }
+            else
+            {
+                if (_service.deleteExpenseEntry(EntryCVViewModelList.entryID))
+                {
+                    id = _service.addExpense_CV(EntryCVViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_CV);
+                }
+            }
+
             ModelState.Clear();
             if (id > -1) {
                 cvList = _service.getExpense(id);
@@ -3928,39 +3905,78 @@ namespace ExpenseProcessingSystem.Controllers
                 return Json(false);
             }
         }
-        public IActionResult GenerateVoucher(EntryCVViewModelList model)
+
+        /// <summary>
+        /// Generate Voucher for CV Module
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns> View</returns>
+        [AcceptVerbs("GET")]
+        [HttpPost]
+        public IActionResult VoucherCV(EntryCVViewModelList model)
         {
+            VoucherViewModelList vvm = GenerateVoucherViewModelCV(model);
+
+            return View(GlobalSystemValues.VOUCHER_LAYOUT, vvm);
+        }
+
+        [AcceptVerbs("GET")]
+        public IActionResult VoucherViewCV(int ExpenseID)
+        {
+            EntryCVViewModelList model = _service.getExpense(ExpenseID);
+            VoucherViewModelList vvm = GenerateVoucherViewModelCV(model);
+
+            return View(GlobalSystemValues.VOUCHER_LAYOUT, vvm);
+        }
+
+        private VoucherViewModelList GenerateVoucherViewModelCV(EntryCVViewModelList model) {
             VoucherViewModelList vvm = new VoucherViewModelList();
 
+            XElement accXML = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
+            XElement xelem = XElement.Load("wwwroot/xml/ReportHeader.xml");
+
+            int officeID = int.Parse(accXML.Element("HOUSE_RENT").Value);
             //string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmsstt"); // ORIGINAL
             vvm.date = DateTime.Now.ToString("MM-dd-yyyy");
 
             vvm.headvm.Header_Logo = "";
-            vvm.headvm.Header_Name = "Mizuho Bank Ltd., Manila Branch";
-            vvm.headvm.Header_TIN = "004-669-467-000";
-            vvm.headvm.Header_Address = "25th Floor, The Zuellig Building, Makati Avenue corner Paseo de Roxas, Makati City";
+            vvm.headvm.Header_Name = xelem.Element("NAME").Value;
+            vvm.headvm.Header_TIN = xelem.Element("TIN").Value;
+            vvm.headvm.Header_Address = xelem.Element("ADDRESS").Value;
 
             vvm.maker = GetUserID();
-
-            vvm.voucherNo = DateTime.Now.Year.ToString("YY") + "-" + model.expenseId;
+            if(model.expenseId != null)
+                vvm.voucherNo = _service.getVoucherNo(1,model.expenseDate,int.Parse(model.expenseId));
             vvm.payee = _service.getVendorName(model.vendor, model.payee_type);
+
+            vvm.approver = model.approver;
+            vvm.verifier_1 = model.verifier_1;
+            vvm.verifier_2 = model.verifier_2;
+            vvm.isFbt = false;
 
             List<ewtAmtList> _ewtList = new List<ewtAmtList>();
 
-            double vat = 0.00;
-            double gross = 0.00;
+            vvm.accountCredit.Add(new accountList
+            {
+                account = "BDO MNL"
+            });
+
+            double tax_vat = 0.00;
+            double tax_gross = 0.00;
+            double amountGross = 0.00;
+            double amountCredit = 0.00;
 
             foreach (var inputItem in model.EntryCV)
             {
-                foreach(var particular in inputItem.gBaseRemarksDetails)
+                foreach (var particular in inputItem.gBaseRemarksDetails)
                 {
                     particulars temp = new particulars();
 
-                    if(vvm.particulars.FirstOrDefault(x=>x.documentType.Trim()==particular.docType.Trim() 
-                                                    && x.invoiceNo.Trim() == particular.invNo.Trim()) != null)
+                    if (vvm.particulars.Any(x => x.documentType.Trim() == particular.docType
+                                              && x.invoiceNo.Trim() == particular.invNo))
                     {
                         int index = vvm.particulars.FindIndex(x => x.documentType.Trim() == particular.docType.Trim()
-                                                    && x.invoiceNo.Trim() == particular.invNo.Trim());
+                            && x.invoiceNo.Trim() == particular.invNo.Trim());
 
                         vvm.particulars[index].amount += particular.amount;
                     }
@@ -3975,88 +3991,82 @@ namespace ExpenseProcessingSystem.Controllers
                     }
                 }
 
-                VoucherViewModel tempVoucher = new VoucherViewModel();
+                vvm.accountsDebit.Add(new accountList
+                {
+                    account = _service.GetAccountName(inputItem.account),
+                    amount = inputItem.debitGross,
+                    accountid = inputItem.account
+                });
 
-                gross += (inputItem.chkEwt || inputItem.chkVat) ? inputItem.debitGross : 0;
+                amountGross += inputItem.debitGross;
+                amountCredit += inputItem.debitGross;
+
+                double _vat = 0;
+
+                if (inputItem.chkEwt || inputItem.chkVat)
+                    tax_gross += inputItem.debitGross;
 
                 if (inputItem.chkVat)
                 {
-                    double _vat = _service.getVat(inputItem.vat);
-                    vat += (inputItem.debitGross / (1 + _vat)) * _vat;
+                    _vat = _service.getVat(inputItem.vat);
+                    tax_vat += Mizuho.round((inputItem.debitGross / (1 + _vat)) * _vat, 2);
                 }
 
                 if (inputItem.chkEwt)
                 {
-                    double _vat = _service.getVat(inputItem.vat);
-                    double _ewt = _service.GetEWTValue(inputItem.ewt);
-                    if (_ewtList.FirstOrDefault(x=>x.ewt == _ewt) != null)
+                    double _ewt = Mizuho.round(_service.GetEWTValue(inputItem.ewt),2) * 100;
+                    double _ewtAmount = Mizuho.round((inputItem.debitGross / (1 + _vat)) * _ewt, 2);
+                    if (_ewtList.Any(x => x.ewt == _ewt))
                     {
                         int index = _ewtList.FindIndex(x => x.ewt == _ewt);
-                        _ewtList[index].ewtAmt += (inputItem.debitGross / (1+_vat)) * _ewt;
+                        _ewtList[index].ewtAmt += _ewtAmount;
                     }
                     else
                     {
-                        ewtAmtList tempEwt = new ewtAmtList();
-                        tempEwt.ewt = _ewt;
-                        tempEwt.ewtAmt = (inputItem.debitGross / (1 + _vat)) * _ewt;
-                        _ewtList.Add(tempEwt);
+                        _ewtList.Add(new ewtAmtList
+                        {
+                            ewt = _ewt,
+                            ewtAmt = _ewtAmount
+                        }
+                        );
                     }
-
+                    amountCredit -= _ewtAmount;
+                    vvm.accountCredit[0].amount += inputItem.debitGross - _ewtAmount;
+                    vvm.accountCredit.Add(new accountList {
+                        account = _ewt.ToString(),
+                        amount = _ewtAmount
+                    });
                 }
-            }
 
-
-            //Return Preview
-            return View(GlobalSystemValues.VOUCHER_LAYOUT, vvm);
-        }
-
-        public static string NumberToWords(int number)
-        {
-            if (number == 0)
-                return "zero";
-
-            if (number < 0)
-                return "minus " + NumberToWords(Math.Abs(number));
-
-            string words = "";
-
-            if ((number / 1000000) > 0)
-            {
-                words += NumberToWords(number / 1000000) + " million ";
-                number %= 1000000;
-            }
-
-            if ((number / 1000) > 0)
-            {
-                words += NumberToWords(number / 1000) + " thousand ";
-                number %= 1000;
-            }
-
-            if ((number / 100) > 0)
-            {
-                words += NumberToWords(number / 100) + " hundred ";
-                number %= 100;
-            }
-
-            if (number > 0)
-            {
-                if (words != "")
-                    words += "and ";
-
-                var unitsMap = new[] { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen" };
-                var tensMap = new[] { "zero", "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety" };
-
-                if (number < 20)
-                    words += unitsMap[number];
-                else
+                if (inputItem.fbt)
                 {
-                    words += tensMap[number / 10];
-                    if ((number % 10) > 0)
-                        words += "-" + unitsMap[number % 10];
+                    vvm.isFbt = true;
+
+                    if(_service.getAccount(inputItem.account).Account_MasterID == officeID)
+                    {
+                        vvm.fbtAmount += Mizuho.round((((inputItem.debitGross * .50) /.65)*.35), 2);
+                    }
+                    else
+                    {
+                        vvm.fbtAmount += Mizuho.round(((inputItem.debitGross/.65)*.35), 2);
+                    }
                 }
             }
 
-            return words;
+            foreach (var item in _ewtList)
+                vvm.taxWithheld += item.ewtAmt;
+
+            vvm.amountString = ConvertToWord.ToWord(amountCredit);
+
+            vvm.vatAmtList.AddRange(_ewtList);
+            vvm.taxInfo_vat = tax_vat;
+            vvm.taxInfo_gross = tax_gross;
+            vvm.taxInfo_taxBase = tax_gross - tax_vat;
+            vvm.amountCredit = amountCredit;
+            vvm.amountGross = amountGross;
+
+            return vvm;
         }
+
     }
 }

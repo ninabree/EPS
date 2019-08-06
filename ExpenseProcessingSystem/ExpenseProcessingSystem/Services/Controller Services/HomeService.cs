@@ -7721,7 +7721,7 @@ namespace ExpenseProcessingSystem.Services
                     Expense_Type = expenseType,
                     Expense_Date = entryModel.expenseDate,
                     Expense_Payee = entryModel.vendor,
-                    Expense_Payee_Type = GlobalSystemValues.PAYEETYPE_VENDOR,
+                    Expense_Payee_Type = entryModel.payee_type,
                     Expense_Debit_Total = TotalDebit,
                     Expense_Credit_Total = credEwtTotal + credCashTotal,
                     Expense_Creator_ID = userId,
@@ -7733,6 +7733,7 @@ namespace ExpenseProcessingSystem.Services
                     Expense_CheckId = 1,
                     ExpenseEntryDetails = expenseDtls
                 };
+
 
                 _context.ExpenseEntry.Add(expenseEntry);
                 _context.SaveChanges();
@@ -7852,6 +7853,7 @@ namespace ExpenseProcessingSystem.Services
                 entryID = EntryDetails.e.Expense_ID,
                 expenseDate = EntryDetails.e.Expense_Date,
                 vendor = EntryDetails.e.Expense_Payee,
+                payee_type = EntryDetails.e.Expense_Payee_Type,
                 expenseYear = EntryDetails.e.Expense_Date.Year.ToString(),
                 expenseId = EntryDetails.e.Expense_Number.ToString().PadLeft(5, '0'),
                 checkNo = EntryDetails.e.Expense_CheckNo,
@@ -9112,7 +9114,7 @@ namespace ExpenseProcessingSystem.Services
                     string fbt = getFbtFormula(getAccount(item.account).Account_FBT_MasterID);
 
                     string equation = fbt.Replace("ExpenseAmount", item.debitGross.ToString());
-                    double fbtAmount = Math.Round(Convert.ToDouble(new DataTable().Compute(equation, null)), 2);
+                    double fbtAmount = Mizuho.round(Convert.ToDouble(new DataTable().Compute(equation, null)), 2);
                     Console.WriteLine(equation);
 
                     debit.account = getAccountByMasterID(int.Parse(xelemAcc.Element("D_FBT").Value)).Account_ID;
@@ -9553,7 +9555,7 @@ namespace ExpenseProcessingSystem.Services
                                     string fbt = getFbtFormula(getAccount(item.account).Account_FBT_MasterID);
 
                                     string equation = fbt.Replace("ExpenseAmount", item.debitGross.ToString());
-                                    double fbtAmount = Math.Round(Convert.ToDouble(new DataTable().Compute(equation, null)), 2);
+                                    double fbtAmount = Mizuho.round(Convert.ToDouble(new DataTable().Compute(equation, null)), 2);
                                     Console.WriteLine("-=-=-=-=-=->" + equation);
                                     entry.amount = fbtAmount;
 
@@ -9631,7 +9633,7 @@ namespace ExpenseProcessingSystem.Services
                         string fbt = getFbtFormula(getAccount(item.account).Account_FBT_MasterID);
 
                         string equation = fbt.Replace("ExpenseAmount", item.debitGross.ToString());
-                        double fbtAmount = Math.Round(Convert.ToDouble(new DataTable().Compute(equation, null)), 2);
+                        double fbtAmount = Mizuho.round(Convert.ToDouble(new DataTable().Compute(equation, null)), 2);
                         Console.WriteLine("-=-=-=-=-=->" + equation);
 
                         debit.account = getAccountByMasterID(int.Parse(xelemAcc.Element("D_FBT").Value)).Account_ID;
@@ -9787,7 +9789,7 @@ namespace ExpenseProcessingSystem.Services
             string fbt = getFbtFormula(getAccount(acc).Account_FBT_MasterID);
 
             string equation = fbt.Replace("ExpenseAmount", gross.ToString());
-            double fbtAmount = Math.Round(Convert.ToDouble(new DataTable().Compute(equation, null)), 2);
+            double fbtAmount = Mizuho.round(Convert.ToDouble(new DataTable().Compute(equation, null)), 2);
             Console.WriteLine("-=-=-=-=-=->" + equation);
 
             #region Get elements fron xml (ohr,rentDebit,expatDebit,localDebit,fbtCred)

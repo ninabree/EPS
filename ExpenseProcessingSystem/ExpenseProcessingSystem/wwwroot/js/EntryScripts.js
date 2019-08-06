@@ -33,9 +33,34 @@
             "date": date
         }
 
-        ajaxFormCall("/Home/GenerateVoucher").done(function (response) {
-            $("#iframePreview").contents().find('html').html(response);
-        });
+        var screen = $("#_screen").val();
+
+        var myform = document.getElementById("inputForm");
+        var data = new FormData(myform);
+
+        if (screen == "cv" || screen == "ddv") {
+
+            $.ajax({
+                type: 'POST',
+                url: "/Home/VoucherCV",
+                data: $("#inputForm").serialize(),
+                success: function (result) {
+                    $("#iframePreview").contents().find('html').html(result)
+                }
+            });
+        }
+
+        if (screen == "ddv") {
+
+            $.ajax({
+                type: 'POST',
+                url: "/Home/VoucherDDV",
+                data: $("#inputForm").serialize(),
+                success: function (result) {
+                    $("#iframePreview").contents().find('html').html(result)
+                }
+            });
+        }
     }
 
     $(".tabContent").keypress(
@@ -48,6 +73,12 @@
                 $canfocus.eq(index).focus();
             }
         });
+
+    $("#entry-controls").on("click", "#printVoucher", function (e) {
+        $("#iframePreview").get(0).contentWindow.print();
+        return false;
+    });
+
     $("table").on("change", "input.chkVat", function (e) {
         var pNode = $(this.parentNode)[0].parentNode;
 
@@ -302,7 +333,7 @@
         $("#grossTotal").val(grossTotal);
         $("#credEwtTotal").val(ewtSubTotal);
         $("#credCashTotal").val(cashSubTotal);
-        $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
+        $("#credTotal").val(roundNumber(Number(ewtSubTotal + cashSubTotal),2));
     }
 
     function ajaxCall(url, data) {
