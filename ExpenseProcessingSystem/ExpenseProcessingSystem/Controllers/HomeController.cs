@@ -4032,11 +4032,11 @@ namespace ExpenseProcessingSystem.Controllers
             }//For DDV Entry
             else if(expType == GlobalSystemValues.TYPE_DDV)
             {
-
+                return Json(_service.CheckRemainingBudgetOfDD(entryID));
             }//For NC Entry
             else if(expType == GlobalSystemValues.TYPE_NC)
             {
-
+                return Json(_service.CheckRemainingBudgetOfNC(entryID));
             }
 
                 return Json(new List<string>());

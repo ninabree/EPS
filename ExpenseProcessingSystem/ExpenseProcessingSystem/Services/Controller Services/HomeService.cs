@@ -11768,17 +11768,250 @@ namespace ExpenseProcessingSystem.Services
             //Return: List<string> result
             return GetRemainingBudgetCommon(dict);
         }
-
-        //retrieve debit accounts and Amount from CV, PC SS past transactions
+        //retrieve debit accounts and Amount from Liquidation past transactions
         public List<string> CheckRemainingBudgetOfLiquidation(int entryID)
         {
             Dictionary<int, double> dict = new Dictionary<int, double>();
+
+            //Get List of accounts and total amount.(same account will be sum up to one record)
+            var EntryDetails = (from e
+                                in _context.ExpenseEntry
+                                where e.Expense_ID == entryID
+                                select new
+                                {
+                                    e,
+                                    ExpenseEntryDetails = from d
+                                                            in _context.ExpenseEntryDetails
+                                                            where d.ExpenseEntryModel.Expense_ID == e.Expense_ID
+                                                            select new
+                                                            {
+                                                                d,
+                                                                LiquidationInterEntity = from i
+                                                                                        in _context.LiquidationInterEntity
+                                                                                        where i.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
+                                                                                        select i
+                                                            }
+                                }).FirstOrDefault();
+
+            foreach(var i in EntryDetails.ExpenseEntryDetails)
+            {
+                foreach(var j in i.LiquidationInterEntity)
+                {
+                    if(j.Liq_DebitCred_1_1 == "D")
+                    {
+                        if (dict.ContainsKey(j.Liq_AccountID_1_1))
+                        {
+                            dict[j.Liq_AccountID_1_1] = dict[j.Liq_AccountID_1_1] + j.Liq_Amount_1_1;
+                        }
+                        else
+                        {
+                            dict.Add(j.Liq_AccountID_1_1, j.Liq_Amount_1_1);
+                        }
+                    }
+                    if (j.Liq_DebitCred_1_2 == "D")
+                    {
+                        if (dict.ContainsKey(j.Liq_AccountID_1_2))
+                        {
+                            dict[j.Liq_AccountID_1_2] = dict[j.Liq_AccountID_1_2] + j.Liq_Amount_1_2;
+                        }
+                        else
+                        {
+                            dict.Add(j.Liq_AccountID_1_2, j.Liq_Amount_1_2);
+                        }
+                    }
+                    if (j.Liq_DebitCred_2_1 == "D")
+                    {
+                        if (dict.ContainsKey(j.Liq_AccountID_2_1))
+                        {
+                            dict[j.Liq_AccountID_2_1] = dict[j.Liq_AccountID_2_1] + j.Liq_Amount_2_1;
+                        }
+                        else
+                        {
+                            dict.Add(j.Liq_AccountID_2_1, j.Liq_Amount_2_1);
+                        }
+                    }
+                    if (j.Liq_DebitCred_2_2 == "D")
+                    {
+                        if (dict.ContainsKey(j.Liq_AccountID_2_2))
+                        {
+                            dict[j.Liq_AccountID_2_2] = dict[j.Liq_AccountID_2_2] + j.Liq_Amount_2_2;
+                        }
+                        else
+                        {
+                            dict.Add(j.Liq_AccountID_2_2, j.Liq_Amount_2_2);
+                        }
+                    }
+                    if (j.Liq_DebitCred_3_1 == "D")
+                    {
+                        if (dict.ContainsKey(j.Liq_AccountID_3_1))
+                        {
+                            dict[j.Liq_AccountID_3_1] = dict[j.Liq_AccountID_3_1] + j.Liq_Amount_3_1;
+                        }
+                        else
+                        {
+                            dict.Add(j.Liq_AccountID_3_1, j.Liq_Amount_3_1);
+                        }
+                    }
+                    if (j.Liq_DebitCred_3_2 == "D")
+                    {
+                        if (dict.ContainsKey(j.Liq_AccountID_3_2))
+                        {
+                            dict[j.Liq_AccountID_3_2] = dict[j.Liq_AccountID_3_2] + j.Liq_Amount_3_2;
+                        }
+                        else
+                        {
+                            dict.Add(j.Liq_AccountID_3_2, j.Liq_Amount_3_2);
+                        }
+                    }
+                }
+            }
 
             //Past the dictionary to check the remaining budget of each accounts.
             //Return: List<string> result
             return GetRemainingBudgetCommon(dict);
         }
+        //retrieve debit accounts and Amount from DD past transactions
+        public List<string> CheckRemainingBudgetOfDD(int entryID)
+        {
+            Dictionary<int, double> dict = new Dictionary<int, double>();
 
+            //Get List of accounts and total amount.(same account will be sum up to one record)
+            var EntryDetails = (from e
+                                in _context.ExpenseEntry
+                                where e.Expense_ID == entryID
+                                select new
+                                {
+                                    e,
+                                    ExpenseEntryDetails = from d
+                                                          in _context.ExpenseEntryDetails
+                                                          where d.ExpenseEntryModel.Expense_ID == e.Expense_ID
+                                                          select new
+                                                          {
+                                                              d,
+                                                              ExpenseEntryInterEntity = from a
+                                                                                          in _context.ExpenseEntryInterEntity
+                                                                                        where a.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
+                                                                                        select new
+                                                                                        {
+                                                                                            a,
+                                                                                            ExpenseEntryInterEntityParticular = from p
+                                                                                                                                in _context.ExpenseEntryInterEntityParticular
+                                                                                                                                where p.ExpenseEntryInterEntityModel.ExpDtl_DDVInter_ID == a.ExpDtl_DDVInter_ID
+                                                                                                                                select new
+                                                                                                                                {
+                                                                                                                                    p,
+                                                                                                                                    ExpenseEntryEntityAccounts = from acc
+                                                                                                                                                                 in _context.ExpenseEntryInterEntityAccs
+                                                                                                                                                                 where acc.ExpenseEntryInterEntityParticular.InterPart_ID == p.InterPart_ID
+                                                                                                                                                                 select acc
+                                                                                                                                }
+                                                                                        }
+                                                          }
+                                }).FirstOrDefault();
+
+            foreach (var dtl in EntryDetails.ExpenseEntryDetails)
+            {
+                if(dtl.d.ExpDtl_Inter_Entity == false)
+                {
+                    if (dict.ContainsKey(dtl.d.ExpDtl_Account))
+                    {
+                        dict[dtl.d.ExpDtl_Account] = dict[dtl.d.ExpDtl_Account] + dtl.d.ExpDtl_Debit;
+                    }
+                    else
+                    {
+                        dict.Add(dtl.d.ExpDtl_Account, dtl.d.ExpDtl_Debit);
+                    }
+                }
+                else
+                {
+                    foreach (var i in dtl.ExpenseEntryInterEntity)
+                    {
+                        foreach(var j in i.ExpenseEntryInterEntityParticular)
+                        {
+                            foreach(var k in j.ExpenseEntryEntityAccounts)
+                            {
+                                if(k.InterAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
+                                {
+                                    if (dict.ContainsKey(k.InterAcc_Acc_ID))
+                                    {
+                                        dict[k.InterAcc_Acc_ID] = dict[k.InterAcc_Acc_ID] + k.InterAcc_Amount;
+                                    }
+                                    else
+                                    {
+                                        dict.Add(k.InterAcc_Acc_ID, k.InterAcc_Amount);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                
+            }
+
+            //Past the dictionary to check the remaining budget of each accounts.
+            //Return: List<string> result
+            return GetRemainingBudgetCommon(dict);
+        }
+        //retrieve debit accounts and Amount from NC past transactions
+        public List<string> CheckRemainingBudgetOfNC(int entryID)
+        {
+            Dictionary<int, double> dict = new Dictionary<int, double>();
+
+            //Get List of accounts and total amount.(same account will be sum up to one record)
+            var EntryDetails = (from e
+                                in _context.ExpenseEntry
+                                where e.Expense_ID == entryID
+                                select new
+                                {
+                                    e,
+                                    ExpenseEntryNC = from d
+                                                          in _context.ExpenseEntryNonCash
+                                                     where d.ExpenseEntryModel.Expense_ID == e.Expense_ID
+                                                     select new
+                                                     {
+                                                         d,
+                                                         ExpenseEntryNCDtls = from g
+                                                                                 in _context.ExpenseEntryNonCashDetails
+                                                                              where g.ExpenseEntryNCModel.ExpNC_ID == d.ExpNC_ID
+                                                                              select new
+                                                                              {
+                                                                                  g,
+                                                                                  ExpenseEntryNCDtlAccs = from a
+                                                                                                           in _context.ExpenseEntryNonCashDetailAccounts
+                                                                                                          where a.ExpenseEntryNCDtlModel.ExpNCDtl_ID == g.ExpNCDtl_ID
+                                                                                                          orderby a.ExpNCDtlAcc_Type_ID
+                                                                                                          select a
+                                                                              }
+
+                                                     }
+                                }).FirstOrDefault();
+
+
+            foreach (var nc in EntryDetails.ExpenseEntryNC)
+            {
+                foreach(var i in nc.ExpenseEntryNCDtls)
+                {
+                    foreach(var j in i.ExpenseEntryNCDtlAccs)
+                    {
+                        if(j.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
+                        {
+                            if (dict.ContainsKey(j.ExpNCDtlAcc_Acc_ID))
+                            {
+                                dict[j.ExpNCDtlAcc_Acc_ID] = dict[j.ExpNCDtlAcc_Acc_ID] + j.ExpNCDtlAcc_Amount;
+                            }
+                            else
+                            {
+                                dict.Add(j.ExpNCDtlAcc_Acc_ID, j.ExpNCDtlAcc_Amount);
+                            }
+                        }
+                    }
+                }
+            }
+
+            //Past the dictionary to check the remaining budget of each accounts.
+            //Return: List<string> result
+            return GetRemainingBudgetCommon(dict);
+        }
         public List<string> GetRemainingBudgetCommon(Dictionary<int, double> dict)
         {
             List<string> result = new List<string>();
@@ -11801,14 +12034,14 @@ namespace ExpenseProcessingSystem.Services
                                                         && x.Budget_IsActive == true && x.Budget_isDeleted == false).FirstOrDefault();
                 if(budget == null)
                 {
-                    result.Add(acc.Account_No + ":" + acc.Account_Name);
-                    result.Add("->No budget registered");
+                    result.Add("->" + acc.Account_No + ":" + acc.Account_Name);
+                    result.Add("No budget registered");
                     continue;
                 }
                 if(budget.Budget_Amount == 0)
                 {
-                    result.Add(acc.Account_No + ":" + acc.Account_Name);
-                    result.Add("->Budget amount is 0");
+                    result.Add("->" + acc.Account_No + ":" + acc.Account_Name);
+                    result.Add("Budget amount is 0");
                     continue;
                 }
 
@@ -11874,8 +12107,9 @@ namespace ExpenseProcessingSystem.Services
                 }
                 if (budget.Budget_Amount < (totalExpenses + i.Value))
                 {
-                    result.Add(acc.Account_No + ":" + acc.Account_Name);
-                    result.Add("->Budget was exceeded. Remaining: " + getCurrencyByMasterID(acc.Account_Currency_MasterID).Curr_CCY_ABBR + (budget.Budget_Amount - totalExpenses));
+                    result.Add("->" + acc.Account_No + ":" + acc.Account_Name);
+                    result.Add("Available budget range exceeded.");
+                    result.Add("Remaining: " + getCurrencyByMasterID(acc.Account_Currency_MasterID).Curr_CCY_ABBR + (budget.Budget_Amount - totalExpenses));
                 }
             }
 

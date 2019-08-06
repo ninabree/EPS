@@ -45,6 +45,8 @@ function dragConfirmElement(elmnt) {
 $('.btnCloseConfirm').click(function () {
     $('#divConfirmWindow').fadeOut(70);
     $('#specialMsgUL').hide();
+    $('#specialMsgUL').empty();
+    $('#specialMsgUL').append($('<li>Warning:<li/>'));
     $('#divConfirmcss').css('top', '');
     $('#divConfirmcss').css('left', '');
 });
