@@ -1,7 +1,7 @@
 ﻿//Make the DIV element draggagle:
-dragElement(document.getElementById("divcss"));
+dragConfirmElement(document.getElementById("divConfirmcss"));
 
-function dragElement(elmnt) {
+function dragConfirmElement(elmnt) {
     var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
     if (document.getElementById(elmnt.id + "header")) {
         /* if present, the header is where you move the DIV from:*/
@@ -42,8 +42,13 @@ function dragElement(elmnt) {
     }
 }
 
-$('#btnAlertClose').click(function () {
-    $('#divcss').css('display', 'none');
-    $('#divcss').css('top', '');
-    $('#divcss').css('left', '');
+$('.btnCloseConfirm').click(function () {
+    $('#divConfirmWindow').fadeOut(70);
+    $('#specialMsgUL').hide();
+    $('#divConfirmcss').css('top', '');
+    $('#divConfirmcss').css('left', '');
+});
+
+$('#btnProceedConfirm').click(function () {
+    $('form').submit();
 });

@@ -153,7 +153,7 @@
         <div id="entry-controls" class="m-b-10">
             <div class="flex-sb">
                 <div>
-                    <div class="dis-inline-block tbl-btn"><button>Save</button></div>
+                    <div class="dis-inline-block tbl-btn"><button class="btnEntryAction" name="command" value="Save">Save</button></div>
                     <div class="dis-inline-block tbl-btn"><button disabled>Delete</button></div>
                     <div class="dis-inline-block tbl-btn"><button disabled>Modify</button></div>
                 </div>
@@ -177,6 +177,7 @@
         @Html.HiddenFor(x => Model.entryID)
         @Html.HiddenFor(x => Model.createdDate)
         @Html.HiddenFor(x => x.payee_type)
+        <input type="hidden" name="command" id="btnID" />
     }
     <input type="hidden" id="phpID" />
     <input type="hidden" id="phpAbbrv" />

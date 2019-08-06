@@ -2181,12 +2181,15 @@ namespace ExpenseProcessingSystem.Controllers
             for (int i = 1; i <= 5; i++)
             {
                 acc = _service.getAccountByMasterID(int.Parse(xelem.Element("D_SS" + i).Value));
-                acclist.Add(new accDetails
+                if(acc != null)
                 {
-                    accId = acc.Account_ID,
-                    accName = acc.Account_Name,
-                    accCode = acc.Account_Code
-                });
+                    acclist.Add(new accDetails
+                    {
+                        accId = acc.Account_ID,
+                        accName = acc.Account_Name,
+                        accCode = acc.Account_Code
+                    });
+                }
             }
             ssList.systemValues.acc = acclist;
 
@@ -4008,6 +4011,33 @@ namespace ExpenseProcessingSystem.Controllers
 
             //Return Preview
             return View(GlobalSystemValues.VOUCHER_LAYOUT, vvm);
+        }
+        [AcceptVerbs("GET")]
+        public JsonResult CheckRemainingBudget(int entryID)
+        {
+            int expType = _service.GetSingleExpenseRec(entryID).Expense_Type;
+
+            //For CV, PC, SS Entry
+            if(expType == GlobalSystemValues.TYPE_CV || expType == GlobalSystemValues.TYPE_PC || expType == GlobalSystemValues.TYPE_SS)
+            {
+                //For Liquidation Entry
+                if(expType == GlobalSystemValues.TYPE_SS && _service.getLiquidationExistence(entryID) > 0)
+                {
+                    return Json(_service.CheckRemainingBudgetOfLiquidation(entryID));
+                }
+                return Json(_service.CheckRemainingBudgetOfCVPCSS(entryID));
+
+            }//For DDV Entry
+            else if(expType == GlobalSystemValues.TYPE_DDV)
+            {
+
+            }//For NC Entry
+            else if(expType == GlobalSystemValues.TYPE_NC)
+            {
+
+            }
+
+                return Json(new List<string>());
         }
 
         public static string NumberToWords(int number)

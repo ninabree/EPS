@@ -114,4 +114,53 @@
     <Folder Include="wwwroot\uploads\Temp\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\lib\bootbox\bootbox.all.js" />
+    <None Include="wwwroot\lib\bootbox\bootbox.all.min.js" />
+    <None Include="wwwroot\lib\bootbox\bootbox.js" />
+    <None Include="wwwroot\lib\bootbox\bootbox.locales.js" />
+    <None Include="wwwroot\lib\bootbox\bootbox.locales.min.js" />
+    <None Include="wwwroot\lib\bootbox\bootbox.min.js" />
+    <None Include="wwwroot\lib\bootbox\locales\ar.js" />
+    <None Include="wwwroot\lib\bootbox\locales\az.js" />
+    <None Include="wwwroot\lib\bootbox\locales\bg_BG.js" />
+    <None Include="wwwroot\lib\bootbox\locales\cs.js" />
+    <None Include="wwwroot\lib\bootbox\locales\da.js" />
+    <None Include="wwwroot\lib\bootbox\locales\de.js" />
+    <None Include="wwwroot\lib\bootbox\locales\el.js" />
+    <None Include="wwwroot\lib\bootbox\locales\en.js" />
+    <None Include="wwwroot\lib\bootbox\locales\es.js" />
+    <None Include="wwwroot\lib\bootbox\locales\et.js" />
+    <None Include="wwwroot\lib\bootbox\locales\eu.js" />
+    <None Include="wwwroot\lib\bootbox\locales\fa.js" />
+    <None Include="wwwroot\lib\bootbox\locales\fi.js" />
+    <None Include="wwwroot\lib\bootbox\locales\fr.js" />
+    <None Include="wwwroot\lib\bootbox\locales\he.js" />
+    <None Include="wwwroot\lib\bootbox\locales\hr.js" />
+    <None Include="wwwroot\lib\bootbox\locales\hu.js" />
+    <None Include="wwwroot\lib\bootbox\locales\id.js" />
+    <None Include="wwwroot\lib\bootbox\locales\it.js" />
+    <None Include="wwwroot\lib\bootbox\locales\ja.js" />
+    <None Include="wwwroot\lib\bootbox\locales\ko.js" />
+    <None Include="wwwroot\lib\bootbox\locales\lt.js" />
+    <None Include="wwwroot\lib\bootbox\locales\lv.js" />
+    <None Include="wwwroot\lib\bootbox\locales\nl.js" />
+    <None Include="wwwroot\lib\bootbox\locales\no.js" />
+    <None Include="wwwroot\lib\bootbox\locales\pl.js" />
+    <None Include="wwwroot\lib\bootbox\locales\pt-br.js" />
+    <None Include="wwwroot\lib\bootbox\locales\pt.js" />
+    <None Include="wwwroot\lib\bootbox\locales\ru.js" />
+    <None Include="wwwroot\lib\bootbox\locales\sk.js" />
+    <None Include="wwwroot\lib\bootbox\locales\sl.js" />
+    <None Include="wwwroot\lib\bootbox\locales\sq.js" />
+    <None Include="wwwroot\lib\bootbox\locales\sv.js" />
+    <None Include="wwwroot\lib\bootbox\locales\sw.js" />
+    <None Include="wwwroot\lib\bootbox\locales\ta.js" />
+    <None Include="wwwroot\lib\bootbox\locales\th.js" />
+    <None Include="wwwroot\lib\bootbox\locales\tr.js" />
+    <None Include="wwwroot\lib\bootbox\locales\uk.js" />
+    <None Include="wwwroot\lib\bootbox\locales\zh_CN.js" />
+    <None Include="wwwroot\lib\bootbox\locales\zh_TW.js" />
+  </ItemGroup>
+
 </Project>

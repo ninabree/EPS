@@ -6827,6 +6827,8 @@ namespace ExpenseProcessingSystem.Services
             List<HomeReportTransactionListViewModel> finalList = list1.Concat(list2).OrderBy(x => x.TransTL_ID).ToList();
 
             double balance = (selectedBudget != null) ? selectedBudget.Budget_Amount : 0;
+            var signInfo = GetSignatoryInfo(signatory.BCS_ID);
+            string signName = (signInfo != null) ? signInfo.BCS_Name : "";
 
             foreach (var i in finalList.Where(x => StartFiscal.Date <= ConvGbDateToDateTime(x.Trans_Value_Date)
                                                 && ConvGbDateToDateTime(x.Trans_Value_Date) <= endDT.Date))
@@ -6852,7 +6854,7 @@ namespace ExpenseProcessingSystem.Services
                         CRAmount = (i.Trans_DebitCredit1_1 == "C") ? Double.Parse(i.Trans_Amount1_1) : 0,
                         BudgetAmount = 0,
                         Balance = balance,
-                        DHName = (signatory != null) ? getBCSName(signatory.BCS_ID) : "",
+                        DHName = signName,
                         ApprvName = i.ESAMS_ApprvName,
                         MakerName = i.ESAMS_MakerName
                     });
@@ -6879,7 +6881,7 @@ namespace ExpenseProcessingSystem.Services
                         CRAmount = (i.Trans_DebitCredit1_2 == "C") ? Double.Parse(i.Trans_Amount1_2) : 0,
                         BudgetAmount = 0,
                         Balance = balance,
-                        DHName = (signatory != null) ? getBCSName(signatory.BCS_ID) : "",
+                        DHName = signName,
                         ApprvName = i.ESAMS_ApprvName,
                         MakerName = i.ESAMS_MakerName
                     });
@@ -6906,7 +6908,7 @@ namespace ExpenseProcessingSystem.Services
                         CRAmount = (i.Trans_DebitCredit2_1 == "C") ? Double.Parse(i.Trans_Amount2_1) : 0,
                         BudgetAmount = 0,
                         Balance = balance,
-                        DHName = (signatory != null) ? getBCSName(signatory.BCS_ID) : "",
+                        DHName = signName,
                         ApprvName = i.ESAMS_ApprvName,
                         MakerName = i.ESAMS_MakerName
                     });
@@ -6933,7 +6935,7 @@ namespace ExpenseProcessingSystem.Services
                         CRAmount = (i.Trans_DebitCredit2_2 == "C") ? Double.Parse(i.Trans_Amount2_2) : 0,
                         BudgetAmount = 0,
                         Balance = balance,
-                        DHName = (signatory != null) ? getBCSName(signatory.BCS_ID) : "",
+                        DHName = signName,
                         ApprvName = i.ESAMS_ApprvName,
                         MakerName = i.ESAMS_MakerName
                     });
@@ -6960,7 +6962,7 @@ namespace ExpenseProcessingSystem.Services
                         CRAmount = (i.Trans_DebitCredit3_1 == "C") ? Double.Parse(i.Trans_Amount3_1) : 0,
                         BudgetAmount = 0,
                         Balance = balance,
-                        DHName = (signatory != null) ? getBCSName(signatory.BCS_ID) : "",
+                        DHName = signName,
                         ApprvName = i.ESAMS_ApprvName,
                         MakerName = i.ESAMS_MakerName
                     });
@@ -6987,7 +6989,7 @@ namespace ExpenseProcessingSystem.Services
                         CRAmount = (i.Trans_DebitCredit3_2 == "C") ? Double.Parse(i.Trans_Amount3_2) : 0,
                         BudgetAmount = 0,
                         Balance = balance,
-                        DHName = (signatory != null) ? getBCSName(signatory.BCS_ID) : "",
+                        DHName = signName,
                         ApprvName = i.ESAMS_ApprvName,
                         MakerName = i.ESAMS_MakerName
                     });
@@ -7014,7 +7016,7 @@ namespace ExpenseProcessingSystem.Services
                         CRAmount = (i.Trans_DebitCredit4_1 == "C") ? Double.Parse(i.Trans_Amount4_1) : 0,
                         BudgetAmount = 0,
                         Balance = balance,
-                        DHName = (signatory != null) ? getBCSName(signatory.BCS_ID) : "",
+                        DHName = signName,
                         ApprvName = i.ESAMS_ApprvName,
                         MakerName = i.ESAMS_MakerName
                     });
@@ -7041,7 +7043,7 @@ namespace ExpenseProcessingSystem.Services
                         CRAmount = (i.Trans_DebitCredit4_2 == "C") ? Double.Parse(i.Trans_Amount4_2) : 0,
                         BudgetAmount = 0,
                         Balance = balance,
-                        DHName = (signatory != null) ? getBCSName(signatory.BCS_ID) : "",
+                        DHName = signName,
                         ApprvName = i.ESAMS_ApprvName,
                         MakerName = i.ESAMS_MakerName
                     });
@@ -7445,9 +7447,9 @@ namespace ExpenseProcessingSystem.Services
 
         public DateTime ConvGbDateToDateTime(string date)
         {
-            int month = int.Parse(date.Substring(0, 2));
-            int day = int.Parse(date.Substring(2, 2));
-            int year = int.Parse(date.Substring(4, 2)) + 2000;
+            string month = date.Substring(0, 2);
+            string day = date.Substring(2, 2);
+            string year = (int.Parse(date.Substring(4, 2)) + 2000).ToString();
 
             return DateTime.ParseExact(month + "-" + day + "-" + year, "M-dd-yyyy", CultureInfo.InvariantCulture);
         }
@@ -7537,16 +7539,16 @@ namespace ExpenseProcessingSystem.Services
         }
         public IEnumerable<DMBCSViewModel> PopulateSignatoryList()
         {
-            return _context.DMBCS.Where(x => x.BCS_isActive == true && x.BCS_isDeleted == false).Join(_context.DMEmp, b => b.BCS_User_ID,
-                e => e.Emp_MasterID, (b, e) => new DMBCSViewModel
-                { BCS_Name = e.Emp_Name }).OrderBy(x => x.BCS_Name).ToList();
+            return _context.DMBCS.Where(x => x.BCS_isActive == true && x.BCS_isDeleted == false).Join(_context.User, b => b.BCS_User_ID,
+                e => e.User_ID, (b, e) => new DMBCSViewModel
+                {BCS_ID = b.BCS_ID, BCS_Name = e.User_LName + ", " + e.User_FName }).OrderBy(x => x.BCS_Name).ToList();
         }
 
         public DMBCSViewModel GetSignatoryInfo(int id)
         {
-            return _context.DMBCS.Where(x => x.BCS_ID == id).Join(_context.DMEmp, b=> b.BCS_User_ID,
-                e=> e.Emp_MasterID, (b,e) => new DMBCSViewModel
-                {  BCS_Position= b.BCS_Position, BCS_Name = e.Emp_Name }).FirstOrDefault();
+            return _context.DMBCS.Where(x => x.BCS_ID == id).Join(_context.User, b=> b.BCS_User_ID,
+                e=> e.User_ID, (b,e) => new DMBCSViewModel
+                {  BCS_Position= b.BCS_Position, BCS_Name = e.User_LName + ", " + e.User_FName }).FirstOrDefault();
         }
 
         // [Entry Petty Cash Voucher]
@@ -11703,7 +11705,6 @@ namespace ExpenseProcessingSystem.Services
                 return false;
             }
         }
-
         public bool UpdateCDDPrintingStatus(int entryID)
         {
             var cddStatus = _context.PrintStatus.Where(x => x.PS_EntryID == entryID).ToList();
@@ -11719,6 +11720,161 @@ namespace ExpenseProcessingSystem.Services
                 return true;
             }
             return false;
+        }
+        //Get single expense record
+        public ExpenseEntryModel GetSingleExpenseRec(int entryID)
+        {
+            return _context.ExpenseEntry.Where(x => x.Expense_ID == entryID).FirstOrDefault();
+        }
+        //retrieve debit accounts and Amount from CV, PC SS past transactions
+        public List<string> CheckRemainingBudgetOfCVPCSS(int entryID)
+        {
+            Dictionary<int, double> dict = new Dictionary<int, double>();
+
+            //Get List of accounts and total amount.(same account will be sum up to one record)
+            var EntryDetails = (from e
+                                in _context.ExpenseEntry
+                                where e.Expense_ID == entryID
+                                select new
+                                {
+                                    e,
+                                    ExpenseEntryDetails = from d
+                                                          in _context.ExpenseEntryDetails
+                                                          where d.ExpenseEntryModel.Expense_ID == e.Expense_ID
+                                                          select new
+                                                          {
+                                                              d,
+                                                          }
+                                }).FirstOrDefault();
+
+            foreach (var dtl in EntryDetails.ExpenseEntryDetails)
+            {
+                if (dict.ContainsKey(dtl.d.ExpDtl_Account))
+                {
+                    dict[dtl.d.ExpDtl_Account] = dict[dtl.d.ExpDtl_Account] + dtl.d.ExpDtl_Debit;
+                }
+                else
+                {
+                    dict.Add(dtl.d.ExpDtl_Account, dtl.d.ExpDtl_Debit);
+                }
+            }
+
+            //Past the dictionary to check the remaining budget of each accounts.
+            //Return: List<string> result
+            return GetRemainingBudgetCommon(dict);
+        }
+
+        //retrieve debit accounts and Amount from CV, PC SS past transactions
+        public List<string> CheckRemainingBudgetOfLiquidation(int entryID)
+        {
+            Dictionary<int, double> dict = new Dictionary<int, double>();
+
+            //Past the dictionary to check the remaining budget of each accounts.
+            //Return: List<string> result
+            return GetRemainingBudgetCommon(dict);
+        }
+
+        public List<string> GetRemainingBudgetCommon(Dictionary<int, double> dict)
+        {
+            List<string> result = new List<string>();
+
+            DateTime currFiscalStart = GetStartOfFiscal(DateTime.Now.Month, DateTime.Now.Year, true);
+            var expenses = _context.GOExpressHist.Where(x => currFiscalStart.Date <= ConvGbDateToDateTime(x.GOExpHist_ValueDate).Date).ToList();
+
+            foreach(var i in dict)
+            {
+                DMAccountModel acc = _context.DMAccount.Where(x => x.Account_ID == (int)i.Key).FirstOrDefault();
+                string accNumber = acc.Account_No.Replace("-", "");
+                string accNo = accNumber.Substring(accNumber.Length - 6, 6);
+                string accType = accNumber.Substring(0, 3);
+                double totalExpenses = 0;
+
+                if (acc.Account_Fund == false)
+                    continue;
+
+                BudgetModel budget = _context.Budget.Where(x => x.Budget_Account_MasterID == acc.Account_MasterID
+                                                        && x.Budget_IsActive == true && x.Budget_isDeleted == false).FirstOrDefault();
+                if(budget == null)
+                {
+                    result.Add(acc.Account_No + ":" + acc.Account_Name);
+                    result.Add("->No budget registered");
+                    continue;
+                }
+                if(budget.Budget_Amount == 0)
+                {
+                    result.Add(acc.Account_No + ":" + acc.Account_Name);
+                    result.Add("->Budget amount is 0");
+                    continue;
+                }
+
+                foreach(var j in expenses)
+                {
+                    if (j.GOExpHist_Entry11Type == "D"
+                        && accType == j.GOExpHist_Entry11ActType && accNo == j.GOExpHist_Entry11ActNo 
+                        && acc.Account_Code == j.GOExpHist_Entry11Actcde)
+                    {
+                        totalExpenses += Double.Parse(j.GOExpHist_Entry11Amt);
+                        continue;
+                    }
+                    if (j.GOExpHist_Entry12Type == "D"
+                        && accType == j.GOExpHist_Entry12ActType && accNo == j.GOExpHist_Entry12ActNo
+                        && acc.Account_Code == j.GOExpHist_Entry12Actcde)
+                    {
+                        totalExpenses += Double.Parse(j.GOExpHist_Entry12Amt);
+                        continue;
+                    }
+                    if (j.GOExpHist_Entry21Type == "D"
+                        && accType == j.GOExpHist_Entry21ActType && accNo == j.GOExpHist_Entry21ActNo
+                        && acc.Account_Code == j.GOExpHist_Entry21Actcde)
+                    {
+                        totalExpenses += Double.Parse(j.GOExpHist_Entry21Amt);
+                        continue;
+                    }
+                    if (j.GOExpHist_Entry22Type == "D"
+                        && accType == j.GOExpHist_Entry22ActType && accNo == j.GOExpHist_Entry22ActNo
+                        && acc.Account_Code == j.GOExpHist_Entry22Actcde)
+                    {
+                        totalExpenses += Double.Parse(j.GOExpHist_Entry22Amt);
+                        continue;
+                    }
+                    if (j.GOExpHist_Entry31Type == "D"
+                        && accType == j.GOExpHist_Entry31ActType && accNo == j.GOExpHist_Entry31ActNo
+                        && acc.Account_Code == j.GOExpHist_Entry31Actcde)
+                    {
+                        totalExpenses += Double.Parse(j.GOExpHist_Entry31Amt);
+                        continue;
+                    }
+                    if (j.GOExpHist_Entry32Type == "D"
+                        && accType == j.GOExpHist_Entry32ActType && accNo == j.GOExpHist_Entry32ActNo
+                        && acc.Account_Code == j.GOExpHist_Entry32Actcde)
+                    {
+                        totalExpenses += Double.Parse(j.GOExpHist_Entry32Amt);
+                        continue;
+                    }
+                    if (j.GOExpHist_Entry41Type == "D"
+                        && accType == j.GOExpHist_Entry41ActType && accNo == j.GOExpHist_Entry41ActNo
+                        && acc.Account_Code == j.GOExpHist_Entry41Actcde)
+                    {
+                        totalExpenses += Double.Parse(j.GOExpHist_Entry41Amt);
+                        continue;
+                    }
+                    if (j.GOExpHist_Entry42Type == "D"
+                        && accType == j.GOExpHist_Entry42ActType && accNo == j.GOExpHist_Entry42ActNo
+                        && acc.Account_Code == j.GOExpHist_Entry42Actcde)
+                    {
+                        totalExpenses += Double.Parse(j.GOExpHist_Entry42Amt);
+                        continue;
+                    }
+
+                }
+                if (budget.Budget_Amount < (totalExpenses + i.Value))
+                {
+                    result.Add(acc.Account_No + ":" + acc.Account_Name);
+                    result.Add("->Budget was exceeded. Remaining: " + getCurrencyByMasterID(acc.Account_Currency_MasterID).Curr_CCY_ABBR + (budget.Budget_Amount - totalExpenses));
+                }
+            }
+
+            return result;
         }
         ///========[End of Other Functions]============
     }

@@ -190,7 +190,41 @@
                 });
         }
     });
+    
+    $('.btnEntryAction').click(function (e) {
+        e.stopImmediatePropagation();
+        loadingEffectStart();
+        var msg = "";
+        var warning = [];
+        var command = $(this).val();
+        if (command == "approver") {
 
+            $.ajax({
+                url: "/Home/CheckRemainingBudget",
+                data: 'entryID=' + $('#entryID').val() + '',
+                datatype:'Json'
+            }).done(function (response) {
+                msg = "Approval";
+                warning = response;
+                OpenConfirmationPopup(msg, command, response);
+                $('#divConfirmWindow').fadeIn(100);
+                loadingEffectStop();
+            });
+        } else if (command == "verifier") {
+            msg = "Verify";
+            warning.push("TEST WARning");
+            OpenConfirmationPopup(msg, command, warning);
+            $('#divConfirmWindow').fadeIn(100);
+            loadingEffectStop();
+        } else {
+            msg = command;
+            OpenConfirmationPopup(msg, command, warning);
+            $('#divConfirmWindow').fadeIn(100);
+            loadingEffectStop();
+        }
+
+        return false;
+    });
     /////--------------------functions--------------------------------
     function checkFormComplete(trs, formName) {
         var isComplete = true;
