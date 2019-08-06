@@ -6,7 +6,7 @@
 
 @model PaginatedList<BMViewModel>
 
-@using (Html.BeginForm("BM_PrintList", "Home", FormMethod.Post, new { @class = "validate-form" }))
+@using (Html.BeginForm("", "Home", FormMethod.Post, new { @class = "validate-form" }))
 {
     <div class="tab-content-cont m-t-10">
         <div class="tbl-cont">
@@ -56,12 +56,12 @@
                asp-route-sortOrder="@ViewData["CurrentSort"]"
                asp-route-page="@(Model.PageIndex + 1)"
                asp-route-currentFilter="@ViewData["CurrentFilter"]"
-               class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right">
+               class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right btnForInputPagination">
             </a>
             <div class="float-r m-r-10 divBtn">
                 <button type="button" class="tbl-btn btnBudgetReg">Budget Registration</button>
                 <button type="button" class="tbl-btn btnBudgetRegHist">History of Budget Registration</button>
-                <button class="tbl-btn">Print Budget List</button>
+                <button type="button" class="tbl-btn btnPrintBudget">Print Budget List</button>
             </div>
             <div id="modalDiv2">
                 @Html.Partial("ModalPartial2")
@@ -74,56 +74,75 @@
     </div>
 }
 <script>
-    $(function () {
-        //Budget registration modal
-        $(".divBtn").on("click", ".btnBudgetReg", function (e) {
-            e.stopImmediatePropagation();
+    $(document).ready(function () {
+        var initHref = $('.btnForInputPagination').attr('href');
+        $('#paginationInput').val(initHref.substring(initHref.length - 1) - 1);
+        $(function () {
+            //Budget registration modal
+            $(".divBtn").on("click", ".btnBudgetReg", function (e) {
+                e.stopImmediatePropagation();
 
-            var modalDivBody = $('.modal-body2');
-            modalDivBody.empty();
-            if ($('.modal-header2').find(".modal-title")[0] == null) {
-                $('.modal-header2').append('<h4 class="modal-title">Budget Registration</h4>');
-            } else {
-                $('.modal-title').text("Budget Registration");
-            }
-
-            modalDivBody.load("@Url.Action("BudgetRegistrationModal", "Modal")", {
-
-            }, function (response, status, xhr) {
-                if (status == "error") {
-                    alert("Something went wrong.");
+                var modalDivBody = $('.modal-body2');
+                modalDivBody.empty();
+                if ($('.modal-header2').find(".modal-title")[0] == null) {
+                    $('.modal-header2').append('<h4 class="modal-title">Budget Registration</h4>');
                 } else {
-
+                    $('.modal-title').text("Budget Registration");
                 }
+
+                modalDivBody.load("@Url.Action("BudgetRegistrationModal", "Modal")", {
+
+                }, function (response, status, xhr) {
+                    if (status == "error") {
+                        alert("Something went wrong.");
+                    } else {
+
+                    }
+                });
+
+                $('.myModal2').modal('show');
             });
 
-            $('.myModal2').modal('show');
-        });
+            //History of budget registration modal
+            $(".divBtn").on("click", ".btnBudgetRegHist", function (e) {
+                e.stopImmediatePropagation();
 
-        //History of budget registration modal
-        $(".divBtn").on("click", ".btnBudgetRegHist", function (e) {
-            e.stopImmediatePropagation();
+                var modalDivBody = $('.modal-body2');
+                modalDivBody.empty();
 
-            var modalDivBody = $('.modal-body2');
-            modalDivBody.empty();
-
-            if ($('.modal-header2').find(".modal-title")[0] == null) {
-                $('.modal-header2').append('<h4 class="modal-title">History of Budget Registration</h4>');
-            } else {
-                $('.modal-title').text("History of Budget Registration");
-            }
-
-            modalDivBody.load("@Url.Action("BudgetRegHistModal", "Modal")", {
-
-            }, function (response, status, xhr) {
-                if (status == "error") {
-                    alert("Something went wrong.");
+                if ($('.modal-header2').find(".modal-title")[0] == null) {
+                    $('.modal-header2').append('<h4 class="modal-title">History of Budget Registration</h4>');
                 } else {
-
+                    $('.modal-title').text("History of Budget Registration");
                 }
-            });
 
-            $('.myModal2').modal('show');
+                modalDivBody.load("@Url.Action("BudgetRegHistModal", "Modal")", {
+
+                }, function (response, status, xhr) {
+                    if (status == "error") {
+                        alert("Something went wrong.");
+                    } else {
+
+                    }
+                });
+
+                $('.myModal2').modal('show');
+            });
+            $(".btnPrintBudget").click(function (e) {
+                e.preventDefault();
+                window.location.href = "/Home/BM_PrintList";
+            });
+            $("#paginationInput").change(function (e) {
+                var $pageInput = $(this);
+                var data = $pageInput.data("value"),
+                    val = $pageInput.val();
+                if (val == "") {
+                    return false;
+                }
+                var href = $('.btnForInputPagination').attr('href');
+                window.location = href.substring(0, href.length - 1) + $(this).val();
+            }); 
         });
+
     });
 </script>
