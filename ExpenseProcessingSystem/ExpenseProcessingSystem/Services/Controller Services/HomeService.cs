@@ -7582,7 +7582,7 @@ namespace ExpenseProcessingSystem.Services
             EmailService _email = new EmailService();
             var email = "monina.martinn@gmail.com";
             var subject = "EPS New PW";
-            var hmtlMessage = "You will recieve new password. Choutto matte.";
+            var hmtlMessage = "You will recieve new password.";
             _email.SendEmailAsync(email, subject, hmtlMessage);
             return true;
         }
@@ -8139,9 +8139,9 @@ namespace ExpenseProcessingSystem.Services
                         ExpNCDtl_Remarks_Desc = ncDtl.g.ExpNCDtl_Remarks_Desc,
                         ExpNCDtl_Remarks_Period = ncDtl.g.ExpNCDtl_Remarks_Period,
                         ExpNCDtl_TR_ID = ncDtl.g.ExpNCDtl_TR_ID,
-                        ExpNCDtl_TR_Title = _context.DMTR.FirstOrDefault(x=> x.TR_ID == ncDtl.g.ExpNCDtl_TR_ID).TR_WT_Title,
+                        ExpNCDtl_TR_Title = ncDtl.g.ExpNCDtl_TR_ID > 0 ? _context.DMTR.FirstOrDefault(x=> x.TR_ID == ncDtl.g.ExpNCDtl_TR_ID).TR_WT_Title : "",
                         ExpNCDtl_Vendor_ID = ncDtl.g.ExpNCDtl_Vendor_ID,
-                        ExpNCDtl_Vendor_Name = _context.DMVendor.FirstOrDefault(x => x.Vendor_ID == ncDtl.g.ExpNCDtl_Vendor_ID).Vendor_Name,
+                        ExpNCDtl_Vendor_Name = ncDtl.g.ExpNCDtl_Vendor_ID> 0 ?_context.DMVendor.FirstOrDefault(x => x.Vendor_ID == ncDtl.g.ExpNCDtl_Vendor_ID).Vendor_Name : "",
                         ExpenseEntryNCDtlAccs = ncDtlAccs
                     };
                     ncDtls.Add(entryNCDtl);
@@ -8556,6 +8556,9 @@ namespace ExpenseProcessingSystem.Services
                 if (entryModel.entryID == 0)
                 {
                     _context.ExpenseEntry.Add(expenseEntry);
+                    //----------------------------- NOTIF----------------------------------
+                    insertIntoNotif(userId, GlobalSystemValues.TYPE_NC, GlobalSystemValues.STATUS_NEW, 0);
+                    //----------------------------- NOTIF----------------------------------
                 }
                 else
                 {
@@ -8563,6 +8566,9 @@ namespace ExpenseProcessingSystem.Services
                     expenseEntry.Expense_ID = entryModel.entryID;
                     removeNCChild(entryModel.entryID);
                     _context.ExpenseEntry.Update(expenseEntry);
+                    //----------------------------- NOTIF----------------------------------
+                    insertIntoNotif(userId, GlobalSystemValues.TYPE_NC, GlobalSystemValues.STATUS_EDIT, 0);
+                    //----------------------------- NOTIF----------------------------------
                 }
                 _context.SaveChanges();
                 return expenseEntry.Expense_ID;
