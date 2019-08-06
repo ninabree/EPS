@@ -28,7 +28,7 @@ namespace ExpenseProcessingSystem.ViewModels
     public class CDDISValuesVIewModel
     {
         public DateTime VALUE_DATE { get; set; }
-        public string CURRENCY { get; set; }
+        public int CURRENCY { get; set; }
         public string COMMENT { get; set; }
         public string SECTION { get; set; }
         public string REMARKS { get; set; }

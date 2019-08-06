@@ -364,6 +364,21 @@
                 computeValuesSSByParentID(pos);
             });
 
+            //Change initial currency of selected Account
+            $("table").on("change", ".txtAcc", function (e) {
+                var pos = $(this.parentNode)[0].parentNode.id;
+                var idx = pos.replace('item_', '');
+
+                $.ajax({
+                    url: "/Home/GetInitCurrencyOfAccount",
+                    data: 'acc_id=' + $('#' + pos).find('.txtAcc').val() + '',
+                    datatype: 'Json'
+                }).done(function (response) {
+                    $('#' + pos).find('.txtccy').val(response);
+                    $('#' + pos).find('.txtccy').trigger('change');
+                });
+            });
+
             $("table").on("click", ".expenseEWT", function (e) {
                 e.stopImmediatePropagation();
                 var myModal2 = $('.myModal2');
@@ -491,6 +506,7 @@
         var amounts = $("");
         var grossAmt = 0;
         var origGrossAmt = 0;
+        var origCredAmt = $("#" + itemNo).find(".txtCredCash").val();
 
         ////check if Inter Entity
         //if (isInter) {
@@ -503,14 +519,6 @@
             grossAmt += Number(amounts[i].value);
         }
 
-        //For PCS,SS - resetting of Cash breakdown list.
-        if ($(".hiddenScreencode").val() == "PCV" || $(".hiddenScreencode").val() == "SS") {
-            if (origGrossAmt != grossAmt) {
-                var ret = parentID.replace('item_', '');
-                $('#divCashBD_' + ret).empty();
-                $('#EntryCV_' + ret + '__modalInputFlag').val(0);
-            }
-        }
         //}
 
         $("#" + parentID + " td .txtGross").val(roundNumber(grossAmt, 2));
@@ -547,6 +555,15 @@
             $("#" + itemNo).find(".txtCredCash").val(roundNumber(grossAmt, 2));
             if ($(".hiddenScreencode").val() == "SS") {
                 $("#" + itemNo).find(".txtGross").val(roundNumber(grossAmt, 2));
+            }
+        }
+
+        //For PCS,SS - resetting of Cash breakdown list.
+        if ($(".hiddenScreencode").val() == "PCV" || $(".hiddenScreencode").val() == "SS") {
+            if (origCredAmt != $("#" + itemNo).find(".txtCredCash").val()) {
+                var ret = parentID.replace('item_', '');
+                $('#divCashBD_' + ret).empty();
+                $('#EntryCV_' + ret + '__modalInputFlag').val(0);
             }
         }
 

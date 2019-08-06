@@ -1797,7 +1797,6 @@ namespace ExpenseProcessingSystem.Controllers
                     }
                     return RedirectToAction("Index", "Home");
 
-                    break;
                 case "Reject":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REJECTED, int.Parse(GetUserID())))
                     {
@@ -1914,6 +1913,7 @@ namespace ExpenseProcessingSystem.Controllers
             pcvList.systemValues.vendors = listOfSysVals[0];
             pcvList.systemValues.dept = listOfSysVals[1];
             pcvList.systemValues.currency = listOfSysVals[2];
+            pcvList.systemValues.employeesAll = listOfSysVals[5];
             //int firstId = int.Parse(listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR].First().Value);
             
             pcvList.systemValues.acc = _service.getAccDetailsEntry();
@@ -2232,6 +2232,7 @@ namespace ExpenseProcessingSystem.Controllers
             ssList.systemValues.vendors = listOfSysVals[0];
             ssList.systemValues.dept = listOfSysVals[1];
             ssList.systemValues.currency = listOfSysVals[2];
+            ssList.systemValues.employees = listOfSysVals[4];
             //int firstId = int.Parse(listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR].First().Value);
 
             XElement xelemliq = XElement.Load("wwwroot/xml/LiquidationValue.xml");
@@ -2318,7 +2319,7 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 VALUE_DATE = DateTime.Parse(expense.Expense_Date.ToLongDateString()),
                 REMARKS = expenseDtl.ExpDtl_Gbase_Remarks,
-                CURRENCY = _service.GetCurrencyAbbrv(expenseDtl.ExpDtl_Ccy)
+                CURRENCY = _service.getCurrency(expenseDtl.ExpDtl_Ccy).Curr_MasterID
             };
 
             List<CDDISValueContentsViewModel> cddContents = new List<CDDISValueContentsViewModel>
@@ -2334,7 +2335,7 @@ namespace ExpenseProcessingSystem.Controllers
             };
             viewModel.CDDContents = cddContents;
             XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
-            string excelTemplateName = (viewModel.CURRENCY == xelem.Element("CURRENCY_Yen").Value) ? "CDDIS_Yen.xlsx" : "CDDIS_USD.xlsx";
+            string excelTemplateName = (viewModel.CURRENCY == int.Parse(xelem.Element("CURRENCY_Yen").Value)) ? "CDDIS_Yen.xlsx" : "CDDIS_USD.xlsx";
 
             bool result = _service.UpdateCDDPrintingStatus(entryID, entryDtlID, GlobalSystemValues.TYPE_SS);
 
@@ -3089,7 +3090,7 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 VALUE_DATE = DateTime.Parse(expense.LiqEntryDetails.Liq_Created_Date.ToLongDateString()),
                 REMARKS = "S" + expenseDtl.GBaseRemarks,
-                CURRENCY = _service.GetCurrencyAbbrv(expenseDtl.ccyID)
+                CURRENCY = _service.getCurrency(expenseDtl.ccyID).Curr_MasterID
             };
 
 
@@ -3107,7 +3108,7 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.CDDContents = cddContents;
 
             XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
-            string excelTemplateName = (viewModel.CURRENCY == xelem.Element("CURRENCY_Yen").Value) ? "CDDIS_Liq_Yen.xlsx" : "CDDIS_Liq_USD.xlsx";
+            string excelTemplateName = (viewModel.CURRENCY == int.Parse(xelem.Element("CURRENCY_Yen").Value)) ? "CDDIS_Liq_Yen.xlsx" : "CDDIS_Liq_USD.xlsx";
 
             bool result = _service.UpdateCDDPrintingStatus(entryID, entryDtlID, GlobalSystemValues.TYPE_LIQ);
 
@@ -3980,7 +3981,6 @@ namespace ExpenseProcessingSystem.Controllers
 
             return Json(trList.ToList());
         }
-
         [HttpPost]
         [AcceptVerbs("GET")]
         public JsonResult getVendorVatList(int vendorID)
@@ -3990,7 +3990,6 @@ namespace ExpenseProcessingSystem.Controllers
 
             return Json(vatList.ToList());
         }
-
         [HttpPost]
         [AcceptVerbs("GET")]
         public JsonResult getAllVatList()
@@ -3999,7 +3998,6 @@ namespace ExpenseProcessingSystem.Controllers
 
             return Json(vatList.ToList());
         }
-
         [AcceptVerbs("GET")]
         public JsonResult getAccount(int masterID)
         {
@@ -4035,7 +4033,11 @@ namespace ExpenseProcessingSystem.Controllers
                 return Json(false);
             }
         }
-
+        [AcceptVerbs("GET")]
+        public JsonResult GetInitCurrencyOfAccount(int acc_id)
+        {
+            return Json(_service.getCurrencyByMasterID(_service.getAccount(acc_id).Account_Currency_MasterID).Curr_ID);
+        }
         /// <summary>
         /// Generate Voucher for CV Module
         /// </summary>

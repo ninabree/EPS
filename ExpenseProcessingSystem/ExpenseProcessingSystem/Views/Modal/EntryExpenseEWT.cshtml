@@ -31,7 +31,10 @@
 </table>
 <script>
     $(document).ready(function () {
-        if ($('#' + $('#parentIdEWT').val()).find('.txtccy').is('[disabled]') || $('#' + $('#parentIdEWT').val()).find('.txtCcyAbbrev').is('[readonly]')) {
+        if ($('#' + $('#parentIdEWT').val()).find('.txtccy').is('[disabled]')
+            || $('#' + $('#parentIdEWT').val()).find('.txtCcyAbbrev').is('[readonly]')
+            || $('#' + $('#parentIdEWT').val()).find('.txtgbaseRemarks').is('[disabled]')
+            || $('#' + $('#parentIdEWT').val()).find('.txtgbaseRemark').is('[disabled]')) {
             $('#tax_payor').attr('disabled', 'disabled');
             $('#tax_payor').addClass('selectDisabled');
             $('#saveBtnEntry').css('display', 'none');
@@ -101,6 +104,7 @@
             var amounts = $("");
             var grossAmt = 0;
             var origGrossAmt = 0;
+            var origCredAmt = $("#" + itemNo).find(".txtCredCash").val();
 
             ////check if Inter Entity
             //if (isInter) {
@@ -113,14 +117,6 @@
                 grossAmt += Number(amounts[i].value);
             }
 
-            //For PCS,SS - resetting of Cash breakdown list.
-            if ($(".hiddenScreencode").val() == "PCV" || $(".hiddenScreencode").val() == "SS") {
-                if (origGrossAmt != grossAmt) {
-                    var ret = parentID.replace('item_', '');
-                    $('#divCashBD_' + ret).empty();
-                    $('#EntryCV_' + ret + '__modalInputFlag').val(0);
-                }
-            }
             //}
 
             $("#" + parentID + " td .txtGross").val(roundNumber(grossAmt, 2));
@@ -184,6 +180,15 @@
             $("#credEwtTotal").val(ewtSubTotal);
             $("#credCashTotal").val(cashSubTotal);
             $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
+
+            //For PCS,SS - resetting of Cash breakdown list.
+            if ($(".hiddenScreencode").val() == "PCV" || $(".hiddenScreencode").val() == "SS") {
+                if (origCredAmt != $("#" + itemNo).find(".txtCredCash").val()) {
+                    var ret = parentID.replace('item_', '');
+                    $('#divCashBD_' + ret).empty();
+                    $('#EntryCV_' + ret + '__modalInputFlag').val(0);
+                }
+            }
         };
     });
 </script>
