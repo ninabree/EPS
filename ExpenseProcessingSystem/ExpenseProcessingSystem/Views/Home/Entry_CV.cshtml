@@ -66,7 +66,7 @@
                         <tr id="item_@i">
                             <td class="p-b-1 p-t-1">
                                 <div class="flex-sb">
-                                    @Html.TextBoxFor(x => Model.EntryCV[i].GBaseRemarks, new { @class = "input100 w-80" })
+                                    @Html.TextBoxFor(x => Model.EntryCV[i].GBaseRemarks, new { @class = "input100 w-80 voucher-input" })
                                     <div id="remark_@i">
                                         <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
                                         @for (int y = 0; y < Model.EntryCV[i].gBaseRemarksDetails.Count(); y++)
@@ -81,7 +81,7 @@
                             </td>
                             <td>
                                 @*@Html.DropDownListFor(x => Model.EntryCV[i].account, new SelectList(Model.systemValues.acc, "accId", "accName", Model.systemValues.acc.Where(x=> x.accId == Model.EntryCV[i].account)), new { @class = "input100 txtAcc" })*@
-                                <select id="@Html.IdFor(x => Model.EntryCV[i].account)" class="input100 txtAcc" name="@Html.NameFor(x => Model.EntryCV[i].account)">
+                                <select id="@Html.IdFor(x => Model.EntryCV[i].account)" class="input100 txtAcc voucher-input" name="@Html.NameFor(x => Model.EntryCV[i].account)">
                                     @foreach (var groepModel in Model.systemValues.acc)
                                     {
                                         if (@groepModel.accId == @Model.EntryCV[0].account)
@@ -98,18 +98,18 @@
                             </td>
                             <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].fbt)</td>
                             <td>
-                                @Html.DropDownListFor(x => Model.EntryCV[i].dept, new SelectList(Model.systemValues.dept, "Value", "Text", Model.systemValues.dept.SelectedValue), new { @class = "input100 txtDept" })
+                                @Html.DropDownListFor(x => Model.EntryCV[i].dept, new SelectList(Model.systemValues.dept, "Value", "Text", Model.systemValues.dept.SelectedValue), new { @class = "input100 txtDept voucher-input" })
                             </td>
                             <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].chkVat, new { @class = "chkVat comVar" })</td>
                             <td>
-                                @Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.systemValues.vat.SelectedValue), new { @class = "input100 txtVat comVar", @disabled = "true" })
+                                @Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.systemValues.vat.SelectedValue), new { @class = "input100 txtVat comVar voucher-input", @disabled = "true" })
                             </td>
                             <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].chkEwt, new { @class = "chkEwt comVar" })</td>
                             <td>
-                                @Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt comVar", @disabled = "true" })
+                                @Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt comVar voucher-input", @disabled = "true" })
                             </td>
                             <td>
-                                @Html.DropDownListFor(x => Model.EntryCV[i].ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100" })
+                                @Html.DropDownListFor(x => Model.EntryCV[i].ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100 voucher-input" })
                             </td>
                             <td>@Html.TextBoxFor(x => Model.EntryCV[i].debitGross, new { @class = "input100 txtGross", @readonly = "readonly" })</td>
                             <td>@Html.TextBoxFor(x => Model.EntryCV[i].credEwt, new { @class = "input100 txtCredEwt", @readonly = "readonly" })</td>
