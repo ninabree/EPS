@@ -284,6 +284,7 @@
         var amounts = $("");
         var grossAmt = 0;
         var origGrossAmt = 0;
+        var origCredAmt = $("#" + itemNo).find(".txtCredCash").val();
 
         amounts = $("#" + pNode.id + " .amount");
         grossAmt = 0;
@@ -291,16 +292,6 @@
         for (var i = 0; i < amounts.length; i++) {
             grossAmt += Number(amounts[i].value);
         }
-
-        //For PCS,SS - resetting of Cash breakdown list.
-        if ($(".hiddenScreencode").val() == "PCV" || $(".hiddenScreencode").val() == "SS") {
-            if (origGrossAmt != grossAmt) {
-                var ret = pNode.id.replace('item_', '');
-                $('#divCashBD_' + ret).empty();
-                $('#EntryCV_' + ret + '__modalInputFlag').val(0);
-            }
-        }
-        
 
         $("#" + pNode.id + " td .txtGross").val(roundNumber(grossAmt,2));
         //if ($(".hiddenScreencode").val() == "SS") {
@@ -341,6 +332,15 @@
             $("#" + itemNo).find(".txtCredCash").val(roundNumber(grossAmt, 2));
             if ($(".hiddenScreencode").val() == "SS") {
                 $("#" + pNode.id).find(".txtGross").val(roundNumber(grossAmt, 2));
+            }
+        }
+
+        //For PCS,SS - resetting of Cash breakdown list.
+        if ($(".hiddenScreencode").val() == "PCV" || $(".hiddenScreencode").val() == "SS") {
+            if (origCredAmt != $("#" + itemNo).find(".txtCredCash").val()) {
+                var ret = pNode.id.replace('item_', '');
+                $('#divCashBD_' + ret).empty();
+                $('#EntryCV_' + ret + '__modalInputFlag').val(0);
             }
         }
 
