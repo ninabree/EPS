@@ -473,7 +473,20 @@ $('.number-inputNoDecimal').keyup(function () {
         event.preventDefault();
     }
 });
+$('.number-inputNoDecNoBlank').keyup(function () {
+    $(this).val($(this).val().replace(/[^\d].+/, ""));
+    if ((event.which < 48 || event.which > 57)) {
+        event.preventDefault();
+    }
+    $(this).val($(this).val().replace("e", "").replace("E", ""));
+    if ((event.which < 48 || event.which > 57)) {
+        event.preventDefault();
+    }
+    if ($(this).val() == "") {
+        $(this).val(0)
+    };
 
+});
 $('.IEBDOPettyInput').keyup(function () {
     IEBDOPettyInputChange();
 });

@@ -55,7 +55,7 @@
                     {
                         <tr id="cashbreakdownid_@a">
                             <td class="tdPrint">@Html.TextBoxFor(x => Model.cashBreakdown[a].CashBreak_Denomination, new { @class = "input100 txtDenomination", @type = "number", @readonly = "true", @style = "text-align:center" })</td>
-                            <td class="tdPrint">@Html.TextBoxFor(x => Model.cashBreakdown[a].CashBreak_NoPcs, new { @class = "input100 txtNoPCS", @type = "number", @min = "0", @style = "text-align:center" })</td>
+                            <td class="tdPrint">@Html.TextBoxFor(x => Model.cashBreakdown[a].CashBreak_NoPcs, new { @class = "input100 txtNoPCS number-inputNoDecimal", @type = "number", @min = "0", @style = "text-align:center" })</td>
                             <td class="tdPrint">@Html.TextBoxFor(x => Model.cashBreakdown[a].CashBreak_Amount, new { @class = "input100 txtAmount", @type = "number", @style = "text-align:center", @readonly = "true" })</td>
                         </tr>
                     }
@@ -267,4 +267,18 @@
         }
         return x1 + x2;
     };
+    $('.number-inputNoDecNoBlank').keyup(function () {
+        $(this).val($(this).val().replace(/[^\d].+/, ""));
+        if ((event.which < 48 || event.which > 57)) {
+            event.preventDefault();
+        }
+        $(this).val($(this).val().replace("e", "").replace("E", ""));
+        if ((event.which < 48 || event.which > 57)) {
+            event.preventDefault();
+        }
+        if ($(this).val() == "") {
+            $(this).val(0)
+        };
+
+    });
 </script>
