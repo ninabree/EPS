@@ -55,7 +55,7 @@
                     {
                         <tr id="cashbreakdownid_@a">
                             <td class="tdPrint">@Html.TextBoxFor(x => Model.cashBreakdown[a].CashBreak_Denomination, new { @class = "input100 txtDenomination", @type = "number", @readonly = "true", @style = "text-align:center" })</td>
-                            <td class="tdPrint">@Html.TextBoxFor(x => Model.cashBreakdown[a].CashBreak_NoPcs, new { @class = "input100 txtNoPCS number-inputNoDecimal", @type = "number", @min = "0", @style = "text-align:center" })</td>
+                            <td class="tdPrint">@Html.TextBoxFor(x => Model.cashBreakdown[a].CashBreak_NoPcs, new { @class = "input100 txtNoPCS number-inputNoDecNoBlank", @type = "number", @min = "0", @style = "text-align:center" })</td>
                             <td class="tdPrint">@Html.TextBoxFor(x => Model.cashBreakdown[a].CashBreak_Amount, new { @class = "input100 txtAmount", @type = "number", @style = "text-align:center", @readonly = "true" })</td>
                         </tr>
                     }

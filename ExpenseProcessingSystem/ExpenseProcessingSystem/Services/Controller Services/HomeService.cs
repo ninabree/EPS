@@ -11226,7 +11226,7 @@ namespace ExpenseProcessingSystem.Services
                 return null;
             }
 
-            return name.User_LName.Substring(0) + ", " + name.User_FName;
+            return name.User_LName + ", " + name.User_FName;
         }
         public List<UserModel> getAllUsers()
         {

@@ -712,16 +712,31 @@
                     }
                     else if (HttpContextAccessor.HttpContext.Session.GetString("accessType") == GlobalSystemValues.ROLE_VERIFIER)
                     {
-                        if (Model.statusID == GlobalSystemValues.STATUS_APPROVED || Model.statusID == GlobalSystemValues.STATUS_VERIFIED
-                            || Model.statusID == GlobalSystemValues.STATUS_REJECTED)
+                        if (Model.statusID != GlobalSystemValues.STATUS_PENDING && Model.statusID != GlobalSystemValues.STATUS_VERIFIED)
                         {
                             <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
                             <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
                         }
                         else
                         {
-                            <div class="dis-inline-block tbl-btn"><button value="@HttpContextAccessor.HttpContext.Session.GetString("accessType")" name="command" class="btnEntryAction">Approve/Verify</button></div>
-                            <div class="dis-inline-block tbl-btn"><button value="Reject" name="command" class="btnEntryAction">Reject</button></div>
+                            if (Model.statusID == GlobalSystemValues.STATUS_VERIFIED)
+                            {
+                                if (Model.verifier_1_id != int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) && Model.verifier_2_id != int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")))
+                                {
+                                    <div class="dis-inline-block tbl-btn"><button value="@HttpContextAccessor.HttpContext.Session.GetString("accessType")" name="command" class="btnEntryAction">Approve/Verify</button></div>
+                                    <div class="dis-inline-block tbl-btn"><button value="Reject" name="command" class="btnEntryAction">Reject</button></div>
+                                }
+                                else
+                                {
+                                    <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
+                                    <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="dis-inline-block tbl-btn"><button value="@HttpContextAccessor.HttpContext.Session.GetString("accessType")" name="command" class="btnEntryAction">Approve/Verify</button></div>
+                                <div class="dis-inline-block tbl-btn"><button value="Reject" name="command" class="btnEntryAction">Reject</button></div>
+                            }
                         }
                     }
                     else
