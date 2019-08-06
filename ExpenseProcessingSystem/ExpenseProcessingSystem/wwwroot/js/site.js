@@ -1,7 +1,5 @@
 ﻿
 $(document).ready(function () {
-    CheckUn();
-    CheckPw();
     populateCol();
     var tabLinks = new Array();
     var contentDivs = new Array();
@@ -11,6 +9,12 @@ $(document).ready(function () {
     $pageInput.data("value", $pageInput.val());
     ////DM ON LOAD
 
+    $(".login-input").trigger("change");
+    //// LOGIN
+    $(".login-input").on("change", function (e) {
+        CheckPw();
+        CheckUn();
+    });
     
     
     /////END DM ON LOAD
@@ -230,8 +234,7 @@ $(document).ready(function () {
     //login
     function CheckUn() {
         var val = $('#User_UserName').val();
-        if (val != "") {
-            //alert(val);
+        if (val.length > 0) {
             $('.UN').hide();
         } else {
             $('.UN').show();
@@ -239,7 +242,7 @@ $(document).ready(function () {
     }
     function CheckPw() {
         var val = $('#User_Password').val();
-        if (val != "") {
+        if (val.length > 0) {
             //alert(val);
             $('.PW').hide();
         } else {

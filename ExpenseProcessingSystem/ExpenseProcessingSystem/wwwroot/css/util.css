@@ -2295,10 +2295,10 @@
 .dis-block {display: block;}
 .dis-inline {display: inline;}
 .dis-inline-block {display: inline-block;}
-	.dis-inline-block[disabled] {
-		cursor: not-allowed;
-		background-color: #ccc;
-	}
+    .dis-inline-block[disabled], .tbl-btn[disabled], .tbl-btn > button[disabled] {
+        cursor: not-allowed;
+        background-color: #ccc;
+    }
 .dis-flex {
 	display: -webkit-box;
 	display: -webkit-flex;
