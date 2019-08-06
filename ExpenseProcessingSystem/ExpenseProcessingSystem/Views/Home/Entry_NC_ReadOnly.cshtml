@@ -33,6 +33,8 @@
                 <tr>
                     <th rowspan="1" colspan="3">Remarks</th>
                     <th rowspan="2" colspan="3">Accounts</th>
+                    <th rowspan="2" colspan="1" class="cat-hidden">Vendor</th>
+                    <th rowspan="2" colspan="1" class="cat-hidden">Tax Rate</th>
                     <th rowspan="2">Inter-Rate</th>
                     <th rowspan="2">CCY</th>
                     <th rowspan="2">Debit</th>
@@ -54,7 +56,13 @@
                             <td colspan="2">
                                 @Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Remarks_Period, new { @type = "date", @class = "" })
                             </td>
-
+                            
+                            <td class="cat-hidden" colspan="1" rowspan="@Model.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs.Count">
+                                @Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Vendor_Name, new { @readonly = "true", @class = "w-full cat-hidden" })
+                            </td>
+                            <td class="cat-hidden" colspan="1" rowspan="@Model.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs.Count">
+                                @Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_TR_Title, new { @readonly = "true", @class = "w-full cat-hidden" })
+                            </td>
                             <td colspan="3">@Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name, new { @readonly = "true", @class = "w-full" })</td>
                             <td>@Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Inter_Rate, new { @class = "ncVar", @disabled = "disabled", @readonly = "true" })</td>
                             @if (Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
@@ -107,7 +115,7 @@
                             @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_ID)
                             @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Type_ID)
                         }
-                        <tr class="NC_spacing_row"><td colspan="11"></td></tr>
+                        <tr class="NC_spacing_row"><td class="cat-hidden" colspan="2"></td><td colspan="11"></td></tr>
                     }
                 }
                 @Html.HiddenFor(x => x.EntryNC.NC_Category_ID)
@@ -492,6 +500,15 @@
 <script type="text/javascript" src="~/js/EntryScripts.js"></script>
 <script type="text/javascript">
     $(function () {
+        hiddencols();
+        function hiddencols() {
+            var catID = @Model.EntryNC.NC_Category_ID;
+            if (catID == @GlobalSystemValues.NC_PSSC +"" || catID == @GlobalSystemValues.NC_PCHC +"" || catID == @GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES +"") {
+                $('#NCPartialTbl').find(".cat-hidden").removeClass("hidden");
+            } else {
+                $('#NCPartialTbl').find(".cat-hidden").addClass("hidden");
+            }
+        }
         @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker
           || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id
           || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id

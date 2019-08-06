@@ -796,8 +796,8 @@ input[type=date]::-ms-clear {
 
 .modal-content, .modal-content2 {
     /* Bootstrap sets the size of the modal in the modal-dialog class, we need to inherit it */
-    width: inherit;
-    max-width: inherit; /* For Bootstrap 4 - to avoid the modal window stretching 
+    /*width: inherit;
+    max-width: inherit;*/ /* For Bootstrap 4 - to avoid the modal window stretching 
 full width */
     height: inherit;
     /* To center horizontally */

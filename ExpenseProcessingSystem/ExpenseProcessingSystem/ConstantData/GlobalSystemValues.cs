@@ -1418,7 +1418,7 @@ namespace ExpenseProcessingSystem.ConstantData
     //NON CASH CONSTANT VALUES
     public class CONSTANT_NC_MISC_ENTRIES
     {
-        public static EntryNCViewModel Populate_MISC_ENTRIES(DMCurrencyModel currDetailsPHP)
+        public static EntryNCViewModel Populate_MISC_ENTRIES(DMCurrencyModel currDetailsPHP, DMAccountModel initialAcc)
         {
             return new EntryNCViewModel
             {
@@ -1432,8 +1432,8 @@ namespace ExpenseProcessingSystem.ConstantData
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 0,
-                                ExpNCDtlAcc_Acc_Name = "",
+                                ExpNCDtlAcc_Acc_ID = initialAcc.Account_ID,
+                                ExpNCDtlAcc_Acc_Name = initialAcc.Account_Name,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
@@ -1441,8 +1441,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_DEBIT
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 0,
-                                ExpNCDtlAcc_Acc_Name = "",
+                                ExpNCDtlAcc_Acc_ID = initialAcc.Account_ID,
+                                ExpNCDtlAcc_Acc_Name = initialAcc.Account_Name,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
@@ -1450,8 +1450,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_CREDIT
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 0,
-                                ExpNCDtlAcc_Acc_Name = "",
+                                ExpNCDtlAcc_Acc_ID = initialAcc.Account_ID,
+                                ExpNCDtlAcc_Acc_Name = initialAcc.Account_Name,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,
@@ -1459,8 +1459,8 @@ namespace ExpenseProcessingSystem.ConstantData
                                 ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_CREDIT
                             },
                             new ExpenseEntryNCDtlAccViewModel{
-                                ExpNCDtlAcc_Acc_ID = 0,
-                                ExpNCDtlAcc_Acc_Name = "",
+                                ExpNCDtlAcc_Acc_ID = initialAcc.Account_ID,
+                                ExpNCDtlAcc_Acc_Name = initialAcc.Account_Name,
                                 ExpNCDtlAcc_Amount = 0,
                                 ExpNCDtlAcc_Curr_ID = currDetailsPHP.Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = currDetailsPHP.Curr_CCY_ABBR,

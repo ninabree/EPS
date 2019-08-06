@@ -160,7 +160,24 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         };
                         ncDtlAccList.Add(ncDtlAccVM);
                     }
-
+                    if(nc.d.ExpNC_Category_ID == GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES)
+                    {
+                        var copyAcc = ncDtlAccList[0];
+                        var emptyAccs = 4 - ncDtlAccList.Count;
+                        int z = 0;
+                        while(z < emptyAccs){
+                            ncDtlAccList.Add(new ExpenseEntryNCDtlAccViewModel {
+                                ExpNCDtlAcc_Acc_ID = copyAcc.ExpNCDtlAcc_Acc_ID,
+                                ExpNCDtlAcc_Acc_Name = copyAcc.ExpNCDtlAcc_Acc_Name,
+                                ExpNCDtlAcc_Curr_ID = copyAcc.ExpNCDtlAcc_Curr_ID,
+                                ExpNCDtlAcc_Curr_Name = copyAcc.ExpNCDtlAcc_Curr_Name,
+                                ExpNCDtlAcc_Inter_Rate = 0,
+                                ExpNCDtlAcc_Amount = 0,
+                                ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_CREDIT
+                            });
+                            z++;
+                        }
+                    }
                     ncDtlVM = new ExpenseEntryNCDtlViewModel()
                     {
                         ExpNCDtl_Remarks_Desc = ncDtl.g.ExpNCDtl_Remarks_Desc,
@@ -448,90 +465,90 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
 
         public List<DMDeptViewModel> populateDept(DMFiltersViewModel filters)
         {
-            IQueryable<DMDeptModel> mList = _context.DMDept.Where(x => x.Dept_isDeleted == false && x.Dept_isActive == true).ToList().AsQueryable();
-            var properties = filters.DF.GetType().GetProperties();
+            var mList = (from e in (from c in _context.DMDept
+                                    join user in _context.User
+                                    on c.Dept_Creator_ID equals user.User_ID
+                                    join stat in _context.StatusList
+                                    on c.Dept_Status_ID equals stat.Status_ID
+                                    where c.Dept_isDeleted == false && c.Dept_isActive == true
+                                    select new
+                                    {
+                                        c.Dept_ID,
+                                        c.Dept_MasterID,
+                                        c.Dept_Name,
+                                        c.Dept_Code,
+                                        c.Dept_Budget_Unit,
+                                        c.Dept_Creator_ID,
+                                        CreatorName = user.User_LName + ", " + user.User_FName,
+                                        c.Dept_Approver_ID,
+                                        stat.Status_ID,
+                                        stat.Status_Name,
+                                        c.Dept_Created_Date,
+                                        c.Dept_Last_Updated
+                                    })
+                         join apprv in _context.User
+                         on e.Dept_Approver_ID
+                         equals apprv.User_ID
+                         into a
+                         from apprv in a.DefaultIfEmpty()
+                         select new
+                         {
+                             e.Dept_ID,
+                             e.Dept_MasterID,
+                             e.Dept_Name,
+                             e.Dept_Code,
+                             e.Dept_Budget_Unit,
+                             e.Dept_Creator_ID,
+                             e.CreatorName,
+                             e.Dept_Approver_ID,
+                             ApproverName = e.Dept_Approver_ID > 0 ? apprv.User_LName + ", " + apprv.User_FName : "",
+                             e.Dept_Created_Date,
+                             e.Dept_Last_Updated,
+                             e.Status_ID,
+                             e.Status_Name
+                         }).ToList();
 
-            var pendingList = _context.DMDept_Pending.ToList();
-            foreach (var m in pendingList)
-            {
-                mList = mList.Concat(new DMDeptModel[] {
-                    new DMDeptModel
-                    {
-                        Dept_ID = m.Pending_Dept_ID,
-                        Dept_MasterID = m.Pending_Dept_MasterID,
-                        Dept_Name = m.Pending_Dept_Name,
-                        Dept_Code = m.Pending_Dept_Code,
-                        Dept_Budget_Unit = m.Pending_Dept_Budget_Unit,
-                        Dept_Creator_ID = m.Pending_Dept_Creator_ID,
-                        Dept_Approver_ID = m.Pending_Dept_Approver_ID.Equals(null) ? 0 : m.Pending_Dept_Approver_ID,
-                        Dept_Created_Date = m.Pending_Dept_Filed_Date,
-                        Dept_Last_Updated = m.Pending_Dept_Filed_Date,
-                        Dept_Status_ID = m.Pending_Dept_Status_ID
-                    }
-                });
-            }
-
-            //FILTER
-            foreach (var property in properties)
-            {
-                var propertyName = property.Name;
-                string subStr = propertyName.Substring(propertyName.IndexOf('_') + 1);
-                var toStr = property.GetValue(filters.DF).ToString();
-                if (toStr.Length > 0)
-                {
-                    if (toStr != "" && toStr != "0")
-                    {
-                        if (subStr == "Creator_Name" || subStr == "Approver_Name" || subStr == "Status")
-                        { 
-                            //get all userIDs of creator or approver that contains string
-                            var names = _context.User
-                              .Where(x => (x.User_FName.Contains(property.GetValue(filters.DF).ToString())
-                              || x.User_LName.Contains(property.GetValue(filters.DF).ToString())))
-                              .Select(x => x.User_ID).ToList(); 
-                            //get all status IDs that contains string
-                            var status = _context.StatusList
-                              .Where(x => (x.Status_Name.Contains(property.GetValue(filters.DF).ToString())))
-                              .Select(x => x.Status_ID).ToList();
-                            if (subStr == "Approver")
-                            {
-                                mList = mList.Where(x => names.Contains(x.Dept_Approver_ID) && x.Dept_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                            else if (subStr == "Creator")
-                            {
-                                mList = mList.Where(x => names.Contains(x.Dept_Creator_ID) && x.Dept_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                            else if (subStr == "Status")
-                            {
-                                mList = mList.Where(x => status.Contains(x.Dept_Status_ID) && x.Dept_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                        }
-                        else // IF STRING VALUE
-                        {
-                            mList = mList.Where("Dept_" + subStr + ".Contains(@0) AND  Dept_isDeleted == @1", property.GetValue(filters.DF).ToString(), false)
-                                    .Select(e => e).AsQueryable();
-                        }
-                    }
-                }
-            }
-            var userList = (from a in mList
-                            from b in _context.User.Where(x => a.Dept_Creator_ID == x.User_ID).DefaultIfEmpty()
-                            from c in _context.User.Where(x => a.Dept_Approver_ID == x.User_ID).DefaultIfEmpty()
-                            select new
-                            {
-                                a.Dept_ID,
-                                a.Dept_MasterID,
-                                CreatorName = b.User_LName + ", " + b.User_FName,
-                                ApproverName = (c == null) ? "" : c.User_LName + ", " + c.User_FName
-                            }).ToList();
-            var statusList = (from a in mList
-                              join c in _context.StatusList on a.Dept_Status_ID equals c.Status_ID
-                              select new { a.Dept_ID, a.Dept_MasterID, c.Status_Name }).ToList();
-
+            var pendingList = (from e in (from c in _context.DMDept_Pending
+                                          join user in _context.User
+                                          on c.Pending_Dept_Creator_ID equals user.User_ID
+                                          join stat in _context.StatusList
+                                          on c.Pending_Dept_Status_ID equals stat.Status_ID
+                                          select new
+                                          {
+                                              c.Pending_Dept_ID,
+                                              c.Pending_Dept_MasterID,
+                                              c.Pending_Dept_Name,
+                                              c.Pending_Dept_Code,
+                                              c.Pending_Dept_Budget_Unit,
+                                              c.Pending_Dept_Creator_ID,
+                                              CreatorName = user.User_LName + ", " + user.User_FName,
+                                              c.Pending_Dept_Approver_ID,
+                                              stat.Status_ID,
+                                              stat.Status_Name,
+                                              c.Pending_Dept_Filed_Date,
+                                          })
+                               join apprv in _context.User
+                               on e.Pending_Dept_Approver_ID
+                               equals apprv.User_ID
+                               into a
+                               from apprv in a.DefaultIfEmpty()
+                               select new
+                               {
+                                   e.Pending_Dept_ID,
+                                   e.Pending_Dept_MasterID,
+                                   e.Pending_Dept_Name,
+                                   e.Pending_Dept_Code,
+                                   e.Pending_Dept_Budget_Unit,
+                                   e.Pending_Dept_Creator_ID,
+                                   e.CreatorName,
+                                   e.Pending_Dept_Approver_ID,
+                                   ApproverName = e.Pending_Dept_Approver_ID > 0 ? apprv.User_LName + ", " + apprv.User_FName : "",
+                                   e.Pending_Dept_Filed_Date,
+                                   e.Status_ID,
+                                   e.Status_Name
+                               }).ToList();
             List<DMDeptViewModel> vmList = new List<DMDeptViewModel>();
-            foreach (DMDeptModel m in mList)
+            foreach (var m in mList)
             {
                 DMDeptViewModel vm = new DMDeptViewModel
                 {
@@ -539,131 +556,195 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     Dept_Name = m.Dept_Name,
                     Dept_Code = m.Dept_Code,
                     Dept_Budget_Unit = m.Dept_Budget_Unit,
-                    Dept_Creator_Name = userList.Where(a => a.Dept_MasterID == m.Dept_MasterID && a.Dept_ID == m.Dept_ID).Select(a => a.CreatorName).FirstOrDefault() ?? "N/A",
-                    Dept_Approver_Name = userList.Where(a => a.Dept_MasterID == m.Dept_MasterID && a.Dept_ID == m.Dept_ID).Select(a => a.ApproverName).FirstOrDefault() ?? "",
+                    Dept_Creator_Name = m.CreatorName ?? "N/A",
+                    Dept_Approver_Name = m.ApproverName ?? "",
                     Dept_Created_Date = m.Dept_Created_Date,
                     Dept_Last_Updated = m.Dept_Last_Updated,
                     Dept_Creator_ID = m.Dept_Creator_ID,
-                    Dept_Status_ID = m.Dept_Status_ID,
-                    Dept_Status = statusList.Where(a => a.Dept_ID == m.Dept_ID).Select(a => a.Status_Name).FirstOrDefault() ?? "N/A"
+                    Dept_Status_ID = m.Status_ID,
+                    Dept_Status = m.Status_Name ?? "N/A"
                 };
                 vmList.Add(vm);
+            }
+            foreach (var m in pendingList)
+            {
+                DMDeptViewModel vm = new DMDeptViewModel
+                {
+                    Dept_MasterID = m.Pending_Dept_MasterID,
+                    Dept_Name = m.Pending_Dept_Name,
+                    Dept_Code = m.Pending_Dept_Code,
+                    Dept_Budget_Unit = m.Pending_Dept_Budget_Unit,
+                    Dept_Creator_Name = m.CreatorName ?? "N/A",
+                    Dept_Approver_Name = m.ApproverName ?? "",
+                    Dept_Created_Date = m.Pending_Dept_Filed_Date,
+                    Dept_Last_Updated = m.Pending_Dept_Filed_Date,
+                    Dept_Creator_ID = m.Pending_Dept_Creator_ID,
+                    Dept_Status_ID = m.Status_ID,
+                    Dept_Status = m.Status_Name ?? "N/A"
+                };
+                vmList.Add(vm);
+            }
+
+            //FILTER
+            var properties = filters.DF.GetType().GetProperties();
+            foreach (var property in properties)
+            {
+                var propertyName = property.Name;
+                var subStr = propertyName.Substring(propertyName.IndexOf("_") + 1);
+                var toStr = property.GetValue(filters.DF).ToString();
+                if (toStr != "" && toStr != "0")
+                {
+                    mList = mList.AsQueryable().Where("Dept_" + subStr + ".Contains(@0)", toStr)
+                            .Select(e => e).ToList();
+                }
             }
             return vmList;
         }
 
         public List<DMCheckViewModel> populateCheck(DMFiltersViewModel filters)
         {
-            IQueryable<DMCheckModel> mList = _context.DMCheck.Where(x => x.Check_isDeleted == false && x.Check_isActive == true).ToList().AsQueryable();
-            var properties = filters.CKF.GetType().GetProperties();
+            var mList = (from e in (from c in _context.DMCheck
+                                    join user in _context.User
+                                    on c.Check_Creator_ID equals user.User_ID
+                                    join stat in _context.StatusList
+                                    on c.Check_Status_ID equals stat.Status_ID
+                                    where c.Check_isDeleted == false && c.Check_isActive == true
+                                    select new
+                                    {
+                                        c.Check_ID,
+                                        c.Check_MasterID,
+                                        c.Check_Input_Date,
+                                        c.Check_Series_From,
+                                        c.Check_Series_To,
+                                        c.Check_Bank_Info,
+                                        c.Check_Creator_ID,
+                                        CreatorName = user.User_LName + ", " + user.User_FName,
+                                        c.Check_Approver_ID,
+                                        stat.Status_ID,
+                                        stat.Status_Name,
+                                        c.Check_Created_Date,
+                                        c.Check_Last_Updated
+                                    })
+                         join apprv in _context.User
+                         on e.Check_Approver_ID
+                         equals apprv.User_ID
+                         into a
+                         from apprv in a.DefaultIfEmpty()
+                         select new
+                         {
+                             e.Check_ID,
+                             e.Check_MasterID,
+                             e.Check_Input_Date,
+                             e.Check_Series_From,
+                             e.Check_Series_To,
+                             e.Check_Bank_Info,
+                             e.Check_Creator_ID,
+                             e.CreatorName,
+                             e.Check_Approver_ID,
+                             ApproverName = e.Check_Approver_ID > 0 ? apprv.User_LName + ", " + apprv.User_FName : "",
+                             e.Check_Created_Date,
+                             e.Check_Last_Updated,
+                             e.Status_ID,
+                             e.Status_Name
+                         }).ToList();
 
-            var pendingList = _context.DMCheck_Pending.ToList();
-            foreach (var m in pendingList)
-            {
-                mList = mList.Concat(new DMCheckModel[] {
-                    new DMCheckModel
-                    {
-                        Check_ID = m.Pending_Check_ID,
-                        Check_MasterID = m.Pending_Check_MasterID,
-                        Check_Input_Date = m.Pending_Check_Input_Date,
-                        Check_Series_From = m.Pending_Check_Series_From,
-                        Check_Series_To = m.Pending_Check_Series_To,
-                        Check_Bank_Info = m.Pending_Check_Bank_Info,
-                        Check_Creator_ID = m.Pending_Check_Creator_ID,
-                        Check_Approver_ID = m.Pending_Check_Approver_ID.Equals(null) ? 0 : m.Pending_Check_Approver_ID,
-                        Check_Created_Date = m.Pending_Check_Filed_Date,
-                        Check_Last_Updated = m.Pending_Check_Filed_Date,
-                        Check_Status_ID = m.Pending_Check_Status_ID
-                    }
-                });
-            }
+            var pendingList = (from e in (from c in _context.DMCheck_Pending
+                                           join user in _context.User
+                                           on c.Pending_Check_Creator_ID equals user.User_ID
+                                           join stat in _context.StatusList
+                                           on c.Pending_Check_Status_ID equals stat.Status_ID
+                                           select new
+                                           {
+                                               c.Pending_Check_ID,
+                                               c.Pending_Check_MasterID,
+                                               c.Pending_Check_Input_Date,
+                                               c.Pending_Check_Series_From,
+                                               c.Pending_Check_Series_To,
+                                               c.Pending_Check_Bank_Info,
+                                               c.Pending_Check_Creator_ID,
+                                               CreatorName = user.User_LName + ", " + user.User_FName,
+                                               c.Pending_Check_Approver_ID,
+                                               stat.Status_ID,
+                                               stat.Status_Name,
+                                               c.Pending_Check_Filed_Date,
+                                           })
+                                join apprv in _context.User
+                                on e.Pending_Check_Approver_ID
+                                equals apprv.User_ID
+                                into a
+                                from apprv in a.DefaultIfEmpty()
+                                select new
+                                {
+                                    e.Pending_Check_ID,
+                                    e.Pending_Check_MasterID,
+                                    e.Pending_Check_Input_Date,
+                                    e.Pending_Check_Series_From,
+                                    e.Pending_Check_Series_To,
+                                    e.Pending_Check_Bank_Info,
+                                    e.Pending_Check_Creator_ID,
+                                    e.CreatorName,
+                                    e.Pending_Check_Approver_ID,
+                                    ApproverName = e.Pending_Check_Approver_ID > 0 ? apprv.User_LName + ", " + apprv.User_FName : "",
+                                    e.Pending_Check_Filed_Date,
+                                    e.Status_ID,
+                                    e.Status_Name
+                                }).ToList();
 
+            List<DMCheckViewModel> vmList = new List<DMCheckViewModel>();
+            mList.GroupBy(o => o.Check_ID).Select(o => o.FirstOrDefault()).ToList().ForEach(m =>
+                  vmList.Add(new DMCheckViewModel
+                  {
+                      Check_ID = m.Check_ID,
+                      Check_MasterID = m.Check_MasterID,
+                      Check_Input_Date = m.Check_Input_Date,
+                      Check_Series_From = m.Check_Series_From,
+                      Check_Series_To = m.Check_Series_To,
+                      Check_Bank_Info = m.Check_Bank_Info,
+                      Check_Creator_Name = m.CreatorName ?? "N/A",
+                      Check_Approver_Name = m.ApproverName ?? "",
+                      Check_Creator_ID = m.Check_Creator_ID,
+                      Check_Created_Date = m.Check_Created_Date,
+                      Check_Last_Updated = m.Check_Last_Updated,
+                      Check_Status_ID = m.Status_ID,
+                      Check_Status = m.Status_Name ?? "N/A"
+                  })
+            );
+
+            pendingList.GroupBy(o => o.Pending_Check_ID).Select(o => o.FirstOrDefault()).ToList().ForEach(m =>
+                 vmList.Add(new DMCheckViewModel
+                 {
+                     Check_ID = m.Pending_Check_ID,
+                     Check_MasterID = m.Pending_Check_MasterID,
+                     Check_Input_Date = m.Pending_Check_Input_Date,
+                     Check_Series_From = m.Pending_Check_Series_From,
+                     Check_Series_To = m.Pending_Check_Series_To,
+                     Check_Bank_Info = m.Pending_Check_Bank_Info,
+                     Check_Creator_Name = m.CreatorName ?? "N/A",
+                     Check_Approver_Name = m.ApproverName ?? "",
+                     Check_Creator_ID = m.Pending_Check_Creator_ID,
+                     Check_Created_Date = m.Pending_Check_Filed_Date,
+                     Check_Last_Updated = m.Pending_Check_Filed_Date,
+                     Check_Status_ID = m.Status_ID,
+                      Check_Status = m.Status_Name ?? "N/A"
+                 })
+            );
             //FILTER
+            var properties = filters.CKF.GetType().GetProperties();
             foreach (var property in properties)
             {
                 var propertyName = property.Name;
-                var subStr = propertyName.Substring(propertyName.IndexOf("_")+1);
+                var subStr = propertyName.Substring(propertyName.IndexOf("_") + 1);
                 var toStr = property.GetValue(filters.CKF).ToString();
-                string[] colArr = { "No", "Creator_ID", "Approver_ID" };
-                if (toStr != "" && toStr != "0001/01/01 0:00:00")
+                if (toStr.Length > 0)
                 {
-                    if (toStr != "0")
+                    if (toStr != "" && toStr != "0")
                     {
-                        if (subStr == "Creator_Name" || subStr == "Approver_Name" || subStr == "Status")
-                        {
-                            //get all userIDs of creator or approver that contains string
-                            var names = _context.User
-                              .Where(x => (x.User_FName.Contains(property.GetValue(filters.CKF).ToString())
-                              || x.User_LName.Contains(property.GetValue(filters.CKF).ToString())))
-                              .Select(x => x.User_ID).ToList();
-                            //get all status IDs that contains string
-                            var status = _context.StatusList
-                              .Where(x => (x.Status_Name.Contains(property.GetValue(filters.CKF).ToString())))
-                              .Select(x => x.Status_ID).ToList();
-                            if (subStr == "Approver")
-                            {
-                                mList = mList.Where(x => names.Contains(x.Check_Approver_ID) && x.Check_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                            else if (subStr == "Creator")
-                            {
-                                mList = mList.Where(x => names.Contains(x.Check_Creator_ID) && x.Check_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                            else if (subStr == "Status")
-                            {
-                                mList = mList.Where(x => status.Contains(x.Check_Status_ID) && x.Check_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                        }
-                        else if (subStr == "Input_Date")
-                        {
-                            mList = mList.Where("Check_" + subStr + ".Date.ToString() == @0", toStr)
-                                   .Select(e => e).AsQueryable();
-                        }
-                        else // IF STRING VALUE
-                        {
-                            mList = mList.Where("Check_" + subStr + ".Contains(@0) AND  Check_isDeleted == @1", toStr, false)
-                                   .Select(e => e).AsQueryable();
-                        }
+                        vmList = vmList.AsQueryable().Where("Check_" + subStr + ".Contains(@0)", toStr)
+                                .Select(e => e).ToList();
                     }
                 }
             }
 
-            var userList = (from a in mList
-                            from b in _context.User.Where(x => a.Check_Creator_ID == x.User_ID).DefaultIfEmpty()
-                            from c in _context.User.Where(x => a.Check_Approver_ID == x.User_ID).DefaultIfEmpty()
-                            select new
-                            {
-                                a.Check_ID,
-                                a.Check_MasterID,
-                                CreatorName = b.User_LName + ", " + b.User_FName,
-                                ApproverName = (c == null) ? "" : c.User_LName + ", " + c.User_FName
-                            }).ToList();
-            var statusList = (from a in mList
-                              join c in _context.StatusList on a.Check_Status_ID equals c.Status_ID
-                              select new { a.Check_ID, a.Check_MasterID, c.Status_Name }).ToList();
-
-            List<DMCheckViewModel> vmList = new List<DMCheckViewModel>();
-            foreach (var m in mList)
-            {
-                DMCheckViewModel vm = new DMCheckViewModel
-                {
-                    Check_MasterID = m.Check_MasterID,
-                    Check_Input_Date = m.Check_Input_Date,
-                    Check_Series_From = m.Check_Series_From,
-                    Check_Series_To = m.Check_Series_To,
-                    Check_Bank_Info = m.Check_Bank_Info,
-                    Check_Creator_Name = userList.Where(a => a.Check_ID == m.Check_ID && a.Check_MasterID == m.Check_MasterID).Select(a => a.CreatorName).FirstOrDefault() ?? "N/A",
-                    Check_Approver_Name = userList.Where(a => a.Check_ID == m.Check_ID && a.Check_MasterID == m.Check_MasterID).Select(a => a.ApproverName).FirstOrDefault() ?? "",
-                    Check_Created_Date = m.Check_Created_Date,
-                    Check_Last_Updated = m.Check_Last_Updated,
-                    Check_Creator_ID = m.Check_Creator_ID,
-                    Check_Status_ID = m.Check_Status_ID,
-                    Check_Status = statusList.Where(a => a.Check_ID == m.Check_ID && a.Check_MasterID == m.Check_MasterID).Select(a => a.Status_Name).FirstOrDefault() ?? "N/A"
-                };
-                vmList.Add(vm);
-            }
             return vmList;
         }
 
@@ -970,456 +1051,556 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
 
         public List<DMVATViewModel> populateVAT(DMFiltersViewModel filters)
         {
-            IQueryable<DMVATModel> mList = _context.DMVAT.Where(x => x.VAT_isDeleted == false && x.VAT_isActive == true).ToList().AsQueryable();
-            var properties = filters.VF.GetType().GetProperties();
+            var mList = (from e in (from c in _context.DMVAT
+                                    join user in _context.User
+                                    on c.VAT_Creator_ID equals user.User_ID
+                                    join stat in _context.StatusList
+                                    on c.VAT_Status_ID equals stat.Status_ID
+                                    where c.VAT_isDeleted == false && c.VAT_isActive == true
+                                    select new
+                                    {
+                                        c.VAT_ID,
+                                        c.VAT_MasterID,
+                                        c.VAT_Name,
+                                        c.VAT_Rate,
+                                        c.VAT_Creator_ID,
+                                        CreatorName = user.User_LName + ", " + user.User_FName,
+                                        c.VAT_Approver_ID,
+                                        stat.Status_ID,
+                                        stat.Status_Name,
+                                        c.VAT_Created_Date,
+                                        c.VAT_Last_Updated
+                                    })
+                         join apprv in _context.User
+                         on e.VAT_Approver_ID
+                         equals apprv.User_ID
+                         into a
+                         from apprv in a.DefaultIfEmpty()
+                         select new
+                         {
+                             e.VAT_ID,
+                             e.VAT_MasterID,
+                             e.VAT_Name,
+                             e.VAT_Rate,
+                             e.VAT_Creator_ID,
+                             e.CreatorName,
+                             e.VAT_Approver_ID,
+                             ApproverName = e.VAT_Approver_ID > 0 ? apprv.User_LName + ", " + apprv.User_FName : "",
+                             e.VAT_Created_Date,
+                             e.VAT_Last_Updated,
+                             e.Status_ID,
+                             e.Status_Name
+                         }).ToList();
 
-            var pendingList = _context.DMVAT_Pending.ToList();
-            foreach (var m in pendingList)
-            {
-                mList = mList.Concat(new DMVATModel[] {
-                    new DMVATModel
-                    {
-                        VAT_ID = m.Pending_VAT_ID,
-                        VAT_MasterID = m.Pending_VAT_MasterID,
-                        VAT_Name = m.Pending_VAT_Name,
-                        VAT_Rate = m.Pending_VAT_Rate,
-                        VAT_Creator_ID = m.Pending_VAT_Creator_ID,
-                        VAT_Approver_ID = m.Pending_VAT_Approver_ID.Equals(null) ? 0 : m.Pending_VAT_Approver_ID,
-                        VAT_Created_Date = m.Pending_VAT_Filed_Date,
-                        VAT_Last_Updated = m.Pending_VAT_Filed_Date,
-                        VAT_Status_ID = m.Pending_VAT_Status_ID
-                    }
-                });
-            }
-            //FILTER
-            foreach (var property in properties)
-            {
-                var propertyName = property.Name;
-                var subStr = propertyName.Substring(propertyName.IndexOf("_")+1);
-                var toStr = property.GetValue(filters.VF).ToString();
-                string[] colArr = { "Rate", "Creator_ID", "Approver_ID" };
-                if (toStr != "")
-                {
-                    if (toStr != "0")
-                    {
-                        if (colArr.Contains(subStr)) // IF INT VAL
-                        {
-                            mList = mList.Where("VAT_" + subStr + " = @0 AND  VAT_isDeleted == @1", property.GetValue(filters.VF), false)
-                                     .Select(e => e).AsQueryable();
-                        }
-                        else if (subStr == "Creator_Name" || subStr == "Approver_Name" || subStr == "Status")
-                        {
-                            //get all userIDs of creator or approver that contains string
-                            var names = _context.User
-                              .Where(x => (x.User_FName.Contains(property.GetValue(filters.VF).ToString())
-                              || x.User_LName.Contains(property.GetValue(filters.VF).ToString())))
-                              .Select(x => x.User_ID).ToList();
-                            //get all status IDs that contains string
-                            var status = _context.StatusList
-                              .Where(x => (x.Status_Name.Contains(property.GetValue(filters.VF).ToString())))
-                              .Select(x => x.Status_ID).ToList();
-                            if (subStr == "Approver_Name")
-                            {
-                                mList = mList.Where(x => names.Contains(x.VAT_Approver_ID) && x.VAT_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                            else if (subStr == "Creator_Name")
-                            {
-                                mList = mList.Where(x => names.Contains(x.VAT_Creator_ID) && x.VAT_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                            else if (subStr == "Status")
-                            {
-                                mList = mList.Where(x => status.Contains(x.VAT_Status_ID) && x.VAT_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                        }
-                        else // IF STRING VALUE
-                        {
-                            mList = mList.Where("VAT_" + subStr + ".Contains(@0) AND  VAT_isDeleted == @1", property.GetValue(filters.VF).ToString(), false)
-                                    .Select(e => e).AsQueryable();
-                        }
-                    }
-                }
-            }
-            var userList = (from a in mList
-                            from b in _context.User.Where(x => a.VAT_Creator_ID == x.User_ID).DefaultIfEmpty()
-                            from c in _context.User.Where(x => a.VAT_Approver_ID == x.User_ID).DefaultIfEmpty()
-                            select new
-                            {
-                                a.VAT_ID,
-                                a.VAT_MasterID,
-                                CreatorName = b.User_LName + ", " + b.User_FName,
-                                ApproverName = (c == null) ? "" : c.User_LName + ", " + c.User_FName
-                            }).ToList();
-            var statusList = (from a in mList
-                              join c in _context.StatusList on a.VAT_Status_ID equals c.Status_ID
-                              select new { a.VAT_ID, a.VAT_MasterID, c.Status_Name }).ToList();
-
+            var pendingList = (from e in (from c in _context.DMVAT_Pending
+                                          join user in _context.User
+                                          on c.Pending_VAT_Creator_ID equals user.User_ID
+                                          join stat in _context.StatusList
+                                          on c.Pending_VAT_Status_ID equals stat.Status_ID
+                                          select new
+                                          {
+                                              c.Pending_VAT_ID,
+                                              c.Pending_VAT_MasterID,
+                                              c.Pending_VAT_Name,
+                                              c.Pending_VAT_Rate,
+                                              c.Pending_VAT_Creator_ID,
+                                              CreatorName = user.User_LName + ", " + user.User_FName,
+                                              c.Pending_VAT_Approver_ID,
+                                              stat.Status_ID,
+                                              stat.Status_Name,
+                                              c.Pending_VAT_Filed_Date,
+                                          })
+                               join apprv in _context.User
+                               on e.Pending_VAT_Approver_ID
+                               equals apprv.User_ID
+                               into a
+                               from apprv in a.DefaultIfEmpty()
+                               select new
+                               {
+                                   e.Pending_VAT_ID,
+                                   e.Pending_VAT_MasterID,
+                                   e.Pending_VAT_Name,
+                                   e.Pending_VAT_Rate,
+                                   e.Pending_VAT_Creator_ID,
+                                   e.CreatorName,
+                                   e.Pending_VAT_Approver_ID,
+                                   ApproverName = e.Pending_VAT_Approver_ID > 0 ? apprv.User_LName + ", " + apprv.User_FName : "",
+                                   e.Pending_VAT_Filed_Date,
+                                   e.Status_ID,
+                                   e.Status_Name
+                               }).ToList();
             List<DMVATViewModel> vmList = new List<DMVATViewModel>();
-            foreach (DMVATModel m in mList)
+            foreach (var m in mList)
             {
-                var creator = userList.Where(a => a.VAT_ID == m.VAT_ID && a.VAT_MasterID == m.VAT_MasterID).Select(a => a.CreatorName).FirstOrDefault();
-                var approver = userList.Where(a => a.VAT_ID == m.VAT_ID && a.VAT_MasterID == m.VAT_MasterID).Select(a => a.ApproverName).FirstOrDefault();
-                var stat = statusList.Where(a => a.VAT_ID == m.VAT_ID && a.VAT_MasterID == m.VAT_MasterID).Select(a => a.Status_Name).FirstOrDefault();
                 DMVATViewModel vm = new DMVATViewModel
                 {
+                    VAT_ID = m.VAT_ID,
                     VAT_MasterID = m.VAT_MasterID,
                     VAT_Name = m.VAT_Name,
                     VAT_Rate = m.VAT_Rate,
-                    VAT_Creator_Name = creator ?? "N/A",
-                    VAT_Approver_Name = approver ?? "",
-                    VAT_Creator_ID = m.VAT_Creator_ID,
+                    VAT_Creator_Name = m.CreatorName ?? "N/A",
+                    VAT_Approver_Name = m.ApproverName ?? "",
                     VAT_Created_Date = m.VAT_Created_Date,
                     VAT_Last_Updated = m.VAT_Last_Updated,
-                    VAT_Status_ID = m.VAT_Status_ID,
-                    VAT_Status = stat ?? "N/A"
+                    VAT_Creator_ID = m.VAT_Creator_ID,
+                    VAT_Status_ID = m.Status_ID,
+                    VAT_Status = m.Status_Name ?? "N/A"
                 };
                 vmList.Add(vm);
+            }
+            foreach (var m in pendingList)
+            {
+                DMVATViewModel vm = new DMVATViewModel
+                {
+                    VAT_ID = m.Pending_VAT_ID,
+                    VAT_MasterID = m.Pending_VAT_MasterID,
+                    VAT_Name = m.Pending_VAT_Name,
+                    VAT_Rate = m.Pending_VAT_Rate,
+                    VAT_Creator_Name = m.CreatorName ?? "N/A",
+                    VAT_Approver_Name = m.ApproverName ?? "",
+                    VAT_Created_Date = m.Pending_VAT_Filed_Date,
+                    VAT_Last_Updated = m.Pending_VAT_Filed_Date,
+                    VAT_Creator_ID = m.Pending_VAT_Creator_ID,
+                    VAT_Status_ID = m.Status_ID,
+                    VAT_Status = m.Status_Name ?? "N/A"
+                };
+                vmList.Add(vm);
+            }
+
+            //FILTER
+            var properties = filters.VF.GetType().GetProperties();
+            foreach (var property in properties)
+            {
+                var propertyName = property.Name;
+                var subStr = propertyName.Substring(propertyName.IndexOf("_") + 1);
+                var toStr = property.GetValue(filters.VF).ToString();
+                if (toStr != "" && toStr != "0")
+                {
+                    mList = mList.AsQueryable().Where("VAT_" + subStr + ".Contains(@0)", toStr)
+                            .Select(e => e).ToList();
+                }
             }
             return vmList;
         }
 
         public List<DMFBTViewModel> populateFBT(DMFiltersViewModel filters)
         {
-            IQueryable<DMFBTModel> mList = _context.DMFBT.Where(x => x.FBT_isDeleted == false && x.FBT_isActive == true).ToList().AsQueryable();
-            var properties = filters.FF.GetType().GetProperties();
+            var mList = (from e in (from c in _context.DMFBT
+                                    join user in _context.User
+                                    on c.FBT_Creator_ID equals user.User_ID
+                                    join stat in _context.StatusList
+                                    on c.FBT_Status_ID equals stat.Status_ID
+                                    where c.FBT_isDeleted == false && c.FBT_isActive == true
+                                    select new
+                                    {
+                                        c.FBT_ID,
+                                        c.FBT_MasterID,
+                                        c.FBT_Name,
+                                        c.FBT_Tax_Rate,
+                                        c.FBT_Formula,
+                                        c.FBT_Creator_ID,
+                                        CreatorName = user.User_LName + ", " + user.User_FName,
+                                        c.FBT_Approver_ID,
+                                        stat.Status_ID,
+                                        stat.Status_Name,
+                                        c.FBT_Created_Date,
+                                        c.FBT_Last_Updated
+                                    })
+                         join apprv in _context.User
+                         on e.FBT_Approver_ID
+                         equals apprv.User_ID
+                         into a
+                         from apprv in a.DefaultIfEmpty()
+                         select new
+                         {
+                             e.FBT_ID,
+                             e.FBT_MasterID,
+                             e.FBT_Name,
+                             e.FBT_Tax_Rate,
+                             e.FBT_Formula,
+                             e.FBT_Creator_ID,
+                             e.CreatorName,
+                             e.FBT_Approver_ID,
+                             ApproverName = e.FBT_Approver_ID > 0 ? apprv.User_LName + ", " + apprv.User_FName : "",
+                             e.FBT_Created_Date,
+                             e.FBT_Last_Updated,
+                             e.Status_ID,
+                             e.Status_Name
+                         }).ToList();
 
-            var pendingList = _context.DMFBT_Pending.ToList();
+            var pendingList = (from e in (from c in _context.DMFBT_Pending
+                                          join user in _context.User
+                                          on c.Pending_FBT_Creator_ID equals user.User_ID
+                                          join stat in _context.StatusList
+                                          on c.Pending_FBT_Status_ID equals stat.Status_ID
+                                          select new
+                                          {
+                                              c.Pending_FBT_ID,
+                                              c.Pending_FBT_MasterID,
+                                              c.Pending_FBT_Name,
+                                              c.Pending_FBT_Tax_Rate,
+                                              c.Pending_FBT_Formula,
+                                              c.Pending_FBT_Creator_ID,
+                                              CreatorName = user.User_LName + ", " + user.User_FName,
+                                              c.Pending_FBT_Approver_ID,
+                                              stat.Status_ID,
+                                              stat.Status_Name,
+                                              c.Pending_FBT_Filed_Date,
+                                          })
+                               join apprv in _context.User
+                               on e.Pending_FBT_Approver_ID
+                               equals apprv.User_ID
+                               into a
+                               from apprv in a.DefaultIfEmpty()
+                               select new
+                               {
+                                   e.Pending_FBT_ID,
+                                   e.Pending_FBT_MasterID,
+                                   e.Pending_FBT_Name,
+                                   e.Pending_FBT_Tax_Rate,
+                                   e.Pending_FBT_Formula,
+                                   e.Pending_FBT_Creator_ID,
+                                   e.CreatorName,
+                                   e.Pending_FBT_Approver_ID,
+                                   ApproverName = e.Pending_FBT_Approver_ID > 0 ? apprv.User_LName + ", " + apprv.User_FName : "",
+                                   e.Pending_FBT_Filed_Date,
+                                   e.Status_ID,
+                                   e.Status_Name
+                               }).ToList();
+
+            List<DMFBTViewModel> vmList = new List<DMFBTViewModel>();
+            foreach (var m in mList)
+            {
+                DMFBTViewModel vm = new DMFBTViewModel
+                {
+                    FBT_ID = m.FBT_ID,
+                    FBT_MasterID = m.FBT_MasterID,
+                    FBT_Name = m.FBT_Name,
+                    FBT_Tax_Rate = m.FBT_Tax_Rate,
+                    FBT_Formula = m.FBT_Formula,
+                    FBT_Creator_Name = m.CreatorName ?? "N/A",
+                    FBT_Approver_Name = m.ApproverName ?? "",
+                    FBT_Created_Date = m.FBT_Created_Date,
+                    FBT_Last_Updated = m.FBT_Last_Updated,
+                    FBT_Creator_ID = m.FBT_Creator_ID,
+                    FBT_Status_ID = m.Status_ID,
+                    FBT_Status = m.Status_Name ?? "N/A"
+                };
+                vmList.Add(vm);
+            }
             foreach (var m in pendingList)
             {
-                mList = mList.Concat(new DMFBTModel[] {
-                    new DMFBTModel
-                    {
-                        FBT_ID = m.Pending_FBT_ID,
-                        FBT_MasterID = m.Pending_FBT_MasterID,
-                        FBT_Name = m.Pending_FBT_Name,
-                        FBT_Tax_Rate = m.Pending_FBT_Tax_Rate,
-                        FBT_Formula = m.Pending_FBT_Formula,
-                        FBT_Creator_ID = m.Pending_FBT_Creator_ID,
-                        FBT_Approver_ID = m.Pending_FBT_Approver_ID.Equals(null) ? 0 : m.Pending_FBT_Approver_ID,
-                        FBT_Created_Date = m.Pending_FBT_Filed_Date,
-                        FBT_Last_Updated = m.Pending_FBT_Filed_Date,
-                        FBT_Status_ID = m.Pending_FBT_Status_ID
-                    }
-                });
+                DMFBTViewModel vm = new DMFBTViewModel
+                {
+                    FBT_ID = m.Pending_FBT_ID,
+                    FBT_MasterID = m.Pending_FBT_MasterID,
+                    FBT_Name = m.Pending_FBT_Name,
+                    FBT_Tax_Rate = m.Pending_FBT_Tax_Rate,
+                    FBT_Formula = m.Pending_FBT_Formula,
+                    FBT_Creator_Name = m.CreatorName ?? "N/A",
+                    FBT_Approver_Name = m.ApproverName ?? "",
+                    FBT_Created_Date = m.Pending_FBT_Filed_Date,
+                    FBT_Last_Updated = m.Pending_FBT_Filed_Date,
+                    FBT_Creator_ID = m.Pending_FBT_Creator_ID,
+                    FBT_Status_ID = m.Status_ID,
+                    FBT_Status = m.Status_Name ?? "N/A"
+                };
+                vmList.Add(vm);
             }
+
             //FILTER
+            var properties = filters.FF.GetType().GetProperties();
             foreach (var property in properties)
             {
                 var propertyName = property.Name;
-                var subStr = propertyName.Substring(propertyName.IndexOf("_")+1);
+                var subStr = propertyName.Substring(propertyName.IndexOf("_") + 1);
                 var toStr = property.GetValue(filters.FF).ToString();
-                string[] colArr = { "Tax_Rate", "Creator_ID", "Approver_ID" };
-                if (toStr != "")
+                if (toStr != "" && toStr != "0")
                 {
-                    if (toStr != "0")
-                    {
-                        if (colArr.Contains(subStr)) // IF INT VAL
-                        {
-                            mList = mList.Where("FBT_" + subStr + " = @0 AND  FBT_isDeleted == @1", property.GetValue(filters.FF), false)
-                                     .Select(e => e).AsQueryable();
-                        }
-                        else if (subStr == "Creator_Name" || subStr == "Approver_Name" || subStr == "Status")
-                        {
-                            //get all userIDs of creator or approver that contains string
-                            var names = _context.User
-                              .Where(x => (x.User_FName.Contains(property.GetValue(filters.FF).ToString())
-                              || x.User_LName.Contains(property.GetValue(filters.FF).ToString())))
-                              .Select(x => x.User_ID).ToList();
-                            //get all status IDs that contains string
-                            var status = _context.StatusList
-                              .Where(x => (x.Status_Name.Contains(property.GetValue(filters.FF).ToString())))
-                              .Select(x => x.Status_ID).ToList();
-                            if (subStr == "Approver_Name")
-                            {
-                                mList = mList.Where(x => names.Contains(x.FBT_Approver_ID) && x.FBT_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                            else if (subStr == "Creator_Name")
-                            {
-                                mList = mList.Where(x => names.Contains(x.FBT_Creator_ID) && x.FBT_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                            else if (subStr == "Status")
-                            {
-                                mList = mList.Where(x => status.Contains(x.FBT_Status_ID) && x.FBT_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                        }
-                        else // IF STRING VALUE
-                        {
-                            mList = mList.Where("FBT_" + subStr + ".Contains(@0) AND  FBT_isDeleted == @1", property.GetValue(filters.FF).ToString(), false)
-                                    .Select(e => e).AsQueryable();
-                        }
-                    }
+                    mList = mList.AsQueryable().Where("FBT_" + subStr + ".Contains(@0)", toStr)
+                            .Select(e => e).ToList();
                 }
-            }
-            var userList = (from a in mList
-                            from b in _context.User.Where(x => a.FBT_Creator_ID == x.User_ID).DefaultIfEmpty()
-                            from c in _context.User.Where(x => a.FBT_Approver_ID == x.User_ID).DefaultIfEmpty()
-                            select new
-                            {
-                                a.FBT_ID,
-                                a.FBT_MasterID,
-                                CreatorName = b.User_LName + ", " + b.User_FName,
-                                ApproverName = (c == null) ? "" : c.User_LName + ", " + c.User_FName
-                            }).ToList();
-            var statusList = (from a in mList
-                              join c in _context.StatusList on a.FBT_Status_ID equals c.Status_ID
-                              select new { a.FBT_ID, a.FBT_MasterID, c.Status_Name }).ToList();
-
-            List<DMFBTViewModel> vmList = new List<DMFBTViewModel>();
-            foreach (DMFBTModel m in mList)
-            {
-                var creator = userList.Where(a => a.FBT_ID == m.FBT_ID && a.FBT_MasterID == m.FBT_MasterID).Select(a => a.CreatorName).FirstOrDefault();
-                var approver = userList.Where(a => a.FBT_ID == m.FBT_ID && a.FBT_MasterID == m.FBT_MasterID).Select(a => a.ApproverName).FirstOrDefault();
-                var stat = statusList.Where(a => a.FBT_ID == m.FBT_ID && a.FBT_MasterID == m.FBT_MasterID).Select(a => a.Status_Name).FirstOrDefault();
-                DMFBTViewModel vm = new DMFBTViewModel
-                {
-                    FBT_MasterID = m.FBT_MasterID,
-                    FBT_Name = m.FBT_Name,
-                    FBT_Formula = m.FBT_Formula,
-                    FBT_Tax_Rate = m.FBT_Tax_Rate,
-                    FBT_Creator_Name = creator ?? "N/A",
-                    FBT_Approver_Name = approver ?? "",
-                    FBT_Creator_ID = m.FBT_Creator_ID,
-                    FBT_Created_Date = m.FBT_Created_Date,
-                    FBT_Last_Updated = m.FBT_Last_Updated,
-                    FBT_Status_ID = m.FBT_Status_ID,
-                    FBT_Status = stat ?? "N/A"
-                };
-                vmList.Add(vm);
             }
             return vmList;
         }
 
         public List<DMTRViewModel> populateTR(DMFiltersViewModel filters)
         {
-            IQueryable<DMTRModel> mList = _context.DMTR.Where(x => x.TR_isDeleted == false && x.TR_isActive == true).ToList().AsQueryable();
-            var properties = filters.TF.GetType().GetProperties();
+            var mList = (from e in (from c in _context.DMTR
+                                    join user in _context.User
+                                    on c.TR_Creator_ID equals user.User_ID
+                                    join stat in _context.StatusList
+                                    on c.TR_Status_ID equals stat.Status_ID
+                                    where c.TR_isDeleted == false && c.TR_isActive == true
+                                    select new
+                                    {
+                                        c.TR_ID,
+                                        c.TR_MasterID,
+                                        c.TR_WT_Title,
+                                        c.TR_Tax_Rate,
+                                        c.TR_Nature,
+                                        c.TR_ATC,
+                                        c.TR_Creator_ID,
+                                        CreatorName = user.User_LName + ", " + user.User_FName,
+                                        c.TR_Approver_ID,
+                                        stat.Status_ID,
+                                        stat.Status_Name,
+                                        c.TR_Created_Date,
+                                        c.TR_Last_Updated
+                                    })
+                         join apprv in _context.User
+                         on e.TR_Approver_ID
+                         equals apprv.User_ID
+                         into a
+                         from apprv in a.DefaultIfEmpty()
+                         select new
+                         {
+                             e.TR_ID,
+                             e.TR_MasterID,
+                             e.TR_WT_Title,
+                             e.TR_Tax_Rate,
+                             e.TR_Nature,
+                             e.TR_ATC,
+                             e.TR_Creator_ID,
+                             e.CreatorName,
+                             e.TR_Approver_ID,
+                             ApproverName = e.TR_Approver_ID > 0 ? apprv.User_LName + ", " + apprv.User_FName : "",
+                             e.TR_Created_Date,
+                             e.TR_Last_Updated,
+                             e.Status_ID,
+                             e.Status_Name
+                         }).ToList();
 
-            var pendingList = _context.DMTR_Pending.ToList();
-            foreach (var m in pendingList)
-            {
-                mList = mList.Concat(new DMTRModel[] {
-                    new DMTRModel
-                    {
-                        TR_ID = m.Pending_TR_ID,
-                        TR_MasterID = m.Pending_TR_MasterID,
-                        TR_WT_Title = m.Pending_TR_WT_Title,
-                        TR_Nature = m.Pending_TR_Nature,
-                        TR_Tax_Rate = m.Pending_TR_Tax_Rate,
-                        TR_ATC = m.Pending_TR_ATC,
-                        TR_Nature_Income_Payment = m.Pending_TR_Nature_Income_Payment,
-                        TR_Creator_ID = m.Pending_TR_Creator_ID,
-                        TR_Approver_ID = m.Pending_TR_Approver_ID.Equals(null) ? 0 : m.Pending_TR_Approver_ID,
-                        TR_Created_Date = m.Pending_TR_Filed_Date,
-                        TR_Last_Updated = m.Pending_TR_Filed_Date,
-                        TR_Status_ID = m.Pending_TR_Status_ID
-                    }
-                });
-            }
-            //FILTER
-            foreach (var property in properties)
-            {
-                var propertyName = property.Name;
-                var subStr = propertyName.Substring(propertyName.IndexOf("_")+1);
-                var toStr = property.GetValue(filters.TF).ToString();
-                if (toStr != "")
-                {
-                    if (toStr != "0")
-                    {
-                        if ("Tax_Rate" == subStr) // IF INT VAL
-                        {
-                            float newVal = Convert.ToSingle(property.GetValue(filters.TF));
-                            mList = mList.Where("TR_" + subStr + " = @0 AND  TR_isDeleted == @1", newVal / 100, false)
-                                     .Select(e => e).AsQueryable();
-                        }
-                        else if (subStr == "Creator_Name" || subStr == "Approver_Name" || subStr == "Status")
-                        {
-                            //get all userIDs of creator or approver that contains string
-                            var names = _context.User
-                              .Where(x => (x.User_FName.Contains(property.GetValue(filters.TF).ToString())
-                              || x.User_LName.Contains(property.GetValue(filters.TF).ToString())))
-                              .Select(x => x.User_ID).ToList();
-                            //get all status IDs that contains string
-                            var status = _context.StatusList
-                              .Where(x => (x.Status_Name.Contains(property.GetValue(filters.TF).ToString())))
-                              .Select(x => x.Status_ID).ToList();
-                            if (subStr == "Approver_Name")
-                            {
-                                mList = mList.Where(x => names.Contains(x.TR_Approver_ID) && x.TR_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                            else if (subStr == "Creator_Name")
-                            {
-                                mList = mList.Where(x => names.Contains(x.TR_Creator_ID) && x.TR_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                            else if (subStr == "Status")
-                            {
-                                mList = mList.Where(x => status.Contains(x.TR_Status_ID) && x.TR_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                        }
-                        else // IF STRING VALUE
-                        {
-                            mList = mList.Where("TR_" + subStr + ".Contains(@0) AND  TR_isDeleted == @1", property.GetValue(filters.TF).ToString(), false)
-                                    .Select(e => e).AsQueryable();
-                        }
-                    }
-                }
-            }
-            var userList = (from a in mList
-                            from b in _context.User.Where(x => a.TR_Creator_ID == x.User_ID).DefaultIfEmpty()
-                            from c in _context.User.Where(x => a.TR_Approver_ID == x.User_ID).DefaultIfEmpty()
-                            select new
-                            {
-                                a.TR_ID,
-                                a.TR_MasterID,
-                                CreatorName = b.User_LName + ", " + b.User_FName,
-                                ApproverName = (c == null) ? "" : c.User_LName + ", " + c.User_FName
-                            }).ToList();
-            var statList = (from a in mList
-                              join c in _context.StatusList on a.TR_Status_ID equals c.Status_ID
-                              select new { a.TR_ID, a.TR_MasterID, c.Status_Name }).ToList();
+            var pendingList = (from e in (from c in _context.DMTR_Pending
+                                          join user in _context.User
+                                          on c.Pending_TR_Creator_ID equals user.User_ID
+                                          join stat in _context.StatusList
+                                          on c.Pending_TR_Status_ID equals stat.Status_ID
+                                          select new
+                                          {
+                                              c.Pending_TR_ID,
+                                              c.Pending_TR_MasterID,
+                                              c.Pending_TR_WT_Title,
+                                              c.Pending_TR_Tax_Rate,
+                                              c.Pending_TR_Nature,
+                                              c.Pending_TR_ATC,
+                                              c.Pending_TR_Creator_ID,
+                                              CreatorName = user.User_LName + ", " + user.User_FName,
+                                              c.Pending_TR_Approver_ID,
+                                              stat.Status_ID,
+                                              stat.Status_Name,
+                                              c.Pending_TR_Filed_Date,
+                                          })
+                               join apprv in _context.User
+                               on e.Pending_TR_Approver_ID
+                               equals apprv.User_ID
+                               into a
+                               from apprv in a.DefaultIfEmpty()
+                               select new
+                               {
+                                   e.Pending_TR_ID,
+                                   e.Pending_TR_MasterID,
+                                   e.Pending_TR_WT_Title,
+                                   e.Pending_TR_Tax_Rate,
+                                   e.Pending_TR_Nature,
+                                   e.Pending_TR_ATC,
+                                   e.Pending_TR_Creator_ID,
+                                   e.CreatorName,
+                                   e.Pending_TR_Approver_ID,
+                                   ApproverName = e.Pending_TR_Approver_ID > 0 ? apprv.User_LName + ", " + apprv.User_FName : "",
+                                   e.Pending_TR_Filed_Date,
+                                   e.Status_ID,
+                                   e.Status_Name
+                               }).ToList();
 
             List<DMTRViewModel> vmList = new List<DMTRViewModel>();
-            foreach (DMTRModel m in mList)
+            foreach (var m in mList)
             {
-                var creator = userList.Where(a => a.TR_ID == m.TR_ID && a.TR_MasterID == m.TR_MasterID).Select(a => a.CreatorName).FirstOrDefault();
-                var approver = userList.Where(a => a.TR_ID == m.TR_ID && a.TR_MasterID == m.TR_MasterID).Select(a => a.ApproverName).FirstOrDefault();
-                var stat = statList.Where(a => a.TR_ID == m.TR_ID && a.TR_MasterID == m.TR_MasterID).Select(a => a.Status_Name).FirstOrDefault();
                 DMTRViewModel vm = new DMTRViewModel
                 {
+                    TR_ID = m.TR_ID,
                     TR_MasterID = m.TR_MasterID,
                     TR_WT_Title = m.TR_WT_Title,
                     TR_Nature = m.TR_Nature,
-                    TR_Tax_Rate = m.TR_Tax_Rate * 100,
                     TR_ATC = m.TR_ATC,
-                    TR_Nature_Income_Payment = m.TR_Nature_Income_Payment,
-                    TR_Creator_Name = creator ?? "N/A",
-                    TR_Approver_Name = approver ?? "",
-                    TR_Creator_ID = m.TR_Creator_ID,
+                    TR_Tax_Rate = m.TR_Tax_Rate,
+                    TR_Creator_Name = m.CreatorName ?? "N/A",
+                    TR_Approver_Name = m.ApproverName ?? "",
                     TR_Created_Date = m.TR_Created_Date,
                     TR_Last_Updated = m.TR_Last_Updated,
-                    TR_Status_ID = m.TR_Status_ID,
-                    TR_Status = stat ?? "N/A"
+                    TR_Creator_ID = m.TR_Creator_ID,
+                    TR_Status_ID = m.Status_ID,
+                    TR_Status = m.Status_Name ?? "N/A"
                 };
                 vmList.Add(vm);
+            }
+            foreach (var m in pendingList)
+            {
+                DMTRViewModel vm = new DMTRViewModel
+                {
+                    TR_ID = m.Pending_TR_ID,
+                    TR_MasterID = m.Pending_TR_MasterID,
+                    TR_WT_Title = m.Pending_TR_WT_Title,
+                    TR_Nature = m.Pending_TR_Nature,
+                    TR_ATC = m.Pending_TR_ATC,
+                    TR_Tax_Rate = m.Pending_TR_Tax_Rate,
+                    TR_Creator_Name = m.CreatorName ?? "N/A",
+                    TR_Approver_Name = m.ApproverName ?? "",
+                    TR_Created_Date = m.Pending_TR_Filed_Date,
+                    TR_Last_Updated = m.Pending_TR_Filed_Date,
+                    TR_Creator_ID = m.Pending_TR_Creator_ID,
+                    TR_Status_ID = m.Status_ID,
+                    TR_Status = m.Status_Name ?? "N/A"
+                };
+                vmList.Add(vm);
+            }
+
+            //FILTER
+            var properties = filters.TF.GetType().GetProperties();
+            foreach (var property in properties)
+            {
+                var propertyName = property.Name;
+                var subStr = propertyName.Substring(propertyName.IndexOf("_") + 1);
+                var toStr = property.GetValue(filters.TF).ToString();
+                if (toStr != "" && toStr != "0")
+                {
+                    mList = mList.AsQueryable().Where("TR_" + subStr + ".Contains(@0)", toStr)
+                            .Select(e => e).ToList();
+                }
             }
             return vmList;
         }
 
         public List<DMCurrencyViewModel> populateCurr(DMFiltersViewModel filters)
         {
-            IQueryable<DMCurrencyModel> mList = _context.DMCurrency.Where(x => x.Curr_isDeleted == false && x.Curr_isActive == true).ToList().AsQueryable();
-            var properties = filters.CF.GetType().GetProperties();
+            var mList = (from e in (from c in _context.DMCurrency
+                                    join user in _context.User
+                                    on c.Curr_Creator_ID equals user.User_ID
+                                    join stat in _context.StatusList
+                                    on c.Curr_Status_ID equals stat.Status_ID
+                                    where c.Curr_isDeleted == false && c.Curr_isActive == true
+                                    select new
+                                    {
+                                        c.Curr_ID,
+                                        c.Curr_MasterID,
+                                        c.Curr_Name,
+                                        c.Curr_CCY_ABBR,
+                                        c.Curr_Creator_ID,
+                                        CreatorName = user.User_LName + ", " + user.User_FName,
+                                        c.Curr_Approver_ID,
+                                        stat.Status_ID,
+                                        stat.Status_Name,
+                                        c.Curr_Created_Date,
+                                        c.Curr_Last_Updated
+                                    })
+                         join apprv in _context.User
+                         on e.Curr_Approver_ID
+                         equals apprv.User_ID
+                         into a
+                         from apprv in a.DefaultIfEmpty()
+                         select new
+                         {
+                             e.Curr_ID,
+                             e.Curr_MasterID,
+                             e.Curr_Name,
+                             e.Curr_CCY_ABBR,
+                             e.Curr_Creator_ID,
+                             e.CreatorName,
+                             e.Curr_Approver_ID,
+                             ApproverName = e.Curr_Approver_ID > 0 ? apprv.User_LName + ", " + apprv.User_FName : "",
+                             e.Curr_Created_Date,
+                             e.Curr_Last_Updated,
+                             e.Status_ID,
+                             e.Status_Name
+                         }).ToList();
 
-            var pendingList = _context.DMCurrency_Pending.ToList();
-            foreach (var m in pendingList)
-            {
-                mList = mList.Concat(new DMCurrencyModel[] {
-                    new DMCurrencyModel
-                    {
-                        Curr_ID = m.Pending_Curr_ID,
-                        Curr_MasterID = m.Pending_Curr_MasterID,
-                        Curr_Name = m.Pending_Curr_Name,
-                        Curr_CCY_ABBR = m.Pending_Curr_CCY_ABBR,
-                        Curr_Creator_ID = m.Pending_Curr_Creator_ID,
-                        Curr_Approver_ID = m.Pending_Curr_Approver_ID.Equals(null) ? 0 : m.Pending_Curr_Approver_ID,
-                        Curr_Created_Date = m.Pending_Curr_Filed_Date,
-                        Curr_Last_Updated = m.Pending_Curr_Filed_Date,
-                        Curr_Status_ID = m.Pending_Curr_Status_ID
-                    }
-                });
-            }
-            //FILTER
-            foreach (var property in properties)
-            {
-                var propertyName = property.Name;
-                var subStr = propertyName.Substring(propertyName.IndexOf("_")+1);
-                var toStr = property.GetValue(filters.CF).ToString();
-                string[] colArr = { "No", "Creator_ID", "Approver_ID" };
-                if (toStr != "")
-                {
-                    if (toStr != "0")
-                    {
-                        if (colArr.Contains(subStr)) // IF INT VAL
-                        {
-                            mList = mList.Where("Curr_" + subStr + " = @0 AND  Curr_isDeleted == @1", property.GetValue(filters.CF), false)
-                                     .Select(e => e).AsQueryable();
-                        }
-                        else if (subStr == "Creator_Name" || subStr == "Approver_Name" || subStr == "Status")
-                        {
-                            //get all userIDs of creator or approver that contains string
-                            var names = _context.User
-                              .Where(x => (x.User_FName.Contains(property.GetValue(filters.CF).ToString())
-                              || x.User_LName.Contains(property.GetValue(filters.CF).ToString())))
-                              .Select(x => x.User_ID).ToList();
-                            //get all status IDs that contains string
-                            var status = _context.StatusList
-                              .Where(x => (x.Status_Name.Contains(property.GetValue(filters.CF).ToString())))
-                              .Select(x => x.Status_ID).ToList();
-                            if (subStr == "Approver_Name")
-                            {
-                                mList = mList.Where(x => names.Contains(x.Curr_Approver_ID) && x.Curr_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                            else if (subStr == "Creator_Name")
-                            {
-                                mList = mList.Where(x => names.Contains(x.Curr_Creator_ID) && x.Curr_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                            else if (subStr == "Status")
-                            {
-                                mList = mList.Where(x => status.Contains(x.Curr_Status_ID) && x.Curr_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                        }
-                        else // IF STRING VALUE
-                        {
-                            mList = mList.Where("Curr_" + subStr + ".Contains(@0) AND  Curr_isDeleted == @1", property.GetValue(filters.CF).ToString(), false)
-                                    .Select(e => e).AsQueryable();
-                        }
-                    }
-                }
-            }
-            var userList = (from a in mList
-                            from b in _context.User.Where(x => a.Curr_Creator_ID == x.User_ID).DefaultIfEmpty()
-                            from c in _context.User.Where(x => a.Curr_Approver_ID == x.User_ID).DefaultIfEmpty()
-                            select new
-                            {
-                                a.Curr_ID,
-                                a.Curr_MasterID,
-                                CreatorName = b.User_LName + ", " + b.User_FName,
-                                ApproverName = (c == null) ? "" : c.User_LName + ", " + c.User_FName
-                            }).ToList();
-            var statusList = (from a in mList
-                              join c in _context.StatusList on a.Curr_Status_ID equals c.Status_ID
-                              select new { a.Curr_ID, a.Curr_MasterID, c.Status_Name }).ToList();
-
+            var pendingList = (from e in (from c in _context.DMCurrency_Pending
+                                          join user in _context.User
+                                          on c.Pending_Curr_Creator_ID equals user.User_ID
+                                          join stat in _context.StatusList
+                                          on c.Pending_Curr_Status_ID equals stat.Status_ID
+                                          select new
+                                          {
+                                              c.Pending_Curr_ID,
+                                              c.Pending_Curr_MasterID,
+                                              c.Pending_Curr_Name,
+                                              c.Pending_Curr_CCY_ABBR,
+                                              c.Pending_Curr_Creator_ID,
+                                              CreatorName = user.User_LName + ", " + user.User_FName,
+                                              c.Pending_Curr_Approver_ID,
+                                              stat.Status_ID,
+                                              stat.Status_Name,
+                                              c.Pending_Curr_Filed_Date,
+                                          })
+                               join apprv in _context.User
+                               on e.Pending_Curr_Approver_ID
+                               equals apprv.User_ID
+                               into a
+                               from apprv in a.DefaultIfEmpty()
+                               select new
+                               {
+                                   e.Pending_Curr_ID,
+                                   e.Pending_Curr_MasterID,
+                                   e.Pending_Curr_Name,
+                                   e.Pending_Curr_CCY_ABBR,
+                                   e.Pending_Curr_Creator_ID,
+                                   e.CreatorName,
+                                   e.Pending_Curr_Approver_ID,
+                                   ApproverName = e.Pending_Curr_Approver_ID > 0 ? apprv.User_LName + ", " + apprv.User_FName : "",
+                                   e.Pending_Curr_Filed_Date,
+                                   e.Status_ID,
+                                   e.Status_Name
+                               }).ToList();
             List<DMCurrencyViewModel> vmList = new List<DMCurrencyViewModel>();
-            foreach (DMCurrencyModel m in mList)
+            foreach (var m in mList)
             {
-                var creator = userList.Where(a => a.Curr_ID == m.Curr_ID && a.Curr_MasterID == m.Curr_MasterID).Select(a => a.CreatorName).FirstOrDefault();
-                var approver = userList.Where(a => a.Curr_ID == m.Curr_ID && a.Curr_MasterID == m.Curr_MasterID).Select(a => a.ApproverName).FirstOrDefault();
-                var stat = statusList.Where(a => a.Curr_ID == m.Curr_ID && a.Curr_MasterID == m.Curr_MasterID).Select(a => a.Status_Name).FirstOrDefault();
                 DMCurrencyViewModel vm = new DMCurrencyViewModel
                 {
+                    Curr_ID = m.Curr_ID,
                     Curr_MasterID = m.Curr_MasterID,
                     Curr_Name = m.Curr_Name,
                     Curr_CCY_ABBR = m.Curr_CCY_ABBR,
-                    Curr_Creator_Name = creator ?? "N/A",
-                    Curr_Approver_Name = approver ?? "",
-                    Curr_Creator_ID = m.Curr_Creator_ID,
+                    Curr_Creator_Name = m.CreatorName ?? "N/A",
+                    Curr_Approver_Name = m.ApproverName ?? "",
                     Curr_Created_Date = m.Curr_Created_Date,
                     Curr_Last_Updated = m.Curr_Last_Updated,
-                    Curr_Status_ID = m.Curr_Status_ID,
-                    Curr_Status = stat ?? "N/A"
+                    Curr_Creator_ID = m.Curr_Creator_ID,
+                    Curr_Status_ID = m.Status_ID,
+                    Curr_Status = m.Status_Name ?? "N/A"
                 };
                 vmList.Add(vm);
+            }
+            foreach (var m in pendingList)
+            {
+                DMCurrencyViewModel vm = new DMCurrencyViewModel
+                {
+                    Curr_ID = m.Pending_Curr_ID,
+                    Curr_MasterID = m.Pending_Curr_MasterID,
+                    Curr_Name = m.Pending_Curr_Name,
+                    Curr_CCY_ABBR = m.Pending_Curr_CCY_ABBR,
+                    Curr_Creator_Name = m.CreatorName ?? "N/A",
+                    Curr_Approver_Name = m.ApproverName ?? "",
+                    Curr_Created_Date = m.Pending_Curr_Filed_Date,
+                    Curr_Last_Updated = m.Pending_Curr_Filed_Date,
+                    Curr_Creator_ID = m.Pending_Curr_Creator_ID,
+                    Curr_Status_ID = m.Status_ID,
+                    Curr_Status = m.Status_Name ?? "N/A"
+                };
+                vmList.Add(vm);
+            }
+
+            //FILTER
+            var properties = filters.CF.GetType().GetProperties();
+            foreach (var property in properties)
+            {
+                var propertyName = property.Name;
+                var subStr = propertyName.Substring(propertyName.IndexOf("_") + 1);
+                var toStr = property.GetValue(filters.CF).ToString();
+                if (toStr != "" && toStr != "0")
+                {
+                    mList = mList.AsQueryable().Where("Curr_" + subStr + ".Contains(@0)", toStr)
+                            .Select(e => e).ToList();
+                }
             }
             return vmList;
         }
@@ -2096,109 +2277,128 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
 
         public List<DMAccountGroupViewModel> populateAG(DMFiltersViewModel filters)
         {
-            IQueryable<DMAccountGroupModel> mList = _context.DMAccountGroup.Where(x => x.AccountGroup_isDeleted == false && x.AccountGroup_isActive == true).ToList().AsQueryable();
-            var properties = filters.AGF.GetType().GetProperties();
+            var mList = (from e in (from c in _context.DMAccountGroup
+                                    join user in _context.User
+                                    on c.AccountGroup_Creator_ID equals user.User_ID
+                                    join stat in _context.StatusList
+                                    on c.AccountGroup_Status_ID equals stat.Status_ID
+                                    where c.AccountGroup_isDeleted == false && c.AccountGroup_isActive == true
+                                    select new
+                                    {
+                                        c.AccountGroup_ID,
+                                        c.AccountGroup_MasterID,
+                                        c.AccountGroup_Name,
+                                        c.AccountGroup_Creator_ID,
+                                        CreatorName = user.User_LName + ", " + user.User_FName,
+                                        c.AccountGroup_Approver_ID,
+                                        stat.Status_ID,
+                                        stat.Status_Name,
+                                        c.AccountGroup_Created_Date,
+                                        c.AccountGroup_Last_Updated
+                                    })
+                         join apprv in _context.User
+                         on e.AccountGroup_Approver_ID
+                         equals apprv.User_ID
+                         into a
+                         from apprv in a.DefaultIfEmpty()
+                         select new
+                         {
+                             e.AccountGroup_ID,
+                             e.AccountGroup_MasterID,
+                             e.AccountGroup_Name,
+                             e.AccountGroup_Creator_ID,
+                             e.CreatorName,
+                             e.AccountGroup_Approver_ID,
+                             ApproverName = e.AccountGroup_Approver_ID > 0 ? apprv.User_LName + ", " + apprv.User_FName : "",
+                             e.AccountGroup_Created_Date,
+                             e.AccountGroup_Last_Updated,
+                             e.Status_ID,
+                             e.Status_Name
+                         }).ToList();
 
-            var pendingList = _context.DMAccountGroup_Pending.ToList();
+            var pendingList = (from e in (from c in _context.DMAccountGroup_Pending
+                                          join user in _context.User
+                                          on c.Pending_AccountGroup_Creator_ID equals user.User_ID
+                                          join stat in _context.StatusList
+                                          on c.Pending_AccountGroup_Status_ID equals stat.Status_ID
+                                          select new
+                                          {
+                                              c.Pending_AccountGroup_ID,
+                                              c.Pending_AccountGroup_MasterID,
+                                              c.Pending_AccountGroup_Name,
+                                              c.Pending_AccountGroup_Creator_ID,
+                                              CreatorName = user.User_LName + ", " + user.User_FName,
+                                              c.Pending_AccountGroup_Approver_ID,
+                                              stat.Status_ID,
+                                              stat.Status_Name,
+                                              c.Pending_AccountGroup_Filed_Date,
+                                          })
+                               join apprv in _context.User
+                               on e.Pending_AccountGroup_Approver_ID
+                               equals apprv.User_ID
+                               into a
+                               from apprv in a.DefaultIfEmpty()
+                               select new
+                               {
+                                   e.Pending_AccountGroup_ID,
+                                   e.Pending_AccountGroup_MasterID,
+                                   e.Pending_AccountGroup_Name,
+                                   e.Pending_AccountGroup_Creator_ID,
+                                   e.CreatorName,
+                                   e.Pending_AccountGroup_Approver_ID,
+                                   ApproverName = e.Pending_AccountGroup_Approver_ID > 0 ? apprv.User_LName + ", " + apprv.User_FName : "",
+                                   e.Pending_AccountGroup_Filed_Date,
+                                   e.Status_ID,
+                                   e.Status_Name
+                               }).ToList();
+            List<DMAccountGroupViewModel> vmList = new List<DMAccountGroupViewModel>();
+            foreach (var m in mList)
+            {
+                DMAccountGroupViewModel vm = new DMAccountGroupViewModel
+                {
+                    AccountGroup_ID = m.AccountGroup_ID,
+                    AccountGroup_MasterID = m.AccountGroup_MasterID,
+                    AccountGroup_Name = m.AccountGroup_Name,
+                    AccountGroup_Creator_Name = m.CreatorName ?? "N/A",
+                    AccountGroup_Approver_Name = m.ApproverName ?? "",
+                    AccountGroup_Created_Date = m.AccountGroup_Created_Date,
+                    AccountGroup_Last_Updated = m.AccountGroup_Last_Updated,
+                    AccountGroup_Creator_ID = m.AccountGroup_Creator_ID,
+                    AccountGroup_Status_ID = m.Status_ID,
+                    AccountGroup_Status_Name = m.Status_Name ?? "N/A"
+                };
+                vmList.Add(vm);
+            }
             foreach (var m in pendingList)
             {
-                mList = mList.Concat(new DMAccountGroupModel[] {
-                    new DMAccountGroupModel
-                    {
-                        AccountGroup_ID = m.Pending_AccountGroup_ID,
-                        AccountGroup_MasterID = m.Pending_AccountGroup_MasterID,
-                        AccountGroup_Name = m.Pending_AccountGroup_Name,
-                        AccountGroup_Code = m.Pending_AccountGroup_Code,
-                        AccountGroup_Creator_ID = m.Pending_AccountGroup_Creator_ID,
-                        AccountGroup_Approver_ID = m.Pending_AccountGroup_Approver_ID.Equals(null) ? 0 : m.Pending_AccountGroup_Approver_ID,
-                        AccountGroup_Created_Date = m.Pending_AccountGroup_Filed_Date,
-                        AccountGroup_Last_Updated = m.Pending_AccountGroup_Filed_Date,
-                        AccountGroup_Status_ID = m.Pending_AccountGroup_Status_ID
-                    }
-                });
+                DMAccountGroupViewModel vm = new DMAccountGroupViewModel
+                {
+                    AccountGroup_ID = m.Pending_AccountGroup_ID,
+                    AccountGroup_MasterID = m.Pending_AccountGroup_MasterID,
+                    AccountGroup_Name = m.Pending_AccountGroup_Name,
+                    AccountGroup_Creator_Name = m.CreatorName ?? "N/A",
+                    AccountGroup_Approver_Name = m.ApproverName ?? "",
+                    AccountGroup_Created_Date = m.Pending_AccountGroup_Filed_Date,
+                    AccountGroup_Last_Updated = m.Pending_AccountGroup_Filed_Date,
+                    AccountGroup_Creator_ID = m.Pending_AccountGroup_Creator_ID,
+                    AccountGroup_Status_ID = m.Status_ID,
+                    AccountGroup_Status_Name = m.Status_Name ?? "N/A"
+                };
+                vmList.Add(vm);
             }
+
             //FILTER
+            var properties = filters.AGF.GetType().GetProperties();
             foreach (var property in properties)
             {
                 var propertyName = property.Name;
                 var subStr = propertyName.Substring(propertyName.IndexOf("_") + 1);
                 var toStr = property.GetValue(filters.AGF).ToString();
-                string[] colArr = { "Creator_ID", "Approver_ID" };
-                if (toStr != "")
+                if (toStr != "" && toStr != "0")
                 {
-                    if (toStr != "0")
-                    {
-                        if (subStr == "Creator_Name" || subStr == "Approver_Name" || subStr == "Status")
-                        {
-                            //get all userIDs of creator or approver that contains string
-                            var names = _context.User
-                              .Where(x => (x.User_FName.Contains(property.GetValue(filters.AGF).ToString())
-                              || x.User_LName.Contains(property.GetValue(filters.AGF).ToString())))
-                              .Select(x => x.User_ID).ToList();
-                            //get all status IDs that contains string
-                            var status = _context.StatusList
-                              .Where(x => (x.Status_Name.Contains(property.GetValue(filters.AGF).ToString())))
-                              .Select(x => x.Status_ID).ToList();
-                            if (subStr == "Approver_Name")
-                            {
-                                mList = mList.Where(x => names.Contains(x.AccountGroup_Approver_ID) && x.AccountGroup_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                            else if (subStr == "Creator_Name")
-                            {
-                                mList = mList.Where(x => names.Contains(x.AccountGroup_Creator_ID) && x.AccountGroup_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                            else if (subStr == "Status")
-                            {
-                                mList = mList.Where(x => status.Contains(x.AccountGroup_Status_ID) && x.AccountGroup_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                        }
-                        else // IF STRING VALUE
-                        {
-                            mList = mList.Where("AccountGroup_" + subStr + ".Contains(@0) AND  AccountGroup_isDeleted == @1", property.GetValue(filters.AGF).ToString(), false)
-                                    .Select(e => e).AsQueryable();
-                        }
-                    }
+                    mList = mList.AsQueryable().Where("AccountGroup_" + subStr + ".Contains(@0)", toStr)
+                            .Select(e => e).ToList();
                 }
-            }
-            var userList = (from a in mList
-                            from b in _context.User.Where(x => a.AccountGroup_Creator_ID == x.User_ID).DefaultIfEmpty()
-                            from c in _context.User.Where(x => a.AccountGroup_Approver_ID == x.User_ID).DefaultIfEmpty()
-                            select new
-                            {
-                                a.AccountGroup_ID,
-                                a.AccountGroup_MasterID,
-                                CreatorName = b.User_LName + ", " + b.User_FName,
-                                ApproverName = (c == null) ? "" : c.User_LName + ", " + c.User_FName
-                            }).ToList();
-            var statusList = (from a in mList
-                              join c in _context.StatusList on a.AccountGroup_Status_ID equals c.Status_ID
-                              select new { a.AccountGroup_ID, a.AccountGroup_MasterID, c.Status_Name }).ToList();
-            //TEMP where clause until FBT is updated
-            var defaultFBT = _context.DMFBT.Where(x => x.FBT_MasterID == 1).Select(x => x.FBT_Name).FirstOrDefault();
-
-            List<DMAccountGroupViewModel> vmList = new List<DMAccountGroupViewModel>();
-            foreach (DMAccountGroupModel m in mList)
-            {
-                var creator = userList.Where(a => a.AccountGroup_ID == m.AccountGroup_ID && a.AccountGroup_MasterID == m.AccountGroup_MasterID).Select(a => a.CreatorName).FirstOrDefault();
-                var approver = userList.Where(a => a.AccountGroup_ID == m.AccountGroup_ID && a.AccountGroup_MasterID == m.AccountGroup_MasterID).Select(a => a.ApproverName).FirstOrDefault();
-                var stat = statusList.Where(a => a.AccountGroup_ID == m.AccountGroup_ID && a.AccountGroup_MasterID == m.AccountGroup_MasterID).Select(a => a.Status_Name).FirstOrDefault();
-                DMAccountGroupViewModel vm = new DMAccountGroupViewModel
-                {
-                    AccountGroup_MasterID = m.AccountGroup_MasterID,
-                    AccountGroup_Name = m.AccountGroup_Name,
-                    AccountGroup_Code = m.AccountGroup_Code,
-                    AccountGroup_Creator_Name = creator ?? "N/A",
-                    AccountGroup_Approver_Name = approver ?? "",
-                    AccountGroup_Creator_ID = m.AccountGroup_Creator_ID,
-                    AccountGroup_Created_Date = m.AccountGroup_Created_Date,
-                    AccountGroup_Last_Updated = m.AccountGroup_Last_Updated,
-                    AccountGroup_Status_ID = m.AccountGroup_Status_ID,
-                    AccountGroup_Status_Name = stat ?? "N/A"
-                };
-                vmList.Add(vm);
             }
             return vmList;
         }
