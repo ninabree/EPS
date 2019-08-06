@@ -45,7 +45,7 @@
 
 body, html {
     height: 100%;
-    font-family: HelveticaNeue, sans-serif;
+    font-family: /*HelveticaNeue,*/ 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     background: #fff;
     font-size: 11px;
 }
@@ -61,7 +61,8 @@ body, html {
 }
 /*---------------------------------------------*/
 a {
-    font-family: HelveticaNeue;
+    /*font-family: HelveticaNeue;*/
+    font-family: /*HelveticaNeue,*/ 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 12px;
     line-height: 1.7;
     color: #666666;
@@ -91,15 +92,18 @@ h5 {
 }
 
 p {
-    font-family: HelveticaNeue;
+    /*font-family: HelveticaNeue;*/
+    font-family: /*HelveticaNeue,*/ 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 14px;
     line-height: 1.7;
-    color: #666666;
+    color: #1a1a1a;
     margin: 0px;
 }
 
 hr {
     width: 100%;
+    margin-top: 20px;
+    margin-bottom: 0px !important; 
     border-top: 1px solid #0a1b81;
 }
 
@@ -112,10 +116,7 @@ ul, li {
     list-style-type: none;
 }
 /*---------------------------------------------*/
-input {
-    outline: none;
-    border: none;
-}
+
 .input {
     background: #fff;
     padding: 2px;
@@ -124,12 +125,15 @@ input {
     line-height: 1.2;
     /*height: 17px;*/
     width: 90%;
-    border: 1px solid #ccc;
+    border: 1px solid #a9a9a9;
     border-radius: 2px;
 }
     .input[disabled] {
         cursor: not-allowed;
         background-color: #ccc;
+    }
+    .input:not(readonly){
+
     }
 a.sidebar-link {
     width: 100%;
@@ -244,14 +248,16 @@ iframe {
 /*//////////////////////////////////////////////////////////////////
 [ Utility ]*/
 .txt1 {
-    font-family: HelveticaNeue;
+    /*font-family: HelveticaNeue;*/
+    font-family: /*HelveticaNeue,*/ 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 15px;
     color: #999999;
     line-height: 1.5;
 }
 
 .txt2 {
-    font-family: HelveticaNeue;
+    /*font-family: HelveticaNeue;*/
+    font-family: /*HelveticaNeue,*/ 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 15px;
     color: #ed1b26;
     line-height: 1.5;
@@ -259,7 +265,8 @@ iframe {
 /*//////////////////////////////////////////////////////////////////
 [ Buttons ]*/
 .login-form-btn {
-    font-family: HelveticaNeueLight;
+    /*font-family: HelveticaNeueLight;*/
+    font-family: /*HelveticaNeue,*/ 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 12px;
     color: #0A1B81;
     padding: 5px 10px;
@@ -294,7 +301,7 @@ iframe {
 }
 
 #header-logo > img {
-    height: 100%;
+    height: 5vh;
     margin: 15px;
 }
 /*//////////////////////////////////////////////////////////////////
@@ -308,15 +315,27 @@ iframe {
     display: -ms-flexbox;
     display: flex;
     flex-wrap: wrap;
-    font-family: HelveticaNeue;
+    font-family: /*HelveticaNeue,*/ 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 12px;
     color: #0A1B81;
     line-height: 1.5;
     justify-content: center;
     align-items: center;
     background: #fff;
+    margin-top: -20vh;
 }
-
+.login-header {
+    width: 100%;
+    max-height: 5vh;
+    margin-top: -10vh;
+}
+    .login-header > div > #header-logo > img {
+        height: 5vh;
+        margin: 15px;
+    }
+.cont-login {
+    z-index: 100;
+}
 .form-login{
     width: 320px;
     align-content: center;
@@ -337,7 +356,8 @@ iframe {
     text-align: left;
     width: 70%;
     position: relative;
-    border-bottom: 1px solid #d9d9d9;
+    /*border-bottom: 1px solid #d9d9d9;*/
+    border-bottom: 1px solid #0A1B81;
     display: block;
     margin: 0 auto;
     margin-top: 5px;
@@ -345,7 +365,7 @@ iframe {
 }
 
 .input100 {
-    font-family: HelveticaNeue;
+    font-family: /*HelveticaNeue,*/ 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 12px;
     color: #555555;
     line-height: 1.2;
@@ -354,8 +374,15 @@ iframe {
     height: 30px;
     background: transparent;
     padding: 0 5px;
+    border: 1px solid #a9a9a9;
+    border-radius: 2px;
+    height: 22px;
+    margin-top: 2px;
 }
-
+input[readonly]{
+    border:none;
+    text-decoration:none;
+}
 /*---------------------------------------------*/
 .focus-input100 {
     position: absolute;
@@ -383,7 +410,7 @@ iframe {
     }
 
     .focus-input100::after {
-        font-family: HelveticaNeue;
+        font-family: /*HelveticaNeue,*/ 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;: HelveticaNeue;
         font-size: 10px;
         color: #333;
         line-height: 1.2;
@@ -458,24 +485,38 @@ div.tabContent {
     max-height: 100%;
     /*min-height: 100%;*/
     /*max-height: 75vh;*/
-    min-height: 75vh;
+    min-height: 82vh;
+    /*max-height: 82vh;*/
     height: auto;
     background-color: #f2f2f2;
-    color: #1f262e;
+    color: #1a1a1a;
 }
-
+    /*div.tabContent:has( > div.hometabContent ) {
+        background-color: #e6e6e6;
+    }*/
     div.tabContent > div.tabContent {
         margin-left: 5px;
-        min-height: 0vh;
+        min-height: 75vh;
         overflow-y: auto;
-        max-height: 67vh;
+        max-height: 75vh;
+        background-color: #f9f9f9;
     }
     div.tabContent > div.hometabContent {
         margin-left: 5px;
         min-height: 70vh;
         overflow-y: auto;
         max-height: 70vh;
+        background-color: #f9f9f9;
     }
+iframe {
+    position: relative;
+    min-height: 50vh;
+    max-height: 100%;
+    width: 100%;
+}
+iframe > html {
+    font-size: 11px;
+}
 .report {
     height: 69vh !important;
     border: 1px solid #ccc;
@@ -492,10 +533,12 @@ div.tabContent {
 .tab-content-cont {
     width: 94%;
     margin: 0% 3%;
-    font-family: HelveticaNeue;
+    font-family: /*HelveticaNeue,*/ 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;: HelveticaNeue;
     font-size: 10px;
 }
-
+iframe{
+    background-color: #fff;
+}
 #tbl-lbl {
     width: 100%;
 }
@@ -513,15 +556,16 @@ div.tabContent {
     [Tab Content - Home]
 */
 .tbl-cont > .tab-tbl, .hometabContent > div > .tab-tbl {
-    font-family: HelveticaNeueLight;
+    font-family: /*HelveticaNeue,*/ 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;: HelveticaNeueLight;
     font-size: 10px;
 }
 
-    .tbl-cont > .tab-tbl > thead, .hometabContent > div > .tab-tbl > thead {
+    .tbl-cont > .tab-tbl > thead, .hometabContent > div > .tab-tbl > thead, table:not(.voucher-tbl) > thead {
         background-color: #ddd;
         color: #000;
         font-size: 12px;
-        font-family: HelveticaNeueLight;
+        font-family: /*HelveticaNeue,*/ 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        : HelveticaNeueLight;
     }
 
         .tbl-cont > .tab-tbl > thead > tr > th, .hometabContent > div > .tab-tbl > thead > tr > th{
@@ -535,7 +579,7 @@ div.tabContent {
 }
 
 .table > tbody > tr > td, .table > thead > tr > th {
-    padding: 1.5px 1px;
+    padding: 1.5px 10px;
     text-align: left;
 }
 
@@ -562,7 +606,7 @@ div.tabContent {
     border-radius: 2px;
     padding: 1px 2px;
     margin: 1px 2px;
-    font-family: HelveticaNeueMedium;
+    font-family: /*HelveticaNeue,*/ 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;: HelveticaNeueMedium;
 }
 
     .tbl-btn:hover {
@@ -579,7 +623,7 @@ div.tabContent {
     border-radius: 2px;
     padding: 1px 5px;
     margin: 1px 5px;
-    font-family: HelveticaNeueMedium;
+    font-family: /*HelveticaNeue,*/ 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;: HelveticaNeueMedium;
 }
 
     .btn:hover {
@@ -590,13 +634,13 @@ div.tabContent {
         cursor: not-allowed;
         background-color: #CFCFCF;
     }
-.btnDisabled {
+/*.btnDisabled {
     border-color: #CFCFCF;
 }
     .btnDisabled:hover {
         background: transparent;
         color: #333;
-    }
+    }*/
 #close-tbl > tbody > tr {
     height: 2px;
 }
@@ -607,7 +651,7 @@ div.tabContent {
     }
         #close-tbl > tbody > tr > td > button.tbl-btn {
             padding: 5px 5px;
-            font-family: HelveticaNeueBold;
+            font-family: /*HelveticaNeue,*/ 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;: HelveticaNeueBold;
         }
 /*---------------------------------------
     [Tab Content - User Management]*/
@@ -655,7 +699,7 @@ div[aria-describedby=validationSummary] {
 [ Voucher - Table ]*/
 /*-------------------------------------
 [ INPUT FIELDS ]*/
-td.voucher-input, div.voucher-input {
+td.voucher-input, div.voucher-input, input.voucher-input, select.voucher-input {
     background-color: #fcf8e3;
 }
     td.voucher-input > input, div.voucher-input > input {
@@ -721,7 +765,7 @@ img#td-logo {
 }
 /*--------------[End Closing]----------------------*/
 .btncustomize {
-    font-family: HelveticaNeue;
+    font-family: /*HelveticaNeue,*/ 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;: HelveticaNeue;
     font-size: 12px;
     line-height: 1.7;
     color: #666666;
@@ -846,7 +890,7 @@ full width */
     box-sizing: border-box;
     color: rgb(51, 51, 51);
     display: block;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: /*HelveticaNeue,*/ 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;: Arial, Helvetica, sans-serif;
     font-size: 11px;
     height: 138.984px;
     left: 40.8%;
@@ -898,7 +942,7 @@ full width */
     color: rgb(51, 51, 51);
     cursor: move;
     display: block;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: /*HelveticaNeue,*/ 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;: Arial, Helvetica, sans-serif;
     font-size: 11px;
     font-weight: 700;
     height: 27.9688px;
@@ -945,7 +989,7 @@ full width */
     box-sizing: border-box;
     color: rgb(255, 0, 0);
     display: block;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: /*HelveticaNeue,*/ 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;: Arial, Helvetica, sans-serif;
     font-size: 11px;
     /*height: 104.641px;*/
     line-height: 15.7143px;
@@ -973,7 +1017,7 @@ full width */
     cursor: move;
     display: block;
     float: left;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: /*HelveticaNeue,*/ 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;: Arial, Helvetica, sans-serif;
     font-size: 11px;
     font-weight: 700;
     height: 15px;
@@ -1026,7 +1070,7 @@ full width */
     color: rgb(51, 51, 51);
     cursor: pointer;
     display: block;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: /*HelveticaNeue,*/ 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;: Arial, Helvetica, sans-serif;
     font-size: 11px;
     font-stretch: 100%;
     font-style: normal;

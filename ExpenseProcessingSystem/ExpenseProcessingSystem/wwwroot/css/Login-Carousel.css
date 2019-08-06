@@ -1,0 +1,99 @@
+﻿.slider {
+    width: 100%;
+    min-height: 100vh;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    flex-wrap: wrap;
+    font-family: HelveticaNeue;
+    font-size: 12px;
+    color: #0A1B81;
+    line-height: 1.5;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+    position: relative;
+}
+
+.slide1, .slide2, .slide3, .slide4, .slide5 {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.slide1 {
+    background: url('/images/login/car-1.jpg')no-repeat center;
+    background-size: cover;
+    animation: fade 18s infinite;
+    -webkit-animation: fade 18s infinite;
+}
+
+.slide2 {
+    background: url('/images/login/car-2.jpg')no-repeat center;
+    background-size: cover;
+    animation: fade2 18s infinite;
+    -webkit-animation: fade2 18s infinite;
+}
+
+.slide3 {
+    background: url('/images/login/car-3.jpg')no-repeat center;
+    background-size: cover;
+    animation: fade3 18s infinite;
+    -webkit-animation: fade3 18s infinite;
+}
+
+@keyframes fade {
+    0% {
+        opacity: 1
+    }
+
+    33.333% {
+        opacity: 0
+    }
+
+    66.666% {
+        opacity: 0
+    }
+
+    100% {
+        opacity: 1
+    }
+}
+
+@keyframes fade2 {
+    0% {
+        opacity: 0
+    }
+
+    33.333% {
+        opacity: 1
+    }
+
+    66.666% {
+        opacity: 0
+    }
+
+    100% {
+        opacity: 0
+    }
+}
+
+@keyframes fade3 {
+    0% {
+        opacity: 0
+    }
+
+    33.333% {
+        opacity: 0
+    }
+
+    66.666% {
+        opacity: 1
+    }
+
+    100% {
+        opacity: 0
+    }
+}

@@ -4,11 +4,11 @@
 @using ExpenseProcessingSystem.ViewModels
 @model HomeIndexViewModel
 <div class="tabContent hometabContent">
-    <div>
+    <div class="p-t-10 p-l-20 p-r-20">
         <form asp-action="Index" asp-controller="Home" method="get" id="search-frm">
             <div class="form-actions no-color">
                 <p>
-                    Find by:
+                    Filter by:
                     <table class="table">
                         <tr>
                             <td>@Html.LabelFor(model => model.Filters.NotifFil.NotifFil_Application_Type_Name)</td>
@@ -85,6 +85,7 @@
         </a>
         @Html.Partial("ModalPartial")
     </div>
+</div>
     <script>
         //reset search filter values
         $(document).on("click", "#full-list-btn", function (e) {

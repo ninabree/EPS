@@ -10,7 +10,7 @@
         <form asp-action="Pending" asp-controller="Home" method="get" id="search-frm">
             <div class="form-actions no-color">
                 <p class="">Filter by:</p>
-                <table class="table">
+                <table class="table tab-tbl">
                     <tr>
                         <td>@Html.LabelFor(model => model.Filters.GenPendFil.Pending_Type)</td>
                         <td>
@@ -52,10 +52,10 @@
             <thead>
                 <tr>
                     <th><a asp-action="Pending" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PendAppIDSortParm"]">Application Type<p class="btn-xs glyphicon @ViewData["glyph-1"]"></p></a></th>
-                    <th><a asp-action="Pending" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PendAppAmtSortParm"]">Application Amount<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
-                    <th><a asp-action="Pending" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PendAppPaySortParm"]">Application Payee<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
-                    <th><a asp-action="Pending" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PendAppMkrSortParm"]">Application Maker<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
-                    <th>Application Verifier/s</th>
+                    <th><a asp-action="Pending" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PendAppAmtSortParm"]">Amount<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
+                    <th><a asp-action="Pending" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PendAppPaySortParm"]">Payee<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
+                    <th><a asp-action="Pending" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PendAppMkrSortParm"]">Maker<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
+                    <th>Verifier/s</th>
                     <th><a asp-action="Pending" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PendDateSortParm"]">Date Submitted<p class="btn-xs glyphicon @ViewData["glyph-6"]"></p></a></th>
                     <th><a asp-action="Pending" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PendUpdateSortParm"]">Last Updated Date<p class="btn-xs glyphicon @ViewData["glyph-7"]"></p></a></th>
                     <th><a asp-action="Pending" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PendAppStatSortParm"]">Application Status<p class="btn-xs glyphicon @ViewData["glyph-8"]"></p></a></th>
@@ -80,8 +80,8 @@
                                 <text>@item.App_Verifier_ID_List[0]</text>
                             }
                         </td>
-                        <td>@Html.DisplayFor(model => item.App_Date)</td>
-                        <td>@Html.DisplayFor(model => item.App_Last_Updated)</td>
+                        <td>@Html.DisplayFor(model => item.App_Date, new { @class = "input", @type = "date" })</td>
+                        <td>@Html.DisplayFor(model => item.App_Last_Updated, new { @class = "input", @type = "date" })</td>
                         <td>@Html.DisplayFor(model => item.App_Status)</td>
                         <th>
                             @if (item.App_Status == printStat)

@@ -43,11 +43,12 @@
 </head>
 <body>
     @RenderSection("Scripts", required: false)
-    <div id="header">
-        <a href="#" id="header-logo"><img src="~/images/mizuho-logo-4.png" alt="bnklogo"></a>
-    </div>
     @if (ViewBag.access.isLoggedIn)
     {
+        <div id="header">
+            <div class="dis-inline-block float-l"><a href="#" id="header-logo"><img src="~/images/mizuho-logo-5-1.png" alt="bnklogo"></a></div>
+            <div class="dis-inline-block float-r"><a href="#" id="header-logo"><img src="~/images/mizuho-logo-5-2.png" alt="bnklogo"></a></div>
+        </div>
         <div id="homepage-tabs" class="m-t-30 m-l-25 m-r-25">
             <input type="hidden" value="@ViewBag.userID" id="UI" />
 
@@ -78,6 +79,13 @@
                 @RenderBody()
             </div>
         </div>
+        //FOOTER
+        <hr />
+        <div class="m-l-25 m-r-25">
+            <footer>
+                <p>&copy; 2019 - Express</p>
+            </footer>
+        </div>
     }
     else
     {
@@ -87,12 +95,6 @@
             @RenderBody()
         </div>
     }
-    <hr />
-    <div class="m-l-25 m-r-25">
-        <footer>
-            <p>&copy; 2019 - EPS</p>
-        </footer>
-    </div>
     @*Confirmation pop up modal*@
     @Html.Partial("PopupConfirmMessage")
     @*Loading effect modal*@

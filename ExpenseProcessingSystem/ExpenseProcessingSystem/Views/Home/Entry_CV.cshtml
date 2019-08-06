@@ -18,10 +18,10 @@
         <div id="tbl-lbl">
             <div class="dis-inline-block"><p>Payee:</p></div>
             <div class="dis-inline-block">
-                @Html.DropDownListFor(m => m.payee_type, new SelectList(Model.systemValues.payee_type_sel, "Value", "Text", Model.systemValues.payee_type_sel.SelectedValue), new { @id = "payeeTypeSel" })
+                @Html.DropDownListFor(m => m.payee_type, new SelectList(Model.systemValues.payee_type_sel, "Value", "Text", Model.systemValues.payee_type_sel.SelectedValue), new { @id="payeeTypeSel", @class="voucher-input" })
             </div>
             <div class="dis-inline-block">
-                @Html.DropDownListFor(m => m.vendor, new SelectList(Model.systemValues.vendors, "Value", "Text", Model.systemValues.vendors.SelectedValue), new { @id = "vendorName" })
+                @Html.DropDownListFor(m => m.vendor, new SelectList(Model.systemValues.vendors, "Value", "Text", Model.systemValues.vendors.SelectedValue), new { @id="vendorName", @class="voucher-input" })
             </div>
         </div>
         <div class="flex-c">
@@ -50,8 +50,9 @@
                         <th colspan="2" rowspan="2">VAT</th>
                         <th colspan="2" rowspan="2">EWT</th>
                         <th rowspan="2">Currency</th>
-                        <th>Debit</th>
-                        <th colspan="2">Credit</th>
+                        <th align="center">Debit</th>
+                        <th align="center" colspan="2">Credit</th>
+                        <th rowspan="2"></th>
                     </tr>
                     <tr>
                         <th scope="col">Gross Amount</th>
@@ -65,7 +66,7 @@
                     <tr id="item_@i">
                         <td class="p-b-1 p-t-1">
                             <div class="flex-sb">
-                                @Html.TextBoxFor(x => Model.EntryCV[i].GBaseRemarks, new { @class = "input100 w-80" })
+                                @Html.TextBoxFor(x => Model.EntryCV[i].GBaseRemarks, new { @class = "input100 w-80 voucher-input" })
                                 <div id="remark_@i">
                                     <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
                                     @for (int y = 0; y < Model.EntryCV[i].gBaseRemarksDetails.Count(); y++)
@@ -80,7 +81,7 @@
                         </td>
                         <td>
                             @*@Html.DropDownListFor(x => Model.EntryCV[i].account, new SelectList(Model.systemValues.acc, "accId", "accName", Model.systemValues.acc.Where(x=> x.accId == Model.EntryCV[i].account)), new { @class = "input100 txtAcc" })*@
-                            <select id="@Html.IdFor(x => Model.EntryCV[i].account)" class="input100 txtAcc" name="@Html.NameFor(x => Model.EntryCV[i].account)">
+                            <select id="@Html.IdFor(x => Model.EntryCV[i].account)" class="input100 txtAcc voucher-input" name="@Html.NameFor(x => Model.EntryCV[i].account)">
                                 @foreach (var groepModel in Model.systemValues.acc)
                                 {
                                     if (@groepModel.accId == @Model.EntryCV[0].account)
@@ -95,20 +96,20 @@
                                 }
                             </select>
                         </td>
-                        <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].fbt)</td>
+                        <td style="text-align:center" class="">@Html.CheckBoxFor(x => Model.EntryCV[i].fbt)</td>
                         <td>
-                            @Html.DropDownListFor(x => Model.EntryCV[i].dept, new SelectList(Model.systemValues.dept, "Value", "Text", Model.systemValues.dept.SelectedValue), new { @class = "input100 txtDept" })
+                            @Html.DropDownListFor(x => Model.EntryCV[i].dept, new SelectList(Model.systemValues.dept, "Value", "Text", Model.systemValues.dept.SelectedValue), new { @class = "input100 txtDept voucher-input" })
                         </td>
-                        <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].chkVat, new { @class = "chkVat comVar" })</td>
+                        <td style="text-align:center" class="">@Html.CheckBoxFor(x => Model.EntryCV[i].chkVat, new { @class = "chkVat comVar" })</td>
                         <td>
-                            @Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.systemValues.vat.SelectedValue), new { @class = "input100 txtVat comVar", @disabled = "true" })
+                            @Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.systemValues.vat.SelectedValue), new { @class = "input100 txtVat comVar voucher-input", @disabled = "true" })
                         </td>
-                        <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].chkEwt, new { @class = "chkEwt comVar" })</td>
+                        <td style="text-align:center" class="">@Html.CheckBoxFor(x => Model.EntryCV[i].chkEwt, new { @class = "chkEwt comVar" })</td>
                         <td>
-                            @Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt comVar", @disabled = "true" })
+                            @Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt comVar voucher-input", @disabled = "true" })
                         </td>
                         <td>
-                            @Html.DropDownListFor(x => Model.EntryCV[i].ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100" })
+                            @Html.DropDownListFor(x => Model.EntryCV[i].ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100 voucher-input" })
                         </td>
                         <td>@Html.TextBoxFor(x => Model.EntryCV[i].debitGross, new { @class = "input100 txtGross", @readonly = "readonly" })</td>
                         <td>@Html.TextBoxFor(x => Model.EntryCV[i].credEwt, new { @class = "input100 txtCredEwt", @readonly = "readonly" })</td>
@@ -161,28 +162,28 @@
         <div id="entry-controls" class="m-b-10">
             <div class="flex-sb">
                 <div>
-                    <div class="dis-inline-block tbl-btn"><button>Save</button></div>
-                    <div class="dis-inline-block tbl-btn"><button disabled>Delete</button></div>
-                    <div class="dis-inline-block tbl-btn"><button disabled>Modify</button></div>
+                    <div class="dis-inline-block"><button class="tbl-btn">Save</button></div>
+                    <div class="dis-inline-block"><button class="tbl-btn" disabled>Delete</button></div>
+                    <div class="dis-inline-block"><button class="tbl-btn" disabled>Modify</button></div>
                 </div>
                 <div>
-                    <div class="dis-inline-block tbl-btn"><button id="reversal_entry" disabled>Create Reversal Entry</button></div>
+                    <div class="dis-inline-block"><button id="reversal_entry" class="tbl-btn" disabled>Create Reversal Entry</button></div>
                 </div>
                 <div>
-                    <div class="dis-inline-block tbl-btn m-l-41"><button disabled>Print Check</button></div>
+                    <div class="dis-inline-block m-l-41"><button class="tbl-btn" disabled>Print Check</button></div>
                 </div>
 
             </div>
             <div class="flex-sb">
                 <div>
-                    <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
-                    <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
+                    <div class="dis-inline-block"><button class="tbl-btn" disabled>Approve/Verify</button></div>
+                    <div class="dis-inline-block"><button class="tbl-btn" disabled>Reject</button></div>
                 </div>
                 <div>
-                    <div class="dis-inline-block tbl-btn"><button disabled>Delete GBase Post</button></div>
+                    <div class="dis-inline-block"><button class="tbl-btn" disabled>Delete GBase Post</button></div>
                 </div>
                 <div>
-                    <div class="dis-inline-block tbl-btn"><button disabled>Print BIR Certificate</button></div>
+                    <div class="dis-inline-block"><button class="tbl-btn" disabled>Print BIR Certificate</button></div>
                 </div>
             </div>
         </div>
