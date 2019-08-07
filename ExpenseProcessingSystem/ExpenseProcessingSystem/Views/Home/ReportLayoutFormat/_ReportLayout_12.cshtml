@@ -78,26 +78,30 @@
                     <td colspan="1" class="bordered-td">@ent.PA_No_Of_Months</td>
                 </tr>
                 <tr><td colspan="6"><p></p></td></tr>
-                <tr>
-                    <td colspan="2" class="bordered-td"><b>Schedule of Amortization</b></td>
-                    <td colspan="1" class="bordered-td"><b>Amount</b></td>
-                    <td colspan="4"></td>
-                </tr>
-                @if (ent.PA_AmortScheds.Count > 0)
-                {
-                    foreach (var a in ent.PA_AmortScheds)
+                <thead>
+                    <tr>
+                        <th colspan="2" class="bordered-td"><b>Schedule of Amortization</b></th>
+                        <th colspan="1" class="bordered-td"><b>Amount</b></th>
+                        <th colspan="4"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ent.PA_AmortScheds.Count > 0)
                     {
+                        foreach (var a in ent.PA_AmortScheds)
+                        {
 
-                        <tr>
-                            <td colspan="2" class="bordered-td">@a.as_Amort_Name</td>
-                            <td colspan="1" class="bordered-td">@a.as_Amount</td>
-                            <td colspan="4"></td>
-                        </tr>
+                            <tr>
+                                <td colspan="2" class="bordered-td">@a.as_Amort_Name</td>
+                                <td colspan="1" class="bordered-td">@a.as_Amount</td>
+                                <td colspan="4"></td>
+                            </tr>
+                        }
                     }
-                }
 
-                <tr><td colspan="6"><p></p></td></tr>
-                <tr><td colspan="6"><p></p></td></tr>
+                    <tr><td colspan="6"><p></p></td></tr>
+                    <tr><td colspan="6"><p></p></td></tr>
+                </tbody>
             </table>
         </div>
     }

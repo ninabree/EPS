@@ -33,7 +33,7 @@ namespace ExpenseProcessingSystem.Controllers
     [ScreenFltr]
     public class HomeController : Controller
     {
-        private readonly int pageSize = 30;
+        private readonly int pageSize = 2;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly EPSDbContext _context;
         private readonly GOExpressContext _GOContext;
@@ -1711,7 +1711,7 @@ namespace ExpenseProcessingSystem.Controllers
                 if (_service.deleteExpenseEntry(EntryCVViewModelList.entryID))
                 {
                     id = _service.addExpense_CV(EntryCVViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_PC);
-                    var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == EntryCVViewModelList.entryID).Expense_Creator_ID;
+                    var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == id).Expense_Creator_ID;
                     //----------------------------- NOTIF----------------------------------
                     _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_PC, GlobalSystemValues.STATUS_EDIT, makerId);
                     //----------------------------- NOTIF----------------------------------
@@ -2024,7 +2024,7 @@ namespace ExpenseProcessingSystem.Controllers
                 if (_service.deleteExpenseEntry(EntryCVViewModelList.entryID))
                 {
                     id = _service.addExpense_CV(EntryCVViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_SS);
-                    var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == EntryCVViewModelList.entryID).Expense_Creator_ID;
+                    var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == id).Expense_Creator_ID;
                     //----------------------------- NOTIF----------------------------------
                     _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_SS, GlobalSystemValues.STATUS_EDIT, makerId);
                     //----------------------------- NOTIF----------------------------------
@@ -2831,12 +2831,19 @@ namespace ExpenseProcessingSystem.Controllers
             if (exist == 0)
             {
                 id = _service.addLiquidationDetail(vm, int.Parse(GetUserID()), exist);
+                //----------------------------- NOTIF----------------------------------
+                _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_LIQ, GlobalSystemValues.STATUS_NEW, 0);
+                //----------------------------- NOTIF----------------------------------
             }
             else
             {
                 if (_service.deleteLiquidationEntry(vm.entryID))
                 {
                     id = _service.addLiquidationDetail(vm, int.Parse(GetUserID()), exist);
+                    var makerId = _context.LiquidationEntryDetails.FirstOrDefault(x => x.ExpenseEntryModel.Expense_ID == id).Liq_Created_UserID;
+                    //----------------------------- NOTIF----------------------------------
+                    _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_SS, GlobalSystemValues.STATUS_EDIT, makerId);
+                    //----------------------------- NOTIF----------------------------------
                 }
             }
 
@@ -2932,7 +2939,7 @@ namespace ExpenseProcessingSystem.Controllers
             string viewLink = "Liquidation_SS";
             LiquidationViewModel ssList;
 
-            var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == entryID).Expense_Creator_ID;
+            var makerId = _context.LiquidationEntryDetails.FirstOrDefault(x => x.ExpenseEntryModel.Expense_ID == entryID).Liq_Created_UserID;
             switch (command)
             {
                 case "Modify":
@@ -4200,32 +4207,5 @@ namespace ExpenseProcessingSystem.Controllers
             return vvm;
         }
 
-        [AcceptVerbs("GET")]
-        public JsonResult CheckRemainingBudget(int entryID)
-        {
-            int expType = _service.GetSingleExpenseRec(entryID).Expense_Type;
-
-            //For CV, PC, SS Entry
-            if (expType == GlobalSystemValues.TYPE_CV || expType == GlobalSystemValues.TYPE_PC || expType == GlobalSystemValues.TYPE_SS)
-            {
-                //For Liquidation Entry
-                if (expType == GlobalSystemValues.TYPE_SS && _service.getLiquidationExistence(entryID) > 0)
-                {
-                    return Json(_service.CheckRemainingBudgetOfLiquidation(entryID));
-                }
-                return Json(_service.CheckRemainingBudgetOfCVPCSS(entryID));
-
-            }//For DDV Entry
-            else if (expType == GlobalSystemValues.TYPE_DDV)
-            {
-                return Json(_service.CheckRemainingBudgetOfDD(entryID));
-            }//For NC Entry
-            else if (expType == GlobalSystemValues.TYPE_NC)
-            {
-                return Json(_service.CheckRemainingBudgetOfNC(entryID));
-            }
-
-            return Json(new List<string>());
-        }
     }
 }

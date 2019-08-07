@@ -315,11 +315,9 @@
 });
 
 $(document).ready(function () {
-    function ajaxStart() { $('body').addClass("loading"); }
-    function ajaxStop() { $('body').removeClass("loading"); } 
     $("#btnGenerateFile").click(function (e) {
         e.preventDefault();
-        ajaxStart();
+        loadingEffectStart();
         var reportType = $('#ddlReportType').val();
         var chkList = [];
         $.each($("input[name='chkTaxRate_" + reportType + "']:checked"), function () {
@@ -381,17 +379,17 @@ $(document).ready(function () {
                         + "&TransNoTo=" + $('#TransNoTo_' + reportType).val()
                         + "&SubjName=" + $('#SubjName_' + reportType).val();
                 }
-                ajaxStop();
+                loadingEffectStop();
             }, 
             error: function (result) {
                 alert('Error');
-                ajaxStop();
+                loadingEffectStop();
             }
         });
     });
     $("#btnGeneratePreview").click(function (e) {
         e.preventDefault();
-        ajaxStart();
+        loadingEffectStart();
 
         var reportType = $('#ddlReportType').val();
         var chkList = [];
@@ -460,11 +458,11 @@ $(document).ready(function () {
                     $('#txtAsOfLabel').text("As of ");
                     $('#txtDatePreviewShow').text(date_time);
                 }
-                ajaxStop();
+                loadingEffectStop();
             },
             error: function (result) {
                 alert('Error');
-                ajaxStop();
+                loadingEffectStop();
             }
         });
     });
