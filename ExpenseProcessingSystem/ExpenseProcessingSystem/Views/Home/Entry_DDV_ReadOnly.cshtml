@@ -196,7 +196,7 @@
     </div>
     <div id="entry-controls" class="m-b-10">
         @{
-            var enableSave = /*(Model.statusID == GlobalSystemValues.STATUS_PENDING) && (isMaker) ? "" :*/ "disabled";
+            var enableSave = "disabled";
             var enableDelete = (Model.statusID == GlobalSystemValues.STATUS_PENDING ||
                                   Model.statusID == GlobalSystemValues.STATUS_REJECTED) && (isMaker) ? "" : "disabled";
             var enableModify = (Model.statusID == GlobalSystemValues.STATUS_PENDING ||
@@ -205,11 +205,6 @@
             var enableApproveVerify = ((Model.statusID == GlobalSystemValues.STATUS_PENDING) &&
                                         ((aVerifier) || (anApprover))) && (!isMaker) ? "" : "disabled";
             var enableReject = ((Model.statusID == GlobalSystemValues.STATUS_PENDING) && (anApprover)) && (!isMaker) ? "" : "disabled";
-
-            var enableLOI = (Model.statusID == GlobalSystemValues.STATUS_REVERSED ||
-                                Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
-                                Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING ||
-                                Model.statusID == GlobalSystemValues.STATUS_POSTED) ? "" : "disabled";
 
             var enableBIR = (Model.statusID == GlobalSystemValues.STATUS_REVERSED ||
                                 Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
