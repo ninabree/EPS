@@ -179,7 +179,7 @@
                 <div>
                     <div class="dis-inline-block tbl-btn"><button disabled>Save</button></div>
 
-                    @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker && Model.statusID == GlobalSystemValues.STATUS_PENDING || Model.statusID == GlobalSystemValues.STATUS_REJECTED)
+                    @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker && (Model.statusID == GlobalSystemValues.STATUS_PENDING || Model.statusID == GlobalSystemValues.STATUS_REJECTED))
                     {
                         <div class="dis-inline-block tbl-btn"><button value="Delete" name="command" class="btnEntryAction">Delete</button></div>
                         <div class="dis-inline-block tbl-btn"><button value="Modify" name="command" class="btnEntryAction">Modify</button></div>

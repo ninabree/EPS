@@ -33,7 +33,7 @@ namespace ExpenseProcessingSystem.Controllers
     [ScreenFltr]
     public class HomeController : Controller
     {
-        private readonly int pageSize = 30;
+        private readonly int pageSize = 2;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly EPSDbContext _context;
         private readonly GOExpressContext _GOContext;
@@ -4207,32 +4207,5 @@ namespace ExpenseProcessingSystem.Controllers
             return vvm;
         }
 
-        [AcceptVerbs("GET")]
-        public JsonResult CheckRemainingBudget(int entryID)
-        {
-            int expType = _service.GetSingleExpenseRec(entryID).Expense_Type;
-
-            //For CV, PC, SS Entry
-            if (expType == GlobalSystemValues.TYPE_CV || expType == GlobalSystemValues.TYPE_PC || expType == GlobalSystemValues.TYPE_SS)
-            {
-                //For Liquidation Entry
-                if (expType == GlobalSystemValues.TYPE_SS && _service.getLiquidationExistence(entryID) > 0)
-                {
-                    return Json(_service.CheckRemainingBudgetOfLiquidation(entryID));
-                }
-                return Json(_service.CheckRemainingBudgetOfCVPCSS(entryID));
-
-            }//For DDV Entry
-            else if (expType == GlobalSystemValues.TYPE_DDV)
-            {
-                return Json(_service.CheckRemainingBudgetOfDD(entryID));
-            }//For NC Entry
-            else if (expType == GlobalSystemValues.TYPE_NC)
-            {
-                return Json(_service.CheckRemainingBudgetOfNC(entryID));
-            }
-
-            return Json(new List<string>());
-        }
     }
 }
