@@ -136,7 +136,11 @@
                     }
 
                     <tr>
-                        <td style="border:none; background-color:#f2f2f2" rowspan="2"><a id="addRow" href="#" class="glyphicon glyphicon-plus"></a></td>
+                        <td style="border:none; background-color:#f2f2f2" rowspan="2">
+                            <a id="addRow" href="#" class="glyphicon glyphicon-plus"></a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a id="removeRow" href="#" class="glyphicon glyphicon-remove expenseTable-remove" style="display:none"></a>
+                        </td>
                         <td colspan="9" style="text-align:right; border:none; background-color:#f2f2f2">Subtotal : </td>
                         <td rowspan="2"><div class="flex-c"><input type="text" class="input100" readonly id="grossTotal" /></div></td>
                         <td><input type="text" readonly class="input100" id="credEwtTotal" /></td>
@@ -294,6 +298,11 @@
                 newRow.innerHTML = htmlContent;
                 $('#EntryCV_' + itemCount + '__ccy').val($('#phpID').val());
                 reqBtnDisable(itemCount);
+
+                var trCount = $("#inputTable").find("tbody").find("tr");
+                if ((trCount.length - 3) > 0) {
+                    $('.expenseTable-remove').show();
+                }
             });
 
             //Cash Breakdown Modal

@@ -242,14 +242,21 @@
                 var invNo = $("#" + id).find(screenCode[screen] + rowNo + "__gBaseRemarksDetails_" + i + "__invNo").val();
                 var amount = $("#" + id).find(screenCode[screen] + rowNo + "__gBaseRemarksDetails_" + i + "__amount").val();
 
-                var newGbaseRemarksRow = $('<tr id="gRemarks-tr-' + i + '">'
+                var newGbaseRemarksRow = '<tr id="gRemarks-tr-' + i + '">'
                     + '<td><input type="text" class="gDocuType" value="' + docuType + '" /></td>'
                     + '<td><input type="text" class="gInvoiceNo" value="' + invNo + '" /></td>'
                     + '<td><input type="text" class="gDescription" value="' + desc + '" /></td>'
                     + '<td><input type="number" min="0" class="gAmount" style="width:100%" value="' + amount + '"  /></td>'
-                    + '<td><div class="flex-c"><span class="table-remove glyphicon glyphicon-remove"></span></div></td></tr>');
+                    + '<td><div class="flex-c">';
+                if (!$("#" + id).find(".txtgbaseRemarks").prop('disabled') &&
+                    $("#" + id).find(".hiddenScreencode").val() != "Liquidation_SS") {
+                    if (i != 0) {
+                        newGbaseRemarksRow = newGbaseRemarksRow + '<span class="table-remove glyphicon glyphicon-remove"></span>';
+                    }
+                }
+                newGbaseRemarksRow = newGbaseRemarksRow + '</div></td></tr>';
 
-                tblDiv.append(newGbaseRemarksRow);
+                tblDiv.append($(newGbaseRemarksRow));
             }
         }
     }
