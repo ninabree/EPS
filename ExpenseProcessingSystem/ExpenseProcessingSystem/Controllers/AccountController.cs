@@ -84,9 +84,7 @@ namespace ExpenseProcessingSystem.Controllers
                 //            Log.Information("User Logged In");
                 //            return RedirectToAction("Index", "Home");
                 //        }
-                //        ViewData["message"] = "got in the second loop";
                 //    }
-                //    ViewData["message"] = "got in the first loop";
                 //}
                 //validate the user's username & password in Active Directory
             //    using (var context = new PrincipalContext(ContextType.Domain, domain, svcUsername, svcPwd))
@@ -105,7 +103,6 @@ namespace ExpenseProcessingSystem.Controllers
             //            Log.Information("User Logged In");
             //            return RedirectToAction("Index", "Home");
             //        }
-            //        ViewData["message"] = "got in the third loop";
             //    }
             //}
             //catch (Exception e)
@@ -146,6 +143,15 @@ namespace ExpenseProcessingSystem.Controllers
             ModelState.AddModelError("", "Invalid Login Credential");
             return View(model);
         }
+
+        [HttpGet]
+        public ActionResult Logout()
+        {
+            _session.Clear();
+
+            return RedirectToAction("Login", "Account");
+        }
+
         public JsonResult checkSession()
         {
             var tmp = (_session.GetString("UserID") == null) ? true : false;
