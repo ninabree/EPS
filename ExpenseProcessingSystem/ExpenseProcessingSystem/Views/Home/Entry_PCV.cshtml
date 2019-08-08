@@ -134,7 +134,11 @@
                         </tr>
                     }
                     <tr>
-                        <td style="border:none; background-color:#f2f2f2" rowspan="2"><a id="addRow" href="#" class="glyphicon glyphicon-plus"></a></td>
+                        <td style="border:none; background-color:#f2f2f2" rowspan="2">
+                            <a id="addRow" href="#" class="glyphicon glyphicon-plus"></a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a id="removeRow" href="#" class="glyphicon glyphicon-remove expenseTable-remove" style="display:none"></a>
+                        </td>
                         <td style="border:none; background-color:#f2f2f2" rowspan="2"></td>
                         <td style="border:none; background-color:#f2f2f2" rowspan="2"></td>
                         <td style="border:none; background-color:#f2f2f2" rowspan="2"></td>
@@ -271,7 +275,11 @@
                 '<td id="req_' + itemCount + '"><a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#"></a><input class="hiddenItem" data-val="true" data-val-required="The modalInputFlag field is required." id="EntryCV_' + itemCount + '__modalInputFlag" name="EntryCV[' + itemCount + '].modalInputFlag" type="hidden" value="0"><input id="EntryCV_' + itemCount + '__screenCode" name="EntryCV[' + itemCount + '].screenCode" type="hidden" value="PCV"><div id="divCashBD_' + itemCount + '"></div></td>';
 
             newRow.innerHTML = htmlContent;
-            
+
+            var trCount = $("#inputTable").find("tbody").find("tr");
+            if ((trCount.length - 3) > 0) {
+                $('.expenseTable-remove').show();
+            }
         });
 
         //Cash Breakdown Modal
