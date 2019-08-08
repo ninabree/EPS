@@ -21,6 +21,17 @@ namespace ExpenseProcessingSystem
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>();
+            //.ConfigureLogging((hostingContent, logging) =>
+            //{
+            //    logging.AddConfiguration(hostingContent.Configuration.GetSection("Logging"));
+            //    logging.AddEventLog(new EventLogSettings()
+            //    {
+            //        SourceName = "ExpressLogger",
+            //        LogName = "ExpressLog",
+            //        Filter = ()
+            //    });
+            //})
+            //.Build();
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()

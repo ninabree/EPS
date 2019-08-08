@@ -39,8 +39,10 @@
             <div class="dis-inline-block float-l"><a href="#" id="header-logo"><img src="~/images/mizuho-logo-5-1.png" alt="bnklogo"></a></div>
             <div class="dis-inline-block float-r"><a href="#" id="header-logo"><img src="~/images/mizuho-logo-5-2.png" alt="bnklogo"></a></div>
         </div>
-        <div id="homepage-tabs" class="m-t-30 m-l-25 m-r-25">
-            <input type="hidden" value="@ViewBag.userID" id="UI" />
+
+        <div id="homepage-tabs" class="m-t-30 m-l-25 m-r-25 ">
+            <input type="hidden" value="@ViewBag.userID" id="UI" />        
+            <div class="float-r"><a href="../Account/Logout">@HttpContextAccessor.HttpContext.Session.GetString("UserName") [Log Out]</a></div>
 
             <ul id="tabs">
 
@@ -60,7 +62,6 @@
                     <li id="um">@Html.ActionLink("User Management", "UM", "Home")</li>
                 }
             </ul>
-
             <div class="tabContent">
                 @if (isEntry)
                 {@Html.Partial("EntityTabsPartial")}
