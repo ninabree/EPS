@@ -1827,6 +1827,8 @@ namespace ExpenseProcessingSystem.Controllers
                 default:
                     break;
             }
+            ViewData["MESSAGE"] = GlobalSystemValues.MESSAGE;
+            GlobalSystemValues.MESSAGE = "";
 
             pcvList = _service.getExpense(entryID);
             pcvList = PopulateEntry((EntryCVViewModelList)pcvList);

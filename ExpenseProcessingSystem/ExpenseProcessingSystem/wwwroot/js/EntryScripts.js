@@ -230,14 +230,12 @@
         var command = $(this).val();
         if (command == "approver") {
             msg = "Approval";
-            warning = response;
             OpenConfirmationPopup(msg, command, warning);
             $('#divConfirmWindow').fadeIn(100);
             loadingEffectStop();
 
         } else if (command == "verifier") {
             msg = "Verify";
-            warning.push("TEST WARning");
             OpenConfirmationPopup(msg, command, warning);
             $('#divConfirmWindow').fadeIn(100);
             loadingEffectStop();

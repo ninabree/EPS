@@ -830,7 +830,7 @@
 
             if (value1 != value2) {
                 $('#alert').text("The total amount of Debit and Credit did not match.");
-                $('#divcss').show();
+                $('#divAlertWindow').show();
                 return false;
             }
             var ddlPhp = $('#lblAccount1_PHP optgroup[label=' + getXMLLiqValue('ACCOUNT11_2') + '] option:first').val();
@@ -839,7 +839,7 @@
                 if ($('#txtLiqPhpInput2').val() > 0) {
                     if ($('#txtCashBDTotal').val().replace(',', '') != $('#txtLiqPhpInput2').val()) {
                         $('#alert').text("The total Amount of cash breakdown and Petty cash amount do not match.");
-                        $('#divcss').show();
+                        $('#divAlertWindow').show();
                         return false;
                     }
                 }
@@ -847,7 +847,7 @@
                 if ($('#txtLiqPhpInput3').val() > 0) {
                     if ($('#txtCashBDTotal').val().replace(',', '') != $('#txtLiqPhpInput3').val()) {
                         $('#alert').text("The total Amount of cash breakdown and Petty cash amount do not match.");
-                        $('#divcss').show();
+                        $('#divAlertWindow').show();
                         return false;
                     }
                 }
@@ -907,13 +907,13 @@
             //DISPLAY ERRORS
             if ($('#txtIEAmount').val().replace(',', '') != $('#' + selectedRow).find(".txtGross").val()) {
                 $('#alert').text("Cash advance amount do not match.");
-                $('#divcss').show();
+                $('#divAlertWindow').show();
                 return false;
             }
 
             if ($('#txtIEExRate').val() == 0 || $('#txtIEExRate').val() == '' ) {
                 $('#alert').text("Enter the Exchange Rate");
-                $('#divcss').show();
+                $('#divAlertWindow').show();
                 return false;
             }
 
@@ -922,7 +922,7 @@
 
             if (value1 != value2) {
                 $('#alert').text("Inter-Entity(2nd Entry): Debit and Credit amount do not match.");
-                $('#divcss').show();
+                $('#divAlertWindow').show();
                 return false;
             }
 
