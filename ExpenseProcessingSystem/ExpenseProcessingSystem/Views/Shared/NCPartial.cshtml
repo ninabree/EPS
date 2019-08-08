@@ -403,6 +403,7 @@
                 @Html.HiddenFor(x => x.category_of_entry)
                 @Html.HiddenFor(x => x.expenseDate)
                 @Html.HiddenFor(x => x.entryID)
+                <input type="hidden" name="command" id="btnID" />
                 <tr>
                     <td class="float-l">
                         @if (@Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_LS_PAYROLL ||

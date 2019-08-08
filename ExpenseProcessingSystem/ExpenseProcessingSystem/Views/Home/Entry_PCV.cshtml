@@ -97,7 +97,6 @@
                                 @Html.CheckBoxFor(x => Model.EntryCV[i].chkVat, new { @class = "chkVat comVar" })
                             </td>
                             <td>
-                                @*@Html.TextBoxFor(x => Model.EntryCV[i].vat, new { @class = "input100 txtVat", @readonly = "true" })*@
                                 @Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.EntryCV[i].vendVATList, "VAT_ID", "VAT_Rate", Model.EntryCV[i].vat), new { @class = "input100 txtVat comVar voucher-input", @disabled = "true" })
                             </td>
                             <td style="text-align:center">
@@ -155,7 +154,7 @@
         <div id="entry-controls" class="m-b-10">
              <div class="flex-sb">
                 <div>
-                    <div class="dis-inline-block"><button class="tbl-btn">Save</button></div>
+                    <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" name="command" value="Save">Save</button></div>
                     <div class="dis-inline-block"><button class="tbl-btn" disabled>Delete</button></div>
                     <div class="dis-inline-block"><button class="tbl-btn" disabled>Modify</button></div>
                     <div class="dis-inline-block"><button class="tbl-btn" disabled>Approve/Verify</button></div>

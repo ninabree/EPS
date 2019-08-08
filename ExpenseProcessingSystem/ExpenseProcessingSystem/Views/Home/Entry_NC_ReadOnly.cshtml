@@ -371,16 +371,16 @@
                 <div class="flex-sb">
                     <div>
                         <div class="dis-inline-block"><button class="tbl-btn" @enableSave>Save</button></div>
-                        <div class="dis-inline-block"><button class="tbl-btn" @enableDelete value="Delete" name="command">Delete</button></div>
-                        <div class="dis-inline-block"><button class="tbl-btn" @enableModify value="Modify" name="command">Modify</button></div>
-                        <div class="dis-inline-block"><button class="tbl-btn" @enableApproveVerify value="@role" name="command">Approve/Verify</button></div>
-                        <div class="dis-inline-block"><button class="tbl-btn" @enableReject value="Reject" name="command">Reject</button></div>
+                        <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" @enableDelete value="Delete" name="command">Delete</button></div>
+                        <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" @enableModify value="Modify" name="command">Modify</button></div>
+                        <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" @enableApproveVerify value="@role" name="command">Approve/Verify</button></div>
+                        <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" @enableReject value="Reject" name="command">Reject</button></div>
                     </div>
                     <div>
                         <div class="dis-inline-block"><button class="tbl-btn" @enableBIR id="printBir" value="printBir">Print BIR Certificate</button></div>
                         @if (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT)
                         {
-                        <div class="dis-inline-block"><button class="tbl-btn" @enablePrint id="printBir" value="PrintCDD" name="command">Print CDD Instruction Sheet</button></div>
+                            <div class="dis-inline-block"><button class="tbl-btn" @enablePrint id="printBir" value="PrintCDD" name="command">Print CDD Instruction Sheet</button></div>
                         }
                         else if (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL &&
                         (Model.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID == @usd ||
@@ -388,10 +388,11 @@
                         {
                             <div class="dis-inline-block"><button class="tbl-btn" @enablePrint id="printBir" value="PrintCDD_RET" name="command">Print CDD Instruction Sheet</button></div>
                         }
-                        <div class="dis-inline-block"><button class="tbl-btn" id="reversal_entry" @enableReversal value="Reversal" name="command">Create Reversal Entry</button></div>
+                        <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" id="reversal_entry" @enableReversal value="Reversal" name="command">Create Reversal Entry</button></div>
                     </div>
                 </div>
             }
+            <input type="hidden" name="command" id="btnID" />
         }
     </div>
     <div id="modalDiv">
