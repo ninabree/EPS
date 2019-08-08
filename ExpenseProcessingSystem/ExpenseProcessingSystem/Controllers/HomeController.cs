@@ -135,7 +135,7 @@ namespace ExpenseProcessingSystem.Controllers
 
         [OnlineUserCheck]
         [NonAdminRoleCheck]
-        public IActionResult Pending(HomeIndexViewModel vm, string sortOrder, string currentFilter, string searchString, int? page)
+        public IActionResult Pending(HomeIndexViewModel vm, string sortOrder, FiltersViewModel currentFilter, int? page)
         {
             var role = _service.getUserRole(GetUserID());
             if (role == "admin")
@@ -153,11 +153,8 @@ namespace ExpenseProcessingSystem.Controllers
             //ViewData["PendAppVfrSortParm"] = sortOrder == "pend_ver_desc" ? "pend_ver" : "pend_ver_desc";
             ViewData["PendDateSortParm"] = sortOrder == "pend_date_created_desc" ? "pend_date_created" : "pend_date_created_desc";
             ViewData["PendUpdateSortParm"] = sortOrder == "pend_last_updte_desc" ? "pend_last_updte" : "pend_last_updte_desc";
+            
 
-            if (searchString != null) { page = 1; }
-            else { searchString = currentFilter; }
-
-            ViewData["CurrentFilter"] = searchString;
             FiltersViewModel tempFil = new FiltersViewModel();
             if (vm.Filters == null || vm.Filters.GenPendFil == null)
             {
@@ -191,6 +188,7 @@ namespace ExpenseProcessingSystem.Controllers
                 };
             }
 
+            ViewBag.currentFilter = tempFil;
             //populate and sort
             var sortedVals = _sortService.SortData(_service.getPending(int.Parse(GetUserID()), tempFil), sortOrder);
             ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;

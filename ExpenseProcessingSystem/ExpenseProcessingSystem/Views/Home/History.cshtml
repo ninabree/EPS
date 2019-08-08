@@ -83,22 +83,12 @@
         var prevDisabled = !Model.HistoryList.HasPreviousPage ? "disabled" : "";
         var nextDisabled = !Model.HistoryList.HasNextPage ? "disabled" : "";
     }
-    <a asp-action="History"
-       asp-route-sortOrder="@ViewData["CurrentSort"]"
-       asp-route-page="@(Model.HistoryList.PageIndex - 1)"
-       asp-controller="Home"
-       asp-route-partialName="@ViewData["Title"]"
-       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+    <a page="@(Model.HistoryList.PageIndex - 1)"
        class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left">
     </a>
     <input type="text" class="pagination-input" id="paginationInput" val="" />
     <input type="text" class="pagination-input" value="@(Model.HistoryList.PageIndex) of @(Model.HistoryList.TotalPages)" disabled />
-    <a asp-action="History"
-       asp-route-sortOrder="@ViewData["CurrentSort"]"
-       asp-controller="Home"
-       asp-route-partialName="@ViewData["Title"]"
-       asp-route-page="@(Model.HistoryList.PageIndex + 1)"
-       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+    <a page="@(Model.HistoryList.PageIndex + 1)"
        class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right">
     </a>
 </div>
