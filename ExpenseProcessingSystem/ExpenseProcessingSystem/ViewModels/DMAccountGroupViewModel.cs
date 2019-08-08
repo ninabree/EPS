@@ -19,8 +19,10 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "Approver Name")]
         public string AccountGroup_Approver_Name { get; set; }
         [Display(Name = "Account Group Created Date")]
+        [DataType(DataType.Date)]
         public DateTime AccountGroup_Created_Date { get; set; }
         [Display(Name = "Account Group Last Updated Date")]
+        [DataType(DataType.Date)]
         public DateTime AccountGroup_Last_Updated { get; set; }
         [Display(Name = "Account Group Status")]
         public int AccountGroup_Status_ID { get; set; }

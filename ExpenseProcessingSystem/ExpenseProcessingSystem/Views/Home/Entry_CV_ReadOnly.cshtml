@@ -12,7 +12,7 @@
     var role = HttpContextAccessor.HttpContext.Session.GetString("accessType");
     var isMaker = int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker;
     var isVerifier = int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id ||
-    int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id;
+     int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id;
     var isApprover = int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.approver_id;
     var aVerifier = role == GlobalSystemValues.ROLE_VERIFIER;
     var anApprover = role == GlobalSystemValues.ROLE_APPROVER;
@@ -176,19 +176,20 @@
                 <div class="flex-sb">
                     <div>
                         <div class="dis-inline-block"><button class="tbl-btn" @enableSave>Save</button></div>
-                        <div class="dis-inline-block"><button class="tbl-btn" @enableDelete value="Delete" name="command">Delete</button></div>
-                        <div class="dis-inline-block"><button class="tbl-btn" @enableModify value="Modify" name="command">Modify</button></div>
-                        <div class="dis-inline-block"><button class="tbl-btn" @enableApproveVerify value="@role" name="command">Approve/Verify</button></div>
-                        <div class="dis-inline-block"><button class="tbl-btn" @enableReject value="Reject" name="command">Reject</button></div>
+                        <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" @enableDelete value="Delete" name="command">Delete</button></div>
+                        <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" @enableModify value="Modify" name="command">Modify</button></div>
+                        <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" @enableApproveVerify value="@role" name="command">Approve/Verify</button></div>
+                        <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" @enableReject value="Reject" name="command">Reject</button></div>
                     </div>
                     <div>
-                        <div class="dis-inline-block"><button class="tbl-btn" @enableBIR id="printCheck" value="printBir">Print Check</button></div>
-                        <div class="dis-inline-block"><button class="tbl-btn" @enableBIR id="printVoucher" value="printBir">Print Voucher</button></div>
-                        <div class="dis-inline-block"><button class="tbl-btn" @enableBIR id="printBir" value="printBir">Print BIR Certificate</button></div>
-                        <div class="dis-inline-block"><button class="tbl-btn" id="reversal_entry" @enableReversal value="Reversal" name="command">Create Reversal Entry</button></div>
+                        <div class="dis-inline-block"><button class="tbl-btn " @enableBIR id="printBir" value="printBir">Print BIR Certificate</button></div>
+                        <div class="dis-inline-block"><button class="tbl-btn " @enableBIR id="printVoucher" value="printVoucher">Print Check Voucher</button></div>
+                        <div class="dis-inline-block"><button class="tbl-btn " @enableBIR id="printCheck" value="printCheck">Print Check</button></div>
+                        <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" id="reversal_entry" @enableReversal value="Reversal" name="command">Create Reversal Entry</button></div>
                     </div>
                 </div>
             }
+            <input type="hidden" name="command" id="btnID" />
         }
     </div>
     <div id="modalDiv">
@@ -236,5 +237,12 @@
         });
 
 
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        if ($('#alert').text() != "") {
+            $('#divAlertWindow').show();
+        }
     });
 </script>

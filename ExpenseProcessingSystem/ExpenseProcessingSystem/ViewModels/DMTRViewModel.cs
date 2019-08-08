@@ -29,8 +29,10 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "Approver Name")]
         public string TR_Approver_Name { get; set; }
         [Display(Name = "Created Date")]
+        [DataType(DataType.Date)]
         public DateTime TR_Created_Date { get; set; }
         [Display(Name = "Last Updated")]
+        [DataType(DataType.Date)]
         public DateTime TR_Last_Updated { get; set; }
         [Display(Name = "Status")]
         public int TR_Status_ID { get; set; }

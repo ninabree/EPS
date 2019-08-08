@@ -14,6 +14,15 @@
 @using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor HttpContextAccessor
 
+@{
+    var role = HttpContextAccessor.HttpContext.Session.GetString("accessType");
+    var isMaker = int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker;
+    var isVerifier = int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id ||
+     int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id;
+    var isApprover = int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.approver_id;
+    var aVerifier = role == GlobalSystemValues.ROLE_VERIFIER;
+    var anApprover = role == GlobalSystemValues.ROLE_APPROVER;
+}
 <div class="tabContent">
     <input id="_screen" type="hidden" value="nc" />
     <div id="tbl-lbl" class="flex-sb">
@@ -23,7 +32,6 @@
         <div class="dis-inline-block"><p>Category of Entries:</p></div>
         <div class="dis-inline-block">
             @Html.DisplayFor(x => x.EntryNC.NC_Category_Name)
-            @*@Html.DropDownListFor(m => m.category_of_entry, Model.systemValues.category_of_entries, new { id = "categoryName" })*@
         </div>
     </div>
 
@@ -56,7 +64,7 @@
                             <td colspan="2">
                                 @Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Remarks_Period, new { @type = "date", @class = "" })
                             </td>
-                            
+                         
                             <td class="cat-hidden" colspan="1" rowspan="@Model.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs.Count">
                                 @Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Vendor_Name, new { @readonly = "true", @class = "w-full cat-hidden" })
                             </td>
@@ -328,168 +336,63 @@
         </div>
     </div>
     <div id="entry-controls" class="m-b-10">
+        @{
+            var isEWT = (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PSSC || Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PCHC ||
+                         Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES);
+            var enableSave = "disabled";
+            var enableDelete = (Model.statusID == GlobalSystemValues.STATUS_PENDING ||
+                                  Model.statusID == GlobalSystemValues.STATUS_REJECTED) && (isMaker) ? "" : "disabled";
+            var enableModify = (Model.statusID == GlobalSystemValues.STATUS_PENDING ||
+                                  Model.statusID == GlobalSystemValues.STATUS_REJECTED) && (isMaker) ? "" : "disabled";
+
+            var enableApproveVerify = ((Model.statusID == GlobalSystemValues.STATUS_PENDING) &&
+                                        ((aVerifier) || (anApprover))) && (!isMaker) ? "" : "disabled";
+            var enableReject = ((Model.statusID == GlobalSystemValues.STATUS_PENDING) && (anApprover)) && (!isMaker) ? "" : "disabled";
+
+            var enableBIR = ((Model.statusID == GlobalSystemValues.STATUS_REVERSED ||
+                                Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
+                                Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING ||
+                                Model.statusID == GlobalSystemValues.STATUS_POSTED) && isEWT) ? "" : "disabled";
+            var enablePrint = (Model.statusID == GlobalSystemValues.STATUS_REVERSED ||
+                                Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
+                                Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING ||
+                                Model.statusID == GlobalSystemValues.STATUS_POSTED) ? "" : "disabled";
+
+            var enableReversal = (Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
+                                Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING) ? "" : "disabled";
+        }
+
         @using (Html.BeginForm("VerAppModNC", "Home", FormMethod.Post, new { @class = "validate-form" }))
         {
             @Html.HiddenFor(x => Model.entryID)
             @Html.HiddenFor(x => Model.EntryNC.NC_Category_ID)
-            <div class="flex-sb">
-                <div>
-                    <div class="dis-inline-block tbl-btn"><button disabled>Save</button></div>
-
-                    @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker)
-                    {
-                        @if ((Model.statusID == GlobalSystemValues.STATUS_APPROVED) || (Model.statusID == GlobalSystemValues.STATUS_REJECTED) || (Model.statusID == GlobalSystemValues.STATUS_REVERSED))
+            @if (isMaker || isVerifier || isApprover || aVerifier || anApprover)
+            {
+                <div class="flex-sb">
+                    <div>
+                        <div class="dis-inline-block"><button class="tbl-btn" @enableSave>Save</button></div>
+                        <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" @enableDelete value="Delete" name="command">Delete</button></div>
+                        <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" @enableModify value="Modify" name="command">Modify</button></div>
+                        <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" @enableApproveVerify value="@role" name="command">Approve/Verify</button></div>
+                        <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" @enableReject value="Reject" name="command">Reject</button></div>
+                    </div>
+                    <div>
+                        <div class="dis-inline-block"><button class="tbl-btn" @enableBIR id="printBir" value="printBir">Print BIR Certificate</button></div>
+                        @if (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT)
                         {
-                            <div class="dis-inline-block tbl-btn"><button disabled>Delete</button></div>
-                            <div class="dis-inline-block tbl-btn"><button disabled>Modify</button></div>
+                            <div class="dis-inline-block"><button class="tbl-btn" @enablePrint id="printBir" value="PrintCDD" name="command">Print CDD Instruction Sheet</button></div>
                         }
-                        else
+                        else if (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL &&
+                        (Model.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID == @usd ||
+                        Model.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID == @jpy))
                         {
-                            <div class="dis-inline-block tbl-btn"><button value="Delete" name="command">Delete</button></div>
-                            <div class="dis-inline-block tbl-btn"><button value="Modify" name="command">Modify</button></div>
+                            <div class="dis-inline-block"><button class="tbl-btn" @enablePrint id="printBir" value="PrintCDD_RET" name="command">Print CDD Instruction Sheet</button></div>
                         }
-                    }
-                    else
-                    {
-                        <div class="dis-inline-block tbl-btn"><button disabled>Delete</button></div>
-                        <div class="dis-inline-block tbl-btn"><button disabled>Modify</button></div>
-                    }
+                        <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" id="reversal_entry" @enableReversal value="Reversal" name="command">Create Reversal Entry</button></div>
+                    </div>
                 </div>
-
-                @if ((Model.statusID == GlobalSystemValues.STATUS_APPROVED))
-                {
-                    <div>
-                        <div class="dis-inline-block tbl-btn"><button value="Reversal" name="command">Create Reversal Entry</button></div>
-                    </div>
-
-                    <div>
-                        @{
-                            var isEWT = (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PSSC || Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PCHC ||
-                                Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES);
-                        }
-                        @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker
-                     || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id
-                     || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id
-                     || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.approver_id && isEWT)
-                        {
-                            <div class="dis-inline-block tbl-btn"><button id="printBir" value="printBir">Print BIR Certificate</button></div>
-                        }
-                    </div>
-                    if (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT)
-                    {
-                        <div>
-                            <div class="dis-inline-block tbl-btn m-l-41"><button value="PrintCDD" name="command">Print CDD Instruction Sheet</button></div>
-                        </div>
-                    }
-                    else if (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL &&
-                       (Model.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID == @usd ||
-                       Model.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID == jpy))
-                    {
-                        <div>
-                            <div class="dis-inline-block tbl-btn m-l-41"><button value="PrintCDD_RET" name="command">Print CDD Instruction Sheet</button></div>
-                        </div>
-                    }
-                    else
-                    {
-                        <div>
-                            <div class="dis-inline-block tbl-btn m-l-41"><button disabled>Print CDD Instruction Sheet</button></div>
-                        </div>
-                    }
-                }
-                else if (Model.statusID == GlobalSystemValues.STATUS_REJECTED)
-                {
-                    <div>
-                        <div class="dis-inline-block tbl-btn"><button disabled>Create Reversal Entry</button></div>
-                    </div>
-                    <div>
-                        <div class="dis-inline-block tbl-btn m-l-41"><button disabled>Print CDD Instruction Sheet</button></div>
-                    </div>
-                    <div>
-                        <div class="dis-inline-block tbl-btn"><button id="printBir" disabled>Print BIR Certificate</button></div>
-                    </div>
-                }
-                else if (Model.statusID == GlobalSystemValues.STATUS_REVERSED)
-                {
-                    <div>
-                        <div class="dis-inline-block tbl-btn"><button disabled>Create Reversal Entry</button></div>
-                    </div>
-                    <div>
-                        <div class="dis-inline-block tbl-btn m-l-41"><button value="PrintCDD" name="command">Print CDD Instruction Sheet</button></div>
-                    </div>
-                    <div>
-                        <div class="dis-inline-block tbl-btn"><button id="printBir" disabled>Print BIR Certificate</button></div>
-                    </div>
-                }
-                else
-                {
-                    <div>
-                        @if (Model.statusID == GlobalSystemValues.STATUS_POSTED)
-                        {
-                            if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker
-                                || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id
-                                || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id
-                                || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.approver_id)
-                            {
-                                <div class="dis-inline-block tbl-btn"><button id="reversal_entry" value="Reversal" name="command">Create Reversal Entry</button></div>
-                            }
-                            else
-                            {
-                                <div class="dis-inline-block tbl-btn"><button id="reversal_entry" disabled>Create Reversal Entry</button></div>
-                            }
-
-                            <div>
-                                @{
-                                    var isEWT = (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PSSC || Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PCHC ||
-                                        Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES);
-                                }
-                                @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker
-                           || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id
-                           || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id
-                           || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.approver_id && isEWT)
-                                {
-                                    <div class="dis-inline-block tbl-btn"><button id="printBir" value="printBir">Print BIR Certificate</button></div>
-                                }
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="dis-inline-block tbl-btn"><button id="reversal_entry" disabled>Create Reversal Entry</button></div>
-                            <div class="dis-inline-block tbl-btn"><button id="printBir" disabled>Print BIR Certificate</button></div>
-                        }
-                    </div>
-                    <div>
-                        <div class="dis-inline-block tbl-btn m-l-41"><button disabled>Print CDD Instruction Sheet</button></div>
-                        <div class="dis-inline-block tbl-btn"><button id="printBir" disabled>Print BIR Certificate</button></div>
-                    </div>
-                }
-
-            </div>
-            <div class="flex-sb">
-                <div>
-                    @if (HttpContextAccessor.HttpContext.Session.GetString("accessType") == GlobalSystemValues.ROLE_MAKER)
-                    {
-                        <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
-                    }
-                    else
-                    {
-                        if (Model.statusID != GlobalSystemValues.STATUS_PENDING &&
-                            Model.statusID != GlobalSystemValues.STATUS_VERIFIED)
-                        {
-                            <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
-                            <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
-                        }
-                        else
-                        {
-                            <div class="dis-inline-block tbl-btn"><button value="@HttpContextAccessor.HttpContext.Session.GetString("accessType")" name="command">Approve/Verify</button></div>
-                            <div class="dis-inline-block tbl-btn"><button value="Reject" name="command">Reject</button></div>
-                        }
-                    }
-                </div>
-                <div>
-                </div>
-                <div>
-                </div>
-            </div>
+            }
+            <input type="hidden" name="command" id="btnID" />
         }
     </div>
     <div id="modalDiv">
@@ -535,5 +438,12 @@
             </Text>
         }
 
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        if ($('#alert').text() != "") {
+            $('#divAlertWindow').show();
+        }
     });
 </script>

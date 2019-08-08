@@ -81,7 +81,7 @@
                     <tr id="item_@i">
                         <td class="p-b-1 p-t-1">
                             <div class="flex-sb">
-                                <input value="@Model.EntryDDV[i].GBaseRemarks" class="input100 w-80 GBaseRemarksTitle" disabled />
+                                <input value="@Model.EntryDDV[i].GBaseRemarks" class="input100 w-80 GBaseRemarksTitle txtgbaseRemarks" disabled />
                                 <div id="remark_@i">
                                     <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5 gRemarksReadOnly"></a>
                                     @for (int y = 0; y < Model.EntryDDV[i].gBaseRemarksDetails.Count(); y++)
@@ -194,47 +194,49 @@
             <p class="dis-inline-block">@Html.TextBoxFor(model => model.verifier_2, new { @readonly = "true", @class = "m-l-5 input" })</p>
         </div>
     </div>
-    <div id="entry-controls" class="m-b-10">
-        @{
-            var enableSave = "disabled";
-            var enableDelete = (Model.statusID == GlobalSystemValues.STATUS_PENDING ||
-                                  Model.statusID == GlobalSystemValues.STATUS_REJECTED) && (isMaker) ? "" : "disabled";
-            var enableModify = (Model.statusID == GlobalSystemValues.STATUS_PENDING ||
-                                  Model.statusID == GlobalSystemValues.STATUS_REJECTED) && (isMaker) ? "" : "disabled";
+          <div id="entry-controls" class="m-b-10">
+              @{
+                  var enableSave = "disabled";
+                  var enableDelete = (Model.statusID == GlobalSystemValues.STATUS_PENDING ||
+                                        Model.statusID == GlobalSystemValues.STATUS_REJECTED) && (isMaker) ? "" : "disabled";
+                  var enableModify = (Model.statusID == GlobalSystemValues.STATUS_PENDING ||
+                                        Model.statusID == GlobalSystemValues.STATUS_REJECTED) && (isMaker) ? "" : "disabled";
 
-            var enableApproveVerify = ((Model.statusID == GlobalSystemValues.STATUS_PENDING) &&
-                                        ((aVerifier) || (anApprover))) && (!isMaker) ? "" : "disabled";
-            var enableReject = ((Model.statusID == GlobalSystemValues.STATUS_PENDING) && (anApprover)) && (!isMaker) ? "" : "disabled";
+                  var enableApproveVerify = ((Model.statusID == GlobalSystemValues.STATUS_PENDING) &&
+                                              ((aVerifier) || (anApprover))) && (!isMaker) ? "" : "disabled";
+                  var enableReject = ((Model.statusID == GlobalSystemValues.STATUS_PENDING) && (anApprover)) && (!isMaker) ? "" : "disabled";
 
-            var enableBIR = (Model.statusID == GlobalSystemValues.STATUS_REVERSED ||
-                                Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
-                                Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING ||
-                                Model.statusID == GlobalSystemValues.STATUS_POSTED) ? "" : "disabled";
+                  var enableBIR = (Model.statusID == GlobalSystemValues.STATUS_REVERSED ||
+                                      Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
+                                      Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING ||
+                                      Model.statusID == GlobalSystemValues.STATUS_POSTED) ? "" : "disabled";
 
-            var enableReversal = (Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
-                                Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING) ? "" : "disabled";
-        }
-        @using (Html.BeginForm("VerAppModDDV", "Home", FormMethod.Post, new { @class = "validate-form" }))
-        {
-            @Html.HiddenFor(x => Model.entryID)
-            @if (isMaker || isVerifier || isApprover || aVerifier || anApprover)
-            {
-                <div class="flex-sb">
-                    <div>
-                        <div class="dis-inline-block"><button class="tbl-btn" @enableSave>Save</button></div>
-                        <div class="dis-inline-block"><button class="tbl-btn" @enableDelete value="Delete" name="command">Delete</button></div>
-                        <div class="dis-inline-block"><button class="tbl-btn" @enableModify value="Modify" name="command">Modify</button></div>
-                        <div class="dis-inline-block"><button class="tbl-btn" @enableApproveVerify value="@role" name="command">Approve/Verify</button></div>
-                        <div class="dis-inline-block"><button class="tbl-btn" @enableReject value="Reject" name="command">Reject</button></div>
-                    </div>
-                    <div>
-                        <div class="dis-inline-block"><button class="tbl-btn" @enableBIR  id="printBir" value="printBir">Print BIR Certificate</button></div>
-                        <div class="dis-inline-block"><button class="tbl-btn" id="reversal_entry" @enableReversal value="Reversal" name="command">Create Reversal Entry</button></div>
-                    </div>
-                </div>
-            }
-        }
-    </div>
+                  var enableReversal = (Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
+                                      Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING) ? "" : "disabled";
+              }
+              @using (Html.BeginForm("VerAppModDDV", "Home", FormMethod.Post, new { @class = "validate-form" }))
+              {
+                  @Html.HiddenFor(x => Model.entryID)
+                  @if (isMaker || isVerifier || isApprover || aVerifier || anApprover)
+                  {
+                      <div class="flex-sb">
+                          <div>
+                              <div class="dis-inline-block"><button class="tbl-btn" @enableSave>Save</button></div>
+                              <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" @enableDelete value="Delete" name="command">Delete</button></div>
+                              <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" @enableModify value="Modify" name="command">Modify</button></div>
+                              <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" @enableApproveVerify value="@role" name="command">Approve/Verify</button></div>
+                              <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" @enableReject value="Reject" name="command">Reject</button></div>
+                          </div>
+                          <div>
+                              <div class="dis-inline-block"><button class="tbl-btn " @enableBIR id="printBir" value="printBir">Print BIR Certificate</button></div>
+                              <div class="dis-inline-block"><button class="tbl-btn " @enableBIR id="printVoucher" value="printVoucher">Print Voucher</button></div>
+                              <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" id="reversal_entry" @enableReversal value="Reversal" name="command">Create Reversal Entry</button></div>
+                          </div>
+                      </div>
+                  }
+                  <input type="hidden" name="command" id="btnID" />
+              }
+          </div>
 
     <div id="modalDiv">
         @Html.Partial("ModalGbase")
@@ -246,6 +248,10 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
+        if ($('#alert').text() != "") {
+            $('#divAlertWindow').show();
+        }
+
         var myModal2 = $('.myModal2');
         var modalDiv2 = $(myModal2).find('div div');
         var modalDivHeader2 = $(modalDiv2).find('.modal-header2');

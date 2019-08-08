@@ -53,6 +53,11 @@ $(document).ready(function () {
             tblName == "Customer" ? custRowFormat(itemCount) :
             tblName == "" ? newGbaseRemarksRow(itemCount) : $('');
         $('#table').find('table').append($clone);
+
+        var trCount = $("#inputTable").find("tbody").find("tr");
+        if ((trCount.length - 3) > 0) {
+            $('.expenseTable-remove').css('display', 'auto');
+        }
     });
 
     $('.table-remove').click(function () {
@@ -310,5 +315,15 @@ $(document).ready(function () {
 
         // Output the result
         $EXPORT.text(JSON.stringify(data));
+    });
+
+    $(document).on('click', '.expenseTable-remove', function (e) {
+        e.stopImmediatePropagation();
+        var trCount = $("#inputTable").find("tbody").find("tr");
+        $('#item_' + (trCount.length - 3)).remove();
+        if ((trCount.length - 3) == 1) {
+            $('.expenseTable-remove').hide();
+        }
+
     });
 });

@@ -31,8 +31,10 @@ namespace ExpenseProcessingSystem.ViewModels
         public int Vendor_Creator_ID { get; set; }
         public int Vendor_Approver_ID { get; set; }
         [Display(Name = "Vendor Created")]
+        [DataType(DataType.Date)]
         public DateTime Vendor_Created_Date { get; set; }
         [Display(Name = "Vendor Last Updated")]
+        [DataType(DataType.Date)]
         public DateTime Vendor_Last_Updated { get; set; }
         public string Vendor_Creator_Name { get; set; }
         public string Vendor_Approver_Name { get; set; }

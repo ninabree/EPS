@@ -25,8 +25,10 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "Approver Name")]
         public string FBT_Approver_Name { get; set; }
         [Display(Name = "FBT Created Date")]
+        [DataType(DataType.Date)]
         public DateTime FBT_Created_Date { get; set; }
         [Display(Name = "FBT Last Updated")]
+        [DataType(DataType.Date)]
         public DateTime FBT_Last_Updated { get; set; }
         [Display(Name = "FBT Status")]
         public int FBT_Status_ID { get; set; }

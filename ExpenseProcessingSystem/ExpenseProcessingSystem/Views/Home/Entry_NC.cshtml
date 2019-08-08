@@ -33,23 +33,17 @@
     <div id="entry-controls" class="m-b-10">
         <div class="flex-sb">
             <div>
-                <div class="dis-inline-block"><button class="tbl-btn" onclick="$('.nc-form').submit();">Save</button></div>
-                <div class="dis-inline-block"><butto class="tbl-btn"n disabled>Delete</button></div>
+                <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" name="command" value="Save" onclick="$('.nc-form').submit();">Save</button></div>
+                <div class="dis-inline-block"><button class="tbl-btn" disabled>Delete</button></div>
                 <div class="dis-inline-block"><button class="tbl-btn" disabled>Modify</button></div>
-            </div>
-            <div>
-                <div class="dis-inline-block"><button class="tbl-btn" id="reversal_entry" disabled>Create Reversal Entry</button></div>
-                <div class="dis-inline-block"><button class="tbl-btn" disabled>Liquidate</button></div>
-            </div>
-            <div>
-                <div class="dis-inline-block"><button class="tbl-btn" disabled>Print CDD Instruction Sheet</button></div>
-            </div>
-
-        </div>
-        <div class="flex-sb">
-            <div>
                 <div class="dis-inline-block"><button class="tbl-btn" disabled>Approve/Verify</button></div>
                 <div class="dis-inline-block"><button class="tbl-btn" disabled>Reject</button></div>
+            </div>
+            <div>
+            </div>
+            <div>
+                <div class="dis-inline-block"><button class="tbl-btn" disabled>Print BIR Certificate</button></div>
+                <div class="dis-inline-block"><button class="tbl-btn" id="reversal_entry" disabled>Create Reversal Entry</button></div>
             </div>
         </div>
     </div>

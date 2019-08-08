@@ -17,6 +17,8 @@
                         <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Name)</td>
                         <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Name, new { @class = "input" })</td>
                         <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Code)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Code, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Budget_Code)</td>
                         <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Budget_Code, new { @class = "input" })</td>
                         <td>@Html.LabelFor(model => model.DMFilters.AF.AF_No)</td>
                         <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_No, new { @class = "input" })</td>
@@ -24,11 +26,11 @@
                         <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Cust, new { @class = "input" })</td>
                         <td>@Html.LabelFor(model => model.DMFilters.AF.AF_FBT)</td>
                         <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_FBT, new { @class = "input" })</td>
-                        <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Currency)</td>
-                        <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Currency, new { @class = "input" })</td>
                         <td><input id="filterPartialName" name="partialName" value="DMPartial_Acc" type="hidden" /></td>
                     </tr>
                     <tr>
+                        <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Currency)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Currency, new { @class = "input" })</td>
                         <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Div)</td>
                         <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Div, new { @class = "input" })</td>
                         <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Group)</td>
@@ -107,22 +109,12 @@
         var nextDisabled = !Model.Account.HasNextPage ? "disabled" : "";
     }
 
-    <a asp-action="DM"
-       asp-route-sortOrder="@ViewData["CurrentSort"]"
-       asp-route-page="@(Model.Account.PageIndex - 1)"
-       asp-controller="Home"
-       asp-route-partialName="@ViewData["Title"]"
-       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+    <a page="@(Model.Account.PageIndex - 1)"
        class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left">
     </a>
     <input type="text" class="pagination-input" id="paginationInput" val="" />
     <input type="text" class="pagination-input" value="@(Model.Account.PageIndex) of @(Model.Account.TotalPages)" disabled />
-    <a asp-action="DM"
-       asp-route-sortOrder="@ViewData["CurrentSort"]"
-       asp-controller="Home"
-       asp-route-partialName="@ViewData["Title"]"
-       asp-route-page="@(Model.Account.PageIndex + 1)"
-       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+    <a page="@(Model.Account.PageIndex + 1)"
        class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right">
     </a>
     <div class="float-r m-r-10">

@@ -18,10 +18,10 @@
         <div id="tbl-lbl">
             <div class="dis-inline-block"><p>Payee:</p></div>
             <div class="dis-inline-block">
-                @Html.DropDownListFor(m => m.payee_type, new SelectList(Model.systemValues.payee_type_sel, "Value", "Text", Model.systemValues.payee_type_sel.SelectedValue), new { @id="payeeTypeSel", @class="voucher-input" })
+                @Html.DropDownListFor(m => m.payee_type, new SelectList(Model.systemValues.payee_type_sel, "Value", "Text", Model.systemValues.payee_type_sel.SelectedValue), new { @id = "payeeTypeSel", @class = "voucher-input" })
             </div>
             <div class="dis-inline-block">
-                @Html.DropDownListFor(m => m.vendor, new SelectList(Model.systemValues.vendors, "Value", "Text", Model.systemValues.vendors.SelectedValue), new { @id="vendorName", @class="voucher-input" })
+                @Html.DropDownListFor(m => m.vendor, new SelectList(Model.systemValues.vendors, "Value", "Text", Model.systemValues.vendors.SelectedValue), new { @id = "vendorName", @class = "voucher-input" })
             </div>
         </div>
         <div class="flex-c">
@@ -169,23 +169,26 @@
 
             <div class="flex-sb">
                 <div>
-                    <div class="dis-inline-block"><button class="tbl-btn">Save</button></div>
+                    <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" name="command" value="Save">Save</button></div>
                     <div class="dis-inline-block"><button class="tbl-btn" disabled>Delete</button></div>
                     <div class="dis-inline-block"><button class="tbl-btn" disabled>Modify</button></div>
                     <div class="dis-inline-block"><button class="tbl-btn" disabled>Approve/Verify</button></div>
                     <div class="dis-inline-block"><button class="tbl-btn" disabled>Reject</button></div>
                 </div>
                 <div>
-                    <div class="dis-inline-block"><button class="tbl-btn" disabled >Print Check</button></div>
-                    <div class="dis-inline-block"><button class="tbl-btn" disabled >Print Voucher</button></div>
-                    <div class="dis-inline-block"><button class="tbl-btn" disabled >Print BIR Certificate</button></div>
-                    <div class="dis-inline-block"><button class="tbl-btn" disabled >Create Reversal Entry</button></div>
+                </div>
+                <div>
+                    <div class="dis-inline-block"><button class="tbl-btn" disabled>Print BIR Certificate</button></div>
+                    <div class="dis-inline-block"><button class="tbl-btn" disabled>Print Check Voucher</button></div>
+                    <div class="dis-inline-block"><button class="tbl-btn" disabled>Print Check</button></div>
+                    <div class="dis-inline-block"><button class="tbl-btn" id="reversal_entry" disabled>Create Reversal Entry</button></div>
                 </div>
             </div>
         </div>
         @Html.HiddenFor(x => Model.entryID);
         @Html.HiddenFor(x => Model.createdDate);
         @Html.HiddenFor(x => x.payee_type)
+        <input type="hidden" name="command" id="btnID" />
     }
     @*@if (Html.ViewData.ModelState.IsValid)
         {

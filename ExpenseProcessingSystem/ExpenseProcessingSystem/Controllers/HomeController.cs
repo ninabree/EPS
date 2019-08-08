@@ -1290,9 +1290,26 @@ namespace ExpenseProcessingSystem.Controllers
             }
             else
             {
-                if (_service.deleteExpenseEntry(EntryCVViewModelList.entryID))
+                List<int> EditableStatus = new List<int>{
+                    GlobalSystemValues.STATUS_PENDING,
+                    GlobalSystemValues.STATUS_REJECTED
+                };
+                var currentStat = _service.GetCurrentEntryStatus(EntryCVViewModelList.entryID);
+                if (EditableStatus.Contains(currentStat))
                 {
-                    id = _service.addExpense_CV(EntryCVViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_CV);
+                    if (_service.deleteExpenseEntry(EntryCVViewModelList.entryID))
+                    {
+                        id = _service.addExpense_CV(EntryCVViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_CV);
+                        var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == id).Expense_Creator_ID;
+                        //----------------------------- NOTIF----------------------------------
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_CV, GlobalSystemValues.STATUS_EDIT, makerId);
+                        //----------------------------- NOTIF----------------------------------
+                    }
+                }
+                else
+                {
+                    id = EntryCVViewModelList.entryID;
+                    GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE1;
                 }
             }
 
@@ -1381,6 +1398,16 @@ namespace ExpenseProcessingSystem.Controllers
         {
             var userId = GetUserID();
 
+            if (entryID == 0 && TempData["entryIDAddtoView"] != null)
+            {
+                entryID = (int)TempData["entryIDAddtoView"];
+                TempData.Keep();
+            }
+            else
+            {
+                TempData.Remove("entryIDAddtoView");
+            }
+
             EntryCVViewModelList cvList;
             cvList = _service.getExpense(entryID);
             List<SelectList> listOfSysVals = _service.getEntrySystemVals();
@@ -1414,6 +1441,12 @@ namespace ExpenseProcessingSystem.Controllers
                 }
             }
             cvList.birForms.AddRange(birForms);
+
+            if (!String.IsNullOrEmpty(GlobalSystemValues.MESSAGE))
+            {
+                ViewData["MESSAGE"] = GlobalSystemValues.MESSAGE;
+                GlobalSystemValues.MESSAGE = "";
+            }
 
             return View("Entry_CV_ReadOnly", cvList);
         }
@@ -1480,13 +1513,26 @@ namespace ExpenseProcessingSystem.Controllers
             EntryDDVViewModelList ddvList = new EntryDDVViewModelList();
             int id = _service.addExpense_DDV(EntryDDVViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_DDV);
             ModelState.Clear();
-            return RedirectToAction("View_DDV", "Home", new { entryID = id });
+            //return RedirectToAction("View_DDV", "Home", new { entryID = id });
+            TempData["entryIDAddtoView"] = id;
+
+            return RedirectToAction("View_DDV", "Home");
         }
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         public IActionResult View_DDV(int entryID)
         {
             var userId = GetUserID();
+
+            if (entryID == 0 && TempData["entryIDAddtoView"] != null)
+            {
+                entryID = (int)TempData["entryIDAddtoView"];
+                TempData.Keep();
+            }
+            else
+            {
+                TempData.Remove("entryIDAddtoView");
+            }
 
             EntryDDVViewModelList ddvList = _service.getExpenseDDV(entryID);
             ddvList = PopulateEntry((EntryDDVViewModelList)ddvList);
@@ -1515,6 +1561,13 @@ namespace ExpenseProcessingSystem.Controllers
                 }
             }
             ddvList.birForms.AddRange(birForms);
+
+            if (!String.IsNullOrEmpty(GlobalSystemValues.MESSAGE))
+            {
+                ViewData["MESSAGE"] = GlobalSystemValues.MESSAGE;
+                GlobalSystemValues.MESSAGE = "";
+            }
+
             return View("Entry_DDV_ReadOnly", ddvList);
         }
         [OnlineUserCheck]
@@ -1675,13 +1728,26 @@ namespace ExpenseProcessingSystem.Controllers
             }
             else
             {
-                if (_service.deleteExpenseEntry(EntryCVViewModelList.entryID))
+                List<int> EditableStatus = new List<int>{
+                    GlobalSystemValues.STATUS_PENDING,
+                    GlobalSystemValues.STATUS_REJECTED
+                };
+                var currentStat = _service.GetCurrentEntryStatus(EntryCVViewModelList.entryID);
+                if (EditableStatus.Contains(currentStat))
                 {
-                    id = _service.addExpense_CV(EntryCVViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_PC);
-                    var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == id).Expense_Creator_ID;
-                    //----------------------------- NOTIF----------------------------------
-                    _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_PC, GlobalSystemValues.STATUS_EDIT, makerId);
-                    //----------------------------- NOTIF----------------------------------
+                    if (_service.deleteExpenseEntry(EntryCVViewModelList.entryID))
+                    {
+                        id = _service.addExpense_CV(EntryCVViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_PC);
+                        var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == id).Expense_Creator_ID;
+                        //----------------------------- NOTIF----------------------------------
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_PC, GlobalSystemValues.STATUS_EDIT, makerId);
+                        //----------------------------- NOTIF----------------------------------
+                    }
+                }
+                else
+                {
+                    id = EntryCVViewModelList.entryID;
+                    GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE1;
                 }
             }
 
@@ -1929,6 +1995,11 @@ namespace ExpenseProcessingSystem.Controllers
             }
             pcvList.birForms.AddRange(birForms);
 
+            if (!String.IsNullOrEmpty(GlobalSystemValues.MESSAGE))
+            {
+                ViewData["MESSAGE"] = GlobalSystemValues.MESSAGE;
+                GlobalSystemValues.MESSAGE = "";
+            }
 
             return View("Entry_PCV_ReadOnly", pcvList);
         }
@@ -1991,13 +2062,26 @@ namespace ExpenseProcessingSystem.Controllers
             }
             else
             {
-                if (_service.deleteExpenseEntry(EntryCVViewModelList.entryID))
+                List<int> EditableStatus = new List<int>{
+                    GlobalSystemValues.STATUS_PENDING,
+                    GlobalSystemValues.STATUS_REJECTED
+                };
+                var currentStat = _service.GetCurrentEntryStatus(EntryCVViewModelList.entryID);
+                if (EditableStatus.Contains(currentStat))
                 {
-                    id = _service.addExpense_CV(EntryCVViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_SS);
-                    var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == id).Expense_Creator_ID;
-                    //----------------------------- NOTIF----------------------------------
-                    _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_SS, GlobalSystemValues.STATUS_EDIT, makerId);
-                    //----------------------------- NOTIF----------------------------------
+                    if (_service.deleteExpenseEntry(EntryCVViewModelList.entryID))
+                    {
+                        id = _service.addExpense_CV(EntryCVViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_SS);
+                        var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == id).Expense_Creator_ID;
+                        //----------------------------- NOTIF----------------------------------
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_SS, GlobalSystemValues.STATUS_EDIT, makerId);
+                        //----------------------------- NOTIF----------------------------------
+                    }
+                }
+                else
+                {
+                    id = EntryCVViewModelList.entryID;
+                    GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE1;
                 }
             }
 
@@ -2273,6 +2357,12 @@ namespace ExpenseProcessingSystem.Controllers
             }
             ssList.birForms.AddRange(birForms);
 
+            if (!String.IsNullOrEmpty(GlobalSystemValues.MESSAGE))
+            {
+                ViewData["MESSAGE"] = GlobalSystemValues.MESSAGE;
+                GlobalSystemValues.MESSAGE = "";
+            }
+
             return View("Entry_SS_ReadOnly", ssList);
         }
 
@@ -2344,13 +2434,26 @@ namespace ExpenseProcessingSystem.Controllers
             //EntryNCViewModelList ncList = new EntryNCViewModelList();
             int id = _service.addExpense_NC(EntryNCViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_NC);
             ModelState.Clear();
-            return RedirectToAction("View_NC", "Home", new { entryID = id });
+            //return RedirectToAction("View_NC", "Home", new { entryID = id });
+            TempData["entryIDAddtoView"] = id;
+
+            return RedirectToAction("View_NC", "Home");
         }
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         public IActionResult View_NC(int entryID)
         {
             var userId = GetUserID();
+
+            if (entryID == 0 && TempData["entryIDAddtoView"] != null)
+            {
+                entryID = (int)TempData["entryIDAddtoView"];
+                TempData.Keep();
+            }
+            else
+            {
+                TempData.Remove("entryIDAddtoView");
+            }
 
             EntryNCViewModelList ncList = _service.getExpenseNC(entryID);
             ncList = PopulateEntryNC(ncList);
@@ -2416,6 +2519,13 @@ namespace ExpenseProcessingSystem.Controllers
                 }
             }
             ncList.birForms.AddRange(birForms);
+
+            if (!String.IsNullOrEmpty(GlobalSystemValues.MESSAGE))
+            {
+                ViewData["MESSAGE"] = GlobalSystemValues.MESSAGE;
+                GlobalSystemValues.MESSAGE = "";
+            }
+
             return View("Entry_NC_ReadOnly", ncList);
         }
         [OnlineUserCheck]
@@ -2807,13 +2917,26 @@ namespace ExpenseProcessingSystem.Controllers
             }
             else
             {
-                if (_service.deleteLiquidationEntry(vm.entryID))
+                List<int> EditableStatus = new List<int>{
+                    GlobalSystemValues.STATUS_PENDING,
+                    GlobalSystemValues.STATUS_REJECTED
+                };
+                var currentStat = _service.getCurrentLiquidationStatus(vm.entryID);
+                if (EditableStatus.Contains(currentStat))
                 {
-                    id = _service.addLiquidationDetail(vm, int.Parse(GetUserID()), exist);
-                    var makerId = _context.LiquidationEntryDetails.FirstOrDefault(x => x.ExpenseEntryModel.Expense_ID == id).Liq_Created_UserID;
-                    //----------------------------- NOTIF----------------------------------
-                    _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_SS, GlobalSystemValues.STATUS_EDIT, makerId);
-                    //----------------------------- NOTIF----------------------------------
+                    if (_service.deleteLiquidationEntry(vm.entryID))
+                    {
+                        id = _service.addLiquidationDetail(vm, int.Parse(GetUserID()), exist);
+                        var makerId = _context.LiquidationEntryDetails.FirstOrDefault(x => x.ExpenseEntryModel.Expense_ID == id).Liq_Created_UserID;
+                        //----------------------------- NOTIF----------------------------------
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_SS, GlobalSystemValues.STATUS_EDIT, makerId);
+                        //----------------------------- NOTIF----------------------------------
+                    }
+                }
+                else
+                {
+                    id = vm.entryID;
+                    GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE1;
                 }
             }
 
@@ -2892,6 +3015,12 @@ namespace ExpenseProcessingSystem.Controllers
             if(birForms.Count() > 0)
             {
                 ssList.birForms.AddRange(birForms);
+            }
+
+            if (!String.IsNullOrEmpty(GlobalSystemValues.MESSAGE))
+            {
+                ViewData["MESSAGE"] = GlobalSystemValues.MESSAGE;
+                GlobalSystemValues.MESSAGE = "";
             }
 
             return View("Liquidation_SS_ReadOnly", ssList);

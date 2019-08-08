@@ -103,7 +103,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         // [RETRIEVE NC EXPENSE DETAILS]
         public EntryNCViewModelList getExpenseNC(int transID)
         {
-            EntryNCViewModel ncVM = new EntryNCViewModel();
+            List<EntryNCViewModel> ncList = new List<EntryNCViewModel>();
 
             var EntryDetails = (from e
                                 in _context.ExpenseEntry
@@ -111,62 +111,67 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                                 select new
                                 {
                                     e,
-                                    ExpenseEntryNCModel = from d
+                                    ExpenseEntryNC = from d
                                                           in _context.ExpenseEntryNonCash
-                                                          where d.ExpenseEntryModel.Expense_ID == e.Expense_ID
-                                                          select new
-                                                          {
-                                                              d,
-                                                              ExpenseEntryNCDtlModel = from g
-                                                                                      in _context.ExpenseEntryNonCashDetails
-                                                                                    where g.ExpenseEntryNCModel.ExpNC_ID == d.ExpNC_ID
-                                                                                       select new
-                                                                                       {
-                                                                                           g,
-                                                                                           ExpenseEntryNCDtlAccModel = from a
-                                                                                                                       in _context.ExpenseEntryNonCashDetailAccounts
-                                                                                                                       where a.ExpenseEntryNCDtlModel.ExpNCDtl_ID == g.ExpNCDtl_ID
-                                                                                                                       select a
-                                                                                       }
+                                                     where d.ExpenseEntryModel.Expense_ID == e.Expense_ID
+                                                     select new
+                                                     {
+                                                         d,
+                                                         ExpenseEntryNCDtls = from g
+                                                                                 in _context.ExpenseEntryNonCashDetails
+                                                                              where g.ExpenseEntryNCModel.ExpNC_ID == d.ExpNC_ID
+                                                                              select new
+                                                                              {
+                                                                                  g,
+                                                                                  ExpenseEntryNCDtlAccs = from a
+                                                                                                           in _context.ExpenseEntryNonCashDetailAccounts
+                                                                                                          where a.ExpenseEntryNCDtlModel.ExpNCDtl_ID == g.ExpNCDtl_ID
+                                                                                                          orderby a.ExpNCDtlAcc_Type_ID
+                                                                                                          select a
+                                                                              }
 
-                                                          }
+                                                     }
                                 }).FirstOrDefault();
-
-            foreach (var nc in EntryDetails.ExpenseEntryNCModel)
+            EntryNCViewModel ncDtlVM = new EntryNCViewModel();
+            foreach (var dtl in EntryDetails.ExpenseEntryNC)
             {
-
-                
-                //NC Details
-                List<ExpenseEntryNCDtlViewModel> ncDtlList = new List<ExpenseEntryNCDtlViewModel>();
-                ExpenseEntryNCDtlViewModel ncDtlVM = new ExpenseEntryNCDtlViewModel();
-                //NC Detail Accounts
-                List<ExpenseEntryNCDtlAccViewModel> ncDtlAccList = new List<ExpenseEntryNCDtlAccViewModel>();
-                ExpenseEntryNCDtlAccViewModel ncDtlAccVM = new ExpenseEntryNCDtlAccViewModel();
-
-                foreach (var ncDtl in nc.ExpenseEntryNCDtlModel)
+                List<ExpenseEntryNCDtlViewModel> ncDtls = new List<ExpenseEntryNCDtlViewModel>();
+                ExpenseEntryNCDtlViewModel entryNCDtl;
+                foreach (var ncDtl in dtl.ExpenseEntryNCDtls)
                 {
-                    ncDtlAccList = new List<ExpenseEntryNCDtlAccViewModel>();
-                    foreach (var ncDtlAcc in ncDtl.ExpenseEntryNCDtlAccModel)
+                    List<ExpenseEntryNCDtlAccViewModel> ncDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>();
+                    ExpenseEntryNCDtlAccViewModel entryNCDtlAcc;
+                    foreach (var ncDtlAcc in ncDtl.ExpenseEntryNCDtlAccs)
                     {
-                        ncDtlAccVM = new ExpenseEntryNCDtlAccViewModel()
+                        entryNCDtlAcc = new ExpenseEntryNCDtlAccViewModel()
                         {
                             ExpNCDtlAcc_Acc_ID = ncDtlAcc.ExpNCDtlAcc_Acc_ID,
-                            ExpNCDtlAcc_Acc_Name = ncDtlAcc.ExpNCDtlAcc_Acc_Name,
+                            ExpNCDtlAcc_Acc_Name = ncDtlAcc.ExpNCDtlAcc_Acc_Name ?? "",
                             ExpNCDtlAcc_Curr_ID = ncDtlAcc.ExpNCDtlAcc_Curr_ID,
-                            ExpNCDtlAcc_Curr_Name = _context.DMCurrency.Where(x=> x.Curr_ID == ncDtlAcc.ExpNCDtlAcc_Curr_ID).Select(x=> x.Curr_CCY_ABBR).FirstOrDefault(),
+                            ExpNCDtlAcc_Curr_Name = "",
                             ExpNCDtlAcc_Inter_Rate = ncDtlAcc.ExpNCDtlAcc_Inter_Rate,
                             ExpNCDtlAcc_Amount = ncDtlAcc.ExpNCDtlAcc_Amount,
                             ExpNCDtlAcc_Type_ID = ncDtlAcc.ExpNCDtlAcc_Type_ID
                         };
-                        ncDtlAccList.Add(ncDtlAccVM);
+                        if (entryNCDtlAcc.ExpNCDtlAcc_Acc_ID != 0)
+                        {
+                            entryNCDtlAcc.ExpNCDtlAcc_Acc_Name = _context.DMAccount.Where(x => x.Account_ID == entryNCDtlAcc.ExpNCDtlAcc_Acc_ID).Select(x => x.Account_Name).FirstOrDefault() ?? "";
+                        }
+                        if (entryNCDtlAcc.ExpNCDtlAcc_Curr_ID != 0)
+                        {
+                            entryNCDtlAcc.ExpNCDtlAcc_Curr_Name = _context.DMCurrency.Where(x => x.Curr_ID == entryNCDtlAcc.ExpNCDtlAcc_Curr_ID).Select(x => x.Curr_CCY_ABBR).FirstOrDefault() ?? "";
+                        }
+                        ncDtlAccs.Add(entryNCDtlAcc);
                     }
-                    if(nc.d.ExpNC_Category_ID == GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES)
+                    if (dtl.d.ExpNC_Category_ID == GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES)
                     {
-                        var copyAcc = ncDtlAccList[0];
-                        var emptyAccs = 4 - ncDtlAccList.Count;
+                        var copyAcc = ncDtlAccs[0];
+                        var emptyAccs = 4 - ncDtlAccs.Count;
                         int z = 0;
-                        while(z < emptyAccs){
-                            ncDtlAccList.Add(new ExpenseEntryNCDtlAccViewModel {
+                        while (z < emptyAccs)
+                        {
+                            ncDtlAccs.Add(new ExpenseEntryNCDtlAccViewModel
+                            {
                                 ExpNCDtlAcc_Acc_ID = copyAcc.ExpNCDtlAcc_Acc_ID,
                                 ExpNCDtlAcc_Acc_Name = copyAcc.ExpNCDtlAcc_Acc_Name,
                                 ExpNCDtlAcc_Curr_ID = copyAcc.ExpNCDtlAcc_Curr_ID,
@@ -178,27 +183,35 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             z++;
                         }
                     }
-                    ncDtlVM = new ExpenseEntryNCDtlViewModel()
+                    entryNCDtl = new ExpenseEntryNCDtlViewModel()
                     {
+                        ExpNCDtl_ID = ncDtl.g.ExpNCDtl_ID,
                         ExpNCDtl_Remarks_Desc = ncDtl.g.ExpNCDtl_Remarks_Desc,
                         ExpNCDtl_Remarks_Period = ncDtl.g.ExpNCDtl_Remarks_Period,
-                        ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>()
+                        ExpNCDtl_TR_ID = ncDtl.g.ExpNCDtl_TR_ID,
+                        ExpNCDtl_TR_Title = ncDtl.g.ExpNCDtl_TR_ID > 0 ? _context.DMTR.FirstOrDefault(x => x.TR_ID == ncDtl.g.ExpNCDtl_TR_ID).TR_WT_Title : "",
+                        ExpNCDtl_Vendor_ID = ncDtl.g.ExpNCDtl_Vendor_ID,
+                        ExpNCDtl_Vendor_Name = ncDtl.g.ExpNCDtl_Vendor_ID > 0 ? _context.DMVendor.FirstOrDefault(x => x.Vendor_ID == ncDtl.g.ExpNCDtl_Vendor_ID).Vendor_Name : "",
+                        ExpenseEntryNCDtlAccs = ncDtlAccs
                     };
-                    if (ncDtlVM.ExpenseEntryNCDtlAccs.Count <= 0)
-                    {
-                        ncDtlVM.ExpenseEntryNCDtlAccs = ncDtlAccList;
-                    }
-                    ncDtlList.Add(ncDtlVM);
+                    ncDtls.Add(entryNCDtl);
                 }
-
-
-                ncVM = new EntryNCViewModel()
+                ncDtlVM = new EntryNCViewModel()
                 {
-                    NC_Category_ID = nc.d.ExpNC_Category_ID,
-                    ExpenseEntryNCDtls = ncDtlList
+                    NC_ID = dtl.d.ExpNC_ID,
+                    NC_Category_ID = dtl.d.ExpNC_Category_ID,
+                    NC_CredAmt = dtl.d.ExpNC_CredAmt,
+                    NC_DebitAmt = dtl.d.ExpNC_DebitAmt,
+                    NC_CS_CredAmt = dtl.d.ExpNC_CS_CredAmt,
+                    NC_CS_DebitAmt = dtl.d.ExpNC_CS_DebitAmt,
+                    NC_IE_CredAmt = dtl.d.ExpNC_IE_CredAmt,
+                    NC_IE_DebitAmt = dtl.d.ExpNC_IE_DebitAmt,
+                    NC_TotalAmt = dtl.d.ExpNC_CredAmt + dtl.d.ExpNC_DebitAmt,
+                    NC_CS_TotalAmt = dtl.d.ExpNC_CS_CredAmt + dtl.d.ExpNC_CS_DebitAmt,
+                    NC_IE_TotalAmt = dtl.d.ExpNC_IE_CredAmt + dtl.d.ExpNC_IE_DebitAmt,
+                    ExpenseEntryNCDtls = ncDtls
                 };
             }
-
             EntryNCViewModelList ncModel = new EntryNCViewModelList()
             {
                 entryID = EntryDetails.e.Expense_ID,
@@ -208,8 +221,12 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 approver = (EntryDetails.e.Expense_Status == 1) ? "" : getUserName(EntryDetails.e.Expense_Approver),
                 verifier_1 = (EntryDetails.e.Expense_Status == 1) ? "" : getUserName(EntryDetails.e.Expense_Verifier_1),
                 verifier_2 = (EntryDetails.e.Expense_Status == 1) ? "" : getUserName(EntryDetails.e.Expense_Verifier_2),
+                approver_id = EntryDetails.e.Expense_Approver,
+                verifier_1_id = EntryDetails.e.Expense_Verifier_1,
+                verifier_2_id = EntryDetails.e.Expense_Verifier_2,
                 maker = EntryDetails.e.Expense_Creator_ID,
-                EntryNC = ncVM
+                lastUpdatedDate = EntryDetails.e.Expense_Last_Updated,
+                EntryNC = ncDtlVM
             };
 
             return ncModel;
@@ -920,12 +937,12 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                   vmList.Add(new DMAccountViewModel
                   {
                       Account_MasterID = m.Account_MasterID,
-                      Account_Name = m.Account_Name,
-                      Account_Code = m.Account_Code,
-                      Account_Budget_Code = m.Account_Budget_Code,
-                      Account_No = m.Account_No,
-                      Account_Cust = m.Account_Cust,
-                      Account_Div = m.Account_Div,
+                      Account_Name = m.Account_Name ?? "",
+                      Account_Code = m.Account_Code ?? "",
+                      Account_Budget_Code = m.Account_Budget_Code ?? "",
+                      Account_No = m.Account_No ?? "",
+                      Account_Cust = m.Account_Cust ?? "",
+                      Account_Div = m.Account_Div ?? "",
                       Account_Fund = m.Account_Fund,
                       Account_Group_Name = m.AccountGroup_Name ?? "",
                       Account_FBT_Name = m.FBT ?? defaultFBT,
@@ -944,12 +961,12 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                  vmList.Add(new DMAccountViewModel
                  {
                      Account_MasterID = m.Pending_Account_MasterID,
-                     Account_Name = m.Pending_Account_Name,
-                     Account_Code = m.Pending_Account_Code,
-                     Account_Budget_Code = m.Pending_Account_Budget_Code,
-                     Account_No = m.Pending_Account_No,
-                     Account_Cust = m.Pending_Account_Cust,
-                     Account_Div = m.Pending_Account_Div,
+                     Account_Name = m.Pending_Account_Name ?? "",
+                     Account_Code = m.Pending_Account_Code ?? "",
+                     Account_Budget_Code = m.Pending_Account_Budget_Code ?? "",
+                     Account_No = m.Pending_Account_No ?? "",
+                     Account_Cust = m.Pending_Account_Cust ?? "",
+                     Account_Div = m.Pending_Account_Div ?? "",
                      Account_Fund = m.Pending_Account_Fund,
                      Account_Group_Name = m.AccountGroup_Name ?? "",
                      Account_FBT_Name = m.FBT ?? defaultFBT,
@@ -964,89 +981,27 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                  })
             );
 
-            var vmList2 = vmList.AsQueryable();
             //FILTER
             foreach (var property in properties)
             {
                 var propertyName = property.Name;
-                var subStr = propertyName.Substring(propertyName.IndexOf("_")+1);
+                var subStr = propertyName.Substring(propertyName.IndexOf("_") + 1);
                 var toStr = property.GetValue(filters.AF).ToString();
-                string[] colArr = { "No", "Creator_ID", "Approver_ID" };
-                if (toStr != "")
+                if (toStr != "" && toStr != "0")
                 {
-                    if (toStr != "0")
+                    if (subStr == "FBT")
                     {
-                        if (colArr.Contains(subStr)) // IF INT VAL
-                        {
-                            vmList2 = vmList2.Where("Account_" + subStr + " = @0 AND  Account_isDeleted == @1", property.GetValue(filters.AF), false)
-                                     .Select(e => e).AsQueryable();
-                        }
-                        else if (subStr == "Creator_Name")
-                        {
-                            //get all userIDs of creator or approver that contains string
-                            var names = _context.User
-                              .Where(x => (x.User_FName.Contains(property.GetValue(filters.AF).ToString())
-                              || x.User_LName.Contains(property.GetValue(filters.AF).ToString())))
-                              .Select(x => x.User_ID).ToList();
-                            vmList2 = vmList2.Where(x => names.Contains(x.Account_Creator_ID) && x.Account_isDeleted == false)
-                                        .Select(e => e).AsQueryable();
-                        }
-                        else if (subStr == "Approver_Name")
-                        {
-                            //get all userIDs of creator or approver that contains string
-                            var names = _context.User
-                              .Where(x => (x.User_FName.Contains(property.GetValue(filters.AF).ToString())
-                              || x.User_LName.Contains(property.GetValue(filters.AF).ToString())))
-                              .Select(x => x.User_ID).ToList();
-                            vmList2 = vmList2.Where(x => names.Contains(x.Account_Approver_ID) && x.Account_isDeleted == false)
-                                        .Select(e => e).AsQueryable();
-                        }
-                        else if (subStr == "Status")
-                        {
-                            //get all status IDs that contains string
-                            var status = _context.StatusList
-                              .Where(x => (x.Status_Name.Contains(property.GetValue(filters.AF).ToString())))
-                              .Select(x => x.Status_ID).ToList();
-                            vmList2 = vmList2.Where(x => status.Contains(x.Account_Status_ID) && x.Account_isDeleted == false)
-                                        .Select(e => e).AsQueryable();
-                        }
-                        else if (subStr == "Group")
-                        {
-                            //get all account group IDs that contains string
-                            var grp = _context.DMAccountGroup
-                              .Where(x => (x.AccountGroup_Name.Contains(property.GetValue(filters.AF).ToString())))
-                              .Select(x => x.AccountGroup_MasterID).ToList();
-                            vmList2 = vmList2.Where(x => grp.Contains(x.Account_Group_MasterID) && x.Account_isDeleted == false)
-                                        .Select(e => e).AsQueryable();
-                        }
-                        else if (subStr == "Currency")
-                        {
-                            //get all currenct IDs that contains string
-                            var curr = _context.DMCurrency
-                              .Where(x => (x.Curr_Name.Contains(property.GetValue(filters.AF).ToString())))
-                              .Select(x => x.Curr_MasterID).ToList();
-                            vmList2 = vmList2.Where(x => curr.Contains(x.Account_Currency_MasterID) && x.Account_isDeleted == false)
-                                        .Select(e => e).AsQueryable();
-                        }
-                        else if (subStr == "FBT")
-                        {
-                            //get all userIDs of creator or approver that contains string
-                            var names = _context.DMFBT
-                              .Where(x => (x.FBT_Name.Contains(property.GetValue(filters.AF).ToString())))
-                              .Select(x => x.FBT_MasterID).ToList();
-                            vmList2 = vmList2.Where(x => names.Contains(x.Account_FBT_MasterID) && x.Account_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                        }
-                        else // IF STRING VALUE
-                        {
-                            vmList2 = vmList2.Where("Account_" + subStr + ".Contains(@0)", property.GetValue(filters.AF).ToString())
-                                    .Select(e => e).AsQueryable();
-                        }
+                        vmList = vmList.Where(x=> x.Account_FBT_Name.Contains(toStr))
+                                .Select(e => e).ToList();
+                    }
+                    else
+                    {
+                        vmList = vmList.AsQueryable().Where("Account_" + subStr + ".Contains(@0)", toStr)
+                                .Select(e => e).ToList();
                     }
                 }
             }
-
-            return vmList2.ToList();
+            return vmList;
         }
 
         public List<DMVATViewModel> populateVAT(DMFiltersViewModel filters)

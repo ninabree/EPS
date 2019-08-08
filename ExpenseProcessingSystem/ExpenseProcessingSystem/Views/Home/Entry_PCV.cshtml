@@ -97,7 +97,6 @@
                                 @Html.CheckBoxFor(x => Model.EntryCV[i].chkVat, new { @class = "chkVat comVar" })
                             </td>
                             <td>
-                                @*@Html.TextBoxFor(x => Model.EntryCV[i].vat, new { @class = "input100 txtVat", @readonly = "true" })*@
                                 @Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.EntryCV[i].vendVATList, "VAT_ID", "VAT_Rate", Model.EntryCV[i].vat), new { @class = "input100 txtVat comVar voucher-input", @disabled = "true" })
                             </td>
                             <td style="text-align:center">
@@ -135,7 +134,11 @@
                         </tr>
                     }
                     <tr>
-                        <td style="border:none; background-color:#f2f2f2" rowspan="2"><a id="addRow" href="#" class="glyphicon glyphicon-plus"></a></td>
+                        <td style="border:none; background-color:#f2f2f2" rowspan="2">
+                            <a id="addRow" href="#" class="glyphicon glyphicon-plus"></a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a id="removeRow" href="#" class="glyphicon glyphicon-remove expenseTable-remove" style="display:none"></a>
+                        </td>
                         <td style="border:none; background-color:#f2f2f2" rowspan="2"></td>
                         <td style="border:none; background-color:#f2f2f2" rowspan="2"></td>
                         <td style="border:none; background-color:#f2f2f2" rowspan="2"></td>
@@ -153,26 +156,19 @@
             </table>
         </div>
         <div id="entry-controls" class="m-b-10">
-            <div class="flex-sb">
+             <div class="flex-sb">
                 <div>
-                    <div class="dis-inline-block"><button class="btnEntryAction tbl-btn" name="command" value="Save">Save</button></div>
+                    <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" name="command" value="Save">Save</button></div>
                     <div class="dis-inline-block"><button class="tbl-btn" disabled>Delete</button></div>
                     <div class="dis-inline-block"><button class="tbl-btn" disabled>Modify</button></div>
-                </div>
-                <div>
-                    <div class="dis-inline-block"><button class="tbl-btn" id="reversal_entry" disabled>Create Reversal Entry</button></div>
-                </div>
-            </div>
-            <div class="flex-sb">
-                <div>
                     <div class="dis-inline-block"><button class="tbl-btn" disabled>Approve/Verify</button></div>
                     <div class="dis-inline-block"><button class="tbl-btn" disabled>Reject</button></div>
                 </div>
                 <div>
-                    <div></div>
                 </div>
                 <div>
                     <div class="dis-inline-block"><button class="tbl-btn" disabled>Print BIR Certificate</button></div>
+                    <div class="dis-inline-block"><button class="tbl-btn" id="reversal_entry" disabled>Create Reversal Entry</button></div>
                 </div>
             </div>
         </div>
@@ -279,7 +275,11 @@
                 '<td id="req_' + itemCount + '"><a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#"></a><input class="hiddenItem" data-val="true" data-val-required="The modalInputFlag field is required." id="EntryCV_' + itemCount + '__modalInputFlag" name="EntryCV[' + itemCount + '].modalInputFlag" type="hidden" value="0"><input id="EntryCV_' + itemCount + '__screenCode" name="EntryCV[' + itemCount + '].screenCode" type="hidden" value="PCV"><div id="divCashBD_' + itemCount + '"></div></td>';
 
             newRow.innerHTML = htmlContent;
-            
+
+            var trCount = $("#inputTable").find("tbody").find("tr");
+            if ((trCount.length - 3) > 0) {
+                $('.expenseTable-remove').show();
+            }
         });
 
         //Cash Breakdown Modal
