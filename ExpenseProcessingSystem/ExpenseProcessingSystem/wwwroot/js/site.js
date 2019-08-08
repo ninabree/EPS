@@ -11,7 +11,16 @@ $(document).ready(function () {
     });
 
     ///------------------------------------------------------------
-    $(".pagination-btn").on("click", function (e) {
+    //$(".pagination-btn").on("click", function (e) {
+    //    var page = $(this).attr('page');
+    //    $("<input />").attr("type", "hidden")
+    //        .attr("name", "page")
+    //        .attr("value", page)
+    //        .appendTo("#search-frm");
+    //    $("#search-frm").submit();
+
+    //});
+    $(document).on("click", ".pagination-btn", function (e) {
         var page = $(this).attr('page');
         $("<input />").attr("type", "hidden")
             .attr("name", "page")

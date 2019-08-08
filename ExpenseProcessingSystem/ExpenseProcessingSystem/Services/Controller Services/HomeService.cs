@@ -128,14 +128,17 @@ namespace ExpenseProcessingSystem.Services
                 var toStr = property.GetValue(filters.NotifFil).ToString();
                 DateTime dt;
                 DateTime.TryParseExact(toStr, "yyyy-dd-MM h:mm tt", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt);
-                if (toStr != "" && toStr != "0" && (dt.ToShortDateString() != new DateTime().ToShortDateString()))
+                if (toStr != "" && toStr != "0")
                 {                    
                     if (subStr == "Date")
                     {
-                        var filterDate = DateTime.Parse(toStr).ToShortDateString();
-                        vmList = vmList.AsQueryable()
-                           .Where(x => (x.Notif_Date.ToShortDateString() == filterDate))
-                          .Select(e => e).ToList();
+                        if ((dt.ToShortDateString() != new DateTime().ToShortDateString()))
+                        {
+                            var filterDate = DateTime.Parse(toStr).ToShortDateString();
+                            vmList = vmList.AsQueryable()
+                               .Where(x => (x.Notif_Date.ToShortDateString() == filterDate))
+                              .Select(e => e).ToList();
+                        }
                     }
                     else // IF STRING VALUE
                     {
