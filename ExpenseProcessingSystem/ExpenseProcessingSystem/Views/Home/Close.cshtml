@@ -103,7 +103,7 @@
 
         <div id="tbl-lbl">
             <div class="dis-inline-block"><p>Status:</p></div>
-            <div class="dis-inline-block">@Html.EditorFor(x=>x.rbuStatus,new { @readonly = "readonly" })</div>
+            <div class="dis-inline-block">@Html.TextBoxFor(x=>x.rbuStatus,new { @readonly = "true" })</div>
         </div>
 
     </div>
@@ -187,7 +187,7 @@
 
         <div id="tbl-lbl">
             <div class="dis-inline-block"><p>Status:</p></div>
-            <div class="dis-inline-block">@Html.EditorFor(x => x.fcduStatus, new { @readonly = "readonly" })</div>
+            <div class="dis-inline-block">@Html.TextBoxFor(x => x.fcduStatus, new { @readonly = "true" })</div>
         </div>
     </div>
     <hr class="dotted" />

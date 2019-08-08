@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Diagnostics;
 using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Services;
 using ExpenseProcessingSystem.ViewModels;
@@ -52,35 +53,42 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 return View(model);
             }
-            ViewData["message"] = "This is the start : ";
+            using (EventLog eventLog = new EventLog("Application"))
+            {
+                eventLog.Source = ".Net Runtime";
+                eventLog.WriteEntry("Express: Express has started", EventLogEntryType.Information, 1000, 1);
+            }
             //START OF LDAP LOGIN
             //try
             //{
-            //    string svcUsername = "tuser";
-            //    string domain = "maniladev.mizuho.com";
-            //    string svcPwd = "password@99";
-            //    //check if user is existing in Active Directory
-            //    using (PrincipalContext context = new PrincipalContext(ContextType.Domain, domain, svcUsername, svcPwd))
-            //    {
-            //        using (UserPrincipal user = UserPrincipal.FindByIdentity(context, model.User_UserName))
-            //        {
-            //            if (user != null)
-            //            {
-            //                //Set Session Info
-            //                _session.SetString("UserID", model.User_UserName);
-            //                //Set User Access Info
-            //                _session.SetString("isLoggedIn", "true");
-            //                _session.SetString("accessType", "admin");
-            //                _session.SetString("isAdmin", "admin" == "admin" ? "true" : "false");
-            //                ViewData["message"] = "well shit";
-            //                Log.Information("User Logged In");
-            //                return RedirectToAction("Index", "Home");
-            //            }
-            //            ViewData["message"] = "got in the second loop";
-            //        }
-            //        ViewData["message"] = "got in the first loop";
-            //    }
-            //    //validate the user's username & password in Active Directory
+            //    //string svcUsername = "tuser";
+            //    //string domain = "maniladev.mizuho.com";
+            //    //string svcPwd = "password@99";
+            //    string svcUsername = "gene.delacruz";
+            //    string domain = "jpi.local";
+            //    string svcPwd = "genecarlod";
+                //check if user is existing in Active Directory
+                //using (PrincipalContext context = new PrincipalContext(ContextType.Domain, domain, svcUsername, svcPwd))
+                //{
+                //    using (UserPrincipal user = UserPrincipal.FindByIdentity(context, model.User_UserName))
+                //    {
+                //        if (user != null)
+                //        {
+                //            //Set Session Info
+                //            _session.SetString("UserID", model.User_UserName);
+                //            //Set User Access Info
+                //            _session.SetString("isLoggedIn", "true");
+                //            _session.SetString("accessType", "admin");
+                //            _session.SetString("isAdmin", "admin" == "admin" ? "true" : "false");
+                //            ViewData["message"] = "well shit";
+                //            Log.Information("User Logged In");
+                //            return RedirectToAction("Index", "Home");
+                //        }
+                //        ViewData["message"] = "got in the second loop";
+                //    }
+                //    ViewData["message"] = "got in the first loop";
+                //}
+                //validate the user's username & password in Active Directory
             //    using (var context = new PrincipalContext(ContextType.Domain, domain, svcUsername, svcPwd))
             //    {
             //        //Username and password for authentication.
@@ -99,9 +107,15 @@ namespace ExpenseProcessingSystem.Controllers
             //        }
             //        ViewData["message"] = "got in the third loop";
             //    }
-            //}catch(Exception e)
+            //}
+            //catch (Exception e)
             //{
-            //    ViewData["error"] = e.Message;
+            //    using (EventLog eventLog = new EventLog("Application"))
+            //    {
+            //        eventLog.Source = ".Net Runtime";
+            //        eventLog.WriteEntry("Express:" + e.Message, EventLogEntryType.Information, 1000, 1);
+            //        eventLog.WriteEntry("Express:" + e.InnerException.Message, EventLogEntryType.Information, 1000, 1);
+            //    }
             //}
             //END OF LDAP LOGIN
 
@@ -118,7 +132,7 @@ namespace ExpenseProcessingSystem.Controllers
                     _session.SetString("isAdmin", acc.User_Role == "admin" ? "true" : "false");
 
                     Log.Information("User Logged In");
-                    if(acc.User_Role == "admin")
+                    if (acc.User_Role == "admin")
                     {
                         return RedirectToAction("UM", "Home");
                     }

@@ -1,5 +1,6 @@
 ﻿$(function () {
     var computeFunction = function (event) {
+        isSessionTimeout();
         if (event.target.classList.contains("comVar")) {
             computeValues(event.target.parentNode.parentNode);
         }
@@ -378,10 +379,29 @@
         });
     }
 
-    function ajaxFormCall(url) {
-        return $.ajax({
-            url: url,
+    function isSessionTimeout() {
+        var tmp = false;
+        $.ajax({
+            url: '/Account/checkSession',
             type: "POST",
+            dataType: 'json',
+            contentType: 'application/json',
+            async: false,
+            processData: false,
+            cache: false,
+            data: '{}',
+            success: function (data) {
+                //FOR SESSION TIMEOUT CHECK
+                if (data == true) {
+                    alert("Your session has timed out. Kindly re-login. Thank you.");
+                    tmp = true;
+                    location.href = "/Account/Login";
+                }
+            },
+            error: function (xhr) {
+                alert('error');
+            }
         });
+        return tmp;
     }
 });
