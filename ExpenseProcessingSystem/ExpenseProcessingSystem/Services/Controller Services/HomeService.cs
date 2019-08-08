@@ -8380,7 +8380,7 @@ namespace ExpenseProcessingSystem.Services
             float TotalDebit = 0;
             float credEwtTotal = 0;
             float credCashTotal = 0;
-
+            int entryID = entryModel.entryID;
             foreach (EntryDDVViewModel cv in entryModel.EntryDDV)
             {
                 TotalDebit += cv.debitGross;
@@ -8512,13 +8512,26 @@ namespace ExpenseProcessingSystem.Services
                 }
                 else
                 {
-                    // Update entity in DbSet
-                    expenseEntry.Expense_ID = entryModel.entryID;
-                    removeDDVChild(entryModel.entryID);
-                    _context.ExpenseEntry.Update(expenseEntry);
-                    //----------------------------- NOTIF----------------------------------
-                    insertIntoNotif(userId, GlobalSystemValues.TYPE_DDV, GlobalSystemValues.STATUS_EDIT, 0);
-                    //----------------------------- NOTIF----------------------------------
+                    List<int> EditableStatus = new List<int>{
+                    GlobalSystemValues.STATUS_PENDING,
+                    GlobalSystemValues.STATUS_REJECTED
+                    };
+                    int currentStat = getSingleEntryRecord(entryID).Expense_Status;
+                    if (EditableStatus.Contains(currentStat))
+                    {
+                        // Update entity in DbSet
+                        expenseEntry.Expense_ID = entryModel.entryID;
+                        removeDDVChild(entryModel.entryID);
+                        _context.ExpenseEntry.Update(expenseEntry);
+                        //----------------------------- NOTIF----------------------------------
+                        insertIntoNotif(userId, GlobalSystemValues.TYPE_DDV, GlobalSystemValues.STATUS_EDIT, 0);
+                        //----------------------------- NOTIF----------------------------------
+                    }
+                    else
+                    {
+                        expenseEntry.Expense_ID = entryID;
+                        GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE1;
+                    }
                 }
                 _context.SaveChanges();
                 return expenseEntry.Expense_ID;
@@ -8528,6 +8541,8 @@ namespace ExpenseProcessingSystem.Services
         }
         public int addExpense_NC(EntryNCViewModelList entryModel, int userId, int expenseType)
         {
+            int entryID = entryModel.entryID;
+
             if (_modelState.IsValid)
             {
                 List<ExpenseEntryNCDtlModel> expenseDtls = new List<ExpenseEntryNCDtlModel>();
@@ -8599,18 +8614,32 @@ namespace ExpenseProcessingSystem.Services
                     //----------------------------- NOTIF----------------------------------
                     insertIntoNotif(userId, GlobalSystemValues.TYPE_NC, GlobalSystemValues.STATUS_NEW, 0);
                     //----------------------------- NOTIF----------------------------------
+                    _context.SaveChanges();
                 }
                 else
                 {
-                    // Update entity in DbSet
-                    expenseEntry.Expense_ID = entryModel.entryID;
-                    removeNCChild(entryModel.entryID);
-                    _context.ExpenseEntry.Update(expenseEntry);
-                    //----------------------------- NOTIF----------------------------------
-                    insertIntoNotif(userId, GlobalSystemValues.TYPE_NC, GlobalSystemValues.STATUS_EDIT, 0);
-                    //----------------------------- NOTIF----------------------------------
+                    List<int> EditableStatus = new List<int>{
+                    GlobalSystemValues.STATUS_PENDING,
+                    GlobalSystemValues.STATUS_REJECTED
+                    };
+                    var currentStat = getSingleEntryRecord(entryID).Expense_Status;
+                    if (EditableStatus.Contains(currentStat))
+                    {
+                        // Update entity in DbSet
+                        expenseEntry.Expense_ID = entryModel.entryID;
+                        removeNCChild(entryModel.entryID);
+                        _context.ExpenseEntry.Update(expenseEntry);
+                        //----------------------------- NOTIF----------------------------------
+                        insertIntoNotif(userId, GlobalSystemValues.TYPE_NC, GlobalSystemValues.STATUS_EDIT, 0);
+                        //----------------------------- NOTIF----------------------------------
+                        _context.SaveChanges();
+                    }
+                    else
+                    {
+                        expenseEntry.Expense_ID = entryID;
+                        GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE1;
+                    }
                 }
-                _context.SaveChanges();
                 return expenseEntry.Expense_ID;
             }
             return -1;
@@ -9071,10 +9100,6 @@ namespace ExpenseProcessingSystem.Services
                 if (status == GlobalSystemValues.STATUS_APPROVED)
                 {
                     liquidateEntry.Liq_Approver = userid;
-                    if (GlobalSystemValues.STATUS_PENDING == getCurrentLiquidationStatus(liquidateEntry.ExpenseEntryModel.Expense_ID))
-                    {
-                        liquidateEntry.Liq_Verifier1 = userid;
-                    }
                 }
 
                 liquidateEntry.Liq_Status = status;
@@ -11803,7 +11828,10 @@ namespace ExpenseProcessingSystem.Services
             }
             return false;
         }
-        
+        public ExpenseEntryModel getSingleEntryRecord(int entryID)
+        {
+            return _context.ExpenseEntry.Where(x => x.Expense_ID == entryID).AsNoTracking().FirstOrDefault();
+        }
         ///========[End of Other Functions]============
     }
 

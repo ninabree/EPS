@@ -64,7 +64,7 @@
                             <td colspan="2">
                                 @Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Remarks_Period, new { @type = "date", @class = "" })
                             </td>
-
+                         
                             <td class="cat-hidden" colspan="1" rowspan="@Model.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs.Count">
                                 @Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Vendor_Name, new { @readonly = "true", @class = "w-full cat-hidden" })
                             </td>
@@ -337,6 +337,8 @@
     </div>
     <div id="entry-controls" class="m-b-10">
         @{
+            var isEWT = (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PSSC || Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PCHC ||
+                         Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES);
             var enableSave = "disabled";
             var enableDelete = (Model.statusID == GlobalSystemValues.STATUS_PENDING ||
                                   Model.statusID == GlobalSystemValues.STATUS_REJECTED) && (isMaker) ? "" : "disabled";
@@ -347,7 +349,11 @@
                                         ((aVerifier) || (anApprover))) && (!isMaker) ? "" : "disabled";
             var enableReject = ((Model.statusID == GlobalSystemValues.STATUS_PENDING) && (anApprover)) && (!isMaker) ? "" : "disabled";
 
-            var enableBIR = (Model.statusID == GlobalSystemValues.STATUS_REVERSED ||
+            var enableBIR = ((Model.statusID == GlobalSystemValues.STATUS_REVERSED ||
+                                Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
+                                Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING ||
+                                Model.statusID == GlobalSystemValues.STATUS_POSTED) && isEWT) ? "" : "disabled";
+            var enablePrint = (Model.statusID == GlobalSystemValues.STATUS_REVERSED ||
                                 Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
                                 Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING ||
                                 Model.statusID == GlobalSystemValues.STATUS_POSTED) ? "" : "disabled";
@@ -372,7 +378,16 @@
                     </div>
                     <div>
                         <div class="dis-inline-block"><button class="tbl-btn" @enableBIR id="printBir" value="printBir">Print BIR Certificate</button></div>
-                        <div class="dis-inline-block"><button class="tbl-btn" @enableBIR id="printBir" value="printBir">Print CDD Instruction Sheet</button></div>
+                        @if (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT)
+                        {
+                        <div class="dis-inline-block"><button class="tbl-btn" @enablePrint id="printBir" value="PrintCDD" name="command">Print CDD Instruction Sheet</button></div>
+                        }
+                        else if (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL &&
+                        (Model.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID == @usd ||
+                        Model.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID == @jpy))
+                        {
+                            <div class="dis-inline-block"><button class="tbl-btn" @enablePrint id="printBir" value="PrintCDD_RET" name="command">Print CDD Instruction Sheet</button></div>
+                        }
                         <div class="dis-inline-block"><button class="tbl-btn" id="reversal_entry" @enableReversal value="Reversal" name="command">Create Reversal Entry</button></div>
                     </div>
                 </div>
@@ -422,5 +437,12 @@
             </Text>
         }
 
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        if ($('#alert').text() != "") {
+            $('#divAlertWindow').show();
+        }
     });
 </script>

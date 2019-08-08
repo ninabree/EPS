@@ -247,6 +247,10 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
+        if ($('#alert').text() != "") {
+            $('#divAlertWindow').show();
+        }
+
         var myModal2 = $('.myModal2');
         var modalDiv2 = $(myModal2).find('div div');
         var modalDivHeader2 = $(modalDiv2).find('.modal-header2');
