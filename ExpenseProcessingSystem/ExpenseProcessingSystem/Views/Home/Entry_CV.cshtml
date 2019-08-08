@@ -128,13 +128,19 @@
                         </tr>
                     }
 
-                    <tr>
-                        <td style="border:none; background-color:#f2f2f2" rowspan="2"><a id="addRow" href="#" class="glyphicon glyphicon-plus"></a></td>
-                        <td colspan="8" style="text-align:right; border:none; background-color:#f2f2f2">Subtotal : </td>
-                        <td rowspan="2"><div class="flex-c"><input type="text" class="input100" readonly id="grossTotal" /></div></td>
-                        <td><input type="text" readonly class="input100" id="credEwtTotal" /></td>
-                        <td><input type="text" readonly class="input100" id="credCashTotal" /></td>
-                    </tr>
+                        <tr>
+                           @* <td style="border:none; background-color:#f2f2f2" rowspan="2"><a id="addRow" href="#" class="glyphicon glyphicon-plus"></a></td>*@
+                            <td style="border:none; background-color:#f2f2f2" rowspan="2">
+                                <a id="addRow" href="#" class="glyphicon glyphicon-plus"></a>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a id="removeRow" href="#" class="glyphicon glyphicon-remove expenseTable-remove" style="display:none"></a>
+                            </td>
+
+                            <td colspan="8" style="text-align:right; border:none; background-color:#f2f2f2">Subtotal : </td>
+                            <td rowspan="2"><div class="flex-c"><input type="text" class="input100" readonly id="grossTotal" /></div></td>
+                            <td><input type="text" readonly class="input100" id="credEwtTotal" /></td>
+                            <td><input type="text" readonly class="input100" id="credCashTotal" /></td>
+                        </tr>
                     <tr>
                         <td colspan="8" style="text-align:right; border:none; background-color:#f2f2f2 ">Total : </td>
                         <td colspan="2"><div class="flex-c"><input type="text" class="input100" readonly id="credTotal" /></div></td>
@@ -160,30 +166,20 @@
             </div>
         </div>
         <div id="entry-controls" class="m-b-10">
+
             <div class="flex-sb">
                 <div>
                     <div class="dis-inline-block"><button class="tbl-btn">Save</button></div>
                     <div class="dis-inline-block"><button class="tbl-btn" disabled>Delete</button></div>
                     <div class="dis-inline-block"><button class="tbl-btn" disabled>Modify</button></div>
-                </div>
-                <div>
-                    <div class="dis-inline-block"><button id="reversal_entry" class="tbl-btn" disabled>Create Reversal Entry</button></div>
-                </div>
-                <div>
-                    <div class="dis-inline-block m-l-41"><button class="tbl-btn" disabled>Print Check</button></div>
-                </div>
-
-            </div>
-            <div class="flex-sb">
-                <div>
                     <div class="dis-inline-block"><button class="tbl-btn" disabled>Approve/Verify</button></div>
                     <div class="dis-inline-block"><button class="tbl-btn" disabled>Reject</button></div>
                 </div>
                 <div>
-                    <div class="dis-inline-block"><button class="tbl-btn" disabled>Delete GBase Post</button></div>
-                </div>
-                <div>
-                    <div class="dis-inline-block"><button class="tbl-btn" disabled>Print BIR Certificate</button></div>
+                    <div class="dis-inline-block"><button class="tbl-btn" disabled >Print Check</button></div>
+                    <div class="dis-inline-block"><button class="tbl-btn" disabled >Print Voucher</button></div>
+                    <div class="dis-inline-block"><button class="tbl-btn" disabled >Print BIR Certificate</button></div>
+                    <div class="dis-inline-block"><button class="tbl-btn" disabled >Create Reversal Entry</button></div>
                 </div>
             </div>
         </div>
@@ -349,11 +345,8 @@
 
             var modalDivBody = $('.modal-body');
             var modalDivFooter = $('.modal-footer').find("#add_row_btn").remove();;
-
-            if ($('.modal-header').find(".modal-title")[0] == null) {
-                $('.modal-header').append('<h4 class="modal-title">Prepaid Expense Amortization Schedule</h4>');
-            }
-
+            $('.modal-header').empty();
+            $('.modal-header').append('<h4 class="modal-title">Prepaid Expense Amortization Schedule</h4>');
             var vendor = $("#vendorName option:selected").text();
             var account = $("#" + pNode.id).find(".txtAcc option:selected").text()
 

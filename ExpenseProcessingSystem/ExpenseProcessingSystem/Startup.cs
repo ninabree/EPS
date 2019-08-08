@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using ExpenseProcessingSystem.ConstantData;
 using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.HostedServices;
 using ExpenseProcessingSystem.Services;
@@ -91,7 +92,7 @@ namespace ExpenseProcessingSystem
             services.AddDbContext<EPSDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddDbContext<GOExpressContext>(options => options.UseSqlServer(Configuration.GetConnectionString("GOExpressConnection")));
             services.AddDbContext<GWriteContext>(options => options.UseSqlServer(Configuration.GetConnectionString("GoWriteConnection")));
-
+            services.AddScoped<MakerCheck>();
             //services.AddHostedService<HelloWorldHostedService>();
         }
 

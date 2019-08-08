@@ -1119,6 +1119,7 @@ namespace ExpenseProcessingSystem.Controllers
 
         [OnlineUserCheck]
         [ImportModelState]
+        [NonAdminRoleCheck]
         public IActionResult UM(string sortOrder, string currentFilter, string searchString, int? page)
         {
             //set sort vals
@@ -1169,6 +1170,7 @@ namespace ExpenseProcessingSystem.Controllers
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         [ImportModelState]
+        [ServiceFilter(typeof(MakerCheck))]
         public IActionResult Entry_CV(int entryID = 0)
         {
             var userId = GetUserID();
@@ -1422,10 +1424,16 @@ namespace ExpenseProcessingSystem.Controllers
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         [ImportModelState]
-        public IActionResult Entry_DDV(EntryDDVViewModelList viewModel)
+        [ServiceFilter(typeof(MakerCheck))]
+        public IActionResult Entry_DDV(int entryID)
         {
+            EntryDDVViewModelList viewModel;
             var userId = GetUserID();
-            if (viewModel.EntryDDV.Count <= 0)
+            if(entryID > 0)
+            {
+                viewModel = _service.getExpenseDDV(entryID);
+            }
+            else
             {
                viewModel = new EntryDDVViewModelList();
                 viewModel.EntryDDV.Add(new EntryDDVViewModel {
@@ -1521,8 +1529,7 @@ namespace ExpenseProcessingSystem.Controllers
             switch (command)
             {
                 case "Modify":
-                    viewLink = "Entry_DDV";
-                    break;
+                    return RedirectToAction("Entry_DDV", "Home", new { entryID = entryID });
                 case "approver":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_APPROVED, intUser))
                     {
@@ -1618,6 +1625,7 @@ namespace ExpenseProcessingSystem.Controllers
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         [ImportModelState]
+        [ServiceFilter(typeof(MakerCheck))]
         public IActionResult Entry_PCV()
         {
             var userId = GetUserID();
@@ -1931,6 +1939,7 @@ namespace ExpenseProcessingSystem.Controllers
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         [ImportModelState]
+        [ServiceFilter(typeof(MakerCheck))]
         public IActionResult Entry_SS()
         {
             var userId = GetUserID();
@@ -4048,7 +4057,7 @@ namespace ExpenseProcessingSystem.Controllers
             if(model.expenseId != null)
                 vvm.voucherNo = _service.getVoucherNo(1,model.expenseDate,int.Parse(model.expenseId));
             vvm.payee = _service.getVendorName(model.vendor, model.payee_type);
-
+            vvm.checkNo = model.checkNo;
             vvm.approver = model.approver;
             vvm.verifier_1 = model.verifier_1;
             vvm.verifier_2 = model.verifier_2;

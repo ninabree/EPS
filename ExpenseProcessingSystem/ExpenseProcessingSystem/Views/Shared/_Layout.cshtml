@@ -42,7 +42,7 @@
 
         <div id="homepage-tabs" class="m-t-30 m-l-25 m-r-25 ">
             <input type="hidden" value="@ViewBag.userID" id="UI" />        
-            <div class="float-r"><a href="../Account/Logout">[Log Out]</a></div>
+            <div class="float-r"><a href="../Account/Logout">@HttpContextAccessor.HttpContext.Session.GetString("UserName") [Log Out]</a></div>
 
             <ul id="tabs">
 

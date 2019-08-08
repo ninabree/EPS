@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ExpenseProcessingSystem.Data;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
 using System;
@@ -13,19 +15,33 @@ namespace ExpenseProcessingSystem.ConstantData
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {
+            var descriptor = context.ActionDescriptor as ControllerActionDescriptor;
+            var actioName = descriptor.ActionName;
+
             var sessionRole = new byte[20];
             bool roleOK = context.HttpContext.Session.TryGetValue("accessType", out sessionRole);
+            var role = System.Text.Encoding.UTF8.GetString(sessionRole);
 
             if (roleOK)
             {
-                if (System.Text.Encoding.UTF8.GetString(sessionRole) == GlobalSystemValues.ROLE_ADMIN) {
+                if (role == GlobalSystemValues.ROLE_ADMIN && actioName != "UM") {
                     context.Result =
                         new RedirectToRouteResult(new RouteValueDictionary(new
                         {
                             controller = "Home",
                             action = "UM"
                         }));
+                }else if(actioName == "UM" && role != GlobalSystemValues.ROLE_ADMIN)
+                {
+                    context.Result =
+                        new RedirectToRouteResult(new RouteValueDictionary(new
+                        {
+                            controller = "Home",
+                            action = "Index"
+                        }));
                 }
+
+
             }
             else
             {

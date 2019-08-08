@@ -123,6 +123,7 @@ namespace ExpenseProcessingSystem.Controllers
                 {
                     //Set Session Info
                     _session.SetString("UserID", acc.User_ID.ToString());
+                    _session.SetString("UserName", acc.User_FName + " " + acc.User_LName);
                     //Set User Access Info
                     _session.SetString("isLoggedIn", "true");
                     _session.SetString("accessType", acc.User_Role);
