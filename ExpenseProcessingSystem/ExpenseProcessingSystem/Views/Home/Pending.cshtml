@@ -4,6 +4,7 @@
 @{ 
     var printStat = ViewBag.printStat ?? "";
     int loi = ViewBag.loi > 0 ? ViewBag.loi : 13;
+    var pageNo = Model.GeneralPendingList.PageIndex;
 }
 <div class="tabContent">
     <div class="p-t-10 p-l-20 p-r-20">
@@ -109,28 +110,15 @@
         var prevDisabled = !Model.GeneralPendingList.HasPreviousPage ? "disabled" : "";
         var nextDisabled = !Model.GeneralPendingList.HasNextPage ? "disabled" : "";
     }
-    <a asp-action="Pending"
-       asp-route-sortOrder="@ViewData["CurrentSort"]"
-       asp-route-page="@(Model.GeneralPendingList.PageIndex - 1)"
-       asp-controller="Home"
-       asp-route-partialName="@ViewData["Title"]"
-       asp-route-currentFilter="@ViewData["CurrentFilter"]"
-       class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left">
-    </a>
+    <a class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left" page="@(Model.GeneralPendingList.PageIndex - 1)"></a>
     <input type="text" class="pagination-input" id="paginationInput" val="" />
-    <input type="text" class="pagination-input" value="of @(Model.GeneralPendingList.TotalPages)" disabled />
-    <a asp-action="Pending"
-       asp-route-sortOrder="@ViewData["CurrentSort"]"
-       asp-controller="Home"
-       asp-route-partialName="@ViewData["Title"]"
-       asp-route-page="@(Model.GeneralPendingList.PageIndex + 1)"
-       asp-route-currentFilter="@ViewData["CurrentFilter"]"
-       class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right">
-    </a>
+    <input type="text" class="pagination-input" value="@(Model.GeneralPendingList.PageIndex) of @(Model.GeneralPendingList.TotalPages)" disabled />
+    <a class="btn pagination-btn btn-xs btn-default @nextDisabled glyphicon glyphicon-menu-right" page="@(Model.GeneralPendingList.PageIndex + 1)"></a>
 </div>
 
 <script type="text/javascript">
-    $(function () {
+    $(document).ready(function (e) {
+
         $('*[data-href]').on('click', function () {
             var form = $("#pendingForm")
             var hrefString = $(this).data("href").split("/");
@@ -141,17 +129,18 @@
             form.attr("action", "/Home/" + link)
             form.submit();
         });
-    });
-    //reset search filter values
-    $(document).on("click", "#full-list-btn", function (e) {
-        e.stopImmediatePropagation();
-        $('input[id^= "Filters_GenPendFil_"]').each(function (i, obj) {
-            $(this).val("");
-            if ($(this).attr('type') == "date") {
-                $(this).val("0001-01-01T00:00:00.000");
-            }
+
+        //reset search filter values
+        $(document).on("click", "#full-list-btn", function (e) {
+            e.stopImmediatePropagation();
+            $('input[id^= "Filters_GenPendFil_"]').each(function (i, obj) {
+                $(this).val("");
+                if ($(this).attr('type') == "date") {
+                    $(this).val("0001-01-01T00:00:00.000");
+                }
+            });
+            $("option:selected").prop("selected", false);
+            $('#search-frm').submit();
         });
-        $("option:selected").prop("selected", false);
-        $('#search-frm').submit();
-    });
+    });    
 </script>

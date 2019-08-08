@@ -126,7 +126,9 @@ namespace ExpenseProcessingSystem.Services
                 var propertyName = property.Name;
                 var subStr = propertyName.Substring(propertyName.IndexOf("_") + 1);
                 var toStr = property.GetValue(filters.NotifFil).ToString();
-                if (toStr != "" && toStr != "0" && toStr != "1/1/0001 12:00:00 AM")
+                DateTime dt;
+                DateTime.TryParseExact(toStr, "yyyy-dd-MM h:mm tt", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt);
+                if (toStr != "" && toStr != "0" && (dt.ToShortDateString() != new DateTime().ToShortDateString()))
                 {                    
                     if (subStr == "Date")
                     {
@@ -237,8 +239,8 @@ namespace ExpenseProcessingSystem.Services
 
                 if (item.Liq_Status == 0)
                 {
-                    ver1 = item.Expense_Verifier_1 == 0 ? null : getUserName(item.Expense_Verifier_1);
-                    ver2 = item.Expense_Verifier_2 == 0 ? null : getUserName(item.Expense_Verifier_2);
+                    ver1 = item.Expense_Verifier_1 == 0 ? null : getName(item.Expense_Verifier_1);
+                    ver2 = item.Expense_Verifier_2 == 0 ? null : getName(item.Expense_Verifier_2);
 
                     linktionary = new Dictionary<int, string>
                     {
@@ -252,8 +254,8 @@ namespace ExpenseProcessingSystem.Services
                 }
                 else
                 {
-                    ver1 = item.Liq_Verifier1 == 0 ? null : getUserName(item.Liq_Verifier1);
-                    ver2 = item.Liq_Verifier2 == 0 ? null : getUserName(item.Liq_Verifier2);
+                    ver1 = item.Liq_Verifier1 == 0 ? null : getName(item.Liq_Verifier1);
+                    ver2 = item.Liq_Verifier2 == 0 ? null : getName(item.Liq_Verifier2);
 
                     linktionary = new Dictionary<int, string>
                     {
@@ -272,7 +274,7 @@ namespace ExpenseProcessingSystem.Services
                     App_Type = (item.Liq_Status == 0) ? GlobalSystemValues.getApplicationType(item.Expense_Type) : GlobalSystemValues.getApplicationType(item.Expense_Type) + " (Liquidation)",
                     App_Amount = item.Expense_Debit_Total,
                     App_Payee = getVendorName(item.Expense_Payee, item.Expense_Payee_Type) ?? "",
-                    App_Maker = (item.Liq_Status == 0) ? getUserName(item.Expense_Creator_ID) : getUserName(item.Liq_Created_UserID),
+                    App_Maker = (item.Liq_Status == 0) ? getName(item.Expense_Creator_ID) : getName(item.Liq_Created_UserID),
                     App_Verifier_ID_List = new List<string> { ver1, ver2 },
                     App_Date = (item.Liq_Status == 0) ? item.Expense_Date : item.Liq_Created_Date,
                     App_Last_Updated = (item.Liq_Status == 0) ? item.Expense_Last_Updated : item.Liq_LastUpdated_Date,
@@ -322,7 +324,7 @@ namespace ExpenseProcessingSystem.Services
                         }
                         else // IF STRING VALUE
                         {
-                            pendingList = pendingList.AsQueryable().Where("App_" + subStr + ".Contains(@0)", toStr)
+                            pendingList = pendingList.AsQueryable().Where("App_" + subStr + ".ToLower().Contains(@0)", toStr.ToLower())
                                     .Select(e => e).ToList();
                         }
                     }
