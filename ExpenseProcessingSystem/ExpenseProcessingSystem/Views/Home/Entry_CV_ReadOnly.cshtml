@@ -188,6 +188,7 @@
                     @if (HttpContextAccessor.HttpContext.Session.GetString("accessType") == GlobalSystemValues.ROLE_MAKER)
                     {
                         <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
+                        <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
                     }
                     else
                     {
@@ -226,6 +227,7 @@
 </div>
 
 <script type="text/javascript" src="~/js/EntryScripts.js"></script>
+
 <script type="text/javascript">
     $(window).on("load", function () {
         $('#iframePreview').prop('src', "/Home/VoucherViewCV?ExpenseID=@Model.entryID");
@@ -265,5 +267,12 @@
         });
 
 
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        if ($('#alert').text() != "") {
+            $('#divAlertWindow').show();
+        }
     });
 </script>

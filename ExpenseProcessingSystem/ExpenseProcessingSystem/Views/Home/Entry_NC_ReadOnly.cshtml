@@ -469,6 +469,7 @@
                     @if (HttpContextAccessor.HttpContext.Session.GetString("accessType") == GlobalSystemValues.ROLE_MAKER)
                     {
                         <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
+                        <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
                     }
                     else
                     {
@@ -535,5 +536,12 @@
             </Text>
         }
 
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        if ($('#alert').text() != "") {
+            $('#divAlertWindow').show();
+        }
     });
 </script>

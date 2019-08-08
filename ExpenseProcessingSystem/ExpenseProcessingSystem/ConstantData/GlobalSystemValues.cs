@@ -268,6 +268,9 @@ namespace ExpenseProcessingSystem.ConstantData
 
         //Static values for Notification.
         public static readonly int UF_ALL = 0; // For General Messages; Notif for someone creating changes in
+
+        //System message
+        public static readonly string MESSAGE1 = "You can only edit the entry in Pending or Rejected status.";
     }
     public class CONSTANT_NC_VALS
     {
