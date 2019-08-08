@@ -66,7 +66,7 @@
                         <tr id="item_@i">
                             <td class="p-b-1 p-t-1">
                                 <div class="flex-sb">
-                                    @Html.TextBoxFor(x => Model.EntryDDV[i].GBaseRemarks, new { @class = "input100 w-80 voucher-input" })
+                                    @Html.TextBoxFor(x => Model.EntryDDV[i].GBaseRemarks, new { @class = "input100 w-80 txtgbaseRemarks voucher-input" })
                                     <div id="remark_@i">
                                         <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
                                         @for (int y = 0; y < Model.EntryDDV[i].gBaseRemarksDetails.Count(); y++)
@@ -135,7 +135,12 @@
                         </tr>
                     }
                     <tr>
-                        <td style="border:none; background-color:#f2f2f2" rowspan="2"><a id="addRow" href="#" class="glyphicon glyphicon-plus"></a></td>
+                        <td style="border:none; background-color:#f2f2f2" rowspan="2">
+                            <a id="addRow" href="#" class="glyphicon glyphicon-plus"></a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a id="removeRow" href="#" class="glyphicon glyphicon-remove expenseTable-remove" style="display:none"></a>
+                        </td>
+
                         <td colspan="9" style="text-align:right; border:none; background-color:#f2f2f2">Subtotal : </td>
                         <td rowspan="2"><div class="flex-c"><input type="text" class="input100" readonly id="grossTotal" /></div></td>
                         <td><input type="text" readonly class="input100" id="credEwtTotal" /></td>
@@ -285,7 +290,10 @@
             newRow.innerHTML = htmlContent;
             $('#EntryDDV_' + itemCount + '__vat').append($("#EntryDDV_0__vat > option").clone());
             $('#EntryDDV_' + itemCount + '__ewt').append($("#EntryDDV_0__ewt > option").clone());
-
+            var trCount = $("#inputTable").find("tbody").find("tr");
+            if ((trCount.length - 3) > 0) {
+                $('.expenseTable-remove').show();
+            }
             eachTr();
         });
         //Inter Entity
