@@ -9561,9 +9561,13 @@ namespace ExpenseProcessingSystem.Services
 
                     Dictionary<string, entryContainer> fbt = createFbt(expenseDetails.vendor, item.account, item.debitGross, credit, debit);
 
-                    tempGbase.entries.Add(fbt["credit"]);
-                    tempGbase.entries.Add(fbt["debit"]);
+                    fbt["debit"].type = (command != "R") ? "D" : "C"; 
+                    fbt["credit"].type = (command != "R") ? "C" : "D";
 
+                    tempGbase.entries.Add(fbt["debit"]);
+                    tempGbase.entries.Add(fbt["credit"]);
+
+                    tempGbase.entries = tempGbase.entries.OrderByDescending(x => x.type).ToList();
                     goExpData = InsertGbaseEntry(tempGbase, expID);
                     goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.expenseDtlID);
                     list.Add(new { expEntryID = expID, expDtl = item.expenseDtlID, expType = expenseDetails.expenseType, goExp = goExpData, goExpHist = goExpHistData });
