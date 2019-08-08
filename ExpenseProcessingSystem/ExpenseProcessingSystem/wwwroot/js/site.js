@@ -10,6 +10,16 @@ $(document).ready(function () {
         CheckUn();
     });
 
+    ///------------------------------------------------------------
+    $(".pagination-btn").on("click", function (e) {
+        var page = $(this).attr('page');
+        $("<input />").attr("type", "hidden")
+            .attr("name", "page")
+            .attr("value", page)
+            .appendTo("#search-frm");
+        $("#search-frm").submit();
+
+    });
     /*//////////////////////////////////////////////////////////////////
    [ Tabs ]*/
     var tabLinks = new Array();
@@ -44,6 +54,7 @@ $(document).ready(function () {
     });
     ///TABS
     init();
+
     ////-----------------------------------------------------------
 
     //$('.tbl-btn:has(button[disabled])').addClass('btnDisabled');
