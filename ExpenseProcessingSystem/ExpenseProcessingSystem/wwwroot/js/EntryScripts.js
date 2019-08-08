@@ -1,5 +1,6 @@
 ﻿$(function () {
     var computeFunction = function (event) {
+        isSessionTimeout();
         if (event.target.classList.contains("comVar")) {
             computeValues(event.target.parentNode.parentNode);
         }
@@ -69,7 +70,8 @@
                 event.preventDefault();
                 var $canfocus = $(':tabbable:visible')
                 var index = $canfocus.index(document.activeElement) + 1;
-                if (index >= $canfocus.length) index = 0;
+                if (index >= $canfocus.length)
+                    index = 0;
                 $canfocus.eq(index).focus();
             }
         });
@@ -124,7 +126,7 @@
 
         var trs = $("#gBaseTable").find("tbody").find("tr");
         var htmlText = "";
-        
+
         //to stop form submit if incomplete
         if (!checkFormComplete(trs, "GBase Remarks")) {
             return;
@@ -160,7 +162,9 @@
         if ($('.hiddenScreencode').val() == "PCV" || $('.hiddenScreencode').val() == "PC") {
             return false;
         }
-        var vendorId = { vendorID: $("#vendorName").val() };
+        var vendorId = {
+            vendorID: $("#vendorName").val()
+        };
         var payeeID = $("#payee_type").val();
         if ($("#payeeTypeSel").length > 0) {
             payeeID = $("#payeeTypeSel option:selected").val();
@@ -221,7 +225,7 @@
                 });
         }
     });
-    
+
     $('.btnEntryAction').click(function (e) {
         e.stopImmediatePropagation();
         loadingEffectStart();
@@ -285,7 +289,7 @@
             grossAmt += Number(amounts[i].value);
         }
 
-        $("#" + pNode.id + " td .txtGross").val(roundNumber(grossAmt,2));
+        $("#" + pNode.id + " td .txtGross").val(roundNumber(grossAmt, 2));
         //if ($(".hiddenScreencode").val() == "SS") {
         //    $("#" + pNode.id).find(".hidDebit").val(grossAmt);
 
@@ -300,8 +304,8 @@
             if (vatable) {
                 var vatRate = (Number($("#" + itemNo).find(".txtVat option:selected").text()) / 100);
                 var ewtRate = (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100);
-                var netVat = roundNumber(grossAmt / (1 + vatRate),2);
-                var ewt = roundNumber(netVat * ewtRate,2);
+                var netVat = roundNumber(grossAmt / (1 + vatRate), 2);
+                var ewt = roundNumber(netVat * ewtRate, 2);
                 var netEwt = grossAmt - ewt;
 
                 $("#" + itemNo).find(".txtCredEwt").val(roundNumber(ewt, 2));
@@ -359,7 +363,7 @@
         $("#grossTotal").val(grossTotal);
         $("#credEwtTotal").val(ewtSubTotal);
         $("#credCashTotal").val(cashSubTotal);
-        $("#credTotal").val(roundNumber(Number(ewtSubTotal + cashSubTotal),2));
+        $("#credTotal").val(roundNumber(Number(ewtSubTotal + cashSubTotal), 2));
     }
 
     function ajaxCall(url, data) {
@@ -370,10 +374,29 @@
         });
     }
 
-    function ajaxFormCall(url) {
-        return $.ajax({
-            url: url,
+    function isSessionTimeout() {
+        var tmp = false;
+        $.ajax({
+            url: '/Account/checkSession',
             type: "POST",
+            dataType: 'json',
+            contentType: 'application/json',
+            async: false,
+            processData: false,
+            cache: false,
+            data: '{}',
+            success: function (data) {
+                //FOR SESSION TIMEOUT CHECK
+                if (data == true) {
+                    alert("Your session has timed out. Kindly re-login. Thank you.");
+                    tmp = true;
+                    location.href = "/Account/Login";
+                }
+            },
+            error: function (xhr) {
+                alert('error');
+            }
         });
+        return tmp;
     }
 });

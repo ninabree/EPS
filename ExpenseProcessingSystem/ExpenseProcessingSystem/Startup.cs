@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using ExpenseProcessingSystem.ConstantData;
 using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.HostedServices;
 using ExpenseProcessingSystem.Services;
@@ -80,7 +81,7 @@ namespace ExpenseProcessingSystem
             services.AddSession(options =>
             {
                 // Set a short timeout for easy testing.
-                options.IdleTimeout = TimeSpan.FromSeconds(1000);
+                options.IdleTimeout = TimeSpan.FromSeconds(180);
             });
             services.AddTransient<IEmailSender,EmailService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
@@ -91,7 +92,7 @@ namespace ExpenseProcessingSystem
             services.AddDbContext<EPSDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddDbContext<GOExpressContext>(options => options.UseSqlServer(Configuration.GetConnectionString("GOExpressConnection")));
             services.AddDbContext<GWriteContext>(options => options.UseSqlServer(Configuration.GetConnectionString("GoWriteConnection")));
-
+            services.AddScoped<MakerCheck>();
             //services.AddHostedService<HelloWorldHostedService>();
         }
 

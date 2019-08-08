@@ -7720,6 +7720,8 @@ namespace ExpenseProcessingSystem.Services
                     expenseDtls.Add(expenseDetails);
                 }
 
+                //var checkNo = getCheckNo();
+
                 ExpenseEntryModel expenseEntry = new ExpenseEntryModel
                 {
                     Expense_Type = expenseType,
@@ -7733,8 +7735,8 @@ namespace ExpenseProcessingSystem.Services
                     Expense_Last_Updated = DateTime.Now,
                     Expense_isDeleted = false,
                     Expense_Status = 1,
-                    Expense_CheckNo = "111",
-                    Expense_CheckId = 1,
+                    Expense_CheckNo = "",
+                    Expense_CheckId = 0,
                     ExpenseEntryDetails = expenseDtls
                 };
 
@@ -8228,7 +8230,6 @@ namespace ExpenseProcessingSystem.Services
                     }
                     return false;
                 }
-                    
 
                 if (status == GlobalSystemValues.STATUS_VERIFIED)
                 {
@@ -8257,10 +8258,14 @@ namespace ExpenseProcessingSystem.Services
                 if (status == GlobalSystemValues.STATUS_APPROVED || status == GlobalSystemValues.STATUS_REJECTED)
                 {
                     dbExpenseEntry.Expense_Approver = userid;
-                    dbExpenseEntry.Expense_Number = status == GlobalSystemValues.STATUS_APPROVED ? 
-                                getExpTransNo(dbExpenseEntry.Expense_Type) : 0;
-
-
+                    
+                    if (status == GlobalSystemValues.STATUS_APPROVED)
+                    {
+                        var checkNo = getCheckNo();
+                        dbExpenseEntry.Expense_Number = getExpTransNo(dbExpenseEntry.Expense_Type);
+                        dbExpenseEntry.Expense_CheckNo = checkNo["check"];
+                        dbExpenseEntry.Expense_CheckId = int.Parse(checkNo["id"]);
+                    }
                 }
                 dbExpenseEntry.Expense_Status = status;
                 dbExpenseEntry.Expense_Last_Updated = DateTime.Now;
@@ -11465,7 +11470,6 @@ namespace ExpenseProcessingSystem.Services
 
             return user.User_FName + " " + user.User_LName;
         }
-
         //get Vat list for specific user
         public SelectList getVendorVat(int vendorID)
         {
@@ -11608,6 +11612,34 @@ namespace ExpenseProcessingSystem.Services
         public string getBranchNo(string accountNo)
         {
             return accountNo.Substring(4, 3);
+        }
+        //retrieve latest check number.
+        public Dictionary<string,string> getCheckNo()
+        {
+            Dictionary<string,string> checkNo = new Dictionary<string, string>();
+
+            var expense = _context.ExpenseEntry.Where(x => x.Expense_Type == GlobalSystemValues.TYPE_CV)
+                                               .OrderByDescending(x => x.Expense_Created_Date).FirstOrDefault();
+
+            var checkNoModel = _context.DMCheck.Where(x => x.Check_ID == expense.Expense_CheckId).FirstOrDefault();
+
+            if(int.Parse(checkNoModel.Check_Series_To) > int.Parse(expense.Expense_CheckNo))
+            {
+                checkNo.Add("check", (int.Parse(expense.Expense_CheckNo) + 1).ToString());
+                checkNo.Add("id", checkNoModel.Check_ID.ToString());
+            }
+            else
+            {
+                checkNoModel.Check_isActive = false;
+                _context.SaveChanges();
+
+                var newCheck = _context.DMCheck.Where(x => x.Check_isActive == true).OrderBy(x=>x.Check_ID).FirstOrDefault();
+
+                checkNo.Add("check", newCheck.Check_Series_From);
+                checkNo.Add("id", newCheck.Check_ID.ToString());
+            }
+
+            return checkNo;
         }
         public GOExpressHistModel convertTblCm10ToGOExHist(TblCm10 tblcm10, int entryID, int entryDtlID)
         {

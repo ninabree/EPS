@@ -1119,6 +1119,7 @@ namespace ExpenseProcessingSystem.Controllers
 
         [OnlineUserCheck]
         [ImportModelState]
+        [NonAdminRoleCheck]
         public IActionResult UM(string sortOrder, string currentFilter, string searchString, int? page)
         {
             //set sort vals
@@ -1169,6 +1170,7 @@ namespace ExpenseProcessingSystem.Controllers
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         [ImportModelState]
+        [ServiceFilter(typeof(MakerCheck))]
         public IActionResult Entry_CV(int entryID = 0)
         {
             var userId = GetUserID();
@@ -1312,23 +1314,8 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             ModelState.Clear();
-            //if (id > -1) {
-            //    cvList = _service.getExpense(id);
-            //    List<SelectList> listOfSysVals = _service.getEntrySystemVals();
-            //    cvList.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
-            //    cvList.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
-            //    cvList.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
-            //    cvList.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
-            //    cvList.systemValues.acc = _service.getAccDetailsEntry();
-            //    cvList.systemValues.vat = _service.getVendorVat(cvList.systemValues.vendors.DataValueField[0]);
-            //    ViewBag.Status = cvList.status;
-            //}
 
-            TempData["entryIDAddtoView"] = id;
-
-            return RedirectToAction("View_CV", "Home");
-
-            //return View("Entry_CV_ReadOnly", cvList);
+            return RedirectToAction("View_CV", "Home", new { entryID = id });
         }
 
         [OnlineUserCheck]
@@ -1338,7 +1325,7 @@ namespace ExpenseProcessingSystem.Controllers
             var userId = GetUserID();
             var intUser = int.Parse(userId);
             string viewLink = "Entry_CV";
-            EntryCVViewModelList cvList;
+            EntryCVViewModelList cvList = _service.getExpense(entryID);
 
             switch (command)
             {
@@ -1372,6 +1359,9 @@ namespace ExpenseProcessingSystem.Controllers
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REJECTED, int.Parse(GetUserID())))
                     {
                         ViewBag.Success = 1;
+                        //----------------------------- NOTIF----------------------------------
+                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_CV, GlobalSystemValues.STATUS_REJECTED, cvList.maker);
+                        //----------------------------- NOTIF----------------------------------
                     }
                     else
                     {
@@ -1382,7 +1372,10 @@ namespace ExpenseProcessingSystem.Controllers
                 case "Delete":
                     if (_service.deleteExpenseEntry(entryID))
                     {
-                        return RedirectToAction("Entry_CV", "Home");
+                        //----------------------------- NOTIF----------------------------------
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_CV, GlobalSystemValues.STATUS_DELETE, 0);
+                        //----------------------------- NOTIF----------------------------------
+                        return RedirectToAction("Index", "Home");
                     }
                     else
                     {
@@ -1395,40 +1388,6 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             ModelState.Clear();
-
-            //cvList = _service.getExpense(entryID);
-
-            //cvList = PopulateEntry((EntryCVViewModelList)cvList);
-
-            //foreach (var acc in cvList.EntryCV)
-            //{
-            //    cvList.systemValues.acc.AddRange(_service.getAccDetailsEntry(acc.account));
-            //}
-
-            //List<cvBirForm> birForms = new List<cvBirForm>();
-            //foreach (var item in cvList.EntryCV)
-            //{
-            //    if (birForms.Any(x => x.ewt == item.ewt))
-            //    {
-            //        int index = birForms.FindIndex(x => x.ewt == item.ewt);
-            //        birForms[index].amount += item.debitGross;
-            //    }
-            //    else
-            //    {
-            //        cvBirForm temp = new cvBirForm
-            //        {
-            //            amount = item.debitGross,
-            //            ewt = item.ewt,
-            //            vat = item.vat,
-            //            vendor = cvList.vendor,
-            //            approver = cvList.approver,
-            //            date = cvList.createdDate
-            //        };
-
-            //        birForms.Add(temp);
-            //    }
-            //}
-            //cvList.birForms.AddRange(birForms);
 
             return RedirectToAction(viewLink, "Home", new { entryID = entryID });
         }
@@ -1498,10 +1457,16 @@ namespace ExpenseProcessingSystem.Controllers
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         [ImportModelState]
-        public IActionResult Entry_DDV(EntryDDVViewModelList viewModel)
+        [ServiceFilter(typeof(MakerCheck))]
+        public IActionResult Entry_DDV(int entryID)
         {
+            EntryDDVViewModelList viewModel;
             var userId = GetUserID();
-            if (viewModel.EntryDDV.Count <= 0)
+            if(entryID > 0)
+            {
+                viewModel = _service.getExpenseDDV(entryID);
+            }
+            else
             {
                viewModel = new EntryDDVViewModelList();
                 viewModel.EntryDDV.Add(new EntryDDVViewModel {
@@ -1617,8 +1582,7 @@ namespace ExpenseProcessingSystem.Controllers
             switch (command)
             {
                 case "Modify":
-                    viewLink = "Entry_DDV";
-                    break;
+                    return RedirectToAction("Entry_DDV", "Home", new { entryID = entryID });
                 case "approver":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_APPROVED, intUser))
                     {
@@ -1714,6 +1678,7 @@ namespace ExpenseProcessingSystem.Controllers
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         [ImportModelState]
+        [ServiceFilter(typeof(MakerCheck))]
         public IActionResult Entry_PCV()
         {
             var userId = GetUserID();
@@ -2045,6 +2010,7 @@ namespace ExpenseProcessingSystem.Controllers
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         [ImportModelState]
+        [ServiceFilter(typeof(MakerCheck))]
         public IActionResult Entry_SS()
         {
             var userId = GetUserID();
@@ -4220,7 +4186,7 @@ namespace ExpenseProcessingSystem.Controllers
             if(model.expenseId != null)
                 vvm.voucherNo = _service.getVoucherNo(1,model.expenseDate,int.Parse(model.expenseId));
             vvm.payee = _service.getVendorName(model.vendor, model.payee_type);
-
+            vvm.checkNo = model.checkNo;
             vvm.approver = model.approver;
             vvm.verifier_1 = model.verifier_1;
             vvm.verifier_2 = model.verifier_2;
