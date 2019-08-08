@@ -8204,7 +8204,26 @@ namespace ExpenseProcessingSystem.Services
                 ExpenseEntryModel dbExpenseEntry = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == transID);
 
                 if (forbiddenStatus.Contains(dbExpenseEntry.Expense_Status))
+                {
+                    if(dbExpenseEntry.Expense_Status == GlobalSystemValues.STATUS_APPROVED)
+                    {
+                        GlobalSystemValues.MESSAGE = DateTime.Now.ToLongTimeString() + ": This entry was already approved by Approver. Cannot proceed with your request.";
+                    }
+                    if (dbExpenseEntry.Expense_Status == GlobalSystemValues.STATUS_FOR_CLOSING)
+                    {
+                        GlobalSystemValues.MESSAGE = DateTime.Now.ToLongTimeString() + ": This entry was already in For Printing status. Cannot proceed with your request.";
+                    }
+                    if (dbExpenseEntry.Expense_Status == GlobalSystemValues.STATUS_FOR_CLOSING)
+                    {
+                        GlobalSystemValues.MESSAGE = DateTime.Now.ToLongTimeString() + ": This entry was already in For Closing status. Cannot proceed with your request.";
+                    }
+                    if (dbExpenseEntry.Expense_Status == GlobalSystemValues.STATUS_FOR_CLOSING)
+                    {
+                        GlobalSystemValues.MESSAGE = DateTime.Now.ToLongTimeString() + ": This entry was already in Rejected status. Cannot proceed with your request.";
+                    }
                     return false;
+                }
+                    
 
                 if (status == GlobalSystemValues.STATUS_VERIFIED)
                 {
@@ -8220,6 +8239,7 @@ namespace ExpenseProcessingSystem.Services
                         }
                         else
                         {
+                            GlobalSystemValues.MESSAGE = DateTime.Now.ToLongTimeString() + ": This entry was already verified by other verifier/s. Cannot proceed with your request.";
                             return false;
                         }
                     }
@@ -9004,11 +9024,44 @@ namespace ExpenseProcessingSystem.Services
         {
             if (_modelState.IsValid)
             {
+                List<int> forbiddenStatus = new List<int>{
+                    GlobalSystemValues.STATUS_APPROVED,
+                    GlobalSystemValues.STATUS_FOR_PRINTING,
+                    GlobalSystemValues.STATUS_REJECTED,
+                    GlobalSystemValues.STATUS_FOR_CLOSING
+                };
+
+
+                LiquidationEntryDetailModel dbLiquidation = _context.LiquidationEntryDetails.FirstOrDefault(x => x.ExpenseEntryModel.Expense_ID == id);
+
+                if (forbiddenStatus.Contains(dbLiquidation.Liq_Status))
+                    return false;
+
                 var liquidateEntry = _context.LiquidationEntryDetails.Include(x => x.ExpenseEntryModel)
                 .Where(x => x.ExpenseEntryModel.Expense_ID == id).FirstOrDefault();
 
                 if (status == GlobalSystemValues.STATUS_VERIFIED)
-                    liquidateEntry.Liq_Verifier1 = userid;
+                {
+                    if (liquidateEntry.Liq_Verifier1 == 0)
+                    {
+                        liquidateEntry.Liq_Verifier1 = userid;
+                    }
+                    else if (liquidateEntry.Liq_Verifier1 != userid)
+                    {
+                        if (liquidateEntry.Liq_Verifier2 == 0)
+                        {
+                            liquidateEntry.Liq_Verifier2 = userid;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
 
                 if (status == GlobalSystemValues.STATUS_APPROVED)
                 {

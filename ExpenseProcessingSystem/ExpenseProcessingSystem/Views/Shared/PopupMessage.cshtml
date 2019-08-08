@@ -1,12 +1,14 @@
-﻿<div class="divcss" id="divcss" style="display:none;">
-    <div class="divheader">
-        <span id="ui-id-1" class="spanTitle">Error</span>
-        <button type="button" id="btnAlertClose" class="buttonClose">X</button>
-    </div>
-    <div class="divContent">
-        <ul>
-            <li id="alert"></li>
-        </ul>
+﻿<div id="divAlertWindow" class="divAlertWindow" style="display:none;">
+    <div class="divcss" id="divcss" style="z-index:1050">
+        <div class="divheader">
+            <span id="ui-id-1" class="spanTitle">Error</span>
+            <button type="button" id="btnAlertClose" class="buttonClose">X</button>
+        </div>
+        <div class="divContent">
+            <ul>
+                <li id="alert">@ViewData["MESSAGE"]</li>
+            </ul>
+        </div>
     </div>
 </div>
 <script type="text/javascript" src="~/js/AlertPopup.js"></script>

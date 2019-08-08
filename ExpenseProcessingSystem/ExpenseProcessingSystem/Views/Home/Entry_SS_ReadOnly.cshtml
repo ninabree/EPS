@@ -304,6 +304,10 @@
 </div>
 <script>
     $(document).ready(function () {
+        if ($('#alert').text() != "") {
+            $('#divAlertWindow').show();
+        }
+
         var phpID = @Html.Raw(Json.Serialize(Model.phpCurrID));
         var phpAbbrv = @Html.Raw(Json.Serialize(Model.phpAbbrev));
         var phpMasterID = @Html.Raw(Json.Serialize(Model.phpCurrMasterID));
