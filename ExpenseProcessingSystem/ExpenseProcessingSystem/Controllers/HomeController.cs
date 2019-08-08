@@ -33,7 +33,7 @@ namespace ExpenseProcessingSystem.Controllers
     [ScreenFltr]
     public class HomeController : Controller
     {
-        private readonly int pageSize = 2;
+        private readonly int pageSize = 30;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly EPSDbContext _context;
         private readonly GOExpressContext _GOContext;
