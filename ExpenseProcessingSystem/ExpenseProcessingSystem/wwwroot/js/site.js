@@ -1,33 +1,61 @@
 ﻿
 $(document).ready(function () {
     populateCol();
-    var tabLinks = new Array();
-    var contentDivs = new Array();
-    $('.tbl-btn:has(button[disabled])').addClass('btnDisabled');
 
-    var $pageInput = $('#paginationInput');
-    $pageInput.data("value", $pageInput.val());
-    ////DM ON LOAD
-
-    $(".login-input").trigger("change");
+    /*//////////////////////////////////////////////////////////////////
+    [ Login ]*/
     //// LOGIN
     $(".login-input").on("change", function (e) {
         CheckPw();
         CheckUn();
     });
-    
+
+    /*//////////////////////////////////////////////////////////////////
+   [ Tabs ]*/
+    var tabLinks = new Array();
+    var contentDivs = new Array();
+
+
+    //temp - if page came from login page, localstorage with default to /Home/Index
+    if (document.referrer = "https://localhost:44395/") {
+        localStorage['tabVal'] = window.location.pathname;
+    }
+    var tabVal = localStorage['tabVal'] != "" ? localStorage['tabVal'] : "/Home/Index";
+
+
+    /*//////////////////////////////////////////////////////////////////
+    [ JQuery UI ]*/
+    //always last but not after init()
+    $('.validation-summary-errors').dialog({
+        dialogClass: 'msg_dlg',
+        title: 'Error',
+        closeText: "",
+        position: {
+            of: 'section',
+            at: 'right top',
+            my: 'right top'
+        },
+        open: function (event, ui) {
+            $(this).dialog('moveToTop');
+        },
+        close: function () {
+            $(this).dialog('destroy');
+        }
+    });
+    ///TABS
+    init();
+    ////-----------------------------------------------------------
+
+    //$('.tbl-btn:has(button[disabled])').addClass('btnDisabled');
+
+    var $pageInput = $('#paginationInput');
+    $pageInput.data("value", $pageInput.val());
+    ////DM ON LOAD
+
     
     /////END DM ON LOAD
     $('#um').find('a').click(function () {
         ClearValidations();
-    });
-    /*//////////////////////////////////////////////////////////////////
-    [ Login ]*/
-    $(document).on("change", "'#User_UserName", function (e) {
-        CheckUn();
-    });
-    $(document).on("change", "'#User_Password", function (e) {
-        CheckPw();
     });
 
     /*//////////////////////////////////////////////////////////////////
@@ -39,23 +67,23 @@ $(document).ready(function () {
     /*//////////////////////////////////////////////////////////////////
     [ Pagination - Number Input]*/
 
-    setInterval(function () {
-        //get hidden value of partial view in Data Maintenance
-        var partial = $('input#partialVal').val();
+    //setInterval(function () {
+    //    //get hidden value of partial view in Data Maintenance
+    //    var partial = $('input#partialVal').val();
 
-        var data = $pageInput.data("value"),
-            val = $pageInput.val();
+    //    var data = $pageInput.data("value"),
+    //        val = $pageInput.val();
 
-        if (data !== val) {
-            $pageInput.data("value", val);
-            var url = window.location.pathname + '?page=' + val;
-            //check if in data maintenance
-            if (window.location.pathname == "/Home/DM") {
-                url = window.location.pathname + '?partialName='+partial+'&page=' + val;
-            }
-            window.location = url;
-        }
-    }, 1000);
+    //    if (data !== val) {
+    //        $pageInput.data("value", val);
+    //        var url = window.location.pathname + '?page=' + val;
+    //        //check if in data maintenance
+    //        if (window.location.pathname == "/Home/DM") {
+    //            url = window.location.pathname + '?partialName='+partial+'&page=' + val;
+    //        }
+    //        window.location = url;
+    //    }
+    //}, 1000);
 
     /*//////////////////////////////////////////////////////////////////
     [ UM ]*/
@@ -111,37 +139,8 @@ $(document).ready(function () {
             return false;
         });
     });
-    /*//////////////////////////////////////////////////////////////////
-    [ Tabs ]*/
+   
 
-    //temp - if page came from login page, localstorage with default to /Home/Index
-    if (document.referrer = "https://localhost:44395/") {
-        localStorage['tabVal'] = window.location.pathname;
-    }
-    var tabVal = localStorage['tabVal'] != "" ? localStorage['tabVal'] : "/Home/Index";
-
-
-    /*//////////////////////////////////////////////////////////////////
-    [ JQuery UI ]*/
-    //always last but not after init()
-    $('.validation-summary-errors').dialog({
-        dialogClass: 'msg_dlg',
-        title: 'Error',
-        closeText: "",
-        position: {
-            of: 'section',
-            at: 'right top',
-            my: 'right top'
-        },
-        open: function (event, ui) {
-            $(this).dialog('moveToTop');
-        },
-        close: function () {
-            $(this).dialog('destroy');
-        }
-    });
-
-    init();
     /*//////////////////////////////////////////////////////////////////
     [ Functions ]*/
 
@@ -194,7 +193,7 @@ $(document).ready(function () {
 
             //if any entry tab is clicked, 'Entry' tab is selected as well
             if ("/Home/Entry_CV" == tabVal || "/Home/Entry_DDV" == tabVal || "/Home/Entry_PCV" == tabVal || "/Home/Entry_NC" == tabVal ||
-                "/Home/Entry_SS" == tabVal || "/Home/Entry_Liquidation" == tabVal) {
+                "/Home/Entry_SS" == tabVal || "/Home/Entry_Liquidation" == tabVal || "/Home/Liquidation_Main" == tabVal) {
                 document.getElementById('entry').firstElementChild.className = 'selected';
             }
             //if any home tab is clicked, 'Home' tab is selected as well
