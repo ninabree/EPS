@@ -670,7 +670,7 @@
                 <div>
                     <div class="dis-inline-block tbl-btn"><button disabled>Save</button></div>
 
-                    @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker && Model.statusID == GlobalSystemValues.STATUS_PENDING || Model.statusID == GlobalSystemValues.STATUS_REJECTED)
+                    @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker && (Model.statusID == GlobalSystemValues.STATUS_PENDING || Model.statusID == GlobalSystemValues.STATUS_REJECTED))
                     {
                         <div class="dis-inline-block tbl-btn"><button value="Delete" name="command" class="btnEntryAction">Delete</button></div>
                         <div class="dis-inline-block tbl-btn"><button value="Modify" name="command" class="btnEntryAction">Modify</button></div>
@@ -787,6 +787,10 @@
 <script type="text/javascript" src="~/js/LiquidationScript.js"></script>
 <script>
     $(document).ready(function () {
+        if ($('#alert').text() != "") {
+            $('#divAlertWindow').show();
+        }
+
         var phpID = @Html.Raw(Json.Serialize(Model.phpCurrID));
         var phpAbbrv = @Html.Raw(Json.Serialize(Model.phpAbbrev));
         var phpMasterID = @Html.Raw(Json.Serialize(Model.phpCurrMasterID));

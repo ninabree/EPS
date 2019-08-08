@@ -128,12 +128,11 @@ ul, li {
     border: 1px solid #a9a9a9;
     border-radius: 2px;
 }
-    .input[disabled] {
+    /*.input[disabled], .input100[readonly] {
         cursor: not-allowed;
         background-color: #ccc;
-    }
-    .input:not(readonly){
-
+    }*/
+    .input:not(readonly), .input100:not(readonly) {
     }
 a.sidebar-link {
     width: 100%;
@@ -379,7 +378,7 @@ iframe {
     height: 22px;
     margin-top: 2px;
 }
-input[readonly]{
+input[readonly], input[disabled]{
     border:none;
     text-decoration:none;
 }
@@ -604,9 +603,9 @@ iframe{
 .tbl-btn {
     border: 1px solid #0a1b81;
     border-radius: 2px;
-    padding: 1px 2px;
-    margin: 1px 2px;
-    font-family: /*HelveticaNeue,*/ 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;: HelveticaNeueMedium;
+    padding: 4px 10px;
+    margin: 1px 3px;
+    font-family: /*HelveticaNeue,*/ 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
     .tbl-btn:hover {
@@ -849,7 +848,7 @@ full width */
     pointer-events: all;
 }
 
-.divConfirmWindow {
+.divAlertWindow, .divConfirmWindow {
     background: rgba(0, 0, 0, 0.5);
     position: fixed;
     top: 0;
@@ -1132,7 +1131,6 @@ full width */
     left: 0;
     height: 100%;
     width: 100%;
-    /*background: rgba( 255, 255, 255, .8 ) url('http://i.stack.imgur.com/FhHRx.gif') 50% 50% no-repeat;*/
     background: rgba( 255, 255, 255, .8 )  url('../images/loading.gif') 50% 50% no-repeat;
 }
 

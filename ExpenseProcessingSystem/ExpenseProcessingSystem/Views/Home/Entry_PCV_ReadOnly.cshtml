@@ -173,7 +173,7 @@
                 <div>
                     <div class="dis-inline-block tbl-btn"><button disabled>Save</button></div>
 
-                    @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker && Model.statusID == GlobalSystemValues.STATUS_PENDING || Model.statusID == GlobalSystemValues.STATUS_REJECTED)
+                    @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker && (Model.statusID == GlobalSystemValues.STATUS_PENDING || Model.statusID == GlobalSystemValues.STATUS_REJECTED))
                     {
                         <div class="dis-inline-block tbl-btn"><button value="Delete" name="command" class="btnEntryAction">Delete</button></div>
                         <div class="dis-inline-block tbl-btn"><button value="Modify" name="command" class="btnEntryAction">Modify</button></div>
@@ -294,6 +294,10 @@
 <script type="text/javascript" src="~/js/EntryScripts.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
+        if ($('#alert').text() != "") {
+            $('#divAlertWindow').show();
+        }
+
         //Enable Vendor selection DDL if EWT or VAT is checked.
         var trs = $("#inputTable").find("tbody").find("tr");
         for (var cnt = 0; cnt < trs.length - 2; cnt++) {

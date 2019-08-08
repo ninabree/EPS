@@ -10,6 +10,8 @@ namespace ExpenseProcessingSystem.ConstantData
 {
     public class GlobalSystemValues
     {
+        public static string MESSAGE = "";
+
         //Static values for status values use the for the workflow statuses.
         //i.e: Checking what the current status of an application is 
         //Example: [Application.status == GlobalSystemValues.STATUS_PENDING]

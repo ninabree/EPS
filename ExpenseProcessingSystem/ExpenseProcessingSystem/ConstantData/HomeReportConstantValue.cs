@@ -503,85 +503,85 @@ namespace ExpenseProcessingSystem.ConstantData
                     Id = 153,
                     SubTypeName = "30% Final Tax",
                     ParentTypeId = 10
-                },
-                new HomeReportSubTypesModel
-                {
-                    Id = 159,
-                    SubTypeName = "Office Rent",
-                    ParentTypeId = 12
-                },
-                new HomeReportSubTypesModel
-                {
-                    Id = 160,
-                    SubTypeName = "Office Association Dues",
-                    ParentTypeId = 12
-                },
-                new HomeReportSubTypesModel
-                {
-                    Id = 161,
-                    SubTypeName = "Residence Rent",
-                    ParentTypeId = 12
-                },
-                new HomeReportSubTypesModel
-                {
-                    Id = 162,
-                    SubTypeName = "Residence Association Dues",
-                    ParentTypeId = 12
-                },
-                new HomeReportSubTypesModel
-                {
-                    Id = 163,
-                    SubTypeName = "Motor Vehicle Lease",
-                    ParentTypeId = 12
-                },
-                new HomeReportSubTypesModel
-                {
-                    Id = 164,
-                    SubTypeName = "Machine Maitnenance",
-                    ParentTypeId = 12
-                },
-                new HomeReportSubTypesModel
-                {
-                    Id = 165,
-                    SubTypeName = "Book & Newspaper",
-                    ParentTypeId = 12
-                },
-                new HomeReportSubTypesModel
-                {
-                    Id = 166,
-                    SubTypeName = "Car Insurance",
-                    ParentTypeId = 12
-                },
-                new HomeReportSubTypesModel
-                {
-                    Id = 167,
-                    SubTypeName = "EEI",
-                    ParentTypeId = 12
-                },
-                new HomeReportSubTypesModel
-                {
-                    Id = 168,
-                    SubTypeName = "Fire",
-                    ParentTypeId = 12
-                },
-                new HomeReportSubTypesModel
-                {
-                    Id = 169,
-                    SubTypeName = "MSPR",
-                    ParentTypeId = 12
-                },
-                new HomeReportSubTypesModel
-                {
-                    Id = 170,
-                    SubTypeName = "GPL",
-                    ParentTypeId = 12
-                },
-                new HomeReportSubTypesModel
-                {
-                    Id = 171,
-                    SubTypeName = "BBI",
-                    ParentTypeId = 12
                 }
+                //new HomeReportSubTypesModel
+                //{
+                //    Id = 159,
+                //    SubTypeName = "Office Rent",
+                //    ParentTypeId = 12
+                //},
+                //new HomeReportSubTypesModel
+                //{
+                //    Id = 160,
+                //    SubTypeName = "Office Association Dues",
+                //    ParentTypeId = 12
+                //},
+                //new HomeReportSubTypesModel
+                //{
+                //    Id = 161,
+                //    SubTypeName = "Residence Rent",
+                //    ParentTypeId = 12
+                //},
+                //new HomeReportSubTypesModel
+                //{
+                //    Id = 162,
+                //    SubTypeName = "Residence Association Dues",
+                //    ParentTypeId = 12
+                //},
+                //new HomeReportSubTypesModel
+                //{
+                //    Id = 163,
+                //    SubTypeName = "Motor Vehicle Lease",
+                //    ParentTypeId = 12
+                //},
+                //new HomeReportSubTypesModel
+                //{
+                //    Id = 164,
+                //    SubTypeName = "Machine Maitnenance",
+                //    ParentTypeId = 12
+                //},
+                //new HomeReportSubTypesModel
+                //{
+                //    Id = 165,
+                //    SubTypeName = "Book & Newspaper",
+                //    ParentTypeId = 12
+                //},
+                //new HomeReportSubTypesModel
+                //{
+                //    Id = 166,
+                //    SubTypeName = "Car Insurance",
+                //    ParentTypeId = 12
+                //},
+                //new HomeReportSubTypesModel
+                //{
+                //    Id = 167,
+                //    SubTypeName = "EEI",
+                //    ParentTypeId = 12
+                //},
+                //new HomeReportSubTypesModel
+                //{
+                //    Id = 168,
+                //    SubTypeName = "Fire",
+                //    ParentTypeId = 12
+                //},
+                //new HomeReportSubTypesModel
+                //{
+                //    Id = 169,
+                //    SubTypeName = "MSPR",
+                //    ParentTypeId = 12
+                //},
+                //new HomeReportSubTypesModel
+                //{
+                //    Id = 170,
+                //    SubTypeName = "GPL",
+                //    ParentTypeId = 12
+                //},
+                //new HomeReportSubTypesModel
+                //{
+                //    Id = 171,
+                //    SubTypeName = "BBI",
+                //    ParentTypeId = 12
+                //}
             };
         }
     }

@@ -43,7 +43,8 @@ function dragElement(elmnt) {
 }
 
 $('#btnAlertClose').click(function () {
-    $('#divcss').css('display', 'none');
+    $('#divAlertWindow').hide();
     $('#divcss').css('top', '');
     $('#divcss').css('left', '');
+    $('#alert').text("");
 });
