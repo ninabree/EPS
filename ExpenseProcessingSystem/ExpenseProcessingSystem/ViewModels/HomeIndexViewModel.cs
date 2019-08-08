@@ -1,6 +1,7 @@
 ﻿using ExpenseProcessingSystem.ViewModels.Search_Filters.Home;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace ExpenseProcessingSystem.ViewModels
 {
@@ -40,7 +41,9 @@ namespace ExpenseProcessingSystem.ViewModels
         public int App_Approver_ID { get; set; }
         public string App_Approver_Name { get; set; }
         public List<string> App_Verifier_Name_List { get; set; }
+        [DataType(DataType.Date)]
         public DateTime App_Date { get; set; }
+        [DataType(DataType.Date)]
         public DateTime App_Last_Updated { get; set; }
         public string App_Status { get; set; }
         public string App_Link { get; set; }
@@ -53,7 +56,9 @@ namespace ExpenseProcessingSystem.ViewModels
         public string App_Payee { get; set; }
         public string App_Maker { get; set; }
         public List<string> App_Verifier_ID_List { get; set; }
+        [DataType(DataType.Date)]
         public DateTime App_Date { get; set; }
+        [DataType(DataType.Date)]
         public DateTime App_Last_Updated { get; set; }
         public string App_Status { get; set; }
         public string App_Link { get; set; }
@@ -67,6 +72,7 @@ namespace ExpenseProcessingSystem.ViewModels
         public string Notif_Application_Maker_Name { get; set; }
         public int Notif_UserFor_ID { get; set; } 
         public string Notif_Message { get; set; }
+        [DataType(DataType.Date)]
         public DateTime Notif_Date { get; set; }
         public int Notif_Status_ID { get; set; }
         public string Notif_Status_Name { get; set; }

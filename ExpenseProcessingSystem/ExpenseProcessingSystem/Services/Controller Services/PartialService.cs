@@ -920,12 +920,12 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                   vmList.Add(new DMAccountViewModel
                   {
                       Account_MasterID = m.Account_MasterID,
-                      Account_Name = m.Account_Name,
-                      Account_Code = m.Account_Code,
-                      Account_Budget_Code = m.Account_Budget_Code,
-                      Account_No = m.Account_No,
-                      Account_Cust = m.Account_Cust,
-                      Account_Div = m.Account_Div,
+                      Account_Name = m.Account_Name ?? "",
+                      Account_Code = m.Account_Code ?? "",
+                      Account_Budget_Code = m.Account_Budget_Code ?? "",
+                      Account_No = m.Account_No ?? "",
+                      Account_Cust = m.Account_Cust ?? "",
+                      Account_Div = m.Account_Div ?? "",
                       Account_Fund = m.Account_Fund,
                       Account_Group_Name = m.AccountGroup_Name ?? "",
                       Account_FBT_Name = m.FBT ?? defaultFBT,
@@ -944,12 +944,12 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                  vmList.Add(new DMAccountViewModel
                  {
                      Account_MasterID = m.Pending_Account_MasterID,
-                     Account_Name = m.Pending_Account_Name,
-                     Account_Code = m.Pending_Account_Code,
-                     Account_Budget_Code = m.Pending_Account_Budget_Code,
-                     Account_No = m.Pending_Account_No,
-                     Account_Cust = m.Pending_Account_Cust,
-                     Account_Div = m.Pending_Account_Div,
+                     Account_Name = m.Pending_Account_Name ?? "",
+                     Account_Code = m.Pending_Account_Code ?? "",
+                     Account_Budget_Code = m.Pending_Account_Budget_Code ?? "",
+                     Account_No = m.Pending_Account_No ?? "",
+                     Account_Cust = m.Pending_Account_Cust ?? "",
+                     Account_Div = m.Pending_Account_Div ?? "",
                      Account_Fund = m.Pending_Account_Fund,
                      Account_Group_Name = m.AccountGroup_Name ?? "",
                      Account_FBT_Name = m.FBT ?? defaultFBT,
@@ -964,89 +964,27 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                  })
             );
 
-            var vmList2 = vmList.AsQueryable();
             //FILTER
             foreach (var property in properties)
             {
                 var propertyName = property.Name;
-                var subStr = propertyName.Substring(propertyName.IndexOf("_")+1);
+                var subStr = propertyName.Substring(propertyName.IndexOf("_") + 1);
                 var toStr = property.GetValue(filters.AF).ToString();
-                string[] colArr = { "No", "Creator_ID", "Approver_ID" };
-                if (toStr != "")
+                if (toStr != "" && toStr != "0")
                 {
-                    if (toStr != "0")
+                    if (subStr == "FBT")
                     {
-                        if (colArr.Contains(subStr)) // IF INT VAL
-                        {
-                            vmList2 = vmList2.Where("Account_" + subStr + " = @0 AND  Account_isDeleted == @1", property.GetValue(filters.AF), false)
-                                     .Select(e => e).AsQueryable();
-                        }
-                        else if (subStr == "Creator_Name")
-                        {
-                            //get all userIDs of creator or approver that contains string
-                            var names = _context.User
-                              .Where(x => (x.User_FName.Contains(property.GetValue(filters.AF).ToString())
-                              || x.User_LName.Contains(property.GetValue(filters.AF).ToString())))
-                              .Select(x => x.User_ID).ToList();
-                            vmList2 = vmList2.Where(x => names.Contains(x.Account_Creator_ID) && x.Account_isDeleted == false)
-                                        .Select(e => e).AsQueryable();
-                        }
-                        else if (subStr == "Approver_Name")
-                        {
-                            //get all userIDs of creator or approver that contains string
-                            var names = _context.User
-                              .Where(x => (x.User_FName.Contains(property.GetValue(filters.AF).ToString())
-                              || x.User_LName.Contains(property.GetValue(filters.AF).ToString())))
-                              .Select(x => x.User_ID).ToList();
-                            vmList2 = vmList2.Where(x => names.Contains(x.Account_Approver_ID) && x.Account_isDeleted == false)
-                                        .Select(e => e).AsQueryable();
-                        }
-                        else if (subStr == "Status")
-                        {
-                            //get all status IDs that contains string
-                            var status = _context.StatusList
-                              .Where(x => (x.Status_Name.Contains(property.GetValue(filters.AF).ToString())))
-                              .Select(x => x.Status_ID).ToList();
-                            vmList2 = vmList2.Where(x => status.Contains(x.Account_Status_ID) && x.Account_isDeleted == false)
-                                        .Select(e => e).AsQueryable();
-                        }
-                        else if (subStr == "Group")
-                        {
-                            //get all account group IDs that contains string
-                            var grp = _context.DMAccountGroup
-                              .Where(x => (x.AccountGroup_Name.Contains(property.GetValue(filters.AF).ToString())))
-                              .Select(x => x.AccountGroup_MasterID).ToList();
-                            vmList2 = vmList2.Where(x => grp.Contains(x.Account_Group_MasterID) && x.Account_isDeleted == false)
-                                        .Select(e => e).AsQueryable();
-                        }
-                        else if (subStr == "Currency")
-                        {
-                            //get all currenct IDs that contains string
-                            var curr = _context.DMCurrency
-                              .Where(x => (x.Curr_Name.Contains(property.GetValue(filters.AF).ToString())))
-                              .Select(x => x.Curr_MasterID).ToList();
-                            vmList2 = vmList2.Where(x => curr.Contains(x.Account_Currency_MasterID) && x.Account_isDeleted == false)
-                                        .Select(e => e).AsQueryable();
-                        }
-                        else if (subStr == "FBT")
-                        {
-                            //get all userIDs of creator or approver that contains string
-                            var names = _context.DMFBT
-                              .Where(x => (x.FBT_Name.Contains(property.GetValue(filters.AF).ToString())))
-                              .Select(x => x.FBT_MasterID).ToList();
-                            vmList2 = vmList2.Where(x => names.Contains(x.Account_FBT_MasterID) && x.Account_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                        }
-                        else // IF STRING VALUE
-                        {
-                            vmList2 = vmList2.Where("Account_" + subStr + ".Contains(@0)", property.GetValue(filters.AF).ToString())
-                                    .Select(e => e).AsQueryable();
-                        }
+                        vmList = vmList.Where(x=> x.Account_FBT_Name.Contains(toStr))
+                                .Select(e => e).ToList();
+                    }
+                    else
+                    {
+                        vmList = vmList.AsQueryable().Where("Account_" + subStr + ".Contains(@0)", toStr)
+                                .Select(e => e).ToList();
                     }
                 }
             }
-
-            return vmList2.ToList();
+            return vmList;
         }
 
         public List<DMVATViewModel> populateVAT(DMFiltersViewModel filters)

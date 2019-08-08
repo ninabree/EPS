@@ -17,6 +17,8 @@
                         <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Name)</td>
                         <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Name, new { @class = "input" })</td>
                         <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Code)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Code, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Budget_Code)</td>
                         <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Budget_Code, new { @class = "input" })</td>
                         <td>@Html.LabelFor(model => model.DMFilters.AF.AF_No)</td>
                         <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_No, new { @class = "input" })</td>
@@ -24,11 +26,11 @@
                         <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Cust, new { @class = "input" })</td>
                         <td>@Html.LabelFor(model => model.DMFilters.AF.AF_FBT)</td>
                         <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_FBT, new { @class = "input" })</td>
-                        <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Currency)</td>
-                        <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Currency, new { @class = "input" })</td>
                         <td><input id="filterPartialName" name="partialName" value="DMPartial_Acc" type="hidden" /></td>
                     </tr>
                     <tr>
+                        <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Currency)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Currency, new { @class = "input" })</td>
                         <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Div)</td>
                         <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Div, new { @class = "input" })</td>
                         <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Group)</td>

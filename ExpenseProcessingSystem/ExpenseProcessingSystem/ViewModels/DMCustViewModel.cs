@@ -25,8 +25,10 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "Approver Name")]
         public string Cust_Approver_Name { get; set; }
         [Display(Name = "Customer Created Date")]
+        [DataType(DataType.Date)]
         public DateTime Cust_Created_Date { get; set; }
         [Display(Name = "Customer Last Updated")]
+        [DataType(DataType.Date)]
         public DateTime Cust_Last_Updated { get; set; }
         [Display(Name = "Customer Status")]
         public int Cust_Status_ID { get; set; }

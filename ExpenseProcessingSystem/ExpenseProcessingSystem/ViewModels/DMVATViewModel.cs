@@ -23,8 +23,10 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "Approver Name")]
         public string VAT_Approver_Name { get; set; }
         [Display(Name = "VAT Created Date")]
+        [DataType(DataType.Date)]
         public DateTime VAT_Created_Date { get; set; }
         [Display(Name = "VAT Last Updated")]
+        [DataType(DataType.Date)]
         public DateTime VAT_Last_Updated { get; set; }
         [Display(Name = "VAT Status")]
         public int VAT_Status_ID { get; set; }

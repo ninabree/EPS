@@ -23,8 +23,10 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "Approver Name")]
         public string Curr_Approver_Name { get; set; }
         [Display(Name = "Currency Created Date")]
+        [DataType(DataType.Date)]
         public DateTime Curr_Created_Date { get; set; }
         [Display(Name = "Currency Last Updated")]
+        [DataType(DataType.Date)]
         public DateTime Curr_Last_Updated { get; set; }
         [Display(Name = "Currency Status")]
         public int Curr_Status_ID { get; set; }

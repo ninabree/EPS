@@ -31,8 +31,10 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "BCS Approver Name")]
         public string BCS_Approver_Name { get; set; }
         [Display(Name = "BCS Created Date")]
+        [DataType(DataType.Date)]
         public DateTime BCS_Created_Date { get; set; }
         [Display(Name = "BCS Last Updated")]
+        [DataType(DataType.Date)]
         public DateTime BCS_Last_Updated { get; set; }
         [Display(Name = "BCS Status")]
         public int BCS_Status_ID { get; set; }

@@ -28,8 +28,10 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "Approver Name")]
         public string Emp_Approver_Name { get; set; }
         [Display(Name = "Employee Created Date")]
+        [DataType(DataType.Date)]
         public DateTime Emp_Created_Date { get; set; }
         [Display(Name = "Employee Last Updated")]
+        [DataType(DataType.Date)]
         public DateTime Emp_Last_Updated { get; set; }
         [Display(Name = "Employee Status")]
         public int Emp_Status_ID { get; set; }
