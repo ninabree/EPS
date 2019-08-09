@@ -1949,7 +1949,6 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                                              on c.Pending_Cust_Creator_ID equals user.User_ID
                                              join stat in _context.StatusList
                                              on c.Pending_Cust_Status_ID equals stat.Status_ID
-                                             where c.Pending_Cust_isDeleted == false && c.Pending_Cust_isActive == true
                                              select new
                                              {
                                                  c.Pending_Cust_ID,

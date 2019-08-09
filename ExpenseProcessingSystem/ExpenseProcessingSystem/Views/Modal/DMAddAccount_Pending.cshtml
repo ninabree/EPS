@@ -58,21 +58,15 @@
     }
 </div>
 <script>
-    $("[id$='_Account_Fund']").each(function (e) {
-        if ($(this).is(':checked')) {
-            $(this).parent().siblings("td.grp").find("select").prop("disabled", false);
-        } else {
+    $(document).ready(function (e) {
+        $("#tsForm").on("change", "[id$='_Account_Fund']",function (e) {
+            e.stopImmediatePropagation();
+            if ($(this).is(':checked')) {
+                $(this).parent().siblings("td.grp").find("select").prop("disabled", false);
+            } else {
 
-            $(this).parent().siblings("td.grp").find("select").prop("disabled", true);
-        }
-    });
-    $("[id$='_Account_Fund']").on("change", function (e) {
-        e.stopImmediatePropagation();
-        if ($(this).is(':checked')) {
-            $(this).parent().siblings("td.grp").find("select").prop("disabled", false);
-        } else {
-
-            $(this).parent().siblings("td.grp").find("select").prop("disabled", true);
-        }
+                $(this).parent().siblings("td.grp").find("select").prop("disabled", true);
+            }
+        });
     });
 </script>

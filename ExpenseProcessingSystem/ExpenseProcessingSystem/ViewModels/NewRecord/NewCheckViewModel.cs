@@ -15,6 +15,8 @@ namespace ExpenseProcessingSystem.ViewModels.NewRecord
     {
         [Display(Name = "Input Date")]
         [NotNullValidations, DateValidation]
+        [DataType(DataType.Date)]
+        [DisplayFormat(HtmlEncode = false, DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode =true)]
         public DateTime Check_Input_Date { get; set; }
         [Display(Name = "Series From")]
         [NotNullValidations, TextValidation]

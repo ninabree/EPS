@@ -48,8 +48,8 @@ $(document).ready(function () {
             tblName == "Tax Rates" ? trRowFormat(itemCount) :
             tblName == "Currency" ? currRowFormat(itemCount) :
             tblName == "Account Group" ? agRowFormat(itemCount) :
-            tblName == "Regular Employee" ? regEmpRowFormat(itemCount) :
-            tblName == "Temporary Employee" ? tempRegRowFormat(itemCount) :
+            tblName == "Regular Employee" ? regEmpRowFormat(itemCount, getEmpCatOptions(itemCount), getEmpFBTOptions(itemCount)) :
+            tblName == "Temporary Employee" ? tempRegRowFormat(itemCount, getEmpCatOptions(itemCount), getEmpFBTOptions(itemCount)) :
             tblName == "Customer" ? custRowFormat(itemCount) :
             tblName == "" ? newGbaseRemarksRow(itemCount) : $('');
         $('#table').find('table').append($clone);
@@ -130,6 +130,24 @@ $(document).ready(function () {
         }
         return curroptions;
     }
+    function getEmpCatOptions(itemCount) {
+        var catoptions = "";
+        if (itemCount > 0) {
+            $("#NewEmpVM_0__Emp_Category_ID option").each(function (index, item) {
+                catoptions += '<option value="' + item.value + '">' + item.text + '</option>';
+            });
+        }
+        return catoptions;
+    }
+    function getEmpFBTOptions(itemCount) {
+        var fbtoptions = "";
+        if (itemCount > 0) {
+            $("#NewEmpVM_0__Emp_FBT_MasterID option").each(function (index, item) {
+                fbtoptions += '<option value="' + item.value + '">' + item.text + '</option>';
+            });
+        }
+        return fbtoptions;
+    }
     function venRowFormat(itemCount, trOptions, vatOptions) {
         return $('<tr id="NewVendor-Tr-' + itemCount + '">'
             + '<td><input class="w-full input voucher-input" id="NewVendorVM_' + itemCount + '__Vendor_Name" name="NewVendorVM[' + itemCount + '].Vendor_Name" type="text" value=""></td>'
@@ -154,21 +172,21 @@ $(document).ready(function () {
     }
     function deptRowFormat(itemCount) {
         return $('<tr id="NewDept-Tr-' + itemCount + '">'
-            + '<td><input class="w-full" id="NewDeptVM_' + itemCount + '__Dept_Name" name="NewDeptVM[' + itemCount + '].Dept_Name" type="text" value=""></td>'
-            + '<td><input class="w-full" id="NewDeptVM_' + itemCount + '__Dept_Code" name="NewDeptVM[' + itemCount + '].Dept_Code" type="text" value=""></td>'
-            + '<td><input class="w-full" id="NewDeptVM_' + itemCount + '__Dept_Budget_Unit" name="NewDeptVM[' + itemCount + '].Dept_Budget_Unit" type="text" value=""></td>'
+            + '<td><input  class="w-full input voucher-input" id="NewDeptVM_' + itemCount + '__Dept_Name" name="NewDeptVM[' + itemCount + '].Dept_Name" type="text" value=""></td>'
+            + '<td><input  class="w-full input voucher-input" id="NewDeptVM_' + itemCount + '__Dept_Code" name="NewDeptVM[' + itemCount + '].Dept_Code" type="text" value=""></td>'
+            + '<td><input  class="w-full input voucher-input" id="NewDeptVM_' + itemCount + '__Dept_Budget_Unit" name="NewDeptVM[' + itemCount + '].Dept_Budget_Unit" type="text" value=""></td>'
             + '<td>'
             + '<span class="table-remove glyphicon glyphicon-remove"></span>'
             + '</td>'
             + '</tr>');
     }
     function checkRowFormat(itemCount) {
-        var getDateTime = new Date();
+        var getDateTime = new Date().toLocaleString();
         return $('<tr id="NewCheck-Tr-' + itemCount + '">'
-            + '<td><input class="h-20 form-control text-box single-line" data-val="true" data-val-required="The Input Date field is required." id="NewCheckVM_' + itemCount + '__Check_Input_Date" name="NewCheckVM[' + itemCount + '].Check_Input_Date" class="check-datetime" type="date" value="' + getDateTime + '"></td>'
-            + '<td><input class="w-full" id="NewCheckVM_' + itemCount + '__Check_Series_From" name="NewCheckVM[' + itemCount + '].Check_Series_From" type="text" value=""></td>'
-            + '<td><input class="w-full" id="NewCheckVM_' + itemCount + '__Check_Series_To" name="NewCheckVM[' + itemCount + '].Check_Series_To" type="text" value=""></td>'
-            + '<td><input class="w-full" id="NewCheckVM_' + itemCount + '__Check_Bank_Info" name="NewCheckVM[' + itemCount + '].Check_Bank_Info" type="text" value=""></td>'
+            + '<td><input  class="w-full input voucher-input" data-val="true" data-val-required="The Input Date field is required." id="NewCheckVM_' + itemCount + '__Check_Input_Date" name="NewCheckVM[' + itemCount + '].Check_Input_Date" readonly="True" type="text" value="'+ getDateTime+'"></td>'
+            + '<td><input class="w-full input voucher-input" id="NewCheckVM_' + itemCount + '__Check_Series_From" name="NewCheckVM[' + itemCount + '].Check_Series_From" type="text" value=""></td>'
+            + '<td><input class="w-full input voucher-input" id="NewCheckVM_' + itemCount + '__Check_Series_To" name="NewCheckVM[' + itemCount + '].Check_Series_To" type="text" value=""></td>'
+            + '<td><input class="w-full input voucher-input" id="NewCheckVM_' + itemCount + '__Check_Bank_Info" name="NewCheckVM[' + itemCount + '].Check_Bank_Info" type="text" value=""></td>'
             + '<td>'
             + '<span class="table-remove glyphicon glyphicon-remove"></span>'
             + '</td>'
@@ -176,20 +194,20 @@ $(document).ready(function () {
     }
     function accRowFormat(itemCount, fbtoptions, agoptions, curroptions) {
         return $('<tr id="NewAccount-Tr-' + itemCount + '">'
-            + '<td><input class="w-full" id="NewAccountVM_' + itemCount + '__Account_Name" name="NewAccountVM[' + itemCount + '].Account_Name" type="text" value=""></td>'
-            + '<td><input class="w-full" id="NewAccountVM_' + itemCount + '__Account_Code" name="NewAccountVM[' + itemCount + '].Account_Code" type="text" value=""></td>'
-            + '<td><input class="w-full" id="NewAccountVM_' + itemCount + '__Account_Budget_Code" name="NewAccountVM[' + itemCount + '].Account_Budget_Code" type="text" value=""></td>'
-            + '<td><input class="w-full" id="NewAccountVM_' + itemCount + '__Account_No" name="NewAccountVM[' + itemCount + '].Account_No" type="text" value=""></td>'
-            + '<td><input class="w-full" id="NewAccountVM_' + itemCount + '__Account_Cust" name="NewAccountVM[' + itemCount + '].Account_Cust" type="text" value=""></td>'
-            + '<td><input class="w-full" id="NewAccountVM_' + itemCount + '__Account_Div" name="NewAccountVM[' + itemCount + '].Account_Div" type="text" value=""></td>'
-            + '<td><input class="w-full" data-val="true" data-val-required="The Account Fund field is required." id="NewAccountVM_' + itemCount + '__Account_Fund" name="NewAccountVM[' + itemCount + '].Account_Fund" type="checkbox" value="true"></td>'
+            + '<td><input class="w-full input voucher-input" id="NewAccountVM_' + itemCount + '__Account_Name" name="NewAccountVM[' + itemCount + '].Account_Name" type="text" value=""></td>'
+            + '<td><input class="w-full input voucher-input" id="NewAccountVM_' + itemCount + '__Account_Code" name="NewAccountVM[' + itemCount + '].Account_Code" type="text" value=""></td>'
+            + '<td><input class="w-full input voucher-input" id="NewAccountVM_' + itemCount + '__Account_Budget_Code" name="NewAccountVM[' + itemCount + '].Account_Budget_Code" type="text" value=""></td>'
+            + '<td><input class="w-full input voucher-input" id="NewAccountVM_' + itemCount + '__Account_No" name="NewAccountVM[' + itemCount + '].Account_No" type="text" value=""></td>'
+            + '<td><input class="w-full input voucher-input" id="NewAccountVM_' + itemCount + '__Account_Cust" name="NewAccountVM[' + itemCount + '].Account_Cust" type="text" value=""></td>'
+            + '<td><input class="w-full input voucher-input" id="NewAccountVM_' + itemCount + '__Account_Div" name="NewAccountVM[' + itemCount + '].Account_Div" type="text" value=""></td>'
+            + '<td><input class="w-full input voucher-input" data-val="true" data-val-required="The Account Fund field is required." id="NewAccountVM_' + itemCount + '__Account_Fund" name="NewAccountVM[' + itemCount + '].Account_Fund" type="checkbox" value="true"></td>'
             + '<td colspan="2">'
             + '<select class="w-full input" data-val="true" data-val-required="The Account FBT field is required." id="NewAccountVM_' + itemCount + '__Account_FBT_MasterID" name="NewAccountVM[' + itemCount + '].Account_FBT_MasterID">'
             + fbtoptions
             + '</select>'
             + '</td>'
-            + '<td colspan="2">'
-            + '<select class="w-full input" data-val="true" data-val-required="The Account Group field is required." id="NewAccountVM_' + itemCount + '__Account_Group_MasterID" name="NewAccountVM[' + itemCount + '].Account_Group_MasterID">'
+            + '<td colspan="2" class="grp">'
+            + '<select class="w-full input" data-val="true" disabled data-val-required="The Account Group field is required." id="NewAccountVM_' + itemCount + '__Account_Group_MasterID" name="NewAccountVM[' + itemCount + '].Account_Group_MasterID">'
             + agoptions
             + '</select>'
             + '</td>'
@@ -205,17 +223,17 @@ $(document).ready(function () {
     }
     function vatRowFormat(itemCount) {
         return $('<tr id="NewVAT-Tr-' + itemCount + '">'
-            + '<td><input class="w-full" id="NewVATVM_' + itemCount + '__VAT_Name" name="NewVATVM[' + itemCount + '].VAT_Name" type="text" value=""></td>'
-            + '<td><input class="w-full" id="NewVATVM_' + itemCount + '__VAT_Rate" name="NewVATVM[' + itemCount + '].VAT_Rate" type="text" value=""></td>'
+            + '<td><input  class="w-full input voucher-input" id="NewVATVM_' + itemCount + '__VAT_Name" name="NewVATVM[' + itemCount + '].VAT_Name" type="text" value=""></td>'
+            + '<td><input  class="w-full input voucher-input" id="NewVATVM_' + itemCount + '__VAT_Rate" name="NewVATVM[' + itemCount + '].VAT_Rate" type="text" value=""></td>'
             + '<td><span class="table-remove glyphicon glyphicon-remove"></span>'
             + '</td>'
             + '</tr>');
     }
     function fbtRowFormat(itemCount) {
         return $('<tr id="NewFBT-Tr-' + itemCount + '">'
-            + '<td><input class="w-full" id="NewFBTVM_' + itemCount + '__FBT_Name" name="NewFBTVM[' + itemCount + '].FBT_Name" type="text" value=""></td>'
-            + '<td><input class="w-full" id="NewFBTVM_' + itemCount + '__FBT_Formula" name="NewFBTVM[' + itemCount + '].FBT_Formula" type="text" value=""></td>'
-            + '<td><input class="w-full" data-val="true" data-val-required="The FBT Tax Rate field is required." id="NewFBTVM_' + itemCount + '__FBT_Tax_Rate" name="NewFBTVM[' + itemCount + '].FBT_Tax_Rate" type="text" value="0"></td>'
+            + '<td><input  class="w-full input voucher-input" id="NewFBTVM_' + itemCount + '__FBT_Name" name="NewFBTVM[' + itemCount + '].FBT_Name" type="text" value=""></td>'
+            + '<td><input  class="w-full input voucher-input" id="NewFBTVM_' + itemCount + '__FBT_Formula" name="NewFBTVM[' + itemCount + '].FBT_Formula" type="text" value=""></td>'
+            + '<td><input  class="w-full input voucher-input" data-val="true" data-val-required="The FBT Tax Rate field is required." id="NewFBTVM_' + itemCount + '__FBT_Tax_Rate" name="NewFBTVM[' + itemCount + '].FBT_Tax_Rate" type="text" value="0"></td>'
             + '<td>'
             + '<span class="table-remove glyphicon glyphicon-remove"></span>'
             + '</td>'
@@ -223,11 +241,11 @@ $(document).ready(function () {
     }
     function trRowFormat(itemCount) {
         return $('<tr id="NewTR-Tr-' + itemCount + '">'
-            + '<td><input class="w-full" id="NewTRVM_' + itemCount + '__TR_WT_Title" name="NewTRVM[' + itemCount + '].TR_WT_Title" type="text" value=""></td>'
-            + '<td><input class="w-full" id="NewTRVM_' + itemCount + '__TR_Nature" name="NewTRVM[' + itemCount + '].TR_Nature" type="text" value=""></td>'
-            + '<td><input class="w-full" data-val="true" data-val-required="The Tax Rate field is required." id="NewTRVM_' + itemCount + '__TR_Tax_Rate" name="NewTRVM[' + itemCount + '].TR_Tax_Rate" type="text" value="0"></td>'
-            + '<td><input class="w-full" id="NewTRVM_' + itemCount + '__TR_ATC" name="NewTRVM[' + itemCount + '].TR_ATC" type="text" value=""></td>'
-            + '<td><input class="w-full" id="NewTRVM_' + itemCount + '__TR_Nature_Income_Payment" name="NewTRVM[' + itemCount + '].TR_Nature_Income_Payment" type="text" value=""></td>'
+            + '<td><input  class="w-full input voucher-input" id="NewTRVM_' + itemCount + '__TR_WT_Title" name="NewTRVM[' + itemCount + '].TR_WT_Title" type="text" value=""></td>'
+            + '<td><input  class="w-full input voucher-input" id="NewTRVM_' + itemCount + '__TR_Nature" name="NewTRVM[' + itemCount + '].TR_Nature" type="text" value=""></td>'
+            + '<td><input  class="w-full input voucher-input" data-val="true" data-val-required="The Tax Rate field is required." id="NewTRVM_' + itemCount + '__TR_Tax_Rate" name="NewTRVM[' + itemCount + '].TR_Tax_Rate" type="text" value="0"></td>'
+            + '<td><input  class="w-full input voucher-input" id="NewTRVM_' + itemCount + '__TR_ATC" name="NewTRVM[' + itemCount + '].TR_ATC" type="text" value=""></td>'
+            + '<td><input  class="w-full input voucher-input" id="NewTRVM_' + itemCount + '__TR_Nature_Income_Payment" name="NewTRVM[' + itemCount + '].TR_Nature_Income_Payment" type="text" value=""></td>'
             + '<td>'
             + '<span class="table-remove glyphicon glyphicon-remove"></span>'
             + '</td>'
@@ -235,8 +253,8 @@ $(document).ready(function () {
     }
     function currRowFormat(itemCount) {
         return $('<tr id="NewCurr-Tr-' + itemCount + '">'
-            + '<td><input class="w-full" id="NewCurrVM_' + itemCount + '__Curr_Name" name="NewCurrVM[' + itemCount + '].Curr_Name" type="text" value=""></td>'
-            + '<td><input class="w-full" id="NewCurrVM_' + itemCount + '__Curr_CCY_ABBR" name="NewCurrVM[' + itemCount + '].Curr_CCY_ABBR" type="text" value=""></td>'
+            + '<td><input  class="w-full input voucher-input" id="NewCurrVM_' + itemCount + '__Curr_Name" name="NewCurrVM[' + itemCount + '].Curr_Name" type="text" value=""></td>'
+            + '<td><input  class="w-full input voucher-input" id="NewCurrVM_' + itemCount + '__Curr_CCY_ABBR" name="NewCurrVM[' + itemCount + '].Curr_CCY_ABBR" type="text" value=""></td>'
             + '<td>'
             + '<span class="table-remove glyphicon glyphicon-remove"></span>'
             + '</td>'
@@ -244,25 +262,45 @@ $(document).ready(function () {
     }
     function agRowFormat(itemCount) {
         return $('<tr id="NewAccountGroup-Tr-' + itemCount + '">'
-            + '<td><input class="w-full" id="NewAccountGroupVM_' + itemCount + '__AccountGroup_Name" name="NewAccountGroupVM[' + itemCount + '].AccountGroup_Name" type="text" value=""></td>'
-            + '<td><input class="w-full" id="NewAccountGroupVM_' + itemCount + '__AccountGroup_Code" name="NewAccountGroupVM[' + itemCount + '].AccountGroup_Code" type="text" value=""></td>'
+            + '<td><input  class="w-full input voucher-input" id="NewAccountGroupVM_' + itemCount + '__AccountGroup_Name" name="NewAccountGroupVM[' + itemCount + '].AccountGroup_Name" type="text" value=""></td>'
+            + '<td><input  class="w-full input voucher-input" id="NewAccountGroupVM_' + itemCount + '__AccountGroup_Code" name="NewAccountGroupVM[' + itemCount + '].AccountGroup_Code" type="text" value=""></td>'
             + '<td>'
             + '<span class="table-remove glyphicon glyphicon-remove"></span>'
             + '</td>'
             + '</tr>');
     }
-    function regEmpRowFormat(itemCount) {
+    function regEmpRowFormat(itemCount, catoptions, fbtoptions) {
         return $('<tr id="NewEmp-Tr-' + itemCount + '">'
-            + '<td><input class="w-full" id="NewEmpVM_' + itemCount + '__Emp_Name" name="NewEmpVM[' + itemCount + '].Emp_Name" type="text" value=""></td>'
-            + '<td><input class="w-full" id="NewEmpVM_' + itemCount + '__Emp_Acc_No" name="NewEmpVM[' + itemCount + '].Emp_Acc_No" type="text" value=""></td>'
+            + '<td><input  class="w-full input voucher-input" id="NewEmpVM_' + itemCount + '__Emp_Name" name="NewEmpVM[' + itemCount + '].Emp_Name" type="text" value=""></td>'
+            + '<td><input  class="w-full input voucher-input" id="NewEmpVM_' + itemCount + '__Emp_Acc_No" name="NewEmpVM[' + itemCount + '].Emp_Acc_No" type="text" value=""></td>'
+            + '<td colspan="2">'
+            + '<select class= "w-full input" data-val="true" data-val- required="The Employee Category field is required." id="NewEmpVM_' + itemCount + '__Emp_Category_ID" name="NewEmpVM[' + itemCount + '].Emp_Category_ID">'
+            + catoptions
+            + '</select>'
+            + '</td>'
+            + '<td colspan="2">'
+            + '<select class="w-full input" data-val="true" data-val-required="The Employee FBT field is required." id="NewEmpVM_' + itemCount + '__Emp_FBT_MasterID" name="NewEmpVM[' + itemCount + '].Emp_FBT_MasterID">'
+            + fbtoptions
+            + '</select>'
+            + '</td>'
             + '<td>'
             + '<span class="table-remove glyphicon glyphicon-remove"></span>'
             + '</td>'
             + '</tr>');
     }
-    function tempRegRowFormat(itemCount) {
+    function tempRegRowFormat(itemCount, catoptions, fbtoptions) {
         return $('<tr id="NewEmp-Tr-' + itemCount + '">'
-            + '<td><input class="w-full" id="NewEmpVM_' + itemCount + '__Emp_Name" name="NewEmpVM[' + itemCount + '].Emp_Name" type="text" value=""></td>'
+            + '<td><input  class="w-full input voucher-input" id="NewEmpVM_' + itemCount + '__Emp_Name" name="NewEmpVM[' + itemCount + '].Emp_Name" type="text" value=""></td>'
+            + '<td colspan="2">'
+            + '<select class= "w-full input" data-val="true" data-val- required="The Employee Category field is required." id="NewEmpVM_' + itemCount + '__Emp_Category_ID" name="NewEmpVM[' + itemCount + '].Emp_Category_ID">'
+            + catoptions
+            + '</select>'
+            + '</td>'
+            + '<td colspan="2">'
+            + '<select class="w-full input" data-val="true" data-val-required="The Employee FBT field is required." id="NewEmpVM_' + itemCount + '__Emp_FBT_MasterID" name="NewEmpVM[' + itemCount + '].Emp_FBT_MasterID">'
+            + fbtoptions
+            + '</select>'
+            + '</td>'
             + '<td>'
             + '<span class="table-remove glyphicon glyphicon-remove"></span>'
             + '</td>'
@@ -270,9 +308,9 @@ $(document).ready(function () {
     }
     function custRowFormat(itemCount) {
         return $('<tr id="NewCust-Tr-' + itemCount + '">'
-            + '<td><input class="w-full" id="NewCustVM_' + itemCount + '__Cust_Name" name="NewCustVM[' + itemCount + '].Cust_Name" type="text" value=""></td>'
-            + '<td><input class="w-full" id="NewCustVM_' + itemCount + '__Cust_Abbr" name="NewCustVM[' + itemCount + '].Cust_Abbr" type="text" value=""></td>'
-            + '<td><input class="w-full" id="NewCustVM_' + itemCount + '__Cust_No" name="NewCustVM[' + itemCount + '].Cust_No" type="text" value=""></td>'
+            + '<td><input  class="w-full input voucher-input" id="NewCustVM_' + itemCount + '__Cust_Name" name="NewCustVM[' + itemCount + '].Cust_Name" type="text" value=""></td>'
+            + '<td><input  class="w-full input voucher-input" id="NewCustVM_' + itemCount + '__Cust_Abbr" name="NewCustVM[' + itemCount + '].Cust_Abbr" type="text" value=""></td>'
+            + '<td><input  class="w-full input voucher-input" id="NewCustVM_' + itemCount + '__Cust_No" name="NewCustVM[' + itemCount + '].Cust_No" type="text" value=""></td>'
             + '<td>'
             + '<span class="table-remove glyphicon glyphicon-remove"></span>'
             + '</td>'
