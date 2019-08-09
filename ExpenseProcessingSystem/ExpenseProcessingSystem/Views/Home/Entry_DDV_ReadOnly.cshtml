@@ -36,7 +36,7 @@
             </select>
         </div>
     </div>
-    <div class="flex-c">
+    <div class="">
         <table class="table table-bordered table-striped voucher-tbl w-97" id="inputTable">
             <colgroup>
                 <col style="width:20%;" />
@@ -182,8 +182,9 @@
         <div id="tbl-lbl">
             <div class="dis-inline-block"><p>Preview of Voucher:</p></div>
         </div>
-        @Html.Partial("DDVPartial")
-    </div><div id="entry-status" class="m-t-10 m-b-10">
+        <iframe id="iframePreview" frameborder="0" src="" style="position: relative; min-height: 50vh; max-height: 100%; width: 100%;"></iframe>
+    </div>
+    <div id="entry-status" class="m-t-10 m-b-10">
         <div class="dis-inline-block"><label>Status: </label></div>
         <div class="dis-inline-block">@Html.TextBoxFor(x => x.status, new { @readonly = "true", @class = "input" })</div>
         <div class="dis-inline-block"><label>Approver:</label></div>
@@ -194,13 +195,13 @@
             <p class="dis-inline-block">@Html.TextBoxFor(model => model.verifier_2, new { @readonly = "true", @class = "m-l-5 input" })</p>
         </div>
     </div>
-          <div id="entry-controls" class="m-b-10">
-              @{
-                  var enableSave = "disabled";
-                  var enableDelete = (Model.statusID == GlobalSystemValues.STATUS_PENDING ||
-                                        Model.statusID == GlobalSystemValues.STATUS_REJECTED) && (isMaker) ? "" : "disabled";
-                  var enableModify = (Model.statusID == GlobalSystemValues.STATUS_PENDING ||
-                                        Model.statusID == GlobalSystemValues.STATUS_REJECTED) && (isMaker) ? "" : "disabled";
+    <div id="entry-controls" class="m-b-10">
+        @{
+            var enableSave = "disabled";
+            var enableDelete = (Model.statusID == GlobalSystemValues.STATUS_PENDING ||
+                                  Model.statusID == GlobalSystemValues.STATUS_REJECTED) && (isMaker) ? "" : "disabled";
+            var enableModify = (Model.statusID == GlobalSystemValues.STATUS_PENDING ||
+                                  Model.statusID == GlobalSystemValues.STATUS_REJECTED) && (isMaker) ? "" : "disabled";
 
                   var enableApproveVerify = ((Model.statusID == GlobalSystemValues.STATUS_PENDING
                                         || Model.statusID == GlobalSystemValues.STATUS_VERIFIED) &&
@@ -208,10 +209,10 @@
                   var enableReject = ((Model.statusID == GlobalSystemValues.STATUS_PENDING
                                         || Model.statusID == GlobalSystemValues.STATUS_VERIFIED) && (anApprover)) && (!isMaker) ? "" : "disabled";
 
-                  var enableBIR = (Model.statusID == GlobalSystemValues.STATUS_REVERSED ||
-                                      Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
-                                      Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING ||
-                                      Model.statusID == GlobalSystemValues.STATUS_POSTED) ? "" : "disabled";
+            var enableBIR = (Model.statusID == GlobalSystemValues.STATUS_REVERSED ||
+                                Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
+                                Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING ||
+                                Model.statusID == GlobalSystemValues.STATUS_POSTED) ? "" : "disabled";
 
                   var enableReversal = (Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
                                       Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING ||
@@ -249,7 +250,9 @@
 
 <script type="text/javascript" src="~/js/EntryScripts.js"></script>
 <script type="text/javascript">
-
+    $(window).on("load", function () {
+        $('#iframePreview').prop('src', "/Home/VoucherViewCV?ExpenseID=@Model.entryID");
+    });
     $(document).ready(function () {
         if ($('#alert').text() != "") {
             $('#divAlertWindow').show();

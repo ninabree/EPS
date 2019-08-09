@@ -39,7 +39,7 @@
         var myform = document.getElementById("inputForm");
         var data = new FormData(myform);
 
-        if (screen == "cv" || screen == "ddv") {
+        if (screen == "cv") {
 
             $.ajax({
                 type: 'POST',
@@ -52,7 +52,6 @@
         }
 
         if (screen == "ddv") {
-
             $.ajax({
                 type: 'POST',
                 url: "/Home/VoucherDDV",
@@ -315,7 +314,7 @@
                     $("#" + pNode.id).find(".txtGross").val(roundNumber(netEwt, 2));
                 }
             } else {
-                var ewtAmount = grossAmt * (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100);
+                var ewtAmount = roundNumber(grossAmt * (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100),2);
                 $("#" + itemNo).find(".txtCredEwt").val(roundNumber(ewtAmount, 2));
                 $("#" + itemNo).find(".txtCredCash").val(roundNumber((grossAmt - ewtAmount), 2));
                 if ($(".hiddenScreencode").val() == "SS") {

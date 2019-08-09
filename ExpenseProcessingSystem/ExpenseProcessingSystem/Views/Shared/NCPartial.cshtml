@@ -349,7 +349,7 @@
                         {
                             <tr id="item_@i">
                                 <td class="@SetRemarksClass(@Model.EntryNC.NC_Category_ID)">
-                                    @if ((@Model.EntryNC.NC_Category_ID == 9))
+                                    @if ((@Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL))
                                     {
                                         @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Remarks_Desc)
                                     }
@@ -362,7 +362,7 @@
                                     @Html.EditorFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Remarks_Period, new { @type = "date", @class = "" })
                                 </td>
 
-                                @if (@Model.EntryNC.NC_Category_ID == 4 || @Model.EntryNC.NC_Category_ID == 5)
+                                @if (@Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PSSC || @Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PCHC)
                                 {
                                     <td class="cat-hidden" colspan="1" rowspan="3">
                                         <select id="@Html.IdFor(x => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Vendor_ID)" class="w-full input ven-sel cat-hidden" name="@Html.NameFor(x => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Vendor_ID)">
@@ -772,24 +772,28 @@
         document.addEventListener("change", computeFunction, false);
         computeValsNC();
         hiddencols();
-        @*onloadModifiedMiscEntries();
-
+        onloadModifiedMiscEntries();
         function onloadModifiedMiscEntries() {
-            jQuery.each(@Model.EntryNC.ExpenseEntryNCDtls, function (i, dtl)
-            {
-                jQuery.each(dtl.ExpenseEntryNCDtlAccs, function (j, a)
-                {
-                    if (a.ExpNCDtlAcc_Amount > 0)
-                    {
-                        if (a.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT) {
-                            $("amt-db-" + i + "-" + j).val(a.ExpNCDtlAcc_Amount);
-                        } else {
-                            $("amt-cd-" + i + "-" + j).val(a.ExpNCDtlAcc_Amount);
+            var tblRow = $("tr[id^='item_']");
+            var tblRowLen = $(tblRow).length;
+            if (tblRowLen > 0) {
+                jQuery.each(tblRow, function (i, dtl) {
+                    for (var a = 0; a < 4; a++) {
+                        var amount = $("#EntryNC_ExpenseEntryNCDtls_" + i + "__ExpenseEntryNCDtlAccs_" + a + "__ExpNCDtlAcc_Amount").val();
+                        if (parseFloat(amount) > 0) {
+                            alert(amount);
+                            var typeId = $("#EntryNC_ExpenseEntryNCDtls_" + i + "__ExpenseEntryNCDtlAccs_" + a + "__ExpNCDtlAcc_Type_ID").val();
+                            if (typeId == @GlobalSystemValues.NC_DEBIT+"") {
+                                $(".amt-db-" + i + "-" + a).val(amount);
+                            } else {
+                                $(".amt-cd-" + i + "-" + a).val(amount);
+                            }
                         }
                     }
                 });
-            });
-        }*@
+            }
+        }
+
         function hiddencols() {
             var catID = $("select#categoryName option:selected").val();
             if (catID == @GlobalSystemValues.NC_PSSC +"" || catID == @GlobalSystemValues.NC_PCHC +"" || catID == @GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES +"") {

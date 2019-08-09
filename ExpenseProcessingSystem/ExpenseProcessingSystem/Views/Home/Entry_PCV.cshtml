@@ -31,7 +31,7 @@
                 @Html.DropDownListFor(m => m.vendor, new SelectList(Model.systemValues.employeesAll, "Value", "Text", Model.systemValues.employeesAll.SelectedValue), new { @id = "vendorName", @class="voucher-input" })
             </div>
         </div>
-        <div class="flex-c">
+        <div class="">
             <table class="table table-bordered table-striped voucher-tbl w-97" id="inputTable">
                 <colgroup>
                     <col style="width:20%;" />
@@ -240,9 +240,9 @@
             newRow.id = "item_" + itemCount
 
             var htmlContent = '<td class="p-b-1 p-t-1"><div class="flex-sb">' +
-                '<input class="input100 w-80 txtGBaseRemark" id="EntryCV_' + itemCount + '__GBaseRemarks" name="EntryCV[' + itemCount + '].GBaseRemarks" maxlength="30" type="text" value="">' +
+                '<input class="input100 w-80 txtGBaseRemark voucher-input" id="EntryCV_' + itemCount + '__GBaseRemarks" name="EntryCV[' + itemCount + '].GBaseRemarks" type="text" value="">' +
                 '<div id="remark_' + itemCount + '"><a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a></div></div></td>' +
-                '<td><select class="input100 txtAcc" id="EntryCV_' + itemCount + '__account" name="EntryCV[' + itemCount + '].account">';
+                '<td><select class="input100 txtAcc voucher-input" id="EntryCV_' + itemCount + '__account" name="EntryCV[' + itemCount + '].account">';
 
             for (var i = 0; i < acc.length; i++) {
                 htmlContent += '<option value="' + acc[i]["accId"] + '" class="' + acc[i]["accCode"] + '">' + acc[i]["accName"] + '</option>';
@@ -250,20 +250,20 @@
 
             htmlContent += '</select></td>' +
                 '<td style="text-align:center"><input data-val="true" data-val-required="The fbt field is required." id="EntryCV_' + itemCount + '__fbt" name="EntryCV[' + itemCount + '].fbt" type="checkbox" value="true"></td>' +
-                '<td><select class="input100" id="EntryCV_' + itemCount + '__dept" name="EntryCV[' + itemCount + '].dept">';
+                '<td><select class="input100 voucher-input" id="EntryCV_' + itemCount + '__dept" name="EntryCV[' + itemCount + '].dept">';
             for (var i = 0; i < dept.length; i++) {
                 htmlContent += '<option value="' + dept[i]["value"] + '">' + dept[i]["text"] + '</option>';
             }
 
             htmlContent += '</select></td>' +
-                '<td style="text-align:center"><input class="chkVat comVar" data-val="true" data-val-required="The chkVat field is required." id="EntryCV_' + itemCount + '__chkVat" name="EntryCV[' + itemCount + '].chkVat" type="checkbox" value="true"></td>' +
-                '<td><select class="input100 txtVat comVar" data-val="true" data-val-required="The vat field is required." id="EntryCV_' + itemCount + '__vat" name="EntryCV[' + itemCount + '].vat" disabled="disabled">';
+                '<td style="text-align:center"><input class="chkVat comVar voucher-input" data-val="true" data-val-required="The chkVat field is required." id="EntryCV_' + itemCount + '__chkVat" name="EntryCV[' + itemCount + '].chkVat" type="checkbox" value="true"></td>' +
+                '<td><select class="input100 txtVat comVar voucher-input" data-val="true" data-val-required="The vat field is required." id="EntryCV_' + itemCount + '__vat" name="EntryCV[' + itemCount + '].vat" disabled="disabled">';
             for (var i = 0; i < vat.length; i++) {
                 htmlContent += '<option value="' + vat[i]["value"] + '">' + vat[i]["text"] + '</option>';
             }
             htmlContent += '</select></td>' +
-                '<td style="text-align:center"><input class="chkEwt comVar" data-val="true" data-val-required="The chkEwt field is required." id="EntryCV_' + itemCount + '__chkEwt" name="EntryCV[' + itemCount + '].chkEwt" type="checkbox" value="true"></td>' +
-                '<td><select class="input100 txtEwt comVar" data-val="true" data-val-required="The ewt field is required." id="EntryCV_' + itemCount + '__ewt" name="EntryCV[' + itemCount + '].ewt" disabled="disabled">';
+                '<td style="text-align:center"><input class="chkEwt comVar voucher-input" data-val="true" data-val-required="The chkEwt field is required." id="EntryCV_' + itemCount + '__chkEwt" name="EntryCV[' + itemCount + '].chkEwt" type="checkbox" value="true"></td>' +
+                '<td><select class="input100 txtEwt comVar voucher-input" data-val="true" data-val-required="The ewt field is required." id="EntryCV_' + itemCount + '__ewt" name="EntryCV[' + itemCount + '].ewt" disabled="disabled">';
             for (var i = 0; i < ewt.length; i++) {
                 htmlContent += '<option value="' + ewt[i]["value"] + '">' + ewt[i]["text"] + '</option>';
             }

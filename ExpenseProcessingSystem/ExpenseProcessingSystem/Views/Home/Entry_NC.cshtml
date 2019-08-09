@@ -61,12 +61,51 @@
 
         var $NC_TABLE = $('#NCPartialTbl');
         initPartial();
-        //------------------- [[ Event ]] ---------------------
+        //------------------- [[ Events ]] ---------------------
         $(document).on('click', '.nc-table-remove', function (e) {
             e.stopImmediatePropagation();
             var tr = $(this).closest('tr');
             tr.remove();
         });
+        $(document).on('keyup', '[id$="ExpNCDtl_Remarks_Desc"]', function (e) {
+            e.stopImmediatePropagation();
+            var trID = $(this).closest('tr').attr('id').substring(5);
+            var descLength = $(this).val().length;
+            checkRemarksPeriodLength(trID, descLength);
+        });
+
+        $(document).on('keyup', '[id$="ExpNCDtl_Remarks_Period"]', function (e) {
+            e.stopImmediatePropagation();
+            var trID = $(this).closest('tr').attr('id').substring(5);
+            var periodLength = $(this).val().length;
+            checkRemarksDescLength(trID, periodLength);
+        });
+
+        function checkRemarksPeriodLength(trID, descLength) {
+            var descElement = $("#EntryNC_ExpenseEntryNCDtls_" + trID + "__ExpNCDtl_Remarks_Desc");
+            var periodElement = $("#EntryNC_ExpenseEntryNCDtls_" + trID + "__ExpNCDtl_Remarks_Period");
+            var periodLength = periodElement.val().length;
+            if (parseInt(descLength) + parseInt(periodLength) >= 30) {
+                descElement.attr("maxlength", descLength);
+                periodElement.attr("maxlength", periodLength);
+            } else {
+                descElement.removeAttr("maxlength");
+                periodElement.removeAttr("maxlength");
+            }
+        }
+
+        function checkRemarksDescLength(trID, periodLength) {
+            var descElement = $("#EntryNC_ExpenseEntryNCDtls_" + trID + "__ExpNCDtl_Remarks_Desc");
+            var periodElement = $("#EntryNC_ExpenseEntryNCDtls_" + trID + "__ExpNCDtl_Remarks_Period");
+            var descLength = descElement.val().length;
+            if (parseInt(descLength) + parseInt(periodLength) >= 30) {
+                descElement.attr("maxlength", descLength);
+                periodElement.attr("maxlength", periodLength);
+            } else {
+                descElement.removeAttr("maxlength");
+                periodElement.removeAttr("maxlength");
+            }
+        }
         $(document).on('change', '.acc-sel', function (e) {
             e.stopImmediatePropagation();
             var selVal = this.value;

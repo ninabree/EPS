@@ -24,7 +24,7 @@
                 @Html.DropDownListFor(m => m.vendor, new SelectList(Model.systemValues.vendors, "Value", "Text", Model.systemValues.vendors.SelectedValue), new { @id = "vendorName", @class = "voucher-input" })
             </div>
         </div>
-        <div class="flex-c">
+        <div class="">
             <table class="table table-bordered table-striped voucher-tbl w-97" id="inputTable">
                 <colgroup>
                     <col style="width:20%;" />
@@ -449,14 +449,14 @@
             <tr id="rowTemplate">
                 <td class="p-b-1 p-t-1">
                     <div class="flex-sb">
-                        @Html.TextBoxFor(x => Model.template.GBaseRemarks,new { @class = "input100 w-80", @value = "" })
+                        @Html.TextBoxFor(x => Model.template.GBaseRemarks,new { @class = "input100 w-80 voucher-input", @value = "" })
                         <div id="remark_">
                             <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
                         </div>
                     </div>
                 </td>
                 <td>
-                    <select id="@Html.IdFor(x => Model.template.account)" class="input100 txtAcc" name="@Html.NameFor(x => Model.template.account)">
+                    <select id="@Html.IdFor(x => Model.template.account)" class="input100 txtAcc voucher-input" name="@Html.NameFor(x => Model.template.account)">
                         @foreach (var groepModel in Model.systemValues.acc)
                         {
                             if (Model.systemValues.acc.IndexOf(groepModel) == 0)
@@ -473,18 +473,18 @@
                 </td>
                 <td style="text-align:center">@Html.CheckBoxFor(x => Model.template.fbt)</td>
                 <td>
-                    @Html.DropDownListFor(x => Model.template.dept, new SelectList(Model.systemValues.dept, "Value", "Text", Model.systemValues.dept.SelectedValue), new { @class = "input100 txtDept" })
+                    @Html.DropDownListFor(x => Model.template.dept, new SelectList(Model.systemValues.dept, "Value", "Text", Model.systemValues.dept.SelectedValue), new { @class = "input100 txtDept voucher-input" })
                 </td>
                 <td style="text-align:center">@Html.CheckBoxFor(x => Model.template.chkVat, new { @class = "chkVat comVar" })</td>
                 <td>
-                    @Html.DropDownListFor(x => Model.template.vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.systemValues.vat.SelectedValue), new { @class = "input100 txtVat comVar", @disabled = "true" })
+                    @Html.DropDownListFor(x => Model.template.vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.systemValues.vat.SelectedValue), new { @class = "input100 txtVat comVar voucher-input", @disabled = "true" })
                 </td>
                 <td style="text-align:center">@Html.CheckBoxFor(x => Model.template.chkEwt, new { @class = "chkEwt comVar" })</td>
                 <td>
-                    @Html.DropDownListFor(x => Model.template.ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt comVar", @disabled = "true" })
+                    @Html.DropDownListFor(x => Model.template.ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt comVar voucher-input", @disabled = "true" })
                 </td>
                 <td>
-                    @Html.DropDownListFor(x => Model.template.ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100 txtccy" })
+                    @Html.DropDownListFor(x => Model.template.ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100 txtccy voucher-input" })
                 </td>
                 <td>@Html.TextBoxFor(x => Model.template.debitGross, new { @class = "input100 txtGross", @readonly = "readonly" })</td>
                 <td>@Html.TextBoxFor(x => Model.template.credEwt, new { @class = "input100 txtCredEwt", @readonly = "readonly" })</td>

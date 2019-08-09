@@ -19,8 +19,8 @@
                 <th></th>
             </tr>
             <tr id="NewEmp-Tr-0">
-                <td>@Html.TextBoxFor(m => m.NewEmpVM[0].Emp_Name, new { @class = "w-full" })</td>
-                <td>@Html.TextBoxFor(m => m.NewEmpVM[0].Emp_Acc_No, new { @class = "w-full" })</td>
+                <td>@Html.TextBoxFor(m => m.NewEmpVM[0].Emp_Name, new { @class = "w-full input voucher-input" })</td>
+                <td>@Html.TextBoxFor(m => m.NewEmpVM[0].Emp_Acc_No, new { @class = "w-full input voucher-input" })</td>
                 <td colspan="2">
                     @Html.DropDownListFor(m => m.NewEmpVM[0].Emp_Category_ID,
                     Model.CatList,
@@ -32,7 +32,6 @@
                     new { @class = "w-full input" })
                 </td>
                 <td>
-                    <span class="table-remove glyphicon glyphicon-remove"></span>
                 </td>
             </tr>
         </table>

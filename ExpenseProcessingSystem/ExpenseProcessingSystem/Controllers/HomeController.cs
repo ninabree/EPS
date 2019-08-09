@@ -4350,7 +4350,6 @@ namespace ExpenseProcessingSystem.Controllers
 
             return View(GlobalSystemValues.VOUCHER_LAYOUT, vvm);
         }
-
         [AcceptVerbs("GET")]
         public IActionResult VoucherViewCV(int ExpenseID)
         {
@@ -4359,7 +4358,6 @@ namespace ExpenseProcessingSystem.Controllers
 
             return View(GlobalSystemValues.VOUCHER_LAYOUT, vvm);
         }
-
         private VoucherViewModelList GenerateVoucherViewModelCV(EntryCVViewModelList model) {
             VoucherViewModelList vvm = new VoucherViewModelList();
 
@@ -4445,7 +4443,7 @@ namespace ExpenseProcessingSystem.Controllers
 
                 if (inputItem.chkEwt)
                 {
-                    double _ewt = Mizuho.round(_service.GetEWTValue(inputItem.ewt),2);
+                    double _ewt = Mizuho.round(_service.GetEWTValue(inputItem.ewt),4);
                     double _ewtAmount = Mizuho.round((inputItem.debitGross / (1 + _vat)) * _ewt, 2);
                     if (_ewtList.Any(x => x.ewt == _ewt))
                     {
@@ -4456,7 +4454,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         _ewtList.Add(new ewtAmtList
                         {
-                            ewt = _ewt * 100,
+                            ewt = _ewt * 100.00,
                             ewtAmt = _ewtAmount
                         }
                         );
@@ -4498,6 +4496,161 @@ namespace ExpenseProcessingSystem.Controllers
 
             return vvm;
         }
+        [AcceptVerbs("GET")]
+        [HttpPost]
+        public IActionResult VoucherDDV(EntryDDVViewModelList model)
+        {
+            VoucherViewModelList vvm = GenerateVoucherViewModelDDV(model);
 
+            return View(GlobalSystemValues.VOUCHER_LAYOUT, vvm);
+        }
+        [AcceptVerbs("GET")]
+        public IActionResult VoucherViewDDV(int ExpenseID)
+        {
+            EntryDDVViewModelList model = _service.getExpenseDDV(ExpenseID);
+            VoucherViewModelList vvm = GenerateVoucherViewModelDDV(model);
+
+            return View(GlobalSystemValues.VOUCHER_LAYOUT, vvm);
+        }
+        private VoucherViewModelList GenerateVoucherViewModelDDV(EntryDDVViewModelList model)
+        {
+            VoucherViewModelList vvm = new VoucherViewModelList();
+
+            XElement accXML = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
+            XElement xelem = XElement.Load("wwwroot/xml/ReportHeader.xml");
+
+            int officeID = int.Parse(accXML.Element("HOUSE_RENT").Value);
+            //string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmsstt"); // ORIGINAL
+            vvm.date = DateTime.Now.ToString("MM-dd-yyyy");
+
+            vvm.headvm.Header_Logo = "";
+            vvm.headvm.Header_Name = xelem.Element("NAME").Value;
+            vvm.headvm.Header_TIN = xelem.Element("TIN").Value;
+            vvm.headvm.Header_Address = xelem.Element("ADDRESS").Value;
+
+            vvm.maker = GetUserID();
+            if (model.expenseId != null)
+                vvm.voucherNo = _service.getVoucherNo(1, model.expenseDate, int.Parse(model.expenseId));
+            vvm.payee = _service.getVendorName(model.vendor, model.payee_type);
+            vvm.checkNo = model.checkNo;
+            vvm.approver = model.approver;
+            vvm.verifier_1 = model.verifier_1;
+            vvm.verifier_2 = model.verifier_2;
+            vvm.isFbt = false;
+
+            List<ewtAmtList> _ewtList = new List<ewtAmtList>();
+
+            vvm.accountCredit.Add(new accountList
+            {
+                account = "BDO MNL"
+            });
+
+            double tax_vat = 0.00;
+            double tax_gross = 0.00;
+            double amountGross = 0.00;
+            double amountCredit = 0.00;
+
+            foreach (var inputItem in model.EntryDDV)
+            {
+                foreach (var particular in inputItem.gBaseRemarksDetails)
+                {
+                    particulars temp = new particulars();
+
+                    if (vvm.particulars.Any(x => x.documentType.Trim() == particular.docType
+                                              && x.invoiceNo.Trim() == particular.invNo))
+                    {
+                        int index = vvm.particulars.FindIndex(x => x.documentType.Trim() == particular.docType.Trim()
+                            && x.invoiceNo.Trim() == particular.invNo.Trim());
+
+                        vvm.particulars[index].amount += particular.amount;
+                    }
+                    else
+                    {
+                        temp.documentType = particular.docType;
+                        temp.invoiceNo = particular.invNo;
+                        temp.description = particular.desc;
+                        temp.amount = particular.amount;
+
+                        vvm.particulars.Add(temp);
+                    }
+                }
+
+                vvm.accountsDebit.Add(new accountList
+                {
+                    account = _service.GetAccountName(inputItem.account),
+                    amount = inputItem.debitGross,
+                    accountid = inputItem.account
+                });
+
+                amountGross += inputItem.debitGross;
+                amountCredit += inputItem.debitGross;
+
+                double _vat = 0;
+
+                if (inputItem.chkEwt || inputItem.chkVat)
+                    tax_gross += inputItem.debitGross;
+
+                if (inputItem.chkVat)
+                {
+                    _vat = _service.getVat(inputItem.vat);
+                    tax_vat += Mizuho.round((inputItem.debitGross / (1 + _vat)) * _vat, 2);
+                }
+
+                if (inputItem.chkEwt)
+                {
+                    double _ewt = Mizuho.round(_service.GetEWTValue(inputItem.ewt), 4);
+                    double _ewtAmount = Mizuho.round((inputItem.debitGross / (1 + _vat)) * _ewt, 2);
+                    if (_ewtList.Any(x => x.ewt == _ewt))
+                    {
+                        int index = _ewtList.FindIndex(x => x.ewt == _ewt);
+                        _ewtList[index].ewtAmt += _ewtAmount;
+                    }
+                    else
+                    {
+                        _ewtList.Add(new ewtAmtList
+                        {
+                            ewt = _ewt * 100,
+                            ewtAmt = _ewtAmount
+                        }
+                        );
+                    }
+                    amountCredit -= _ewtAmount;
+                    vvm.accountCredit[0].amount += inputItem.debitGross - _ewtAmount;
+                    vvm.accountCredit.Add(new accountList
+                    {
+                        account = (_ewt * 100).ToString(),
+                        amount = _ewtAmount
+                    });
+                }
+
+                if (inputItem.fbt)
+                {
+                    vvm.isFbt = true;
+
+                    if (_service.getAccount(inputItem.account).Account_MasterID == officeID)
+                    {
+                        vvm.fbtAmount += Mizuho.round((((inputItem.debitGross * .50) / .65) * .35), 2);
+                    }
+                    else
+                    {
+                        vvm.fbtAmount += Mizuho.round(((inputItem.debitGross / .65) * .35), 2);
+                    }
+                }
+            }
+
+            foreach (var item in _ewtList)
+                vvm.taxWithheld += item.ewtAmt;
+
+            vvm.amountString = ConvertToWord.ToWord(amountCredit);
+
+            vvm.vatAmtList.AddRange(_ewtList);
+            vvm.taxInfo_vat = tax_vat;
+            vvm.taxInfo_gross = tax_gross;
+            vvm.taxInfo_taxBase = tax_gross - tax_vat;
+            vvm.amountCredit = amountCredit;
+            vvm.amountGross = amountGross;
+
+            return vvm;
+        }
     }
 }
