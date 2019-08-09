@@ -206,6 +206,10 @@
         $('#iframePreview').prop('src', "/Home/VoucherViewCV?ExpenseID=@Model.entryID");
     });
     $(function () {
+        if ($('#alert').text() != "") {
+            $('#divAlertWindow').show();
+        }
+
         @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker
           || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id
           || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id
