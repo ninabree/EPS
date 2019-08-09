@@ -109,7 +109,7 @@
                             </td>
                             <td style="text-align:center"><a class="reqEWTBtn glyphicon glyphicon-list-alt"></a></td>
                             <td>
-                                @Html.DropDownListFor(x => Model.EntryDDV[i].ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100 ddv-curr-sel voucher-input" })
+                                @Html.DropDownListFor(x => Model.EntryDDV[i].ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100 ddv-curr-sel voucher-input txtccy" })
                             </td>
                             <td>@Html.TextBoxFor(x => Model.EntryDDV[i].debitGross, new { @class = "input100 txtGross", @readonly = "readonly" })</td>
                             <td>@Html.TextBoxFor(x => Model.EntryDDV[i].credEwt, new { @class = "input100 txtCredEwt", @readonly = "readonly" })</td>
@@ -193,6 +193,9 @@
             </div>
         </div>
         <input type="hidden" name="command" id="btnID" />
+        <input type="hidden" id="yenID" value="@Model.yenCurrID" />
+        <input type="hidden" id="yenAbbrv" value="@Model.yenAbbrev" />
+        <input type="hidden" id="yenMasterID" value="@Model.yenCurrMasterID" />
     }
 
     <div id="modalDiv">
@@ -211,7 +214,7 @@
         var modalDivHeader2 = $(modalDiv2).find('.modal-header2');
         var modalDivBody2 = $(modalDiv2).find('.modal-body2');
         var modalDivFooter2 = $(modalDiv2).find('.modal-footer2');
-
+    
         function eachTr() {
             //Enable VAT/EWT dropdown list if corresponding checkbox is checked
             var trs = $("#inputTable").find("tbody").find("tr");
@@ -262,7 +265,7 @@
                 '<td><select class="input100 txtEwt  comVar voucher-input" data-val="true" data-val-required="The ewt field is required." id="EntryDDV_' + itemCount + '__ewt" name="EntryDDV[' + itemCount + '].ewt" disabled="disabled">';
             htmlContent += '</select></td>' +
                 '<td style="text-align:center"><a class="reqEWTBtn glyphicon glyphicon-list-alt"></a></td>' +
-                '<td><select class="input100 ddv-curr-sel voucher-input" data-val="true" data-val-required="The ccy field is required." id="EntryDDV_' + itemCount + '__ccy" name="EntryDDV[' + itemCount + '].ccy">';
+                '<td><select class="input100 ddv-curr-sel txtccy voucher-input" data-val="true" data-val-required="The ccy field is required." id="EntryDDV_' + itemCount + '__ccy" name="EntryDDV[' + itemCount + '].ccy">';
             for (var i = 0; i < curr.length; i++) {
                 htmlContent += '<option value="' + curr[i]["value"] + '">' + curr[i]["text"] + '</option>';
             }

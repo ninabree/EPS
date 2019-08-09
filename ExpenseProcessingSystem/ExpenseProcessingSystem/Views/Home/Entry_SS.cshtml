@@ -176,9 +176,12 @@
         @Html.HiddenFor(x => x.payee_type)
         <input type="hidden" name="command" id="btnID" />
     }
-    <input type="hidden" id="phpID" />
-    <input type="hidden" id="phpAbbrv" />
-    <input type="hidden" id="phpMasterID" />
+    <input type="hidden" id="phpID" value="@Model.phpCurrID" />
+    <input type="hidden" id="phpAbbrv" value="@Model.phpAbbrev" />
+    <input type="hidden" id="phpMasterID" value="@Model.phpCurrMasterID" />
+    <input type="hidden" id="yenID" value="@Model.yenCurrID"/>
+    <input type="hidden" id="yenAbbrv" value="@Model.yenAbbrev" />
+    <input type="hidden" id="yenMasterID" value="@Model.yenCurrMasterID" />
     <div id="modalDiv">
         @Html.Partial("ModalGBase")
     </div>
@@ -191,14 +194,6 @@
 <script type="text/javascript" src="~/js/EntryScripts.js"></script>
 <script>
     $(document).ready(function () {
-        var phpID = @Html.Raw(Json.Serialize(Model.phpCurrID));
-        var phpAbbrv = @Html.Raw(Json.Serialize(Model.phpAbbrev));
-        var phpMasterID = @Html.Raw(Json.Serialize(Model.phpCurrMasterID));
-
-        $('#phpID').val(phpID);
-        $('#phpAbbrv').val(phpAbbrv);
-        $('#phpMasterID').val(phpMasterID);
-
         //Enable Cash breakdown button if currency = PHP, disable if not.
         var trs = $("#inputTable").find("tbody").find("tr");
         for (var cnt = 0; cnt < trs.length - 2; cnt++) {

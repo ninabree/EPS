@@ -30,7 +30,7 @@
                     <td><input type="text" class="gDocuType" /></td>
                     <td><input type="text" class="gInvoiceNo" /></td>
                     <td><input type="text" class="gDescription" /></td>
-                    <td><input type="number" min="0" class="gAmount" style="width:100%" /></td>
+                    <td><input type="text" min="0" class="gAmount NumberOnlyOneDecimal" style="width:100%" /></td>
                     <td><div class="flex-c"></div></td>
                 </tr>
             </tbody>
@@ -52,13 +52,48 @@
                 $("#gRemarks-tr-" + count).find(".gAmount").attr("readonly", "readonly");
                 $("#gRemarks-tr-" + count).find(".flex-c").find(".table-remove").css("pointer-events", "none");
             }
-            $("#add_row_btn").attr("disabled", "disabled");
-            $("#saveGbase").attr("disabled", "disabled");
+            $("#add_row_btn").css("display", "none");
+            $("#saveGbase").css("display", "none");
         }
 
         if ($('#EntryCV_' + idNum + '__screenCode').val() == "SS") {
             $('#payee_SS').val($("#item_" + idNum).find(".txtPayee option:selected").text());
             $('#divPayee_SS').show();
+        }
+    });
+</script>
+<script>
+    $("#gBaseTable").on("keyup", "input.NumberOnlyOneDecimal", function (e) {
+        var pid = $(this.parentNode)[0].parentNode.id;
+        var val = $('#' + pid).find('.NumberOnlyOneDecimal').val();
+        if (isNaN(val)) {
+            val = val.replace(/[^0-9\.]/g, '');
+            if (val.split('.').length > 2) {
+                val = val.replace(/\.+$/, "");
+            }
+        }
+        $('#' + pid).find('.NumberOnlyOneDecimal').val(val);
+    });
+    $("#gBaseTable").on("change", "input.NumberOnlyOneDecimal", function (e) {
+        var decVal = 2;
+
+        var pid = $(this.parentNode)[0].parentNode.id;
+        var val = $('#' + pid).find('.NumberOnlyOneDecimal').val();
+
+        var idNum = $("#parentId").val().replace('remark_', '');
+
+        if ($('#yenID').val() == $("#item_" + idNum).find(".txtccy").val()) {
+            decVal = 0;
+        }
+
+        if ($('#req_' + idNum).find('.hiddenScreencode').val() == "PCV") {
+            decVal = 2;
+        }
+
+        $('#' + pid).find('.NumberOnlyOneDecimal').val(roundNumber(val, decVal));
+
+        if (isNaN($('#' + pid).find('.NumberOnlyOneDecimal').val())) {
+            $('#' + pid).find('.NumberOnlyOneDecimal').val(0);
         }
     });
 </script>
