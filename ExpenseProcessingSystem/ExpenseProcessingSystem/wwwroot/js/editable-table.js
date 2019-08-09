@@ -325,5 +325,29 @@ $(document).ready(function () {
             $('.expenseTable-remove').hide();
         }
 
+        var gross = $(".txtGross");
+        var credEwt = $(".txtCredEwt");
+        var credCash = $(".txtCredCash");
+
+        var grossTotal = 0;
+        var ewtSubTotal = 0;
+        var cashSubTotal = 0;
+
+        for (var i = 0; i < gross.length; i++) {
+            grossTotal += Number(gross[i].value);
+        }
+
+        for (var i = 0; i < credEwt.length; i++) {
+            ewtSubTotal += Number(credEwt[i].value);
+        }
+
+        for (var i = 0; i < credCash.length; i++) {
+            cashSubTotal += Number(credCash[i].value);
+        }
+
+        $("#grossTotal").val(grossTotal);
+        $("#credEwtTotal").val(ewtSubTotal);
+        $("#credCashTotal").val(cashSubTotal);
+        $("#credTotal").val(roundNumber(Number(ewtSubTotal + cashSubTotal), 2));
     });
 });
