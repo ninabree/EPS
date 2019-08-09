@@ -161,7 +161,7 @@
             <div id="tbl-lbl">
                 <div class="dis-inline-block"><p>Preview of Voucher:</p></div>
             </div>
-            @Html.Partial("DDVPartial")
+            <iframe id="iframePreview" frameborder="0" src="" style="position: relative; min-height: 50vh; max-height: 100%; width: 100%;"></iframe>
         </div>
         <div id="entry-status" class="m-t-10 m-b-10">
             <div class="dis-inline-block"><label>Status: </label></div>
@@ -204,6 +204,10 @@
     </div>
 </div>
 <script>
+    $(window).on("load", function () {
+        $('#iframePreview').prop('src', "/Home/VoucherDDV");
+    });
+
     $(document).ready(function () {
         eachTr();
         var myModal2 = $('.myModal2');

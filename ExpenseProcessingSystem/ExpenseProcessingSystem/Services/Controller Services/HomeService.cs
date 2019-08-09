@@ -11614,7 +11614,15 @@ namespace ExpenseProcessingSystem.Services
         {
             Dictionary<string,string> checkNo = new Dictionary<string, string>();
 
-            var expense = _context.ExpenseEntry.Where(x => x.Expense_Type == GlobalSystemValues.TYPE_CV)
+            List<int> expectedStatus = new List<int> {
+                    GlobalSystemValues.STATUS_APPROVED,
+                    GlobalSystemValues.STATUS_FOR_CLOSING,
+                    GlobalSystemValues.STATUS_FOR_PRINTING,
+                    GlobalSystemValues.STATUS_REVERSED
+                };
+
+            var expense = _context.ExpenseEntry.Where(x => x.Expense_Type == GlobalSystemValues.TYPE_CV
+                                                        && expectedStatus.Contains(x.Expense_Status))
                                                .OrderByDescending(x => x.Expense_Created_Date).FirstOrDefault();
 
             var checkNoModel = _context.DMCheck.Where(x => x.Check_ID == expense.Expense_CheckId).FirstOrDefault();

@@ -201,6 +201,9 @@
 <script type="text/javascript">
     $(window).on("load", function () {
         $('#iframePreview').prop('src', "/Home/VoucherViewCV?ExpenseID=@Model.entryID");
+        if ($('#alert').text() != "") {
+            $('#divAlertWindow').show();
+        }
     });
     $(function () {
         @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker
