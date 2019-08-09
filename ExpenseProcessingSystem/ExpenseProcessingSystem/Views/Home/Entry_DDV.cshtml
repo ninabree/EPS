@@ -66,7 +66,7 @@
                         <tr id="item_@i">
                             <td class="p-b-1 p-t-1">
                                 <div class="flex-sb">
-                                    @Html.TextBoxFor(x => Model.EntryDDV[i].GBaseRemarks, new { @class = "input100 w-80 txtgbaseRemarks voucher-input" })
+                                    @Html.TextBoxFor(x => Model.EntryDDV[i].GBaseRemarks, new { @class = "input100 w-80 txtgbaseRemarks voucher-input", @maxlength = "30" })
                                     <div id="remark_@i">
                                         <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
                                         @for (int y = 0; y < Model.EntryDDV[i].gBaseRemarksDetails.Count(); y++)
