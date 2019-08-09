@@ -18,11 +18,11 @@
             </colgroup>
             <thead>
                 <tr>
-                    <td>Document Type</td>
-                    <td>Invoice No.</td>
-                    <td>Description</td>
-                    <td>Amount</td>
-                    <td></td>
+                    <th>Document Type</th>
+                    <th>Invoice No.</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -30,7 +30,7 @@
                     <td><input type="text" class="gDocuType" /></td>
                     <td><input type="text" class="gInvoiceNo" /></td>
                     <td><input type="text" class="gDescription" /></td>
-                    <td><input type="number" min="0" class="gAmount" style="width:100%" /></td>
+                    <td><input type="text" min="0" class="gAmount NumberOnlyOneDecimal" style="width:100%" /></td>
                     <td><div class="flex-c"></div></td>
                 </tr>
             </tbody>
@@ -40,7 +40,7 @@
 
 <script>
     $(document).ready(function () {
-        $('.modal-dialog').css('width', '50%');
+        //$('.modal-dialog').css('width', '50%');
         var idNum = $("#parentId").val().replace('remark_', '');
         var trs = $("#gBaseTable").find("tbody").find("tr");
         if ($("#item_" + idNum).find(".txtgbaseRemarks").prop('disabled') || 
@@ -60,5 +60,21 @@
             $('#payee_SS').val($("#item_" + idNum).find(".txtPayee option:selected").text());
             $('#divPayee_SS').show();
         }
+    });
+</script>
+<script>
+    $('.NumberOnlyOneDecimal').keyup(function () {
+        var val = $(this).val();
+        if (isNaN(val)) {
+            val = val.replace(/[^0-9\.]/g, '');
+            if (val.split('.').length > 2) {
+                val = val.replace(/\.+$/, "");
+            }
+        }
+        $(this).val(val);
+    });
+    $('.NumberOnlyOneDecimal').change(function () {
+        var val = $(this).val();
+        $(this).val(roundNumber(val, 2));
     });
 </script>

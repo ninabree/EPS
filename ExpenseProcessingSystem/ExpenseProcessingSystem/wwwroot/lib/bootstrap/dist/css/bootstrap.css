@@ -7277,7 +7277,7 @@ button.close {
 
 @media (min-width: 768px) {
     .modal-dialog, .modal-dialog2 {
-        /*width: 600px;*/
+        /*width: max-content;*/
         margin: 30px auto;
     }
 

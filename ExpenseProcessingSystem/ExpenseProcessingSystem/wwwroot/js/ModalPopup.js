@@ -246,7 +246,7 @@
                     + '<td><input type="text" class="gDocuType" value="' + docuType + '" /></td>'
                     + '<td><input type="text" class="gInvoiceNo" value="' + invNo + '" /></td>'
                     + '<td><input type="text" class="gDescription" value="' + desc + '" /></td>'
-                    + '<td><input type="number" min="0" class="gAmount" style="width:100%" value="' + amount + '"  /></td>'
+                    + '<td><input type="text" min="0" class="gAmount NumberOnlyOneDecimal" style="width:100%" value="' + amount + '"  /></td>'
                     + '<td><div class="flex-c">';
                 if (!$("#" + id).find(".txtgbaseRemarks").prop('disabled') &&
                     $("#" + id).find(".hiddenScreencode").val() != "Liquidation_SS") {
