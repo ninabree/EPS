@@ -772,24 +772,28 @@
         document.addEventListener("change", computeFunction, false);
         computeValsNC();
         hiddencols();
-        @*onloadModifiedMiscEntries();
-
+        onloadModifiedMiscEntries();
         function onloadModifiedMiscEntries() {
-            jQuery.each(@Model.EntryNC.ExpenseEntryNCDtls, function (i, dtl)
-            {
-                jQuery.each(dtl.ExpenseEntryNCDtlAccs, function (j, a)
-                {
-                    if (a.ExpNCDtlAcc_Amount > 0)
-                    {
-                        if (a.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT) {
-                            $("amt-db-" + i + "-" + j).val(a.ExpNCDtlAcc_Amount);
-                        } else {
-                            $("amt-cd-" + i + "-" + j).val(a.ExpNCDtlAcc_Amount);
+            var tblRow = $("tr[id^='item_']");
+            var tblRowLen = $(tblRow).length;
+            if (tblRowLen > 0) {
+                jQuery.each(tblRow, function (i, dtl) {
+                    for (var a = 0; a < 4; a++) {
+                        var amount = $("#EntryNC_ExpenseEntryNCDtls_" + i + "__ExpenseEntryNCDtlAccs_" + a + "__ExpNCDtlAcc_Amount").val();
+                        if (parseFloat(amount) > 0) {
+                            alert(amount);
+                            var typeId = $("#EntryNC_ExpenseEntryNCDtls_" + i + "__ExpenseEntryNCDtlAccs_" + a + "__ExpNCDtlAcc_Type_ID").val();
+                            if (typeId == @GlobalSystemValues.NC_DEBIT+"") {
+                                $(".amt-db-" + i + "-" + a).val(amount);
+                            } else {
+                                $(".amt-cd-" + i + "-" + a).val(amount);
+                            }
                         }
                     }
                 });
-            });
-        }*@
+            }
+        }
+
         function hiddencols() {
             var catID = $("select#categoryName option:selected").val();
             if (catID == @GlobalSystemValues.NC_PSSC +"" || catID == @GlobalSystemValues.NC_PCHC +"" || catID == @GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES +"") {
