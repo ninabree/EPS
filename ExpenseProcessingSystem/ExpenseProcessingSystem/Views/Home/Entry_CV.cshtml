@@ -109,7 +109,7 @@
                                 @Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt comVar voucher-input", @disabled = "true" })
                             </td>
                             <td>
-                                @Html.DropDownListFor(x => Model.EntryCV[i].ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100 voucher-input" })
+                                @Html.DropDownListFor(x => Model.EntryCV[i].ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100 voucher-input txtccy" })
                             </td>
                             <td>@Html.TextBoxFor(x => Model.EntryCV[i].debitGross, new { @class = "input100 txtGross", @readonly = "readonly" })</td>
                             <td>@Html.TextBoxFor(x => Model.EntryCV[i].credEwt, new { @class = "input100 txtCredEwt", @readonly = "readonly" })</td>
@@ -128,19 +128,19 @@
                         </tr>
                     }
 
-                        <tr>
-                           @* <td style="border:none; background-color:#f2f2f2" rowspan="2"><a id="addRow" href="#" class="glyphicon glyphicon-plus"></a></td>*@
-                            <td style="border:none; background-color:#f2f2f2" rowspan="2">
-                                <a id="addRow" href="#" class="glyphicon glyphicon-plus"></a>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <a id="removeRow" href="#" class="glyphicon glyphicon-remove expenseTable-remove" style="display:none"></a>
-                            </td>
+                    <tr>
+                        @* <td style="border:none; background-color:#f2f2f2" rowspan="2"><a id="addRow" href="#" class="glyphicon glyphicon-plus"></a></td>*@
+                        <td style="border:none; background-color:#f2f2f2" rowspan="2">
+                            <a id="addRow" href="#" class="glyphicon glyphicon-plus"></a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a id="removeRow" href="#" class="glyphicon glyphicon-remove expenseTable-remove" style="display:none"></a>
+                        </td>
 
-                            <td colspan="8" style="text-align:right; border:none; background-color:#f2f2f2">Subtotal : </td>
-                            <td rowspan="2"><div class="flex-c"><input type="text" class="input100" readonly id="grossTotal" /></div></td>
-                            <td><input type="text" readonly class="input100" id="credEwtTotal" /></td>
-                            <td><input type="text" readonly class="input100" id="credCashTotal" /></td>
-                        </tr>
+                        <td colspan="8" style="text-align:right; border:none; background-color:#f2f2f2">Subtotal : </td>
+                        <td rowspan="2"><div class="flex-c"><input type="text" class="input100" readonly id="grossTotal" /></div></td>
+                        <td><input type="text" readonly class="input100" id="credEwtTotal" /></td>
+                        <td><input type="text" readonly class="input100" id="credCashTotal" /></td>
+                    </tr>
                     <tr>
                         <td colspan="8" style="text-align:right; border:none; background-color:#f2f2f2 ">Total : </td>
                         <td colspan="2"><div class="flex-c"><input type="text" class="input100" readonly id="credTotal" /></div></td>
@@ -204,6 +204,9 @@
     <div id="modalDiv">
         @Html.Partial("ModalGbase")
     </div>
+    <input type="hidden" id="yenID" value="@Model.yenCurrID" />
+    <input type="hidden" id="yenAbbrv" value="@Model.yenAbbrev" />
+    <input type="hidden" id="yenMasterID" value="@Model.yenCurrMasterID" />
 
 </div>
 <script>
@@ -481,7 +484,7 @@
                     @Html.DropDownListFor(x => Model.template.ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt comVar", @disabled = "true" })
                 </td>
                 <td>
-                    @Html.DropDownListFor(x => Model.template.ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100" })
+                    @Html.DropDownListFor(x => Model.template.ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100 txtccy" })
                 </td>
                 <td>@Html.TextBoxFor(x => Model.template.debitGross, new { @class = "input100 txtGross", @readonly = "readonly" })</td>
                 <td>@Html.TextBoxFor(x => Model.template.credEwt, new { @class = "input100 txtCredEwt", @readonly = "readonly" })</td>

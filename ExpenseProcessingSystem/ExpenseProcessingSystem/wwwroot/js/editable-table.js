@@ -280,10 +280,10 @@ $(document).ready(function () {
     }
     function newGbaseRemarksRow(itemCount) {
         return $('<tr id="gRemarks-tr-' + itemCount + '">'
-            + '<td><input type="text" class="gDocuType" /></td>'
-            + '<td><input type="text" class="gInvoiceNo" /></td>'
-            + '<td><input type="text" class="gDescription" /></td>'
-            + '<td><input type="number" min="0" class="gAmount" style="width:100%"  /></td>'
+            + '<td><input id="gDocu_' + itemCount + '" type="text" class="gDocuType" /></td>'
+            + '<td><input id="gInv_' + itemCount + '" type="text" class="gInvoiceNo" /></td>'
+            + '<td><input id="gDesc_' + itemCount + '" type="text" class="gDescription" /></td>'
+            + '<td><input id="gAmount_' + itemCount + '" type="text" min="0" class="gAmount NumberOnlyOneDecimal" style="width:100%"  /></td>'
             + '<td><div class="flex-c"><span class="table-remove glyphicon glyphicon-remove"></span></div></td></tr>');
     }
     // A few jQuery helpers for exporting only

@@ -1195,6 +1195,12 @@ namespace ExpenseProcessingSystem.Controllers
                 viewModel.EntryCV.Add(new EntryCVViewModel());
             }
 
+            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
+            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
+            viewModel.yenCurrID = ccyYEN.Curr_ID;
+            viewModel.yenCurrMasterID = ccyYEN.Curr_MasterID;
+            viewModel.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
+
             return View(viewModel);
         }
 
@@ -1448,6 +1454,12 @@ namespace ExpenseProcessingSystem.Controllers
                 GlobalSystemValues.MESSAGE = "";
             }
 
+            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
+            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
+            cvList.yenCurrID = ccyYEN.Curr_ID;
+            cvList.yenCurrMasterID = ccyYEN.Curr_MasterID;
+            cvList.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
+
             return View("Entry_CV_ReadOnly", cvList);
         }
 
@@ -1499,6 +1511,11 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.payee_type = GlobalSystemValues.PAYEETYPE_REGEMP;
             viewModel.systemValues.vat = _service.getAllVat();
             viewModel.systemValues.ewt = _service.getAllTaxRate();
+            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
+            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
+            viewModel.yenCurrID = ccyYEN.Curr_ID;
+            viewModel.yenCurrMasterID = ccyYEN.Curr_MasterID;
+            viewModel.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
             return View(viewModel);
         }
         [ExportModelState]
@@ -1567,6 +1584,12 @@ namespace ExpenseProcessingSystem.Controllers
                 ViewData["MESSAGE"] = GlobalSystemValues.MESSAGE;
                 GlobalSystemValues.MESSAGE = "";
             }
+
+            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
+            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
+            ddvList.yenCurrID = ccyYEN.Curr_ID;
+            ddvList.yenCurrMasterID = ccyYEN.Curr_MasterID;
+            ddvList.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
 
             return View("Entry_DDV_ReadOnly", ddvList);
         }
@@ -1837,7 +1860,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "Entry_PCV_ReadOnly";
+                    viewLink = "View_PCV";
                     break;
                 case "verifier":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_VERIFIED, int.Parse(GetUserID())))
@@ -1851,7 +1874,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "Entry_PCV_ReadOnly";
+                    viewLink = "View_PCV";
                     break;
                 case "Delete":
                     if (_service.deleteExpenseEntry(entryID))
@@ -1879,7 +1902,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "Entry_PCV_ReadOnly";
+                    viewLink = "View_PCV";
                     break;
                 case "Reversal":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
@@ -1894,7 +1917,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "Entry_PCV_ReadOnly";
+                    viewLink = "View_PCV";
                     break;
                 default:
                     break;
@@ -2092,6 +2115,10 @@ namespace ExpenseProcessingSystem.Controllers
                 viewModel.phpCurrID = ccyPHP.Curr_ID;
                 viewModel.phpCurrMasterID = ccyPHP.Curr_MasterID;
                 viewModel.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
+                var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
+                viewModel.yenCurrID = ccyYEN.Curr_ID;
+                viewModel.yenCurrMasterID = ccyYEN.Curr_MasterID;
+                viewModel.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
             }
             else
             {
@@ -2112,6 +2139,10 @@ namespace ExpenseProcessingSystem.Controllers
                 viewModel.phpCurrMasterID = ccyPHP.Curr_MasterID;
                 viewModel.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
                 viewModel.EntryCV[0].ccy = ccyPHP.Curr_ID;
+                var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
+                viewModel.yenCurrID = ccyYEN.Curr_ID;
+                viewModel.yenCurrMasterID = ccyYEN.Curr_MasterID;
+                viewModel.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
             }
 
             return View(viewModel);
@@ -2212,7 +2243,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "Entry_SS_ReadOnly";
+                    viewLink = "View_SS";
                     break;
                 case "verifier":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_VERIFIED, int.Parse(GetUserID())))
@@ -2226,7 +2257,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "Entry_SS_ReadOnly";
+                    viewLink = "View_SS";
                     break;
                 case "Delete":
                     if (_service.deleteExpenseEntry(entryID))
@@ -2254,7 +2285,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "Entry_SS_ReadOnly";
+                    viewLink = "View_SS";
                     break;
                 case "Reversal":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
@@ -2269,7 +2300,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "Entry_SS_ReadOnly";
+                    viewLink = "View_SS";
                     break;
                 default:
                     break;
@@ -2311,6 +2342,10 @@ namespace ExpenseProcessingSystem.Controllers
             ssList.phpCurrID = ccyPHP.Curr_ID;
             ssList.phpCurrMasterID = ccyPHP.Curr_MasterID;
             ssList.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
+            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
+            ssList.yenCurrID = ccyYEN.Curr_ID;
+            ssList.yenCurrMasterID = ccyYEN.Curr_MasterID;
+            ssList.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
 
             List<cvBirForm> birForms = new List<cvBirForm>();
             foreach (var item in ssList.EntryCV)
@@ -2373,6 +2408,10 @@ namespace ExpenseProcessingSystem.Controllers
             ssList.phpCurrID = ccyPHP.Curr_ID;
             ssList.phpCurrMasterID = ccyPHP.Curr_MasterID;
             ssList.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
+            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelemliq.Element("CURRENCY_Yen").Value));
+            ssList.yenCurrID = ccyYEN.Curr_ID;
+            ssList.yenCurrMasterID = ccyYEN.Curr_MasterID;
+            ssList.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
 
             DMAccountModel acc = new DMAccountModel();
             List<accDetails> acclist = new List<accDetails>();
@@ -2925,6 +2964,10 @@ namespace ExpenseProcessingSystem.Controllers
             ssList.phpCurrID = ccyPHP.Curr_ID;
             ssList.phpCurrMasterID = ccyPHP.Curr_MasterID;
             ssList.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
+            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
+            ssList.yenCurrID = ccyYEN.Curr_ID;
+            ssList.yenCurrMasterID = ccyYEN.Curr_MasterID;
+            ssList.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
 
             List<cvBirForm> birForms = new List<cvBirForm>();
             ssList.birForms = new List<cvBirForm>();
@@ -3063,6 +3106,10 @@ namespace ExpenseProcessingSystem.Controllers
             ssList.phpCurrID = ccyPHP.Curr_ID;
             ssList.phpCurrMasterID = ccyPHP.Curr_MasterID;
             ssList.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
+            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
+            ssList.yenCurrID = ccyYEN.Curr_ID;
+            ssList.yenCurrMasterID = ccyYEN.Curr_MasterID;
+            ssList.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
 
             List<cvBirForm> birForms = new List<cvBirForm>();
             ssList.birForms = new List<cvBirForm>();
@@ -3137,7 +3184,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "Liquidation_SS_ReadOnly";
+                    viewLink = "View_Liquidation_SS";
                     break;
                 case "verifier":
                     if (_service.updateLiquidateStatus(entryID, GlobalSystemValues.STATUS_VERIFIED, int.Parse(GetUserID())))
@@ -3151,7 +3198,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "Liquidation_SS_ReadOnly";
+                    viewLink = "View_Liquidation_SS";
                     break;
                 case "Delete":
                     if (_service.deleteLiquidationEntry(entryID))
@@ -3179,7 +3226,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "Liquidation_SS_ReadOnly";
+                    viewLink = "View_Liquidation_SS";
                     break;
                 case "Reversal":
                     if (_service.updateLiquidateStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
@@ -3194,7 +3241,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "Liquidation_SS_ReadOnly";
+                    viewLink = "View_Liquidation_SS";
                     break;
                 default:
                     break;
@@ -3226,6 +3273,10 @@ namespace ExpenseProcessingSystem.Controllers
             ssList.phpCurrID = ccyPHP.Curr_ID;
             ssList.phpCurrMasterID = ccyPHP.Curr_MasterID;
             ssList.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
+            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
+            ssList.yenCurrID = ccyYEN.Curr_ID;
+            ssList.yenCurrMasterID = ccyYEN.Curr_MasterID;
+            ssList.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
 
             List<cvBirForm> birForms = new List<cvBirForm>();
             ssList.birForms = new List<cvBirForm>();
