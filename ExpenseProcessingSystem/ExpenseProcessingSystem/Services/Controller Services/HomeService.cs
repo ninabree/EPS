@@ -62,7 +62,9 @@ namespace ExpenseProcessingSystem.Services
                 .Select(x => x.User_Role).FirstOrDefault() ?? "";
             return data;
         }
-        private int[] status = { GlobalSystemValues.STATUS_APPROVED, GlobalSystemValues.STATUS_POSTED };
+        private int[] status = { GlobalSystemValues.STATUS_APPROVED, GlobalSystemValues.STATUS_POSTED,
+                            GlobalSystemValues.STATUS_CLOSED, GlobalSystemValues.STATUS_FOR_CLOSING,
+                            GlobalSystemValues.STATUS_FOR_PRINTING, GlobalSystemValues.STATUS_REVERSED };
 
         //-----------------------------------Populate-------------------------------------//
         //[ Home ]
@@ -8712,7 +8714,8 @@ namespace ExpenseProcessingSystem.Services
             List<LiquidationMainListViewModel> postedEntryList = new List<LiquidationMainListViewModel>();
 
             var dbPostedEntry = from p in _context.ExpenseEntry
-                                where p.Expense_Status == GlobalSystemValues.STATUS_POSTED
+                                where p.Expense_Status == GlobalSystemValues.STATUS_CLOSED 
+                                || p.Expense_Status == GlobalSystemValues.STATUS_POSTED
                                 && p.Expense_Type == GlobalSystemValues.TYPE_SS
                                 && p.Expense_Last_Updated.Date < DateTime.Now.Date
                                 orderby p.Expense_Last_Updated
