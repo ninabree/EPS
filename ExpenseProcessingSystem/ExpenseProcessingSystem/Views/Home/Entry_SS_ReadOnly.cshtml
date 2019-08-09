@@ -124,6 +124,7 @@
                             <td>
                                 @Html.DropDownListFor(x => Model.EntryCV[i].ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100 txtccy selectDisabled", disabled = "disabled" })
                                 @Html.HiddenFor(x => Model.EntryCV[i].ccy, new { @class = "txtCcyID" })
+                                @Html.HiddenFor(m => Model.EntryCV[i].ccyMasterID, new { @class = "currMasterID" })
                                 @Html.HiddenFor(x => Model.EntryCV[i].ccyAbbrev, new { @class = "txtCcyAbbrev" })
                             </td>
                             <td>

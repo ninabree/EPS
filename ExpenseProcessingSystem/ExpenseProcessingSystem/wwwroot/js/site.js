@@ -306,3 +306,4 @@ function loadingEffectStop() { $('body').removeClass("loading"); }
 function roundNumber(num, scale) {
     return Math.round(num * (Math.pow(10, scale))) / Math.pow(10, scale);
 };
+
