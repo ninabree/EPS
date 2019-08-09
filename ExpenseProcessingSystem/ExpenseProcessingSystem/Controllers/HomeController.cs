@@ -1922,8 +1922,6 @@ namespace ExpenseProcessingSystem.Controllers
                 default:
                     break;
             }
-            ViewData["MESSAGE"] = GlobalSystemValues.MESSAGE;
-            GlobalSystemValues.MESSAGE = "";
 
             pcvList = _service.getExpense(entryID);
             pcvList = PopulateEntry((EntryCVViewModelList)pcvList);
@@ -2474,12 +2472,6 @@ namespace ExpenseProcessingSystem.Controllers
                 }
             }
             ssList.birForms.AddRange(birForms);
-
-            if (!String.IsNullOrEmpty(GlobalSystemValues.MESSAGE))
-            {
-                ViewData["MESSAGE"] = GlobalSystemValues.MESSAGE;
-                GlobalSystemValues.MESSAGE = "";
-            }
 
             return View("Entry_SS_ReadOnly", ssList);
         }
