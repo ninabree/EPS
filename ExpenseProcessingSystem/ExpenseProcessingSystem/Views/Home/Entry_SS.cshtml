@@ -25,7 +25,7 @@
                 </p>
             </div>
         </div>
-        <div class="flex-c">
+        <div>
             <table class="table table-bordered table-striped voucher-tbl w-97" id="inputTable">
                 <colgroup>
                     <col style="width:15%;" />
@@ -142,13 +142,13 @@
                             <a id="removeRow" href="#" class="glyphicon glyphicon-remove expenseTable-remove" style="display:none"></a>
                         </td>
                         <td colspan="9" style="text-align:right; border:none; background-color:#f2f2f2">Subtotal : </td>
-                        <td rowspan="2"><div class="flex-c"><input type="text" class="input100" readonly id="grossTotal" /></div></td>
-                        <td><input type="text" readonly class="input100" id="credEwtTotal" /></td>
-                        <td><input type="text" readonly class="input100" id="credCashTotal" /></td>
+                        <td rowspan="2"><div class="flex-c"><input type="text" class="input100" readonly id="grossTotal" value="0" /></div></td>
+                        <td><input type="text" readonly class="input100" id="credEwtTotal" value="0" /></td>
+                        <td><input type="text" readonly class="input100" id="credCashTotal" value="0" /></td>
                     </tr>
                     <tr>
                         <td colspan="9" style="text-align:right; border:none; background-color:#f2f2f2 ">Total:</td>
-                        <td colspan="2"><div class="flex-c"><input type="text" class="input100" readonly id="credTotal" /></div></td>
+                        <td colspan="2"><div class="flex-c"><input type="text" class="input100" readonly id="credTotal" value="0" /></div></td>
                     </tr>
 
                 </tbody>
@@ -176,9 +176,12 @@
         @Html.HiddenFor(x => x.payee_type)
         <input type="hidden" name="command" id="btnID" />
     }
-    <input type="hidden" id="phpID" />
-    <input type="hidden" id="phpAbbrv" />
-    <input type="hidden" id="phpMasterID" />
+    <input type="hidden" id="phpID" value="@Model.phpCurrID" />
+    <input type="hidden" id="phpAbbrv" value="@Model.phpAbbrev" />
+    <input type="hidden" id="phpMasterID" value="@Model.phpCurrMasterID" />
+    <input type="hidden" id="yenID" value="@Model.yenCurrID"/>
+    <input type="hidden" id="yenAbbrv" value="@Model.yenAbbrev" />
+    <input type="hidden" id="yenMasterID" value="@Model.yenCurrMasterID" />
     <div id="modalDiv">
         @Html.Partial("ModalGBase")
     </div>
@@ -191,14 +194,6 @@
 <script type="text/javascript" src="~/js/EntryScripts.js"></script>
 <script>
     $(document).ready(function () {
-        var phpID = @Html.Raw(Json.Serialize(Model.phpCurrID));
-        var phpAbbrv = @Html.Raw(Json.Serialize(Model.phpAbbrev));
-        var phpMasterID = @Html.Raw(Json.Serialize(Model.phpCurrMasterID));
-
-        $('#phpID').val(phpID);
-        $('#phpAbbrv').val(phpAbbrv);
-        $('#phpMasterID').val(phpMasterID);
-
         //Enable Cash breakdown button if currency = PHP, disable if not.
         var trs = $("#inputTable").find("tbody").find("tr");
         for (var cnt = 0; cnt < trs.length - 2; cnt++) {
@@ -250,42 +245,42 @@
                 newRow.id = "item_" + itemCount
 
                 var htmlContent = '<td class="p-b-1 p-t-1"><div class="flex-sb">' +
-                    '<input class="input100 w-80 txtGBaseRemark" id="EntryCV_' + itemCount + '__GBaseRemarks" name="EntryCV[' + itemCount + '].GBaseRemarks"  maxlength="29" type="text" value="">' +
+                    '<input class="input100 w-80 txtGBaseRemark voucher-input" id="EntryCV_' + itemCount + '__GBaseRemarks" name="EntryCV[' + itemCount + '].GBaseRemarks" type="text" value="">' +
                     '<div id="remark_' + itemCount + '"><a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a></div></div></td>' +
-                    '<td><select class="input100 txtPayee" id="EntryCV_' + itemCount + '__dtlSSPayee" name="EntryCV[' + itemCount + '].dtlSSPayee">';
+                    '<td><select class="input100 txtPayee voucher-input" id="EntryCV_' + itemCount + '__dtlSSPayee" name="EntryCV[' + itemCount + '].dtlSSPayee">';
 
                 for (var i = 0; i < payee.length; i++) {
                     htmlContent += '<option value="' + payee[i]["value"] + '">' + payee[i]["text"] + '</option>';
                 }
 
                 htmlContent += '</select></td>' +
-                    '<td><select class="input100 txtAcc" id="EntryCV_' + itemCount + '__account" name="EntryCV[' + itemCount + '].account">';
+                    '<td><select class="input100 txtAcc voucher-input" id="EntryCV_' + itemCount + '__account" name="EntryCV[' + itemCount + '].account">';
 
                 for (var i = 0; i < acc.length; i++) {
                     htmlContent += '<option value="' + acc[i]["accId"] + '" class="' + acc[i]["accCode"] + '">' + acc[i]["accName"] + '</option>';
                 }
 
                 htmlContent += '</select></td>' +
-                    '<td><select class="input100" id="EntryCV_' + itemCount + '__dept" name="EntryCV[' + itemCount + '].dept">';
+                    '<td><select class="input100 voucher-input" id="EntryCV_' + itemCount + '__dept" name="EntryCV[' + itemCount + '].dept">';
                 for (var i = 0; i < dept.length; i++) {
                     htmlContent += '<option value="' + dept[i]["value"] + '">' + dept[i]["text"] + '</option>';
                 }
 
                 htmlContent += '</select></td>' +
-                    '<td style="text-align:center"><input class="chkVat comVar" data-val="true" data-val-required="The chkVat field is required." id="EntryCV_' + itemCount + '__chkVat" name="EntryCV[' + itemCount + '].chkVat" type="checkbox" value="true"></td>' +
-                    '<td><select class="input100 txtVat comVar" data-val="true" data-val-required="The vat field is required." id="EntryCV_' + itemCount + '__vat" name="EntryCV[' + itemCount + '].vat" disabled="disabled">';
+                    '<td style="text-align:center"><input class="chkVat comVar voucher-input" data-val="true" data-val-required="The chkVat field is required." id="EntryCV_' + itemCount + '__chkVat" name="EntryCV[' + itemCount + '].chkVat" type="checkbox" value="true"></td>' +
+                    '<td><select class="input100 txtVat comVar voucher-input" data-val="true" data-val-required="The vat field is required." id="EntryCV_' + itemCount + '__vat" name="EntryCV[' + itemCount + '].vat" disabled="disabled">';
                 for (var i = 0; i < vat.length; i++) {
                     htmlContent += '<option value="' + vat[i]["value"] + '">' + vat[i]["text"] + '</option>';
                 }
                 htmlContent += '</select></td>' +
-                    '<td style="text-align:center"><input class="chkEwt comVar" data-val="true" data-val-required="The chkEwt field is required." id="EntryCV_' + itemCount + '__chkEwt" name="EntryCV[' + itemCount + '].chkEwt" type="checkbox" value="true"></td>' +
-                    '<td><select class="input100 txtEwt comVar" data-val="true" data-val-required="The ewt field is required." id="EntryCV_' + itemCount + '__ewt" name="EntryCV[' + itemCount + '].ewt" disabled="disabled">';
+                    '<td style="text-align:center"><input class="chkEwt comVar voucher-input" data-val="true" data-val-required="The chkEwt field is required." id="EntryCV_' + itemCount + '__chkEwt" name="EntryCV[' + itemCount + '].chkEwt" type="checkbox" value="true"></td>' +
+                    '<td><select class="input100 txtEwt comVar voucher-input" data-val="true" data-val-required="The ewt field is required." id="EntryCV_' + itemCount + '__ewt" name="EntryCV[' + itemCount + '].ewt" disabled="disabled">';
                 for (var i = 0; i < ewt.length; i++) {
                     htmlContent += '<option value="' + ewt[i]["value"] + '">' + ewt[i]["text"] + '</option>';
                 }
                 htmlContent += '</select></td>' +
                     '<td style="text-align:center"><a class="reqEWTBtn glyphicon glyphicon-list-alt expenseEWT" href="#" style="pointer-events:none;"></a><input data-val="true" data-val-required="The dtl_Ewt_Payor_Name_ID field is required." id="EntryCV_' + itemCount + '__dtl_Ewt_Payor_Name_ID" name="EntryCV[' + itemCount + '].dtl_Ewt_Payor_Name_ID" class = "txtPayor" type="hidden" value="0"></td>' +
-                    '<td><select class="input100 txtccy" data-val="true" data-val-required="The ccy field is required." id="EntryCV_' + itemCount + '__ccy" name="EntryCV[' + itemCount + '].ccy">';
+                    '<td><select class="input100 txtccy voucher-input" data-val="true" data-val-required="The ccy field is required." id="EntryCV_' + itemCount + '__ccy" name="EntryCV[' + itemCount + '].ccy">';
                 for (var i = 0; i < curr.length; i++) {
                     htmlContent += '<option value="' + curr[i]["value"] + '">' + curr[i]["text"] + '</option>';
                 }

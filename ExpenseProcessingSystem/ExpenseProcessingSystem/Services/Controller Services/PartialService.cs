@@ -437,8 +437,8 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     Vendor_Last_Updated = m.Vendor_Last_Updated,
                     Vendor_Status_ID = m.Status_ID,
                     Vendor_Status = m.Status_Name ?? "N/A",
-                    Vendor_Tax_Rates = mList.Where(x=> x.Vendor_ID == m.Vendor_ID).Select(x => (x.TRRAte * 100) + "% - " + x.TR_WT_Title).ToList(),
-                    Vendor_VAT = mList.Where(x => x.Vendor_ID == m.Vendor_ID).Select(x => (x.VATRAte * 100) + "% - " + x.VAT_Name).ToList()
+                    Vendor_Tax_Rates = mList.Where(x=> x.Vendor_ID == m.Vendor_ID && x.VTV_TR_ID > 0 && x.TRRAte > 0).Select(x => (x.TRRAte * 100) + "% - " + x.TR_WT_Title).ToList(),
+                    Vendor_VAT = mList.Where(x => x.Vendor_ID == m.Vendor_ID && x.VTV_VAT_ID > 0 && x.VATRAte > 0).Select(x => (x.VATRAte * 100) + "% - " + x.VAT_Name).ToList()
                 })
             );
 
@@ -456,8 +456,8 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                      Vendor_Last_Updated = m.Vendor_Last_Updated,
                      Vendor_Status_ID = m.Status_ID,
                      Vendor_Status = m.Status_Name ?? "N/A",
-                     Vendor_Tax_Rates = pendingList.Where(x => x.Pending_ID == m.Pending_ID).Select(x => (x.TRRAte * 100) + "% - " + x.TR_WT_Title).ToList(),
-                     Vendor_VAT = pendingList.Where(x => x.Pending_ID == m.Pending_ID).Select(x => (x.VATRAte * 100) + "% - " + x.VAT_Name).ToList()
+                     Vendor_Tax_Rates = pendingList.Where(x => x.Pending_ID == m.Pending_ID && x.VTV_TRID > 0 && x.TRRAte > 0).Select(x => (x.TRRAte * 100) + "% - " + x.TR_WT_Title).ToList(),
+                     Vendor_VAT = pendingList.Where(x => x.Pending_ID == m.Pending_ID && x.VTV_VATID > 0 && x.VATRAte > 0).Select(x => (x.VATRAte * 100) + "% - " + x.VAT_Name).ToList()
                  })
             );
             //FILTER

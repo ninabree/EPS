@@ -35,10 +35,10 @@
                                             "-- Select from List --",
                                             new { @class = "w-full input" })
                     </td>
-                    <td>@Html.TextBoxFor(item => item.BCS_TIN, new { @class = "w-full" })</td>
-                    <td>@Html.TextBoxFor(item => item.BCS_Position, new { @class = "w-full" })</td>
+                    <td>@Html.TextBoxFor(item => item.BCS_TIN, new { @class = "w-full input voucher-input" })</td>
+                    <td>@Html.TextBoxFor(item => item.BCS_Position, new { @class = "w-full input voucher-input" })</td>
                     <td colspan="3">
-                        @Html.TextBoxFor(item => item.BCS_Signatures_Name, new { @class = "w-full" })
+                        @Html.TextBoxFor(item => item.BCS_Signatures_Name, new { @class = "w-full input voucher-input" })
                         <input type="file" asp-for="BCS_Signatures">
                     </td>
                     <td>@Html.TextBoxFor(item => item.BCS_Status, new { @class = "w-full", @readonly = "readonly" })</td>

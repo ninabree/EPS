@@ -13,6 +13,7 @@
 .modal-body, .modal-body2 {
     /*max-height: 300px;*/
     /*overflow-y: scroll;*/
+    padding: 10px 30px;
 }
 .modal-message-dialog {
     max-width: 20% !important;

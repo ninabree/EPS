@@ -36,7 +36,7 @@
             </select>
         </div>
     </div>
-    <div class="flex-c">
+    <div class="">
         <table class="table table-bordered table-striped voucher-tbl w-97" id="inputTable">
             <colgroup>
                 <col style="width:20%;" />
@@ -203,41 +203,44 @@
             var enableModify = (Model.statusID == GlobalSystemValues.STATUS_PENDING ||
                                   Model.statusID == GlobalSystemValues.STATUS_REJECTED) && (isMaker) ? "" : "disabled";
 
-            var enableApproveVerify = ((Model.statusID == GlobalSystemValues.STATUS_PENDING) &&
-                                        ((aVerifier) || (anApprover))) && (!isMaker) ? "" : "disabled";
-            var enableReject = ((Model.statusID == GlobalSystemValues.STATUS_PENDING) && (anApprover)) && (!isMaker) ? "" : "disabled";
+                  var enableApproveVerify = ((Model.statusID == GlobalSystemValues.STATUS_PENDING
+                                        || Model.statusID == GlobalSystemValues.STATUS_VERIFIED) &&
+                                              ((aVerifier) || (anApprover))) && (!isMaker) ? "" : "disabled";
+                  var enableReject = ((Model.statusID == GlobalSystemValues.STATUS_PENDING
+                                        || Model.statusID == GlobalSystemValues.STATUS_VERIFIED) && (anApprover)) && (!isMaker) ? "" : "disabled";
 
             var enableBIR = (Model.statusID == GlobalSystemValues.STATUS_REVERSED ||
                                 Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
                                 Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING ||
                                 Model.statusID == GlobalSystemValues.STATUS_POSTED) ? "" : "disabled";
 
-            var enableReversal = (Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
-                                Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING) ? "" : "disabled";
-        }
-        @using (Html.BeginForm("VerAppModDDV", "Home", FormMethod.Post, new { @class = "validate-form" }))
-        {
-            @Html.HiddenFor(x => Model.entryID)
-            @if (isMaker || isVerifier || isApprover || aVerifier || anApprover)
-            {
-                <div class="flex-sb">
-                    <div>
-                        <div class="dis-inline-block"><button class="tbl-btn" @enableSave>Save</button></div>
-                        <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" @enableDelete value="Delete" name="command">Delete</button></div>
-                        <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" @enableModify value="Modify" name="command">Modify</button></div>
-                        <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" @enableApproveVerify value="@role" name="command">Approve/Verify</button></div>
-                        <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" @enableReject value="Reject" name="command">Reject</button></div>
-                    </div>
-                    <div>
-                        <div class="dis-inline-block"><button class="tbl-btn " @enableBIR id="printBir" value="printBir">Print BIR Certificate</button></div>
-                        <div class="dis-inline-block"><button class="tbl-btn " @enableBIR id="printVoucher" value="printVoucher">Print Voucher</button></div>
-                        <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" id="reversal_entry" @enableReversal value="Reversal" name="command">Create Reversal Entry</button></div>
-                    </div>
-                </div>
-            }
-            <input type="hidden" name="command" id="btnID" />
-        }
-    </div>
+                  var enableReversal = (Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
+                                      Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING ||
+                                      Model.statusID == GlobalSystemValues.STATUS_POSTED) ? "" : "disabled";
+              }
+              @using (Html.BeginForm("VerAppModDDV", "Home", FormMethod.Post, new { @class = "validate-form" }))
+              {
+                  @Html.HiddenFor(x => Model.entryID)
+                  @if (isMaker || isVerifier || isApprover || aVerifier || anApprover)
+                  {
+                      <div class="flex-sb">
+                          <div>
+                              <div class="dis-inline-block"><button class="tbl-btn" @enableSave>Save</button></div>
+                              <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" @enableDelete value="Delete" name="command">Delete</button></div>
+                              <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" @enableModify value="Modify" name="command">Modify</button></div>
+                              <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" @enableApproveVerify value="@role" name="command">Approve/Verify</button></div>
+                              <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" @enableReject value="Reject" name="command">Reject</button></div>
+                          </div>
+                          <div>
+                              <div class="dis-inline-block"><button class="tbl-btn " @enableBIR id="printBir" value="printBir">Print BIR Certificate</button></div>
+                              <div class="dis-inline-block"><button class="tbl-btn " @enableBIR id="printVoucher" value="printVoucher">Print Voucher</button></div>
+                              <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" id="reversal_entry" @enableReversal value="Reversal" name="command">Create Reversal Entry</button></div>
+                          </div>
+                      </div>
+                  }
+                  <input type="hidden" name="command" id="btnID" />
+              }
+          </div>
 
     <div id="modalDiv">
         @Html.Partial("ModalGbase")

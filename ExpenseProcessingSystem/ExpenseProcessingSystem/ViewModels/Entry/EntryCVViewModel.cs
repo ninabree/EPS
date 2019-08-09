@@ -130,6 +130,9 @@ namespace ExpenseProcessingSystem.ViewModels
         public int phpCurrID { get; set; }
         public int phpCurrMasterID { get; set; }
         public string phpAbbrev { get; set; }
+        public int yenCurrID { get; set; }
+        public int yenCurrMasterID { get; set; }
+        public string yenAbbrev { get; set; }
     }
 
     public class temp

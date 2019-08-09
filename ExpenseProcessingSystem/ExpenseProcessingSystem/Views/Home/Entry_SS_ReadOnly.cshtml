@@ -39,7 +39,7 @@
                 </p>
             </div>
         </div>
-        <div class="flex-c">
+        <div class="">
             <table class="table table-bordered table-striped voucher-tbl w-97" id="inputTable">
                 <colgroup>
                     <col style="width:15%;" />
@@ -139,9 +139,9 @@
                             <td id="req_@i">
                                 <a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#"></a>
                                 @if (Model.EntryCV[i].ccyMasterID != int.Parse(XElement.Load("wwwroot/xml/LiquidationValue.xml").Element("CURRENCY_PHP").Value)
-                                  && (Model.statusID == GlobalSystemValues.STATUS_REVERSED || Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING
-                                  || Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING || Model.statusID == GlobalSystemValues.STATUS_CLOSED
-                                   || Model.statusID == GlobalSystemValues.STATUS_POSTED))
+                                 && (Model.statusID == GlobalSystemValues.STATUS_REVERSED || Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING
+                                 || Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING || Model.statusID == GlobalSystemValues.STATUS_CLOSED
+                                  || Model.statusID == GlobalSystemValues.STATUS_POSTED))
                                 {
                                     <a class="cddISBtn" href="#"><img id="imgCDD" src="~/images/cddLogo.png" style="width:100%;height:70%" /></a>
                                 }
@@ -162,13 +162,13 @@
                     <tr>
                         <td style="border:none; background-color:#f2f2f2" rowspan="2"><a id="addRow" href="#" class="glyphicon glyphicon-plus" style="display:none;"></a></td>
                         <td colspan="9" style="text-align:right; border:none; background-color:#f2f2f2">Subtotal : </td>
-                        <td rowspan="2"><div class="flex-c"><input type="text" class="input100" readonly id="grossTotal" /></div></td>
-                        <td><input type="text" readonly class="input100" id="credEwtTotal" /></td>
-                        <td><input type="text" readonly class="input100" id="credCashTotal" /></td>
+                        <td rowspan="2"><div class="flex-c"><input type="text" class="input100" readonly id="grossTotal" value="0" /></div></td>
+                        <td><input type="text" readonly class="input100" id="credEwtTotal" value="0" /></td>
+                        <td><input type="text" readonly class="input100" id="credCashTotal" value="0" /></td>
                     </tr>
                     <tr>
                         <td colspan="9" style="text-align:right; border:none; background-color:#f2f2f2 ">Total:</td>
-                        <td colspan="2"><div class="flex-c"><input type="text" class="input100" readonly id="credTotal" /></div></td>
+                        <td colspan="2"><div class="flex-c"><input type="text" class="input100" readonly id="credTotal" value="0" /></div></td>
                     </tr>
                 </tbody>
             </table>
@@ -192,9 +192,11 @@
                 var enableModify = (Model.statusID == GlobalSystemValues.STATUS_PENDING ||
                                       Model.statusID == GlobalSystemValues.STATUS_REJECTED) && (isMaker) ? "" : "disabled";
 
-                var enableApproveVerify = ((Model.statusID == GlobalSystemValues.STATUS_PENDING) &&
+                var enableApproveVerify = ((Model.statusID == GlobalSystemValues.STATUS_PENDING
+                                        || Model.statusID == GlobalSystemValues.STATUS_VERIFIED) &&
                                             ((aVerifier) || (anApprover))) && (!isMaker) ? "" : "disabled";
-                var enableReject = ((Model.statusID == GlobalSystemValues.STATUS_PENDING) && (anApprover)) && (!isMaker) ? "" : "disabled";
+                var enableReject = ((Model.statusID == GlobalSystemValues.STATUS_PENDING
+                                        || Model.statusID == GlobalSystemValues.STATUS_VERIFIED) && (anApprover)) && (!isMaker) ? "" : "disabled";
 
                 var enableBIR = (Model.statusID == GlobalSystemValues.STATUS_REVERSED ||
                                     Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
@@ -202,7 +204,8 @@
                                     Model.statusID == GlobalSystemValues.STATUS_POSTED) ? "" : "disabled";
 
                 var enableReversal = (Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
-                                    Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING) ? "" : "disabled";
+                                    Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING ||
+                                    Model.statusID == GlobalSystemValues.STATUS_POSTED) ? "" : "disabled";
             }
             @Html.HiddenFor(x => Model.entryID)
             @if (isMaker || isVerifier || isApprover || aVerifier || anApprover)
@@ -227,9 +230,9 @@
         </div>
         @Html.Partial("ModalPartial2")
     </div>
-    <input type="hidden" id="phpID" />
-    <input type="hidden" id="phpAbbrv" />
-    <input type="hidden" id="phpMasterID" />
+    <input type="hidden" id="phpID" value="@Model.phpCurrID" />
+    <input type="hidden" id="phpAbbrv" value="@Model.phpAbbrev" />
+    <input type="hidden" id="phpMasterID" value="@Model.phpCurrMasterID" />
     <input type="hidden" name="command" id="btnID" />
 }
 @*validation message*@
@@ -242,13 +245,6 @@
             $('#divAlertWindow').show();
         }
 
-        var phpID = @Html.Raw(Json.Serialize(Model.phpCurrID));
-        var phpAbbrv = @Html.Raw(Json.Serialize(Model.phpAbbrev));
-        var phpMasterID = @Html.Raw(Json.Serialize(Model.phpCurrMasterID));
-
-        $('#phpID').val(phpID);
-        $('#phpAbbrv').val(phpAbbrv);
-        $('#phpMasterID').val(phpMasterID);
         //Enable Cash breakdown button if currency = PHP, disable if not.
         var trs = $("#inputTable").find("tbody").find("tr");
         for (var cnt = 0; cnt < trs.length - 2; cnt++) {

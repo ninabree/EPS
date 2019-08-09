@@ -95,6 +95,10 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         public List<EntryDDVViewModel> EntryDDV { get; set; }
         public List<cvBirForm> birForms { get; set; }
 
+        public int yenCurrID { get; set; }
+        public int yenCurrMasterID { get; set; }
+        public string yenAbbrev { get; set; }
+
         public EntryDDVViewModelList()
         {
             systemValues = new SysValViewModel();

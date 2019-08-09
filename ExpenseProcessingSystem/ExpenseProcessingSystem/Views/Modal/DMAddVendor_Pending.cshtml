@@ -28,9 +28,9 @@
                 <th></th>
             </tr>
             <tr id="NewVendor-Tr-0">
-                <td>@Html.TextBoxFor(m => m.NewVendorVM[0].Vendor_Name, new { @class = "w-full" })</td>
-                <td>@Html.TextBoxFor(m => m.NewVendorVM[0].Vendor_TIN, new { @class = "w-full" })</td>
-                <td>@Html.TextBoxFor(m => m.NewVendorVM[0].Vendor_Address, new { @class = "w-full" })</td>
+                <td>@Html.TextBoxFor(m => m.NewVendorVM[0].Vendor_Name, new { @class = "w-full input voucher-input" })</td>
+                <td>@Html.TextBoxFor(m => m.NewVendorVM[0].Vendor_TIN, new { @class = "w-full input voucher-input" })</td>
+                <td>@Html.TextBoxFor(m => m.NewVendorVM[0].Vendor_Address, new { @class = "w-full input voucher-input" })</td>
                 <td>
                     <div style="height:80px; overflow-y:scroll">
                         @if (Model.Vendor_Tax_Rates.Count > 0)
@@ -60,7 +60,6 @@
                     </div>
                 </td>
                 <td>
-                    <span class="table-remove glyphicon glyphicon-remove"></span>
                     @Html.HiddenFor(m => m.NewVendorVM[0].Vendor_Tax_Rates_ID)
                     @Html.HiddenFor(m => m.NewVendorVM[0].Vendor_VAT_ID)
                 </td>
@@ -68,3 +67,8 @@
         </table>
     }
 </div>
+<script>
+    $(document).ready(function (e) {
+
+    });
+</script>

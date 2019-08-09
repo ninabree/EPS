@@ -30,8 +30,8 @@
                         <td>@Html.TextBoxFor(model => model.DMFilters.PF.PF_Status, new { @class = "input" })</td>
                         <td colspan="2"><input id="filterPartialName" name="partialName" value="DMPartial_vendor" type="hidden" /></td>
                         <td colspan="2" style="text-align: right;">
-                            <input type="submit" value="Search" class="btn btn-default" id="search-btn" />
-                            <input type="button" value="Back to Full List" id="full-list-btn" class="btn btn-default" />
+                            <input type="submit" value="Search" class="tbl-btn btn-default" id="search-btn" />
+                            <input type="button" value="Back to Full List" id="full-list-btn" class="tbl-btn btn-default" />
                         </td>
                     </tr>
                 </table>
@@ -145,14 +145,14 @@
        class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right">
     </a>
     <div class="float-r m-r-10">
-        <button class="dis-inline-block tbl-btn btn add-rec rec" id="add_vendor">Add</button>
-        <button class="dis-inline-block tbl-btn btn edit-rec rec" id="edit_vendor">Edit</button>
-        <button class="dis-inline-block tbl-btn btn delete-rec rec" id="delete_vendor">Delete</button>
+        <button class="dis-inline-block tbl-btn add-rec rec" id="add_vendor">Add</button>
+        <button class="dis-inline-block tbl-btn edit-rec rec" id="edit_vendor">Edit</button>
+        <button class="dis-inline-block tbl-btn delete-rec rec" id="delete_vendor">Delete</button>
         @*<div class="w-full" style="text-align: right;"><button class="btn" id="forgot_PW">Forgot Password?</button></div>*@
         @if (ViewBag.access.accessType == "approver")
         {
-            <button class="dis-inline-block tbl-btn btn apprv-rec rec" id="apprv_vendor">Approve</button>
-            <button class="dis-inline-block tbl-btn btn rej-rec rec" id="rej_vendor">Reject</button>
+            <button class="dis-inline-block tbl-btn apprv-rec rec" id="apprv_vendor">Approve</button>
+            <button class="dis-inline-block tbl-btn rej-rec rec" id="rej_vendor">Reject</button>
         }
         <input type="hidden" value="@ViewData["Title"]" id="partialVal" />
     </div>

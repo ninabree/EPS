@@ -24,11 +24,11 @@
                 @for (int i = 0; i < Model.Count(); i++)
                 {
                     <tr>
-                        <td>@Html.TextBoxFor(item => item[i].TR_WT_Title, new { @class = "w-full" })</td>
-                        <td>@Html.TextBoxFor(item => item[i].TR_Nature, new { @class = "w-full" })</td>
-                        <td>@Html.TextBoxFor(item => item[i].TR_Tax_Rate, new { @class = "w-full" })</td>
-                        <td>@Html.TextBoxFor(item => item[i].TR_ATC, new { @class = "w-full" })</td>
-                        <td>@Html.TextBoxFor(item => item[i].TR_Nature_Income_Payment, new { @class = "w-full" })</td>
+                        <td>@Html.TextBoxFor(item => item[i].TR_WT_Title, new { @class = "w-full input voucher-input" })</td>
+                        <td>@Html.TextBoxFor(item => item[i].TR_Nature, new { @class = "w-full input voucher-input" })</td>
+                        <td>@Html.TextBoxFor(item => item[i].TR_Tax_Rate, new { @class = "w-full input voucher-input" })</td>
+                        <td>@Html.TextBoxFor(item => item[i].TR_ATC, new { @class = "w-full input voucher-input" })</td>
+                        <td>@Html.TextBoxFor(item => item[i].TR_Nature_Income_Payment, new { @class = "w-full input voucher-input" })</td>
                         <td>@Html.TextBoxFor(item => item[i].TR_Status, new { @class = "w-full", @readonly = "readonly" })</td>
                         @Html.HiddenFor(item => item[i].TR_MasterID)
                     </tr>

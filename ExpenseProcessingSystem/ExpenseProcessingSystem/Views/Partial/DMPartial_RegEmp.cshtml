@@ -33,8 +33,8 @@
                         <td>@Html.TextBoxFor(model => model.DMFilters.EMF.EMF_Status, new { @class = "input" })</td>
                         <td colspan="2"></td>
                         <td colspan="2" style="text-align: right;">
-                            <input type="submit" value="Search" class="btn btn-default" id="search-btn" />
-                            <input type="button" value="Back to Full List" id="full-list-btn" class="btn btn-default" />
+                            <input type="submit" value="Search" class="tbl-btn btn-default" id="search-btn" />
+                            <input type="button" value="Back to Full List" id="full-list-btn" class="tbl-btn btn-default" />
                         </td>
                     </tr>
                 </table>
@@ -106,13 +106,13 @@
     </a>
 
     <div class="float-r m-r-10">
-        <button class="dis-inline-block tbl-btn btn add-rec rec" id="add_regEmp">Add</button>
-        <button class="dis-inline-block tbl-btn btn edit-rec rec" id="edit_regEmp">Edit</button>
-        <button class="dis-inline-block tbl-btn btn delete-rec rec" id="delete_regEmp">Delete</button>
+        <button class="dis-inline-block tbl-btn add-rec rec" id="add_regEmp">Add</button>
+        <button class="dis-inline-block tbl-btn edit-rec rec" id="edit_regEmp">Edit</button>
+        <button class="dis-inline-block tbl-btn delete-rec rec" id="delete_regEmp">Delete</button>
         @if (ViewBag.access.accessType == "approver")
         {
-            <button class="dis-inline-block tbl-btn btn apprv-rec rec" id="apprv_regEmp">Approve</button>
-            <button class="dis-inline-block tbl-btn btn rej-rec rec" id="rej_regEmp">Reject</button>
+            <button class="dis-inline-block tbl-btn apprv-rec rec" id="apprv_regEmp">Approve</button>
+            <button class="dis-inline-block tbl-btn rej-rec rec" id="rej_regEmp">Reject</button>
         }
         <input type="hidden" value="@ViewData["Title"]" id="partialVal" />
     </div>

@@ -132,16 +132,16 @@ $(document).ready(function () {
     }
     function venRowFormat(itemCount, trOptions, vatOptions) {
         return $('<tr id="NewVendor-Tr-' + itemCount + '">'
-            + '<td><input class="w-full" id="NewVendorVM_' + itemCount + '__Vendor_Name" name="NewVendorVM[' + itemCount + '].Vendor_Name" type="text" value=""></td>'
-            + '<td><input class="w-full" id="NewVendorVM_' + itemCount + '__Vendor_TIN" name="NewVendorVM[' + itemCount + '].Vendor_TIN" type="text" value=""></td>'
-            + '<td><input class="w-full" id="NewVendorVM_' + itemCount + '__Vendor_Address" name="NewVendorVM[' + itemCount + '].Vendor_Address" type="text" value=""></td>'
-            + '<td colspan="2">'
-            + '<div style = "height:80px; overflow-y:scroll">'
+            + '<td><input class="w-full input voucher-input" id="NewVendorVM_' + itemCount + '__Vendor_Name" name="NewVendorVM[' + itemCount + '].Vendor_Name" type="text" value=""></td>'
+            + '<td><input class="w-full input voucher-input" id="NewVendorVM_' + itemCount + '__Vendor_TIN" name="NewVendorVM[' + itemCount + '].Vendor_TIN" type="text" value=""></td>'
+            + '<td><input class="w-full input voucher-input" id="NewVendorVM_' + itemCount + '__Vendor_Address" name="NewVendorVM[' + itemCount + '].Vendor_Address" type="text" value=""></td>'
+            + '<td>'
+            + '<div style="height:80px; overflow-y:scroll">'
             + trOptions
             + '</div>'
             + '</td>'
-            + '<td colspan="2">'
-            + '<div style = "height:80px; overflow-y:scroll">'
+            + '<td>'
+            + '<div style="height:80px; overflow-y:scroll">'
             + vatOptions
             + '</div>'
             + '</td>'
@@ -280,10 +280,10 @@ $(document).ready(function () {
     }
     function newGbaseRemarksRow(itemCount) {
         return $('<tr id="gRemarks-tr-' + itemCount + '">'
-            + '<td><input type="text" class="gDocuType" /></td>'
-            + '<td><input type="text" class="gInvoiceNo" /></td>'
-            + '<td><input type="text" class="gDescription" /></td>'
-            + '<td><input type="number" min="0" class="gAmount" style="width:100%"  /></td>'
+            + '<td><input id="gDocu_' + itemCount + '" type="text" class="gDocuType" /></td>'
+            + '<td><input id="gInv_' + itemCount + '" type="text" class="gInvoiceNo" /></td>'
+            + '<td><input id="gDesc_' + itemCount + '" type="text" class="gDescription" /></td>'
+            + '<td><input id="gAmount_' + itemCount + '" type="text" min="0" class="gAmount NumberOnlyOneDecimal" style="width:100%"  /></td>'
             + '<td><div class="flex-c"><span class="table-remove glyphicon glyphicon-remove"></span></div></td></tr>');
     }
     // A few jQuery helpers for exporting only

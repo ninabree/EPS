@@ -25,13 +25,13 @@
                 <th></th>
             </tr>
             <tr id="NewAccount-Tr-0">
-                <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_Name, new { @class = "w-full" })</td>
-                <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_Code, new { @class = "w-full" })</td>
-                <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_Budget_Code, new { @class = "w-full" })</td>
-                <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_No, new { @class = "w-full" })</td>
-                <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_Cust, new { @class = "w-full" })</td>
-                <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_Div, new { @class = "w-full" })</td>
-                <td>@Html.CheckBoxFor(m => m.NewAccountVM[0].Account_Fund, new { @class = "w-full" })</td>
+                <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_Name, new { @class = "w-full input voucher-input" })</td>
+                <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_Code, new { @class = "w-full input voucher-input" })</td>
+                <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_Budget_Code, new { @class = "w-full input voucher-input" })</td>
+                <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_No, new { @class = "w-full input voucher-input" })</td>
+                <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_Cust, new { @class = "w-full input voucher-input" })</td>
+                <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_Div, new { @class = "w-full input voucher-input" })</td>
+                <td>@Html.CheckBoxFor(m => m.NewAccountVM[0].Account_Fund, new { @class = "w-full input voucher-input" })</td>
                 <td colspan="2">
                     @Html.DropDownListFor(m => m.NewAccountVM[0].Account_FBT_MasterID,
                     Model.FbtList,
