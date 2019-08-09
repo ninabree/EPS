@@ -578,15 +578,17 @@ iframe{
 }
 
 .table > tbody > tr > td, .table > thead > tr > th {
-    padding: 1.5px 10px;
+    padding: 1.5px 8px !important;
     text-align: left;
 }
 
 .table > tbody > tr > td {
     font-size: 11px;
-    height: 20px
+    height: 20px;
 }
-
+.table > tbody > tr > td > input {
+    margin: 5px 0px;
+}
 .table > thead > tr > th > a {
     text-decoration: underline;
     color: #0A1B81;

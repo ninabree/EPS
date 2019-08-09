@@ -1,8 +1,14 @@
 /*[ MODAL ]
 ///////////////////////////////////////////////////////////
 */
-.modal-dialog, .modal-dialog2 {
-    max-width: 75% !important;
+/*.modal-dialog, .modal-dialog2 {
+    width: fit-content !important;
+}*/
+.modal-dialog { /* Width */
+    text-align: left;
+    max-width: 100%;
+    width: auto !important;
+    display: inline-block;
 }
 .modal-body, .modal-body2 {
     /*max-height: 300px;*/
@@ -11,6 +17,9 @@
 .modal-message-dialog {
     max-width: 20% !important;
     position:center;
+}
+.modal {
+    text-align: center;
 }
 /*[ FONT SIZE ]
 ///////////////////////////////////////////////////////////
