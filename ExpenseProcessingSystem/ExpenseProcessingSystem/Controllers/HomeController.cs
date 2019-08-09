@@ -31,6 +31,7 @@ using ExpenseProcessingSystem.Models.Check;
 namespace ExpenseProcessingSystem.Controllers
 {
     [ScreenFltr]
+    [RequestFormLimits(ValueCountLimit = 5000)]
     public class HomeController : Controller
     {
         private readonly int pageSize = 30;
@@ -1376,17 +1377,27 @@ namespace ExpenseProcessingSystem.Controllers
                     viewLink = "View_CV";
                     break;
                 case "Delete":
-                    if (_service.deleteExpenseEntry(entryID))
+                    int expStatus = _service.GetCurrentEntryStatus(entryID);
+                    if (expStatus == GlobalSystemValues.STATUS_PENDING || expStatus == GlobalSystemValues.STATUS_REJECTED)
                     {
-                        //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_CV, GlobalSystemValues.STATUS_DELETE, 0);
-                        //----------------------------- NOTIF----------------------------------
+                        if (_service.deleteExpenseEntry(entryID))
+                        {
+                            //----------------------------- NOTIF----------------------------------
+                            _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_CV, GlobalSystemValues.STATUS_DELETE, 0);
+                            //----------------------------- NOTIF----------------------------------
+                        }
+                        else
+                        {
+                            ViewBag.Success = 0;
+                        }
                         return RedirectToAction("Index", "Home");
                     }
                     else
                     {
+                        GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE2;
                         ViewBag.Success = 0;
                     }
+                    
                     viewLink = "View_CV";
                     break;
                 default:
@@ -1651,19 +1662,29 @@ namespace ExpenseProcessingSystem.Controllers
                     viewLink = "Entry_DDV_ReadOnly";
                     break;
                 case "Delete":
-                    if (_service.deleteExpenseEntry(entryID, GlobalSystemValues.TYPE_DDV))
+                    int expStatus = _service.GetCurrentEntryStatus(entryID);
+                    if (expStatus == GlobalSystemValues.STATUS_PENDING || expStatus == GlobalSystemValues.STATUS_REJECTED)
                     {
-                        ViewBag.Success = 1;
-                        //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DDV, GlobalSystemValues.STATUS_DELETE, 0);
-                        //----------------------------- NOTIF----------------------------------
+                        if (_service.deleteExpenseEntry(entryID, GlobalSystemValues.TYPE_DDV))
+                        {
+                            ViewBag.Success = 1;
+                            //----------------------------- NOTIF----------------------------------
+                            _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DDV, GlobalSystemValues.STATUS_DELETE, 0);
+                            //----------------------------- NOTIF----------------------------------
+                        }
+                        else
+                        {
+                            ViewBag.Success = 0;
+                        }
+                        viewLink = "Entry_DDV";
+                        return RedirectToAction("Entry_DDV", new EntryDDVViewModelList());
                     }
                     else
                     {
+                        GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE2;
                         ViewBag.Success = 0;
                     }
-                    viewLink = "Entry_DDV";
-                return RedirectToAction("Entry_DDV", entryID);
+                    break;
                 case "Reversal":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
                     {
@@ -1877,19 +1898,30 @@ namespace ExpenseProcessingSystem.Controllers
                     viewLink = "View_PCV";
                     break;
                 case "Delete":
-                    if (_service.deleteExpenseEntry(entryID))
+                    int expStatus = _service.GetCurrentEntryStatus(entryID);
+                    if (expStatus == GlobalSystemValues.STATUS_PENDING || expStatus == GlobalSystemValues.STATUS_REJECTED)
                     {
-                        ViewBag.Success = 1;
-                        //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_PC, GlobalSystemValues.STATUS_DELETE, 0);
-                        //----------------------------- NOTIF----------------------------------
+                        if (_service.deleteExpenseEntry(entryID))
+                        {
+                            ViewBag.Success = 1;
+                            //----------------------------- NOTIF----------------------------------
+                            _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_PC, GlobalSystemValues.STATUS_DELETE, 0);
+                            //----------------------------- NOTIF----------------------------------
+                        }
+                        else
+                        {
+                            ViewBag.Success = 0;
+                        }
+                        return RedirectToAction("Index", "Home");
                     }
                     else
                     {
+                        GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE2;
                         ViewBag.Success = 0;
                     }
-                    return RedirectToAction("Index", "Home");
 
+                    viewLink = "View_PCV";
+                    break;
                 case "Reject":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REJECTED, int.Parse(GetUserID())))
                     {
@@ -2258,19 +2290,30 @@ namespace ExpenseProcessingSystem.Controllers
                     viewLink = "View_SS";
                     break;
                 case "Delete":
-                    if (_service.deleteExpenseEntry(entryID))
+                    int expStatus = _service.GetCurrentEntryStatus(entryID);
+                    if (expStatus == GlobalSystemValues.STATUS_PENDING || expStatus == GlobalSystemValues.STATUS_REJECTED)
                     {
-                        ViewBag.Success = 1;
-                        //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_SS, GlobalSystemValues.STATUS_DELETE, 0);
-                        //----------------------------- NOTIF----------------------------------                    
+                        if (_service.deleteExpenseEntry(entryID))
+                        {
+                            ViewBag.Success = 1;
+                            //----------------------------- NOTIF----------------------------------
+                            _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_SS, GlobalSystemValues.STATUS_DELETE, 0);
+                            //----------------------------- NOTIF----------------------------------                    
+                        }
+                        else
+                        {
+                            ViewBag.Success = 0;
+                        }
+                        return RedirectToAction("Index", "Home");
                     }
                     else
                     {
+                        GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE2;
                         ViewBag.Success = 0;
                     }
-                    return RedirectToAction("Index", "Home");
 
+                    viewLink = "View_SS";
+                    break;
                 case "Reject":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REJECTED, int.Parse(GetUserID())))
                     {
@@ -2682,7 +2725,7 @@ namespace ExpenseProcessingSystem.Controllers
                         ViewBag.Success = 0;
                     }
                     return RedirectToAction("View_NC", "Home", new { entryID = entryID });
-                    break;
+
                 case "Reject":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REJECTED, int.Parse(GetUserID())))
                     {
@@ -2697,21 +2740,33 @@ namespace ExpenseProcessingSystem.Controllers
                         ViewBag.Success = 0;
                     }
                     return RedirectToAction("View_NC", "Home", new { entryID = entryID });
-                    break;
+
                 case "Delete":
-                    if (_service.deleteExpenseEntry(entryID, GlobalSystemValues.TYPE_NC))
+                    int expStatus = _service.GetCurrentEntryStatus(entryID);
+                    if (expStatus == GlobalSystemValues.STATUS_PENDING || expStatus == GlobalSystemValues.STATUS_REJECTED)
                     {
-                        ViewBag.Success = 1;
-                        //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_NC, GlobalSystemValues.STATUS_DELETE, 0);
-                        //----------------------------- NOTIF----------------------------------                    
+                        if (_service.deleteExpenseEntry(entryID, GlobalSystemValues.TYPE_NC))
+                        {
+                            ViewBag.Success = 1;
+                            //----------------------------- NOTIF----------------------------------
+                            _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_NC, GlobalSystemValues.STATUS_DELETE, 0);
+                            //----------------------------- NOTIF----------------------------------                    
+                        }
+                        else
+                        {
+                            ViewBag.Success = 0;
+                        }
+                        viewLink = "Entry_NC";
+                        return RedirectToAction("Entry_NC", new EntryNCViewModelList());
                     }
                     else
                     {
+                        GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE2;
                         ViewBag.Success = 0;
                     }
-                    viewLink = "Entry_NC";
-                    return RedirectToAction("Entry_NC", new EntryNCViewModelList());
+
+                    return RedirectToAction("View_NC", "Home", new { entryID = entryID });
+
                 case "PrintCDD":
                     return RedirectToAction("CDD_IS_NC_PCR", new { entryID = entryID });
                 case "PrintCDD_RET":
@@ -2731,7 +2786,7 @@ namespace ExpenseProcessingSystem.Controllers
                         ViewBag.Success = 0;
                     }
                     return RedirectToAction("View_NC", "Home", new { entryID = entryID });
-                    break;
+
                 default:
                     break;
             }
@@ -2931,7 +2986,7 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [OnlineUserCheck]
         [NonAdminRoleCheck]
-        [ServiceFilter(typeof(MakerCheck))]
+        [ServiceFilter(typeof(MakerCheckLiquidation))]
         public IActionResult Liquidation_SS(int entryID)
         {
             var userId = GetUserID();
@@ -2941,7 +2996,10 @@ namespace ExpenseProcessingSystem.Controllers
             ssList.accList = _service.getAccountList();
             ssList.accAllList = _service.getAccountListIncHist();
             ssList.vendorList = _service.getVendorList().OrderBy(x => x.Vendor_Name).ToList();
-            ssList.LiqEntryDetails.Liq_Created_Date = DateTime.Now.Date;
+            if(ssList.LiqEntryDetails.Liq_Created_UserID == 0)
+            {
+                ssList.LiqEntryDetails.Liq_Created_Date = DateTime.Now.Date;
+            }
 
             foreach (var i in ssList.accAllList)
             {
@@ -3193,19 +3251,30 @@ namespace ExpenseProcessingSystem.Controllers
                     viewLink = "View_Liquidation_SS";
                     break;
                 case "Delete":
-                    if (_service.deleteLiquidationEntry(entryID))
+                    int expStatus = _service.GetCurrentEntryStatus(entryID);
+                    if (expStatus == GlobalSystemValues.STATUS_PENDING || expStatus == GlobalSystemValues.STATUS_REJECTED)
                     {
-                        ViewBag.Success = 1;
-                        //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_LIQ, GlobalSystemValues.STATUS_DELETE, 0);
-                        //----------------------------- NOTIF----------------------------------
+                        if (_service.deleteLiquidationEntry(entryID))
+                        {
+                            ViewBag.Success = 1;
+                            //----------------------------- NOTIF----------------------------------
+                            _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_LIQ, GlobalSystemValues.STATUS_DELETE, 0);
+                            //----------------------------- NOTIF----------------------------------
+                        }
+                        else
+                        {
+                            ViewBag.Success = 0;
+                        }
+                        return RedirectToAction("Index", "Home");
                     }
                     else
                     {
+                        GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE2;
                         ViewBag.Success = 0;
                     }
-                    return RedirectToAction("Index", "Home");
 
+                    viewLink = "View_Liquidation_SS";
+                    break;
                 case "Reject":
                     if (_service.updateLiquidateStatus(entryID, GlobalSystemValues.STATUS_REJECTED, int.Parse(GetUserID())))
                     {

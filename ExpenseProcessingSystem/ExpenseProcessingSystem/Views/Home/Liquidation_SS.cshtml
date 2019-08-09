@@ -642,7 +642,8 @@
         </div>
         <div id="entry-controls" class="m-b-10">
             @Html.HiddenFor(x => Model.entryID, new { @class = "entryID" })
-            <input type="hidden" id="LiqEntryDetails_Liq_Created_Date" value="@(((DateTime)Model.LiqEntryDetails.Liq_Created_Date).ToString("MM/dd/yyyy"))" style="background-color:transparent" />
+            @Html.HiddenFor(x => Model.LiqEntryDetails.Liq_Created_Date, new { @class = "LiqEntryDetails_Liq_Created_Date" })
+            @*<input type="hidden" id="LiqEntryDetails_Liq_Created_Date" value="@(((DateTime)Model.LiqEntryDetails.Liq_Created_Date).ToString("MM/dd/yyyy"))" style="background-color:transparent" />*@
             <div class="flex-sb">
                 <div>
                     <div class="dis-inline-block tbl-btn"><button class="btnEntryAction" name="command" value="Save">Save</button></div>
@@ -752,6 +753,7 @@
             $('#cashBDLiqTable').find('.txtLiqAmount').val(0);
             $('#cashBDLiqTable').find('#txtCashBDTotal').val(0);
             $('#ddlLiqPhpAccount1').val($("#ddlLiqPhpAccount1 option:first").val());
+            $('#txtIEExRatePhp').text("");
 
             $('#divForeign').find(':input[type="number"]').val(0);
             $('#ddlAccount3').val($("#ddlAccount3 option:first").val());
