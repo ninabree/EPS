@@ -73,7 +73,7 @@
                     {
                         <tr id="item_@i">
                             <td id="sss">
-                                <a class="liqudationBtn" href="#"><img id="imgLiq" src="~/images/liqLogo.png" style="width:100%;height:100%" /></a>
+                                <a class="liqudationBtn" href="#"><img id="imgLiq" src="~/images/liqLogo.png"/></a>
                                 @Html.HiddenFor(x => Model.LiquidationDetails[i].EntryDetailsID, new { @class = "entryDtlID" })
                                 @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInputFlag, new { @class = "hiddenLiqFlag" })
                                 <div id="divLiqCashBD_@i">
@@ -184,7 +184,7 @@
                                 <a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#"></a>
                                 @if (Model.LiquidationDetails[i].ccyMasterID != int.Parse(XElement.Load("wwwroot/xml/LiquidationValue.xml").Element("CURRENCY_PHP").Value))
                                 {
-                                    <a class="cddISBtn" href="#"><img id="imgCDD" src="~/images/cddLogo.png" style="width:100%;height:70%" /></a>
+                                    <a class="cddISBtn" href="#"><img id="imgCDD" src="~/images/cddLogo.png" style="height:100%" /></a>
                                 }
                                 @Html.HiddenFor(x => Model.LiquidationDetails[i].modalInputFlag, new { @class = "hiddenItem" })
                                 @Html.HiddenFor(x => Model.LiquidationDetails[i].screenCode, new { @class = "hiddenScreencode" })
