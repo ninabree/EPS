@@ -349,7 +349,7 @@
                         {
                             <tr id="item_@i">
                                 <td class="@SetRemarksClass(@Model.EntryNC.NC_Category_ID)">
-                                    @if ((@Model.EntryNC.NC_Category_ID == 9))
+                                    @if ((@Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL))
                                     {
                                         @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Remarks_Desc)
                                     }
@@ -362,7 +362,7 @@
                                     @Html.EditorFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Remarks_Period, new { @type = "date", @class = "" })
                                 </td>
 
-                                @if (@Model.EntryNC.NC_Category_ID == 4 || @Model.EntryNC.NC_Category_ID == 5)
+                                @if (@Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PSSC || @Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PCHC)
                                 {
                                     <td class="cat-hidden" colspan="1" rowspan="3">
                                         <select id="@Html.IdFor(x => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Vendor_ID)" class="w-full input ven-sel cat-hidden" name="@Html.NameFor(x => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Vendor_ID)">

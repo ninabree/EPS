@@ -1640,7 +1640,7 @@ namespace ExpenseProcessingSystem.Controllers
                         ViewBag.Success = 0;
                     }
                     viewLink = "Entry_DDV";
-                    return RedirectToAction("Entry_DDV", new EntryDDVViewModelList());
+                return RedirectToAction("Entry_DDV", entryID);
                 case "Reversal":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
                     {

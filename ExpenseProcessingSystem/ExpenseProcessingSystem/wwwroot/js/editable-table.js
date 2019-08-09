@@ -132,16 +132,16 @@ $(document).ready(function () {
     }
     function venRowFormat(itemCount, trOptions, vatOptions) {
         return $('<tr id="NewVendor-Tr-' + itemCount + '">'
-            + '<td><input class="w-full" id="NewVendorVM_' + itemCount + '__Vendor_Name" name="NewVendorVM[' + itemCount + '].Vendor_Name" type="text" value=""></td>'
-            + '<td><input class="w-full" id="NewVendorVM_' + itemCount + '__Vendor_TIN" name="NewVendorVM[' + itemCount + '].Vendor_TIN" type="text" value=""></td>'
-            + '<td><input class="w-full" id="NewVendorVM_' + itemCount + '__Vendor_Address" name="NewVendorVM[' + itemCount + '].Vendor_Address" type="text" value=""></td>'
-            + '<td colspan="2">'
-            + '<div style = "height:80px; overflow-y:scroll">'
+            + '<td><input class="w-full input voucher-input" id="NewVendorVM_' + itemCount + '__Vendor_Name" name="NewVendorVM[' + itemCount + '].Vendor_Name" type="text" value=""></td>'
+            + '<td><input class="w-full input voucher-input" id="NewVendorVM_' + itemCount + '__Vendor_TIN" name="NewVendorVM[' + itemCount + '].Vendor_TIN" type="text" value=""></td>'
+            + '<td><input class="w-full input voucher-input" id="NewVendorVM_' + itemCount + '__Vendor_Address" name="NewVendorVM[' + itemCount + '].Vendor_Address" type="text" value=""></td>'
+            + '<td>'
+            + '<div style="height:80px; overflow-y:scroll">'
             + trOptions
             + '</div>'
             + '</td>'
-            + '<td colspan="2">'
-            + '<div style = "height:80px; overflow-y:scroll">'
+            + '<td>'
+            + '<div style="height:80px; overflow-y:scroll">'
             + vatOptions
             + '</div>'
             + '</td>'

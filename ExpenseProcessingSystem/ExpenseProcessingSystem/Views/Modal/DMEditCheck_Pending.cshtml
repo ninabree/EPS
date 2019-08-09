@@ -23,9 +23,9 @@
                 {
                     <tr>
                         <td>@Html.TextBoxFor(item => item[i].Check_Input_Date, new { @readonly = true, @class = "w-full" })</td>
-                        <td>@Html.TextBoxFor(item => item[i].Check_Series_From, new { @class = "w-full" })</td>
-                        <td>@Html.TextBoxFor(item => item[i].Check_Series_To, new { @class = "w-full" })</td>
-                        <td>@Html.TextBoxFor(item => item[i].Check_Bank_Info, new { @class = "w-full" })</td>
+                        <td>@Html.TextBoxFor(item => item[i].Check_Series_From, new { @class = "w-full input voucher-input" })</td>
+                        <td>@Html.TextBoxFor(item => item[i].Check_Series_To, new { @class = "w-full input voucher-input" })</td>
+                        <td>@Html.TextBoxFor(item => item[i].Check_Bank_Info, new { @class = "w-full input voucher-input" })</td>
                         <td>@Html.TextBoxFor(item => item[i].Check_Status, new { @class = "w-full", @readonly = "readonly" })</td>
                         @Html.HiddenFor(item => item[i].Check_MasterID)
                     </tr>
