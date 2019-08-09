@@ -4384,7 +4384,7 @@ namespace ExpenseProcessingSystem.Controllers
 
             return vvm;
         }
-
+        [AcceptVerbs("GET")]
         [HttpPost]
         public IActionResult VoucherDDV(EntryDDVViewModelList model)
         {
@@ -4486,7 +4486,7 @@ namespace ExpenseProcessingSystem.Controllers
 
                 if (inputItem.chkEwt)
                 {
-                    double _ewt = Mizuho.round(_service.GetEWTValue(inputItem.ewt), 2);
+                    double _ewt = Mizuho.round(_service.GetEWTValue(inputItem.ewt), 4);
                     double _ewtAmount = Mizuho.round((inputItem.debitGross / (1 + _vat)) * _ewt, 2);
                     if (_ewtList.Any(x => x.ewt == _ewt))
                     {

@@ -201,11 +201,12 @@
 <script type="text/javascript">
     $(window).on("load", function () {
         $('#iframePreview').prop('src', "/Home/VoucherViewCV?ExpenseID=@Model.entryID");
+    });
+    $(function () {
         if ($('#alert').text() != "") {
             $('#divAlertWindow').show();
         }
-    });
-    $(function () {
+
         @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker
           || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id
           || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id
