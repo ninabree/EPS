@@ -168,14 +168,19 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly string ENTRY_Liquidation = "/Home/Entry_Liquidation";
         public static readonly string ENTRY_NEW_CV = "/Home/AddNewCV";
         public static readonly string ENTRY_NEW_DDV = "/Home/AddNewDDV";
-        public static readonly string ENTRY_VIEW_CV = "/Home/View_CV";
-        public static readonly string ENTRY_VIEW_PCV = "/Home/View_PCV";
-        public static readonly string ENTRY_VIEW_SS = "/Home/View_SS";
         public static readonly string ENTRY_NEW_PCV = "/Home/AddNewPCV";
         public static readonly string ENTRY_NEW_SS = "/Home/AddNewSS";
+        public static readonly string ENTRY_NEW_NC = "/Home/AddNewNC";
+        public static readonly string ENTRY_VIEW_CV = "/Home/View_CV";
+        public static readonly string ENTRY_VIEW_DDV = "/Home/View_DDV";
+        public static readonly string ENTRY_VIEW_PCV = "/Home/View_PCV";
+        public static readonly string ENTRY_VIEW_SS = "/Home/View_SS";
+        public static readonly string ENTRY_VIEW_NC = "/Home/View_NC";
         public static readonly string ENTRY_MOD_CV = "/Home/VerAppModCV";
+        public static readonly string ENTRY_MOD_DDV = "/Home/VerAppModDDV";
         public static readonly string ENTRY_MOD_PCV = "/Home/VerAppModPCV";
         public static readonly string ENTRY_MOD_SS = "/Home/VerAppModSS";
+        public static readonly string ENTRY_MOD_NC = "/Home/VerAppModNC";
         public static readonly string LIQ_MAIN = "/Home/Liquidation_Main";
         public static readonly string LIQ_SS = "/Home/Liquidation_SS";
         public static readonly string LIQ_New_SS = "/Home/Liquidation_AddNewSS";
@@ -192,12 +197,14 @@ namespace ExpenseProcessingSystem.ConstantData
             GlobalSystemValues.ENTRY_Liquidation,
             GlobalSystemValues.ENTRY_NEW_CV,
             GlobalSystemValues.ENTRY_NEW_DDV,
-            GlobalSystemValues.ENTRY_VIEW_CV,
-            GlobalSystemValues.ENTRY_VIEW_PCV,
-            GlobalSystemValues.ENTRY_VIEW_SS,
             GlobalSystemValues.ENTRY_NEW_PCV,
             GlobalSystemValues.ENTRY_NEW_SS,
+            GlobalSystemValues.ENTRY_VIEW_CV,
+            GlobalSystemValues.ENTRY_VIEW_DDV,
+            GlobalSystemValues.ENTRY_VIEW_PCV,
+            GlobalSystemValues.ENTRY_VIEW_SS,
             GlobalSystemValues.ENTRY_MOD_CV,
+            GlobalSystemValues.ENTRY_MOD_DDV,
             GlobalSystemValues.ENTRY_MOD_PCV,
             GlobalSystemValues.ENTRY_MOD_SS,
             GlobalSystemValues.LIQ_MAIN,
