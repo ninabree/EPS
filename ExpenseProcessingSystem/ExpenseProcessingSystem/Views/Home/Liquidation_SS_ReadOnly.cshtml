@@ -45,8 +45,9 @@
                     <col style="width:2%;" />
                     <col style="width:5%;" />
                     <col style="width:8%;" />
-                    <col style="width:8%;" />
-                    <col style="width:8%;" />
+                    <col style="width:7%;" />
+                    <col style="width:7%;" />
+                    <col style="width:2%;" />
                     <col style="width:2%;" />
                 </colgroup>
                 <thead>
@@ -60,12 +61,12 @@
                         <th colspan="3" rowspan="2">EWT</th>
                         <th rowspan="2">Currency</th>
                         <th>Debit</th>
-                        <th colspan="2">Credit</th>
+                        <th colspan="3">Credit</th>
                     </tr>
                     <tr>
                         <th scope="col">Gross Amount</th>
                         <th scope="col">EWT Amount</th>
-                        <th scope="col">Cash</th>
+                        <th scope="col" colspan="2">Cash</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -73,7 +74,7 @@
                     {
                         <tr id="item_@i">
                             <td id="sss">
-                                <a class="liqudationBtn" href="#"><img id="imgLiq" src="~/images/liqLogo.png" style="width:100%;height:100%" /></a>
+                                <a class="liqudationBtn" href="#"><img id="imgLiq" src="~/images/liqLogo.png"/></a>
                                 @Html.HiddenFor(x => Model.LiquidationDetails[i].EntryDetailsID, new { @class = "entryDtlID" })
                                 @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInputFlag, new { @class = "hiddenLiqFlag" })
                                 <div id="divLiqCashBD_@i">
@@ -184,7 +185,7 @@
                                 <a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#" data-title="Cash Breakdown"></a>
                                 @if (Model.LiquidationDetails[i].ccyMasterID != int.Parse(XElement.Load("wwwroot/xml/LiquidationValue.xml").Element("CURRENCY_PHP").Value))
                                 {
-                                    <a class="cddISBtn" href="#" data-title="CDD Instruction Sheet"><img id="imgCDD" src="~/images/cddLogo.png" style="width:100%;height:70%" /></a>
+                                    <a class="cddISBtn" href="#" data-title="CDD Instruction Sheet"><img id="imgCDD" src="~/images/cddLogo.png" style="height:100%" /></a>
                                 }
                                 @Html.HiddenFor(x => Model.LiquidationDetails[i].modalInputFlag, new { @class = "hiddenItem" })
                                 @Html.HiddenFor(x => Model.LiquidationDetails[i].screenCode, new { @class = "hiddenScreencode" })
@@ -303,13 +304,13 @@
                     <table style="width:100%;margin-top:5%">
                         <tr>
                             <td colspan="2" style="text-align:left">
-                                <label>Transaction No.: </label><input type="text" />
+                                <label>Transaction No: </label><input type="text" />
                             </td>
                         </tr>
                         <tr>
                             <td></td>
                             <td>
-                                <input type="button" class="printCashBDBtn btn" value="Print Cash Breakdown" onclick='printDivCashLiqBD("divCashBDLiq");' />
+                                <input type="button" class="printCashBDBtn tbl-btn" value="Print Cash Breakdown" onclick='printDivCashLiqBD("divCashBDLiq");' />
                             </td>
                         </tr>
                     </table>
@@ -669,17 +670,62 @@
             @*<input type="hidden" id="LiqEntryDetails_Liq_Created_Date" value="@(((DateTime)Model.LiqEntryDetails.Liq_Created_Date).ToString("MM/dd/yyyy"))" style="background-color:transparent" />*@
             <div class="flex-sb">
                 <div>
-                    <div class="dis-inline-block tbl-btn"><button disabled>Save</button></div>
+                    <div class="dis-inline-block"><button class="tbl-btn" disabled>Save</button></div>
 
                     @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker && (Model.statusID == GlobalSystemValues.STATUS_PENDING || Model.statusID == GlobalSystemValues.STATUS_REJECTED))
                     {
-                        <div class="dis-inline-block tbl-btn"><button value="Delete" name="command" class="btnEntryAction">Delete</button></div>
-                        <div class="dis-inline-block tbl-btn"><button value="Modify" name="command" class="btnEntryAction">Modify</button></div>
+                        <div class="dis-inline-block"><button value="Delete" name="command" class="btnEntryAction tbl-btn">Delete</button></div>
+                        <div class="dis-inline-block"><button value="Modify" name="command" class="btnEntryAction tbl-btn">Modify</button></div>
                     }
                     else
                     {
-                        <div class="dis-inline-block tbl-btn"><button disabled>Delete</button></div>
-                        <div class="dis-inline-block tbl-btn"><button disabled>Modify</button></div>
+                        <div class="dis-inline-block"><button class="tbl-btn" disabled>Delete</button></div>
+                        <div class="dis-inline-block"><button class="tbl-btn" disabled>Modify</button></div>
+                    }
+                    @if (HttpContextAccessor.HttpContext.Session.GetString("accessType") == GlobalSystemValues.ROLE_MAKER || HttpContextAccessor.HttpContext.Session.GetString("UserID") == Model.maker.ToString())
+                    {
+                        <div class="dis-inline-block"><button class="tbl-btn" disabled>Approve/Verify</button></div>
+                        <div class="dis-inline-block"><button class="tbl-btn" disabled>Reject</button></div>
+                    }
+                    else if (HttpContextAccessor.HttpContext.Session.GetString("accessType") == GlobalSystemValues.ROLE_VERIFIER)
+                    {
+                        if (Model.statusID != GlobalSystemValues.STATUS_PENDING && Model.statusID != GlobalSystemValues.STATUS_VERIFIED)
+                        {
+                            <div class="dis-inline-block"><button class="tbl-btn" disabled>Approve/Verify</button></div>
+                        }
+                        else
+                        {
+                            if (Model.statusID == GlobalSystemValues.STATUS_VERIFIED)
+                            {
+                                if (Model.verifier_1_id != int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) && Model.verifier_2_id != int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")))
+                                {
+                                    <div class="dis-inline-block"><button class="tbl-btn" value="@HttpContextAccessor.HttpContext.Session.GetString("accessType")" name="command" class="btnEntryAction">Approve/Verify</button></div>
+                                }
+                                else
+                                {
+                                    <div class="dis-inline-block"><button class="tbl-btn" disabled>Approve/Verify</button></div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="dis-inline-block"><button class="tbl-btn" value="@HttpContextAccessor.HttpContext.Session.GetString("accessType")" name="command" class="btnEntryAction">Approve/Verify</button></div>
+                            }
+                        }
+                        <div class="dis-inline-block"><button class="tbl-btn" disabled>Reject</button></div>
+                    }
+                    else
+                    {
+                        if (Model.statusID != GlobalSystemValues.STATUS_PENDING &&
+                            Model.statusID != GlobalSystemValues.STATUS_VERIFIED)
+                        {
+                            <div class="dis-inline-block"><button class="tbl-btn" disabled>Approve/Verify</button></div>
+                            <div class="dis-inline-block"><button class="tbl-btn" disabled>Reject</button></div>
+                        }
+                        else
+                        {
+                            <div class="dis-inline-block"><button value="@HttpContextAccessor.HttpContext.Session.GetString("accessType")" name="command" class="btnEntryAction tbl-btn">Approve/Verify</button></div>
+                            <div class="dis-inline-block"><button value="Reject" name="command" class="btnEntryAction tbl-btn">Reject</button></div>
+                        }
                     }
                 </div>
                 <div>
@@ -691,78 +737,27 @@
                             || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.LiqEntryDetails.Liq_Verifier2
                             || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.LiqEntryDetails.Liq_Approver)
                         {
-                            <div class="dis-inline-block tbl-btn"><button id="reversal_entry" value="Reversal" name="command" class="btnEntryAction">Create Reversal Entry</button></div>
+                            <div class="dis-inline-block"><button id="reversal_entry" value="Reversal" name="command" class="btnEntryAction tbl-btn">Create Reversal Entry</button></div>
                         }
                         else
                         {
-                            <div class="dis-inline-block tbl-btn"><button id="reversal_entry" disabled>Create Reversal Entry</button></div>
+                            <div class="dis-inline-block"><button class="tbl-btn" id="reversal_entry" disabled>Create Reversal Entry</button></div>
                         }
                     }
                     else
                     {
-                        <div class="dis-inline-block tbl-btn"><button id="reversal_entry" disabled>Create Reversal Entry</button></div>
+                        <div class="dis-inline-block"><button class="tbl-btn" id="reversal_entry" disabled>Create Reversal Entry</button></div>
                     }
-                </div>
-            </div>
-            <div class="flex-sb">
-                <div>
-                    @if (HttpContextAccessor.HttpContext.Session.GetString("accessType") == GlobalSystemValues.ROLE_MAKER || HttpContextAccessor.HttpContext.Session.GetString("UserID") == Model.maker.ToString())
-                    {
-                        <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
-                        <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
-                    }
-                    else if (HttpContextAccessor.HttpContext.Session.GetString("accessType") == GlobalSystemValues.ROLE_VERIFIER)
-                    {
-                        if (Model.statusID != GlobalSystemValues.STATUS_PENDING && Model.statusID != GlobalSystemValues.STATUS_VERIFIED)
-                        {
-                            <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
-                        }
-                        else
-                        {
-                            if (Model.statusID == GlobalSystemValues.STATUS_VERIFIED)
-                            {
-                                if (Model.verifier_1_id != int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) && Model.verifier_2_id != int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")))
-                                {
-                                    <div class="dis-inline-block tbl-btn"><button value="@HttpContextAccessor.HttpContext.Session.GetString("accessType")" name="command" class="btnEntryAction">Approve/Verify</button></div>
-                                }
-                                else
-                                {
-                                    <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
-                                }
-                            }
-                            else
-                            {
-                                <div class="dis-inline-block tbl-btn"><button value="@HttpContextAccessor.HttpContext.Session.GetString("accessType")" name="command" class="btnEntryAction">Approve/Verify</button></div>
-                            }
-                        }
-                        <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
-                    }
-                    else
-                    {
-                        if (Model.statusID != GlobalSystemValues.STATUS_PENDING &&
-                            Model.statusID != GlobalSystemValues.STATUS_VERIFIED)
-                        {
-                            <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
-                            <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
-                        }
-                        else
-                        {
-                            <div class="dis-inline-block tbl-btn"><button value="@HttpContextAccessor.HttpContext.Session.GetString("accessType")" name="command" class="btnEntryAction">Approve/Verify</button></div>
-                            <div class="dis-inline-block tbl-btn"><button value="Reject" name="command" class="btnEntryAction">Reject</button></div>
-                        }
-                    }
-                </div>
-                <div>
                     @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker
                  || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id
                  || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id
                  || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.approver_id)
                     {
-                        <div class="dis-inline-block tbl-btn"><button id="printBir" value="printBir">Print BIR Certificate</button></div>
+                        <div class="dis-inline-block"><button class="tbl-btn" id="printBir" value="printBir">Print BIR Certificate</button></div>
                     }
                     else
                     {
-                        <div class="dis-inline-block tbl-btn"><button disabled>Print BIR Certificate</button></div>
+                        <div class="dis-inline-block"><button class="tbl-btn" disabled>Print BIR Certificate</button></div>
                     }
                 </div>
             </div>
