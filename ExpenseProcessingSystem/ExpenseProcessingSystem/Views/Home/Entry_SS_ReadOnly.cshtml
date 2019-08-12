@@ -137,13 +137,13 @@
                                 <input value="@Model.EntryCV[i].credCash" class="input100 txtCredCash" disabled />
                             </td>
                             <td id="req_@i">
-                                <a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#"></a>
+                                <a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#" data-title="Cash Breakdown"></a>
                                 @if (Model.EntryCV[i].ccyMasterID != int.Parse(XElement.Load("wwwroot/xml/LiquidationValue.xml").Element("CURRENCY_PHP").Value)
                                  && (Model.statusID == GlobalSystemValues.STATUS_REVERSED || Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING
                                  || Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING || Model.statusID == GlobalSystemValues.STATUS_CLOSED
                                   || Model.statusID == GlobalSystemValues.STATUS_POSTED))
                                 {
-                                    <a class="cddISBtn" href="#"><img id="imgCDD" src="~/images/cddLogo.png" style="width:100%;height:70%" /></a>
+                                    <a class="cddISBtn" href="#" data-title="CDD Instruction Sheet"><img id="imgCDD" src="~/images/cddLogo.png" style="width:100%;height:70%" /></a>
                                 }
                                 @Html.HiddenFor(x => Model.EntryCV[i].modalInputFlag, new { @class = "hiddenItem" })
                                 @Html.HiddenFor(x => Model.EntryCV[i].screenCode, new { @class = "hiddenScreencode" })

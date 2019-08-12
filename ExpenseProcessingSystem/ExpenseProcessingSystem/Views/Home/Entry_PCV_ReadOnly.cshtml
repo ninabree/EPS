@@ -120,7 +120,7 @@
                                 @Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.EntryCV[i].vendTRList, "TR_ID", "TR_Tax_Rate"), new { @class = "input100 txtEwt comVar", @disabled = "true" })
                             </td>
                             <td style="text-align:center">
-                                <a class="reqEWTBtn glyphicon glyphicon-list-alt expenseEWT" href="#" style="pointer-events:none;"></a>
+                                <a class="reqEWTBtn glyphicon glyphicon-list-alt expenseEWT" href="#" data-title="Vendor selection" style="pointer-events:none;"></a>
                                 @Html.HiddenFor(x => Model.EntryCV[i].dtl_Ewt_Payor_Name_ID, new { @class = "txtPayor" })
                             </td>
                             <td>
@@ -133,7 +133,7 @@
                                 <input value="@Model.EntryCV[i].credCash" class="input100 txtCredCash" disabled />
                             </td>
                             <td id="req_@i">
-                                <a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#"></a>
+                                <a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#" data-title="Cash Breakdown"></a>
                                 @Html.HiddenFor(x => Model.EntryCV[i].modalInputFlag, new { @class = "hiddenItem" })
                                 @Html.HiddenFor(x => Model.EntryCV[i].screenCode, new { @class = "hiddenScreencode" })
                                 <div id="divCashBD_@i">

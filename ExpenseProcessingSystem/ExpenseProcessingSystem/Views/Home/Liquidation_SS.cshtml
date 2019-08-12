@@ -163,7 +163,7 @@
                                 @Html.HiddenFor(m => Model.LiquidationDetails[i].ewtID, new { @class = "ewtID" })
                             </td>
                             <td style="text-align:center">
-                                <a class="reqEWTBtn glyphicon glyphicon-list-alt expenseEWT" href="#" style="pointer-events:none;"></a>
+                                <a class="reqEWTBtn glyphicon glyphicon-list-alt expenseEWT" href="#" style="pointer-events:none;" data-title="Vendor selection"></a>
                                 @Html.HiddenFor(x => Model.LiquidationDetails[i].dtl_Ewt_Payor_Name_ID, new { @class = "txtPayor" })
                             </td>
                             <td>
@@ -181,10 +181,10 @@
                                 @Html.TextBoxFor(m => Model.LiquidationDetails[i].credCash, new { @class = "txtCredit txtCredCash", @readonly = "true", @style = "width:100%;background:transparent" })
                             </td>
                             <td id="req_@i">
-                                <a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#"></a>
+                                <a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#" data-title="Cash Breakdown"></a>
                                 @if (Model.LiquidationDetails[i].ccyMasterID != int.Parse(XElement.Load("wwwroot/xml/LiquidationValue.xml").Element("CURRENCY_PHP").Value))
                                 {
-                                    <a class="cddISBtn" href="#"><img id="imgCDD" src="~/images/cddLogo.png" style="width:100%;height:70%" /></a>
+                                    <a class="cddISBtn" href="#" data-title="CDD Instruction Sheet"><img id="imgCDD" src="~/images/cddLogo.png" style="width:100%;height:70%" /></a>
                                 }
                                 @Html.HiddenFor(x => Model.LiquidationDetails[i].modalInputFlag, new { @class = "hiddenItem" })
                                 @Html.HiddenFor(x => Model.LiquidationDetails[i].screenCode, new { @class = "hiddenScreencode" })

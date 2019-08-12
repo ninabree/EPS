@@ -119,7 +119,7 @@
                                 @Html.TextBoxFor(x => Model.EntryCV[i].credCash, new { @class = "input100 txtCredCash", @type = "number", @min = "0", @readonly = "readonly" })
                             </td>
                             <td id="req_@i">
-                                <a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#"></a>
+                                <a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#" data-title="Cash Breakdown"></a>
                                 @Html.HiddenFor(x => Model.EntryCV[i].modalInputFlag, new { @class = "hiddenItem" })
                                 @Html.HiddenFor(x => Model.EntryCV[i].screenCode, new { @class = "hiddenScreencode" })
                                 @Html.HiddenFor(x => Model.EntryCV[i].ccyAbbrev, new { @class = "hiddenCcyAbbrev" })
@@ -279,7 +279,7 @@
                     htmlContent += '<option value="' + ewt[i]["value"] + '">' + ewt[i]["text"] + '</option>';
                 }
                 htmlContent += '</select></td>' +
-                    '<td style="text-align:center"><a class="reqEWTBtn glyphicon glyphicon-list-alt expenseEWT" href="#" style="pointer-events:none;"></a><input data-val="true" data-val-required="The dtl_Ewt_Payor_Name_ID field is required." id="EntryCV_' + itemCount + '__dtl_Ewt_Payor_Name_ID" name="EntryCV[' + itemCount + '].dtl_Ewt_Payor_Name_ID" class = "txtPayor" type="hidden" value="0"></td>' +
+                    '<td style="text-align:center"><a class="reqEWTBtn glyphicon glyphicon-list-alt expenseEWT" href="#" data-title="Vendor selection" style="pointer-events:none;"></a><input data-val="true" data-val-required="The dtl_Ewt_Payor_Name_ID field is required." id="EntryCV_' + itemCount + '__dtl_Ewt_Payor_Name_ID" name="EntryCV[' + itemCount + '].dtl_Ewt_Payor_Name_ID" class = "txtPayor" type="hidden" value="0"></td>' +
                     '<td><select class="input100 txtccy voucher-input" data-val="true" data-val-required="The ccy field is required." id="EntryCV_' + itemCount + '__ccy" name="EntryCV[' + itemCount + '].ccy">';
                 for (var i = 0; i < curr.length; i++) {
                     htmlContent += '<option value="' + curr[i]["value"] + '">' + curr[i]["text"] + '</option>';
@@ -288,7 +288,7 @@
                     '<td><input class="input100 txtGross" data-val="true" data-val-number="The field debitGross must be a number." data-val-required="The debitGross field is required." id="EntryCV_' + itemCount + '__debitGross" name="EntryCV[' + itemCount + '].debitGross" type="number" readonly="true" min="0" value="0"></td>' +
                     '<td><input class="input100 txtCredEwt" data-val="true" data-val-number="The field credEwt must be a number." data-val-required="The credEwt field is required." id="EntryCV_' + itemCount + '__credEwt" name="EntryCV[' + itemCount + '].credEwt" type="number" readonly="true" min="0" value="0"></td>' +
                     '<td><input class="input100 txtCredCash" data-val="true" data-val-number="The field credCash must be a number." data-val-required="The credCash field is required." id="EntryCV_' + itemCount + '__credCash" name="EntryCV[' + itemCount + '].credCash" type="number" readonly="true" min="0" value="0"></td>' +
-                    '<td id="req_' + itemCount + '"><a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#"></a><input class="hiddenItem" data-val="true" data-val-required="The modalInputFlag field is required." id="EntryCV_' + itemCount + '__modalInputFlag" name="EntryCV[' + itemCount + '].modalInputFlag" type="hidden" value="0"><input id="EntryCV_' + itemCount + '__screenCode" name="EntryCV[' + itemCount + '].screenCode" type="hidden" value="SS"><input class="hiddenCcyAbbrev" id="EntryCV_' + itemCount + '__ccyAbbrev" name="EntryCV[' + itemCount + '].ccyAbbrev" type="hidden" value=""><div id="divCashBD_' + itemCount + '"></div></td>';
+                    '<td id="req_' + itemCount + '"><a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#" data-title="Cash Breakdown"></a><input class="hiddenItem" data-val="true" data-val-required="The modalInputFlag field is required." id="EntryCV_' + itemCount + '__modalInputFlag" name="EntryCV[' + itemCount + '].modalInputFlag" type="hidden" value="0"><input id="EntryCV_' + itemCount + '__screenCode" name="EntryCV[' + itemCount + '].screenCode" type="hidden" value="SS"><input class="hiddenCcyAbbrev" id="EntryCV_' + itemCount + '__ccyAbbrev" name="EntryCV[' + itemCount + '].ccyAbbrev" type="hidden" value=""><div id="divCashBD_' + itemCount + '"></div></td>';
 
                 newRow.innerHTML = htmlContent;
                 $('#EntryCV_' + itemCount + '__ccy').val($('#phpID').val());

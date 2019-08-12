@@ -307,3 +307,14 @@ function roundNumber(num, scale) {
     return Math.round(num * (Math.pow(10, scale))) / Math.pow(10, scale);
 };
 
+function setCheckPageIndex() {
+    var currPageNo = $('#paginationInput').attr('placeholder');
+    var lastPageNo = $('.txtMaxPage').val().substring($('.txtMaxPage').val().lastIndexOf(" ") + 1);
+    var urlparam = window.location.search.substring(1);
+    var link = $('.btnForInputPagination').attr('href');
+    if (urlparam.substring(urlparam.lastIndexOf("page=")).replace(/\d+/g, '') == "page=") {
+        if (parseInt(urlparam.substring(urlparam.lastIndexOf("page=")).replace("page=", "")) > lastPageNo) {
+            window.location = link.substring(0, link.lastIndexOf("=") + 1) + "" + lastPageNo;
+        }
+    }
+};

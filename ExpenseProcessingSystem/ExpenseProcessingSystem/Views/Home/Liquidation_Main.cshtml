@@ -54,8 +54,8 @@
        asp-route-currentFilter="@ViewData["CurrentFilter"]"
        class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left">
     </a>
-    <input type="text" class="pagination-input" id="paginationInput" val="" />
-    <input type="text" class="pagination-input txtMaxPage" value="of @(Model.TotalPages)" disabled />
+    <input type="text" class="pagination-input" id="paginationInput" placeholder="@(Model.PageIndex)" style="text-align:center" />
+    <input type="text" class="pagination-input txtMaxPage" value="of @(Model.TotalPages)" style="text-align:center" disabled />
     <a asp-action="Liquidation_Main"
        asp-route-sortOrder="@ViewData["CurrentSort"]"
        asp-route-page="@(Model.PageIndex + 1)"
@@ -66,9 +66,8 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        var initHref = $('.btnForInputPagination').attr('href');
-        var currPageNo = initHref.substring(initHref.lastIndexOf("=") + 1) - 1;
-        $('#paginationInput').val(currPageNo);
+        setCheckPageIndex();
+
         $(function () {
             $('*[data-href]').on('click', function () {
                 var form = $("#liquidationForm")
@@ -90,9 +89,8 @@
             }
             var href = $('.btnForInputPagination').attr('href');
 
-            if (parseInt(val) > parseInt($('.txtMaxPage').val().substring($('.txtMaxPage').val().lastIndexOf(" ") + 1))) {
-                $(this).val(currPageNo);
-
+            if (parseInt(val) > parseInt(lastPageNo)) {
+                $(this).val(lastPageNo);
             }
             window.location = href.substring(0, href.lastIndexOf("=") + 1) + "" + $(this).val();
         }); 
