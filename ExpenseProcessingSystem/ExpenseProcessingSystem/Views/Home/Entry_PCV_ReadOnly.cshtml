@@ -98,7 +98,7 @@
                                 </div>
                             </td>
                             <td>
-                                @Html.DropDownListFor(x => Model.EntryCV[i].account, new SelectList(Model.systemValues.acc, "accId", "accName"), new { @class = "input100 txtAcc", disabled = "disabled" })
+                                @Html.DropDownListFor(x => Model.EntryCV[i].account, new SelectList(Model.systemValues.acc, "accId", "accName"), new { @class = "input100 txtAcc selectDisabled", disabled = "disabled" })
                             </td>
                             <td style="text-align:center">
                                 @Html.DisplayFor(x => Model.EntryCV[i].fbt)
@@ -111,13 +111,13 @@
                             </td>
                             <td>
                                 @*<input value="@Model.EntryCV[i].vat" class="input100" disabled />*@
-                                @Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.EntryCV[i].vendVATList, "VAT_ID", "VAT_Rate"), new { @class = "input100 txtVat comVar", @disabled = "true" })
+                                @Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.EntryCV[i].vendVATList, "VAT_ID", "VAT_Rate"), new { @class = "input100 txtVat comVar selectDisabled", @disabled = "true" })
                             </td>
                             <td style="text-align:center">
                                 @Html.CheckBoxFor(x => Model.EntryCV[i].chkEwt, new { @class = "chkEwt", disabled = "disabled" })
                             </td>
                             <td>
-                                @Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.EntryCV[i].vendTRList, "TR_ID", "TR_Tax_Rate"), new { @class = "input100 txtEwt comVar", @disabled = "true" })
+                                @Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.EntryCV[i].vendTRList, "TR_ID", "TR_Tax_Rate"), new { @class = "input100 txtEwt comVar selectDisabled", @disabled = "true" })
                             </td>
                             <td style="text-align:center">
                                 <a class="reqEWTBtn glyphicon glyphicon-list-alt expenseEWT" href="#" data-title="Vendor selection" style="pointer-events:none;"></a>

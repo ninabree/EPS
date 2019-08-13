@@ -8213,25 +8213,26 @@ namespace ExpenseProcessingSystem.Services
 
                 if(dbExpenseEntry == null)
                 {
-                    GlobalSystemValues.MESSAGE = DateTime.Now.ToLongTimeString() + ": This entry is edited/deleted by another user. Please check the entry again.";
+                    GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE3;
+                    return false;
                 }
                 if (forbiddenStatus.Contains(dbExpenseEntry.Expense_Status))
                 {
                     if(dbExpenseEntry.Expense_Status == GlobalSystemValues.STATUS_APPROVED)
                     {
-                        GlobalSystemValues.MESSAGE = DateTime.Now.ToLongTimeString() + ": This entry was already approved by Approver. Cannot proceed with your request.";
+                        GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE4;
                     }
                     if (dbExpenseEntry.Expense_Status == GlobalSystemValues.STATUS_FOR_CLOSING)
                     {
-                        GlobalSystemValues.MESSAGE = DateTime.Now.ToLongTimeString() + ": This entry was already in For Printing status. Cannot proceed with your request.";
+                        GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE5;
                     }
                     if (dbExpenseEntry.Expense_Status == GlobalSystemValues.STATUS_FOR_CLOSING)
                     {
-                        GlobalSystemValues.MESSAGE = DateTime.Now.ToLongTimeString() + ": This entry was already in For Closing status. Cannot proceed with your request.";
+                        GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE6;
                     }
                     if (dbExpenseEntry.Expense_Status == GlobalSystemValues.STATUS_FOR_CLOSING)
                     {
-                        GlobalSystemValues.MESSAGE = DateTime.Now.ToLongTimeString() + ": This entry was already in Rejected status. Cannot proceed with your request.";
+                        GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE7;
                     }
                     return false;
                 }
@@ -8250,7 +8251,7 @@ namespace ExpenseProcessingSystem.Services
                         }
                         else
                         {
-                            GlobalSystemValues.MESSAGE = DateTime.Now.ToLongTimeString() + ": This entry was already verified by other verifier/s. Cannot proceed with your request.";
+                            GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE8;
                             return false;
                         }
                     }
@@ -9078,6 +9079,12 @@ namespace ExpenseProcessingSystem.Services
 
 
                 LiquidationEntryDetailModel dbLiquidation = _context.LiquidationEntryDetails.FirstOrDefault(x => x.ExpenseEntryModel.Expense_ID == id);
+
+                if (dbLiquidation == null)
+                {
+                    GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE3;
+                    return false;
+                }
 
                 if (forbiddenStatus.Contains(dbLiquidation.Liq_Status))
                     return false;

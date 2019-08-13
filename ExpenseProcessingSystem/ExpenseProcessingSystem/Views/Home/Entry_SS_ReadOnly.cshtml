@@ -249,6 +249,7 @@
         var trs = $("#inputTable").find("tbody").find("tr");
         for (var cnt = 0; cnt < trs.length - 2; cnt++) {
             reqBtnDisable(cnt);
+            ddlEnabled(cnt);
         }
 
         $(function () {
@@ -383,7 +384,29 @@
             $('#item_' + idx).find('.reqEWTBtn').css("pointer-events", "auto");
         }
     };
+    function ddlEnabled(idx) {
+        var pid = '#item_' + idx;
 
+        if (!$(pid).find(".chkEwt").is(':checked')) {
+            if ($(pid).find(".chkVat").is(':checked')) {
+                $(pid).find('.reqEWTBtn').css("pointer-events", "auto");
+            } else {
+                $(pid).find('.reqEWTBtn').css("pointer-events", "none");
+            }
+        } else {
+            $(pid).find('.reqEWTBtn').css("pointer-events", "auto");
+        }
+
+        if (!$(pid).find(".chkVat").is(':checked')) {
+            if ($(pid).find(".chkEwt").is(':checked')) {
+                $(pid).find('.reqEWTBtn').css("pointer-events", "auto");
+            } else {
+                $(pid).find('.reqEWTBtn').css("pointer-events", "none");
+            }
+        } else {
+            $(pid).find('.reqEWTBtn').css("pointer-events", "auto");
+        }
+    };
 </script>
 <script type="text/javascript" src="~/js/EntryScripts.js"></script>
 <script type="text/javascript">
