@@ -1607,7 +1607,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Vendor_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_Vendor_Filed_Date = DateTime.Now,
                     Pending_Vendor_IsDeleted = false,
-                    Pending_Vendor_Status_ID = 7
+                    Pending_Vendor_Status_ID = GlobalSystemValues.STATUS_NEW
                 };
                 vmList.Add(m);
             }

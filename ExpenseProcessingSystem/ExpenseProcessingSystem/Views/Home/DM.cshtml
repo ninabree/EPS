@@ -114,7 +114,30 @@
                     if (status == "error") {
                         alert("Something went wrong.");
                     } else {
+                        $('input#entryCheckTypes').val();
                         isSearchDisabled();
+                        //disable approve/reject button upon initial load in DM
+                        defaultDisableAll();
+                        //Pagination Input Field
+                        $pageInput = $('#paginationInput');
+                        $pageInput.data("value", $pageInput.val());
+
+                        ////DM ON LOAD
+                        $('input#entryCheckTypes').val("");
+                        //get column # of status per table
+                        var countDoc = $('#partialContainer #partcontains div div table thead tr th').length - 2;
+                        var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
+                        var remainingCheckStatDoc = $('input.tbl-chk[type="checkbox"]:checked').parent().siblings(":eq(" + countDoc + ")").text();
+
+                        if (chkCount <= 0) {
+                            defaultApproved();
+                        } else {
+                            if (remainingCheckStatDoc == "Approved") {
+                                defaultApproved();
+                            } else {
+                                defaultForApproval();
+                            }
+                        }
                     }
                 });
             }

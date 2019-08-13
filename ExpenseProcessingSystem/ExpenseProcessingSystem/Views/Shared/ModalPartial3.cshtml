@@ -21,26 +21,34 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $(document).on("click", "#btnVendor", function (e) {
-            //New
-            var hiddenTR = $('#NewVendorVM_0__Vendor_Tax_Rates_ID');
-            var hiddenVAT = $('#NewVendorVM_0__Vendor_VAT_ID');
+            ////New
+            //var hiddenTR = $('#NewVendorVM_''__Vendor_Tax_Rates_ID');
+            //var hiddenVAT = $('#NewVendorVM_''__Vendor_VAT_ID');
 
-            // for edit
-            var hiddenTREdit = $('#z0__Vendor_Tax_Rates_ID');
-            var hiddenVATEdit = $('#z0__Vendor_VAT_ID');
+            //// for edit
+            //var hiddenTREdit = $('#z''__Vendor_Tax_Rates_ID');
+            //var hiddenVATEdit = $('#z''__Vendor_VAT_ID');
 
-            var arrTR = "";
-            var arrVAT = "";
-            $('.trChk:checked').each(function () {
-                arrTR += ($(this).val()) + ",";
+            //NEW
+            $("[id^='NewVendor-Tr-']").each(function (index, el) {
+                var idNo = this.id.substring(13);
+                alert(idNo);
+                var arrTR = "";
+                var arrVAT = "";
+                $(el).find('td:eq(3)').find('.trChk:checked').each(function () {
+                    arrTR += ($(this).val()) + ",";
+                });
+                $(el).find('td:eq(4)').find('.vatChk:checked').each(function () {
+                    arrVAT += ($(this).val()) + ",";
+                });
+                //New
+                $('#NewVendorVM_' + idNo + '__Vendor_Tax_Rates_ID').val(arrTR);
+                $('#NewVendorVM_' + idNo + '__Vendor_VAT_ID').val(arrVAT);
+
+                // for edit
+                $('#z' + idNo + '__Vendor_Tax_Rates_ID').val(arrTR);
+                $('#z' + idNo + '__Vendor_VAT_ID').val(arrVAT);
             });
-            $('.vatChk:checked').each(function () {
-                arrVAT += ($(this).val()) + ",";
-            });
-            hiddenTR.val(arrTR);
-            hiddenVAT.val(arrVAT);
-            hiddenTREdit.val(arrTR);
-            hiddenVATEdit.val(arrVAT);
         });
     });
 </script>

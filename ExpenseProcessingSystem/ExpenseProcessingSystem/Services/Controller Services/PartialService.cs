@@ -289,10 +289,26 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         public List<DMVendorViewModel> populateVendor(DMFiltersViewModel filters)
         {
             var properties = filters.PF.GetType().GetProperties();
-            var mList = (from rate in (from ven in _context.DMVendor
-                                       from trvat in _context.DMVendorTRVAT
-                                       where ven.Vendor_MasterID == trvat.VTV_Vendor_ID
-                                       && ven.Vendor_isDeleted == false && ven.Vendor_isActive == true
+            var mList = (from rate in (from ven in (from ven in _context.DMVendor
+                                                    where ven.Vendor_isDeleted == false && ven.Vendor_isActive == true
+                                                    select new
+                                                    {
+                                                        ven.Vendor_ID,
+                                                        ven.Vendor_MasterID,
+                                                        ven.Vendor_TIN,
+                                                        ven.Vendor_Address,
+                                                        ven.Vendor_Name,
+                                                        ven.Vendor_Creator_ID,
+                                                        ven.Vendor_Approver_ID,
+                                                        ven.Vendor_Status_ID,
+                                                        ven.Vendor_Created_Date,
+                                                        ven.Vendor_Last_Updated
+                                                    })
+                                       join trvat in _context.DMVendorTRVAT
+                                       on ven.Vendor_MasterID
+                                       equals trvat.VTV_Vendor_ID
+                                       into TrVat
+                                       from trvat in TrVat.DefaultIfEmpty()
                                        select new
                                        {
                                            ven.Vendor_ID,
@@ -300,8 +316,8 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                                            ven.Vendor_TIN,
                                            ven.Vendor_Address,
                                            ven.Vendor_Name,
-                                           trvat.VTV_TR_ID,
-                                           trvat.VTV_VAT_ID,
+                                           VTV_TR_ID = trvat.VTV_TR_ID > 0 ? trvat.VTV_TR_ID : 0,
+                                           VTV_VAT_ID = trvat.VTV_VAT_ID > 0 ? trvat.VTV_VAT_ID : 0,
                                            ven.Vendor_Creator_ID,
                                            ven.Vendor_Approver_ID,
                                            ven.Vendor_Status_ID,
@@ -356,31 +372,45 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                              stat.Status_Name
                          }).ToList();
 
-            var pendingList = (from rate in (from ven in _context.DMVendor_Pending
+            var pendingList = (from rate in (from ven in (from ven in _context.DMVendor_Pending
+                                                          select new
+                                                          {
+                                                              ven.Pending_ID,
+                                                              ven.Pending_Vendor_MasterID,
+                                                              ven.Pending_Vendor_TIN,
+                                                              ven.Pending_Vendor_Address,
+                                                              ven.Pending_Vendor_Name,
+                                                              ven.Pending_Vendor_Creator_ID,
+                                                              ven.Pending_Vendor_Approver_ID,
+                                                              ven.Pending_Vendor_Status_ID,
+                                                              ven.Pending_Vendor_Filed_Date
+                                                          })
+                                             join trvat in _context.DMVendorTRVAT
+                                             on ven.Pending_Vendor_MasterID
+                                             equals trvat.VTV_Vendor_ID
+                                             into TrVat
+                                             from trvat in TrVat.DefaultIfEmpty()
                                              select new
                                              {
                                                  ven.Pending_ID,
                                                  ven.Pending_Vendor_MasterID,
-                                                 ven.Pending_Vendor_Name,
                                                  ven.Pending_Vendor_TIN,
                                                  ven.Pending_Vendor_Address,
+                                                 ven.Pending_Vendor_Name,
+                                                 VTV_TR_ID = trvat.VTV_TR_ID > 0 ? trvat.VTV_TR_ID : 0,
+                                                 VTV_VAT_ID = trvat.VTV_VAT_ID > 0 ? trvat.VTV_VAT_ID : 0,
                                                  ven.Pending_Vendor_Creator_ID,
                                                  ven.Pending_Vendor_Approver_ID,
                                                  ven.Pending_Vendor_Status_ID,
                                                  ven.Pending_Vendor_Filed_Date
                                              })
-                               join trvat in _context.DMVendorTRVAT_Pending
-                               on rate.Pending_Vendor_MasterID
-                               equals trvat.Pending_VTV_Vendor_ID
-                               into withTrVat
-                               from trvat in withTrVat.DefaultIfEmpty()
                                join tr in _context.DMTR
-                               on new { masterID = trvat != null ? trvat.Pending_VTV_TR_ID : 0, isActive = true, isDeleted = false }
+                               on new { masterID = rate.VTV_TR_ID, isActive = true, isDeleted = false }
                                equals new { masterID = tr.TR_MasterID, isActive = tr.TR_isActive, isDeleted = tr.TR_isDeleted }
                                into withTr
                                from tr in withTr.DefaultIfEmpty()
                                join vat in _context.DMVAT
-                               on new { masterID = trvat != null ? trvat.Pending_VTV_VAT_ID : 0, isActive = true, isDeleted = false }
+                               on new { masterID = rate.VTV_VAT_ID, isActive = true, isDeleted = false }
                                equals new { masterID = vat.VAT_MasterID, isActive = vat.VAT_isActive, isDeleted = vat.VAT_isDeleted }
                                into withVat
                                from vat in withVat.DefaultIfEmpty()
@@ -404,16 +434,16 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                                    rate.Pending_ID,
                                    rate.Pending_Vendor_MasterID,
                                    rate.Pending_Vendor_Name,
-                                   VTV_TRID = trvat != null ? trvat.Pending_VTV_TR_ID : 0,
-                                   VTV_VATID = trvat != null ? trvat.Pending_VTV_VAT_ID : 0,
+                                   rate.Pending_Vendor_TIN,
+                                   rate.Pending_Vendor_Address,
+                                   rate.VTV_TR_ID,
+                                   rate.VTV_VAT_ID,
                                    tr.TR_WT_Title,
                                    TRRAte = tr.TR_Tax_Rate > 0 ? tr.TR_Tax_Rate : 0,
                                    vat.VAT_Name,
                                    VATRAte = vat.VAT_Rate > 0 ? vat.VAT_Rate : 0,
-                                   rate.Pending_Vendor_TIN,
-                                   rate.Pending_Vendor_Address,
                                    rate.Pending_Vendor_Creator_ID,
-                                   rate.Pending_Vendor_Approver_ID,
+                                   ApproverID = rate.Pending_Vendor_Approver_ID,
                                    CreatorName = user.User_LName + ", " + user.User_FName,
                                    ApproverName = rate.Pending_Vendor_Approver_ID > 0 ? apprv.User_LName + ", " + apprv.User_FName : "",
                                    Vendor_Created_Date = rate.Pending_Vendor_Filed_Date,
@@ -456,8 +486,8 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                      Vendor_Last_Updated = m.Vendor_Last_Updated,
                      Vendor_Status_ID = m.Status_ID,
                      Vendor_Status = m.Status_Name ?? "N/A",
-                     Vendor_Tax_Rates = pendingList.Where(x => x.Pending_ID == m.Pending_ID && x.VTV_TRID > 0 && x.TRRAte > 0).Select(x => (x.TRRAte * 100) + "% - " + x.TR_WT_Title).ToList(),
-                     Vendor_VAT = pendingList.Where(x => x.Pending_ID == m.Pending_ID && x.VTV_VATID > 0 && x.VATRAte > 0).Select(x => (x.VATRAte * 100) + "% - " + x.VAT_Name).ToList()
+                     Vendor_Tax_Rates = pendingList.Where(x => x.Pending_ID == m.Pending_ID && x.VTV_TR_ID > 0 && x.TRRAte > 0).Select(x => (x.TRRAte * 100) + "% - " + x.TR_WT_Title).ToList(),
+                     Vendor_VAT = pendingList.Where(x => x.Pending_ID == m.Pending_ID && x.VTV_VAT_ID > 0 && x.VATRAte > 0).Select(x => (x.VATRAte * 100) + "% - " + x.VAT_Name).ToList()
                  })
             );
             //FILTER
@@ -471,7 +501,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     if (toStr != "" && toStr != "0")
                     {
 
-                        vmList = vmList.AsQueryable().Where("Vendor_" + subStr + ".Contains(@0)", toStr)
+                        vmList = vmList.AsQueryable().Where("Vendor_" + subStr + ".ToLower().Contains(@0)", toStr.ToLower())
                                 .Select(e => e).ToList();
                     }
                 }
@@ -611,7 +641,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 var toStr = property.GetValue(filters.DF).ToString();
                 if (toStr != "" && toStr != "0")
                 {
-                    mList = mList.AsQueryable().Where("Dept_" + subStr + ".Contains(@0)", toStr)
+                    vmList = vmList.AsQueryable().Where("Dept_" + subStr + ".ToLower().Contains(@0)", toStr.ToLower())
                             .Select(e => e).ToList();
                 }
             }
@@ -756,7 +786,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 {
                     if (toStr != "" && toStr != "0")
                     {
-                        vmList = vmList.AsQueryable().Where("Check_" + subStr + ".Contains(@0)", toStr)
+                        vmList = vmList.AsQueryable().Where("Check_" + subStr + ".ToLower().Contains(@0)", toStr.ToLower())
                                 .Select(e => e).ToList();
                     }
                 }
@@ -989,16 +1019,8 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 var toStr = property.GetValue(filters.AF).ToString();
                 if (toStr != "" && toStr != "0")
                 {
-                    if (subStr == "FBT")
-                    {
-                        vmList = vmList.Where(x=> x.Account_FBT_Name.Contains(toStr))
+                    vmList = vmList.AsQueryable().Where("Account_" + subStr + ".ToLower().Contains(@0)", toStr.ToLower())
                                 .Select(e => e).ToList();
-                    }
-                    else
-                    {
-                        vmList = vmList.AsQueryable().Where("Account_" + subStr + ".Contains(@0)", toStr)
-                                .Select(e => e).ToList();
-                    }
                 }
             }
             return vmList;
@@ -1131,7 +1153,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 var toStr = property.GetValue(filters.VF).ToString();
                 if (toStr != "" && toStr != "0")
                 {
-                    mList = mList.AsQueryable().Where("VAT_" + subStr + ".Contains(@0)", toStr)
+                    vmList = vmList.AsQueryable().Where("VAT_" + subStr + ".ToLower().Contains(@0)", toStr.ToLower())
                             .Select(e => e).ToList();
                 }
             }
@@ -1272,7 +1294,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 var toStr = property.GetValue(filters.FF).ToString();
                 if (toStr != "" && toStr != "0")
                 {
-                    mList = mList.AsQueryable().Where("FBT_" + subStr + ".Contains(@0)", toStr)
+                    vmList = vmList .AsQueryable().Where("FBT_" + subStr + ".ToLower().Contains(@0)", toStr.ToLower())
                             .Select(e => e).ToList();
                 }
             }
@@ -1419,7 +1441,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 var toStr = property.GetValue(filters.TF).ToString();
                 if (toStr != "" && toStr != "0")
                 {
-                    mList = mList.AsQueryable().Where("TR_" + subStr + ".Contains(@0)", toStr)
+                    vmList = vmList .AsQueryable().Where("TR_" + subStr + ".ToLower().Contains(@0)", toStr.ToLower())
                             .Select(e => e).ToList();
                 }
             }
@@ -1553,7 +1575,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 var toStr = property.GetValue(filters.CF).ToString();
                 if (toStr != "" && toStr != "0")
                 {
-                    mList = mList.AsQueryable().Where("Curr_" + subStr + ".Contains(@0)", toStr)
+                    vmList = vmList .AsQueryable().Where("Curr_" + subStr + ".ToLower().Contains(@0)", toStr.ToLower())
                             .Select(e => e).ToList();
                 }
             }
@@ -1723,7 +1745,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 var toStr = property.GetValue(filters.EMF).ToString();
                 if (toStr != "" && toStr != "0")
                 {
-                    mList = mList.AsQueryable().Where("Emp_" + subStr + ".Contains(@0)", toStr)
+                    vmList = vmList .AsQueryable().Where("Emp_" + subStr + ".ToLower().Contains(@0)", toStr.ToLower())
                             .Select(e => e).ToList();
                 }
             }
@@ -1893,7 +1915,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 var toStr = property.GetValue(filters.EMF).ToString();
                 if (toStr != "" && toStr != "0")
                 {
-                    mList = mList.AsQueryable().Where("Emp_" + subStr + ".Contains(@0)", toStr)
+                    vmList = vmList .AsQueryable().Where("Emp_" + subStr + ".ToLower().Contains(@0)", toStr.ToLower())
                             .Select(e => e).ToList();
                 }
             }
@@ -2020,55 +2042,20 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 };
                 vmList.Add(vm);
             }
-            var properties = filters.CUF.GetType().GetProperties();
-            IQueryable<DMCustViewModel> vmList2 = vmList.AsQueryable();
             //FILTER
+            var properties = filters.CUF.GetType().GetProperties();
             foreach (var property in properties)
             {
                 var propertyName = property.Name;
-                var subStr = propertyName.Substring(propertyName.IndexOf("_")+1);
+                var subStr = propertyName.Substring(propertyName.IndexOf("_") + 1);
                 var toStr = property.GetValue(filters.CUF).ToString();
-                string[] colArr = { "Creator_ID", "Approver_ID" };
-                if (toStr != "")
+                if (toStr != "" && toStr != "0")
                 {
-                    if (toStr != "0")
-                    {
-                        if (subStr == "Creator_Name" || subStr == "Approver_Name" || subStr == "Status")
-                        {
-                            //get all userIDs of creator or approver that contains string
-                            var names = _context.User
-                              .Where(x => (x.User_FName.Contains(property.GetValue(filters.CUF).ToString())
-                              || x.User_LName.Contains(property.GetValue(filters.CUF).ToString())))
-                              .Select(x => x.User_ID).ToList();
-                            //get all status IDs that contains string
-                            var status = _context.StatusList
-                              .Where(x => (x.Status_Name.Contains(property.GetValue(filters.CUF).ToString())))
-                              .Select(x => x.Status_ID).ToList();
-                            if (subStr == "Approver_Name")
-                            {
-                                vmList2 = vmList2.Where(x => names.Contains(x.Cust_Approver_ID) && x.Cust_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                            else if (subStr == "Creator_Name")
-                            {
-                                vmList2 = vmList2.Where(x => names.Contains(x.Cust_Creator_ID) && x.Cust_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                            else if (subStr == "Status")
-                            {
-                                vmList2 = vmList2.Where(x => status.Contains(x.Cust_Status_ID) && x.Cust_isDeleted == false)
-                                         .Select(e => e).AsQueryable();
-                            }
-                        }
-                        else // IF STRING VALUE
-                        {
-                            vmList2 = vmList2.Where("Cust_" + subStr + ".Contains(@0)", toStr)
-                                    .Select(e => e).AsQueryable();
-                        }
-                    }
+                    vmList = vmList.AsQueryable().Where("AccountGroup_" + subStr + ".ToLower().Contains(@0)", toStr.ToLower())
+                            .Select(e => e).ToList();
                 }
             }
-            return vmList2.ToList();
+            return vmList;
         }
 
         public List<DMBCSViewModel> populateBCS(DMFiltersViewModel filters)
@@ -2222,7 +2209,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 var toStr = property.GetValue(filters.BF).ToString();
                 if (toStr != "" && toStr != "0")
                 {
-                    mList = mList.AsQueryable().Where("BCS_" + subStr + ".Contains(@0)", toStr)
+                    vmList = vmList .AsQueryable().Where("BCS_" + subStr + ".ToLower().Contains(@0)", toStr.ToLower())
                             .Select(e => e).ToList();
                 }
             }
@@ -2242,6 +2229,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                                         c.AccountGroup_ID,
                                         c.AccountGroup_MasterID,
                                         c.AccountGroup_Name,
+                                        c.AccountGroup_Code,
                                         c.AccountGroup_Creator_ID,
                                         CreatorName = user.User_LName + ", " + user.User_FName,
                                         c.AccountGroup_Approver_ID,
@@ -2260,6 +2248,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                              e.AccountGroup_ID,
                              e.AccountGroup_MasterID,
                              e.AccountGroup_Name,
+                             e.AccountGroup_Code,
                              e.AccountGroup_Creator_ID,
                              e.CreatorName,
                              e.AccountGroup_Approver_ID,
@@ -2279,6 +2268,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                                           {
                                               c.Pending_AccountGroup_ID,
                                               c.Pending_AccountGroup_MasterID,
+                                              c.Pending_AccountGroup_Code,
                                               c.Pending_AccountGroup_Name,
                                               c.Pending_AccountGroup_Creator_ID,
                                               CreatorName = user.User_LName + ", " + user.User_FName,
@@ -2297,6 +2287,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                                    e.Pending_AccountGroup_ID,
                                    e.Pending_AccountGroup_MasterID,
                                    e.Pending_AccountGroup_Name,
+                                   e.Pending_AccountGroup_Code,
                                    e.Pending_AccountGroup_Creator_ID,
                                    e.CreatorName,
                                    e.Pending_AccountGroup_Approver_ID,
@@ -2312,6 +2303,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 {
                     AccountGroup_ID = m.AccountGroup_ID,
                     AccountGroup_MasterID = m.AccountGroup_MasterID,
+                    AccountGroup_Code = m.AccountGroup_Code,
                     AccountGroup_Name = m.AccountGroup_Name,
                     AccountGroup_Creator_Name = m.CreatorName ?? "N/A",
                     AccountGroup_Approver_Name = m.ApproverName ?? "",
@@ -2330,6 +2322,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     AccountGroup_ID = m.Pending_AccountGroup_ID,
                     AccountGroup_MasterID = m.Pending_AccountGroup_MasterID,
                     AccountGroup_Name = m.Pending_AccountGroup_Name,
+                    AccountGroup_Code = m.Pending_AccountGroup_Code,
                     AccountGroup_Creator_Name = m.CreatorName ?? "N/A",
                     AccountGroup_Approver_Name = m.ApproverName ?? "",
                     AccountGroup_Created_Date = m.Pending_AccountGroup_Filed_Date,
@@ -2350,7 +2343,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 var toStr = property.GetValue(filters.AGF).ToString();
                 if (toStr != "" && toStr != "0")
                 {
-                    mList = mList.AsQueryable().Where("AccountGroup_" + subStr + ".Contains(@0)", toStr)
+                    vmList = vmList.AsQueryable().Where("AccountGroup_" + subStr + ".ToLower().Contains(@0)", toStr.ToLower())
                             .Select(e => e).ToList();
                 }
             }

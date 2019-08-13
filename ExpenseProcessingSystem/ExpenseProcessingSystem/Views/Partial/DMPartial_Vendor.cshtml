@@ -54,8 +54,8 @@
             <tr>
                 <th></th>
                 <th id="Name"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["VendorSortParm"]">Vendor<p class="btn-xs glyphicon @ViewData["glyph-1"]"></p></a></th>
-                <th id="TIN"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData[" Title"]" asp-route-sortOrder="@ViewData[" VendorTINSortParm"]">TIN<p class="btn-xs glyphicon @ViewData[" glyph-2"]"></p></a></th>
-                <th id="Address"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData[" Title"]" asp-route-sortOrder="@ViewData[" VendorAddSortParm"]">Address<p class="btn-xs glyphicon @ViewData[" glyph-3"]"></p></a></th>
+                <th id="TIN"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["VendorTINSortParm"]">TIN<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
+                <th id="Address"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["VendorAddSortParm"]">Address<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
                 <th id="">Tax Rate/s</th>
                 <th id="">VAT/s</th>
                 <th id="Creator_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["VendorCreatorSortParm"]">Input By<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
@@ -148,11 +148,15 @@
         <button class="dis-inline-block tbl-btn add-rec rec" id="add_vendor">Add</button>
         <button class="dis-inline-block tbl-btn edit-rec rec" id="edit_vendor">Edit</button>
         <button class="dis-inline-block tbl-btn delete-rec rec" id="delete_vendor">Delete</button>
-        @*<div class="w-full" style="text-align: right;"><button class="btn" id="forgot_PW">Forgot Password?</button></div>*@
+
         @if (ViewBag.access.accessType == "approver")
         {
             <button class="dis-inline-block tbl-btn apprv-rec rec" id="apprv_vendor">Approve</button>
             <button class="dis-inline-block tbl-btn rej-rec rec" id="rej_vendor">Reject</button>
+        }
+        else if (ViewBag.access.accessType == "verifier")
+        {
+            <button class="dis-inline-block tbl-btn apprv-rec rec" id="apprv_vendor">Approve</button>
         }
         <input type="hidden" value="@ViewData["Title"]" id="partialVal" />
     </div>

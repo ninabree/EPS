@@ -21,11 +21,11 @@ namespace ExpenseProcessingSystem.ViewModels.Search_Filters
         [Display(Name = "Account Div")]
         public string AF_Div { get; set; }
         [Display(Name = "Account Group")]
-        public string AF_Group { get; set; }
+        public string AF_Group_Name { get; set; }
         [Display(Name = "Account Currency")]
-        public string AF_Currency { get; set; }
+        public string AF_Currency_Name { get; set; }
         [Display(Name = "Account FBT")]
-        public string AF_FBT { get; set; }
+        public string AF_FBT_Name { get; set; }
         [Display(Name = "Creator Name")]
         public string AF_Creator_Name { get; set; }
         [Display(Name = "Approver Name")]

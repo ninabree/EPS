@@ -10,16 +10,8 @@ $(document).ready(function () {
         CheckUn();
     });
 
-    ///------------------------------------------------------------
-    //$(".pagination-btn").on("click", function (e) {
-    //    var page = $(this).attr('page');
-    //    $("<input />").attr("type", "hidden")
-    //        .attr("name", "page")
-    //        .attr("value", page)
-    //        .appendTo("#search-frm");
-    //    $("#search-frm").submit();
-
-    //});
+    /*//////////////////////////////////////////////////////////////////
+   [ Pagination ]*/
     $(document).on("click", ".pagination-btn", function (e) {
         var page = $(this).attr('page');
         $("<input />").attr("type", "hidden")
@@ -74,9 +66,6 @@ $(document).ready(function () {
 
     
     /////END DM ON LOAD
-    $('#um').find('a').click(function () {
-        ClearValidations();
-    });
 
     /*//////////////////////////////////////////////////////////////////
     [ Modal ]*/
@@ -85,28 +74,11 @@ $(document).ready(function () {
     }, 1);
 
     /*//////////////////////////////////////////////////////////////////
-    [ Pagination - Number Input]*/
-
-    //setInterval(function () {
-    //    //get hidden value of partial view in Data Maintenance
-    //    var partial = $('input#partialVal').val();
-
-    //    var data = $pageInput.data("value"),
-    //        val = $pageInput.val();
-
-    //    if (data !== val) {
-    //        $pageInput.data("value", val);
-    //        var url = window.location.pathname + '?page=' + val;
-    //        //check if in data maintenance
-    //        if (window.location.pathname == "/Home/DM") {
-    //            url = window.location.pathname + '?partialName='+partial+'&page=' + val;
-    //        }
-    //        window.location = url;
-    //    }
-    //}, 1000);
-
-    /*//////////////////////////////////////////////////////////////////
     [ UM ]*/
+
+    $('#um').find('a').click(function () {
+        ClearValidations();
+    });
 
     //to highlight a table row in UM
     var rows = $(document).find('#um-tbl').find('tbody').find('tr');

@@ -74,6 +74,7 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
     {
         public int entryID { get; set; }
         public SysValViewModel systemValues { get; set; }
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime expenseDate { get; set; }
         public int vendor { get; set; }
         public string vendor_Name { get; set; }
