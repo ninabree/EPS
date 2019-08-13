@@ -1,4 +1,5 @@
-﻿using ExpenseProcessingSystem.Services.Validations;
+﻿using ExpenseProcessingSystem.Models;
+using ExpenseProcessingSystem.Services.Validations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -45,6 +46,8 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         [Display(Name = "EWT - Tax Payor's Name")]
         public int ewt_Payor_Name_ID { get; set; }
         public string ewt_Payor_Name { get; set; }
+        public List<DMTRModel> vendTRList { get; set; }
+        public List<DMVATModel> vendVATList { get; set; }
         [NotNullValidations]
         [Display(Name = "Currency")]
         public int ccy { get; set; }
