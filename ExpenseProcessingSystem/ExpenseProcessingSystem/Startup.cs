@@ -3,6 +3,7 @@ using System.Globalization;
 using ExpenseProcessingSystem.ConstantData;
 using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.HostedServices;
+using ExpenseProcessingSystem.Resources;
 using ExpenseProcessingSystem.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -94,6 +95,7 @@ namespace ExpenseProcessingSystem
             services.AddDbContext<GWriteContext>(options => options.UseSqlServer(Configuration.GetConnectionString("GoWriteConnection")));
             services.AddScoped<MakerCheck>();
             services.AddScoped<MakerCheckLiquidation>();
+            services.AddScoped<HandleExceptionAttribute>();
             //services.AddHostedService<HelloWorldHostedService>();
         }
 

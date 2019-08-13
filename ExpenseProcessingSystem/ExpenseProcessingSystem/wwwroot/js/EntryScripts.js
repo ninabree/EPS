@@ -158,7 +158,7 @@
         computeFunction(e);
     });
     $("#vendorName").on("change", function (e) {
-        if ($('.hiddenScreencode').val() == "PCV" || $('.hiddenScreencode').val() == "PC") {
+        if ($('.hiddenScreencode').val() == "PCV" || $('.hiddenScreencode').val() == "PC" || $('#_screen').val() == "ddv") {
             return false;
         }
         var vendorId = {
@@ -250,6 +250,21 @@
         }
 
         return false;
+    });
+
+    //Change initial currency of selected Account
+    $("table").on("change", ".txtAcc", function (e) {
+        var pos = $(this.parentNode)[0].parentNode.id;
+        var idx = pos.replace('item_', '');
+
+        $.ajax({
+            url: "/Home/GetInitCurrencyOfAccount",
+            data: 'acc_id=' + $('#' + pos).find('.txtAcc').val() + '',
+            datatype: 'Json'
+        }).done(function (response) {
+            $('#' + pos).find('.txtccy').val(response);
+            $('#' + pos).find('.txtccy').trigger('change');
+        });
     });
     /////--------------------functions--------------------------------
     function checkFormComplete(trs, formName) {

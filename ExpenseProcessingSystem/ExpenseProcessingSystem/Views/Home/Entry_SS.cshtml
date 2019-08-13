@@ -361,21 +361,6 @@
                 computeValuesSSByParentID(pos);
             });
 
-            //Change initial currency of selected Account
-            $("table").on("change", ".txtAcc", function (e) {
-                var pos = $(this.parentNode)[0].parentNode.id;
-                var idx = pos.replace('item_', '');
-
-                $.ajax({
-                    url: "/Home/GetInitCurrencyOfAccount",
-                    data: 'acc_id=' + $('#' + pos).find('.txtAcc').val() + '',
-                    datatype: 'Json'
-                }).done(function (response) {
-                    $('#' + pos).find('.txtccy').val(response);
-                    $('#' + pos).find('.txtccy').trigger('change');
-                });
-            });
-
             $("table").on("click", ".expenseEWT", function (e) {
                 e.stopImmediatePropagation();
                 var myModal2 = $('.myModal2');
@@ -503,7 +488,7 @@
         var amounts = $("");
         var grossAmt = 0;
         var origGrossAmt = 0;
-        var origCredAmt = $("#" + itemNo).find(".txtCredCash").val();
+        var origCredAmt = $("#" + parentID).find(".txtCredCash").val();
 
         ////check if Inter Entity
         //if (isInter) {

@@ -784,6 +784,8 @@
 
             var txtDenomination = $("#" + cashBDLiqItemNo).find('.txtLiqDenomination').val();
             var txtNoPCS = $("#" + cashBDLiqItemNo).find('.txtLiqNoPCS').val();
+            //Remove leading 0.
+            $('#' + cashBDLiqItemNo).find('.txtLiqNoPCS').val(parseInt(txtNoPCS));
 
             $("#" + cashBDLiqItemNo).find('.txtLiqAmount').val(round(parseFloat(txtDenomination) * parseFloat(txtNoPCS), 2));
 

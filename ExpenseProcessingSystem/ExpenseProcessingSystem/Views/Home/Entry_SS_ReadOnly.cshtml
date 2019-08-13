@@ -109,13 +109,13 @@
                             </td>
                             <td>
                                 @*@Html.TextBoxFor(x => Model.EntryCV[i].vat, new { @class = "input100 txtVat", @readonly = "true" })*@
-                                @Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.EntryCV[i].vendVATList, "VAT_ID", "VAT_Rate"), new { @class = "input100 txtVat comVar", @disabled = "true" })
+                                @Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.EntryCV[i].vendVATList, "VAT_ID", "VAT_Rate"), new { @class = "input100 txtVat comVar selectDisabled", @disabled = "true" })
                             </td>
                             <td style="text-align:center">
                                 @Html.CheckBoxFor(x => Model.EntryCV[i].chkEwt, new { @class = "chkEwt comVar", disabled = "disabled" })
                             </td>
                             <td>
-                                @Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.EntryCV[i].vendTRList, "TR_ID", "TR_Tax_Rate"), new { @class = "input100 txtEwt comVar", @disabled = "true" })
+                                @Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.EntryCV[i].vendTRList, "TR_ID", "TR_Tax_Rate"), new { @class = "input100 txtEwt comVar selectDisabled", @disabled = "true" })
                             </td>
                             <td style="text-align:center">
                                 <a class="reqEWTBtn glyphicon glyphicon-list-alt expenseEWT" href="#" style="pointer-events:none;"></a>

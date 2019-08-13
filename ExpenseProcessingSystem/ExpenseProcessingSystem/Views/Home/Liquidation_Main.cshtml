@@ -66,8 +66,6 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        setCheckPageIndex();
-
         $(function () {
             $('*[data-href]').on('click', function () {
                 var form = $("#liquidationForm")
@@ -80,20 +78,7 @@
                 form.submit();
             });
         });
-        $("#paginationInput").change(function (e) {
-            var $pageInput = $(this);
-            var data = $pageInput.data("value"),
-                val = $pageInput.val();
-            if (val == "") {
-                return false;
-            }
-            var href = $('.btnForInputPagination').attr('href');
-
-            if (parseInt(val) > parseInt(lastPageNo)) {
-                $(this).val(lastPageNo);
-            }
-            window.location = href.substring(0, href.lastIndexOf("=") + 1) + "" + $(this).val();
-        }); 
     });
 </script>
 <script type="text/javascript" src="~/js/EntryScripts.js"></script>
+<script type="text/javascript" src="~/js/Pagination.js"></script>

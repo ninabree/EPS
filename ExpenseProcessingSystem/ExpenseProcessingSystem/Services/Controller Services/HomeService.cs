@@ -276,7 +276,7 @@ namespace ExpenseProcessingSystem.Services
                 ApplicationsViewModel tempPending = new ApplicationsViewModel
                 {
                     App_ID = item.Expense_ID,
-                    App_Type = (item.Liq_Status == 0) ? GlobalSystemValues.getApplicationType(item.Expense_Type) : GlobalSystemValues.getApplicationType(item.Expense_Type) + " (Liquidation)",
+                    App_Type = (item.Liq_Status == 0) ? GlobalSystemValues.getApplicationType(item.Expense_Type) : "Liquidation",
                     App_Amount = item.Expense_Debit_Total,
                     App_Payee = getVendorName(item.Expense_Payee, item.Expense_Payee_Type) ?? "",
                     App_Maker = (item.Liq_Status == 0) ? getName(item.Expense_Creator_ID) : getName(item.Liq_Created_UserID),
@@ -8035,10 +8035,10 @@ namespace ExpenseProcessingSystem.Services
                     chkVat = (dtl.d.ExpDtl_Vat <= 0) ? false : true,
                     vat = dtl.d.ExpDtl_Vat,
                     //vat_Name is actually the rate
-                    vat_Name = _context.DMVAT.Where(x => x.VAT_ID == dtl.d.ExpDtl_Vat && x.VAT_isActive == true).Select(x => x.VAT_Rate.ToString()).FirstOrDefault(),
+                    vat_Name = (dtl.d.ExpDtl_Vat > 0) ? _context.DMVAT.Where(x => x.VAT_ID == dtl.d.ExpDtl_Vat && x.VAT_isActive == true).Select(x => (x.VAT_Rate * 100).ToString()).FirstOrDefault() : "0",
                     chkEwt = (dtl.d.ExpDtl_Ewt <= 0) ? false : true,
                     ewt = dtl.d.ExpDtl_Ewt,
-                    ewt_Name = _context.DMTR.Where(x => x.TR_ID == dtl.d.ExpDtl_Ewt).Select(x => x.TR_Tax_Rate.ToString()).FirstOrDefault(),
+                    ewt_Name = (dtl.d.ExpDtl_Ewt > 0) ? _context.DMTR.Where(x => x.TR_ID == dtl.d.ExpDtl_Ewt).Select(x => (x.TR_Tax_Rate * 100).ToString()).FirstOrDefault() : "0",
                     ewt_Payor_Name = (dtl.d.ExpDtl_Ewt_Payor_Name_ID >= 0) ? _context.DMVendor.Where(x => x.Vendor_ID == dtl.d.ExpDtl_Ewt_Payor_Name_ID).Select(x => x.Vendor_Name).FirstOrDefault() : "",
                     ccy = dtl.d.ExpDtl_Ccy,
                     ccy_Name = _context.DMCurrency.Where(x => x.Curr_ID == dtl.d.ExpDtl_Ccy && x.Curr_isActive == true).Select(x => x.Curr_CCY_ABBR).FirstOrDefault(),
@@ -8209,9 +8209,12 @@ namespace ExpenseProcessingSystem.Services
                     GlobalSystemValues.STATUS_FOR_CLOSING
                 };
 
-
                 ExpenseEntryModel dbExpenseEntry = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == transID);
 
+                if(dbExpenseEntry == null)
+                {
+                    GlobalSystemValues.MESSAGE = DateTime.Now.ToLongTimeString() + ": This entry is edited/deleted by another user. Please check the entry again.";
+                }
                 if (forbiddenStatus.Contains(dbExpenseEntry.Expense_Status))
                 {
                     if(dbExpenseEntry.Expense_Status == GlobalSystemValues.STATUS_APPROVED)

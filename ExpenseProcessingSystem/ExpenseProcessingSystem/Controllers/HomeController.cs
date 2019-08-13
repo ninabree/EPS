@@ -27,11 +27,12 @@ using System.Text;
 using BIR_Form_Filler.Functions;
 using BIR_Form_Filler.Models;
 using ExpenseProcessingSystem.Models.Check;
+using Microsoft.Extensions.Logging;
 
 namespace ExpenseProcessingSystem.Controllers
 {
     [ScreenFltr]
-    [RequestFormLimits(ValueCountLimit = 5000)]
+    [ServiceFilter(typeof(HandleExceptionAttribute))]
     public class HomeController : Controller
     {
         private readonly int pageSize = 30;
@@ -1070,6 +1071,7 @@ namespace ExpenseProcessingSystem.Controllers
         //}
 
         //-----------------------[* BUDGET MONITORING *]-------------------------------------------
+
         [OnlineUserCheck]
         [ImportModelState]
         [NonAdminRoleCheck]
@@ -1489,10 +1491,37 @@ namespace ExpenseProcessingSystem.Controllers
             if(entryID > 0)
             {
                 viewModel = _service.getExpenseDDV(entryID);
+                viewModel = PopulateEntry((EntryDDVViewModelList)viewModel);
+
+                foreach (var i in viewModel.EntryDDV)
+                {
+                    viewModel.systemValues.acc.AddRange(_service.getAccDetailsEntry(i.account));
+
+                    var vend = _service.getVendor(i.ewt_Payor_Name_ID);
+                    if (vend != null)
+                    {
+                        i.vendTRList = _service.getVendorTaxList(vend.Vendor_MasterID).ToList();
+                        i.vendVATList = _service.getVendorVatList(vend.Vendor_MasterID).ToList();
+                        if (i.vendTRList == null || i.vendTRList.Count() == 0)
+                        {
+                            i.vendTRList.Add(new DMTRModel { TR_ID = 0, TR_Tax_Rate = 0 });
+                        }
+                        if (i.vendVATList == null || i.vendVATList.Count() == 0)
+                        {
+                            i.vendVATList.Add(new DMVATModel { VAT_ID = 0, VAT_Rate = 0 });
+                        }
+                    }
+                    else
+                    {
+                        i.vendTRList = new List<DMTRModel> { new DMTRModel { TR_ID = 0, TR_Tax_Rate = 0 } };
+                        i.vendVATList = new List<DMVATModel> { new DMVATModel { VAT_ID = 0, VAT_Rate = 0 } };
+                    }
+                }
             }
             else
             {
-               viewModel = new EntryDDVViewModelList();
+                viewModel = new EntryDDVViewModelList();
+                viewModel = PopulateEntry((EntryDDVViewModelList)viewModel);
                 viewModel.EntryDDV.Add(new EntryDDVViewModel {
                     interDetails = new DDVInterEntityViewModel {
                         interPartList = new List<ExpenseEntryInterEntityParticularViewModel>{
@@ -1515,19 +1544,22 @@ namespace ExpenseProcessingSystem.Controllers
                                     new ExpenseEntryInterEntityAccsViewModel()
                                 }
                             }
-                       }
-                    }
+                        }
+                    },
+                    vendTRList = new List<DMTRModel> { new DMTRModel { TR_ID = 0, TR_Tax_Rate = 0 } },
+                    vendVATList = new List<DMVATModel> { new DMVATModel { VAT_ID = 0, VAT_Rate = 0 } },
+                    ccy = _service.getCurrencyByMasterID(_service.getAccount(viewModel.systemValues.acc[0].accId).Account_Currency_MasterID).Curr_ID
                 });
             }
-            viewModel = PopulateEntry((EntryDDVViewModelList)viewModel);
             viewModel.payee_type = GlobalSystemValues.PAYEETYPE_REGEMP;
-            viewModel.systemValues.vat = _service.getAllVat();
-            viewModel.systemValues.ewt = _service.getAllTaxRate();
+            viewModel.systemValues.ewt = new SelectList("0", "0");
+            viewModel.systemValues.vat = new SelectList("0", "0");
             XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
             var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
             viewModel.yenCurrID = ccyYEN.Curr_ID;
             viewModel.yenCurrMasterID = ccyYEN.Curr_MasterID;
             viewModel.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
+
             return View(viewModel);
         }
         [ExportModelState]
@@ -1744,11 +1776,11 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         i.vendTRList = _service.getVendorTaxList(vend.Vendor_MasterID).ToList();
                         i.vendVATList = _service.getVendorVatList(vend.Vendor_MasterID).ToList();
-                        if (i.vendTRList == null)
+                        if (i.vendTRList == null || i.vendTRList.Count() == 0)
                         {
                             i.vendTRList.Add(new DMTRModel { TR_ID = 0, TR_Tax_Rate = 0 });
                         }
-                        if (i.vendVATList == null)
+                        if (i.vendVATList == null || i.vendVATList.Count() == 0)
                         {
                             i.vendVATList.Add(new DMVATModel { VAT_ID = 0, VAT_Rate = 0 });
                         }
@@ -1790,7 +1822,35 @@ namespace ExpenseProcessingSystem.Controllers
 
             if (!ModelState.IsValid)
             {
-                return View("Entry_PCV", PopulateEntry((EntryCVViewModelList)EntryCVViewModelList));
+                EntryCVViewModelList = PopulateEntry((EntryCVViewModelList)EntryCVViewModelList);
+                foreach (var i in EntryCVViewModelList.EntryCV)
+                {
+                    EntryCVViewModelList.systemValues.acc.AddRange(_service.getAccDetailsEntry(i.account));
+                    i.screenCode = "PCV";
+
+                    var vend = _service.getVendor(i.dtl_Ewt_Payor_Name_ID);
+                    if (vend != null)
+                    {
+                        i.vendTRList = _service.getVendorTaxList(vend.Vendor_MasterID).ToList();
+                        i.vendVATList = _service.getVendorVatList(vend.Vendor_MasterID).ToList();
+                        if (i.vendTRList == null || i.vendTRList.Count() == 0)
+                        {
+                            i.vendTRList.Add(new DMTRModel { TR_ID = 0, TR_Tax_Rate = 0 });
+                        }
+                        if (i.vendVATList == null || i.vendVATList.Count() == 0)
+                        {
+                            i.vendVATList.Add(new DMVATModel { VAT_ID = 0, VAT_Rate = 0 });
+                        }
+                    }
+                    else
+                    {
+                        i.vendTRList = new List<DMTRModel> { new DMTRModel { TR_ID = 0, TR_Tax_Rate = 0 } };
+                        i.vendVATList = new List<DMVATModel> { new DMVATModel { VAT_ID = 0, VAT_Rate = 0 } };
+                    }
+                }
+                EntryCVViewModelList.systemValues.ewt = new SelectList("0", "0");
+                EntryCVViewModelList.systemValues.vat = new SelectList("0", "0");
+                return View("Entry_PCV", EntryCVViewModelList);
             }
             XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
             var phpID = _service.getAccountByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value)).Account_ID;
@@ -1969,11 +2029,11 @@ namespace ExpenseProcessingSystem.Controllers
                 {
                     i.vendTRList = _service.getVendorTaxList(vend.Vendor_MasterID).ToList();
                     i.vendVATList = _service.getVendorVatList(vend.Vendor_MasterID).ToList();
-                    if (i.vendTRList == null)
+                    if (i.vendTRList == null || i.vendTRList.Count() == 0)
                     {
                         i.vendTRList.Add(new DMTRModel { TR_ID = 0, TR_Tax_Rate = 0 });
                     }
-                    if (i.vendVATList == null)
+                    if (i.vendVATList == null || i.vendVATList.Count() == 0)
                     {
                         i.vendVATList.Add(new DMVATModel { VAT_ID = 0, VAT_Rate = 0 });
                     }
@@ -2106,6 +2166,8 @@ namespace ExpenseProcessingSystem.Controllers
         {
             var userId = GetUserID();
             XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
+            var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
+            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
 
             EntryCVViewModelList viewModel = new EntryCVViewModelList();
 
@@ -2124,11 +2186,11 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         i.vendTRList = _service.getVendorTaxList(vend.Vendor_MasterID).ToList();
                         i.vendVATList = _service.getVendorVatList(vend.Vendor_MasterID).ToList();
-                        if (i.vendTRList == null)
+                        if (i.vendTRList == null || i.vendTRList.Count() == 0)
                         {
                             i.vendTRList.Add(new DMTRModel { TR_ID = 0, TR_Tax_Rate = 0 });
                         }
-                        if (i.vendVATList == null)
+                        if (i.vendVATList == null || i.vendVATList.Count() == 0)
                         {
                             i.vendVATList.Add(new DMVATModel { VAT_ID = 0, VAT_Rate = 0 });
                         }
@@ -2139,17 +2201,6 @@ namespace ExpenseProcessingSystem.Controllers
                         i.vendVATList = new List<DMVATModel> { new DMVATModel { VAT_ID = 0, VAT_Rate = 0 } };
                     }
                 }
-                viewModel.systemValues.ewt = new SelectList("0", "0");
-                viewModel.systemValues.vat = new SelectList("0", "0");
-                
-                var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
-                viewModel.phpCurrID = ccyPHP.Curr_ID;
-                viewModel.phpCurrMasterID = ccyPHP.Curr_MasterID;
-                viewModel.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
-                var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
-                viewModel.yenCurrID = ccyYEN.Curr_ID;
-                viewModel.yenCurrMasterID = ccyYEN.Curr_MasterID;
-                viewModel.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
             }
             else
             {
@@ -2158,23 +2209,21 @@ namespace ExpenseProcessingSystem.Controllers
                 viewModel.EntryCV.Add(new EntryCVViewModel {
                     screenCode = "SS",
                     vendTRList = new List<DMTRModel> { new DMTRModel { TR_ID = 0, TR_Tax_Rate = 0 } },
-                    vendVATList = new List<DMVATModel> { new DMVATModel { VAT_ID = 0, VAT_Rate = 0 } }
+                    vendVATList = new List<DMVATModel> { new DMVATModel { VAT_ID = 0, VAT_Rate = 0 } },
+                    ccy = ccyPHP.Curr_ID
                 });
-
-                //select values for reg employee payee
-                viewModel.payee_type = GlobalSystemValues.PAYEETYPE_REGEMP;
-                viewModel.systemValues.ewt = new SelectList("0","0");
-                viewModel.systemValues.vat = new SelectList("0", "0");
-                var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
-                viewModel.phpCurrID = ccyPHP.Curr_ID;
-                viewModel.phpCurrMasterID = ccyPHP.Curr_MasterID;
-                viewModel.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
-                viewModel.EntryCV[0].ccy = ccyPHP.Curr_ID;
-                var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
-                viewModel.yenCurrID = ccyYEN.Curr_ID;
-                viewModel.yenCurrMasterID = ccyYEN.Curr_MasterID;
-                viewModel.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
             }
+
+            //select values for reg employee payee
+            viewModel.payee_type = GlobalSystemValues.PAYEETYPE_REGEMP;
+            viewModel.systemValues.ewt = new SelectList("0", "0");
+            viewModel.systemValues.vat = new SelectList("0", "0");
+            viewModel.phpCurrID = ccyPHP.Curr_ID;
+            viewModel.phpCurrMasterID = ccyPHP.Curr_MasterID;
+            viewModel.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
+            viewModel.yenCurrID = ccyYEN.Curr_ID;
+            viewModel.yenCurrMasterID = ccyYEN.Curr_MasterID;
+            viewModel.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
 
             return View(viewModel);
         }
@@ -2188,6 +2237,45 @@ namespace ExpenseProcessingSystem.Controllers
 
             if (!ModelState.IsValid)
             {
+                EntryCVViewModelList = PopulateEntry((EntryCVViewModelList)EntryCVViewModelList, GlobalSystemValues.TYPE_SS);
+
+                foreach (var i in EntryCVViewModelList.EntryCV)
+                {
+                    EntryCVViewModelList.systemValues.acc.AddRange(_service.getAccDetailsEntry(i.account));
+                    i.screenCode = "SS";
+
+                    var vend = _service.getVendor(i.dtl_Ewt_Payor_Name_ID);
+                    if (vend != null)
+                    {
+                        i.vendTRList = _service.getVendorTaxList(vend.Vendor_MasterID).ToList();
+                        i.vendVATList = _service.getVendorVatList(vend.Vendor_MasterID).ToList();
+                        if (i.vendTRList == null || i.vendTRList.Count() == 0)
+                        {
+                            i.vendTRList.Add(new DMTRModel { TR_ID = 0, TR_Tax_Rate = 0 });
+                        }
+                        if (i.vendVATList == null || i.vendVATList.Count() == 0)
+                        {
+                            i.vendVATList.Add(new DMVATModel { VAT_ID = 0, VAT_Rate = 0 });
+                        }
+                    }
+                    else
+                    {
+                        i.vendTRList = new List<DMTRModel> { new DMTRModel { TR_ID = 0, TR_Tax_Rate = 0 } };
+                        i.vendVATList = new List<DMVATModel> { new DMVATModel { VAT_ID = 0, VAT_Rate = 0 } };
+                    }
+                }
+                EntryCVViewModelList.systemValues.ewt = new SelectList("0", "0");
+                EntryCVViewModelList.systemValues.vat = new SelectList("0", "0");
+
+                XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
+                var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
+                EntryCVViewModelList.phpCurrID = ccyPHP.Curr_ID;
+                EntryCVViewModelList.phpCurrMasterID = ccyPHP.Curr_MasterID;
+                EntryCVViewModelList.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
+                var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
+                EntryCVViewModelList.yenCurrID = ccyYEN.Curr_ID;
+                EntryCVViewModelList.yenCurrMasterID = ccyYEN.Curr_MasterID;
+                EntryCVViewModelList.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
                 return View("Entry_SS", PopulateEntry((EntryCVViewModelList)EntryCVViewModelList, GlobalSystemValues.TYPE_SS));
             }
 
@@ -2361,11 +2449,11 @@ namespace ExpenseProcessingSystem.Controllers
                 {
                     i.vendTRList = _service.getVendorTaxList(vend.Vendor_MasterID).ToList();
                     i.vendVATList = _service.getVendorVatList(vend.Vendor_MasterID).ToList();
-                    if(i.vendTRList == null)
+                    if (i.vendTRList == null || i.vendTRList.Count() == 0)
                     {
-                        i.vendTRList.Add(new DMTRModel { TR_ID = 0, TR_Tax_Rate = 0});
+                        i.vendTRList.Add(new DMTRModel { TR_ID = 0, TR_Tax_Rate = 0 });
                     }
-                    if(i.vendVATList == null)
+                    if (i.vendVATList == null || i.vendVATList.Count() == 0)
                     {
                         i.vendVATList.Add(new DMVATModel { VAT_ID = 0, VAT_Rate = 0 });
                     }
