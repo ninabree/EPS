@@ -1709,8 +1709,7 @@ namespace ExpenseProcessingSystem.Controllers
                         {
                             ViewBag.Success = 0;
                         }
-                        viewLink = "Entry_DDV";
-                        return RedirectToAction("Entry_DDV", new EntryDDVViewModelList());
+                        return RedirectToAction("Index");
                     }
                     else
                     {
@@ -1728,7 +1727,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "Entry_DDV_ReadOnly";
+                    return RedirectToAction("Index");
                     break;
                 default:
                     break;

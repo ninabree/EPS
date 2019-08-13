@@ -9,7 +9,7 @@
 <div class="tabContent">
     <input id="_screen" type="hidden" value="nc" />
     <div id="tbl-lbl" class="flex-sb">
-        <div class="dis-inline-block w-20">Date: <p class="dis-inline-block w-70">@Html.TextBoxFor(model => model.expenseDate, new { @readonly = "true", @class = "input w-97" })</p> </div>
+        <div class="dis-inline-block w-20">Date: <p class="dis-inline-block w-70">@Html.EditorFor(m => m.expenseDate, new { htmlAttributes = new { @class = "input w-97", @type = "date", @readonly = "readonly", @id = "entryDate" } })</p> </div>
     </div>
     <div id="tbl-lbl">
         <div class="dis-inline-block"><p>Category of Entries:</p></div>
