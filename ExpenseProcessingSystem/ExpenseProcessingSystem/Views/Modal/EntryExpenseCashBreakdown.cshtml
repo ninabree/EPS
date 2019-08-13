@@ -138,6 +138,8 @@
 
                 var txtDenomination = $('#' + cashBDModalitemNo).find('.txtDenomination').val();
                 var txtNoPCS = $('#' + cashBDModalitemNo).find('.txtNoPCS').val();
+                //Remove leading 0.
+                $('#' + cashBDModalitemNo).find('.txtNoPCS').val(parseInt(txtNoPCS));
 
                 $('#' + cashBDModalitemNo).find('.txtAmount').val(round(parseFloat(txtDenomination) * parseFloat(txtNoPCS), 2));
 

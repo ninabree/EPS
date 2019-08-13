@@ -276,7 +276,7 @@ namespace ExpenseProcessingSystem.Services
                 ApplicationsViewModel tempPending = new ApplicationsViewModel
                 {
                     App_ID = item.Expense_ID,
-                    App_Type = (item.Liq_Status == 0) ? GlobalSystemValues.getApplicationType(item.Expense_Type) : GlobalSystemValues.getApplicationType(item.Expense_Type) + " (Liquidation)",
+                    App_Type = (item.Liq_Status == 0) ? GlobalSystemValues.getApplicationType(item.Expense_Type) : "Liquidation",
                     App_Amount = item.Expense_Debit_Total,
                     App_Payee = getVendorName(item.Expense_Payee, item.Expense_Payee_Type) ?? "",
                     App_Maker = (item.Liq_Status == 0) ? getName(item.Expense_Creator_ID) : getName(item.Liq_Created_UserID),
