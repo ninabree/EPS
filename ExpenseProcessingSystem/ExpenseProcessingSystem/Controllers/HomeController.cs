@@ -400,8 +400,9 @@ namespace ExpenseProcessingSystem.Controllers
                     _session.SetString("AF_No", vm.DMFilters.AF.AF_No ?? "");
                     _session.SetString("AF_Cust", vm.DMFilters.AF.AF_Cust ?? "");
                     _session.SetString("AF_Div", vm.DMFilters.AF.AF_Div ?? "");
-                    _session.SetString("AF_Group", vm.DMFilters.AF.AF_Group ?? "");
-                    _session.SetString("AF_FBT", vm.DMFilters.AF.AF_FBT ?? "");
+                    _session.SetString("AF_Group_Name", vm.DMFilters.AF.AF_Group_Name ?? "");
+                    _session.SetString("AF_Currency_Name", vm.DMFilters.AF.AF_Currency_Name ?? "");
+                    _session.SetString("AF_FBT_Name", vm.DMFilters.AF.AF_FBT_Name ?? "");
                     _session.SetString("AF_Creator_Name", vm.DMFilters.AF.AF_Creator_Name ?? "");
                     _session.SetString("AF_Approver_Name", vm.DMFilters.AF.AF_Approver_Name ?? "");
                     _session.SetString("AF_Status", vm.DMFilters.AF.AF_Status ?? "");
@@ -486,7 +487,7 @@ namespace ExpenseProcessingSystem.Controllers
                     _session.SetString("AGF_Code", vm.DMFilters.AGF.AGF_Code ?? "");
                     _session.SetString("AGF_Creator_Name", vm.DMFilters.AGF.AGF_Creator_Name ?? "");
                     _session.SetString("AGF_Approver_Name", vm.DMFilters.AGF.AGF_Approver_Name ?? "");
-                    _session.SetString("AGF_Status", vm.DMFilters.AGF.AGF_Status ?? "");
+                    _session.SetString("AGF_Status_Name", vm.DMFilters.AGF.AGF_Status_Name ?? "");
                 }
             }
             return View();
@@ -1250,7 +1251,7 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.systemValues.employees = listOfSysVals[GlobalSystemValues.SELECT_LIST_REGEMPLOYEE]; 
             viewModel.systemValues.employeesAll = listOfSysVals[GlobalSystemValues.SELECT_LIST_ALLEMPLOYEE];
             //for NC
-            if (viewModel.GetType() != typeof(EntryNCViewModelList))
+            if (viewModel.GetType() != typeof(EntryNCViewModelList) && viewModel.expenseYear == null)
             {
                 viewModel.expenseYear = DateTime.Today.Year.ToString();
                 viewModel.expenseDate = DateTime.Today;
@@ -1742,8 +1743,7 @@ namespace ExpenseProcessingSystem.Controllers
                         {
                             ViewBag.Success = 0;
                         }
-                        viewLink = "Entry_DDV";
-                        return RedirectToAction("Entry_DDV", new EntryDDVViewModelList());
+                        return RedirectToAction("Index");
                     }
                     else
                     {
@@ -1761,7 +1761,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "Entry_DDV_ReadOnly";
+                    return RedirectToAction("Index");
                     break;
                 default:
                     break;

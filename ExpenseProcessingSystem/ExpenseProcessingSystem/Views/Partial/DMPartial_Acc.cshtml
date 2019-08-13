@@ -24,17 +24,17 @@
                         <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_No, new { @class = "input" })</td>
                         <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Cust)</td>
                         <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Cust, new { @class = "input" })</td>
-                        <td>@Html.LabelFor(model => model.DMFilters.AF.AF_FBT)</td>
-                        <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_FBT, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.AF.AF_FBT_Name)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_FBT_Name, new { @class = "input" })</td>
                         <td><input id="filterPartialName" name="partialName" value="DMPartial_Acc" type="hidden" /></td>
                     </tr>
                     <tr>
-                        <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Currency)</td>
-                        <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Currency, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Currency_Name)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Currency_Name, new { @class = "input" })</td>
                         <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Div)</td>
                         <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Div, new { @class = "input" })</td>
-                        <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Group)</td>
-                        <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Group, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Group_Name)</td>
+                        <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Group_Name, new { @class = "input" })</td>
                         <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Creator_Name)</td>
                         <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Creator_Name, new { @class = "input" })</td>
                         <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Approver_Name)</td>
@@ -125,6 +125,10 @@
         {
             <button class="dis-inline-block tbl-btn apprv-rec rec" id="apprv_account">Approve</button>
             <button class="dis-inline-block tbl-btn rej-rec rec" id="rej_account">Reject</button>
+        }
+        else if (ViewBag.access.accessType == "verifier")
+        {
+            <button class="dis-inline-block tbl-btn apprv-rec rec" id="apprv_account">Approve</button>
         }
         <input type="hidden" value="@ViewData["Title"]" id="partialVal" />
     </div>

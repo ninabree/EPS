@@ -14,7 +14,7 @@ namespace ExpenseProcessingSystem.ViewModels.NewRecord
     public class NewCheckViewModel
     {
         [Display(Name = "Input Date")]
-        [NotNullValidations, DateValidation]
+        [NotNullValidations/*, DateValidation*/]
         [DataType(DataType.Date)]
         [DisplayFormat(HtmlEncode = false, DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode =true)]
         public DateTime Check_Input_Date { get; set; }

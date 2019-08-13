@@ -1607,7 +1607,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Vendor_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_Vendor_Filed_Date = DateTime.Now,
                     Pending_Vendor_IsDeleted = false,
-                    Pending_Vendor_Status_ID = 7
+                    Pending_Vendor_Status_ID = GlobalSystemValues.STATUS_NEW
                 };
                 vmList.Add(m);
             }
@@ -8337,21 +8337,30 @@ namespace ExpenseProcessingSystem.Services
                 foreach (var i in entryDtl)
                 {
                     var interList = _context.ExpenseEntryInterEntity.Where(x => x.ExpenseEntryDetailModel.ExpDtl_ID == i.ExpDtl_ID).ToList();
-                    foreach (var inter in interList)
+                    var gbaseList = _context.ExpenseEntryGbaseDtls.Where(x => x.ExpenseEntryDetailModel.ExpDtl_ID == i.ExpDtl_ID).ToList();
+                    if (interList.Count > 0)
                     {
-                        var partList = _context.ExpenseEntryInterEntityParticular.Where(x => x.ExpenseEntryInterEntityModel.ExpDtl_DDVInter_ID == inter.ExpDtl_DDVInter_ID).ToList();
-                        foreach (var part in partList)
+                        foreach (var inter in interList)
                         {
-                            var accList = _context.ExpenseEntryInterEntityAccs.Where(x => x.ExpenseEntryInterEntityParticular.InterPart_ID == part.InterPart_ID).ToList();
-                            foreach (var accs in accList)
+                            var partList = _context.ExpenseEntryInterEntityParticular.Where(x => x.ExpenseEntryInterEntityModel.ExpDtl_DDVInter_ID == inter.ExpDtl_DDVInter_ID).ToList();
+                            foreach (var part in partList)
                             {
-                                _context.ExpenseEntryInterEntityAccs.RemoveRange(_context.ExpenseEntryInterEntityAccs
-                                    .Where(x => x.ExpenseEntryInterEntityParticular.InterPart_ID == part.InterPart_ID));
+                                var accList = _context.ExpenseEntryInterEntityAccs.Where(x => x.ExpenseEntryInterEntityParticular.InterPart_ID == part.InterPart_ID).ToList();
+                                foreach (var accs in accList)
+                                {
+                                    _context.ExpenseEntryInterEntityAccs.RemoveRange(_context.ExpenseEntryInterEntityAccs
+                                        .Where(x => x.ExpenseEntryInterEntityParticular.InterPart_ID == part.InterPart_ID));
+                                }
+                                _context.ExpenseEntryInterEntityParticular.RemoveRange(_context.ExpenseEntryInterEntityParticular
+                                    .Where(x => x.ExpenseEntryInterEntityModel.ExpDtl_DDVInter_ID == inter.ExpDtl_DDVInter_ID));
                             }
-                            _context.ExpenseEntryInterEntityParticular.RemoveRange(_context.ExpenseEntryInterEntityParticular
-                                .Where(x => x.ExpenseEntryInterEntityModel.ExpDtl_DDVInter_ID == inter.ExpDtl_DDVInter_ID));
+                            _context.ExpenseEntryInterEntity.RemoveRange(_context.ExpenseEntryInterEntity
+                                .Where(x => x.ExpenseEntryDetailModel.ExpDtl_ID == i.ExpDtl_ID));
                         }
-                        _context.ExpenseEntryInterEntity.RemoveRange(_context.ExpenseEntryInterEntity
+                    }
+                    if (gbaseList.Count > 0)
+                    {
+                        _context.ExpenseEntryGbaseDtls.RemoveRange(_context.ExpenseEntryGbaseDtls
                             .Where(x => x.ExpenseEntryDetailModel.ExpDtl_ID == i.ExpDtl_ID));
                     }
                 }

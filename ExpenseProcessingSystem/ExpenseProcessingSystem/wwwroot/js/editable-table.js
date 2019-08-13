@@ -181,9 +181,9 @@ $(document).ready(function () {
             + '</tr>');
     }
     function checkRowFormat(itemCount) {
-        var getDateTime = new Date().toLocaleString();
+        var getDateTime = (new Date().getMonth() + 1) + '/' + new Date().getDate() + '/' + new Date().getFullYear();
         return $('<tr id="NewCheck-Tr-' + itemCount + '">'
-            + '<td><input  class="w-full input voucher-input" data-val="true" data-val-required="The Input Date field is required." id="NewCheckVM_' + itemCount + '__Check_Input_Date" name="NewCheckVM[' + itemCount + '].Check_Input_Date" readonly="True" type="text" value="'+ getDateTime+'"></td>'
+            + '<td><input class="w-full" data-val="true" data-val-required="The Input Date field is required." id="NewCheckVM_' + itemCount + '__Check_Input_Date" name="NewCheckVM[' + itemCount + '].Check_Input_Date" readonly="True" type="text" value="' + getDateTime + '"></td>'
             + '<td><input class="w-full input voucher-input" id="NewCheckVM_' + itemCount + '__Check_Series_From" name="NewCheckVM[' + itemCount + '].Check_Series_From" type="text" value=""></td>'
             + '<td><input class="w-full input voucher-input" id="NewCheckVM_' + itemCount + '__Check_Series_To" name="NewCheckVM[' + itemCount + '].Check_Series_To" type="text" value=""></td>'
             + '<td><input class="w-full input voucher-input" id="NewCheckVM_' + itemCount + '__Check_Bank_Info" name="NewCheckVM[' + itemCount + '].Check_Bank_Info" type="text" value=""></td>'
