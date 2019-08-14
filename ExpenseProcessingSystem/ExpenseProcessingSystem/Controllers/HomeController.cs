@@ -2884,7 +2884,7 @@ namespace ExpenseProcessingSystem.Controllers
                         ViewBag.Success = 1;
                         var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == entryID);
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_NC, GlobalSystemValues.STATUS_REJECTED, makerId);
+                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_NC, GlobalSystemValues.STATUS_REJECTED, makerId.Expense_Creator_ID);
                         //----------------------------- NOTIF----------------------------------  
                         return RedirectToAction("Index", "Home");
                     }

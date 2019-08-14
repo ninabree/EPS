@@ -4,6 +4,7 @@
     Layout = "~/Views/Shared/_ModalLayout.cshtml";
 }
 
+@using ExpenseProcessingSystem.ConstantData
 @using ExpenseProcessingSystem.ViewModels
 @model DMViewModel
 
@@ -66,11 +67,20 @@
         <tbody>
             @if (Model.Vendor != null)
             {
-                @foreach (var item in Model.Vendor)
+                var pendList = Model.Vendor.Where(x => x.Vendor_Status_ID != GlobalSystemValues.STATUS_APPROVED).ToList();
+
+                @foreach(var item in Model.Vendor)
                 {
                     <tr>
                         <td>
-                            <input class="tbl-chk" id="@item.Vendor_MasterID" type="checkbox" />
+                            @if (pendList.Select(x => x.Vendor_MasterID).Contains(item.Vendor_MasterID) && item.Vendor_Status_ID == GlobalSystemValues.STATUS_APPROVED)
+                            {
+                                <input class="tbl-chk" id="@item.Vendor_MasterID" disabled type="checkbox" />
+                            }
+                            else
+                            {
+                                <input class="tbl-chk" id="@item.Vendor_MasterID" type="checkbox" />
+                            }
                             @Html.HiddenFor(modelItem => item.Vendor_Creator_ID)
                         </td>
                         <td>@Html.DisplayFor(modelItem => item.Vendor_Name)</td>

@@ -4,6 +4,7 @@
     Layout = "~/Views/Shared/_ModalLayout.cshtml";
 }
 
+@using ExpenseProcessingSystem.ConstantData
 @using ExpenseProcessingSystem.ViewModels
 @model DMViewModel
 
@@ -55,11 +56,19 @@
         <tbody>
             @if (Model.Dept.Count != 0)
             {
+                var pendList = Model.Dept.Where(x => x.Dept_Status_ID != GlobalSystemValues.STATUS_APPROVED).ToList();
                 @foreach (var item in Model.Dept)
                 {
                     <tr>
                         <td>
-                            <input class="tbl-chk" id="@item.Dept_MasterID" type="checkbox" />
+                            @if (pendList.Select(x => x.Dept_MasterID).Contains(item.Dept_MasterID) && item.Dept_Status_ID == GlobalSystemValues.STATUS_APPROVED)
+                            {
+                                <input class="tbl-chk" id="@item.Dept_MasterID" type="checkbox" disabled />
+                            }
+                            else
+                            {
+                                <input class="tbl-chk" id="@item.Dept_MasterID" type="checkbox" />
+                            }
                             @Html.HiddenFor(modelItem => item.Dept_Creator_ID)
                         </td>
                         <td>@Html.DisplayFor(modelItem => item.Dept_Name)</td>

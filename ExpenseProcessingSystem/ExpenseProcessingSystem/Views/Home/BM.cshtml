@@ -98,7 +98,7 @@
                     }
                 });
 
-                $('.myModal2').modal('show');
+                $('.myModal2').removeData('bs.modal').modal({ backdrop: 'static', keyboard: false });
             });
 
             //History of budget registration modal
@@ -123,8 +123,8 @@
 
                     }
                 });
-
-                $('.myModal2').modal('show');
+                $('.myModal2').removeData('bs.modal').modal({ backdrop: true, keyboard: true });
+                //$('.myModal2').modal({ backdrop: false, keyboard: true });
             });
             $(".btnPrintBudget").click(function (e) {
                 e.preventDefault();
