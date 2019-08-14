@@ -1720,6 +1720,7 @@ namespace ExpenseProcessingSystem.Controllers
                         //----------------------------- NOTIF----------------------------------
                         _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_DDV, GlobalSystemValues.STATUS_REJECTED, makerId.Expense_Creator_ID);
                         //----------------------------- NOTIF----------------------------------
+                        return RedirectToAction("Index", "Home");
                     }
                     else
                     {
@@ -1738,12 +1739,14 @@ namespace ExpenseProcessingSystem.Controllers
                             //----------------------------- NOTIF----------------------------------
                             _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DDV, GlobalSystemValues.STATUS_DELETE, 0);
                             //----------------------------- NOTIF----------------------------------
+                            return RedirectToAction("Index", "Home");
                         }
                         else
                         {
                             ViewBag.Success = 0;
                         }
-                        return RedirectToAction("Index");
+                        viewLink = "Entry_DDV_ReadOnly";
+                        break;
                     }
                     else
                     {
@@ -1761,7 +1764,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 0;
                     }
-                    return RedirectToAction("Index");
+                    viewLink = "Entry_DDV_ReadOnly";
                     break;
                 default:
                     break;
@@ -2881,8 +2884,9 @@ namespace ExpenseProcessingSystem.Controllers
                         ViewBag.Success = 1;
                         var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == entryID);
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_NC, GlobalSystemValues.STATUS_REJECTED, makerId.Expense_Creator_ID);
-                        //----------------------------- NOTIF----------------------------------                    
+                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_NC, GlobalSystemValues.STATUS_REJECTED, makerId);
+                        //----------------------------- NOTIF----------------------------------  
+                        return RedirectToAction("Index", "Home");
                     }
                     else
                     {
@@ -2905,8 +2909,7 @@ namespace ExpenseProcessingSystem.Controllers
                         {
                             ViewBag.Success = 0;
                         }
-                        viewLink = "Entry_NC";
-                        return RedirectToAction("Entry_NC", new EntryNCViewModelList());
+                        return RedirectToAction("Index", "Home");
                     }
                     else
                     {
