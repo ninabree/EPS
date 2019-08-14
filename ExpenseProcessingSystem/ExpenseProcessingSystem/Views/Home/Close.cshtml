@@ -195,7 +195,7 @@
     <br />
     <table class="table" id="close-tbl">
         <colgroup>
-            <col style="width:10%;" />
+            <col style="width:15%;" />
             <col style="width:15%;" />
             <col />
         </colgroup>
@@ -205,7 +205,7 @@
                     <p>Beginning Balance</p>
                 </td>
                 <td>
-                    @Html.EditorFor(x=>x.pettyBegBalance, new { @readonly = "readonly"})
+                    @Html.TextBoxFor(x=>x.pettyBegBalance, new { @readonly = "true",@class = "input", @id= "CBD_opeBalance" })
                 </td>
                 <td>
                     <button class="tbl-btn" id="StartPettyCash" value="StartPettyCash">Beginning Cash balance Confirmation</button>
@@ -216,7 +216,7 @@
                     <p>Cash-IN</p>
                 </td>
                 <td>
-                    @Html.EditorFor(x=>x.recieve, new { @readonly = "readonly" })
+                    @Html.TextBoxFor(x=>x.recieve, new { @readonly = "true", @class = "input",@id = "CBD_recieve" })
                 </td>
                 <td><button class="tbl-btn" id="ClosePettyCash" value="ClosePettyCash">Petty Cash Breakdown</button></td>
             </tr>
@@ -225,7 +225,7 @@
                     <p>Cash-OUT</p>
                 </td>
                 <td>
-                    @Html.EditorFor(x=>x.Disbursed, new { @readonly = "readonly" })
+                    @Html.TextBoxFor(x=>x.Disbursed, new { @readonly = "true", @class = "input",@id= "CBD_disburse" })
                 </td>
                 <td>
                     <button class="tbl-btn" value="Close">Close</button>
@@ -236,18 +236,49 @@
                     <p>Ending Balance</p>
                 </td>
                 <td>
-                    @Html.EditorFor(x=>x.closeBal, new { @readonly = "readonly" })
+                    @Html.TextBoxFor(x=>x.closeBal, new { @readonly = "true", @class = "input",@id= "CBD_closeBalance" })
                 </td>
                 <td></td>
             </tr>
         </tbody>
     </table>
+    <div id="hiddenValues">
+        @Html.HiddenFor(x => x.oneK, new { @id = "" })
+        @Html.HiddenFor(x => x.oneKAmount, new { @id = "" })
+        @Html.HiddenFor(x => x.fiveH, new { @id = "" })
+        @Html.HiddenFor(x => x.fiveHAmount, new { @id = "" })
+        @Html.HiddenFor(x => x.twoH, new { @id = "" })
+        @Html.HiddenFor(x => x.twoHAmount, new { @id = "" })
+        @Html.HiddenFor(x => x.oneH, new { @id = "" })
+        @Html.HiddenFor(x => x.oneHAmount, new { @id = "" })
+        @Html.HiddenFor(x => x.fifty, new { @id = "" })
+        @Html.HiddenFor(x => x.fiftyAmount, new { @id = "" })
+        @Html.HiddenFor(x => x.twenty, new { @id = "" })
+        @Html.HiddenFor(x => x.twentyAmount, new { @id = "" })
+        @Html.HiddenFor(x => x.ten, new { @id = "" })
+        @Html.HiddenFor(x => x.tenAmount, new { @id = "" })
+        @Html.HiddenFor(x => x.five, new { @id = "" })
+        @Html.HiddenFor(x => x.fiveAmount, new { @id = "" })
+        @Html.HiddenFor(x => x.one, new { @id = "" })
+        @Html.HiddenFor(x => x.oneAmount, new { @id = "" })
+        @Html.HiddenFor(x => x.c25, new { @id = "" })
+        @Html.HiddenFor(x => x.c25Amount, new { @id = "" })
+        @Html.HiddenFor(x => x.c10, new { @id = "" })
+        @Html.HiddenFor(x => x.c10Amount, new { @id = "" })
+        @Html.HiddenFor(x => x.c5, new { @id = "" })
+        @Html.HiddenFor(x => x.c5Amount, new { @id = "" })
+        @Html.HiddenFor(x => x.c1, new { @id = "" })
+        @Html.HiddenFor(x => x.c1Amout, new { @id = "" })
+        @Html.HiddenFor(x => x.billTotal, new { @id = "" })
+        @Html.HiddenFor(x => x.coinTotal, new { @id = "" })
+
+    </div>
 </div>
 <div id="pettyCashModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <!-- Modal content-->
         <div class="vertical-alignment-helper">
-            <div class="modal-dialog vertical-align-center">
+            <div class="modal-dialog vertical-align-center" style="width:500px !important;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 style="display:inline">Cash Break Down</h4>

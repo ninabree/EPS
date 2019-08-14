@@ -1757,5 +1757,11 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
 
             return name.BCS_Name.ToUpper();
         }
+
+        //=============[Get Pettycash]==============
+        public PettyCashModel getPC()
+        {
+            return _context.PettyCash.OrderByDescending(x => x.PC_ID).FirstOrDefault();
+        }
     }
 }

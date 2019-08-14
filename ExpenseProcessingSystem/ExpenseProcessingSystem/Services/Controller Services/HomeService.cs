@@ -602,6 +602,7 @@ namespace ExpenseProcessingSystem.Services
                 mod = new UserModel
                 {
                     User_UserName = model.NewAcc.User_UserName,
+                    User_EmpCode = model.NewAcc.User_EmpCode,
                     User_FName = model.NewAcc.User_FName,
                     User_LName = model.NewAcc.User_LName,
                     User_DeptID = model.NewAcc.User_DeptID,
@@ -624,6 +625,7 @@ namespace ExpenseProcessingSystem.Services
             {
                 if (model.NewAcc.User_ID == mod.User_ID)
                 {
+                    mod.User_EmpCode = model.NewAcc.User_EmpCode;
                     mod.User_FName = model.NewAcc.User_FName;
                     mod.User_LName = model.NewAcc.User_LName;
                     mod.User_DeptID = model.NewAcc.User_DeptID;

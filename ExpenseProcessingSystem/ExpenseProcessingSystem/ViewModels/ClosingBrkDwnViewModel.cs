@@ -47,5 +47,8 @@ namespace ExpenseProcessingSystem.ViewModels
         public double CBD_c5Amount { get; set; }
         public int CBD_c1 { get; set; }
         public double CBD_c1Amout { get; set; }
+
+        public double CBD_coinTotal { get; set; }
+        public double CBD_billTotal { get; set; }
     }
 }

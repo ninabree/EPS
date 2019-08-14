@@ -4,14 +4,16 @@ using ExpenseProcessingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    partial class EPSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190813101542_Remove pcb_id from pettycash")]
+    partial class Removepcb_idfrompettycash
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1842,9 +1844,9 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("PC_OpenUser");
 
-                    b.Property<double>("PC_Recieved");
-
                     b.Property<double>("PC_StartBal");
+
+                    b.Property<double>("PC_Recieved");
 
                     b.HasKey("PC_ID");
 

@@ -11,6 +11,9 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "User ID")]
         public int User_ID { get; set; }
 
+        [Display(Name = "Employee Code")]
+        public string User_EmpCode { get; set; }
+
         [Display(Name = "Username")]
         [NotNullValidations, LengthValidation]
         public string User_UserName { get; set; }

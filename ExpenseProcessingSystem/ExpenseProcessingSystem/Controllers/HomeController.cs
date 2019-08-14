@@ -27,6 +27,8 @@ using System.Text;
 using BIR_Form_Filler.Functions;
 using BIR_Form_Filler.Models;
 using ExpenseProcessingSystem.Models.Check;
+using System.DirectoryServices.AccountManagement;
+using Microsoft.Extensions.Logging;
 
 namespace ExpenseProcessingSystem.Controllers
 {
@@ -45,9 +47,11 @@ namespace ExpenseProcessingSystem.Controllers
         //to access resources
         private readonly IStringLocalizer<HomeController> _localizer;
         private IHostingEnvironment _env;
+        private ILogger<HomeController> _logger;
 
-        public HomeController(IHttpContextAccessor httpContextAccessor, EPSDbContext context, GOExpressContext gocontext,GWriteContext gwritecontext,IHostingEnvironment hostingEnvironment, IStringLocalizer<HomeController> localizer)
+        public HomeController(ILogger<HomeController> logger,IHttpContextAccessor httpContextAccessor, EPSDbContext context, GOExpressContext gocontext,GWriteContext gwritecontext,IHostingEnvironment hostingEnvironment, IStringLocalizer<HomeController> localizer)
         {
+            _logger = logger;
             _localizer = localizer;
             _httpContextAccessor = httpContextAccessor;
             _context = context;
@@ -1161,6 +1165,11 @@ namespace ExpenseProcessingSystem.Controllers
                 RoleList = data.RoleList
             };
 
+            var message = TempData["MESSAGE"];
+            if(message != null || message != "")
+            {
+                ViewData["MESSAGE"] = message;
+            }
             //pagination
             return View(mod);
         }
@@ -1374,7 +1383,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "View_CV";
+                    return RedirectToAction("Index", "Home");
                     break;
                 case "Delete":
                     int expStatus = _service.GetCurrentEntryStatus(entryID);
@@ -4162,8 +4171,20 @@ namespace ExpenseProcessingSystem.Controllers
             var userId = GetUserID();
             if (ModelState.IsValid)
             {
-                _service.deleteBCS_Pending(model, userId);
+                try
+                {
+                    _service.deleteBCS_Pending(model, userId);
+
+                }
+                catch (Exception ex)
+                {
+                    string UserID = _session.GetString("UserID");
+                    string UserName = _session.GetString("UserName");
+                    _logger.LogError(ex, "User [" + UserName + "] has encountered a system error at [" + DateTime.Now + "].");
+                    return StatusCode(500);
+                }
             }
+
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_BCS" });
         }
 
@@ -4174,11 +4195,43 @@ namespace ExpenseProcessingSystem.Controllers
         public IActionResult AddEditUser(UserManagementViewModel model)
         {
             var userId = GetUserID();
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _service.addUser(model, userId);
+                return View();
             }
 
+            try
+            {
+                XElement xelemDirectory = XElement.Load("wwwroot/xml/ActiveDirectory.xml");
+
+                string svcUsername = xelemDirectory.Element("svcUsername").Value;
+                string domain = xelemDirectory.Element("domain").Value;
+                string svcPwd = xelemDirectory.Element("svcPwd").Value;
+                //check if user is existing in Active Directory
+                using (PrincipalContext context = new PrincipalContext(ContextType.Domain, domain, svcUsername, svcPwd))
+                {
+                    using (UserPrincipal user = UserPrincipal.FindByIdentity(context, model.NewAcc.User_UserName))
+                    {
+                        if (user != null)
+                        {
+                            _service.addUser(model, userId);
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("", "Can't find user in the directory.");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string UserID = _session.GetString("UserID");
+                string UserName = _session.GetString("UserName");
+                _logger.LogError(ex, "User [" + UserName + "] has encountered a system error at [" + DateTime.Now + "].");
+                return StatusCode(500);
+            }
+
+            TempData["MESSAGE"] = "User successfully registered.";
 
             return RedirectToAction("UM", "Home");
         }

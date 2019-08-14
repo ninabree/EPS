@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using System;
+using System.Xml.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace ExpenseProcessingSystem.Controllers
 {
@@ -18,9 +20,11 @@ namespace ExpenseProcessingSystem.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly EPSDbContext _context;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
+        private ILogger<AccountController> _logger;
 
-        public AccountController(IHttpContextAccessor httpContextAccessor, EPSDbContext context)
+        public AccountController(ILogger<AccountController> logger,IHttpContextAccessor httpContextAccessor, EPSDbContext context)
         {
+            _logger = logger;
             _httpContextAccessor = httpContextAccessor;
             _context = context;
         }
@@ -53,66 +57,46 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 return View(model);
             }
-            using (EventLog eventLog = new EventLog("Application"))
-            {
-                eventLog.Source = ".Net Runtime";
-                eventLog.WriteEntry("Express: Express has started", EventLogEntryType.Information, 1000, 1);
-            }
+
             //START OF LDAP LOGIN
             //try
             //{
-            //    //string svcUsername = "tuser";
-            //    //string domain = "maniladev.mizuho.com";
-            //    //string svcPwd = "password@99";
-            //    string svcUsername = "gene.delacruz";
-            //    string domain = "jpi.local";
-            //    string svcPwd = "genecarlod";
-                //check if user is existing in Active Directory
-                //using (PrincipalContext context = new PrincipalContext(ContextType.Domain, domain, svcUsername, svcPwd))
-                //{
-                //    using (UserPrincipal user = UserPrincipal.FindByIdentity(context, model.User_UserName))
-                //    {
-                //        if (user != null)
-                //        {
-                //            //Set Session Info
-                //            _session.SetString("UserID", model.User_UserName);
-                //            //Set User Access Info
-                //            _session.SetString("isLoggedIn", "true");
-                //            _session.SetString("accessType", "admin");
-                //            _session.SetString("isAdmin", "admin" == "admin" ? "true" : "false");
-                //            ViewData["message"] = "well shit";
-                //            Log.Information("User Logged In");
-                //            return RedirectToAction("Index", "Home");
-                //        }
-                //    }
-                //}
-                //validate the user's username & password in Active Directory
+            //    XElement xelem = XElement.Load("wwwroot/xml/ActiveDirectory.xml");
+
+            //    string svcUsername = xelem.Element("svcUsername").Value;
+            //    string domain = xelem.Element("domain").Value;
+            //    string svcPwd = xelem.Element("svcPwd").Value;
+
+            //    //validate the user's username & password in Active Directory
             //    using (var context = new PrincipalContext(ContextType.Domain, domain, svcUsername, svcPwd))
             //    {
             //        //Username and password for authentication.
             //        bool rslt = context.ValidateCredentials(model.User_UserName, model.User_Password);
             //        if (rslt)
             //        {
-            //            //Set Session Info
-            //            _session.SetString("UserID", model.User_UserName);
-            //            //Set User Access Info
-            //            _session.SetString("isLoggedIn", "true");
-            //            _session.SetString("accessType", "admin");
-            //            _session.SetString("isAdmin", "admin" == "admin" ? "true" : "false");
-            //            ViewData["message"] = "got in the fourth loop";
-            //            Log.Information("User Logged In");
-            //            return RedirectToAction("Index", "Home");
+            //            var acc = _context.User.Where(x => x.User_UserName == model.User_UserName).Where(x => x.User_InUse == true).Select(x => x).FirstOrDefault();
+            //            if(acc != null)
+            //            {
+            //                //Set Session Info
+            //                _session.SetString("UserID", acc.User_ID.ToString());
+            //                _session.SetString("UserName", acc.User_FName + " " + acc.User_LName);
+            //                //Set User Access Info
+            //                _session.SetString("isLoggedIn", "true");
+            //                _session.SetString("accessType", acc.User_Role);
+            //                _session.SetString("isAdmin", acc.User_Role == "admin" ? "true" : "false");
+            //                return RedirectToAction("Index", "Home");
+            //            }
+            //            else
+            //            {
+            //                ModelState.AddModelError("", "Invalid Login Credential");
+            //            }
             //        }
             //    }
             //}
-            //catch (Exception e)
+            //catch (Exception ex)
             //{
-            //    using (EventLog eventLog = new EventLog("Application"))
-            //    {
-            //        eventLog.Source = ".Net Runtime";
-            //        eventLog.WriteEntry("Express:" + e.Message, EventLogEntryType.Information, 1000, 1);
-            //        eventLog.WriteEntry("Express:" + e.InnerException.Message, EventLogEntryType.Information, 1000, 1);
-            //    }
+            //    _logger.LogError(ex, "User [" + model.User_UserName + "] has encountered a system error at [" + DateTime.Now + "].");
+            //    return StatusCode(500);
             //}
             //END OF LDAP LOGIN
 
@@ -129,7 +113,6 @@ namespace ExpenseProcessingSystem.Controllers
                     _session.SetString("accessType", acc.User_Role);
                     _session.SetString("isAdmin", acc.User_Role == "admin" ? "true" : "false");
 
-                    Log.Information("User Logged In");
                     if (acc.User_Role == "admin")
                     {
                         return RedirectToAction("UM", "Home");
@@ -140,7 +123,6 @@ namespace ExpenseProcessingSystem.Controllers
                     }
                 }
             }
-            ViewData["message"] += "There's an error but you can't see me";
             ModelState.AddModelError("", "Invalid Login Credential");
             return View(model);
         }

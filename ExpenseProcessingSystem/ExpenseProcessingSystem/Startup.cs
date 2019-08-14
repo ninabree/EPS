@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Threading.Tasks;
 using ExpenseProcessingSystem.ConstantData;
 using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.HostedServices;
@@ -103,15 +104,19 @@ namespace ExpenseProcessingSystem
             //Serilog
             loggerFactory.AddSerilog();
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-                app.UseHsts();
-            }
+            //if (env.IsDevelopment())
+            //{
+            //    //  app.UseDeveloperExceptionPage();
+            //    //app.UseStatusCodePagesWithReExecute("/error/Error");
+                
+            //}
+            //else
+            //{
+            //    //app.UseStatusCodePagesWithReExecute("/Error/{0}");
+            //    app.UseHsts();
+            //}
+
+            app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

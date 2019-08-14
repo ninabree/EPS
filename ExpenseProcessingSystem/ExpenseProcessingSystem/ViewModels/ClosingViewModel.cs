@@ -55,6 +55,9 @@ namespace ExpenseProcessingSystem.ViewModels
         public int c1 { get; set; }
         public double c1Amout { get; set; }
 
+        public double billTotal { get; set; }
+        public double coinTotal { get; set; }
+
         public ClosingViewModel()
         {
             messages = new List<string>();

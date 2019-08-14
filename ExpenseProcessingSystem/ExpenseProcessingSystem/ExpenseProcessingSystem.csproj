@@ -110,7 +110,6 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\ExcelTemplatesTempFolder\" />
-    <Folder Include="wwwroot\images\login\" />
     <Folder Include="wwwroot\uploads\NCC\" />
     <Folder Include="wwwroot\uploads\BCS\" />
     <Folder Include="wwwroot\uploads\Temp\" />
