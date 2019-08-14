@@ -19,17 +19,6 @@
     </div>
     <div id="nc_container" class="border-solid">
     </div>
-    <div id="entry-status" class="m-t-10 m-b-10">
-        <div class="dis-inline-block"><label>Status: </label></div>
-        <div class="dis-inline-block">@Html.TextBoxFor(x => x.status, new { @readonly = "true", @class = "input" })</div>
-        <div class="dis-inline-block"><label>Approver:</label></div>
-        <div class="dis-inline-block">@Html.TextBoxFor(model => model.approver, new { @readonly = "true", @class = "input" })</div>
-        <div class="dis-inline-block"><label>Verifier:</label></div>
-        <div class="dis-inline-block">
-            <p class="dis-inline-block">@Html.TextBoxFor(model => model.verifier_1, new { @readonly = "true", @class = "m-l-5 input" })</p>
-            <p class="dis-inline-block">@Html.TextBoxFor(model => model.verifier_2, new { @readonly = "true", @class = "m-l-5 input" })</p>
-        </div>
-    </div>
     <div id="entry-controls" class="m-b-10">
         <div class="flex-sb">
             <div>
@@ -161,14 +150,13 @@
         // ------------------- [[ FUNCTIONS ]] ------------------
         function initPartial() {
             $('select#categoryName option[value=' + partial + ']').attr('selected', 'selected');
-            //var _entryID = $("select#categoryName option:selected").val();
             var _entryID = @Model.entryID;
             var _expenseDate = $("#expenseDate").val();
             $.ajax({
                 url: '/Partial/NC_Partial_GetPreview',
                 type: "Get",
                 data: {
-                    'categoryID': partial, 'entryID': _entryID, 'expenseDate': _expenseDate },
+                    'categoryID': partial, 'entryID': _entryID },
                 async: true,
                 datatype: "json",
                 cache: false,
@@ -324,20 +312,18 @@
             return $('<tr id="item_' + itemCount + '">'
                 + '<td class="voucher-input"><input id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_Remarks_Desc" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_Remarks_Desc"  type="text" value=""></td>'
                 + '<td  class="voucher-input" colspan="2">'
-                + '<div class="dis-inline-block w-48 voucher-input">'
                 + '<input class="text-box single-line" id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_Remarks_Period" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_Remarks_Period" type="text" value="">'
-                + '</div>'
+                + '</td>'
+                + '<td class="cat-hidden hidden" colspan="1" rowspan="2">'
+                + '<input class= "w-full cat-hidden hidden" data - val="true" data - val - required="The Vendor field is required." id = "EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_Vendor_ID" name = "EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_Vendor_ID" readonly = "true" type = "text" value = "0" >'
+                + '</td>'
+                + '<td class="cat-hidden hidden" colspan="1" rowspan="2">'
+                + '<input class= "w-full cat-hidden hidden" data - val="true" data - val - required="The Tax Rate field is required." id = "EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_TR_ID" name = "EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_TR_ID" readonly = "true" type = "text" value = "0" >'
                 + '</td>'
                 + '<td colspan="3"  class="voucher-input">'
                 + '<select class= "w-full input acc-sel" data-val="true" data-val- required="The Account field is required." id = "EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Acc_Name" name = "EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name"> '
                 + accoptions
                 + '</select> </td>'
-                + '<td class="" colspan="1" rowspan="2">'
-                + '<input class= "w-full" data - val="true" data - val - required="The Vendor field is required." id = "EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_Vendor_ID" name = "EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_Vendor_ID" readonly = "true" type = "text" value = "0" >'
-                + '</td>'
-                + '<td class="" colspan="1" rowspan="2">'
-                + '<input class= "w-full" data - val="true" data - val - required="The Tax Rate field is required." id = "EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_TR_ID" name = "EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_TR_ID" readonly = "true" type = "text" value = "0" >'
-                + '</td>'
                 + '<td class="voucher-inter"><input class="ncVar" data-val="true" data-val-number="The field Inter-Rate must be a number." data-val-required="The Inter-Rate field is required." disabled="disabled" id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Inter_Rate" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Inter_Rate"  type="text" value="0"></td>'
                 + '<td> <select id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Curr_ID" class="w-full input curr-sel" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID">'
                 + curroptions

@@ -28,7 +28,7 @@
                                         "-- Select from List --",
                                         new { @class = "w-full input" })
                 </td>
-                <td>@Html.TextBoxFor(m => m.BCS_TIN, new { @class = "w-full input voucher-input" })</td>
+                <td>@Html.TextBoxFor(m => m.BCS_TIN, new { @class = "w-full input-tin input voucher-input", @maxlength = "15", @pattern = "\\d-{15}" })</td>
                 <td>@Html.TextBoxFor(m => m.BCS_Position, new { @class = "w-full input voucher-input" })</td>
                 <td colspan="2"><input type="file" asp-for="BCS_Signatures"></td>
                 <td>
@@ -37,3 +37,14 @@
         </table>
     }
 </div>
+<script>
+    $(document).ready(function (e) {
+        $(".input-tin").keyup(function () {
+            var val = $(this).val()
+            var len = val.length;
+            if (len == 3 || len == 7 || len == 11) {
+                $(this).val(val+"-");
+            }
+        });
+    });
+</script>
