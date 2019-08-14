@@ -77,6 +77,10 @@
 </div>
 <script>
     $(document).ready(function (e) {
+        if ($('#alert').text() != "") {
+            $('#divAlertWindow').show();
+        }
+
         //reset search filter values
         $(document).on("click", "#full-list-btn", function (e) {
             e.stopImmediatePropagation();

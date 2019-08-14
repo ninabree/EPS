@@ -80,6 +80,12 @@ namespace ExpenseProcessingSystem.Controllers
         [NonAdminRoleCheck]
         public IActionResult Index(HomeIndexViewModel vm, string sortOrder, string currentFilter, string colName, string searchString, string page)
         {
+            if (!String.IsNullOrEmpty(GlobalSystemValues.MESSAGE))
+            {
+                ViewData["MESSAGE"] = GlobalSystemValues.MESSAGE;
+                GlobalSystemValues.MESSAGE = "";
+            }
+
             int? pg = (page == null) ? 1 : int.Parse(page);
 
             //sort
@@ -1183,14 +1189,34 @@ namespace ExpenseProcessingSystem.Controllers
             if (entryID > 0)
             {
                 viewModel = _service.getExpense(entryID);
-                List<SelectList> listOfSysVals = _service.getEntrySystemVals();
-                viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
-                viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
-                viewModel.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
-                viewModel.systemValues.ewt = _service.getVendorTaxRate(viewModel.vendor);
-                viewModel.systemValues.vat = _service.getVendorVat(viewModel.vendor);
-                viewModel.systemValues.acc = _service.getAccDetailsEntry();
+                viewModel = PopulateEntry((EntryCVViewModelList)viewModel);
                 viewModel.systemValues.payee_type_sel = new SelectList(GlobalSystemValues.PAYEETYPE_SELECT_CV, "Value", "Text", GlobalSystemValues.PAYEETYPE_SELECT_CV.First());
+
+                foreach (var i in viewModel.EntryCV)
+                {
+                    viewModel.systemValues.acc.AddRange(_service.getAccDetailsEntry(i.account));
+                    i.screenCode = "CV";
+
+                    var vend = _service.getVendor(i.dtl_Ewt_Payor_Name_ID);
+                    if (vend != null)
+                    {
+                        i.vendTRList = _service.getVendorTaxList(vend.Vendor_MasterID).ToList();
+                        i.vendVATList = _service.getVendorVatList(vend.Vendor_MasterID).ToList();
+                        if (i.vendTRList == null || i.vendTRList.Count() == 0)
+                        {
+                            i.vendTRList.Add(new DMTRModel { TR_ID = 0, TR_Tax_Rate = 0 });
+                        }
+                        if (i.vendVATList == null || i.vendVATList.Count() == 0)
+                        {
+                            i.vendVATList.Add(new DMVATModel { VAT_ID = 0, VAT_Rate = 0 });
+                        }
+                    }
+                    else
+                    {
+                        i.vendTRList = new List<DMTRModel> { new DMTRModel { TR_ID = 0, TR_Tax_Rate = 0 } };
+                        i.vendVATList = new List<DMVATModel> { new DMVATModel { VAT_ID = 0, VAT_Rate = 0 } };
+                    }
+                }
             }
             else
             {
@@ -1405,6 +1431,13 @@ namespace ExpenseProcessingSystem.Controllers
                     break;
                 default:
                     break;
+            }
+
+            //Entry was Edited, Deleted by user before clicking the approve/verify button by user, 
+            //return error message then redirect to Home Index screen.
+            if (GlobalSystemValues.MESSAGE == GlobalSystemValues.MESSAGE3)
+            {
+                return RedirectToAction("Index", "Home");
             }
 
             ModelState.Clear();
@@ -1668,9 +1701,9 @@ namespace ExpenseProcessingSystem.Controllers
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_VERIFIED, intUser))
                     {
                         ViewBag.Success = 1;
-                        var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == entryID).Expense_Creator_ID;
+                        var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == entryID);
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_DDV, GlobalSystemValues.STATUS_VERIFIED, makerId);
+                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_DDV, GlobalSystemValues.STATUS_VERIFIED, makerId.Expense_Creator_ID);
                         //----------------------------- NOTIF----------------------------------                    
                     }
                     else
@@ -1683,9 +1716,9 @@ namespace ExpenseProcessingSystem.Controllers
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REJECTED, intUser))
                     {
                         ViewBag.Success = 1;
-                        var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == entryID).Expense_Creator_ID;
+                        var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == entryID);
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_DDV, GlobalSystemValues.STATUS_REJECTED, makerId);
+                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_DDV, GlobalSystemValues.STATUS_REJECTED, makerId.Expense_Creator_ID);
                         //----------------------------- NOTIF----------------------------------
                         return RedirectToAction("Index", "Home");
                     }
@@ -1697,6 +1730,7 @@ namespace ExpenseProcessingSystem.Controllers
                     break;
                 case "Delete":
                     int expStatus = _service.GetCurrentEntryStatus(entryID);
+
                     if (expStatus == GlobalSystemValues.STATUS_PENDING || expStatus == GlobalSystemValues.STATUS_REJECTED)
                     {
                         if (_service.deleteExpenseEntry(entryID, GlobalSystemValues.TYPE_DDV))
@@ -1734,6 +1768,13 @@ namespace ExpenseProcessingSystem.Controllers
                     break;
                 default:
                     break;
+            }
+
+            //Entry was Edited, Deleted by user before clicking the approve/verify button by user, 
+            //return error message then redirect to Home Index screen.
+            if (GlobalSystemValues.MESSAGE == GlobalSystemValues.MESSAGE3)
+            {
+                return RedirectToAction("Index", "Home");
             }
 
             ModelState.Clear();
@@ -1924,7 +1965,7 @@ namespace ExpenseProcessingSystem.Controllers
             var intUser = int.Parse(userId);
             string viewLink = "Entry_PCV";
             EntryCVViewModelList pcvList;
-            var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == entryID).Expense_Creator_ID;
+            var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == entryID);
 
             switch (command)
             {
@@ -1937,7 +1978,7 @@ namespace ExpenseProcessingSystem.Controllers
                         _service.postCV(entryID, "P", int.Parse(GetUserID()));
                         ViewBag.Success = 1;
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_PC, GlobalSystemValues.STATUS_APPROVED, makerId);
+                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_PC, GlobalSystemValues.STATUS_APPROVED, makerId.Expense_Creator_ID);
                         //----------------------------- NOTIF----------------------------------                    
                     }
                     else
@@ -1951,7 +1992,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 1;
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_PC, GlobalSystemValues.STATUS_VERIFIED, makerId);
+                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_PC, GlobalSystemValues.STATUS_VERIFIED, makerId.Expense_Creator_ID);
                         //----------------------------- NOTIF----------------------------------                    
                     }
                     else
@@ -1990,7 +2031,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 1;
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_PC, GlobalSystemValues.STATUS_REJECTED, makerId);
+                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_PC, GlobalSystemValues.STATUS_REJECTED, makerId.Expense_Creator_ID);
                         //----------------------------- NOTIF----------------------------------                    
                     }
                     else
@@ -2004,7 +2045,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         _service.postCV(entryID, "R", int.Parse(GetUserID()));
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_PC, GlobalSystemValues.STATUS_REVERSED, makerId);
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_PC, GlobalSystemValues.STATUS_REVERSED, makerId.Expense_Creator_ID);
                         //----------------------------- NOTIF----------------------------------
                         ViewBag.Success = 1;
                     }
@@ -2016,6 +2057,13 @@ namespace ExpenseProcessingSystem.Controllers
                     break;
                 default:
                     break;
+            }
+
+            //Entry was Edited, Deleted by user before clicking the approve/verify button by user, 
+            //return error message then redirect to Home Index screen.
+            if (GlobalSystemValues.MESSAGE == GlobalSystemValues.MESSAGE3)
+            {
+                return RedirectToAction("Index", "Home");
             }
 
             pcvList = _service.getExpense(entryID);
@@ -2345,7 +2393,7 @@ namespace ExpenseProcessingSystem.Controllers
             string viewLink = "Entry_SS";
             EntryCVViewModelList ssList;
 
-            var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == entryID).Expense_Creator_ID;
+            var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == entryID);
             switch (command)
             {
                 case "Modify":
@@ -2357,7 +2405,7 @@ namespace ExpenseProcessingSystem.Controllers
                         _service.postCV(entryID, "P", int.Parse(GetUserID()));
                         ViewBag.Success = 1;
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_SS, GlobalSystemValues.STATUS_APPROVED, makerId);
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_SS, GlobalSystemValues.STATUS_APPROVED, makerId.Expense_Creator_ID);
                         //----------------------------- NOTIF----------------------------------
                     }
                     else
@@ -2371,7 +2419,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 1;
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_SS, GlobalSystemValues.STATUS_VERIFIED, makerId);
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_SS, GlobalSystemValues.STATUS_VERIFIED, makerId.Expense_Creator_ID);
                         //----------------------------- NOTIF----------------------------------
                     }
                     else
@@ -2410,7 +2458,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 1;
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_SS, GlobalSystemValues.STATUS_REJECTED, makerId);
+                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_SS, GlobalSystemValues.STATUS_REJECTED, makerId.Expense_Creator_ID);
                         //----------------------------- NOTIF----------------------------------                    
                     }
                     else
@@ -2425,7 +2473,7 @@ namespace ExpenseProcessingSystem.Controllers
                         _service.postCV(entryID, "R", int.Parse(GetUserID()));
                         ViewBag.Success = 1;
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_SS, GlobalSystemValues.STATUS_REVERSED, makerId);
+                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_SS, GlobalSystemValues.STATUS_REVERSED, makerId.Expense_Creator_ID);
                         //----------------------------- NOTIF----------------------------------                    
                     }
                     else
@@ -2436,6 +2484,13 @@ namespace ExpenseProcessingSystem.Controllers
                     break;
                 default:
                     break;
+            }
+
+            //Entry was Edited, Deleted by user before clicking the approve/verify button by user, 
+            //return error message then redirect to Home Index screen.
+            if (GlobalSystemValues.MESSAGE == GlobalSystemValues.MESSAGE3)
+            {
+                return RedirectToAction("Index", "Home");
             }
 
             ssList = _service.getExpense(entryID);
@@ -2792,9 +2847,9 @@ namespace ExpenseProcessingSystem.Controllers
                         //"P" for Normal Posting, "R" for Reversal
                         _service.postNC(entryID,"P", int.Parse(GetUserID()));
                         ViewBag.Success = 1;
-                        var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == entryID).Expense_Creator_ID;
+                        var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == entryID);
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_NC, GlobalSystemValues.STATUS_APPROVED, makerId);
+                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_NC, GlobalSystemValues.STATUS_APPROVED, makerId.Expense_Creator_ID);
                         //----------------------------- NOTIF----------------------------------                    
                     }
                     else
@@ -2806,9 +2861,9 @@ namespace ExpenseProcessingSystem.Controllers
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_VERIFIED, int.Parse(GetUserID())))
                     {
                         ViewBag.Success = 1;
-                        var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == entryID).Expense_Creator_ID;
+                        var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == entryID);
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_NC, GlobalSystemValues.STATUS_VERIFIED, makerId);
+                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_NC, GlobalSystemValues.STATUS_VERIFIED, makerId.Expense_Creator_ID);
                         //----------------------------- NOTIF----------------------------------                    
                     }
                     else
@@ -2821,7 +2876,7 @@ namespace ExpenseProcessingSystem.Controllers
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REJECTED, int.Parse(GetUserID())))
                     {
                         ViewBag.Success = 1;
-                        var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == entryID).Expense_Creator_ID;
+                        var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == entryID);
                         //----------------------------- NOTIF----------------------------------
                         _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_NC, GlobalSystemValues.STATUS_REJECTED, makerId);
                         //----------------------------- NOTIF----------------------------------  
@@ -2867,9 +2922,9 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         _service.postNC(entryID, "R", int.Parse(GetUserID()));
                         ViewBag.Success = 1;
-                        var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == entryID).Expense_Creator_ID;
+                        var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == entryID);
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_NC, GlobalSystemValues.STATUS_REVERSED, makerId);
+                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_NC, GlobalSystemValues.STATUS_REVERSED, makerId.Expense_Creator_ID);
                         //----------------------------- NOTIF----------------------------------                    
                     }
                     else
@@ -3306,7 +3361,7 @@ namespace ExpenseProcessingSystem.Controllers
             string viewLink = "Liquidation_SS";
             LiquidationViewModel ssList;
 
-            var makerId = _context.LiquidationEntryDetails.FirstOrDefault(x => x.ExpenseEntryModel.Expense_ID == entryID).Liq_Created_UserID;
+            var makerId = _context.LiquidationEntryDetails.FirstOrDefault(x => x.ExpenseEntryModel.Expense_ID == entryID);
             switch (command)
             {
                 case "Modify":
@@ -3318,7 +3373,7 @@ namespace ExpenseProcessingSystem.Controllers
                         _service.postLiq_SS(entryID, command, int.Parse(GetUserID()));
                         ViewBag.Success = 1;
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_LIQ, GlobalSystemValues.STATUS_APPROVED, makerId);
+                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_LIQ, GlobalSystemValues.STATUS_APPROVED, makerId.Liq_Created_UserID);
                         //----------------------------- NOTIF----------------------------------
                     }
                     else
@@ -3332,7 +3387,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 1;
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_LIQ, GlobalSystemValues.STATUS_VERIFIED, makerId);
+                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_LIQ, GlobalSystemValues.STATUS_VERIFIED, makerId.Liq_Created_UserID);
                         //----------------------------- NOTIF----------------------------------
                     }
                     else
@@ -3371,7 +3426,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 1;
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_LIQ, GlobalSystemValues.STATUS_REJECTED, makerId);
+                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_LIQ, GlobalSystemValues.STATUS_REJECTED, makerId.Liq_Created_UserID);
                         //----------------------------- NOTIF----------------------------------
                     }
                     else
@@ -3386,7 +3441,7 @@ namespace ExpenseProcessingSystem.Controllers
                         _service.postLiq_SS(entryID, "R", int.Parse(GetUserID()));
                         ViewBag.Success = 1;
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_LIQ, GlobalSystemValues.STATUS_REVERSED, makerId);
+                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_LIQ, GlobalSystemValues.STATUS_REVERSED, makerId.Liq_Created_UserID);
                         //----------------------------- NOTIF----------------------------------
                     }
                     else
@@ -3397,6 +3452,13 @@ namespace ExpenseProcessingSystem.Controllers
                     break;
                 default:
                     break;
+            }
+
+            //Entry was Edited, Deleted by user before clicking the approve/verify button by user, 
+            //return error message then redirect to Home Index screen.
+            if (GlobalSystemValues.MESSAGE == GlobalSystemValues.MESSAGE3)
+            {
+                return RedirectToAction("Index", "Home");
             }
 
             ssList = _service.getExpenseToLiqudate(entryID);
