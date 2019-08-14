@@ -2659,6 +2659,12 @@ namespace ExpenseProcessingSystem.Controllers
             }
             ssList.birForms.AddRange(birForms);
 
+            if (!String.IsNullOrEmpty(GlobalSystemValues.MESSAGE))
+            {
+                ViewData["MESSAGE"] = GlobalSystemValues.MESSAGE;
+                GlobalSystemValues.MESSAGE = "";
+            }
+
             return View("Entry_SS_ReadOnly", ssList);
         }
 

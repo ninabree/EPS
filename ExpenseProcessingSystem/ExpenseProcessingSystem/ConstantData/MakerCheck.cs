@@ -34,7 +34,7 @@ namespace ExpenseProcessingSystem.ConstantData
 
                 var expense = _dbContext.ExpenseEntry.FirstOrDefault(x=>x.Expense_ID == id);
 
-                if(userID != expense.Expense_Creator_ID || expense.Expense_Status != GlobalSystemValues.STATUS_PENDING)
+                if(userID != expense.Expense_Creator_ID || (expense.Expense_Status != GlobalSystemValues.STATUS_PENDING && expense.Expense_Status != GlobalSystemValues.STATUS_REJECTED))
                 {
                     context.Result =
                         new RedirectToRouteResult(new RouteValueDictionary(new
