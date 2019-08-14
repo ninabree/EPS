@@ -644,7 +644,7 @@ iframe{
 
     .btn:hover {
         background-color: #0a1b81;
-        color: #fff;
+        color: #fff !important;
     }
     .btn[disabled], select[disabled] {
         cursor: not-allowed;
