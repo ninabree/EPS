@@ -86,7 +86,7 @@
     <a page="@(Model.HistoryList.PageIndex - 1)"
        class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left">
     </a>
-    <input type="text" class="pagination-input" id="paginationInput" val="" />
+    <input type="text" class="pagination-input" id="paginationInput" val=""/>
     <input type="text" class="pagination-input" value="@(Model.HistoryList.PageIndex) of @(Model.HistoryList.TotalPages)" disabled />
     <a page="@(Model.HistoryList.PageIndex + 1)"
        class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right">
@@ -105,6 +105,19 @@
             form.attr("action", "/Home/" + link)
             form.submit();
         });
+    });
+
+    $(document).on("change", "#paginationInput", function (e) {
+        var $pageInput = $(this);
+
+        var data = $pageInput.data("value"),
+            val = $pageInput.val();
+
+        if (data !== val) {
+            $pageInput.data("value", val);
+            var url = window.location.pathname + '?page=' + val;
+            window.location = url;
+        }
     });
     //reset search filter values
     $(document).on("click", "#full-list-btn", function (e) {

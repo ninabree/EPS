@@ -1259,7 +1259,7 @@ namespace ExpenseProcessingSystem.Controllers
 
             return viewModel;
         }
-
+        
         public dynamic PopulateEntry(dynamic viewModel, int screenCode)
         {
             List<SelectList> listOfSysVals = _service.getEntrySystemVals();
@@ -1555,58 +1555,34 @@ namespace ExpenseProcessingSystem.Controllers
                         i.vendVATList = new List<DMVATModel> { new DMVATModel { VAT_ID = 0, VAT_Rate = 0 } };
                     }
                 }
+
+                viewModel.payee_type = GlobalSystemValues.PAYEETYPE_REGEMP;
+                viewModel.systemValues.ewt = new SelectList("0", "0");
+                viewModel.systemValues.vat = new SelectList("0", "0");
+                XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
+                var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
+                viewModel.yenCurrID = ccyYEN.Curr_ID;
+                viewModel.yenCurrMasterID = ccyYEN.Curr_MasterID;
+                viewModel.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
             }
             else
             {
                 viewModel = new EntryDDVViewModelList();
-                viewModel = PopulateEntry((EntryDDVViewModelList)viewModel);
-                viewModel.EntryDDV.Add(new EntryDDVViewModel {
-                    interDetails = new DDVInterEntityViewModel {
-                        interPartList = new List<ExpenseEntryInterEntityParticularViewModel>{
-                            new ExpenseEntryInterEntityParticularViewModel{
-                                ExpenseEntryInterEntityAccs = new List<ExpenseEntryInterEntityAccsViewModel>{
-                                    new ExpenseEntryInterEntityAccsViewModel(),
-                                    new ExpenseEntryInterEntityAccsViewModel(),
-                                    new ExpenseEntryInterEntityAccsViewModel()
-                                }
-                            },
-                            new ExpenseEntryInterEntityParticularViewModel{
-                                ExpenseEntryInterEntityAccs = new List<ExpenseEntryInterEntityAccsViewModel>{
-                                    new ExpenseEntryInterEntityAccsViewModel(),
-                                    new ExpenseEntryInterEntityAccsViewModel()
-                                }
-                            },
-                            new ExpenseEntryInterEntityParticularViewModel{
-                                ExpenseEntryInterEntityAccs = new List<ExpenseEntryInterEntityAccsViewModel>{
-                                    new ExpenseEntryInterEntityAccsViewModel(),
-                                    new ExpenseEntryInterEntityAccsViewModel()
-                                }
-                            }
-                        }
-                    },
-                    vendTRList = new List<DMTRModel> { new DMTRModel { TR_ID = 0, TR_Tax_Rate = 0 } },
-                    vendVATList = new List<DMVATModel> { new DMVATModel { VAT_ID = 0, VAT_Rate = 0 } },
-                    ccy = _service.getCurrencyByMasterID(_service.getAccount(viewModel.systemValues.acc[0].accId).Account_Currency_MasterID).Curr_ID
-                });
+                viewModel = PopulateEntryDDV(viewModel);
             }
-            viewModel.payee_type = GlobalSystemValues.PAYEETYPE_REGEMP;
-            viewModel.systemValues.ewt = new SelectList("0", "0");
-            viewModel.systemValues.vat = new SelectList("0", "0");
-            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
-            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
-            viewModel.yenCurrID = ccyYEN.Curr_ID;
-            viewModel.yenCurrMasterID = ccyYEN.Curr_MasterID;
-            viewModel.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
-
             return View(viewModel);
         }
+
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
         [ExportModelState]
         public IActionResult AddNewDDV(EntryDDVViewModelList EntryDDVViewModelList)
         {
             var userId = GetUserID();
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Entry_DDV", EntryDDVViewModelList);
+                //return RedirectToAction("Entry_DDV", EntryDDVViewModelList);
+                return View("Entry_DDV", PopulateEntryDDV(EntryDDVViewModelList));
             }
 
             EntryDDVViewModelList ddvList = new EntryDDVViewModelList();
@@ -2716,27 +2692,32 @@ namespace ExpenseProcessingSystem.Controllers
 
         [OnlineUserCheck]
         [NonAdminRoleCheck]
-        [ImportModelState]
+        //[ImportModelState]
         public IActionResult Entry_NC(EntryNCViewModelList viewModel, string partialName)
         {
             var userId = GetUserID();
-            if(viewModel.EntryNC == null)
-            {
-                viewModel = new EntryNCViewModelList();
-            }
-            ViewData["partialName"] = partialName ?? (viewModel.EntryNC.NC_Category_ID.ToString() != "0" ? viewModel.EntryNC.NC_Category_ID.ToString() : GlobalSystemValues.NC_LS_PAYROLL.ToString());
-            viewModel.category_of_entry = GlobalSystemValues.NC_CATEGORIES_SELECT;
-            viewModel.expenseDate = DateTime.Now;
+            partialName = partialName ?? (viewModel.EntryNC.NC_Category_ID.ToString() != "0" ? viewModel.EntryNC.NC_Category_ID.ToString() : GlobalSystemValues.NC_LS_PAYROLL.ToString());
+            //if (viewModel.EntryNC == null)
+            //{
+            //    viewModel.EntryNC = new EntryNCViewModel {
+            //                            NC_Category_ID = int.Parse(partialName),
+            //                            NC_CredAmt = 0,
+            //                            NC_DebitAmt = 0
+            //                        };
+            //}
+            ViewData["partialName"] = partialName;
             viewModel.entryID = 0;
-            return View(viewModel);
+            ModelState.Clear();
+            return View(PopulateEntryNC(viewModel));
         }
-        [ExportModelState]
+        //[ExportModelState]
         public IActionResult AddNewNC(EntryNCViewModelList EntryNCViewModelList)
         {
             var userId = GetUserID();
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Entry_NC", EntryNCViewModelList);
+                ViewData["partialName"] = (EntryNCViewModelList.EntryNC.NC_Category_ID.ToString() != "0" ? EntryNCViewModelList.EntryNC.NC_Category_ID.ToString() : GlobalSystemValues.NC_LS_PAYROLL.ToString());
+                return View("Entry_NC", PopulateEntryNC(EntryNCViewModelList));
             }
 
             //EntryNCViewModelList ncList = new EntryNCViewModelList();
@@ -3103,7 +3084,79 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.expenseDate = DateTime.Now;
             return viewModel;
         }
+        public dynamic PopulateEntryDDV(EntryDDVViewModelList viewModel)
+        {
+            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
+            viewModel.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
+            viewModel.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
+            viewModel.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
 
+            int firstId = int.Parse(listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR].First().Value);
+
+            viewModel.systemValues.acc = _service.getAccDetailsEntry();
+            viewModel.systemValues.payee_type_sel = new SelectList(GlobalSystemValues.PAYEETYPE_SELECT_CV, "Value", "Text", GlobalSystemValues.PAYEETYPE_SELECT_CV.First());
+            viewModel.systemValues.employees = listOfSysVals[GlobalSystemValues.SELECT_LIST_REGEMPLOYEE];
+            viewModel.payee_type = GlobalSystemValues.PAYEETYPE_REGEMP;
+            viewModel.systemValues.ewt = new SelectList("0", "0");
+            viewModel.systemValues.vat = new SelectList("0", "0");
+            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
+            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
+            viewModel.yenCurrID = ccyYEN.Curr_ID;
+            viewModel.yenCurrMasterID = ccyYEN.Curr_MasterID;
+            viewModel.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
+
+            if (viewModel.expenseYear == null)
+            {
+                viewModel.expenseYear = DateTime.Today.Year.ToString();
+                viewModel.expenseDate = DateTime.Today;
+            }
+
+            //FOR DDV
+            if (viewModel.EntryDDV.Count < 1)
+            {
+                viewModel.EntryDDV.Add(new EntryDDVViewModel
+                {
+                    interDetails = new DDVInterEntityViewModel
+                    {
+                        interPartList = new List<ExpenseEntryInterEntityParticularViewModel>{
+                            new ExpenseEntryInterEntityParticularViewModel{
+                                ExpenseEntryInterEntityAccs = new List<ExpenseEntryInterEntityAccsViewModel>{
+                                    new ExpenseEntryInterEntityAccsViewModel(),
+                                    new ExpenseEntryInterEntityAccsViewModel(),
+                                    new ExpenseEntryInterEntityAccsViewModel()
+                                }
+                            },
+                            new ExpenseEntryInterEntityParticularViewModel{
+                                ExpenseEntryInterEntityAccs = new List<ExpenseEntryInterEntityAccsViewModel>{
+                                    new ExpenseEntryInterEntityAccsViewModel(),
+                                    new ExpenseEntryInterEntityAccsViewModel()
+                                }
+                            },
+                            new ExpenseEntryInterEntityParticularViewModel{
+                                ExpenseEntryInterEntityAccs = new List<ExpenseEntryInterEntityAccsViewModel>{
+                                    new ExpenseEntryInterEntityAccsViewModel(),
+                                    new ExpenseEntryInterEntityAccsViewModel()
+                                }
+                            }
+                        }
+                    },
+                    vendTRList = new List<DMTRModel> { new DMTRModel { TR_ID = 0, TR_Tax_Rate = 0 } },
+                    vendVATList = new List<DMVATModel> { new DMVATModel { VAT_ID = 0, VAT_Rate = 0 } },
+                    ccy = _service.getCurrencyByMasterID(_service.getAccount(viewModel.systemValues.acc[0].accId).Account_Currency_MasterID).Curr_ID
+                });
+            }
+            else
+            {
+                foreach (var ddv in viewModel.EntryDDV)
+                {
+                    ddv.vendTRList = new List<DMTRModel> { new DMTRModel { TR_ID = 0, TR_Tax_Rate = 0 } };
+                    ddv.vendVATList = new List<DMVATModel> { new DMVATModel { VAT_ID = 0, VAT_Rate = 0 } };
+                    ddv.ccy = _service.getCurrencyByMasterID(_service.getAccount(viewModel.systemValues.acc[0].accId).Account_Currency_MasterID).Curr_ID;
+                }
+            }
+
+            return viewModel;
+        }
         //-------------[* Liquidation *]--------------------------
         [OnlineUserCheck]
         [NonAdminRoleCheck]

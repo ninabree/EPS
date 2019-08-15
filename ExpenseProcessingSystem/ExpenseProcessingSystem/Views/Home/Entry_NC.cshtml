@@ -40,7 +40,10 @@
     <div id="modalDiv">
         @Html.Partial("ModalPartial")
     </div>
-
+    @*validation message*@
+    <div id="ValidationSummary" style="display:none" class="">
+        @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
+    </div>
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
