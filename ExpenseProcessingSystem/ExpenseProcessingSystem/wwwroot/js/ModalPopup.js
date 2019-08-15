@@ -27,12 +27,6 @@
     //    ModalPopup('Modal', 'ReversalEntryModal', 'Reversal Entry');
     //});
 
-    $(".adjust_btn").click(function () {
-        var id = this.id;
-        var splitid = id.split("_");
-        //controller name, method name, modal header
-        ModalPopup('Modal', 'BudgetAdjustmentModal', 'Budget Adjustment');
-    });
     //DM
     $(document).on("click", ".apprv-rec", function (e) {
         e.stopImmediatePropagation();
@@ -199,6 +193,7 @@
                 //remove prev contents
                 modalDivBody.empty();
                 modalDivHeader.find('h4').remove();
+                modalDivFooter.find('#add_row_btn').remove();
 
                 //set modal header title
                 modalDivHeader.append('<h4 class="modal-title">' + modalHeader + '</h4>');

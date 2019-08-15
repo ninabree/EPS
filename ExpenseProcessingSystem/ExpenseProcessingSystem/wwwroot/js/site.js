@@ -170,23 +170,23 @@ $(document).ready(function () {
     }
 
     //login
-    function CheckUn() {
-        var val = $('#User_UserName').val();
-        if (val.length > 0) {
-            $('.UN').hide();
-        } else {
-            $('.UN').show();
-        }
-    }
-    function CheckPw() {
-        var val = $('#User_Password').val();
-        if (val.length > 0) {
-            //alert(val);
-            $('.PW').hide();
-        } else {
-            $('.PW').show();
-        }
-    }
+    //function CheckUn() {
+    //    var val = $('#User_UserName').val();
+    //    if (val.length > 0) {
+    //        $('.UN').hide();
+    //    } else {
+    //        $('.UN').show();
+    //    }
+    //}
+    //function CheckPw() {
+    //    var val = $('#User_Password').val();
+    //    if (val.length > 0) {
+    //        //alert(val);
+    //        $('.PW').hide();
+    //    } else {
+    //        $('.PW').show();
+    //    }
+    //}
     //clear validation onload of User Management
     function ClearValidations() {
         $('#validationSummary').empty();

@@ -419,7 +419,8 @@ input[readonly], input[disabled]{
     }
 
     .focus-input100::after {
-        font-family: /*HelveticaNeue,*/ 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;: HelveticaNeue;
+        font-family: /*HelveticaNeue,*/ 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        : HelveticaNeue;
         font-size: 10px;
         color: #333;
         line-height: 1.2;
@@ -427,18 +428,20 @@ input[readonly], input[disabled]{
         display: block;
         width: 100%;
         position: absolute;
-        top: 15px;
+        top: 105%;
         left: 0px;
         padding-left: 5px;
         -webkit-transition: all 0.4s;
         -o-transition: all 0.4s;
         -moz-transition: all 0.4s;
         transition: all 0.4s;
+        background-color: #f1f1f1/*#dfae6c*/;
     }
 
 .input100:focus + .focus-input100::after {
     top: -10px;
     font-size: 12px;
+    background-color: transparent;
 }
 
 .input100:focus + .focus-input100::before {
@@ -644,7 +647,7 @@ iframe{
 
     .btn:hover {
         background-color: #0a1b81;
-        color: #fff;
+        color: #fff !important;
     }
     .btn[disabled], select[disabled] {
         cursor: not-allowed;

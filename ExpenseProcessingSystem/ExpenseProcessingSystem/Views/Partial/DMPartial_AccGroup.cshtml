@@ -4,6 +4,7 @@
     Layout = "~/Views/Shared/_ModalLayout.cshtml";
 }
 
+@using ExpenseProcessingSystem.ConstantData
 @using ExpenseProcessingSystem.ViewModels
 @model DMViewModel
 
@@ -36,7 +37,7 @@
             </p>
         </div>
     </form>
-    <table class="table table-striped table-bordered tab-tbl">
+    <table class="table table-striped table-bordered tab-tbl table_DM_Main">
         <thead>
             <tr>
                 <th></th>
@@ -51,11 +52,19 @@
         <tbody>
             @if (Model.AccountGroup.Count != 0)
             {
+                var pendList = Model.AccountGroup.Where(x => x.AccountGroup_Status_ID != GlobalSystemValues.STATUS_APPROVED).ToList();
                 @foreach (var item in Model.AccountGroup)
                 {
                     <tr>
                         <td>
-                            <input class="tbl-chk" id="@item.AccountGroup_MasterID" type="checkbox" />
+                            @if (pendList.Select(x => x.AccountGroup_MasterID).Contains(item.AccountGroup_MasterID) && item.AccountGroup_Status_ID == GlobalSystemValues.STATUS_APPROVED)
+                            {
+                                <input class="tbl-chk" id="@item.AccountGroup_MasterID" type="checkbox" disabled />
+                            }
+                            else
+                            {
+                                <input class="tbl-chk" id="@item.AccountGroup_MasterID" type="checkbox" />
+                            }
                             @Html.HiddenFor(modelItem => item.AccountGroup_Creator_ID)
                         </td>
                         <td>@Html.DisplayFor(modelItem => item.AccountGroup_Name)</td>

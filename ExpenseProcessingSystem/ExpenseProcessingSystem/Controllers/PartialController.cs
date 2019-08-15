@@ -41,13 +41,13 @@ namespace ExpenseProcessingSystem.Controllers
         // [[ Local Payroll ]]
         [OnlineUserCheck]
         [Route("//Partial/NC_Partial_GetPreview/")]
-        public IActionResult NC_Partial_GetPreview (string categoryID, string entryID, string expenseDate)
+        public IActionResult NC_Partial_GetPreview (string categoryID, string entryID)
         {
             var userId = _session.GetString("UserID");
             EntryNCViewModelList viewModel = new EntryNCViewModelList();
             var accs = _service.getNCAccsForFilter();
             viewModel.accList = accs;
-            viewModel = PopulateEntryNC(viewModel, expenseDate);
+            viewModel = PopulateEntryNC(viewModel);
             DMCurrencyModel currDtl = _context.DMCurrency.Where(x => x.Curr_MasterID == 31 && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
             DMCurrencyModel currDtlUSD = _context.DMCurrency.Where(x => x.Curr_MasterID == 1 && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
 
@@ -58,7 +58,7 @@ namespace ExpenseProcessingSystem.Controllers
                 viewModel.EntryNC.NC_Category_ID = int.Parse(categoryID);
 
                 viewModel.accList = accs;
-                viewModel = PopulateEntryNC(viewModel, expenseDate);
+                viewModel = PopulateEntryNC(viewModel);
                 if (categoryID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT.ToString())
                 {
                     viewModel.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_PETTYCASHREPLENISHMENT.Populate_CDD_Instruc_Sheet(currDtl);
@@ -112,17 +112,17 @@ namespace ExpenseProcessingSystem.Controllers
                 }
                 else if (categoryID == GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES.ToString())
                 {
-                    viewModel.EntryNC = CONSTANT_NC_MISC_ENTRIES.Populate_MISC_ENTRIES(currDtl, new DMAccountModel { Account_ID = accs[0].accID, Account_Name = accs[0].accName});
+                    viewModel.EntryNC = CONSTANT_NC_MISC_ENTRIES.Populate_MISC_ENTRIES(currDtl, new DMAccountModel { Account_ID = int.Parse(viewModel.accountList[0].Value), Account_Name = viewModel.accountList[0].Text});
                 }
             }
 
             return View("NCPartial", viewModel);
         }
 
-        public EntryNCViewModelList PopulateEntryNC(EntryNCViewModelList viewModel, string expenseDate)
+        public EntryNCViewModelList PopulateEntryNC(EntryNCViewModelList viewModel)
         { 
             viewModel.category_of_entry = GlobalSystemValues.NC_CATEGORIES_SELECT;
-            viewModel.expenseDate = DateTime.Parse(expenseDate);
+            viewModel.expenseDate = DateTime.Now;
             viewModel.accountList = _service.getAccountSelectList();
             viewModel.currList = _service.getCurrencySelectList();
             viewModel.vendorList = _service.getVendorSelectList();

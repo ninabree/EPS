@@ -9,7 +9,7 @@
         }
     }
 
-    $('.pagination-input').css("width", ($('.txtMaxPage').val().length * 6) + "px");
+    $('.pagination-input').css("width", ($('.txtMaxPage').val().length * 8) + "px");
 
     $("#paginationInput").change(function (e) {
         loadingEffectStart();

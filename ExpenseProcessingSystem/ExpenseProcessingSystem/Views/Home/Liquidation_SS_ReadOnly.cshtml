@@ -655,13 +655,13 @@
         </div>
         <div id="entry-status" class="m-t-10 m-b-10">
             <div class="dis-inline-block"><label>Status: </label></div>
-            <div class="dis-inline-block">@Html.TextBoxFor(x => x.status, new { @disabled = "disabled", @class = "input" })</div>
-            <div class="dis-inline-block"><label>Approver:</label></div>
-            <div class="dis-inline-block">@Html.TextBoxFor(x => x.approver, new { @disabled = "disabled", @class = "input" })</div>
-            <div class="dis-inline-block"><label>Verifier:</label></div>
+            <div class="dis-inline-block">@Html.DisplayFor(x => x.status, new { @disabled = "disabled", @class = "input" })</div>
+            <div class="dis-inline-block m-l-10"><label>Approver:</label></div>
+            <div class="dis-inline-block">@Html.DisplayFor(model => model.approver, new { @disabled = "disabled", @class = "input" })</div>
+            <div class="dis-inline-block m-l-10"><label>Verifier:</label></div>
             <div class="dis-inline-block">
-                <p class="dis-inline-block">@Html.TextBoxFor(x => x.verifier_1, new { @disabled = "disabled", @class = "m-l-5 input" })</p>
-                <p class="dis-inline-block">@Html.TextBoxFor(x => x.verifier_2, new { @disabled = "disabled", @class = "m-l-5 input" })</p>
+                @Html.DisplayFor(model => model.verifier_1, new { @disabled = "disabled", @class = " input" })
+                @Html.DisplayFor(model => model.verifier_2, new { @disabled = "disabled", @class = " input" })
             </div>
         </div>
         <div id="entry-controls" class="m-b-10">

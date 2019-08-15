@@ -93,11 +93,11 @@ namespace ExpenseProcessingSystem.Controllers
 
             //sort
             ViewData["CurrentSort"] = sortOrder;
-            ViewData["NotifStatSortParm"] = String.IsNullOrEmpty(sortOrder) ? "notif_type_status" : "";
+            ViewData["NotifDateSortParm"] = String.IsNullOrEmpty(sortOrder) ? "notif_date" : "";
             ViewData["NotifAppTypeSortParm"] = sortOrder == "notif_type_desc" ? "notif_type" : "notif_type_desc";
             ViewData["NotifMessageSortParm"] = sortOrder == "notif_message_desc" ? "notif_message" : "notif_message_desc";
             ViewData["NotifMakerSortParm"] = sortOrder == "notif_mkr_desc" ? "notif_mkr" : "notif_mkr_desc";
-            ViewData["NotifDateSortParm"] = sortOrder == "notif_date_desc" ? "notif_date" : "notif_date_desc";
+            ViewData["NotifStatSortParm"] = sortOrder == "notif_type_status_desc" ? "notif_type_status" : "notif_type_status_desc";
 
             if (searchString != null) { pg = 1; }
             else { searchString = currentFilter; }
@@ -226,12 +226,12 @@ namespace ExpenseProcessingSystem.Controllers
 
             //sort
             ViewData["CurrentSort"] = sortOrder;
-            ViewData["HistStatusSortParm"] = String.IsNullOrEmpty(sortOrder) ? "hist_status" : "";
+            ViewData["HistLastUpdatedSortParm"] = String.IsNullOrEmpty(sortOrder) ? "hist_last_updte" : "";
             ViewData["HistMakerSortParm"] = sortOrder == "hist_maker_desc" ? "hist_maker" : "hist_maker_desc";
             ViewData["HistApproverSortParm"] = sortOrder == "hist_approver_desc" ? "hist_approver" : "hist_approver_desc";
             ViewData["HistDateCreatedSortParm"] = sortOrder == "hist_date_created_desc" ? "hist_date_created" : "hist_date_created_desc";
-            ViewData["HistLastUpdatedSortParm"] = sortOrder == "hist_last_updte_desc" ? "hist_last_updte" : "hist_last_updte_desc";
             ViewData["HistVoucherSortParm"] = sortOrder == "hist_voucher_desc" ? "hist_voucher" : "hist_voucher_desc";
+            ViewData["HistStatusSortParm"] = sortOrder == "hist_status_desc" ? "hist_status" : "hist_status_desc";
 
             if (searchString != null) { page = 1; }
             else { searchString = currentFilter; }
@@ -1259,7 +1259,7 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.systemValues.employees = listOfSysVals[GlobalSystemValues.SELECT_LIST_REGEMPLOYEE]; 
             viewModel.systemValues.employeesAll = listOfSysVals[GlobalSystemValues.SELECT_LIST_ALLEMPLOYEE];
             //for NC
-            if (viewModel.GetType() != typeof(EntryNCViewModelList) && viewModel.expenseYear == null)
+            if (/*viewModel.GetType() != typeof(EntryNCViewModelList) && */viewModel.expenseYear == null)
             {
                 viewModel.expenseYear = DateTime.Today.Year.ToString();
                 viewModel.expenseDate = DateTime.Today;
@@ -1331,6 +1331,12 @@ namespace ExpenseProcessingSystem.Controllers
             if (EntryCVViewModelList.entryID == 0)
             {
                 id = _service.addExpense_CV(EntryCVViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_CV);
+                if(id > 0)
+                {
+                    //----------------------------- NOTIF----------------------------------
+                    _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_CV, GlobalSystemValues.STATUS_NEW, 0);
+                    //----------------------------- NOTIF----------------------------------
+                }
             }
             else
             {
@@ -1344,9 +1350,8 @@ namespace ExpenseProcessingSystem.Controllers
                     if (_service.deleteExpenseEntry(EntryCVViewModelList.entryID))
                     {
                         id = _service.addExpense_CV(EntryCVViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_CV);
-                        var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == id).Expense_Creator_ID;
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_CV, GlobalSystemValues.STATUS_EDIT, makerId);
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_CV, GlobalSystemValues.STATUS_EDIT, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -1728,6 +1733,7 @@ namespace ExpenseProcessingSystem.Controllers
                         //----------------------------- NOTIF----------------------------------
                         _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_DDV, GlobalSystemValues.STATUS_REJECTED, makerId.Expense_Creator_ID);
                         //----------------------------- NOTIF----------------------------------
+                        return RedirectToAction("Index", "Home");
                     }
                     else
                     {
@@ -1746,12 +1752,14 @@ namespace ExpenseProcessingSystem.Controllers
                             //----------------------------- NOTIF----------------------------------
                             _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DDV, GlobalSystemValues.STATUS_DELETE, 0);
                             //----------------------------- NOTIF----------------------------------
+                            return RedirectToAction("Index", "Home");
                         }
                         else
                         {
                             ViewBag.Success = 0;
                         }
-                        return RedirectToAction("Index");
+                        viewLink = "Entry_DDV_ReadOnly";
+                        break;
                     }
                     else
                     {
@@ -1769,7 +1777,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 0;
                     }
-                    return RedirectToAction("Index");
+                    viewLink = "Entry_DDV_ReadOnly";
                     break;
                 default:
                     break;
@@ -1928,9 +1936,8 @@ namespace ExpenseProcessingSystem.Controllers
                     if (_service.deleteExpenseEntry(EntryCVViewModelList.entryID))
                     {
                         id = _service.addExpense_CV(EntryCVViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_PC);
-                        var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == id).Expense_Creator_ID;
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_PC, GlobalSystemValues.STATUS_EDIT, makerId);
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_PC, GlobalSystemValues.STATUS_EDIT, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -2356,9 +2363,8 @@ namespace ExpenseProcessingSystem.Controllers
                     if (_service.deleteExpenseEntry(EntryCVViewModelList.entryID))
                     {
                         id = _service.addExpense_CV(EntryCVViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_SS);
-                        var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == id).Expense_Creator_ID;
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_SS, GlobalSystemValues.STATUS_EDIT, makerId);
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_SS, GlobalSystemValues.STATUS_EDIT, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -2667,6 +2673,12 @@ namespace ExpenseProcessingSystem.Controllers
             }
             ssList.birForms.AddRange(birForms);
 
+            if (!String.IsNullOrEmpty(GlobalSystemValues.MESSAGE))
+            {
+                ViewData["MESSAGE"] = GlobalSystemValues.MESSAGE;
+                GlobalSystemValues.MESSAGE = "";
+            }
+
             return View("Entry_SS_ReadOnly", ssList);
         }
 
@@ -2884,7 +2896,8 @@ namespace ExpenseProcessingSystem.Controllers
                         var makerId = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == entryID);
                         //----------------------------- NOTIF----------------------------------
                         _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_NC, GlobalSystemValues.STATUS_REJECTED, makerId.Expense_Creator_ID);
-                        //----------------------------- NOTIF----------------------------------                    
+                        //----------------------------- NOTIF----------------------------------  
+                        return RedirectToAction("Index", "Home");
                     }
                     else
                     {
@@ -2907,8 +2920,7 @@ namespace ExpenseProcessingSystem.Controllers
                         {
                             ViewBag.Success = 0;
                         }
-                        viewLink = "Entry_NC";
-                        return RedirectToAction("Entry_NC", new EntryNCViewModelList());
+                        return RedirectToAction("Index", "Home");
                     }
                     else
                     {
@@ -3251,9 +3263,8 @@ namespace ExpenseProcessingSystem.Controllers
                     if (_service.deleteLiquidationEntry(vm.entryID))
                     {
                         id = _service.addLiquidationDetail(vm, int.Parse(GetUserID()), exist);
-                        var makerId = _context.LiquidationEntryDetails.FirstOrDefault(x => x.ExpenseEntryModel.Expense_ID == id).Liq_Created_UserID;
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_SS, GlobalSystemValues.STATUS_EDIT, makerId);
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_SS, GlobalSystemValues.STATUS_EDIT, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -3698,6 +3709,39 @@ namespace ExpenseProcessingSystem.Controllers
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Acc" });
         }
+        //[* ACCOUNT GROUP *]
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult ApproveAccountGroup(List<DMAccountGroupViewModel> model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.approveAccountGroup(model, userId);
+            }
+
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_AccGroup" });
+        }
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult RejAccountGroup(List<DMAccountGroupViewModel> model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.rejAccountGroup(model, userId);
+            }
+
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_AccGroup" });
+        }
         //[* VAT *]
         [HttpPost]
         [ExportModelState]
@@ -4046,6 +4090,55 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Acc" });
+        }
+        // [ACCOUNT Group]
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult AddAccountGroup_Pending(NewAccountGroupListViewModel model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.addAccountGroup_Pending(model, userId);
+            }
+
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_AccGroup" });
+        }
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult EditAccountGroup_Pending(List<DMAccountGroupViewModel> model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.editAccountGroup_Pending(model, userId);
+            }
+
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_AccGroup" });
+        }
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult DeleteAccountGroup_Pending(List<DMAccountGroupViewModel> model)
+        {
+            var userId = GetUserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (ModelState.IsValid)
+            {
+                _service.deleteAccountGroup_Pending(model, userId);
+            }
+
+            return RedirectToAction("DM", "Home", new { partialName = "DMPartial_AccGroup" });
         }
         // [VAT]
         [HttpPost]

@@ -4,6 +4,7 @@
     Layout = "~/Views/Shared/_ModalLayout.cshtml";
 }
 
+@using ExpenseProcessingSystem.ConstantData
 @using ExpenseProcessingSystem.ViewModels
 @model DMViewModel
 
@@ -42,7 +43,7 @@
             </p>
         </div>
     </form>
-    <table class="table table-striped table-bordered tab-tbl">
+    <table class="table table-striped table-bordered tab-tbl table_DM_Main">
         <thead>
             <tr>
                 <th></th>
@@ -60,11 +61,19 @@
         <tbody>
             @if (Model.TR != null)
             {
+                var pendList = Model.TR.Where(x => x.TR_Status_ID != GlobalSystemValues.STATUS_APPROVED).ToList();
                 @foreach (var item in Model.TR)
                 {
                     <tr>
                         <td>
-                            <input class="tbl-chk" id="@item.TR_MasterID" type="checkbox" />
+                            @if (pendList.Select(x => x.TR_MasterID).Contains(item.TR_MasterID) && item.TR_Status_ID == GlobalSystemValues.STATUS_APPROVED)
+                            {
+                                <input class="tbl-chk" id="@item.TR_MasterID" type="checkbox" disabled />
+                            }
+                            else
+                            {
+                                <input class="tbl-chk" id="@item.TR_MasterID" type="checkbox" />
+                            }
                             @Html.HiddenFor(modelItem => item.TR_Creator_ID)
                         </td>
                         <td>@Html.DisplayFor(modelItem => item.TR_WT_Title)</td>

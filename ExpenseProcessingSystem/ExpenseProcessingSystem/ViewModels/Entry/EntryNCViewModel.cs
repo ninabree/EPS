@@ -27,6 +27,8 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         //[NotNullValidations, AmountValidation]
         [Display(Name = "Computer Suspense: Credit - Total Amount")]
         public float NC_CS_CredAmt { get; set; }
+        [Display(Name = "Computer Suspense: Remarks Period")]
+        public string NC_CS_Period { get; set; }
         //[NotNullValidations, AmountValidation]
         [Display(Name = "Computer Suspense: Total Amount")]
         public float NC_CS_TotalAmt { get; set; }

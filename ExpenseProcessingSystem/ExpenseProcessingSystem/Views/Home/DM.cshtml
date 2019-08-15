@@ -22,7 +22,7 @@
                 <option value="DMPartial_Curr">Currency</option>
                 <option value="DMPartial_RegEmp">Regular Employee</option>
                 <option value="DMPartial_TempEmp">Temporary Employee</option>
-                <option value="DMPartial_Cust">Customer</option>
+                @*<option value="DMPartial_Cust">Customer</option>*@
                 <option value="DMPartial_BCS">BIR Cert Signatory</option>
             </select>
         </div>
@@ -162,7 +162,7 @@
             //disable all buttons
             defaultDisableAll();
             //get column # of status per table
-            var count = $('.table').find('th').length - 2;
+            var count = $('.table_DM_Main').find('th').length - 2;
             var stat = $(this).parent().siblings(":eq(" + count + ")").text();
             var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
             var remainingCheckStat = $('input.tbl-chk[type="checkbox"]:checked').parent().siblings(":eq(" + count + ")").text();
@@ -177,6 +177,7 @@
             var isSameStat = true;
             var firstChk = $('input.tbl-chk[type="checkbox"]:checked').first().parent().siblings(":eq(" + count + ")").text()
             $('input.tbl-chk[type="checkbox"]:checked').each(function (index) {
+                console.log(firstChk);
                 if ($(this).parent().siblings(":eq(" + count + ")").text() != firstChk) {
                     isSameStat = false;
                     return false;
@@ -186,6 +187,7 @@
             if (!isSameStat && chkCount <= 2) {
                 alert("Kindly check rows with the same status only.");
                 $('.rec').prop('disabled', true);
+                return false;
             }
             else if (creatorId == userId/* && chkCount <= 1*/) {
                 if (stat != "APPROVED") {

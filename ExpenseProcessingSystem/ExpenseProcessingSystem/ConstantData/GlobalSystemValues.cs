@@ -199,14 +199,17 @@ namespace ExpenseProcessingSystem.ConstantData
             GlobalSystemValues.ENTRY_NEW_DDV,
             GlobalSystemValues.ENTRY_NEW_PCV,
             GlobalSystemValues.ENTRY_NEW_SS,
+            GlobalSystemValues.ENTRY_NEW_NC,
             GlobalSystemValues.ENTRY_VIEW_CV,
             GlobalSystemValues.ENTRY_VIEW_DDV,
             GlobalSystemValues.ENTRY_VIEW_PCV,
             GlobalSystemValues.ENTRY_VIEW_SS,
+            GlobalSystemValues.ENTRY_VIEW_NC,
             GlobalSystemValues.ENTRY_MOD_CV,
             GlobalSystemValues.ENTRY_MOD_DDV,
             GlobalSystemValues.ENTRY_MOD_PCV,
             GlobalSystemValues.ENTRY_MOD_SS,
+            GlobalSystemValues.ENTRY_MOD_NC,
             GlobalSystemValues.LIQ_MAIN,
             GlobalSystemValues.LIQ_SS,
             GlobalSystemValues.LIQ_New_SS,
@@ -281,7 +284,7 @@ namespace ExpenseProcessingSystem.ConstantData
         //public static readonly string MESSAGE2 = "You can only delete the entry in Pending or Rejected status.";
         public static readonly string MESSAGE1 = "処理失敗。PENDING又はREJECTEDステータスのみ訂正可能";
         public static readonly string MESSAGE2 = "処理失敗。PENDING又はREJECTEDステータスのみ削除可能";
-        public static readonly string MESSAGE3 = "This entry was edited/deleted by another user. Please check the entry again.";
+        public static readonly string MESSAGE3 = "This entry was edited/deleted by the maker. Please check the entry again.";
         public static readonly string MESSAGE4 = "This entry was already approved by Approver. Cannot proceed with your request.";
         public static readonly string MESSAGE5 = "This entry was already in For Printing status. Cannot proceed with your request.";
         public static readonly string MESSAGE6 = "This entry was already in For Closing status. Cannot proceed with your request.";
@@ -316,7 +319,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "T-L/S PAY:",
-                        ExpNCDtl_Remarks_Period = "Dec'19",
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -342,7 +345,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "HDMF ER Cont.",
-                        ExpNCDtl_Remarks_Period = "Dec'19",
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -367,7 +370,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "WHT L/S PAY",
-                        ExpNCDtl_Remarks_Period = "Dec16-31,'19",
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -392,7 +395,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "HDMF LOAN:",
-                        ExpNCDtl_Remarks_Period = "Dec16-31,'19",
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -417,7 +420,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "NET BDO -L/S PAY:",
-                        ExpNCDtl_Remarks_Period = "Dec16-31,'19",
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -442,7 +445,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "CTBC LOAN:",
-                        ExpNCDtl_Remarks_Period = "Dec16-31,'19",
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -467,7 +470,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "HSBC LOAN:",
-                        ExpNCDtl_Remarks_Period = "Dec16-31,'19",
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -492,7 +495,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "HDMF ER-EE CONT:",
-                        ExpNCDtl_Remarks_Period = "Dec'19",
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -517,7 +520,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "SSS LOAN:",
-                        ExpNCDtl_Remarks_Period = "Dec16-31,'19",
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -567,7 +570,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "NT - Proportionate Bonus:",
-                        ExpNCDtl_Remarks_Period = "2019",
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -607,7 +610,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "REMIT RTGS PHILPASS",
-                        ExpNCDtl_Remarks_Period = "Dec'19",
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -633,7 +636,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "BPI PAYROLL FACILITY",
-                        ExpNCDtl_Remarks_Period = "Dec'19",
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -658,7 +661,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "REMIT WHT CONTRACTORS",
-                        ExpNCDtl_Remarks_Period = "Dec'19",
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -683,7 +686,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "REMIT WHT MONEY MARKET",
-                        ExpNCDtl_Remarks_Period = "Dec'19",
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -708,7 +711,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "REMIT WHT J/S SALARY",
-                        ExpNCDtl_Remarks_Period = "Dec'19",
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -733,7 +736,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "REMIT WHT L/S SALARY",
-                        ExpNCDtl_Remarks_Period = "Dec'19",
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -758,7 +761,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "REMIT WHT L/S BONUS",
-                        ExpNCDtl_Remarks_Period = "Dec'19",
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -783,7 +786,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "REMIT VAT",
-                        ExpNCDtl_Remarks_Period = "Dec'19",
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -808,7 +811,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     },new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "FRINGE BENEFIT TAX",
-                        ExpNCDtl_Remarks_Period = "Dec'19",
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -848,7 +851,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "BSP:MONTHLY ROSS BILL",
-                        ExpNCDtl_Remarks_Period = "Dec'19",
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -888,7 +891,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "PSSC:2% PDDTS CHARGES",
-                        ExpNCDtl_Remarks_Period = "Dec'19",
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -937,7 +940,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "PCHC:2% PROC FEES",
-                        ExpNCDtl_Remarks_Period = "Dec'19",
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -972,7 +975,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "2% PAS 5",
-                        ExpNCDtl_Remarks_Period = "Dec'19",
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -1021,7 +1024,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "DEPRECIATION:BANK PREMISES",
-                        ExpNCDtl_Remarks_Period = "Dec'19",
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -1047,7 +1050,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "DEPRECIATION:BK FIR FIX EQUIP",
-                        ExpNCDtl_Remarks_Period = "Dec'19",
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -1073,7 +1076,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "DEPRECIATION: SOFTWARE",
-                        ExpNCDtl_Remarks_Period = "Dec'19",
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -1185,7 +1188,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "J/S PAYROLL: ",
-                        ExpNCDtl_Remarks_Period = "Dec'19",
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -1211,7 +1214,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "WHT J/S PAYROLL:",
-                        ExpNCDtl_Remarks_Period = "Dec'19",
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -1237,7 +1240,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "J/S PAYROLL: ",
-                        ExpNCDtl_Remarks_Period = "Dec'19",
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -1263,7 +1266,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "J/S PAYROLL: ",
-                        ExpNCDtl_Remarks_Period = "Dec'19",
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
@@ -1289,7 +1292,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     new ExpenseEntryNCDtlViewModel
                     {
                         ExpNCDtl_Remarks_Desc = "JS PAYROLL: CAR ADJUST",
-                        ExpNCDtl_Remarks_Period = "Dec'19",
+                        ExpNCDtl_Remarks_Period = "",
                         ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                         {
                             new ExpenseEntryNCDtlAccViewModel{
