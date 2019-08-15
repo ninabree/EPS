@@ -33,7 +33,7 @@ string value4 = xelem.Element("ADDRESS").Value
   <!--Gen Exp-->
   <D_SS1 id="D_SS1">96</D_SS1>
   <!--Expense HO US$-->
-  <D_SS2 id="D_SS2">131</D_SS2>
+  <D_SS2 id="D_SS2">135</D_SS2>
   <!--Reimburse US$-->
   <D_SS3 id="D_SS3">87</D_SS3>
   <!--Adv Exp HO PhP-->

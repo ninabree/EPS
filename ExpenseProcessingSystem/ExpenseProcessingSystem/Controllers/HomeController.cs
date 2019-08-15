@@ -1185,6 +1185,9 @@ namespace ExpenseProcessingSystem.Controllers
         {
             var userId = GetUserID();
             EntryCVViewModelList viewModel = new EntryCVViewModelList();
+            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
+            var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
+            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
 
             if (entryID > 0)
             {
@@ -1222,11 +1225,14 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 viewModel = PopulateEntry((EntryCVViewModelList)viewModel);
                 //viewModel.vendor = 2;
-                viewModel.EntryCV.Add(new EntryCVViewModel());
+                viewModel.EntryCV.Add(new EntryCVViewModel {
+                    ccy = _service.getCurrencyByMasterID(_service.getAccount(viewModel.systemValues.acc[0].accId).Account_Currency_MasterID).Curr_ID
+                });
             }
 
-            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
-            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
+            viewModel.phpCurrID = ccyPHP.Curr_ID;
+            viewModel.phpCurrMasterID = ccyPHP.Curr_MasterID;
+            viewModel.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
             viewModel.yenCurrID = ccyYEN.Curr_ID;
             viewModel.yenCurrMasterID = ccyYEN.Curr_MasterID;
             viewModel.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
@@ -1688,7 +1694,6 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         _service.postDDV(entryID, "P", int.Parse(GetUserID()));
                         ViewBag.Success = 1;
-                        _service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_FOR_PRINTING, int.Parse(GetUserID()));
 
                     }
                     else

@@ -158,7 +158,9 @@
                     return;
                 }
                 e.stopImmediatePropagation();
-                if ($(".cashBDAmountTotal").val().replace(",", "") != $("#reqAmount").val()) {
+                alert($(".cashBDAmountTotal").val().replace(/\,/g, ""));
+                alert($("#reqAmount").val());
+                if ($(".cashBDAmountTotal").val().replace(/\,/g, "") != $("#reqAmount").val()) {
                     alert("Amount do not match.");
                     return false;
                 }
@@ -270,7 +272,7 @@
         return x1 + x2;
     };
     $('.number-inputNoDecNoBlank').keyup(function () {
-        $(this).val($(this).val().replace(/[^\d].+/, ""));
+        $(this).val($(this).val().replace(/[^\d].+/, "").replace("-", ""));
         if ((event.which < 48 || event.which > 57)) {
             event.preventDefault();
         }
@@ -279,7 +281,7 @@
             event.preventDefault();
         }
         if ($(this).val() == "") {
-            $(this).val(0)
+            $(this).val(0).replace("-","");
         };
 
     });

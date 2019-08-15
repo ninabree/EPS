@@ -27,7 +27,7 @@
     <div id="tbl-lbl">
         <div class="dis-inline-block"><p>Payee:</p></div>
         <div class="dis-inline-block">
-            @Html.DropDownListFor(m => m.vendor, new SelectList(Model.systemValues.vendors, "Value", "Text", Model.systemValues.vendors.SelectedValue), new { @disabled = "true" })
+            @Html.DropDownListFor(m => m.vendor, new SelectList(Model.systemValues.vendors, "Value", "Text", Model.systemValues.vendors.SelectedValue), new { @disabled = "true", @class= "selectDisabled" })
         </div>
     </div>
     <div class="">
@@ -84,7 +84,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td>@Html.DropDownListFor(x => Model.EntryCV[i].account, new SelectList(Model.systemValues.acc, "accId", "accName"), new { @class = "input100 txtAcc", disabled = "disabled" })</td>
+                        <td>@Html.DropDownListFor(x => Model.EntryCV[i].account, new SelectList(Model.systemValues.acc, "accId", "accName"), new { @class = "input100 txtAcc selectDisabled", disabled = "disabled" })</td>
                         <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].fbt, new { @disabled = "true" })</td>
                         <td>@Html.DropDownListFor(x => Model.EntryCV[i].dept, new SelectList(Model.systemValues.dept, "Value", "Text", Model.systemValues.dept.SelectedValue), new { @class = "input100 selectDisabled", disabled = "disabled" })</td>
                         <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].chkVat, new { @class = "chkVat", @disabled = "true" })</td>

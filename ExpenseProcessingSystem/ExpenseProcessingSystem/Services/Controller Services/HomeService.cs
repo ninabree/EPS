@@ -7838,6 +7838,7 @@ namespace ExpenseProcessingSystem.Services
                     ewt = dtl.d.ExpDtl_Ewt,
                     ccy = dtl.d.ExpDtl_Ccy,
                     ccyMasterID = (dtl.d.ExpDtl_Ccy != 0) ? getCurrencyByMasterID(dtl.d.ExpDtl_Ccy).Curr_MasterID : 0,
+                    ccyAbbrev = (dtl.d.ExpDtl_Ccy != 0) ? getCurrencyByMasterID(dtl.d.ExpDtl_Ccy).Curr_CCY_ABBR : "",
                     debitGross = dtl.d.ExpDtl_Debit,
                     credEwt = dtl.d.ExpDtl_Credit_Ewt,
                     credCash = dtl.d.ExpDtl_Credit_Cash,
@@ -11409,7 +11410,7 @@ namespace ExpenseProcessingSystem.Services
                     {
                         TR_ID =  tr.TR_ID,
                         TR_MasterID = tr.TR_MasterID,
-                        TR_Tax_Rate = tr.TR_Tax_Rate * 100,
+                        TR_Tax_Rate = Mizuho.round(tr.TR_Tax_Rate * 100, 2),
                         TR_WT_Title = tr.TR_WT_Title
                     }).ToList();
         }
@@ -11424,7 +11425,7 @@ namespace ExpenseProcessingSystem.Services
             var select = new SelectList(_context.DMTR.Where(x => vendorTRIDList.Contains(x.TR_MasterID)
                                                             && x.TR_isActive == true
                                                             && x.TR_isDeleted == false)
-                                                     .Select(q => new { q.TR_ID, TR_Tax_Rate = (q.TR_Tax_Rate * 100) }),
+                                                     .Select(q => new { q.TR_ID, TR_Tax_Rate = Mizuho.round((q.TR_Tax_Rate * 100), 2) }),
                         "TR_ID", "TR_Tax_Rate");
 
             return select;
@@ -11434,7 +11435,7 @@ namespace ExpenseProcessingSystem.Services
         {
             var select = new SelectList(_context.DMTR.Where(x => x.TR_isActive == true
                                                             && x.TR_isDeleted == false)
-                                                     .Select(q => new { q.TR_ID, TR_Tax_Rate = (q.TR_Tax_Rate * 100) }),
+                                                     .Select(q => new { q.TR_ID, TR_Tax_Rate = Mizuho.round((q.TR_Tax_Rate * 100), 2) }),
                         "TR_ID", "TR_Tax_Rate");
 
             return select;
@@ -11446,7 +11447,7 @@ namespace ExpenseProcessingSystem.Services
             {
                 TR_ID = x.TR_ID,
                 TR_MasterID = x.TR_MasterID,
-                TR_Tax_Rate = x.TR_Tax_Rate * 100,
+                TR_Tax_Rate = Mizuho.round(x.TR_Tax_Rate * 100, 2),
                 TR_WT_Title = x.TR_WT_Title
             }).ToList();
         }
@@ -11455,7 +11456,7 @@ namespace ExpenseProcessingSystem.Services
         {
             var select = new SelectList(_context.DMVAT.Where(x => x.VAT_isActive == true
                                                              && x.VAT_isDeleted == false)
-                                                      .Select(q => new { q.VAT_ID, VAT_Rate = (q.VAT_Rate * 100) }),
+                                                      .Select(q => new { q.VAT_ID, VAT_Rate = Mizuho.round((q.VAT_Rate * 100), 2) }),
                         "VAT_ID", "VAT_Rate");
             return select;
         }
@@ -11470,7 +11471,7 @@ namespace ExpenseProcessingSystem.Services
                     {
                         VAT_ID = vat.VAT_ID,
                         VAT_MasterID = vat.VAT_MasterID,
-                        VAT_Rate = vat.VAT_Rate * 100,
+                        VAT_Rate = Mizuho.round(vat.VAT_Rate * 100, 2),
                         VAT_Name = vat.VAT_Name
                     }).ToList();
         }
@@ -11481,7 +11482,7 @@ namespace ExpenseProcessingSystem.Services
             {
                 VAT_ID = x.VAT_ID,
                 VAT_MasterID = x.VAT_MasterID,
-                VAT_Rate = x.VAT_Rate * 100,
+                VAT_Rate = Mizuho.round(x.VAT_Rate * 100, 2),
                 VAT_Name = x.VAT_Name
             }).ToList();
         }
@@ -11503,7 +11504,7 @@ namespace ExpenseProcessingSystem.Services
             var select = new SelectList(_context.DMVAT.Where(x => vendorVatIDList.Contains(x.VAT_ID)
                                                              && x.VAT_isActive == true
                                                              && x.VAT_isDeleted == false)
-                                                      .Select(q => new { q.VAT_ID, VAT_Rate = (q.VAT_Rate * 100) }),
+                                                      .Select(q => new { q.VAT_ID, VAT_Rate = Mizuho.round((q.VAT_Rate * 100), 2) }),
                         "VAT_ID", "VAT_Rate");
 
             return select;
@@ -11572,7 +11573,7 @@ namespace ExpenseProcessingSystem.Services
                 .Select(x => new  DMTRModel {
                     TR_ID = x.TR_ID,
                     TR_MasterID = x.TR_MasterID,
-                    TR_Tax_Rate = x.TR_Tax_Rate * 100,
+                    TR_Tax_Rate = Mizuho.round(x.TR_Tax_Rate * 100, 2),
                     TR_WT_Title = x.TR_Tax_Rate * 100 + "% " + x.TR_WT_Title
                 }).ToList();
         }

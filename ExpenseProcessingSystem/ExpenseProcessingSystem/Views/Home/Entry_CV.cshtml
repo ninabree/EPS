@@ -66,7 +66,7 @@
                         <tr id="item_@i">
                             <td class="p-b-1 p-t-1">
                                 <div class="flex-sb">
-                                    @Html.TextBoxFor(x => Model.EntryCV[i].GBaseRemarks, new { @class = "input100 w-80 voucher-input" })
+                                    @Html.TextBoxFor(x => Model.EntryCV[i].GBaseRemarks, new { @class = "input100 w-80 voucher-input", @maxlength = "30" })
                                     <div id="remark_@i">
                                         <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
                                         @for (int y = 0; y < Model.EntryCV[i].gBaseRemarksDetails.Count(); y++)
@@ -109,7 +109,7 @@
                                 @Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt comVar voucher-input", @disabled = "true" })
                             </td>
                             <td>
-                                @Html.DropDownListFor(x => Model.EntryCV[i].ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100 voucher-input txtccy" })
+                                @Html.DropDownListFor(x => Model.EntryCV[i].ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100 voucher-input txtccy comVar" })
                             </td>
                             <td>@Html.TextBoxFor(x => Model.EntryCV[i].debitGross, new { @class = "input100 txtGross", @readonly = "readonly" })</td>
                             <td>@Html.TextBoxFor(x => Model.EntryCV[i].credEwt, new { @class = "input100 txtCredEwt", @readonly = "readonly" })</td>
@@ -124,6 +124,7 @@
                                     @Html.HiddenFor(x => Model.EntryCV[i].amtDetails[y].amtDate);
                                     @Html.HiddenFor(x => Model.EntryCV[i].amtDetails[y].amtAmount);
                                 }
+                                @Html.HiddenFor(x => Model.EntryCV[i].screenCode, new { @class = "hiddenScreencode" })
                             </td>
                         </tr>
                     }
@@ -204,6 +205,9 @@
     <div id="modalDiv">
         @Html.Partial("ModalGbase")
     </div>
+    <input type="hidden" id="phpID" value="@Model.phpCurrID" />
+    <input type="hidden" id="phpAbbrv" value="@Model.phpAbbrev" />
+    <input type="hidden" id="phpMasterID" value="@Model.phpCurrMasterID" />
     <input type="hidden" id="yenID" value="@Model.yenCurrID" />
     <input type="hidden" id="yenAbbrv" value="@Model.yenAbbrev" />
     <input type="hidden" id="yenMasterID" value="@Model.yenCurrMasterID" />
@@ -256,9 +260,22 @@
 
         $('#iframePreview').prop('src', "/Home/VoucherCV");
     });
-
+    
     $(function () {
         updatePayeeSelect();
+
+        var trs = $("#inputTable").find("tbody").find("tr").length - 2;
+        for (var cnt = 0; cnt < trs; cnt++) {
+            var pos = "item_" + cnt;
+            var idx = pos.replace('item_', '');
+            if ($('#EntryCV_' + idx + '__ccy option:selected').text() != $('#phpAbbrv').val()) {
+                $('#' + pos).find('.chkEwt').attr("disabled", "disabled");
+                $('#' + pos).find('.chkVat').attr("disabled", "disabled");
+            } else {
+                $('#' + pos).find('.chkEwt').removeAttr("disabled");
+                $('#' + pos).find('.chkVat').removeAttr("disabled");
+            }
+        }
 
         $("#payeeTypeSel").change(function (e) {
             updatePayeeSelect();
@@ -321,6 +338,16 @@
             $(trClone).find("#template_duration").attr("id", "EntryCV_" + itemCount + "__duration");
 
             $(trClone).insertAfter($("#inputTable > tbody").find("#item_" + (itemCount - 1)));
+
+            var trCount = $("#inputTable").find("tbody").find("tr");
+            if ((trCount.length - 3) > 0) {
+                $('.expenseTable-remove').show();
+            }
+
+            if ($("#payeeTypeSel").val() == "2") {
+                $('.table').find('.chkEwt').attr('disabled', 'disabled');
+                $('.table').find('.txtEwt').attr('disabled', 'disabled');
+            }
         });
 
         $("table").on("click", ".expenseAmortization", function (e) {
@@ -395,24 +422,52 @@
             }
         });
 
+        //EWT/VAT Check and Drop down list. Enable if currency = PHP, disable if not.
+        $("table").on("change", ".txtccy", function (e) {
+            var pos = $(this.parentNode)[0].parentNode.id;
+            var idx = pos.replace('item_', '');
+            if ($('#EntryCV_' + idx + '__ccy option:selected').text() != $('#phpAbbrv').val()) {
+                $('#' + pos).find('.chkEwt').attr("disabled", "disabled");
+                $('#' + pos).find('.txtEwt').attr("disabled", "disabled");
+                $('#' + pos).find('.chkVat').attr("disabled", "disabled");
+                $('#' + pos).find('.txtVat').attr("disabled", "disabled");
+                $('#' + pos).find('.chkEwt').prop("checked", false);
+                $('#' + pos).find('.chkVat').prop("checked", false);
+            } else {
+                $('#' + pos).find('.chkEwt').removeAttr("disabled");
+                $('#' + pos).find('.chkVat').removeAttr("disabled");
+                if ($('#' + pos).find('.chkEwt').is(':checked')) {
+                    $('#' + pos).find('.txtEwt').removeAttr("disabled");
+                }
+                if ($('#' + pos).find('.chkVat').is(':checked')) {
+                    $('#' + pos).find('.txtVat').removeAttr("disabled");
+                }
+            }
+            computeValuesSSByParentID(pos);
+        });
 
     });
 </script>
 <script type="text/javascript"> 
     // [[ FUNCTIONS ]]
-     function updatePayeeSelect() {
-         var paytype = $("#payeeTypeSel option:selected").val();
+    function updatePayeeSelect() {
+        $('.table').find('input.chkVat').prop('checked', false);
+        $('.table').find('input.chkEwt').prop('checked', false);
+        var paytype = $("#payeeTypeSel option:selected").val();
         var options = "";
         if (paytype == "1") {
             var opt = @Html.Raw(Json.Serialize(Model.systemValues.vendors));
             for (var i = 0; i < opt.length; i++) {
                 options += '<option value="' + opt[i].value + '">' + opt[i].text + '</option>';
             }
+            $('.table').find('.chkEwt').removeAttr('disabled');
         } else if (paytype == "2") {
             var opt = @Html.Raw(Json.Serialize(Model.systemValues.employees));
             for (var i = 0; i < opt.length; i++) {
                 options += '<option value="' + opt[i].value + '">' + opt[i].text + '</option>';
             }
+            $('.table').find('.chkEwt').attr('disabled', 'disabled');
+            $('.table').find('.txtEwt').attr('disabled', 'disabled');
         }
         $("#vendorName").empty();
         $("#vendorName").append($(options));
@@ -449,7 +504,7 @@
             <tr id="rowTemplate">
                 <td class="p-b-1 p-t-1">
                     <div class="flex-sb">
-                        @Html.TextBoxFor(x => Model.template.GBaseRemarks,new { @class = "input100 w-80 voucher-input", @value = "" })
+                        @Html.TextBoxFor(x => Model.template.GBaseRemarks,new { @class = "input100 w-80 voucher-input", @value = "", @maxlength="30" })
                         <div id="remark_">
                             <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
                         </div>
@@ -484,7 +539,7 @@
                     @Html.DropDownListFor(x => Model.template.ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt comVar voucher-input", @disabled = "true" })
                 </td>
                 <td>
-                    @Html.DropDownListFor(x => Model.template.ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100 txtccy voucher-input" })
+                    @Html.DropDownListFor(x => Model.template.ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100 txtccy voucher-input comVar" })
                 </td>
                 <td>@Html.TextBoxFor(x => Model.template.debitGross, new { @class = "input100 txtGross", @readonly = "readonly" })</td>
                 <td>@Html.TextBoxFor(x => Model.template.credEwt, new { @class = "input100 txtCredEwt", @readonly = "readonly" })</td>

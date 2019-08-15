@@ -10,8 +10,6 @@ namespace ExpenseProcessingSystem.ConstantData
 {
     public class GlobalSystemValues
     {
-        public static string MESSAGE = "";
-
         //Static values for status values use the for the workflow statuses.
         //i.e: Checking what the current status of an application is 
         //Example: [Application.status == GlobalSystemValues.STATUS_PENDING]
@@ -279,6 +277,7 @@ namespace ExpenseProcessingSystem.ConstantData
         //System message
         //public static readonly string MESSAGE1 = "You can only edit the entry in Pending or Rejected status.";
         //public static readonly string MESSAGE2 = "You can only delete the entry in Pending or Rejected status.";
+        public static string MESSAGE = "";
         public static readonly string MESSAGE1 = "処理失敗。PENDING又はREJECTEDステータスのみ訂正可能";
         public static readonly string MESSAGE2 = "処理失敗。PENDING又はREJECTEDステータスのみ削除可能";
         public static readonly string MESSAGE3 = "This entry was edited/deleted by the maker. Please check the entry again.";

@@ -8,7 +8,7 @@
 
 <div class="tabContent">
     <input id="_screen" type="hidden" value="cv" />
-    @using (Html.BeginForm("AddNewSS", "Home", FormMethod.Post, new { @class = "validate-form" }))
+    @using (Html.BeginForm("AddNewSS", "Home", FormMethod.Post, new { @class = "validate-form", @id = "inputForm" }))
     {
         <div id="tbl-lbl">
             <div class="dis-inline-block"><p>Date:</p></div>
@@ -245,7 +245,7 @@
                 newRow.id = "item_" + itemCount
 
                 var htmlContent = '<td class="p-b-1 p-t-1"><div class="flex-sb">' +
-                    '<input class="input100 w-80 txtGBaseRemark voucher-input" id="EntryCV_' + itemCount + '__GBaseRemarks" name="EntryCV[' + itemCount + '].GBaseRemarks" type="text" value="">' +
+                    '<input class="input100 w-80 txtGBaseRemark voucher-input" id="EntryCV_' + itemCount + '__GBaseRemarks" name="EntryCV[' + itemCount + '].GBaseRemarks" maxlength="29" type="text" value="">' +
                     '<div id="remark_' + itemCount + '"><a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a></div></div></td>' +
                     '<td><select class="input100 txtPayee voucher-input" id="EntryCV_' + itemCount + '__dtlSSPayee" name="EntryCV[' + itemCount + '].dtlSSPayee">';
 
