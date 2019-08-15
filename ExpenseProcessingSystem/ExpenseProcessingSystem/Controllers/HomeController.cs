@@ -28,6 +28,7 @@ using BIR_Form_Filler.Functions;
 using BIR_Form_Filler.Models;
 using ExpenseProcessingSystem.Models.Check;
 using Microsoft.Extensions.Logging;
+using System.DirectoryServices.AccountManagement;
 
 namespace ExpenseProcessingSystem.Controllers
 {
@@ -4337,49 +4338,50 @@ namespace ExpenseProcessingSystem.Controllers
         }
 
         //[* USER *]
-        [HttpPost]
         [ExportModelState]
+        [HttpPost]
         [OnlineUserCheck]
         public IActionResult AddEditUser(UserManagementViewModel model)
         {
             var userId = GetUserID();
             if (!ModelState.IsValid)
             {
-                return View();
+                return RedirectToAction("UM", "Home");
             }
 
-            try
-            {
-                XElement xelemDirectory = XElement.Load("wwwroot/xml/ActiveDirectory.xml");
+            XElement xelemDirectory = XElement.Load("wwwroot/xml/ActiveDirectory.xml");
 
-                string svcUsername = xelemDirectory.Element("svcUsername").Value;
-                string domain = xelemDirectory.Element("domain").Value;
-                string svcPwd = xelemDirectory.Element("svcPwd").Value;
-                //check if user is existing in Active Directory
-                using (PrincipalContext context = new PrincipalContext(ContextType.Domain, domain, svcUsername, svcPwd))
+            string svcUsername = xelemDirectory.Element("svcUsername").Value;
+            string domain = xelemDirectory.Element("domain").Value;
+            string svcPwd = EncrytionTool.DecryptString(xelemDirectory.Element("svcPwd").Value,"eXpreSS");
+            //check if user is existing in Active Directory
+            using (PrincipalContext context = new PrincipalContext(ContextType.Domain, domain, svcUsername, svcPwd))
+            {
+                using (UserPrincipal user = UserPrincipal.FindByIdentity(context, model.NewAcc.User_UserName))
                 {
-                    using (UserPrincipal user = UserPrincipal.FindByIdentity(context, model.NewAcc.User_UserName))
+                    if (user != null)
                     {
-                        if (user != null)
+                        bool result = _service.addUser(model, userId);
+                        if (result && model.NewAcc.User_ID == 0)
                         {
-                            _service.addUser(model, userId);
+                            TempData["MESSAGE"] = "User successfully registered.";
+                        }
+                        else if(result && model.NewAcc.User_ID > 0)
+                        {
+                            TempData["MESSAGE"] = "User successfully updated.";
+
                         }
                         else
                         {
-                            ModelState.AddModelError("", "Can't find user in the directory.");
+                            ModelState.AddModelError("", "User already exists!");
                         }
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Can't find user in the directory.");
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                string UserID = _session.GetString("UserID");
-                string UserName = _session.GetString("UserName");
-                _logger.LogError(ex, "User [" + UserName + "] has encountered a system error at [" + DateTime.Now + "].");
-                return StatusCode(500);
-            }
-
-            TempData["MESSAGE"] = "User successfully registered.";
 
             return RedirectToAction("UM", "Home");
         }

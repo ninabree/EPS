@@ -11,7 +11,7 @@ string value4 = xelem.Element("ADDRESS").Value
 -->
 <LDAP>
   <svcUsername id="svcUsername">gene.delacruz</svcUsername>
-  <svcPwd id="svcPwd">genecarlod</svcPwd>
+  <svcPwd id="svcPwd">EZUumKPAnJXsx9n0l9m+1g==</svcPwd>
   <domain id="domain">jpi.local</domain>
 
   <!--<svcUsername id="svcUsername">tuser</svcUsername>
