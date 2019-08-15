@@ -220,6 +220,7 @@ namespace ExpenseProcessingSystem.Services
                             || p.Expense_Status == GlobalSystemValues.STATUS_FOR_PRINTING)
                             && p.Expense_Verifier_1 != userID
                             && p.Expense_Verifier_2 != userID
+                            &&(p.Expense_Status == GlobalSystemValues.STATUS_REJECTED)
                             ) ||
                             //verifier
                             //if role == verifier && not creator of entry
@@ -272,6 +273,9 @@ namespace ExpenseProcessingSystem.Services
                              && p.Liq_Created_UserID != userID
                              && p.Liq_Verifier1 != userID
                              && p.Liq_Verifier2 != userID)
+                             ||
+                             //maker
+                             (p.Liq_Status == GlobalSystemValues.STATUS_REJECTED && p.Liq_Created_UserID == userID)
                              ||
                             //verifier
                             //if role == verifier && not creator of entry
