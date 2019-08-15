@@ -208,30 +208,35 @@ namespace ExpenseProcessingSystem.Services
                         {GlobalSystemValues.TYPE_SS,"View_SS"},
                     };
             List<ApplicationsViewModel> dbPending = (from p in _context.ExpenseEntry
-                            join l in _context.LiquidationEntryDetails on p.Expense_ID equals l.ExpenseEntryModel.Expense_ID into gj
-                            from l in gj.DefaultIfEmpty()
+                            from user in _context.User
                             where (
+                            //maker
+                            (p.Expense_Creator_ID == userID &&
                             (p.Expense_Status == GlobalSystemValues.STATUS_PENDING
                             || p.Expense_Status == GlobalSystemValues.STATUS_VERIFIED
                             || p.Expense_Status == GlobalSystemValues.STATUS_NEW
                             || p.Expense_Status == GlobalSystemValues.STATUS_EDIT
-                            || p.Expense_Status == GlobalSystemValues.STATUS_DELETE)
-                            && p.Expense_Creator_ID != userID
+                            || p.Expense_Status == GlobalSystemValues.STATUS_DELETE
+                            || p.Expense_Status == GlobalSystemValues.STATUS_FOR_PRINTING)
                             && p.Expense_Verifier_1 != userID
                             && p.Expense_Verifier_2 != userID
-                            )
-                            ||
-                            (
-                            p.Expense_Status == GlobalSystemValues.STATUS_POSTED
-                            && p.Expense_Type == GlobalSystemValues.TYPE_SS
-                            && l.Liq_Created_UserID != userID
-                            && l.Liq_Verifier1 != userID
-                            && l.Liq_Verifier2 != userID
-                            && (l.Liq_Status == GlobalSystemValues.STATUS_PENDING
-                            || l.Liq_Status == GlobalSystemValues.STATUS_VERIFIED)
-                            )
-                            ||
-                            (p.Expense_Status == GlobalSystemValues.STATUS_FOR_PRINTING)
+                            ) ||
+                            //verifier
+                            //if role == verifier && not creator of entry
+                            ((user.User_Role == GlobalSystemValues.ROLE_VERIFIER && user.User_ID == userID && p.Expense_Creator_ID != userID) &&
+                            // and if pending or verified but can still be verified
+                            (((p.Expense_Status == GlobalSystemValues.STATUS_PENDING || p.Expense_Status == GlobalSystemValues.STATUS_VERIFIED) && (p.Expense_Verifier_1 == 0 || p.Expense_Verifier_2 == 0))
+                            //or for printing and is a verifier of the entry
+                            || (p.Expense_Status == GlobalSystemValues.STATUS_FOR_PRINTING && (p.Expense_Verifier_1 == userID || p.Expense_Verifier_2 == userID)))
+                            ) ||
+                            //approver
+                            //if role == approver && not creator of entry
+                            ((user.User_Role == GlobalSystemValues.ROLE_APPROVER && user.User_ID == userID && p.Expense_Creator_ID != userID) &&
+                            // and if pending or verified
+                            ((p.Expense_Status == GlobalSystemValues.STATUS_PENDING || p.Expense_Status == GlobalSystemValues.STATUS_VERIFIED)
+                            //or for printing and is the approver of the entry
+                            || (p.Expense_Status == GlobalSystemValues.STATUS_FOR_PRINTING && p.Expense_Approver == userID))
+                            ))
                             select new ApplicationsViewModel
                             {
                                 App_ID = p.Expense_ID,
@@ -257,7 +262,8 @@ namespace ExpenseProcessingSystem.Services
                         {GlobalSystemValues.TYPE_SS,"View_Liquidation_SS"},
                     };
             dbPending.Concat(from p in _context.LiquidationEntryDetails
-                            where 
+                             from user in _context.User
+                             where (
                             ((p.Liq_Status == GlobalSystemValues.STATUS_PENDING
                              || p.Liq_Status == GlobalSystemValues.STATUS_VERIFIED
                              || p.Liq_Status == GlobalSystemValues.STATUS_NEW
@@ -266,7 +272,24 @@ namespace ExpenseProcessingSystem.Services
                              && p.Liq_Created_UserID != userID
                              && p.Liq_Verifier1 != userID
                              && p.Liq_Verifier2 != userID)
-                            select new ApplicationsViewModel
+                             ||
+                            //verifier
+                            //if role == verifier && not creator of entry
+                            ((user.User_Role == GlobalSystemValues.ROLE_VERIFIER && user.User_ID == userID && p.Liq_Created_UserID != userID) &&
+                            // and if pending or verified but can still be verified
+                            (((p.Liq_Status == GlobalSystemValues.STATUS_PENDING || p.Liq_Status == GlobalSystemValues.STATUS_VERIFIED) && (p.Liq_Verifier1 == 0 || p.Liq_Verifier2 == 0))
+                            //or for printing and is a verifier of the entry
+                            || (p.Liq_Status == GlobalSystemValues.STATUS_FOR_PRINTING && (p.Liq_Verifier1 == userID || p.Liq_Verifier2 == userID)))
+                            ) ||
+                            //approver
+                            //if role == approver && not creator of entry
+                            ((user.User_Role == GlobalSystemValues.ROLE_APPROVER && user.User_ID == userID && p.Liq_Created_UserID != userID) &&
+                            // and if pending or verified
+                            ((p.Liq_Status == GlobalSystemValues.STATUS_PENDING || p.Liq_Status == GlobalSystemValues.STATUS_VERIFIED)
+                            //or for printing and is the approver of the entry
+                            || (p.Liq_Status == GlobalSystemValues.STATUS_FOR_PRINTING && p.Liq_Approver == userID))
+                            ))
+                             select new ApplicationsViewModel
                             {
                                 App_ID = p.ExpenseEntryModel.Expense_ID,
                                 App_Type = "Liquidation",
