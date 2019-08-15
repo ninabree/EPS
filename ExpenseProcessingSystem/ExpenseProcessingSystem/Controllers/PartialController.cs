@@ -112,7 +112,7 @@ namespace ExpenseProcessingSystem.Controllers
                 }
                 else if (categoryID == GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES.ToString())
                 {
-                    viewModel.EntryNC = CONSTANT_NC_MISC_ENTRIES.Populate_MISC_ENTRIES(currDtl, new DMAccountModel { Account_ID = accs[0].accID, Account_Name = accs[0].accName});
+                    viewModel.EntryNC = CONSTANT_NC_MISC_ENTRIES.Populate_MISC_ENTRIES(currDtl, new DMAccountModel { Account_ID = int.Parse(viewModel.accountList[0].Value), Account_Name = viewModel.accountList[0].Text});
                 }
             }
 
