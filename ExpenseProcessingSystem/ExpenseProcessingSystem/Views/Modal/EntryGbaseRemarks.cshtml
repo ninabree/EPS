@@ -78,7 +78,7 @@
         var decVal = 2;
 
         var pid = $(this.parentNode)[0].parentNode.id;
-        var val = $('#' + pid).find('.NumberOnlyOneDecimal').val();
+        var val = $('#' + pid).find('.NumberOnlyOneDecimal').val().replace("-","");
 
         var idNum = $("#parentId").val().replace('remark_', '');
 

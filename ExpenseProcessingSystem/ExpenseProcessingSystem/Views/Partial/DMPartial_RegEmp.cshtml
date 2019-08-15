@@ -114,6 +114,10 @@
             <button class="dis-inline-block tbl-btn apprv-rec rec" id="apprv_regEmp">Approve</button>
             <button class="dis-inline-block tbl-btn rej-rec rec" id="rej_regEmp">Reject</button>
         }
+        else if (ViewBag.access.accessType == "verifier")
+        {
+            <button class="dis-inline-block tbl-btn apprv-rec rec" id="apprv_regEmp">Approve</button>
+        }
         <input type="hidden" value="@ViewData["Title"]" id="partialVal" />
     </div>
     @Html.Partial("ModalPartial")

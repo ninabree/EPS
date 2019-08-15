@@ -101,9 +101,9 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 dataEndRow = lastRow;
                 lastRow += 1;
 
-                worksheet.Cells["E" + lastRow].Formula = "SUM(E"+ dataStartRow + ":E" + dataEndRow + ")";
+                worksheet.Cells["E" + lastRow].Formula = (data.HomeReportOutputAPSWT_M.Count() != 0) ? "SUM(E"+ dataStartRow + ":E" + dataEndRow + ")" : "0.00";
                 worksheet.Cells["E" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
-                worksheet.Cells["G" + lastRow].Formula = "SUM(G" + dataStartRow + ":G" + dataEndRow + ")";
+                worksheet.Cells["G" + lastRow].Formula = (data.HomeReportOutputAPSWT_M.Count() != 0) ? "SUM(G" + dataStartRow + ":G" + dataEndRow + ")" : "0.00";
                 worksheet.Cells["G" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
 
                 lastRow += 3;
@@ -169,9 +169,9 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 worksheet.Cells["A" + lastRow].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                 worksheet.Cells["E" + lastRow].Value = "TOTAL =>";
                 worksheet.Cells["E" + lastRow].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                worksheet.Cells["F" + lastRow].Formula = "SUM(F" + dataStartRow + ":F" + dataEndRow + ")";
+                worksheet.Cells["F" + lastRow].Formula = (data.HomeReportOutputAST1000.Count() != 0) ? "SUM(F" + dataStartRow + ":F" + dataEndRow + ")" : "0.00";
                 worksheet.Cells["F" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
-                worksheet.Cells["H" + lastRow].Formula = "SUM(H" + dataStartRow + ":H" + dataEndRow + ")";
+                worksheet.Cells["H" + lastRow].Formula = (data.HomeReportOutputAST1000.Count() != 0) ? "SUM(H" + dataStartRow + ":H" + dataEndRow + ")" : "0.00";
                 worksheet.Cells["H" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
 
                 lastRow += 3;
@@ -242,6 +242,18 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
 
                 dataEndRow = lastRow;
                 lastRow += 1;
+                worksheet.Cells["A" + lastRow + ":" + "C" + lastRow].Merge = true;
+                worksheet.Cells["A" + lastRow].Value = "TOTAL:";
+                worksheet.Cells["A" + lastRow + ":" + "C" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
+
+                worksheet.Cells["D" + lastRow].Value = data.HomeReportOutputESAMS.Sum(x => x.DRAmount);
+                worksheet.Cells["D" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
+
+                worksheet.Cells["E" + lastRow].Value = data.HomeReportOutputESAMS.Sum(x => x.CRAmount);
+                worksheet.Cells["E" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
+
+                worksheet.Cells["F" + lastRow + ":" + "J" + lastRow].Merge = true;
+                worksheet.Cells["F" + lastRow + ":" + "J" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
 
                 //worksheet.Cells["A" + lastRow].Value = "***End of Report***";
                 //worksheet.Cells["A" + lastRow].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
@@ -270,6 +282,7 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 package.Save();
             }
         }
+
         public void ExcelActualBudget(FileInfo newFile, FileInfo templateFile, HomeReportDataFilterViewModel data)
         {
             using (ExcelPackage package = new ExcelPackage(newFile, templateFile))

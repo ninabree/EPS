@@ -281,6 +281,12 @@ namespace ExpenseProcessingSystem.ConstantData
         //public static readonly string MESSAGE2 = "You can only delete the entry in Pending or Rejected status.";
         public static readonly string MESSAGE1 = "処理失敗。PENDING又はREJECTEDステータスのみ訂正可能";
         public static readonly string MESSAGE2 = "処理失敗。PENDING又はREJECTEDステータスのみ削除可能";
+        public static readonly string MESSAGE3 = "This entry was edited/deleted by another user. Please check the entry again.";
+        public static readonly string MESSAGE4 = "This entry was already approved by Approver. Cannot proceed with your request.";
+        public static readonly string MESSAGE5 = "This entry was already in For Printing status. Cannot proceed with your request.";
+        public static readonly string MESSAGE6 = "This entry was already in For Closing status. Cannot proceed with your request.";
+        public static readonly string MESSAGE7 = "This entry was already in Rejected status. Cannot proceed with your request.";
+        public static readonly string MESSAGE8 = "This entry was already verified by other verifier/s. Cannot proceed with your request.";
     }
     public class CONSTANT_NC_VALS
     {

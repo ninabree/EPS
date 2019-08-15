@@ -276,7 +276,7 @@ namespace ExpenseProcessingSystem.Services
                 ApplicationsViewModel tempPending = new ApplicationsViewModel
                 {
                     App_ID = item.Expense_ID,
-                    App_Type = (item.Liq_Status == 0) ? GlobalSystemValues.getApplicationType(item.Expense_Type) : GlobalSystemValues.getApplicationType(item.Expense_Type) + " (Liquidation)",
+                    App_Type = (item.Liq_Status == 0) ? GlobalSystemValues.getApplicationType(item.Expense_Type) : "Liquidation",
                     App_Amount = item.Expense_Debit_Total,
                     App_Payee = getVendorName(item.Expense_Payee, item.Expense_Payee_Type) ?? "",
                     App_Maker = (item.Liq_Status == 0) ? getName(item.Expense_Creator_ID) : getName(item.Liq_Created_UserID),
@@ -1609,7 +1609,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Vendor_Creator_ID = int.Parse(_session.GetString("UserID")),
                     Pending_Vendor_Filed_Date = DateTime.Now,
                     Pending_Vendor_IsDeleted = false,
-                    Pending_Vendor_Status_ID = 7
+                    Pending_Vendor_Status_ID = GlobalSystemValues.STATUS_NEW
                 };
                 vmList.Add(m);
             }
@@ -8037,10 +8037,10 @@ namespace ExpenseProcessingSystem.Services
                     chkVat = (dtl.d.ExpDtl_Vat <= 0) ? false : true,
                     vat = dtl.d.ExpDtl_Vat,
                     //vat_Name is actually the rate
-                    vat_Name = _context.DMVAT.Where(x => x.VAT_ID == dtl.d.ExpDtl_Vat && x.VAT_isActive == true).Select(x => x.VAT_Rate.ToString()).FirstOrDefault(),
+                    vat_Name = (dtl.d.ExpDtl_Vat > 0) ? _context.DMVAT.Where(x => x.VAT_ID == dtl.d.ExpDtl_Vat && x.VAT_isActive == true).Select(x => (x.VAT_Rate * 100).ToString()).FirstOrDefault() : "0",
                     chkEwt = (dtl.d.ExpDtl_Ewt <= 0) ? false : true,
                     ewt = dtl.d.ExpDtl_Ewt,
-                    ewt_Name = _context.DMTR.Where(x => x.TR_ID == dtl.d.ExpDtl_Ewt).Select(x => x.TR_Tax_Rate.ToString()).FirstOrDefault(),
+                    ewt_Name = (dtl.d.ExpDtl_Ewt > 0) ? _context.DMTR.Where(x => x.TR_ID == dtl.d.ExpDtl_Ewt).Select(x => (x.TR_Tax_Rate * 100).ToString()).FirstOrDefault() : "0",
                     ewt_Payor_Name = (dtl.d.ExpDtl_Ewt_Payor_Name_ID >= 0) ? _context.DMVendor.Where(x => x.Vendor_ID == dtl.d.ExpDtl_Ewt_Payor_Name_ID).Select(x => x.Vendor_Name).FirstOrDefault() : "",
                     ccy = dtl.d.ExpDtl_Ccy,
                     ccy_Name = _context.DMCurrency.Where(x => x.Curr_ID == dtl.d.ExpDtl_Ccy && x.Curr_isActive == true).Select(x => x.Curr_CCY_ABBR).FirstOrDefault(),
@@ -8211,26 +8211,30 @@ namespace ExpenseProcessingSystem.Services
                     GlobalSystemValues.STATUS_FOR_CLOSING
                 };
 
-
                 ExpenseEntryModel dbExpenseEntry = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == transID);
 
+                if(dbExpenseEntry == null)
+                {
+                    GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE3;
+                    return false;
+                }
                 if (forbiddenStatus.Contains(dbExpenseEntry.Expense_Status))
                 {
                     if(dbExpenseEntry.Expense_Status == GlobalSystemValues.STATUS_APPROVED)
                     {
-                        GlobalSystemValues.MESSAGE = DateTime.Now.ToLongTimeString() + ": This entry was already approved by Approver. Cannot proceed with your request.";
+                        GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE4;
                     }
                     if (dbExpenseEntry.Expense_Status == GlobalSystemValues.STATUS_FOR_CLOSING)
                     {
-                        GlobalSystemValues.MESSAGE = DateTime.Now.ToLongTimeString() + ": This entry was already in For Printing status. Cannot proceed with your request.";
+                        GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE5;
                     }
                     if (dbExpenseEntry.Expense_Status == GlobalSystemValues.STATUS_FOR_CLOSING)
                     {
-                        GlobalSystemValues.MESSAGE = DateTime.Now.ToLongTimeString() + ": This entry was already in For Closing status. Cannot proceed with your request.";
+                        GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE6;
                     }
                     if (dbExpenseEntry.Expense_Status == GlobalSystemValues.STATUS_FOR_CLOSING)
                     {
-                        GlobalSystemValues.MESSAGE = DateTime.Now.ToLongTimeString() + ": This entry was already in Rejected status. Cannot proceed with your request.";
+                        GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE7;
                     }
                     return false;
                 }
@@ -8249,7 +8253,7 @@ namespace ExpenseProcessingSystem.Services
                         }
                         else
                         {
-                            GlobalSystemValues.MESSAGE = DateTime.Now.ToLongTimeString() + ": This entry was already verified by other verifier/s. Cannot proceed with your request.";
+                            GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE8;
                             return false;
                         }
                     }
@@ -8335,21 +8339,30 @@ namespace ExpenseProcessingSystem.Services
                 foreach (var i in entryDtl)
                 {
                     var interList = _context.ExpenseEntryInterEntity.Where(x => x.ExpenseEntryDetailModel.ExpDtl_ID == i.ExpDtl_ID).ToList();
-                    foreach (var inter in interList)
+                    var gbaseList = _context.ExpenseEntryGbaseDtls.Where(x => x.ExpenseEntryDetailModel.ExpDtl_ID == i.ExpDtl_ID).ToList();
+                    if (interList.Count > 0)
                     {
-                        var partList = _context.ExpenseEntryInterEntityParticular.Where(x => x.ExpenseEntryInterEntityModel.ExpDtl_DDVInter_ID == inter.ExpDtl_DDVInter_ID).ToList();
-                        foreach (var part in partList)
+                        foreach (var inter in interList)
                         {
-                            var accList = _context.ExpenseEntryInterEntityAccs.Where(x => x.ExpenseEntryInterEntityParticular.InterPart_ID == part.InterPart_ID).ToList();
-                            foreach (var accs in accList)
+                            var partList = _context.ExpenseEntryInterEntityParticular.Where(x => x.ExpenseEntryInterEntityModel.ExpDtl_DDVInter_ID == inter.ExpDtl_DDVInter_ID).ToList();
+                            foreach (var part in partList)
                             {
-                                _context.ExpenseEntryInterEntityAccs.RemoveRange(_context.ExpenseEntryInterEntityAccs
-                                    .Where(x => x.ExpenseEntryInterEntityParticular.InterPart_ID == part.InterPart_ID));
+                                var accList = _context.ExpenseEntryInterEntityAccs.Where(x => x.ExpenseEntryInterEntityParticular.InterPart_ID == part.InterPart_ID).ToList();
+                                foreach (var accs in accList)
+                                {
+                                    _context.ExpenseEntryInterEntityAccs.RemoveRange(_context.ExpenseEntryInterEntityAccs
+                                        .Where(x => x.ExpenseEntryInterEntityParticular.InterPart_ID == part.InterPart_ID));
+                                }
+                                _context.ExpenseEntryInterEntityParticular.RemoveRange(_context.ExpenseEntryInterEntityParticular
+                                    .Where(x => x.ExpenseEntryInterEntityModel.ExpDtl_DDVInter_ID == inter.ExpDtl_DDVInter_ID));
                             }
-                            _context.ExpenseEntryInterEntityParticular.RemoveRange(_context.ExpenseEntryInterEntityParticular
-                                .Where(x => x.ExpenseEntryInterEntityModel.ExpDtl_DDVInter_ID == inter.ExpDtl_DDVInter_ID));
+                            _context.ExpenseEntryInterEntity.RemoveRange(_context.ExpenseEntryInterEntity
+                                .Where(x => x.ExpenseEntryDetailModel.ExpDtl_ID == i.ExpDtl_ID));
                         }
-                        _context.ExpenseEntryInterEntity.RemoveRange(_context.ExpenseEntryInterEntity
+                    }
+                    if (gbaseList.Count > 0)
+                    {
+                        _context.ExpenseEntryGbaseDtls.RemoveRange(_context.ExpenseEntryGbaseDtls
                             .Where(x => x.ExpenseEntryDetailModel.ExpDtl_ID == i.ExpDtl_ID));
                     }
                 }
@@ -9077,6 +9090,12 @@ namespace ExpenseProcessingSystem.Services
 
 
                 LiquidationEntryDetailModel dbLiquidation = _context.LiquidationEntryDetails.FirstOrDefault(x => x.ExpenseEntryModel.Expense_ID == id);
+
+                if (dbLiquidation == null)
+                {
+                    GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE3;
+                    return false;
+                }
 
                 if (forbiddenStatus.Contains(dbLiquidation.Liq_Status))
                     return false;

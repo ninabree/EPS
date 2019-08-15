@@ -109,13 +109,13 @@
                             </td>
                             <td>
                                 @*@Html.TextBoxFor(x => Model.EntryCV[i].vat, new { @class = "input100 txtVat", @readonly = "true" })*@
-                                @Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.EntryCV[i].vendVATList, "VAT_ID", "VAT_Rate"), new { @class = "input100 txtVat comVar", @disabled = "true" })
+                                @Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.EntryCV[i].vendVATList, "VAT_ID", "VAT_Rate"), new { @class = "input100 txtVat comVar selectDisabled", @disabled = "true" })
                             </td>
                             <td style="text-align:center">
                                 @Html.CheckBoxFor(x => Model.EntryCV[i].chkEwt, new { @class = "chkEwt comVar", disabled = "disabled" })
                             </td>
                             <td>
-                                @Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.EntryCV[i].vendTRList, "TR_ID", "TR_Tax_Rate"), new { @class = "input100 txtEwt comVar", @disabled = "true" })
+                                @Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.EntryCV[i].vendTRList, "TR_ID", "TR_Tax_Rate"), new { @class = "input100 txtEwt comVar selectDisabled", @disabled = "true" })
                             </td>
                             <td style="text-align:center">
                                 <a class="reqEWTBtn glyphicon glyphicon-list-alt expenseEWT" href="#" style="pointer-events:none;"></a>
@@ -137,13 +137,13 @@
                                 <input value="@Model.EntryCV[i].credCash" class="input100 txtCredCash" disabled />
                             </td>
                             <td id="req_@i">
-                                <a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#"></a>
+                                <a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#" data-title="Cash Breakdown"></a>
                                 @if (Model.EntryCV[i].ccyMasterID != int.Parse(XElement.Load("wwwroot/xml/LiquidationValue.xml").Element("CURRENCY_PHP").Value)
                                  && (Model.statusID == GlobalSystemValues.STATUS_REVERSED || Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING
                                  || Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING || Model.statusID == GlobalSystemValues.STATUS_CLOSED
                                   || Model.statusID == GlobalSystemValues.STATUS_POSTED))
                                 {
-                                    <a class="cddISBtn" href="#"><img id="imgCDD" src="~/images/cddLogo.png" style="width:100%;height:70%" /></a>
+                                    <a class="cddISBtn" href="#" data-title="CDD Instruction Sheet"><img id="imgCDD" src="~/images/cddLogo.png" style="width:100%;height:70%" /></a>
                                 }
                                 @Html.HiddenFor(x => Model.EntryCV[i].modalInputFlag, new { @class = "hiddenItem" })
                                 @Html.HiddenFor(x => Model.EntryCV[i].screenCode, new { @class = "hiddenScreencode" })
@@ -249,6 +249,7 @@
         var trs = $("#inputTable").find("tbody").find("tr");
         for (var cnt = 0; cnt < trs.length - 2; cnt++) {
             reqBtnDisable(cnt);
+            ddlEnabled(cnt);
         }
 
         $(function () {
@@ -383,7 +384,29 @@
             $('#item_' + idx).find('.reqEWTBtn').css("pointer-events", "auto");
         }
     };
+    function ddlEnabled(idx) {
+        var pid = '#item_' + idx;
 
+        if (!$(pid).find(".chkEwt").is(':checked')) {
+            if ($(pid).find(".chkVat").is(':checked')) {
+                $(pid).find('.reqEWTBtn').css("pointer-events", "auto");
+            } else {
+                $(pid).find('.reqEWTBtn').css("pointer-events", "none");
+            }
+        } else {
+            $(pid).find('.reqEWTBtn').css("pointer-events", "auto");
+        }
+
+        if (!$(pid).find(".chkVat").is(':checked')) {
+            if ($(pid).find(".chkEwt").is(':checked')) {
+                $(pid).find('.reqEWTBtn').css("pointer-events", "auto");
+            } else {
+                $(pid).find('.reqEWTBtn').css("pointer-events", "none");
+            }
+        } else {
+            $(pid).find('.reqEWTBtn').css("pointer-events", "auto");
+        }
+    };
 </script>
 <script type="text/javascript" src="~/js/EntryScripts.js"></script>
 <script type="text/javascript">

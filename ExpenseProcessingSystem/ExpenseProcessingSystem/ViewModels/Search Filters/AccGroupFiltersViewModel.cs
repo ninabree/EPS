@@ -13,6 +13,6 @@ namespace ExpenseProcessingSystem.ViewModels.Search_Filters
         [Display(Name = "Approver Name")]
         public string AGF_Approver_Name { get; set; }
         [Display(Name = "Account Status")]
-        public string AGF_Status { get; set; }
+        public string AGF_Status_Name { get; set; }
     }
 }

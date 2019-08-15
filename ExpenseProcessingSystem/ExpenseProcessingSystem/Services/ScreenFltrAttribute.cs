@@ -96,9 +96,9 @@ namespace ExpenseProcessingSystem.Services
                     AF_No = ctx.Session.GetString("AF_No") ?? "",
                     AF_Cust = ctx.Session.GetString("AF_Cust") ?? "",
                     AF_Div = ctx.Session.GetString("AF_Div") ?? "",
-                    AF_Group = ctx.Session.GetString("AF_Group") ?? "",
-                    AF_Currency = ctx.Session.GetString("AF_Currency") ?? "",
-                    AF_FBT = ctx.Session.GetString("AF_FBT") ?? "",
+                    AF_Group_Name = ctx.Session.GetString("AF_Group_Name") ?? "",
+                    AF_Currency_Name = ctx.Session.GetString("AF_Currency_Name") ?? "",
+                    AF_FBT_Name = ctx.Session.GetString("AF_FBT_Name") ?? "",
                     AF_Creator_Name = ctx.Session.GetString("AF_Creator_Name") ?? "",
                     AF_Approver_Name = ctx.Session.GetString("AF_Approver_Name") ?? "",
                     AF_Status = ctx.Session.GetString("AF_Status") ?? ""
@@ -223,7 +223,7 @@ namespace ExpenseProcessingSystem.Services
                     AGF_Code = ctx.Session.GetString("AGF_Code") ?? "",
                     AGF_Creator_Name = ctx.Session.GetString("AGF_Creator_Name") ?? "",
                     AGF_Approver_Name = ctx.Session.GetString("AGF_Approver_Name") ?? "",
-                    AGF_Status = ctx.Session.GetString("AGF_Status") ?? ""
+                    AGF_Status_Name = ctx.Session.GetString("AGF_Status_Name") ?? ""
                 };
                 filters.AGF = AGF;
                 controller.TempData["filters"] = filters;
