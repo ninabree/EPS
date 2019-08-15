@@ -16,6 +16,7 @@ namespace ExpenseProcessingSystem.Models
         public float ExpNC_CredAmt { get; set; }
         public float ExpNC_CS_DebitAmt { get; set; }
         public float ExpNC_CS_CredAmt { get; set; }
+        public string ExpNC_CS_Period { get; set; }
         public float ExpNC_IE_DebitAmt { get; set; }
         public float ExpNC_IE_CredAmt { get; set; }
         public ExpenseEntryModel ExpenseEntryModel { get; set; }

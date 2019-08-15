@@ -163,17 +163,6 @@
             </div>
             <iframe id="iframePreview" frameborder="0" src="" style="position: relative; min-height: 50vh; max-height: 100%; width: 100%;"></iframe>
         </div>
-        <div id="entry-status" class="m-t-10 m-b-10">
-            <div class="dis-inline-block"><label>Status: </label></div>
-            <div class="dis-inline-block">@Html.TextBoxFor(x => x.status, new { @readonly = "true", @class = "input" })</div>
-            <div class="dis-inline-block"><label>Approver:</label></div>
-            <div class="dis-inline-block">@Html.TextBoxFor(model => model.approver, new { @readonly = "true", @class = "input" })</div>
-            <div class="dis-inline-block"><label>Verifier:</label></div>
-            <div class="dis-inline-block">
-                <p class="dis-inline-block">@Html.TextBoxFor(model => model.verifier_1, new { @readonly = "true", @class = "m-l-5 input" })</p>
-                <p class="dis-inline-block">@Html.TextBoxFor(model => model.verifier_2, new { @readonly = "true", @class = "m-l-5 input" })</p>
-            </div>
-        </div>
         <div id="entry-controls" class="m-b-10">
             <div class="flex-sb">
                 <div>

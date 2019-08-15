@@ -1411,7 +1411,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             switch (sortOrder)
             {
                 case "notif_type_status":
-                    tempList = tempList.OrderBy(x => x.Notif_Status_Name == "PENDING");
+                    tempList = tempList.OrderBy(x => x.Notif_Status_Name);
                     viewData = "glyph-5";
                     vdInfo = "glyphicon-menu-up";
                     break;
@@ -1450,15 +1450,15 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     viewData = "glyph-4";
                     vdInfo = "glyphicon-menu-down";
                     break;
-                case "notif_date_desc":
+                case "notif_type_status_desc":
+                    tempList = tempList.OrderByDescending(x => x.Notif_Status_Name);
+                    viewData = "glyph-5";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
+                default:
                     tempList = tempList.OrderByDescending(s => s.Notif_Date);
                     viewData = "glyph-4";
                     vdInfo = "glyphicon-menu-up";
-                    break;
-                default:
-                    tempList = tempList.OrderByDescending(x => x.Notif_Application_Type_Name == "PENDING");
-                    viewData = "glyph-5";
-                    vdInfo = "glyphicon-menu-down";
                     break;
             }
             SortViewModel vm = new SortViewModel
@@ -1554,7 +1554,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             switch (sortOrder)
             {
                 case "hist_voucher":
-                    tempList = tempList.OrderBy(x => x.App_Voucher_No == "PENDING");
+                    tempList = tempList.OrderBy(x => x.App_Voucher_No);
                     viewData = "glyph-1";
                     vdInfo = "glyphicon-menu-down";
                     break;
@@ -1593,15 +1593,15 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     viewData = "glyph-5";
                     vdInfo = "glyphicon-menu-down";
                     break;
-                case "hist_last_updte_desc":
-                    tempList = tempList.OrderByDescending(s => s.App_Last_Updated);
-                    viewData = "glyph-5";
-                    vdInfo = "glyphicon-menu-up";
-                    break;
                 case "hist_status":
                     tempList = tempList.OrderBy(s => s.App_Status);
                     viewData = "glyph-6";
                     vdInfo = "glyphicon-menu-down";
+                    break;
+                case "hist_status_desc":
+                    tempList = tempList.OrderByDescending(s => s.App_Status);
+                    viewData = "glyph-6";
+                    vdInfo = "glyphicon-menu-up";
                     break;
                 case "hist_voucher_desc":
                     tempList = tempList.OrderByDescending(x => x.App_Voucher_No);
@@ -1609,8 +1609,8 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     vdInfo = "glyphicon-menu-up";
                     break;
                 default:
-                    tempList = tempList.OrderByDescending(s => s.App_Status == "PENDING");
-                    viewData = "glyph-6";
+                    tempList = tempList.OrderByDescending(s => s.App_Last_Updated);
+                    viewData = "glyph-5";
                     vdInfo = "glyphicon-menu-up";
                     break;
             }

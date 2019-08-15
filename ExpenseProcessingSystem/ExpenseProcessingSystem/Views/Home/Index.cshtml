@@ -80,7 +80,18 @@
         if ($('#alert').text() != "") {
             $('#divAlertWindow').show();
         }
+        $(document).on("change", "#paginationInput", function (e) {
+            var $pageInput = $(this);
 
+            var data = $pageInput.data("value"),
+                val = $pageInput.val();
+
+            if (data !== val) {
+                $pageInput.data("value", val);
+                var url = window.location.pathname + '?page=' + val;
+                window.location = url;
+            }
+        });
         //reset search filter values
         $(document).on("click", "#full-list-btn", function (e) {
             e.stopImmediatePropagation();

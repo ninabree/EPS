@@ -41,7 +41,7 @@ namespace ExpenseProcessingSystem.Services.Validations
     }
     public class TINLengthValidation : ValidationAttribute
     {
-        readonly int TINLength = 12;
+        readonly int TINLength = 15;
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             try
@@ -49,9 +49,9 @@ namespace ExpenseProcessingSystem.Services.Validations
                 //check if valid TIN length
                 string val = Convert.ToString(value);
                 if (val.Length < TINLength)
-                    return new ValidationResult("Minimum length should be " + TINLength);
+                    return new ValidationResult("Minimum length should be 12 digits");
                 if (val.Length > TINLength)
-                    return new ValidationResult("Maximum length should be " + TINLength);
+                    return new ValidationResult("Maximum length should be 12 digits");
                 return ValidationResult.Success;
             }
             catch (Exception ex)

@@ -1153,8 +1153,16 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 var toStr = property.GetValue(filters.VF).ToString();
                 if (toStr != "" && toStr != "0")
                 {
-                    vmList = vmList.AsQueryable().Where("VAT_" + subStr + ".ToLower().Contains(@0)", toStr.ToLower())
-                            .Select(e => e).ToList();
+                    if (subStr == "Rate")
+                    {
+                        vmList = vmList.AsQueryable().Where("VAT_" + subStr + ".ToString().Contains(@0)", toStr)
+                                .Select(e => e).ToList();
+                    }
+                    else
+                    {
+                        vmList = vmList.AsQueryable().Where("VAT_" + subStr + ".ToLower().Contains(@0)", toStr.ToLower())
+                                .Select(e => e).ToList();
+                    }
                 }
             }
             return vmList;
