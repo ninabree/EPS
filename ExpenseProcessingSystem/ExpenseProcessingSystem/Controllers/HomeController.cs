@@ -1676,8 +1676,8 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "Entry_DDV_ReadOnly";
-                    break;
+
+                    return RedirectToAction("View_DDV", "Home", new { entryID = entryID });
                 case "verifier":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_VERIFIED, intUser))
                     {
@@ -1691,8 +1691,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "Entry_DDV_ReadOnly";
-                    break;
+                    return RedirectToAction("View_DDV", "Home", new { entryID = entryID });
                 case "Reject":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REJECTED, intUser))
                     {
@@ -1701,14 +1700,14 @@ namespace ExpenseProcessingSystem.Controllers
                         //----------------------------- NOTIF----------------------------------
                         _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_DDV, GlobalSystemValues.STATUS_REJECTED, makerId.Expense_Creator_ID);
                         //----------------------------- NOTIF----------------------------------
-                        return RedirectToAction("Index", "Home");
+
+                        return RedirectToAction("View_DDV", "Home", new { entryID = entryID });
                     }
                     else
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "Entry_DDV_ReadOnly";
-                    break;
+                    return RedirectToAction("View_DDV", "Home", new { entryID = entryID });
                 case "Delete":
                     int expStatus = _service.GetCurrentEntryStatus(entryID);
 
@@ -1726,8 +1725,7 @@ namespace ExpenseProcessingSystem.Controllers
                         {
                             ViewBag.Success = 0;
                         }
-                        viewLink = "Entry_DDV_ReadOnly";
-                        break;
+                        return RedirectToAction("View_DDV", "Home", new { entryID = entryID });
                     }
                     else
                     {
@@ -1745,7 +1743,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "Entry_DDV_ReadOnly";
+                    return RedirectToAction("View_DDV", "Home", new { entryID = entryID });
                     break;
                 default:
                     break;
@@ -2870,7 +2868,7 @@ namespace ExpenseProcessingSystem.Controllers
                         //----------------------------- NOTIF----------------------------------
                         _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_NC, GlobalSystemValues.STATUS_REJECTED, makerId.Expense_Creator_ID);
                         //----------------------------- NOTIF----------------------------------  
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("View_NC", "Home", new { entryID = entryID });
                     }
                     else
                     {
