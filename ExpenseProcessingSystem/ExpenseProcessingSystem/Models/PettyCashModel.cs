@@ -11,10 +11,10 @@ namespace ExpenseProcessingSystem.Models
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int PC_ID { get; set; }
-        public double PC_StartBal { get; set; }
+        public decimal PC_StartBal { get; set; }
         public double PC_Disbursed { get; set; }
         public double PC_Recieved { get; set; }
-        public double PC_EndBal { get; set; }
+        public decimal PC_EndBal { get; set; }
         public int PC_CloseUser { get; set; }
         public int PC_OpenUser { get; set; }
         public bool PC_OpenConfirm { get; set; }

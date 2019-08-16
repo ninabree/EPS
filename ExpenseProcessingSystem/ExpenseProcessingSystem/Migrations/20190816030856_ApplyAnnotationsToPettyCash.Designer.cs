@@ -4,14 +4,16 @@ using ExpenseProcessingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    partial class EPSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190816030856_ApplyAnnotationsToPettyCash")]
+    partial class ApplyAnnotationsToPettyCash
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -675,7 +677,7 @@ namespace ExpenseProcessingSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<decimal>("CashBreak_Amount");
+                    b.Property<double>("CashBreak_Amount");
 
                     b.Property<double>("CashBreak_Denomination");
 
@@ -1404,7 +1406,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int?>("ExpenseEntryDetailModelExpDtl_ID");
 
-                    b.Property<decimal>("LiqCashBreak_Amount");
+                    b.Property<double>("LiqCashBreak_Amount");
 
                     b.Property<double>("LiqCashBreak_Denomination");
 

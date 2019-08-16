@@ -13,10 +13,10 @@ namespace ExpenseProcessingSystem.ViewModels
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime CBD_Date { get; set; }
 
-        public double CBD_opeBalance { get; set; }
+        public decimal CBD_opeBalance { get; set; }
         public double CBD_recieve { get; set; }
         public double CBD_disburse { get; set; }
-        public double CBD_closeBalance { get; set; }
+        public decimal CBD_closeBalance { get; set; }
 
         public bool CBD_ConfirmClose { get; set; }
         public string CBD_Comment { get; set; }

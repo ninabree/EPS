@@ -88,7 +88,7 @@ namespace ExpenseProcessingSystem.ViewModels
     {
         public double cashDenomination { get; set; }
         public int cashNoPC { get; set; }
-        public double cashAmount { get; set; }
+        public decimal cashAmount { get; set; }
     }
     public class EntryCVViewModelList
     {

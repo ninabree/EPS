@@ -13,7 +13,7 @@ namespace ExpenseProcessingSystem.Models
         public int LiqCashBreak_ID { get; set; }
         public double LiqCashBreak_Denomination { get; set; }
         public int LiqCashBreak_NoPcs { get; set; }
-        public double LiqCashBreak_Amount { get; set; }
+        public decimal LiqCashBreak_Amount { get; set; }
         public ExpenseEntryDetailModel ExpenseEntryDetailModel { get; set; }
     }
 }
