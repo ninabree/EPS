@@ -33,7 +33,10 @@
     <input type="hidden" id="entryCheckTypes" />
 </div>
 
-
+@*validation message*@
+<div id="ValidationSummary" style="display:none" class="">
+    @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
+</div>
 <script type="text/javascript">
     $(document).ready(function () {
         var sortOrder = '@ViewData["sortOrder"]';
@@ -183,7 +186,6 @@
                     return false;
                 }
             });
-            //alert(creatorId + " ------ " + userId);
             if (!isSameStat && chkCount <= 2) {
                 alert("Kindly check rows with the same status only.");
                 $('.rec').prop('disabled', true);
@@ -251,7 +253,7 @@
                     }
                 } else {
                     $('input#entryCheckTypes').val(stat);
-                    //format only avail buttons for clicked checkbox 
+                    //format only avail buttons for clicked checkbox
                     if (remainingCheckStat == "APPROVED") {
                         defaultApproved();
                     } else {

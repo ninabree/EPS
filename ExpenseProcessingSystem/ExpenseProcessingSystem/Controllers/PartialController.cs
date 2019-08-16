@@ -40,6 +40,7 @@ namespace ExpenseProcessingSystem.Controllers
         // -------------------------------------- [[ NON CASH ]] --------------------------------------
         // [[ Local Payroll ]]
         [OnlineUserCheck]
+        //[ImportModelState]
         [Route("//Partial/NC_Partial_GetPreview/")]
         public IActionResult NC_Partial_GetPreview (string categoryID, string entryID)
         {

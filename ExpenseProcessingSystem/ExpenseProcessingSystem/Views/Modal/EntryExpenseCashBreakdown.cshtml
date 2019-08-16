@@ -55,7 +55,7 @@
                     {
                         <tr id="cashbreakdownid_@a">
                             <td class="tdPrint">@Html.TextBoxFor(x => Model.cashBreakdown[a].CashBreak_Denomination, new { @class = "input100 txtDenomination", @type = "number", @readonly = "true", @style = "text-align:center" })</td>
-                            <td class="tdPrint">@Html.TextBoxFor(x => Model.cashBreakdown[a].CashBreak_NoPcs, new { @class = "input100 txtNoPCS number-inputNoDecNoBlank", @type = "number", @min = "0", @style = "text-align:center" })</td>
+                            <td class="tdPrint">@Html.TextBoxFor(x => Model.cashBreakdown[a].CashBreak_NoPcs, new { @class = "input100 txtNoPCS number-inputNoDecNoBlank voucher-input", @type = "number", @min = "0", @style = "text-align:center" })</td>
                             <td class="tdPrint">@Html.TextBoxFor(x => Model.cashBreakdown[a].CashBreak_Amount, new { @class = "input100 txtAmount", @type = "number", @style = "text-align:center", @readonly = "true" })</td>
                         </tr>
                     }
@@ -158,7 +158,7 @@
                     return;
                 }
                 e.stopImmediatePropagation();
-                if ($(".cashBDAmountTotal").val().replace(",", "") != $("#reqAmount").val()) {
+                if ($(".cashBDAmountTotal").val().replace(/\,/g, "") != $("#reqAmount").val()) {
                     alert("Amount do not match.");
                     return false;
                 }
@@ -220,11 +220,13 @@
         $('#cashbdDatePrint').attr('value', $('#expenseDate').val());
         $('#cashbdAmountPrint').attr('value', $('#cashBDAmountTotal').val());
         $('#paymentFor').attr('value', $('#' + $('#parentIdPCVSSTable').val()).find('.txtGBaseRemark').val());
+
         var cssjs = '<style>.tablePrint, .tdPrint, .thPrint {  ' +
             '  border: 1px solid #ddd;' +
             '  text-align: center;' +
             '  width: 60%;' +
             '  height: auto;' +
+            '  table-layout: fixed;' +
             '}' +
 
             'table {' +
@@ -237,7 +239,8 @@
 
             'input {' +
             '	outline:none;' +
-            '    border:none;' +
+            '   border:none;' +
+            '   width:80%;' +
             '}' +
             '</style>';
 
@@ -249,7 +252,7 @@
         WinPrint.document.close();
         WinPrint.focus();
         WinPrint.print();
-        WinPrint.close();
+        //WinPrint.close();
 
         //Rollback the Cash Breakdown Liquidation table attribute value to default(0).
         for (var count = 0; count < tableCnt.length; count++) {
@@ -270,7 +273,7 @@
         return x1 + x2;
     };
     $('.number-inputNoDecNoBlank').keyup(function () {
-        $(this).val($(this).val().replace(/[^\d].+/, ""));
+        $(this).val($(this).val().replace(/[^\d].+/, "").replace("-", ""));
         if ((event.which < 48 || event.which > 57)) {
             event.preventDefault();
         }
@@ -279,7 +282,7 @@
             event.preventDefault();
         }
         if ($(this).val() == "") {
-            $(this).val(0)
+            $(this).val(0).replace("-","");
         };
 
     });

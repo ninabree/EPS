@@ -157,72 +157,18 @@
         computeValues($("#item_" + rowNo)[0]);
         computeFunction(e);
     });
+
     $("#vendorName").on("change", function (e) {
-        if ($('.hiddenScreencode').val() == "PCV" || $('.hiddenScreencode').val() == "PC" || $('#_screen').val() == "ddv") {
+        if ($('#payeeTypeSel').length == 0) {
             return false;
         }
-        var vendorId = {
-            vendorID: $("#vendorName").val()
-        };
-        var payeeID = $("#payee_type").val();
-        if ($("#payeeTypeSel").length > 0) {
-            payeeID = $("#payeeTypeSel option:selected").val();
+
+        if ($('#payeeTypeSel').val() == "1") {
+            GetVendorVATTRList($('#vendorName').val());
+        } else {
+            GetVatList();
         }
-        if (payeeID == "1") {
-            ajaxCall("/Home/getVendorVatList", vendorId)
-                .done(function (vatData) {
-                    if (vatData.length) {
-                        ajaxCall("/Home/getVendorTRList", vendorId)
-                            .done(function (ewtData) {
-                                if (ewtData.length) {
-                                    $(".txtVat").empty();
-                                    $(".txtEwt").empty();
 
-                                    for (var i = 0; i < vatData.length; i++) {
-                                        var option = $("<option></option>").attr("value", vatData[i].vaT_ID).text(vatData[i].vaT_Rate);
-                                        $(".txtVat").append(option);
-                                    }
-
-                                    for (var i = 0; i < ewtData.length; i++) {
-                                        var option = $("<option></option>").attr("value", ewtData[i].tR_ID).text(ewtData[i].tR_Tax_Rate);
-                                        $(".txtEwt").append(option);
-                                    }
-                                } else {
-                                    alert("oops something went wrong!");
-                                }
-                            });
-                    } else {
-                        alert("oops something went wrong!");
-                    }
-                });
-        } else if (payeeID == "2" || payeeID == "5") {
-            ajaxCall("/Home/getAllVatList")
-                .done(function (vatData) {
-                    if (vatData.length) {
-                        ajaxCall("/Home/getAllTRList")
-                            .done(function (ewtData) {
-                                if (ewtData.length) {
-                                    $(".txtVat").empty();
-                                    $(".txtEwt").empty();
-
-                                    for (var i = 0; i < vatData.length; i++) {
-                                        var option = $("<option></option>").attr("value", vatData[i].value).text(vatData[i].text);
-                                        $(".txtVat").append(option);
-                                    }
-
-                                    for (var i = 0; i < ewtData.length; i++) {
-                                        var option = $("<option></option>").attr("value", ewtData[i].value).text(ewtData[i].text);
-                                        $(".txtEwt").append(option);
-                                    }
-                                } else {
-                                    alert("oops something went wrong!");
-                                }
-                            });
-                    } else {
-                        alert("oops something went wrong!");
-                    }
-                });
-        }
     });
 
     $('.btnEntryAction').click(function (e) {
@@ -304,12 +250,6 @@
         }
 
         $("#" + pNode.id + " td .txtGross").val(roundNumber(grossAmt, 2));
-        //if ($(".hiddenScreencode").val() == "SS") {
-        //    $("#" + pNode.id).find(".hidDebit").val(grossAmt);
-
-        //    return false;
-        //}
-        //$("#" + pNode.id + " .txtGross").attr("value", grossAmt);
 
         var itemNo = pNode.id; //jquery obj
         var chkEwtVal = $("#" + itemNo).find(".chkEwt").is(':checked');
@@ -374,9 +314,79 @@
             cashSubTotal += Number(credCash[i].value);
         }
 
-        $("#grossTotal").val(grossTotal);
-        $("#credEwtTotal").val(ewtSubTotal);
-        $("#credCashTotal").val(cashSubTotal);
+        $("#grossTotal").val(roundNumber(grossTotal, 2));
+        $("#credEwtTotal").val(roundNumber(ewtSubTotal, 2));
+        $("#credCashTotal").val(roundNumber(cashSubTotal, 2));
+        $("#credTotal").val(roundNumber(Number(ewtSubTotal + cashSubTotal), 2));
+    }
+
+    function computeValuesOfAllRecordVatTR() {
+
+        var trs = $("#inputTable").find("tbody").find("tr").length - 2;
+        
+        for (var cnt = 0; cnt < trs; cnt++) {
+            var id = "item_" + cnt;
+
+            var amounts = $("");
+            var grossAmt = 0;
+            var origGrossAmt = 0;
+            var origCredAmt = $("#" + itemNo).find(".txtCredCash").val();
+
+            amounts = $("#" + id + " .amount");
+            grossAmt = 0;
+            origGrossAmt = $("#" + id + " .txtGross").val();
+            for (var i = 0; i < amounts.length; i++) {
+                grossAmt += Number(amounts[i].value);
+            }
+
+            $("#" + id + " td .txtGross").val(roundNumber(grossAmt, 2));
+
+            var itemNo = id; //jquery obj
+            var chkEwtVal = $("#" + itemNo).find(".chkEwt").is(':checked');
+            var vatable = $("#" + itemNo).find(".chkVat").is(':checked');
+            if (chkEwtVal) {
+                if (vatable) {
+                    var vatRate = (Number($("#" + itemNo).find(".txtVat option:selected").text()) / 100);
+                    var ewtRate = (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100);
+                    var netVat = roundNumber(grossAmt / (1 + vatRate), 2);
+                    var ewt = roundNumber(netVat * ewtRate, 2);
+                    var netEwt = grossAmt - ewt;
+
+                    $("#" + itemNo).find(".txtCredEwt").val(roundNumber(ewt, 2));
+                    $("#" + itemNo).find(".txtCredCash").val(roundNumber(netEwt, 2));
+                } else {
+                    var ewtAmount = roundNumber(grossAmt * (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100), 2);
+                    $("#" + itemNo).find(".txtCredEwt").val(roundNumber(ewtAmount, 2));
+                    $("#" + itemNo).find(".txtCredCash").val(roundNumber((grossAmt - ewtAmount), 2));
+                }
+            } else {
+                $("#" + itemNo).find(".txtCredEwt").val(0);
+                $("#" + itemNo).find(".txtCredCash").val(roundNumber(grossAmt, 2));
+            }
+        }
+        var gross = $(".txtGross");
+        var credEwt = $(".txtCredEwt");
+        var credCash = $(".txtCredCash");
+
+        var grossTotal = 0;
+        var ewtSubTotal = 0;
+        var cashSubTotal = 0;
+
+        for (var i = 0; i < gross.length; i++) {
+            grossTotal += Number(gross[i].value);
+        }
+
+        for (var i = 0; i < credEwt.length; i++) {
+            ewtSubTotal += Number(credEwt[i].value);
+        }
+
+        for (var i = 0; i < credCash.length; i++) {
+            cashSubTotal += Number(credCash[i].value);
+        }
+
+        $("#grossTotal").val(roundNumber(grossTotal, 2));
+        $("#credEwtTotal").val(roundNumber(ewtSubTotal, 2));
+        $("#credCashTotal").val(roundNumber(cashSubTotal, 2));
         $("#credTotal").val(roundNumber(Number(ewtSubTotal + cashSubTotal), 2));
     }
 
@@ -412,5 +422,50 @@
             }
         });
         return tmp;
+    }
+
+    function GetVendorVATTRList(vendorId) {
+        ajaxCall("/Home/getVendorVatList", { vendorID: vendorId })
+            .done(function (vatData) {
+                $(".txtVat").empty();
+                if (vatData.length) {
+                    for (var i = 0; i < vatData.length; i++) {
+                        $(".txtVat").append($("<option></option>").attr("value", vatData[i].vaT_ID).text(vatData[i].vaT_Rate));
+                    }
+                    
+                } else {
+                    $(".txtVat").append('<option value="0">0</option>');
+                }
+                computeValuesOfAllRecordVatTR();
+            });
+        ajaxCall("/Home/getVendorTRList", { vendorID: vendorId })
+            .done(function (ewtData) {
+                $(".txtEwt").empty();
+                if (ewtData.length) {
+                    for (var i = 0; i < ewtData.length; i++) {
+                        $(".txtEwt").append($("<option></option>").attr("value", ewtData[i].tR_ID).text(ewtData[i].tR_Tax_Rate));
+                    }
+                } else {
+                    $(".txtEwt").append('<option value="0">0</option>');
+                }
+                computeValuesOfAllRecordVatTR();
+            });
+    }
+
+    function GetVatList() {
+        ajaxCall("/Home/getAllVatList")
+            .done(function (vatData) {
+                $(".txtVat").empty();
+                $(".txtEwt").empty();
+                if (vatData.length) {
+                    for (var i = 0; i < vatData.length; i++) {
+                        $(".txtVat").append($("<option></option>").attr("value", vatData[i].value).text(vatData[i].text));
+                    }
+                } else {
+                    $(".txtVat").append('<option value="0">0</option>');
+                }
+                $(".txtEwt").append('<option value="0">0</option>');
+                computeValuesOfAllRecordVatTR();
+            });
     }
 });

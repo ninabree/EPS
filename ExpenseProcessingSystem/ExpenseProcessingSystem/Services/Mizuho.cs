@@ -40,5 +40,12 @@ namespace ExpenseProcessingSystem.Services
 
             return (double)val;
         }
+
+        public static float round(float _num, int scale)
+        {
+            decimal val = decimal.Round((decimal)_num, scale, MidpointRounding.AwayFromZero);
+
+            return (float)val;
+        }
     }
 }

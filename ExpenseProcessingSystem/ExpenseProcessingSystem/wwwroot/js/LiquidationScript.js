@@ -147,13 +147,14 @@ function printDivCashLiqBD(divID) {
 
     $('#cashbdDatePrintLiq').attr('value', $('#LiqEntryDetails_Liq_Created_Date').val());
     $('#cashbdAmountPrintLiq').attr('value', $('#txtCashBDTotal').val());
-    $('#paymentFor').attr('value', "S" + $('.highlight').find('.txtGBaseRemark').val());
+    $('#paymentForLiq').attr('value', "S" + $('.highlight').find('.txtGBaseRemark').val());
 
     var cssjs = '<style>.tablePrintLiq, .tdPrintLiq, .thPrintLiq {  ' +
         '  border: 1px solid #ddd;' +
         '  text-align: center;' +
         '  width: 60%;' +
         '  height: auto;' +
+        '  table-layout: fixed;' +
         '}' +
 
         'table {' +
@@ -178,7 +179,7 @@ function printDivCashLiqBD(divID) {
     WinPrint.document.close();
     WinPrint.focus();
     WinPrint.print();
-    WinPrint.close();
+    //WinPrint.close();
 
     //Rollback the Cash Breakdown Liquidation table attribute value to default(0).
     for (var count = 0; count < tableCnt.length; count++) {
@@ -304,16 +305,16 @@ function setIEValuetoDivInput(ret) {
     $('#LiquidationDetails_' + ret + '__liqInterEntity_3__Liq_DebitCred_1_2').val("C");
 
     //AMOUNT
-    $('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Amount_1_1').val($('#txtIEInput1').val().replace(',', ''));
-    $('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Amount_1_2').val($('#txtIEInput1').val().replace(',', ''));
-    $('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_1_1').val($('#txtIEInput2').val().replace(',', ''));
-    $('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_1_2').val($('#txtIEInput4').val().replace(',', ''));
-    $('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_2_1').val($('#txtIEInput3').val().replace(',', ''));
-    $('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_2_2').val($('#lblIEInput2').text().replace(',', ''));
-    $('#LiquidationDetails_' + ret + '__liqInterEntity_2__Liq_Amount_1_1').val($('#lblIEInput3').text().replace(',', ''));
-    $('#LiquidationDetails_' + ret + '__liqInterEntity_2__Liq_Amount_1_2').val($('#lblIEInput4').text().replace(',', ''));
-    $('#LiquidationDetails_' + ret + '__liqInterEntity_3__Liq_Amount_1_1').val($('#lblIEInput5').text().replace(',', ''));
-    $('#LiquidationDetails_' + ret + '__liqInterEntity_3__Liq_Amount_1_2').val($('#lblIEInput6').text().replace(',', ''));
+    $('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Amount_1_1').val($('#txtIEInput1').val().replace(/\,/g, ''));
+    $('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Amount_1_2').val($('#txtIEInput1').val().replace(/\,/g, ''));
+    $('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_1_1').val($('#txtIEInput2').val().replace(/\,/g, ''));
+    $('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_1_2').val($('#txtIEInput4').val().replace(/\,/g, ''));
+    $('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_2_1').val($('#txtIEInput3').val().replace(/\,/g, ''));
+    $('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_2_2').val($('#lblIEInput2').text().replace(/\,/g, ''));
+    $('#LiquidationDetails_' + ret + '__liqInterEntity_2__Liq_Amount_1_1').val($('#lblIEInput3').text().replace(/\,/g, ''));
+    $('#LiquidationDetails_' + ret + '__liqInterEntity_2__Liq_Amount_1_2').val($('#lblIEInput4').text().replace(/\,/g, ''));
+    $('#LiquidationDetails_' + ret + '__liqInterEntity_3__Liq_Amount_1_1').val($('#lblIEInput5').text().replace(/\,/g, ''));
+    $('#LiquidationDetails_' + ret + '__liqInterEntity_3__Liq_Amount_1_2').val($('#lblIEInput6').text().replace(/\,/g, ''));
 };
 
 function assignDivValuesIE(pid) {
@@ -346,7 +347,7 @@ function assignDivValuesIE(pid) {
     $('#lblIEInput5').text(AC($('#LiquidationDetails_' + ret + '__liqInterEntity_3__Liq_Amount_1_1').val()));
     $('#lblIEInput6').text(AC($('#LiquidationDetails_' + ret + '__liqInterEntity_3__Liq_Amount_1_2').val()));
 
-    $('#txtIEAmount').val($('#lblIEInput4').text().replace(',', ''));
+    $('#txtIEAmount').val($('#lblIEInput4').text().replace(/\,/g, ''));
     $('#txtIEExRate').val($('#lblIEInput9').text());
     $('#txtIEExRatePhp').val(AC(roundExceptionJPY(parseFloat($('#txtIEAmount').val() * $('#txtIEExRate').val()), 2)));
 
@@ -450,31 +451,31 @@ function setDivTaxRateToLiqPhp(ret) {
 };
 
 $('.number-inputExceptionJPY').keyup(function () {
-    $(this).val($(this).val().replace(/[^0-9\.]/g,''));
+    $(this).val($(this).val().replace(/[^0-9\.]/g, '').replace("-", ""));
     if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
         event.preventDefault();
     }
 
     if ($('.highlight').find('.currMasterID').val() == getXMLLiqValue("CURRENCY_Yen")) {
-        $(this).val($(this).val().replace(/\D/g, ''));
+        $(this).val($(this).val().replace(/\D/g, '').replace("-", ""));
     };
 });
 
 $('.number-input').keyup(function () {
-    $(this).val($(this).val().replace(/[^0-9\.]/g, ''));
+    $(this).val($(this).val().replace(/[^0-9\.]/g, '').replace("-", ""));
     if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
         event.preventDefault();
     }
 });
 
 $('.number-inputNoDecimal').keyup(function () {
-    $(this).val($(this).val().replace(/[^\d].+/, ""));
+    $(this).val($(this).val().replace(/[^\d].+/, "").replace("-", ""));
     if ((event.which < 48 || event.which > 57)) {
         event.preventDefault();
     }
 });
 $('.number-inputNoDecNoBlank').keyup(function () {
-    $(this).val($(this).val().replace(/[^\d].+/, ""));
+    $(this).val($(this).val().replace(/[^\d].+/, "").replace("-", ""));
     if ((event.which < 48 || event.which > 57)) {
         event.preventDefault();
     }
@@ -483,10 +484,11 @@ $('.number-inputNoDecNoBlank').keyup(function () {
         event.preventDefault();
     }
     if ($(this).val() == "") {
-        $(this).val(0)
+        $(this).val(0).replace("-", "");
     };
 
 });
+
 $('.IEBDOPettyInput').keyup(function () {
     IEBDOPettyInputChange();
 });
@@ -553,11 +555,11 @@ function HideCashBreakdownTable() {
 
 function ChangeOptionMarkForPrint() {
     if ($('#txtLiqPhpInput2').val() > 0) {
-        $('#printOptExpense').html("&#9645;");
-        $('#printOptReverse').html("&#8999;");
+        $('#printOptExpenseLiq').html("&#9645;");
+        $('#printOptReverseLiq').html("&#8999;");
     }
     if ($('#txtLiqPhpInput3').val() > 0){
-        $('#printOptExpense').html("&#8999;");
-        $('#printOptReverse').html("&#9645;");
+        $('#printOptExpenseLiq').html("&#8999;");
+        $('#printOptReverseLiq').html("&#9645;");
     }
 }

@@ -32,7 +32,6 @@
             //NEW
             $("[id^='NewVendor-Tr-']").each(function (index, el) {
                 var idNo = this.id.substring(13);
-                alert(idNo);
                 var arrTR = "";
                 var arrVAT = "";
                 $(el).find('td:eq(3)').find('.trChk:checked').each(function () {

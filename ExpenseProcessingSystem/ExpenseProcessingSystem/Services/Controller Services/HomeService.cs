@@ -195,66 +195,10 @@ namespace ExpenseProcessingSystem.Services
         //Pending
         public List<ApplicationsViewModel> getPending(int userID, FiltersViewModel filters)
         {
-            List<ApplicationsViewModel> pendingList = new List<ApplicationsViewModel>();
+            var linktionary = new Dictionary<int, string>();
 
-            var dbPending = from p in _context.ExpenseEntry
-                            join l in _context.LiquidationEntryDetails on p.Expense_ID equals l.ExpenseEntryModel.Expense_ID into gj
-                            from l in gj.DefaultIfEmpty()
-                            where (
-                            (p.Expense_Status == GlobalSystemValues.STATUS_PENDING
-                            || p.Expense_Status == GlobalSystemValues.STATUS_VERIFIED
-                            || p.Expense_Status == GlobalSystemValues.STATUS_NEW
-                            || p.Expense_Status == GlobalSystemValues.STATUS_EDIT
-                            || p.Expense_Status == GlobalSystemValues.STATUS_DELETE)
-                            && p.Expense_Creator_ID != userID
-                            && p.Expense_Verifier_1 != userID
-                            && p.Expense_Verifier_2 != userID
-                            )
-                            ||
-                            (
-                            p.Expense_Status == GlobalSystemValues.STATUS_POSTED
-                            && p.Expense_Type == GlobalSystemValues.TYPE_SS
-                            && l.Liq_Created_UserID != userID
-                            && l.Liq_Verifier1 != userID
-                            && l.Liq_Verifier2 != userID
-                            && (l.Liq_Status == GlobalSystemValues.STATUS_PENDING
-                            || l.Liq_Status == GlobalSystemValues.STATUS_VERIFIED)
-                            )
-                            ||
-                            (p.Expense_Status == GlobalSystemValues.STATUS_FOR_PRINTING)
-                            select new
-                            {
-                                p.Expense_ID,
-                                p.Expense_Type,
-                                p.Expense_Debit_Total,
-                                p.Expense_Payee,
-                                p.Expense_Payee_Type,
-                                p.Expense_Creator_ID,
-                                p.Expense_Verifier_1,
-                                p.Expense_Verifier_2,
-                                p.Expense_Last_Updated,
-                                p.Expense_Date,
-                                p.Expense_Status,
-                                Liq_Status = l == null ? 0 : l.Liq_Status,
-                                Liq_Created_UserID = l == null ? 0 : l.Liq_Created_UserID,
-                                Liq_Created_Date = l == null ? DateTime.Now : l.Liq_Created_Date,
-                                Liq_Verifier1 = l == null ? 0 : l.Liq_Verifier1,
-                                Liq_Verifier2 = l == null ? 0 : l.Liq_Verifier2,
-                                Liq_LastUpdated_Date = l == null ? DateTime.Now : l.Liq_LastUpdated_Date
-                            };
-
-            foreach (var item in dbPending)
-            {
-                string ver1 = "";
-                string ver2 = "";
-                var linktionary = new Dictionary<int, string>();
-
-                if (item.Liq_Status == 0)
-                {
-                    ver1 = item.Expense_Verifier_1 == 0 ? null : getName(item.Expense_Verifier_1);
-                    ver2 = item.Expense_Verifier_2 == 0 ? null : getName(item.Expense_Verifier_2);
-
-                    linktionary = new Dictionary<int, string>
+            // New Linktionary for Expense Transactions
+            linktionary = new Dictionary<int, string>
                     {
                         {0,"Data Maintenance" },
                         {GlobalSystemValues.TYPE_CV,"View_CV"},
@@ -263,13 +207,53 @@ namespace ExpenseProcessingSystem.Services
                         {GlobalSystemValues.TYPE_PC,"View_PCV"},
                         {GlobalSystemValues.TYPE_SS,"View_SS"},
                     };
-                }
-                else
-                {
-                    ver1 = item.Liq_Verifier1 == 0 ? null : getName(item.Liq_Verifier1);
-                    ver2 = item.Liq_Verifier2 == 0 ? null : getName(item.Liq_Verifier2);
+            List<ApplicationsViewModel> dbPending = (from p in _context.ExpenseEntry
+                            from user in _context.User
+                            where (
+                            //maker
+                            (p.Expense_Creator_ID == userID &&
+                            (p.Expense_Status == GlobalSystemValues.STATUS_PENDING
+                            || p.Expense_Status == GlobalSystemValues.STATUS_VERIFIED
+                            || p.Expense_Status == GlobalSystemValues.STATUS_NEW
+                            || p.Expense_Status == GlobalSystemValues.STATUS_EDIT
+                            || p.Expense_Status == GlobalSystemValues.STATUS_DELETE
+                            || p.Expense_Status == GlobalSystemValues.STATUS_FOR_PRINTING)
+                            && p.Expense_Verifier_1 != userID
+                            && p.Expense_Verifier_2 != userID
+                            &&(p.Expense_Status == GlobalSystemValues.STATUS_REJECTED)
+                            ) ||
+                            //verifier
+                            //if role == verifier && not creator of entry
+                            ((user.User_Role == GlobalSystemValues.ROLE_VERIFIER && user.User_ID == userID && p.Expense_Creator_ID != userID) &&
+                            // and if pending or verified but can still be verified
+                            (((p.Expense_Status == GlobalSystemValues.STATUS_PENDING || p.Expense_Status == GlobalSystemValues.STATUS_VERIFIED) && (p.Expense_Verifier_1 == 0 || p.Expense_Verifier_2 == 0))
+                            //or for printing and is a verifier of the entry
+                            || (p.Expense_Status == GlobalSystemValues.STATUS_FOR_PRINTING && (p.Expense_Verifier_1 == userID || p.Expense_Verifier_2 == userID)))
+                            ) ||
+                            //approver
+                            //if role == approver && not creator of entry
+                            ((user.User_Role == GlobalSystemValues.ROLE_APPROVER && user.User_ID == userID && p.Expense_Creator_ID != userID) &&
+                            // and if pending or verified
+                            ((p.Expense_Status == GlobalSystemValues.STATUS_PENDING || p.Expense_Status == GlobalSystemValues.STATUS_VERIFIED)
+                            //or for printing and is the approver of the entry
+                            || (p.Expense_Status == GlobalSystemValues.STATUS_FOR_PRINTING && p.Expense_Approver == userID))
+                            ))
+                            select new ApplicationsViewModel
+                            {
+                                App_ID = p.Expense_ID,
+                                App_Type = GlobalSystemValues.getApplicationType(p.Expense_Type),
+                                App_Amount = p.Expense_Debit_Total,
+                                App_Payee = p.Expense_Payee+","+p.Expense_Payee_Type,
+                                App_Maker = p.Expense_Creator_ID+"",
+                                App_Verifier_ID_List = new List<string> { p.Expense_Verifier_1 == 0 ? null : p.Expense_Verifier_1+"", p.Expense_Verifier_2 == 0 ? null : p.Expense_Verifier_2+"" },
+                                App_Date = p.Expense_Date,
+                                App_Last_Updated = p.Expense_Last_Updated,
+                                App_Status = p.Expense_Status+"",
+                                App_Link = linktionary[p.Expense_Type]
+                            }).ToList();
 
-                    linktionary = new Dictionary<int, string>
+            // New Linktionary for Liquidation Transactions
+            linktionary = new Dictionary<int, string>
                     {
                         {0,"Data Maintenance" },
                         {GlobalSystemValues.TYPE_CV,"View_CV"},
@@ -278,26 +262,65 @@ namespace ExpenseProcessingSystem.Services
                         {GlobalSystemValues.TYPE_PC,"View_PCV"},
                         {GlobalSystemValues.TYPE_SS,"View_Liquidation_SS"},
                     };
-                }
-
-                ApplicationsViewModel tempPending = new ApplicationsViewModel
+            dbPending.Concat(from p in _context.LiquidationEntryDetails
+                             from user in _context.User
+                             where (
+                            ((p.Liq_Status == GlobalSystemValues.STATUS_PENDING
+                             || p.Liq_Status == GlobalSystemValues.STATUS_VERIFIED
+                             || p.Liq_Status == GlobalSystemValues.STATUS_NEW
+                             || p.Liq_Status == GlobalSystemValues.STATUS_EDIT
+                             || p.Liq_Status == GlobalSystemValues.STATUS_DELETE)
+                             && p.Liq_Created_UserID != userID
+                             && p.Liq_Verifier1 != userID
+                             && p.Liq_Verifier2 != userID)
+                             ||
+                             //maker
+                             (p.Liq_Status == GlobalSystemValues.STATUS_REJECTED && p.Liq_Created_UserID == userID)
+                             ||
+                            //verifier
+                            //if role == verifier && not creator of entry
+                            ((user.User_Role == GlobalSystemValues.ROLE_VERIFIER && user.User_ID == userID && p.Liq_Created_UserID != userID) &&
+                            // and if pending or verified but can still be verified
+                            (((p.Liq_Status == GlobalSystemValues.STATUS_PENDING || p.Liq_Status == GlobalSystemValues.STATUS_VERIFIED) && (p.Liq_Verifier1 == 0 || p.Liq_Verifier2 == 0))
+                            //or for printing and is a verifier of the entry
+                            || (p.Liq_Status == GlobalSystemValues.STATUS_FOR_PRINTING && (p.Liq_Verifier1 == userID || p.Liq_Verifier2 == userID)))
+                            ) ||
+                            //approver
+                            //if role == approver && not creator of entry
+                            ((user.User_Role == GlobalSystemValues.ROLE_APPROVER && user.User_ID == userID && p.Liq_Created_UserID != userID) &&
+                            // and if pending or verified
+                            ((p.Liq_Status == GlobalSystemValues.STATUS_PENDING || p.Liq_Status == GlobalSystemValues.STATUS_VERIFIED)
+                            //or for printing and is the approver of the entry
+                            || (p.Liq_Status == GlobalSystemValues.STATUS_FOR_PRINTING && p.Liq_Approver == userID))
+                            ))
+                             select new ApplicationsViewModel
+                            {
+                                App_ID = p.ExpenseEntryModel.Expense_ID,
+                                App_Type = "Liquidation",
+                                App_Amount = 0,
+                                App_Payee = "",
+                                App_Maker = p.Liq_Created_UserID + "",
+                                App_Verifier_ID_List = new List<string> { p.Liq_Verifier1 == 0 ? null : p.Liq_Verifier1 + "", p.Liq_Verifier2 == 0 ? null : p.Liq_Verifier2+"" },
+                                App_Date = p.Liq_Created_Date,
+                                App_Last_Updated = p.Liq_LastUpdated_Date,
+                                App_Status = p.Liq_Status + "",
+                                App_Link = linktionary[p.ExpenseEntryModel.Expense_Type]
+                            }).ToList();
+            //Get Name of Maker, Verifier and Status.
+            dbPending.ForEach(pen =>
+            {
+                if (pen.App_Payee.Length > 0)
                 {
-                    App_ID = item.Expense_ID,
-                    App_Type = (item.Liq_Status == 0) ? GlobalSystemValues.getApplicationType(item.Expense_Type) : "Liquidation",
-                    App_Amount = item.Expense_Debit_Total,
-                    App_Payee = getVendorName(item.Expense_Payee, item.Expense_Payee_Type) ?? "",
-                    App_Maker = (item.Liq_Status == 0) ? getName(item.Expense_Creator_ID) : getName(item.Liq_Created_UserID),
-                    App_Verifier_ID_List = new List<string> { ver1, ver2 },
-                    App_Date = (item.Liq_Status == 0) ? item.Expense_Date : item.Liq_Created_Date,
-                    App_Last_Updated = (item.Liq_Status == 0) ? item.Expense_Last_Updated : item.Liq_LastUpdated_Date,
-                    App_Status = (item.Liq_Status == 0) ? getStatus(item.Expense_Status) : getStatus(item.Liq_Status),
-                    App_Link = linktionary[item.Expense_Type]
-                };
+                    var split = pen.App_Payee.Split(",");
+                    pen.App_Payee = getVendorName(int.Parse(split[0]), int.Parse(split[1])) ?? "";
+                }
+                pen.App_Maker = getName(int.Parse(pen.App_Maker));
+                pen.App_Verifier_ID_List[0] = pen.App_Verifier_ID_List[0] != null ? getName(int.Parse(pen.App_Verifier_ID_List[0])) : null;
+                pen.App_Verifier_ID_List[1] = pen.App_Verifier_ID_List[1] != null ? getName(int.Parse(pen.App_Verifier_ID_List[1])) : null;
+                pen.App_Status = getStatus(int.Parse(pen.App_Status));
+            });
 
-                pendingList.Add(tempPending);
-            }
             //FILTER
-
             var properties = filters.GenPendFil.GetType().GetProperties();
             foreach (var property in properties)
             {
@@ -315,13 +338,13 @@ namespace ExpenseProcessingSystem.Services
                                 if (subStr == "Created_Date")
                                 {
                                     var filterDate = DateTime.Parse(toStr).ToShortDateString();
-                                    pendingList = pendingList.Where(x => (x.App_Date.ToShortDateString() == filterDate))
+                                    dbPending = dbPending.Where(x => (x.App_Date.ToShortDateString() == filterDate))
                                                 .Select(e => e).ToList();
                                 }
                                 else
                                 {
                                     var filterDate = DateTime.Parse(toStr).ToShortDateString();
-                                    pendingList = pendingList.Where(x => (x.App_Last_Updated.ToShortDateString() == filterDate))
+                                    dbPending = dbPending.Where(x => (x.App_Last_Updated.ToShortDateString() == filterDate))
                                                 .Select(e => e).ToList();
                                 }
                             }
@@ -331,20 +354,18 @@ namespace ExpenseProcessingSystem.Services
                         }
                         else if (subStr == "Amount")
                         {
-                            pendingList = pendingList.Where(x => (x.App_Amount.ToString().Contains(toStr)))
+                            dbPending = dbPending.Where(x => (x.App_Amount.ToString().Contains(toStr)))
                                                 .Select(e => e).ToList();
                         }
                         else // IF STRING VALUE
                         {
-                            pendingList = pendingList.AsQueryable().Where("App_" + subStr + ".ToLower().Contains(@0)", toStr.ToLower())
+                            dbPending = dbPending.AsQueryable().Where("App_" + subStr + ".ToLower().Contains(@0)", toStr.ToLower())
                                     .Select(e => e).ToList();
                         }
                     }
                 }
             }
-            //PaginatedList<ApplicationsViewModel> pgPendingList = new PaginatedList<ApplicationsViewModel>(pendingList, pendingList.Count, 1, 10);
-
-            return pendingList;
+            return dbPending;
         }
 
         //History
@@ -7847,6 +7868,7 @@ namespace ExpenseProcessingSystem.Services
                     ewt = dtl.d.ExpDtl_Ewt,
                     ccy = dtl.d.ExpDtl_Ccy,
                     ccyMasterID = (dtl.d.ExpDtl_Ccy != 0) ? getCurrencyByMasterID(dtl.d.ExpDtl_Ccy).Curr_MasterID : 0,
+                    ccyAbbrev = (dtl.d.ExpDtl_Ccy != 0) ? getCurrencyByMasterID(dtl.d.ExpDtl_Ccy).Curr_CCY_ABBR : "",
                     debitGross = dtl.d.ExpDtl_Debit,
                     credEwt = dtl.d.ExpDtl_Credit_Ewt,
                     credCash = dtl.d.ExpDtl_Credit_Cash,
@@ -11421,7 +11443,7 @@ namespace ExpenseProcessingSystem.Services
                     {
                         TR_ID =  tr.TR_ID,
                         TR_MasterID = tr.TR_MasterID,
-                        TR_Tax_Rate = tr.TR_Tax_Rate * 100,
+                        TR_Tax_Rate = Mizuho.round(tr.TR_Tax_Rate * 100, 2),
                         TR_WT_Title = tr.TR_WT_Title
                     }).ToList();
         }
@@ -11436,7 +11458,7 @@ namespace ExpenseProcessingSystem.Services
             var select = new SelectList(_context.DMTR.Where(x => vendorTRIDList.Contains(x.TR_MasterID)
                                                             && x.TR_isActive == true
                                                             && x.TR_isDeleted == false)
-                                                     .Select(q => new { q.TR_ID, TR_Tax_Rate = (q.TR_Tax_Rate * 100) }),
+                                                     .Select(q => new { q.TR_ID, TR_Tax_Rate = Mizuho.round((q.TR_Tax_Rate * 100), 2) }),
                         "TR_ID", "TR_Tax_Rate");
 
             return select;
@@ -11446,7 +11468,7 @@ namespace ExpenseProcessingSystem.Services
         {
             var select = new SelectList(_context.DMTR.Where(x => x.TR_isActive == true
                                                             && x.TR_isDeleted == false)
-                                                     .Select(q => new { q.TR_ID, TR_Tax_Rate = (q.TR_Tax_Rate * 100) }),
+                                                     .Select(q => new { q.TR_ID, TR_Tax_Rate = Mizuho.round((q.TR_Tax_Rate * 100), 2) }),
                         "TR_ID", "TR_Tax_Rate");
 
             return select;
@@ -11458,7 +11480,7 @@ namespace ExpenseProcessingSystem.Services
             {
                 TR_ID = x.TR_ID,
                 TR_MasterID = x.TR_MasterID,
-                TR_Tax_Rate = x.TR_Tax_Rate * 100,
+                TR_Tax_Rate = Mizuho.round(x.TR_Tax_Rate * 100, 2),
                 TR_WT_Title = x.TR_WT_Title
             }).ToList();
         }
@@ -11467,7 +11489,7 @@ namespace ExpenseProcessingSystem.Services
         {
             var select = new SelectList(_context.DMVAT.Where(x => x.VAT_isActive == true
                                                              && x.VAT_isDeleted == false)
-                                                      .Select(q => new { q.VAT_ID, VAT_Rate = (q.VAT_Rate * 100) }),
+                                                      .Select(q => new { q.VAT_ID, VAT_Rate = Mizuho.round((q.VAT_Rate * 100), 2) }),
                         "VAT_ID", "VAT_Rate");
             return select;
         }
@@ -11482,7 +11504,7 @@ namespace ExpenseProcessingSystem.Services
                     {
                         VAT_ID = vat.VAT_ID,
                         VAT_MasterID = vat.VAT_MasterID,
-                        VAT_Rate = vat.VAT_Rate * 100,
+                        VAT_Rate = Mizuho.round(vat.VAT_Rate * 100, 2),
                         VAT_Name = vat.VAT_Name
                     }).ToList();
         }
@@ -11493,7 +11515,7 @@ namespace ExpenseProcessingSystem.Services
             {
                 VAT_ID = x.VAT_ID,
                 VAT_MasterID = x.VAT_MasterID,
-                VAT_Rate = x.VAT_Rate * 100,
+                VAT_Rate = Mizuho.round(x.VAT_Rate * 100, 2),
                 VAT_Name = x.VAT_Name
             }).ToList();
         }
@@ -11515,7 +11537,7 @@ namespace ExpenseProcessingSystem.Services
             var select = new SelectList(_context.DMVAT.Where(x => vendorVatIDList.Contains(x.VAT_ID)
                                                              && x.VAT_isActive == true
                                                              && x.VAT_isDeleted == false)
-                                                      .Select(q => new { q.VAT_ID, VAT_Rate = (q.VAT_Rate * 100) }),
+                                                      .Select(q => new { q.VAT_ID, VAT_Rate = Mizuho.round((q.VAT_Rate * 100), 2) }),
                         "VAT_ID", "VAT_Rate");
 
             return select;
@@ -11584,7 +11606,7 @@ namespace ExpenseProcessingSystem.Services
                 .Select(x => new  DMTRModel {
                     TR_ID = x.TR_ID,
                     TR_MasterID = x.TR_MasterID,
-                    TR_Tax_Rate = x.TR_Tax_Rate * 100,
+                    TR_Tax_Rate = Mizuho.round(x.TR_Tax_Rate * 100, 2),
                     TR_WT_Title = x.TR_Tax_Rate * 100 + "% " + x.TR_WT_Title
                 }).ToList();
         }
