@@ -217,10 +217,10 @@ namespace ExpenseProcessingSystem.Services
                             || p.Expense_Status == GlobalSystemValues.STATUS_NEW
                             || p.Expense_Status == GlobalSystemValues.STATUS_EDIT
                             || p.Expense_Status == GlobalSystemValues.STATUS_DELETE
-                            || p.Expense_Status == GlobalSystemValues.STATUS_FOR_PRINTING)
+                            || p.Expense_Status == GlobalSystemValues.STATUS_FOR_PRINTING
+                            || p.Expense_Status == GlobalSystemValues.STATUS_REJECTED)
                             && p.Expense_Verifier_1 != userID
                             && p.Expense_Verifier_2 != userID
-                            &&(p.Expense_Status == GlobalSystemValues.STATUS_REJECTED)
                             ) ||
                             //verifier
                             //if role == verifier && not creator of entry
@@ -250,7 +250,7 @@ namespace ExpenseProcessingSystem.Services
                                 App_Last_Updated = p.Expense_Last_Updated,
                                 App_Status = p.Expense_Status+"",
                                 App_Link = linktionary[p.Expense_Type]
-                            }).ToList();
+                            }).Distinct().ToList();
 
             // New Linktionary for Liquidation Transactions
             linktionary = new Dictionary<int, string>
