@@ -19,13 +19,13 @@ namespace ExpenseProcessingSystem.Models
         public string ATC { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:#,##0.00}", ApplyFormatInEditMode = true)]
-        public double TaxBase { get; set; }
+        public decimal TaxBase { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:P2}", ApplyFormatInEditMode = true)]
-        public double RateOfTax { get; set; }
+        public float RateOfTax { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:#,##0.00}", ApplyFormatInEditMode = true)]
-        public double AOTW { get; set; }
+        public decimal AOTW { get; set; }
 
         public int Payee_SS_ID { get; set; }
         public int Vendor_masterID { get; set; }

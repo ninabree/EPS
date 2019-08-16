@@ -32,67 +32,11 @@ namespace BIR_Form_Filler.Functions
         // Populating sample list
         private void initSampIncPay()
         {
-            incPay = new List<PaymentInfo>();
-            incPay.Add(new PaymentInfo()
-            {
-                Payments = "YKK Zippers",
-                Atc = "WV180",
-                M1Quarter = 123000123.15,
-                M2Quarter = 932182.21,
-                M3Quarter = 657899.12,
-                TaxWithheld = 638823.51
-            });
-            incPay.Add(new PaymentInfo()
-            {
-                Payments = "Baker's Depot",
-                Atc = "WOW10",
-                M1Quarter = 812390.21,
-                TaxWithheld = 4421.99
-            });
-            incPay.Add(new PaymentInfo()
-            {
-                Payments = "The Barber's Store",
-                Atc = "W210",
-                M2Quarter = 11233345.01,
-                M3Quarter = 654123.23,
-                TaxWithheld = 5555.55
-            });
-            incPay.Add(new PaymentInfo()
-            {
-                Payments = "Marikina sa Quiapo",
-                Atc = "WZ99",
-                M2Quarter = 11233.88,
-                TaxWithheld = 1355.53
-            });
-
         }
 
         private void initSampMonPay()
         {
-            monPay = new List<PaymentInfo>();
-            monPay.Add(new PaymentInfo()
-            {
-                Payments = "Gelato Winns",
-                Atc = "WKK2",
-                M3Quarter = 29005.34,
-                TaxWithheld = 34555.12
-            });
-            monPay.Add(new PaymentInfo()
-            {
-                Payments = "Dalton and His Friends Ltd.",
-                Atc = "WAK2",
-                M2Quarter = 929239.32,
-                TaxWithheld = 1299.23
-            });
-            monPay.Add(new PaymentInfo()
-            {
-                Payments = "Ice Fruit Loops",
-                Atc = "W11P",
-                M1Quarter = 321868.20,
-                M2Quarter = 100225.66,
-                M3Quarter = 638234.00,
-                TaxWithheld = 450123.00
-            });
+   
         }
 
 

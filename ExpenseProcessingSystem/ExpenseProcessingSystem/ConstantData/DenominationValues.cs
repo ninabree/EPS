@@ -13,55 +13,55 @@ namespace ExpenseProcessingSystem.ConstantData
             return new ExpenseEntryCashBreakdownModel[] {
                 new ExpenseEntryCashBreakdownModel
                 {
-                    CashBreak_Denomination = 1000
+                    CashBreak_Denomination = 1000M
                 },
                 new ExpenseEntryCashBreakdownModel
                 {
-                    CashBreak_Denomination = 500
+                    CashBreak_Denomination = 500M
                 },
                 new ExpenseEntryCashBreakdownModel
                 {
-                    CashBreak_Denomination = 200
+                    CashBreak_Denomination = 200M
                 },
                 new ExpenseEntryCashBreakdownModel
                 {
-                    CashBreak_Denomination = 100
+                    CashBreak_Denomination = 100M
                 },
                 new ExpenseEntryCashBreakdownModel
                 {
-                    CashBreak_Denomination = 50
+                    CashBreak_Denomination = 50M
                 },
                 new ExpenseEntryCashBreakdownModel
                 {
-                    CashBreak_Denomination = 20
+                    CashBreak_Denomination = 20M
                 },
                 new ExpenseEntryCashBreakdownModel
                 {
-                    CashBreak_Denomination = 10
+                    CashBreak_Denomination = 10M
                 },
                 new ExpenseEntryCashBreakdownModel
                 {
-                    CashBreak_Denomination = 5
+                    CashBreak_Denomination = 5M
                 },
                 new ExpenseEntryCashBreakdownModel
                 {
-                    CashBreak_Denomination = 1
+                    CashBreak_Denomination = 1M
                 },
                 new ExpenseEntryCashBreakdownModel
                 {
-                    CashBreak_Denomination = 0.25
+                    CashBreak_Denomination = 0.25M
                 },
                 new ExpenseEntryCashBreakdownModel
                 {
-                    CashBreak_Denomination = 0.1
+                    CashBreak_Denomination = 0.1M
                 },
                 new ExpenseEntryCashBreakdownModel
                 {
-                    CashBreak_Denomination = 0.05
+                    CashBreak_Denomination = 0.05M
                 },
                 new ExpenseEntryCashBreakdownModel
                 {
-                    CashBreak_Denomination = 0.01
+                    CashBreak_Denomination = 0.01M
                 }
             };
         }

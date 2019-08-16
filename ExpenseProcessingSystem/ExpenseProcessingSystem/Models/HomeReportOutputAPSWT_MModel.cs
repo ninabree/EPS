@@ -17,13 +17,13 @@ namespace ExpenseProcessingSystem.Models
         public string NOIP { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:#,##0.00}", ApplyFormatInEditMode = true)]
-        public double AOIP { get; set; }
+        public decimal AOIP { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:P2}", ApplyFormatInEditMode = true)]
-        public double RateOfTax { get; set; }
+        public float RateOfTax { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:#,##0.00}", ApplyFormatInEditMode = true)]
-        public double AOTW { get; set; }
+        public decimal AOTW { get; set; }
 
         public int VAT_ID { get; set; }
         public int Vendor_masterID { get; set; }

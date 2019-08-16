@@ -82,12 +82,8 @@
 
         var idNum = $("#parentId").val().replace('remark_', '');
 
-        if ($('#yenID').val() == $("#item_" + idNum).find(".txtccy").val()) {
+        if ($("#item_" + idNum).find(".txtccy").length == 1 && ($('#yenID').val() == $("#item_" + idNum).find(".txtccy").val())) {
             decVal = 0;
-        }
-
-        if ($('#req_' + idNum).find('.hiddenScreencode').val() == "PCV") {
-            decVal = 2;
         }
 
         $('#' + pid).find('.NumberOnlyOneDecimal').val(roundNumber(val, decVal));

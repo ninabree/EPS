@@ -28,6 +28,7 @@ using BIR_Form_Filler.Functions;
 using BIR_Form_Filler.Models;
 using ExpenseProcessingSystem.Models.Check;
 using Microsoft.Extensions.Logging;
+using System.DirectoryServices.AccountManagement;
 
 namespace ExpenseProcessingSystem.Controllers
 {
@@ -46,9 +47,11 @@ namespace ExpenseProcessingSystem.Controllers
         //to access resources
         private readonly IStringLocalizer<HomeController> _localizer;
         private IHostingEnvironment _env;
+        private ILogger<HomeController> _logger;
 
-        public HomeController(IHttpContextAccessor httpContextAccessor, EPSDbContext context, GOExpressContext gocontext,GWriteContext gwritecontext,IHostingEnvironment hostingEnvironment, IStringLocalizer<HomeController> localizer)
+        public HomeController(ILogger<HomeController> logger,IHttpContextAccessor httpContextAccessor, EPSDbContext context, GOExpressContext gocontext,GWriteContext gwritecontext,IHostingEnvironment hostingEnvironment, IStringLocalizer<HomeController> localizer)
         {
+            _logger = logger;
             _localizer = localizer;
             _httpContextAccessor = httpContextAccessor;
             _context = context;
@@ -338,6 +341,11 @@ namespace ExpenseProcessingSystem.Controllers
 
             if (closeFail)
                 model.messages.Add("Can't close book there are still ongoing transactions!");
+
+            var confirmMessage = TempData["closeMessage"];
+
+            if(confirmMessage != null)
+                model.messages.Add(confirmMessage.ToString());
 
             return View(model);
         }
@@ -965,7 +973,7 @@ namespace ExpenseProcessingSystem.Controllers
 
         [OnlineUserCheck]
         [NonAdminRoleCheck]
-        public IActionResult Generate2307File(int _vendor, int _ewt, int _tax, double _amount, DateTime date, string approver,int expID)
+        public IActionResult Generate2307File(int _vendor, int _ewt, int _tax,  decimal _amount, DateTime date, string approver,int expID)
         {
             string path = "";
             XElement xelem = XElement.Load("wwwroot/xml/ReportHeader.xml");
@@ -981,10 +989,10 @@ namespace ExpenseProcessingSystem.Controllers
 
                 var vendor = _service.getVendor(_vendor);
                 var ewt = _service.GetEWT(_ewt);
-                float vat = _service.getVat(_tax);
+                decimal vat = _service.getVat(_tax);
 
                 var payItem = new PaymentInfo();
-                double amount;
+                 decimal amount;
 
                 if (vat > 0)
                     amount = _amount / (1 + vat);
@@ -1006,7 +1014,7 @@ namespace ExpenseProcessingSystem.Controllers
                 //payitem
                 payItem.Atc = ewt.TR_ATC;
                 payItem.Payments = ewt.TR_Nature_Income_Payment;
-                payItem.TaxWithheld = amount * ewt.TR_Tax_Rate;
+                payItem.TaxWithheld = amount * (decimal)ewt.TR_Tax_Rate;
 
                 fp.IncomePay.Add(payItem);
 
@@ -1170,6 +1178,11 @@ namespace ExpenseProcessingSystem.Controllers
                 RoleList = data.RoleList
             };
 
+            var message = TempData["MESSAGE"];
+            if(message != null || message != "")
+            {
+                ViewData["MESSAGE"] = message;
+            }
             //pagination
             return View(mod);
         }
@@ -1414,7 +1427,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "View_CV";
+                    return RedirectToAction("Index", "Home");
                     break;
                 case "Delete":
                     int expStatus = _service.GetCurrentEntryStatus(entryID);
@@ -2519,7 +2532,7 @@ namespace ExpenseProcessingSystem.Controllers
             List<cvBirForm> birForms = new List<cvBirForm>();
             foreach (var item in ssList.EntryCV)
             {
-                double grossOrig = item.gBaseRemarksDetails.Sum(x => x.amount);
+                decimal grossOrig = item.gBaseRemarksDetails.Sum(x => x.amount);
 
                 if (birForms.Any(x => x.ewt == item.ewt && x.vendor == item.dtl_Ewt_Payor_Name_ID))
                 {
@@ -2618,7 +2631,7 @@ namespace ExpenseProcessingSystem.Controllers
             List<cvBirForm> birForms = new List<cvBirForm>();
             foreach (var item in ssList.EntryCV)
             {
-                double grossOrig = item.gBaseRemarksDetails.Sum(x => x.amount);
+                decimal grossOrig = item.gBaseRemarksDetails.Sum(x => x.amount);
 
                 if (birForms.Any(x => x.ewt == item.ewt && x.vendor == item.dtl_Ewt_Payor_Name_ID))
                 {
@@ -2789,7 +2802,7 @@ namespace ExpenseProcessingSystem.Controllers
                 }
                 else
                 {
-                    double amt = 0;
+                    decimal amt = 0;
                     foreach (var a in item.ExpenseEntryNCDtlAccs)
                     {
                         if (a.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
@@ -3008,8 +3021,8 @@ namespace ExpenseProcessingSystem.Controllers
                 MEMO = " "
             };
             List<CDDISValueContentsViewModel> cddContents = new List<CDDISValueContentsViewModel>();
-            float totalDeb = 0;
-            float totalCred = 0;
+            decimal totalDeb = 0;
+            decimal totalCred = 0;
             entryVals.EntryNC.ExpenseEntryNCDtls.ForEach(x =>
             {
                 x.ExpenseEntryNCDtlAccs.ForEach(a =>
@@ -3234,7 +3247,7 @@ namespace ExpenseProcessingSystem.Controllers
             ssList.birForms = new List<cvBirForm>();
             foreach (var item in ssList.LiquidationDetails)
             {
-                double grossOrig = item.gBaseRemarksDetails.Sum(x => x.amount);
+                decimal grossOrig = item.gBaseRemarksDetails.Sum(x => x.amount);
 
                 if (birForms.Any(x => x.ewt == item.ewtID && x.vendor == item.dtl_Ewt_Payor_Name_ID))
                 {
@@ -3375,7 +3388,7 @@ namespace ExpenseProcessingSystem.Controllers
             ssList.birForms = new List<cvBirForm>();
             foreach (var item in ssList.LiquidationDetails)
             {
-                double grossOrig = item.gBaseRemarksDetails.Sum(x => x.amount);
+                 decimal grossOrig = item.gBaseRemarksDetails.Sum(x => x.amount);
 
                 if (birForms.Any(x => x.ewt == item.ewtID && x.vendor == item.dtl_Ewt_Payor_Name_ID))
                 {
@@ -3560,7 +3573,7 @@ namespace ExpenseProcessingSystem.Controllers
             ssList.birForms = new List<cvBirForm>();
             foreach (var item in ssList.LiquidationDetails)
             {
-                double grossOrig = item.gBaseRemarksDetails.Sum(x => x.amount);
+                 decimal grossOrig = item.gBaseRemarksDetails.Sum(x => x.amount);
 
                 if (birForms.Any(x => x.ewt == item.ewtID && x.vendor == item.dtl_Ewt_Payor_Name_ID))
                 {
@@ -4461,23 +4474,68 @@ namespace ExpenseProcessingSystem.Controllers
             var userId = GetUserID();
             if (ModelState.IsValid)
             {
-                _service.deleteBCS_Pending(model, userId);
+                try
+                {
+                    _service.deleteBCS_Pending(model, userId);
+
+                }
+                catch (Exception ex)
+                {
+                    string UserID = _session.GetString("UserID");
+                    string UserName = _session.GetString("UserName");
+                    _logger.LogError(ex, "User [" + UserName + "] has encountered a system error at [" + DateTime.Now + "].");
+                    return StatusCode(500);
+                }
             }
+
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_BCS" });
         }
 
         //[* USER *]
-        [HttpPost]
         [ExportModelState]
+        [HttpPost]
         [OnlineUserCheck]
         public IActionResult AddEditUser(UserManagementViewModel model)
         {
             var userId = GetUserID();
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _service.addUser(model, userId);
+                return RedirectToAction("UM", "Home");
             }
 
+            XElement xelemDirectory = XElement.Load("wwwroot/xml/ActiveDirectory.xml");
+
+            string svcUsername = xelemDirectory.Element("svcUsername").Value;
+            string domain = xelemDirectory.Element("domain").Value;
+            string svcPwd = EncrytionTool.DecryptString(xelemDirectory.Element("svcPwd").Value,"eXpreSS");
+            //check if user is existing in Active Directory
+            using (PrincipalContext context = new PrincipalContext(ContextType.Domain, domain, svcUsername, svcPwd))
+            {
+                using (UserPrincipal user = UserPrincipal.FindByIdentity(context, model.NewAcc.User_UserName))
+                {
+                    if (user != null)
+                    {
+                        bool result = _service.addUser(model, userId);
+                        if (result && model.NewAcc.User_ID == 0)
+                        {
+                            TempData["MESSAGE"] = "User successfully registered.";
+                        }
+                        else if(result && model.NewAcc.User_ID > 0)
+                        {
+                            TempData["MESSAGE"] = "User successfully updated.";
+
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("", "User already exists!");
+                        }
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Can't find user in the directory.");
+                    }
+                }
+            }
 
             return RedirectToAction("UM", "Home");
         }
@@ -4689,10 +4747,10 @@ namespace ExpenseProcessingSystem.Controllers
                 account = "BDO MNL"
             });
 
-            double tax_vat = 0.00;
-            double tax_gross = 0.00;
-            double amountGross = 0.00;
-            double amountCredit = 0.00;
+             decimal tax_vat = 0.00M;
+             decimal tax_gross = 0.00M;
+             decimal amountGross = 0.00M;
+             decimal amountCredit = 0.00M;
 
             foreach (var inputItem in model.EntryCV)
             {
@@ -4729,7 +4787,7 @@ namespace ExpenseProcessingSystem.Controllers
                 amountGross += inputItem.debitGross;
                 amountCredit += inputItem.debitGross;
 
-                double _vat = 0;
+                 decimal _vat = 0;
 
                 if (inputItem.chkEwt || inputItem.chkVat)
                     tax_gross += inputItem.debitGross;
@@ -4742,8 +4800,8 @@ namespace ExpenseProcessingSystem.Controllers
 
                 if (inputItem.chkEwt)
                 {
-                    double _ewt = Mizuho.round(_service.GetEWTValue(inputItem.ewt),4);
-                    double _ewtAmount = Mizuho.round((inputItem.debitGross / (1 + _vat)) * _ewt, 2);
+                     float _ewt = Mizuho.round(_service.GetEWTValue(inputItem.ewt),4);
+                     decimal _ewtAmount = Mizuho.round((inputItem.debitGross / (1 + _vat)) * (decimal)_ewt, 2);
                     if (_ewtList.Any(x => x.ewt == _ewt))
                     {
                         int index = _ewtList.FindIndex(x => x.ewt == _ewt);
@@ -4753,7 +4811,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         _ewtList.Add(new ewtAmtList
                         {
-                            ewt = _ewt * 100.00,
+                            ewt = _ewt * 100.00f,
                             ewtAmt = _ewtAmount
                         }
                         );
@@ -4772,11 +4830,11 @@ namespace ExpenseProcessingSystem.Controllers
 
                     if(_service.getAccount(inputItem.account).Account_MasterID == officeID)
                     {
-                        vvm.fbtAmount += Mizuho.round((((inputItem.debitGross * .50) /.65)*.35), 2);
+                        vvm.fbtAmount += Mizuho.round(((((decimal)inputItem.debitGross * .50M) /.65M)*.35M), 2);
                     }
                     else
                     {
-                        vvm.fbtAmount += Mizuho.round(((inputItem.debitGross/.65)*.35), 2);
+                        vvm.fbtAmount += Mizuho.round((((decimal)inputItem.debitGross/.65M)*.35M), 2);
                     }
                 }
             }
@@ -4844,10 +4902,10 @@ namespace ExpenseProcessingSystem.Controllers
                 account = "BDO MNL"
             });
 
-            double tax_vat = 0.00;
-            double tax_gross = 0.00;
-            double amountGross = 0.00;
-            double amountCredit = 0.00;
+             decimal tax_vat = 0.00M;
+             decimal tax_gross = 0.00M;
+             decimal amountGross = 0.00M;
+             decimal amountCredit = 0.00M;
 
             foreach (var inputItem in model.EntryDDV)
             {
@@ -4884,7 +4942,7 @@ namespace ExpenseProcessingSystem.Controllers
                 amountGross += inputItem.debitGross;
                 amountCredit += inputItem.debitGross;
 
-                double _vat = 0;
+                 decimal _vat = 0;
 
                 if (inputItem.chkEwt || inputItem.chkVat)
                     tax_gross += inputItem.debitGross;
@@ -4897,8 +4955,8 @@ namespace ExpenseProcessingSystem.Controllers
 
                 if (inputItem.chkEwt)
                 {
-                    double _ewt = Mizuho.round(_service.GetEWTValue(inputItem.ewt), 4);
-                    double _ewtAmount = Mizuho.round((inputItem.debitGross / (1 + _vat)) * _ewt, 2);
+                     float _ewt = Mizuho.round(_service.GetEWTValue(inputItem.ewt), 4);
+                     decimal _ewtAmount = Mizuho.round((inputItem.debitGross / (1 + _vat)) * (decimal)_ewt, 2);
                     if (_ewtList.Any(x => x.ewt == _ewt))
                     {
                         int index = _ewtList.FindIndex(x => x.ewt == _ewt);
@@ -4928,11 +4986,11 @@ namespace ExpenseProcessingSystem.Controllers
 
                     if (_service.getAccount(inputItem.account).Account_MasterID == officeID)
                     {
-                        vvm.fbtAmount += Mizuho.round((((inputItem.debitGross * .50) / .65) * .35), 2);
+                        vvm.fbtAmount += Mizuho.round(((((decimal)inputItem.debitGross * .50M) / .65M) * .35M), 2);
                     }
                     else
                     {
-                        vvm.fbtAmount += Mizuho.round(((inputItem.debitGross / .65) * .35), 2);
+                        vvm.fbtAmount += Mizuho.round((((decimal)inputItem.debitGross / .65M) * .35M), 2);
                     }
                 }
             }

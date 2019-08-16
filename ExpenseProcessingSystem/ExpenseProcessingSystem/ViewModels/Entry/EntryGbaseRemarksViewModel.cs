@@ -10,6 +10,6 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         public string docType { get; set; }
         public string invNo { get; set; }
         public string desc { get; set; }
-        public float amount { get; set; }
+        public decimal amount { get; set; }
     }
 }

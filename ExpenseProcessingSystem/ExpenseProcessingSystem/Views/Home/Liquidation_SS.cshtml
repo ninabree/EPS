@@ -384,11 +384,11 @@
                     <table style="width:60%;" id="tableOptionPrint" border="0" class="tblHidePrintLiq">
                         <tr>
                             <td style="width:5%;text-align:left">EXPENSE</td>
-                            <td style="text-align:center"><label style="font-size:x-large;text-align:center" value="&#9645;" id="printOptExpense"></label></td>
+                            <td style="text-align:center"><label style="font-size:x-large;text-align:center" value="&#9645;" id="printOptExpenseLiq"></label></td>
                         </tr>
                         <tr>
                             <td style="width:5%;text-align:left">REVERSAL</td>
-                            <td style="text-align:center"><label style="font-size:x-large;text-align:center" value="&#9645;" id="printOptReverse"></label></td>
+                            <td style="text-align:center"><label style="font-size:x-large;text-align:center" value="&#9645;" id="printOptReverseLiq"></label></td>
                         </tr>
                     </table>
                     <table style="width:60%;" id="tableSignPrint" border="1" class="tblHidePrintLiq">
@@ -407,7 +407,7 @@
                         </tr>
                         <tr>
                             <td>PAYMENT FOR :</td>
-                            <td colspan="2" style="text-align:center"><input id="paymentFor" /></td>
+                            <td colspan="2" style="text-align:center"><input id="paymentForLiq" /></td>
                         </tr>
                     </table>
                 </div>
@@ -644,9 +644,8 @@
         </div>
         <div id="entry-controls" class="m-b-10">
             @Html.HiddenFor(x => Model.entryID, new { @class = "entryID" })
-            @Html.HiddenFor(x => Model.LiqEntryDetails.Liq_Created_Date, new { @class = "LiqEntryDetails_Liq_Created_Date" })
-            @*<input type="hidden" id="LiqEntryDetails_Liq_Created_Date" value="@(((DateTime)Model.LiqEntryDetails.Liq_Created_Date).ToString("MM/dd/yyyy"))" style="background-color:transparent" />*@
-
+            @*@Html.HiddenFor(x => Model.LiqEntryDetails.Liq_Created_Date, new { @class = "LiqEntryDetails_Liq_Created_Date" })*@
+            <input type="hidden" id="LiqEntryDetails_Liq_Created_Date" value="@(((DateTime)Model.LiqEntryDetails.Liq_Created_Date).ToString("MM/dd/yyyy"))" style="background-color:transparent" />
             <div class="flex-sb m-t-15">
                 <div>
                     <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" name="command" value="Save">Save</button></div>

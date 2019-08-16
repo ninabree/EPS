@@ -2,7 +2,7 @@
     ViewData["Title"] = "Close";
     string prevCcyRBU = Model.rbuItems.Count > 0 ? Model.rbuItems.OrderBy(x => x.ccy).ThenBy(x => x.expTrans).ToList()[0].ccy : "";
     string prevCcyFCDU = Model.fcduItems.Count > 0 ? Model.fcduItems.OrderBy(x => x.ccy).ThenBy(x => x.expTrans).ToList()[0].ccy : "";
-    double totalAmount = 0;
+    decimal totalAmount = 0M;
     int totalTransCount = 0;
   //  int index = 0;
 }
@@ -195,7 +195,7 @@
     <br />
     <table class="table" id="close-tbl">
         <colgroup>
-            <col style="width:10%;" />
+            <col style="width:15%;" />
             <col style="width:15%;" />
             <col />
         </colgroup>
@@ -205,7 +205,7 @@
                     <p>Beginning Balance</p>
                 </td>
                 <td>
-                    @Html.EditorFor(x=>x.pettyBegBalance, new { @readonly = "readonly"})
+                    @Html.TextBoxFor(x=>x.pettyBegBalance, new { @readonly = "true",@class = "input", @id= "CBD_opeBalance" })
                 </td>
                 <td>
                     <button class="tbl-btn" id="StartPettyCash" value="StartPettyCash">Beginning Cash balance Confirmation</button>
@@ -216,7 +216,7 @@
                     <p>Cash-IN</p>
                 </td>
                 <td>
-                    @Html.EditorFor(x=>x.recieve, new { @readonly = "readonly" })
+                    @Html.TextBoxFor(x=>x.recieve, new { @readonly = "true", @class = "input",@id = "CBD_recieve" })
                 </td>
                 <td><button class="tbl-btn" id="ClosePettyCash" value="ClosePettyCash">Petty Cash Breakdown</button></td>
             </tr>
@@ -225,7 +225,7 @@
                     <p>Cash-OUT</p>
                 </td>
                 <td>
-                    @Html.EditorFor(x=>x.Disbursed, new { @readonly = "readonly" })
+                    @Html.TextBoxFor(x=>x.Disbursed, new { @readonly = "true", @class = "input",@id= "CBD_disburse" })
                 </td>
                 <td>
                     <button class="tbl-btn" value="Close">Close</button>
@@ -236,18 +236,49 @@
                     <p>Ending Balance</p>
                 </td>
                 <td>
-                    @Html.EditorFor(x=>x.closeBal, new { @readonly = "readonly" })
+                    @Html.TextBoxFor(x=>x.closeBal, new { @readonly = "true", @class = "input",@id= "CBD_closeBalance" })
                 </td>
                 <td></td>
             </tr>
         </tbody>
     </table>
+    <div id="hiddenValues">
+        @Html.HiddenFor(x => x.oneK, new { @id = "" })
+        @Html.HiddenFor(x => x.oneKAmount, new { @id = "" })
+        @Html.HiddenFor(x => x.fiveH, new { @id = "" })
+        @Html.HiddenFor(x => x.fiveHAmount, new { @id = "" })
+        @Html.HiddenFor(x => x.twoH, new { @id = "" })
+        @Html.HiddenFor(x => x.twoHAmount, new { @id = "" })
+        @Html.HiddenFor(x => x.oneH, new { @id = "" })
+        @Html.HiddenFor(x => x.oneHAmount, new { @id = "" })
+        @Html.HiddenFor(x => x.fifty, new { @id = "" })
+        @Html.HiddenFor(x => x.fiftyAmount, new { @id = "" })
+        @Html.HiddenFor(x => x.twenty, new { @id = "" })
+        @Html.HiddenFor(x => x.twentyAmount, new { @id = "" })
+        @Html.HiddenFor(x => x.ten, new { @id = "" })
+        @Html.HiddenFor(x => x.tenAmount, new { @id = "" })
+        @Html.HiddenFor(x => x.five, new { @id = "" })
+        @Html.HiddenFor(x => x.fiveAmount, new { @id = "" })
+        @Html.HiddenFor(x => x.one, new { @id = "" })
+        @Html.HiddenFor(x => x.oneAmount, new { @id = "" })
+        @Html.HiddenFor(x => x.c25, new { @id = "" })
+        @Html.HiddenFor(x => x.c25Amount, new { @id = "" })
+        @Html.HiddenFor(x => x.c10, new { @id = "" })
+        @Html.HiddenFor(x => x.c10Amount, new { @id = "" })
+        @Html.HiddenFor(x => x.c5, new { @id = "" })
+        @Html.HiddenFor(x => x.c5Amount, new { @id = "" })
+        @Html.HiddenFor(x => x.c1, new { @id = "" })
+        @Html.HiddenFor(x => x.c1Amout, new { @id = "" })
+        @Html.HiddenFor(x => x.billTotal, new { @id = "" })
+        @Html.HiddenFor(x => x.coinTotal, new { @id = "" })
+
+    </div>
 </div>
 <div id="pettyCashModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <!-- Modal content-->
         <div class="vertical-alignment-helper">
-            <div class="modal-dialog vertical-align-center">
+            <div class="modal-dialog vertical-align-center" style="width:500px !important;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 style="display:inline">Cash Break Down</h4>
@@ -258,7 +289,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn float-r" data-dismiss="modal">Close</button>
-                        <button class="btn float-r comVar" id="loginSubmit">Submit</button>
+                        <button class="btn float-r comVar" id="brkDwnSubmit">Submit</button>
                     </div>
                 </div>
             </div>
@@ -272,20 +303,20 @@
             <div class="modal-dialog vertical-align-center">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 style="display:inline">Login</h4>
+                        <h4 style="display:inline">Gbase Login</h4>
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
                         <table style="margin:5px;">
                             <tr>
-                                <td>Username : </td>
+                                <td>Racfid : </td>
                                 <td>&nbsp;<input type="text" id="userName" class="input" /></td>
                             </tr>
                             <tr>
                                 <td>&nbsp;&nbsp;</td>
                             </tr>
                             <tr>
-                                <td>Password : </td>
+                                <td>Racfpassword : </td>
                                 <td>&nbsp;<input type="password" id="passWord" class="input" /></td>
                             </tr>
                         </table>
@@ -305,17 +336,38 @@
     <input type="hidden" name="username" id="userString" />
     <input type="hidden" name="password" id="passString" />
 }
-@Html.Partial("PopupMessage")
     <script type="text/javascript">
     $(function () {
          $(window).on("load", function () {
         @if (Model.messages.Count() > 0)
         {
             <text>
+                $('#divAlertWindow').find(".spanTitle").html("Information");
                 $('#alert').text("@Model.messages[0]");
-                $('#divcss').show();
+                $('#divAlertWindow').show();
             </text>
         }
+        });
+
+        $("#pettyCashModal").on("click", "#brkDwnSubmit", function () {
+            $.ajax({
+                type: 'POST',
+                url: "/Modal/closeSveBrkDown",
+                data: $("#inputForm").serialize(),
+                success: function (result) {
+                    if (result) {
+                        $('#divAlertWindow').find(".spanTitle").html("Information");
+                        $('#alert').text("Cash breakdown saved.");
+                        $('#pettyCashModal').modal('hide');
+                        $('#divAlertWindow').show();
+                    } else {
+                        $('#divAlertWindow').find(".spanTitle").html("Information");
+                        $('#alert').text("Failed to save cash breakdown."); 
+                        $('#pettyCashModal').modal('hide');
+                        $('#divAlertWindow').show();
+                    }
+                }
+            });
         });
 
         $("#closeBody").on("click", "#StartPettyCash", function (e) {
@@ -325,6 +377,7 @@
                 if (status == "error") {
                     alert("Something went wrong.");
                 }
+                $('#brkDwnSubmit').hide();
             });
             $('#pettyCashModal').modal('show');
         });
@@ -332,12 +385,21 @@
         $("#closeBody").on("click", "#ClosePettyCash", function (e) {
             var command = $(this).val();
             $("#pettyCashModal").find(".modal-body").empty();
-            $("#pettyCashModal").find(".modal-body").load("@Url.Action("ClosePettyCash", "Modal")", { command: command }, function (response, status, xhr) {
+            var pop = $("#pettyCashModal").find(".modal-body").load("@Url.Action("ClosePettyCash", "Modal")", { command: command }, function (response, status, xhr) {
                 if (status == "error") {
                     alert("Something went wrong.");
+                } else {
+                    var mes = $("#eMessage").val();
+                    if (typeof mes != "undefined") {
+                        $('#alert').text(mes);
+                        $('#divAlertWindow').show();
+                    } else {
+                        $('#brkDwnSubmit').show();
+                        $('#pettyCashModal').modal('show');
+                    }
                 }
             });
-            $('#pettyCashModal').modal('show');
+ 
         });
 
         $("#closeBody").on("click", ".closeBtn", function (e) {

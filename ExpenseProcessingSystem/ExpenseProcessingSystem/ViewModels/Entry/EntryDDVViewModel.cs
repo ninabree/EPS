@@ -54,13 +54,13 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         public string ccy_Name { get; set; }
         [NotNullValidations, AmountValidation]
         [Display(Name = "Debit - Gross Amount")]
-        public float debitGross { get; set; }
+        public decimal debitGross { get; set; }
         [NotNullValidations]
         [Display(Name = "Credit - EWT Amount")]
-        public float credEwt { get; set; }
+        public decimal credEwt { get; set; }
         [NotNullValidations, AmountValidation]
         [Display(Name = "Credit - Cash")]
-        public float credCash { get; set; }
+        public decimal credCash { get; set; }
         public int dtlID { get; set; }
         //[ListValidation("inter_entity")]
         [Display(Name = "Inter-Entity Details")]

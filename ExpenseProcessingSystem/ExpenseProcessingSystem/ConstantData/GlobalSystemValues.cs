@@ -1502,7 +1502,7 @@ namespace ExpenseProcessingSystem.ConstantData
     //Populate DDV Inter-Entity Particulars
     public class CONSTANT_DDV_INTER_PARTICULARS
     {
-        public static List<InterEntityParticular> PopulateParticular1(string accName, string Curr1Abbr, float Curr1Amt, float Curr2Amt, float InterRate, int accID, int curr1ID, List<CONSTANT_NC_VALS> accList)
+        public static List<InterEntityParticular> PopulateParticular1(string accName, string Curr1Abbr, decimal Curr1Amt, decimal Curr2Amt, float InterRate, int accID, int curr1ID, List<CONSTANT_NC_VALS> accList)
         {
             return new List<InterEntityParticular> {
                 new InterEntityParticular {
@@ -1510,7 +1510,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     Particular_Account_Name = accName,
                     Particular_DebCurr_ID = curr1ID,
                     Particular_Debit_Curr = Curr1Abbr,
-                    Particular_Debit_Amount = Curr1Amt + (Curr2Amt * InterRate),
+                    Particular_Debit_Amount = Curr1Amt + (Curr2Amt * (decimal)InterRate),
                     Particular_CredCurr_ID= 0,
                     Particular_Credit_Curr = "",
                     Particular_Credit_Amount = 0,
@@ -1524,7 +1524,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     Particular_Debit_Curr = "",
                     Particular_Debit_Amount = 0,
                     Particular_Credit_Curr = Curr1Abbr,
-                    Particular_Credit_Amount = Curr2Amt * InterRate,
+                    Particular_Credit_Amount = Curr2Amt * (decimal)InterRate,
                     Particular_Type_ID = GlobalSystemValues.NC_CREDIT
                 },
                 new InterEntityParticular {
@@ -1540,7 +1540,7 @@ namespace ExpenseProcessingSystem.ConstantData
                 },
             };
         }
-        public static List<InterEntityParticular> PopulateParticular2(string Curr1Abbr, string Curr2Abbr, float Curr2Amt, float InterRate, int curr1ID, int curr2ID, List<CONSTANT_NC_VALS> accList)
+        public static List<InterEntityParticular> PopulateParticular2(string Curr1Abbr, string Curr2Abbr, decimal Curr2Amt, float InterRate, int curr1ID, int curr2ID, List<CONSTANT_NC_VALS> accList)
         {
             return new List<InterEntityParticular> {
                 new InterEntityParticular {
@@ -1549,7 +1549,7 @@ namespace ExpenseProcessingSystem.ConstantData
                     Particular_DebCurr_ID = curr1ID,
                     Particular_CredCurr_ID= 0,
                     Particular_Debit_Curr = Curr1Abbr,
-                    Particular_Debit_Amount = Curr2Amt * InterRate,
+                    Particular_Debit_Amount = Curr2Amt * (decimal)InterRate,
                     Particular_Credit_Curr = "",
                     Particular_Credit_Amount = 0,
                     Particular_Type_ID = GlobalSystemValues.NC_DEBIT
@@ -1568,7 +1568,7 @@ namespace ExpenseProcessingSystem.ConstantData
                 }
             };
         }
-        public static List<InterEntityParticular> PopulateParticular3(string Curr2Abbr, float Curr2Amt, int curr2ID, List<CONSTANT_NC_VALS> accList)
+        public static List<InterEntityParticular> PopulateParticular3(string Curr2Abbr, decimal Curr2Amt, int curr2ID, List<CONSTANT_NC_VALS> accList)
         {
             return new List<InterEntityParticular> {
                 new InterEntityParticular {

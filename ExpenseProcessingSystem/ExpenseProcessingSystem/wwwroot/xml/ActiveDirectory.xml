@@ -9,6 +9,12 @@ string value3 = xelem.Element("TIN").Value
 string value4 = xelem.Element("ADDRESS").Value
 
 -->
-<CLOSING>
-  <PC_MASTERID id="PC_MASTERID">95</PC_MASTERID>
-</CLOSING>
+<LDAP>
+  <svcUsername id="svcUsername">gene.delacruz</svcUsername>
+  <svcPwd id="svcPwd">EZUumKPAnJXsx9n0l9m+1g==</svcPwd>
+  <domain id="domain">jpi.local</domain>
+
+  <!--<svcUsername id="svcUsername">tuser</svcUsername>
+  <svcPwd id="svcPwd">maniladev.mizuho.com</svcPwd>
+  <domain id="domain">password@99</domain>-->
+</LDAP>

@@ -14,7 +14,7 @@ namespace ExpenseProcessingSystem.Models
         public string GbaseDtl_Document_Type { get; set; }
         public string GbaseDtl_InvoiceNo { get; set; }
         public string GbaseDtl_Description { get; set; }
-        public float GbaseDtl_Amount { get; set; }
+        public decimal GbaseDtl_Amount { get; set; }
         public ExpenseEntryDetailModel ExpenseEntryDetailModel { get; set; }
     }
 }

@@ -1,25 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ExpenseProcessingSystem.Services;
-using ExpenseProcessingSystem.ViewModels;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace ExpenseProcessingSystem.Controllers
 {
+    //[System.Web.Mvc.RoutePrefix("error")]
     public class ErrorController : Controller
     {
-        [ImportModelState]
-        public IActionResult Index()
+        [Route("Error/{statusCode}")]
+        public IActionResult Error()
         {
-            AccessViewModel accessVM = new AccessViewModel
-            {
-                isLoggedIn = true,
-                accessType = "",
-                isAdmin = false
-            };
-            ViewBag.access = accessVM;
+            ViewData["filename"] = "log" + DateTime.Now.ToString("yyyyMMdd") + ".txt";
+
+            return View();
+        }
+
+        [Route("404")]
+        public IActionResult PageNotFound()
+        {
             return View();
         }
     }

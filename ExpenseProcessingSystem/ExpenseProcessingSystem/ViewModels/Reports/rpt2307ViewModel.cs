@@ -11,6 +11,6 @@ namespace ExpenseProcessingSystem.ViewModels.Reports
         public int ewt { get; set; }
         public int vat { get; set; }
         public int approver { get; set; }
-        public double amount { get; set; }
+        public decimal amount { get; set; }
     }
 }

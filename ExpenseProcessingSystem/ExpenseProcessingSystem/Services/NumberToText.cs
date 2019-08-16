@@ -30,7 +30,7 @@ namespace ExpenseProcessingSystem
         private static readonly string[] ScaleMap = new[]
         { "", " Thousand", " Million", " Billion", " Trillion", " Quadrillion" };
 
-        static IEnumerable<int> SplitIntoThousands(long number)
+        static IEnumerable<int> SplitIntoThousands(decimal number)
         {
             while (number != 0)
             {
@@ -46,7 +46,7 @@ namespace ExpenseProcessingSystem
                 number /= 1000;
             }
         }
-        static StringBuilder SplitDecimals(double number)
+        static StringBuilder SplitDecimals(decimal number)
         {
             StringBuilder decword = new StringBuilder();
             String[] num = number.ToString("G17").Split('.');
@@ -90,13 +90,13 @@ namespace ExpenseProcessingSystem
             return result;
         }
 
-        public string DoubleNumberToWords(double number)
+        public string decimalNumberToWords(decimal number)
         {
             if (number == 0)
                 return "Zero";
 
             if (number < 0)
-                return "MINUS " + DoubleNumberToWords(-number);
+                return "MINUS " + decimalNumberToWords(-number);
 
             var decimals = SplitDecimals(number);
             var thousands = SplitIntoThousands(number).ToArray();
@@ -121,13 +121,13 @@ namespace ExpenseProcessingSystem
             return result.ToString();
         }
 
-        public string DoubleNumberToWords(double number, string currency)
+        public string decimalNumberToWords(decimal number, string currency)
         {
             if (number == 0)
                 return "Zero";
 
             if (number < 0)
-                return "MINUS " + DoubleNumberToWords(-number, currency);
+                return "MINUS " + decimalNumberToWords(-number, currency);
 
             var decimals = SplitDecimals(number);
             var thousands = SplitIntoThousands(number).ToArray();

@@ -34,11 +34,11 @@ namespace ExpenseProcessingSystem.Services
             return newVal;
         }
 
-        public static double round(double _num, int scale)
+        public static decimal round(decimal _num, int scale)
         {
-            decimal val = decimal.Round((decimal)_num, scale, MidpointRounding.AwayFromZero);
+            decimal val = decimal.Round(_num, scale, MidpointRounding.AwayFromZero);
 
-            return (double)val;
+            return val;
         }
 
         public static float round(float _num, int scale)

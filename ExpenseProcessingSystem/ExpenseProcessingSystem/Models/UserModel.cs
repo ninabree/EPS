@@ -12,6 +12,7 @@ namespace ExpenseProcessingSystem.Models
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int User_ID { get; set; }
+        public string User_EmpCode { get; set; }
         public string User_UserName { get; set; }
         public string User_FName { get; set; }
         public string User_LName { get; set; }

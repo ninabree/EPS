@@ -1639,11 +1639,11 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                                             && x.Account_isDeleted == false).ToList().OrderBy(x => x.Account_Name);
         }
 
-        public double GetCurrentBudget(int accountMasterID)
+        public decimal GetCurrentBudget(int accountMasterID)
         {
             return _context.Budget.Where(x => x.Budget_Account_MasterID == accountMasterID
             && x.Budget_IsActive == true && x.Budget_isDeleted == false).DefaultIfEmpty(
-                new BudgetModel { Budget_Amount = 0.00 }).First().Budget_Amount;
+                new BudgetModel { Budget_Amount = 0.00M }).First().Budget_Amount;
         }
 
         public List<BudgetModel> GetAllCurrentBudget()
@@ -1756,6 +1756,98 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             }
 
             return name.BCS_Name.ToUpper();
+        }
+
+        //=============[Get Pettycash]==============
+        public PettyCashModel getPC(string command)
+        {
+            PettyCashModel model = null;
+
+            switch (command)
+            {
+                case "StartPettyCash":
+                    var modStart = _context.PettyCash.OrderByDescending(x => x.PC_ID).Take(2);
+                    if (modStart.FirstOrDefault() != null)
+                    {
+                        if (modStart.FirstOrDefault().PC_Status == GlobalSystemValues.STATUS_OPEN)
+                        {
+                            if (modStart.Skip(1).FirstOrDefault() != null)
+                                model = modStart.Skip(1).FirstOrDefault();
+                            else
+                                model = new PettyCashModel();
+                        }
+                        else
+                        {
+                            model = modStart.FirstOrDefault();
+                        }
+                    }
+                    else
+                    {
+                        model = new PettyCashModel();
+                    }
+                    break;
+                case "ClosePettyCash":
+                    var modClose = _context.PettyCash.OrderByDescending(x => x.PC_ID).FirstOrDefault();
+                    if (modClose != null)
+                        model = modClose;
+                    break;
+            }
+            return model;
+        }
+        public bool confirmPC(int userID)
+        {
+            var lastPC = _context.PettyCash.OrderByDescending(x => x.PC_ID).FirstOrDefault();
+
+            lastPC.PC_Status = GlobalSystemValues.STATUS_CLOSED;
+            lastPC.PC_CloseDate = DateTime.Now;
+            lastPC.PC_CloseUser = userID;
+
+            PettyCashModel newPC = new PettyCashModel
+            {
+                PC_OpenDate = DateTime.Now,
+                PC_OpenUser = userID,
+                PC_StartBal = lastPC.PC_EndBal,
+                PC_EndBal = lastPC.PC_EndBal,
+                PC_OpenConfirm = true,
+                PC_Status = GlobalSystemValues.STATUS_OPEN
+            };
+
+            _context.PettyCash.Add(newPC);
+
+            _context.SaveChanges();
+
+            return true;
+        }
+        public bool saveBrkDwnPC(ClosingBrkDwnViewModel model)
+        {
+            PettyCashModel pcModel = _context.PettyCash.OrderByDescending(x => x.PC_ID).FirstOrDefault();
+
+            pcModel.PCB_OneThousand = model.CBD_oneK;
+            pcModel.PCB_FiveHundred = model.CBD_fiveH;
+            pcModel.PCB_TwoHundred = model.CBD_twoH;
+            pcModel.PCB_OneHundred = model.CBD_oneH;
+            pcModel.PCB_Fifty = model.CBD_fifty;
+            pcModel.PCB_Twenty = model.CBD_twenty;
+            pcModel.PCB_Ten = model.CBD_ten;
+            pcModel.PCB_Five = model.CBD_five;
+            pcModel.PCB_One = model.CBD_one;
+            pcModel.PCB_TwentyFiveCents = model.CBD_c25;
+            pcModel.PCB_TenCents = model.CBD_c10;
+            pcModel.PCB_FiveCents = model.CBD_c5;
+            pcModel.PCB_OneCents = model.CBD_c1;
+
+            _context.SaveChanges();
+
+            return true;
+        }
+        public bool lastPCEntry()
+        {
+            var lastEntry = _context.PettyCash.OrderByDescending(x => x.PC_ID).Select(x => x.PC_Status).FirstOrDefault();
+
+            if (lastEntry == GlobalSystemValues.STATUS_CLOSED)
+                return true;
+            else
+                return false;
         }
     }
 }

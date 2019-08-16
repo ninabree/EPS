@@ -20,10 +20,10 @@ namespace ExpenseProcessingSystem.ViewModels.Reports
     {
         public int CSB_ID { get; set; }
         public DateTime CSB_Date { get; set; }
-        public double CSB_Debit { get; set; }
-        public double CSB_Credit { get; set; }
+        public decimal CSB_Debit { get; set; }
+        public decimal CSB_Credit { get; set; }
         public string CSB_Remarks { get; set; }
         public int CSB_Ref_No { get; set; }
-        public double CSB_Balance { get; set; }
+        public decimal CSB_Balance { get; set; }
     }
 }

@@ -536,6 +536,7 @@ namespace ExpenseProcessingSystem.Services
                         select new
                         {
                             a.User_ID,
+                            a.User_EmpCode,
                             a.User_UserName,
                             a.User_FName,
                             a.User_LName,
@@ -570,6 +571,7 @@ namespace ExpenseProcessingSystem.Services
                 {
                     User_ID = x.User_ID,
                     User_UserName = x.User_UserName,
+                    User_EmpCode = x.User_EmpCode,
                     User_FName = x.User_FName,
                     User_LName = x.User_LName,
                     User_Dept_ID = x.User_DeptID,
@@ -620,9 +622,15 @@ namespace ExpenseProcessingSystem.Services
             UserModel mod = _context.User.Where(x => model.NewAcc.User_ID == x.User_ID).FirstOrDefault();
             if (mod == null)
             {
+                UserModel duplicate = _context.User.Where(x => x.User_UserName == model.NewAcc.User_UserName).FirstOrDefault();
+
+                if (duplicate != null)
+                    return false;
+
                 mod = new UserModel
                 {
                     User_UserName = model.NewAcc.User_UserName,
+                    User_EmpCode = model.NewAcc.User_EmpCode,
                     User_FName = model.NewAcc.User_FName,
                     User_LName = model.NewAcc.User_LName,
                     User_DeptID = model.NewAcc.User_DeptID,
@@ -645,6 +653,7 @@ namespace ExpenseProcessingSystem.Services
             {
                 if (model.NewAcc.User_ID == mod.User_ID)
                 {
+                    mod.User_EmpCode = model.NewAcc.User_EmpCode;
                     mod.User_FName = model.NewAcc.User_FName;
                     mod.User_LName = model.NewAcc.User_LName;
                     mod.User_DeptID = model.NewAcc.User_DeptID;
@@ -2953,7 +2962,7 @@ namespace ExpenseProcessingSystem.Services
                              NOIP = tr.TR_Nature,
                              //B. AMOUNT NET OF VAT = (GROSS AMOUNT/( 1 + VAT RATE))
                              //Example: 45,000 / 1.12 = 40,178.57
-                             AOIP = (expEntryDetl.ExpDtl_Vat != 0) ? (expEntryDetl.ExpDtl_Debit / (1 + vatList
+                             AOIP = (expEntryDetl.ExpDtl_Vat != 0) ? (expEntryDetl.ExpDtl_Debit / (decimal)(1 + vatList
                                     .Where(x => x.VAT_ID == expEntryDetl.ExpDtl_Vat).FirstOrDefault().VAT_Rate)) : expEntryDetl.ExpDtl_Debit,
                              RateOfTax = tr.TR_Tax_Rate,
                              AOTW = expEntryDetl.ExpDtl_Credit_Ewt,
@@ -3024,9 +3033,9 @@ namespace ExpenseProcessingSystem.Services
                 foreach (var j in taxRatesList)
                 {
                     //NATURE OF INCOME PAYMENT
-                    double aoipTotal = 0;
+                     decimal aoipTotal = 0;
                     //AMOUNT OF TAX WITHHELD
-                    double aotwTotal = 0;
+                     decimal aotwTotal = 0;
                     foreach (var k in dbAPSWT_Conc.Where(x => x.Vendor_masterID == i && x.RateOfTax == j))
                     {
                         aoipTotal = aoipTotal + k.AOIP;
@@ -3100,7 +3109,7 @@ namespace ExpenseProcessingSystem.Services
                              NOIP = tr.TR_Nature,
                              //B. AMOUNT NET OF VAT = (GROSS AMOUNT/( 1 + VAT RATE))
                              //Example: 45,000 / 1.12 = 40,178.57
-                             TaxBase = (expEntryDetl.ExpDtl_Vat != 0) ? (expEntryDetl.ExpDtl_Debit / (1 + vatList
+                             TaxBase = (expEntryDetl.ExpDtl_Vat != 0) ? (expEntryDetl.ExpDtl_Debit / (decimal)(1 + vatList
                                     .Where(x => x.VAT_ID == expEntryDetl.ExpDtl_Vat).FirstOrDefault().VAT_Rate)) : expEntryDetl.ExpDtl_Debit,
                              RateOfTax = tr.TR_Tax_Rate,
                              AOTW = expEntryDetl.ExpDtl_Credit_Ewt,
@@ -3171,9 +3180,9 @@ namespace ExpenseProcessingSystem.Services
                 foreach (var j in taxRatesList)
                 {
                     //NATURE OF INCOME PAYMENT
-                    double aoipTotal = 0;
+                     decimal aoipTotal = 0;
                     //AMOUNT OF TAX WITHHELD
-                    double aotwTotal = 0;
+                     decimal aotwTotal = 0;
                     foreach (var k in dbAPSWT_Conc.Where(x => x.Vendor_masterID == i && x.RateOfTax == j))
                     {
                         aoipTotal = aoipTotal + k.TaxBase;
@@ -3206,7 +3215,7 @@ namespace ExpenseProcessingSystem.Services
         public ReportLOIViewModel GetLOIData(HomeReportViewModel model)
         {
             List<LOIAccount> accs = new List<LOIAccount>();
-            double totalAmount = 0;
+             decimal totalAmount = 0;
             List<string> voucherNoList = model.VoucherArray.Split(',').ToList();
             List<int> entryIDs = voucherNoList.Select(x => int.Parse(x)).ToList();
 
@@ -3227,11 +3236,11 @@ namespace ExpenseProcessingSystem.Services
                     })
             );
             entryList.ForEach(x => totalAmount += x.e.Expense_Debit_Total);
-            var stringNum = _class.DoubleNumberToWords(totalAmount);
+            var stringNum = _class.decimalNumberToWords(totalAmount);
             return new ReportLOIViewModel()
             {
                 Rep_DDVNoList = model.VoucherNoList.Select(x => x.vchr_No).ToList(),
-                Rep_Amount = (float)totalAmount,
+                Rep_Amount = (decimal)totalAmount,
                 Rep_AmountInString = stringNum,
                 Rep_LOIAccList = accs,
                 Rep_LOIEntryIDList = entryIDs,
@@ -3315,9 +3324,9 @@ namespace ExpenseProcessingSystem.Services
             DateTime EndFiscal = GetStartOfFiscal(filterMonth, filterYear, false);
             int termYear = startOfTerm.Year;
             int termMonth = startOfTerm.Month;
-            double budgetBalance;
-            double totalExpenseThisTermToPrevMonthend;
-            double subTotal;
+             decimal budgetBalance;
+             decimal totalExpenseThisTermToPrevMonthend;
+             decimal subTotal;
             string format = "yyyy-M";
 
             endDT = DateTime.ParseExact(filterYear + "-" + filterMonth, format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
@@ -3329,15 +3338,15 @@ namespace ExpenseProcessingSystem.Services
             var budgetList = _context.Budget.Where(x => x.Budget_Date_Registered.Date <= EndFiscal.Date)
                                                         .OrderByDescending(x => x.Budget_Date_Registered);
             int currGroup = accountList.First().Account_Group_MasterID;
-            double budgetAmount = 0.0;
+             decimal budgetAmount = 0.0M;
 
 
-            if (budgetList.Count() == 0)
+            if (budgetList.Count() == 0M)
             {
                 actualBudgetData.Add(new HomeReportActualBudgetModel
                 {
-                    BudgetBalance = 0.0,
-                    ExpenseAmount = 0.0,
+                    BudgetBalance = 0.0M,
+                    ExpenseAmount = 0.0M,
                     Remarks = "NO_RECORD",
                     ValueDate = DateTime.Parse("1991/01/01 12:00:00")
                 });
@@ -3350,7 +3359,7 @@ namespace ExpenseProcessingSystem.Services
                     .DefaultIfEmpty(new BudgetModel
                     {
                         Budget_Account_MasterID = i.Account_MasterID,
-                        Budget_Amount = 0.0
+                        Budget_Amount = 0.0M
                     }).OrderByDescending(x => x.Budget_Date_Registered).First();
 
                 if (currGroup == i.Account_Group_MasterID)
@@ -3395,8 +3404,8 @@ namespace ExpenseProcessingSystem.Services
             {
                 startDT = DateTime.ParseExact(termYear + "-" + termMonth, format, CultureInfo.InvariantCulture);
                 endDT = DateTime.ParseExact(filterYear + "-" + filterMonth, format, CultureInfo.InvariantCulture);
-                subTotal = 0.00;
-                totalExpenseThisTermToPrevMonthend = 0.00;
+                subTotal = 0.00M;
+                totalExpenseThisTermToPrevMonthend = 0.00M;
 
                 budgetBalance = category.Budget;
 
@@ -3422,11 +3431,11 @@ namespace ExpenseProcessingSystem.Services
                         {
                             if (hist.GOExpHist_Entry11Type == "D")
                             {
-                                totalExpenseThisTermToPrevMonthend += double.Parse(hist.GOExpHist_Entry11Amt);
+                                totalExpenseThisTermToPrevMonthend += Decimal.Parse(hist.GOExpHist_Entry11Amt);
                             }
                             else
                             {
-                                totalExpenseThisTermToPrevMonthend -= double.Parse(hist.GOExpHist_Entry11Amt);
+                                totalExpenseThisTermToPrevMonthend -= Decimal.Parse(hist.GOExpHist_Entry11Amt);
                             }
                         }
                         if (!String.IsNullOrEmpty(hist.GOExpHist_Entry12ActNo)
@@ -3436,11 +3445,11 @@ namespace ExpenseProcessingSystem.Services
                         {
                             if (hist.GOExpHist_Entry12Type == "D")
                             {
-                                totalExpenseThisTermToPrevMonthend += double.Parse(hist.GOExpHist_Entry12Amt);
+                                totalExpenseThisTermToPrevMonthend += Decimal.Parse(hist.GOExpHist_Entry12Amt);
                             }
                             else
                             {
-                                totalExpenseThisTermToPrevMonthend -= double.Parse(hist.GOExpHist_Entry12Amt);
+                                totalExpenseThisTermToPrevMonthend -= Decimal.Parse(hist.GOExpHist_Entry12Amt);
                             }
                         }
                         if (!String.IsNullOrEmpty(hist.GOExpHist_Entry21ActNo)
@@ -3450,11 +3459,11 @@ namespace ExpenseProcessingSystem.Services
                         {
                             if (hist.GOExpHist_Entry21Type == "D")
                             {
-                                totalExpenseThisTermToPrevMonthend += double.Parse(hist.GOExpHist_Entry21Amt);
+                                totalExpenseThisTermToPrevMonthend += Decimal.Parse(hist.GOExpHist_Entry21Amt);
                             }
                             else
                             {
-                                totalExpenseThisTermToPrevMonthend -= double.Parse(hist.GOExpHist_Entry21Amt);
+                                totalExpenseThisTermToPrevMonthend -= Decimal.Parse(hist.GOExpHist_Entry21Amt);
                             }
                         }
                         if (!String.IsNullOrEmpty(hist.GOExpHist_Entry22ActNo)
@@ -3464,11 +3473,11 @@ namespace ExpenseProcessingSystem.Services
                         {
                             if (hist.GOExpHist_Entry22Type == "D")
                             {
-                                totalExpenseThisTermToPrevMonthend += double.Parse(hist.GOExpHist_Entry22Amt);
+                                totalExpenseThisTermToPrevMonthend += Decimal.Parse(hist.GOExpHist_Entry22Amt);
                             }
                             else
                             {
-                                totalExpenseThisTermToPrevMonthend -= double.Parse(hist.GOExpHist_Entry22Amt);
+                                totalExpenseThisTermToPrevMonthend -= Decimal.Parse(hist.GOExpHist_Entry22Amt);
                             }
                         }
                         if (!String.IsNullOrEmpty(hist.GOExpHist_Entry31ActNo)
@@ -3478,11 +3487,11 @@ namespace ExpenseProcessingSystem.Services
                         {
                             if (hist.GOExpHist_Entry31Type == "D")
                             {
-                                totalExpenseThisTermToPrevMonthend += double.Parse(hist.GOExpHist_Entry31Amt);
+                                totalExpenseThisTermToPrevMonthend += Decimal.Parse(hist.GOExpHist_Entry31Amt);
                             }
                             else
                             {
-                                totalExpenseThisTermToPrevMonthend -= double.Parse(hist.GOExpHist_Entry31Amt);
+                                totalExpenseThisTermToPrevMonthend -= Decimal.Parse(hist.GOExpHist_Entry31Amt);
                             }
                         }
                         if (!String.IsNullOrEmpty(hist.GOExpHist_Entry32ActNo)
@@ -3492,11 +3501,11 @@ namespace ExpenseProcessingSystem.Services
                         {
                             if (hist.GOExpHist_Entry32Type == "D")
                             {
-                                totalExpenseThisTermToPrevMonthend += double.Parse(hist.GOExpHist_Entry32Amt);
+                                totalExpenseThisTermToPrevMonthend += Decimal.Parse(hist.GOExpHist_Entry32Amt);
                             }
                             else
                             {
-                                totalExpenseThisTermToPrevMonthend -= double.Parse(hist.GOExpHist_Entry32Amt);
+                                totalExpenseThisTermToPrevMonthend -= Decimal.Parse(hist.GOExpHist_Entry32Amt);
                             }
                         }
                         if (!String.IsNullOrEmpty(hist.GOExpHist_Entry41ActNo)
@@ -3506,11 +3515,11 @@ namespace ExpenseProcessingSystem.Services
                         {
                             if (hist.GOExpHist_Entry41Type == "D")
                             {
-                                totalExpenseThisTermToPrevMonthend += double.Parse(hist.GOExpHist_Entry41Amt);
+                                totalExpenseThisTermToPrevMonthend += Decimal.Parse(hist.GOExpHist_Entry41Amt);
                             }
                             else
                             {
-                                totalExpenseThisTermToPrevMonthend -= double.Parse(hist.GOExpHist_Entry41Amt);
+                                totalExpenseThisTermToPrevMonthend -= Decimal.Parse(hist.GOExpHist_Entry41Amt);
                             }
                         }
                         if (!String.IsNullOrEmpty(hist.GOExpHist_Entry42ActNo)
@@ -3520,11 +3529,11 @@ namespace ExpenseProcessingSystem.Services
                         {
                             if (hist.GOExpHist_Entry42Type == "D")
                             {
-                                totalExpenseThisTermToPrevMonthend += double.Parse(hist.GOExpHist_Entry42Amt);
+                                totalExpenseThisTermToPrevMonthend += Decimal.Parse(hist.GOExpHist_Entry42Amt);
                             }
                             else
                             {
-                                totalExpenseThisTermToPrevMonthend -= double.Parse(hist.GOExpHist_Entry42Amt);
+                                totalExpenseThisTermToPrevMonthend -= Decimal.Parse(hist.GOExpHist_Entry42Amt);
                             }
                         }
                     }
@@ -3566,13 +3575,13 @@ namespace ExpenseProcessingSystem.Services
                         {
                             if (hist.GOExpHist_Entry11Type == "D")
                             {
-                                budgetBalance -= double.Parse(hist.GOExpHist_Entry11Amt);
-                                subTotal += double.Parse(hist.GOExpHist_Entry11Amt);
+                                budgetBalance -= Decimal.Parse(hist.GOExpHist_Entry11Amt);
+                                subTotal += Decimal.Parse(hist.GOExpHist_Entry11Amt);
 
                                 actualBudgetData.Add(new HomeReportActualBudgetModel()
                                 {
                                     BudgetBalance = budgetBalance,
-                                    ExpenseAmount = double.Parse(hist.GOExpHist_Entry11Amt),
+                                    ExpenseAmount = Decimal.Parse(hist.GOExpHist_Entry11Amt),
                                     Remarks = hist.GOExpHist_Remarks,
                                     Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
                                     ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
@@ -3580,13 +3589,13 @@ namespace ExpenseProcessingSystem.Services
                             }
                             else
                             {
-                                budgetBalance += double.Parse(hist.GOExpHist_Entry11Amt);
-                                subTotal -= double.Parse(hist.GOExpHist_Entry11Amt);
+                                budgetBalance += Decimal.Parse(hist.GOExpHist_Entry11Amt);
+                                subTotal -= Decimal.Parse(hist.GOExpHist_Entry11Amt);
 
                                 actualBudgetData.Add(new HomeReportActualBudgetModel()
                                 {
                                     BudgetBalance = budgetBalance,
-                                    ExpenseAmount = double.Parse(hist.GOExpHist_Entry11Amt),
+                                    ExpenseAmount = Decimal.Parse(hist.GOExpHist_Entry11Amt),
                                     Remarks = hist.GOExpHist_Remarks,
                                     Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
                                     ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
@@ -3600,13 +3609,13 @@ namespace ExpenseProcessingSystem.Services
                         {
                             if (hist.GOExpHist_Entry12Type == "D")
                             {
-                                budgetBalance -= double.Parse(hist.GOExpHist_Entry12Amt);
-                                subTotal += double.Parse(hist.GOExpHist_Entry12Amt);
+                                budgetBalance -= Decimal.Parse(hist.GOExpHist_Entry12Amt);
+                                subTotal += Decimal.Parse(hist.GOExpHist_Entry12Amt);
 
                                 actualBudgetData.Add(new HomeReportActualBudgetModel()
                                 {
                                     BudgetBalance = budgetBalance,
-                                    ExpenseAmount = double.Parse(hist.GOExpHist_Entry12Amt),
+                                    ExpenseAmount = Decimal.Parse(hist.GOExpHist_Entry12Amt),
                                     Remarks = hist.GOExpHist_Remarks,
                                     Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
                                     ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
@@ -3614,13 +3623,13 @@ namespace ExpenseProcessingSystem.Services
                             }
                             else
                             {
-                                budgetBalance += double.Parse(hist.GOExpHist_Entry12Amt);
-                                subTotal -= double.Parse(hist.GOExpHist_Entry12Amt);
+                                budgetBalance += Decimal.Parse(hist.GOExpHist_Entry12Amt);
+                                subTotal -= Decimal.Parse(hist.GOExpHist_Entry12Amt);
 
                                 actualBudgetData.Add(new HomeReportActualBudgetModel()
                                 {
                                     BudgetBalance = budgetBalance,
-                                    ExpenseAmount = double.Parse(hist.GOExpHist_Entry12Amt),
+                                    ExpenseAmount = Decimal.Parse(hist.GOExpHist_Entry12Amt),
                                     Remarks = hist.GOExpHist_Remarks,
                                     Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
                                     ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
@@ -3634,13 +3643,13 @@ namespace ExpenseProcessingSystem.Services
                         {
                             if (hist.GOExpHist_Entry21Type == "D")
                             {
-                                budgetBalance -= double.Parse(hist.GOExpHist_Entry21Amt);
-                                subTotal += double.Parse(hist.GOExpHist_Entry21Amt);
+                                budgetBalance -= Decimal.Parse(hist.GOExpHist_Entry21Amt);
+                                subTotal += Decimal.Parse(hist.GOExpHist_Entry21Amt);
 
                                 actualBudgetData.Add(new HomeReportActualBudgetModel()
                                 {
                                     BudgetBalance = budgetBalance,
-                                    ExpenseAmount = double.Parse(hist.GOExpHist_Entry21Amt),
+                                    ExpenseAmount = Decimal.Parse(hist.GOExpHist_Entry21Amt),
                                     Remarks = hist.GOExpHist_Remarks,
                                     Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
                                     ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
@@ -3648,13 +3657,13 @@ namespace ExpenseProcessingSystem.Services
                             }
                             else
                             {
-                                budgetBalance += double.Parse(hist.GOExpHist_Entry21Amt);
-                                subTotal -= double.Parse(hist.GOExpHist_Entry21Amt);
+                                budgetBalance += Decimal.Parse(hist.GOExpHist_Entry21Amt);
+                                subTotal -= Decimal.Parse(hist.GOExpHist_Entry21Amt);
 
                                 actualBudgetData.Add(new HomeReportActualBudgetModel()
                                 {
                                     BudgetBalance = budgetBalance,
-                                    ExpenseAmount = double.Parse(hist.GOExpHist_Entry21Amt),
+                                    ExpenseAmount = Decimal.Parse(hist.GOExpHist_Entry21Amt),
                                     Remarks = hist.GOExpHist_Remarks,
                                     Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
                                     ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
@@ -3668,13 +3677,13 @@ namespace ExpenseProcessingSystem.Services
                         {
                             if (hist.GOExpHist_Entry22Type == "D")
                             {
-                                budgetBalance -= double.Parse(hist.GOExpHist_Entry22Amt);
-                                subTotal += double.Parse(hist.GOExpHist_Entry22Amt);
+                                budgetBalance -= Decimal.Parse(hist.GOExpHist_Entry22Amt);
+                                subTotal += Decimal.Parse(hist.GOExpHist_Entry22Amt);
 
                                 actualBudgetData.Add(new HomeReportActualBudgetModel()
                                 {
                                     BudgetBalance = budgetBalance,
-                                    ExpenseAmount = double.Parse(hist.GOExpHist_Entry22Amt),
+                                    ExpenseAmount = Decimal.Parse(hist.GOExpHist_Entry22Amt),
                                     Remarks = hist.GOExpHist_Remarks,
                                     Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
                                     ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
@@ -3682,13 +3691,13 @@ namespace ExpenseProcessingSystem.Services
                             }
                             else
                             {
-                                budgetBalance += double.Parse(hist.GOExpHist_Entry22Amt);
-                                subTotal -= double.Parse(hist.GOExpHist_Entry22Amt);
+                                budgetBalance += Decimal.Parse(hist.GOExpHist_Entry22Amt);
+                                subTotal -= Decimal.Parse(hist.GOExpHist_Entry22Amt);
 
                                 actualBudgetData.Add(new HomeReportActualBudgetModel()
                                 {
                                     BudgetBalance = budgetBalance,
-                                    ExpenseAmount = double.Parse(hist.GOExpHist_Entry22Amt),
+                                    ExpenseAmount = Decimal.Parse(hist.GOExpHist_Entry22Amt),
                                     Remarks = hist.GOExpHist_Remarks,
                                     Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
                                     ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
@@ -3702,13 +3711,13 @@ namespace ExpenseProcessingSystem.Services
                         {
                             if (hist.GOExpHist_Entry31Type == "D")
                             {
-                                budgetBalance -= double.Parse(hist.GOExpHist_Entry31Amt);
-                                subTotal += double.Parse(hist.GOExpHist_Entry31Amt);
+                                budgetBalance -= Decimal.Parse(hist.GOExpHist_Entry31Amt);
+                                subTotal += Decimal.Parse(hist.GOExpHist_Entry31Amt);
 
                                 actualBudgetData.Add(new HomeReportActualBudgetModel()
                                 {
                                     BudgetBalance = budgetBalance,
-                                    ExpenseAmount = double.Parse(hist.GOExpHist_Entry31Amt),
+                                    ExpenseAmount = Decimal.Parse(hist.GOExpHist_Entry31Amt),
                                     Remarks = hist.GOExpHist_Remarks,
                                     Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
                                     ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
@@ -3716,13 +3725,13 @@ namespace ExpenseProcessingSystem.Services
                             }
                             else
                             {
-                                budgetBalance += double.Parse(hist.GOExpHist_Entry31Amt);
-                                subTotal -= double.Parse(hist.GOExpHist_Entry31Amt);
+                                budgetBalance += Decimal.Parse(hist.GOExpHist_Entry31Amt);
+                                subTotal -= Decimal.Parse(hist.GOExpHist_Entry31Amt);
 
                                 actualBudgetData.Add(new HomeReportActualBudgetModel()
                                 {
                                     BudgetBalance = budgetBalance,
-                                    ExpenseAmount = double.Parse(hist.GOExpHist_Entry31Amt),
+                                    ExpenseAmount = Decimal.Parse(hist.GOExpHist_Entry31Amt),
                                     Remarks = hist.GOExpHist_Remarks,
                                     Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
                                     ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
@@ -3736,13 +3745,13 @@ namespace ExpenseProcessingSystem.Services
                         {
                             if (hist.GOExpHist_Entry32Type == "D")
                             {
-                                budgetBalance -= double.Parse(hist.GOExpHist_Entry32Amt);
-                                subTotal += double.Parse(hist.GOExpHist_Entry32Amt);
+                                budgetBalance -= Decimal.Parse(hist.GOExpHist_Entry32Amt);
+                                subTotal += Decimal.Parse(hist.GOExpHist_Entry32Amt);
 
                                 actualBudgetData.Add(new HomeReportActualBudgetModel()
                                 {
                                     BudgetBalance = budgetBalance,
-                                    ExpenseAmount = double.Parse(hist.GOExpHist_Entry32Amt),
+                                    ExpenseAmount = Decimal.Parse(hist.GOExpHist_Entry32Amt),
                                     Remarks = hist.GOExpHist_Remarks,
                                     Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
                                     ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
@@ -3750,13 +3759,13 @@ namespace ExpenseProcessingSystem.Services
                             }
                             else
                             {
-                                budgetBalance += double.Parse(hist.GOExpHist_Entry32Amt);
-                                subTotal -= double.Parse(hist.GOExpHist_Entry32Amt);
+                                budgetBalance += Decimal.Parse(hist.GOExpHist_Entry32Amt);
+                                subTotal -= Decimal.Parse(hist.GOExpHist_Entry32Amt);
 
                                 actualBudgetData.Add(new HomeReportActualBudgetModel()
                                 {
                                     BudgetBalance = budgetBalance,
-                                    ExpenseAmount = double.Parse(hist.GOExpHist_Entry32Amt),
+                                    ExpenseAmount = Decimal.Parse(hist.GOExpHist_Entry32Amt),
                                     Remarks = hist.GOExpHist_Remarks,
                                     Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
                                     ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
@@ -3770,13 +3779,13 @@ namespace ExpenseProcessingSystem.Services
                         {
                             if (hist.GOExpHist_Entry41Type == "D")
                             {
-                                budgetBalance -= double.Parse(hist.GOExpHist_Entry41Amt);
-                                subTotal += double.Parse(hist.GOExpHist_Entry41Amt);
+                                budgetBalance -= Decimal.Parse(hist.GOExpHist_Entry41Amt);
+                                subTotal += Decimal.Parse(hist.GOExpHist_Entry41Amt);
 
                                 actualBudgetData.Add(new HomeReportActualBudgetModel()
                                 {
                                     BudgetBalance = budgetBalance,
-                                    ExpenseAmount = double.Parse(hist.GOExpHist_Entry41Amt),
+                                    ExpenseAmount = Decimal.Parse(hist.GOExpHist_Entry41Amt),
                                     Remarks = hist.GOExpHist_Remarks,
                                     Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
                                     ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
@@ -3784,13 +3793,13 @@ namespace ExpenseProcessingSystem.Services
                             }
                             else
                             {
-                                budgetBalance += double.Parse(hist.GOExpHist_Entry41Amt);
-                                subTotal -= double.Parse(hist.GOExpHist_Entry41Amt);
+                                budgetBalance += Decimal.Parse(hist.GOExpHist_Entry41Amt);
+                                subTotal -= Decimal.Parse(hist.GOExpHist_Entry41Amt);
 
                                 actualBudgetData.Add(new HomeReportActualBudgetModel()
                                 {
                                     BudgetBalance = budgetBalance,
-                                    ExpenseAmount = double.Parse(hist.GOExpHist_Entry41Amt),
+                                    ExpenseAmount = Decimal.Parse(hist.GOExpHist_Entry41Amt),
                                     Remarks = hist.GOExpHist_Remarks,
                                     Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
                                     ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
@@ -3804,13 +3813,13 @@ namespace ExpenseProcessingSystem.Services
                         {
                             if (hist.GOExpHist_Entry42Type == "D")
                             {
-                                budgetBalance -= double.Parse(hist.GOExpHist_Entry42Amt);
-                                subTotal += double.Parse(hist.GOExpHist_Entry42Amt);
+                                budgetBalance -= Decimal.Parse(hist.GOExpHist_Entry42Amt);
+                                subTotal += Decimal.Parse(hist.GOExpHist_Entry42Amt);
 
                                 actualBudgetData.Add(new HomeReportActualBudgetModel()
                                 {
                                     BudgetBalance = budgetBalance,
-                                    ExpenseAmount = double.Parse(hist.GOExpHist_Entry42Amt),
+                                    ExpenseAmount = Decimal.Parse(hist.GOExpHist_Entry42Amt),
                                     Remarks = hist.GOExpHist_Remarks,
                                     Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
                                     ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
@@ -3818,13 +3827,13 @@ namespace ExpenseProcessingSystem.Services
                             }
                             else
                             {
-                                budgetBalance += double.Parse(hist.GOExpHist_Entry42Amt);
-                                subTotal -= double.Parse(hist.GOExpHist_Entry42Amt);
+                                budgetBalance += Decimal.Parse(hist.GOExpHist_Entry42Amt);
+                                subTotal -= Decimal.Parse(hist.GOExpHist_Entry42Amt);
 
                                 actualBudgetData.Add(new HomeReportActualBudgetModel()
                                 {
                                     BudgetBalance = budgetBalance,
-                                    ExpenseAmount = double.Parse(hist.GOExpHist_Entry42Amt),
+                                    ExpenseAmount = Decimal.Parse(hist.GOExpHist_Entry42Amt),
                                     Remarks = hist.GOExpHist_Remarks,
                                     Department = deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).DefaultIfEmpty("").FirstOrDefault().Dept_Name,
                                     ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
@@ -6851,7 +6860,7 @@ namespace ExpenseProcessingSystem.Services
 
             List<HomeReportTransactionListViewModel> finalList = list1.Concat(list2).OrderBy(x => x.TransTL_ID).ToList();
 
-            double balance = 0;
+             decimal balance = 0;
             var signInfo = GetSignatoryInfo(signatory.BCS_ID);
             string signName = (signInfo != null) ? signInfo.BCS_Name : "";
 
@@ -6862,11 +6871,11 @@ namespace ExpenseProcessingSystem.Services
                 {
                     if (i.Trans_DebitCredit1_1 == "D")
                     {
-                        balance += Double.Parse(i.Trans_Amount1_1);
+                        balance += Decimal.Parse(i.Trans_Amount1_1);
                     }
                     else
                     {
-                        balance -= Double.Parse(i.Trans_Amount1_1);
+                        balance -= Decimal.Parse(i.Trans_Amount1_1);
                     }
 
                     esamsData.Add(new HomeReportESAMSViewModel
@@ -6875,8 +6884,8 @@ namespace ExpenseProcessingSystem.Services
                         DebCredType = i.Trans_DebitCredit1_1,
                         GbaseRemark = i.Trans_Remarks,
                         SettleDate = ConvGbDateToDateTime(i.Trans_Value_Date),
-                        DRAmount = (i.Trans_DebitCredit1_1 == "D") ? Double.Parse(i.Trans_Amount1_1) : 0,
-                        CRAmount = (i.Trans_DebitCredit1_1 == "C") ? Double.Parse(i.Trans_Amount1_1) : 0,
+                        DRAmount = (i.Trans_DebitCredit1_1 == "D") ? Decimal.Parse(i.Trans_Amount1_1) : 0,
+                        CRAmount = (i.Trans_DebitCredit1_1 == "C") ? Decimal.Parse(i.Trans_Amount1_1) : 0,
                         BudgetAmount = 0,
                         Balance = balance,
                         DHName = signName,
@@ -6889,11 +6898,11 @@ namespace ExpenseProcessingSystem.Services
                 {
                     if (i.Trans_DebitCredit1_2 == "D")
                     {
-                        balance += Double.Parse(i.Trans_Amount1_2);
+                        balance += Decimal.Parse(i.Trans_Amount1_2);
                     }
                     else
                     {
-                        balance -= Double.Parse(i.Trans_Amount1_2);
+                        balance -= Decimal.Parse(i.Trans_Amount1_2);
                     }
 
                     esamsData.Add(new HomeReportESAMSViewModel
@@ -6902,8 +6911,8 @@ namespace ExpenseProcessingSystem.Services
                         DebCredType = i.Trans_DebitCredit1_2,
                         GbaseRemark = i.Trans_Remarks,
                         SettleDate = ConvGbDateToDateTime(i.Trans_Value_Date),
-                        DRAmount = (i.Trans_DebitCredit1_2 == "D") ? Double.Parse(i.Trans_Amount1_2) : 0,
-                        CRAmount = (i.Trans_DebitCredit1_2 == "C") ? Double.Parse(i.Trans_Amount1_2) : 0,
+                        DRAmount = (i.Trans_DebitCredit1_2 == "D") ? Decimal.Parse(i.Trans_Amount1_2) : 0,
+                        CRAmount = (i.Trans_DebitCredit1_2 == "C") ? Decimal.Parse(i.Trans_Amount1_2) : 0,
                         BudgetAmount = 0,
                         Balance = balance,
                         DHName = signName,
@@ -6916,11 +6925,11 @@ namespace ExpenseProcessingSystem.Services
                 {
                     if (i.Trans_DebitCredit2_1 == "D")
                     {
-                        balance += Double.Parse(i.Trans_Amount2_1);
+                        balance += Decimal.Parse(i.Trans_Amount2_1);
                     }
                     else
                     {
-                        balance -= Double.Parse(i.Trans_Amount2_1);
+                        balance -= Decimal.Parse(i.Trans_Amount2_1);
                     }
 
                     esamsData.Add(new HomeReportESAMSViewModel
@@ -6929,8 +6938,8 @@ namespace ExpenseProcessingSystem.Services
                         DebCredType = i.Trans_DebitCredit2_1,
                         GbaseRemark = i.Trans_Remarks,
                         SettleDate = ConvGbDateToDateTime(i.Trans_Value_Date),
-                        DRAmount = (i.Trans_DebitCredit2_1 == "D") ? Double.Parse(i.Trans_Amount2_1) : 0,
-                        CRAmount = (i.Trans_DebitCredit2_1 == "C") ? Double.Parse(i.Trans_Amount2_1) : 0,
+                        DRAmount = (i.Trans_DebitCredit2_1 == "D") ? Decimal.Parse(i.Trans_Amount2_1) : 0,
+                        CRAmount = (i.Trans_DebitCredit2_1 == "C") ? Decimal.Parse(i.Trans_Amount2_1) : 0,
                         BudgetAmount = 0,
                         Balance = balance,
                         DHName = signName,
@@ -6943,11 +6952,11 @@ namespace ExpenseProcessingSystem.Services
                 {
                     if (i.Trans_DebitCredit2_2 == "D")
                     {
-                        balance += Double.Parse(i.Trans_Amount2_2);
+                        balance += Decimal.Parse(i.Trans_Amount2_2);
                     }
                     else
                     {
-                        balance -= Double.Parse(i.Trans_Amount2_2);
+                        balance -= Decimal.Parse(i.Trans_Amount2_2);
                     }
 
                     esamsData.Add(new HomeReportESAMSViewModel
@@ -6956,8 +6965,8 @@ namespace ExpenseProcessingSystem.Services
                         DebCredType = i.Trans_DebitCredit2_2,
                         GbaseRemark = i.Trans_Remarks,
                         SettleDate = ConvGbDateToDateTime(i.Trans_Value_Date),
-                        DRAmount = (i.Trans_DebitCredit2_2 == "D") ? Double.Parse(i.Trans_Amount2_2) : 0,
-                        CRAmount = (i.Trans_DebitCredit2_2 == "C") ? Double.Parse(i.Trans_Amount2_2) : 0,
+                        DRAmount = (i.Trans_DebitCredit2_2 == "D") ? Decimal.Parse(i.Trans_Amount2_2) : 0,
+                        CRAmount = (i.Trans_DebitCredit2_2 == "C") ? Decimal.Parse(i.Trans_Amount2_2) : 0,
                         BudgetAmount = 0,
                         Balance = balance,
                         DHName = signName,
@@ -6970,11 +6979,11 @@ namespace ExpenseProcessingSystem.Services
                 {
                     if (i.Trans_DebitCredit3_1 == "D")
                     {
-                        balance += Double.Parse(i.Trans_Amount3_1);
+                        balance += Decimal.Parse(i.Trans_Amount3_1);
                     }
                     else
                     {
-                        balance -= Double.Parse(i.Trans_Amount3_1);
+                        balance -= Decimal.Parse(i.Trans_Amount3_1);
                     }
 
                     esamsData.Add(new HomeReportESAMSViewModel
@@ -6983,8 +6992,8 @@ namespace ExpenseProcessingSystem.Services
                         DebCredType = i.Trans_DebitCredit3_1,
                         GbaseRemark = i.Trans_Remarks,
                         SettleDate = ConvGbDateToDateTime(i.Trans_Value_Date),
-                        DRAmount = (i.Trans_DebitCredit3_1 == "D") ? Double.Parse(i.Trans_Amount3_1) : 0,
-                        CRAmount = (i.Trans_DebitCredit3_1 == "C") ? Double.Parse(i.Trans_Amount3_1) : 0,
+                        DRAmount = (i.Trans_DebitCredit3_1 == "D") ? Decimal.Parse(i.Trans_Amount3_1) : 0,
+                        CRAmount = (i.Trans_DebitCredit3_1 == "C") ? Decimal.Parse(i.Trans_Amount3_1) : 0,
                         BudgetAmount = 0,
                         Balance = balance,
                         DHName = signName,
@@ -6997,11 +7006,11 @@ namespace ExpenseProcessingSystem.Services
                 {
                     if (i.Trans_DebitCredit3_2 == "D")
                     {
-                        balance += Double.Parse(i.Trans_Amount3_2);
+                        balance += Decimal.Parse(i.Trans_Amount3_2);
                     }
                     else
                     {
-                        balance -= Double.Parse(i.Trans_Amount3_2);
+                        balance -= Decimal.Parse(i.Trans_Amount3_2);
                     }
 
                     esamsData.Add(new HomeReportESAMSViewModel
@@ -7010,8 +7019,8 @@ namespace ExpenseProcessingSystem.Services
                         DebCredType = i.Trans_DebitCredit3_2,
                         GbaseRemark = i.Trans_Remarks,
                         SettleDate = ConvGbDateToDateTime(i.Trans_Value_Date),
-                        DRAmount = (i.Trans_DebitCredit3_2 == "D") ? Double.Parse(i.Trans_Amount3_2) : 0,
-                        CRAmount = (i.Trans_DebitCredit3_2 == "C") ? Double.Parse(i.Trans_Amount3_2) : 0,
+                        DRAmount = (i.Trans_DebitCredit3_2 == "D") ? Decimal.Parse(i.Trans_Amount3_2) : 0,
+                        CRAmount = (i.Trans_DebitCredit3_2 == "C") ? Decimal.Parse(i.Trans_Amount3_2) : 0,
                         BudgetAmount = 0,
                         Balance = balance,
                         DHName = signName,
@@ -7024,11 +7033,11 @@ namespace ExpenseProcessingSystem.Services
                 {
                     if (i.Trans_DebitCredit4_1 == "D")
                     {
-                        balance += Double.Parse(i.Trans_Amount4_1);
+                        balance += Decimal.Parse(i.Trans_Amount4_1);
                     }
                     else
                     {
-                        balance -= Double.Parse(i.Trans_Amount4_1);
+                        balance -= Decimal.Parse(i.Trans_Amount4_1);
                     }
 
                     esamsData.Add(new HomeReportESAMSViewModel
@@ -7037,8 +7046,8 @@ namespace ExpenseProcessingSystem.Services
                         DebCredType = i.Trans_DebitCredit4_1,
                         GbaseRemark = i.Trans_Remarks,
                         SettleDate = ConvGbDateToDateTime(i.Trans_Value_Date),
-                        DRAmount = (i.Trans_DebitCredit4_1 == "D") ? Double.Parse(i.Trans_Amount4_1) : 0,
-                        CRAmount = (i.Trans_DebitCredit4_1 == "C") ? Double.Parse(i.Trans_Amount4_1) : 0,
+                        DRAmount = (i.Trans_DebitCredit4_1 == "D") ? Decimal.Parse(i.Trans_Amount4_1) : 0,
+                        CRAmount = (i.Trans_DebitCredit4_1 == "C") ? Decimal.Parse(i.Trans_Amount4_1) : 0,
                         BudgetAmount = 0,
                         Balance = balance,
                         DHName = signName,
@@ -7051,11 +7060,11 @@ namespace ExpenseProcessingSystem.Services
                 {
                     if (i.Trans_DebitCredit4_2 == "D")
                     {
-                        balance += Double.Parse(i.Trans_Amount4_2);
+                        balance += Decimal.Parse(i.Trans_Amount4_2);
                     }
                     else
                     {
-                        balance -= Double.Parse(i.Trans_Amount4_2);
+                        balance -= Decimal.Parse(i.Trans_Amount4_2);
                     }
 
                     esamsData.Add(new HomeReportESAMSViewModel
@@ -7064,8 +7073,8 @@ namespace ExpenseProcessingSystem.Services
                         DebCredType = i.Trans_DebitCredit4_2,
                         GbaseRemark = i.Trans_Remarks,
                         SettleDate = ConvGbDateToDateTime(i.Trans_Value_Date),
-                        DRAmount = (i.Trans_DebitCredit4_2 == "D") ? Double.Parse(i.Trans_Amount4_2) : 0,
-                        CRAmount = (i.Trans_DebitCredit4_2 == "C") ? Double.Parse(i.Trans_Amount4_2) : 0,
+                        DRAmount = (i.Trans_DebitCredit4_2 == "D") ? Decimal.Parse(i.Trans_Amount4_2) : 0,
+                        CRAmount = (i.Trans_DebitCredit4_2 == "C") ? Decimal.Parse(i.Trans_Amount4_2) : 0,
                         BudgetAmount = 0,
                         Balance = balance,
                         DHName = signName,
@@ -7620,9 +7629,9 @@ namespace ExpenseProcessingSystem.Services
         //save expense details
         public int addExpense_CV(EntryCVViewModelList entryModel, int userId, int expenseType)
         {
-            float TotalDebit = 0;
-            float credEwtTotal = 0;
-            float credCashTotal = 0;
+            decimal TotalDebit = 0;
+            decimal credEwtTotal = 0;
+            decimal credCashTotal = 0;
 
             foreach (EntryCVViewModel cv in entryModel.EntryCV)
             {
@@ -8420,9 +8429,9 @@ namespace ExpenseProcessingSystem.Services
 
         public int addExpense_DDV(EntryDDVViewModelList entryModel, int userId, int expenseType)
         {
-            float TotalDebit = 0;
-            float credEwtTotal = 0;
-            float credCashTotal = 0;
+            decimal TotalDebit = 0;
+            decimal credEwtTotal = 0;
+            decimal credCashTotal = 0;
             int entryID = entryModel.entryID;
             foreach (EntryDDVViewModel cv in entryModel.EntryDDV)
             {
@@ -9273,7 +9282,7 @@ namespace ExpenseProcessingSystem.Services
                     string fbt = getFbtFormula(getAccount(item.account).Account_FBT_MasterID);
 
                     string equation = fbt.Replace("ExpenseAmount", item.debitGross.ToString());
-                    double fbtAmount = Mizuho.round(Convert.ToDouble(new DataTable().Compute(equation, null)), 2);
+                     decimal fbtAmount = Mizuho.round((decimal)(new DataTable().Compute(equation, null)), 2);
                     Console.WriteLine(equation);
 
                     debit.account = getAccountByMasterID(int.Parse(xelemAcc.Element("D_FBT").Value)).Account_ID;
@@ -9424,7 +9433,7 @@ namespace ExpenseProcessingSystem.Services
                                 interate = i.Liq_InterRate_1_1
                             });
                         }
-                        double amount = i.Liq_Amount_1_2;
+                         decimal amount = i.Liq_Amount_1_2;
                         int contraCcy = 0;
                         int ccy = i.Liq_CCY_1_2;
 
@@ -9718,7 +9727,7 @@ namespace ExpenseProcessingSystem.Services
                                     string fbt = getFbtFormula(getAccount(item.account).Account_FBT_MasterID);
 
                                     string equation = fbt.Replace("ExpenseAmount", item.debitGross.ToString());
-                                    double fbtAmount = Mizuho.round(Convert.ToDouble(new DataTable().Compute(equation, null)), 2);
+                                     decimal fbtAmount = Mizuho.round((decimal)(new DataTable().Compute(equation, null)), 2);
                                     Console.WriteLine("-=-=-=-=-=->" + equation);
                                     entry.amount = fbtAmount;
 
@@ -9796,7 +9805,7 @@ namespace ExpenseProcessingSystem.Services
                         string fbt = getFbtFormula(getAccount(item.account).Account_FBT_MasterID);
 
                         string equation = fbt.Replace("ExpenseAmount", item.debitGross.ToString());
-                        double fbtAmount = Mizuho.round(Convert.ToDouble(new DataTable().Compute(equation, null)), 2);
+                         decimal fbtAmount = Mizuho.round((decimal)(new DataTable().Compute(equation, null)), 2);
                         Console.WriteLine("-=-=-=-=-=->" + equation);
 
                         debit.account = getAccountByMasterID(int.Parse(xelemAcc.Element("D_FBT").Value)).Account_ID;
@@ -9946,13 +9955,13 @@ namespace ExpenseProcessingSystem.Services
             return true;
         }
 
-        internal Dictionary<string, entryContainer> createFbt(int payee, int acc, double gross, entryContainer d, entryContainer c)
+        internal Dictionary<string, entryContainer> createFbt(int payee, int acc,  decimal gross, entryContainer d, entryContainer c)
         {
             //((ExpenseAmount*.50)/.65)*.35
             string fbt = getFbtFormula(getAccount(acc).Account_FBT_MasterID);
 
             string equation = fbt.Replace("ExpenseAmount", gross.ToString());
-            double fbtAmount = Mizuho.round(Convert.ToDouble(new DataTable().Compute(equation, null)), 2);
+             decimal fbtAmount = Mizuho.round((decimal)(new DataTable().Compute(equation, null)), 2);
             Console.WriteLine("-=-=-=-=-=->" + equation);
 
             #region Get elements fron xml (ohr,rentDebit,expatDebit,localDebit,fbtCred)
@@ -10208,14 +10217,14 @@ namespace ExpenseProcessingSystem.Services
                         if (getBranchNo(item.Account_No) == GlobalSystemValues.BRANCH_RBU)
                         {
                             temp.gBaseTrans += "," + gTrans.TL_GoExpress_ID;
-                            temp.amount += double.Parse(gTrans.GOExpHist_Entry11Amt);
+                            temp.amount += Decimal.Parse(gTrans.GOExpHist_Entry11Amt);
                             temp.transCount = 2;
                         }
                         else
                         {
                             fbtItem.expTrans = temp.expTrans;
                             fbtItem.gBaseTrans = gTrans.TL_GoExpress_ID.ToString();
-                            fbtItem.amount = double.Parse(gTrans.GOExpHist_Entry11Amt);
+                            fbtItem.amount = Decimal.Parse(gTrans.GOExpHist_Entry11Amt);
                             fbtItem.ccy = item.Curr_CCY_ABBR;
                             fbtItem.status = GlobalSystemValues.getStatus(item.Expense_Status);
                             fbtItem.particulars = item.ExpDtl_Gbase_Remarks;
@@ -10861,7 +10870,7 @@ namespace ExpenseProcessingSystem.Services
             rqDtlModel.RacfId = username;
             rqDtlModel.RacfPassword = encodedPass;
             rqDtlModel.RequestCreated = DateTime.Now;
-            rqDtlModel.Status = "SCRIPTING";
+            rqDtlModel.Status = "WAITING";
             rqDtlModel.SystemAbbr = "EXPRESS";
             rqDtlModel.Priority = 1;
 
@@ -10908,7 +10917,7 @@ namespace ExpenseProcessingSystem.Services
                 goModel.Entry11Actcde = entry11Account.Account_Code;
                 goModel.Entry11ActType = entry11Account.Account_No.Substring(0, 3);
                 goModel.Entry11ActNo = entry11Account.Account_No.Substring(Math.Max(0, entry11Account.Account_No.Length - 6));
-                goModel.Entry11ExchRate = containerModel.entries[0].interate.ToString();
+                goModel.Entry11ExchRate = containerModel.entries[0].interate == 0 ? "" : containerModel.entries[0].interate.ToString();
                 goModel.Entry11ExchCcy = (containerModel.entries[0].contraCcy > 0) ? GetCurrencyAbbrv(containerModel.entries[0].contraCcy) : "";
                 goModel.Entry11Fund = (entry11Account.Account_Fund == true) ? "O" : "";//Replace with proper fund default.
                 if (containerModel.entries[0].chkNo != null)
@@ -10917,7 +10926,7 @@ namespace ExpenseProcessingSystem.Services
                 }
                 goModel.Entry11Available = "";//Replace with proper available default.
                 goModel.Entry11Details = "";//Replace with proper details default.
-                goModel.Entry11Entity = "10";//Replace with proper entity default.
+                goModel.Entry11Entity = "010";//Replace with proper entity default.
                 goModel.Entry11Division = entry11Account.Account_Div;//Replace with proper division default.
                 goModel.Entry11InterRate = (containerModel.entries[0].interate > 0) ? containerModel.entries[0].interate.ToString() : "";//Replace with proper interate default.
                 goModel.Entry11InterAmt = "";//Replace with proper interamt default.
@@ -10933,7 +10942,7 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry12Actcde = entry12Account.Account_Code;
                     goModel.Entry12ActType = entry12Account.Account_No.Substring(0, 3);
                     goModel.Entry12ActNo = entry12Account.Account_No.Substring(Math.Max(0, entry12Account.Account_No.Length - 6));
-                    goModel.Entry12ExchRate = containerModel.entries[1].interate.ToString();
+                    goModel.Entry12ExchRate = containerModel.entries[1].interate == 0 ? "" : containerModel.entries[1].interate.ToString();
                     goModel.Entry12ExchCcy = (containerModel.entries[1].contraCcy > 0) ? GetCurrencyAbbrv(containerModel.entries[1].contraCcy) : "";
                     goModel.Entry12Fund = (entry12Account.Account_Fund == true) ? "O" : "";//Replace with proper fund default.
                     if (containerModel.entries[1].chkNo != null)
@@ -10942,7 +10951,7 @@ namespace ExpenseProcessingSystem.Services
                     }
                     goModel.Entry12Available = "";//Replace with proper available default.
                     goModel.Entry12Details = "";//Replace with proper details default.
-                    goModel.Entry12Entity = "10";//Replace with proper entity default.
+                    goModel.Entry12Entity = "010";//Replace with proper entity default.
                     goModel.Entry12Division = entry11Account.Account_Div;//Replace with proper division default.
                     goModel.Entry12InterRate = (containerModel.entries[1].interate > 0) ? containerModel.entries[1].interate.ToString() : "";//Replace with proper interate default.
                     goModel.Entry12InterAmt = "";//Replace with proper interamt default.
@@ -10958,7 +10967,7 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry21Actcde = entry21Account.Account_Code;
                     goModel.Entry21ActType = entry21Account.Account_No.Substring(0, 3);
                     goModel.Entry21ActNo = entry21Account.Account_No.Substring(Math.Max(0, entry21Account.Account_No.Length - 6));
-                    goModel.Entry21ExchRate = containerModel.entries[2].interate.ToString();
+                    goModel.Entry21ExchRate = containerModel.entries[2].interate == 0 ? "" : containerModel.entries[2].interate.ToString();
                     goModel.Entry21ExchCcy = (containerModel.entries[2].contraCcy > 0) ? GetCurrencyAbbrv(containerModel.entries[2].contraCcy) : "";
                     goModel.Entry21Fund = (entry21Account.Account_Fund == true) ? "O" : "";//Replace with proper fund default.
                     if (containerModel.entries[2].chkNo != null)
@@ -10967,7 +10976,7 @@ namespace ExpenseProcessingSystem.Services
                     }
                     goModel.Entry21Available = "";//Replace with proper available default.
                     goModel.Entry21Details = "";//Replace with proper details default.
-                    goModel.Entry21Entity = "10";//Replace with proper entity default.
+                    goModel.Entry21Entity = "010";//Replace with proper entity default.
                     goModel.Entry21Division = entry11Account.Account_Div;//Replace with proper division default.
                     goModel.Entry21InterRate = (containerModel.entries[2].interate > 0) ? containerModel.entries[2].interate.ToString() : "";//Replace with proper interate default.
                     goModel.Entry21InterAmt = "";//Replace with proper interamt default.
@@ -10983,7 +10992,7 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry22Actcde = entry22Account.Account_Code;
                     goModel.Entry22ActType = entry22Account.Account_No.Substring(0, 3);
                     goModel.Entry22ActNo = entry22Account.Account_No.Substring(Math.Max(0, entry22Account.Account_No.Length - 6));
-                    goModel.Entry22ExchRate = containerModel.entries[3].interate.ToString();
+                    goModel.Entry22ExchRate = containerModel.entries[3].interate == 0 ? "" : containerModel.entries[3].interate.ToString();
                     goModel.Entry22ExchCcy = (containerModel.entries[3].contraCcy > 0) ? GetCurrencyAbbrv(containerModel.entries[3].contraCcy) : "";
                     goModel.Entry22Fund = (entry22Account.Account_Fund == true) ? "O" : "";//Replace with proper fund default.
                     if (containerModel.entries[3].chkNo != null)
@@ -10992,7 +11001,7 @@ namespace ExpenseProcessingSystem.Services
                     }
                     goModel.Entry22Available = "";//Replace with proper available default.
                     goModel.Entry22Details = "";//Replace with proper details default.
-                    goModel.Entry22Entity = "10";//Replace with proper entity default.
+                    goModel.Entry22Entity = "010";//Replace with proper entity default.
                     goModel.Entry22Division = entry11Account.Account_Div;//Replace with proper division default.
                     goModel.Entry22InterRate = (containerModel.entries[3].interate > 0) ? containerModel.entries[3].interate.ToString() : "";//Replace with proper interate default.
                     goModel.Entry22InterAmt = "";//Replace with proper interamt default.
@@ -11008,7 +11017,7 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry31Actcde = entry31Account.Account_Code;
                     goModel.Entry31ActType = entry31Account.Account_No.Substring(0, 3);
                     goModel.Entry31ActNo = entry31Account.Account_No.Substring(Math.Max(0, entry31Account.Account_No.Length - 6));
-                    goModel.Entry31ExchRate = containerModel.entries[4].interate.ToString();
+                    goModel.Entry31ExchRate = containerModel.entries[4].interate == 0 ? "" : containerModel.entries[4].interate.ToString();
                     goModel.Entry31ExchCcy = (containerModel.entries[4].contraCcy > 0) ? GetCurrencyAbbrv(containerModel.entries[4].contraCcy) : "";
                     goModel.Entry31Fund = (entry31Account.Account_Fund == true) ? "O" : "";//Replace with proper fund default.
                     if (containerModel.entries[4].chkNo != null)
@@ -11017,7 +11026,7 @@ namespace ExpenseProcessingSystem.Services
                     }
                     goModel.Entry31Available = "";//Replace with proper available default.
                     goModel.Entry31Details = "";//Replace with proper details default.
-                    goModel.Entry31Entity = "10";//Replace with proper entity default.
+                    goModel.Entry31Entity = "010";//Replace with proper entity default.
                     goModel.Entry31Division = entry11Account.Account_Div;//Replace with proper division default.
                     goModel.Entry31InterRate = (containerModel.entries[4].interate > 0) ? containerModel.entries[4].interate.ToString() : "";//Replace with proper interate default.
                     goModel.Entry31InterAmt = "";//Replace with proper interamt default.
@@ -11033,7 +11042,7 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry32Actcde = entry32Account.Account_Code;
                     goModel.Entry32ActType = entry32Account.Account_No.Substring(0, 3);
                     goModel.Entry32ActNo = entry32Account.Account_No.Substring(Math.Max(0, entry32Account.Account_No.Length - 6));
-                    goModel.Entry32ExchRate = containerModel.entries[5].interate.ToString();
+                    goModel.Entry32ExchRate = containerModel.entries[5].interate == 0 ? "" : containerModel.entries[5].interate.ToString();
                     goModel.Entry32ExchCcy = (containerModel.entries[5].contraCcy > 0) ? GetCurrencyAbbrv(containerModel.entries[5].contraCcy) : "";
                     goModel.Entry32Fund = (entry32Account.Account_Fund == true) ? "O" : "";//Replace with proper fund default.
                     if (containerModel.entries[5].chkNo != null)
@@ -11042,7 +11051,7 @@ namespace ExpenseProcessingSystem.Services
                     }
                     goModel.Entry32Available = "";//Replace with proper available default.
                     goModel.Entry32Details = "";//Replace with proper details default.
-                    goModel.Entry32Entity = "10";//Replace with proper entity default.
+                    goModel.Entry32Entity = "010";//Replace with proper entity default.
                     goModel.Entry32Division = entry11Account.Account_Div;//Replace with proper division default.
                     goModel.Entry32InterRate = (containerModel.entries[5].interate > 0) ? containerModel.entries[5].interate.ToString() : "";//Replace with proper interate default.
                     goModel.Entry32InterAmt = "";//Replace with proper interamt default.
@@ -11058,7 +11067,7 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry41Actcde = entry41Account.Account_Code;
                     goModel.Entry41ActType = entry41Account.Account_No.Substring(0, 3);
                     goModel.Entry41ActNo = entry41Account.Account_No.Substring(Math.Max(0, entry41Account.Account_No.Length - 6));
-                    goModel.Entry41ExchRate = containerModel.entries[6].interate.ToString();
+                    goModel.Entry41ExchRate = containerModel.entries[6].interate == 0 ? "" : containerModel.entries[6].interate.ToString();
                     goModel.Entry41ExchCcy = (containerModel.entries[6].contraCcy > 0) ? GetCurrencyAbbrv(containerModel.entries[6].contraCcy) : "";
                     goModel.Entry41Fund = (entry41Account.Account_Fund == true) ? "O" : "";//Replace with proper fund default.
                     if (containerModel.entries[6].chkNo != null)
@@ -11067,7 +11076,7 @@ namespace ExpenseProcessingSystem.Services
                     }
                     goModel.Entry41Available = "";//Replace with proper available default.
                     goModel.Entry41Details = "";//Replace with proper details default.
-                    goModel.Entry41Entity = "10";//Replace with proper entity default.
+                    goModel.Entry41Entity = "010";//Replace with proper entity default.
                     goModel.Entry41Division = entry11Account.Account_Div;//Replace with proper division default.
                     goModel.Entry41InterRate = (containerModel.entries[6].interate > 0) ? containerModel.entries[6].interate.ToString() : "";//Replace with proper interate default.
                     goModel.Entry41InterAmt = "";//Replace with proper interamt default.
@@ -11083,7 +11092,7 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry42Actcde = entry42Account.Account_Code;
                     goModel.Entry42ActType = entry42Account.Account_No.Substring(0, 3);
                     goModel.Entry42ActNo = entry42Account.Account_No.Substring(Math.Max(0, entry42Account.Account_No.Length - 6));
-                    goModel.Entry42ExchRate = containerModel.entries[7].interate.ToString();
+                    goModel.Entry42ExchRate = containerModel.entries[7].interate == 0 ? "" : containerModel.entries[7].interate.ToString();
                     goModel.Entry42ExchCcy = (containerModel.entries[7].contraCcy > 0) ? GetCurrencyAbbrv(containerModel.entries[7].contraCcy) : "";
                     goModel.Entry42Fund = (entry42Account.Account_Fund == true) ? "O" : "";//Replace with proper fund default.
                     if (containerModel.entries[7].chkNo != null)
@@ -11092,7 +11101,7 @@ namespace ExpenseProcessingSystem.Services
                     }
                     goModel.Entry42Available = "";//Replace with proper available default.
                     goModel.Entry42Details = "";//Replace with proper details default.
-                    goModel.Entry42Entity = "10";//Replace with proper entity default.
+                    goModel.Entry42Entity = "010";//Replace with proper entity default.
                     goModel.Entry42Division = entry11Account.Account_Div;//Replace with proper division default.
                     goModel.Entry42InterRate = (containerModel.entries[7].interate > 0) ? containerModel.entries[7].interate.ToString() : "";//Replace with proper interate default.
                     goModel.Entry42InterAmt = "";//Replace with proper interamt default.
@@ -11383,7 +11392,7 @@ namespace ExpenseProcessingSystem.Services
             return name.BCS_Name.ToUpper();
         }
         //get vat value
-        public float getVat()
+        public decimal getVat()
         {
             var vat = _context.DMVAT.FirstOrDefault(q => q.VAT_isActive == true);
 
@@ -11392,16 +11401,16 @@ namespace ExpenseProcessingSystem.Services
                 return 0;
             }
 
-            return vat.VAT_Rate;
+            return (decimal)vat.VAT_Rate;
         }
-        public float getVat(int id)
+        public decimal getVat(int id)
         {
             var vat = _context.DMVAT.Where(x => x.VAT_ID == id).FirstOrDefault();
             if (vat == null)
             {
                 return 0;
             }
-            return vat.VAT_Rate;
+            return (decimal)vat.VAT_Rate;
         }
         //get EWT(Tax Rate) value
         public float GetEWTValue(int id)
@@ -11944,10 +11953,10 @@ namespace ExpenseProcessingSystem.Services
     {
         public string type { get; set; }
         public int ccy { get; set; }
-        public double amount { get; set; }
+        public  decimal amount { get; set; }
         public int vendor { get; set; }
         public int account { get; set; }
-        public double interate { get; set; }
+        public  decimal interate { get; set; }
         public int contraCcy { get; set; }
         public string chkNo { get; set; }
         public int dept { get; set; }
