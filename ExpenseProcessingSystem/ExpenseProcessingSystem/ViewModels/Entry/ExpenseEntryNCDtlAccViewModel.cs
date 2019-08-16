@@ -23,9 +23,9 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         public string ExpNCDtlAcc_Curr_Name { get; set; }
         [NotNullValidations]
         [Display(Name = "Inter-Rate")]
-        public float ExpNCDtlAcc_Inter_Rate { get; set; }
+        public decimal ExpNCDtlAcc_Inter_Rate { get; set; }
         [NotNullValidations]
         [Display(Name = "Amount")]
-        public float ExpNCDtlAcc_Amount { get; set; }
+        public decimal ExpNCDtlAcc_Amount { get; set; }
     }
 }

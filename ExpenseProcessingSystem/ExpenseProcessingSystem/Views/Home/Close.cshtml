@@ -2,7 +2,7 @@
     ViewData["Title"] = "Close";
     string prevCcyRBU = Model.rbuItems.Count > 0 ? Model.rbuItems.OrderBy(x => x.ccy).ThenBy(x => x.expTrans).ToList()[0].ccy : "";
     string prevCcyFCDU = Model.fcduItems.Count > 0 ? Model.fcduItems.OrderBy(x => x.ccy).ThenBy(x => x.expTrans).ToList()[0].ccy : "";
-    double totalAmount = 0;
+    decimal totalAmount = 0M;
     int totalTransCount = 0;
   //  int index = 0;
 }

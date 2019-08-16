@@ -1,7 +1,7 @@
 ﻿@model ExpenseProcessingSystem.ViewModels.VoucherViewModelList
 @{
     Layout = null;
-    double totalAmountPay = Model.amountGross - Model.taxWithheld;
+    decimal totalAmountPay = Model.amountGross - Model.taxWithheld;
 }
 <!DOCTYPE html>
 <html>

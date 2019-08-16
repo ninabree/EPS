@@ -5,7 +5,7 @@ namespace ExpenseProcessingSystem.Services
 {
     public class ConvertToWord
     {
-        public static string ToWord(double input)
+        public static string ToWord(decimal input)
         {
             StringBuilder sb = new StringBuilder("");
 

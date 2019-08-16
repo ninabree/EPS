@@ -16,9 +16,9 @@ namespace ExpenseProcessingSystem.ViewModels
         public string BM_GBase_Code { get; set; }
         public string BM_Acc_Num { get; set; }
         [DisplayFormat(DataFormatString = "{0:#,##0.00#}", ApplyFormatInEditMode = true)]
-        public double BM_Budget_Current { get; set; }
+        public decimal BM_Budget_Current { get; set; }
         [DisplayFormat(DataFormatString = "{0:#,##0.00#}", ApplyFormatInEditMode = true)]
-        public double BM_Budget_Amount { get; set; }
+        public decimal BM_Budget_Amount { get; set; }
         public DateTime BM_Date_Registered { get; set; }
         public string BM_GWrite_Status { get; set; }
 

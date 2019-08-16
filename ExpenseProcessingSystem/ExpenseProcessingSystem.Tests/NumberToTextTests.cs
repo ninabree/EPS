@@ -33,7 +33,7 @@ namespace ExpenseProcessingSystem.Tests
             int num1 = 2014;
 
             //Act
-            var result = _class.DoubleNumberToWords(num1);
+            var result = _class.decimalNumberToWords(num1);
 
             //Assert
             Assert.That(result, Is.EqualTo("TWO THOUSAND FOURTEEN"));
@@ -43,10 +43,10 @@ namespace ExpenseProcessingSystem.Tests
         public void NumberToText_ReturnDoubleNumericText()
         {
             //Arrange 
-            double num1 = 422014.75;
+            decimal num1 = 422014.75M;
 
             //Act
-            var result = _class.DoubleNumberToWords(num1);
+            var result = _class.decimalNumberToWords(num1);
 
             //Assert
             Assert.That(result, Is.EqualTo("FOUR HUNDRED TWENTY TWO THOUSAND FOURTEEN AND 75/100"));
@@ -56,10 +56,10 @@ namespace ExpenseProcessingSystem.Tests
         public void NumberToText_ReturnNegativeDoubleNumericText()
         {
             //Arrange 
-            double num1 = -422014.75;
+            decimal num1 = -422014.75M;
 
             //Act
-            var result = _class.DoubleNumberToWords(num1);
+            var result = _class.decimalNumberToWords(num1);
 
             //Assert
             Assert.That(result, Is.EqualTo("MINUS FOUR HUNDRED TWENTY TWO THOUSAND FOURTEEN AND 75/100"));
@@ -69,10 +69,10 @@ namespace ExpenseProcessingSystem.Tests
         public void NumberToText_ReturnMillionDoubleNumericText()
         {
             //Arrange 
-            double num1 = 10000005422014.75;
+            decimal num1 = 10000005422014.75M;
 
             //Act
-            var result = _class.DoubleNumberToWords(num1);
+            var result = _class.decimalNumberToWords(num1);
 
             //Assert
             Assert.That(result, Is.EqualTo("TEN TRILLION FIVE MILLION FOUR HUNDRED TWENTY TWO THOUSAND FOURTEEN AND 75/100"));
@@ -82,10 +82,10 @@ namespace ExpenseProcessingSystem.Tests
         public void NumberToText_ReturnNoDecimalNumericText()
         {
             //Arrange 
-            double num1 = 10000005422014;
+            decimal num1 = 10000005422014M;
 
             //Act
-            var result = _class.DoubleNumberToWords(num1);
+            var result = _class.decimalNumberToWords(num1);
 
             //Assert
             Assert.That(result, Is.EqualTo("TEN TRILLION FIVE MILLION FOUR HUNDRED TWENTY TWO THOUSAND FOURTEEN"));
@@ -95,10 +95,10 @@ namespace ExpenseProcessingSystem.Tests
         public void NumberToText_ReturnWithCurrencyNumericText()
         {
             //Arrange 
-            double num1 = 1000000005422014.50;
+            decimal num1 = 1000000005422014.50M;
 
             //Act
-            var result = _class.DoubleNumberToWords(num1, "PHP");
+            var result = _class.decimalNumberToWords(num1, "PHP");
 
             //Assert
             Assert.That(result, Is.EqualTo("ONE QUADRILLION FIVE MILLION FOUR HUNDRED TWENTY TWO THOUSAND FOURTEEN AND 50/100 PESOS ONLY"));

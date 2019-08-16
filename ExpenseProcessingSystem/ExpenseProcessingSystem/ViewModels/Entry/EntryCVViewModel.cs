@@ -41,13 +41,13 @@ namespace ExpenseProcessingSystem.ViewModels
         public int ccy { get; set; }
         [NotNullValidations, AmountValidation]
         [Display(Name = "Debit - Gross Amount")]
-        public float debitGross { get; set; }
+        public decimal debitGross { get; set; }
         [NotNullValidations]
         [Display(Name = "Credit - EWT Amount")]
-        public float credEwt { get; set; }
+        public decimal credEwt { get; set; }
         [NotNullValidations, AmountValidation]
         [Display(Name = "Credit - Cash")]
-        public float credCash { get; set; }
+        public decimal credCash { get; set; }
         public int dtlSSPayee { get; set; }
         public int dtl_Ewt_Payor_Name_ID { get; set; }
         [Display(Name = "Month")]
@@ -81,12 +81,12 @@ namespace ExpenseProcessingSystem.ViewModels
     public class amortizationSchedule
     {
         public DateTime amtDate { get; set; }
-        public float amtAmount { get; set; }
+        public decimal amtAmount { get; set; }
     }
 
     public class CashBreakdown
     {
-        public double cashDenomination { get; set; }
+        public decimal cashDenomination { get; set; }
         public int cashNoPC { get; set; }
         public decimal cashAmount { get; set; }
     }
@@ -156,11 +156,11 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "Currency")]
         public int ccy { get; set; }
         [Display(Name = "Debit - Gross Amount")]
-        public float debitGross { get; set; }
+        public decimal debitGross { get; set; }
         [Display(Name = "Credit - EWT Amount")]
-        public float credEwt { get; set; }
+        public decimal credEwt { get; set; }
         [Display(Name = "Credit - Cash")]
-        public float credCash { get; set; }
+        public decimal credCash { get; set; }
         [Display(Name = "Month")]
         public int month { get; set; }
         [Display(Name = "Day")]
@@ -181,7 +181,7 @@ namespace ExpenseProcessingSystem.ViewModels
 
     public class cvBirForm
     {
-        public double amount { get; set; }
+        public decimal amount { get; set; }
         public int vat { get; set; } //id
         public int ewt { get; set; } //id
         public int vendor { get; set; } //name

@@ -1,8 +1,8 @@
 ﻿@using ExpenseProcessingSystem.Services
 @model ExpenseProcessingSystem.ViewModels.ClosingBrkDwnViewModel
 @{
-    double billsTotal = Mizuho.round(Model.CBD_oneKAmount + Model.CBD_fiveHAmount + Model.CBD_twoHAmount + Model.CBD_oneHAmount + Model.CBD_fiftyAmount + Model.CBD_twentyAmount, 2);
-    double coinsTotal = Mizuho.round(Model.CBD_tenAmount + Model.CBD_fiveAmount + Model.CBD_oneAmount + Model.CBD_c25Amount + Model.CBD_c10Amount + Model.CBD_c5Amount + Model.CBD_c1Amount, 2);
+    decimal billsTotal = Mizuho.round(Model.CBD_oneKAmount + Model.CBD_fiveHAmount + Model.CBD_twoHAmount + Model.CBD_oneHAmount + Model.CBD_fiftyAmount + Model.CBD_twentyAmount, 2);
+    decimal coinsTotal = Mizuho.round(Model.CBD_tenAmount + Model.CBD_fiveAmount + Model.CBD_oneAmount + Model.CBD_c25Amount + Model.CBD_c10Amount + Model.CBD_c5Amount + Model.CBD_c1Amount, 2);
 }
 <div style="text-align:center">
     <h5>MIZUHO BANK, LTD. - MANILA BRANCH</h5>

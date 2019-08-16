@@ -31,6 +31,6 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
     {
         public int vatId { get; set; }
         public string vatName { get; set; }
-        public double vatRate { get; set; }
+        public decimal vatRate { get; set; }
     }
 }

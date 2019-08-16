@@ -14,12 +14,12 @@ namespace ExpenseProcessingSystem.ViewModels
         [DisplayFormat(DataFormatString = "{0:M/dd/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime SettleDate { get; set; }
         [DisplayFormat(DataFormatString = "{0:#,##0.00}", ApplyFormatInEditMode = true)]
-        public double DRAmount { get; set; }
+        public decimal DRAmount { get; set; }
         [DisplayFormat(DataFormatString = "{0:#,##0.00}", ApplyFormatInEditMode = true)]
-        public double CRAmount { get; set; }
-        public double BudgetAmount { get; set; }
+        public decimal CRAmount { get; set; }
+        public decimal BudgetAmount { get; set; }
         [DisplayFormat(DataFormatString = "{0:#,##0.00}", ApplyFormatInEditMode = true)]
-        public double Balance { get; set; }
+        public decimal Balance { get; set; }
         public string DHName { get; set; }
         public string ApprvName { get; set; }
         public string MakerName { get; set; }

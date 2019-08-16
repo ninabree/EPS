@@ -1639,11 +1639,11 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                                             && x.Account_isDeleted == false).ToList().OrderBy(x => x.Account_Name);
         }
 
-        public double GetCurrentBudget(int accountMasterID)
+        public decimal GetCurrentBudget(int accountMasterID)
         {
             return _context.Budget.Where(x => x.Budget_Account_MasterID == accountMasterID
             && x.Budget_IsActive == true && x.Budget_isDeleted == false).DefaultIfEmpty(
-                new BudgetModel { Budget_Amount = 0.00 }).First().Budget_Amount;
+                new BudgetModel { Budget_Amount = 0.00M }).First().Budget_Amount;
         }
 
         public List<BudgetModel> GetAllCurrentBudget()

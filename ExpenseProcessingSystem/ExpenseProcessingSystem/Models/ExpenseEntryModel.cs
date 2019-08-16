@@ -18,8 +18,8 @@ namespace ExpenseProcessingSystem.Models
         public string Expense_CheckNo { get; set; }
         public int Expense_Payee { get; set; }
         public int Expense_Payee_Type { get; set; }
-        public float Expense_Debit_Total { get; set; }
-        public float Expense_Credit_Total { get; set; }
+        public decimal Expense_Debit_Total { get; set; }
+        public decimal Expense_Credit_Total { get; set; }
         public int Expense_Verifier_1 { get; set; }
         public int Expense_Verifier_2 { get; set; }
         public int Expense_Approver { get; set; }

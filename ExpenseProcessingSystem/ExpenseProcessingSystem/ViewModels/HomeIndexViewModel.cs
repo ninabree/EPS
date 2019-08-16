@@ -52,7 +52,7 @@ namespace ExpenseProcessingSystem.ViewModels
     {
         public int App_ID { get; set; }
         public string App_Type { get; set; }
-        public double App_Amount { get; set; }
+        public decimal App_Amount { get; set; }
         public string App_Payee { get; set; }
         public string App_Maker { get; set; }
         public List<string> App_Verifier_ID_List { get; set; }

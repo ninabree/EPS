@@ -9,11 +9,11 @@ namespace ExpenseProcessingSystem.ViewModels
     {
         public string DEBIT_CREDIT { get; set; }
         public string CCY { get; set; }
-        public double AMOUNT { get; set; }
+        public decimal AMOUNT { get; set; }
         public string CUSTOMER_ABBR { get; set; }
         public string ACCOUNT_CODE { get; set; }
         public string ACCOUNT_NO { get; set; }
-        public double EXCHANGE_RATE { get; set; }
+        public decimal EXCHANGE_RATE { get; set; }
         public string CONTRA_CCY { get; set; }
         public string FUND { get; set; }
         public string CHECK_NO { get; set; }
@@ -22,8 +22,8 @@ namespace ExpenseProcessingSystem.ViewModels
         public string DETAILS { get; set; }
         public string ENTITY { get; set; }
         public string DIVISION { get; set; }
-        public double INTER_AMOUNT { get; set; }
-        public double INTER_RATE { get; set; }
+        public decimal INTER_AMOUNT { get; set; }
+        public decimal INTER_RATE { get; set; }
     }
     public class CDDISValuesVIewModel
     {

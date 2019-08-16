@@ -9,13 +9,13 @@ namespace ExpenseProcessingSystem.ViewModels
     {
         public int accountid { get; set; }
         public string account { get; set; }
-        public double amount { get; set; }
+        public decimal amount { get; set; }
     }
 
     public class ewtAmtList
     {
-        public double ewt { get; set; }
-        public double ewtAmt { get; set; }
+        public float ewt { get; set; }
+        public decimal ewtAmt { get; set; }
     }
 
     public class particulars
@@ -23,7 +23,7 @@ namespace ExpenseProcessingSystem.ViewModels
         public string documentType { get; set; }
         public string invoiceNo { get; set; }
         public string description { get; set; }
-        public double amount { get; set; }
+        public decimal amount { get; set; }
     }
 
     public class VoucherViewModelList
@@ -32,13 +32,13 @@ namespace ExpenseProcessingSystem.ViewModels
         public headerVM headvm { get; set; }
         public int payeeID { get; set; }
         public string payee { get; set; }
-        public double amountCredit { get; set; }
-        public double amountGross { get; set; }
-        public double taxWithheld { get; set; }
-        public double taxInfo_vat { get; set; }
-        public double taxInfo_gross { get; set; }
-        public double taxInfo_taxBase { get; set; }
-        public double fbtAmount { get; set; }
+        public decimal amountCredit { get; set; }
+        public decimal amountGross { get; set; }
+        public decimal taxWithheld { get; set; }
+        public decimal taxInfo_vat { get; set; }
+        public decimal taxInfo_gross { get; set; }
+        public decimal taxInfo_taxBase { get; set; }
+        public decimal fbtAmount { get; set; }
         public string amountString { get; set; }
         public string checkNo { get; set; }
         public string voucherNo { get; set; }

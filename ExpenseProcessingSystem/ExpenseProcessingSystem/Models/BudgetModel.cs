@@ -13,12 +13,12 @@ namespace ExpenseProcessingSystem.Models
         public int Budget_ID { get; set; }
         public int Budget_Account_ID { get; set; }
         public int Budget_Account_MasterID { get; set; }
-        public double Budget_Amount { get; set; }
+        public decimal Budget_Amount { get; set; }
         public int Budget_Creator_ID { get; set; }
         public bool Budget_IsActive { get; set; }
         public bool Budget_isDeleted { get; set; }
         public DateTime Budget_Date_Registered { get; set; }
-        public double Budget_New_Amount { get; set; }
+        public decimal Budget_New_Amount { get; set; }
         public int Budget_GWrite_Status { get; set; }
     }
 }

@@ -13,7 +13,7 @@ namespace ExpenseProcessingSystem.ViewModels.Reports
         public DateTime PA_Value_Date { get; set; }
         public string PA_Section { get; set; }
         public string PA_Remarks { get; set; }
-        public float PA_Total_Amt { get; set; }
+        public decimal PA_Total_Amt { get; set; }
         public string PA_Vendor_Name { get; set; }
         public string PA_Month { get; set; }
         public int PA_Day { get; set; }
@@ -23,6 +23,6 @@ namespace ExpenseProcessingSystem.ViewModels.Reports
     public class AmortSched
     {
         public string as_Amort_Name { get; set; }
-        public float as_Amount { get; set; }
+        public decimal as_Amount { get; set; }
     }
 }

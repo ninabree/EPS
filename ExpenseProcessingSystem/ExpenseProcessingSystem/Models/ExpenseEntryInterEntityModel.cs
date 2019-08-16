@@ -11,10 +11,10 @@ namespace ExpenseProcessingSystem.Models
         public int ExpDtl_DDVInter_ID { get; set; }
         public int ExpDtl_DDVInter_Curr1_ID { get; set; }
         public int ExpDtl_DDVInter_Curr2_ID { get; set; }
-        public float ExpDtl_DDVInter_Amount1 { get; set; }
-        public float ExpDtl_DDVInter_Amount2 { get; set; }
-        public float ExpDtl_DDVInter_Conv_Amount1 { get; set; }
-        public float ExpDtl_DDVInter_Conv_Amount2 { get; set; }
+        public decimal ExpDtl_DDVInter_Amount1 { get; set; }
+        public decimal ExpDtl_DDVInter_Amount2 { get; set; }
+        public decimal ExpDtl_DDVInter_Conv_Amount1 { get; set; }
+        public decimal ExpDtl_DDVInter_Conv_Amount2 { get; set; }
         public float ExpDtl_DDVInter_Rate { get; set; }
         public bool ExpDtl_DDVInter_Check1 { get; set; }
         public bool ExpDtl_DDVInter_Check2 { get; set; }
@@ -37,8 +37,8 @@ namespace ExpenseProcessingSystem.Models
         public int InterAcc_ID { get; set; }
         public int InterAcc_Acc_ID { get; set; }
         public int InterAcc_Curr_ID { get; set; }
-        public float InterAcc_Amount { get; set; }
-        public float InterAcc_Rate { get; set; }
+        public decimal InterAcc_Amount { get; set; }
+        public decimal InterAcc_Rate { get; set; }
         public int InterAcc_Type_ID { get; set; }
         public ExpenseEntryInterEntityParticularModel ExpenseEntryInterEntityParticular { get; set; }
     }

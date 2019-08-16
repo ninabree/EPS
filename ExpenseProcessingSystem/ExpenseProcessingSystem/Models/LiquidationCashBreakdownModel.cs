@@ -11,7 +11,7 @@ namespace ExpenseProcessingSystem.Models
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int LiqCashBreak_ID { get; set; }
-        public double LiqCashBreak_Denomination { get; set; }
+        public decimal LiqCashBreak_Denomination { get; set; }
         public int LiqCashBreak_NoPcs { get; set; }
         public decimal LiqCashBreak_Amount { get; set; }
         public ExpenseEntryDetailModel ExpenseEntryDetailModel { get; set; }

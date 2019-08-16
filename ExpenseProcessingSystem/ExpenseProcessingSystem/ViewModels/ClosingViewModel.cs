@@ -16,47 +16,47 @@ namespace ExpenseProcessingSystem.ViewModels
         public string rbuStatus { get; set; }
         public string fcduStatus { get; set; }
 
-        public double pettyBegBalance { get; set; }
-        public double cashIn { get; set; }
-        public double cashOut { get; set; }
-        public double endBalance { get; set; }
+        public decimal pettyBegBalance { get; set; }
+        public decimal cashIn { get; set; }
+        public decimal cashOut { get; set; }
+        public decimal endBalance { get; set; }
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime date { get; set; }
 
-        public double opeBal { get; set; }
-        public double recieve { get; set; }
-        public double Disbursed { get; set; }
-        public double closeBal { get; set; }
+        public decimal opeBal { get; set; }
+        public decimal recieve { get; set; }
+        public decimal Disbursed { get; set; }
+        public decimal closeBal { get; set; }
 
         public int oneK { get; set; }
-        public double oneKAmount { get; set; }
+        public decimal oneKAmount { get; set; }
         public int fiveH { get; set; }
-        public double fiveHAmount { get; set; }
+        public decimal fiveHAmount { get; set; }
         public int twoH { get; set; }
-        public double twoHAmount { get; set; }
+        public decimal twoHAmount { get; set; }
         public int oneH { get; set; }
-        public double oneHAmount { get; set; }
+        public decimal oneHAmount { get; set; }
         public int fifty { get; set; }
-        public double fiftyAmount { get; set; }
+        public decimal fiftyAmount { get; set; }
         public int twenty { get; set; }
-        public double twentyAmount { get; set; }
+        public decimal twentyAmount { get; set; }
         public int ten { get; set; }
-        public double tenAmount { get; set; }
+        public decimal tenAmount { get; set; }
         public int five { get; set; }
-        public double fiveAmount { get; set; }
+        public decimal fiveAmount { get; set; }
         public int one { get; set; }
-        public double oneAmount { get; set; }
+        public decimal oneAmount { get; set; }
         public int c25 { get; set; }
-        public double c25Amount { get; set; }
+        public decimal c25Amount { get; set; }
         public int c10 { get; set; }
-        public double c10Amount { get; set; }
+        public decimal c10Amount { get; set; }
         public int c5 { get; set; }
-        public double c5Amount { get; set; }
+        public decimal c5Amount { get; set; }
         public int c1 { get; set; }
-        public double c1Amout { get; set; }
+        public decimal c1Amout { get; set; }
 
-        public double billTotal { get; set; }
-        public double coinTotal { get; set; }
+        public decimal billTotal { get; set; }
+        public decimal coinTotal { get; set; }
 
         public ClosingViewModel()
         {
@@ -72,7 +72,7 @@ namespace ExpenseProcessingSystem.ViewModels
         public string expTrans { get; set; }
         public string particulars { get; set; } 
         public string ccy { get; set; } 
-        public double amount { get; set; } 
+        public decimal amount { get; set; } 
         public int transCount { get; set; } 
         public string status { get; set; }
     }

@@ -11,7 +11,7 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         public int App_ID { get; set; }
         public string App_Type { get; set; }
         [DisplayFormat(DataFormatString = "{0:#,##0.00#}", ApplyFormatInEditMode = true)]
-        public double App_Amount { get; set; }
+        public decimal App_Amount { get; set; }
         public string App_Payee { get; set; }
         public string App_Maker { get; set; }
         public string App_Approver { get; set; }

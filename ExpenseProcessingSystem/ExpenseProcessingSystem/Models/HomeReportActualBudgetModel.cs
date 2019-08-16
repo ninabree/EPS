@@ -13,9 +13,9 @@ namespace ExpenseProcessingSystem.Models
         public string Remarks { get; set; }
         public string Department { get; set; }
         [DisplayFormat(DataFormatString = "{0:#,##0.00}", ApplyFormatInEditMode = true)]
-        public double ExpenseAmount { get; set; }
+        public decimal ExpenseAmount { get; set; }
         [DisplayFormat(DataFormatString = "{0:#,##0.00}", ApplyFormatInEditMode = true)]
-        public double BudgetBalance { get; set; }
+        public decimal BudgetBalance { get; set; }
         [DisplayFormat(DataFormatString = "{0:M/dd/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime ValueDate { get; set; }
     }
@@ -26,6 +26,6 @@ namespace ExpenseProcessingSystem.Models
         public int AccountGroupMasterID { get; set; }
         public string AccountGroupName { get; set; }
         public string Remarks { get; set; }
-        public double Budget { get; set; }
+        public decimal Budget { get; set; }
     }
 }

@@ -15,8 +15,8 @@ namespace ExpenseProcessingSystem.Models
         public int ExpNCDtlAcc_Type_ID { get; set; }
         public int ExpNCDtlAcc_Curr_ID { get; set; }
         public string ExpNCDtlAcc_Acc_Name { get; set; }
-        public float ExpNCDtlAcc_Inter_Rate { get; set; }
-        public float ExpNCDtlAcc_Amount { get; set; }
+        public decimal ExpNCDtlAcc_Inter_Rate { get; set; }
+        public decimal ExpNCDtlAcc_Amount { get; set; }
         public ExpenseEntryNCDtlModel ExpenseEntryNCDtlModel { get; set; }
     }
 }

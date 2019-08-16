@@ -23,9 +23,9 @@ namespace ExpenseProcessingSystem.Models
         public bool ExpDtl_isEwt { get; set; }
         public int ExpDtl_Ewt { get; set; }
         public int ExpDtl_Ccy { get; set; }
-        public float ExpDtl_Debit { get; set; }
-        public float ExpDtl_Credit_Ewt { get; set; }
-        public float ExpDtl_Credit_Cash { get; set; }
+        public decimal ExpDtl_Debit { get; set; }
+        public decimal ExpDtl_Credit_Ewt { get; set; }
+        public decimal ExpDtl_Credit_Cash { get; set; }
         public int ExpDtl_Amor_Month { get; set; }
         public int ExpDtl_Amor_Day { get; set; }
         public int ExpDtl_Amor_Duration { get; set; }
