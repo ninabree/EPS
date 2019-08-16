@@ -289,7 +289,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn float-r" data-dismiss="modal">Close</button>
-                        <button class="btn float-r comVar" id="loginSubmit">Submit</button>
+                        <button class="btn float-r comVar" id="brkDwnSubmit">Submit</button>
                     </div>
                 </div>
             </div>
@@ -303,20 +303,20 @@
             <div class="modal-dialog vertical-align-center">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 style="display:inline">Login</h4>
+                        <h4 style="display:inline">Gbase Login</h4>
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
                         <table style="margin:5px;">
                             <tr>
-                                <td>Username : </td>
+                                <td>Racfid : </td>
                                 <td>&nbsp;<input type="text" id="userName" class="input" /></td>
                             </tr>
                             <tr>
                                 <td>&nbsp;&nbsp;</td>
                             </tr>
                             <tr>
-                                <td>Password : </td>
+                                <td>Racfpassword : </td>
                                 <td>&nbsp;<input type="password" id="passWord" class="input" /></td>
                             </tr>
                         </table>
@@ -336,17 +336,38 @@
     <input type="hidden" name="username" id="userString" />
     <input type="hidden" name="password" id="passString" />
 }
-@Html.Partial("PopupMessage")
     <script type="text/javascript">
     $(function () {
          $(window).on("load", function () {
         @if (Model.messages.Count() > 0)
         {
             <text>
+                $('#divAlertWindow').find(".spanTitle").html("Information");
                 $('#alert').text("@Model.messages[0]");
-                $('#divcss').show();
+                $('#divAlertWindow').show();
             </text>
         }
+        });
+
+        $("#pettyCashModal").on("click", "#brkDwnSubmit", function () {
+            $.ajax({
+                type: 'POST',
+                url: "/Modal/closeSveBrkDown",
+                data: $("#inputForm").serialize(),
+                success: function (result) {
+                    if (result) {
+                        $('#divAlertWindow').find(".spanTitle").html("Information");
+                        $('#alert').text("Cash breakdown saved.");
+                        $('#pettyCashModal').modal('hide');
+                        $('#divAlertWindow').show();
+                    } else {
+                        $('#divAlertWindow').find(".spanTitle").html("Information");
+                        $('#alert').text("Failed to save cash breakdown."); 
+                        $('#pettyCashModal').modal('hide');
+                        $('#divAlertWindow').show();
+                    }
+                }
+            });
         });
 
         $("#closeBody").on("click", "#StartPettyCash", function (e) {
@@ -356,6 +377,7 @@
                 if (status == "error") {
                     alert("Something went wrong.");
                 }
+                $('#brkDwnSubmit').hide();
             });
             $('#pettyCashModal').modal('show');
         });
@@ -363,12 +385,21 @@
         $("#closeBody").on("click", "#ClosePettyCash", function (e) {
             var command = $(this).val();
             $("#pettyCashModal").find(".modal-body").empty();
-            $("#pettyCashModal").find(".modal-body").load("@Url.Action("ClosePettyCash", "Modal")", { command: command }, function (response, status, xhr) {
+            var pop = $("#pettyCashModal").find(".modal-body").load("@Url.Action("ClosePettyCash", "Modal")", { command: command }, function (response, status, xhr) {
                 if (status == "error") {
                     alert("Something went wrong.");
+                } else {
+                    var mes = $("#eMessage").val();
+                    if (typeof mes != "undefined") {
+                        $('#alert').text(mes);
+                        $('#divAlertWindow').show();
+                    } else {
+                        $('#brkDwnSubmit').show();
+                        $('#pettyCashModal').modal('show');
+                    }
                 }
             });
-            $('#pettyCashModal').modal('show');
+ 
         });
 
         $("#closeBody").on("click", ".closeBtn", function (e) {

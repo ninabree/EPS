@@ -342,6 +342,11 @@ namespace ExpenseProcessingSystem.Controllers
             if (closeFail)
                 model.messages.Add("Can't close book there are still ongoing transactions!");
 
+            var confirmMessage = TempData["closeMessage"];
+
+            if(confirmMessage != null)
+                model.messages.Add(confirmMessage.ToString());
+
             return View(model);
         }
 

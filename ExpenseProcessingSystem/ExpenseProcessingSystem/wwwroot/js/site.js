@@ -145,7 +145,7 @@ $(document).ready(function () {
         // Hide all content divs except the first
         var i = 0;
         for (var id in contentDivs) {
-            if (i != 0) contentDivs[id].className = 'tabContent hide';
+            if (i != 0 && contentDivs[id] != null) contentDivs[id].className = 'tabContent hide';
             i++;
         }
     }
@@ -223,5 +223,5 @@ function loadingEffectStart() { $('body').addClass("loading"); }
 function loadingEffectStop() { $('body').removeClass("loading"); } 
 
 function roundNumber(num, scale) {
-    return Math.round(num * (Math.pow(10, scale))) / Math.pow(10, scale);
+    return parseFloat(Math.round(num * (Math.pow(10, scale))) / Math.pow(10, scale)).toFixed(2);
 };

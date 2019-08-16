@@ -19,6 +19,7 @@ namespace ExpenseProcessingSystem.Models
         public int PC_OpenUser { get; set; }
         public bool PC_OpenConfirm { get; set; }
         public string PC_ConfirmComment { get; set; }
+        public int PC_Status { get; set; }
         public DateTime PC_OpenDate { get; set; }
         public DateTime PC_CloseDate { get; set; }
 
