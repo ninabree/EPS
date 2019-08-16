@@ -18,7 +18,9 @@
         <div id="tbl-lbl">
             <div class="dis-inline-block"><p>Date:</p></div>
             <div class="dis-inline-block">
-                <input id="expenseDate" value="@(((DateTime)Model.expenseDate).ToString("MM/dd/yyyy"))" style="background-color:transparent" />
+                @*<input id="expenseDate" value="@(((DateTime)Model.expenseDate).ToString("MM/dd/yyyy"))" style="background-color:transparent" />*@
+                @Html.EditorFor(m => m.expenseDate, new { htmlAttributes = new { @class = "input w-97", @type = "date", @readonly = "readonly" } })
+
             </div>
             <div class="dis-inline-block" style="float:right">
                 <p class="dis-inline-block">

@@ -237,6 +237,7 @@
 
     function computeValues(parent) {
         var pNode = parent;
+        var itemNo = pNode.id;
         var amounts = $("");
         var grossAmt = 0;
         var origGrossAmt = 0;
