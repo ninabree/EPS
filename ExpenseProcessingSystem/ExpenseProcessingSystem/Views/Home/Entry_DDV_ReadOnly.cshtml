@@ -203,7 +203,6 @@
                                   Model.statusID == GlobalSystemValues.STATUS_REJECTED) && (isMaker) ? true : false;
             var enableModify = (Model.statusID == GlobalSystemValues.STATUS_PENDING ||
                                   Model.statusID == GlobalSystemValues.STATUS_REJECTED) && (isMaker) ? true : false;
-
             //enable verify when status is Pending
             var enableVerify = ((Model.statusID == GlobalSystemValues.STATUS_PENDING
                                  //OR if Status is Verified and Verifiers  < 2 and not one of the current verifiers of the transaction
@@ -213,10 +212,10 @@
 
             var enableApprove = ((Model.statusID == GlobalSystemValues.STATUS_PENDING
                                   || Model.statusID == GlobalSystemValues.STATUS_VERIFIED)) &&
-                                  (anApprover) && (!isMaker) ? true : false;
+                                  (anApprover) && (!isMaker) && (!isVerifier) ? true : false;
 
             var enableReject = ((Model.statusID == GlobalSystemValues.STATUS_PENDING
-                                        || Model.statusID == GlobalSystemValues.STATUS_VERIFIED) && (anApprover)) && (!isMaker) ? true : false;
+                                        || Model.statusID == GlobalSystemValues.STATUS_VERIFIED) && ((anApprover) || (aVerifier))) && (!isMaker) && (!isVerifier) ? true : false;
 
             var enableBIR = (Model.statusID == GlobalSystemValues.STATUS_REVERSED ||
                                 Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
@@ -261,7 +260,7 @@
 <script type="text/javascript" src="~/js/EntryScripts.js"></script>
 <script type="text/javascript">
     $(window).on("load", function () {
-        $('#iframePreview').prop('src', "/Home/VoucherViewCV?ExpenseID=@Model.entryID");
+        $('#iframePreview').prop('src', "/Home/VoucherViewDDV?ExpenseID=@Model.entryID");
     });
     $(document).ready(function () {
         if ($('#alert').text() != "") {
@@ -465,10 +464,10 @@
                 cashSubTotal += Number(credCash[i].value);
             }
 
-            $("#grossTotal").val(grossTotal);
-            $("#credEwtTotal").val(ewtSubTotal);
-            $("#credCashTotal").val(cashSubTotal);
-            $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
+            $("#grossTotal").val(roundNumber(grossTotal, 2));
+            $("#credEwtTotal").val(roundNumber(ewtSubTotal, 2));
+            $("#credCashTotal").val(roundNumber(cashSubTotal, 2));
+            $("#credTotal").val(roundNumber(Number(ewtSubTotal + cashSubTotal), 2));
         }
     });
 </script>

@@ -204,10 +204,10 @@
 
                 var enableApprove = ((Model.statusID == GlobalSystemValues.STATUS_PENDING
                                       || Model.statusID == GlobalSystemValues.STATUS_VERIFIED)) &&
-                                      (anApprover) && (!isMaker) ? true : false;
+                                  (anApprover) && (!isMaker) && (!isVerifier) ? true : false;
 
                 var enableReject = ((Model.statusID == GlobalSystemValues.STATUS_PENDING
-                                            || Model.statusID == GlobalSystemValues.STATUS_VERIFIED) && (anApprover)) && (!isMaker) ? true : false;
+                                        || Model.statusID == GlobalSystemValues.STATUS_VERIFIED) && ((anApprover) || (aVerifier))) && (!isMaker) && (!isVerifier) ? true : false;
 
                 var enableBIR = (Model.statusID == GlobalSystemValues.STATUS_REVERSED ||
                                     Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||

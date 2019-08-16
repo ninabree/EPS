@@ -4932,7 +4932,7 @@ namespace ExpenseProcessingSystem.Controllers
 
             vvm.maker = GetUserID();
             if (model.expenseId != null)
-                vvm.voucherNo = _service.getVoucherNo(1, model.expenseDate, int.Parse(model.expenseId));
+                vvm.voucherNo = _service.getVoucherNo(2, model.expenseDate, int.Parse(model.expenseId));
             vvm.payee = _service.getVendorName(model.vendor, model.payee_type);
             vvm.checkNo = model.checkNo;
             vvm.approver = model.approver;
@@ -4998,7 +4998,7 @@ namespace ExpenseProcessingSystem.Controllers
                     tax_vat += Mizuho.round((inputItem.debitGross / (1 + _vat)) * _vat, 2);
                 }
 
-                if (inputItem.chkEwt)
+                if (inputItem.chkEwt && inputItem.ewt != 0)
                 {
                      float _ewt = Mizuho.round(_service.GetEWTValue(inputItem.ewt), 4);
                      decimal _ewtAmount = Mizuho.round((inputItem.debitGross / (1 + _vat)) * (decimal)_ewt, 2);
@@ -5023,6 +5023,10 @@ namespace ExpenseProcessingSystem.Controllers
                         account = (_ewt * 100).ToString(),
                         amount = _ewtAmount
                     });
+                }
+                else
+                {
+                    vvm.accountCredit[0].amount += inputItem.debitGross;
                 }
 
                 if (inputItem.fbt)
