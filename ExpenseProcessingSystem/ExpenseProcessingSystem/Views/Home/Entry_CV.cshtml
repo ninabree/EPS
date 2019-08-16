@@ -71,10 +71,10 @@
                                         <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
                                         @for (int y = 0; y < Model.EntryCV[i].gBaseRemarksDetails.Count(); y++)
                                         {
-                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].docType);
-                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].desc);
-                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].invNo);
-                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].amount);
+                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].docType, new { @class= "docType" });
+                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].desc, new { @class = "desc" });
+                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].invNo, new { @class = "invNo" });
+                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].amount, new { @class = "amount" });
                                         }
                                     </div>
                                 </div>
@@ -222,9 +222,9 @@
             cashSubTotal += Number(credCash[i].value);
         }
 
-        $("#grossTotal").val(grossTotal);
-        $("#credEwtTotal").val(ewtSubTotal);
-        $("#credCashTotal").val(cashSubTotal);
+        $("#grossTotal").val(roundNumber(grossTotal, 2));
+        $("#credEwtTotal").val(roundNumber(ewtSubTotal, 2));
+        $("#credCashTotal").val(roundNumber(cashSubTotal, 2));
         $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
 
         var rowTemplate = $("#rowTemplate")

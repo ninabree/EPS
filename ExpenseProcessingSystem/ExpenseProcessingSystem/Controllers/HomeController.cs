@@ -1210,7 +1210,6 @@ namespace ExpenseProcessingSystem.Controllers
 
                 foreach (var i in viewModel.EntryCV)
                 {
-                    viewModel.systemValues.acc.AddRange(_service.getAccDetailsEntry(i.account));
                     i.screenCode = "CV";
 
                     var vend = _service.getVendor(i.dtl_Ewt_Payor_Name_ID);
@@ -1552,7 +1551,6 @@ namespace ExpenseProcessingSystem.Controllers
 
                 foreach (var i in viewModel.EntryDDV)
                 {
-                    viewModel.systemValues.acc.AddRange(_service.getAccDetailsEntry(i.account));
 
                     var vend = _service.getVendor(i.ewt_Payor_Name_ID);
                     if (vend != null)
@@ -1808,7 +1806,6 @@ namespace ExpenseProcessingSystem.Controllers
 
                 foreach (var i in viewModel.EntryCV)
                 {
-                    viewModel.systemValues.acc.AddRange(_service.getAccDetailsEntry(i.account));
                     i.screenCode = "PCV";
 
                     var vend = _service.getVendor(i.dtl_Ewt_Payor_Name_ID);
@@ -2224,7 +2221,6 @@ namespace ExpenseProcessingSystem.Controllers
 
                 foreach (var i in viewModel.EntryCV)
                 {
-                    viewModel.systemValues.acc.AddRange(_service.getAccDetailsEntry(i.account));
                     i.screenCode = "SS";
 
                     var vend = _service.getVendor(i.dtl_Ewt_Payor_Name_ID);
@@ -3287,10 +3283,13 @@ namespace ExpenseProcessingSystem.Controllers
             var userId = GetUserID();
             if (!ModelState.IsValid)
             {
+                XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
                 vm.accList = _service.getAccountList();
                 vm.accAllList = _service.getAccountListIncHist();
                 vm.vendorList = _service.getVendorList().OrderBy(x => x.Vendor_Name).ToList();
                 vm.taxRateList = _service.getVendorTaxList(vm.vendorList[0].Vendor_MasterID);
+                vm.LiqEntryDetails = new LiquidationEntryDetailModel();
+                vm.LiqEntryDetails.Liq_Created_Date = DateTime.Now.Date;
                 foreach (var i in vm.taxRateList)
                 {
                     i.TR_WT_Title = (i.TR_Tax_Rate * 100) + "% " + i.TR_WT_Title;
@@ -3299,6 +3298,52 @@ namespace ExpenseProcessingSystem.Controllers
                 {
                     i.Account_Name = i.Account_No + " - " + i.Account_Name;
                 }
+                foreach (var i in vm.LiquidationDetails)
+                {
+                    i.screenCode = "Liquidation_SS";
+                }
+                var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
+                vm.phpCurrID = ccyPHP.Curr_ID;
+                vm.phpCurrMasterID = ccyPHP.Curr_MasterID;
+                vm.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
+                var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
+                vm.yenCurrID = ccyYEN.Curr_ID;
+                vm.yenCurrMasterID = ccyYEN.Curr_MasterID;
+                vm.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
+
+                List<cvBirForm> birForms = new List<cvBirForm>();
+                vm.birForms = new List<cvBirForm>();
+                foreach (var item in vm.LiquidationDetails)
+                {
+                    decimal grossOrig = item.gBaseRemarksDetails.Sum(x => x.amount);
+
+                    if (birForms.Any(x => x.ewt == item.ewtID && x.vendor == item.dtl_Ewt_Payor_Name_ID))
+                    {
+                        int index = birForms.FindIndex(x => x.ewt == item.ewtID);
+                        birForms[index].amount += grossOrig;
+                    }
+                    else
+                    {
+                        cvBirForm temp = new cvBirForm
+                        {
+                            amount = grossOrig,
+                            ewt = item.ewtID,
+                            vat = item.vatID,
+                            vendor = item.dtl_Ewt_Payor_Name_ID,
+                            approver = vm.approver,
+                            date = vm.createdDate
+                        };
+                        if (item.ewtID > 0)
+                        {
+                            birForms.Add(temp);
+                        }
+                    }
+                }
+                if (birForms.Count() > 0)
+                {
+                    vm.birForms.AddRange(birForms);
+                }
+
                 return View("Liquidation_SS", vm);
             }
 

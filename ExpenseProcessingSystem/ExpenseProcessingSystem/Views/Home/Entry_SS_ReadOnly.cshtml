@@ -134,7 +134,7 @@
                                 <input value="@Model.EntryCV[i].debitGross" class="input100 txtGross" disabled />
                             </td>
                             <td>
-                                <input value="@Model.EntryCV[i].credEwt" class="input100" disabled />
+                                <input value="@Model.EntryCV[i].credEwt" class="input100 txtCredEwt" disabled />
                             </td>
                             <td>
                                 <input value="@Model.EntryCV[i].credCash" class="input100 txtCredCash" disabled />
@@ -264,34 +264,32 @@
             ddlEnabled(cnt);
         }
 
+        var gross = $(".txtGross");
+        var credEwt = $(".txtCredEwt");
+        var credCash = $(".txtCredCash");
+
+        var grossTotal = 0;
+        var ewtSubTotal = 0;
+        var cashSubTotal = 0;
+
+        for (var i = 0; i < gross.length; i++) {
+            grossTotal += Number(gross[i].value);
+        }
+
+        for (var i = 0; i < credEwt.length; i++) {
+            ewtSubTotal += Number(credEwt[i].value);
+        }
+
+        for (var i = 0; i < credCash.length; i++) {
+            cashSubTotal += Number(credCash[i].value);
+        }
+
+        $("#grossTotal").val(roundNumber(grossTotal, 2));
+        $("#credEwtTotal").val(roundNumber(ewtSubTotal, 2));
+        $("#credCashTotal").val(roundNumber(cashSubTotal,2));
+        $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
+
         $(function () {
-            $(window).on("load", function () {
-                var gross = $(".txtGross");
-                var credEwt = $(".txtCredEwt");
-                var credCash = $(".txtCredCash");
-
-                var grossTotal = 0;
-                var ewtSubTotal = 0;
-                var cashSubTotal = 0;
-
-                for (var i = 0; i < gross.length; i++) {
-                    grossTotal += Number(gross[i].value);
-                }
-
-                for (var i = 0; i < credEwt.length; i++) {
-                    ewtSubTotal += Number(credEwt[i].value);
-                }
-
-                for (var i = 0; i < credCash.length; i++) {
-                    cashSubTotal += Number(credCash[i].value);
-                }
-
-                $("#grossTotal").val(grossTotal);
-                $("#credEwtTotal").val(ewtSubTotal);
-                $("#credCashTotal").val(cashSubTotal);
-                $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
-            });
-
             //Cash Breakdown Modal
             $("table").on("click", ".cashBreakdown", function (e) {
                 e.stopImmediatePropagation();
