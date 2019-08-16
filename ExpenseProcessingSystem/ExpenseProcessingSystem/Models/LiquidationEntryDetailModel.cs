@@ -12,6 +12,7 @@ namespace ExpenseProcessingSystem.Models
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Liq_DtlID { get; set; }
         public int Liq_Status { get; set; }
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime Liq_Created_Date { get; set; }
         public DateTime Liq_LastUpdated_Date { get; set; }
         public int Liq_Created_UserID { get; set; }

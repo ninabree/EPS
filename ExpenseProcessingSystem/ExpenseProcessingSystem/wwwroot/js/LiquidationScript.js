@@ -147,13 +147,14 @@ function printDivCashLiqBD(divID) {
 
     $('#cashbdDatePrintLiq').attr('value', $('#LiqEntryDetails_Liq_Created_Date').val());
     $('#cashbdAmountPrintLiq').attr('value', $('#txtCashBDTotal').val());
-    $('#paymentFor').attr('value', "S" + $('.highlight').find('.txtGBaseRemark').val());
+    $('#paymentForLiq').attr('value', "S" + $('.highlight').find('.txtGBaseRemark').val());
 
     var cssjs = '<style>.tablePrintLiq, .tdPrintLiq, .thPrintLiq {  ' +
         '  border: 1px solid #ddd;' +
         '  text-align: center;' +
         '  width: 60%;' +
         '  height: auto;' +
+        '  table-layout: fixed;' +
         '}' +
 
         'table {' +
@@ -178,7 +179,7 @@ function printDivCashLiqBD(divID) {
     WinPrint.document.close();
     WinPrint.focus();
     WinPrint.print();
-    WinPrint.close();
+    //WinPrint.close();
 
     //Rollback the Cash Breakdown Liquidation table attribute value to default(0).
     for (var count = 0; count < tableCnt.length; count++) {
@@ -554,11 +555,11 @@ function HideCashBreakdownTable() {
 
 function ChangeOptionMarkForPrint() {
     if ($('#txtLiqPhpInput2').val() > 0) {
-        $('#printOptExpense').html("&#9645;");
-        $('#printOptReverse').html("&#8999;");
+        $('#printOptExpenseLiq').html("&#9645;");
+        $('#printOptReverseLiq').html("&#8999;");
     }
     if ($('#txtLiqPhpInput3').val() > 0){
-        $('#printOptExpense').html("&#8999;");
-        $('#printOptReverse').html("&#9645;");
+        $('#printOptExpenseLiq').html("&#8999;");
+        $('#printOptReverseLiq').html("&#9645;");
     }
 }
