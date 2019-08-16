@@ -632,21 +632,10 @@
                 </div>
             </div>
         </div>
-        <div id="entry-status" class="m-t-10 m-b-10">
-            <div class="dis-inline-block"><label>Status: </label></div>
-            <div class="dis-inline-block">@Html.TextBoxFor(x => x.status, new { @disabled = "disabled", @class = "input" })</div>
-            <div class="dis-inline-block"><label>Approver:</label></div>
-            <div class="dis-inline-block">@Html.TextBoxFor(x => x.approver, new { @disabled = "disabled", @class = "input" })</div>
-            <div class="dis-inline-block"><label>Verifier:</label></div>
-            <div class="dis-inline-block">
-                <p class="dis-inline-block">@Html.TextBoxFor(x => x.verifier_1, new { @disabled = "disabled", @class = "m-l-5 input" })</p>
-                <p class="dis-inline-block">@Html.TextBoxFor(x => x.verifier_2, new { @disabled = "disabled", @class = "m-l-5 input" })</p>
-            </div>
-        </div>
         <div id="entry-controls" class="m-b-10">
             @Html.HiddenFor(x => Model.entryID, new { @class = "entryID" })
-            @*@Html.HiddenFor(x => Model.LiqEntryDetails.Liq_Created_Date, new { @class = "LiqEntryDetails_Liq_Created_Date" })*@
-            <input type="hidden" id="LiqEntryDetails_Liq_Created_Date" value="@(((DateTime)Model.LiqEntryDetails.Liq_Created_Date).ToString("MM/dd/yyyy"))" style="background-color:transparent" />
+            @Html.HiddenFor(x => Model.LiqEntryDetails.Liq_Created_Date, new { @class = "LiqEntryDetails_Liq_Created_Date" })
+            @*<input type="hidden" id="LiqEntryDetails_Liq_Created_Date" value="@(((DateTime)Model.LiqEntryDetails.Liq_Created_Date).ToString("MM/dd/yyyy"))" style="background-color:transparent" />*@
             <div class="flex-sb m-t-15">
                 <div>
                     <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" name="command" value="Save">Save</button></div>

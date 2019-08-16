@@ -42,7 +42,7 @@ namespace ExpenseProcessingSystem.Models
         public int Liq_CCY_3_2 { get; set; }
         public decimal Liq_Amount_3_2 { get; set; }
         public int Liq_VendorID { get; set; }
-        public decimal Liq_TaxRate { get; set; }
+        public int Liq_TaxRate { get; set; }
         public ExpenseEntryDetailModel ExpenseEntryDetailModel { get; set; }
     }
 }

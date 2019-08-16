@@ -718,8 +718,8 @@
                                     && (isMakerLiq || isVerifierLiq || isApproverLiq)) ? true : false;
             }
             @Html.HiddenFor(x => Model.entryID, new { @class = "entryID" })
-            @*@Html.HiddenFor(x => Model.LiqEntryDetails.Liq_Created_Date, new { @class = "LiqEntryDetails_Liq_Created_Date" })*@
-            <input type="hidden" id="LiqEntryDetails_Liq_Created_Date" value="@(((DateTime)Model.LiqEntryDetails.Liq_Created_Date).ToString("MM/dd/yyyy"))" style="background-color:transparent" />
+            @Html.HiddenFor(x => Model.LiqEntryDetails.Liq_Created_Date, new { @class = "LiqEntryDetails_Liq_Created_Date" })
+            @*<input type="hidden" id="LiqEntryDetails_Liq_Created_Date" value="@(((DateTime)Model.LiqEntryDetails.Liq_Created_Date).ToString("MM/dd/yyyy"))" name="LiqEntryDetails.Liq_Created_Date" style="background-color:transparent" />*@
             <div class="flex-sb">
                 <div>
                     <div class="dis-inline-block">@if(enableSave) { <button class="tbl-btn">Save</button> }</div>
