@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "Error";
+    Layout = null;
+}
+<html>
+<head>
+    <style>
+        /*body, html {
+            height: 100%;
+            background-image: url("../images/error/error.jpg");
+            height: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }*/
+        h1{
+            font-size: 70px;
+        }
+
+        .outer {
+            display: table;
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+        }
+
+        .middle {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .inner {
+            margin-left: auto;
+            margin-right: auto;
+            width: 600px;
+        }
+
+        .inner em{
+            color:red;
+        }
+    </style>
+</head>
+<body>
+    <div class="outer">
+        <div class="middle">
+            <div class="inner">
+                <h1>We have a problem</h1>
+                <p>Sorry, an error occurred while executing your request. Please contact your IT Administrator .</p>
+                <a href=""></a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

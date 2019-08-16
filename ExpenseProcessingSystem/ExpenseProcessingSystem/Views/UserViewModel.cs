@@ -14,6 +14,9 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "Employee ID")]
         public int User_ID { get; set; }
 
+        [Display(Name = "Employee Code")]
+        public string User_EmpCode { get; set; }
+
         [Display(Name = "Username")]
         public string User_UserName { get; set; }
 

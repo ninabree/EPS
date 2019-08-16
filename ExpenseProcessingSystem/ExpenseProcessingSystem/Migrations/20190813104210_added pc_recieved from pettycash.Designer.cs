@@ -4,14 +4,16 @@ using ExpenseProcessingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    partial class EPSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190813104210_added pc_recieved from pettycash")]
+    partial class addedpc_recievedfrompettycash
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -948,8 +950,6 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<float>("ExpNC_CS_DebitAmt");
 
-                    b.Property<string>("ExpNC_CS_Period");
-
                     b.Property<int>("ExpNC_Category_ID");
 
                     b.Property<float>("ExpNC_CredAmt");
@@ -1847,8 +1847,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.Property<double>("PC_Recieved");
 
                     b.Property<double>("PC_StartBal");
-
-                    b.Property<int>("PC_Status");
 
                     b.HasKey("PC_ID");
 

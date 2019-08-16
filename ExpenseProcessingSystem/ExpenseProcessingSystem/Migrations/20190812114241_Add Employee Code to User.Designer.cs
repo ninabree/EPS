@@ -4,14 +4,16 @@ using ExpenseProcessingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    partial class EPSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190812114241_Add Employee Code to User")]
+    partial class AddEmployeeCodetoUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -948,8 +950,6 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<float>("ExpNC_CS_DebitAmt");
 
-                    b.Property<string>("ExpNC_CS_Period");
-
                     b.Property<int>("ExpNC_Category_ID");
 
                     b.Property<float>("ExpNC_CredAmt");
@@ -1810,6 +1810,8 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("PCB_FiveHundred");
 
+                    b.Property<int>("PCB_ID");
+
                     b.Property<int>("PCB_One");
 
                     b.Property<int>("PCB_OneCents");
@@ -1844,11 +1846,7 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("PC_OpenUser");
 
-                    b.Property<double>("PC_Recieved");
-
                     b.Property<double>("PC_StartBal");
-
-                    b.Property<int>("PC_Status");
 
                     b.HasKey("PC_ID");
 

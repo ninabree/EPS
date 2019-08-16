@@ -11,6 +11,10 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "User ID")]
         public int User_ID { get; set; }
 
+        [Display(Name = "Employee Code")]
+        [NotNullValidations]
+        public string User_EmpCode { get; set; }
+
         [Display(Name = "Username")]
         [NotNullValidations, LengthValidation]
         public string User_UserName { get; set; }
@@ -22,7 +26,7 @@ namespace ExpenseProcessingSystem.ViewModels
 
         [Display(Name = "Password")]
         [DataType(DataType.Password)]
-        [PasswordValidation, LengthValidation]
+        //[PasswordValidation, LengthValidation]
         public string User_Password { get; set; }
 
         [Display(Name = "Department")]

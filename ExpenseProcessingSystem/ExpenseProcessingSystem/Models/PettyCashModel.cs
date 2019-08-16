@@ -13,15 +13,16 @@ namespace ExpenseProcessingSystem.Models
         public int PC_ID { get; set; }
         public double PC_StartBal { get; set; }
         public double PC_Disbursed { get; set; }
+        public double PC_Recieved { get; set; }
         public double PC_EndBal { get; set; }
         public int PC_CloseUser { get; set; }
         public int PC_OpenUser { get; set; }
         public bool PC_OpenConfirm { get; set; }
         public string PC_ConfirmComment { get; set; }
+        public int PC_Status { get; set; }
         public DateTime PC_OpenDate { get; set; }
         public DateTime PC_CloseDate { get; set; }
 
-        public int PCB_ID { get; set; }
         public int PCB_OneThousand { get; set; }
         public int PCB_FiveHundred { get; set; }
         public int PCB_TwoHundred { get; set; }

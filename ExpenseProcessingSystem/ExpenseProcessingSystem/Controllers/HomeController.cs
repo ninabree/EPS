@@ -28,6 +28,7 @@ using BIR_Form_Filler.Functions;
 using BIR_Form_Filler.Models;
 using ExpenseProcessingSystem.Models.Check;
 using Microsoft.Extensions.Logging;
+using System.DirectoryServices.AccountManagement;
 
 namespace ExpenseProcessingSystem.Controllers
 {
@@ -46,9 +47,11 @@ namespace ExpenseProcessingSystem.Controllers
         //to access resources
         private readonly IStringLocalizer<HomeController> _localizer;
         private IHostingEnvironment _env;
+        private ILogger<HomeController> _logger;
 
-        public HomeController(IHttpContextAccessor httpContextAccessor, EPSDbContext context, GOExpressContext gocontext,GWriteContext gwritecontext,IHostingEnvironment hostingEnvironment, IStringLocalizer<HomeController> localizer)
+        public HomeController(ILogger<HomeController> logger,IHttpContextAccessor httpContextAccessor, EPSDbContext context, GOExpressContext gocontext,GWriteContext gwritecontext,IHostingEnvironment hostingEnvironment, IStringLocalizer<HomeController> localizer)
         {
+            _logger = logger;
             _localizer = localizer;
             _httpContextAccessor = httpContextAccessor;
             _context = context;
@@ -338,6 +341,11 @@ namespace ExpenseProcessingSystem.Controllers
 
             if (closeFail)
                 model.messages.Add("Can't close book there are still ongoing transactions!");
+
+            var confirmMessage = TempData["closeMessage"];
+
+            if(confirmMessage != null)
+                model.messages.Add(confirmMessage.ToString());
 
             return View(model);
         }
@@ -1170,6 +1178,11 @@ namespace ExpenseProcessingSystem.Controllers
                 RoleList = data.RoleList
             };
 
+            var message = TempData["MESSAGE"];
+            if(message != null || message != "")
+            {
+                ViewData["MESSAGE"] = message;
+            }
             //pagination
             return View(mod);
         }
@@ -1414,7 +1427,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         ViewBag.Success = 0;
                     }
-                    viewLink = "View_CV";
+                    return RedirectToAction("Index", "Home");
                     break;
                 case "Delete":
                     int expStatus = _service.GetCurrentEntryStatus(entryID);
@@ -4461,23 +4474,68 @@ namespace ExpenseProcessingSystem.Controllers
             var userId = GetUserID();
             if (ModelState.IsValid)
             {
-                _service.deleteBCS_Pending(model, userId);
+                try
+                {
+                    _service.deleteBCS_Pending(model, userId);
+
+                }
+                catch (Exception ex)
+                {
+                    string UserID = _session.GetString("UserID");
+                    string UserName = _session.GetString("UserName");
+                    _logger.LogError(ex, "User [" + UserName + "] has encountered a system error at [" + DateTime.Now + "].");
+                    return StatusCode(500);
+                }
             }
+
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_BCS" });
         }
 
         //[* USER *]
-        [HttpPost]
         [ExportModelState]
+        [HttpPost]
         [OnlineUserCheck]
         public IActionResult AddEditUser(UserManagementViewModel model)
         {
             var userId = GetUserID();
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _service.addUser(model, userId);
+                return RedirectToAction("UM", "Home");
             }
 
+            XElement xelemDirectory = XElement.Load("wwwroot/xml/ActiveDirectory.xml");
+
+            string svcUsername = xelemDirectory.Element("svcUsername").Value;
+            string domain = xelemDirectory.Element("domain").Value;
+            string svcPwd = EncrytionTool.DecryptString(xelemDirectory.Element("svcPwd").Value,"eXpreSS");
+            //check if user is existing in Active Directory
+            using (PrincipalContext context = new PrincipalContext(ContextType.Domain, domain, svcUsername, svcPwd))
+            {
+                using (UserPrincipal user = UserPrincipal.FindByIdentity(context, model.NewAcc.User_UserName))
+                {
+                    if (user != null)
+                    {
+                        bool result = _service.addUser(model, userId);
+                        if (result && model.NewAcc.User_ID == 0)
+                        {
+                            TempData["MESSAGE"] = "User successfully registered.";
+                        }
+                        else if(result && model.NewAcc.User_ID > 0)
+                        {
+                            TempData["MESSAGE"] = "User successfully updated.";
+
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("", "User already exists!");
+                        }
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Can't find user in the directory.");
+                    }
+                }
+            }
 
             return RedirectToAction("UM", "Home");
         }
