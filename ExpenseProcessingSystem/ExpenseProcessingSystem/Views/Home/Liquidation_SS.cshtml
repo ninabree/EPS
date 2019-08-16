@@ -36,7 +36,7 @@
                     <col style="width:4%;" />
                     <col style="width:13%;" />
                     <col style="width:13%;" />
-                    <col style="width:15%;" />
+                    <col style="width:13%;" />
                     <col style="width:10%" />
                     <col style="width:2%;" />
                     <col style="width:5%;" />
@@ -47,6 +47,7 @@
                     <col style="width:8%;" />
                     <col style="width:8%;" />
                     <col style="width:8%;" />
+                    <col style="width:2%;" />
                     <col style="width:2%;" />
                 </colgroup>
                 <thead>
@@ -61,6 +62,7 @@
                         <th rowspan="2">Currency</th>
                         <th>Debit</th>
                         <th colspan="2">Credit</th>
+                        <th rowspan="2"></th>
                     </tr>
                     <tr>
                         <th scope="col">Gross Amount</th>
@@ -644,29 +646,16 @@
             @Html.HiddenFor(x => Model.entryID, new { @class = "entryID" })
             @Html.HiddenFor(x => Model.LiqEntryDetails.Liq_Created_Date, new { @class = "LiqEntryDetails_Liq_Created_Date" })
             @*<input type="hidden" id="LiqEntryDetails_Liq_Created_Date" value="@(((DateTime)Model.LiqEntryDetails.Liq_Created_Date).ToString("MM/dd/yyyy"))" style="background-color:transparent" />*@
-            <div class="flex-sb">
+
+            <div class="flex-sb m-t-15">
                 <div>
-                    <div class="dis-inline-block tbl-btn"><button class="btnEntryAction" name="command" value="Save">Save</button></div>
-                    <div class="dis-inline-block tbl-btn"><button disabled>Delete</button></div>
-                    <div class="dis-inline-block tbl-btn"><button disabled>Modify</button></div>
-                </div>
-                <div>
-                    <div class="dis-inline-block tbl-btn"><button id="reversal_entry" disabled>Create Reversal Entry</button></div>
-                </div>
-            </div>
-            <div class="flex-sb">
-                <div>
-                    <div class="dis-inline-block tbl-btn"><button disabled>Approve/Verify</button></div>
-                    <div class="dis-inline-block tbl-btn"><button disabled>Reject</button></div>
-                </div>
-                <div>
-                    <div></div>
+                    <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" name="command" value="Save">Save</button></div>
                 </div>
                 <div>
                     @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker
-                   || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id
-                   || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id
-                   || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.approver_id)
+                  || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id
+                  || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id
+                  || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.approver_id)
                     {
                         <div class="dis-inline-block tbl-btn"><button id="printBir" value="printBir">Print BIR Certificate</button></div>
                     }
