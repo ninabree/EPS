@@ -220,7 +220,6 @@
             updateCurrency2();
         });
         $(".modal-footer2").on("click", "#saveBtnEntry", function (e) {
-            e.stopImmediatePropagation();
             if ($(this).parent().siblings().find('h4.modal-title', this).text() == "Inter-Entity") {
                 var itemNo = $("#parentIdInter").val();
                 isChk();

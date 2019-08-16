@@ -207,7 +207,7 @@
             }
         }
         //checks each checkbox and enables corresponding modals
-        //CheckEachEWT();
+        CheckEachEWT();
         CheckEachInter();
 
         $("#addRow").click(function (e) {
@@ -566,7 +566,7 @@
             updateExpenseEWTDDV(item);
 
             //checks if ewt payor name is not null, if yes, update tr and vat
-            CheckEWTPayor($(item.parentNode)[0].parentNode);
+            //CheckEWTPayor($(item.parentNode)[0].parentNode);
         });
     }
 
@@ -646,9 +646,9 @@
         }
 
         $("#grossTotal").val(grossTotal);
-        $("#credEwtTotal").val(ewtSubTotal);
+        $("#credEwtTotal").val(roundNumber(ewtSubTotal, 2));
         $("#credCashTotal").val(roundNumber(cashSubTotal,2));
-        $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
+        $("#credTotal").val(roundNumber(Number(ewtSubTotal + cashSubTotal),2));
     }
 </script>
 <script type="text/javascript">

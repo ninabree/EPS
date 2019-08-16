@@ -261,7 +261,7 @@
 <script type="text/javascript" src="~/js/EntryScripts.js"></script>
 <script type="text/javascript">
     $(window).on("load", function () {
-        $('#iframePreview').prop('src', "/Home/VoucherViewCV?ExpenseID=@Model.entryID");
+        $('#iframePreview').prop('src', "/Home/VoucherViewDDV?ExpenseID=@Model.entryID");
     });
     $(document).ready(function () {
         if ($('#alert').text() != "") {
@@ -465,10 +465,10 @@
                 cashSubTotal += Number(credCash[i].value);
             }
 
-            $("#grossTotal").val(grossTotal);
-            $("#credEwtTotal").val(ewtSubTotal);
-            $("#credCashTotal").val(cashSubTotal);
-            $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
+            $("#grossTotal").val(roundNumber(grossTotal, 2));
+            $("#credEwtTotal").val(roundNumber(ewtSubTotal, 2));
+            $("#credCashTotal").val(roundNumber(cashSubTotal, 2));
+            $("#credTotal").val(roundNumber(Number(ewtSubTotal + cashSubTotal), 2));
         }
     });
 </script>
