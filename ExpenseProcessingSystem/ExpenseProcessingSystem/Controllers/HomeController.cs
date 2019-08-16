@@ -156,14 +156,13 @@ namespace ExpenseProcessingSystem.Controllers
 
             //sort
             ViewData["CurrentSort"] = sortOrder;
-            ViewData["PendAppStatSortParm"] = String.IsNullOrEmpty(sortOrder) ? "pend_status" : "";
+            ViewData["PendUpdateSortParm"] = String.IsNullOrEmpty(sortOrder) ? "pend_last_updte" : "";
             ViewData["PendAppIDSortParm"] = sortOrder == "pend_type_desc" ? "pend_type" : "pend_type_desc";
             ViewData["PendAppAmtSortParm"] = sortOrder == "pend_amt_desc" ? "pend_amt" : "pend_amt_desc";
             ViewData["PendAppPaySortParm"] = sortOrder == "pend_payee_desc" ? "pend_payee" : "pend_payee_desc";
             ViewData["PendAppMkrSortParm"] = sortOrder == "pend_maker_desc" ? "pend_maker" : "pend_maker_desc";
-            //ViewData["PendAppVfrSortParm"] = sortOrder == "pend_ver_desc" ? "pend_ver" : "pend_ver_desc";
             ViewData["PendDateSortParm"] = sortOrder == "pend_date_created_desc" ? "pend_date_created" : "pend_date_created_desc";
-            ViewData["PendUpdateSortParm"] = sortOrder == "pend_last_updte_desc" ? "pend_last_updte" : "pend_last_updte_desc";
+            ViewData["PendAppStatSortParm"] = sortOrder == "pend_status_desc" ? "pend_status" : "pend_status_desc";
             
 
             FiltersViewModel tempFil = new FiltersViewModel();
