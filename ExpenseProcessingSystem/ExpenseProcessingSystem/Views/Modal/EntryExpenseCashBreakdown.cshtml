@@ -118,18 +118,18 @@
 
             for (var count = 0; count < 13; count++) {
                 $("#" + trs[count].id).find('.txtNoPCS').val($("#" + header + ret + "__cashBreakdown_" + count + "__cashNoPC").val());
-                $("#" + trs[count].id).find('.txtAmount').val($("#" + header + ret + "__cashBreakdown_" + count + "__cashAmount").val());
+                $("#" + trs[count].id).find('.txtAmount').val($("#" + header + ret + "__cashBreakdown_" + count + "__cashAmount").val().replace(".00", ""));
 
                 amountTotal = parseFloat(amountTotal) + parseFloat($("#" + header + ret + "__cashBreakdown_" + count + "__cashAmount").val());
 
                 if ($("#item_" + ret).find(".txtgbaseRemarks").prop('disabled') || header == "LiquidationDetails_") {
                     $("#" + trs[count].id).find('.txtNoPCS').attr("readonly", "readonly");
+                    $("#" + trs[count].id).find('.txtNoPCS').removeClass('voucher-input');
                     $("#saveGbase").css("display", "none");
                 }
             }
             $('.cashBDAmountTotal').val(AC(round(amountTotal, 2)));
         }
-
         $(function () {
             $("table").on("change", "input.txtNoPCS", function (e) {
                 var cashBDModalpNode = $(this.parentNode)[0].parentNode;
@@ -217,7 +217,8 @@
         }
         $('#cashBDAmountTotal').attr('value', $('#cashBDAmountTotal').val());
 
-        $('#cashbdDatePrint').attr('value', $('#expenseDate').val());
+        var dt = new Date($('#expenseDate').val());
+        $('#cashbdDatePrint').attr('value', (dt.getMonth() + 1) + '/' + dt.getDate() + '/' + dt.getFullYear());
         $('#cashbdAmountPrint').attr('value', $('#cashBDAmountTotal').val());
         $('#paymentFor').attr('value', $('#' + $('#parentIdPCVSSTable').val()).find('.txtGBaseRemark').val());
 
@@ -252,7 +253,7 @@
         WinPrint.document.close();
         WinPrint.focus();
         WinPrint.print();
-        //WinPrint.close();
+        WinPrint.close();
 
         //Rollback the Cash Breakdown Liquidation table attribute value to default(0).
         for (var count = 0; count < tableCnt.length; count++) {

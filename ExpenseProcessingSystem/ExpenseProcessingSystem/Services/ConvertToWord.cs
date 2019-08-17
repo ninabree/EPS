@@ -9,10 +9,10 @@ namespace ExpenseProcessingSystem.Services
         {
             StringBuilder sb = new StringBuilder("");
 
-            short bil = Convert.ToInt16(Convert.ToInt64(Math.Floor(input)) / 1000000000L);
-            short mil = Convert.ToInt16(Convert.ToInt64(Math.Floor(input)) % 1000000000 / 1000000);
-            short tho = Convert.ToInt16(Convert.ToInt64(Math.Floor(input)) % 1000000 / 1000);
-            short hun = Convert.ToInt16(Convert.ToInt64(Math.Floor(input)) % 1000);
+            long bil = Convert.ToInt64(Convert.ToInt64(Math.Floor(input)) / 1000000000L);
+            long mil = Convert.ToInt64(Convert.ToInt64(Math.Floor(input)) % 1000000000 / 1000000);
+            long tho = Convert.ToInt64(Convert.ToInt64(Math.Floor(input)) % 1000000 / 1000);
+            long hun = Convert.ToInt64(Convert.ToInt64(Math.Floor(input)) % 1000);
             byte cent = Convert.ToByte((input - Math.Truncate(input)) * 100);
 
             if (bil > 0)
@@ -105,7 +105,7 @@ namespace ExpenseProcessingSystem.Services
         }
 
 
-        private static string GetHundreds(short toConv)
+        private static string GetHundreds(long toConv)
         {
             if (toConv >= 100)
             {
@@ -119,17 +119,17 @@ namespace ExpenseProcessingSystem.Services
             }
         }
 
-        private static string GetThousands(short toConv)
+        private static string GetThousands(long toConv)
         {
             return string.Join(" ", GetHundreds(toConv), new string("Thousand"));
         }
 
-        private static string GetMillions(short toConv)
+        private static string GetMillions(long toConv)
         {
             return string.Join(" ", GetHundreds(toConv), new string("Million"));
         }
 
-        private static string GetBillions(short toConv)
+        private static string GetBillions(long toConv)
         {
             return string.Join(" ", GetHundreds(toConv), new string("Billion"));
         }

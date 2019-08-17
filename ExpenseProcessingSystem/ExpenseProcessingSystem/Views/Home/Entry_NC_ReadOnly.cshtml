@@ -22,6 +22,8 @@
     var isApprover = int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.approver_id;
     var aVerifier = role == GlobalSystemValues.ROLE_VERIFIER;
     var anApprover = role == GlobalSystemValues.ROLE_APPROVER;
+    var Verifiable = Model.verifier_1_id < 1 || Model.verifier_2_id < 1;
+}
 }
 <div class="tabContent">
     <input id="_screen" type="hidden" value="nc" />
@@ -351,30 +353,39 @@
         @{
             var isEWT = (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PSSC || Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PCHC ||
                          Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES);
-            var enableSave = "disabled";
+            var enableSave = false;
             var enableDelete = (Model.statusID == GlobalSystemValues.STATUS_PENDING ||
-                                  Model.statusID == GlobalSystemValues.STATUS_REJECTED) && (isMaker) ? "" : "disabled";
+                                  Model.statusID == GlobalSystemValues.STATUS_REJECTED) && (isMaker) ? true : false;
             var enableModify = (Model.statusID == GlobalSystemValues.STATUS_PENDING ||
-                                  Model.statusID == GlobalSystemValues.STATUS_REJECTED) && (isMaker) ? "" : "disabled";
+                                  Model.statusID == GlobalSystemValues.STATUS_REJECTED) && (isMaker) ? true : false;
 
-            var enableApproveVerify = ((Model.statusID == GlobalSystemValues.STATUS_PENDING
-                                        || Model.statusID == GlobalSystemValues.STATUS_VERIFIED) &&
-                                        ((aVerifier) || (anApprover))) && (!isMaker) ? "" : "disabled";
+            //enable verify when status is Pending
+            var enableVerify = ((Model.statusID == GlobalSystemValues.STATUS_PENDING
+                                 //OR if Status is Verified and Verifiers  < 2 and not one of the current verifiers of the transaction
+                                 || (Model.statusID == GlobalSystemValues.STATUS_VERIFIED && (!isVerifier) && Verifiable))
+                                 //AND Role  is Verifier OR Approver AND not the Maker of the  transaction
+                                 && ((aVerifier) || (anApprover))) && (!isMaker) ? true : false;
+
+            var enableApprove = ((Model.statusID == GlobalSystemValues.STATUS_PENDING
+                                  || Model.statusID == GlobalSystemValues.STATUS_VERIFIED)) &&
+                                  (anApprover) && (!isMaker) && (!isVerifier) ? true : false;
+
             var enableReject = ((Model.statusID == GlobalSystemValues.STATUS_PENDING
-                                        || Model.statusID == GlobalSystemValues.STATUS_VERIFIED) && (anApprover)) && (!isMaker) ? "" : "disabled";
+                                || Model.statusID == GlobalSystemValues.STATUS_VERIFIED) && ((anApprover) || (aVerifier))) && (!isMaker) && (!isVerifier) ? true : false;
 
             var enableBIR = ((Model.statusID == GlobalSystemValues.STATUS_REVERSED ||
                                 Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
                                 Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING ||
-                                Model.statusID == GlobalSystemValues.STATUS_POSTED) && isEWT) ? "" : "disabled";
+                                Model.statusID == GlobalSystemValues.STATUS_POSTED) && isEWT) ? true : false;
+
             var enablePrint = (Model.statusID == GlobalSystemValues.STATUS_REVERSED ||
                                 Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
                                 Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING ||
-                                Model.statusID == GlobalSystemValues.STATUS_POSTED) ? "" : "disabled";
+                                Model.statusID == GlobalSystemValues.STATUS_POSTED) ? true : false;
 
             var enableReversal = (Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
                                 Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING ||
-                                Model.statusID == GlobalSystemValues.STATUS_POSTED) ? "" : "disabled";
+                                Model.statusID == GlobalSystemValues.STATUS_POSTED) ? true : false;
         }
 
         @using (Html.BeginForm("VerAppModNC", "Home", FormMethod.Post, new { @class = "validate-form" }))
@@ -385,25 +396,26 @@
             {
                 <div class="flex-sb">
                     <div>
-                        <div class="dis-inline-block"><button class="tbl-btn" @enableSave>Save</button></div>
-                        <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" @enableDelete value="Delete" name="command">Delete</button></div>
-                        <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" @enableModify value="Modify" name="command">Modify</button></div>
-                        <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" @enableApproveVerify value="@role" name="command">Approve/Verify</button></div>
-                        <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" @enableReject value="Reject" name="command">Reject</button></div>
+                        <div class="dis-inline-block">@if(enableSave) { <button class="tbl-btn">Save</button> }</div>
+                        <div class="dis-inline-block">@if(enableDelete) { <button class="tbl-btn btnEntryAction" value="Delete" name="command">Delete</button> }</div>
+                        <div class="dis-inline-block">@if(enableModify) { <button class="tbl-btn btnEntryAction" value="Modify" name="command">Modify</button> }</div>
+                        <div class="dis-inline-block">@if(enableVerify) { <button class="tbl-btn btnEntryAction" value="verifier" name="command">Verify</button> }</div>
+                        <div class="dis-inline-block">@if(enableApprove) { <button class="tbl-btn btnEntryAction" value="approver" name="command">Approve</button> }</div>
+                        <div class="dis-inline-block">@if(enableReject) { <button class="tbl-btn btnEntryAction" value="Reject" name="command">Reject</button> }</div>
                     </div>
                     <div>
-                        <div class="dis-inline-block"><button class="tbl-btn" @enableBIR id="printBir" value="printBir">Print BIR Certificate</button></div>
+                        <div class="dis-inline-block">@if(enableBIR) { <button class="tbl-btn" id="printBir" value="printBir">Print BIR Certificate</button> }</div>
                         @if (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT)
                         {
-                            <div class="dis-inline-block"><button class="tbl-btn" @enablePrint id="printBir" value="PrintCDD" name="command">Print CDD Instruction Sheet</button></div>
+                            <div class="dis-inline-block">@if(enablePrint) { <button class="tbl-btn" id="printBir" value="PrintCDD" name="command">Print CDD Instruction Sheet</button> }</div>
                         }
                         else if (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL &&
                         (Model.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID == @usd ||
                         Model.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID == @jpy))
                         {
-                            <div class="dis-inline-block"><button class="tbl-btn" @enablePrint id="printBir" value="PrintCDD_RET" name="command">Print CDD Instruction Sheet</button></div>
+                            <div class="dis-inline-block">@if(enablePrint) { <button class="tbl-btn" id="printBir" value="PrintCDD_RET" name="command">Print CDD Instruction Sheet</button> }</div>
                         }
-                        <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" id="reversal_entry" @enableReversal value="Reversal" name="command">Create Reversal Entry</button></div>
+                        <div class="dis-inline-block">@if(enableReversal) { <button class="tbl-btn btnEntryAction" id="reversal_entry" value="Reversal" name="command">Create Reversal Entry</button> }</div>
                     </div>
                 </div>
             }

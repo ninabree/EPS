@@ -30,7 +30,7 @@
                 <colgroup>
                     <col style="width:15%;" />
                     <col style="width:13%;" />
-                    <col style="width:15%;" />
+                    <col style="width:13%;" />
                     <col style="width:10%" />
                     <col style="width:2%;" />
                     <col style="width:5%;" />
@@ -41,6 +41,7 @@
                     <col style="width:8%;" />
                     <col style="width:8%;" />
                     <col style="width:8%;" />
+                    <col style="width:2%;" />
                     <col style="width:2%;" />
                 </colgroup>
                 <thead>
@@ -54,6 +55,7 @@
                         <th rowspan="2">Currency</th>
                         <th>Debit</th>
                         <th colspan="2">Credit</th>
+                        <th rowspan="2"></th>
                     </tr>
                     <tr>
                         <th scope="col">Gross Amount</th>
@@ -72,10 +74,10 @@
                                         <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
                                         @for (int y = 0; y < Model.EntryCV[i].gBaseRemarksDetails.Count(); y++)
                                         {
-                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].docType);
-                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].desc);
-                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].invNo);
-                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].amount);
+                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].docType, new { @class = "docType" });
+                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].desc, new { @class = "desc" });
+                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].invNo, new { @class = "invNo" });
+                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].amount, new { @class = "amount" });
                                         }
                                     </div>
                                 </div>
@@ -155,19 +157,9 @@
             </table>
         </div>
         <div id="entry-controls" class="m-b-10">
-            <div class="flex-sb">
+            <div class="flex-sb m-t-15">
                 <div>
                     <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" name="command" value="Save">Save</button></div>
-                    <div class="dis-inline-block"><button class="tbl-btn" disabled>Delete</button></div>
-                    <div class="dis-inline-block"><button class="tbl-btn" disabled>Modify</button></div>
-                    <div class="dis-inline-block"><button class="tbl-btn" disabled>Approve/Verify</button></div>
-                    <div class="dis-inline-block"><button class="tbl-btn" disabled>Reject</button></div>
-                </div>
-                <div>
-                </div>
-                <div>
-                    <div class="dis-inline-block"><button class="tbl-btn" disabled>Print BIR Certificate</button></div>
-                    <div class="dis-inline-block"><button class="tbl-btn" id="reversal_entry" disabled>Create Reversal Entry</button></div>
                 </div>
             </div>
         </div>
@@ -201,34 +193,32 @@
             ddlEnabled(cnt);
         }
 
+        var gross = $(".txtGross");
+        var credEwt = $(".txtCredEwt");
+        var credCash = $(".txtCredCash");
+
+        var grossTotal = 0;
+        var ewtSubTotal = 0;
+        var cashSubTotal = 0;
+
+        for (var i = 0; i < gross.length; i++) {
+            grossTotal += Number(gross[i].value);
+        }
+
+        for (var i = 0; i < credEwt.length; i++) {
+            ewtSubTotal += Number(credEwt[i].value);
+        }
+
+        for (var i = 0; i < credCash.length; i++) {
+            cashSubTotal += Number(credCash[i].value);
+        }
+
+        $("#grossTotal").val(roundNumber(grossTotal, 2));
+        $("#credEwtTotal").val(roundNumber(ewtSubTotal, 2));
+        $("#credCashTotal").val(roundNumber(cashSubTotal,2));
+        $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
+
         $(function () {
-            $(window).on("load", function () {
-                var gross = $(".txtGross");
-                var credEwt = $(".txtCredEwt");
-                var credCash = $(".txtCredCash");
-
-                var grossTotal = 0;
-                var ewtSubTotal = 0;
-                var cashSubTotal = 0;
-
-                for (var i = 0; i < gross.length; i++) {
-                    grossTotal += Number(gross[i].value);
-                }
-
-                for (var i = 0; i < credEwt.length; i++) {
-                    ewtSubTotal += Number(credEwt[i].value);
-                }
-
-                for (var i = 0; i < credCash.length; i++) {
-                    cashSubTotal += Number(credCash[i].value);
-                }
-
-                $("#grossTotal").val(grossTotal);
-                $("#credEwtTotal").val(ewtSubTotal);
-                $("#credCashTotal").val(cashSubTotal);
-                $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
-            });
-
             $("#addRow").click(function (e) {
                 var itemCount = document.getElementById('inputTable').getElementsByTagName('tbody')[0].childElementCount - 2;
                 var tableRef = document.getElementById('inputTable').getElementsByTagName('tbody')[0];

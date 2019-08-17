@@ -10,6 +10,21 @@
 @using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor HttpContextAccessor
 
+@{
+    var role = HttpContextAccessor.HttpContext.Session.GetString("accessType");
+    var isMaker = int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker;
+    var isVerifier = int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id ||
+     int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id;
+    var isApprover = int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.approver_id;
+    var isMakerLiq = int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.LiqEntryDetails.Liq_Created_UserID;
+    var isVerifierLiq = int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.LiqEntryDetails.Liq_Verifier1 ||
+     int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.LiqEntryDetails.Liq_Verifier2;
+    var isApproverLiq = int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.LiqEntryDetails.Liq_Approver;
+    var aVerifier = role == GlobalSystemValues.ROLE_VERIFIER;
+    var anApprover = role == GlobalSystemValues.ROLE_APPROVER;
+    var Verifiable = Model.verifier_1_id < 1 || Model.verifier_2_id < 1;
+}
+
 <input id="_screen" type="hidden" value="liq_Dtl" />
 @using (Html.BeginForm("Liquidation_VerAppModSS", "Home", FormMethod.Post))
 {
@@ -18,7 +33,9 @@
         <div id="tbl-lbl">
             <div class="dis-inline-block"><p>Date:</p></div>
             <div class="dis-inline-block">
-                <input id="expenseDate" value="@(((DateTime)Model.expenseDate).ToString("MM/dd/yyyy"))" style="background-color:transparent" />
+                @*<input id="expenseDate" value="@(((DateTime)Model.expenseDate).ToString("MM/dd/yyyy"))" style="background-color:transparent" />*@
+                @Html.EditorFor(m => m.expenseDate, new { htmlAttributes = new { @class = "input w-97", @type = "date", @readonly = "readonly" } })
+
             </div>
             <div class="dis-inline-block" style="float:right">
                 <p class="dis-inline-block">
@@ -36,7 +53,7 @@
                     <col style="width:4%;" />
                     <col style="width:12%;" />
                     <col style="width:12%;" />
-                    <col style="width:15%;" />
+                    <col style="width:13%;" />
                     <col style="width:10%" />
                     <col style="width:2%;" />
                     <col style="width:5%;" />
@@ -47,6 +64,7 @@
                     <col style="width:8%;" />
                     <col style="width:7%;" />
                     <col style="width:7%;" />
+                    <col style="width:2%;" />
                     <col style="width:2%;" />
                     <col style="width:2%;" />
                 </colgroup>
@@ -62,6 +80,7 @@
                         <th rowspan="2">Currency</th>
                         <th>Debit</th>
                         <th colspan="3">Credit</th>
+                        <th rowspan="2"></th>
                     </tr>
                     <tr>
                         <th scope="col">Gross Amount</th>
@@ -74,7 +93,7 @@
                     {
                         <tr id="item_@i">
                             <td id="sss">
-                                <a class="liqudationBtn" href="#"><img id="imgLiq" src="~/images/liqLogo.png"/></a>
+                                <a class="liqudationBtn" href="#"><img id="imgLiq" src="~/images/liqLogo.png" /></a>
                                 @Html.HiddenFor(x => Model.LiquidationDetails[i].EntryDetailsID, new { @class = "entryDtlID" })
                                 @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInputFlag, new { @class = "hiddenLiqFlag" })
                                 <div id="divLiqCashBD_@i">
@@ -463,8 +482,8 @@
                             <td></td>
                             <td>
                                 @if (Model.statusID == GlobalSystemValues.STATUS_REVERSED || Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING
-                                  || Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING || Model.statusID == GlobalSystemValues.STATUS_CLOSED
-                                   || Model.statusID == GlobalSystemValues.STATUS_POSTED)
+                                 || Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING || Model.statusID == GlobalSystemValues.STATUS_CLOSED
+                                  || Model.statusID == GlobalSystemValues.STATUS_POSTED)
                                 {
                                     <a class="cddISLiqBtn" href="#"><img id="imgLiqCDD" src="~/images/cddLiqLogo.png" style="width:20%;height:30%" /></a>
                                 }
@@ -665,100 +684,54 @@
             </div>
         </div>
         <div id="entry-controls" class="m-b-10">
+            @{
+                var enableSave = false;
+                var enableDelete = (Model.statusID == GlobalSystemValues.STATUS_PENDING ||
+                                      Model.statusID == GlobalSystemValues.STATUS_REJECTED) && (isMaker) ? true : false;
+                var enableModify = (Model.statusID == GlobalSystemValues.STATUS_PENDING ||
+                                      Model.statusID == GlobalSystemValues.STATUS_REJECTED) && (isMaker) ? true : false;
+
+                //enable verify when status is Pending
+                var enableVerify = ((Model.statusID == GlobalSystemValues.STATUS_PENDING
+                                     //OR if Status is Verified and Verifiers  < 2 and not one of the current verifiers of the transaction
+                                     || (Model.statusID == GlobalSystemValues.STATUS_VERIFIED && (!isVerifier) && Verifiable))
+                                     //AND Role  is Verifier OR Approver AND not the Maker of the  transaction
+                                     && ((aVerifier) || (anApprover))) && (!isMaker) ? true : false;
+
+                var enableApprove = ((Model.statusID == GlobalSystemValues.STATUS_PENDING
+                                      || Model.statusID == GlobalSystemValues.STATUS_VERIFIED)) &&
+                                    (anApprover) && (!isMaker) && (!isVerifier) ? true : false;
+
+                var enableReject = ((Model.statusID == GlobalSystemValues.STATUS_PENDING
+                                        || Model.statusID == GlobalSystemValues.STATUS_VERIFIED) && ((anApprover) || (aVerifier))) && (!isMaker) && (!isVerifier) ? true : false;
+
+                var enableBIR = ((Model.statusID == GlobalSystemValues.STATUS_REVERSED ||
+                                    Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
+                                    Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING ||
+                                    Model.statusID == GlobalSystemValues.STATUS_POSTED)
+                                    && (isMaker || isVerifier || isApprover)) ? true : false;
+
+                var enableReversal = ((Model.LiqEntryDetails.Liq_Status == GlobalSystemValues.STATUS_FOR_PRINTING
+                                    || Model.LiqEntryDetails.Liq_Status == GlobalSystemValues.STATUS_FOR_CLOSING
+                                    || Model.LiqEntryDetails.Liq_Status == GlobalSystemValues.STATUS_POSTED
+                                    || Model.LiqEntryDetails.Liq_Status == GlobalSystemValues.STATUS_CLOSED)
+                                    && (isMakerLiq || isVerifierLiq || isApproverLiq)) ? true : false;
+            }
             @Html.HiddenFor(x => Model.entryID, new { @class = "entryID" })
-            @*@Html.HiddenFor(x => Model.LiqEntryDetails.Liq_Created_Date, new { @class = "LiqEntryDetails_Liq_Created_Date" })*@
-            <input type="hidden" id="LiqEntryDetails_Liq_Created_Date" value="@(((DateTime)Model.LiqEntryDetails.Liq_Created_Date).ToString("MM/dd/yyyy"))" style="background-color:transparent" />
+            @Html.HiddenFor(x => Model.LiqEntryDetails.Liq_Created_Date, new { @class = "LiqEntryDetails_Liq_Created_Date" })
+            @*<input type="hidden" id="LiqEntryDetails_Liq_Created_Date" value="@(((DateTime)Model.LiqEntryDetails.Liq_Created_Date).ToString("MM/dd/yyyy"))" name="LiqEntryDetails.Liq_Created_Date" style="background-color:transparent" />*@
             <div class="flex-sb">
                 <div>
-                    <div class="dis-inline-block"><button class="tbl-btn" disabled>Save</button></div>
-
-                    @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker && (Model.statusID == GlobalSystemValues.STATUS_PENDING || Model.statusID == GlobalSystemValues.STATUS_REJECTED))
-                    {
-                        <div class="dis-inline-block"><button value="Delete" name="command" class="btnEntryAction tbl-btn">Delete</button></div>
-                        <div class="dis-inline-block"><button value="Modify" name="command" class="btnEntryAction tbl-btn">Modify</button></div>
-                    }
-                    else
-                    {
-                        <div class="dis-inline-block"><button class="tbl-btn" disabled>Delete</button></div>
-                        <div class="dis-inline-block"><button class="tbl-btn" disabled>Modify</button></div>
-                    }
-                    @if (HttpContextAccessor.HttpContext.Session.GetString("accessType") == GlobalSystemValues.ROLE_MAKER || HttpContextAccessor.HttpContext.Session.GetString("UserID") == Model.maker.ToString())
-                    {
-                        <div class="dis-inline-block"><button class="tbl-btn" disabled>Approve/Verify</button></div>
-                        <div class="dis-inline-block"><button class="tbl-btn" disabled>Reject</button></div>
-                    }
-                    else if (HttpContextAccessor.HttpContext.Session.GetString("accessType") == GlobalSystemValues.ROLE_VERIFIER)
-                    {
-                        if (Model.statusID != GlobalSystemValues.STATUS_PENDING && Model.statusID != GlobalSystemValues.STATUS_VERIFIED)
-                        {
-                            <div class="dis-inline-block"><button class="tbl-btn" disabled>Approve/Verify</button></div>
-                        }
-                        else
-                        {
-                            if (Model.statusID == GlobalSystemValues.STATUS_VERIFIED)
-                            {
-                                if (Model.verifier_1_id != int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) && Model.verifier_2_id != int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")))
-                                {
-                                    <div class="dis-inline-block"><button class="tbl-btn" value="@HttpContextAccessor.HttpContext.Session.GetString("accessType")" name="command" class="btnEntryAction">Approve/Verify</button></div>
-                                }
-                                else
-                                {
-                                    <div class="dis-inline-block"><button class="tbl-btn" disabled>Approve/Verify</button></div>
-                                }
-                            }
-                            else
-                            {
-                                <div class="dis-inline-block"><button class="tbl-btn" value="@HttpContextAccessor.HttpContext.Session.GetString("accessType")" name="command" class="btnEntryAction">Approve/Verify</button></div>
-                            }
-                        }
-                        <div class="dis-inline-block"><button class="tbl-btn" disabled>Reject</button></div>
-                    }
-                    else
-                    {
-                        if (Model.statusID != GlobalSystemValues.STATUS_PENDING &&
-                            Model.statusID != GlobalSystemValues.STATUS_VERIFIED)
-                        {
-                            <div class="dis-inline-block"><button class="tbl-btn" disabled>Approve/Verify</button></div>
-                            <div class="dis-inline-block"><button class="tbl-btn" disabled>Reject</button></div>
-                        }
-                        else
-                        {
-                            <div class="dis-inline-block"><button value="@HttpContextAccessor.HttpContext.Session.GetString("accessType")" name="command" class="btnEntryAction tbl-btn">Approve/Verify</button></div>
-                            <div class="dis-inline-block"><button value="Reject" name="command" class="btnEntryAction tbl-btn">Reject</button></div>
-                        }
-                    }
+                    <div class="dis-inline-block">@if(enableSave) { <button class="tbl-btn">Save</button> }</div>
+                    <div class="dis-inline-block">@if(enableDelete) { <button class="tbl-btn btnEntryAction" value="Delete" name="command">Delete</button> }</div>
+                    <div class="dis-inline-block">@if(enableModify) { <button class="tbl-btn btnEntryAction" value="Modify" name="command">Modify</button> }</div>
+                    <div class="dis-inline-block">@if(enableVerify) { <button class="tbl-btn btnEntryAction" value="verifier" name="command">Verify</button> }</div>
+                    <div class="dis-inline-block">@if(enableApprove) { <button class="tbl-btn btnEntryAction" value="approver" name="command">Approve</button> }</div>
+                    <div class="dis-inline-block">@if(enableReject) { <button class="tbl-btn btnEntryAction" value="Reject" name="command">Reject</button> }</div>
                 </div>
                 <div>
-                    @if (Model.LiqEntryDetails.Liq_Status == GlobalSystemValues.STATUS_FOR_PRINTING || Model.LiqEntryDetails.Liq_Status == GlobalSystemValues.STATUS_FOR_CLOSING
-                    || Model.LiqEntryDetails.Liq_Status == GlobalSystemValues.STATUS_POSTED || Model.LiqEntryDetails.Liq_Status == GlobalSystemValues.STATUS_CLOSED)
-                    {
-                        if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.LiqEntryDetails.Liq_Created_UserID
-                            || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.LiqEntryDetails.Liq_Verifier1
-                            || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.LiqEntryDetails.Liq_Verifier2
-                            || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.LiqEntryDetails.Liq_Approver)
-                        {
-                            <div class="dis-inline-block"><button id="reversal_entry" value="Reversal" name="command" class="btnEntryAction tbl-btn">Create Reversal Entry</button></div>
-                        }
-                        else
-                        {
-                            <div class="dis-inline-block"><button class="tbl-btn" id="reversal_entry" disabled>Create Reversal Entry</button></div>
-                        }
-                    }
-                    else
-                    {
-                        <div class="dis-inline-block"><button class="tbl-btn" id="reversal_entry" disabled>Create Reversal Entry</button></div>
-                    }
-                    @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker
-               || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id
-               || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id
-               || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.approver_id)
-                    {
-                        <div class="dis-inline-block"><button class="tbl-btn" id="printBir" value="printBir">Print BIR Certificate</button></div>
-                    }
-                    else
-                    {
-                        <div class="dis-inline-block"><button class="tbl-btn" disabled>Print BIR Certificate</button></div>
-                    }
+                    <div class="dis-inline-block">@if(enableBIR) { <button class="tbl-btn" id="printBir" value="printBir">Print BIR Certificate</button> }</div>
+                    <div class="dis-inline-block">@if (enableReversal){<button id="reversal_entry" value="Reversal" name="command" class="btnEntryAction tbl-btn">Create Reversal Entry</button>}</div>
                 </div>
             </div>
         </div>

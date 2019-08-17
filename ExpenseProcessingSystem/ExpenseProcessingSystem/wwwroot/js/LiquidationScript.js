@@ -92,9 +92,9 @@ function displayInfoCashBD(pid) {
     var totalAmount = 0.0;
 
     for (var count = 0; count < cashBDInput.length / 3; count++) {
-        $('#cashbdliqid_' + count).find('.txtLiqDenomination').val($('#LiquidationDetails_' + ret + '__liqCashBreakdown_' + count + '__cashDenomination').val());
+        $('#cashbdliqid_' + count).find('.txtLiqDenomination').val($('#LiquidationDetails_' + ret + '__liqCashBreakdown_' + count + '__cashDenomination').val().replace(".00", ""));
         $('#cashbdliqid_' + count).find('.txtLiqNoPCS').val($('#LiquidationDetails_' + ret + '__liqCashBreakdown_' + count + '__cashNoPC').val());
-        $('#cashbdliqid_' + count).find('.txtLiqAmount').val($('#LiquidationDetails_' + ret + '__liqCashBreakdown_' + count + '__cashAmount').val());
+        $('#cashbdliqid_' + count).find('.txtLiqAmount').val($('#LiquidationDetails_' + ret + '__liqCashBreakdown_' + count + '__cashAmount').val().replace(".00", ""));
 
         totalAmount += parseFloat($('#LiquidationDetails_' + ret + '__liqCashBreakdown_' + count + '__cashAmount').val());
     }
@@ -144,8 +144,8 @@ function printDivCashLiqBD(divID) {
         $('#cashbdliqid_' + count).find('.txtLiqAmount').attr('value', $('#cashbdliqid_' + count).find('.txtLiqAmount').val());
     }
     $('#txtCashBDTotal').attr('value', $('#txtCashBDTotal').val());
-
-    $('#cashbdDatePrintLiq').attr('value', $('#LiqEntryDetails_Liq_Created_Date').val());
+    var d = new Date($('#LiqEntryDetails_Liq_Created_Date').val());
+    $('#cashbdDatePrintLiq').attr('value', (d.getMonth() + 1) + '/' + d.getDate() + '/' + d.getFullYear());
     $('#cashbdAmountPrintLiq').attr('value', $('#txtCashBDTotal').val());
     $('#paymentForLiq').attr('value', "S" + $('.highlight').find('.txtGBaseRemark').val());
 
@@ -179,7 +179,7 @@ function printDivCashLiqBD(divID) {
     WinPrint.document.close();
     WinPrint.focus();
     WinPrint.print();
-    //WinPrint.close();
+    WinPrint.close();
 
     //Rollback the Cash Breakdown Liquidation table attribute value to default(0).
     for (var count = 0; count < tableCnt.length; count++) {

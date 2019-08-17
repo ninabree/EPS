@@ -196,7 +196,9 @@ namespace ExpenseProcessingSystem.Services
         public List<ApplicationsViewModel> getPending(int userID, FiltersViewModel filters)
         {
             var linktionary = new Dictionary<int, string>();
-
+            string mkr = GlobalSystemValues.ROLE_MAKER;
+            var vfr = GlobalSystemValues.ROLE_VERIFIER;
+            var appr = GlobalSystemValues.ROLE_APPROVER;
             // New Linktionary for Expense Transactions
             linktionary = new Dictionary<int, string>
                     {
@@ -207,105 +209,193 @@ namespace ExpenseProcessingSystem.Services
                         {GlobalSystemValues.TYPE_PC,"View_PCV"},
                         {GlobalSystemValues.TYPE_SS,"View_SS"},
                     };
-            List<ApplicationsViewModel> dbPending = (from p in _context.ExpenseEntry
-                            from user in _context.User
-                            where (
-                            //maker
-                            (p.Expense_Creator_ID == userID &&
-                            (p.Expense_Status == GlobalSystemValues.STATUS_PENDING
-                            || p.Expense_Status == GlobalSystemValues.STATUS_VERIFIED
-                            || p.Expense_Status == GlobalSystemValues.STATUS_NEW
-                            || p.Expense_Status == GlobalSystemValues.STATUS_EDIT
-                            || p.Expense_Status == GlobalSystemValues.STATUS_DELETE
-                            || p.Expense_Status == GlobalSystemValues.STATUS_FOR_PRINTING)
-                            && p.Expense_Verifier_1 != userID
-                            && p.Expense_Verifier_2 != userID
-                            &&(p.Expense_Status == GlobalSystemValues.STATUS_REJECTED)
-                            ) ||
-                            //verifier
-                            //if role == verifier && not creator of entry
-                            ((user.User_Role == GlobalSystemValues.ROLE_VERIFIER && user.User_ID == userID && p.Expense_Creator_ID != userID) &&
-                            // and if pending or verified but can still be verified
-                            (((p.Expense_Status == GlobalSystemValues.STATUS_PENDING || p.Expense_Status == GlobalSystemValues.STATUS_VERIFIED) && (p.Expense_Verifier_1 == 0 || p.Expense_Verifier_2 == 0))
-                            //or for printing and is a verifier of the entry
-                            || (p.Expense_Status == GlobalSystemValues.STATUS_FOR_PRINTING && (p.Expense_Verifier_1 == userID || p.Expense_Verifier_2 == userID)))
-                            ) ||
-                            //approver
-                            //if role == approver && not creator of entry
-                            ((user.User_Role == GlobalSystemValues.ROLE_APPROVER && user.User_ID == userID && p.Expense_Creator_ID != userID) &&
-                            // and if pending or verified
-                            ((p.Expense_Status == GlobalSystemValues.STATUS_PENDING || p.Expense_Status == GlobalSystemValues.STATUS_VERIFIED)
-                            //or for printing and is the approver of the entry
-                            || (p.Expense_Status == GlobalSystemValues.STATUS_FOR_PRINTING && p.Expense_Approver == userID))
-                            ))
-                            select new ApplicationsViewModel
-                            {
-                                App_ID = p.Expense_ID,
-                                App_Type = GlobalSystemValues.getApplicationType(p.Expense_Type),
-                                App_Amount = p.Expense_Debit_Total,
-                                App_Payee = p.Expense_Payee+","+p.Expense_Payee_Type,
-                                App_Maker = p.Expense_Creator_ID+"",
-                                App_Verifier_ID_List = new List<string> { p.Expense_Verifier_1 == 0 ? null : p.Expense_Verifier_1+"", p.Expense_Verifier_2 == 0 ? null : p.Expense_Verifier_2+"" },
-                                App_Date = p.Expense_Date,
-                                App_Last_Updated = p.Expense_Last_Updated,
-                                App_Status = p.Expense_Status+"",
-                                App_Link = linktionary[p.Expense_Type]
-                            }).ToList();
-
-            // New Linktionary for Liquidation Transactions
-            linktionary = new Dictionary<int, string>
-                    {
-                        {0,"Data Maintenance" },
-                        {GlobalSystemValues.TYPE_CV,"View_CV"},
-                        {GlobalSystemValues.TYPE_DDV,"View_DDV"},
-                        {GlobalSystemValues.TYPE_NC,"View_Liquidation_NC"},
-                        {GlobalSystemValues.TYPE_PC,"View_PCV"},
-                        {GlobalSystemValues.TYPE_SS,"View_Liquidation_SS"},
-                    };
-            dbPending.Concat(from p in _context.LiquidationEntryDetails
-                             from user in _context.User
-                             where (
-                            ((p.Liq_Status == GlobalSystemValues.STATUS_PENDING
-                             || p.Liq_Status == GlobalSystemValues.STATUS_VERIFIED
-                             || p.Liq_Status == GlobalSystemValues.STATUS_NEW
-                             || p.Liq_Status == GlobalSystemValues.STATUS_EDIT
-                             || p.Liq_Status == GlobalSystemValues.STATUS_DELETE)
-                             && p.Liq_Created_UserID != userID
-                             && p.Liq_Verifier1 != userID
-                             && p.Liq_Verifier2 != userID)
-                             ||
-                             //maker
-                             (p.Liq_Status == GlobalSystemValues.STATUS_REJECTED && p.Liq_Created_UserID == userID)
-                             ||
-                            //verifier
-                            //if role == verifier && not creator of entry
-                            ((user.User_Role == GlobalSystemValues.ROLE_VERIFIER && user.User_ID == userID && p.Liq_Created_UserID != userID) &&
-                            // and if pending or verified but can still be verified
-                            (((p.Liq_Status == GlobalSystemValues.STATUS_PENDING || p.Liq_Status == GlobalSystemValues.STATUS_VERIFIED) && (p.Liq_Verifier1 == 0 || p.Liq_Verifier2 == 0))
-                            //or for printing and is a verifier of the entry
-                            || (p.Liq_Status == GlobalSystemValues.STATUS_FOR_PRINTING && (p.Liq_Verifier1 == userID || p.Liq_Verifier2 == userID)))
-                            ) ||
-                            //approver
-                            //if role == approver && not creator of entry
-                            ((user.User_Role == GlobalSystemValues.ROLE_APPROVER && user.User_ID == userID && p.Liq_Created_UserID != userID) &&
-                            // and if pending or verified
-                            ((p.Liq_Status == GlobalSystemValues.STATUS_PENDING || p.Liq_Status == GlobalSystemValues.STATUS_VERIFIED)
-                            //or for printing and is the approver of the entry
-                            || (p.Liq_Status == GlobalSystemValues.STATUS_FOR_PRINTING && p.Liq_Approver == userID))
-                            ))
-                             select new ApplicationsViewModel
-                            {
-                                App_ID = p.ExpenseEntryModel.Expense_ID,
-                                App_Type = "Liquidation",
-                                App_Amount = 0,
-                                App_Payee = "",
-                                App_Maker = p.Liq_Created_UserID + "",
-                                App_Verifier_ID_List = new List<string> { p.Liq_Verifier1 == 0 ? null : p.Liq_Verifier1 + "", p.Liq_Verifier2 == 0 ? null : p.Liq_Verifier2+"" },
-                                App_Date = p.Liq_Created_Date,
-                                App_Last_Updated = p.Liq_LastUpdated_Date,
-                                App_Status = p.Liq_Status + "",
-                                App_Link = linktionary[p.ExpenseEntryModel.Expense_Type]
-                            }).ToList();
+            List<ApplicationsViewModel> dbPending = new List<ApplicationsViewModel>();
+            var userInfo = _context.User.Where(x => x.User_ID == userID).FirstOrDefault();
+            if(userInfo != null)
+            {
+                switch (userInfo.User_Role)
+                {
+                    case "maker":
+                        dbPending = (from exp in _context.ExpenseEntry
+                                     join us in _context.User on exp.Expense_Creator_ID equals us.User_ID
+                                     where (
+                                         exp.Expense_Status == GlobalSystemValues.STATUS_FOR_PRINTING
+                                         && exp.Expense_Creator_ID == userID
+                                     )
+                                     select new ApplicationsViewModel
+                                     {
+                                         App_ID = exp.Expense_ID,
+                                         App_Type = GlobalSystemValues.getApplicationType(exp.Expense_Type),
+                                         App_Amount = exp.Expense_Debit_Total,
+                                         App_Payee = exp.Expense_Payee + "," + exp.Expense_Payee_Type,
+                                         App_Maker = exp.Expense_Creator_ID + "",
+                                         App_Verifier_ID_List = new List<string> { exp.Expense_Verifier_1 == 0 ? null : exp.Expense_Verifier_1 + "", exp.Expense_Verifier_2 == 0 ? null : exp.Expense_Verifier_2 + "" },
+                                         App_Date = exp.Expense_Date,
+                                         App_Last_Updated = exp.Expense_Last_Updated,
+                                         App_Status = exp.Expense_Status + "",
+                                         App_Link = linktionary[exp.Expense_Type]
+                                     }).ToList();
+                    dbPending.Concat((from liq in _context.LiquidationEntryDetails
+                                      join us in _context.User on liq.Liq_Created_UserID equals us.User_ID
+                                      join exp in _context.ExpenseEntry on liq.ExpenseEntryModel.Expense_ID equals exp.Expense_ID
+                                      where (
+                                          liq.Liq_Status == GlobalSystemValues.STATUS_FOR_PRINTING
+                                          && liq.Liq_Created_UserID == userID
+                                      )
+                                      select new ApplicationsViewModel
+                                      {
+                                          App_ID = liq.ExpenseEntryModel.Expense_ID,
+                                          App_Type = "Liquidation",
+                                          App_Amount = exp.Expense_Debit_Total,
+                                          App_Payee = "",
+                                          App_Maker = liq.Liq_Created_UserID+"",
+                                          App_Verifier_ID_List = new List<string> { liq.Liq_Verifier1 == 0 ? null : liq.Liq_Verifier1 + "", liq.Liq_Verifier2 == 0 ? null : liq.Liq_Verifier2 + "" },
+                                          App_Date = liq.Liq_Created_Date,
+                                          App_Last_Updated = liq.Liq_LastUpdated_Date,
+                                          App_Status = liq.Liq_Status + "",
+                                          App_Link = "View_Liquidation_SS"
+                                      })).ToList();
+                        break;
+                    case "verifier":
+                        dbPending = (from exp in _context.ExpenseEntry
+                                     join us in _context.User on exp.Expense_Creator_ID equals us.User_ID
+                                     where (
+                                             (exp.Expense_Status == GlobalSystemValues.STATUS_PENDING
+                                             && exp.Expense_Creator_ID != userID
+                                             && us.User_DeptID == userInfo.User_DeptID)
+                                         ||
+                                             (exp.Expense_Status == GlobalSystemValues.STATUS_VERIFIED
+                                             && exp.Expense_Creator_ID != userID
+                                             && exp.Expense_Verifier_1 != userID
+                                             && exp.Expense_Verifier_2 != userID
+                                             && (exp.Expense_Verifier_1 == 0 || exp.Expense_Verifier_2 == 0)
+                                             && us.User_DeptID == userInfo.User_DeptID)
+                                         ||
+                                            ((exp.Expense_Status == GlobalSystemValues.STATUS_FOR_PRINTING)&&
+                                            (exp.Expense_Creator_ID == userID
+                                            || exp.Expense_Verifier_1 == userID
+                                            || exp.Expense_Verifier_2 == userID
+                                            || exp.Expense_Approver == userID))
+                                         )
+                                     select new ApplicationsViewModel
+                                     {
+                                         App_ID = exp.Expense_ID,
+                                         App_Type = GlobalSystemValues.getApplicationType(exp.Expense_Type),
+                                         App_Amount = exp.Expense_Debit_Total,
+                                         App_Payee = exp.Expense_Payee + "," + exp.Expense_Payee_Type,
+                                         App_Maker = exp.Expense_Creator_ID + "",
+                                         App_Verifier_ID_List = new List<string> { exp.Expense_Verifier_1 == 0 ? null : exp.Expense_Verifier_1 + "", exp.Expense_Verifier_2 == 0 ? null : exp.Expense_Verifier_2 + "" },
+                                         App_Date = exp.Expense_Date,
+                                         App_Last_Updated = exp.Expense_Last_Updated,
+                                         App_Status = exp.Expense_Status + "",
+                                         App_Link = linktionary[exp.Expense_Type]
+                                     }).ToList();
+                        dbPending.Concat((from liq in _context.LiquidationEntryDetails
+                                          join us in _context.User on liq.Liq_Created_UserID equals us.User_ID
+                                          join exp in _context.ExpenseEntry on liq.ExpenseEntryModel.Expense_ID equals exp.Expense_ID
+                                          where (
+                                             (liq.Liq_Status == GlobalSystemValues.STATUS_PENDING
+                                             && liq.Liq_Created_UserID != userID
+                                             && us.User_DeptID == userInfo.User_DeptID)
+                                         ||
+                                             (liq.Liq_Status == GlobalSystemValues.STATUS_VERIFIED
+                                             && liq.Liq_Created_UserID != userID
+                                             && liq.Liq_Verifier1 != userID
+                                             && liq.Liq_Verifier2 != userID
+                                             && (liq.Liq_Verifier1 == 0 || liq.Liq_Verifier2 == 0)
+                                             && us.User_DeptID == userInfo.User_DeptID)
+                                         ||
+                                            ((liq.Liq_Status == GlobalSystemValues.STATUS_FOR_PRINTING) &&
+                                            (liq.Liq_Created_UserID == userID
+                                            || liq.Liq_Verifier1 == userID
+                                            || liq.Liq_Verifier2 == userID
+                                            || liq.Liq_Approver == userID))
+                                         )
+                                          select new ApplicationsViewModel
+                                          {
+                                              App_ID = liq.ExpenseEntryModel.Expense_ID,
+                                              App_Type = "Liquidation",
+                                              App_Amount = exp.Expense_Debit_Total,
+                                              App_Payee = "",
+                                              App_Maker = liq.Liq_Created_UserID + "",
+                                              App_Verifier_ID_List = new List<string> { liq.Liq_Verifier1 == 0 ? null : liq.Liq_Verifier1 + "", liq.Liq_Verifier2 == 0 ? null : liq.Liq_Verifier2 + "" },
+                                              App_Date = liq.Liq_Created_Date,
+                                              App_Last_Updated = liq.Liq_LastUpdated_Date,
+                                              App_Status = liq.Liq_Status + "",
+                                              App_Link = "View_Liquidation_SS"
+                                          })).ToList();
+                        break;
+                    case "approver":
+                        dbPending = (from exp in _context.ExpenseEntry
+                                     join us in _context.User on exp.Expense_Creator_ID equals us.User_ID
+                                     where (
+                                             (exp.Expense_Status == GlobalSystemValues.STATUS_PENDING
+                                             && exp.Expense_Creator_ID != userID
+                                             && us.User_DeptID == userInfo.User_DeptID)
+                                         ||
+                                             (exp.Expense_Status == GlobalSystemValues.STATUS_VERIFIED
+                                             && exp.Expense_Creator_ID != userID
+                                             && exp.Expense_Verifier_1 != userID
+                                             && exp.Expense_Verifier_2 != userID
+                                             && us.User_DeptID == userInfo.User_DeptID)
+                                         ||
+                                            ((exp.Expense_Status == GlobalSystemValues.STATUS_FOR_PRINTING) &&
+                                            (exp.Expense_Creator_ID == userID
+                                            || exp.Expense_Verifier_1 == userID
+                                            || exp.Expense_Verifier_2 == userID
+                                            || exp.Expense_Approver == userID))
+                                         )
+                                     select new ApplicationsViewModel
+                                     {
+                                         App_ID = exp.Expense_ID,
+                                         App_Type = GlobalSystemValues.getApplicationType(exp.Expense_Type),
+                                         App_Amount = exp.Expense_Debit_Total,
+                                         App_Payee = exp.Expense_Payee + "," + exp.Expense_Payee_Type,
+                                         App_Maker = exp.Expense_Creator_ID + "",
+                                         App_Verifier_ID_List = new List<string> { exp.Expense_Verifier_1 == 0 ? null : exp.Expense_Verifier_1 + "", exp.Expense_Verifier_2 == 0 ? null : exp.Expense_Verifier_2 + "" },
+                                         App_Date = exp.Expense_Date,
+                                         App_Last_Updated = exp.Expense_Last_Updated,
+                                         App_Status = exp.Expense_Status + "",
+                                         App_Link = linktionary[exp.Expense_Type]
+                                     }).ToList();
+                        dbPending.Concat((from liq in _context.LiquidationEntryDetails
+                                          join us in _context.User on liq.Liq_Created_UserID equals us.User_ID
+                                          join exp in _context.ExpenseEntry on liq.ExpenseEntryModel.Expense_ID equals exp.Expense_ID
+                                          where (
+                                             (liq.Liq_Status == GlobalSystemValues.STATUS_PENDING
+                                             && liq.Liq_Created_UserID != userID
+                                             && us.User_DeptID == userInfo.User_DeptID)
+                                         ||
+                                             (liq.Liq_Status == GlobalSystemValues.STATUS_VERIFIED
+                                             && liq.Liq_Created_UserID != userID
+                                             && liq.Liq_Verifier1 != userID
+                                             && liq.Liq_Verifier2 != userID
+                                             && us.User_DeptID == userInfo.User_DeptID)
+                                         ||
+                                            ((liq.Liq_Status == GlobalSystemValues.STATUS_FOR_PRINTING) &&
+                                            (liq.Liq_Created_UserID == userID
+                                            || liq.Liq_Verifier1 == userID
+                                            || liq.Liq_Verifier2 == userID
+                                            || liq.Liq_Approver == userID))
+                                         )
+                                          select new ApplicationsViewModel
+                                          {
+                                              App_ID = liq.ExpenseEntryModel.Expense_ID,
+                                              App_Type = "Liquidation",
+                                              App_Amount = exp.Expense_Debit_Total,
+                                              App_Payee = "",
+                                              App_Maker = liq.Liq_Created_UserID + "",
+                                              App_Verifier_ID_List = new List<string> { liq.Liq_Verifier1 == 0 ? null : liq.Liq_Verifier1 + "", liq.Liq_Verifier2 == 0 ? null : liq.Liq_Verifier2 + "" },
+                                              App_Date = liq.Liq_Created_Date,
+                                              App_Last_Updated = liq.Liq_LastUpdated_Date,
+                                              App_Status = liq.Liq_Status + "",
+                                              App_Link = "View_Liquidation_SS"
+                                          })).ToList();
+                        break;
+                    default:
+                        break;
+                }
+            }
             //Get Name of Maker, Verifier and Status.
             dbPending.ForEach(pen =>
             {

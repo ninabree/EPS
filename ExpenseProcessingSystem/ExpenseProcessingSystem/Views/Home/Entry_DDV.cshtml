@@ -164,20 +164,9 @@
             <iframe id="iframePreview" frameborder="0" src="" style="position: relative; min-height: 50vh; max-height: 100%; width: 100%;"></iframe>
         </div>
         <div id="entry-controls" class="m-b-10">
-            <div class="flex-sb">
+            <div class="flex-sb m-t-15">
                 <div>
                     <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" name="command" value="Save">Save</button></div>
-                    <div class="dis-inline-block"><button class="tbl-btn" disabled>Delete</button></div>
-                    <div class="dis-inline-block"><button class="tbl-btn" disabled>Modify</button></div>
-                    <div class="dis-inline-block"><button class="tbl-btn" disabled>Approve/Verify</button></div>
-                    <div class="dis-inline-block"><button class="tbl-btn" disabled>Reject</button></div>
-                </div>
-                <div>
-                </div>
-                <div>
-                    <div class="dis-inline-block"><button class="tbl-btn" disabled>Print BIR Certificate</button></div>
-                    <div class="dis-inline-block"><button class="tbl-btn" disabled>Print Voucher</button></div>
-                    <div class="dis-inline-block"><button class="tbl-btn" id="reversal_entry" disabled>Create Reversal Entry</button></div>
                 </div>
             </div>
         </div>
@@ -218,7 +207,7 @@
             }
         }
         //checks each checkbox and enables corresponding modals
-        //CheckEachEWT();
+        CheckEachEWT();
         CheckEachInter();
 
         $("#addRow").click(function (e) {
@@ -577,7 +566,7 @@
             updateExpenseEWTDDV(item);
 
             //checks if ewt payor name is not null, if yes, update tr and vat
-            CheckEWTPayor($(item.parentNode)[0].parentNode);
+            //CheckEWTPayor($(item.parentNode)[0].parentNode);
         });
     }
 
@@ -657,9 +646,9 @@
         }
 
         $("#grossTotal").val(grossTotal);
-        $("#credEwtTotal").val(ewtSubTotal);
+        $("#credEwtTotal").val(roundNumber(ewtSubTotal, 2));
         $("#credCashTotal").val(roundNumber(cashSubTotal,2));
-        $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
+        $("#credTotal").val(roundNumber(Number(ewtSubTotal + cashSubTotal),2));
     }
 </script>
 <script type="text/javascript">
