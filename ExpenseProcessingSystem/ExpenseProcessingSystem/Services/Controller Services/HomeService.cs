@@ -11684,8 +11684,15 @@ namespace ExpenseProcessingSystem.Services
             var expense = _context.ExpenseEntry.Where(x => x.Expense_Type == GlobalSystemValues.TYPE_CV
                                                         && expectedStatus.Contains(x.Expense_Status))
                                                .OrderByDescending(x => x.Expense_Created_Date).FirstOrDefault();
-
-            var checkNoModel = _context.DMCheck.Where(x => x.Check_ID == expense.Expense_CheckId).FirstOrDefault();
+            DMCheckModel checkNoModel;
+            if (expense.Expense_CheckId != 0)
+            {
+                checkNoModel = _context.DMCheck.Where(x => x.Check_ID == expense.Expense_CheckId).FirstOrDefault();
+            }
+            else
+            {
+                checkNoModel = _context.DMCheck.OrderBy(x => x.Check_ID).Where(x => x.Check_isActive == true).FirstOrDefault();
+            }
 
             if(int.Parse(checkNoModel.Check_Series_To) > int.Parse(expense.Expense_CheckNo))
             {
@@ -11931,6 +11938,54 @@ namespace ExpenseProcessingSystem.Services
         public ExpenseEntryModel getSingleEntryRecord(int entryID)
         {
             return _context.ExpenseEntry.Where(x => x.Expense_ID == entryID).AsNoTracking().FirstOrDefault();
+        }
+        //Check if latest pettycash entry is open
+        public bool lastPCEntry()
+        {
+            var lastEntry = _context.PettyCash.OrderByDescending(x => x.PC_ID).Select(x => x.PC_Status).FirstOrDefault();
+
+            if (lastEntry == GlobalSystemValues.STATUS_OPEN)
+                return true;
+            else
+                return false;
+        }
+        public bool confirmBrkDown()
+        {
+
+            PettyCashModel model = _context.PettyCash.OrderByDescending(x => x.PC_ID).FirstOrDefault();
+
+            decimal oneK = Mizuho.round(model.PCB_OneThousand * 1000M,2);
+            decimal fiveH = Mizuho.round(model.PCB_FiveHundred * 500M, 2);
+            decimal twoH = Mizuho.round(model.PCB_TwoHundred * 200M, 2);
+            decimal oneH = Mizuho.round(model.PCB_OneHundred * 100M, 2);
+            decimal fifty = Mizuho.round(model.PCB_Fifty * 50M, 2);
+            decimal twenty = Mizuho.round(model.PCB_Twenty * 20M, 2);
+            decimal ten = Mizuho.round(model.PCB_Ten * 10M, 2);
+            decimal five = Mizuho.round(model.PCB_Five * 5M, 2);
+            decimal one = Mizuho.round(model.PCB_One * 1M, 2);
+            decimal c25 = Mizuho.round(model.PCB_TwentyFiveCents * .25M, 2);
+            decimal c10 = Mizuho.round(model.PCB_TenCents * .10M, 2);
+            decimal c5 = Mizuho.round(model.PCB_FiveCents * .05M, 2);
+            decimal c1 = Mizuho.round(model.PCB_OneCents * .01M, 2);
+
+            decimal total = Mizuho.round(oneK+fiveH+twoH+oneH+fifty+twenty+ten+five+one+c25+c10+c5+c1, 2);
+
+            if (total == model.PC_EndBal)
+                return true;
+            else
+                return false;
+        }
+        public bool closePC(int userID)
+        {
+            PettyCashModel pc = _context.PettyCash.OrderByDescending(x => x.PC_ID).FirstOrDefault();
+
+            pc.PC_Status = GlobalSystemValues.STATUS_CLOSED;
+            pc.PC_CloseDate = DateTime.Now;
+            pc.PC_CloseUser = userID;
+
+            _context.SaveChanges();
+
+            return true;
         }
         ///========[End of Other Functions]============
     }

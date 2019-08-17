@@ -1,4 +1,5 @@
 ﻿using ExpenseProcessingSystem.Models;
+using ExpenseProcessingSystem.Models.Gbase;
 using ExpenseProcessingSystem.Models.Pending;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -91,5 +92,8 @@ namespace ExpenseProcessingSystem.Data
 
         //STATUS TABLE OF ALL PRINT RELATED FUNCTION
         public DbSet<PrintStatusModel> PrintStatus { get; set; }
+
+        //gbase error codes
+        public DbSet<GbaseErrorCodes> GbaseErrorCodes { get; set; }
     }
 }

@@ -11,7 +11,7 @@ namespace ExpenseProcessingSystem.ViewModels
         public List<CloseItems> rbuItems { get; set; }
         public List<CloseItems> fcduItems { get; set; }
 
-        public List<String> messages { get; set; }
+        public List<string> messages { get; set; }
 
         public string rbuStatus { get; set; }
         public string fcduStatus { get; set; }
@@ -57,6 +57,8 @@ namespace ExpenseProcessingSystem.ViewModels
 
         public decimal billTotal { get; set; }
         public decimal coinTotal { get; set; }
+
+        public bool pcOpen { get; set; }
 
         public ClosingViewModel()
         {

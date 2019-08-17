@@ -228,7 +228,14 @@
                     @Html.TextBoxFor(x=>x.Disbursed, new { @readonly = "true", @class = "input",@id= "CBD_disburse" })
                 </td>
                 <td>
-                    <button class="tbl-btn" value="Close">Close</button>
+                    @if (Model.pcOpen)
+                    {
+                        <button class="tbl-btn" id="Close" value="Close">Close</button>
+                    }
+                    else
+                    {
+                        <button class="tbl-btn" disabled>Close</button>
+                    }
                 </td>
             </tr>
             <tr>
@@ -405,6 +412,13 @@
         $("#closeBody").on("click", ".closeBtn", function (e) {
             $("#cmdString").val($(this).val());
             $('#login').modal('show');
+        });
+
+        $("#closeBody").on("click", "#Close", function (e) {
+            $("#cmdString").val($(this).val());
+            $("#userString").val("-");
+            $("#passString").val("-");
+            $("#inputForm").submit();
         });
 
         $("#closeBody").on("click", "#openBook", function (e) {
