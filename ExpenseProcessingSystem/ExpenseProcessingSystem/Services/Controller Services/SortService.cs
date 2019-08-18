@@ -1411,54 +1411,54 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             switch (sortOrder)
             {
                 case "notif_type_status":
-                    tempList = tempList.OrderBy(x => x.Notif_Status_Name);
+                    tempList = tempList.OrderByDescending(x => x.Notif_Status_Name);
                     viewData = "glyph-5";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 case "notif_type":
-                    tempList = tempList.OrderBy(s => s.Notif_Application_Type_Name);
-                    viewData = "glyph-1";
-                    vdInfo = "glyphicon-menu-down";
-                    break;
-                case "notif_type_desc":
                     tempList = tempList.OrderByDescending(s => s.Notif_Application_Type_Name);
                     viewData = "glyph-1";
                     vdInfo = "glyphicon-menu-up";
                     break;
-                case "notif_message":
-                    tempList = tempList.OrderBy(s => s.Notif_Message);
-                    viewData = "glyph-2";
+                case "notif_type_desc":
+                    tempList = tempList.OrderBy(s => s.Notif_Application_Type_Name);
+                    viewData = "glyph-1";
                     vdInfo = "glyphicon-menu-down";
                     break;
-                case "notif_message_desc":
+                case "notif_message":
                     tempList = tempList.OrderByDescending(s => s.Notif_Message);
                     viewData = "glyph-2";
                     vdInfo = "glyphicon-menu-up";
                     break;
+                case "notif_message_desc":
+                    tempList = tempList.OrderBy(s => s.Notif_Message);
+                    viewData = "glyph-2";
+                    vdInfo = "glyphicon-menu-down";
+                    break;
                 case "notif_mkr":
                     tempList = tempList.OrderBy(s => s.Notif_Application_Maker_Name);
                     viewData = "glyph-3";
-                    vdInfo = "glyphicon-menu-down";
+                    vdInfo = "glyphicon-menu-up";
                     break;
                 case "notif_mkr_desc":
                     tempList = tempList.OrderByDescending(s => s.Notif_Application_Maker_Name);
                     viewData = "glyph-3";
-                    vdInfo = "glyphicon-menu-up";
+                    vdInfo = "glyphicon-menu-down";
                     break;
                 case "notif_date":
                     tempList = tempList.OrderBy(s => s.Notif_Date);
                     viewData = "glyph-4";
-                    vdInfo = "glyphicon-menu-down";
+                    vdInfo = "glyphicon-menu-up";
                     break;
                 case "notif_type_status_desc":
-                    tempList = tempList.OrderByDescending(x => x.Notif_Status_Name);
+                    tempList = tempList.OrderBy(x => x.Notif_Status_Name);
                     viewData = "glyph-5";
                     vdInfo = "glyphicon-menu-down";
                     break;
                 default:
                     tempList = tempList.OrderByDescending(s => s.Notif_Date);
                     viewData = "glyph-4";
-                    vdInfo = "glyphicon-menu-up";
+                    vdInfo = "glyphicon-menu-down";
                     break;
             }
             SortViewModel vm = new SortViewModel

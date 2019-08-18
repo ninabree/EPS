@@ -55,6 +55,7 @@
         <thead>
             <tr>
                 <th></th>
+                <th>Master ID</th>
                 <th id="Name"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["AccountSortParm"]">Account Name<p class="btn-xs glyphicon @ViewData["glyph-1"]"></p></a></th>
                 <th id="Code"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["AccountCodeSortParm"]">Code<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
                 <th id="Budget_Code"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["AccountBudgetCodeSortParm"]">Budget Code<p class="btn-xs glyphicon @ViewData["glyph-14"]"></p></a></th>
@@ -68,7 +69,6 @@
                 <th id="Creator_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["AccountCreatorSortParm"]">Input By<p class="btn-xs glyphicon @ViewData["glyph-7"]"></p></a></th>
                 <th id="Approver_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["AccountApproverSortParm"]">Approved By<p class="btn-xs glyphicon @ViewData["glyph-8"]"></p></a></th>
                 <th id="Last_Updated"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["AccountLastUpdatedSortParm"]">Last Updated<p class="btn-xs glyphicon @ViewData["glyph-9"]"></p></a></th>
-                <th>Master ID</th>
                 <th id="Status_ID"><a asp-action="DM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["AccountStatusSortParm"]">Status<p class="btn-xs glyphicon @ViewData["glyph-10"]"></p></a></th>
             </tr>
         </thead>
@@ -90,6 +90,7 @@
                             }
                             @Html.HiddenFor(modelItem => item.Account_Creator_ID)
                         </td>
+                        <td>@Html.DisplayFor(modelItem => item.Account_MasterID)</td>
                         <td>@Html.DisplayFor(modelItem => item.Account_Name)</td>
                         <td>@Html.DisplayFor(modelItem => item.Account_Code)</td>
                         <td>@Html.DisplayFor(modelItem => item.Account_Budget_Code)</td>
@@ -103,7 +104,6 @@
                         <td>@Html.DisplayFor(modelItem => item.Account_Creator_Name)</td>
                         <td>@Html.DisplayFor(modelItem => item.Account_Approver_Name)</td>
                         <td>@Html.DisplayFor(modelItem => item.Account_Last_Updated)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Account_MasterID)</td>
                         <td>@Html.DisplayFor(modelItem => item.Account_Status)</td>
                     </tr>
                 }
