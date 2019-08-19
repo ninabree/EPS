@@ -319,6 +319,17 @@
         $("#credEwtTotal").val(roundNumber(ewtSubTotal, 2));
         $("#credCashTotal").val(roundNumber(cashSubTotal, 2));
         $("#credTotal").val(roundNumber(Number(ewtSubTotal + cashSubTotal), 2));
+
+        var ccyList = [];
+        for (var i = 0; i < $('.txtccy').length; i++) {
+            ccyList.push($($('.txtccy')[i]).val());
+        }
+        if ($('.txtccy').length > 1 && !(ccyList.every((val, i, arr) => val === arr[0]))) {
+            $("#grossTotal").val(0.00);
+            $("#credEwtTotal").val(0.00);
+            $("#credCashTotal").val(0.00);
+            $("#credTotal").val(0.00);
+        }
     }
 
     function computeValuesOfAllRecordVatTR() {
@@ -389,6 +400,17 @@
         $("#credEwtTotal").val(roundNumber(ewtSubTotal, 2));
         $("#credCashTotal").val(roundNumber(cashSubTotal, 2));
         $("#credTotal").val(roundNumber(Number(ewtSubTotal + cashSubTotal), 2));
+
+        var ccyList = [];
+        for (var i = 0; i < $('.txtccy').length; i++) {
+            ccyList.push($($('.txtccy')[i]).val());
+        }
+        if ($('.txtccy').length > 1 && !(ccyList.every((val, i, arr) => val === arr[0]))) {
+            $("#grossTotal").val(0.00);
+            $("#credEwtTotal").val(0.00);
+            $("#credCashTotal").val(0.00);
+            $("#credTotal").val(0.00);
+        }
     }
 
     function ajaxCall(url, data) {
