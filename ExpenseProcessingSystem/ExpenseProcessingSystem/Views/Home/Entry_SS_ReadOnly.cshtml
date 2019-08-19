@@ -289,6 +289,17 @@
         $("#credCashTotal").val(roundNumber(cashSubTotal,2));
         $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
 
+        var ccyList = [];
+        for (var i = 0; i < $('.txtccy').length; i++) {
+            ccyList.push($($('.txtccy')[i]).val());
+        }
+        if ($('.txtccy').length > 1 && !(ccyList.every((val, i, arr) => val === arr[0]))) {
+            $("#grossTotal").val(0.00);
+            $("#credEwtTotal").val(0.00);
+            $("#credCashTotal").val(0.00);
+            $("#credTotal").val(0.00);
+        }
+
         $(function () {
             //Cash Breakdown Modal
             $("table").on("click", ".cashBreakdown", function (e) {

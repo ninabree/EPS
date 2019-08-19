@@ -10,6 +10,7 @@ using System.Text;
 using System.Xml.Linq;
 using BIR_Form_Filler.Models;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace BIR_Form_Filler.Functions
 {
@@ -189,8 +190,11 @@ namespace BIR_Form_Filler.Functions
 
         private void SetForThePeriod(ExcelWorksheet ws, DateTime fromDate, DateTime toDate)
         {
-            string fDate = fromDate.ToString("MMddyy");
-            string tDate = toDate.ToString("MMddyy");
+            string format = "yyyy-M";
+            DateTime startDt = DateTime.ParseExact(fromDate.Year + "-" + fromDate.Month, format, CultureInfo.InvariantCulture);
+            DateTime endDt = DateTime.ParseExact(toDate.Year + "-" + toDate.Month, format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
+            string fDate = startDt.ToString("MMddyy");
+            string tDate = endDt.ToString("MMddyy");
 
             //From Date
             ws.Cells["I8"].Value = fDate[0].ToString();

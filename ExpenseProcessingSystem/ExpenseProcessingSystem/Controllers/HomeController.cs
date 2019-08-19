@@ -1373,7 +1373,9 @@ namespace ExpenseProcessingSystem.Controllers
 
             ModelState.Clear();
 
-            return RedirectToAction("View_CV", "Home", new { entryID = id });
+            TempData["entryIDAddtoView"] = id;
+            
+            return RedirectToAction("View_CV", "Home");
         }
 
         [OnlineUserCheck]
@@ -1472,6 +1474,17 @@ namespace ExpenseProcessingSystem.Controllers
         public IActionResult View_CV(int entryID)
         {
             var userId = GetUserID();
+
+            //Check if entryID is exist or not. if not, redirect to Home/Index screen.
+            //Possible senario: Open entry by Approver, then modified by Maker. entry ID will be re-created.
+            if (TempData["entryIDAddtoView"] == null)
+            {
+                if (_service.getSingleEntryRecord(entryID) == null)
+                {
+                    GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE3;
+                    return RedirectToAction("Index", "Home");
+                }
+            }
 
             if (entryID == 0 && TempData["entryIDAddtoView"] != null)
             {
@@ -2126,6 +2139,17 @@ namespace ExpenseProcessingSystem.Controllers
         {
             var userId = GetUserID();
 
+            //Check if entryID is exist or not. if not, redirect to Home/Index screen.
+            //Possible senario: Open entry by Approver, then modified by Maker. entry ID will be re-created.
+            if(TempData["entryIDAddtoView"] == null)
+            {
+                if (_service.getSingleEntryRecord(entryID) == null)
+                {
+                    GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE3;
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+
             if (entryID == 0 && TempData["entryIDAddtoView"] != null)
             { 
                 entryID = (int)TempData["entryIDAddtoView"];
@@ -2561,6 +2585,17 @@ namespace ExpenseProcessingSystem.Controllers
         public IActionResult View_SS(int entryID)
         {
             var userId = GetUserID();
+
+            //Check if entryID is exist or not. if not, redirect to Home/Index screen.
+            //Possible senario: Open entry by Approver, then modified by Maker. entry ID will be re-created.
+            if (TempData["entryIDAddtoView"] == null)
+            {
+                if (_service.getSingleEntryRecord(entryID) == null)
+                {
+                    GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE3;
+                    return RedirectToAction("Index", "Home");
+                }
+            }
 
             if (entryID == 0 && TempData["entryIDAddtoView"] != null)
             {
@@ -3394,6 +3429,17 @@ namespace ExpenseProcessingSystem.Controllers
         {
             var userId = GetUserID();
             XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
+            
+            //Check if entryID is exist or not. if not, redirect to Home/Index screen.
+            //Possible senario: Open entry by Approver, then modified by Maker. entry ID will be re-created.
+            if (TempData["entryIDAddtoView"] == null)
+            {
+                if (_service.getSingleEntryRecord(entryID) == null)
+                {
+                    GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE3;
+                    return RedirectToAction("Index", "Home");
+                }
+            }
 
             if (entryID == 0 && TempData["entryIDAddtoView"] != null)
             {

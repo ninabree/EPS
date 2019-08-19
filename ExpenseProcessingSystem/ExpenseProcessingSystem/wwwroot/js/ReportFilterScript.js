@@ -74,7 +74,7 @@
         //ddlYear.attr("disabled", "disabled");
         //ddlMonthTo.attr("disabled", "disabled");
         //ddlYearTo.attr("disabled", "disabled");
-        ////ddlFileFormat.attr("disabled", "disabled");
+        ddlFileFormat.attr("disabled", "disabled");
         //ddlSignatory.attr("disabled", "disabled");
         //dtPeriodFrom.attr("disabled", "disabled");
         //dtPeriodTo.attr("disabled", "disabled");
@@ -85,8 +85,8 @@
         //txtTransNoFrom.attr("disabled", "disabled");
         //txtTransNoTo.attr("disabled", "disabled");
         //txtSubjName.attr("disabled", "disabled");
-        //btnGenerateFile.attr("disabled", "disabled");
-        //btnGeneratePreview.attr("disabled", "disabled");
+        btnGenerateFile.attr("disabled", "disabled");
+        btnGeneratePreview.attr("disabled", "disabled");
         //divChkTax.css('pointer-events', 'none');
         //divChkTax.css('background-color', '#ccc');
         //$('.chkTaxRate').prop("checked", false);

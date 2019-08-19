@@ -86,7 +86,7 @@
                                 @Html.DropDownListFor(m => Model.EntryCV[i].dtlSSPayee, new SelectList(Model.systemValues.employees, "Value", "Text", Model.systemValues.employees.SelectedValue), new { @class = "input100 txtPayee voucher-input" })
                             </td>
                             <td>
-                                @Html.DropDownListFor(x => Model.EntryCV[i].account, new SelectList(Model.systemValues.acc, "accId", "accName"), new { @class = "input100 txtAcc voucher-input" })
+                                @Html.DropDownListFor(x => Model.EntryCV[i].account, new SelectList(Model.systemValues.acc, "accId", "accName"), new { @class = "input100 txtAcc comVar voucher-input" })
                             </td>
                             <td>
                                 @Html.DropDownListFor(x => Model.EntryCV[i].dept, new SelectList(Model.systemValues.dept, "Value", "Text", Model.systemValues.dept.SelectedValue), new { @class = "input100 voucher-input" })
@@ -108,7 +108,7 @@
                                 @Html.HiddenFor(x => Model.EntryCV[i].dtl_Ewt_Payor_Name_ID, new { @class = "txtPayor" })
                             </td>
                             <td>
-                                @Html.DropDownListFor(x => Model.EntryCV[i].ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100 txtccy voucher-input" })
+                                @Html.DropDownListFor(x => Model.EntryCV[i].ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100 txtccy comVar voucher-input" })
                             </td>
                             <td>
                                 @Html.TextBoxFor(x => Model.EntryCV[i].debitGross, new { @class = "input100 txtGross", @type = "number", @min = "0", @readonly = "readonly" })
@@ -218,6 +218,17 @@
         $("#credCashTotal").val(roundNumber(cashSubTotal,2));
         $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
 
+        var ccyList = [];
+        for (var i = 0; i < $('.txtccy').length; i++) {
+            ccyList.push($($('.txtccy')[i]).val());
+        }
+        if ($('.txtccy').length > 1 && !(ccyList.every((val, i, arr) => val === arr[0]))) {
+            $("#grossTotal").val(0.00);
+            $("#credEwtTotal").val(0.00);
+            $("#credCashTotal").val(0.00);
+            $("#credTotal").val(0.00);
+        }
+
         $(function () {
             $("#addRow").click(function (e) {
                 var itemCount = document.getElementById('inputTable').getElementsByTagName('tbody')[0].childElementCount - 2;
@@ -270,7 +281,7 @@
                 }
                 htmlContent += '</select></td>' +
                     '<td style="text-align:center"><a class="reqEWTBtn glyphicon glyphicon-list-alt expenseEWT" href="#" data-title="Vendor selection" style="pointer-events:none;"></a><input data-val="true" data-val-required="The dtl_Ewt_Payor_Name_ID field is required." id="EntryCV_' + itemCount + '__dtl_Ewt_Payor_Name_ID" name="EntryCV[' + itemCount + '].dtl_Ewt_Payor_Name_ID" class = "txtPayor" type="hidden" value="0"></td>' +
-                    '<td><select class="input100 txtccy voucher-input" data-val="true" data-val-required="The ccy field is required." id="EntryCV_' + itemCount + '__ccy" name="EntryCV[' + itemCount + '].ccy">';
+                    '<td><select class="input100 txtccy voucher-input comVar" data-val="true" data-val-required="The ccy field is required." id="EntryCV_' + itemCount + '__ccy" name="EntryCV[' + itemCount + '].ccy">';
                 for (var i = 0; i < curr.length; i++) {
                     htmlContent += '<option value="' + curr[i]["value"] + '">' + curr[i]["text"] + '</option>';
                 }
@@ -348,7 +359,11 @@
                         $('#' + pos).find('.reqEWTBtn').css("pointer-events", "auto");
                     }
                 }
-                computeValuesSSByParentID(pos);
+                if ($('#EntryCV_' + idx + '__ccy option:selected').text() == $('#yenAbbrv').val()) {
+                    $("#remark_" + idx).find('input').remove();
+                    $("#divCashBD_" + idx).find('input').remove();
+                    computeValuesSSByParentID(pos);
+                }
             });
 
             $("table").on("click", ".expenseEWT", function (e) {
@@ -474,16 +489,11 @@
     };
 
     function computeValuesSSByParentID(parentID) {
-        //var isInter = $("#" + parentID).find("#EntryDDV_" + parentID.substring(5) + "__inter_entity").is(':checked');
         var amounts = $("");
         var grossAmt = 0;
         var origGrossAmt = 0;
         var origCredAmt = $("#" + parentID).find(".txtCredCash").val();
 
-        ////check if Inter Entity
-        //if (isInter) {
-        //    var grossAmt = $("#" + parentID + " td .txtGross").val();
-        //} else {
         amounts = $("#" + parentID + " .amount");
         grossAmt = 0;
         origGrossAmt = $("#" + parentID + " .txtGross").val();
@@ -491,10 +501,7 @@
             grossAmt += Number(amounts[i].value);
         }
 
-        //}
-
         $("#" + parentID + " td .txtGross").val(roundNumber(grossAmt, 2));
-        //$("#" + pNode.id + " .txtGross").attr("value", grossAmt);
 
         var itemNo = parentID; //jquery obj
         var chkEwtVal = $("#" + itemNo).find(".chkEwt").is(':checked');
@@ -559,9 +566,20 @@
             cashSubTotal += Number(credCash[i].value);
         }
 
-        $("#grossTotal").val(grossTotal);
-        $("#credEwtTotal").val(ewtSubTotal);
-        $("#credCashTotal").val(cashSubTotal);
-        $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
+        $("#grossTotal").val(roundNumber(grossTotal,2));
+        $("#credEwtTotal").val(roundNumber(ewtSubTotal, 2));
+        $("#credCashTotal").val(roundNumber(cashSubTotal, 2));
+        $("#credTotal").val(roundNumber(Number(ewtSubTotal + cashSubTotal), 2));
+
+        var ccyList = [];
+        for (var i = 0; i < $('.txtccy').length; i++) {
+            ccyList.push($($('.txtccy')[i]).val());
+        }
+        if ($('.txtccy').length > 1 && !(ccyList.every((val, i, arr) => val === arr[0]))) {
+            $("#grossTotal").val(0.00);
+            $("#credEwtTotal").val(0.00);
+            $("#credCashTotal").val(0.00);
+            $("#credTotal").val(0.00);
+        }
     };
 </script>
