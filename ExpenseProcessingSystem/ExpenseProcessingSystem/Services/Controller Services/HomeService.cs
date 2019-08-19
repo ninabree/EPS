@@ -126,8 +126,6 @@ namespace ExpenseProcessingSystem.Services
             }
 
             PropertyInfo[] properties = filters.NotifFil.GetType().GetProperties();
-            //string str = _filterservice.generateFilterQuery(properties, vmList.Cast<dynamic>().ToList(), filters, "Notif");
-            //if (str.Length > 0) { vmList = vmList.AsQueryable().Where(str).Select(e => e).ToList(); }
 
             //FILTER
             foreach (var property in properties)

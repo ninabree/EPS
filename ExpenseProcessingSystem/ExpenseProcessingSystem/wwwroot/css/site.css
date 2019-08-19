@@ -1200,3 +1200,13 @@ body.loading .loadingEffect {
     box-shadow: 0 0 3px #CC0000;
     margin: 10px;
 }
+/*////////////////////////////////////////////////////////////////////////////
+    [ MODAL BUTTONS ]
+*/
+.expenseAmortization, .expenseEWT[style="pointer-events: auto;"], .expenseInterEntity, .cashBreakdown {
+    color: #0e2cbe;
+    text-decoration: underline;
+}
+/*////////////////////////////////////////////////////////////////////////////
+    [ END OF SITE.CSS ]
+*/
