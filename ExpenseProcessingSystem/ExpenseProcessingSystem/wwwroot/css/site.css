@@ -689,6 +689,14 @@ tr {
 /*modal2 div #table #tsForm tbale tbody tr td input.form-control {
     height : 20px
 }*/
+#acc-srch-btn {
+    text-align: right;
+    padding-right: 1px !important
+}
+#acc-full-list-btn {
+    text-align: left;
+    padding-left: 1px !important
+}
 /*//////////////////////////////////////////////////////////////////
 [ Validation Summary Message ]*/
 div[aria-describedby=validationSummary] {
@@ -761,7 +769,7 @@ td.voucher-input, div.voucher-input, input.voucher-input, select.voucher-input {
     margin: .5% 0%;
     padding: .5%;
     border: 1px solid #ccc;
-    background-color: #eee;
+    background-color: #fff;
 }
 /*-------------------------------------
 [ DDV ]*/

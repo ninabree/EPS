@@ -385,9 +385,9 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                                                               ven.Pending_Vendor_Status_ID,
                                                               ven.Pending_Vendor_Filed_Date
                                                           })
-                                             join trvat in _context.DMVendorTRVAT
+                                             join trvat in _context.DMVendorTRVAT_Pending
                                              on ven.Pending_Vendor_MasterID
-                                             equals trvat.VTV_Vendor_ID
+                                             equals trvat.Pending_VTV_Vendor_ID
                                              into TrVat
                                              from trvat in TrVat.DefaultIfEmpty()
                                              select new
@@ -397,8 +397,8 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                                                  ven.Pending_Vendor_TIN,
                                                  ven.Pending_Vendor_Address,
                                                  ven.Pending_Vendor_Name,
-                                                 VTV_TR_ID = trvat.VTV_TR_ID > 0 ? trvat.VTV_TR_ID : 0,
-                                                 VTV_VAT_ID = trvat.VTV_VAT_ID > 0 ? trvat.VTV_VAT_ID : 0,
+                                                 VTV_TR_ID = trvat.Pending_VTV_TR_ID > 0 ? trvat.Pending_VTV_TR_ID : 0,
+                                                 VTV_VAT_ID = trvat.Pending_VTV_VAT_ID > 0 ? trvat.Pending_VTV_VAT_ID : 0,
                                                  ven.Pending_Vendor_Creator_ID,
                                                  ven.Pending_Vendor_Approver_ID,
                                                  ven.Pending_Vendor_Status_ID,

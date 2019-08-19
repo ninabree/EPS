@@ -6,7 +6,7 @@
 @using ExpenseProcessingSystem.ViewModels
 @model UserManagementViewModel
 <div>
-    @using (Html.BeginForm("AddEditUser", "Home", FormMethod.Post, new { @class = "validate-form", @id = "tsForm" }))
+    @using (Html.BeginForm("AddEditUser", "Home", FormMethod.Post, new { @class = "validate-form filter-cont", @id = "tsForm" }))
     {
         <table class="table">
             <tr>
