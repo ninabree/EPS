@@ -147,6 +147,10 @@ namespace ExpenseProcessingSystem.Services
                               .Select(e => e).ToList();
                         }
                     }
+                    else if (subStr == "Application_Type_Select")
+                    {
+                        //there is no filter for this field
+                    }
                     else // IF STRING VALUE
                     {
                         vmList = vmList.AsQueryable().Where("Notif_" + subStr + ".Contains(@0)", toStr)
