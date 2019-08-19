@@ -72,14 +72,20 @@ namespace ExpenseProcessingSystem.Services
         public List<HomeNotifViewModel> populateNotif(FiltersViewModel filters, int loggedUID)
         {
             var mList = (from notifs in (from n in _context.HomeNotif
+                                         //for currently logged in User
                                          join user in _context.User
-                                          on loggedUID
-                                          equals user.User_ID
-                                          into c
-                                         from user in c.DefaultIfEmpty()
+                                         on loggedUID
+                                         equals user.User_ID
+                                         into c from user in c.DefaultIfEmpty()
+                                         //for User Acc of Maker of records
+                                         join mkr in _context.User
+                                         on n.Notif_Application_Maker_ID
+                                         equals mkr.User_ID
+                                         into m from mkr in m.DefaultIfEmpty()
                                          where n.Notif_UserFor_ID == loggedUID ||
                                          (n.Notif_UserFor_ID == 0 && n.Notif_Application_Maker_ID != loggedUID 
-                                         && (user.User_Role != GlobalSystemValues.ROLE_ADMIN && user.User_Role != GlobalSystemValues.ROLE_MAKER))
+                                         && (user.User_Role != GlobalSystemValues.ROLE_ADMIN && user.User_Role != GlobalSystemValues.ROLE_MAKER)
+                                         && mkr.User_DeptID == user.User_DeptID)
                                          select new { n, user })
                          join creator in _context.User
                          on notifs.n.Notif_Application_Maker_ID
@@ -126,8 +132,6 @@ namespace ExpenseProcessingSystem.Services
             }
 
             PropertyInfo[] properties = filters.NotifFil.GetType().GetProperties();
-            //string str = _filterservice.generateFilterQuery(properties, vmList.Cast<dynamic>().ToList(), filters, "Notif");
-            //if (str.Length > 0) { vmList = vmList.AsQueryable().Where(str).Select(e => e).ToList(); }
 
             //FILTER
             foreach (var property in properties)
@@ -8649,8 +8653,8 @@ namespace ExpenseProcessingSystem.Services
                     Expense_Debit_Total = TotalDebit,
                     Expense_Credit_Total = credEwtTotal + credCashTotal,
                     Expense_Creator_ID = userId,
-                    Expense_Created_Date = DateTime.Now,
-                    Expense_Last_Updated = DateTime.Now,
+                    Expense_Created_Date = entryModel.expenseDate,
+                    Expense_Last_Updated = entryModel.expenseDate,
                     Expense_isDeleted = false,
                     Expense_Status = 1,
                     ExpenseEntryDetails = expenseDtls
@@ -8757,8 +8761,8 @@ namespace ExpenseProcessingSystem.Services
                     Expense_Debit_Total = entryModel.EntryNC.NC_DebitAmt,
                     Expense_Credit_Total = entryModel.EntryNC.NC_CredAmt,
                     Expense_Creator_ID = userId,
-                    Expense_Created_Date = DateTime.Now,
-                    Expense_Last_Updated = DateTime.Now,
+                    Expense_Created_Date = entryModel.expenseDate,
+                    Expense_Last_Updated = entryModel.expenseDate,
                     Expense_isDeleted = false,
                     Expense_Status = 1,
                     ExpenseEntryNC = expenseNCList

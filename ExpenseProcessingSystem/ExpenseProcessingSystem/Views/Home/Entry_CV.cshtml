@@ -24,7 +24,7 @@
                 @Html.DropDownListFor(m => m.vendor, new SelectList(Model.systemValues.vendors, "Value", "Text", Model.systemValues.vendors.SelectedValue), new { @id = "vendorName", @class = "voucher-input" })
             </div>
         </div>
-        <div class="">
+        <div class="entry-tbl-cont">
             <table class="table table-bordered table-striped voucher-tbl w-97" id="inputTable">
                 <colgroup>
                     <col style="width:20%;" />
@@ -448,9 +448,10 @@
                 $("#req_" + idx).find('input.txtAmorDuration').remove();
                 $("#req_" + idx).find('input.txtAmorDate').remove();
                 $("#req_" + idx).find('input.txtAmorAmount').remove();
-                computeValuesCAByParentID(pos);
             }
+            computeValuesCAByParentID(pos);
         });
+
         function computeValuesCAByParentID(parentID) {
             var amounts = $("");
             var grossAmt = 0;

@@ -31,21 +31,21 @@ string value4 = xelem.Element("ADDRESS").Value
   
 <!--Debit Account - SS-->
   <!--Gen Exp-->
-  <D_SS1 id="D_SS1">96</D_SS1>
+  <D_SS1 id="D_SS1">124</D_SS1>
   <!--Expense HO US$-->
-  <D_SS2 id="D_SS2">135</D_SS2>
+  <D_SS2 id="D_SS2">130</D_SS2>
   <!--Reimburse US$-->
-  <D_SS3 id="D_SS3">87</D_SS3>
+  <D_SS3 id="D_SS3">125</D_SS3>
   <!--Adv Exp HO PhP-->
-  <D_SS4 id="D_SS4">111</D_SS4>
+  <D_SS4 id="D_SS4">70</D_SS4>
   <!--Reimburse Yen-->
-  <D_SS5 id="D_SS5">88</D_SS5>
+  <D_SS5 id="D_SS5">126</D_SS5>
   
 <!--Credit Account - SS-->
   <!--PETTY CASH-->
   <C_SS1 id="C_SS1">108</C_SS1>
   <!--COMP SUSP-->
-  <C_SS2 id="C_SS2">76</C_SS2>
+  <C_SS2 id="C_SS2">79</C_SS2>
 
 <!--FBT debit/credit account-->
   <!--Master ID For House Rent-->

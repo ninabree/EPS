@@ -1316,6 +1316,7 @@ namespace ExpenseProcessingSystem.Controllers
                 for(int i = 1; i <= 5; i++)
                 {
                     acc = _service.getAccountByMasterID(int.Parse(xelem.Element("D_SS" + i).Value));
+                    if (acc == null) continue;
                     acclist.Add(new accDetails
                     {
                         accId = acc.Account_ID,
@@ -2650,15 +2651,13 @@ namespace ExpenseProcessingSystem.Controllers
             for (int i = 1; i <= 5; i++)
             {
                 acc = _service.getAccountByMasterID(int.Parse(xelem.Element("D_SS" + i).Value));
-                if(acc != null)
-                {
-                    acclist.Add(new accDetails
+                if (acc == null) continue;
+                acclist.Add(new accDetails
                     {
                         accId = acc.Account_ID,
                         accName = acc.Account_Name,
                         accCode = acc.Account_Code
                     });
-                }
             }
             ssList.systemValues.acc = acclist;
 
@@ -2784,8 +2783,7 @@ namespace ExpenseProcessingSystem.Controllers
                 ViewData["partialName"] = (EntryNCViewModelList.EntryNC.NC_Category_ID.ToString() != "0" ? EntryNCViewModelList.EntryNC.NC_Category_ID.ToString() : GlobalSystemValues.NC_LS_PAYROLL.ToString());
                 return View("Entry_NC", PopulateEntryNC(EntryNCViewModelList));
             }
-
-            //EntryNCViewModelList ncList = new EntryNCViewModelList();
+            
             int id = _service.addExpense_NC(EntryNCViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_NC);
             ModelState.Clear();
             //return RedirectToAction("View_NC", "Home", new { entryID = id });
@@ -3146,7 +3144,8 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.category_of_entry = GlobalSystemValues.NC_CATEGORIES_SELECT;
             viewModel.EntryNC.NC_Category_Name = GlobalSystemValues.NC_CATEGORIES_SELECT.Where(x => x.Value == viewModel.EntryNC.NC_Category_ID + "")
                                             .Select(x => x.Text).FirstOrDefault();
-            viewModel.expenseDate = DateTime.Now;
+            //viewModel.expenseDate = DateTime.Now;
+            viewModel.expenseDate = DateTime.Today;
             return viewModel;
         }
         public dynamic PopulateEntryDDV(EntryDDVViewModelList viewModel)
