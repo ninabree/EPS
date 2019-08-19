@@ -362,8 +362,8 @@
                 if ($('#EntryCV_' + idx + '__ccy option:selected').text() == $('#yenAbbrv').val()) {
                     $("#remark_" + idx).find('input').remove();
                     $("#divCashBD_" + idx).find('input').remove();
-                    computeValuesSSByParentID(pos);
                 }
+                computeValuesSSByParentID(pos);
             });
 
             $("table").on("click", ".expenseEWT", function (e) {

@@ -448,9 +448,10 @@
                 $("#req_" + idx).find('input.txtAmorDuration').remove();
                 $("#req_" + idx).find('input.txtAmorDate').remove();
                 $("#req_" + idx).find('input.txtAmorAmount').remove();
-                computeValuesCAByParentID(pos);
             }
+            computeValuesCAByParentID(pos);
         });
+
         function computeValuesCAByParentID(parentID) {
             var amounts = $("");
             var grossAmt = 0;
