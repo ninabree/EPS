@@ -10,36 +10,36 @@
     {
         <table class="table">
             <tr>
-                <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.User_UserName)</td>
+                <td>@Html.LabelFor(item => item.NewAcc.User_UserName)</td>
                 <td class="p-r-50">@Html.TextBoxFor(item => item.NewAcc.User_UserName, new { @class = "w-full input" })</td>
-                <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.User_EmpCode)</td>
+                <td>@Html.LabelFor(item => item.NewAcc.User_EmpCode)</td>
                 <td class="p-r-50">@Html.TextBoxFor(item => item.NewAcc.User_EmpCode, new { @class = "w-full input" })</td>
-                <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.User_Email)</td>
+                <td>@Html.LabelFor(item => item.NewAcc.User_Email)</td>
                 <td class="p-r-50">@Html.TextBoxFor(item => item.NewAcc.User_Email, new { @class = "w-full input" })</td>
-                <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.User_Password)</td>
-                <td class="p-r-50">@Html.PasswordFor(item => item.NewAcc.User_Password, new { @class = "w-full input" })</td>
             </tr>
 
             <tr>
-                <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.User_FName)</td>
+                <td>@Html.LabelFor(item => item.NewAcc.User_FName)</td>
                 <td class="p-r-50">
                     <div class="dis-inline-block w-49">@Html.TextBoxFor(item => item.NewAcc.User_FName, new { @class = "w-full input" })</div>
                     <div class="dis-inline-block w-49">@Html.TextBoxFor(item => item.NewAcc.User_LName, new { @class = "w-full input" })</div>
                 </td>
-                <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.User_Role)</td>
+                <td>@Html.LabelFor(item => item.NewAcc.User_Role)</td>
                 <td class="p-r-50">@Html.DropDownListFor(item => item.NewAcc.User_Role, Model.RoleList, new { @class = "w-full input" })</td>
                 <td rowspan="2" style="width: 7%">@Html.LabelFor(item => item.NewAcc.User_Comment)</td>
                 <td rowspan="2" class="p-r-50">@Html.TextAreaFor(item => item.NewAcc.User_Comment, new { @class = "w-full h-full input" })</td>
+                <td><div class="w-20"></div></td>
             </tr>
             <tr>
-                <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.User_DeptID)</td>
+                <td>@Html.LabelFor(item => item.NewAcc.User_DeptID)</td>
                 <td class="p-r-50">
                     @Html.DropDownListFor(item => item.NewAcc.User_DeptID,
                                      new SelectList(Model.DeptList, "Dept_ID", "Dept_Name"),
-                                     new { @class = "w-full input" })
+                                     new { @class = "w-49 input" })
                 </td>
-                <td style="width: 7%">@Html.LabelFor(item => item.NewAcc.User_InUse)</td>
+                <td>@Html.LabelFor(item => item.NewAcc.User_InUse)</td>
                 <td style="text-align: left">@Html.CheckBoxFor(item => item.NewAcc.User_InUse, new { @class = "fs-10" })</td>
+                <td><div class="w-20"></div></td>
             </tr>
             <tr>
                 <td></td>
@@ -48,8 +48,10 @@
                 <td></td>
                 <td>@Html.TextBoxFor(item => item.NewAcc.User_ID, new { @class = "hidden" })</td>
                 <td><button type="submit" class="btn tbl-btn">Save/Update</button><button id="clear-btn" class="btn tbl-btn">Clear</button></td>
+                <td><div class="w-20"></div></td>
             </tr>
         </table>
+        @Html.HiddenFor(item => item.NewAcc.User_Password)
     }
 </div>
 @*validation message*@
@@ -58,7 +60,7 @@
 </div>
 <div id="UM_tbl" class="tbl-cont">
     <div id="tbl-lbl">
-        <div class="dis-inline-block"><p>Users Master Data:</p></div>
+        <div class="dis-inline-block"><p>Users Master Data Table:</p></div>
     </div>
     <table id="um-tbl" class="table tab-tbl table-striped ">
         <thead>
@@ -70,12 +72,12 @@
                 <th><a asp-action="UM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["RoleSortParm"]">Role<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
                 <th><a asp-action="UM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["EmailSortParm"]">Email<p class="btn-xs glyphicon @ViewData["glyph-5"]"></p></a></th>
                 <th><a asp-action="UM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CommentSortParm"]">Comment<p class="btn-xs glyphicon @ViewData["glyph-6"]"></p></a></th>
-                <th><a asp-action="UM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["InUseSortParm"]">In-Use<p class="btn-xs glyphicon @ViewData["glyph-7"]"></p></a></th>
+                @*<th><a asp-action="UM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["InUseSortParm"]">In-Use<p class="btn-xs glyphicon @ViewData["glyph-7"]"></p></a></th>*@
                 <th><a asp-action="UM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CreatrSortParm"]">Created By<p class="btn-xs glyphicon @ViewData["glyph-8"]"></p></a></th>
                 <th><a asp-action="UM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["ApprvrSortParm"]">Updated By<p class="btn-xs glyphicon @ViewData["glyph-9"]"></p></a></th>
                 <th><a asp-action="UM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["CreatedDateSortParm"]">Created Date<p class="btn-xs glyphicon @ViewData["glyph-10"]"></p></a></th>
                 <th><a asp-action="UM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["LastUpdateDateSortParm"]">Last Update Date<p class="btn-xs glyphicon @ViewData["glyph-11"]"></p></a></th>
-                <th><a asp-action="UM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["StatusSortParm"]">Status<p class="btn-xs glyphicon @ViewData["glyph-12"]"></p></a></th>
+                @*<th><a asp-action="UM" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["StatusSortParm"]">Status<p class="btn-xs glyphicon @ViewData["glyph-12"]"></p></a></th>*@
             </tr>
         </thead>
         <tbody>
@@ -91,12 +93,12 @@
                         <td>@Html.DisplayFor(modelItem => item.User_Role)</td>
                         <td>@Html.DisplayFor(modelItem => item.User_Email)</td>
                         <td>@Html.DisplayFor(modelItem => item.User_Comment)</td>
-                        <td>@Html.DisplayFor(modelItem => item.User_InUse)</td>
+                        @*<td>@Html.DisplayFor(modelItem => item.User_InUse)</td>*@
                         <td>@Html.DisplayFor(modelItem => item.User_Creator_Name)</td>
                         <td>@Html.DisplayFor(modelItem => item.User_Approver_Name)</td>
                         <td>@Html.DisplayFor(modelItem => item.User_Created_Date)</td>
                         <td>@Html.DisplayFor(modelItem => item.User_Last_Updated)</td>
-                        <td>@Html.DisplayFor(modelItem => item.User_Status)</td>
+                        @*<td>@Html.DisplayFor(modelItem => item.User_Status)</td>*@
                         @Html.HiddenFor(modelItem => item.User_ID)
                     </tr>
                 }
