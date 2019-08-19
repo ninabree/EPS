@@ -39,7 +39,7 @@
 </div>
 <script>
     $(document).ready(function (e) {
-        $(".input-tin").keyup(function () {
+        $(".input-tin").keypress(function () {
             var val = $(this).val()
             var len = val.length;
             if (len == 3 || len == 7 || len == 11) {
