@@ -2765,8 +2765,7 @@ namespace ExpenseProcessingSystem.Controllers
                 ViewData["partialName"] = (EntryNCViewModelList.EntryNC.NC_Category_ID.ToString() != "0" ? EntryNCViewModelList.EntryNC.NC_Category_ID.ToString() : GlobalSystemValues.NC_LS_PAYROLL.ToString());
                 return View("Entry_NC", PopulateEntryNC(EntryNCViewModelList));
             }
-
-            //EntryNCViewModelList ncList = new EntryNCViewModelList();
+            
             int id = _service.addExpense_NC(EntryNCViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_NC);
             ModelState.Clear();
             //return RedirectToAction("View_NC", "Home", new { entryID = id });
@@ -3127,7 +3126,8 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.category_of_entry = GlobalSystemValues.NC_CATEGORIES_SELECT;
             viewModel.EntryNC.NC_Category_Name = GlobalSystemValues.NC_CATEGORIES_SELECT.Where(x => x.Value == viewModel.EntryNC.NC_Category_ID + "")
                                             .Select(x => x.Text).FirstOrDefault();
-            viewModel.expenseDate = DateTime.Now;
+            //viewModel.expenseDate = DateTime.Now;
+            viewModel.expenseDate = DateTime.Today;
             return viewModel;
         }
         public dynamic PopulateEntryDDV(EntryDDVViewModelList viewModel)

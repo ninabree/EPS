@@ -8642,8 +8642,8 @@ namespace ExpenseProcessingSystem.Services
                     Expense_Debit_Total = TotalDebit,
                     Expense_Credit_Total = credEwtTotal + credCashTotal,
                     Expense_Creator_ID = userId,
-                    Expense_Created_Date = DateTime.Now,
-                    Expense_Last_Updated = DateTime.Now,
+                    Expense_Created_Date = entryModel.expenseDate,
+                    Expense_Last_Updated = entryModel.expenseDate,
                     Expense_isDeleted = false,
                     Expense_Status = 1,
                     ExpenseEntryDetails = expenseDtls
@@ -8750,8 +8750,8 @@ namespace ExpenseProcessingSystem.Services
                     Expense_Debit_Total = entryModel.EntryNC.NC_DebitAmt,
                     Expense_Credit_Total = entryModel.EntryNC.NC_CredAmt,
                     Expense_Creator_ID = userId,
-                    Expense_Created_Date = DateTime.Now,
-                    Expense_Last_Updated = DateTime.Now,
+                    Expense_Created_Date = entryModel.expenseDate,
+                    Expense_Last_Updated = entryModel.expenseDate,
                     Expense_isDeleted = false,
                     Expense_Status = 1,
                     ExpenseEntryNC = expenseNCList
