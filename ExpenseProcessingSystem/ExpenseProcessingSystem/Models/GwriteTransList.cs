@@ -14,5 +14,6 @@ namespace ExpenseProcessingSystem.Models
         public int GW_GWrite_ID { get; set; }
         public int GW_TransID { get; set; }
         public int GW_Status { get; set; }
+        public string GW_Type { get; set; }
     }
 }

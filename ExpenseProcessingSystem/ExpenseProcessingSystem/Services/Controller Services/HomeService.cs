@@ -10129,6 +10129,7 @@ namespace ExpenseProcessingSystem.Services
 
             gWriteModel.GW_GWrite_ID = int.Parse(rqDtl.RequestId.ToString());
             gWriteModel.GW_Status = GlobalSystemValues.STATUS_PENDING;
+            gWriteModel.GW_Type = "closing";
 
             return true;
         }
@@ -11790,7 +11791,11 @@ namespace ExpenseProcessingSystem.Services
                                                         && expectedStatus.Contains(x.Expense_Status))
                                                .OrderByDescending(x => x.Expense_Created_Date).FirstOrDefault();
             DMCheckModel checkNoModel;
-            if (expense != null && expense.Expense_CheckId != 0)
+
+            if (expense == null)
+                return null;
+
+            if (expense.Expense_CheckId != 0)
             {
                 checkNoModel = _context.DMCheck.Where(x => x.Check_ID == expense.Expense_CheckId).FirstOrDefault();
             }
