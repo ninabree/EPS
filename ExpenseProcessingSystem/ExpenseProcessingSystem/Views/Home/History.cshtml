@@ -2,39 +2,38 @@
 @model HomeIndexViewModel
 <div class="tabContent">
     <div class="p-t-10 p-l-20 p-r-20">
-        <form asp-action="History" asp-controller="Home" method="get" id="search-frm">
+        <form asp-action="History" asp-controller="Home" method="get" id="search-frm" class="filter-cont">
             <div class="form-actions no-color">
                 <p class="">Filter by:</p>
-                    <table class="table">
-                        <tr>
-                            <td>@Html.LabelFor(model => model.Filters.HistoryFil.Hist_Voucher_No)</td>
-                            <td>
-                                @Html.DropDownListFor(model => model.Filters.HistoryFil.Hist_Voucher_Type, new SelectList(Model.Filters.HistoryFil.Hist_Type_Select, "Value", "Text", "1"), "-- Voucher Type --", new { @class = "dis-inline-block" })
-                                @Html.DropDownListFor(model => model.Filters.HistoryFil.Hist_Voucher_Year, new SelectList(Model.Filters.HistoryFil.Hist_YearList, "YearID", "YearID", DateTime.Now.Year), "-- Voucher Year --", new { @class = "dis-inline-block" })
-                                @Html.EditorFor(model => model.Filters.HistoryFil.Hist_Voucher_No, new { @class = "dis-inline-block" })
-                            </td>
-                            <td>@Html.LabelFor(model => model.Filters.HistoryFil.Hist_Maker)</td>
-                            <td>@Html.TextBoxFor(model => model.Filters.HistoryFil.Hist_Maker, new { @class = "input" })</td>
-                            <td>@Html.LabelFor(model => model.Filters.HistoryFil.Hist_Approver)</td>
-                            <td>@Html.TextBoxFor(model => model.Filters.HistoryFil.Hist_Approver, new { @class = "input" })</td>
-                        </tr>
-                        <tr>
-                            <td>@Html.LabelFor(model => model.Filters.HistoryFil.Hist_Created_Date)</td>
-                            <td>@Html.TextBoxFor(model => model.Filters.HistoryFil.Hist_Created_Date, new { @class = "input w-49", @type = "date" })</td>
-                            <td>@Html.LabelFor(model => model.Filters.HistoryFil.Hist_Updated_Date)</td>
-                            <td>@Html.TextBoxFor(model => model.Filters.HistoryFil.Hist_Updated_Date, new { @class = "input", @type = "date" })</td>
-                            <td>@Html.LabelFor(model => model.Filters.HistoryFil.Hist_Status)</td>
-                            <td>@Html.TextBoxFor(model => model.Filters.HistoryFil.Hist_Status, new { @class = "input" })</td>
-                            <td colspan="2" style="text-align: right;">
-                                <input type="submit" value="Search" class="tbl-btn btn-default" id="search-btn" />
-                                <input type="button" value="Back to Full List" id="full-list-btn" class="tbl-btn btn-default" />
-                            </td>
-                        </tr>
-                    </table>
+                <table class="table">
+                    <tr>
+                        <td>@Html.LabelFor(model => model.Filters.HistoryFil.Hist_Voucher_No)</td>
+                        <td>
+                            @Html.DropDownListFor(model => model.Filters.HistoryFil.Hist_Voucher_Type, new SelectList(Model.Filters.HistoryFil.Hist_Type_Select, "Value", "Text", "1"), "-- Voucher Type --", new { @class = "dis-inline-block" })
+                            @Html.DropDownListFor(model => model.Filters.HistoryFil.Hist_Voucher_Year, new SelectList(Model.Filters.HistoryFil.Hist_YearList, "YearID", "YearID", DateTime.Now.Year), "-- Voucher Year --", new { @class = "dis-inline-block" })
+                            @Html.EditorFor(model => model.Filters.HistoryFil.Hist_Voucher_No, new { @class = "dis-inline-block" })
+                        </td>
+                        <td>@Html.LabelFor(model => model.Filters.HistoryFil.Hist_Maker)</td>
+                        <td>@Html.TextBoxFor(model => model.Filters.HistoryFil.Hist_Maker, new { @class = "input" })</td>
+                        <td>@Html.LabelFor(model => model.Filters.HistoryFil.Hist_Approver)</td>
+                        <td>@Html.TextBoxFor(model => model.Filters.HistoryFil.Hist_Approver, new { @class = "input" })</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(model => model.Filters.HistoryFil.Hist_Created_Date)</td>
+                        <td>@Html.TextBoxFor(model => model.Filters.HistoryFil.Hist_Created_Date, new { @class = "input w-49", @type = "date" })</td>
+                        <td>@Html.LabelFor(model => model.Filters.HistoryFil.Hist_Updated_Date)</td>
+                        <td>@Html.TextBoxFor(model => model.Filters.HistoryFil.Hist_Updated_Date, new { @class = "input", @type = "date" })</td>
+                        <td>@Html.LabelFor(model => model.Filters.HistoryFil.Hist_Status)</td>
+                        <td>@Html.TextBoxFor(model => model.Filters.HistoryFil.Hist_Status, new { @class = "input" })</td>
+                        <td colspan="2" style="text-align: right;">
+                            <input type="submit" value="Search" class="tbl-btn btn-default" id="search-btn" />
+                            <input type="button" value="Back to Full List" id="full-list-btn" class="tbl-btn btn-default" />
+                        </td>
+                    </tr>
+                </table>
             </div>
         </form>
-    </div>
-    <div class="flex-c p-t-10">
+        <div class="tab-tbl m-t-20">All Expense History Records:</div>
         <table class="table table-striped tab-tbl table-bordered table-hover w-97">
             <thead>
                 <tr>
@@ -78,19 +77,19 @@
         {
             <input id="entryID" type="hidden" name="entryID" value="" />
         }
+        @{
+            var prevDisabled = !Model.HistoryList.HasPreviousPage ? "disabled" : "";
+            var nextDisabled = !Model.HistoryList.HasNextPage ? "disabled" : "";
+        }
+        <a page="@(Model.HistoryList.PageIndex - 1)"
+           class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left">
+        </a>
+        <input type="text" class="pagination-input" id="paginationInput" val="" />
+        <input type="text" class="pagination-input" value="@(Model.HistoryList.PageIndex) of @(Model.HistoryList.TotalPages)" disabled />
+        <a page="@(Model.HistoryList.PageIndex + 1)"
+           class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right">
+        </a>
     </div>
-    @{
-        var prevDisabled = !Model.HistoryList.HasPreviousPage ? "disabled" : "";
-        var nextDisabled = !Model.HistoryList.HasNextPage ? "disabled" : "";
-    }
-    <a page="@(Model.HistoryList.PageIndex - 1)"
-       class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left">
-    </a>
-    <input type="text" class="pagination-input" id="paginationInput" val=""/>
-    <input type="text" class="pagination-input" value="@(Model.HistoryList.PageIndex) of @(Model.HistoryList.TotalPages)" disabled />
-    <a page="@(Model.HistoryList.PageIndex + 1)"
-       class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right">
-    </a>
 </div>
 
 <script type="text/javascript">

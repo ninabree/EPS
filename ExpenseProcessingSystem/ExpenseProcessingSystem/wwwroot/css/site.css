@@ -569,7 +569,7 @@ iframe{
 */
 .tbl-cont > .tab-tbl, .hometabContent > div > .tab-tbl {
     font-family: /*HelveticaNeue,*/ 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;: HelveticaNeueLight;
-    font-size: 10px;
+    /*font-size: 10px;*/
 }
 
     .tbl-cont > .tab-tbl > thead, .hometabContent > div > .tab-tbl > thead, table:not(.voucher-tbl) > thead {
@@ -581,7 +581,7 @@ iframe{
     }
 
         .tbl-cont > .tab-tbl > thead > tr > th, .hometabContent > div > .tab-tbl > thead > tr > th{
-            font-weight: 100;
+            /*font-weight: 100;*/
             text-align: left;
         }
 
@@ -750,6 +750,18 @@ td.voucher-input, div.voucher-input, input.voucher-input, select.voucher-input {
 }
 .ncVar[disabled = "disabled"], #EntryNC_NC_DebitAmt, #EntryNC_NC_CredAmt, #EntryNC_NC_TotalAmt, .NC_readonly_row > input {
     background-color: transparent;
+}
+/*////////////////////////////////////////////////
+    [Tab Content - Entry]
+*/
+.entry-tbl-cont {
+    margin: 1% 0%;
+}
+.filter-cont {
+    margin: .5% 0%;
+    padding: .5%;
+    border: 1px solid #ccc;
+    background-color: #eee;
 }
 /*-------------------------------------
 [ DDV ]*/
