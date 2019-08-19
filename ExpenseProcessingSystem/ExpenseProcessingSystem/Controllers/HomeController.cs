@@ -1298,6 +1298,7 @@ namespace ExpenseProcessingSystem.Controllers
                 for(int i = 1; i <= 5; i++)
                 {
                     acc = _service.getAccountByMasterID(int.Parse(xelem.Element("D_SS" + i).Value));
+                    if (acc == null) continue;
                     acclist.Add(new accDetails
                     {
                         accId = acc.Account_ID,
@@ -2631,15 +2632,13 @@ namespace ExpenseProcessingSystem.Controllers
             for (int i = 1; i <= 5; i++)
             {
                 acc = _service.getAccountByMasterID(int.Parse(xelem.Element("D_SS" + i).Value));
-                if(acc != null)
-                {
-                    acclist.Add(new accDetails
+                if (acc == null) continue;
+                acclist.Add(new accDetails
                     {
                         accId = acc.Account_ID,
                         accName = acc.Account_Name,
                         accCode = acc.Account_Code
                     });
-                }
             }
             ssList.systemValues.acc = acclist;
 
