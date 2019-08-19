@@ -8,14 +8,14 @@
 }
 <div class="tabContent">
     <div class="p-t-10 p-l-20 p-r-20">
-        <form asp-action="Pending" asp-controller="Home" method="get" id="search-frm">
+        <form asp-action="Pending" asp-controller="Home" method="get" id="search-frm" class="filter-cont">
             <div class="form-actions no-color">
                 <p class="">Filter by:</p>
                 <table class="table tab-tbl">
                     <tr>
                         <td>@Html.LabelFor(model => model.Filters.GenPendFil.Pending_Type)</td>
                         <td>
-                            @Html.DropDownListFor(model => model.Filters.GenPendFil.Pending_Type, new SelectList(Model.Filters.GenPendFil.Pending_Type_Select, "Value", "Text", "1"), "-- Voucher Type --", new { @class="w-49"})
+                            @Html.DropDownListFor(model => model.Filters.GenPendFil.Pending_Type, new SelectList(Model.Filters.GenPendFil.Pending_Type_Select, "Value", "Text", "1"), "-- Voucher Type --", new { @class = "w-49" })
                         </td>
                         <td>@Html.LabelFor(model => model.Filters.GenPendFil.Pending_Amount)</td>
                         <td>@Html.TextBoxFor(model => model.Filters.GenPendFil.Pending_Amount, new { @class = "input" })</td>
@@ -37,8 +37,7 @@
                 </table>
             </div>
         </form>
-    </div>
-    <div class="flex-c p-t-10">
+        <div class="tab-tbl m-t-20">All Notification Records:</div>
         <table class="table table-striped tab-tbl table-bordered table-hover w-97">
             <colgroup>
                 <col style="width:10%" />
@@ -105,17 +104,16 @@
         {
             <input id="entryID" type="hidden" name="entryID" value="" />
         }
+        @{
+            var prevDisabled = !Model.GeneralPendingList.HasPreviousPage ? "disabled" : "";
+            var nextDisabled = !Model.GeneralPendingList.HasNextPage ? "disabled" : "";
+        }
+        <a class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left" page="@(Model.GeneralPendingList.PageIndex - 1)"></a>
+        <input type="text" class="pagination-input" id="paginationInput" val="" />
+        <input type="text" class="pagination-input" value="@(Model.GeneralPendingList.PageIndex) of @(Model.GeneralPendingList.TotalPages)" disabled />
+        <a class="btn pagination-btn btn-xs btn-default @nextDisabled glyphicon glyphicon-menu-right" page="@(Model.GeneralPendingList.PageIndex + 1)"></a>
     </div>
-    @{
-        var prevDisabled = !Model.GeneralPendingList.HasPreviousPage ? "disabled" : "";
-        var nextDisabled = !Model.GeneralPendingList.HasNextPage ? "disabled" : "";
-    }
-    <a class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left" page="@(Model.GeneralPendingList.PageIndex - 1)"></a>
-    <input type="text" class="pagination-input" id="paginationInput" val="" />
-    <input type="text" class="pagination-input" value="@(Model.GeneralPendingList.PageIndex) of @(Model.GeneralPendingList.TotalPages)" disabled />
-    <a class="btn pagination-btn btn-xs btn-default @nextDisabled glyphicon glyphicon-menu-right" page="@(Model.GeneralPendingList.PageIndex + 1)"></a>
 </div>
-
 <script type="text/javascript">
     $(document).ready(function (e) {
 
