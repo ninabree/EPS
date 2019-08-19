@@ -28,7 +28,6 @@
                 <td class="p-r-50">@Html.DropDownListFor(item => item.NewAcc.User_Role, Model.RoleList, new { @class = "w-full input" })</td>
                 <td rowspan="2" style="width: 7%">@Html.LabelFor(item => item.NewAcc.User_Comment)</td>
                 <td rowspan="2" class="p-r-50">@Html.TextAreaFor(item => item.NewAcc.User_Comment, new { @class = "w-full h-full input" })</td>
-                <td><div class="w-20"></div></td>
             </tr>
             <tr>
                 <td>@Html.LabelFor(item => item.NewAcc.User_DeptID)</td>
@@ -39,10 +38,6 @@
                 </td>
                 <td>@Html.LabelFor(item => item.NewAcc.User_InUse)</td>
                 <td style="text-align: left">@Html.CheckBoxFor(item => item.NewAcc.User_InUse, new { @class = "fs-10" })</td>
-                <td><div class="w-20"></div></td>
-            </tr>
-            <tr>
-                <td colspan="7"></td>
             </tr>
             <tr>
                 <td></td>
@@ -51,7 +46,6 @@
                 <td></td>
                 <td>@Html.TextBoxFor(item => item.NewAcc.User_ID, new { @class = "hidden" })</td>
                 <td><button type="submit" class="btn tbl-btn">Save/Update</button><button id="clear-btn" class="btn tbl-btn">Clear</button></td>
-                <td><div class="w-20"></div></td>
             </tr>
         </table>
         @Html.HiddenFor(item => item.NewAcc.User_Password)
@@ -63,7 +57,7 @@
 </div>
 <div id="UM_tbl" class="tbl-cont">
     <div id="tbl-lbl">
-        <div class="dis-inline-block"><p>Users Master Data Table:</p></div>
+        <div class="dis-inline-block"><p>Users Master Data Records:</p></div>
     </div>
     <table id="um-tbl" class="table tab-tbl table-striped ">
         <thead>
@@ -89,7 +83,7 @@
                 @foreach (var item in Model.AccList)
                 {
                     <tr>
-                        <td>@Html.DisplayFor(modelItem => item.User_UserName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.User_UserName, new { @class="voucher-input"})</td>
                         <td>@Html.DisplayFor(modelItem => item.User_EmpCode)</td>
                         <td>@Html.DisplayFor(modelItem => item.User_LName), @Html.DisplayFor(modelItem => item.User_FName)</td>
                         <td id=@item.User_Dept_ID>@Html.DisplayFor(modelItem => item.User_Dept_Name)</td>

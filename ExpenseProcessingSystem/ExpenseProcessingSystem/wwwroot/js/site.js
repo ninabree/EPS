@@ -131,12 +131,11 @@ $(document).ready(function () {
             if (id == tabVal) tabLinks[id].className = 'selected';
 
             //if any entry tab is clicked, 'Entry' tab is selected as well
-            if ("/Home/Entry_CV" == tabVal || "/Home/Entry_DDV" == tabVal || "/Home/Entry_PCV" == tabVal || "/Home/Entry_NC" == tabVal ||
-                "/Home/Entry_SS" == tabVal || "/Home/Entry_Liquidation" == tabVal || "/Home/Liquidation_Main" == tabVal) {
+            if (GlobalSystemValues.ENTRY_VALS.Contains(tabVal)) {
                 document.getElementById('entry').firstElementChild.className = 'selected';
             }
             //if any home tab is clicked, 'Home' tab is selected as well
-            else if ("/Home/Index" == tabVal || "/Home/Pending" == tabVal || "/Home/History" == tabVal || "/Home/Entry_NC" == tabVal) {
+            else if (GlobalSystemValues.HOME_VALS.Contains(tabVal)) {
                 document.getElementById('home').firstElementChild.className = 'selected';
             }
             i++;

@@ -481,6 +481,8 @@ input[readonly], input[disabled]{
 
             #tabs li a:hover, ul#entity-tabs li a:hover {
                 background-color: #f1f0ee;
+                color: #0A1B81;
+                font-weight: bold;
             }
 
             #tabs li a.selected, ul#entity-tabs li a.selected {
