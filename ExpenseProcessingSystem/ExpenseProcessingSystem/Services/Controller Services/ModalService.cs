@@ -1714,7 +1714,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             rqDtlModel.RacfId = username;
             rqDtlModel.RacfPassword = encodedPass;
             rqDtlModel.RequestCreated = DateTime.Now;
-            rqDtlModel.Status = "SCRIPTING";
+            rqDtlModel.Status = "WAITING";
             rqDtlModel.SystemAbbr = "EXPRESS";
             rqDtlModel.Priority = 1;
 
