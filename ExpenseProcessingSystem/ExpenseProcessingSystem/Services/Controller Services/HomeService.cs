@@ -72,14 +72,20 @@ namespace ExpenseProcessingSystem.Services
         public List<HomeNotifViewModel> populateNotif(FiltersViewModel filters, int loggedUID)
         {
             var mList = (from notifs in (from n in _context.HomeNotif
+                                         //for currently logged in User
                                          join user in _context.User
-                                          on loggedUID
-                                          equals user.User_ID
-                                          into c
-                                         from user in c.DefaultIfEmpty()
+                                         on loggedUID
+                                         equals user.User_ID
+                                         into c from user in c.DefaultIfEmpty()
+                                         //for User Acc of Maker of records
+                                         join mkr in _context.User
+                                         on n.Notif_Application_Maker_ID
+                                         equals mkr.User_ID
+                                         into m from mkr in m.DefaultIfEmpty()
                                          where n.Notif_UserFor_ID == loggedUID ||
                                          (n.Notif_UserFor_ID == 0 && n.Notif_Application_Maker_ID != loggedUID 
-                                         && (user.User_Role != GlobalSystemValues.ROLE_ADMIN && user.User_Role != GlobalSystemValues.ROLE_MAKER))
+                                         && (user.User_Role != GlobalSystemValues.ROLE_ADMIN && user.User_Role != GlobalSystemValues.ROLE_MAKER)
+                                         && mkr.User_DeptID == user.User_DeptID)
                                          select new { n, user })
                          join creator in _context.User
                          on notifs.n.Notif_Application_Maker_ID
