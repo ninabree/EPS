@@ -570,6 +570,8 @@
         var now = new Date();
         var Year = now.getFullYear();
 
+        var total = 0;
+
         for (var i = 0; i < duration; i++) {
             var newRow = tableRef.insertRow(i);
             var cellDate = newRow.insertCell(0);
@@ -578,7 +580,15 @@
             var month = Number(begMonth) + Number(i);
 
             cellDate.innerHTML = new Date(Year, month, day).toDateString();
-            cellAmount.innerHTML = dvdAmount;
+
+            if (i == duration - 1) {
+                var lastAmount = roundNumber(grossAmount - total,2);
+                cellAmount.innerHTML = lastAmount;
+            } else {
+                cellAmount.innerHTML = dvdAmount;
+
+            }
+            total += dvdAmount;
         }
     };
 
