@@ -9,7 +9,7 @@
 @model DMViewModel
 
 <div class="tbl-cont">
-    <form asp-action="DM" asp-controller="Home" method="get" id="search-frm">
+    <form asp-action="DM" asp-controller="Home" method="get" id="search-frm" class="filter-cont">
         <div class="form-actions no-color">
             <p>
                 Filter by:
@@ -42,8 +42,10 @@
                         <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Approver_Name, new { @class = "input" })</td>
                         <td>@Html.LabelFor(model => model.DMFilters.AF.AF_Status)</td>
                         <td>@Html.TextBoxFor(model => model.DMFilters.AF.AF_Status, new { @class = "input" })</td>
-                        <td colspan="2" style="text-align: right;">
+                        <td id="acc-srch-btn">
                             <input type="submit" value="Search" class="tbl-btn btn-default" id="search-btn" />
+                        </td>
+                        <td id="acc-full-list-btn">
                             <input type="button" value="Back to Full List" id="full-list-btn" class="tbl-btn btn-default" />
                         </td>
                     </tr>
@@ -51,6 +53,7 @@
             </p>
         </div>
     </form>
+    <div class="tab-tbl m-t-20">All Account Records:</div>
     <table class="table table-striped table-bordered tab-tbl table_DM_Main">
         <thead>
             <tr>

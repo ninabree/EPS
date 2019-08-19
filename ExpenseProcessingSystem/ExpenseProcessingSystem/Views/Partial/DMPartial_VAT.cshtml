@@ -9,7 +9,7 @@
 @model DMViewModel
 
 <div class="tbl-cont">
-    <form asp-action="DM" asp-controller="Home" method="get" id="search-frm">
+    <form asp-action="DM" asp-controller="Home" method="get" id="search-frm" class="filter-cont">
         <div class="form-actions no-color">
             <p>
                 Filter by:
@@ -37,6 +37,7 @@
             </p>
         </div>
     </form>
+    <div class="tab-tbl m-t-20">All Value Added Tax Records:</div>
     <table class="table table-striped table-bordered tab-tbl table_DM_Main">
         <thead>
             <tr>
