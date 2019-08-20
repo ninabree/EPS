@@ -211,7 +211,7 @@
         $("#grossTotal").val(roundNumber(grossTotal, 2));
         $("#credEwtTotal").val(roundNumber(ewtSubTotal, 2));
         $("#credCashTotal").val(roundNumber(cashSubTotal, 2));
-        $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
+        $("#credTotal").val(roundNumber(Number(ewtSubTotal + cashSubTotal), 2));
 
         $("#addRow").click(function (e) {
             var itemCount = document.getElementById('inputTable').getElementsByTagName('tbody')[0].childElementCount - 2;

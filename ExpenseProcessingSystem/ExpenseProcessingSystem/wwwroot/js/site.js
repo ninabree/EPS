@@ -183,6 +183,12 @@ $(document).ready(function () {
             LIQ_View_SS,
             LIQ_MOD_SS];
 
+        var ENTRY_VALS_SS = [
+            ENTRY_SS,
+            ENTRY_NEW_SS,
+            ENTRY_VIEW_SS,
+            ENTRY_MOD_SS];
+
         var ENTRY_VALS = [
             ENTRY,
             ENTRY_CV,

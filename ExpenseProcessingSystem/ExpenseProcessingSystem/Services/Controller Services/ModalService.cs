@@ -1626,12 +1626,73 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 {
                     GW_GWrite_ID = int.Parse(i.listGwriteDtl.RequestId.ToString()),
                     GW_TransID = int.Parse(i.listBudget.Budget_ID.ToString()),
-                    GW_Status = GlobalSystemValues.STATUS_PENDING
+                    GW_Status = GlobalSystemValues.STATUS_PENDING,
+                    GW_Type = "Budget"
                 });
             }
             _context.GwriteTransLists.AddRange(gtransList);
             _context.SaveChanges();
         }
+
+        public void ReSendNewBudget(int userid, string gwriteUsername, string gwritePassword)
+        {
+            string gCommand = "";
+            TblRequestDetails gwriteDtl = new TblRequestDetails();
+            TblRequestItem gwriteItem = new TblRequestItem();
+            List<BudgetModel> dbList = _context.Budget.Where(x => x.Budget_GWrite_Status == GlobalSystemValues.STATUS_ERROR).ToList();
+
+            var list = new[] {
+                new { listBudget = new BudgetModel(), listGwriteDtl = new TblRequestDetails() }
+            }.ToList();
+            list.Clear();
+
+            //Get all "Fund == True" account information.
+            var allAccountInfo = _context.DMAccount.Where(x => x.Account_isActive == true && x.Account_isDeleted == false
+                                                        && x.Account_Fund == true).ToList();
+
+            //Add all inputted budget information.
+            //Insert command to G-Write side.
+            //Status of inputted budget will be pending.
+            foreach (var i in dbList)
+            {
+                var acc = allAccountInfo.Where(x => x.Account_ID == i.Budget_Account_ID).FirstOrDefault();
+
+                i.Budget_GWrite_Status = GlobalSystemValues.STATUS_PENDING;
+
+                gCommand = "cm00@E"
+                            + acc.Account_No.Replace("-", "").Substring(3, 3)
+                            + "1@E@E11"
+                            + gwriteUsername.Substring(gwriteUsername.Length - 4)
+                            + "@E5@E1"
+                            + acc.Account_Budget_Code
+                            + "@E"
+                            + @String.Format("{0:N}", i.Budget_New_Amount)
+                            + "@E@E";
+
+                gwriteDtl = postToGwrite(gCommand, gwriteUsername, gwritePassword);
+
+                list.Add(new { listBudget = i, listGwriteDtl = gwriteDtl });
+
+            }
+            _context.Budget.UpdateRange(dbList);
+            _gWriteContext.SaveChanges();
+            _context.SaveChanges();
+
+            List<GwriteTransList> gtransList = new List<GwriteTransList>();
+            foreach (var i in list)
+            {
+                gtransList.Add(new GwriteTransList
+                {
+                    GW_GWrite_ID = int.Parse(i.listGwriteDtl.RequestId.ToString()),
+                    GW_TransID = int.Parse(i.listBudget.Budget_ID.ToString()),
+                    GW_Status = GlobalSystemValues.STATUS_PENDING,
+                    GW_Type = "Budget"
+                });
+            }
+            _context.GwriteTransLists.AddRange(gtransList);
+            _context.SaveChanges();
+        }
+
 
         public IEnumerable<DMAccountModel> GetAccountListForBudgetMonitoring()
         {

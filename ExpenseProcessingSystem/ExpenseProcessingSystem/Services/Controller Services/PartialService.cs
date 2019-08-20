@@ -453,23 +453,23 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                                }).ToList();
 
             List<DMVendorViewModel> vmList = new List<DMVendorViewModel>();
-            mList.GroupBy(o=> o.Vendor_ID).Select(o=> o.FirstOrDefault()).ToList().ForEach(m =>
-                vmList.Add(new DMVendorViewModel
-                {
-                    Vendor_MasterID = m.Vendor_MasterID,
-                    Vendor_Name = m.Vendor_Name,
-                    Vendor_TIN = m.Vendor_TIN,
-                    Vendor_Address = m.Vendor_Address,
-                    Vendor_Creator_Name = m.CreatorName ?? "N/A",
-                    Vendor_Approver_Name = m.ApproverName ?? "",
-                    Vendor_Created_Date = m.Vendor_Created_Date,
-                    Vendor_Creator_ID = m.Vendor_Creator_ID,
-                    Vendor_Last_Updated = m.Vendor_Last_Updated,
-                    Vendor_Status_ID = m.Status_ID,
-                    Vendor_Status = m.Status_Name ?? "N/A",
-                    Vendor_Tax_Rates = mList.Where(x=> x.Vendor_ID == m.Vendor_ID && x.VTV_TR_ID > 0 && x.TRRAte > 0).Select(x => (x.TRRAte * 100) + "% - " + x.TR_WT_Title).ToList(),
-                    Vendor_VAT = mList.Where(x => x.Vendor_ID == m.Vendor_ID && x.VTV_VAT_ID > 0 && x.VATRAte > 0).Select(x => (x.VATRAte * 100) + "% - " + x.VAT_Name).ToList()
-                })
+            mList.GroupBy(o => o.Vendor_ID).Select(o => o.FirstOrDefault()).ToList().ForEach(m =>
+                  vmList.Add(new DMVendorViewModel
+                  {
+                      Vendor_MasterID = m.Vendor_MasterID,
+                      Vendor_Name = m.Vendor_Name,
+                      Vendor_TIN = m.Vendor_TIN,
+                      Vendor_Address = m.Vendor_Address,
+                      Vendor_Creator_Name = m.CreatorName ?? "N/A",
+                      Vendor_Approver_Name = m.ApproverName ?? "",
+                      Vendor_Created_Date = m.Vendor_Created_Date,
+                      Vendor_Creator_ID = m.Vendor_Creator_ID,
+                      Vendor_Last_Updated = m.Vendor_Last_Updated,
+                      Vendor_Status_ID = m.Status_ID,
+                      Vendor_Status = m.Status_Name ?? "N/A",
+                      Vendor_Tax_Rates = mList.Where(x => x.Vendor_ID == m.Vendor_ID && x.VTV_TR_ID > 0 && x.TRRAte > 0).Select(x => (x.TRRAte * 100) + "% - " + x.TR_WT_Title).ToList(),
+                      Vendor_VAT = mList.Where(x => x.Vendor_ID == m.Vendor_ID && x.VTV_VAT_ID > 0 && x.VATRAte > 0).Select(x => (x.VATRAte * 100) + "% - " + x.VAT_Name).ToList()
+                  })
             );
 
             pendingList.GroupBy(o => o.Pending_ID).Select(o => o.FirstOrDefault()).ToList().ForEach(m =>
