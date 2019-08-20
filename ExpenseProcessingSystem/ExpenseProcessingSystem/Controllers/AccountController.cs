@@ -100,7 +100,7 @@ namespace ExpenseProcessingSystem.Controllers
             //Set User Access Info
             _session.SetString("isLoggedIn", "true");
             _session.SetString("accessType", "approver");
-            _session.SetString("isAdmin",  "false");
+            _session.SetString("isAdmin", "false");
             return RedirectToAction("Index", "Home");
             //END OF LDAP LOGIN
 

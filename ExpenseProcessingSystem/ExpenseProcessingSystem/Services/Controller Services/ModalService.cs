@@ -1626,7 +1626,8 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 {
                     GW_GWrite_ID = int.Parse(i.listGwriteDtl.RequestId.ToString()),
                     GW_TransID = int.Parse(i.listBudget.Budget_ID.ToString()),
-                    GW_Status = GlobalSystemValues.STATUS_PENDING
+                    GW_Status = GlobalSystemValues.STATUS_PENDING,
+                    GW_Type = "budget"
                 });
             }
             _context.GwriteTransLists.AddRange(gtransList);

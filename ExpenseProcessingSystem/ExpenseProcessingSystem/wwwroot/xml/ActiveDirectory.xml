@@ -15,6 +15,6 @@ string value4 = xelem.Element("ADDRESS").Value
   <domain id="domain">jpi.local</domain>
 
   <!--<svcUsername id="svcUsername">tuser</svcUsername>
-  <svcPwd id="svcPwd">maniladev.mizuho.com</svcPwd>
-  <domain id="domain">password@99</domain>-->
+  <svcPwd id="domain">maniladev.mizuho.com</svcPwd>
+  <domain id="svcPwd">VtWGDWa2/mRe7Nda2O3/nA==</domain>-->
 </LDAP>
