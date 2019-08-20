@@ -32,7 +32,7 @@
     <script type="text/javascript" src="~/js/CallXML.js"></script>
 
 </head>
-<body>
+<body onhashchange="init()">
     @RenderSection("Scripts", required: false)
     @if (ViewBag.access.isLoggedIn)
     {

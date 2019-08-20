@@ -97,7 +97,7 @@
                             <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryDDV[i].inter_entity, new { @class = "chkInter" })</td>
                             <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryDDV[i].fbt)</td>
                             <td>
-                                @Html.DropDownListFor(x => Model.EntryDDV[i].dept, new SelectList(Model.systemValues.dept, "Value", "Text", Model.systemValues.dept.SelectedValue), new { @class = "input100 txtDept voucher-input" })
+                                @Html.DropDownListFor(x => Model.EntryDDV[i].dept, new SelectList(Model.systemValues.dept.OrderBy(x => x.Text), "Value", "Text", Model.systemValues.dept.SelectedValue), new { @class = "input100 txtDept voucher-input" })
                             </td>
                             <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryDDV[i].chkVat, new { @class = "chkVat comVar" })</td>
                             <td>
@@ -287,6 +287,17 @@
             }
             eachTr();
             $('#item_' + itemCount).find('.txtAcc').trigger('change');
+
+            var ccyList = [];
+            for (var i = 0; i < $('.txtccy:not(#template_ccy)').length; i++) {
+                ccyList.push($($('.txtccy:not(#template_ccy)')[i]).val());
+            }
+            if ($('.txtccy:not(#template_ccy)').length > 1 && !(ccyList.every((val, i, arr) => val === arr[0]))) {
+                $("#grossTotal").val(0.00);
+                $("#credEwtTotal").val(0.00);
+                $("#credCashTotal").val(0.00);
+                $("#credTotal").val(0.00);
+            }
         });
         //Inter Entity
         $("table").on("click", ".expenseInterEntity", function (e) {
@@ -414,6 +425,7 @@
         $("table").on("change", ".ddv-curr-sel", function (e) {
             var pNode = String($(this.parentNode)[0].parentNode.id);
             currenableVATEWT(pNode, $(this).val());
+            computeValuesDDV($(this.parentNode)[0].parentNode);
         });
     });
     //--------------------------------------------------------------------------------------------
@@ -645,10 +657,21 @@
             cashSubTotal += Number(credCash[i].value);
         }
 
-        $("#grossTotal").val(grossTotal);
+        $("#grossTotal").val(roundNumber(grossTotal, 2));
         $("#credEwtTotal").val(roundNumber(ewtSubTotal, 2));
         $("#credCashTotal").val(roundNumber(cashSubTotal,2));
-        $("#credTotal").val(roundNumber(Number(ewtSubTotal + cashSubTotal),2));
+        $("#credTotal").val(roundNumber(Number(ewtSubTotal + cashSubTotal), 2));
+
+        var ccyList = [];
+        for (var i = 0; i < $('.txtccy:not(#template_ccy)').length; i++) {
+            ccyList.push($($('.txtccy:not(#template_ccy)')[i]).val());
+        }
+        if ($('.txtccy:not(#template_ccy)').length > 1 && !(ccyList.every((val, i, arr) => val === arr[0]))) {
+            $("#grossTotal").val(0.00);
+            $("#credEwtTotal").val(0.00);
+            $("#credCashTotal").val(0.00);
+            $("#credTotal").val(0.00);
+        }
     }
 </script>
 <script type="text/javascript">

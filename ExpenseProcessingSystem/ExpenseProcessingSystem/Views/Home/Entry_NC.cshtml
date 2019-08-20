@@ -49,14 +49,14 @@
             var tr = $(this).closest('tr');
             tr.remove();
         });
-        $(document).on('keyup', '[id$="ExpNCDtl_Remarks_Desc"]', function (e) {
+        $(document).on('keypress', '[id$="ExpNCDtl_Remarks_Desc"]', function (e) {
             e.stopImmediatePropagation();
             var trID = $(this).closest('tr').attr('id').substring(5);
             var descLength = $(this).val().length;
             checkRemarksPeriodLength(trID, descLength);
         });
 
-        $(document).on('keyup', '[id$="ExpNCDtl_Remarks_Period"]', function (e) {
+        $(document).on('keypress', '[id$="ExpNCDtl_Remarks_Period"]', function (e) {
             e.stopImmediatePropagation();
             var trID = $(this).closest('tr').attr('id').substring(5);
             var periodLength = $(this).val().length;

@@ -86,12 +86,19 @@ namespace ExpenseProcessingSystem.Controllers
         }
 
         //Register new budget from Budget Monitoring screen
-        public IActionResult RegisterNewBudget(List<BMViewModel> vmList, string username, string password)
+        public IActionResult RegisterNewBudget(List<BMViewModel> vmList, string username, string password, string BudgetCommand)
         {
             var userId = GetUserID();
 
-            _service.AddNewBudget(vmList, int.Parse(GetUserID()), username, password);
-
+            if(BudgetCommand == "NEW")
+            {
+                _service.AddNewBudget(vmList, int.Parse(GetUserID()), username, password);
+            }
+            else
+            {
+                _service.ReSendNewBudget(int.Parse(GetUserID()), username, password);
+            }
+            
             return RedirectToAction("BM", "Home");
         }
 

@@ -1264,10 +1264,12 @@ namespace ExpenseProcessingSystem.Controllers
             else
             {
                 viewModel = PopulateEntry((EntryCVViewModelList)viewModel);
+                var accCCY = _service.getCurrencyByMasterID(_service.getAccount(viewModel.systemValues.acc[0].accId).Account_Currency_MasterID).Curr_ID;
                 //viewModel.vendor = 2;
                 viewModel.EntryCV.Add(new EntryCVViewModel {
-                    ccy = _service.getCurrencyByMasterID(_service.getAccount(viewModel.systemValues.acc[0].accId).Account_Currency_MasterID).Curr_ID
+                    ccy = accCCY
                 });
+                viewModel.template.ccy = accCCY;
             }
 
             viewModel.phpCurrID = ccyPHP.Curr_ID;
@@ -1289,8 +1291,10 @@ namespace ExpenseProcessingSystem.Controllers
 
             int firstId = int.Parse(listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR].First().Value);
 
-            viewModel.systemValues.ewt = _service.getVendorTaxRate(firstId);
-            viewModel.systemValues.vat = _service.getVendorVat(firstId);
+            var ewt = _service.getVendorTaxRate(firstId);
+            var vat = _service.getVendorVat(firstId);
+            viewModel.systemValues.ewt = (ewt.Count() > 0) ? ewt : new SelectList("0", "0");
+            viewModel.systemValues.vat = (vat.Count() > 0) ? vat : new SelectList("0", "0");
             viewModel.systemValues.acc = _service.getAccDetailsEntry();
             //TEMP for CV
             viewModel.systemValues.payee_type_sel = new SelectList(GlobalSystemValues.PAYEETYPE_SELECT_CV, "Value", "Text", GlobalSystemValues.PAYEETYPE_SELECT_CV.First());
@@ -3018,10 +3022,10 @@ namespace ExpenseProcessingSystem.Controllers
             string newFileName = "CDD_IS_NC_PCR_" + DateTime.Now.ToString("MM-dd-yyyy_hhmmss") + ".xlsx";
             ExcelGenerateService excelGenerate = new ExcelGenerateService();
             CDDISValuesVIewModel viewModel = new CDDISValuesVIewModel {
-                VALUE_DATE = DateTime.Parse("2019/01/01"), //TEMP VALUE
+                VALUE_DATE = entryVals.expenseDate, //TEMP VALUE
                 COMMENT = "  ",
                 SECTION = "09",
-                REMARKS = "AD: PETTY CASH REPLENISHEMENT",
+                REMARKS = entryVals.EntryNC.ExpenseEntryNCDtls[0].ExpNCDtl_Remarks_Desc + " " + entryVals.EntryNC.ExpenseEntryNCDtls[0].ExpNCDtl_Remarks_Period,
                 SCHEME_NO = "  ",
                 MEMO = " "
             };
@@ -3042,7 +3046,7 @@ namespace ExpenseProcessingSystem.Controllers
                         CONTRA_CCY = "   ",
                         FUND = (acct.Account_Fund) ? "O" : " ",
                         CHECK_NO = " ",
-                        AVAILABLE_DATE = DateTime.Parse("2019/02/01"),
+                        AVAILABLE_DATE = entryVals.expenseDate,
                         ADVICE = " ",
                         DETAILS = " ",
                         ENTITY = "010",
@@ -3071,7 +3075,7 @@ namespace ExpenseProcessingSystem.Controllers
             ExcelGenerateService excelGenerate = new ExcelGenerateService();
             CDDISValuesVIewModel viewModel = new CDDISValuesVIewModel
             {
-                VALUE_DATE = DateTime.Now, //TEMP VALUE
+                VALUE_DATE = entryVals.expenseDate, 
                 COMMENT = "  ",
                 SECTION = "09",
                 REMARKS = "",
@@ -4795,9 +4799,9 @@ namespace ExpenseProcessingSystem.Controllers
             return Json(acc);
         }
         [AcceptVerbs("GET")]
-        public JsonResult UpdateCDDPrintingStatus(int entryID)
+        public JsonResult UpdateBIR2307PrintingStatus(int entryID)
         {
-            bool result = _service.UpdateCDDPrintingStatus(entryID);
+            bool result = _service.UpdateBIR2307PrintingStatus(entryID);
 
             if (result)
             {

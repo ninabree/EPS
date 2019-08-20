@@ -1007,7 +1007,7 @@
                 for (var i = 0; i < link.length - 1; i++) {
                     window.open(link[i]);
                 }
-                $.getJSON('UpdateCDDPrintingStatus', { entryID: @Html.Raw(Json.Serialize(Model.entryID)) }, function (data) {
+                $.getJSON('UpdateBIR2307PrintingStatus', { entryID: @Html.Raw(Json.Serialize(Model.entryID)) }, function (data) {
 
                 });
                 return false;
