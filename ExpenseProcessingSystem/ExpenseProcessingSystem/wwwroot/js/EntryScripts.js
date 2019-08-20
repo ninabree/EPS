@@ -38,9 +38,11 @@
 
         var myform = document.getElementById("inputForm");
         var data = new FormData(myform);
-
+        
         if (screen == "cv") {
-
+            if ($('#iframePreview').length == 0) {
+                return false;
+            }
             $.ajax({
                 type: 'POST',
                 url: "/Home/VoucherCV",
@@ -321,10 +323,10 @@
         $("#credTotal").val(roundNumber(Number(ewtSubTotal + cashSubTotal), 2));
 
         var ccyList = [];
-        for (var i = 0; i < $('.txtccy').length; i++) {
-            ccyList.push($($('.txtccy')[i]).val());
+        for (var i = 0; i < $('.txtccy:not(#template_ccy)').length; i++) {
+            ccyList.push($($('.txtccy:not(#template_ccy)')[i]).val());
         }
-        if ($('.txtccy').length > 1 && !(ccyList.every((val, i, arr) => val === arr[0]))) {
+        if ($('.txtccy:not(#template_ccy)').length > 1 && !(ccyList.every((val, i, arr) => val === arr[0]))) {
             $("#grossTotal").val(0.00);
             $("#credEwtTotal").val(0.00);
             $("#credCashTotal").val(0.00);
@@ -402,10 +404,10 @@
         $("#credTotal").val(roundNumber(Number(ewtSubTotal + cashSubTotal), 2));
 
         var ccyList = [];
-        for (var i = 0; i < $('.txtccy').length; i++) {
-            ccyList.push($($('.txtccy')[i]).val());
+        for (var i = 0; i < $('.txtccy:not(#template_ccy)').length; i++) {
+            ccyList.push($($('.txtccy:not(#template_ccy)')[i]).val());
         }
-        if ($('.txtccy').length > 1 && !(ccyList.every((val, i, arr) => val === arr[0]))) {
+        if ($('.txtccy:not(#template_ccy)').length > 1 && !(ccyList.every((val, i, arr) => val === arr[0]))) {
             $("#grossTotal").val(0.00);
             $("#credEwtTotal").val(0.00);
             $("#credCashTotal").val(0.00);

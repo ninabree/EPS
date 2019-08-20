@@ -287,12 +287,12 @@ namespace ExpenseProcessingSystem.ConstantData
                     TypeName = "Account Summary",
                     SubTypeAvail = true
                 },
-                new HomeReportTypesModel
-                {
-                    Id = Reserved,
-                    TypeName = "Reserved",
-                    SubTypeAvail = true
-                },
+                //new HomeReportTypesModel
+                //{
+                //    Id = Reserved,
+                //    TypeName = "Reserved",
+                //    SubTypeAvail = true
+                //},
                 new HomeReportTypesModel
                 {
                     Id = WTS,

@@ -27,6 +27,7 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly int STATUS_OPEN = 12;
         public static readonly int STATUS_FOR_PRINTING = 13;
         public static readonly int STATUS_FOR_CLOSING = 14;
+        public static readonly int STATUS_ERROR = 15;
 
         //Static values for the index of certain lists that are to be stored inside a list object.
         //i.e: Retrieving system values for the dropdown boxes of entry views.
@@ -129,6 +130,7 @@ namespace ExpenseProcessingSystem.ConstantData
                 case 12: return "OPEN";
                 case 13: return "FOR PRINTING";
                 case 14: return "FOR CLOSING";
+                case 15: return "ERROR";
             };
 
             return "";
