@@ -11676,7 +11676,7 @@ namespace ExpenseProcessingSystem.Services
         //get all currency active only
         public List<DMCurrencyModel> getAllCurrency()
         {
-            return _context.DMCurrency.Where(x => x.Curr_isActive == true && x.Curr_isDeleted == false).OrderBy(x => x.Curr_ID).ToList();
+            return _context.DMCurrency.Where(x => x.Curr_isActive == true && x.Curr_isDeleted == false).OrderBy(x => x.Curr_CCY_ABBR).ToList();
         }
         //retrieve vendor list
         public List<SelectList> getEntrySystemVals()

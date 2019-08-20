@@ -1689,14 +1689,14 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     viewData = "glyph-7";
                     vdInfo = "glyphicon-menu-down";
                     break;
-                case "pend_last_updte_desc":
-                    tempList = tempList.OrderByDescending(s => s.App_Last_Updated);
-                    viewData = "glyph-7";
+                case "pend_status_desc":
+                    tempList = tempList.OrderByDescending(s => s.App_Status == "PENDING");
+                    viewData = "glyph-8";
                     vdInfo = "glyphicon-menu-up";
                     break;
                 default:
-                    tempList = tempList.OrderByDescending(s => s.App_Status == "PENDING");
-                    viewData = "glyph-8";
+                    tempList = tempList.OrderByDescending(s => s.App_Last_Updated);
+                    viewData = "glyph-7";
                     vdInfo = "glyphicon-menu-up";
                     break;
             }

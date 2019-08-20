@@ -3860,7 +3860,14 @@ namespace ExpenseProcessingSystem.Controllers
             var userId = GetUserID();
             if (ModelState.IsValid)
             {
-                _service.approveAccount(model, userId);
+                if (_service.approveAccount(model, userId)) {
+                    foreach(DMAccountViewModel vm in model)
+                    {
+                        //----------------------------- NOTIF----------------------------------
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_APPROVED, vm.Account_Creator_ID);
+                        //----------------------------- NOTIF----------------------------------
+                    }
+                }
             }
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Acc" });
@@ -3873,7 +3880,15 @@ namespace ExpenseProcessingSystem.Controllers
             var userId = GetUserID();
             if (ModelState.IsValid)
             {
-                _service.rejAccount(model, userId);
+                if (_service.rejAccount(model, userId))
+                {
+                    foreach (DMAccountViewModel vm in model)
+                    {
+                        //----------------------------- NOTIF----------------------------------
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_REJECTED, vm.Account_Creator_ID);
+                        //----------------------------- NOTIF----------------------------------
+                    }
+                }
             }
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Acc" });
@@ -3890,7 +3905,15 @@ namespace ExpenseProcessingSystem.Controllers
             }
             if (ModelState.IsValid)
             {
-                _service.approveAccountGroup(model, userId);
+                if (_service.approveAccountGroup(model, userId))
+                {
+                    foreach (DMAccountGroupViewModel vm in model)
+                    {
+                        //----------------------------- NOTIF----------------------------------
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_APPROVED, vm.AccountGroup_Creator_ID);
+                        //----------------------------- NOTIF----------------------------------
+                    }
+                }
             }
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_AccGroup" });
@@ -3906,7 +3929,15 @@ namespace ExpenseProcessingSystem.Controllers
             }
             if (ModelState.IsValid)
             {
-                _service.rejAccountGroup(model, userId);
+                if (_service.rejAccountGroup(model, userId))
+                {
+                    foreach (DMAccountGroupViewModel vm in model)
+                    {
+                        //----------------------------- NOTIF----------------------------------
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_REJECTED, vm.AccountGroup_Creator_ID);
+                        //----------------------------- NOTIF----------------------------------
+                    }
+                }
             }
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_AccGroup" });

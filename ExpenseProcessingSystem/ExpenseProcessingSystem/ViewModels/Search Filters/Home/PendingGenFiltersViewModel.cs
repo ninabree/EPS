@@ -9,7 +9,7 @@ namespace ExpenseProcessingSystem.ViewModels.Search_Filters.Home
 {
     public class PendingGenFiltersViewModel
     {
-        [Display(Name = "Application Type")]
+        [Display(Name = "Voucher Type")]
         public string Pending_Type { get; set; }
         [Display(Name = "Payee")]
         public string Pending_Payee { get; set; }
