@@ -7,6 +7,16 @@
 
 @using (Html.BeginForm("RegisterNewBudget", "Modal", FormMethod.Post, new { @id = "submitNewBudgetForm" }))
 {
+    @if (Model.Select(x => x.BM_GWrite_StatusID).Contains(GlobalSystemValues.STATUS_ERROR))
+    {
+        <table class="resendTable" style="width:100%">
+            <tr>
+                <td>
+                    <button class="btn float-r" type="button" id="resendGwrite">Re-Send to G-Base</button>
+                </td>
+            </tr>
+        </table>
+    }
     <div style="height:450px;overflow-y: scroll">
         <table class="table tableBudReg table-striped tab-tbl table-hover table-bordered" style="width:100%">
             <thead>
@@ -24,7 +34,7 @@
                 {
                     @for (var i = 0; i < Model.Count(); i++)
                     {
-                        if (Model[i].BM_GWrite_StatusID != GlobalSystemValues.STATUS_PENDING)
+                        if (Model[i].BM_GWrite_StatusID != GlobalSystemValues.STATUS_PENDING && Model[i].BM_GWrite_StatusID != GlobalSystemValues.STATUS_ERROR)
                         {
 
                             <tr id="budRegId_@i">
@@ -113,7 +123,7 @@
                                     <td>RACFPassword : </td>
                                     <td>
                                         &nbsp;
-                                        <input type="password" id="passWord" name="password" class="input LoginEnterAction" maxlength="10" />
+                                        <input type="password" id="passWord" name="password" class="input LoginEnterAction" maxlength="8" />
                                     </td>
                                 </tr>
                                 <tr>
@@ -126,7 +136,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn float-r" onclick="$('#loginModal').hide();">Close</button>
-                            <button class="btn float-r" id="loginSubmit">Submit</button>
+                            <button class="btn float-r" id="loginSubmit" command="BudgetCommand">Submit</button>
                         </div>
                     </div>
                 </div>
@@ -147,7 +157,7 @@
         var trs = $(".tableBudReg").find("tbody").find("tr");
         var currAllStat = $('#chkAll').is(':checked');
         for (var i = 0; i < trs.length; i++) {
-            if ($('#gwriteStatusID_' + i).val() != 1) {
+            if ($('#gwriteStatusID_' + i).val() != 1 && $('#gwriteStatusID_' + i).val() != 15) {
                 $('#chk_' + i).prop("checked", currAllStat);
                 checkedOrNotChange(i, currAllStat);
             }
@@ -205,11 +215,18 @@
 
             $(".modal-footer2").on("click", "#saveBtnEntry", function (e) {
                 $('#loginModal').show().addClass('in');
-                $('#loginModal').on('shown.bs.modal', function () {
-                    $('#userName').val("");
-                    $('#passWord').val("");
-                    $('#userName').focus();
-                });
+                $('#userName').val("");
+                $('#passWord').val("");
+                $('#userName').focus();
+                $('#loginSubmit').val('NEW');
+            });
+
+            $(".resendTable").on("click", "#resendGwrite", function (e) {
+                $('#loginModal').show().addClass('in');
+                $('#userName').val("");
+                $('#passWord').val("");
+                $('#userName').focus();
+                $('#loginSubmit').val('RESEND');
             });
 
             $(".modal-footer").on("click", "#loginSubmit", function (e) {

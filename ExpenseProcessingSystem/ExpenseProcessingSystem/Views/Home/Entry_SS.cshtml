@@ -216,7 +216,7 @@
         $("#grossTotal").val(roundNumber(grossTotal, 2));
         $("#credEwtTotal").val(roundNumber(ewtSubTotal, 2));
         $("#credCashTotal").val(roundNumber(cashSubTotal,2));
-        $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
+        $("#credTotal").val(roundNumber(Number(ewtSubTotal + cashSubTotal), 2));
 
         var ccyList = [];
         for (var i = 0; i < $('.txtccy:not(#template_ccy)').length; i++) {
@@ -298,6 +298,17 @@
                 var trCount = $("#inputTable").find("tbody").find("tr");
                 if ((trCount.length - 3) > 0) {
                     $('.expenseTable-remove').show();
+                }
+
+                var ccyList = [];
+                for (var i = 0; i < $('.txtccy:not(#template_ccy)').length; i++) {
+                    ccyList.push($($('.txtccy:not(#template_ccy)')[i]).val());
+                }
+                if ($('.txtccy:not(#template_ccy)').length > 1 && !(ccyList.every((val, i, arr) => val === arr[0]))) {
+                    $("#grossTotal").val(0.00);
+                    $("#credEwtTotal").val(0.00);
+                    $("#credCashTotal").val(0.00);
+                    $("#credTotal").val(0.00);
                 }
             });
 

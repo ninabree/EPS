@@ -12034,16 +12034,16 @@ namespace ExpenseProcessingSystem.Services
                 return false;
             }
         }
-        public bool UpdateCDDPrintingStatus(int entryID)
+        public bool UpdateBIR2307PrintingStatus(int entryID)
         {
-            var cddStatus = _context.PrintStatus.Where(x => x.PS_EntryID == entryID).ToList();
-            foreach(var i in cddStatus)
+            var birStatus = _context.PrintStatus.Where(x => x.PS_EntryID == entryID).ToList();
+            foreach(var i in birStatus)
             {
                 i.PS_BIR2307 = true;
                 _context.Entry(i).State = EntityState.Modified;
             }
 
-            if(cddStatus != null)
+            if(birStatus != null)
             {
                 _context.SaveChanges();
                 return true;

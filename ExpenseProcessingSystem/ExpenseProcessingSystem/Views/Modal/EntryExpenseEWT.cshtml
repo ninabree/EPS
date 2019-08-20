@@ -176,10 +176,21 @@
                 cashSubTotal += Number(credCash[i].value);
             }
 
-            $("#grossTotal").val(grossTotal);
-            $("#credEwtTotal").val(ewtSubTotal);
-            $("#credCashTotal").val(cashSubTotal);
-            $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
+            $("#grossTotal").val(roundNumber(grossTotal, 2));
+            $("#credEwtTotal").val(roundNumber(ewtSubTotal, 2));
+            $("#credCashTotal").val(roundNumber(cashSubTotal, 2));
+            $("#credTotal").val(roundNumber(Number(ewtSubTotal + cashSubTotal), 2));
+
+            var ccyList = [];
+            for (var i = 0; i < $('.txtccy:not(#template_ccy)').length; i++) {
+                ccyList.push($($('.txtccy:not(#template_ccy)')[i]).val());
+            }
+            if ($('.txtccy:not(#template_ccy)').length > 1 && !(ccyList.every((val, i, arr) => val === arr[0]))) {
+                $("#grossTotal").val(0.00);
+                $("#credEwtTotal").val(0.00);
+                $("#credCashTotal").val(0.00);
+                $("#credTotal").val(0.00);
+            }
 
             //For PCS,SS - resetting of Cash breakdown list.
             if ($(".hiddenScreencode").val() == "PCV" || $(".hiddenScreencode").val() == "SS") {
