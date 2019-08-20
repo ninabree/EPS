@@ -291,6 +291,7 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly string MESSAGE6 = "This entry was already in For Closing status. Cannot proceed with your request.";
         public static readonly string MESSAGE7 = "This entry was already in Rejected status. Cannot proceed with your request.";
         public static readonly string MESSAGE8 = "This entry was already verified by other verifier/s. Cannot proceed with your request.";
+        public static readonly string MESSAGE9 = "There are is no check series registered. Check the Data Maintenance and try again.";
     }
     public class CONSTANT_NC_VALS
     {

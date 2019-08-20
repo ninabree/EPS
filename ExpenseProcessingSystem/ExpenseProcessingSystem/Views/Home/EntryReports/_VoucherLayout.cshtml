@@ -315,6 +315,16 @@
                     </tr>
                 }
 
+                @if (Model.vatAmtList.Count <= 0)
+                {
+                    for (int i = 0; i < Model.accountsDebit.Count; i++)
+                    {
+                        <tr>
+                            <td colspan="3"></td>
+                        </tr>
+                    }
+                }
+
                 @for (int i = 3; i < Model.accountsDebit.Count; i++)
                 {
                     <tr>
@@ -325,16 +335,16 @@
                     <td colspan="3"></td>
                 </tr>
                 @*<tr>
-                    <td colspan="3" style="font-style:italic;padding-bottom:3px;">Fringe Benefit Tax</td>
-                </tr>
-                <tr>
-                    <td colspan="2">Benefit Amount</td>
-                    <td class="rightA">222</td>
-                </tr>
-                <tr>
-                    <td colspan="2">35% Tax</td>
-                    <td class="rightA">-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                </tr>*@
+            <td colspan="3" style="font-style:italic;padding-bottom:3px;">Fringe Benefit Tax</td>
+        </tr>
+        <tr>
+            <td colspan="2">Benefit Amount</td>
+            <td class="rightA">222</td>
+        </tr>
+        <tr>
+            <td colspan="2">35% Tax</td>
+            <td class="rightA">-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        </tr>*@
                 @if (Model.isFbt)
                 {
                     <tr>

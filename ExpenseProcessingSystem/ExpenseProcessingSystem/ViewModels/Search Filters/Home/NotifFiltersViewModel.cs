@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ExpenseProcessingSystem.ConstantData;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -18,5 +20,21 @@ namespace ExpenseProcessingSystem.ViewModels.Search_Filters.Home
         public string NotifFil_Status_Name { get; set; }
         [Display(Name = "Application Maker Name")]
         public string NotifFil_Application_Maker_Name { get; set; }
+        public SelectList NotifFil_Application_Type_Select { get; set; }
+
+        public NotifFiltersViewModel()
+        {
+            NotifFil_Application_Type_Select = new SelectList(
+                new List<SelectListItem>
+                {
+                    new SelectListItem { Text = NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_CV], Value = NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_CV]},
+                    new SelectListItem { Text = NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_DDV], Value = NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_DDV]},
+                    new SelectListItem { Text = NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_SS], Value = NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_SS]},
+                    new SelectListItem { Text = NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_PC], Value = NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_PC]},
+                    new SelectListItem { Text = NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_NC], Value = NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_NC]},
+                    new SelectListItem { Text =NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_LIQ], Value = NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_LIQ]},
+                    new SelectListItem { Text =NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_DM], Value = NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_DM]}
+                }, "Value", "Text");
+        }
     }
 }

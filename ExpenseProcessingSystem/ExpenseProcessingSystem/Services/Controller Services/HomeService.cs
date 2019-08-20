@@ -77,15 +77,9 @@ namespace ExpenseProcessingSystem.Services
                                          on loggedUID
                                          equals user.User_ID
                                          into c from user in c.DefaultIfEmpty()
-                                         //for User Acc of Maker of records
-                                         join mkr in _context.User
-                                         on n.Notif_Application_Maker_ID
-                                         equals mkr.User_ID
-                                         into m from mkr in m.DefaultIfEmpty()
                                          where n.Notif_UserFor_ID == loggedUID ||
                                          (n.Notif_UserFor_ID == 0 && n.Notif_Application_Maker_ID != loggedUID 
-                                         && (user.User_Role != GlobalSystemValues.ROLE_ADMIN && user.User_Role != GlobalSystemValues.ROLE_MAKER)
-                                         && mkr.User_DeptID == user.User_DeptID)
+                                         && (user.User_Role != GlobalSystemValues.ROLE_ADMIN && user.User_Role != GlobalSystemValues.ROLE_MAKER))
                                          select new { n, user })
                          join creator in _context.User
                          on notifs.n.Notif_Application_Maker_ID
@@ -152,6 +146,10 @@ namespace ExpenseProcessingSystem.Services
                                .Where(x => (x.Notif_Date.ToShortDateString() == filterDate))
                               .Select(e => e).ToList();
                         }
+                    }
+                    else if (subStr == "Application_Type_Select")
+                    {
+                        //there is no filter for this field
                     }
                     else // IF STRING VALUE
                     {
@@ -8397,10 +8395,21 @@ namespace ExpenseProcessingSystem.Services
                     
                     if (status == GlobalSystemValues.STATUS_APPROVED)
                     {
-                        var checkNo = getCheckNo();
                         dbExpenseEntry.Expense_Number = getExpTransNo(dbExpenseEntry.Expense_Type);
-                        dbExpenseEntry.Expense_CheckNo = checkNo["check"];
-                        dbExpenseEntry.Expense_CheckId = int.Parse(checkNo["id"]);
+                        if(dbExpenseEntry.Expense_Type == GlobalSystemValues.TYPE_CV)
+                        {
+                            var checkNo = getCheckNo();
+                            if(checkNo != null)
+                            {
+                                dbExpenseEntry.Expense_CheckNo = checkNo["check"];
+                                dbExpenseEntry.Expense_CheckId = int.Parse(checkNo["id"]);
+                            }
+                            else
+                            {
+                                GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE9;
+                                return false;
+                            }
+                        }
                     }
                 }
                 dbExpenseEntry.Expense_Status = status;
@@ -9308,117 +9317,117 @@ namespace ExpenseProcessingSystem.Services
         ////============[End Access Entry Tables]=========================
 
         ///==============[Post Entries]==============
-        public bool postCV(int expID)
-        {
-            var expenseDetails = getExpense(expID);
+        //public bool postCV(int expID)
+        //{
+        //    var expenseDetails = getExpense(expID);
 
-            var list = new[] {
-                new { expEntryID = 0, goExp = new TblCm10(), goExpHist = new GOExpressHistModel()}
-            }.ToList();
-            TblCm10 goExpData = new TblCm10();
-            GOExpressHistModel goExpHistData = new GOExpressHistModel();
+        //    var list = new[] {
+        //        new { expEntryID = 0, goExp = new TblCm10(), goExpHist = new GOExpressHistModel()}
+        //    }.ToList();
+        //    TblCm10 goExpData = new TblCm10();
+        //    GOExpressHistModel goExpHistData = new GOExpressHistModel();
 
-            list.Clear();
+        //    list.Clear();
 
-            foreach (var item in expenseDetails.EntryCV)
-            {
-                gbaseContainer tempGbase = new gbaseContainer();
+        //    foreach (var item in expenseDetails.EntryCV)
+        //    {
+        //        gbaseContainer tempGbase = new gbaseContainer();
 
-                tempGbase.valDate = expenseDetails.expenseDate;
-                tempGbase.remarks = item.GBaseRemarks;
-                tempGbase.maker = expenseDetails.maker;
-                tempGbase.approver = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == expID).Expense_Approver;
+        //        tempGbase.valDate = expenseDetails.expenseDate;
+        //        tempGbase.remarks = item.GBaseRemarks;
+        //        tempGbase.maker = expenseDetails.maker;
+        //        tempGbase.approver = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == expID).Expense_Approver;
 
-                entryContainer debit = new entryContainer();
-                entryContainer credit = new entryContainer();
+        //        entryContainer debit = new entryContainer();
+        //        entryContainer credit = new entryContainer();
 
-                debit.type = "D";
+        //        debit.type = "D";
 
-                //Debit
-                debit.ccy = item.ccy;
-                debit.amount = item.debitGross;
-                debit.vendor = expenseDetails.vendor;
-                debit.account = item.account;
-                debit.chkNo = expenseDetails.checkNo;
-                debit.dept = item.dept;
+        //        //Debit
+        //        debit.ccy = item.ccy;
+        //        debit.amount = item.debitGross;
+        //        debit.vendor = expenseDetails.vendor;
+        //        debit.account = item.account;
+        //        debit.chkNo = expenseDetails.checkNo;
+        //        debit.dept = item.dept;
 
-                tempGbase.entries.Add(debit);
+        //        tempGbase.entries.Add(debit);
 
-                //Credit 1 - tax withheld if only has tax amount and EWT Account 
-                if (item.credEwt > 0 && item.creditAccount1 > 0)
-                {
-                    credit.type = "C";
-                    credit.ccy = item.ccy;
-                    credit.amount = item.credEwt;
-                    credit.vendor = expenseDetails.vendor;
-                    credit.account = item.creditAccount1;
-                    credit.dept = item.dept;
+        //        //Credit 1 - tax withheld if only has tax amount and EWT Account 
+        //        if (item.credEwt > 0 && item.creditAccount1 > 0)
+        //        {
+        //            credit.type = "C";
+        //            credit.ccy = item.ccy;
+        //            credit.amount = item.credEwt;
+        //            credit.vendor = expenseDetails.vendor;
+        //            credit.account = item.creditAccount1;
+        //            credit.dept = item.dept;
 
-                    tempGbase.entries.Add(credit);
-                }
+        //            tempGbase.entries.Add(credit);
+        //        }
 
-                //Credit 2 - Credit amount
-                credit = new entryContainer();
-                credit.type = "C";
-                credit.ccy = item.ccy;
-                credit.amount = item.credCash;
-                credit.vendor = expenseDetails.vendor;
-                credit.account = item.creditAccount2;
-                credit.dept = item.dept;
+        //        //Credit 2 - Credit amount
+        //        credit = new entryContainer();
+        //        credit.type = "C";
+        //        credit.ccy = item.ccy;
+        //        credit.amount = item.credCash;
+        //        credit.vendor = expenseDetails.vendor;
+        //        credit.account = item.creditAccount2;
+        //        credit.dept = item.dept;
 
-                tempGbase.entries.Add(credit);
+        //        tempGbase.entries.Add(credit);
 
-                goExpData = InsertGbaseEntry(tempGbase, expID);
-                goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.expenseDtlID);
-                list.Add(new { expEntryID = expID, goExp = goExpData, goExpHist = goExpHistData });
+        //        goExpData = InsertGbaseEntry(tempGbase, expID);
+        //        goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.expenseDtlID);
+        //        list.Add(new { expEntryID = expID, goExp = goExpData, goExpHist = goExpHistData });
 
-                if (item.fbt)
-                {
-                    tempGbase.entries = new List<entryContainer>();
+        //        if (item.fbt)
+        //        {
+        //            tempGbase.entries = new List<entryContainer>();
 
-                    //((ExpenseAmount*.50)/.65)*.35
-                    string fbt = getFbtFormula(getAccount(item.account).Account_FBT_MasterID);
+        //            //((ExpenseAmount*.50)/.65)*.35
+        //            string fbt = getFbtFormula(getAccount(item.account).Account_FBT_MasterID);
 
-                    string equation = fbt.Replace("ExpenseAmount", item.debitGross.ToString());
-                     decimal fbtAmount = Mizuho.round((decimal)(new DataTable().Compute(equation, null)), 2);
-                    Console.WriteLine(equation);
+        //            string equation = fbt.Replace("ExpenseAmount", item.debitGross.ToString());
+        //             decimal fbtAmount = Mizuho.round((decimal)(new DataTable().Compute(equation, null)), 2);
+        //            Console.WriteLine(equation);
 
-                    debit.account = getAccountByMasterID(int.Parse(xelemAcc.Element("D_FBT").Value)).Account_ID;
-                    debit.amount = fbtAmount;
+        //            debit.account = getAccountByMasterID(int.Parse(xelemAcc.Element("D_FBT").Value)).Account_ID;
+        //            debit.amount = fbtAmount;
 
-                    credit.account = getAccountByMasterID(int.Parse(xelemAcc.Element("C_FBT").Value)).Account_ID;
-                    credit.amount = fbtAmount;
+        //            credit.account = getAccountByMasterID(int.Parse(xelemAcc.Element("C_FBT").Value)).Account_ID;
+        //            credit.amount = fbtAmount;
 
-                    tempGbase.entries.Add(debit);
-                    tempGbase.entries.Add(credit);
+        //            tempGbase.entries.Add(debit);
+        //            tempGbase.entries.Add(credit);
 
-                    goExpData = InsertGbaseEntry(tempGbase, expID);
-                    goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.expenseDtlID);
-                    list.Add(new { expEntryID = expID, goExp = goExpData, goExpHist = goExpHistData });
-                }
-            }
+        //            goExpData = InsertGbaseEntry(tempGbase, expID);
+        //            goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.expenseDtlID);
+        //            list.Add(new { expEntryID = expID, goExp = goExpData, goExpHist = goExpHistData });
+        //        }
+        //    }
 
-            _GOContext.SaveChanges();
-            _context.SaveChanges();
+        //    _GOContext.SaveChanges();
+        //    _context.SaveChanges();
 
-            List<ExpenseTransList> transactions = new List<ExpenseTransList>();
+        //    List<ExpenseTransList> transactions = new List<ExpenseTransList>();
 
-            foreach (var item in list)
-            {
-                ExpenseTransList tran = new ExpenseTransList
-                {
-                    TL_ExpenseID = item.expEntryID,
-                    TL_GoExpress_ID = int.Parse(item.goExp.Id.ToString()),
-                    TL_GoExpHist_ID = int.Parse(item.goExpHist.GOExpHist_Id.ToString()),
-                    TL_Liquidation = false
-                };
-                transactions.Add(tran);
-            }
+        //    foreach (var item in list)
+        //    {
+        //        ExpenseTransList tran = new ExpenseTransList
+        //        {
+        //            TL_ExpenseID = item.expEntryID,
+        //            TL_GoExpress_ID = int.Parse(item.goExp.Id.ToString()),
+        //            TL_GoExpHist_ID = int.Parse(item.goExpHist.GOExpHist_Id.ToString()),
+        //            TL_Liquidation = false
+        //        };
+        //        transactions.Add(tran);
+        //    }
 
-            _context.ExpenseTransLists.AddRange(transactions);
-            _context.SaveChanges();
-            return true;
-        }
+        //    _context.ExpenseTransLists.AddRange(transactions);
+        //    _context.SaveChanges();
+        //    return true;
+        //}
         public bool postLiq_SS(int expID, string command, int userID)
         {
             var liquidationDetails = getExpenseToLiqudate(expID);
@@ -10122,6 +10131,7 @@ namespace ExpenseProcessingSystem.Services
 
             gWriteModel.GW_GWrite_ID = int.Parse(rqDtl.RequestId.ToString());
             gWriteModel.GW_Status = GlobalSystemValues.STATUS_PENDING;
+            gWriteModel.GW_Type = "closing";
 
             return true;
         }
@@ -11782,8 +11792,22 @@ namespace ExpenseProcessingSystem.Services
             var expense = _context.ExpenseEntry.Where(x => x.Expense_Type == GlobalSystemValues.TYPE_CV
                                                         && expectedStatus.Contains(x.Expense_Status))
                                                .OrderByDescending(x => x.Expense_Created_Date).FirstOrDefault();
+            DMCheckModel checkNoModel;
 
-            var checkNoModel = _context.DMCheck.Where(x => x.Check_ID == expense.Expense_CheckId).FirstOrDefault();
+            if (expense == null)
+                return null;
+
+            if (expense.Expense_CheckId != 0)
+            {
+                checkNoModel = _context.DMCheck.Where(x => x.Check_ID == expense.Expense_CheckId).FirstOrDefault();
+            }
+            else
+            {
+                checkNoModel = _context.DMCheck.OrderBy(x => x.Check_ID).Where(x => x.Check_isActive == true).FirstOrDefault();
+            }
+
+            if (checkNoModel == null)
+                return null;
 
             if(int.Parse(checkNoModel.Check_Series_To) > int.Parse(expense.Expense_CheckNo))
             {
@@ -12029,6 +12053,54 @@ namespace ExpenseProcessingSystem.Services
         public ExpenseEntryModel getSingleEntryRecord(int entryID)
         {
             return _context.ExpenseEntry.Where(x => x.Expense_ID == entryID).AsNoTracking().FirstOrDefault();
+        }
+        //Check if latest pettycash entry is open
+        public bool lastPCEntry()
+        {
+            var lastEntry = _context.PettyCash.OrderByDescending(x => x.PC_ID).Select(x => x.PC_Status).FirstOrDefault();
+
+            if (lastEntry == GlobalSystemValues.STATUS_OPEN)
+                return true;
+            else
+                return false;
+        }
+        public bool confirmBrkDown()
+        {
+
+            PettyCashModel model = _context.PettyCash.OrderByDescending(x => x.PC_ID).FirstOrDefault();
+
+            decimal oneK = Mizuho.round(model.PCB_OneThousand * 1000M,2);
+            decimal fiveH = Mizuho.round(model.PCB_FiveHundred * 500M, 2);
+            decimal twoH = Mizuho.round(model.PCB_TwoHundred * 200M, 2);
+            decimal oneH = Mizuho.round(model.PCB_OneHundred * 100M, 2);
+            decimal fifty = Mizuho.round(model.PCB_Fifty * 50M, 2);
+            decimal twenty = Mizuho.round(model.PCB_Twenty * 20M, 2);
+            decimal ten = Mizuho.round(model.PCB_Ten * 10M, 2);
+            decimal five = Mizuho.round(model.PCB_Five * 5M, 2);
+            decimal one = Mizuho.round(model.PCB_One * 1M, 2);
+            decimal c25 = Mizuho.round(model.PCB_TwentyFiveCents * .25M, 2);
+            decimal c10 = Mizuho.round(model.PCB_TenCents * .10M, 2);
+            decimal c5 = Mizuho.round(model.PCB_FiveCents * .05M, 2);
+            decimal c1 = Mizuho.round(model.PCB_OneCents * .01M, 2);
+
+            decimal total = Mizuho.round(oneK+fiveH+twoH+oneH+fifty+twenty+ten+five+one+c25+c10+c5+c1, 2);
+
+            if (total == model.PC_EndBal)
+                return true;
+            else
+                return false;
+        }
+        public bool closePC(int userID)
+        {
+            PettyCashModel pc = _context.PettyCash.OrderByDescending(x => x.PC_ID).FirstOrDefault();
+
+            pc.PC_Status = GlobalSystemValues.STATUS_CLOSED;
+            pc.PC_CloseDate = DateTime.Now;
+            pc.PC_CloseUser = userID;
+
+            _context.SaveChanges();
+
+            return true;
         }
         ///========[End of Other Functions]============
     }

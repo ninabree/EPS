@@ -290,6 +290,7 @@ namespace ExpenseProcessingSystem.Controllers
         public IActionResult Close(string username, string password, string command = "load")
         {
             ClosingViewModel model = new ClosingViewModel();
+            List<string> messages = new List<string>();
             bool closeFail = false;
             switch (command)
             {
@@ -300,7 +301,7 @@ namespace ExpenseProcessingSystem.Controllers
                     }
                     else
                     {
-                        model.messages.Add("Can't open a new book, status still open.");
+                        messages.Add("Can't open a new book, status still open.");
                     }
                     break;
                 case "CloseRBU":
@@ -334,9 +335,23 @@ namespace ExpenseProcessingSystem.Controllers
                         closeFail = true;
                     }
                     break;
+                case "Close":
+                    if (_service.lastPCEntry())
+                    {
+                        if (!_service.confirmBrkDown())
+                        {
+                            messages.Add("Cash breakdown is not equal to ending balance.");
+                        }
+                    }
+                    else
+                    {
+                        messages.Add("Petty cash already closed!");
+                    }
+                    break;
             }
 
             model = _service.ClosingGetRecords();
+            model.pcOpen = _service.lastPCEntry();
 
             if (closeFail)
                 model.messages.Add("Can't close book there are still ongoing transactions!");
@@ -345,6 +360,9 @@ namespace ExpenseProcessingSystem.Controllers
 
             if(confirmMessage != null)
                 model.messages.Add(confirmMessage.ToString());
+
+            foreach (string text in messages)
+                model.messages.Add(text);
 
             return View(model);
         }
@@ -1396,7 +1414,8 @@ namespace ExpenseProcessingSystem.Controllers
                 case "approver":
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_APPROVED, int.Parse(GetUserID())))
                     {
-                        _service.postCV(entryID);
+                        
+                        _service.postCV(entryID,"P",int.Parse(GetUserID()));
                         ViewBag.Success = 1;
                     }
                     else
@@ -4887,7 +4906,7 @@ namespace ExpenseProcessingSystem.Controllers
                     tax_vat += Mizuho.round((inputItem.debitGross / (1 + _vat)) * _vat, 2);
                 }
 
-                if (inputItem.chkEwt)
+                if (inputItem.chkEwt && inputItem.ewt != 0)
                 {
                      float _ewt = Mizuho.round(_service.GetEWTValue(inputItem.ewt),4);
                      decimal _ewtAmount = Mizuho.round((inputItem.debitGross / (1 + _vat)) * (decimal)_ewt, 2);
@@ -4911,6 +4930,10 @@ namespace ExpenseProcessingSystem.Controllers
                         account = (_ewt * 100).ToString(),
                         amount = _ewtAmount
                     });
+                }
+                else
+                {
+                    vvm.accountCredit[0].amount += inputItem.debitGross;
                 }
 
                 if (inputItem.fbt)

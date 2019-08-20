@@ -9,11 +9,6 @@ namespace ExpenseProcessingSystem.Migrations
             migrationBuilder.DropColumn(
                 name: "PCB_ID",
                 table: "PettyCash");
-
-            migrationBuilder.AddColumn<double>(
-                name: "PC_Recieved",
-                table: "PettyCash",
-                nullable: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -23,9 +18,6 @@ namespace ExpenseProcessingSystem.Migrations
                 table: "PettyCash",
                 nullable: false,
                 defaultValue: 0);
-            migrationBuilder.DropColumn(
-                name: "PC_Recieved",
-                table: "PettyCash");
         }
     }
 }

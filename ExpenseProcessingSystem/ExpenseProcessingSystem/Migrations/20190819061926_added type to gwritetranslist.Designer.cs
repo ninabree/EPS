@@ -4,14 +4,16 @@ using ExpenseProcessingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExpenseProcessingSystem.Migrations
 {
     [DbContext(typeof(EPSDbContext))]
-    partial class EPSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190819061926_added type to gwritetranslist")]
+    partial class addedtypetogwritetranslist
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1386,6 +1388,8 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("GW_TransID");
 
+                    b.Property<string>("GW_Type");
+
                     b.HasKey("GW_ID");
 
                     b.ToTable("GwriteTransLists");
@@ -1861,8 +1865,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.Property<DateTime>("PC_OpenDate");
 
                     b.Property<int>("PC_OpenUser");
-
-                    b.Property<decimal>("PC_Recieved");
 
                     b.Property<decimal>("PC_StartBal");
 
