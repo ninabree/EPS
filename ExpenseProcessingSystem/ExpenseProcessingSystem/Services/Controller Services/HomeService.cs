@@ -11787,9 +11787,10 @@ namespace ExpenseProcessingSystem.Services
             DMCheckModel checkNoModel;
 
             if (expense == null)
-                return null;
-
-            if (expense.Expense_CheckId != 0)
+            {
+                checkNoModel = _context.DMCheck.OrderBy(x => x.Check_ID).Where(x => x.Check_isActive == true).FirstOrDefault();
+            }
+            else if(expense.Expense_CheckId != 0)
             {
                 checkNoModel = _context.DMCheck.Where(x => x.Check_ID == expense.Expense_CheckId).FirstOrDefault();
             }
@@ -11801,21 +11802,32 @@ namespace ExpenseProcessingSystem.Services
             if (checkNoModel == null)
                 return null;
 
-            if(int.Parse(checkNoModel.Check_Series_To) > int.Parse(expense.Expense_CheckNo))
+            if(expense != null)
             {
-                checkNo.Add("check", (int.Parse(expense.Expense_CheckNo) + 1).ToString());
-                checkNo.Add("id", checkNoModel.Check_ID.ToString());
+                if (int.Parse(checkNoModel.Check_Series_To) > int.Parse(expense.Expense_CheckNo))
+                {
+                    checkNo.Add("check", (int.Parse(expense.Expense_CheckNo) + 1).ToString());
+                    checkNo.Add("id", checkNoModel.Check_ID.ToString());
+                }
+                else
+                {
+                    checkNoModel.Check_isActive = false;
+                    _context.SaveChanges();
+
+                    var newCheck = _context.DMCheck.Where(x => x.Check_isActive == true).OrderBy(x => x.Check_ID).FirstOrDefault();
+
+                    checkNo.Add("check", newCheck.Check_Series_From);
+                    checkNo.Add("id", newCheck.Check_ID.ToString());
+                }
             }
             else
             {
-                checkNoModel.Check_isActive = false;
-                _context.SaveChanges();
-
-                var newCheck = _context.DMCheck.Where(x => x.Check_isActive == true).OrderBy(x=>x.Check_ID).FirstOrDefault();
+                var newCheck = _context.DMCheck.Where(x => x.Check_isActive == true).OrderBy(x => x.Check_ID).FirstOrDefault();
 
                 checkNo.Add("check", newCheck.Check_Series_From);
                 checkNo.Add("id", newCheck.Check_ID.ToString());
             }
+            
 
             return checkNo;
         }
