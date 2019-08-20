@@ -84,7 +84,7 @@
             </tbody>
         </table>
     </div>
-    <div class="modal fade" id="login" role="dialog" data-backdrop="true">
+    <div class="modal login fade" id="loginModal" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="vertical-alignment-helper">
@@ -92,7 +92,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h4 style="display:inline">GBASE</h4>
-                            <button type="button" class="close" onclick="$('#login').modal('hide');">&times;</button>
+                            <button type="button" class="close" onclick="$('#loginModal').hide();">&times;</button>
                         </div>
                         <div class="modal-body">
                             <table style="margin:5px;">
@@ -125,8 +125,8 @@
                             </table>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn float-r" onclick="$('#login').modal('hide');">Close</button>
-                            <button class="btn float-r comVar" id="loginSubmit">Submit</button>
+                            <button type="button" class="btn float-r" onclick="$('#loginModal').hide();">Close</button>
+                            <button class="btn float-r" id="loginSubmit">Submit</button>
                         </div>
                     </div>
                 </div>
@@ -154,6 +154,7 @@
         }
 
         $('.BudgetEnterAction').on('keyup keypress', function (e) {
+            $(this).val($(this).val().replace("-", ""));
             var keyCode = e.keyCode || e.which;
             if (keyCode === 13) {
                 e.preventDefault();
@@ -203,8 +204,8 @@
             });
 
             $(".modal-footer2").on("click", "#saveBtnEntry", function (e) {
-                $('#login').modal('show');
-                $('#login').on('shown.bs.modal', function () {
+                $('#loginModal').show().addClass('in');
+                $('#loginModal').on('shown.bs.modal', function () {
                     $('#userName').val("");
                     $('#passWord').val("");
                     $('#userName').focus();
@@ -222,10 +223,9 @@
                     $('#invPass').show();
                     valid = 1;
                 }
-                if (valid = 1) {
+                if (valid == 1) {
                     return false;
                 }
-
             });
         });
 

@@ -147,6 +147,10 @@ namespace ExpenseProcessingSystem.Services
                               .Select(e => e).ToList();
                         }
                     }
+                    else if (subStr == "Application_Type_Select")
+                    {
+                        //there is no filter for this field
+                    }
                     else // IF STRING VALUE
                     {
                         vmList = vmList.AsQueryable().Where("Notif_" + subStr + ".Contains(@0)", toStr)
@@ -6949,8 +6953,12 @@ namespace ExpenseProcessingSystem.Services
             List<HomeReportTransactionListViewModel> finalList = list1.Concat(list2).OrderBy(x => x.TransTL_ID).ToList();
 
              decimal balance = 0;
-            var signInfo = GetSignatoryInfo(signatory.BCS_ID);
-            string signName = (signInfo != null) ? signInfo.BCS_Name : "";
+            string signName = "";
+            if(signatory != null)
+            {
+                var signInfo = GetSignatoryInfo(signatory.BCS_ID);
+                signName = (signInfo != null) ? signInfo.BCS_Name : "";
+            }
 
             foreach (var i in finalList.Where(x => StartFiscal.Date <= ConvGbDateToDateTime(x.Trans_Value_Date)
                                                 && ConvGbDateToDateTime(x.Trans_Value_Date) <= endDT.Date))

@@ -155,17 +155,6 @@
             </div>
             <iframe id="iframePreview" frameborder="0" src="" style="position: relative; min-height: 50vh; max-height: 100%; width: 100%;"></iframe>
         </div>
-        <div id="entry-status" class="m-t-10 m-b-10">
-            <div class="dis-inline-block"><label>Status: </label></div>
-            <div class="dis-inline-block">@Html.TextBoxFor(x => x.status, new { @readonly = "true", @class = "input" })</div>
-            <div class="dis-inline-block"><label>Approver:</label></div>
-            <div class="dis-inline-block">@Html.TextBoxFor(model => model.approver, new { @readonly = "true", @class = "input", @id = "approver" })</div>
-            <div class="dis-inline-block"><label>Verifier:</label></div>
-            <div class="dis-inline-block">
-                <p class="dis-inline-block">@Html.TextBoxFor(model => model.verifier_1, new { @readonly = "true", @class = "m-l-5 input", @id = "verifier1" })</p>
-                <p class="dis-inline-block">@Html.TextBoxFor(model => model.verifier_2, new { @readonly = "true", @class = "m-l-5 input", @id = "verifier2" })</p>
-            </div>
-        </div>
         <div id="entry-controls" class="m-b-10">
             <div class="flex-sb m-t-15">
                 <div>
@@ -228,10 +217,10 @@
         $("#credTotal").val(Number(ewtSubTotal + cashSubTotal));
 
         var ccyList = [];
-        for (var i = 0; i < $('.txtccy').length; i++) {
-            ccyList.push($($('.txtccy')[i]).val());
+        for (var i = 0; i < $('.txtccy:not(#template_ccy)').length; i++) {
+            ccyList.push($($('.txtccy:not(#template_ccy)')[i]).val());
         }
-        if ($('.txtccy').length > 1 && !(ccyList.every((val, i, arr) => val === arr[0]))) {
+        if ($('.txtccy:not(#template_ccy)').length > 1 && !(ccyList.every((val, i, arr) => val === arr[0]))) {
             $("#grossTotal").val(0.00);
             $("#credEwtTotal").val(0.00);
             $("#credCashTotal").val(0.00);
@@ -527,10 +516,10 @@
             $("#credTotal").val(roundNumber(Number(ewtSubTotal + cashSubTotal), 2));
 
             var ccyList = [];
-            for (var i = 0; i < $('.txtccy').length; i++) {
-                ccyList.push($($('.txtccy')[i]).val());
+            for (var i = 0; i < $('.txtccy:not(#template_ccy)').length; i++) {
+                ccyList.push($($('.txtccy:not(#template_ccy)')[i]).val());
             }
-            if ($('.txtccy').length > 1 && !(ccyList.every((val, i, arr) => val === arr[0]))) {
+            if ($('.txtccy:not(#template_ccy)').length > 1 && !(ccyList.every((val, i, arr) => val === arr[0]))) {
                 $("#grossTotal").val(0.00);
                 $("#credEwtTotal").val(0.00);
                 $("#credCashTotal").val(0.00);
