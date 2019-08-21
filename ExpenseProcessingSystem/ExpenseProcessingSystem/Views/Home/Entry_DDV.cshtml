@@ -1,6 +1,15 @@
 ﻿
 @{
     ViewData["Title"] = "Entry_DDV";
+    var usdId = ViewData["usdCurrID"];
+    var usdMId = ViewData["usdCurrMasterID"];
+    var usdAbbr = ViewData["usdAbbrev"];
+    var phpId = ViewData["phpCurrID"];
+    var phpMId = ViewData["phpCurrMasterID"];
+    var phpAbbr = ViewData["phpAbbrev"];
+    var yenId = ViewData["yenCurrID"];
+    var yenMId = ViewData["yenCurrMasterID"];
+    var yenAbbr = ViewData["yenAbbrev"];
 }
 @using ExpenseProcessingSystem.ViewModels.Entry
 @model EntryDDVViewModelList
@@ -426,6 +435,12 @@
             var pNode = String($(this.parentNode)[0].parentNode.id);
             currenableVATEWT(pNode, $(this).val());
             computeValuesDDV($(this.parentNode)[0].parentNode);
+            if ($("option:selected", this).text() == "@ViewData["yenAbbrev"]") {
+                $("#remark_" + pNode.substring(5)).find('input').remove();
+                $("#req_" + pNode.substring(5)).find('#interDtls').empty();
+                $("#" + pNode + " .txtGross").val(0);
+                computeValuesDDV($(this.parentNode)[0].parentNode);
+            }
         });
     });
     //--------------------------------------------------------------------------------------------
