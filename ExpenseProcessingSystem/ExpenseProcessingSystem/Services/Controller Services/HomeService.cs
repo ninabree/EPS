@@ -9506,7 +9506,7 @@ namespace ExpenseProcessingSystem.Services
                         });
                     }
                     tempGbase.entries = tempGbase.entries.OrderByDescending(x => x.type).ToList();
-                    goExpData = InsertGbaseEntry(tempGbase, expID);
+                    goExpData = InsertGbaseEntry(tempGbase, expID,userID);
                     goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.EntryDetailsID);
                     list.Add(new { expEntryID = expID, expDtl = item.EntryDetailsID, expType = GlobalSystemValues.TYPE_SS,
                         LiqDtlID = liquidationDetails.LiqEntryDetails.Liq_DtlID,
@@ -9606,7 +9606,7 @@ namespace ExpenseProcessingSystem.Services
                         }
 
                         tempGbase.entries = tempGbase.entries.OrderByDescending(x => x.type).ToList();
-                        goExpData = InsertGbaseEntry(tempGbase, expID);
+                        goExpData = InsertGbaseEntry(tempGbase, expID,userID);
                         goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.EntryDetailsID);
                         list.Add(new
                         {
@@ -9718,7 +9718,7 @@ namespace ExpenseProcessingSystem.Services
 
                 tempGbase.entries.Add(credit);
                 tempGbase.entries = tempGbase.entries.OrderByDescending(x => x.type).ToList();
-                goExpData = InsertGbaseEntry(tempGbase, expID);
+                goExpData = InsertGbaseEntry(tempGbase, expID, userID);
                 goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.expenseDtlID);
 
                 list.Add(new { expEntryID = expID, expDtl = item.expenseDtlID, expType = expenseDetails.expenseType, goExp = goExpData, goExpHist = goExpHistData });
@@ -9736,7 +9736,7 @@ namespace ExpenseProcessingSystem.Services
                     tempGbase.entries.Add(fbt["credit"]);
 
                     tempGbase.entries = tempGbase.entries.OrderByDescending(x => x.type).ToList();
-                    goExpData = InsertGbaseEntry(tempGbase, expID);
+                    goExpData = InsertGbaseEntry(tempGbase, expID, userID);
                     goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.expenseDtlID);
                     list.Add(new { expEntryID = expID, expDtl = item.expenseDtlID, expType = expenseDetails.expenseType, goExp = goExpData, goExpHist = goExpHistData });
                 }
@@ -9841,14 +9841,14 @@ namespace ExpenseProcessingSystem.Services
                                     tempGbase.entries.Add(entry);
 
                                     tempGbase.entries = tempGbase.entries.OrderByDescending(x => x.type).ToList();
-                                    goExpData = InsertGbaseEntry(tempGbase, expID);
+                                    goExpData = InsertGbaseEntry(tempGbase, expID, userID);
                                     goExpHistData = new GOExpressHistModel();
                                     list.Add(new { expEntryID = expID, expDtl = item.dtlID, expType = GlobalSystemValues.TYPE_DDV, goExp = goExpData, goExpHist = goExpHistData });
                                 }
                             }
                         }
                         tempGbase.entries = tempGbase.entries.OrderByDescending(x => x.type).ToList();
-                        goExpData = InsertGbaseEntry(tempGbase, expID);
+                        goExpData = InsertGbaseEntry(tempGbase, expID, userID);
                         goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.dtlID);
                         list.Add(new { expEntryID = expID, expDtl = item.dtlID, expType = GlobalSystemValues.TYPE_DDV, goExp = goExpData, goExpHist = goExpHistData });
                     }
@@ -9900,7 +9900,7 @@ namespace ExpenseProcessingSystem.Services
                     tempGbase.entries.Add(credit);
 
                     tempGbase.entries = tempGbase.entries.OrderByDescending(x => x.type).ToList();
-                    goExpData = InsertGbaseEntry(tempGbase, expID);
+                    goExpData = InsertGbaseEntry(tempGbase, expID, userID);
                     goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.dtlID);
                     list.Add(new { expEntryID = expID, expDtl = item.dtlID, expType = GlobalSystemValues.TYPE_DDV, goExp = goExpData, goExpHist = goExpHistData });
 
@@ -9925,7 +9925,7 @@ namespace ExpenseProcessingSystem.Services
                         tempGbase.entries.Add(credit);
 
                         tempGbase.entries = tempGbase.entries.OrderByDescending(x => x.type).ToList();
-                        goExpData = InsertGbaseEntry(tempGbase, expID);
+                        goExpData = InsertGbaseEntry(tempGbase, expID, userID);
                         goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.dtlID);
                         list.Add(new { expEntryID = expID, expDtl = item.dtlID, expType = GlobalSystemValues.TYPE_DDV, goExp = goExpData, goExpHist = goExpHistData });
                     }
@@ -10020,7 +10020,7 @@ namespace ExpenseProcessingSystem.Services
 
                 tempGbase.entries = tempGbase.entries.OrderByDescending(x => x.type == "D").ToList();
                 //insert
-                goExpData = InsertGbaseEntry(tempGbase, expID);
+                goExpData = InsertGbaseEntry(tempGbase, expID, userID);
                 goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, dtls.ExpNCDtl_ID);
                 list.Add(new { expEntryID = expID, nonCashDtlID = dtls.ExpNCDtl_ID, expType = GlobalSystemValues.TYPE_NC,
                     goExp = goExpData, goExpHist = goExpHistData });
@@ -10996,10 +10996,12 @@ namespace ExpenseProcessingSystem.Services
         ///==========[End Post to Gwrite]============
 
         ///==============[Begin Gbase Entry Section]================
-        private TblCm10 InsertGbaseEntry(gbaseContainer containerModel, int expenseID)
+        private TblCm10 InsertGbaseEntry(gbaseContainer containerModel, int expenseID,int userID)
         {
             TblCm10 goModel = new TblCm10();
 
+            var user = _context.User.FirstOrDefault(x => x.User_ID == userID);
+            
             //goModel.Id = -1;
             goModel.SystemName = "EXPRESS";
             goModel.Branchno = getAccount(containerModel.entries[0].account).Account_No.Substring(4, 3);
@@ -11007,8 +11009,8 @@ namespace ExpenseProcessingSystem.Services
             goModel.ValueDate = DateTime.Now.ToString("MMddyy");
             goModel.Section = "10";
             goModel.Remarks = containerModel.remarks;
-            goModel.MakerEmpno = containerModel.maker.ToString(); //Replace with user ID later when user module is finished.
-            goModel.Empno = containerModel.approver.ToString();  //Replace with user ID later when user module is finished.
+            goModel.MakerEmpno = user.User_EmpCode; //Replace with user ID later when user module is finished.
+            goModel.Empno = user.User_EmpCode.Substring(2);  //Replace with user ID later when user module is finished.
             goModel.Recstatus = "READY";
             goModel.Datestamp = DateTime.Now;
             goModel.Timerespond = DateTime.Now;
@@ -11799,9 +11801,10 @@ namespace ExpenseProcessingSystem.Services
             DMCheckModel checkNoModel;
 
             if (expense == null)
-                return null;
-
-            if (expense.Expense_CheckId != 0)
+            {
+                checkNoModel = _context.DMCheck.OrderBy(x => x.Check_ID).Where(x => x.Check_isActive == true).FirstOrDefault();
+            }
+            else if(expense.Expense_CheckId != 0)
             {
                 checkNoModel = _context.DMCheck.Where(x => x.Check_ID == expense.Expense_CheckId).FirstOrDefault();
             }
@@ -11813,21 +11816,32 @@ namespace ExpenseProcessingSystem.Services
             if (checkNoModel == null)
                 return null;
 
-            if(int.Parse(checkNoModel.Check_Series_To) > int.Parse(expense.Expense_CheckNo))
+            if(expense != null)
             {
-                checkNo.Add("check", (int.Parse(expense.Expense_CheckNo) + 1).ToString());
-                checkNo.Add("id", checkNoModel.Check_ID.ToString());
+                if (int.Parse(checkNoModel.Check_Series_To) > int.Parse(expense.Expense_CheckNo))
+                {
+                    checkNo.Add("check", (int.Parse(expense.Expense_CheckNo) + 1).ToString());
+                    checkNo.Add("id", checkNoModel.Check_ID.ToString());
+                }
+                else
+                {
+                    checkNoModel.Check_isActive = false;
+                    _context.SaveChanges();
+
+                    var newCheck = _context.DMCheck.Where(x => x.Check_isActive == true).OrderBy(x => x.Check_ID).FirstOrDefault();
+
+                    checkNo.Add("check", newCheck.Check_Series_From);
+                    checkNo.Add("id", newCheck.Check_ID.ToString());
+                }
             }
             else
             {
-                checkNoModel.Check_isActive = false;
-                _context.SaveChanges();
-
-                var newCheck = _context.DMCheck.Where(x => x.Check_isActive == true).OrderBy(x=>x.Check_ID).FirstOrDefault();
+                var newCheck = _context.DMCheck.Where(x => x.Check_isActive == true).OrderBy(x => x.Check_ID).FirstOrDefault();
 
                 checkNo.Add("check", newCheck.Check_Series_From);
                 checkNo.Add("id", newCheck.Check_ID.ToString());
             }
+            
 
             return checkNo;
         }
@@ -12105,6 +12119,34 @@ namespace ExpenseProcessingSystem.Services
             _context.SaveChanges();
 
             return true;
+        }
+        //Update Status for closing
+        public bool forClosingStatus(int expenseID)
+        {
+            var printStatus = _context.PrintStatus.Where(x => x.PS_EntryID == expenseID).ToList();
+
+            int completed = 0;
+
+            foreach (var item in printStatus)
+            {
+                if (item.PS_LOI && item.PS_Check && item.PS_CDD && item.PS_BIR2307 && item.PS_Voucher)
+                    completed++;
+            }
+
+            if(completed == (printStatus.Count() - 1))
+            {
+                ExpenseEntryModel updItem = _context.ExpenseEntry.Where(x => x.Expense_ID == expenseID).FirstOrDefault();
+
+                updItem.Expense_Status = GlobalSystemValues.STATUS_FOR_CLOSING;
+
+                _context.SaveChanges();
+
+                return true;
+            }
+
+            forClosingStatus(expenseID);
+
+            return false;
         }
         ///========[End of Other Functions]============
     }

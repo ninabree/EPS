@@ -341,6 +341,17 @@ namespace ExpenseProcessingSystem.Controllers
                         {
                             messages.Add("Cash breakdown is not equal to ending balance.");
                         }
+                        else
+                        {
+                            if (_service.closePC(int.Parse(GetUserID())))
+                            {
+                                messages.Add("Petty cash closed.");
+                            }
+                            else
+                            {
+                                messages.Add("Failed to close petty cash.");
+                            }
+                        }
                     }
                     else
                     {
@@ -5158,6 +5169,11 @@ namespace ExpenseProcessingSystem.Controllers
             vvm.amountGross = amountGross;
 
             return vvm;
+        }
+
+        public JsonResult updateVoucherPrintStatus(int expenseID)
+        {
+            return Json(true);
         }
     }
 }

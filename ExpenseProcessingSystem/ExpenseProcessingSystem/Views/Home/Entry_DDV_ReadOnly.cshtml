@@ -500,7 +500,9 @@
                 }
                     ""
                 ];
+                $.getJSON('UpdateCDDPrintingStatus', { entryID: @Html.Raw(Json.Serialize(Model.entryID)) }, function (data) {
 
+                });
                 for (var i = 0; i < link.length-1;i++) {
                     window.open(link[i]);
                 }
