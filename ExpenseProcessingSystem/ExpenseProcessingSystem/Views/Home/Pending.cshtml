@@ -37,7 +37,7 @@
                 </table>
             </div>
         </form>
-        <div class="tab-tbl m-t-20">All Notification Records:</div>
+        <div class="tab-tbl m-t-20">All Pending Records:</div>
         <table class="table table-striped tab-tbl table-bordered table-hover w-97">
             <colgroup>
                 <col style="width:10%" />
@@ -58,7 +58,7 @@
                     <th>Verifier/s</th>
                     <th><a asp-action="Pending" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PendDateSortParm"]">Date Submitted<p class="btn-xs glyphicon @ViewData["glyph-6"]"></p></a></th>
                     <th><a asp-action="Pending" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PendUpdateSortParm"]">Last Updated Date<p class="btn-xs glyphicon @ViewData["glyph-7"]"></p></a></th>
-                    <th><a asp-action="Pending" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PendAppStatSortParm"]">Application Status<p class="btn-xs glyphicon @ViewData["glyph-8"]"></p></a></th>
+                    <th><a asp-action="Pending" asp-controller="Home" asp-route-partialName="@ViewData["Title"]" asp-route-sortOrder="@ViewData["PendAppStatSortParm"]">Status<p class="btn-xs glyphicon @ViewData["glyph-8"]"></p></a></th>
                     <th></th>
                 </tr>
             </thead>

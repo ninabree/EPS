@@ -50,15 +50,15 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly int PAYEETYPE_EMP_ALL = 5;
 
         public static readonly List<SelectListItem> PAYEETYPE_SELECT_ALL = new List<SelectListItem> {
-                new SelectListItem { Text = "VENDOR", Value = PAYEETYPE_VENDOR.ToString(), Selected = true },
+                new SelectListItem { Text = "ALL EMPLOYEE", Value = PAYEETYPE_EMP_ALL.ToString(), Selected = true },
+                new SelectListItem { Text = "CUSTOMER", Value = PAYEETYPE_REGEMP.ToString(), Selected = false },
                 new SelectListItem { Text = "REGULAR EMPLOYEE", Value = PAYEETYPE_REGEMP.ToString(), Selected = false },
                 new SelectListItem { Text = "TEMPORARY EMPLOYEE", Value = PAYEETYPE_REGEMP.ToString(), Selected = false },
-                new SelectListItem { Text = "CUSTOMER", Value = PAYEETYPE_REGEMP.ToString(), Selected = false },
-                new SelectListItem { Text = "ALL EMPLOYEE", Value = PAYEETYPE_EMP_ALL.ToString(), Selected = false }
+                new SelectListItem { Text = "VENDOR", Value = PAYEETYPE_VENDOR.ToString(), Selected = false },
         };
         public static readonly List<SelectListItem> PAYEETYPE_SELECT_CV = new List<SelectListItem> {
-                new SelectListItem { Text = "VENDOR", Value = PAYEETYPE_VENDOR.ToString(), Selected = true },
-                new SelectListItem { Text = "REGULAR EMPLOYEE", Value = PAYEETYPE_REGEMP.ToString(), Selected = false }
+                new SelectListItem { Text = "REGULAR EMPLOYEE", Value = PAYEETYPE_REGEMP.ToString(), Selected = true },
+                new SelectListItem { Text = "VENDOR", Value = PAYEETYPE_VENDOR.ToString(), Selected = false }
         };
         //Static values for payee type use for checking or adding employee category.
         //i.e: Checking category type
@@ -67,8 +67,8 @@ namespace ExpenseProcessingSystem.ConstantData
         public const int EMPCAT_EXPAT = 2;
 
         public static readonly List<SelectListItem> EMPCATEGORY_SELECT = new List<SelectListItem> {
-                new SelectListItem { Text = "LOCAL", Value = EMPCAT_LOCAL.ToString(), Selected = true },
-                new SelectListItem { Text = "EXPAT", Value = EMPCAT_EXPAT.ToString(), Selected = false }
+                new SelectListItem { Text = "EXPAT", Value = EMPCAT_EXPAT.ToString(), Selected = true },
+                new SelectListItem { Text = "LOCAL", Value = EMPCAT_LOCAL.ToString(), Selected = false }
         };
 
         //Static values for user roles use for checking or adding user roles to users.

@@ -95,38 +95,38 @@ namespace ExpenseProcessingSystem.Controllers
             //    return StatusCode(500);
             //}
 
-            _session.SetString("UserID", "1");
-            _session.SetString("UserName", "test user");
-            //Set User Access Info
-            _session.SetString("isLoggedIn", "true");
-            _session.SetString("accessType", "approver");
-            _session.SetString("isAdmin",  "false");
-            return RedirectToAction("Index", "Home");
+            //_session.SetString("UserID", "1");
+            //_session.SetString("UserName", "test user");
+            ////Set User Access Info
+            //_session.SetString("isLoggedIn", "true");
+            //_session.SetString("accessType", "approver");
+            //_session.SetString("isAdmin",  "false");
+            //return RedirectToAction("Index", "Home");
             //END OF LDAP LOGIN
 
-            //var acc = _context.User.Where(x => x.User_UserName == model.User_UserName).Where(x => x.User_InUse == true).Select(x => x).FirstOrDefault();
-            //if (acc != null)
-            //{
-            //    if (CryptoTools.getHashPasswd("PLACEHOLDER", model.User_UserName, model.User_Password) == acc.User_Password)
-            //    {
-            //        //Set Session Info
-            //        _session.SetString("UserID", acc.User_ID.ToString());
-            //        _session.SetString("UserName", acc.User_FName + " " + acc.User_LName);
-            //        //Set User Access Info
-            //        _session.SetString("isLoggedIn", "true");
-            //        _session.SetString("accessType", acc.User_Role);
-            //        _session.SetString("isAdmin", acc.User_Role == "admin" ? "true" : "false");
+            var acc = _context.User.Where(x => x.User_UserName == model.User_UserName).Where(x => x.User_InUse == true).Select(x => x).FirstOrDefault();
+            if (acc != null)
+            {
+                //if (CryptoTools.getHashPasswd("PLACEHOLDER", model.User_UserName, model.User_Password) == acc.User_Password)
+                //{
+                    //Set Session Info
+                    _session.SetString("UserID", acc.User_ID.ToString());
+                    _session.SetString("UserName", acc.User_FName + " " + acc.User_LName);
+                    //Set User Access Info
+                    _session.SetString("isLoggedIn", "true");
+                    _session.SetString("accessType", acc.User_Role);
+                    _session.SetString("isAdmin", acc.User_Role == "admin" ? "true" : "false");
 
-            //        if (acc.User_Role == "admin")
-            //        {
-            //            return RedirectToAction("UM", "Home");
-            //        }
-            //        else
-            //        {
-            //            return RedirectToAction("Index", "Home");
-            //        }
-            //    }
-            //}
+                    if (acc.User_Role == "admin")
+                    {
+                        return RedirectToAction("UM", "Home");
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                //}
+            }
             ModelState.AddModelError("", "Invalid Login Credential");
             return View(model);
         }

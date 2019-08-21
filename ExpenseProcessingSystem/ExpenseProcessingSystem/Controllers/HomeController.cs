@@ -179,7 +179,6 @@ namespace ExpenseProcessingSystem.Controllers
                         Pending_Updated_Date = new DateTime(),
                         Pending_Payee = "",
                         Pending_Type = ""
-                        //Pending_Type_Select = ""
                     }
                 };
             }
@@ -1324,11 +1323,11 @@ namespace ExpenseProcessingSystem.Controllers
                     acclist.Add(new accDetails
                     {
                         accId = acc.Account_ID,
-                        accName = acc.Account_Name,
+                        accName = acc.Account_Name + " - " + acc.Account_No,
                         accCode = acc.Account_Code
                     });
                 }
-                viewModel.systemValues.acc = acclist;
+                viewModel.systemValues.acc = acclist.OrderBy(x=> x.accName).ToList();
             }
             else
             {

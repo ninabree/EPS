@@ -11378,7 +11378,7 @@ namespace ExpenseProcessingSystem.Services
         public DMAccountModel getAccountByMasterID(int masterID)
         {
             return _context.DMAccount.Where(x => x.Account_MasterID == masterID && x.Account_isActive == true
-                    && x.Account_isDeleted == false).FirstOrDefault();
+                    && x.Account_isDeleted == false).OrderBy(x=> x.Account_Name).FirstOrDefault();
         }
         public int getAccountID(string accountNo)
         {
@@ -11389,13 +11389,13 @@ namespace ExpenseProcessingSystem.Services
         {
             List<accDetails> accDetails = new List<accDetails>();
 
-            var accDbDetails = _context.DMAccount.Where(x => x.Account_isActive == true).Select(q => new { q.Account_ID, q.Account_Name, q.Account_Code });
+            var accDbDetails = _context.DMAccount.Where(x => x.Account_isActive == true).OrderBy(x=> x.Account_Name).Select(q => new { q.Account_ID, q.Account_Name, q.Account_No,q.Account_Code });
 
             foreach (var detail in accDbDetails)
             {
                 accDetails temp = new accDetails();
                 temp.accId = detail.Account_ID;
-                temp.accName = detail.Account_Name;
+                temp.accName = detail.Account_Name + " - " + detail.Account_No;
                 temp.accCode = detail.Account_Code;
 
                 accDetails.Add(temp);
@@ -11561,11 +11561,13 @@ namespace ExpenseProcessingSystem.Services
             var vendorMasterID = _context.DMVendor.Where(x => x.Vendor_ID == vendorID).Select(id => id.Vendor_MasterID).FirstOrDefault();
             var vendorTRIDList = _context.DMVendorTRVAT.Where(x => x.VTV_Vendor_ID == vendorMasterID
                                                                 && x.VTV_TR_ID > 0)
+                                                       .OrderBy(x => x.VTV_TR_ID)
                                                        .Select(q => q.VTV_TR_ID).ToList();
 
             var select = new SelectList(_context.DMTR.Where(x => vendorTRIDList.Contains(x.TR_MasterID)
                                                             && x.TR_isActive == true
                                                             && x.TR_isDeleted == false)
+                                                     .OrderBy(x => x.TR_Tax_Rate)
                                                      .Select(q => new { q.TR_ID, TR_Tax_Rate = Mizuho.round((q.TR_Tax_Rate * 100), 2) }),
                         "TR_ID", "TR_Tax_Rate");
 
@@ -11576,6 +11578,7 @@ namespace ExpenseProcessingSystem.Services
         {
             var select = new SelectList(_context.DMTR.Where(x => x.TR_isActive == true
                                                             && x.TR_isDeleted == false)
+                                                     .OrderBy(x => x.TR_Tax_Rate)
                                                      .Select(q => new { q.TR_ID, TR_Tax_Rate = Mizuho.round((q.TR_Tax_Rate * 100), 2) }),
                         "TR_ID", "TR_Tax_Rate");
 
@@ -11590,13 +11593,14 @@ namespace ExpenseProcessingSystem.Services
                 TR_MasterID = x.TR_MasterID,
                 TR_Tax_Rate = Mizuho.round(x.TR_Tax_Rate * 100, 2),
                 TR_WT_Title = x.TR_WT_Title
-            }).ToList();
+            }).OrderBy(x => x.TR_Tax_Rate).ToList();
         }
         //get Vat list for specific user
         public SelectList getAllVat()
         {
             var select = new SelectList(_context.DMVAT.Where(x => x.VAT_isActive == true
                                                              && x.VAT_isDeleted == false)
+                                                      .OrderBy(x => x.VAT_Rate)
                                                       .Select(q => new { q.VAT_ID, VAT_Rate = Mizuho.round((q.VAT_Rate * 100), 2) }),
                         "VAT_ID", "VAT_Rate");
             return select;
@@ -11614,7 +11618,7 @@ namespace ExpenseProcessingSystem.Services
                         VAT_MasterID = vat.VAT_MasterID,
                         VAT_Rate = Mizuho.round(vat.VAT_Rate * 100, 2),
                         VAT_Name = vat.VAT_Name
-                    }).ToList();
+                    }).OrderBy(x=> x.VAT_Rate).ToList();
         }
         //get all VAT including history
         public List<DMVATModel> getAllVATList()
@@ -11625,7 +11629,7 @@ namespace ExpenseProcessingSystem.Services
                 VAT_MasterID = x.VAT_MasterID,
                 VAT_Rate = Mizuho.round(x.VAT_Rate * 100, 2),
                 VAT_Name = x.VAT_Name
-            }).ToList();
+            }).OrderBy(x => x.VAT_Rate).ToList();
         }
         //get user account without username and password
         public string getUserFullName(int id)
@@ -11687,22 +11691,22 @@ namespace ExpenseProcessingSystem.Services
         {
             List<SelectList> listOfLists = new List<SelectList>();
 
-            listOfLists.Add(new SelectList(_context.DMVendor.Where(x => x.Vendor_isActive == true && x.Vendor_isDeleted == false).Select(q => new { q.Vendor_ID, q.Vendor_Name }),
+            listOfLists.Add(new SelectList(_context.DMVendor.Where(x => x.Vendor_isActive == true && x.Vendor_isDeleted == false).OrderBy(x=> x.Vendor_Name).Select(q => new { q.Vendor_ID, q.Vendor_Name }),
                                                 "Vendor_ID", "Vendor_Name"));
 
-            listOfLists.Add(new SelectList(_context.DMDept.Where(x => x.Dept_isActive == true && x.Dept_isDeleted == false).Select(q => new { q.Dept_ID, q.Dept_Name }),
+            listOfLists.Add(new SelectList(_context.DMDept.Where(x => x.Dept_isActive == true && x.Dept_isDeleted == false).OrderBy(x => x.Dept_Name).Select(q => new { q.Dept_ID, q.Dept_Name }),
                                                 "Dept_ID", "Dept_Name"));
 
-            listOfLists.Add(new SelectList(_context.DMCurrency.Where(x => x.Curr_isActive == true && x.Curr_isDeleted == false).Select(q => new { q.Curr_ID, q.Curr_CCY_ABBR }),
+            listOfLists.Add(new SelectList(_context.DMCurrency.Where(x => x.Curr_isActive == true && x.Curr_isDeleted == false).OrderBy(x => x.Curr_CCY_ABBR).Select(q => new { q.Curr_ID, q.Curr_CCY_ABBR }),
                                     "Curr_ID", "Curr_CCY_ABBR"));
 
-            listOfLists.Add(new SelectList(_context.DMTR.Where(x => x.TR_isActive == true && x.TR_isDeleted == false).Select(q => new { q.TR_ID, q.TR_Tax_Rate }),
+            listOfLists.Add(new SelectList(_context.DMTR.Where(x => x.TR_isActive == true && x.TR_isDeleted == false).OrderBy(x => x.TR_Tax_Rate).Select(q => new { q.TR_ID, q.TR_Tax_Rate }),
                         "TR_ID", "TR_Tax_Rate"));
 
-            listOfLists.Add(new SelectList(_context.DMEmp.Where(x => x.Emp_isActive == true && x.Emp_isDeleted == false && x.Emp_Type == "Regular").Select(q => new { q.Emp_ID, q.Emp_Name }),
+            listOfLists.Add(new SelectList(_context.DMEmp.Where(x => x.Emp_isActive == true && x.Emp_isDeleted == false && x.Emp_Type == "Regular").OrderBy(x => x.Emp_Name).Select(q => new { q.Emp_ID, q.Emp_Name }),
                         "Emp_ID", "Emp_Name"));
 
-            listOfLists.Add(new SelectList(_context.DMEmp.Where(x => x.Emp_isActive == true && x.Emp_isDeleted == false).Select(q => new { q.Emp_ID, q.Emp_Name }),
+            listOfLists.Add(new SelectList(_context.DMEmp.Where(x => x.Emp_isActive == true && x.Emp_isDeleted == false).OrderBy(x => x.Emp_Name).Select(q => new { q.Emp_ID, q.Emp_Name }),
                         "Emp_ID", "Emp_Name"));
             return listOfLists;
         }
