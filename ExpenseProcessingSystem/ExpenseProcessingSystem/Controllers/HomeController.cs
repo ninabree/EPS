@@ -2811,7 +2811,8 @@ namespace ExpenseProcessingSystem.Controllers
             if (!ModelState.IsValid)
             {
                 ViewData["partialName"] = (EntryNCViewModelList.EntryNC.NC_Category_ID.ToString() != "0" ? EntryNCViewModelList.EntryNC.NC_Category_ID.ToString() : GlobalSystemValues.NC_LS_PAYROLL.ToString());
-                return View("Entry_NC", PopulateEntryNC(EntryNCViewModelList));
+                EntryNCViewModelList = PopulateEntryNC(EntryNCViewModelList);
+                return View("Entry_NC", EntryNCViewModelList);
             }
             
             int id = _service.addExpense_NC(EntryNCViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_NC);
