@@ -76,8 +76,9 @@
                     {
                         <tr id="item_@i">
                             <td id="sss">
-                                <a class="liqudationBtn" href="#"><img id="imgLiq" src="~/images/liqLogo.png"/></a>
+                                <a class="liqudationBtn" href="#"><img id="imgLiq" src="~/images/liqLogo.png" /></a>
                                 @Html.HiddenFor(x => Model.LiquidationDetails[i].EntryDetailsID, new { @class = "entryDtlID" })
+                                @Html.HiddenFor(x => Model.LiquidationDetails[i].transNo, new { @class = "transNo" })
                                 @Html.HiddenFor(x => Model.LiquidationDetails[i].liqInputFlag, new { @class = "hiddenLiqFlag" })
                                 <div id="divLiqCashBD_@i">
                                     @for (int y = 0; y < Model.LiquidationDetails[i].liqCashBreakdown.Count(); y++)
@@ -306,7 +307,7 @@
                     <table style="width:100%;margin-top:5%">
                         <tr>
                             <td colspan="2" style="text-align:left">
-                                <label>Transaction No.: </label><input type="text" />
+                                <label>Transaction No.: </label><input type="text" id="TransIDPhp" readonly="readonly" style="background-color:transparent" />
                             </td>
                         </tr>
                         <tr>
@@ -456,7 +457,7 @@
                     <table style="width:100%;margin-top:5%">
                         <tr>
                             <td colspan="2" style="text-align:left">
-                                <label>Transaction No.: </label><input type="text" />
+                                <label>Transaction No.: </label><input type="text" id="TransIDForeign" readonly="readonly" style="background-color:transparent" />
                             </td>
                         </tr>
                         <tr>
@@ -642,9 +643,9 @@
                 </div>
                 <div>
                     @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker
-                  || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id
-                  || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id
-                  || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.approver_id)
+                 || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id
+                 || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id
+                 || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.approver_id)
                     {
                         <div class="dis-inline-block tbl-btn"><button id="printBir" value="printBir">Print BIR Certificate</button></div>
                     }
@@ -659,6 +660,9 @@
     <input type="hidden" id="phpID" value="@Model.phpCurrID" />
     <input type="hidden" id="phpAbbrv" value="@Model.phpAbbrev" />
     <input type="hidden" id="phpMasterID" value="@Model.phpCurrMasterID" />
+    <input type="hidden" id="yenID" value="@Model.yenCurrID" />
+    <input type="hidden" id="yenAbbrv" value="@Model.yenAbbrev" />
+    <input type="hidden" id="yenMasterID" value="@Model.yenCurrMasterID" />
     <input type="hidden" name="command" id="btnID" />
 }
 @*validation message*@
@@ -677,6 +681,7 @@
         var trs = $("#inputTable").find("tbody").find("tr");
         for (var cnt = 0; cnt < trs.length; cnt++) {
             reqBtnDisable(cnt);
+            removeDecimalYEN(cnt)
             if ($('#divLiqCashBD_' + cnt).find("input").length != 0 || $('#divLiqIE_' + cnt).find("input").length != 0) {
                 $('#item_' + cnt).find('#imgLiq').attr('src', '/images/liqLogo_chk.png');
             }
@@ -731,7 +736,7 @@
             $('#cashBDLiqTable').find('.txtLiqAmount').val(0);
             $('#cashBDLiqTable').find('#txtCashBDTotal').val(0);
             $('#ddlLiqPhpAccount1').val($("#ddlLiqPhpAccount1 option:first").val());
-            $('#txtIEExRatePhp').text("");
+            $('#txtIEExRatePhp').val("");
 
             $('#divForeign').find(':input[type="number"]').val(0);
             $('#ddlAccount3').val($("#ddlAccount3 option:first").val());
@@ -747,10 +752,12 @@
                 assignAccCodeLiqPhp();
                 HideCashBreakdownTable();
                 ChangeOptionMarkForPrint();
+                $('#TransIDPhp').val($('#' + pid).find('.transNo').val());
             } else {
                 $('#divForeign').show();
                 $('#divPHP').hide();
                 displayInfoIE($(this.parentNode)[0].parentNode.id);
+                $('#TransIDForeign').val($('#' + pid).find('.transNo').val());
             }
 
             IEBDOPettyInputChange();
@@ -787,7 +794,7 @@
             $('#lblIEInput6').text(AC(round($("#txtIEAmount").val(), 2)));
             $('#lblIEInput7').text(AC(round($("#txtIEAmount").val(), 2)));
             $('#lblIEInput8').text(AC(round($("#txtIEAmount").val(), 2)));
-            $('#lblIEInput9').text(AC($("#txtIEExRate").val()));
+            $('#lblIEInput9').text(AC(parseFloat($("#txtIEExRate").val())));
         });
 
         $('#IEInputTable').on("change", "#txtIEInput1", function (e) {

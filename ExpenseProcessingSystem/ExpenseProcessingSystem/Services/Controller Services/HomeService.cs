@@ -12072,6 +12072,14 @@ namespace ExpenseProcessingSystem.Services
         {
             return _context.ExpenseEntry.Where(x => x.Expense_ID == entryID).AsNoTracking().FirstOrDefault();
         }
+        //Get Transaction No for Liquidation entries
+        public int getTransactionNoLiquidation(int entryID, int detailID)
+        {
+            return _context.ExpenseTransLists.Where(x => x.TL_GoExpHist_ID == _context.GOExpressHist.Where(
+                    y => y.ExpenseEntryID == entryID && y.ExpenseDetailID == detailID).FirstOrDefault().GOExpHist_Id)
+                    .FirstOrDefault().TL_TransID;
+        }
+
         //Check if latest pettycash entry is open
         public bool lastPCEntry()
         {
@@ -12172,7 +12180,7 @@ namespace ExpenseProcessingSystem.Services
         public  decimal amount { get; set; }
         public int vendor { get; set; }
         public int account { get; set; }
-        public  decimal interate { get; set; }
+        public decimal interate { get; set; }
         public int contraCcy { get; set; }
         public string chkNo { get; set; }
         public int dept { get; set; }
