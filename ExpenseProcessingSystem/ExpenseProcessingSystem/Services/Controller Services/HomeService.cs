@@ -8868,7 +8868,7 @@ namespace ExpenseProcessingSystem.Services
             List<LiquidationMainListViewModel> postedEntryList = new List<LiquidationMainListViewModel>();
 
             var dbPostedEntry = from p in _context.ExpenseEntry
-                                where p.Expense_Status == GlobalSystemValues.STATUS_CLOSED 
+                                where p.Expense_Status == GlobalSystemValues.STATUS_FOR_CLOSING 
                                 || p.Expense_Status == GlobalSystemValues.STATUS_POSTED
                                 && p.Expense_Type == GlobalSystemValues.TYPE_SS
                                 && p.Expense_Last_Updated.Date < DateTime.Now.Date

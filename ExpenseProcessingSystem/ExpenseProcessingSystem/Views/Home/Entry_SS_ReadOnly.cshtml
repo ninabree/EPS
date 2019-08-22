@@ -218,7 +218,7 @@
                                     Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING ||
                                     Model.statusID == GlobalSystemValues.STATUS_POSTED) ? true : false;
             }
-            @Html.HiddenFor(x => Model.entryID)
+            @Html.HiddenFor(x => Model.entryID, new { @class= "entryID" })
             @if (isMaker || isVerifier || isApprover || aVerifier || anApprover)
             {
                 <div class="flex-sb">

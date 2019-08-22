@@ -204,7 +204,7 @@
                     <td class="td-center"></td>
                     <td class="td-center"></td>
                     <td class="td-right">
-                        Signatory :
+                        Signatory : 
                     </td>
                     <td>
                         @Html.DropDownListFor(m => m.SignatoryList, new SelectList(Model.SignatoryList, "BCS_ID", "BCS_Name"), null, new { @class = "dis-inline-block", id = "ddlSignatory_" + @HomeReportConstantValue.ESAMS })
@@ -520,9 +520,9 @@
         <div style="float:right;">
         </div>
     </div>
-    <div class="tabContent rep-tab-cont">
-        <div id="voucherPreview" style="min-height: 50vh; max-height: 100%;">
-            <iframe id="iframePreview" frameborder="0" src="" style="position: relative; min-height: 50vh; max-height: 100%; width: 100%;"></iframe>
+    <div class="tabContent rep-tab-cont" style="height:1000px">
+        <div id="voucherPreview" style="height: 100%;">
+            <iframe id="iframePreview" frameborder="0" src="" style="position: relative; height: 100%; width: 100%;"></iframe>
         </div>
     </div>
 </body>
