@@ -837,6 +837,7 @@ div.sticky {
 }
 
 .selectDisabled[disabled] {
+    cursor:auto;
     background-color: transparent;
     border: none;
     -webkit-appearance: none;
@@ -1228,7 +1229,7 @@ body.loading .loadingEffect {
 /*////////////////////////////////////////////////////////////////////////////
     [ MODAL BUTTONS ]
 */
-.expenseAmortization, .expenseEWT[style="pointer-events: auto;"], .expenseInterEntity, .cashBreakdown {
+.expenseAmortization, .expenseEWT[style="pointer-events: auto;"], .expenseInterEntity, .cashBreakdown[style="pointer-events: auto;"] {
     color: #0e2cbe;
     text-decoration: underline;
 }

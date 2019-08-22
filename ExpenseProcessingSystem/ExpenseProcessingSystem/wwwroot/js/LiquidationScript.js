@@ -332,7 +332,7 @@ function assignDivValuesIE(pid) {
     $('#lblAccount6').val($('#LiquidationDetails_' + ret + '__liqInterEntity_3__Liq_AccountID_1_1').val());
     $('#lblAccount7').val($('#LiquidationDetails_' + ret + '__liqInterEntity_3__Liq_AccountID_1_2').val());
 
-    //INTER-ENTITY
+    //INTER-RATE
     $('#lblIEInput9').text($('#LiquidationDetails_' + ret + '__liqInterEntity_2__Liq_InterRate_1_2').val());
 
     //AMOUNT
