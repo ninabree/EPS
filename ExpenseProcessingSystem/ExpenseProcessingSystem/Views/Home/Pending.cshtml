@@ -109,8 +109,8 @@
             var nextDisabled = !Model.GeneralPendingList.HasNextPage ? "disabled" : "";
         }
         <a class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left" page="@(Model.GeneralPendingList.PageIndex - 1)"></a>
-        <input type="text" class="pagination-input" id="paginationInput" val="" />
-        <input type="text" class="pagination-input" value="@(Model.GeneralPendingList.PageIndex) of @(Model.GeneralPendingList.TotalPages)" disabled />
+        <input type="text" class="pagination-input" id="paginationInput" val="" placeholder="@(Model.GeneralPendingList.PageIndex)"/>
+        <input type="text" class="pagination-input" value=" of @(Model.GeneralPendingList.TotalPages)" disabled />
         <a class="btn pagination-btn btn-xs btn-default @nextDisabled glyphicon glyphicon-menu-right" page="@(Model.GeneralPendingList.PageIndex + 1)"></a>
     </div>
 </div>

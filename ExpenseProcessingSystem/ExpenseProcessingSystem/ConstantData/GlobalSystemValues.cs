@@ -261,6 +261,22 @@ namespace ExpenseProcessingSystem.ConstantData
             GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL,
             GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES
         };
+
+        //Static values for Document Type to be printed in all Expense Transactions
+        public static readonly int PS_LOI = 1;
+        public static readonly int PS_BIR2307 = 2;
+        public static readonly int PS_CDD = 3;
+        public static readonly int PS_Check = 4;
+        public static readonly int PS_Voucher = 5;
+
+        public static readonly List<int> PS_DocType = new List<int> {
+            GlobalSystemValues.PS_LOI,
+            GlobalSystemValues.PS_BIR2307,
+            GlobalSystemValues.PS_CDD,
+            GlobalSystemValues.PS_Check,
+            GlobalSystemValues.PS_Voucher
+        };
+
         public static readonly List<SelectListItem> NC_CATEGORIES_SELECT = new List<SelectListItem> {
                 new SelectListItem { Text = "LS PAYROLL", Value = NC_CATEGORIES[0].ToString(), Selected = true },
                 new SelectListItem { Text = "TAX REMITTANCE", Value = NC_CATEGORIES[1].ToString(), Selected = false },
@@ -282,11 +298,9 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly int UF_ALL = 0; // For General Messages; Notif for someone creating changes in
 
         //System message
-        //public static readonly string MESSAGE1 = "You can only edit the entry in Pending or Rejected status.";
-        //public static readonly string MESSAGE2 = "You can only delete the entry in Pending or Rejected status.";
         public static string MESSAGE = "";
-        public static readonly string MESSAGE1 = "処理失敗。PENDING又はREJECTEDステータスのみ訂正可能";
-        public static readonly string MESSAGE2 = "処理失敗。PENDING又はREJECTEDステータスのみ削除可能";
+        public static readonly string MESSAGE1 = "You can only edit the entry in Pending or Rejected status.";
+        public static readonly string MESSAGE2 = "You can only delete the entry in Pending or Rejected status.";
         public static readonly string MESSAGE3 = "This entry was edited/deleted by the maker. Please check the entry again.";
         public static readonly string MESSAGE4 = "This entry was already approved by Approver. Cannot proceed with your request.";
         public static readonly string MESSAGE5 = "This entry was already in For Printing status. Cannot proceed with your request.";

@@ -942,6 +942,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (var accs in data.ReportLOI.Rep_LOIEntryIDList)
                     {
                         _service.updateExpenseStatus(accs, GlobalSystemValues.STATUS_POSTED, int.Parse(GetUserID()));
+                        bool result = _service.updatePrintStatus(GlobalSystemValues.PS_LOI, accs);
                     }
                 }
                 //Return Excel file
@@ -955,6 +956,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (var accs in data.ReportLOI.Rep_LOIEntryIDList)
                     {
                         _service.updateExpenseStatus(accs, GlobalSystemValues.STATUS_POSTED, int.Parse(GetUserID()));
+                        bool result = _service.updatePrintStatus(GlobalSystemValues.PS_LOI, accs);
                     }
                 }
                 //Return PDF file
@@ -3071,6 +3073,8 @@ namespace ExpenseProcessingSystem.Controllers
                 }
             }
             viewModel.CDDContents = cddContents;
+
+            bool result = _service.updatePrintStatus(GlobalSystemValues.PS_CDD, entryID);
             return File(excelGenerate.ExcelCDDIS_PRC(viewModel, newFileName, "CDDIS_NC_PCR.xlsx"), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", newFileName);
 
         }
@@ -3308,6 +3312,7 @@ namespace ExpenseProcessingSystem.Controllers
             foreach (var i in ssList.LiquidationDetails)
             {
                 i.screenCode = "Liquidation_SS";
+                i.transNo = _service.getTransactionNoLiquidation(entryID, i.EntryDetailsID).ToString().PadLeft(5, '0');
             }
 
             var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
@@ -3381,6 +3386,7 @@ namespace ExpenseProcessingSystem.Controllers
                 foreach (var i in vm.LiquidationDetails)
                 {
                     i.screenCode = "Liquidation_SS";
+                    i.transNo = _service.getTransactionNoLiquidation(vm.entryID, i.EntryDetailsID).ToString().PadLeft(5, '0');
                 }
                 var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
                 vm.phpCurrID = ccyPHP.Curr_ID;
@@ -3509,6 +3515,7 @@ namespace ExpenseProcessingSystem.Controllers
             foreach (var i in ssList.LiquidationDetails)
             {
                 i.screenCode = "Liquidation_SS";
+                i.transNo = _service.getTransactionNoLiquidation(entryID, i.EntryDetailsID).ToString().PadLeft(5, '0');
             }
 
             var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
@@ -3610,7 +3617,7 @@ namespace ExpenseProcessingSystem.Controllers
                     viewLink = "View_Liquidation_SS";
                     break;
                 case "Delete":
-                    int expStatus = _service.GetCurrentEntryStatus(entryID);
+                    int expStatus = _service.getCurrentLiquidationStatus(entryID);
                     if (expStatus == GlobalSystemValues.STATUS_PENDING || expStatus == GlobalSystemValues.STATUS_REJECTED)
                     {
                         if (_service.deleteLiquidationEntry(entryID))

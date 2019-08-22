@@ -40,6 +40,7 @@ namespace ExpenseProcessingSystem.ViewModels
         public int modalInputFlag { get; set; }
         public int liqInputFlag { get; set; }
         public string screenCode { get; set; }
+        public string transNo { get; set; }
         public List<DMTRModel> vendTRList { get; set; }
         public List<EntryGbaseRemarksViewModel> gBaseRemarksDetails { get; set; }
         public List<LiquidationCashBreakdown> cashBreakdown { get; set; }
