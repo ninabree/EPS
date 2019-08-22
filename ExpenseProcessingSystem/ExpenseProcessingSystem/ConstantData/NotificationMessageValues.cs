@@ -19,6 +19,8 @@ namespace ExpenseProcessingSystem.ConstantData
             {GlobalSystemValues.TYPE_PC,"Petty Cash"},
             {GlobalSystemValues.TYPE_SS,"Suspense Sundry"},
             {GlobalSystemValues.TYPE_LIQ,"Liquidation"},
+            {GlobalSystemValues.TYPE_BUDGET,"G-Write"},
+            {GlobalSystemValues.TYPE_CLOSING,"Closing"}
         };
         public static readonly Dictionary<int, string> action = new Dictionary<int, string>
         {

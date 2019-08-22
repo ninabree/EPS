@@ -10126,19 +10126,28 @@ namespace ExpenseProcessingSystem.Services
             closeCommand = closeCommand.Replace("-", username.Substring(username.Length - 4));
             closeCommand = operation.Equals("close") ? closeCommand.Replace("_", "2") : closeCommand.Replace("_", "3");
 
-
             rqDtl = postToGwrite(closeCommand, username, password);
+
+            var close = _context.Closing.Where(x => x.Close_Type == transactionType)
+                                           .OrderByDescending(x => x.Close_ID).FirstOrDefault();
+
+            close.Close_Status = GlobalSystemValues.STATUS_PENDING;
 
             gWriteModel.GW_GWrite_ID = int.Parse(rqDtl.RequestId.ToString());
             gWriteModel.GW_Status = GlobalSystemValues.STATUS_PENDING;
             gWriteModel.GW_Type = "closing";
+            gWriteModel.GW_TransID = close.Close_ID;
+
+            _context.GwriteTransLists.Add(gWriteModel);
+
+            _context.SaveChanges();
 
             return true;
         }
 
         public ClosingViewModel ClosingGetRecords()
         {
-            var closeModel = _context.Closing.Where(x => x.Close_Status == GlobalSystemValues.STATUS_OPEN).FirstOrDefault();
+            var closeModel = _context.Closing.OrderByDescending(x=>x.Close_ID).FirstOrDefault();
 
             DateTime opening = closeModel.Close_Open_Date.Date + new TimeSpan(0,0,0);
             DateTime closing = DateTime.Today.AddHours(23.9999);
@@ -10180,6 +10189,13 @@ namespace ExpenseProcessingSystem.Services
 
             Dictionary<int, List<int>> expenseRbuId = new Dictionary<int, List<int>>();
             Dictionary<int, List<int>> expenseFcduId = new Dictionary<int, List<int>>();
+
+            PettyCashModel currentPC = _context.PettyCash.OrderByDescending(x => x.PC_ID).FirstOrDefault();
+
+            closeVM.pettyBegBalance = currentPC.PC_StartBal;
+            closeVM.endBalance = currentPC.PC_EndBal;
+            closeVM.Disbursed = currentPC.PC_Disbursed;
+            closeVM.recieve = currentPC.PC_Recieved;
 
             return closeVM;
         }

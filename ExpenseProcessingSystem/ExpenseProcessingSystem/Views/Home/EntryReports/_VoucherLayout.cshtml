@@ -145,7 +145,14 @@
             </tr>
         </table>
     </div>
-
+    @if (Model.isCheck)
+    {
+        <div style="text-align: center;"><h1>Check Voucher</h1></div>
+    }
+    else
+    {
+        <div style="text-align: center;"><h1>Direct Deposit Voucher</h1></div>
+    }
     <div id="mainBody">
         <table>
             <colgroup>
@@ -167,10 +174,13 @@
                 <td><a class="heading">Payee</a></td>
                 <td colspan="2"><div class="flexContainer">@Html.TextBoxFor(x => x.payee, new { @class = "flexstuff", @type = "text", @disabled = "disabled" })</div></td>
             </tr>
-            <tr>
-                <td><a class="heading">Check Number</a></td>
-                <td colspan="2"><div class="flexContainer">@Html.TextBoxFor(x => x.checkNo, new { @class = "flexstuff", @type = "text", @disabled = "disabled" })</div></td>
-            </tr>
+            @if (Model.isCheck)
+            {
+                <tr>
+                    <td><a class="heading">Check Number</a></td>
+                    <td colspan="2"><div class="flexContainer">@Html.TextBoxFor(x => x.checkNo, new { @class = "flexstuff", @type = "text", @disabled = "disabled" })</div></td>
+                </tr>
+            }
             <tr>
                 <td colspan="3"> &nbsp; &nbsp; &nbsp;</td>
             </tr>
@@ -204,15 +214,15 @@
             <tbody>
                 @foreach (var item in Model.particulars)
                 {
-                <tr>
-                    <td>@Html.DisplayFor(x=>item.documentType)</td>
-                    <td>@Html.DisplayFor(x=>item.invoiceNo)</td>
-                    <td>@Html.DisplayFor(x=>item.description)</td>
-                    <td>@Html.DisplayFor(x=>item.amount)</td>
-                </tr>
+                    <tr>
+                        <td>@Html.DisplayFor(x => item.documentType)</td>
+                        <td>@Html.DisplayFor(x => item.invoiceNo)</td>
+                        <td>@Html.DisplayFor(x => item.description)</td>
+                        <td>@Html.DisplayFor(x => item.amount)</td>
+                    </tr>
                 }
                 <tr>
-                    <td colspan="4" style="border:1px solid black">Total <a style="float:right;">PHP @Html.DisplayFor(x=>x.amountGross)</a></td>
+                    <td colspan="4" style="border:1px solid black">Total <a style="float:right;">PHP @Html.DisplayFor(x => x.amountGross)</a></td>
                 </tr>
             </tbody>
         </table>
@@ -335,16 +345,16 @@
                     <td colspan="3"></td>
                 </tr>
                 @*<tr>
-            <td colspan="3" style="font-style:italic;padding-bottom:3px;">Fringe Benefit Tax</td>
-        </tr>
-        <tr>
-            <td colspan="2">Benefit Amount</td>
-            <td class="rightA">222</td>
-        </tr>
-        <tr>
-            <td colspan="2">35% Tax</td>
-            <td class="rightA">-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        </tr>*@
+                        <td colspan="3" style="font-style:italic;padding-bottom:3px;">Fringe Benefit Tax</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">Benefit Amount</td>
+                        <td class="rightA">222</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">35% Tax</td>
+                        <td class="rightA">-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                    </tr>*@
                 @if (Model.isFbt)
                 {
                     <tr>
@@ -352,11 +362,11 @@
                     </tr>
                     <tr>
                         <td colspan="2">Benefit Amount</td>
-                        <td class="rightA">@Html.DisplayFor(x => x.fbtAmount)</td>
+                        <td class="rightA">@Html.DisplayFor(x => x.fbtGross)</td>
                     </tr>
                     <tr>
                         <td colspan="2">35% Tax</td>
-                        <td class="rightA">-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td class="rightA">@Html.DisplayFor(x => x.fbtAmount)</td>
                     </tr>
                 }
                 else
@@ -388,7 +398,7 @@
             <tbody>
                 <tr>
                     <td>
-                        <a>Prepared By : </a>@Html.TextBoxFor(x => x.maker, new {@class="input100", @type = "text", @disabled = "disabled" })
+                        <a>Prepared By : </a>@Html.TextBoxFor(x => x.maker, new { @class = "input100", @type = "text", @disabled = "disabled" })
                     </td>
                     <td>
                         <a>Verified By : </a>@Html.TextBoxFor(x => x.verifier_1, new { @class = "input100 dis-inline", @type = "text", @disabled = "disabled" })
@@ -398,20 +408,30 @@
                     <td>
                         <a>Approved By : </a>
                     </td>
-                    <td>@Html.TextBoxFor(x => x.approver, new {@class="input100", @type = "text", @disabled = "disabled" })</td>
+                    <td>@Html.TextBoxFor(x => x.approver, new { @class = "input100", @type = "text", @disabled = "disabled" })</td>
                 </tr>
                 <tr>
                     <td colspan="2" rowspan="2">
                         <a>Payment Recieved By : </a>
-                        <input class="input100" disabled style = "width:70%;height:64px"/>
+                        <input class="input100" disabled style="width:70%;height:64px" />
                     </td>
                     <td><a>Date : </a></td>
                     <td>@Html.TextBoxFor(x => x.date, new { @class = "input100", @type = "text", @disabled = "disabled" })</td>
                 </tr>
-                <tr>
-                    <td><a>OR Number : </a></td>
-                    <td><input class="input100" disabled /></td>
-                </tr>
+                @if (Model.isCheck)
+                {
+                    <tr>
+                        <td><a>OR Number : </a></td>
+                        <td><input class="input100" disabled /></td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td>&nbsp;&nbsp;</td>
+                        <td>&nbsp;&nbsp;</td>
+                    </tr>
+                }
                 <tr>
                     <td colspan="2" style="text-align:center;"><a>Name and Signature</a></td>
                     <td></td>
@@ -460,12 +480,15 @@
                             @Html.TextBoxFor(x => x.payee, new { @style = "width:93%;float:right;", @class = "input100", @type = "text", @disabled = "disabled" })
                         </td>
                     </tr>
-                    <tr>
-                        <td colspan="3">
-                            <a>Check Number : </a>
-                            @Html.TextBoxFor(x => x.checkNo, new { @style = "width:60%", @class = "input100", @type = "text", @disabled = "disabled" })
-                        </td>
-                    </tr>
+                    @if (Model.isCheck)
+                    {
+                        <tr>
+                            <td colspan="3">
+                                <a>Check Number : </a>
+                                @Html.TextBoxFor(x => x.checkNo, new { @style = "width:60%", @class = "input100", @type = "text", @disabled = "disabled" })
+                            </td>
+                        </tr>
+                    }
                     <tr>
                         <td><a>Payment Amount : </a>@Html.TextBoxFor(x => totalAmountPay, new { @class = "input100", @type = "text", @disabled = "disabled" })</td>
                         <td colspan="2"><a>Taxes Withheld : </a>@Html.TextBoxFor(x => x.taxWithheld, new { @class = "input100", @type = "text", @disabled = "disabled" })</td>
@@ -505,7 +528,7 @@
                                             </tr>
                                         }
                                         <tr>
-                                            <td colspan="4" style="border:1px solid black">Total <a style="float:right;">PHP @Html.DisplayFor(x=>x.amountGross)</a></td>
+                                            <td colspan="4" style="border:1px solid black">Total <a style="float:right;">PHP @Html.DisplayFor(x => x.amountGross)</a></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -515,7 +538,7 @@
                 </tbody>
             </table>
         </div>
-        
+
     </div>
 </body>
 </html>
