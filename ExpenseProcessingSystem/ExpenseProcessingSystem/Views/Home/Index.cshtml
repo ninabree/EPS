@@ -72,7 +72,7 @@
 
         <a class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left" page="@(Model.NotifList.PageIndex - 1)"></a>
         <input type="text" class="pagination-input" id="paginationInput" val="" placeholder="@(Model.NotifList.PageIndex)" />
-        <input type="text" class="pagination-input" value=" of @(Model.NotifList.TotalPages)" disabled />
+        <input type="text" class="pagination-input txtMaxPage" value="of @(Model.NotifList.TotalPages)" disabled />
         <a class="btn pagination-btn btn-xs btn-default @nextDisabled glyphicon glyphicon-menu-right" page="@(Model.NotifList.PageIndex + 1)"></a>
         @Html.Partial("ModalPartial")
     </div>
@@ -107,5 +107,16 @@
             });
             $('#search-frm').submit();
         });
+        $('*[data-href]').on('click', function () {
+            var form = $("#liquidationForm")
+            var hrefString = $(this).data("href").split("/");
+            var link = hrefString[0];
+            var entryID = hrefString[1];
+
+            $("#entryID").val(entryID);
+            form.attr("action", "/Home/" + link)
+            form.submit();
+        });
     });
 </script>
+<script type="text/javascript" src="~/js/Pagination.js"></script>

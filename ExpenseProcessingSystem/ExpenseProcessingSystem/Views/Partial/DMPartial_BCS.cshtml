@@ -104,8 +104,8 @@
        asp-route-currentFilter="@ViewData["CurrentFilter"]"
        class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left">
     </a>
-    <input type="text" class="pagination-input" id="paginationInput" val="" placeholder="@(Model.BCS.PageIndex)"/>
-    <input type="text" class="pagination-input" value=" of @(Model.BCS.TotalPages)" disabled />
+    <input type="text" class="pagination-input" id="paginationInput" val="" placeholder="@(Model.BCS.PageIndex)" />
+    <input type="text" class="pagination-input txtMaxPage" value=" of @(Model.BCS.TotalPages)" disabled />
     <a asp-action="DM"
        asp-route-sortOrder="@ViewData["CurrentSort"]"
        asp-controller="Home"
@@ -132,3 +132,5 @@
     </div>
     @Html.Partial("ModalPartial")
 </div>
+
+<script type="text/javascript" src="~/js/Pagination.js"></script>
