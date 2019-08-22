@@ -4903,9 +4903,13 @@ namespace ExpenseProcessingSystem.Controllers
                 vvm.voucherNo = _service.getVoucherNo(1,model.expenseDate,int.Parse(model.expenseId));
             vvm.payee = _service.getVendorName(model.vendor, model.payee_type);
             vvm.checkNo = model.checkNo;
-            vvm.approver = _service.getUserFullName(model.approver_id);
-            vvm.verifier_1 = _service.getUserFullName(model.verifier_1_id);
-            vvm.verifier_2 = _service.getUserFullName(model.verifier_2_id);
+            if(model.approver_id > 0)
+                vvm.approver = _service.getUserFullName(model.approver_id);
+            if (model.verifier_1_id > 0)
+                vvm.verifier_1 = _service.getUserFullName(model.verifier_1_id);
+            if (model.verifier_2_id > 0)
+                vvm.verifier_2 = _service.getUserFullName(model.verifier_2_id);
+
             vvm.isFbt = false;
 
             List<ewtAmtList> _ewtList = new List<ewtAmtList>();
@@ -5064,9 +5068,12 @@ namespace ExpenseProcessingSystem.Controllers
                 vvm.voucherNo = _service.getVoucherNo(2, model.expenseDate, int.Parse(model.expenseId));
             vvm.payee = _service.getVendorName(model.vendor, model.payee_type);
             vvm.checkNo = model.checkNo;
-            vvm.approver = _service.getUserFullName(model.approver_id);
-            vvm.verifier_1 = _service.getUserFullName(model.verifier_1_id);
-            vvm.verifier_2 = _service.getUserFullName(model.verifier_2_id);
+            if (model.approver_id > 0)
+                vvm.approver = _service.getUserFullName(model.approver_id);
+            if (model.verifier_1_id > 0)
+                vvm.verifier_1 = _service.getUserFullName(model.verifier_1_id);
+            if (model.verifier_2_id > 0)
+                vvm.verifier_2 = _service.getUserFullName(model.verifier_2_id);
             vvm.isFbt = false;
 
             List<ewtAmtList> _ewtList = new List<ewtAmtList>();
@@ -5192,7 +5199,15 @@ namespace ExpenseProcessingSystem.Controllers
 
         public JsonResult updateVoucherPrintStatus(int expenseID)
         {
-            return Json(true);
+            bool result = _service.UpdatePrintVoucherPrintStatus(expenseID);
+
+            return Json(result);
+        }
+        public JsonResult updateCheckPrintStatus(int expenseID)
+        {
+            bool result = _service.UpdatePrintCheckPrintStatus(expenseID);
+
+            return Json(result);
         }
     }
 }

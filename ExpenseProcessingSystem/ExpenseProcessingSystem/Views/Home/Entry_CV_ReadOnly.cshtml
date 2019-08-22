@@ -252,6 +252,15 @@
 
         $("#entry-controls").on("click", "#printCheck", function (e) {
             window.open("/Home/GenerateCheckFile?ExpenseID=@Model.entryID");
+            $.getJSON('updateCheckPrintStatus', { entryID: @Html.Raw(Json.Serialize(Model.entryID)) }, function (data) {
+            });
+            return false;
+        });
+
+        $("#entry-controls").on("click", "#printVoucher", function (e) {
+            $("#iframePreview").get(0).contentWindow.print();
+            $.getJSON('updateVoucherPrintStatus', { entryID: @Html.Raw(Json.Serialize(Model.entryID)) }, function (data) {
+            });
             return false;
         });
 

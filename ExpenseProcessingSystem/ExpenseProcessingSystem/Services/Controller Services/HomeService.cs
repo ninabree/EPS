@@ -8334,7 +8334,8 @@ namespace ExpenseProcessingSystem.Services
                     GlobalSystemValues.STATUS_APPROVED,
                     GlobalSystemValues.STATUS_FOR_PRINTING,
                     GlobalSystemValues.STATUS_REJECTED,
-                    GlobalSystemValues.STATUS_FOR_CLOSING
+                    GlobalSystemValues.STATUS_FOR_CLOSING,
+                    GlobalSystemValues.STATUS_POSTED
                 };
 
                 ExpenseEntryModel dbExpenseEntry = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == transID);
@@ -8868,7 +8869,7 @@ namespace ExpenseProcessingSystem.Services
             List<LiquidationMainListViewModel> postedEntryList = new List<LiquidationMainListViewModel>();
 
             var dbPostedEntry = from p in _context.ExpenseEntry
-                                where p.Expense_Status == GlobalSystemValues.STATUS_CLOSED 
+                                where p.Expense_Status == GlobalSystemValues.STATUS_FOR_CLOSING 
                                 || p.Expense_Status == GlobalSystemValues.STATUS_POSTED
                                 && p.Expense_Type == GlobalSystemValues.TYPE_SS
                                 && p.Expense_Last_Updated.Date < DateTime.Now.Date
@@ -12078,6 +12079,41 @@ namespace ExpenseProcessingSystem.Services
             }
 
             if(birStatus != null)
+            {
+                _context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+        public bool UpdatePrintVoucherPrintStatus(int entryID)
+        {
+            var ps = _context.PrintStatus.Where(x => x.PS_EntryID == entryID).ToList();
+
+            foreach (var item in ps)
+            {
+                item.PS_Voucher = true;
+                _context.Entry(item).State = EntityState.Modified;
+            }
+
+            if (ps != null)
+            {
+                _context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
+        public bool UpdatePrintCheckPrintStatus(int entryID)
+        {
+            var ps = _context.PrintStatus.Where(x => x.PS_EntryID == entryID).ToList();
+
+            foreach (var item in ps)
+            {
+                item.PS_Check = true;
+                _context.Entry(item).State = EntityState.Modified;
+            }
+
+            if (ps != null)
             {
                 _context.SaveChanges();
                 return true;

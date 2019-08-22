@@ -131,7 +131,7 @@ namespace ExpenseProcessingSystem.ConstantData
                 case 11: return "CLOSED";
                 case 12: return "OPEN";
                 case 13: return "FOR PRINTING";
-                case 14: return "FOR CLOSING";
+                case 14: return "POSTED";
                 case 15: return "ERROR";
             };
 
