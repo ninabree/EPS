@@ -1697,7 +1697,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         public IEnumerable<DMAccountModel> GetAccountListForBudgetMonitoring()
         {
             return _context.DMAccount.Where(x => x.Account_Fund == true && x.Account_isActive == true 
-                                            && x.Account_isDeleted == false).ToList().OrderBy(x => x.Account_Name);
+                                            && x.Account_isDeleted == false).ToList().OrderBy(x => x.Account_Budget_Code);
         }
 
         public decimal GetCurrentBudget(int accountMasterID)

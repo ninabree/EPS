@@ -632,7 +632,7 @@ namespace ExpenseProcessingSystem.Controllers
                         subtypes.Add(new HomeReportSubTypeAccModel
                         {
                             Id = acc.Account_ID.ToString(),
-                            SubTypeName = acc.Account_No + " - " + acc.Account_Name
+                            SubTypeName = acc.Account_Name + " - " + acc.Account_No
                         });
                     }
                 }
@@ -3303,7 +3303,7 @@ namespace ExpenseProcessingSystem.Controllers
 
             foreach (var i in ssList.accAllList)
             {
-                i.Account_Name = i.Account_No + " - " + i.Account_Name;
+                i.Account_Name = i.Account_Name + " - " + i.Account_No;
             }
             foreach (var i in ssList.LiquidationDetails)
             {
@@ -3376,7 +3376,7 @@ namespace ExpenseProcessingSystem.Controllers
                 }
                 foreach (var i in vm.accAllList)
                 {
-                    i.Account_Name = i.Account_No + " - " + i.Account_Name;
+                    i.Account_Name = i.Account_Name + " - " + i.Account_No;
                 }
                 foreach (var i in vm.LiquidationDetails)
                 {
@@ -3504,7 +3504,7 @@ namespace ExpenseProcessingSystem.Controllers
 
             foreach (var i in ssList.accAllList)
             {
-                i.Account_Name = i.Account_No + " - " + i.Account_Name;
+                i.Account_Name = i.Account_Name + " - " + i.Account_No;
             }
             foreach (var i in ssList.LiquidationDetails)
             {
@@ -3688,7 +3688,7 @@ namespace ExpenseProcessingSystem.Controllers
             
             foreach (var i in ssList.accAllList)
             {
-                i.Account_Name = i.Account_No + " - " + i.Account_Name;
+                i.Account_Name = i.Account_Name + " - " + i.Account_No;
             }
 
             foreach (var i in ssList.LiquidationDetails)

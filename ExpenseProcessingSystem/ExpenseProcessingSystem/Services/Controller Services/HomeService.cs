@@ -11435,7 +11435,7 @@ namespace ExpenseProcessingSystem.Services
                 {
                     Account_ID = i.Account_ID,
                     Account_MasterID = i.Account_MasterID,
-                    Account_Name = i.Account_No + " - " + i.Account_Name,
+                    Account_Name = i.Account_Name + " - " + i.Account_No,
                     Account_No = i.Account_No,
                     Account_Code = i.Account_Code
                 });
