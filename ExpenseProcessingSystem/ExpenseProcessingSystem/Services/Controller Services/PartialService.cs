@@ -253,6 +253,11 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         public List<SelectListItem> getAccountSelectList()
         {
             List<SelectListItem> selList = new List<SelectListItem>();
+            selList.Add(new SelectListItem()
+            {
+                Text = "--- Accounts --",
+                Value = "0"
+            });
             _context.DMAccount.Where(x => x.Account_isDeleted == false && x.Account_isActive == true).ToList().ForEach(x => {
                 selList.Add(new SelectListItem() { Text = x.Account_No + " - " + x.Account_Name, Value = x.Account_ID + "" });
             });

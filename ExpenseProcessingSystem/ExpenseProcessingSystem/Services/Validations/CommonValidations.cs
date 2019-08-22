@@ -21,9 +21,9 @@ namespace ExpenseProcessingSystem.Services.Validations
             try
             {
                 var name = validationContext.DisplayName;
-                if (value == null || value.Equals(0))
+                if (value == null || value.Equals(0) || value.Equals("0"))
                 {
-                    return new ValidationResult(name + " is empty");
+                    return new ValidationResult(name + " cannot be empty.");
                 }
                 return ValidationResult.Success;
             }
