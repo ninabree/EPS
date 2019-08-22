@@ -95,6 +95,19 @@ namespace ExpenseProcessingSystem.Controllers
                 return StatusCode(500);
             }
 
+
+            //var acc = _context.User.Where(x => x.User_UserName == "aadvincula").Where(x => x.User_InUse == true).Select(x => x).FirstOrDefault();
+            //if (acc != null)
+            //{
+            //    //Set Session Info
+            //    _session.SetString("UserID", acc.User_ID.ToString());
+            //    _session.SetString("UserName", acc.User_FName + " " + acc.User_LName);
+            //    //Set User Access Info
+            //    _session.SetString("isLoggedIn", "true");
+            //    _session.SetString("accessType", acc.User_Role);
+            //    _session.SetString("isAdmin", acc.User_Role == "admin" ? "true" : "false");
+            //    return RedirectToAction("Index", "Home");
+            //}
             //_session.SetString("UserID", "1");
             //_session.SetString("UserName", "test user");
             ////Set User Access Info
@@ -102,7 +115,7 @@ namespace ExpenseProcessingSystem.Controllers
             //_session.SetString("accessType", "approver");
             //_session.SetString("isAdmin", "false");
             //return RedirectToAction("Index", "Home");
-            ////END OF LDAP LOGIN
+            //END OF LDAP LOGIN
 
             //var acc = _context.User.Where(x => x.User_UserName == model.User_UserName).Where(x => x.User_InUse == true).Select(x => x).FirstOrDefault();
             //if (acc != null)
