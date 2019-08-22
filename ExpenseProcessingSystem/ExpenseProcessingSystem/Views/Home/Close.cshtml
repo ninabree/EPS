@@ -95,8 +95,21 @@
         </table>
 
         <div class="tbl-controls m-t-20">
-            <button value="CloseRBU" class="tbl-btn float-l closeBtn">Close RBU</button>
-            <button value="reOpenRBU" class="tbl-btn float-l closeBtn">Re-Open RBU</button>
+            @if (Model.rbuStatus == "CLOSED")
+            {
+                <button class="tbl-btn float-l closeBtn" disabled>Close RBU</button>
+                <button value="reOpenRBU" class="tbl-btn float-l closeBtn">Re-Open RBU</button>
+            }
+            else if (Model.rbuStatus == "OPEN")
+            {
+                <button value="CloseRBU" class="tbl-btn float-l closeBtn">Close RBU</button>
+                <button class="tbl-btn float-l closeBtn" disabled>Re-Open RBU</button>
+            }
+            else
+            {
+                <button class="tbl-btn float-l closeBtn" disabled>Close RBU</button>
+                <button class="tbl-btn float-l closeBtn" disabled>Re-Open RBU</button>
+            }
             <!--<button class="tbl-btn float-l">Print RBU Balance</button>-->
             <!--<button class="tbl-btn float-r">Print RBU Proof sheet</button>-->
         </div>
@@ -181,8 +194,21 @@
         </table>
 
         <div class="tbl-controls m-t-20 m-b-20">
-            <button value="CloseFCDU" class="tbl-btn float-l closeBtn">Close FCDU</button>
-            <button value="reOpenFCDU" class="tbl-btn float-l closeBtn">Re-Open FCDU</button>
+            @if (Model.fcduStatus == "CLOSED")
+            {
+                <button class="tbl-btn float-l closeBtn" disabled>Close FCDU</button>
+                <button value="reOpenFCDU" class="tbl-btn float-l closeBtn">Re-Open FCDU</button>
+            }
+            else if (Model.fcduStatus == "OPEN")
+            {
+                <button value="CloseFCDU" class="tbl-btn float-l closeBtn">Close FCDU</button>
+                <button class="tbl-btn float-l closeBtn" disabled>Re-Open FCDU</button>
+            }
+            else
+            {
+                <button class="tbl-btn float-l closeBtn" disabled>Close FCDU</button>
+                <button class="tbl-btn float-l closeBtn" disabled>Re-Open FCDU</button>
+            }
         </div>
 
         <div id="tbl-lbl">

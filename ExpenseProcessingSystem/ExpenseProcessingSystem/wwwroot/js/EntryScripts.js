@@ -77,11 +77,6 @@
             }
         });
 
-    $("#entry-controls").on("click", "#printVoucher", function (e) {
-        $("#iframePreview").get(0).contentWindow.print();
-        return false;
-    });
-
     $("table").on("change", "input.chkVat", function (e) {
         var pNode = $(this.parentNode)[0].parentNode;
 

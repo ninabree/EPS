@@ -280,6 +280,13 @@
         CheckEachEWT();
         CheckEachInter();
 
+         $("#entry-controls").on("click", "#printVoucher", function (e) {
+            $("#iframePreview").get(0).contentWindow.print();
+            $.getJSON('updateVoucherPrintStatus', { entryID: @Html.Raw(Json.Serialize(Model.entryID)) }, function (data) {
+            });
+            return false;
+        });
+
         //EWT
         $("table").on("click", ".expenseEWT", function (e) {
             e.stopImmediatePropagation();

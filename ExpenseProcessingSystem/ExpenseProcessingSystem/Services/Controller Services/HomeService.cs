@@ -8334,7 +8334,8 @@ namespace ExpenseProcessingSystem.Services
                     GlobalSystemValues.STATUS_APPROVED,
                     GlobalSystemValues.STATUS_FOR_PRINTING,
                     GlobalSystemValues.STATUS_REJECTED,
-                    GlobalSystemValues.STATUS_FOR_CLOSING
+                    GlobalSystemValues.STATUS_FOR_CLOSING,
+                    GlobalSystemValues.STATUS_POSTED
                 };
 
                 ExpenseEntryModel dbExpenseEntry = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == transID);
@@ -9912,7 +9913,9 @@ namespace ExpenseProcessingSystem.Services
                         string fbt = getFbtFormula(getAccount(item.account).Account_FBT_MasterID);
 
                         string equation = fbt.Replace("ExpenseAmount", item.debitGross.ToString());
-                         decimal fbtAmount = Mizuho.round((decimal)(new DataTable().Compute(equation, null)), 2);
+
+                        var fbtCompute = Convert.ToDecimal(new DataTable().Compute(equation, null));
+                        decimal fbtAmount = Mizuho.round(fbtCompute, 2);
                         Console.WriteLine("-=-=-=-=-=->" + equation);
 
                         debit.account = getAccountByMasterID(int.Parse(xelemAcc.Element("D_FBT").Value)).Account_ID;
@@ -10068,7 +10071,9 @@ namespace ExpenseProcessingSystem.Services
             string fbt = getFbtFormula(getAccount(acc).Account_FBT_MasterID);
 
             string equation = fbt.Replace("ExpenseAmount", gross.ToString());
-             decimal fbtAmount = Mizuho.round((decimal)(new DataTable().Compute(equation, null)), 2);
+
+            var fbtCompute = Convert.ToDecimal(new DataTable().Compute(equation, null));
+            decimal fbtAmount = Mizuho.round(fbtCompute, 2);
             Console.WriteLine("-=-=-=-=-=->" + equation);
 
             #region Get elements fron xml (ohr,rentDebit,expatDebit,localDebit,fbtCred)
@@ -10126,19 +10131,28 @@ namespace ExpenseProcessingSystem.Services
             closeCommand = closeCommand.Replace("-", username.Substring(username.Length - 4));
             closeCommand = operation.Equals("close") ? closeCommand.Replace("_", "2") : closeCommand.Replace("_", "3");
 
-
             rqDtl = postToGwrite(closeCommand, username, password);
+
+            var close = _context.Closing.Where(x => x.Close_Type == transactionType)
+                                           .OrderByDescending(x => x.Close_ID).FirstOrDefault();
+
+            close.Close_Status = GlobalSystemValues.STATUS_PENDING;
 
             gWriteModel.GW_GWrite_ID = int.Parse(rqDtl.RequestId.ToString());
             gWriteModel.GW_Status = GlobalSystemValues.STATUS_PENDING;
             gWriteModel.GW_Type = "closing";
+            gWriteModel.GW_TransID = close.Close_ID;
+
+            _context.GwriteTransLists.Add(gWriteModel);
+
+            _context.SaveChanges();
 
             return true;
         }
 
         public ClosingViewModel ClosingGetRecords()
         {
-            var closeModel = _context.Closing.Where(x => x.Close_Status == GlobalSystemValues.STATUS_OPEN).FirstOrDefault();
+            var closeModel = _context.Closing.OrderByDescending(x=>x.Close_ID).FirstOrDefault();
 
             DateTime opening = closeModel.Close_Open_Date.Date + new TimeSpan(0,0,0);
             DateTime closing = DateTime.Today.AddHours(23.9999);
@@ -10180,6 +10194,13 @@ namespace ExpenseProcessingSystem.Services
 
             Dictionary<int, List<int>> expenseRbuId = new Dictionary<int, List<int>>();
             Dictionary<int, List<int>> expenseFcduId = new Dictionary<int, List<int>>();
+
+            PettyCashModel currentPC = _context.PettyCash.OrderByDescending(x => x.PC_ID).FirstOrDefault();
+
+            closeVM.pettyBegBalance = currentPC.PC_StartBal;
+            closeVM.endBalance = currentPC.PC_EndBal;
+            closeVM.Disbursed = currentPC.PC_Disbursed;
+            closeVM.recieve = currentPC.PC_Recieved;
 
             return closeVM;
         }
@@ -11008,6 +11029,7 @@ namespace ExpenseProcessingSystem.Services
             goModel.AutoApproved = "Y";
             goModel.ValueDate = DateTime.Now.ToString("MMddyy");
             goModel.Section = "10";
+            goModel.WarningOverride = "Y";
             goModel.Remarks = containerModel.remarks;
             goModel.MakerEmpno = user.User_EmpCode; //Replace with user ID later when user module is finished.
             goModel.Empno = user.User_EmpCode.Substring(2);  //Replace with user ID later when user module is finished.
@@ -11062,7 +11084,7 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry12Available = "";//Replace with proper available default.
                     goModel.Entry12Details = "";//Replace with proper details default.
                     goModel.Entry12Entity = "010";//Replace with proper entity default.
-                    goModel.Entry12Division = entry11Account.Account_Div;//Replace with proper division default.
+                    goModel.Entry12Division = entry12Account.Account_Div;//Replace with proper division default.
                     goModel.Entry12InterRate = (containerModel.entries[1].interate > 0) ? containerModel.entries[1].interate.ToString() : "";//Replace with proper interate default.
                     goModel.Entry12InterAmt = "";//Replace with proper interamt default.
                 }
@@ -11087,7 +11109,7 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry21Available = "";//Replace with proper available default.
                     goModel.Entry21Details = "";//Replace with proper details default.
                     goModel.Entry21Entity = "010";//Replace with proper entity default.
-                    goModel.Entry21Division = entry11Account.Account_Div;//Replace with proper division default.
+                    goModel.Entry21Division = entry21Account.Account_Div;//Replace with proper division default.
                     goModel.Entry21InterRate = (containerModel.entries[2].interate > 0) ? containerModel.entries[2].interate.ToString() : "";//Replace with proper interate default.
                     goModel.Entry21InterAmt = "";//Replace with proper interamt default.
                 }
@@ -11112,7 +11134,7 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry22Available = "";//Replace with proper available default.
                     goModel.Entry22Details = "";//Replace with proper details default.
                     goModel.Entry22Entity = "010";//Replace with proper entity default.
-                    goModel.Entry22Division = entry11Account.Account_Div;//Replace with proper division default.
+                    goModel.Entry22Division = entry22Account.Account_Div;//Replace with proper division default.
                     goModel.Entry22InterRate = (containerModel.entries[3].interate > 0) ? containerModel.entries[3].interate.ToString() : "";//Replace with proper interate default.
                     goModel.Entry22InterAmt = "";//Replace with proper interamt default.
                 }
@@ -11137,7 +11159,7 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry31Available = "";//Replace with proper available default.
                     goModel.Entry31Details = "";//Replace with proper details default.
                     goModel.Entry31Entity = "010";//Replace with proper entity default.
-                    goModel.Entry31Division = entry11Account.Account_Div;//Replace with proper division default.
+                    goModel.Entry31Division = entry31Account.Account_Div;//Replace with proper division default.
                     goModel.Entry31InterRate = (containerModel.entries[4].interate > 0) ? containerModel.entries[4].interate.ToString() : "";//Replace with proper interate default.
                     goModel.Entry31InterAmt = "";//Replace with proper interamt default.
                 }
@@ -11162,7 +11184,7 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry32Available = "";//Replace with proper available default.
                     goModel.Entry32Details = "";//Replace with proper details default.
                     goModel.Entry32Entity = "010";//Replace with proper entity default.
-                    goModel.Entry32Division = entry11Account.Account_Div;//Replace with proper division default.
+                    goModel.Entry32Division = entry32Account.Account_Div;//Replace with proper division default.
                     goModel.Entry32InterRate = (containerModel.entries[5].interate > 0) ? containerModel.entries[5].interate.ToString() : "";//Replace with proper interate default.
                     goModel.Entry32InterAmt = "";//Replace with proper interamt default.
                 }
@@ -11187,7 +11209,7 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry41Available = "";//Replace with proper available default.
                     goModel.Entry41Details = "";//Replace with proper details default.
                     goModel.Entry41Entity = "010";//Replace with proper entity default.
-                    goModel.Entry41Division = entry11Account.Account_Div;//Replace with proper division default.
+                    goModel.Entry41Division = entry41Account.Account_Div;//Replace with proper division default.
                     goModel.Entry41InterRate = (containerModel.entries[6].interate > 0) ? containerModel.entries[6].interate.ToString() : "";//Replace with proper interate default.
                     goModel.Entry41InterAmt = "";//Replace with proper interamt default.
                 }
@@ -11212,7 +11234,7 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry42Available = "";//Replace with proper available default.
                     goModel.Entry42Details = "";//Replace with proper details default.
                     goModel.Entry42Entity = "010";//Replace with proper entity default.
-                    goModel.Entry42Division = entry11Account.Account_Div;//Replace with proper division default.
+                    goModel.Entry42Division = entry42Account.Account_Div;//Replace with proper division default.
                     goModel.Entry42InterRate = (containerModel.entries[7].interate > 0) ? containerModel.entries[7].interate.ToString() : "";//Replace with proper interate default.
                     goModel.Entry42InterAmt = "";//Replace with proper interamt default.
                 }
@@ -12137,10 +12159,53 @@ namespace ExpenseProcessingSystem.Services
             }
             return false;
         }
+        public bool UpdatePrintVoucherPrintStatus(int entryID)
+        {
+            var ps = _context.PrintStatus.Where(x => x.PS_EntryID == entryID).ToList();
+
+            foreach (var item in ps)
+            {
+                item.PS_Voucher = true;
+                _context.Entry(item).State = EntityState.Modified;
+            }
+
+            if (ps != null)
+            {
+                _context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
+        public bool UpdatePrintCheckPrintStatus(int entryID)
+        {
+            var ps = _context.PrintStatus.Where(x => x.PS_EntryID == entryID).ToList();
+
+            foreach (var item in ps)
+            {
+                item.PS_Check = true;
+                _context.Entry(item).State = EntityState.Modified;
+            }
+
+            if (ps != null)
+            {
+                _context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
         public ExpenseEntryModel getSingleEntryRecord(int entryID)
         {
             return _context.ExpenseEntry.Where(x => x.Expense_ID == entryID).AsNoTracking().FirstOrDefault();
         }
+        //Get Transaction No for Liquidation entries
+        public int getTransactionNoLiquidation(int entryID, int detailID)
+        {
+            return _context.ExpenseTransLists.Where(x => x.TL_GoExpHist_ID == _context.GOExpressHist.Where(
+                    y => y.ExpenseEntryID == entryID && y.ExpenseDetailID == detailID).FirstOrDefault().GOExpHist_Id)
+                    .FirstOrDefault().TL_TransID;
+        }
+
         //Check if latest pettycash entry is open
         public bool lastPCEntry()
         {
@@ -12241,7 +12306,7 @@ namespace ExpenseProcessingSystem.Services
         public  decimal amount { get; set; }
         public int vendor { get; set; }
         public int account { get; set; }
-        public  decimal interate { get; set; }
+        public decimal interate { get; set; }
         public int contraCcy { get; set; }
         public string chkNo { get; set; }
         public int dept { get; set; }

@@ -39,6 +39,7 @@ namespace ExpenseProcessingSystem.ViewModels
         public decimal taxInfo_gross { get; set; }
         public decimal taxInfo_taxBase { get; set; }
         public decimal fbtAmount { get; set; }
+        public decimal fbtGross { get; set; }
         public string amountString { get; set; }
         public string checkNo { get; set; }
         public string voucherNo { get; set; }
@@ -53,6 +54,8 @@ namespace ExpenseProcessingSystem.ViewModels
         public List<accountList> accountCredit { get; set; }
         public List<particulars> particulars { get; set; }
         public List<ewtAmtList> vatAmtList { get; set; }
+
+        public bool isCheck { get; set; }
 
         public VoucherViewModelList()
         {

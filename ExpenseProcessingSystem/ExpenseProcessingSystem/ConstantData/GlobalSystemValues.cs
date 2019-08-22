@@ -89,6 +89,8 @@ namespace ExpenseProcessingSystem.ConstantData
         public const int TYPE_PC = 4;
         public const int TYPE_NC = 5;
         public const int TYPE_LIQ = 6;
+        public const int TYPE_BUDGET = 7;
+        public const int TYPE_CLOSING = 8;
 
         //Static value for branch Type/Name/Code
         //i.e: determining what is the branch code for the transaction
@@ -129,7 +131,7 @@ namespace ExpenseProcessingSystem.ConstantData
                 case 11: return "CLOSED";
                 case 12: return "OPEN";
                 case 13: return "FOR PRINTING";
-                case 14: return "FOR CLOSING";
+                case 14: return "POSTED";
                 case 15: return "ERROR";
             };
 
@@ -296,11 +298,9 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly int UF_ALL = 0; // For General Messages; Notif for someone creating changes in
 
         //System message
-        //public static readonly string MESSAGE1 = "You can only edit the entry in Pending or Rejected status.";
-        //public static readonly string MESSAGE2 = "You can only delete the entry in Pending or Rejected status.";
         public static string MESSAGE = "";
-        public static readonly string MESSAGE1 = "処理失敗。PENDING又はREJECTEDステータスのみ訂正可能";
-        public static readonly string MESSAGE2 = "処理失敗。PENDING又はREJECTEDステータスのみ削除可能";
+        public static readonly string MESSAGE1 = "You can only edit the entry in Pending or Rejected status.";
+        public static readonly string MESSAGE2 = "You can only delete the entry in Pending or Rejected status.";
         public static readonly string MESSAGE3 = "This entry was edited/deleted by the maker. Please check the entry again.";
         public static readonly string MESSAGE4 = "This entry was already approved by Approver. Cannot proceed with your request.";
         public static readonly string MESSAGE5 = "This entry was already in For Printing status. Cannot proceed with your request.";

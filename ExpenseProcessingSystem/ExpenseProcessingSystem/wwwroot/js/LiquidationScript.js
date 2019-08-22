@@ -49,7 +49,12 @@ function reqBtnDisable(idx) {
         $('#item_' + idx).find('.reqEWTBtn').css("pointer-events", "auto");
     }
 };
-
+function removeDecimalYEN(idx) {
+    if ($('#LiquidationDetails_' + idx + '__ccyAbbrev').val() == $('#yenAbbrv').val()) {
+        $('#item_' + idx).find('.txtGross').val($('#item_' + idx).find('.txtGross').val().replace(".00", ""));
+        $('#item_' + idx).find('.txtCredCash').val($('#item_' + idx).find('.txtCredCash').val().replace(".00", ""));
+    }
+}
 function displayInfoCashBD(pid) {
 
     $('#txtLiqAccNo').val($('#' + pid).find('.hidAccNo').val());

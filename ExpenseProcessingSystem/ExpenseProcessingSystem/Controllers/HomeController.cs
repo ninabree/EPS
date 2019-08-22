@@ -3313,6 +3313,7 @@ namespace ExpenseProcessingSystem.Controllers
             foreach (var i in ssList.LiquidationDetails)
             {
                 i.screenCode = "Liquidation_SS";
+                i.transNo = _service.getTransactionNoLiquidation(entryID, i.EntryDetailsID).ToString().PadLeft(5, '0');
             }
 
             var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
@@ -3386,6 +3387,7 @@ namespace ExpenseProcessingSystem.Controllers
                 foreach (var i in vm.LiquidationDetails)
                 {
                     i.screenCode = "Liquidation_SS";
+                    i.transNo = _service.getTransactionNoLiquidation(vm.entryID, i.EntryDetailsID).ToString().PadLeft(5, '0');
                 }
                 var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
                 vm.phpCurrID = ccyPHP.Curr_ID;
@@ -3514,6 +3516,7 @@ namespace ExpenseProcessingSystem.Controllers
             foreach (var i in ssList.LiquidationDetails)
             {
                 i.screenCode = "Liquidation_SS";
+                i.transNo = _service.getTransactionNoLiquidation(entryID, i.EntryDetailsID).ToString().PadLeft(5, '0');
             }
 
             var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
@@ -3615,7 +3618,7 @@ namespace ExpenseProcessingSystem.Controllers
                     viewLink = "View_Liquidation_SS";
                     break;
                 case "Delete":
-                    int expStatus = _service.GetCurrentEntryStatus(entryID);
+                    int expStatus = _service.getCurrentLiquidationStatus(entryID);
                     if (expStatus == GlobalSystemValues.STATUS_PENDING || expStatus == GlobalSystemValues.STATUS_REJECTED)
                     {
                         if (_service.deleteLiquidationEntry(entryID))
@@ -4875,8 +4878,9 @@ namespace ExpenseProcessingSystem.Controllers
         [HttpPost]
         public IActionResult VoucherCV(EntryCVViewModelList model)
         {
+            model.maker = int.Parse(GetUserID());
             VoucherViewModelList vvm = GenerateVoucherViewModelCV(model);
-
+            vvm.isCheck = true;
             return View(GlobalSystemValues.VOUCHER_LAYOUT, vvm);
         }
         [AcceptVerbs("GET")]
@@ -4884,7 +4888,7 @@ namespace ExpenseProcessingSystem.Controllers
         {
             EntryCVViewModelList model = _service.getExpense(ExpenseID);
             VoucherViewModelList vvm = GenerateVoucherViewModelCV(model);
-
+            vvm.isCheck = true;
             return View(GlobalSystemValues.VOUCHER_LAYOUT, vvm);
         }
         private VoucherViewModelList GenerateVoucherViewModelCV(EntryCVViewModelList model) {
@@ -4902,14 +4906,18 @@ namespace ExpenseProcessingSystem.Controllers
             vvm.headvm.Header_TIN = xelem.Element("TIN").Value;
             vvm.headvm.Header_Address = xelem.Element("ADDRESS").Value;
 
-            vvm.maker = GetUserID();
+            vvm.maker = _service.getUserFullName(model.maker);
             if(model.expenseId != null)
                 vvm.voucherNo = _service.getVoucherNo(1,model.expenseDate,int.Parse(model.expenseId));
             vvm.payee = _service.getVendorName(model.vendor, model.payee_type);
             vvm.checkNo = model.checkNo;
-            vvm.approver = model.approver;
-            vvm.verifier_1 = model.verifier_1;
-            vvm.verifier_2 = model.verifier_2;
+            if(model.approver_id > 0)
+                vvm.approver = _service.getUserFullName(model.approver_id);
+            if (model.verifier_1_id > 0)
+                vvm.verifier_1 = _service.getUserFullName(model.verifier_1_id);
+            if (model.verifier_2_id > 0)
+                vvm.verifier_2 = _service.getUserFullName(model.verifier_2_id);
+
             vvm.isFbt = false;
 
             List<ewtAmtList> _ewtList = new List<ewtAmtList>();
@@ -5012,6 +5020,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         vvm.fbtAmount += Mizuho.round((((decimal)inputItem.debitGross/.65M)*.35M), 2);
                     }
+                    vvm.fbtGross += (decimal)inputItem.debitGross;
                 }
             }
 
@@ -5033,8 +5042,9 @@ namespace ExpenseProcessingSystem.Controllers
         [HttpPost]
         public IActionResult VoucherDDV(EntryDDVViewModelList model)
         {
+            model.maker = int.Parse(GetUserID());
             VoucherViewModelList vvm = GenerateVoucherViewModelDDV(model);
-
+            vvm.isCheck = false;
             return View(GlobalSystemValues.VOUCHER_LAYOUT, vvm);
         }
         [AcceptVerbs("GET")]
@@ -5042,7 +5052,7 @@ namespace ExpenseProcessingSystem.Controllers
         {
             EntryDDVViewModelList model = _service.getExpenseDDV(ExpenseID);
             VoucherViewModelList vvm = GenerateVoucherViewModelDDV(model);
-
+            vvm.isCheck = false;
             return View(GlobalSystemValues.VOUCHER_LAYOUT, vvm);
         }
         private VoucherViewModelList GenerateVoucherViewModelDDV(EntryDDVViewModelList model)
@@ -5061,14 +5071,17 @@ namespace ExpenseProcessingSystem.Controllers
             vvm.headvm.Header_TIN = xelem.Element("TIN").Value;
             vvm.headvm.Header_Address = xelem.Element("ADDRESS").Value;
 
-            vvm.maker = GetUserID();
+            vvm.maker =_service.getUserFullName(model.maker);
             if (model.expenseId != null)
                 vvm.voucherNo = _service.getVoucherNo(2, model.expenseDate, int.Parse(model.expenseId));
             vvm.payee = _service.getVendorName(model.vendor, model.payee_type);
             vvm.checkNo = model.checkNo;
-            vvm.approver = model.approver;
-            vvm.verifier_1 = model.verifier_1;
-            vvm.verifier_2 = model.verifier_2;
+            if (model.approver_id > 0)
+                vvm.approver = _service.getUserFullName(model.approver_id);
+            if (model.verifier_1_id > 0)
+                vvm.verifier_1 = _service.getUserFullName(model.verifier_1_id);
+            if (model.verifier_2_id > 0)
+                vvm.verifier_2 = _service.getUserFullName(model.verifier_2_id);
             vvm.isFbt = false;
 
             List<ewtAmtList> _ewtList = new List<ewtAmtList>();
@@ -5172,6 +5185,8 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         vvm.fbtAmount += Mizuho.round((((decimal)inputItem.debitGross / .65M) * .35M), 2);
                     }
+
+                    vvm.fbtGross += (decimal)inputItem.debitGross;
                 }
             }
 
@@ -5192,7 +5207,15 @@ namespace ExpenseProcessingSystem.Controllers
 
         public JsonResult updateVoucherPrintStatus(int expenseID)
         {
-            return Json(true);
+            bool result = _service.UpdatePrintVoucherPrintStatus(expenseID);
+
+            return Json(result);
+        }
+        public JsonResult updateCheckPrintStatus(int expenseID)
+        {
+            bool result = _service.UpdatePrintCheckPrintStatus(expenseID);
+
+            return Json(result);
         }
     }
 }
