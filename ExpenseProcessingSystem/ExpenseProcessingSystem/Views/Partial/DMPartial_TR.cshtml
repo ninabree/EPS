@@ -116,8 +116,8 @@
        asp-route-currentFilter="@ViewData["CurrentFilter"]"
        class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left">
     </a>
-    <input type="text" class="pagination-input" id="paginationInput" val="" />
-    <input type="text" class="pagination-input" value="@(Model.TR.PageIndex) of @(Model.TR.TotalPages)" disabled />
+    <input type="text" class="pagination-input" id="paginationInput" val="" placeholder="@(Model.TR.PageIndex)"/>
+    <input type="text" class="pagination-input" value=" of @(Model.TR.TotalPages)" disabled />
     <a asp-action="DM"
        asp-route-sortOrder="@ViewData["CurrentSort"]"
        asp-controller="Home"
