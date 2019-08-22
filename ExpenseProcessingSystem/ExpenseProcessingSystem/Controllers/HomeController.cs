@@ -179,7 +179,6 @@ namespace ExpenseProcessingSystem.Controllers
                         Pending_Updated_Date = new DateTime(),
                         Pending_Payee = "",
                         Pending_Type = ""
-                        //Pending_Type_Select = ""
                     }
                 };
             }
@@ -633,7 +632,7 @@ namespace ExpenseProcessingSystem.Controllers
                         subtypes.Add(new HomeReportSubTypeAccModel
                         {
                             Id = acc.Account_ID.ToString(),
-                            SubTypeName = acc.Account_No + " - " + acc.Account_Name
+                            SubTypeName = acc.Account_Name + " - " + acc.Account_No
                         });
                     }
                 }
@@ -1335,11 +1334,11 @@ namespace ExpenseProcessingSystem.Controllers
                     acclist.Add(new accDetails
                     {
                         accId = acc.Account_ID,
-                        accName = acc.Account_Name,
+                        accName = acc.Account_Name + " - " + acc.Account_No,
                         accCode = acc.Account_Code
                     });
                 }
-                viewModel.systemValues.acc = acclist;
+                viewModel.systemValues.acc = acclist.OrderBy(x=> x.accName).ToList();
             }
             else
             {
@@ -1591,7 +1590,12 @@ namespace ExpenseProcessingSystem.Controllers
         {
             EntryDDVViewModelList viewModel;
             var userId = GetUserID();
-            if(entryID > 0)
+            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
+            var ccyUSD = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_US").Value));
+            var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
+            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
+
+            if (entryID > 0)
             {
                 viewModel = _service.getExpenseDDV(entryID);
                 viewModel = PopulateEntry((EntryDDVViewModelList)viewModel);
@@ -1623,8 +1627,7 @@ namespace ExpenseProcessingSystem.Controllers
                 viewModel.payee_type = GlobalSystemValues.PAYEETYPE_REGEMP;
                 viewModel.systemValues.ewt = new SelectList("0", "0");
                 viewModel.systemValues.vat = new SelectList("0", "0");
-                XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
-                var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
+
                 viewModel.yenCurrID = ccyYEN.Curr_ID;
                 viewModel.yenCurrMasterID = ccyYEN.Curr_MasterID;
                 viewModel.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
@@ -1634,6 +1637,16 @@ namespace ExpenseProcessingSystem.Controllers
                 viewModel = new EntryDDVViewModelList();
                 viewModel = PopulateEntryDDV(viewModel);
             }
+
+            ViewData["usdCurrID"] = ccyUSD.Curr_ID;
+            ViewData["usdCurrMasterID"] = ccyUSD.Curr_MasterID;
+            ViewData["usdAbbrev"] = ccyUSD.Curr_CCY_ABBR;
+            ViewData["phpCurrID"] = ccyPHP.Curr_ID;
+            ViewData["phpCurrMasterID"] = ccyPHP.Curr_MasterID;
+            ViewData["phpAbbrev"] = ccyPHP.Curr_CCY_ABBR;
+            ViewData["yenCurrID"] = ccyYEN.Curr_ID;
+            ViewData["yenCurrMasterID"] = ccyYEN.Curr_MasterID;
+            ViewData["yenAbbrev"] = ccyYEN.Curr_CCY_ABBR;
             return View(viewModel);
         }
 
@@ -3290,7 +3303,7 @@ namespace ExpenseProcessingSystem.Controllers
 
             foreach (var i in ssList.accAllList)
             {
-                i.Account_Name = i.Account_No + " - " + i.Account_Name;
+                i.Account_Name = i.Account_Name + " - " + i.Account_No;
             }
             foreach (var i in ssList.LiquidationDetails)
             {
@@ -3363,7 +3376,7 @@ namespace ExpenseProcessingSystem.Controllers
                 }
                 foreach (var i in vm.accAllList)
                 {
-                    i.Account_Name = i.Account_No + " - " + i.Account_Name;
+                    i.Account_Name = i.Account_Name + " - " + i.Account_No;
                 }
                 foreach (var i in vm.LiquidationDetails)
                 {
@@ -3491,7 +3504,7 @@ namespace ExpenseProcessingSystem.Controllers
 
             foreach (var i in ssList.accAllList)
             {
-                i.Account_Name = i.Account_No + " - " + i.Account_Name;
+                i.Account_Name = i.Account_Name + " - " + i.Account_No;
             }
             foreach (var i in ssList.LiquidationDetails)
             {
@@ -3675,7 +3688,7 @@ namespace ExpenseProcessingSystem.Controllers
             
             foreach (var i in ssList.accAllList)
             {
-                i.Account_Name = i.Account_No + " - " + i.Account_Name;
+                i.Account_Name = i.Account_Name + " - " + i.Account_No;
             }
 
             foreach (var i in ssList.LiquidationDetails)
@@ -3875,7 +3888,14 @@ namespace ExpenseProcessingSystem.Controllers
             var userId = GetUserID();
             if (ModelState.IsValid)
             {
-                _service.approveAccount(model, userId);
+                if (_service.approveAccount(model, userId)) {
+                    foreach(DMAccountViewModel vm in model)
+                    {
+                        //----------------------------- NOTIF----------------------------------
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_APPROVED, vm.Account_Creator_ID);
+                        //----------------------------- NOTIF----------------------------------
+                    }
+                }
             }
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Acc" });
@@ -3888,7 +3908,15 @@ namespace ExpenseProcessingSystem.Controllers
             var userId = GetUserID();
             if (ModelState.IsValid)
             {
-                _service.rejAccount(model, userId);
+                if (_service.rejAccount(model, userId))
+                {
+                    foreach (DMAccountViewModel vm in model)
+                    {
+                        //----------------------------- NOTIF----------------------------------
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_REJECTED, vm.Account_Creator_ID);
+                        //----------------------------- NOTIF----------------------------------
+                    }
+                }
             }
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Acc" });
@@ -3905,7 +3933,15 @@ namespace ExpenseProcessingSystem.Controllers
             }
             if (ModelState.IsValid)
             {
-                _service.approveAccountGroup(model, userId);
+                if (_service.approveAccountGroup(model, userId))
+                {
+                    foreach (DMAccountGroupViewModel vm in model)
+                    {
+                        //----------------------------- NOTIF----------------------------------
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_APPROVED, vm.AccountGroup_Creator_ID);
+                        //----------------------------- NOTIF----------------------------------
+                    }
+                }
             }
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_AccGroup" });
@@ -3921,7 +3957,15 @@ namespace ExpenseProcessingSystem.Controllers
             }
             if (ModelState.IsValid)
             {
-                _service.rejAccountGroup(model, userId);
+                if (_service.rejAccountGroup(model, userId))
+                {
+                    foreach (DMAccountGroupViewModel vm in model)
+                    {
+                        //----------------------------- NOTIF----------------------------------
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_REJECTED, vm.AccountGroup_Creator_ID);
+                        //----------------------------- NOTIF----------------------------------
+                    }
+                }
             }
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_AccGroup" });

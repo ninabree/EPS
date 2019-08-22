@@ -10,7 +10,7 @@
 <table class="table voucher-tbl table-bordered">
     <tr>
         <td colspan="3"><label>Exchange Rate:</label></td>
-        <td colspan="2">@Html.TextBoxFor(m => m.Inter_Rate, new { @class = "w-full changeable" })</td>
+        <td colspan="2">@Html.TextBoxFor(m => m.Inter_Rate, new { @class = "w-full changeable NumberOnlyOneDecimal" })</td>
         <td colspan="11"></td>
     </tr>
     <tr>
@@ -19,12 +19,12 @@
             @Html.DisplayFor(m => m.Inter_Currency1_ABBR)
             @Html.HiddenFor(m => m.Inter_Currency1_ID)
         </td>
-        <td colspan="4">@Html.TextBoxFor(m => m.Inter_Currency1_Amount, new { @class = "changeable" })</td>
+        <td colspan="4">@Html.TextBoxFor(m => m.Inter_Currency1_Amount, new { @class = "changeable NumberOnlyOneDecimal" })</td>
         <td colspan="3">
             @Html.CheckBoxFor(model => model.Inter_Check1, new { @class = "convertChk changeable" })
             Convert from <label id="convertCurr1">@Model.Inter_Currency2_ABBR</label>
         </td>
-        <td colspan="4"><input type="number" id="convertAmt1" class="changeable" value="@Model.Inter_Convert1_Amount" /></td>
+        <td colspan="4"><input type="number" id="convertAmt1" class="changeable NumberOnlyOneDecimal" value="@Model.Inter_Convert1_Amount" /></td>
     </tr>
     <tr>
         <td colspan="3"><label id="curr2-lbl"> @Model.CurrencyList.Where(x=> x.Value == @Model.Inter_Currency2_ID + "").Select(x => x.Text).FirstOrDefault() Amount</label></td>
@@ -43,12 +43,12 @@
                 }
             </select>
         </td>
-        <td colspan="4">@Html.TextBoxFor(m => m.Inter_Currency2_Amount, new { @class = "changeable" })</td>
+        <td colspan="4">@Html.TextBoxFor(m => m.Inter_Currency2_Amount, new { @class = "changeable NumberOnlyOneDecimal" })</td>
         <td colspan="3">
             @Html.CheckBoxFor(model => model.Inter_Check2, new { @class = "convertChk changeable" })
             Convert from <label id="convertCurr2">@Model.Inter_Currency1_ABBR</label>
         </td>
-        <td colspan="4"><input type="number" id="convertAmt2" value="@Model.Inter_Convert2_Amount" class="changeable" /></td>
+        <td colspan="4"><input type="number" id="convertAmt2" value="@Model.Inter_Convert2_Amount" class="changeable NumberOnlyOneDecimal" /></td>
     </tr>
     <tr>
         <td colspan="16"></td>

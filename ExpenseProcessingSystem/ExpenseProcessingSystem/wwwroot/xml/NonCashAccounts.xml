@@ -11,131 +11,131 @@ string value1 = xNC.Element("LOGO").Value
     <!-- THE VALUE PER ACCOUNT ARE THEIR DESIGNATED ACCOUNT MASTER ID'S 
         TO UPDATE THESE VALUES, REFER TO THE MASTER ID IN DATA MAINTENANCE: ACCOUNT
     -->
-    <ACCOUNT class="entry1" id="ACCOUNT1">119</ACCOUNT>
-    <ACCOUNT class="entry1" id="ACCOUNT2">68</ACCOUNT>
+    <ACCOUNT class="entry1" id="ACCOUNT1">105</ACCOUNT>
+    <ACCOUNT class="entry1" id="ACCOUNT2">78</ACCOUNT>
 
-    <ACCOUNT class="entry2" id="ACCOUNT1">124</ACCOUNT>
-    <ACCOUNT class="entry2" id="ACCOUNT2">68</ACCOUNT>
+    <ACCOUNT class="entry2" id="ACCOUNT1">106</ACCOUNT>
+    <ACCOUNT class="entry2" id="ACCOUNT2">78</ACCOUNT>
 
-    <ACCOUNT class="entry3" id="ACCOUNT1">68</ACCOUNT>
-    <ACCOUNT class="entry3" id="ACCOUNT2">100</ACCOUNT>
+    <ACCOUNT class="entry3" id="ACCOUNT1">78</ACCOUNT>
+    <ACCOUNT class="entry3" id="ACCOUNT2">119</ACCOUNT>
 
-    <ACCOUNT class="entry4" id="ACCOUNT1">68</ACCOUNT>
-    <ACCOUNT class="entry4" id="ACCOUNT2">109</ACCOUNT>
+    <ACCOUNT class="entry4" id="ACCOUNT1">78</ACCOUNT>
+    <ACCOUNT class="entry4" id="ACCOUNT2">89</ACCOUNT>
 
-    <ACCOUNT class="entry5" id="ACCOUNT1">68</ACCOUNT>
-    <ACCOUNT class="entry5" id="ACCOUNT2">94</ACCOUNT>
+    <ACCOUNT class="entry5" id="ACCOUNT1">78</ACCOUNT>
+    <ACCOUNT class="entry5" id="ACCOUNT2">117</ACCOUNT>
 
-    <ACCOUNT class="entry6" id="ACCOUNT1">68</ACCOUNT>
-    <ACCOUNT class="entry6" id="ACCOUNT2">117</ACCOUNT>
+    <ACCOUNT class="entry6" id="ACCOUNT1">78</ACCOUNT>
+    <ACCOUNT class="entry6" id="ACCOUNT2">119</ACCOUNT>
 
-    <ACCOUNT class="entry7" id="ACCOUNT1">68</ACCOUNT>
-    <ACCOUNT class="entry7" id="ACCOUNT2">117</ACCOUNT>
+    <ACCOUNT class="entry7" id="ACCOUNT1">78</ACCOUNT>
+    <ACCOUNT class="entry7" id="ACCOUNT2">119</ACCOUNT>
 
-    <ACCOUNT class="entry8" id="ACCOUNT1">68</ACCOUNT>
-    <ACCOUNT class="entry8" id="ACCOUNT2">107</ACCOUNT>
+    <ACCOUNT class="entry8" id="ACCOUNT1">78</ACCOUNT>
+    <ACCOUNT class="entry8" id="ACCOUNT2">88</ACCOUNT>
 
-    <ACCOUNT class="entry9" id="ACCOUNT1">68</ACCOUNT>
-    <ACCOUNT class="entry9" id="ACCOUNT2">117</ACCOUNT>
+    <ACCOUNT class="entry9" id="ACCOUNT1">78</ACCOUNT>
+    <ACCOUNT class="entry9" id="ACCOUNT2">119</ACCOUNT>
 
-    <ACCOUNT class="entry10" id="ACCOUNT1">124</ACCOUNT>
-    <ACCOUNT class="entry10" id="ACCOUNT2">68</ACCOUNT>
+    <ACCOUNT class="entry10" id="ACCOUNT1">105</ACCOUNT>
+    <ACCOUNT class="entry10" id="ACCOUNT2">78</ACCOUNT>
 
-    <ACCOUNT class="entry11" id="ACCOUNT1">123</ACCOUNT>
-    <ACCOUNT class="entry11" id="ACCOUNT2">68</ACCOUNT>
+    <ACCOUNT class="entry11" id="ACCOUNT1">103</ACCOUNT>
+    <ACCOUNT class="entry11" id="ACCOUNT2">78</ACCOUNT>
   </LSPAYROLL>
 
   <TAXREMITTANCE>
-    <ACCOUNT class="entry1" id="ACCOUNT1">103</ACCOUNT>
-    <ACCOUNT class="entry1" id="ACCOUNT2">92</ACCOUNT>
+    <ACCOUNT class="entry1" id="ACCOUNT1">111</ACCOUNT>
+    <ACCOUNT class="entry1" id="ACCOUNT2">75</ACCOUNT>
 
-    <ACCOUNT class="entry2" id="ACCOUNT1">90</ACCOUNT>
-    <ACCOUNT class="entry2" id="ACCOUNT2">92</ACCOUNT>
+    <ACCOUNT class="entry2" id="ACCOUNT1">128</ACCOUNT>
+    <ACCOUNT class="entry2" id="ACCOUNT2">75</ACCOUNT>
 
-    <ACCOUNT class="entry3" id="ACCOUNT1">91</ACCOUNT>
-    <ACCOUNT class="entry3" id="ACCOUNT2">92</ACCOUNT>
+    <ACCOUNT class="entry3" id="ACCOUNT1">114</ACCOUNT>
+    <ACCOUNT class="entry3" id="ACCOUNT2">75</ACCOUNT>
 
-    <ACCOUNT class="entry4" id="ACCOUNT1">92</ACCOUNT>
-    <ACCOUNT class="entry4" id="ACCOUNT2">92</ACCOUNT>
+    <ACCOUNT class="entry4" id="ACCOUNT1">112</ACCOUNT>
+    <ACCOUNT class="entry4" id="ACCOUNT2">75</ACCOUNT>
 
-    <ACCOUNT class="entry5" id="ACCOUNT1">93</ACCOUNT>
-    <ACCOUNT class="entry5" id="ACCOUNT2">92</ACCOUNT>
+    <ACCOUNT class="entry5" id="ACCOUNT1">69</ACCOUNT>
+    <ACCOUNT class="entry5" id="ACCOUNT2">75</ACCOUNT>
 
-    <ACCOUNT class="entry6" id="ACCOUNT1">94</ACCOUNT>
-    <ACCOUNT class="entry6" id="ACCOUNT2">92</ACCOUNT>
+    <ACCOUNT class="entry6" id="ACCOUNT1">117</ACCOUNT>
+    <ACCOUNT class="entry6" id="ACCOUNT2">75</ACCOUNT>
 
-    <ACCOUNT class="entry7" id="ACCOUNT1">95</ACCOUNT>
-    <ACCOUNT class="entry7" id="ACCOUNT2">92</ACCOUNT>
+    <ACCOUNT class="entry7" id="ACCOUNT1">108</ACCOUNT>
+    <ACCOUNT class="entry7" id="ACCOUNT2">75</ACCOUNT>
 
-    <ACCOUNT class="entry8" id="ACCOUNT1">96</ACCOUNT>
-    <ACCOUNT class="entry8" id="ACCOUNT2">92</ACCOUNT>
+    <ACCOUNT class="entry8" id="ACCOUNT1">68</ACCOUNT>
+    <ACCOUNT class="entry8" id="ACCOUNT2">75</ACCOUNT>
 
-    <ACCOUNT class="entry9" id="ACCOUNT1">97</ACCOUNT>
-    <ACCOUNT class="entry9" id="ACCOUNT2">92</ACCOUNT>
+    <ACCOUNT class="entry9" id="ACCOUNT1">110</ACCOUNT>
+    <ACCOUNT class="entry9" id="ACCOUNT2">75</ACCOUNT>
   </TAXREMITTANCE>
   
   <MONTHLYROSS>
-    <ACCOUNT class="entry1" id="ACCOUNT1">118</ACCOUNT>
-    <ACCOUNT class="entry1" id="ACCOUNT2">92</ACCOUNT>
+    <ACCOUNT class="entry1" id="ACCOUNT1">67</ACCOUNT>
+    <ACCOUNT class="entry1" id="ACCOUNT2">75</ACCOUNT>
   </MONTHLYROSS>
 
   <PSSC>
-    <ACCOUNT class="entry1" id="ACCOUNT1">118</ACCOUNT>
-    <ACCOUNT class="entry1" id="ACCOUNT2">98</ACCOUNT>
-    <ACCOUNT class="entry1" id="ACCOUNT3">92</ACCOUNT>
+    <ACCOUNT class="entry1" id="ACCOUNT1">67</ACCOUNT>
+    <ACCOUNT class="entry1" id="ACCOUNT2">114</ACCOUNT>
+    <ACCOUNT class="entry1" id="ACCOUNT3">75</ACCOUNT>
   </PSSC>
 
   <PCHC>
-    <ACCOUNT class="entry1" id="ACCOUNT1">118</ACCOUNT>
-    <ACCOUNT class="entry1" id="ACCOUNT2">98</ACCOUNT>
-    <ACCOUNT class="entry1" id="ACCOUNT3">92</ACCOUNT>
-    <ACCOUNT class="entry2" id="ACCOUNT4">118</ACCOUNT>
-    <ACCOUNT class="entry2" id="ACCOUNT5">98</ACCOUNT>
-    <ACCOUNT class="entry2" id="ACCOUNT6">92</ACCOUNT>
+    <ACCOUNT class="entry1" id="ACCOUNT1">67</ACCOUNT>
+    <ACCOUNT class="entry1" id="ACCOUNT2">114</ACCOUNT>
+    <ACCOUNT class="entry1" id="ACCOUNT3">75</ACCOUNT>
+    <ACCOUNT class="entry2" id="ACCOUNT4">67</ACCOUNT>
+    <ACCOUNT class="entry2" id="ACCOUNT5">114</ACCOUNT>
+    <ACCOUNT class="entry2" id="ACCOUNT6">75</ACCOUNT>
   </PCHC>
 
   <DEPRECIATION>
-    <ACCOUNT class="entry1" id="ACCOUNT1">126</ACCOUNT>
-    <ACCOUNT class="entry1" id="ACCOUNT2">113</ACCOUNT>
+    <ACCOUNT class="entry1" id="ACCOUNT1">83</ACCOUNT>
+    <ACCOUNT class="entry1" id="ACCOUNT2">68</ACCOUNT>
 
-    <ACCOUNT class="entry2" id="ACCOUNT1">127</ACCOUNT>
-    <ACCOUNT class="entry2" id="ACCOUNT2">115</ACCOUNT>
+    <ACCOUNT class="entry2" id="ACCOUNT1">84</ACCOUNT>
+    <ACCOUNT class="entry2" id="ACCOUNT2">69</ACCOUNT>
 
-    <ACCOUNT class="entry3" id="ACCOUNT1">118</ACCOUNT>
-    <ACCOUNT class="entry3" id="ACCOUNT2">69</ACCOUNT>
+    <ACCOUNT class="entry3" id="ACCOUNT1">129</ACCOUNT>
+    <ACCOUNT class="entry3" id="ACCOUNT2">82</ACCOUNT>
   </DEPRECIATION>
 
   <PCR>
-    <ACCOUNT class="entry1" id="ACCOUNT1">95</ACCOUNT>
-    <ACCOUNT class="entry1" id="ACCOUNT2">68</ACCOUNT>
+    <ACCOUNT class="entry1" id="ACCOUNT1">108</ACCOUNT>
+    <ACCOUNT class="entry1" id="ACCOUNT2">78</ACCOUNT>
   </PCR>
 
   <JSPAYROLL>
-    <ACCOUNT class="entry1" id="ACCOUNT1">117</ACCOUNT>
-    <ACCOUNT class="entry1" id="ACCOUNT2">68</ACCOUNT>
+    <ACCOUNT class="entry1" id="ACCOUNT1">101</ACCOUNT>
+    <ACCOUNT class="entry1" id="ACCOUNT2">78</ACCOUNT>
 
-    <ACCOUNT class="entry2" id="ACCOUNT1">68</ACCOUNT>
-    <ACCOUNT class="entry2" id="ACCOUNT2">99</ACCOUNT>
+    <ACCOUNT class="entry2" id="ACCOUNT1">78</ACCOUNT>
+    <ACCOUNT class="entry2" id="ACCOUNT2">115</ACCOUNT>
 
-    <ACCOUNT class="entry3" id="ACCOUNT1">77</ACCOUNT>
-    <ACCOUNT class="entry3" id="ACCOUNT2">82</ACCOUNT>
+    <ACCOUNT class="entry3" id="ACCOUNT1">90</ACCOUNT>
+    <ACCOUNT class="entry3" id="ACCOUNT2">76</ACCOUNT>
 
-    <ACCOUNT class="entry4" id="ACCOUNT1">68</ACCOUNT>
-    <ACCOUNT class="entry4" id="ACCOUNT2">72</ACCOUNT>
+    <ACCOUNT class="entry4" id="ACCOUNT1">78</ACCOUNT>
+    <ACCOUNT class="entry4" id="ACCOUNT2">91</ACCOUNT>
 
-    <ACCOUNT class="entry5" id="ACCOUNT1">68</ACCOUNT>
+    <ACCOUNT class="entry5" id="ACCOUNT1">78</ACCOUNT>
     <ACCOUNT class="entry5" id="ACCOUNT2">57</ACCOUNT>
   </JSPAYROLL>
 
   <RETURNOFJSPAYROLL>
-    <ACCOUNT class="entry1" id="ACCOUNT1">76</ACCOUNT>
-    <ACCOUNT class="entry1" id="ACCOUNT2">72</ACCOUNT>
+    <ACCOUNT class="entry1" id="ACCOUNT1">79</ACCOUNT>
+    <ACCOUNT class="entry1" id="ACCOUNT2">91</ACCOUNT>
 
-    <ACCOUNT class="entry2" id="ACCOUNT1">72</ACCOUNT>
-    <ACCOUNT class="entry2" id="ACCOUNT2">68</ACCOUNT>
+    <ACCOUNT class="entry2" id="ACCOUNT1">91</ACCOUNT>
+    <ACCOUNT class="entry2" id="ACCOUNT2">78</ACCOUNT>
 
-    <ACCOUNT class="entry3" id="ACCOUNT1">68</ACCOUNT>
-    <ACCOUNT class="entry3" id="ACCOUNT2">117</ACCOUNT>
+    <ACCOUNT class="entry3" id="ACCOUNT1">78</ACCOUNT>
+    <ACCOUNT class="entry3" id="ACCOUNT2">101</ACCOUNT>
   </RETURNOFJSPAYROLL>
   
   <!-- Global currencies master ID -->

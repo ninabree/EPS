@@ -1,6 +1,15 @@
 ﻿
 @{
     ViewData["Title"] = "Entry_DDV";
+    var usdId = ViewData["usdCurrID"];
+    var usdMId = ViewData["usdCurrMasterID"];
+    var usdAbbr = ViewData["usdAbbrev"];
+    var phpId = ViewData["phpCurrID"];
+    var phpMId = ViewData["phpCurrMasterID"];
+    var phpAbbr = ViewData["phpAbbrev"];
+    var yenId = ViewData["yenCurrID"];
+    var yenMId = ViewData["yenCurrMasterID"];
+    var yenAbbr = ViewData["yenAbbrev"];
 }
 @using ExpenseProcessingSystem.ViewModels.Entry
 @model EntryDDVViewModelList
@@ -24,15 +33,15 @@
         <div class="entry-tbl-cont">
             <table class="table table-bordered table-striped voucher-tbl w-97 ddv-tbl" id="inputTable">
                 <colgroup>
-                    <col style="width:20%;" />
+                    <col style="width:18%;" />
                     <col style="width:9%;" />
                     <col style="width:3%;" />
                     <col style="width:3%;" />
                     <col style="width:10%" />
                     <col style="width:2%;" />
-                    <col style="width:5%;" />
+                    <col style="width:6%;" />
                     <col style="width:2%;" />
-                    <col style="width:5%;" />
+                    <col style="width:6%;" />
                     <col style="width:3%;" />
                     <col style="width:7%;" />
                     <col style="width:10%;" />
@@ -426,6 +435,12 @@
             var pNode = String($(this.parentNode)[0].parentNode.id);
             currenableVATEWT(pNode, $(this).val());
             computeValuesDDV($(this.parentNode)[0].parentNode);
+            if ($("option:selected", this).text() == "@ViewData["yenAbbrev"]") {
+                $("#remark_" + pNode.substring(5)).find('input').remove();
+                $("#req_" + pNode.substring(5)).find('#interDtls').empty();
+                $("#" + pNode + " .txtGross").val(0);
+                computeValuesDDV($(this.parentNode)[0].parentNode);
+            }
         });
     });
     //--------------------------------------------------------------------------------------------

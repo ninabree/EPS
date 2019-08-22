@@ -28,12 +28,12 @@ namespace ExpenseProcessingSystem.ViewModels.Search_Filters.Home
                 new List<SelectListItem>
                 {
                     new SelectListItem { Text = NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_CV], Value = NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_CV]},
+                    new SelectListItem { Text =NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_DM], Value = NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_DM]},
                     new SelectListItem { Text = NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_DDV], Value = NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_DDV]},
-                    new SelectListItem { Text = NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_SS], Value = NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_SS]},
-                    new SelectListItem { Text = NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_PC], Value = NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_PC]},
-                    new SelectListItem { Text = NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_NC], Value = NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_NC]},
                     new SelectListItem { Text =NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_LIQ], Value = NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_LIQ]},
-                    new SelectListItem { Text =NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_DM], Value = NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_DM]}
+                    new SelectListItem { Text = NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_NC], Value = NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_NC]},
+                    new SelectListItem { Text = NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_PC], Value = NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_PC]},
+                    new SelectListItem { Text = NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_SS], Value = NotificationMessageValues.TYTIONARY[GlobalSystemValues.TYPE_SS]}
                 }, "Value", "Text");
         }
     }

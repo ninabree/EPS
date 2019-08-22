@@ -17,7 +17,7 @@ namespace ExpenseProcessingSystem.ViewModels.Search_Filters.Home
         public string Pending_Maker { get; set; }
         [Display(Name = "Amount")]
         public string Pending_Amount { get; set; }
-        [Display(Name = "Date Created")]
+        [Display(Name = "Date Submitted")]
         public DateTime Pending_Created_Date { get; set; }
         [Display(Name = "Date Updated")]
         public DateTime Pending_Updated_Date { get; set; }
@@ -33,9 +33,9 @@ namespace ExpenseProcessingSystem.ViewModels.Search_Filters.Home
                 {
                     new SelectListItem { Text = GlobalSystemValues.getApplicationType(GlobalSystemValues.TYPE_CV), Value = GlobalSystemValues.getApplicationType(GlobalSystemValues.TYPE_CV)},
                     new SelectListItem { Text = GlobalSystemValues.getApplicationType(GlobalSystemValues.TYPE_DDV), Value = GlobalSystemValues.getApplicationType(GlobalSystemValues.TYPE_DDV)},
-                    new SelectListItem { Text = GlobalSystemValues.getApplicationType(GlobalSystemValues.TYPE_SS), Value = GlobalSystemValues.getApplicationType(GlobalSystemValues.TYPE_SS)},
-                    new SelectListItem { Text = GlobalSystemValues.getApplicationType(GlobalSystemValues.TYPE_PC), Value = GlobalSystemValues.getApplicationType(GlobalSystemValues.TYPE_PC)},
                     new SelectListItem { Text = GlobalSystemValues.getApplicationType(GlobalSystemValues.TYPE_NC), Value = GlobalSystemValues.getApplicationType(GlobalSystemValues.TYPE_NC)},
+                    new SelectListItem { Text = GlobalSystemValues.getApplicationType(GlobalSystemValues.TYPE_PC), Value = GlobalSystemValues.getApplicationType(GlobalSystemValues.TYPE_PC)},
+                    new SelectListItem { Text = GlobalSystemValues.getApplicationType(GlobalSystemValues.TYPE_SS), Value = GlobalSystemValues.getApplicationType(GlobalSystemValues.TYPE_SS)},
                     new SelectListItem { Text = GlobalSystemValues.getApplicationType(GlobalSystemValues.TYPE_LIQ), Value = GlobalSystemValues.getApplicationType(GlobalSystemValues.TYPE_LIQ)}
                 }, "Value", "Text");
         }
@@ -69,9 +69,9 @@ namespace ExpenseProcessingSystem.ViewModels.Search_Filters.Home
                     //new SelectListItem { Text = GlobalSystemValues.getApplicationCode(GlobalSystemValues.TYPE_DM), Value = GlobalSystemValues.getApplicationCode(GlobalSystemValues.TYPE_DM)},
                     new SelectListItem { Text = GlobalSystemValues.getApplicationCode(GlobalSystemValues.TYPE_CV), Value = GlobalSystemValues.getApplicationCode(GlobalSystemValues.TYPE_CV)},
                     new SelectListItem { Text = GlobalSystemValues.getApplicationCode(GlobalSystemValues.TYPE_DDV), Value = GlobalSystemValues.getApplicationCode(GlobalSystemValues.TYPE_DDV)},
-                    new SelectListItem { Text = GlobalSystemValues.getApplicationCode(GlobalSystemValues.TYPE_SS), Value = GlobalSystemValues.getApplicationCode(GlobalSystemValues.TYPE_SS)},
+                    new SelectListItem { Text = GlobalSystemValues.getApplicationCode(GlobalSystemValues.TYPE_NC), Value = GlobalSystemValues.getApplicationCode(GlobalSystemValues.TYPE_NC)},
                     new SelectListItem { Text = GlobalSystemValues.getApplicationCode(GlobalSystemValues.TYPE_PC), Value = GlobalSystemValues.getApplicationCode(GlobalSystemValues.TYPE_PC)},
-                    new SelectListItem { Text = GlobalSystemValues.getApplicationCode(GlobalSystemValues.TYPE_NC), Value = GlobalSystemValues.getApplicationCode(GlobalSystemValues.TYPE_NC)}
+                    new SelectListItem { Text = GlobalSystemValues.getApplicationCode(GlobalSystemValues.TYPE_SS), Value = GlobalSystemValues.getApplicationCode(GlobalSystemValues.TYPE_SS)}
                 }, "Value", "Text");
 
             Hist_YearList = ConstantData.HomeReportConstantValue.GetYearList();
