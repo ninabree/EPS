@@ -71,8 +71,8 @@
         }
 
         <a class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left" page="@(Model.NotifList.PageIndex - 1)"></a>
-        <input type="text" class="pagination-input" id="paginationInput" val="" />
-        <input type="text" class="pagination-input" value="@(Model.NotifList.PageIndex) of @(Model.NotifList.TotalPages)" disabled />
+        <input type="text" class="pagination-input" id="paginationInput" val="" placeholder="@(Model.NotifList.PageIndex)" />
+        <input type="text" class="pagination-input" value=" of @(Model.NotifList.TotalPages)" disabled />
         <a class="btn pagination-btn btn-xs btn-default @nextDisabled glyphicon glyphicon-menu-right" page="@(Model.NotifList.PageIndex + 1)"></a>
         @Html.Partial("ModalPartial")
     </div>
