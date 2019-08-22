@@ -11229,7 +11229,76 @@ namespace ExpenseProcessingSystem.Services
             return goModel;
         }
         ///===============[End Gbase Entry Section]=================
-
+        ///==============[Begin Print Status Section]===============
+        public bool updatePrintStatus(int docID, int entryID)
+        {
+            try
+            {
+                var rec = _context.PrintStatus.Where(x => x.PS_EntryID == entryID).ToList();
+                if (rec != null)
+                {
+                    switch (docID)
+                    {
+                        //GlobalSystemValues.PS_LOI == 1
+                        case 1:
+                            foreach (var i in rec)
+                            {
+                                i.PS_LOI = true;
+                                _context.Entry(i).State = EntityState.Modified;
+                            }
+                            break;
+                        //GlobalSystemValues.PS_BIR2307 == 2
+                        case 2:
+                            foreach (var i in rec)
+                            {
+                                i.PS_BIR2307 = true;
+                                _context.Entry(i).State = EntityState.Modified;
+                            }
+                            break;
+                        //GlobalSystemValues.PS_CDD == 3
+                        case 3:
+                            foreach (var i in rec)
+                            {
+                                i.PS_CDD = true;
+                                _context.Entry(i).State = EntityState.Modified;
+                            }
+                            break;
+                        //GlobalSystemValues.PS_Check == 4
+                        case 4:
+                            foreach (var i in rec)
+                            {
+                                i.PS_Check = true;
+                                _context.Entry(i).State = EntityState.Modified;
+                            }
+                            break;
+                        //GlobalSystemValues.PS_Voucher == 5
+                        case 5:
+                            foreach (var i in rec)
+                            {
+                                i.PS_Voucher = true;
+                                _context.Entry(i).State = EntityState.Modified;
+                            }
+                            break;
+                        //
+                        default:
+                            break;
+                    }
+                    if (_modelState.IsValid)
+                    {
+                        //_context.Entry(rec).State = EntityState.Modified;
+                        _context.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                //redirect to Error Screen
+                Console.WriteLine(e.Message);
+                return false;
+            }
+            return true;
+        }
+        ///===============[End Print Status Section]================
         ///============[Other Functions]============
         //get fbt id
         public int getFbt(int id)

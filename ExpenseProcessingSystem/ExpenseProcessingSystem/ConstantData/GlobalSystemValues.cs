@@ -259,6 +259,22 @@ namespace ExpenseProcessingSystem.ConstantData
             GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL,
             GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES
         };
+
+        //Static values for Document Type to be printed in all Expense Transactions
+        public static readonly int PS_LOI = 1;
+        public static readonly int PS_BIR2307 = 2;
+        public static readonly int PS_CDD = 3;
+        public static readonly int PS_Check = 4;
+        public static readonly int PS_Voucher = 5;
+
+        public static readonly List<int> PS_DocType = new List<int> {
+            GlobalSystemValues.PS_LOI,
+            GlobalSystemValues.PS_BIR2307,
+            GlobalSystemValues.PS_CDD,
+            GlobalSystemValues.PS_Check,
+            GlobalSystemValues.PS_Voucher
+        };
+
         public static readonly List<SelectListItem> NC_CATEGORIES_SELECT = new List<SelectListItem> {
                 new SelectListItem { Text = "LS PAYROLL", Value = NC_CATEGORIES[0].ToString(), Selected = true },
                 new SelectListItem { Text = "TAX REMITTANCE", Value = NC_CATEGORIES[1].ToString(), Selected = false },

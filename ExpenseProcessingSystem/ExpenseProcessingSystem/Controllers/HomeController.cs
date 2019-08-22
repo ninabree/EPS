@@ -942,6 +942,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (var accs in data.ReportLOI.Rep_LOIEntryIDList)
                     {
                         _service.updateExpenseStatus(accs, GlobalSystemValues.STATUS_POSTED, int.Parse(GetUserID()));
+                        bool result = _service.updatePrintStatus(GlobalSystemValues.PS_LOI, accs);
                     }
                 }
                 //Return Excel file
@@ -955,6 +956,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (var accs in data.ReportLOI.Rep_LOIEntryIDList)
                     {
                         _service.updateExpenseStatus(accs, GlobalSystemValues.STATUS_POSTED, int.Parse(GetUserID()));
+                        bool result = _service.updatePrintStatus(GlobalSystemValues.PS_LOI, accs);
                     }
                 }
                 //Return PDF file
@@ -3071,6 +3073,8 @@ namespace ExpenseProcessingSystem.Controllers
                 }
             }
             viewModel.CDDContents = cddContents;
+
+            bool result = _service.updatePrintStatus(GlobalSystemValues.PS_CDD, entryID);
             return File(excelGenerate.ExcelCDDIS_PRC(viewModel, newFileName, "CDDIS_NC_PCR.xlsx"), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", newFileName);
 
         }

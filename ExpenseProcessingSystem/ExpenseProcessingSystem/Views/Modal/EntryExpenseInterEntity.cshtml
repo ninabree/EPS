@@ -171,6 +171,7 @@
         var chk2 = $("table").find("#Inter_Check2");
         var conv1Amt = $("table").find("#convertAmt1");
         var conv2Amt = $("table").find("#convertAmt2");
+        var rate = $("table").find("#Inter_Rate");
 
         var curr1Val = $(curr1Amt).val();
         var curr2Val = $(curr2Amt).val();
@@ -205,13 +206,25 @@
             var curr1Val = $(curr1Amt).val();
             var curr2Val = $(curr2Amt).val();
             isChk();
-            var conv1Val = $(conv1Amt).val();
+            var conv1Val = $(conv1Amt).val(); 
             var conv2Val = $(conv2Amt).val();
-            if ((curr1Val != 0) && isChk2 && (conv2Val != 0)) {
+            var rateVal = $(rate).val();
+            //if Curr1 Amount is not 0 and checkbox 2 is checked and converted2 Amount is not 0 
+            if ((curr1Val != 0) && isChk2 && (conv2Val != 0) && (rateVal != 0)) {
                 UpdateParticulars1(curr1Val, conv2Val);
             }
-            else if ((curr2Val != 0) && isChk1 && (conv1Val != 0)) {
+            //if Curr2 Amount is not 0 and checkbox1 is checked and converted1 Amount is not 0 
+            else if ((curr2Val != 0) && isChk1 && (conv1Val != 0) && (rateVal != 0)) {
                 UpdateParticulars2(curr2Val, conv1Val);
+            } else {
+                if (isChk1) {
+                    UpdateParticulars3(curr1Amt);
+                } else if (isChk2) {
+                    UpdateParticulars3(curr2Amt);
+                } else {
+                    UpdateParticulars3(curr2Amt);
+                    UpdateParticulars3(curr1Amt);
+                }
             }
         });
 
@@ -368,17 +381,18 @@
                 alert("Invalid amount/s provided.");
             } else {
                 currVal = parseFloat(currVal).toFixed(2);
-                var curr2 = (parseFloat(convVal) / parseFloat(rate)).toFixed(2);
+                var curr2 = (parseFloat(convVal) / parseFloat(rate));
+                var curr2Dec = (parseFloat(convVal) / parseFloat(rate)).toFixed(2);
                 var parCredit = (parseFloat(curr2) * parseFloat(rate)).toFixed(2);
                 var parDebit = (parseFloat(currVal) + parseFloat(parCredit)).toFixed(2);
-                $(curr2Amt).val(curr2);
+                $(curr2Amt).val(curr2Dec);
                 $("#par1-0").text(parDebit);
                 $("#par1-1").text(parCredit);
                 $("#par1-2").text(currVal);
                 $("#par2-0").text(parCredit);
-                $("#par2-1").text(curr2);
-                $("#par3-0").text(curr2);
-                $("#par3-1").text(curr2);
+                $("#par2-1").text(curr2Dec);
+                $("#par3-0").text(curr2Dec);
+                $("#par3-1").text(curr2Dec);
                 $("#par2-0-1").text(rate);
             }
         }
@@ -387,19 +401,31 @@
             if (!($.isNumeric(currVal) && $.isNumeric(convVal) && $.isNumeric(rate))) {
                 alert("Invalid amount/s provided.");
             } else {
-                var curr2 = (parseFloat(convVal) * parseFloat(rate)).toFixed(2);
+                var curr1 = (parseFloat(convVal) * parseFloat(rate));
+                var curr1Dec = (parseFloat(convVal) * parseFloat(rate)).toFixed(2);
                 var parCredit = (parseFloat(currVal) * parseFloat(rate)).toFixed(2);
-                var parDebit = (parseFloat(curr2) + parseFloat(parCredit)).toFixed(2);
-                $(curr1Amt).val(curr2);
+                var parDebit = (parseFloat(curr1) + parseFloat(parCredit)).toFixed(2);
+                $(curr1Amt).val(curr1Dec);
                 $("#par1-0").text(parDebit);
                 $("#par1-1").text(parCredit);
-                $("#par1-2").text(curr2);
+                $("#par1-2").text(curr1Dec);
                 $("#par2-0").text(parCredit);
                 $("#par2-1").text(currVal);
                 $("#par3-0").text(currVal);
                 $("#par3-1").text(currVal);
                 $("#par2-0-1").text(rate);
             }
+        }
+        function UpdateParticulars3(currAmt) {
+            $(currAmt).val(0);
+            $("#par1-0").text(0);
+            $("#par1-1").text(0);
+            $("#par1-2").text(0);
+            $("#par2-0").text(0);
+            $("#par2-1").text(0);
+            $("#par3-0").text(0);
+            $("#par3-1").text(0);
+            $("#par2-0-1").text(0);
         }
         ////TEMP FIX
         function computeValuesDDVInter(parent) {

@@ -63,11 +63,13 @@
             checkRemarksDescLength(trID, periodLength);
         });
 
+        //when Remarks Desc is changed, compares the Length of Desc and Period to not surpass the Gbase Remarks Limit
         function checkRemarksPeriodLength(trID, descLength) {
             var descElement = $("#EntryNC_ExpenseEntryNCDtls_" + trID + "__ExpNCDtl_Remarks_Desc");
             var periodElement = $("#EntryNC_ExpenseEntryNCDtls_" + trID + "__ExpNCDtl_Remarks_Period");
             var periodLength = periodElement.val().length;
-            if (parseInt(descLength) + parseInt(periodLength) >= 30) {
+            //Gbase limit is 30 - 1 for " " between  the Remarks Desc and Remarks Period
+            if (parseInt(descLength) + parseInt(periodLength) >= 29) {
                 descElement.attr("maxlength", descLength);
                 periodElement.attr("maxlength", periodLength);
             } else {
@@ -76,11 +78,13 @@
             }
         }
 
+        //when Remarks Desc is changed, compares the Length of Desc and Period to not surpass the Gbase Remarks Limit
         function checkRemarksDescLength(trID, periodLength) {
             var descElement = $("#EntryNC_ExpenseEntryNCDtls_" + trID + "__ExpNCDtl_Remarks_Desc");
             var periodElement = $("#EntryNC_ExpenseEntryNCDtls_" + trID + "__ExpNCDtl_Remarks_Period");
             var descLength = descElement.val().length;
-            if (parseInt(descLength) + parseInt(periodLength) >= 30) {
+            //Gbase limit is 30 - 1 for " " between  the Remarks Desc and Remarks Period
+            if (parseInt(descLength) + parseInt(periodLength) >= 29) {
                 descElement.attr("maxlength", descLength);
                 periodElement.attr("maxlength", periodLength);
             } else {
@@ -88,6 +92,8 @@
                 periodElement.removeAttr("maxlength");
             }
         }
+
+        //when selection option in Account DropDownList is changed, compares the account to Comp Suspense / Petty Cash
         $(document).on('change', '.acc-sel', function (e) {
             e.stopImmediatePropagation();
             var selVal = this.value;
