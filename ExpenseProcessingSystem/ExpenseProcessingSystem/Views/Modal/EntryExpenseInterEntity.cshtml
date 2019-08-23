@@ -196,7 +196,7 @@
                 disable1();
             } else if ($(this).is(':checked') && $(this).attr("id") == "Inter_Check2") {
                 disable2();
-            } else {
+            } else if (!$(this).is(':checked')){
                 defaultVals();
                 defaultInter();
             }
@@ -417,7 +417,7 @@
             }
         }
         function UpdateParticulars3(currAmt) {
-            $(currAmt).val(0);
+            //$(currAmt).val(0);
             $("#par1-0").text(0);
             $("#par1-1").text(0);
             $("#par1-2").text(0);

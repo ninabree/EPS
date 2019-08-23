@@ -3815,7 +3815,15 @@ namespace ExpenseProcessingSystem.Controllers
             var userId = GetUserID();
             if (ModelState.IsValid)
             {
-                _service.approveVendor(model, userId);
+                if (_service.approveVendor(model, userId))
+                {
+                    foreach (DMVendorViewModel vm in model)
+                    {
+                        //----------------------------- NOTIF----------------------------------
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_APPROVED, vm.Vendor_Creator_ID);
+                        //----------------------------- NOTIF----------------------------------
+                    }
+                }
             }
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Vendor" });
@@ -3842,7 +3850,15 @@ namespace ExpenseProcessingSystem.Controllers
             var userId = GetUserID();
             if (ModelState.IsValid)
             {
-                _service.approveDept(model, userId);
+                if (_service.approveDept(model, userId))
+                {
+                    foreach (DMDeptViewModel vm in model)
+                    {
+                        //----------------------------- NOTIF----------------------------------
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_APPROVED, vm.Dept_Creator_ID);
+                        //----------------------------- NOTIF----------------------------------
+                    }
+                }
             }
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Dept" });
@@ -3869,7 +3885,15 @@ namespace ExpenseProcessingSystem.Controllers
             var userId = GetUserID();
             if (ModelState.IsValid)
             {
-                _service.approveCheck(model, userId);
+                if (_service.approveCheck(model, userId))
+                {
+                    foreach (DMCheckViewModel vm in model)
+                    {
+                        //----------------------------- NOTIF----------------------------------
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_APPROVED, vm.Check_Creator_ID);
+                        //----------------------------- NOTIF----------------------------------
+                    }
+                }
             }
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Check" });
@@ -3987,7 +4011,15 @@ namespace ExpenseProcessingSystem.Controllers
             var userId = GetUserID();
             if (ModelState.IsValid)
             {
-                _service.approveVAT(model, userId);
+                if (_service.approveVAT(model, userId))
+                {
+                    foreach (DMVATViewModel vm in model)
+                    {
+                        //----------------------------- NOTIF----------------------------------
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_APPROVED, vm.VAT_Creator_ID);
+                        //----------------------------- NOTIF----------------------------------
+                    }
+                }
             }
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_VAT" });
@@ -4014,7 +4046,15 @@ namespace ExpenseProcessingSystem.Controllers
             var userId = GetUserID();
             if (ModelState.IsValid)
             {
-                _service.approveFBT(model, userId);
+                if (_service.approveFBT(model, userId))
+                {
+                    foreach (DMFBTViewModel vm in model)
+                    {
+                        //----------------------------- NOTIF----------------------------------
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_APPROVED, vm.FBT_Creator_ID);
+                        //----------------------------- NOTIF----------------------------------
+                    }
+                }
             }
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_FBT" });
@@ -4041,7 +4081,15 @@ namespace ExpenseProcessingSystem.Controllers
             var userId = GetUserID();
             if (ModelState.IsValid)
             {
-                _service.approveTR(model, userId);
+                if (_service.approveTR(model, userId))
+                {
+                    foreach (DMTRViewModel vm in model)
+                    {
+                        //----------------------------- NOTIF----------------------------------
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_APPROVED, vm.TR_Creator_ID);
+                        //----------------------------- NOTIF----------------------------------
+                    }
+                }
             }
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_TR" });
@@ -4068,7 +4116,15 @@ namespace ExpenseProcessingSystem.Controllers
             var userId = GetUserID();
             if (ModelState.IsValid)
             {
-                _service.approveCurr(model, userId);
+                if (_service.approveCurr(model, userId))
+                {
+                    foreach (DMCurrencyViewModel vm in model)
+                    {
+                        //----------------------------- NOTIF----------------------------------
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_APPROVED, vm.Curr_Creator_ID);
+                        //----------------------------- NOTIF----------------------------------
+                    }
+                }
             }
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Curr" });
@@ -4095,7 +4151,15 @@ namespace ExpenseProcessingSystem.Controllers
             var userId = GetUserID();
             if (ModelState.IsValid)
             {
-                _service.approveEmp(model, userId);
+                if (_service.approveEmp(model, userId))
+                {
+                    foreach (DMEmpViewModel vm in model)
+                    {
+                        //----------------------------- NOTIF----------------------------------
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_APPROVED, vm.Emp_Creator_ID);
+                        //----------------------------- NOTIF----------------------------------
+                    }
+                }
             }
             var partialName = model[0].Emp_Acc_No == null ? "DMPartial_TempEmp" : "DMPartial_RegEmp";
             return RedirectToAction("DM", "Home", new { partialName = partialName });
@@ -4122,7 +4186,15 @@ namespace ExpenseProcessingSystem.Controllers
             var userId = GetUserID();
             if (ModelState.IsValid)
             {
-                _service.approveCust(model, userId);
+                if (_service.approveCust(model, userId))
+                {
+                    foreach (DMCustViewModel vm in model)
+                    {
+                        //----------------------------- NOTIF----------------------------------
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_APPROVED, vm.Cust_Creator_ID);
+                        //----------------------------- NOTIF----------------------------------
+                    }
+                }
             }
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_Cust" });
@@ -4148,7 +4220,15 @@ namespace ExpenseProcessingSystem.Controllers
             var userId = GetUserID();
             if (ModelState.IsValid)
             {
-                _service.approveBCS(model, userId);
+                if (_service.approveBCS(model, userId))
+                {
+                    foreach (DMBCSViewModel vm in model)
+                    {
+                        //----------------------------- NOTIF----------------------------------
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_APPROVED, vm.BCS_Creator_ID);
+                        //----------------------------- NOTIF----------------------------------
+                    }
+                }
             }
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_BCS" });

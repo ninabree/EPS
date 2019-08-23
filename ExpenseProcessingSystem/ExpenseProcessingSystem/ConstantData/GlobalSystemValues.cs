@@ -285,7 +285,7 @@ namespace ExpenseProcessingSystem.ConstantData
                 new SelectListItem { Text = "PCHC", Value = NC_CATEGORIES[4].ToString(), Selected = false },
                 new SelectListItem { Text = "DEPRECIATION", Value = NC_CATEGORIES[5].ToString(), Selected = false },
                 new SelectListItem { Text = "PETTY CASH REPLENISHMENT", Value = NC_CATEGORIES[6].ToString(), Selected = false },
-                new SelectListItem { Text = "JS PAYROLL.", Value = NC_CATEGORIES[7].ToString(), Selected = false },
+                new SelectListItem { Text = "JS PAYROLL", Value = NC_CATEGORIES[7].ToString(), Selected = false },
                 new SelectListItem { Text = "RETURN OF JS PAYROLL", Value = NC_CATEGORIES[8].ToString(), Selected = false },
                 new SelectListItem { Text = "MISCELLANEOUS ENTRIES", Value = NC_CATEGORIES[9].ToString(), Selected = false }
         };
