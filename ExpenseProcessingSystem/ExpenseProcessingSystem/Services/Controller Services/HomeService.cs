@@ -9923,7 +9923,7 @@ namespace ExpenseProcessingSystem.Services
                     {
                         tempGbase.entries = new List<entryContainer>();
 
-                        Dictionary<string, entryContainer> fbt = createFbt(expenseDDV.vendor, item.account, item.debitGross, credit, debit);
+                        Dictionary<string, entryContainer> fbt = createFbt(expenseDDV.vendor, item.account, item.debitGross, debit, credit);
 
                         fbt["debit"].type = (command != "R") ? "D" : "C";
                         fbt["credit"].type = (command != "R") ? "C" : "D";
