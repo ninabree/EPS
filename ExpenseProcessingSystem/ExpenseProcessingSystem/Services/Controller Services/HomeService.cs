@@ -8106,7 +8106,7 @@ namespace ExpenseProcessingSystem.Services
                         interDetail.Inter_Currency2_ABBR = _context.DMCurrency.Where(x => x.Curr_ID == inter.a.ExpDtl_DDVInter_Curr2_ID &&
                                                     x.Curr_isDeleted == false && x.Curr_isActive == true).Select(x => x.Curr_CCY_ABBR).FirstOrDefault() ?? "";
                     }
-                    //ERROR HERE                                                                  VVVVVV
+                    //ERROR HERE    
                     foreach (var interPart in inter.ExpenseEntryInterEntityParticular)
                     {
                         var acc = _context.DMAccount.Where(x => x.Account_ID == dtl.d.ExpDtl_Account).FirstOrDefault();
@@ -9793,13 +9793,14 @@ namespace ExpenseProcessingSystem.Services
 
             foreach (var item in expenseDDV.EntryDDV)
             {
+                gbaseContainer tempGbase = new gbaseContainer();
                 if (item.inter_entity)
                 {
                     DDVInterEntityViewModel interDtls = item.interDetails;
 
                     foreach (var particular in item.interDetails.interPartList)
                     {
-                        gbaseContainer tempGbase = new gbaseContainer
+                        tempGbase = new gbaseContainer
                         {
                             valDate = expenseDDV.expenseDate,
                             remarks = particular.InterPart_Particular_Title,
@@ -9828,40 +9829,53 @@ namespace ExpenseProcessingSystem.Services
                                     type = entryType
                                 };
                                 tempGbase.entries.Add(entry);
-
-                                if (item.fbt)
-                                {
-                                    tempGbase.entries = new List<entryContainer>();
-                                    string fbt = getFbtFormula(getAccount(item.account).Account_FBT_MasterID);
-
-                                    string equation = fbt.Replace("ExpenseAmount", item.debitGross.ToString());
-                                     decimal fbtAmount = Mizuho.round((decimal)(new DataTable().Compute(equation, null)), 2);
-                                    Console.WriteLine("-=-=-=-=-=->" + equation);
-                                    entry.amount = fbtAmount;
-
-                                    tempGbase.entries.Add(entry);
-
-                                    tempGbase.entries = tempGbase.entries.OrderByDescending(x => x.type).ToList();
-                                    goExpData = InsertGbaseEntry(tempGbase, expID, userID);
-                                    goExpHistData = new GOExpressHistModel();
-                                    list.Add(new { expEntryID = expID, expDtl = item.dtlID, expType = GlobalSystemValues.TYPE_DDV, goExp = goExpData, goExpHist = goExpHistData });
-                                }
                             }
                         }
                         tempGbase.entries = tempGbase.entries.OrderByDescending(x => x.type).ToList();
                         goExpData = InsertGbaseEntry(tempGbase, expID, userID);
                         goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.dtlID);
                         list.Add(new { expEntryID = expID, expDtl = item.dtlID, expType = GlobalSystemValues.TYPE_DDV, goExp = goExpData, goExpHist = goExpHistData });
+
+                        //FBT FOR INTER-ENTITY
+                        if (item.fbt)
+                        {
+                            tempGbase.entries = new List<entryContainer>();
+                            entryContainer credit = new entryContainer
+                            {
+                                amount = tempGbase.entries.Where(x => x.type == "C").Sum(x=> x.amount),
+                                dept = item.dept,
+                                type = "C"
+                            };
+                            entryContainer debit = new entryContainer
+                            {
+                                amount = tempGbase.entries.Where(x => x.type == "D").Sum(x => x.amount),
+                                dept = item.dept,
+                                type = "D"
+                            };
+                            Dictionary<string, entryContainer> fbt = createFbt(expenseDDV.vendor, item.account, item.debitGross, debit, credit);
+
+                            fbt["debit"].type = (command != "R") ? "D" : "C";
+                            fbt["credit"].type = (command != "R") ? "C" : "D";
+
+                            tempGbase.entries.Add(fbt["debit"]);
+                            tempGbase.entries.Add(fbt["credit"]);
+
+                            tempGbase.entries = tempGbase.entries.OrderByDescending(x => x.type).ToList();
+                            goExpData = InsertGbaseEntry(tempGbase, expID, userID);
+                            goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.dtlID);
+                            list.Add(new { expEntryID = expID, expDtl = item.dtlID, expType = GlobalSystemValues.TYPE_DDV, goExp = goExpData, goExpHist = goExpHistData });
+                        }
                     }
                 }
                 else
                 {
-                    gbaseContainer tempGbase = new gbaseContainer();
-
-                    tempGbase.valDate = expenseDDV.expenseDate;
-                    tempGbase.remarks = item.GBaseRemarks;
-                    tempGbase.maker = expenseDDV.maker;
-                    tempGbase.approver = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == expID).Expense_Approver;
+                    tempGbase = new gbaseContainer
+                    {
+                        valDate = expenseDDV.expenseDate,
+                        remarks = item.GBaseRemarks,
+                        maker = expenseDDV.maker,
+                        approver = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == expID).Expense_Approver
+                    };
 
                     entryContainer debit = new entryContainer();
                     entryContainer credit = new entryContainer();
@@ -9904,28 +9918,18 @@ namespace ExpenseProcessingSystem.Services
                     goExpData = InsertGbaseEntry(tempGbase, expID, userID);
                     goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.dtlID);
                     list.Add(new { expEntryID = expID, expDtl = item.dtlID, expType = GlobalSystemValues.TYPE_DDV, goExp = goExpData, goExpHist = goExpHistData });
-
+                    //FBT FOR GBASE REMARKS
                     if (item.fbt)
                     {
                         tempGbase.entries = new List<entryContainer>();
 
-                        //((ExpenseAmount*.50)/.65)*.35
-                        string fbt = getFbtFormula(getAccount(item.account).Account_FBT_MasterID);
+                        Dictionary<string, entryContainer> fbt = createFbt(expenseDDV.vendor, item.account, item.debitGross, debit, credit);
 
-                        string equation = fbt.Replace("ExpenseAmount", item.debitGross.ToString());
+                        fbt["debit"].type = (command != "R") ? "D" : "C";
+                        fbt["credit"].type = (command != "R") ? "C" : "D";
 
-                        var fbtCompute = Convert.ToDecimal(new DataTable().Compute(equation, null));
-                        decimal fbtAmount = Mizuho.round(fbtCompute, 2);
-                        Console.WriteLine("-=-=-=-=-=->" + equation);
-
-                        debit.account = getAccountByMasterID(int.Parse(xelemAcc.Element("D_FBT").Value)).Account_ID;
-                        debit.amount = fbtAmount;
-
-                        credit.account = getAccountByMasterID(int.Parse(xelemAcc.Element("C_FBT").Value)).Account_ID;
-                        credit.amount = fbtAmount;
-
-                        tempGbase.entries.Add(debit);
-                        tempGbase.entries.Add(credit);
+                        tempGbase.entries.Add(fbt["debit"]);
+                        tempGbase.entries.Add(fbt["credit"]);
 
                         tempGbase.entries = tempGbase.entries.OrderByDescending(x => x.type).ToList();
                         goExpData = InsertGbaseEntry(tempGbase, expID, userID);
@@ -9934,7 +9938,6 @@ namespace ExpenseProcessingSystem.Services
                     }
                 }
             }
-
             _GOContext.SaveChanges();
             _context.SaveChanges();
 

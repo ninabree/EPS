@@ -1,7 +1,7 @@
 ﻿@using ExpenseProcessingSystem.ViewModels
 @model HomeIndexViewModel
 
-@{ 
+@{
     var printStat = ViewBag.printStat ?? "";
     int loi = ViewBag.loi > 0 ? ViewBag.loi : 13;
     var pageNo = Model.GeneralPendingList.PageIndex;
@@ -109,8 +109,8 @@
             var nextDisabled = !Model.GeneralPendingList.HasNextPage ? "disabled" : "";
         }
         <a class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left" page="@(Model.GeneralPendingList.PageIndex - 1)"></a>
-        <input type="text" class="pagination-input" id="paginationInput" val="" placeholder="@(Model.GeneralPendingList.PageIndex)"/>
-        <input type="text" class="pagination-input" value=" of @(Model.GeneralPendingList.TotalPages)" disabled />
+        <input type="text" class="pagination-input" id="paginationInput" val="" placeholder="@(Model.GeneralPendingList.PageIndex)" />
+        <input type="text" class="pagination-input txtMaxPage" value="of @(Model.GeneralPendingList.TotalPages)" disabled />
         <a class="btn pagination-btn btn-xs btn-default @nextDisabled glyphicon glyphicon-menu-right" page="@(Model.GeneralPendingList.PageIndex + 1)"></a>
     </div>
 </div>
@@ -152,5 +152,6 @@
             $("option:selected").prop("selected", false);
             $('#search-frm').submit();
         });
-    });    
+    });
 </script>
+<script type="text/javascript" src="~/js/Pagination.js"></script>

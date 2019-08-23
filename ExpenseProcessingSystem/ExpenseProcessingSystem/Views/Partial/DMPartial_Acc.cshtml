@@ -124,8 +124,8 @@
     <a page="@(Model.Account.PageIndex - 1)"
        class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left">
     </a>
-    <input type="text" class="pagination-input" id="paginationInput" val="" placeholder="@(Model.Account.PageIndex)"/>
-    <input type="text" class="pagination-input" value=" of @(Model.Account.TotalPages)" disabled />
+    <input type="text" class="pagination-input" id="paginationInput" val="" placeholder="@(Model.Account.PageIndex)" />
+    <input type="text" class="pagination-input txtMaxPage" value=" of @(Model.Account.TotalPages)" disabled />
     <a page="@(Model.Account.PageIndex + 1)"
        class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right">
     </a>
@@ -146,3 +146,4 @@
     </div>
     @Html.Partial("ModalPartial")
 </div>
+<script type="text/javascript" src="~/js/Pagination.js"></script>

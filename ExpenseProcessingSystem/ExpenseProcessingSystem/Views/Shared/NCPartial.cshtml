@@ -535,7 +535,7 @@
                 @Html.HiddenFor(x => x.entryID)
                 <input type="hidden" name="command" id="btnID" />
                 <tr>
-                    <td class="float-l">
+                    <td class="float-l" colspan="1">
                         @if (@Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_LS_PAYROLL ||
                             @Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_TAX_REMITTANCE ||
                             @Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_DEPRECIATION ||
@@ -569,6 +569,7 @@
                             }
                         </select>
                     </td>
+                    <td colspan="12"></td>
                 </tr>
             </tbody>
         </table>

@@ -258,7 +258,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 Text = "--- Accounts --",
                 Value = "0"
             });
-            _context.DMAccount.Where(x => x.Account_isDeleted == false && x.Account_isActive == true).ToList().ForEach(x => {
+            _context.DMAccount.Where(x => x.Account_isDeleted == false && x.Account_isActive == true).OrderBy(x => x.Account_No).ToList().ForEach(x => {
                 selList.Add(new SelectListItem() { Text = x.Account_No + " - " + x.Account_Name, Value = x.Account_ID + "" });
             });
             return selList;
