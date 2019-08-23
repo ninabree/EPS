@@ -275,6 +275,11 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         public List<SelectListItem> getVendorSelectList()
         {
             List<SelectListItem> venList = new List<SelectListItem>();
+            venList.Add(new SelectListItem()
+            {
+                Text = "--- Select Vendor Applicable --",
+                Value = "0"
+            });
             _context.DMVendor.Where(x => x.Vendor_isDeleted == false && x.Vendor_isActive == true).ToList().ForEach(x => {
                 venList.Add(new SelectListItem() { Text = x.Vendor_Name, Value = x.Vendor_ID + "" });
             });
@@ -284,6 +289,11 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         public List<SelectListItem> getTaxRateSelectList()
         {
             List<SelectListItem> trList = new List<SelectListItem>();
+            trList.Add(new SelectListItem()
+            {
+                Text = "--- Select Tax Rate Applicable --",
+                Value = "0"
+            });
             _context.DMTR.Where(x => x.TR_isDeleted == false && x.TR_isActive == true).ToList().ForEach(x => {
                 trList.Add(new SelectListItem() { Text = x.TR_WT_Title+" - " + x.TR_Tax_Rate, Value = x.TR_ID + "" });
             });
