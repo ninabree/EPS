@@ -1336,11 +1336,11 @@ namespace ExpenseProcessingSystem.Controllers
                     acclist.Add(new accDetails
                     {
                         accId = acc.Account_ID,
-                        accName = acc.Account_Name + " - " + acc.Account_No,
+                        accName = acc.Account_No + " - " + acc.Account_Name,
                         accCode = acc.Account_Code
                     });
                 }
-                viewModel.systemValues.acc = acclist.OrderBy(x=> x.accName).ToList();
+                viewModel.systemValues.acc = acclist.OrderBy(x=> x.accName.Contains("H90")).ThenBy(x=> x.accName).ToList();
             }
             else
             {
@@ -2685,7 +2685,7 @@ namespace ExpenseProcessingSystem.Controllers
                 acclist.Add(new accDetails
                     {
                         accId = acc.Account_ID,
-                        accName = acc.Account_Name,
+                        accName = acc.Account_No + " - " + acc.Account_Name,
                         accCode = acc.Account_Code
                     });
             }

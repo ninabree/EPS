@@ -9,8 +9,7 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
 {
     public class ExpenseEntryNCDtlAccViewModel
     {
-        [NotNullValidations]
-        [Display(Name = "Account")]
+        [Display(Name = "Account ID")]
         public int ExpNCDtlAcc_Acc_ID { get; set; }
         [Display(Name = "Account")]
         public string ExpNCDtlAcc_Acc_Name { get; set; }

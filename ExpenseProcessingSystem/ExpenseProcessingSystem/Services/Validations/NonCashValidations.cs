@@ -51,9 +51,54 @@ namespace ExpenseProcessingSystem.Services.Validations
                 {
                     foreach (ExpenseEntryNCDtlViewModel dtl in data.EntryNC.ExpenseEntryNCDtls)
                     {
-                        if ((dtl.ExpNCDtl_Remarks_Desc.Length + dtl.ExpNCDtl_Remarks_Period.Length) > 29)
+                        if (dtl.ExpNCDtl_Remarks_Desc == null)
+                        {
+                            return new ValidationResult("Remarks Description cannot be empty.");
+                        } else if (dtl.ExpNCDtl_Remarks_Desc != null && dtl.ExpNCDtl_Remarks_Period == null)
+                        {
+                            if ((dtl.ExpNCDtl_Remarks_Desc.Length) > 29)
+                            {
+                                return new ValidationResult("Remarks Description and Period exceeds the limit of 29 characters in total.");
+                            }
+                        }
+                        else if ((dtl.ExpNCDtl_Remarks_Desc.Length + dtl.ExpNCDtl_Remarks_Period.Length) > 29)
                         {
                             return new ValidationResult("Remarks Description and Period exceeds the limit of 29 characters in total.");
+                        }
+                    }
+                }
+                return ValidationResult.Success;
+            }
+            catch (Exception ex)
+            {
+                //sample fatal error log
+                Log.Fatal(ex, "User: {user}, StackTrace : {trace}, Error Message: {message}", "[UserID]", ex.StackTrace, ex.Message);
+                return new ValidationResult("Invalid input");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
+        }
+    }
+    public class AccountNotNullValidations : ValidationAttribute
+    {
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            try
+            {
+                var name = validationContext.DisplayName;
+                var data = (EntryNCViewModelList)validationContext.ObjectInstance;
+                if(data.EntryNC.NC_Category_ID != GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES)
+                {
+                    foreach(ExpenseEntryNCDtlViewModel dtl in data.EntryNC.ExpenseEntryNCDtls)
+                    {
+                        foreach (ExpenseEntryNCDtlAccViewModel acc in dtl.ExpenseEntryNCDtlAccs)
+                        {
+                            if (value == null || value.Equals(0) || value.Equals("0"))
+                            {
+                                return new ValidationResult(name + " cannot be empty.");
+                            }
                         }
                     }
                 }

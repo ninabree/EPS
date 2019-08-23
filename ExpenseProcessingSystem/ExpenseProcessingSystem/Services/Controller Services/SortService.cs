@@ -287,7 +287,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             switch (sortOrder)
             {
                 case "acc_stat":
-                    tempList = tempList.OrderBy(x => statusIDs.Contains(x.Account_Status_ID));
+                    tempList = tempList.OrderBy(x => statusIDs.Contains(x.Account_Status_ID)).OrderBy(x=> x.Account_Status_ID);
                     viewData = "glyph-10";
                     vdInfo = "glyphicon-menu-up";
                     break;
@@ -422,7 +422,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     vdInfo = "glyphicon-menu-up";
                     break;
                 default:
-                    tempList = tempList.OrderByDescending(x => statusIDs.Contains(x.Account_Status_ID));
+                    tempList = tempList.OrderByDescending(x => statusIDs.Contains(x.Account_Status_ID)).OrderByDescending(x => x.Account_Status_ID);
                     viewData = "glyph-10";
                     vdInfo = "glyphicon-menu-down";
                     break;
