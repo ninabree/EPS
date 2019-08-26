@@ -23,7 +23,13 @@
     <div id="tbl-lbl" class="flex-sb">
         <div class="dis-inline-block w-20">Date: <p class="dis-inline-block w-70">@Html.TextBoxFor(model => model.expenseDate, new { @readonly = "true", @class = "input w-97" })</p> </div>
         <div class="dis-inline-block"><p class="dis-inline-block">@Html.TextBoxFor(model => model.expenseYear, new { @readonly = "true", @class = "input" })</p> - <p class="dis-inline-block">@Html.TextBoxFor(model => model.expenseId, new { @readonly = "true", @class = "input" })</p></div>
-        <div class="dis-inline-block float-r">Check No : <p class="dis-inline-block">@Html.TextBoxFor(model => model.checkNo, new { @readonly = "true", @class = "input" })</p></div>
+        <div class="dis-inline-block float-r">
+            @if (Model.checkNo != "")
+            {
+            <button class="tbl-btn" id="newCheck">Generate new check No.</button>
+            }
+            Check No : <p class="dis-inline-block">@Html.TextBoxFor(model => model.checkNo, new { @readonly = "true", @class = "input" })</p>
+        </div>
     </div>
     <div id="tbl-lbl">
         <div class="dis-inline-block"><p>Payee:</p></div>
@@ -249,6 +255,10 @@
             });
             </Text>
         }
+
+        $("body").on("click", "#newCheck", function () {
+            window.location.href = "generateNewCheckNo?entryID=@Model.entryID";
+        });
 
         $("#entry-controls").on("click", "#printCheck", function (e) {
             window.open("/Home/GenerateCheckFile?ExpenseID=@Model.entryID");

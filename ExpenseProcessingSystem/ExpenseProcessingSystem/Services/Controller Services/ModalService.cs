@@ -1533,6 +1533,15 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             return grpList;
         }
         
+        public SelectList getAccountSelectList()
+        {
+            var select = new SelectList(_context.DMAccount.Where(x => x.Account_isActive == true
+                                                 && x.Account_isDeleted == false)
+                                          .OrderBy(x => x.Account_Name)
+                                          .Select(q => new {q.Account_ID, name = (q.Account_No + " - " + q.Account_Name)}),
+            "Account_ID", "name");
+            return select;
+        }
 
         public string GetAccountName(string id)
         {

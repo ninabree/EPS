@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,12 +10,14 @@ namespace ExpenseProcessingSystem.ViewModels
     {
         public int accountid { get; set; }
         public string account { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:n}")]
         public decimal amount { get; set; }
     }
 
     public class ewtAmtList
     {
         public float ewt { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:n}")]
         public decimal ewtAmt { get; set; }
     }
 
@@ -26,19 +29,31 @@ namespace ExpenseProcessingSystem.ViewModels
         public decimal amount { get; set; }
     }
 
+    public class taxInfo
+    {
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:n}")]
+        public decimal taxInfo_vat { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:n}")]
+        public decimal taxInfo_gross { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:n}")]
+        public decimal taxInfo_taxBase { get; set; }
+    }
+
     public class VoucherViewModelList
     {
         //public List<VoucherViewModel> itemDtl { get; set; }
         public headerVM headvm { get; set; }
         public int payeeID { get; set; }
         public string payee { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:n}")]
         public decimal amountCredit { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:n}")]
         public decimal amountGross { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:n}")]
         public decimal taxWithheld { get; set; }
-        public decimal taxInfo_vat { get; set; }
-        public decimal taxInfo_gross { get; set; }
-        public decimal taxInfo_taxBase { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:n}")]
         public decimal fbtAmount { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:n}")]
         public decimal fbtGross { get; set; }
         public string amountString { get; set; }
         public string checkNo { get; set; }
@@ -50,11 +65,15 @@ namespace ExpenseProcessingSystem.ViewModels
         public string verifier_2 { get; set; }
         public string date { get; set; }
         public bool isFbt { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:n}")]
         public List<accountList> accountsDebit { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:n}")]
         public List<accountList> accountCredit { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:n}")]
         public List<particulars> particulars { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:n}")]
         public List<ewtAmtList> vatAmtList { get; set; }
-
+        public List<taxInfo> taxInfos { get; set; }
         public bool isCheck { get; set; }
 
         public VoucherViewModelList()
@@ -63,6 +82,7 @@ namespace ExpenseProcessingSystem.ViewModels
             vatAmtList = new List<ewtAmtList>();
             accountsDebit = new List<accountList>();
             accountCredit = new List<accountList>();
+            taxInfos = new List<taxInfo>();
             headvm = new headerVM();
         }
     }

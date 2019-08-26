@@ -7875,7 +7875,24 @@ namespace ExpenseProcessingSystem.Services
             }
             return -1;
         }
+        public bool generateNewCheck(int entryID)
+        {
+            var expense = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == entryID);
 
+            if(expense != null)
+            {
+
+                var newCheckNo = getCheckNo();
+                expense.Expense_CheckId = int.Parse(newCheckNo["id"]);
+                expense.Expense_CheckNo = newCheckNo["check"];
+
+                _context.SaveChanges();
+
+                return true;
+            }
+
+            return false;
+        }
         //retrieve expense details
         public EntryCVViewModelList getExpense(int transID)
         {
@@ -10218,9 +10235,10 @@ namespace ExpenseProcessingSystem.Services
             PettyCashModel currentPC = _context.PettyCash.OrderByDescending(x => x.PC_ID).FirstOrDefault();
 
             closeVM.pettyBegBalance = currentPC.PC_StartBal;
-            closeVM.endBalance = currentPC.PC_EndBal;
+            closeVM.closeBal = currentPC.PC_EndBal;
             closeVM.Disbursed = currentPC.PC_Disbursed;
             closeVM.recieve = currentPC.PC_Recieved;
+            closeVM.date = DateTime.Now;
 
             return closeVM;
         }
@@ -11072,10 +11090,6 @@ namespace ExpenseProcessingSystem.Services
                 goModel.Entry11ExchRate = containerModel.entries[0].interate == 0 ? "" : containerModel.entries[0].interate.ToString();
                 goModel.Entry11ExchCcy = (containerModel.entries[0].contraCcy > 0) ? GetCurrencyAbbrv(containerModel.entries[0].contraCcy) : "";
                 goModel.Entry11Fund = (entry11Account.Account_Fund == true) ? "O" : "";//Replace with proper fund default.
-                if (containerModel.entries[0].chkNo != null)
-                {
-                    goModel.Entry11CheckNo = containerModel.entries[0].chkNo;
-                }
                 goModel.Entry11Available = "";//Replace with proper available default.
                 goModel.Entry11Details = "";//Replace with proper details default.
                 goModel.Entry11Entity = "010";//Replace with proper entity default.
@@ -11097,10 +11111,6 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry12ExchRate = containerModel.entries[1].interate == 0 ? "" : containerModel.entries[1].interate.ToString();
                     goModel.Entry12ExchCcy = (containerModel.entries[1].contraCcy > 0) ? GetCurrencyAbbrv(containerModel.entries[1].contraCcy) : "";
                     goModel.Entry12Fund = (entry12Account.Account_Fund == true) ? "O" : "";//Replace with proper fund default.
-                    if (containerModel.entries[1].chkNo != null)
-                    {
-                        goModel.Entry12CheckNo = containerModel.entries[1].chkNo;
-                    }
                     goModel.Entry12Available = "";//Replace with proper available default.
                     goModel.Entry12Details = "";//Replace with proper details default.
                     goModel.Entry12Entity = "010";//Replace with proper entity default.
@@ -11122,10 +11132,6 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry21ExchRate = containerModel.entries[2].interate == 0 ? "" : containerModel.entries[2].interate.ToString();
                     goModel.Entry21ExchCcy = (containerModel.entries[2].contraCcy > 0) ? GetCurrencyAbbrv(containerModel.entries[2].contraCcy) : "";
                     goModel.Entry21Fund = (entry21Account.Account_Fund == true) ? "O" : "";//Replace with proper fund default.
-                    if (containerModel.entries[2].chkNo != null)
-                    {
-                        goModel.Entry21CheckNo = containerModel.entries[2].chkNo;
-                    }
                     goModel.Entry21Available = "";//Replace with proper available default.
                     goModel.Entry21Details = "";//Replace with proper details default.
                     goModel.Entry21Entity = "010";//Replace with proper entity default.
@@ -11147,10 +11153,6 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry22ExchRate = containerModel.entries[3].interate == 0 ? "" : containerModel.entries[3].interate.ToString();
                     goModel.Entry22ExchCcy = (containerModel.entries[3].contraCcy > 0) ? GetCurrencyAbbrv(containerModel.entries[3].contraCcy) : "";
                     goModel.Entry22Fund = (entry22Account.Account_Fund == true) ? "O" : "";//Replace with proper fund default.
-                    if (containerModel.entries[3].chkNo != null)
-                    {
-                        goModel.Entry22CheckNo = containerModel.entries[3].chkNo;
-                    }
                     goModel.Entry22Available = "";//Replace with proper available default.
                     goModel.Entry22Details = "";//Replace with proper details default.
                     goModel.Entry22Entity = "010";//Replace with proper entity default.
@@ -11172,10 +11174,6 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry31ExchRate = containerModel.entries[4].interate == 0 ? "" : containerModel.entries[4].interate.ToString();
                     goModel.Entry31ExchCcy = (containerModel.entries[4].contraCcy > 0) ? GetCurrencyAbbrv(containerModel.entries[4].contraCcy) : "";
                     goModel.Entry31Fund = (entry31Account.Account_Fund == true) ? "O" : "";//Replace with proper fund default.
-                    if (containerModel.entries[4].chkNo != null)
-                    {
-                        goModel.Entry31CheckNo = containerModel.entries[4].chkNo;
-                    }
                     goModel.Entry31Available = "";//Replace with proper available default.
                     goModel.Entry31Details = "";//Replace with proper details default.
                     goModel.Entry31Entity = "010";//Replace with proper entity default.
@@ -11197,10 +11195,6 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry32ExchRate = containerModel.entries[5].interate == 0 ? "" : containerModel.entries[5].interate.ToString();
                     goModel.Entry32ExchCcy = (containerModel.entries[5].contraCcy > 0) ? GetCurrencyAbbrv(containerModel.entries[5].contraCcy) : "";
                     goModel.Entry32Fund = (entry32Account.Account_Fund == true) ? "O" : "";//Replace with proper fund default.
-                    if (containerModel.entries[5].chkNo != null)
-                    {
-                        goModel.Entry32CheckNo = containerModel.entries[5].chkNo;
-                    }
                     goModel.Entry32Available = "";//Replace with proper available default.
                     goModel.Entry32Details = "";//Replace with proper details default.
                     goModel.Entry32Entity = "010";//Replace with proper entity default.
@@ -11222,10 +11216,6 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry41ExchRate = containerModel.entries[6].interate == 0 ? "" : containerModel.entries[6].interate.ToString();
                     goModel.Entry41ExchCcy = (containerModel.entries[6].contraCcy > 0) ? GetCurrencyAbbrv(containerModel.entries[6].contraCcy) : "";
                     goModel.Entry41Fund = (entry41Account.Account_Fund == true) ? "O" : "";//Replace with proper fund default.
-                    if (containerModel.entries[6].chkNo != null)
-                    {
-                        goModel.Entry41CheckNo = containerModel.entries[6].chkNo;
-                    }
                     goModel.Entry41Available = "";//Replace with proper available default.
                     goModel.Entry41Details = "";//Replace with proper details default.
                     goModel.Entry41Entity = "010";//Replace with proper entity default.
@@ -11247,10 +11237,6 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry42ExchRate = containerModel.entries[7].interate == 0 ? "" : containerModel.entries[7].interate.ToString();
                     goModel.Entry42ExchCcy = (containerModel.entries[7].contraCcy > 0) ? GetCurrencyAbbrv(containerModel.entries[7].contraCcy) : "";
                     goModel.Entry42Fund = (entry42Account.Account_Fund == true) ? "O" : "";//Replace with proper fund default.
-                    if (containerModel.entries[7].chkNo != null)
-                    {
-                        goModel.Entry42CheckNo = containerModel.entries[7].chkNo;
-                    }
                     goModel.Entry42Available = "";//Replace with proper available default.
                     goModel.Entry42Details = "";//Replace with proper details default.
                     goModel.Entry42Entity = "010";//Replace with proper entity default.
@@ -11908,7 +11894,8 @@ namespace ExpenseProcessingSystem.Services
 
             var expense = _context.ExpenseEntry.Where(x => x.Expense_Type == GlobalSystemValues.TYPE_CV
                                                         && expectedStatus.Contains(x.Expense_Status))
-                                               .OrderByDescending(x => x.Expense_Created_Date).FirstOrDefault();
+                                               .OrderByDescending(x => x.Expense_CheckId)
+                                               .ThenByDescending(y => int.Parse(y.Expense_CheckNo)).FirstOrDefault();
             DMCheckModel checkNoModel;
 
             if (expense == null)

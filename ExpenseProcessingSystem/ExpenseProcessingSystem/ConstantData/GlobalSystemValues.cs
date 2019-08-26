@@ -184,6 +184,7 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly string ENTRY_MOD_SS = "/Home/VerAppModSS";
         public static readonly string ENTRY_MOD_NC = "/Home/VerAppModNC";
         public static readonly string LIQ_MAIN = "/Home/Liquidation_Main";
+        public static readonly string AMOR = "/Home/Amortization";
         public static readonly string LIQ_SS = "/Home/Liquidation_SS";
         public static readonly string LIQ_New_SS = "/Home/Liquidation_AddNewSS";
         public static readonly string LIQ_View_SS = "/Home/View_Liquidation_SS";
@@ -213,6 +214,7 @@ namespace ExpenseProcessingSystem.ConstantData
             GlobalSystemValues.ENTRY_MOD_SS,
             GlobalSystemValues.ENTRY_MOD_NC,
             GlobalSystemValues.LIQ_MAIN,
+            GlobalSystemValues.AMOR,
             GlobalSystemValues.LIQ_SS,
             GlobalSystemValues.LIQ_New_SS,
             GlobalSystemValues.LIQ_View_SS,

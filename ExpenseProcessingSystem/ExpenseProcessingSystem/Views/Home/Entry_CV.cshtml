@@ -379,7 +379,7 @@
             $('.modal-header').empty();
             $('.modal-header').append('<h4 class="modal-title">Prepaid Expense Amortization Schedule</h4>');
             var vendor = $("#vendorName option:selected").text();
-            var account = $("#" + pNode.id).find(".txtAcc option:selected").text()
+            var account = $("#" + pNode.id).find(".txtAcc option:selected").va()
 
             modalDivBody.load("@Url.Action("EntryExpenseAmortization", "Modal")", {
                 "id": id,

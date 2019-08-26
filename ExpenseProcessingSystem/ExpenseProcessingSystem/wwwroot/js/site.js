@@ -148,6 +148,7 @@ $(document).ready(function () {
         var ENTRY_MOD_SS = "/Home/VerAppModSS";
         var ENTRY_MOD_NC = "/Home/VerAppModNC";
         var LIQ_MAIN = "/Home/Liquidation_Main";
+        var AMOR = "/Home/Amortization";
         var LIQ_SS = "/Home/Liquidation_SS";
         var LIQ_New_SS = "/Home/Liquidation_AddNewSS";
         var LIQ_View_SS = "/Home/View_Liquidation_SS";
@@ -213,6 +214,7 @@ $(document).ready(function () {
             ENTRY_MOD_SS,
             ENTRY_MOD_NC,
             LIQ_MAIN,
+            AMOR,
             LIQ_SS,
             LIQ_New_SS,
             LIQ_View_SS,

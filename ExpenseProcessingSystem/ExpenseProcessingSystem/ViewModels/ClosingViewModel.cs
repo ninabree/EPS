@@ -15,17 +15,23 @@ namespace ExpenseProcessingSystem.ViewModels
 
         public string rbuStatus { get; set; }
         public string fcduStatus { get; set; }
-
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:n}")]
         public decimal pettyBegBalance { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:n}")]
         public decimal cashIn { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:n}")]
         public decimal cashOut { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:n}")]
         public decimal endBalance { get; set; }
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime date { get; set; }
-
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:n}")]
         public decimal opeBal { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:n}")]
         public decimal recieve { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:n}")]
         public decimal Disbursed { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:n}")]
         public decimal closeBal { get; set; }
 
         public int oneK { get; set; }

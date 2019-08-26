@@ -3789,6 +3789,27 @@ namespace ExpenseProcessingSystem.Controllers
 
         }
 
+        //----------------[Amortization]--------------------------
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
+        public IActionResult Amortization()
+        {
+            AmortizationList items = new AmortizationList();
+
+            for(int i = 0; i < 5; i++)
+            {
+                items.amortizations.Add(new amorViewModel {
+                    link = "Pending",
+                    maker = "Gene - " + (i.ToString()),
+                    amount = 9999.00M + (decimal)i,
+                    sched = DateTime.Now.AddDays(i),
+                    voucherNo = "CV-2019-" + i.ToString().PadLeft(5,'0')
+                });
+            }
+
+            return View(items);
+        }
+
         //------------------------------------------------------------------
         //[* ACCOUNT *]
         [HttpPost]
@@ -5007,8 +5028,6 @@ namespace ExpenseProcessingSystem.Controllers
                 account = "BDO MNL"
             });
 
-             decimal tax_vat = 0.00M;
-             decimal tax_gross = 0.00M;
              decimal amountGross = 0.00M;
              decimal amountCredit = 0.00M;
 
@@ -5037,25 +5056,37 @@ namespace ExpenseProcessingSystem.Controllers
                     }
                 }
 
-                vvm.accountsDebit.Add(new accountList
+                if(vvm.accountsDebit.Any(x => x.accountid == inputItem.account))
                 {
-                    account = _service.GetAccountName(inputItem.account),
-                    amount = inputItem.debitGross,
-                    accountid = inputItem.account
-                });
+                    int accountIndex = vvm.accountsDebit.IndexOf(vvm.accountsDebit.FirstOrDefault(x => x.accountid == inputItem.account));
+                    vvm.accountsDebit[accountIndex].amount += inputItem.debitGross;
+                }
+                else
+                {
+                    vvm.accountsDebit.Add(new accountList
+                    {
+                        account = _service.GetAccountName(inputItem.account),
+                        amount = inputItem.debitGross,
+                        accountid = inputItem.account
+                    });
+                }
 
                 amountGross += inputItem.debitGross;
                 amountCredit += inputItem.debitGross;
 
-                 decimal _vat = 0;
+                decimal _vat = 0;
 
-                if (inputItem.chkEwt || inputItem.chkVat)
-                    tax_gross += inputItem.debitGross;
+                taxInfo information = new taxInfo();
 
                 if (inputItem.chkVat)
                 {
                     _vat = _service.getVat(inputItem.vat);
-                    tax_vat += Mizuho.round((inputItem.debitGross / (1 + _vat)) * _vat, 2);
+                    information.taxInfo_vat += Mizuho.round((inputItem.debitGross / (1 + _vat)) * _vat, 2);
+                    information.taxInfo_taxBase = inputItem.debitGross - information.taxInfo_vat;
+                }
+                else
+                {
+                    information.taxInfo_taxBase = inputItem.debitGross;
                 }
 
                 if (inputItem.chkEwt && inputItem.ewt != 0)
@@ -5102,6 +5133,12 @@ namespace ExpenseProcessingSystem.Controllers
                     }
                     vvm.fbtGross += (decimal)inputItem.debitGross;
                 }
+
+                if (inputItem.chkEwt || inputItem.chkVat)
+                {
+                    information.taxInfo_gross = inputItem.debitGross;
+                    vvm.taxInfos.Add(information);
+                }
             }
 
             foreach (var item in _ewtList)
@@ -5110,9 +5147,7 @@ namespace ExpenseProcessingSystem.Controllers
             vvm.amountString = ConvertToWord.ToWord(amountCredit);
 
             vvm.vatAmtList.AddRange(_ewtList);
-            vvm.taxInfo_vat = tax_vat;
-            vvm.taxInfo_gross = tax_gross;
-            vvm.taxInfo_taxBase = tax_gross - tax_vat;
+
             vvm.amountCredit = amountCredit;
             vvm.amountGross = amountGross;
 
@@ -5211,21 +5246,25 @@ namespace ExpenseProcessingSystem.Controllers
                 amountGross += inputItem.debitGross;
                 amountCredit += inputItem.debitGross;
 
-                 decimal _vat = 0;
+                decimal _vat = 0;
 
-                if (inputItem.chkEwt || inputItem.chkVat)
-                    tax_gross += inputItem.debitGross;
+                taxInfo information = new taxInfo();
 
                 if (inputItem.chkVat)
                 {
                     _vat = _service.getVat(inputItem.vat);
-                    tax_vat += Mizuho.round((inputItem.debitGross / (1 + _vat)) * _vat, 2);
+                    information.taxInfo_vat += Mizuho.round((inputItem.debitGross / (1 + _vat)) * _vat, 2);
+                    information.taxInfo_taxBase = inputItem.debitGross - information.taxInfo_vat;
+                }
+                else
+                {
+                    information.taxInfo_taxBase = inputItem.debitGross;
                 }
 
                 if (inputItem.chkEwt && inputItem.ewt != 0)
                 {
-                     float _ewt = Mizuho.round(_service.GetEWTValue(inputItem.ewt), 4);
-                     decimal _ewtAmount = Mizuho.round((inputItem.debitGross / (1 + _vat)) * (decimal)_ewt, 2);
+                    float _ewt = Mizuho.round(_service.GetEWTValue(inputItem.ewt), 4);
+                    decimal _ewtAmount = Mizuho.round((inputItem.debitGross / (1 + _vat)) * (decimal)_ewt, 2);
                     if (_ewtList.Any(x => x.ewt == _ewt))
                     {
                         int index = _ewtList.FindIndex(x => x.ewt == _ewt);
@@ -5235,7 +5274,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         _ewtList.Add(new ewtAmtList
                         {
-                            ewt = _ewt * 100,
+                            ewt = _ewt * 100.00f,
                             ewtAmt = _ewtAmount
                         }
                         );
@@ -5265,8 +5304,13 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         vvm.fbtAmount += Mizuho.round((((decimal)inputItem.debitGross / .65M) * .35M), 2);
                     }
-
                     vvm.fbtGross += (decimal)inputItem.debitGross;
+                }
+
+                if (inputItem.chkEwt || inputItem.chkVat)
+                {
+                    information.taxInfo_gross = inputItem.debitGross;
+                    vvm.taxInfos.Add(information);
                 }
             }
 
@@ -5276,9 +5320,9 @@ namespace ExpenseProcessingSystem.Controllers
             vvm.amountString = ConvertToWord.ToWord(amountCredit);
 
             vvm.vatAmtList.AddRange(_ewtList);
-            vvm.taxInfo_vat = tax_vat;
-            vvm.taxInfo_gross = tax_gross;
-            vvm.taxInfo_taxBase = tax_gross - tax_vat;
+            //vvm.taxInfo_vat = tax_vat;
+            //vvm.taxInfo_gross = tax_gross;
+            //vvm.taxInfo_taxBase = tax_gross - tax_vat;
             vvm.amountCredit = amountCredit;
             vvm.amountGross = amountGross;
 
@@ -5296,6 +5340,12 @@ namespace ExpenseProcessingSystem.Controllers
             bool result = _service.UpdatePrintCheckPrintStatus(expenseID);
 
             return Json(result);
+        }
+
+        public IActionResult generateNewCheckNo(int entryID)
+        {
+            _service.generateNewCheck(entryID);
+            return RedirectToAction("View_CV", "Home", new { entryID = entryID });
         }
     }
 }

@@ -15,6 +15,7 @@ namespace ExpenseProcessingSystem.Models
         public decimal Amor_Price { get; set; }
         public string Amor_Status { get; set; }
         public string Amor_Number { get; set; }
+        public int Amor_Account { get; set; }
         public ExpenseEntryDetailModel ExpenseEntryDetailModel { get; set; }
     }
 }

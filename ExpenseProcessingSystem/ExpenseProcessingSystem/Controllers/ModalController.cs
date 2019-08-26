@@ -1001,7 +1001,7 @@ namespace ExpenseProcessingSystem.Controllers
         }
         //_________________________//[Check Expense]//_____________________________
         //Expense Amortization
-        public IActionResult EntryExpenseAmortization(string id, string vendor, string account, int month, int day, int duration)
+        public IActionResult EntryExpenseAmortization(string id, string vendor, int account, int month, int day, int duration)
         {
             CVAmortizationViewModel model = new CVAmortizationViewModel();
 
@@ -1011,6 +1011,8 @@ namespace ExpenseProcessingSystem.Controllers
             model.month = month;
             model.day = day;
             model.duration = duration;
+
+            model.accountsList = _service.getAccountSelectList();
 
             return PartialView(model);
         }
