@@ -9729,7 +9729,7 @@ namespace ExpenseProcessingSystem.Services
                 {
                     tempGbase.entries = new List<entryContainer>();
 
-                    Dictionary<string, entryContainer> fbt = createFbt(expenseDetails.vendor, item.account, item.debitGross, credit, debit);
+                    Dictionary<string, entryContainer> fbt = createFbt(expenseDetails.vendor, item.account, item.debitGross, debit, credit);
 
                     fbt["debit"].type = (command != "R") ? "D" : "C"; 
                     fbt["credit"].type = (command != "R") ? "C" : "D";
@@ -10094,16 +10094,29 @@ namespace ExpenseProcessingSystem.Services
             if (masterId == ohr)
             {
                 d.account = rentDebit;
+                var rentDebitAcc = _context.DMAccount.FirstOrDefault(x => x.Account_MasterID == rentDebit
+                                                                       && x.Account_isActive == true);
+                d.ccy = _context.DMCurrency.FirstOrDefault(x => x.Curr_MasterID == rentDebitAcc.Account_Currency_MasterID
+                                                             && x.Curr_isActive == true).Curr_ID;
             }
             else
             {
+                int currMaster;
                 switch (userType)
                 {
                     case GlobalSystemValues.EMPCAT_EXPAT:
                         d.account = expatDebit;
+                        currMaster = _context.DMAccount.FirstOrDefault(x => x.Account_MasterID == expatDebit
+                                                       && x.Account_isActive == true).Account_Currency_MasterID;
+                        d.ccy = _context.DMCurrency.FirstOrDefault(x => x.Curr_MasterID == currMaster
+                                                                     && x.Curr_isActive == true).Curr_ID;
                         break;
                     case GlobalSystemValues.EMPCAT_LOCAL:
                         d.account = localDebit;
+                        currMaster = _context.DMAccount.FirstOrDefault(x => x.Account_MasterID == localDebit
+                                                                      && x.Account_isActive == true).Account_Currency_MasterID;
+                        d.ccy = _context.DMCurrency.FirstOrDefault(x => x.Curr_MasterID == currMaster
+                                                                     && x.Curr_isActive == true).Curr_ID;
                         break;
                 };
             }
@@ -10113,6 +10126,10 @@ namespace ExpenseProcessingSystem.Services
 
             c.account = getAccountByMasterID(int.Parse(xelemAcc.Element("C_FBT").Value)).Account_ID;
             c.amount = fbtAmount;
+            var cAccount = _context.DMAccount.FirstOrDefault(x => x.Account_MasterID == c.account
+                                                                    && x.Account_isActive == true);
+            d.ccy = _context.DMCurrency.FirstOrDefault(x => x.Curr_MasterID == cAccount.Account_Currency_MasterID
+                                                         && x.Curr_isActive == true).Curr_ID;
 
             Dictionary<string, entryContainer> fbtDic = new Dictionary<string, entryContainer>();
 
