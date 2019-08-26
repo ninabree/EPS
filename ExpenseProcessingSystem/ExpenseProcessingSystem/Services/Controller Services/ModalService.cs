@@ -296,6 +296,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             Account_Currency_Name = _context.DMCurrency.Where(x => x.Curr_MasterID == m.Pending_Account_Currency_MasterID)
                                             .Where(x => x.Curr_isActive == true)
                                             .Select(x => x.Curr_Name).FirstOrDefault(),
+                            Account_Currency_MasterID = m.Pending_Account_Currency_MasterID,
                             Account_Name = m.Pending_Account_Name,
                             Account_Code = m.Pending_Account_Code,
                             Account_Budget_Code = m.Pending_Account_Budget_Code,
@@ -1465,7 +1466,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         public List<SelectListItem> getFbtSelectList()
         {
             List<SelectListItem> fbtList = new List<SelectListItem>();
-            fbtList.Add(new SelectListItem() { Text = "-- Select FBT if Applicable --", Value = "0", Selected = true  });
+            fbtList.Add(new SelectListItem() { Text = "-- Select FBT Applicable --", Value = "0", Selected = true  });
             _context.DMFBT.Where(x => x.FBT_isDeleted == false && x.FBT_isActive == true).ToList().ForEach(x => {
                 fbtList.Add(new SelectListItem() { Text = x.FBT_Name, Value = x.FBT_MasterID + "" });
             });
@@ -1486,6 +1487,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         public List<SelectListItem> getAccGroupSelectList()
         {
             List<SelectListItem> grpList = new List<SelectListItem>();
+            grpList.Add(new SelectListItem() { Text = "-- Select Account Group Applicable --", Value = "0", Selected = true });
             _context.DMAccountGroup.Where(x => x.AccountGroup_isDeleted == false && x.AccountGroup_isActive == true).ToList().ForEach(x => {
                 grpList.Add(new SelectListItem() { Text = x.AccountGroup_Name, Value = x.AccountGroup_MasterID + "" });
             });

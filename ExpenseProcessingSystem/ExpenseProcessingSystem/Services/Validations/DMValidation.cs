@@ -37,33 +37,46 @@ namespace ExpenseProcessingSystem.Services.Validations
             }
         }
     }
-    public class DMPayeeValidation : ValidationAttribute
+    public class DMAccountFundValidation : ValidationAttribute
     {
+        private readonly string _CheckBoxProperty;
+
+        public DMAccountFundValidation(string CheckBoxProperty)
+        {
+            _CheckBoxProperty = CheckBoxProperty;
+        }
+
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            try
+            var name = validationContext.DisplayName;
+            var property = validationContext.ObjectType.GetProperty(_CheckBoxProperty);
+            var val = property.GetValue(validationContext.ObjectInstance, null);
+            if ((Boolean)val && value != null)
             {
-                var data = (DMViewModel)validationContext.ObjectInstance;
-                //if(string.IsNullOrEmpty(data.Acc_UserName))
-                //{
-                //    return new ValidationResult("User name is empty");
-                //}
-                //if(data.Acc_UserName.Any(char.IsDigit))
-                //{
-                //    return new ValidationResult("User name contains numbers");
-                //}
-                return ValidationResult.Success;
+                if (value.ToString() == "")
+                {
+                    return new ValidationResult(name + " cannot be empty.");
+                }
+                else if (!(int.TryParse(value.ToString(), out int temp)))
+                {
+                    if (temp == 0)
+                    {
+                        return new ValidationResult(name + " cannot be empty.");
+                    }
+                }
             }
-            catch (Exception ex)
+            else if ((Boolean)val && value == null)
             {
-                //sample fatal error log
-                Log.Fatal(ex, "User: {user}, StackTrace : {trace}, Error Message: {message}", "[UserID]", ex.StackTrace, ex.Message);
-                return new ValidationResult("Invalid input");
+                return new ValidationResult(name + " is  empty");
             }
-            finally
+            else if (!(Boolean)val && value != null)
             {
-                Log.CloseAndFlush();
+                if (value.ToString() != "0" || value.ToString() == "")
+                {
+                    return new ValidationResult(name + " can only be entered if Fund is checked.");
+                }
             }
+            return ValidationResult.Success;
         }
     }
 }

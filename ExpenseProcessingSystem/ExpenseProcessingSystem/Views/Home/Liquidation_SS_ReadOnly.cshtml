@@ -161,7 +161,7 @@
                             <td>
                                 @Html.TextBoxFor(m => Model.LiquidationDetails[i].dtlSSPayeeName, new { @class = "txtPayee", @readonly = "true", @style = "width:100%;background:transparent" })
                             </td>
-                            <td>
+                            <td colspan="1" data-toggle="tooltip" title="@Model.LiquidationDetails[i].accountName" data-placement="right">
                                 @Html.TextBoxFor(m => Model.LiquidationDetails[i].accountName, new { @class = "txtAcc", @readonly = "true", @style = "width:100%;background:transparent" })
                                 @Html.HiddenFor(m => Model.LiquidationDetails[i].accountID, new { @class = "hidAccID" })
                                 @Html.HiddenFor(m => Model.LiquidationDetails[i].accountNumber, new { @class = "hidAccNo" })

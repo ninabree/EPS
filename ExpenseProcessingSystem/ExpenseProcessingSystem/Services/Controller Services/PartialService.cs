@@ -50,53 +50,52 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         }
         public List<CONSTANT_NC_VALS> getNCAccsForFilter()
         {
-            List<CONSTANT_NC_VALS> ts = new List<CONSTANT_NC_VALS>
+            var acc_pettyCash = getNCAccs("/NONCASHACCOUNTS/PCR/ACCOUNT[@class='entry1' and @id='ACCOUNT1']");
+            var acc_computerSus = getNCAccs("/NONCASHACCOUNTS/PCR/ACCOUNT[@class='entry1' and @id='ACCOUNT2']");
+            var acc_computerSusUSD = getNCAccs("/NONCASHACCOUNTS/RETURNOFJSPAYROLL/ACCOUNT[@class='entry1' and @id='ACCOUNT1']");
+            var acc_interRF = getNCAccs("/NONCASHACCOUNTS/RETURNOFJSPAYROLL/ACCOUNT[@class='entry1' and @id='ACCOUNT2']");
+            var acc_interFR = getNCAccs("/NONCASHACCOUNTS/JSPAYROLL/ACCOUNT[@class='entry3' and @id='ACCOUNT1']");
+            var acc_ewtTax = getNCAccs("/NONCASHACCOUNTS/PSSC/ACCOUNT[@class='entry1' and @id='ACCOUNT2']");
+            //Populate Constant NC Accounts
+            List<CONSTANT_NC_VALS> valList = new List<CONSTANT_NC_VALS>
             {
-                //accId is really MasterId
                 new CONSTANT_NC_VALS()
                 {
-                    accID = 68,
-                    accName = "COMPUTER SUSPENSE"
+                    accID = acc_computerSus.FirstOrDefault().accID,
+                    accNo = acc_computerSus.FirstOrDefault().accNo+"",
+                    accName = "CS"
                 },
                 new CONSTANT_NC_VALS()
                 {
-                    accID = 76,
-                    accName = "COMPUTER SUSPENSE (US$)"
+                    accID = acc_computerSusUSD.FirstOrDefault().accID,
+                    accNo = acc_computerSusUSD.FirstOrDefault().accNo+"",
+                    accName = "CSU"
                 },
                 new CONSTANT_NC_VALS()
                 {
-                    accID = 72,
-                    accName = "INTER ENTITY REG to FCDU"
+                    accID = acc_interRF.FirstOrDefault().accID,
+                    accNo = acc_interRF.FirstOrDefault().accNo+"",
+                    accName = "IERF"
                 },
                 new CONSTANT_NC_VALS()
                 {
-                    accID = 77,
-                    accName = "	INTER ENTITY FCDU to REG"
+                    accID = acc_interFR.FirstOrDefault().accID,
+                    accNo = acc_interFR.FirstOrDefault().accNo+"",
+                    accName = "IEFR"
                 },
                 new CONSTANT_NC_VALS()
                 {
-                    accID = 95,
-                    accName = "PETTY CASH"
+                    accID = acc_pettyCash.FirstOrDefault().accID,
+                    accNo = acc_pettyCash.FirstOrDefault().accNo+"",
+                    accName = "PC"
                 },
                 new CONSTANT_NC_VALS()
                 {
-                    accID = 98,
-                    accName = "EWT TAX"
+                    accID = acc_ewtTax.FirstOrDefault().accID,
+                    accNo = acc_ewtTax.FirstOrDefault().accNo+"",
+                    accName = "ET"
                 }
             };
-            List<CONSTANT_NC_VALS> valList = new List<CONSTANT_NC_VALS>();
-            foreach (CONSTANT_NC_VALS val in ts)
-            {
-                var acc = _context.DMAccount.Where(x => (x.Account_MasterID == val.accID)
-                                                    && x.Account_isActive == true && x.Account_isDeleted == false).FirstOrDefault();
-                CONSTANT_NC_VALS vals = new CONSTANT_NC_VALS
-                {
-                    accID = acc.Account_ID,
-                    accNo = acc.Account_MasterID+"",
-                    accName = acc.Account_Name
-                };
-                valList.Add(vals);
-            }
             return valList;
         }
         //----------------------------------- [[ Populate Non Cash ]] -------------------------------------////
@@ -258,7 +257,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 Text = "--- Accounts --",
                 Value = "0"
             });
-            _context.DMAccount.Where(x => x.Account_isDeleted == false && x.Account_isActive == true).OrderBy(x => x.Account_No).ToList().ForEach(x => {
+            _context.DMAccount.Where(x => x.Account_isDeleted == false && x.Account_isActive == true).OrderByDescending(x=> x.Account_No.Contains("H90")).ThenBy(x=> x.Account_No).ToList().ForEach(x => {
                 selList.Add(new SelectListItem() { Text = x.Account_No + " - " + x.Account_Name, Value = x.Account_ID + "" });
             });
             return selList;
@@ -276,6 +275,11 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         public List<SelectListItem> getVendorSelectList()
         {
             List<SelectListItem> venList = new List<SelectListItem>();
+            venList.Add(new SelectListItem()
+            {
+                Text = "--- Select Vendor Applicable --",
+                Value = "0"
+            });
             _context.DMVendor.Where(x => x.Vendor_isDeleted == false && x.Vendor_isActive == true).ToList().ForEach(x => {
                 venList.Add(new SelectListItem() { Text = x.Vendor_Name, Value = x.Vendor_ID + "" });
             });
@@ -285,6 +289,11 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         public List<SelectListItem> getTaxRateSelectList()
         {
             List<SelectListItem> trList = new List<SelectListItem>();
+            trList.Add(new SelectListItem()
+            {
+                Text = "--- Select Tax Rate Applicable --",
+                Value = "0"
+            });
             _context.DMTR.Where(x => x.TR_isDeleted == false && x.TR_isActive == true).ToList().ForEach(x => {
                 trList.Add(new SelectListItem() { Text = x.TR_WT_Title+" - " + x.TR_Tax_Rate, Value = x.TR_ID + "" });
             });

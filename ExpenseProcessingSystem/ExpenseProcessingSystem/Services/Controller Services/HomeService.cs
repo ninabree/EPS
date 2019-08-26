@@ -7605,6 +7605,7 @@ namespace ExpenseProcessingSystem.Services
         {
             var vn = _context.ExpenseEntry
                 .Where(x => x.Expense_Payee_Type == GlobalSystemValues.PAYEETYPE_REGEMP
+                        && x.Expense_Type == GlobalSystemValues.TYPE_DDV
                         && x.Expense_Last_Updated.Date == DateTime.Now.Date)
                 .ToList().Distinct();
             List<VoucherNoOptions> vnList = new List<VoucherNoOptions>();
@@ -8238,7 +8239,7 @@ namespace ExpenseProcessingSystem.Services
                     dtlID = dtl.d.ExpDtl_ID,
                     GBaseRemarks = dtl.d.ExpDtl_Gbase_Remarks,
                     account = dtl.d.ExpDtl_Account,
-                    account_Name = _context.DMAccount.Where(x => x.Account_ID == dtl.d.ExpDtl_Account && x.Account_isActive == true).Select(x => x.Account_Name).FirstOrDefault(),
+                    account_Name = _context.DMAccount.Where(x => x.Account_ID == dtl.d.ExpDtl_Account && x.Account_isActive == true).Select(x => x.Account_No + " - " + x.Account_Name).FirstOrDefault(),
                     inter_entity = dtl.d.ExpDtl_Inter_Entity,
                     fbt = dtl.d.ExpDtl_Fbt,
                     dept = dtl.d.ExpDtl_Dept,
@@ -8346,7 +8347,7 @@ namespace ExpenseProcessingSystem.Services
                         };
                         if (entryNCDtlAcc.ExpNCDtlAcc_Acc_ID != 0)
                         {
-                            entryNCDtlAcc.ExpNCDtlAcc_Acc_Name = _context.DMAccount.Where(x => x.Account_ID == entryNCDtlAcc.ExpNCDtlAcc_Acc_ID).Select(x => x.Account_Name).FirstOrDefault() ?? "";
+                            entryNCDtlAcc.ExpNCDtlAcc_Acc_Name = _context.DMAccount.Where(x => x.Account_ID == entryNCDtlAcc.ExpNCDtlAcc_Acc_ID).Select(x => x.Account_No + " - " + x.Account_Name).FirstOrDefault() ?? "";
                         }
                         if (entryNCDtlAcc.ExpNCDtlAcc_Curr_ID != 0)
                         {
@@ -11555,13 +11556,13 @@ namespace ExpenseProcessingSystem.Services
         {
             List<accDetails> accDetails = new List<accDetails>();
 
-            var accDbDetails = _context.DMAccount.Where(x => x.Account_isActive == true).OrderBy(x=> x.Account_Name).Select(q => new { q.Account_ID, q.Account_Name, q.Account_No,q.Account_Code });
+            var accDbDetails = _context.DMAccount.Where(x => x.Account_isDeleted == false && x.Account_isActive == true).OrderByDescending(x => x.Account_No.Contains("H90")).ThenBy(x => x.Account_No).Select(q => new { q.Account_ID, q.Account_Name, q.Account_No,q.Account_Code });
 
             foreach (var detail in accDbDetails)
             {
                 accDetails temp = new accDetails();
                 temp.accId = detail.Account_ID;
-                temp.accName = detail.Account_Name + " - " + detail.Account_No;
+                temp.accName = detail.Account_No + " - " + detail.Account_Name;
                 temp.accCode = detail.Account_Code;
 
                 accDetails.Add(temp);

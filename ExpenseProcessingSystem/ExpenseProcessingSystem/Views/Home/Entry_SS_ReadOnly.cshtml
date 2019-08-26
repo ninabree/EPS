@@ -101,7 +101,7 @@
                             <td>
                                 @Html.DropDownListFor(m => Model.EntryCV[i].dtlSSPayee, new SelectList(Model.systemValues.employees, "Value", "Text", Model.systemValues.employees.SelectedValue), new { @class = "input100 txtPayee selectDisabled", disabled = "disabled" })
                             </td>
-                            <td>
+                            <td data-toggle="tooltip" title="@Model.systemValues.acc.FirstOrDefault(x=> x.accId == Model.EntryCV[i].account).accName" data-placement="right">
                                 @Html.DropDownListFor(x => Model.EntryCV[i].account, new SelectList(Model.systemValues.acc, "accId", "accName"), new { @class = "input100 txtAcc selectDisabled", disabled = "disabled" })
                             </td>
                             <td>

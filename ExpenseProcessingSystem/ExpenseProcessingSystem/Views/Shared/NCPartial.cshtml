@@ -1,12 +1,12 @@
 ﻿
 @{
     Layout = null;
-    var cs = Model.accList.FirstOrDefault(x => x.accNo == "68").accID;
-    var csUSD = Model.accList.FirstOrDefault(x => x.accNo == "76").accID;
-    var intrRF = Model.accList.FirstOrDefault(x => x.accNo == "72").accID;
-    var intrFR = Model.accList.FirstOrDefault(x => x.accNo == "77").accID;
-    var petty = Model.accList.FirstOrDefault(x => x.accNo == "95").accID;
-    var ewt = Model.accList.FirstOrDefault(x => x.accNo == "98").accID;
+    var cs = Model.accList.FirstOrDefault(x => x.accName == "CS").accID;
+    var csUSD = Model.accList.FirstOrDefault(x => x.accName == "CSU").accID;
+    var intrRF = Model.accList.FirstOrDefault(x => x.accName == "IERF").accID;
+    var intrFR = Model.accList.FirstOrDefault(x => x.accName == "IEFR").accID;
+    var petty = Model.accList.FirstOrDefault(x => x.accName == "PC").accID;
+    var ewt = Model.accList.FirstOrDefault(x => x.accName == "ET").accID;
 }
 @using ExpenseProcessingSystem.ConstantData
 @using ExpenseProcessingSystem.ViewModels.Entry
@@ -14,7 +14,7 @@
 @functions{
     public string SetClassCompSusp(int catID, int csID, string suffix, int cs, int csUSD, int intrRF, int intrFR, int petty)
     {
-        return (csID == cs && catID == 7) ? "nc-cdd-comp-" + suffix : (csID == cs) ? "nc-comp-susp-" + suffix : ((csID == cs && catID == 8) || ((csID == csUSD || csID == cs) && catID == 9)) ? "nc-comp-susp-" + suffix : (csID == intrRF || csID == intrFR) ? "nc-inter-" + suffix : (csID == petty) ? "nc-cdd-petty-" + suffix : "";
+        return (csID == cs && catID == 7) ? "nc-cdd-comp-" + suffix : (csID == cs && catID != 9) ? "nc-comp-susp-" + suffix : ((csID == cs && catID == 8) || ((csID == csUSD) && catID == 9)) ? "nc-comp-susp-" + suffix : (csID == petty) ? "nc-cdd-petty-" + suffix : (csID == intrRF || csID == intrFR) ? "nc-inter-" + suffix : "";
     }
     object getHtmlAttributes(int catID, int count)
     {
@@ -569,7 +569,7 @@
                             }
                         </select>
                     </td>
-                    <td colspan="12"></td>
+                    <td colspan="10"></td>
                 </tr>
             </tbody>
         </table>
@@ -665,7 +665,7 @@
                 {
                     <tr style="border-bottom: 2px solid #ccc !important;">
                         <td colspan="2">Total</td>
-                        <td colspan="6"></td>
+                        <td colspan="5"></td>
                         <td colspan="1" class="border-solid NC_readonly_row">@Html.TextBoxFor(x => x.EntryNC.NC_DebitAmt, new { @readonly = "true", @class = "NumberOnlyOneDecimal" })</td>
                         <td colspan="1" class="border-solid">@Html.TextBoxFor(x => x.EntryNC.NC_TotalAmt, new { @readonly = "true", @class = "hidden NumberOnlyOneDecimal" })</td>
                         <td colspan="1" class="border-solid NC_readonly_row">@Html.TextBoxFor(x => x.EntryNC.NC_CredAmt, new { @readonly = "true", @class = "NumberOnlyOneDecimal" })</td>
@@ -687,7 +687,42 @@
                         @Html.EditorFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpNCDtl_Remarks_Period, new { @type = "date", @class = "hidden" })
                     </td>
 
-                    <td colspan="3">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name, new { @readonly = "true", @class = "w-full" })</td>
+                    <td colspan="3">
+                        @if(Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT){
+                            @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name, new { @readonly = "true", @class = "w-full" })
+                        }else{
+                            <select id="@Html.IdFor(x => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name)" class="w-full" readonly name="@Html.NameFor(x => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name)">
+                                @if (@Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID > 0)
+                                {
+                                    @foreach (var groepModel in Model.accountList)
+                                    {
+                                        if (@groepModel.Value == @Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID + "")
+                                        {
+                                            <option value="@groepModel.Value" selected>@groepModel.Text</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@groepModel.Value">@groepModel.Text</option>
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    @foreach (var groepModel in Model.accountList)
+                                    {
+                                        if (@groepModel.Value == @Model.accountList[0].Value)
+                                        {
+                                            <option value="@groepModel.Value" selected>@groepModel.Text</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@groepModel.Value">@groepModel.Text</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        }
+                    </td>
                     <td class="voucher-inter">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Inter_Rate, new { @class = "ncVar umberOnlyOneDecimal", @disabled = "disabled", @readonly = "true" })</td>
                     @if (Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
                     {
@@ -763,7 +798,7 @@
         {
             <table class="table table-bordered voucher-tbl m-t-20" style="background-color: #fafafa; border: 2px solid #ccc !important">
                 <tr style="border-bottom: 2px solid #ccc !important;">
-                    <td colspan="2">Total</td>
+                    <td colspan="2">Total:</td>
                     <td colspan="5"></td>
                     <td colspan="1" class="border-solid NC_readonly_row">@Html.TextBoxFor(x => x.EntryNC.NC_DebitAmt, new { @readonly = "true", @class="NumberOnlyOneDecimal" })</td>
                     <td colspan="1" class="border-solid">@Html.TextBoxFor(x => x.EntryNC.NC_TotalAmt, new { @readonly = "true", @class = "hidden NumberOnlyOneDecimal" })</td>
@@ -992,17 +1027,9 @@
                     }
                 });
                 //collect values for Credit
-                    //if (categoryID == "11") {
-                    //    alert($(element).find("td.cd").find($("[class^='amt-cd-']")).length);
-                    //    $(element).find("td.cd").find($("[class^='amt-cd-']")).each(function (ind, el) {
-                    //        subtotalCred = parseFloat($(".amt-cd-" + idNo + "-" + ind + "").val());
-                    //        alert(subtotalCred);
-                    //    });
-                    //} else {
-                        $(element).find("td[id='cred_" + idNo + "']").each(function (ind, el) {
-                            subtotalCred += parseFloat($(el).find("[id$='__ExpNCDtlAcc_Amount']").val());
-                        });
-                    //}
+                $(element).find("td[id='cred_" + idNo + "']").each(function (ind, el) {
+                    subtotalCred += parseFloat($(el).find("[id$='__ExpNCDtlAcc_Amount']").val());
+                });
 
                 //In RETURN OF JSPAYROLL, set value to 2nd Entry Debit
                 if ((categoryID == "9") && (idNo == 1) && ($(element).find("#EntryNC_ExpenseEntryNCDtls_1__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Inter_Rate").length != 0)) {

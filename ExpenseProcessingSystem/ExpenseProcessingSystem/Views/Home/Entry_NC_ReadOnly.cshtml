@@ -66,13 +66,15 @@
                                 @Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Remarks_Period, new { @type = "date", @class = "" })
                             </td>
 
-                            <td class="cat-hidden" colspan="1" rowspan="@Model.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs.Count">
+                            <td class="cat-hidden" colspan="1" rowspan="@Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs.Count">
                                 @Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Vendor_Name, new { @readonly = "true", @class = "w-full cat-hidden" })
                             </td>
-                            <td class="cat-hidden" colspan="1" rowspan="@Model.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs.Count">
+                            <td class="cat-hidden" colspan="1" rowspan="@Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs.Count">
                                 @Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_TR_Title, new { @readonly = "true", @class = "w-full cat-hidden" })
                             </td>
-                            <td colspan="3">@Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name, new { @readonly = "true", @class = "w-full" })</td>
+                            <td colspan="3" data-toggle="tooltip" title="@Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name" data-placement="right">
+                                @Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name, new { @readonly = "true", @class = "w-full" })
+                            </td>
                             <td>@Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Inter_Rate, new { @class = "ncVar", @disabled = "disabled", @readonly = "true" })</td>
                             @if (Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
                             {
@@ -100,7 +102,9 @@
                             <tr id="item_@i" class="">
                                 <td></td>
                                 <td colspan="2"></td>
-                                <td colspan="3">@Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_Name, new { @readonly = "true", @class = "w-full" })</td>
+                                <td colspan="3" data-toggle="tooltip" title="@Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_Name" data-placement="right">
+                                    @Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_Name, new { @readonly = "true", @class = "w-full" })
+                                </td>
                                 <td></td>
                                 @if (Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
                                 {
