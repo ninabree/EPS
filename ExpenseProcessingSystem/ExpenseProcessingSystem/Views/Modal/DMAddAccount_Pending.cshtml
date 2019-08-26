@@ -27,7 +27,7 @@
             <tr id="NewAccount-Tr-0">
                 <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_Name, new { @class = "w-full input voucher-input" })</td>
                 <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_Code, new { @class = "w-full input voucher-input" })</td>
-                <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_Budget_Code, new { @class = "w-full input voucher-input" })</td>
+                <td class="bdgcd">@Html.TextBoxFor(m => m.NewAccountVM[0].Account_Budget_Code, new { @class = "w-full input" })</td>
                 <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_No, new { @class = "w-full input voucher-input" })</td>
                 <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_Cust, new { @class = "w-full input voucher-input" })</td>
                 <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_Div, new { @class = "w-full input voucher-input" })</td>
@@ -52,21 +52,32 @@
                 </td>
             </tr>
         </table>
-        <input id="fbtList" type = "hidden" value = "@Model.FbtList" />
+        <input id="fbtList" type="hidden" value="@Model.FbtList" />
         <input id="accgrpList" type="hidden" value="@Model.AccGrp" />
         <input id="currList" type="hidden" value="@Model.CurrList" />
     }
 </div>
-<script>
-    $(document).ready(function (e) {
-        $("#tsForm").on("change", "[id$='_Account_Fund']",function (e) {
-            e.stopImmediatePropagation();
-            if ($(this).is(':checked')) {
-                $(this).parent().siblings("td.grp").find("select").prop("disabled", false);
-            } else {
 
-                $(this).parent().siblings("td.grp").find("select").prop("disabled", true);
-            }
-        });
+<script>
+    $("[id$='_Account_Fund']").each(function (e) {
+        if ($(this).is(':checked')) {
+            $(this).parent().siblings("td.grp").find("select").prop("disabled", false);
+            $(this).parent().siblings("td.bdgcd").find("input").addClass("voucher-input");
+        } else {
+
+            $(this).parent().siblings("td.grp").find("select").prop("disabled", true);
+            $(this).parent().siblings("td.bdgcd").find("input").removeClass("voucher-input");
+        }
+    });
+    $("[id$='_Account_Fund']").on("change", function (e) {
+        e.stopImmediatePropagation();
+        if ($(this).is(':checked')) {
+            $(this).parent().siblings("td.bdgcd").find("input").addClass("voucher-input");
+            $(this).parent().siblings("td.grp").find("select").prop("disabled", false);
+        } else {
+            $(this).parent().siblings("td.grp").find("select").prop("disabled", true);
+            $(this).parent().siblings("td.grp").find("select option[value='']").attr("selected", true);
+            $(this).parent().siblings("td.bdgcd").find("input").removeClass("voucher-input");
+        }
     });
 </script>

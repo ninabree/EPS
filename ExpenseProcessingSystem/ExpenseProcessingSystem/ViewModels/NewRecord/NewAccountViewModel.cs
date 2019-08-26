@@ -21,7 +21,7 @@ namespace ExpenseProcessingSystem.ViewModels.NewRecord
         [NotNullValidations, TextValidation]
         public string Account_Code { get; set; }
         [Display(Name = "Account Budget Code")]
-        [NotNullValidations, TextValidation]
+        [DMAccountFundValidation("Account_Fund"), TextValidation]
         public string Account_Budget_Code { get; set; }
         [Display(Name = "Account No")]
         [NotNullValidations]
@@ -36,9 +36,9 @@ namespace ExpenseProcessingSystem.ViewModels.NewRecord
         [NotNullValidations]
         public bool Account_Fund { get; set; }
         [Display(Name = "Account FBT")]
-        [NotNullValidations]
         public int Account_FBT_MasterID { get; set; }
         [Display(Name = "Account Group")]
+        [DMAccountFundValidation("Account_Fund")]
         public int Account_Group_MasterID { get; set; }
         [Display(Name = "Account Currency")]
         public int Account_Currency_MasterID { get; set; }

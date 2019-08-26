@@ -687,7 +687,42 @@
                         @Html.EditorFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpNCDtl_Remarks_Period, new { @type = "date", @class = "hidden" })
                     </td>
 
-                    <td colspan="3">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name, new { @readonly = "true", @class = "w-full" })</td>
+                    <td colspan="3">
+                        @if(Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT){
+                            @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name, new { @readonly = "true", @class = "w-full" })
+                        }else{
+                            <select id="@Html.IdFor(x => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name)" class="w-full" readonly name="@Html.NameFor(x => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name)">
+                                @if (@Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID > 0)
+                                {
+                                    @foreach (var groepModel in Model.accountList)
+                                    {
+                                        if (@groepModel.Value == @Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID + "")
+                                        {
+                                            <option value="@groepModel.Value" selected>@groepModel.Text</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@groepModel.Value">@groepModel.Text</option>
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    @foreach (var groepModel in Model.accountList)
+                                    {
+                                        if (@groepModel.Value == @Model.accountList[0].Value)
+                                        {
+                                            <option value="@groepModel.Value" selected>@groepModel.Text</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@groepModel.Value">@groepModel.Text</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        }
+                    </td>
                     <td class="voucher-inter">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Inter_Rate, new { @class = "ncVar umberOnlyOneDecimal", @disabled = "disabled", @readonly = "true" })</td>
                     @if (Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
                     {

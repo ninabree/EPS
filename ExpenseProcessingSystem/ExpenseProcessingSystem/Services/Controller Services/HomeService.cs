@@ -7605,6 +7605,7 @@ namespace ExpenseProcessingSystem.Services
         {
             var vn = _context.ExpenseEntry
                 .Where(x => x.Expense_Payee_Type == GlobalSystemValues.PAYEETYPE_REGEMP
+                        && x.Expense_Type == GlobalSystemValues.TYPE_DDV
                         && x.Expense_Last_Updated.Date == DateTime.Now.Date)
                 .ToList().Distinct();
             List<VoucherNoOptions> vnList = new List<VoucherNoOptions>();
