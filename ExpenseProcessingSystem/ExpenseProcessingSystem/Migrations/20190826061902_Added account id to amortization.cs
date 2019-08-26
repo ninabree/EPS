@@ -6,11 +6,6 @@ namespace ExpenseProcessingSystem.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "GW_Type",
-                table: "GwriteTransLists",
-                nullable: true);
-
             migrationBuilder.AddColumn<int>(
                 name: "Amor_Account",
                 table: "ExpenseEntryAmortizations",
@@ -20,10 +15,6 @@ namespace ExpenseProcessingSystem.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "GW_Type",
-                table: "GwriteTransLists");
-
             migrationBuilder.DropColumn(
                 name: "Amor_Account",
                 table: "ExpenseEntryAmortizations");

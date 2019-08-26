@@ -15,6 +15,9 @@ namespace ExpenseProcessingSystem.ViewModels
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:n}")]
         public decimal amount { get; set; }
         public string account { get; set; }
+        public int debit_acc_id { get; set; }
+        public int credit_acc_id { get; set; }
+        public int vendor_id { get; set; }
         public string link { get; set; }
     }
 

@@ -109,6 +109,7 @@
                                 @Html.HiddenFor(x => Model.EntryCV[i].month, new { @class = "txtAmorMonth" })
                                 @Html.HiddenFor(x => Model.EntryCV[i].day, new { @class = "txtAmorDay" })
                                 @Html.HiddenFor(x => Model.EntryCV[i].duration, new { @class = "txtAmorDuration" })
+                                @Html.HiddenFor(x => Model.EntryCV[i].amorAcc, new { @class = "txtAmorAccount" })
                                 @for (int y = 0; y < Model.EntryCV[i].amtDetails.Count(); y++)
                                 {
                                     @Html.HiddenFor(x => Model.EntryCV[i].amtDetails[y].amtDate);
@@ -274,6 +275,71 @@
             return false;
         });
 
+        $("#saveBtn").hide();
+
+        $("table").on("click", ".expenseAmortization", function (e) {
+            e.stopImmediatePropagation();
+
+            var pNode = $(this.parentNode)[0].parentNode;
+
+            var id = pNode.id;
+            var month;
+            var day;
+            var duration;
+            var account;
+
+            if ($("#" + id).find(".txtAmorMonth").val() != null) {
+                month = $("#" + id).find(".txtAmorMonth").val();
+            } else {
+                month = 1;
+            }
+            if ($("#" + id).find(".txtAmorDay").val() != null) {
+                day = $("#" + id).find(".txtAmorDay").val();
+            } else {
+                day = 1;
+            }
+            if ($("#" + id).find(".txtAmorDuration").val() != null) {
+                duration = $("#" + id).find(".txtAmorDuration").val();
+            } else {
+                duration = 1;
+            }
+            if ($("#" + id).find(".txtAmorAccount").val() != null) {
+                account = $("#" + id).find(".txtAmorAccount").val();
+            } else {
+                account = 1;
+            }
+
+            var modalDivBody = $('.modal-body');
+            var modalDivFooter = $('.modal-footer').find("#add_row_btn").remove();;
+            $('.modal-header').empty();
+            $('.modal-header').append('<h4 class="modal-title">Prepaid Expense Amortization Schedule</h4>');
+            var vendor = $("#vendorName option:selected").text();
+
+            modalDivBody.load("@Url.Action("EntryExpenseAmortization", "Modal")", {
+                "id": id,
+                "vendor": vendor,
+                "account": account,
+                "month": month,
+                "day": day,
+                "duration": duration,
+                "readOnly": true
+            }, function (response, status, xhr) {
+                if (status == "error") {
+                    alert("Something went wrong.");
+                } else {
+                    if ($("#parentIdAmortization") != null) {
+                        var tableRef = document.getElementById('modalTable').getElementsByTagName('tbody')[0];
+                        //var tableRef = $("#modalTable").children("tbody");
+                        var grossAmount = Number($("#" + id).find(".txtGross").val());
+
+                        tblBuilder(tableRef, month, day, duration, grossAmount);
+                    }
+                }
+            });
+
+            $('#myModal').modal('show');
+        });
+
         var gross = $(".txtGross");
         var credEwt = $(".txtCredEwt");
         var credCash = $(".txtCredCash");
@@ -309,6 +375,36 @@
             $("#credTotal").val(0.00);
         }
     });
+</script>
+<script type="text/javascript">
+
+    // [[ FUNCTIONS ]]
+    function tblBuilder(tableRef, begMonth, day, duration, grossAmount) {
+        var dvdAmount = roundNumber((grossAmount / duration), 2);
+
+        var now = new Date();
+        var Year = now.getFullYear();
+
+        var total = 0;
+
+        for (var i = 0; i < duration; i++) {
+            var newRow = tableRef.insertRow(i);
+            var cellDate = newRow.insertCell(0);
+            var cellAmount = newRow.insertCell(1);
+
+            var month = Number(begMonth) + Number(i);
+
+            cellDate.innerHTML = new Date(Year, month, day).toDateString();
+
+            if (i == duration - 1) {
+                var lastAmount = roundNumber(grossAmount - (dvdAmount*i),2);
+                cellAmount.innerHTML = lastAmount;
+            } else {
+                cellAmount.innerHTML = dvdAmount;
+
+            }
+        }
+    };
 </script>
 <script type="text/javascript">
     $(document).ready(function () {

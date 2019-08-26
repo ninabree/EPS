@@ -113,7 +113,17 @@ namespace ExpenseProcessingSystem.Controllers
                 }
                 else if (categoryID == GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES.ToString())
                 {
-                    viewModel.EntryNC = CONSTANT_NC_MISC_ENTRIES.Populate_MISC_ENTRIES(currDtl, new DMAccountModel { Account_ID = int.Parse(viewModel.accountList[0].Value.Length < 1 ? "0" : viewModel.accountList[0].Value), Account_Name = viewModel.accountList[0].Text});
+                    if (TempData["amortizationModel"] != null)
+                    {
+                        string jsonModel = TempData["amortizationModel"].ToString();
+                        var temp = Newtonsoft.Json.JsonConvert.DeserializeObject<EntryNCViewModelList>(jsonModel);
+
+                        viewModel.EntryNC = temp.EntryNC;
+                        viewModel.amortizationID = temp.amortizationID;
+                    }
+                    else {
+                        viewModel.EntryNC = CONSTANT_NC_MISC_ENTRIES.Populate_MISC_ENTRIES(currDtl, new DMAccountModel { Account_ID = int.Parse(viewModel.accountList[0].Value.Length < 1 ? "0" : viewModel.accountList[0].Value), Account_Name = viewModel.accountList[0].Text });
+                    }
                 }
             }
 

@@ -2799,11 +2799,23 @@ namespace ExpenseProcessingSystem.Controllers
             //                            NC_DebitAmt = 0
             //                        };
             //}
+            string jsonModel;
+
+            ModelState.Clear();
             ViewData["partialName"] = partialName;
             viewModel.entryID = 0;
-            ModelState.Clear();
+            EntryNCViewModelList amortizationModel;
+
+            if (TempData["amortizationModel"] != null)
+            {
+                jsonModel = TempData["amortizationModel"].ToString();
+                amortizationModel = Newtonsoft.Json.JsonConvert.DeserializeObject<EntryNCViewModelList>(jsonModel);
+                TempData["amortizationModel"] = Newtonsoft.Json.JsonConvert.SerializeObject(amortizationModel);
+                return View(PopulateEntryNC(amortizationModel));
+            }
             return View(PopulateEntryNC(viewModel));
         }
+
         //[ExportModelState]
         public IActionResult AddNewNC(EntryNCViewModelList EntryNCViewModelList)
         {
@@ -2816,6 +2828,12 @@ namespace ExpenseProcessingSystem.Controllers
             }
             
             int id = _service.addExpense_NC(EntryNCViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_NC);
+
+            if (id != 0)
+            {
+                _service.updateAmorStatus(EntryNCViewModelList.amortizationID);
+            }
+
             ModelState.Clear();
             //return RedirectToAction("View_NC", "Home", new { entryID = id });
             TempData["entryIDAddtoView"] = id;
@@ -3255,6 +3273,7 @@ namespace ExpenseProcessingSystem.Controllers
             return viewModel;
         }
         //-------------[* Liquidation *]--------------------------
+        #region Liquidation
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         public IActionResult Liquidation_Main(string sortOrder, string currentFilter, string searchString, int? page)
@@ -3788,7 +3807,7 @@ namespace ExpenseProcessingSystem.Controllers
             return File(excelGenerate.ExcelCDDIS(viewModel, newFileName, excelTemplateName), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", newFileName);
 
         }
-
+        #endregion
         //----------------[Amortization]--------------------------
         [OnlineUserCheck]
         [NonAdminRoleCheck]
@@ -3796,20 +3815,66 @@ namespace ExpenseProcessingSystem.Controllers
         {
             AmortizationList items = new AmortizationList();
 
-            for(int i = 0; i < 5; i++)
-            {
-                items.amortizations.Add(new amorViewModel {
-                    link = "Pending",
-                    maker = "Gene - " + (i.ToString()),
-                    amount = 9999.00M + (decimal)i,
-                    sched = DateTime.Now.AddDays(i),
-                    voucherNo = "CV-2019-" + i.ToString().PadLeft(5,'0')
-                });
-            }
+            var model = _service.getAmortizationList();
 
-            return View(items);
+            return View(model);
         }
 
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
+        public IActionResult NCAmortization(int AmorID)
+        {
+            EntryNCViewModelList model = new EntryNCViewModelList {
+                expenseDate = DateTime.Now
+            };
+
+            var details = _service.getAmortizationDetails(AmorID);
+
+            var currDebitMaster = _service.getAccount(details.debit_acc_id).Account_Currency_MasterID;
+            var currCreditMaster = _service.getAccount(details.credit_acc_id).Account_Currency_MasterID;
+
+            var debCurr = _service.getCurrencyByMasterID(currDebitMaster).Curr_ID;
+            var credCurr = _service.getCurrencyByMasterID(currCreditMaster).Curr_ID;
+
+            model.amortizationID = AmorID;
+            model.EntryNC.NC_Category_ID = GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES;
+            model.EntryNC.NC_Category_Name = "MISCELLANEOUS ENTRIES";
+            model.EntryNC.NC_CredAmt = details.amount;
+            model.EntryNC.NC_DebitAmt = details.amount;
+            model.EntryNC.NC_TotalAmt = details.amount;
+            model.EntryNC.ExpenseEntryNCDtls.Add(new ExpenseEntryNCDtlViewModel {
+                ExpNCDtl_Remarks_Desc = "PREPAY",
+                ExpNCDtl_Remarks_Period = details.sched.ToString("yyyy-MM-dd"),
+                ExpNCDtl_TR_ID = 1,
+                ExpNCDtl_Vendor_ID = details.vendor_id,
+                ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel> {
+                    new ExpenseEntryNCDtlAccViewModel{
+                        ExpNCDtlAcc_Type_ID = 1,
+                        ExpNCDtlAcc_Amount = details.amount,
+                        ExpNCDtlAcc_Acc_ID = details.debit_acc_id,
+                        ExpNCDtlAcc_Curr_ID = debCurr,
+                        ExpNCDtlAcc_Curr_Name = _service.GetCurrencyAbbrv(debCurr),
+                        ExpNCDtlAcc_Acc_Name = _service.GetAccountName(details.debit_acc_id)
+                    },
+                    new ExpenseEntryNCDtlAccViewModel{
+                        ExpNCDtlAcc_Type_ID = 2,
+                        ExpNCDtlAcc_Amount = details.amount,
+                        ExpNCDtlAcc_Acc_ID = details.credit_acc_id,
+                        ExpNCDtlAcc_Curr_ID = credCurr,
+                        ExpNCDtlAcc_Curr_Name = _service.GetCurrencyAbbrv(credCurr),
+                        ExpNCDtlAcc_Acc_Name = _service.GetAccountName(details.credit_acc_id)
+                    }
+                }
+            });
+            TempData["amortizationModel"] = Newtonsoft.Json.JsonConvert.SerializeObject(model);
+
+            model = PopulateEntryNC(model);
+
+            var accs = _service.getNCAccsForFilter();
+            model.accList = accs;
+            ViewData["partialName"] = model.EntryNC.NC_Category_ID.ToString();
+            return RedirectToAction("Entry_NC", "Home",new { partialName = "11"});
+        }
         //------------------------------------------------------------------
         //[* ACCOUNT *]
         [HttpPost]

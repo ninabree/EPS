@@ -7687,19 +7687,16 @@ namespace ExpenseProcessingSystem.Services
             return _context.DMVendor.Where(x => x.Vendor_isActive == true
                 && x.Vendor_isDeleted == false).OrderBy(x => x.Vendor_Name).ToList();
         }
-
         public IEnumerable<DMAccountModel> PopulateAccountList()
         {
             return _context.DMAccount.Where(x => x.Account_isActive == true
                 && x.Account_isDeleted == false).OrderBy(x => x.Account_Name).ToList();
         }
-
         public IEnumerable<DMDeptModel> PopulateDepartmentList()
         {
             return _context.DMDept.Where(x => x.Dept_isActive == true
                 && x.Dept_isDeleted == false).OrderBy(x => x.Dept_Name).ToList();
         }
-
         public IEnumerable<DMTRModel> PopulateTaxRateList()
         {
             return _context.DMTR.Where(x => x.TR_isActive == true
@@ -7761,8 +7758,9 @@ namespace ExpenseProcessingSystem.Services
                             {
                                 Amor_Sched_Date = amorSchedule.amtDate,
                                 Amor_Price = amorSchedule.amtAmount,
-                                Amor_Status = GlobalSystemValues.getStatus(GlobalSystemValues.STATUS_PENDING),
-                                Amor_Number = "21"
+                                Amor_Status = GlobalSystemValues.STATUS_PENDING,
+                                Amor_Number = "21",
+                                Amor_Account = cv.amorAcc
                             };
 
                             expenseAmor.Add(amortization);
@@ -7893,6 +7891,72 @@ namespace ExpenseProcessingSystem.Services
 
             return false;
         }
+
+        public AmortizationList getAmortizationList()
+        {
+            AmortizationList model = new AmortizationList();
+
+            List<int> expectedStatus = new List<int> { GlobalSystemValues.STATUS_FOR_PRINTING,
+                                                       GlobalSystemValues.STATUS_FOR_CLOSING,
+                                                       GlobalSystemValues.STATUS_POSTED};
+
+            var amorPending = _context.ExpenseEntryAmortizations.Include(x => x.ExpenseEntryDetailModel.ExpenseEntryModel)
+                                      .Join(_context.DMAccount,
+                                            amo => amo.Amor_Account,
+                                            acc => acc.Account_ID,
+                                            (amo, acc) => new
+                                            {
+                                                amo.ExpenseEntryDetailModel.ExpenseEntryModel.Expense_ID,
+                                                amo.ExpenseEntryDetailModel.ExpenseEntryModel.Expense_Number,
+                                                amo.ExpenseEntryDetailModel.ExpenseEntryModel.Expense_Date,
+                                                amo.ExpenseEntryDetailModel.ExpenseEntryModel.Expense_Status,
+                                                amo.ExpenseEntryDetailModel.ExpenseEntryModel.Expense_Creator_ID,
+                                                amo.Amor_ID,
+                                                amo.Amor_Price,
+                                                amo.Amor_Sched_Date,
+                                                amo.Amor_Account,
+                                                amo.Amor_Status,
+                                                acc.Account_Name
+                                            })
+                                      .Where(y => y.Amor_Status == GlobalSystemValues.STATUS_PENDING
+                                               && expectedStatus.Contains(y.Expense_Status)
+                                               && y.Amor_Sched_Date <= DateTime.Now);
+
+            foreach (var item in amorPending) {
+                model.amortizations.Add(new amorViewModel {
+                    account = item.Account_Name,
+                    amount = item.Amor_Price,
+                    maker = getUserFullName(item.Expense_Creator_ID),
+                    sched = item.Amor_Sched_Date,
+                    voucherNo = getVoucherNo(1,item.Expense_Date,item.Expense_Number),
+                    link = "NCAmortization?AmorID=" + item.Amor_ID
+                });
+            }
+
+            return model;
+        }
+        public amorViewModel getAmortizationDetails(int amorID)
+        {
+            amorViewModel model = new amorViewModel();
+
+            var dbItem = _context.ExpenseEntryAmortizations
+                                 .Include(x => x.ExpenseEntryDetailModel.ExpenseEntryModel)
+                                 .FirstOrDefault(x => x.Amor_ID == amorID);
+
+            model.debit_acc_id = dbItem.Amor_Account;
+            model.amount = dbItem.Amor_Price;
+            model.sched = dbItem.Amor_Sched_Date;
+            model.credit_acc_id = dbItem.ExpenseEntryDetailModel.ExpDtl_Account;
+            model.vendor_id = dbItem.ExpenseEntryDetailModel.ExpenseEntryModel.Expense_Payee;
+
+            return model;
+        }
+        public void updateAmorStatus(int amorID) {
+            var amortizationRecord = _context.ExpenseEntryAmortizations.FirstOrDefault(x => x.Amor_ID == amorID);
+
+            amortizationRecord.Amor_Status = GlobalSystemValues.STATUS_APPROVED;
+            _context.SaveChanges();
+        }
         //retrieve expense details
         public EntryCVViewModelList getExpense(int transID)
         {
@@ -7931,6 +7995,8 @@ namespace ExpenseProcessingSystem.Services
                 List<EntryGbaseRemarksViewModel> remarksDtl = new List<EntryGbaseRemarksViewModel>();
                 List<CashBreakdown> cashBreakdown = new List<CashBreakdown>();
 
+                int amorAcc = 0;
+
                 foreach (var amor in dtl.ExpenseEntryAmortizations)
                 {
                     amortizationSchedule amorTemp = new amortizationSchedule()
@@ -7938,7 +8004,7 @@ namespace ExpenseProcessingSystem.Services
                         amtDate = amor.Amor_Sched_Date,
                         amtAmount = amor.Amor_Price
                     };
-
+                    amorAcc = amor.Amor_Account;
                     amtDetails.Add(amorTemp);
                 }
 
@@ -7995,7 +8061,8 @@ namespace ExpenseProcessingSystem.Services
                     amtDetails = amtDetails,
                     gBaseRemarksDetails = remarksDtl,
                     cashBreakdown = cashBreakdown,
-                    modalInputFlag = (cashBreakdown == null || cashBreakdown.Count == 0) ? 0 : 1
+                    modalInputFlag = (cashBreakdown == null || cashBreakdown.Count == 0) ? 0 : 1,
+                    amorAcc = amorAcc
                 };
                 cvList.Add(cvDtl);
             }

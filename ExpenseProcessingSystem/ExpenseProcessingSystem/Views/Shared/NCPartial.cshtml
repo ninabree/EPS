@@ -747,15 +747,16 @@
         else if (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES)
         {
             <table class="table table-bordered voucher-tbl m-t-20" style="background-color: #fafafa; border: 2px solid #ccc !important">
-                @Html.HiddenFor(x => x.EntryNC.NC_DebitAmt)
-                @Html.HiddenFor(x => x.EntryNC.NC_CredAmt)
-                @Html.HiddenFor(x => x.EntryNC.NC_TotalAmt)
-                @Html.HiddenFor(x => x.EntryNC.NC_IE_DebitAmt)
-                @Html.HiddenFor(x => x.EntryNC.NC_IE_CredAmt)
-                @Html.HiddenFor(x => x.EntryNC.NC_IE_TotalAmt)
-                @Html.HiddenFor(x => x.EntryNC.NC_CS_DebitAmt)
-                @Html.HiddenFor(x => x.EntryNC.NC_CS_CredAmt)
-                @Html.HiddenFor(x => x.EntryNC.NC_CS_TotalAmt)
+                @Html.HiddenFor(x => Model.EntryNC.NC_DebitAmt)
+                @Html.HiddenFor(x => Model.EntryNC.NC_CredAmt)
+                @Html.HiddenFor(x => Model.EntryNC.NC_TotalAmt)
+                @Html.HiddenFor(x => Model.EntryNC.NC_IE_DebitAmt)
+                @Html.HiddenFor(x => Model.EntryNC.NC_IE_CredAmt)
+                @Html.HiddenFor(x => Model.EntryNC.NC_IE_TotalAmt)
+                @Html.HiddenFor(x => Model.EntryNC.NC_CS_DebitAmt)
+                @Html.HiddenFor(x => Model.EntryNC.NC_CS_CredAmt)
+                @Html.HiddenFor(x => Model.EntryNC.NC_CS_TotalAmt)
+                @Html.HiddenFor(x=>x.amortizationID)
             </table>
         }
         else
@@ -783,14 +784,13 @@
         var dbType = @GlobalSystemValues.NC_DEBIT;
         var cdType = @GlobalSystemValues.NC_CREDIT;
         var ewtType = @GlobalSystemValues.NC_EWT;
-
         var computeFunction = function (event) {
             if (event.target.classList.contains("ncVar")) {
                 computeValsNC();
             }
         }
         document.addEventListener("change", computeFunction, false);
-        computeValsNC();
+        //computeValsNC();
         hiddencols();
         onloadModifiedMiscEntries();
         function onloadModifiedMiscEntries() {

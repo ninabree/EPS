@@ -70,6 +70,7 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         public int verifier_1_id { get; set; }
         public int verifier_2_id { get; set; }
         public int maker { get; set; }
+        public int amortizationID { get; set; }
         public DateTime lastUpdatedDate { get; set; }
         [BalancedValidations, RemarksLimitValidations]
         public EntryNCViewModel EntryNC { get; set; }

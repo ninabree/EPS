@@ -56,6 +56,8 @@ namespace ExpenseProcessingSystem.ViewModels
         public int day { get; set; }
         [Display(Name = "Duration")]
         public int duration { get; set; }
+        [Display(Name = "Duration")]
+        public int amorAcc { get; set; }
         public int modalInputFlag { get; set; }
         public string screenCode { get; set; }
         public string ccyAbbrev { get; set; }

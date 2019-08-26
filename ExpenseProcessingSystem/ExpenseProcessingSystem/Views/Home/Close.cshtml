@@ -363,7 +363,7 @@
         </div>
     </div>
 </div>
-@using (Html.BeginForm("Close", "Home", FormMethod.Post, new { @id = "inputForm" }))
+@using (Html.BeginForm("Close", "Home", FormMethod.Post, new { @id = "closeForm" }))
 {
     <input type="hidden" name="command" id="cmdString" />
     <input type="hidden" name="username" id="userString" />
@@ -444,20 +444,20 @@
             $("#cmdString").val($(this).val());
             $("#userString").val("-");
             $("#passString").val("-");
-            $("#inputForm").submit();
+            $("#closeForm").submit();
         });
 
         $("#closeBody").on("click", "#openBook", function (e) {
             $("#cmdString").val($(this).val());
             $("#userString").val("-");
             $("#passString").val("-");
-            $("#inputForm").submit();
+            $("#closeForm").submit();
         });
 
         $("#login").on("click", "#loginSubmit", function (e) {
             $("#userString").val($("#userName").val());
             $("#passString").val($("#passWord").val());
-            $("#inputForm").submit();
+            $("#closeForm").submit();
         });
     });
     </script>

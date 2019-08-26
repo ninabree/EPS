@@ -119,6 +119,7 @@
                                 @Html.HiddenFor(x => Model.EntryCV[i].month, new { @class = "txtAmorMonth" })
                                 @Html.HiddenFor(x => Model.EntryCV[i].day, new { @class = "txtAmorDay" })
                                 @Html.HiddenFor(x => Model.EntryCV[i].duration, new { @class = "txtAmorDuration" })
+                                @Html.HiddenFor(x => Model.EntryCV[i].amorAcc, new { @class = "txtAmorAccount" })
                                 @for (int y = 0; y < Model.EntryCV[i].amtDetails.Count(); y++)
                                 {
                                     @Html.HiddenFor(x => Model.EntryCV[i].amtDetails[y].amtDate, new { @class = "txtAmorDate" });
@@ -357,6 +358,7 @@
             var month;
             var day;
             var duration;
+            var account;
 
             if ($("#" + id).find(".txtAmorMonth").val() != null) {
                 month = $("#" + id).find(".txtAmorMonth").val();
@@ -373,13 +375,17 @@
             } else {
                 duration = 1;
             }
+            if ($("#" + id).find(".txtAmorAccount").val() != null) {
+                account = $("#" + id).find(".txtAmorAccount").val();
+            } else {
+                account = 1;
+            }
 
             var modalDivBody = $('.modal-body');
             var modalDivFooter = $('.modal-footer').find("#add_row_btn").remove();;
             $('.modal-header').empty();
             $('.modal-header').append('<h4 class="modal-title">Prepaid Expense Amortization Schedule</h4>');
             var vendor = $("#vendorName option:selected").text();
-            var account = $("#" + pNode.id).find(".txtAcc option:selected").va()
 
             modalDivBody.load("@Url.Action("EntryExpenseAmortization", "Modal")", {
                 "id": id,
@@ -583,13 +589,12 @@
             cellDate.innerHTML = new Date(Year, month, day).toDateString();
 
             if (i == duration - 1) {
-                var lastAmount = roundNumber(grossAmount - total,2);
+                var lastAmount = roundNumber(grossAmount - (dvdAmount*i),2);
                 cellAmount.innerHTML = lastAmount;
             } else {
                 cellAmount.innerHTML = dvdAmount;
 
             }
-            total += dvdAmount;
         }
     };
 

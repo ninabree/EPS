@@ -7,14 +7,16 @@
 <div class="tabContent">
     <table class="table table-striped tab-tbl table-bordered table-hover w-97">
         <colgroup>
-            <col style="width:25%" />
-            <col style="width:25%" />
-            <col style="width:25%" />
-            <col style="width:25%" />
+            <col style="width:20%" />
+            <col style="width:20%" />
+            <col style="width:20%" />
+            <col style="width:20%" />
+            <col style="width:20%" />
         </colgroup>
         <thead>
             <tr>
                 <th>Check Voucher No.</th>
+                <th>Account</th>
                 <th>Schedule</th>
                 <th>Check Maker</th>
                 <th>Amount</th>
@@ -25,6 +27,7 @@
             {
                 <tr data-href="@item.link">
                     <td>@Html.DisplayFor(model => item.voucherNo)</td>
+                    <td>@Html.DisplayFor(model => item.account)</td>
                     <td>@Html.DisplayFor(model => item.sched)</td>
                     <td>@Html.DisplayFor(model => item.maker)</td>
                     <td>@Html.DisplayFor(model => item.amount)</td>

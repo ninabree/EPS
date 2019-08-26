@@ -18,6 +18,8 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         public SelectList accountsList { get; set; }
         public List<AmortizationBreakdown> brkDown { get; set; }
 
+        public bool readOnly {get;set;}
+
         public CVAmortizationViewModel()
         {
             brkDown = new List<AmortizationBreakdown>();
