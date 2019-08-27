@@ -2829,11 +2829,14 @@ namespace ExpenseProcessingSystem.Controllers
             
             int id = _service.addExpense_NC(EntryNCViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_NC);
 
-            if (id != 0)
+            //if (id != 0)
+            //{
+            //    _service.updateAmorStatus(EntryNCViewModelList.amortizationID);
+            //}
+            if (EntryNCViewModelList.amortizationID != 0)
             {
                 _service.updateAmorStatus(EntryNCViewModelList.amortizationID);
             }
-
             ModelState.Clear();
             //return RedirectToAction("View_NC", "Home", new { entryID = id });
             TempData["entryIDAddtoView"] = id;

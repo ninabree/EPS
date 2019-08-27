@@ -762,9 +762,15 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 "AH", "AI", "AJ", "AK", "AL", "AM", "AN", "AO", "AP", "AQ", "AR", "AS", "AT", "AU", "AV",
                 "AW", "AX", "AY", "AZ" };
                 int colpnt = 3;
+                int rowpnt = 17;
                 foreach (var num in data.ReportLOI.Rep_DDVNoList) {
-                    worksheet.Cells[col[colpnt] + "17"].Value = num;
+                    worksheet.Cells[col[colpnt] + rowpnt].Value = num;
                     colpnt++;
+                    if(colpnt == 11)
+                    {
+                        colpnt = 3;
+                        rowpnt++;
+                    }
                 };
 
                 worksheet.Cells["C21"].Value = data.ReportLOI.Rep_AmountInString;
