@@ -3029,6 +3029,7 @@ namespace ExpenseProcessingSystem.Services
         public IEnumerable<HomeReportOutputAPSWT_MModel> GetAPSWT_MData(int month, int year)
         {
             List<HomeReportOutputAPSWT_MModel> dbAPSWT_M = new List<HomeReportOutputAPSWT_MModel>();
+            List<HomeReportOutputAPSWT_MModel> dbAPSWT_M_Check = new List<HomeReportOutputAPSWT_MModel>();
             List<HomeReportOutputAPSWT_MModel> dbAPSWT_M_LIQ = new List<HomeReportOutputAPSWT_MModel>();
             List<HomeReportOutputAPSWT_MModel> dbAPSWT_M_NC = new List<HomeReportOutputAPSWT_MModel>();
             List<HomeReportOutputAPSWT_MModel> finalOutput = new List<HomeReportOutputAPSWT_MModel>();
@@ -3036,7 +3037,7 @@ namespace ExpenseProcessingSystem.Services
             var taxRatesList = _context.DMTR.OrderBy(x => x.TR_Tax_Rate).Select(x => x.TR_Tax_Rate).Distinct();
             var vatList = _context.DMVAT.ToList();
 
-            //Get data from Taxable expense table except cash advance(SS)
+            //Get data from Taxable expense table except cash advance(SS) and Check Payment
             dbAPSWT_M = (from expEntryDetl in _context.ExpenseEntryDetails
                          join expense in _context.ExpenseEntry on expEntryDetl.ExpenseEntryModel.Expense_ID equals expense.Expense_ID
                          join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
@@ -3045,13 +3046,41 @@ namespace ExpenseProcessingSystem.Services
                          && expense.Expense_Last_Updated.Month == month
                          && expense.Expense_Last_Updated.Year == year
                          && expense.Expense_Type != GlobalSystemValues.TYPE_SS
+                         && expense.Expense_Type != GlobalSystemValues.TYPE_CV
                          orderby expense.Expense_Last_Updated
                          select new HomeReportOutputAPSWT_MModel
                          {
                              Payee = vend.Vendor_Name,
                              Tin = vend.Vendor_TIN,
                              ATC = tr.TR_ATC,
-                             NOIP = tr.TR_Nature,
+                             NOIP = tr.TR_Nature_Income_Payment,
+                             //B. AMOUNT NET OF VAT = (GROSS AMOUNT/( 1 + VAT RATE))
+                             //Example: 45,000 / 1.12 = 40,178.57
+                             AOIP = (expEntryDetl.ExpDtl_Vat != 0) ? (expEntryDetl.ExpDtl_Debit / (decimal)(1 + vatList
+                                    .Where(x => x.VAT_ID == expEntryDetl.ExpDtl_Vat).FirstOrDefault().VAT_Rate)) : expEntryDetl.ExpDtl_Debit,
+                             RateOfTax = tr.TR_Tax_Rate,
+                             AOTW = expEntryDetl.ExpDtl_Credit_Ewt,
+                             Last_Update_Date = expense.Expense_Last_Updated,
+                             Vendor_masterID = vend.Vendor_MasterID
+                         }).ToList();
+
+            //Get data from Taxable expense table for Check Payment
+            dbAPSWT_M_Check = (from expEntryDetl in _context.ExpenseEntryDetails
+                         join expense in _context.ExpenseEntry on expEntryDetl.ExpenseEntryModel.Expense_ID equals expense.Expense_ID
+                         join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
+                         join vend in _context.DMVendor on expense.Expense_Payee equals vend.Vendor_ID
+                         where status.Contains(expense.Expense_Status)
+                         && expense.Expense_Last_Updated.Month == month
+                         && expense.Expense_Last_Updated.Year == year
+                         && expense.Expense_Type == GlobalSystemValues.TYPE_CV
+                         && expense.Expense_Payee_Type == GlobalSystemValues.PAYEETYPE_VENDOR
+                         orderby expense.Expense_Last_Updated
+                         select new HomeReportOutputAPSWT_MModel
+                         {
+                             Payee = vend.Vendor_Name,
+                             Tin = vend.Vendor_TIN,
+                             ATC = tr.TR_ATC,
+                             NOIP = tr.TR_Nature_Income_Payment,
                              //B. AMOUNT NET OF VAT = (GROSS AMOUNT/( 1 + VAT RATE))
                              //Example: 45,000 / 1.12 = 40,178.57
                              AOIP = (expEntryDetl.ExpDtl_Vat != 0) ? (expEntryDetl.ExpDtl_Debit / (decimal)(1 + vatList
@@ -3076,8 +3105,11 @@ namespace ExpenseProcessingSystem.Services
                                  Payee = vend.Vendor_Name,
                                  Tin = vend.Vendor_TIN,
                                  ATC = tr.TR_ATC,
-                                 NOIP = tr.TR_Nature,
-                                 AOIP = ie.Liq_Amount_2_1 + ie.Liq_Amount_2_2 + ie.Liq_Amount_3_1,
+                                 NOIP = tr.TR_Nature_Income_Payment,
+                                 //B. AMOUNT NET OF VAT = (GROSS AMOUNT/( 1 + VAT RATE))
+                                 //Example: 45,000 / 1.12 = 40,178.57
+                                 AOIP = (expDtl.ExpDtl_Vat != 0) ? ((ie.Liq_Amount_2_1 + ie.Liq_Amount_2_2 + ie.Liq_Amount_3_1) / (decimal)(1 + vatList
+                                    .Where(x => x.VAT_ID == expDtl.ExpDtl_Vat).FirstOrDefault().VAT_Rate)) : (ie.Liq_Amount_2_1 + ie.Liq_Amount_2_2 + ie.Liq_Amount_3_1),
                                  RateOfTax = tr.TR_Tax_Rate,
                                  AOTW = ie.Liq_Amount_2_2,
                                  Last_Update_Date = liqDtl.Liq_LastUpdated_Date,
@@ -3105,14 +3137,14 @@ namespace ExpenseProcessingSystem.Services
                                 Tin = vend.Vendor_TIN,
                                 RateOfTax = tr.TR_Tax_Rate,
                                 ATC = tr.TR_ATC,
-                                NOIP = tr.TR_Nature,
+                                NOIP = tr.TR_Nature_Income_Payment,
                                 AOIP = ncAcc.ExpNCDtlAcc_Amount,
                                 AOTW = ncAcc2.ExpNCDtlAcc_Amount,
                                 Last_Update_Date = exp.Expense_Last_Updated,
                                 Vendor_masterID = vend.Vendor_MasterID
                             }).Where(x => x.AOTW > 0).ToList();
 
-            var dbAPSWT_Conc = dbAPSWT_M.Concat(dbAPSWT_M_LIQ).Concat(dbAPSWT_M_NC).OrderBy(x => x.Payee);
+            var dbAPSWT_Conc = dbAPSWT_M.Concat(dbAPSWT_M_Check).Concat(dbAPSWT_M_LIQ).Concat(dbAPSWT_M_NC).OrderBy(x => x.Payee);
 
 
             foreach (var i in vendorMasterIDList)
@@ -3174,6 +3206,7 @@ namespace ExpenseProcessingSystem.Services
             }
             
             List<HomeReportOutputAST1000Model> dbAST1000 = new List<HomeReportOutputAST1000Model>();
+            List<HomeReportOutputAST1000Model> dbAST1000_Check = new List<HomeReportOutputAST1000Model>();
             List<HomeReportOutputAST1000Model> dbAST1000_LIQ = new List<HomeReportOutputAST1000Model>();
             List<HomeReportOutputAST1000Model> dbAST1000_NC = new List<HomeReportOutputAST1000Model>();
             List<HomeReportOutputAST1000Model> finalOutput = new List<HomeReportOutputAST1000Model>();
@@ -3182,7 +3215,7 @@ namespace ExpenseProcessingSystem.Services
             var taxRatesList = _context.DMTR.OrderBy(x => x.TR_Tax_Rate).Select(x => x.TR_Tax_Rate).Distinct();
             var vatList = _context.DMVAT.ToList();
 
-            //Get data from Taxable expense table.
+            //Get data from Taxable expense table except cash advance(SS) and Check Payment.
             dbAST1000 = (from expEntryDetl in _context.ExpenseEntryDetails
                          join expense in _context.ExpenseEntry on expEntryDetl.ExpenseEntryModel.Expense_ID equals expense.Expense_ID
                          join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
@@ -3192,13 +3225,41 @@ namespace ExpenseProcessingSystem.Services
                          && startDT.Date <= expense.Expense_Last_Updated.Date
                          && expense.Expense_Last_Updated.Date <= endDT.Date
                          && expense.Expense_Type != GlobalSystemValues.TYPE_SS
+                         && expense.Expense_Type != GlobalSystemValues.TYPE_CV
                          orderby expense.Expense_Last_Updated
                          select new HomeReportOutputAST1000Model
                          {
                              SupplierName = vend.Vendor_Name,
                              Tin = vend.Vendor_TIN,
                              ATC = tr.TR_ATC,
-                             NOIP = tr.TR_Nature,
+                             NOIP = tr.TR_Nature_Income_Payment,
+                             //B. AMOUNT NET OF VAT = (GROSS AMOUNT/( 1 + VAT RATE))
+                             //Example: 45,000 / 1.12 = 40,178.57
+                             TaxBase = (expEntryDetl.ExpDtl_Vat != 0) ? (expEntryDetl.ExpDtl_Debit / (decimal)(1 + vatList
+                                    .Where(x => x.VAT_ID == expEntryDetl.ExpDtl_Vat).FirstOrDefault().VAT_Rate)) : expEntryDetl.ExpDtl_Debit,
+                             RateOfTax = tr.TR_Tax_Rate,
+                             AOTW = expEntryDetl.ExpDtl_Credit_Ewt,
+                             Vendor_masterID = vend.Vendor_MasterID
+                         }).ToList();
+
+            //Get data from Taxable expense table for Check Payment.
+            dbAST1000_Check = (from expEntryDetl in _context.ExpenseEntryDetails
+                         join expense in _context.ExpenseEntry on expEntryDetl.ExpenseEntryModel.Expense_ID equals expense.Expense_ID
+                         join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
+                         join vend in _context.DMVendor on expense.Expense_Payee equals vend.Vendor_ID
+                         where status.Contains(expense.Expense_Status)
+                         && model.TaxRateList.Contains(tr.TR_Tax_Rate)
+                         && startDT.Date <= expense.Expense_Last_Updated.Date
+                         && expense.Expense_Last_Updated.Date <= endDT.Date
+                         && expense.Expense_Type == GlobalSystemValues.TYPE_CV
+                         && expense.Expense_Payee_Type == GlobalSystemValues.PAYEETYPE_VENDOR
+                         orderby expense.Expense_Last_Updated
+                         select new HomeReportOutputAST1000Model
+                         {
+                             SupplierName = vend.Vendor_Name,
+                             Tin = vend.Vendor_TIN,
+                             ATC = tr.TR_ATC,
+                             NOIP = tr.TR_Nature_Income_Payment,
                              //B. AMOUNT NET OF VAT = (GROSS AMOUNT/( 1 + VAT RATE))
                              //Example: 45,000 / 1.12 = 40,178.57
                              TaxBase = (expEntryDetl.ExpDtl_Vat != 0) ? (expEntryDetl.ExpDtl_Debit / (decimal)(1 + vatList
@@ -3223,8 +3284,11 @@ namespace ExpenseProcessingSystem.Services
                                  SupplierName = vend.Vendor_Name,
                                  Tin = vend.Vendor_TIN,
                                  ATC = tr.TR_ATC,
-                                 NOIP = tr.TR_Nature,
-                                 TaxBase = ie.Liq_Amount_2_1 + ie.Liq_Amount_2_2 + ie.Liq_Amount_3_1,
+                                 NOIP = tr.TR_Nature_Income_Payment,
+                                 //B. AMOUNT NET OF VAT = (GROSS AMOUNT/( 1 + VAT RATE))
+                                 //Example: 45,000 / 1.12 = 40,178.57
+                                 TaxBase = (expDtl.ExpDtl_Vat != 0) ? ((ie.Liq_Amount_2_1 + ie.Liq_Amount_2_2 + ie.Liq_Amount_3_1) / (decimal)(1 + vatList
+                                    .Where(x => x.VAT_ID == expDtl.ExpDtl_Vat).FirstOrDefault().VAT_Rate)) : (ie.Liq_Amount_2_1 + ie.Liq_Amount_2_2 + ie.Liq_Amount_3_1),
                                  RateOfTax = tr.TR_Tax_Rate,
                                  AOTW = ie.Liq_Amount_2_2,
                                  Last_Update_Date = liqDtl.Liq_LastUpdated_Date,
@@ -3253,14 +3317,14 @@ namespace ExpenseProcessingSystem.Services
                                 Tin = vend.Vendor_TIN,
                                 RateOfTax = tr.TR_Tax_Rate,
                                 ATC = tr.TR_ATC,
-                                NOIP = tr.TR_Nature,
+                                NOIP = tr.TR_Nature_Income_Payment,
                                 TaxBase = ncAcc.ExpNCDtlAcc_Amount,
                                 AOTW = ncAcc2.ExpNCDtlAcc_Amount,
                                 Last_Update_Date = exp.Expense_Last_Updated,
                                 Vendor_masterID = vend.Vendor_MasterID
                             }).Where(x => x.AOTW > 0).ToList();
 
-            var dbAPSWT_Conc = dbAST1000.Concat(dbAST1000_LIQ).Concat(dbAST1000_NC).OrderBy(x => x.SupplierName);
+            var dbAPSWT_Conc = dbAST1000.Concat(dbAST1000_Check).Concat(dbAST1000_LIQ).Concat(dbAST1000_NC).OrderBy(x => x.SupplierName);
 
             foreach (var i in vendorMasterIDList)
             {
@@ -5696,16 +5760,18 @@ namespace ExpenseProcessingSystem.Services
 
         public IEnumerable<HomeReportOutputAPSWT_MModel> GetBIRWTCSVData(HomeReportViewModel model)
         {
-            int[] status = { GlobalSystemValues.STATUS_APPROVED, GlobalSystemValues.STATUS_POSTED };
             string format = "yyyy-M";
             DateTime startDT = DateTime.ParseExact(model.Year + "-" + model.Month, format, CultureInfo.InvariantCulture);
             DateTime endDT = DateTime.ParseExact(model.YearTo + "-" + model.MonthTo, format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
             
             List<HomeReportOutputAPSWT_MModel> dbBIRCSV = new List<HomeReportOutputAPSWT_MModel>();
+            List<HomeReportOutputAPSWT_MModel> dbBIRCSV_Check= new List<HomeReportOutputAPSWT_MModel>();
             List<HomeReportOutputAPSWT_MModel> dbBIRCSV_LIQ = new List<HomeReportOutputAPSWT_MModel>();
             List<HomeReportOutputAPSWT_MModel> dbBIRCSV_NC = new List<HomeReportOutputAPSWT_MModel>();
 
-            //Get data from Taxable expense table.
+            var vatList = _context.DMVAT.ToList();
+
+            //Get data from Taxable expense table except Cash Advance(SS) and Check payment.
             dbBIRCSV = (from expEntryDetl in _context.ExpenseEntryDetails
                         join expense in _context.ExpenseEntry on expEntryDetl.ExpenseEntryModel.Expense_ID equals expense.Expense_ID
                         join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
@@ -5713,14 +5779,45 @@ namespace ExpenseProcessingSystem.Services
                         where status.Contains(expense.Expense_Status)
                                && startDT.Date <= expense.Expense_Last_Updated.Date
                                && expense.Expense_Last_Updated.Date <= endDT.Date
+                               && expense.Expense_Type != GlobalSystemValues.TYPE_SS
+                               && expense.Expense_Type != GlobalSystemValues.TYPE_CV
                         orderby expense.Expense_Last_Updated
                         select new HomeReportOutputAPSWT_MModel
                         {
                             Payee = vend.Vendor_Name,
                             Tin = vend.Vendor_TIN,
                             ATC = tr.TR_ATC,
-                            NOIP = tr.TR_Nature,
-                            AOIP = expEntryDetl.ExpDtl_Debit,
+                            NOIP = tr.TR_Nature_Income_Payment,
+                            //B. AMOUNT NET OF VAT = (GROSS AMOUNT/( 1 + VAT RATE))
+                            //Example: 45,000 / 1.12 = 40,178.57
+                            AOIP = (expEntryDetl.ExpDtl_Vat != 0) ? (expEntryDetl.ExpDtl_Debit / (decimal)(1 + vatList
+                                    .Where(x => x.VAT_ID == expEntryDetl.ExpDtl_Vat).FirstOrDefault().VAT_Rate)) : expEntryDetl.ExpDtl_Debit,
+                            RateOfTax = tr.TR_Tax_Rate,
+                            AOTW = expEntryDetl.ExpDtl_Credit_Ewt,
+                            Last_Update_Date = expense.Expense_Last_Updated
+                        }).ToList();
+
+            //Get data from Taxable expense table for Check payment.
+            dbBIRCSV_Check = (from expEntryDetl in _context.ExpenseEntryDetails
+                        join expense in _context.ExpenseEntry on expEntryDetl.ExpenseEntryModel.Expense_ID equals expense.Expense_ID
+                        join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
+                        join vend in _context.DMVendor on expense.Expense_Payee equals vend.Vendor_ID
+                        where status.Contains(expense.Expense_Status)
+                               && startDT.Date <= expense.Expense_Last_Updated.Date
+                               && expense.Expense_Last_Updated.Date <= endDT.Date
+                               && expense.Expense_Type == GlobalSystemValues.TYPE_CV
+                               && expense.Expense_Payee_Type == GlobalSystemValues.PAYEETYPE_VENDOR
+                              orderby expense.Expense_Last_Updated
+                        select new HomeReportOutputAPSWT_MModel
+                        {
+                            Payee = vend.Vendor_Name,
+                            Tin = vend.Vendor_TIN,
+                            ATC = tr.TR_ATC,
+                            NOIP = tr.TR_Nature_Income_Payment,
+                            //B. AMOUNT NET OF VAT = (GROSS AMOUNT/( 1 + VAT RATE))
+                            //Example: 45,000 / 1.12 = 40,178.57
+                            AOIP = (expEntryDetl.ExpDtl_Vat != 0) ? (expEntryDetl.ExpDtl_Debit / (decimal)(1 + vatList
+                                    .Where(x => x.VAT_ID == expEntryDetl.ExpDtl_Vat).FirstOrDefault().VAT_Rate)) : expEntryDetl.ExpDtl_Debit,
                             RateOfTax = tr.TR_Tax_Rate,
                             AOTW = expEntryDetl.ExpDtl_Credit_Ewt,
                             Last_Update_Date = expense.Expense_Last_Updated
@@ -5740,8 +5837,11 @@ namespace ExpenseProcessingSystem.Services
                                 Payee = vend.Vendor_Name,
                                 Tin = vend.Vendor_TIN,
                                 ATC = tr.TR_ATC,
-                                NOIP = tr.TR_Nature,
-                                AOIP = ie.Liq_Amount_2_1 + ie.Liq_Amount_2_2 + ie.Liq_Amount_3_1,
+                                NOIP = tr.TR_Nature_Income_Payment,
+                                //B. AMOUNT NET OF VAT = (GROSS AMOUNT/( 1 + VAT RATE))
+                                //Example: 45,000 / 1.12 = 40,178.57
+                                AOIP = (expDtl.ExpDtl_Vat != 0) ? ((ie.Liq_Amount_2_1 + ie.Liq_Amount_2_2 + ie.Liq_Amount_3_1) / (decimal)(1 + vatList
+                                    .Where(x => x.VAT_ID == expDtl.ExpDtl_Vat).FirstOrDefault().VAT_Rate)) : (ie.Liq_Amount_2_1 + ie.Liq_Amount_2_2 + ie.Liq_Amount_3_1),
                                 RateOfTax = tr.TR_Tax_Rate,
                                 AOTW = ie.Liq_Amount_2_2,
                                 Last_Update_Date = liqDtl.Liq_LastUpdated_Date
@@ -5768,14 +5868,14 @@ namespace ExpenseProcessingSystem.Services
                                 Tin = vend.Vendor_TIN,
                                 RateOfTax = tr.TR_Tax_Rate,
                                 ATC = tr.TR_ATC,
-                                NOIP = tr.TR_Nature,
+                                NOIP = tr.TR_Nature_Income_Payment,
                                 AOIP = ncAcc.ExpNCDtlAcc_Amount,
                                 AOTW = ncAcc2.ExpNCDtlAcc_Amount,
                                 Last_Update_Date = exp.Expense_Last_Updated,
                                 Vendor_masterID = vend.Vendor_MasterID
                             }).Where(x => x.AOTW > 0).ToList();
 
-            return dbBIRCSV.Concat(dbBIRCSV_LIQ).Concat(dbBIRCSV_NC).OrderBy(x => x.Payee).ThenBy(x => x.RateOfTax);
+            return dbBIRCSV.Concat(dbBIRCSV_Check).Concat(dbBIRCSV_LIQ).Concat(dbBIRCSV_NC).OrderBy(x => x.Payee).ThenBy(x => x.RateOfTax);
         }
 
         public IEnumerable<HomeReportAccountSummaryViewModel> GetWithHoldingSummaryData(HomeReportViewModel model)
@@ -8954,8 +9054,8 @@ namespace ExpenseProcessingSystem.Services
             List<LiquidationMainListViewModel> postedEntryList = new List<LiquidationMainListViewModel>();
 
             var dbPostedEntry = from p in _context.ExpenseEntry
-                                where p.Expense_Status == GlobalSystemValues.STATUS_FOR_CLOSING 
-                                || p.Expense_Status == GlobalSystemValues.STATUS_POSTED
+                                where (p.Expense_Status == GlobalSystemValues.STATUS_FOR_CLOSING 
+                                || p.Expense_Status == GlobalSystemValues.STATUS_POSTED)
                                 && p.Expense_Type == GlobalSystemValues.TYPE_SS
                                 && p.Expense_Last_Updated.Date < DateTime.Now.Date
                                 orderby p.Expense_Last_Updated

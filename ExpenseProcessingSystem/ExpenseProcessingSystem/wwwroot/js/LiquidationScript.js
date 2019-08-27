@@ -385,7 +385,11 @@ function setLiqPhpValuetoDivInput(ret) {
     //Tax RATE
     $('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Tax_Rate').val($('#txtLiqTaxRate').val());
     //Vendor ID
-    $('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_VendorID').val($('#txtLiqVendor').val());
+    if ($('#txtLiqVendor').val() == null) {
+        $('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_VendorID').val(0);
+    } else {
+        $('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_VendorID').val($('#txtLiqVendor').val());
+    }
 };
 
 function assignDivValuesLiqPhp(pid) {

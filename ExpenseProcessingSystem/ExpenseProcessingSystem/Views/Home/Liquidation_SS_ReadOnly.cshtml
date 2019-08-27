@@ -737,8 +737,7 @@
                     {<button class="tbl-btn btnEntryAction" value="Reject" name="command">Reject</button>}</div>
                 </div>
                 <div>
-                    <div class="dis-inline-block">@if (enableBIR)
-                    {<button class="tbl-btn" id="printBir" value="printBir">Print BIR Certificate</button>}</div>
+                    <div class="dis-inline-block"><button class="tbl-btn" id="printBir" value="printBir">Print BIR Certificate</button></div>
                     <div class="dis-inline-block">@if (enableReversal)
                     {<button id="reversal_entry" value="Reversal" name="command" class="btnEntryAction tbl-btn">Create Reversal Entry</button>}</div>
                 </div>
@@ -841,6 +840,7 @@
                 $('#txtLiqPhpInput5').val($('#' + pid).find('.txtGross').val());
                 $('#lblAccount2_PHP').val($('#' + pid).find('.hidAccID').val());
                 displayInfoCashBD($(this.parentNode)[0].parentNode.id);
+                HideCashBreakdownTable();
                 assignAccCodeLiqPhp();
                 $('#txtLiqTaxRate').attr('disabled', 'disabled');
                 $('#txtLiqPhpInput4').attr('disabled', 'disabled');
