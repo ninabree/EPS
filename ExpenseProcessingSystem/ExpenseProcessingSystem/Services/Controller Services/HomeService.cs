@@ -3371,37 +3371,41 @@ namespace ExpenseProcessingSystem.Services
         public ReportLOIViewModel GetLOIData(HomeReportViewModel model)
         {
             List<LOIAccount> accs = new List<LOIAccount>();
-             decimal totalAmount = 0;
-            List<string> voucherNoList = model.VoucherArray.Split(',').ToList();
-            List<int> entryIDs = voucherNoList.Select(x => int.Parse(x)).ToList();
+            decimal totalAmount = 0;
+            string stringNum = "";
+            List<string> voucherNoList = new List<string>();
+            List<int> entryIDs = new List<int>();
+            if (model.VoucherArray != null) {
+                voucherNoList = model.VoucherArray.Split(',').ToList();
+                entryIDs = voucherNoList.Select(x => int.Parse(x)).ToList();
+                model.VoucherNoList = PopulateVoucherNo(entryIDs);
 
-            model.VoucherNoList = PopulateVoucherNo(entryIDs);
-
-            var entryList = (from e in _context.ExpenseEntry
-                             join emp in _context.DMEmp on e.Expense_Payee equals emp.Emp_ID
-                             where entryIDs.Contains(e.Expense_ID)
-                             select new { e, emp }).ToList();
-            entryList.ForEach(x =>
-                accs.Add(
-                    new LOIAccount
-                    {
-                        loi_Emp_Name = x.emp.Emp_Name,
-                        loi_Acc_Type = x.emp.Emp_Acc_No.Substring(0, 2),
-                        loi_Acc_No = x.emp.Emp_Acc_No.Substring(2, x.emp.Emp_Acc_No.Length - 2),
-                        loi_Amount = x.e.Expense_Debit_Total
-                    })
-            );
-            entryList.ForEach(x => totalAmount += x.e.Expense_Debit_Total);
-            var stringNum = _class.decimalNumberToWords(totalAmount);
+                var entryList = (from e in _context.ExpenseEntry
+                                    join emp in _context.DMEmp on e.Expense_Payee equals emp.Emp_ID
+                                    where entryIDs.Contains(e.Expense_ID)
+                                    select new { e, emp }).ToList();
+                entryList.ForEach(x =>
+                    accs.Add(
+                        new LOIAccount
+                        {
+                            loi_Emp_Name = x.emp.Emp_Name,
+                            loi_Acc_Type = x.emp.Emp_Acc_No.Substring(0, 2),
+                            loi_Acc_No = x.emp.Emp_Acc_No.Substring(2, x.emp.Emp_Acc_No.Length - 2),
+                            loi_Amount = x.e.Expense_Debit_Total
+                        })
+                );
+                entryList.ForEach(x => totalAmount += x.e.Expense_Debit_Total);
+                stringNum = _class.decimalNumberToWords(totalAmount);
+            }
             return new ReportLOIViewModel()
             {
-                Rep_DDVNoList = model.VoucherNoList.Select(x => x.vchr_No).ToList(),
+                Rep_DDVNoList = model.VoucherNoList != null ? model.VoucherNoList.Select(x => x.vchr_No).ToList() : voucherNoList,
                 Rep_Amount = (decimal)totalAmount,
                 Rep_AmountInString = stringNum,
                 Rep_LOIAccList = accs,
                 Rep_LOIEntryIDList = entryIDs,
-                Rep_Approver_Name = getBCSName(model.SignatoryID),
-                Rep_Verifier1_Name = getBCSName(model.SignatoryIDVerifier),
+                Rep_Approver_Name = (model.SignatoryID > 0) ? getBCSName(model.SignatoryID) : "",
+                Rep_Verifier1_Name = (model.SignatoryIDVerifier > 0) ? getBCSName(model.SignatoryIDVerifier) : "",
                 //Rep_Verifier2_Name = "",
                 Rep_String1 = "This authority to debit and credit is issued pursuant to and subject to the terms and conditions of the Company's",
                 Rep_String2 = "Regular Payroll Agreement with the Bank.",
@@ -11483,6 +11487,7 @@ namespace ExpenseProcessingSystem.Services
                     {
                         //_context.Entry(rec).State = EntityState.Modified;
                         _context.SaveChanges();
+                        updatePrintStatusForCLosing(entryID);
                     }
                 }
             }
@@ -11755,9 +11760,9 @@ namespace ExpenseProcessingSystem.Services
         //get bcs name
         public string getBCSName(int id)
         {
-            var name = _context.DMBCS.Where(q => q.BCS_ID == id).Join(_context.DMEmp, b => b.BCS_User_ID,
-                e => e.Emp_MasterID, (b, e) => new DMBCSViewModel
-                { BCS_Name = e.Emp_Name }).SingleOrDefault();
+            var name = _context.DMBCS.Where(q => q.BCS_ID == id).Join(_context.User, b => b.BCS_User_ID,
+                e => e.User_ID, (b, e) => new DMBCSViewModel
+                { BCS_Name = e.User_FName + " " + e.User_LName }).SingleOrDefault();
 
             if (name == null)
             {
@@ -12311,6 +12316,7 @@ namespace ExpenseProcessingSystem.Services
                 cddStatus.PS_CDD = true;
                 _context.Entry(cddStatus).State = EntityState.Modified;
                 _context.SaveChanges();
+                updatePrintStatusForCLosing(entryID);
                 return true;
             }
             else
@@ -12330,6 +12336,7 @@ namespace ExpenseProcessingSystem.Services
             if(birStatus != null)
             {
                 _context.SaveChanges();
+                updatePrintStatusForCLosing(entryID);
                 return true;
             }
             return false;
@@ -12347,11 +12354,32 @@ namespace ExpenseProcessingSystem.Services
             if (ps != null)
             {
                 _context.SaveChanges();
+                updatePrintStatusForCLosing(entryID);
                 return true;
             }
             return false;
         }
 
+        public void updatePrintStatusForCLosing(int entryID) {
+            var expPrintStatus = _context.PrintStatus.Where(x => x.PS_EntryID == entryID);
+
+            bool updStats = true;
+
+            foreach(var item in expPrintStatus)
+            {
+                if (!item.PS_BIR2307 || !item.PS_CDD || !item.PS_Check || !item.PS_LOI || !item.PS_Voucher)
+                    updStats = false;
+            }
+
+            if (updStats)
+            {
+                ExpenseEntryModel updItem = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == entryID);
+
+                updItem.Expense_Status = GlobalSystemValues.STATUS_FOR_CLOSING;
+
+                _context.SaveChanges();
+            }
+        }
         public bool UpdatePrintCheckPrintStatus(int entryID)
         {
             var ps = _context.PrintStatus.Where(x => x.PS_EntryID == entryID).ToList();
@@ -12365,6 +12393,7 @@ namespace ExpenseProcessingSystem.Services
             if (ps != null)
             {
                 _context.SaveChanges();
+                updatePrintStatusForCLosing(entryID);
                 return true;
             }
             return false;

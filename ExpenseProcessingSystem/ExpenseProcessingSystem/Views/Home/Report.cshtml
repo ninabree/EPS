@@ -20,18 +20,18 @@
         <div class="m-t-10 rep-voucher-cont" style="height:100px">
             <table class="table rep-voucher-tbl ">
                 <colgroup>
-                    <col style="width:5%" />
-                    <col style="width:5%" />
-                    <col style="width:10%" />
-                    <col style="width:20%" />
-                    <col style="width:10%" />
-                    <col style="width:20%" />
-                    <col style="width:2%" />
-                    <col style="width:5%" />
-                    <col style="width:10%" />
-                    <col style="width:5%" />
-                    <col style="width:5%" />
-                    <col style="width:5%" />
+                    <col style="width:2%">
+                    <col style="width:2%">
+                    <col style="width:10%">
+                    <col style="width:20%">
+                    <col style="width:10%">
+                    <col style="width:26%">
+                    <col style="width:2%">
+                    <col style="width:5%">
+                    <col style="width:10%">
+                    <col style="width:5%">
+                    <col style="width:5%">
+                    <col style="width:5%">
                 </colgroup>
                 <tr>
                     <td class="td-center"></td>
@@ -500,13 +500,23 @@
                         Signatory 1:
                     </td>
                     <td>
-                        @Html.DropDownListFor(m => m.SignatoryID, new SelectList(Model.SignatoryList, "BCS_ID", "BCS_Name"), null, new { @class = "dis-inline-block", id = "ddlSignatory_" + @HomeReportConstantValue.LOI })
+                        @{
+                            List<SelectListItem> sig1 = new List<SelectListItem>();
+                            sig1.Add(new SelectListItem
+                            {
+                                Text = "-- Select Approver Applicable--",
+                                Value = "0",
+                                Selected = true
+                            });
+                            sig1.AddRange(new SelectList(Model.SignatoryList, "BCS_ID", "BCS_Name"));
+                        }
+                        @Html.DropDownListFor(m => m.SignatoryID, sig1, null, new { @class = "dis-inline-block", id = "ddlSignatory_" + @HomeReportConstantValue.LOI })
                     </td>
                     <td class="td-right">
                         Signatory 2:
                     </td>
                     <td>
-                        @Html.DropDownListFor(m => m.SignatoryIDVerifier, new SelectList(Model.SignatoryList, "BCS_ID", "BCS_Name"), null, new { @class = "dis-inline-block", id = "ddlSignatoryVer_" + @HomeReportConstantValue.LOI })
+                        @Html.DropDownListFor(m => m.SignatoryIDVerifier, sig1, null, new { @class = "dis-inline-block", id = "ddlSignatoryVer_" + @HomeReportConstantValue.LOI })
                     </td>
                     <td></td>
                 </tr>
