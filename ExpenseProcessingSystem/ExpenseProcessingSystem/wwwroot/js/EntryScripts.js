@@ -36,10 +36,9 @@
 
         var screen = $("#_screen").val();
 
-        var myform = document.getElementById("inputForm");
-        var data = new FormData(myform);
-        
         if (screen == "cv") {
+            var myform = document.getElementById("inputForm");
+            var data = new FormData(myform);
             if ($('#iframePreview').length == 0) {
                 return false;
             }
@@ -54,6 +53,8 @@
         }
 
         if (screen == "ddv") {
+            var myform = document.getElementById("inputForm");
+            var data = new FormData(myform);
             $.ajax({
                 type: 'POST',
                 url: "/Home/VoucherDDV",

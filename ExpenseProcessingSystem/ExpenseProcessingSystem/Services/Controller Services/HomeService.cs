@@ -11387,6 +11387,7 @@ namespace ExpenseProcessingSystem.Services
                     {
                         //_context.Entry(rec).State = EntityState.Modified;
                         _context.SaveChanges();
+                        updatePrintStatusForCLosing(entryID);
                     }
                 }
             }
@@ -12215,6 +12216,7 @@ namespace ExpenseProcessingSystem.Services
                 cddStatus.PS_CDD = true;
                 _context.Entry(cddStatus).State = EntityState.Modified;
                 _context.SaveChanges();
+                updatePrintStatusForCLosing(entryID);
                 return true;
             }
             else
@@ -12234,6 +12236,7 @@ namespace ExpenseProcessingSystem.Services
             if(birStatus != null)
             {
                 _context.SaveChanges();
+                updatePrintStatusForCLosing(entryID);
                 return true;
             }
             return false;
@@ -12251,11 +12254,32 @@ namespace ExpenseProcessingSystem.Services
             if (ps != null)
             {
                 _context.SaveChanges();
+                updatePrintStatusForCLosing(entryID);
                 return true;
             }
             return false;
         }
 
+        public void updatePrintStatusForCLosing(int entryID) {
+            var expPrintStatus = _context.PrintStatus.Where(x => x.PS_EntryID == entryID);
+
+            bool updStats = true;
+
+            foreach(var item in expPrintStatus)
+            {
+                if (!item.PS_BIR2307 || !item.PS_CDD || !item.PS_Check || !item.PS_LOI || !item.PS_Voucher)
+                    updStats = false;
+            }
+
+            if (updStats)
+            {
+                ExpenseEntryModel updItem = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == entryID);
+
+                updItem.Expense_Status = GlobalSystemValues.STATUS_FOR_CLOSING;
+
+                _context.SaveChanges();
+            }
+        }
         public bool UpdatePrintCheckPrintStatus(int entryID)
         {
             var ps = _context.PrintStatus.Where(x => x.PS_EntryID == entryID).ToList();
@@ -12269,6 +12293,7 @@ namespace ExpenseProcessingSystem.Services
             if (ps != null)
             {
                 _context.SaveChanges();
+                updatePrintStatusForCLosing(entryID);
                 return true;
             }
             return false;
