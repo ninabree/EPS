@@ -221,7 +221,8 @@ namespace ExpenseProcessingSystem.Services
                         dbPending = (from exp in _context.ExpenseEntry
                                      join us in _context.User on exp.Expense_Creator_ID equals us.User_ID
                                      where (
-                                         exp.Expense_Status == GlobalSystemValues.STATUS_FOR_PRINTING
+                                         (exp.Expense_Status == GlobalSystemValues.STATUS_FOR_PRINTING ||
+                                         exp.Expense_Status == GlobalSystemValues.STATUS_REJECTED)
                                          && exp.Expense_Creator_ID == userID
                                      )
                                      select new ApplicationsViewModel
@@ -241,7 +242,8 @@ namespace ExpenseProcessingSystem.Services
                                       join us in _context.User on liq.Liq_Created_UserID equals us.User_ID
                                       join exp in _context.ExpenseEntry on liq.ExpenseEntryModel.Expense_ID equals exp.Expense_ID
                                       where (
-                                          liq.Liq_Status == GlobalSystemValues.STATUS_FOR_PRINTING
+                                          (liq.Liq_Status == GlobalSystemValues.STATUS_FOR_PRINTING ||
+                                          liq.Liq_Status == GlobalSystemValues.STATUS_REJECTED)
                                           && liq.Liq_Created_UserID == userID
                                       )
                                       select new ApplicationsViewModel

@@ -69,13 +69,45 @@
         <tr>
             <td></td>
             <td><p class="">DDV No/s. </p></td>
-            <td colspan="10" class="float-l">
+            @if (@Model.ReportLOI.Rep_DDVNoList.Count <= 8)
+            {
                 @foreach (var val in Model.ReportLOI.Rep_DDVNoList)
                 {
-                    <p class="ddv_no">@val</p>
+                    <td>@val</td>
                 }
-            </td>
+            }
+            else
+            {
+                int lmt = (@Model.ReportLOI.Rep_DDVNoList.Count < 8) ? @Model.ReportLOI.Rep_DDVNoList.Count : 7;
+                for (int cnt1 = 0; cnt1 <= lmt; cnt1++)
+                {
+                    <td>@Model.ReportLOI.Rep_DDVNoList[cnt1]</td>
+                }
+            }
         </tr>
+        @if (@Model.ReportLOI.Rep_DDVNoList.Count >= 9)
+        {
+            var lmt = (@Model.ReportLOI.Rep_DDVNoList.Count < 16) ? @Model.ReportLOI.Rep_DDVNoList.Count : 16;
+            <tr>
+                <td></td>
+                <td></td>
+                @for (int count = 8; count < lmt; count++)
+                {
+                    <td>@Model.ReportLOI.Rep_DDVNoList[count]</td>
+                }
+            </tr>
+        }
+        @if (@Model.ReportLOI.Rep_DDVNoList.Count >= 16)
+        {
+            <tr>
+                <td></td>
+                <td></td>
+                @for (int count = 16; count < 16; count++)
+                {
+                    <td>@Model.ReportLOI.Rep_DDVNoList[count]</td>
+                }
+            </tr>
+        }
         <tr><td colspan="12"><p></p></td></tr>
         <tr>
             <td colspan="12">This is to authorize BDO Universal Bank - Corporate Center Branch to debit MIZUHO BANK, LTD. - </td>
