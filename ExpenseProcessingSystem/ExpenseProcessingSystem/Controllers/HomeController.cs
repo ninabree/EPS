@@ -5479,6 +5479,18 @@ namespace ExpenseProcessingSystem.Controllers
             vvm.headvm.Header_TIN = xelem.Element("TIN").Value;
             vvm.headvm.Header_Address = xelem.Element("ADDRESS").Value;
 
+            for (var i = 0; i < model.EntryCV.Count(); i++)
+            {
+                if (model.EntryCV[i].account == 0)
+                {
+                    model.EntryCV.RemoveAt(i);
+                    ModelState.Remove("EntryCV[" + i + "].GBaseRemarks");
+                    ModelState.Remove("EntryCV[" + i + "].debitGross");
+                    ModelState.Remove("EntryCV[" + i + "].credCash");
+                    ModelState.Remove("EntryCV[" + i + "]");
+                }
+            }
+
             vvm.maker = _service.getUserFullName(model.maker);
             if(model.expenseId != null)
                 vvm.voucherNo = _service.getVoucherNo(1,model.expenseDate,int.Parse(model.expenseId));
@@ -5657,6 +5669,18 @@ namespace ExpenseProcessingSystem.Controllers
             vvm.headvm.Header_Name = xelem.Element("NAME").Value;
             vvm.headvm.Header_TIN = xelem.Element("TIN").Value;
             vvm.headvm.Header_Address = xelem.Element("ADDRESS").Value;
+
+            for (var i = 0; i < model.EntryDDV.Count(); i++)
+            {
+                if (model.EntryDDV[i].account == 0)
+                {
+                    model.EntryDDV.RemoveAt(i);
+                    ModelState.Remove("EntryDDV[" + i + "].GBaseRemarks");
+                    ModelState.Remove("EntryDDV[" + i + "].debitGross");
+                    ModelState.Remove("EntryDDV[" + i + "].credCash");
+                    ModelState.Remove("EntryDDV[" + i + "]");
+                }
+            }
 
             vvm.maker =_service.getUserFullName(model.maker);
             if (model.expenseId != null)
