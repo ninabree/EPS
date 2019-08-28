@@ -214,6 +214,9 @@
                 var currId = $("#item_" + cnt).find("#EntryDDV_" + cnt + "__ccy  option:selected").val() + "";
                 currenableVATEWT("item_" + cnt, currId);
             }
+            if ((trs.length - 3) > 0) {
+                $('.expenseTable-remove').show();
+            }
         }
         //checks each checkbox and enables corresponding modals
         CheckEachEWT();

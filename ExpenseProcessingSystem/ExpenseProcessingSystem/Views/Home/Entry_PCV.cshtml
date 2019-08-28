@@ -187,7 +187,9 @@
         for (var cnt = 0; cnt < trs.length - 2; cnt++) {
             ddlEnabled(cnt);
         }
-
+        if ((trs.length - 3) > 0) {
+            $('.expenseTable-remove').show();
+        }
         var gross = $(".txtGross");
         var credEwt = $(".txtCredEwt");
         var credCash = $(".txtCredCash");

@@ -7,7 +7,7 @@
 @model DDVInterEntityViewModel
 
 @Html.HiddenFor(x => Model.Inter_ID, new { @id = "parentIdInter" })
-<table class="table voucher-tbl table-bordered">
+<table class="table voucher-tbl table-bordered" id="inter-tbl">
     <tr>
         <td colspan="3"><label>Exchange Rate:</label></td>
         <td colspan="2">@Html.TextBoxFor(m => m.Inter_Rate, new { @class = "w-full changeable NumberOnlyOneDecimal" })</td>
@@ -21,13 +21,13 @@
         </td>
         <td colspan="4" id="amt1">@Html.TextBoxFor(m => m.Inter_Currency1_Amount, new { @class = "changeable NumberOnlyOneDecimal" })</td>
         <td colspan="3">
-            @Html.CheckBoxFor(model => model.Inter_Check1, new { @class = "convertChk changeable" })
-            Convert from <label id="convertCurr1">@Model.Inter_Currency2_ABBR</label>
+            @Html.CheckBoxFor(model => model.Inter_Check1, new { @class = "convertChk" })
+            Convert <label id="convertCurr1">@Model.Inter_Currency2_ABBR</label>
         </td>
-        <td colspan="4"><input type="number" id="convertAmt1" class="changeable NumberOnlyOneDecimal" value="@Model.Inter_Convert1_Amount" /></td>
+        <td colspan="4"><input type="number" id="convertAmt1" class="NumberOnlyOneDecimal" value="@Model.Inter_Convert1_Amount" /></td>
     </tr>
     <tr>
-        <td colspan="3"><label id="curr2-lbl"> @Model.CurrencyList.Where(x=> x.Value == @Model.Inter_Currency2_ID + "").Select(x => x.Text).FirstOrDefault() Amount</label></td>
+        <td colspan="3"><label id="curr2-lbl"> @Model.CurrencyList.Where(x => x.Value == @Model.Inter_Currency2_ID + "").Select(x => x.Text).FirstOrDefault() Amount</label></td>
         <td colspan="2" id="curr2-abbr">
             <select id="@Html.IdFor(x => Model.Inter_Currency2_ID)" class="input100 txtAcc curr2" name="@Html.NameFor(x => Model.Inter_Currency2_ID)">
                 @foreach (var groepModel in Model.CurrencyList)
@@ -43,12 +43,12 @@
                 }
             </select>
         </td>
-        <td colspan="4" id="amt2">@Html.TextBoxFor(m => m.Inter_Currency2_Amount, new { @class = "changeable NumberOnlyOneDecimal" })</td>
+        <td colspan="4"><input type="number" id="convertAmt2" value="@Model.Inter_Convert2_Amount" class="NumberOnlyOneDecimal" /></td>
         <td colspan="3">
-            @Html.CheckBoxFor(model => model.Inter_Check2, new { @class = "convertChk changeable" })
-            Convert from <label id="convertCurr2">@Model.Inter_Currency1_ABBR</label>
+            @Html.CheckBoxFor(model => model.Inter_Check2, new { @class = "convertChk" })
+            Convert <label id="convertCurr2">@Model.Inter_Currency1_ABBR</label>
         </td>
-        <td colspan="4"><input type="number" id="convertAmt2" value="@Model.Inter_Convert2_Amount" class="changeable NumberOnlyOneDecimal" /></td>
+        <td colspan="4" id="amt2">@Html.TextBoxFor(m => m.Inter_Currency2_Amount, new { @class = "changeable NumberOnlyOneDecimal" })</td>
     </tr>
     <tr>
         <td colspan="16"></td>
@@ -189,22 +189,93 @@
         defaultCheck();
         updateCurrency2();
 
+        $(".NumberOnlyOneDecimal").on("keyup", function (e) {
+            var val = $(this).val();
+            if (isNaN(val)) {
+                val = val.replace(/[^0-9\.]/g, '');
+                if (val.split('.').length > 2) {
+                    val = val.replace(/\.+$/, "");
+                }
+            }
+            $(this).val(val);
+        });
+        $(".NumberOnlyOneDecimal").on("change", function (e) {
+            var decVal = 2;
+            
+            var val = $(this).val().replace("-", "");
+            var valId = $(this).attr("id");
+            if (valId == "Inter_Rate") {
+                decVal = 4;
+            }
+            //if ($('#yenID').val() == $("#" + pid).find("[id$='__ExpNCDtlAcc_Type_ID']").val()) {
+            //    decVal = 0;
+            //}
+            $(this).val(roundNumber(val, decVal));
+            if (isNaN($(this).val())) {
+                $(this).val(0);
+            }
+        });
         $(".convertChk").on("change", function (e) {
             defaultSet();
             var rateVal = rate.val(); 
+            curr1Val = $(curr1Amt).val();
+            curr2Val = $(curr2Amt).val();
             if ($(this).is(':checked') && $(this).attr("id") == "Inter_Check1") {
                 if ((curr1Val != 0) && (curr2Val != 0) && (rateVal != 0)) {
-                    $(".changeable").trigger("change");
+                    UpdateParticulars4(curr1Val, curr2Val, rateVal, "chk1");
                 }
                 disable1();
             } else if ($(this).is(':checked') && $(this).attr("id") == "Inter_Check2") {
                 if ((curr1Val != 0) && (curr2Val != 0) && (rateVal != 0)) {
-                    $(".changeable").trigger("change");
+                    UpdateParticulars4(curr1Val, curr2Val, rateVal, "chk2");
                 } 
                 disable2();
             } else if (!$(this).is(':checked')){
                 defaultVals();
                 defaultInter();
+            }
+        });
+
+        $("#convertAmt2").on("change", function (e) {
+            e.stopImmediatePropagation();
+            isChk();
+            var curr1Val = $(curr1Amt).val();
+            var conv2Val = $(conv2Amt).val();
+            var rateVal = $(rate).val();
+            //if Curr1 Amount is not 0 and checkbox 2 is checked and converted2 Amount is not 0 
+            if ((curr1Val != 0) && isChk2 && (conv2Val != 0) && (rateVal != 0)) {
+                UpdateParticulars1(curr1Val, conv2Val);
+            }
+            else {
+                if (isChk1) {
+                    UpdateParticulars3(curr1Amt);
+                } else if (isChk2) {
+                    UpdateParticulars3(curr2Amt);
+                } else {
+                    UpdateParticulars3(curr2Amt);
+                    UpdateParticulars3(curr1Amt);
+                }
+            }
+        });
+
+        $("#convertAmt1").on("change", function (e) {
+            e.stopImmediatePropagation();
+            isChk();
+            var curr2Val = $(curr2Amt).val();
+            var conv1Val = $(conv1Amt).val();
+            var rateVal = $(rate).val();
+            //if Curr1 Amount is not 0 and checkbox 2 is checked and converted2 Amount is not 0 
+            if ((curr2Val != 0) && isChk1 && (conv1Val != 0) && (rateVal != 0)) {
+                UpdateParticulars2(curr2Val, conv1Val);
+            } else {
+                if (isChk1) {
+                    UpdateParticulars3(curr1Amt);
+                } else if (isChk2) {
+                    UpdateParticulars3(curr2Amt);
+                } else {
+                    UpdateParticulars3(curr2Amt);
+                    UpdateParticulars3(curr1Amt);
+                }
             }
         });
         $(".changeable").on("change", function (e) {
@@ -392,18 +463,18 @@
                 alert("Invalid amount/s provided.");
             } else {
                 currVal = parseFloat(currVal).toFixed(2);
-                var curr2 = (parseFloat(convVal) / parseFloat(rate));
-                var curr2Dec = (parseFloat(convVal) / parseFloat(rate)).toFixed(2);
-                var parCredit = (parseFloat(curr2) * parseFloat(rate)).toFixed(2);
-                var parDebit = (parseFloat(currVal) + parseFloat(parCredit)).toFixed(2);
+                var curr2 = (parseFloat(convVal) * parseFloat(rate));
+                var curr2Dec = (curr2).toFixed(2);
+                var parCredit = (parseFloat(convVal)).toFixed(2);
+                var parDebit = (parseFloat(currVal) + parseFloat(curr2)).toFixed(2);
                 $(curr2Amt).val(curr2Dec);
                 $("#par1-0").text(parDebit);
-                $("#par1-1").text(parCredit);
+                $("#par1-1").text(curr2Dec);
                 $("#par1-2").text(currVal);
-                $("#par2-0").text(parCredit);
-                $("#par2-1").text(curr2Dec);
-                $("#par3-0").text(curr2Dec);
-                $("#par3-1").text(curr2Dec);
+                $("#par2-0").text(curr2Dec);
+                $("#par2-1").text(parCredit);
+                $("#par3-0").text(parCredit);
+                $("#par3-1").text(parCredit);
                 $("#par2-0-1").text(rate);
             }
         }
@@ -413,17 +484,17 @@
                 alert("Invalid amount/s provided.");
             } else {
                 var curr1 = (parseFloat(convVal) * parseFloat(rate));
-                var curr1Dec = (parseFloat(convVal) * parseFloat(rate)).toFixed(2);
-                var parCredit = (parseFloat(currVal) * parseFloat(rate)).toFixed(2);
-                var parDebit = (parseFloat(curr1) + parseFloat(parCredit)).toFixed(2);
+                var curr1Dec = (curr1).toFixed(2);
+                var parCredit = (parseFloat(convVal)).toFixed(2);
+                var parDebit = (parseFloat(curr1) + parseFloat(currVal)).toFixed(2);
                 $(curr1Amt).val(curr1Dec);
                 $("#par1-0").text(parDebit);
-                $("#par1-1").text(parCredit);
-                $("#par1-2").text(curr1Dec);
-                $("#par2-0").text(parCredit);
-                $("#par2-1").text(currVal);
-                $("#par3-0").text(currVal);
-                $("#par3-1").text(currVal);
+                $("#par1-1").text(curr1Dec);
+                $("#par1-2").text(currVal);
+                $("#par2-0").text(curr1Dec);
+                $("#par2-1").text(parCredit);
+                $("#par3-0").text(parCredit);
+                $("#par3-1").text(parCredit);
                 $("#par2-0-1").text(rate);
             }
         }
@@ -431,31 +502,35 @@
             if (!($.isNumeric(curr1Val) && $.isNumeric(curr2Val) && $.isNumeric(rateVal))) {
                 alert("Invalid amount/s provided.");
             } else if (checkBox == "chk1") {
+                var rateValDec = (parseFloat(rateVal).toFixed(4));
                 var curr1Dec = (parseFloat(curr1Val).toFixed(2));
-                var parCredit = (parseFloat(curr1Val) * parseFloat(rateVal)).toFixed(2);
-                var parDebit = (parseFloat(curr1Val) + parseFloat(parCredit)).toFixed(2);
+                var curr2Dec = (parseFloat(curr2Val).toFixed(2));
+                var parCredit = (parseFloat(curr1Val) / parseFloat(rateVal)).toFixed(2);
+                var parDebit = (parseFloat(curr1Val) + parseFloat(curr2Val)).toFixed(2);
                 $("#convertAmt1").val(parCredit);
                 $("#par1-0").text(parDebit);
-                $("#par1-1").text(parCredit);
+                $("#par1-1").text(curr2Dec);
                 $("#par1-2").text(curr1Dec);
-                $("#par2-0").text(parCredit);
-                $("#par2-1").text(parseFloat(curr1Val).toFixed(2));
-                $("#par3-0").text(parseFloat(curr1Val).toFixed(2));
-                $("#par3-1").text(parseFloat(curr1Val).toFixed(2));
-                $("#par2-0-1").text(rateVal);
+                $("#par2-0").text(curr2Dec);
+                $("#par2-1").text(parCredit);
+                $("#par3-0").text(parCredit);
+                $("#par3-1").text(parCredit);
+                $("#par2-0-1").text(rateValDec);
             } else if (checkBox == "chk2") {
+                var rateValDec = (parseFloat(rateVal).toFixed(4));
+                var curr1Dec = (parseFloat(curr1Val).toFixed(2));
                 var curr2Dec = (parseFloat(curr2Val).toFixed(2));
-                var parCredit = (parseFloat(curr2Val) * parseFloat(rateVal)).toFixed(2);
-                var parDebit = (parseFloat(curr2Val) + parseFloat(parCredit)).toFixed(2);
+                var parCredit = (parseFloat(curr2Val) / parseFloat(rateVal)).toFixed(2);
+                var parDebit = (parseFloat(curr2Val) + parseFloat(curr1Val)).toFixed(2);
                 $("#convertAmt2").val(parCredit);
                 $("#par1-0").text(parDebit);
-                $("#par1-1").text(parCredit);
+                $("#par1-1").text(curr1Dec);
                 $("#par1-2").text(curr2Dec);
-                $("#par2-0").text(parCredit);
-                $("#par2-1").text(parseFloat(curr2Val).toFixed(2));
-                $("#par3-0").text(parseFloat(curr2Val).toFixed(2));
-                $("#par3-1").text(parseFloat(curr2Val).toFixed(2));
-                $("#par2-0-1").text(rateVal);
+                $("#par2-0").text(curr1Dec);
+                $("#par2-1").text(parCredit);
+                $("#par3-0").text(parCredit);
+                $("#par3-1").text(parCredit);
+                $("#par2-0-1").text(rateValDec);
             }
         }
         function UpdateParticulars3(currAmt) {

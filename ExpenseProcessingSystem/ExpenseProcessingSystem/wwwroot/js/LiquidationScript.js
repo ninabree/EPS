@@ -356,8 +356,8 @@ function assignDivValuesIE(pid) {
     $('#txtIEExRate').val($('#lblIEInput9').text());
     $('#txtIEExRatePhp').val(AC(roundExceptionJPY(parseFloat($('#txtIEAmount').val() * $('#txtIEExRate').val()), 2)));
 
-    $('#lblIEInput7').text(AC($("#txtIEAmount").val(), 2));
-    $('#lblIEInput8').text(AC($("#txtIEAmount").val(), 2));
+    $('#lblIEInput7').text(AC($("#txtIEInput1").val().replace(/\,/g, "")));
+    $('#lblIEInput8').text(AC($("#txtIEInput1").val().replace(/\,/g, "")));
 };
 
 function setLiqPhpValuetoDivInput(ret) {
@@ -570,5 +570,14 @@ function ChangeOptionMarkForPrint() {
     if ($('#txtLiqPhpInput3').val() > 0){
         $('#printOptExpenseLiq').html("&#8999;");
         $('#printOptReverseLiq').html("&#9645;");
+    }
+}
+
+function ShowHideCDDLiqButton(pid) {
+    var ret = pid.replace('item_', '');
+    if (parseFloat($('#lblIEInput7').text().replace(/\,/g, "")) == 0) {
+        $('.cddISLiqBtn').css('display', 'none');
+    } else {
+        $('.cddISLiqBtn').show();
     }
 }
