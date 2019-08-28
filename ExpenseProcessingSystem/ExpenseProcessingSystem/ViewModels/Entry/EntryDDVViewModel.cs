@@ -13,36 +13,28 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         [NotNullValidations, TextValidation]
         [Display(Name = "GBase Remarks")]
         public string GBaseRemarks { get; set; }
-        [NotNullValidations]
         [Display(Name = "Account")]
         public int account { get; set; }
         public int creditAccount1 { get; set; }
         public int creditAccount2 { get; set; }
         public string account_Name { get; set; }
-        [NotNullValidations]
         [Display(Name = "Inter Entity")]
         public bool inter_entity { get; set; }
-        [NotNullValidations]
         [Display(Name = "FBT")]
         public bool fbt { get; set; }
-        [NotNullValidations]
         [Display(Name = "Department")]
         public int dept { get; set; }
         public string dept_Name { get; set; }
-        [NotNullValidations]
         [Display(Name = "VAT Checkbox")]
         public bool chkVat { get; set; }
         [Display(Name = "VAT")]
         public int vat { get; set; }
         public string vat_Name { get; set; }
-        [NotNullValidations]
         [Display(Name = "EWT Checkbox")]
         public bool chkEwt { get; set; }
-        [IntegerValidation]
         [Display(Name = "EWT")]
         public int ewt { get; set; }
         public string ewt_Name { get; set; }
-        [FalseValidation("chkEwt"), TextValidation]
         [Display(Name = "EWT - Tax Payor's Name")]
         public int ewt_Payor_Name_ID { get; set; }
         public string ewt_Payor_Name { get; set; }
