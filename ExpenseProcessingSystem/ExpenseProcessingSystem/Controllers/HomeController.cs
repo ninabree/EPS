@@ -2829,7 +2829,7 @@ namespace ExpenseProcessingSystem.Controllers
             
             int id = _service.addExpense_NC(EntryNCViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_NC);
 
-            if (id != 0)
+            if (EntryNCViewModelList.amortizationID != 0)
             {
                 _service.updateAmorStatus(EntryNCViewModelList.amortizationID);
             }
@@ -5394,15 +5394,15 @@ namespace ExpenseProcessingSystem.Controllers
             return vvm;
         }
 
-        public JsonResult updateVoucherPrintStatus(int expenseID)
+        public JsonResult updateVoucherPrintStatus(int entryID)
         {
-            bool result = _service.UpdatePrintVoucherPrintStatus(expenseID);
+            bool result = _service.UpdatePrintVoucherPrintStatus(entryID);
 
             return Json(result);
         }
-        public JsonResult updateCheckPrintStatus(int expenseID)
+        public JsonResult updateCheckPrintStatus(int entryID)
         {
-            bool result = _service.UpdatePrintCheckPrintStatus(expenseID);
+            bool result = _service.UpdatePrintCheckPrintStatus(entryID);
 
             return Json(result);
         }

@@ -10575,9 +10575,22 @@ namespace ExpenseProcessingSystem.Services
                 }
 
                 if (getBranchNo(item.Account_No) == GlobalSystemValues.BRANCH_RBU)
-                    nmCloseItemsRBU.Add(temp);
-                else
-                    nmCloseItemsFCDU.Add(temp);
+                {
+                    int itemIndex = nmCloseItemsRBU.FindIndex(x => x.expTrans == temp.expTrans
+                                                                && x.gBaseTrans == temp.gBaseTrans
+                                                                && x.particulars == temp.particulars
+                                                                && x.ccy == temp.ccy);
+                    if(itemIndex < 0)
+                        nmCloseItemsRBU.Add(temp);
+                }
+                else {
+                    int itemIndex = nmCloseItemsFCDU.FindIndex(x => x.expTrans == temp.expTrans
+                                            && x.gBaseTrans == temp.gBaseTrans
+                                            && x.particulars == temp.particulars
+                                            && x.ccy == temp.ccy);
+                    if (itemIndex < 0)
+                        nmCloseItemsFCDU.Add(temp);
+                }
             }
 
             nmDic.Add(GlobalSystemValues.BRANCH_RBU, nmCloseItemsRBU);
