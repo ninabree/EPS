@@ -14,24 +14,19 @@ namespace ExpenseProcessingSystem.ViewModels
         [NotNullValidations, TextValidation]
         [Display(Name = "GBase Remarks")]
         public string GBaseRemarks { get; set; }
-        [NotNullValidations]
         [Display(Name = "Account")]
         public int account { get; set; }
         public int creditAccount1 { get; set; }
         public int creditAccount2 { get; set; }
-        [NotNullValidations]
         [Display(Name = "FBT")]
         public bool fbt { get; set; }
         public int fbtID { get; set; }
-        [NotNullValidations]
         [Display(Name = "Department")]
         public int dept { get; set; }
-        [NotNullValidations]
         [Display(Name = "VAT Checkbox")]
         public bool chkVat { get; set; }
         [Display(Name = "VAT")]
         public int vat { get; set; }
-        [NotNullValidations]
         [Display(Name = "EWT Checkbox")]
         public bool chkEwt { get; set; }
         [IntegerValidation]

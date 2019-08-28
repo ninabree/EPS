@@ -1365,6 +1365,17 @@ namespace ExpenseProcessingSystem.Controllers
         public IActionResult AddNewCV(EntryCVViewModelList EntryCVViewModelList)
         {
             var userId = GetUserID();
+            for (var i = 0; i < EntryCVViewModelList.EntryCV.Count(); i++)
+            {
+                if (EntryCVViewModelList.EntryCV[i].account == 0)
+                {
+                    EntryCVViewModelList.EntryCV.RemoveAt(i);
+                    ModelState.Remove("EntryCV[" + i + "].GBaseRemarks");
+                    ModelState.Remove("EntryCV[" + i + "].debitGross");
+                    ModelState.Remove("EntryCV[" + i + "].credCash");
+                    ModelState.Remove("EntryCV[" + i + "]");
+                }
+            }
             if (!ModelState.IsValid)
             {
                 return View("Entry_CV", PopulateEntry((EntryCVViewModelList)EntryCVViewModelList));
@@ -1936,7 +1947,9 @@ namespace ExpenseProcessingSystem.Controllers
                 if(EntryCVViewModelList.EntryCV[i].account == 0)
                 {
                     EntryCVViewModelList.EntryCV.RemoveAt(i);
-                    ModelState["EntryCVViewModelList.EntryCV[" + i + "]"].Errors.RemoveAt(i);
+                    ModelState.Remove("EntryCV[" + i + "].GBaseRemarks");
+                    ModelState.Remove("EntryCV[" + i + "].debitGross");
+                    ModelState.Remove("EntryCV[" + i + "].credCash");
                     ModelState.Remove("EntryCV[" + i + "]");
                 }
             }
@@ -2371,6 +2384,18 @@ namespace ExpenseProcessingSystem.Controllers
         public IActionResult AddNewSS(EntryCVViewModelList EntryCVViewModelList)
         {
             var userId = GetUserID();
+
+            for (var i = 0; i < EntryCVViewModelList.EntryCV.Count(); i++)
+            {
+                if (EntryCVViewModelList.EntryCV[i].account == 0)
+                {
+                    EntryCVViewModelList.EntryCV.RemoveAt(i);
+                    ModelState.Remove("EntryCV[" + i + "].GBaseRemarks");
+                    ModelState.Remove("EntryCV[" + i + "].debitGross");
+                    ModelState.Remove("EntryCV[" + i + "].credCash");
+                    ModelState.Remove("EntryCV[" + i + "]");
+                }
+            }
 
             if (!ModelState.IsValid)
             {
