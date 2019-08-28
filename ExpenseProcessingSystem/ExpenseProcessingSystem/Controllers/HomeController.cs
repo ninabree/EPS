@@ -1670,6 +1670,17 @@ namespace ExpenseProcessingSystem.Controllers
         public IActionResult AddNewDDV(EntryDDVViewModelList EntryDDVViewModelList)
         {
             var userId = GetUserID();
+            for (var i = 0; i < EntryDDVViewModelList.EntryDDV.Count(); i++)
+            {
+                if (EntryDDVViewModelList.EntryDDV[i].account == 0)
+                {
+                    EntryDDVViewModelList.EntryDDV.RemoveAt(i);
+                    ModelState.Remove("EntryDDV[" + i + "].GBaseRemarks");
+                    ModelState.Remove("EntryDDV[" + i + "].debitGross");
+                    ModelState.Remove("EntryDDV[" + i + "].credCash");
+                    ModelState.Remove("EntryDDV[" + i + "]");
+                }
+            }
             if (!ModelState.IsValid)
             {
                 //return RedirectToAction("Entry_DDV", EntryDDVViewModelList);

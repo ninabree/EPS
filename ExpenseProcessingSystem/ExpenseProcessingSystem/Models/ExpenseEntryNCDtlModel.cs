@@ -15,6 +15,7 @@ namespace ExpenseProcessingSystem.Models
         public string ExpNCDtl_Remarks_Period { get; set; }
         public int ExpNCDtl_Vendor_ID { get; set; }
         public int ExpNCDtl_TR_ID { get; set; }
+        public decimal ExpNCDtl_TaxBasedAmt { get; set; }
         public ExpenseEntryNCModel ExpenseEntryNCModel { get; set; }
 
         public ICollection<ExpenseEntryNCDtlAccModel> ExpenseEntryNCDtlAccs { get; set; }
