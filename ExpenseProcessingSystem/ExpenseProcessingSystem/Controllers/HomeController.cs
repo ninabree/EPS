@@ -2838,14 +2838,7 @@ namespace ExpenseProcessingSystem.Controllers
         {
             var userId = GetUserID();
             partialName = partialName ?? (viewModel.EntryNC.NC_Category_ID.ToString() != "0" ? viewModel.EntryNC.NC_Category_ID.ToString() : GlobalSystemValues.NC_LS_PAYROLL.ToString());
-            //if (viewModel.EntryNC == null)
-            //{
-            //    viewModel.EntryNC = new EntryNCViewModel {
-            //                            NC_Category_ID = int.Parse(partialName),
-            //                            NC_CredAmt = 0,
-            //                            NC_DebitAmt = 0
-            //                        };
-            //}
+
             string jsonModel;
 
             ModelState.Clear();

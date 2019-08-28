@@ -601,9 +601,9 @@ iframe{
     font-size: 11px;
     height: 20px;
 }
-.table > tbody > tr > td > input {
-    margin: 5px 0px;
-}
+    .table > tbody > tr > td > .input {
+        margin: 5px 0px;
+    }
 .table > thead > tr > th > a {
     text-decoration: underline;
     color: #0A1B81;

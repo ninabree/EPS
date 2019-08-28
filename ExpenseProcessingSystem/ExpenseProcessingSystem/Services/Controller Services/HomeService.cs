@@ -8464,6 +8464,7 @@ namespace ExpenseProcessingSystem.Services
                         ExpNCDtl_TR_Title = ncDtl.g.ExpNCDtl_TR_ID > 0 ? _context.DMTR.FirstOrDefault(x=> x.TR_ID == ncDtl.g.ExpNCDtl_TR_ID).TR_WT_Title : "",
                         ExpNCDtl_Vendor_ID = ncDtl.g.ExpNCDtl_Vendor_ID,
                         ExpNCDtl_Vendor_Name = ncDtl.g.ExpNCDtl_Vendor_ID> 0 ?_context.DMVendor.FirstOrDefault(x => x.Vendor_ID == ncDtl.g.ExpNCDtl_Vendor_ID).Vendor_Name : "",
+                        ExpNCDtl_TaxBasedAmt = ncDtl.g.ExpNCDtl_TaxBasedAmt,
                         ExpenseEntryNCDtlAccs = ncDtlAccs
                     };
                     ncDtls.Add(entryNCDtl);
@@ -8920,6 +8921,7 @@ namespace ExpenseProcessingSystem.Services
                             ExpNCDtl_Remarks_Period = ncDtls.ExpNCDtl_Remarks_Period,
                             ExpNCDtl_Vendor_ID = ncDtls.ExpNCDtl_Vendor_ID,
                             ExpNCDtl_TR_ID = ncDtls.ExpNCDtl_TR_ID,
+                            ExpNCDtl_TaxBasedAmt = ncDtls.ExpNCDtl_TaxBasedAmt,
                             ExpenseEntryNCDtlAccs = accountDtls
                         };
                         expenseDtls.Add(expenseDetail);

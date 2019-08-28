@@ -949,7 +949,7 @@
         $('#NCPartialTbl').on('update', function () {
             computeValsNC();
         });
-        $("#NCPartialTbl").on("keyup", ".NumberOnlyOneDecimal", function (e) {
+        $("#NCPartialTbl").on("keypress", ".NumberOnlyOneDecimal", function (e) {
             var val = $(this).val();
             if (isNaN(val)) {
                 val = val.replace(/[^0-9\.]/g, '');
@@ -964,10 +964,12 @@
 
             var pid = $(this.parentNode)[0].parentNode.id;
             var val = $(this).val().replace("-", "");
-
-            if ($('#yenID').val() == $("#" + pid).find("[id$='__ExpNCDtlAcc_Type_ID']").val()) {
-                decVal = 0;
+            if (@Model.EntryNC.NC_Category_ID == 11) {
+                //pid = $(this).parent().attr("id").split("_").pop();
             }
+            //if ($('#yenID').val() == $("#EntryNC_ExpenseEntryNCDtls_0__ExpenseEntryNCDtlAccs_2__ExpNCDtlAcc_Acc_ID']").val()) {
+            //    decVal = 0;
+            //}
             $(this).val(roundNumber(val, decVal));
 
             if (isNaN($(this).val())) {
