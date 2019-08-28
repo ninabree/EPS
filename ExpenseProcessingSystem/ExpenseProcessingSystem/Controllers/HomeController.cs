@@ -29,6 +29,7 @@ using BIR_Form_Filler.Models;
 using ExpenseProcessingSystem.Models.Check;
 using Microsoft.Extensions.Logging;
 using System.DirectoryServices.AccountManagement;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace ExpenseProcessingSystem.Controllers
 {
@@ -1919,6 +1920,16 @@ namespace ExpenseProcessingSystem.Controllers
         {
             var userId = GetUserID();
 
+            for(var i = 0; i < EntryCVViewModelList.EntryCV.Count(); i++)
+            {
+                if(EntryCVViewModelList.EntryCV[i].account == 0)
+                {
+                    EntryCVViewModelList.EntryCV.RemoveAt(i);
+                    ModelState["EntryCVViewModelList.EntryCV[" + i + "]"].Errors.RemoveAt(i);
+                    ModelState.Remove("EntryCV[" + i + "]");
+                }
+            }
+            
             if (!ModelState.IsValid)
             {
                 EntryCVViewModelList = PopulateEntry((EntryCVViewModelList)EntryCVViewModelList);
@@ -2829,7 +2840,7 @@ namespace ExpenseProcessingSystem.Controllers
             
             int id = _service.addExpense_NC(EntryNCViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_NC);
 
-            if (id != 0)
+            if (EntryNCViewModelList.amortizationID != 0)
             {
                 _service.updateAmorStatus(EntryNCViewModelList.amortizationID);
             }
@@ -3790,11 +3801,11 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 new CDDISValueContentsViewModel
                 {
-                    AMOUNT = expenseDtl.liqInterEntity[2].Liq_Amount_1_2,
+                    AMOUNT = expenseDtl.liqInterEntity[0].Liq_Amount_1_1,
                 },
                 new CDDISValueContentsViewModel
                 {
-                    AMOUNT = expenseDtl.liqInterEntity[2].Liq_Amount_1_2,
+                    AMOUNT = expenseDtl.liqInterEntity[0].Liq_Amount_1_1,
                 },
             };
             viewModel.CDDContents = cddContents;

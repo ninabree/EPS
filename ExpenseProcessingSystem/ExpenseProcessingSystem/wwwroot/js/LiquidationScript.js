@@ -356,8 +356,8 @@ function assignDivValuesIE(pid) {
     $('#txtIEExRate').val($('#lblIEInput9').text());
     $('#txtIEExRatePhp').val(AC(roundExceptionJPY(parseFloat($('#txtIEAmount').val() * $('#txtIEExRate').val()), 2)));
 
-    $('#lblIEInput7').text(AC($("#txtIEAmount").val(), 2));
-    $('#lblIEInput8').text(AC($("#txtIEAmount").val(), 2));
+    $('#lblIEInput7').text(AC(round($("#txtIEInput1").val(), 2)));
+    $('#lblIEInput8').text(AC(round($("#txtIEInput1").val(), 2)));
 };
 
 function setLiqPhpValuetoDivInput(ret) {

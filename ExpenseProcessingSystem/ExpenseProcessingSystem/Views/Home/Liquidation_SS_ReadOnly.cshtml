@@ -438,7 +438,7 @@
                 <div style="display:inline-block;width:100%">
                     <label>INTER-ENTITY (Liquidation for Foreign currency)</label>
                 </div>
-                <div style="display:inline-block;text-align:center;width:auto;vertical-align:top">
+                <div style="display:inline-block;text-align:center;width:39%;vertical-align:top">
                     <table id="IEInfoTable" class="table-bordered table-striped voucher-tbl">
                         <tr>
                             <td colspan="2">
@@ -483,8 +483,8 @@
                             <td></td>
                             <td>
                                 @if (Model.statusID == GlobalSystemValues.STATUS_REVERSED || Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING
-                                || Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING || Model.statusID == GlobalSystemValues.STATUS_CLOSED
-                                 || Model.statusID == GlobalSystemValues.STATUS_POSTED)
+                                    || Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING || Model.statusID == GlobalSystemValues.STATUS_CLOSED
+                                    || Model.statusID == GlobalSystemValues.STATUS_POSTED)
                                 {
                                     <a class="cddISLiqBtn" href="#"><img id="imgLiqCDD" src="~/images/cddLiqLogo.png" style="width:20%;height:30%" /></a>
                                 }
@@ -913,11 +913,7 @@
                 alert("Entry Failed");
             }
         });*@
-        @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker
-          || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id
-          || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id
-          || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.approver_id)
-        {
+        @{ 
             <Text>
             $("#entry-controls").on("click", "#printBir", function (e) {
                 var vendorID = @Model.vendor;
@@ -942,6 +938,5 @@
             });
             </Text>
         }
-
     });
 </script>

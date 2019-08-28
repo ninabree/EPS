@@ -265,6 +265,10 @@
             }
         }
 
+        if (($("#inputTable").find("tbody").find("tr").length - 3) > 0) {
+            $('.expenseTable-remove').show();
+        }
+
         $("#payeeTypeSel").change(function (e) {
             updatePayeeSelect();
         });

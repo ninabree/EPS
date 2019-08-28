@@ -419,7 +419,7 @@
                 <div style="display:inline-block;width:100%">
                     <label>INTER-ENTITY (Liquidation for Foreign currency)</label>
                 </div>
-                <div style="display:inline-block;text-align:center;width:auto;vertical-align:top">
+                <div style="display:inline-block;text-align:center;width:39%;vertical-align:top">
                     <table id="IEInfoTable" class="table-bordered table-striped voucher-tbl">
                         <tr>
                             <td colspan="2">
@@ -786,13 +786,13 @@
             $('#lblIEInput4').text(AC(round($("#txtIEAmount").val(), 2)));
             $('#lblIEInput5').text(AC(round($("#txtIEAmount").val(), 2)));
             $('#lblIEInput6').text(AC(round($("#txtIEAmount").val(), 2)));
-            $('#lblIEInput7').text(AC(round($("#txtIEAmount").val(), 2)));
-            $('#lblIEInput8').text(AC(round($("#txtIEAmount").val(), 2)));
             $('#lblIEInput9').text(AC(parseFloat($("#txtIEExRate").val())));
         });
 
         $('#IEInputTable').on("change", "#txtIEInput1", function (e) {
             $('#lblIEInput1').text(AC(round($("#txtIEInput1").val(), 2)));
+            $('#lblIEInput7').text(AC(round($("#txtIEInput1").val(), 2)));
+            $('#lblIEInput8').text(AC(round($("#txtIEInput1").val(), 2)));
         });
 
         $("table").on("click", "#saveLiqPhp", function (e) {
@@ -986,11 +986,7 @@
                 alert("Entry Failed");
             }
         });*@
-        @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker
-          || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id
-          || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id
-          || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.approver_id)
-        {
+        @{
             <Text>
             $("#entry-controls").on("click", "#printBir", function (e) {
                 var vendorID = @Model.vendor;
