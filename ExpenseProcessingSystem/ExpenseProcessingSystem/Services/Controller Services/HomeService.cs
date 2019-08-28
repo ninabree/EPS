@@ -4311,7 +4311,7 @@ namespace ExpenseProcessingSystem.Services
                            }).Where(whereQuery1, subType, startDT.Date, endDT.Date, model.PeriodFrom.Date,
                                    model.PeriodTo.Date, model.CheckNoFrom, model.CheckNoTo, model.VoucherNoFrom, model.VoucherNoTo,
                                    model.TransNoFrom, model.TransNoTo, model.SubjName, expType1).ToList();
-
+                
                 //Convert to List object.
                 foreach (var i in db1)
                 {
@@ -4332,13 +4332,16 @@ namespace ExpenseProcessingSystem.Services
                         }
                     }
 
+                    //Check record if liquidation or not.
+                    bool boolLiq = _context.ExpenseTransLists.Where(x => x.TL_ID == i.TL_ID).Select(x => x.TL_Liquidation).FirstOrDefault();
+
                     list1.Add(new HomeReportTransactionListViewModel
                     {
                         ExpExpense_ID = i.Expense_ID,
                         ExpExpense_Type = i.Expense_Type,
                         Trans_Last_Updated_Date = i.Expense_Last_Updated,
                         ExpExpense_Date = i.Expense_Date.ToString(),
-                        Trans_Voucher_Number = i.Expense_Number.ToString(),
+                        Trans_Voucher_Number = getVoucherNo(i.Expense_Type, i.Expense_Date, i.Expense_Number, boolLiq),
                         Trans_Check_Number = i.Expense_CheckNo,
                         HistExpenseEntryID = i.ExpenseEntryID,
                         HistExpenseDetailID = i.ExpenseDetailID,
@@ -4688,7 +4691,7 @@ namespace ExpenseProcessingSystem.Services
                         ExpExpense_Type = i.Expense_Type,
                         Trans_Last_Updated_Date = i.Expense_Last_Updated,
                         ExpExpense_Date = i.Expense_Date.ToString(),
-                        Trans_Voucher_Number = i.Expense_Number.ToString(),
+                        Trans_Voucher_Number = getVoucherNo(i.Expense_Type, i.Expense_Date, i.Expense_Number, false),
                         Trans_Check_Number = i.Expense_CheckNo,
                         HistExpenseEntryID = i.ExpenseEntryID,
                         HistExpenseDetailID = i.ExpenseDetailID,
@@ -5045,6 +5048,8 @@ namespace ExpenseProcessingSystem.Services
             //Convert to List object.
             foreach (var i in db1)
             {
+                //Check record if liquidation or not.
+                bool boolLiq = _context.ExpenseTransLists.Where(x => x.TL_ID == i.TL_ID).Select(x => x.TL_Liquidation).FirstOrDefault();
 
                 list1.Add(new HomeReportTransactionListViewModel
                 {
@@ -5052,7 +5057,7 @@ namespace ExpenseProcessingSystem.Services
                     ExpExpense_Type = i.Expense_Type,
                     Trans_Last_Updated_Date = i.Expense_Last_Updated,
                     ExpExpense_Date = i.Expense_Date.ToString(),
-                    Trans_Voucher_Number = i.Expense_Number.ToString(),
+                    Trans_Voucher_Number = getVoucherNo(i.Expense_Type, i.Expense_Date, i.Expense_Number, boolLiq),
                     Trans_Check_Number = i.Expense_CheckNo,
                     HistExpenseEntryID = i.ExpenseEntryID,
                     HistExpenseDetailID = i.ExpenseDetailID,
@@ -5373,7 +5378,7 @@ namespace ExpenseProcessingSystem.Services
                     ExpExpense_Type = i.Expense_Type,
                     Trans_Last_Updated_Date = i.Expense_Last_Updated,
                     ExpExpense_Date = i.Expense_Date.ToString(),
-                    Trans_Voucher_Number = i.Expense_Number.ToString(),
+                    Trans_Voucher_Number = getVoucherNo(i.Expense_Type, i.Expense_Date, i.Expense_Number, false),
                     Trans_Check_Number = i.Expense_CheckNo,
                     HistExpenseEntryID = i.ExpenseEntryID,
                     HistExpenseDetailID = i.ExpenseDetailID,
@@ -6076,14 +6081,15 @@ namespace ExpenseProcessingSystem.Services
             //Convert to List object.
             foreach (var i in db1)
             {
-
+                //Check record if liquidation or not.
+                bool boolLiq = _context.ExpenseTransLists.Where(x => x.TL_ID == i.TL_ID).Select(x => x.TL_Liquidation).FirstOrDefault();
                 list1.Add(new HomeReportTransactionListViewModel
                 {
                     ExpExpense_ID = i.Expense_ID,
                     ExpExpense_Type = i.Expense_Type,
                     Trans_Last_Updated_Date = i.Expense_Last_Updated,
                     ExpExpense_Date = i.Expense_Date.ToString(),
-                    Trans_Voucher_Number = i.Expense_Number.ToString(),
+                    Trans_Voucher_Number = getVoucherNo(i.Expense_Type, i.Expense_Date, i.Expense_Number, boolLiq),
                     Trans_Check_Number = i.Expense_CheckNo,
                     HistExpenseEntryID = i.ExpenseEntryID,
                     HistExpenseDetailID = i.ExpenseDetailID,
@@ -6402,7 +6408,7 @@ namespace ExpenseProcessingSystem.Services
                     ExpExpense_Type = i.Expense_Type,
                     Trans_Last_Updated_Date = i.Expense_Last_Updated,
                     ExpExpense_Date = i.Expense_Date.ToString(),
-                    Trans_Voucher_Number = i.Expense_Number.ToString(),
+                    Trans_Voucher_Number = getVoucherNo(i.Expense_Type, i.Expense_Date, i.Expense_Number, false),
                     Trans_Check_Number = i.Expense_CheckNo,
                     HistExpenseEntryID = i.ExpenseEntryID,
                     HistExpenseDetailID = i.ExpenseDetailID,
@@ -10573,9 +10579,22 @@ namespace ExpenseProcessingSystem.Services
                 }
 
                 if (getBranchNo(item.Account_No) == GlobalSystemValues.BRANCH_RBU)
-                    nmCloseItemsRBU.Add(temp);
-                else
-                    nmCloseItemsFCDU.Add(temp);
+                {
+                    int itemIndex = nmCloseItemsRBU.FindIndex(x => x.expTrans == temp.expTrans
+                                                                && x.gBaseTrans == temp.gBaseTrans
+                                                                && x.particulars == temp.particulars
+                                                                && x.ccy == temp.ccy);
+                    if(itemIndex < 0)
+                        nmCloseItemsRBU.Add(temp);
+                }
+                else {
+                    int itemIndex = nmCloseItemsFCDU.FindIndex(x => x.expTrans == temp.expTrans
+                                            && x.gBaseTrans == temp.gBaseTrans
+                                            && x.particulars == temp.particulars
+                                            && x.ccy == temp.ccy);
+                    if (itemIndex < 0)
+                        nmCloseItemsFCDU.Add(temp);
+                }
             }
 
             nmDic.Add(GlobalSystemValues.BRANCH_RBU, nmCloseItemsRBU);
