@@ -238,7 +238,7 @@ namespace ExpenseProcessingSystem.Services
                                          App_Status = exp.Expense_Status + "",
                                          App_Link = linktionary[exp.Expense_Type]
                                      }).ToList();
-                    dbPending.Concat((from liq in _context.LiquidationEntryDetails
+                        dbPending = dbPending.Concat((from liq in _context.LiquidationEntryDetails
                                       join us in _context.User on liq.Liq_Created_UserID equals us.User_ID
                                       join exp in _context.ExpenseEntry on liq.ExpenseEntryModel.Expense_ID equals exp.Expense_ID
                                       where (
@@ -294,7 +294,7 @@ namespace ExpenseProcessingSystem.Services
                                          App_Status = exp.Expense_Status + "",
                                          App_Link = linktionary[exp.Expense_Type]
                                      }).ToList();
-                        dbPending.Concat((from liq in _context.LiquidationEntryDetails
+                        dbPending = dbPending.Concat((from liq in _context.LiquidationEntryDetails
                                           join us in _context.User on liq.Liq_Created_UserID equals us.User_ID
                                           join exp in _context.ExpenseEntry on liq.ExpenseEntryModel.Expense_ID equals exp.Expense_ID
                                           where (
@@ -362,7 +362,7 @@ namespace ExpenseProcessingSystem.Services
                                          App_Status = exp.Expense_Status + "",
                                          App_Link = linktionary[exp.Expense_Type]
                                      }).ToList();
-                        dbPending.Concat((from liq in _context.LiquidationEntryDetails
+                        dbPending =  dbPending.Concat((from liq in _context.LiquidationEntryDetails
                                           join us in _context.User on liq.Liq_Created_UserID equals us.User_ID
                                           join exp in _context.ExpenseEntry on liq.ExpenseEntryModel.Expense_ID equals exp.Expense_ID
                                           where (
@@ -6799,7 +6799,6 @@ namespace ExpenseProcessingSystem.Services
             DateTime StartFiscal = GetStartOfFiscal(startDT.Month, startDT.Year, true);
             DateTime EndFiscal = GetStartOfFiscal(endDT.Month, endDT.Year, false);
             var selectedAccount = _context.DMAccount.Where(x => x.Account_ID == model.ReportSubType).FirstOrDefault();
-            var signatory = _context.DMBCS.Where(x => x.BCS_ID == model.SignatoryID).FirstOrDefault();
 
             List<DMAccountModel> accList = getAccountListIncHist();
             List<UserModel> userList = getAllUsers();
@@ -7058,13 +7057,8 @@ namespace ExpenseProcessingSystem.Services
 
             List<HomeReportTransactionListViewModel> finalList = list1.Concat(list2).OrderBy(x => x.TransTL_ID).ToList();
 
-             decimal balance = 0;
-            string signName = "";
-            if(signatory != null)
-            {
-                var signInfo = GetSignatoryInfo(signatory.BCS_ID);
-                signName = (signInfo != null) ? signInfo.BCS_Name : "";
-            }
+            decimal balance = 0;
+
 
             foreach (var i in finalList.Where(x => StartFiscal.Date <= ConvGbDateToDateTime(x.Trans_Value_Date)
                                                 && ConvGbDateToDateTime(x.Trans_Value_Date) <= endDT.Date))
@@ -7090,7 +7084,7 @@ namespace ExpenseProcessingSystem.Services
                         CRAmount = (i.Trans_DebitCredit1_1 == "C") ? Decimal.Parse(i.Trans_Amount1_1) : 0,
                         BudgetAmount = 0,
                         Balance = balance,
-                        DHName = signName,
+                        DHName = "",
                         ApprvName = i.ESAMS_ApprvName,
                         MakerName = i.ESAMS_MakerName
                     });
@@ -7117,7 +7111,7 @@ namespace ExpenseProcessingSystem.Services
                         CRAmount = (i.Trans_DebitCredit1_2 == "C") ? Decimal.Parse(i.Trans_Amount1_2) : 0,
                         BudgetAmount = 0,
                         Balance = balance,
-                        DHName = signName,
+                        DHName = "",
                         ApprvName = i.ESAMS_ApprvName,
                         MakerName = i.ESAMS_MakerName
                     });
@@ -7144,7 +7138,7 @@ namespace ExpenseProcessingSystem.Services
                         CRAmount = (i.Trans_DebitCredit2_1 == "C") ? Decimal.Parse(i.Trans_Amount2_1) : 0,
                         BudgetAmount = 0,
                         Balance = balance,
-                        DHName = signName,
+                        DHName = "",
                         ApprvName = i.ESAMS_ApprvName,
                         MakerName = i.ESAMS_MakerName
                     });
@@ -7171,7 +7165,7 @@ namespace ExpenseProcessingSystem.Services
                         CRAmount = (i.Trans_DebitCredit2_2 == "C") ? Decimal.Parse(i.Trans_Amount2_2) : 0,
                         BudgetAmount = 0,
                         Balance = balance,
-                        DHName = signName,
+                        DHName = "",
                         ApprvName = i.ESAMS_ApprvName,
                         MakerName = i.ESAMS_MakerName
                     });
@@ -7198,7 +7192,7 @@ namespace ExpenseProcessingSystem.Services
                         CRAmount = (i.Trans_DebitCredit3_1 == "C") ? Decimal.Parse(i.Trans_Amount3_1) : 0,
                         BudgetAmount = 0,
                         Balance = balance,
-                        DHName = signName,
+                        DHName = "",
                         ApprvName = i.ESAMS_ApprvName,
                         MakerName = i.ESAMS_MakerName
                     });
@@ -7225,7 +7219,7 @@ namespace ExpenseProcessingSystem.Services
                         CRAmount = (i.Trans_DebitCredit3_2 == "C") ? Decimal.Parse(i.Trans_Amount3_2) : 0,
                         BudgetAmount = 0,
                         Balance = balance,
-                        DHName = signName,
+                        DHName = "",
                         ApprvName = i.ESAMS_ApprvName,
                         MakerName = i.ESAMS_MakerName
                     });
@@ -7252,7 +7246,7 @@ namespace ExpenseProcessingSystem.Services
                         CRAmount = (i.Trans_DebitCredit4_1 == "C") ? Decimal.Parse(i.Trans_Amount4_1) : 0,
                         BudgetAmount = 0,
                         Balance = balance,
-                        DHName = signName,
+                        DHName = "",
                         ApprvName = i.ESAMS_ApprvName,
                         MakerName = i.ESAMS_MakerName
                     });
@@ -7279,7 +7273,7 @@ namespace ExpenseProcessingSystem.Services
                         CRAmount = (i.Trans_DebitCredit4_2 == "C") ? Decimal.Parse(i.Trans_Amount4_2) : 0,
                         BudgetAmount = 0,
                         Balance = balance,
-                        DHName = signName,
+                        DHName = "",
                         ApprvName = i.ESAMS_ApprvName,
                         MakerName = i.ESAMS_MakerName
                     });

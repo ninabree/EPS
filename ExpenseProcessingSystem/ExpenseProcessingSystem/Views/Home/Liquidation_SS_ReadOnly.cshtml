@@ -483,8 +483,8 @@
                             <td></td>
                             <td>
                                 @if (Model.statusID == GlobalSystemValues.STATUS_REVERSED || Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING
-                                    || Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING || Model.statusID == GlobalSystemValues.STATUS_CLOSED
-                                    || Model.statusID == GlobalSystemValues.STATUS_POSTED)
+                                || Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING || Model.statusID == GlobalSystemValues.STATUS_CLOSED
+                                || Model.statusID == GlobalSystemValues.STATUS_POSTED)
                                 {
                                     <a class="cddISLiqBtn" href="#"><img id="imgLiqCDD" src="~/images/cddLiqLogo.png" style="width:20%;height:30%" /></a>
                                 }
@@ -846,11 +846,14 @@
                 $('#txtLiqPhpInput4').attr('disabled', 'disabled');
                 ChangeOptionMarkForPrint();
                 $('#TransIDPhp').val($('#' + pid).find('.transNo').val());
+
             } else {
                 $('#divForeign').show();
                 $('#divPHP').hide();
                 displayInfoIE($(this.parentNode)[0].parentNode.id);
                 $('#TransIDForeign').val($('#' + pid).find('.transNo').val());
+                //For Readonly
+                ShowHideCDDLiqButton($(this.parentNode)[0].parentNode.id);
             }
         });
 

@@ -255,7 +255,7 @@ $(document).ready(function () {
                 }
                 //if any liquidation page, liquidation tab is selected
                 if (ENTRY_VALS_LIQ.indexOf(tabVal) > 0) {
-                    document.getElementById('liquidation').firstElementChild.className = 'selected';
+                    document.getElementById('liqtab').firstElementChild.className = 'selected';
                 }
             }
             //if any home tab is clicked, 'Home' tab is selected as well
