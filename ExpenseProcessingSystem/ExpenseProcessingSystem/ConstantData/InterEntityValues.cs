@@ -30,6 +30,8 @@ namespace ExpenseProcessingSystem.ConstantData
         public static string Account8_Yen { get; set; }
         public static string Account9_Yen { get; set; }
 
+        public static string Currency_PHP { get; set; }
+
         public InterEntityValues()
         {
             XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
@@ -55,6 +57,8 @@ namespace ExpenseProcessingSystem.ConstantData
             Account7_Yen = xelem.Element("ACCOUNT7_Yen").Value;
             Account8_Yen = xelem.Element("ACCOUNT8_Yen").Value;
             Account9_Yen = xelem.Element("ACCOUNT9_Yen").Value;
+
+            Currency_PHP = xelem.Element("CURRENCY_PHP").Value;
         }
     }
 }

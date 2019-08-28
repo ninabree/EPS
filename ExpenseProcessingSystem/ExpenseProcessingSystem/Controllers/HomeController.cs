@@ -2915,9 +2915,9 @@ namespace ExpenseProcessingSystem.Controllers
                 ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount = ncList.EntryNC.NC_CS_DebitAmt;
                 ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Amount = ncList.EntryNC.NC_CS_CredAmt;
             }
-            ViewData["USDmstr"] = _service.getXMLCurrency("USD").FirstOrDefault().currMasterID;
-            ViewData["JPYmstr"] = _service.getXMLCurrency("YEN").FirstOrDefault().currMasterID;
-            ViewData["PHPmstr"] = _service.getXMLCurrency("PHP").FirstOrDefault().currMasterID;
+            ViewData["USDmstr"] = _service.getXMLCurrency("USD").currMasterID;
+            ViewData["JPYmstr"] = _service.getXMLCurrency("YEN").currMasterID;
+            ViewData["PHPmstr"] = _service.getXMLCurrency("PHP").currMasterID;
 
 
             List<cvBirForm> birForms = new List<cvBirForm>();
@@ -3140,8 +3140,8 @@ namespace ExpenseProcessingSystem.Controllers
         public IActionResult CDD_IS_NC_RET(int entryID)
         {
             var entryVals = _service.getExpenseNC(entryID);
-            List<CONSTANT_CCY_VALS> currUSD = _service.getXMLCurrency("USD");
-            List<CONSTANT_CCY_VALS> currJPY = _service.getXMLCurrency("YEN");
+            CONSTANT_CCY_VALS currUSD = _service.getXMLCurrency("USD");
+            CONSTANT_CCY_VALS currJPY = _service.getXMLCurrency("YEN");
             var masterid = _service.getCurrencyMasterID(entryVals.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID);
             DMCurrencyModel currModel = _service.getCurrency(entryVals.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID);
 
@@ -3194,8 +3194,8 @@ namespace ExpenseProcessingSystem.Controllers
             cddContents.Add(vm);
             cddContents.Add(vm2);
             viewModel.CDDContents = cddContents;
-            var xlFileName = masterid == currUSD.FirstOrDefault().currMasterID
-                ? "CDDIS_NC_RET_USD.xlsx" : masterid == currJPY.FirstOrDefault().currMasterID ? "CDDIS_NC_RET_YEN.xlsx" : "CDDIS_NC_PCR.xlsx";
+            var xlFileName = masterid == currUSD.currMasterID
+                ? "CDDIS_NC_RET_USD.xlsx" : masterid == currJPY.currMasterID ? "CDDIS_NC_RET_YEN.xlsx" : "CDDIS_NC_PCR.xlsx";
             return File(excelGenerate.ExcelCDDIS_RET(viewModel, newFileName, xlFileName), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", newFileName);
 
         }
