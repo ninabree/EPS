@@ -212,7 +212,7 @@
                                 </td>
                                 <td class="@SetRateClass(@Model.EntryNC.NC_Category_ID, @i)">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Inter_Rate, @getHtmlAttributes(@Model.EntryNC.NC_Category_ID, @i))</td>
                                 @* DEBIT *@
-                                <td>
+                                <td id="curr_sel[@i]_[0]">
                                     <select id="curr[@i]_[0]" class="w-full input curr-sel misc-curr-0" name="curr[@i]_[0]">
                                         @foreach (var groepModel in Model.currList)
                                         {
@@ -232,7 +232,7 @@
                                 </td>
 
                                 @* CREDIT *@
-                                <td>
+                                <td id="curr_sel[@i]_[0]">
                                     <select id="curr[@i]_[0]" class="w-full input curr-sel misc-curr-0" name="curr[@i]_[0]">
                                         @foreach (var groepModel in Model.currList)
                                         {
@@ -292,7 +292,7 @@
                                     </td>
                                     <td class="@SetRateClass(@Model.EntryNC.NC_Category_ID, @i)">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Inter_Rate, @getHtmlAttributes(@Model.EntryNC.NC_Category_ID, @i))</td>
                                     @* DEBIT *@
-                                    <td>
+                                    <td id="curr_sel[@i]_[@j]">
                                         <select id="curr[@i]_[@j]" class="w-full input curr-sel misc-curr-@j" name="curr[@i]_[@j]">
                                             @foreach (var groepModel in Model.currList)
                                             {
@@ -312,7 +312,7 @@
                                     </td>
 
                                     @* CREDIT *@
-                                    <td>
+                                    <td id="curr_sel[@i]_[@j]">
                                         <select id="curr[@i]_[@j]" class="w-full input curr-sel misc-curr-@j" name="curr[@i]_[@j]">
                                             @foreach (var groepModel in Model.currList)
                                             {
@@ -926,7 +926,7 @@
             $(this).parent().parent().siblings("[id$='ExpenseEntryNCDtlAccs_3__ExpNCDtlAcc_Curr_ID']").val(vals);
         });
         //[ END MISC ENTRIES]
-        
+
         $('#NCPartialTbl').on('change', '.acc-sel', function () {
             var vals = $(this).val();
             if (vals == @ewt) {
@@ -951,6 +951,16 @@
                 $("#EntryNC_ExpenseEntryNCDtls_CDD_0__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Curr_Name").val(texts);
                 $("#EntryNC_ExpenseEntryNCDtls_CDD_0__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Curr_ID").val(vals);
             }
+            if (categoryID == @GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES) {
+                var valIdSplt = $(this).attr("id").split("-");
+                var amtInput = $("#EntryNC_ExpenseEntryNCDtls_" + valIdSplt[2] + "__ExpenseEntryNCDtlAccs_" + valIdSplt[3] + "__ExpNCDtlAcc_Amount");
+                $(amtInput).trigger("change");
+            } else {
+                var valId = $(this).attr("id");
+                var valIdSplt = valId.split("_");
+                var amtInput = $("#EntryNC_ExpenseEntryNCDtls_" + valIdSplt[2] + "__ExpenseEntryNCDtlAccs_" + valIdSplt[5] + "__ExpNCDtlAcc_Amount");
+                $(amtInput).trigger("change");
+            }
         });
         $('#NCPartialTbl').on('update', function () {
             computeValsNC();
@@ -967,12 +977,16 @@
         });
         $("#NCPartialTbl").on("change", ".NumberOnlyOneDecimal", function (e) {
             var decVal = 2;
-
-            var pid = $(this.parentNode)[0].parentNode.id;
             var val = $(this).val().replace("-", "");
             var valId = $(this).attr("id");
-            if (valId.indexOf("ExpNCDtlAcc_Inter_Rate") >= 0){
+            var valIdSplt = valId.split("_");
+            var elCurrId = $("#EntryNC_ExpenseEntryNCDtls_" + valIdSplt[2] + "__ExpenseEntryNCDtlAccs_" + valIdSplt[5] + "__ExpNCDtlAcc_Curr_ID").val();
+
+            if (valId.indexOf("ExpNCDtlAcc_Inter_Rate") >= 0) {
                 decVal = 4;
+            }
+            if (@jpy == elCurrId) {
+                decVal = 0;
             }
             $(this).val(roundNumber(val, decVal));
             if (isNaN($(this).val())) {
@@ -985,7 +999,8 @@
             var pid = $(this.parentNode)[0].parentNode.id;
             var val = $(this).val().replace("-", "");
             var valId = $(this).attr("id").split("-");
-            var elCurrId = $("#EntryNC_ExpenseEntryNCDtls_" + valId[2] + "__ExpenseEntryNCDtlAccs_" + valId[3] + "__ExpNCDtlAcc_Curr_ID").val();
+            var elCurrId = $(this).parent().prevAll().find("#curr[" + valId[2] + "]_[" + valId[3] + "] option:selected").val();
+            alert($(this).parent().prevAll("td:first").find("#curr[" + valId[2] + "]_[" + valId[3] + "]").attr("id"));
             if (@jpy == elCurrId) {
                 decVal = 0;
             }
@@ -1039,6 +1054,7 @@
 
                     //set values of Credit from Debit
                     var tempInd = parseInt(ind) + 1;
+                    var decVal = 2;
                     if ((categoryID == "4") || (categoryID == "5") || (categoryID == "11") || ((categoryID == "8") && (idNo == 3)) || ((categoryID == "9") && (idNo == 1))) {
                         //nothing will happen when inputting values in debit of PSSC, PCHC and MISC ENTRIES
                         //the value will be manually inputed by the user
@@ -1046,14 +1062,14 @@
                         //nothing will happen when passing the 4th row in Petty Cash Replenishment
                         //the value will only be inputted when rate and credit is not empty
                     } else if ((categoryID == "8") && (idNo == 2)) {
-                        $(el).parent().siblings().find("td[id='cred_" + idNo + "']").find("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + tempInd + "__ExpNCDtlAcc_Amount']").val(debitVal);
-                        $("#EntryNC_ExpenseEntryNCDtls_3__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Amount").val(debitVal);
+                        $(el).parent().siblings().find("td[id='cred_" + idNo + "']").find("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + tempInd + "__ExpNCDtlAcc_Amount']").val(roundNumber(debitVal, decVal));
+                        $("#EntryNC_ExpenseEntryNCDtls_3__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Amount").val(roundNumber(debitVal, decVal));
                     } else if ((categoryID == "9") && (idNo == 0)) {
-                        $(el).parent().siblings().find("td[id='cred_" + idNo + "']").find("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + tempInd + "__ExpNCDtlAcc_Amount']").val(debitVal);
-                        $("#EntryNC_ExpenseEntryNCDtls_1__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount").val(debitVal.toFixed(2));
-                        $("#EntryNC_ExpenseEntryNCDtls_1__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount").attr('value', debitVal.toFixed(2));
+                        $(el).parent().siblings().find("td[id='cred_" + idNo + "']").find("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + tempInd + "__ExpNCDtlAcc_Amount']").val(roundNumber(debitVal, decVal));
+                        $("#EntryNC_ExpenseEntryNCDtls_1__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount").val(roundNumber(debitVal, decVal));
+                        $("#EntryNC_ExpenseEntryNCDtls_1__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount").attr('value', roundNumber(debitVal, decVal));
                     } else {
-                        $(el).parent().siblings().find("td[id='cred_" + idNo + "']").find("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + tempInd + "__ExpNCDtlAcc_Amount']").val(debitVal.toFixed(2));
+                        $(el).parent().siblings().find("td[id='cred_" + idNo + "']").find("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + tempInd + "__ExpNCDtlAcc_Amount']").val(roundNumber(debitVal, decVal));
                     }
                 });
                 //collect values for Credit

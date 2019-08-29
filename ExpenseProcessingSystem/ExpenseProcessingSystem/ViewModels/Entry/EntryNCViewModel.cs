@@ -60,7 +60,7 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         public int entryID { get; set; }
         public SysValViewModel systemValues { get; set; }
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime expenseDate { get; set; }
+        public DateTime expenseDate { get { return DateTime.Now; } set { expenseDate = DateTime.Now; } }
         public int statusID { get; set; }
         public string status { get; set; }
         public string approver { get; set; }

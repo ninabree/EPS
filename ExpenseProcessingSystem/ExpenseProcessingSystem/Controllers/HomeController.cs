@@ -209,6 +209,7 @@ namespace ExpenseProcessingSystem.Controllers
                         (sortedVals.list).Cast<ApplicationsViewModel>().AsQueryable().AsNoTracking(), page ?? 1, pageSize)
             };
             ViewBag.printStat = _service.getStatus(GlobalSystemValues.STATUS_FOR_PRINTING);
+            ViewBag.ddvLink = "View_DDV";
             ViewBag.loi = HomeReportConstantValue.LOI;
             return View(VM);
         }
