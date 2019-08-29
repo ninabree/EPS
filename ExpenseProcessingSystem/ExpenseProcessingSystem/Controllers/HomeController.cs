@@ -5377,6 +5377,18 @@ namespace ExpenseProcessingSystem.Controllers
             }
             return Json(trList.ToList());
         }
+        //Used in Liquidation readonly page
+        [HttpPost]
+        [AcceptVerbs("GET")]
+        public JsonResult getAllTaxRate()
+        {
+            var trList = _service.getAllTRList();
+            foreach (var i in trList)
+            {
+                i.TR_WT_Title = i.TR_Tax_Rate + "%";
+            }
+            return Json(trList.ToList());
+        }
         [HttpPost]
         [AcceptVerbs("GET")]
         public JsonResult getAllTRList()

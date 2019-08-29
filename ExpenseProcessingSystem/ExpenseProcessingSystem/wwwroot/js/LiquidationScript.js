@@ -440,19 +440,35 @@ function assignAccCodeLiqPhp() {
 
 function getVendorTaxRate(vendorID, ret) {
     $('#txtLiqTaxRate').empty();
-    $.getJSON('getVendorTaxRate', { vendorID: vendorID }, function (data) {
-        $.each(data, function (index, item) {
-            $('#txtLiqTaxRate').append($('<option/>', {
-                value: item["tR_ID"],
-                text: item["tR_WT_Title"]
-            }));
+    if ($('#hiddenMode').val() == "Edit") {
+        $.getJSON('getVendorTaxRate', { vendorID: vendorID }, function (data) {
+            $.each(data, function (index, item) {
+                $('#txtLiqTaxRate').append($('<option/>', {
+                    value: item["tR_ID"],
+                    text: item["tR_WT_Title"]
+                }));
+            });
+            if ($('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Tax_Rate').val() > 0) {
+                setDivTaxRateToLiqPhp(ret);
+            } else {
+                $('#txtLiqTaxRate').val($('#item_' + ret).find('.ewtID').val());
+            };
         });
-        if ($('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Tax_Rate').val() > 0) {
-            setDivTaxRateToLiqPhp(ret);
-        } else {
-            $('#txtLiqTaxRate').val($('#item_' + ret).find('.ewtID').val());
-        };
-    }); 
+    } else {
+        $.getJSON('getAllTaxRate', function (data) {
+            $.each(data, function (index, item) {
+                $('#txtLiqTaxRate').append($('<option/>', {
+                    value: item["tR_ID"],
+                    text: item["tR_WT_Title"]
+                }));
+            });
+            if ($('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Tax_Rate').val() > 0) {
+                setDivTaxRateToLiqPhp(ret);
+            } else {
+                $('#txtLiqTaxRate').val($('#item_' + ret).find('.ewtID').val());
+            };
+        });
+    }
 };
 
 function setDivTaxRateToLiqPhp(ret) {

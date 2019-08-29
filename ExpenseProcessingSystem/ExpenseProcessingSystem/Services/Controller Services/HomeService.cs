@@ -3140,7 +3140,7 @@ namespace ExpenseProcessingSystem.Services
                                 RateOfTax = tr.TR_Tax_Rate,
                                 ATC = tr.TR_ATC,
                                 NOIP = tr.TR_Nature_Income_Payment,
-                                AOIP = ncAcc.ExpNCDtlAcc_Amount,
+                                AOIP = (ncDtl.ExpNCDtl_TaxBasedAmt != 0 ) ? ncDtl.ExpNCDtl_TaxBasedAmt : ncAcc.ExpNCDtlAcc_Amount,
                                 AOTW = ncAcc2.ExpNCDtlAcc_Amount,
                                 Last_Update_Date = exp.Expense_Last_Updated,
                                 Vendor_masterID = vend.Vendor_MasterID
@@ -3320,7 +3320,7 @@ namespace ExpenseProcessingSystem.Services
                                 RateOfTax = tr.TR_Tax_Rate,
                                 ATC = tr.TR_ATC,
                                 NOIP = tr.TR_Nature_Income_Payment,
-                                TaxBase = ncAcc.ExpNCDtlAcc_Amount,
+                                TaxBase = (ncDtl.ExpNCDtl_TaxBasedAmt != 0) ? ncDtl.ExpNCDtl_TaxBasedAmt : ncAcc.ExpNCDtlAcc_Amount,
                                 AOTW = ncAcc2.ExpNCDtlAcc_Amount,
                                 Last_Update_Date = exp.Expense_Last_Updated,
                                 Vendor_masterID = vend.Vendor_MasterID
@@ -5880,7 +5880,7 @@ namespace ExpenseProcessingSystem.Services
                                 RateOfTax = tr.TR_Tax_Rate,
                                 ATC = tr.TR_ATC,
                                 NOIP = tr.TR_Nature_Income_Payment,
-                                AOIP = ncAcc.ExpNCDtlAcc_Amount,
+                                AOIP = (ncDtl.ExpNCDtl_TaxBasedAmt != 0) ? ncDtl.ExpNCDtl_TaxBasedAmt : ncAcc.ExpNCDtlAcc_Amount,
                                 AOTW = ncAcc2.ExpNCDtlAcc_Amount,
                                 Last_Update_Date = exp.Expense_Last_Updated,
                                 Vendor_masterID = vend.Vendor_MasterID

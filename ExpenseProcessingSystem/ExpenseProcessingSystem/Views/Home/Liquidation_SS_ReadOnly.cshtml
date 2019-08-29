@@ -181,6 +181,7 @@
                             </td>
                             <td>
                                 @Html.TextBoxFor(m => Model.LiquidationDetails[i].ewtValue, new { @readonly = "true", @style = "width:100%;background:transparent" })
+                                @Html.HiddenFor(m => Model.LiquidationDetails[i].ewtID, new { @class = "ewtID" })
                             </td>
                             <td style="text-align:center">
                                 <a class="reqEWTBtn glyphicon glyphicon-list-alt expenseEWT" href="#" style="pointer-events:none;" data-title="Vendor selection"></a>
@@ -755,6 +756,7 @@
     <input type="hidden" id="yenAbbrv" value="@Model.yenAbbrev" />
     <input type="hidden" id="yenMasterID" value="@Model.yenCurrMasterID" />
     <input type="hidden" name="command" id="btnID" />
+    <input type="hidden" id="hiddenMode" value="Read" />
 }
 @*validation message*@
 <div id="ValidationSummary" style="display:none" class="">
