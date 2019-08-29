@@ -306,7 +306,6 @@
         function forma1RowFormat(itemCount, accoptions, accFirstID, curroptions) {
             var dt = new Date();
             var formatMonth = (dt.getMonth() + 1).length == 2 ? (dt.getMonth() + 1) : "0" + (dt.getMonth() + 1);
-            var dtFormatted = dt.getFullYear() + "-" + formatMonth + "-" + dt.getDate();
             var CurrIDOfFirstRow = $("#EntryNC_ExpenseEntryNCDtls_0__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Curr_ID").val();
             return $('<tr id="item_' + itemCount + '">'
                 + '<td class="voucher-input"><input id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_Remarks_Desc" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_Remarks_Desc"  type="text" value=""></td>'
@@ -314,10 +313,13 @@
                 + '<input class="text-box single-line" id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_Remarks_Period" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_Remarks_Period" type="text" value="">'
                 + '</td>'
                 + '<td class="cat-hidden hidden" colspan="1" rowspan="2">'
-                + '<input class= "w-full cat-hidden hidden" data - val="true" data - val - required="The Vendor field is required." id = "EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_Vendor_ID" name = "EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_Vendor_ID" readonly = "true" type = "text" value = "0" >'
+                + '<input class= "w-full cat-hidden hidden" id = "EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_Vendor_ID" name = "EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_Vendor_ID" readonly = "true" type = "text" value = "0" >'
                 + '</td>'
                 + '<td class="cat-hidden hidden" colspan="1" rowspan="2">'
-                + '<input class= "w-full cat-hidden hidden" data - val="true" data - val - required="The Tax Rate field is required." id = "EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_TR_ID" name = "EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_TR_ID" readonly = "true" type = "text" value = "0" >'
+                + '<input class= "w-full cat-hidden hidden" id = "EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_TR_ID" name = "EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_TR_ID" readonly = "true" type = "text" value = "0" >'
+                + '</td>'
+                + '<td class="cat-hidden hidden" colspan="1" rowspan="2">'
+                + '<input class= "w-full cat-hidden hidden" id = "EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_TaxBasedAmt" name = "EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_TaxBasedAmt" readonly = "true" type = "text" value = "0" >'
                 + '</td>'
                 + '<td colspan="3"  class="voucher-input">'
                 + '<select class= "w-full input acc-sel" data-val="true" data-val- required="The Account field is required." id = "EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Acc_Name" name = "EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name"> '
@@ -354,53 +356,6 @@
                 + '</tr>'
                 + '<tr class="NC_spacing_row"><td colspan="13"></td></tr>');
         }
-        function forma1RowFormat2(itemCount, accoptions1, accoptions2, accID1, accID2, curroptions) {
-            var dt = new Date();
-            var formatMonth = (dt.getMonth() + 1).length == 2 ? (dt.getMonth() + 1) : "0" + (dt.getMonth() + 1);
-            var dtFormatted = dt.getFullYear() + "-" + formatMonth + "-" + dt.getDate();
-            var CurrIDOfFirstRow = $("#EntryNC_ExpenseEntryNCDtls_0__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Curr_ID").val();
-            return $('<tr id="item_' + itemCount + '">'
-                + '<td class="voucher-input"><input id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_Remarks_Desc" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_Remarks_Desc"  type="text" value=""></td>'
-                + '<td  class="voucher-input" colspan="2">'
-                + '<div class="dis-inline-block w-48 voucher-input">'
-                + '<input class="text-box single-line" id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_Remarks_Period" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_Remarks_Period" type="text" value="">'
-                + '</div>'
-                + '</td>'
-                + '<td colspan="3"  class="voucher-input">'
-                + '<select class= "w-full input acc-sel" data-val="true" data-val- required="The Account field is required." id = "EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Acc_Name" name = "EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name"> '
-                + accoptions1
-                + '</select> </td>'
-                + '<td class="voucher-inter"><input class="ncVar NumberOnlyOneDecimal" data-val="true" data-val-number="The field Inter-Rate must be a number." data-val-required="The Inter-Rate field is required." disabled="disabled" id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Inter_Rate" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Inter_Rate"  type="text" value="0"></td>'
-                + '<td> <select id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Curr_ID" class="w-full input curr-sel" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID">'
-                + curroptions
-                + '</select></td>'
-                + '<td class="voucher-input" id="deb_' + itemCount + '"><input class="ncVar NumberOnlyOneDecimal nc-cdd-petty-db" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount" type="text" value="0"></td>'
-                + '<td></td>'
-                + '<td></td>'
-                + '<input data-val="true" data-val-required="The Account field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Acc_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID" type="hidden" value="' + accID1 + '">'
-                + '<input data-val="true" data-val-required="The CCY field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Curr_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID" type="hidden" value="' + CurrIDOfFirstRow + '">'
-                + '<input data-val="true" data-val-required="The Type field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Type_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Type_ID" type="hidden" value="1">'
-                + '</tr>'
-                + '<tr id="item_' + itemCount + '">'
-                + '<td></td>'
-                + '<td colspan="2"></td>'
-                + '<td colspan="3" class="voucher-input">'
-                + '<select class= "w-full input  acc-sel" data-val="true" data-val- required="The Account field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Acc_Name" name = "EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Acc_Name"> '
-                + accoptions2
-                + '</select></td>'
-                + '<td></td>'
-                + '<td></td>'
-                + '<td></td>'
-                + '<td> <select id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Curr_ID" class="w-full input curr-sel" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Curr_ID">'
-                + curroptions
-                + '</select></td>'
-                + '<td class="" id="cred_' + itemCount + '"><input class="ncVar NumberOnlyOneDecimal nc-cdd-comp-cd" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Amount" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Amount"  type="text" readonly="true" value="0"></td>'
-                + '<input data-val="true" data-val-required="The Account field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Acc_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Acc_ID" type="hidden" value="' + accID2 + '">'
-                + '<input data-val="true" data-val-required="The CCY field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Curr_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Curr_ID" type="hidden" value="' + CurrIDOfFirstRow + '">'
-                + '<input data-val="true" data-val-required="The Type field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Type_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Type_ID" type="hidden" value="2">'
-                + '</tr>'
-                + '<tr class="NC_spacing_row"><td colspan="13"></td></tr>');
-        }
         function forma2RowFormat(itemCount, accoptions1, accoptions2, accoptions3, accID1, accID2, accID3, curroptions, venOptions, trOptions) {
             var dt = new Date();
             var formatMonth = (dt.getMonth() + 1).length == 2 ? (dt.getMonth() + 1) : "0" + (dt.getMonth() + 1);
@@ -427,6 +382,7 @@
                 + trOptions
                 + '</select >'
                 + '</td>'
+                + '<input class="input voucher-input NumberOnlyOneDecimal" data-val="true" data-val-number="The field Tax Based Amount must be a number." data-val-required="The Tax Based Amount field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_TaxBasedAmt" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_TaxBasedAmt" type="text" value="0">'
                 + '<td class=""><input class="ncVar NumberOnlyOneDecimal" data-val="true" data-val-number="The field Inter-Rate must be a number." data-val-required="The Inter-Rate field is required." disabled="disabled" id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Inter_Rate" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Inter_Rate" readonly="true" type="text" value="0"></td>'
                 + '<td> <select id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Curr_ID" class="w-full input curr-sel" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID">'
                 + curroptions
@@ -494,6 +450,7 @@
                 + trOptions
                 + '</select>'
                 + '</td>'
+                + '<td colspan="1" rowspan="4"><input class="input voucher-input NumberOnlyOneDecimal" data-val="true" data-val-number="The field Tax Based Amount must be a number." data-val-required="The Tax Based Amount field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpNCDtl_TaxBasedAmt" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpNCDtl_TaxBasedAmt" type="text" value="0"></td>'
                 + '<td colspan="3" class="voucher-input">'
                 + '<select id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Acc_Name" class="w-full input acc-sel" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name">'
                 + accoptions
@@ -506,7 +463,7 @@
                 + '</select>'
                 + '</td>'
                 + '<td class="voucher-input db" id="deb_' + itemCount + '">'
-                + '<input class="ncVar NumberOnlyOneDecimal misc-0 amt-db-' + itemCount + '-0" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." type="text" value="0">'
+                + '<input class="ncVar NumberOnlyOneDecimalMisc misc-0 amt-db-' + itemCount + '-0" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." type="text" value="0">'
                 + '</td>'
                                 
                 + '<td>'
@@ -515,7 +472,7 @@
                 + '</select>'
                 + '</td>'
                 + '<td class="voucher-input cd" id="cred_' + itemCount + '">'
-                + '<input class="ncVar NumberOnlyOneDecimal misc-0 amt-cd-' + itemCount + '-0" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." type="text" value="0">'
+                + '<input class="ncVar NumberOnlyOneDecimalMisc misc-0 amt-cd-' + itemCount + '-0" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." type="text" value="0">'
                 + '</td>'
                 + '<input data-val="true" data-val-required="The Account field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Acc_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID" type="hidden" value="' + accFirstID + '">'
                 + '<input data-val="true" data-val-required="The Type field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Type_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Type_ID" type="hidden" value="1">'
@@ -535,7 +492,7 @@
                 + '</select>'
                 + '</td>'
                 + '<td class="voucher-input db" id="deb_' + itemCount + '">'
-                + '<input class="ncVar NumberOnlyOneDecimal misc-1 amt-db-' + itemCount + '-1" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." type="text" value="0">'
+                + '<input class="ncVar NumberOnlyOneDecimalMisc misc-1 amt-db-' + itemCount + '-1" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." type="text" value="0">'
                 + '</td>'
 
                 + '<td>'
@@ -544,7 +501,7 @@
                 + '</select>'
                 + '</td>'
                 + '<td class="voucher-input cd" id="cred_' + itemCount + '">'
-                + '<input class="ncVar NumberOnlyOneDecimal misc-1 amt-cd-' + itemCount + '-1" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." type="text" value="0">'
+                + '<input class="ncVar NumberOnlyOneDecimalMisc misc-1 amt-cd-' + itemCount + '-1" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." type="text" value="0">'
                 + '</td>'
                 + '<input data-val="true" data-val-required="The Account field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Acc_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Acc_ID" type="hidden" value="' + accFirstID + '">'
                 + '<input data-val="true" data-val-required="The Type field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Type_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Type_ID" type="hidden" value="2">'
@@ -564,7 +521,7 @@
                 + '</select>'
                 + '</td>'
                 + '<td class="voucher-input db" id="deb_' + itemCount + '">'
-                + '<input class="ncVar NumberOnlyOneDecimal misc-2 amt-db-' + itemCount + '-2" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." type="text" value="0">'
+                + '<input class="ncVar NumberOnlyOneDecimalMisc misc-2 amt-db-' + itemCount + '-2" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." type="text" value="0">'
                 + '</td>'
 
                 + '<td>'
@@ -573,7 +530,7 @@
                 + '</select>'
                 + '</td>'
                 + '<td class="voucher-input cd" id="cred_' + itemCount + '">'
-                + '<input class="ncVar NumberOnlyOneDecimal misc-2 amt-cd-' + itemCount + '-2" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." type="text" value="0">'
+                + '<input class="ncVar NumberOnlyOneDecimalMisc misc-2 amt-cd-' + itemCount + '-2" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." type="text" value="0">'
                 + '</td>'
                 + '<input data-val="true" data-val-required="The Account field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_2__ExpNCDtlAcc_Acc_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[2].ExpNCDtlAcc_Acc_ID" type="hidden" value="' + accFirstID + '">'
                 + '<input data-val="true" data-val-required="The Type field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_2__ExpNCDtlAcc_Type_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[2].ExpNCDtlAcc_Type_ID" type="hidden" value="2">'
@@ -593,7 +550,7 @@
                 + '</select>'
                 + '</td>'
                 + '<td class="voucher-input db" id="deb_' + itemCount + '">'
-                + '<input class="ncVar NumberOnlyOneDecimal misc-3 amt-db-' + itemCount + '-3" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." type="text" value="0">'
+                + '<input class="ncVar NumberOnlyOneDecimalMisc misc-3 amt-db-' + itemCount + '-3" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." type="text" value="0">'
                 + '</td>'
 
                 + '<td>'
@@ -602,7 +559,7 @@
                 + '</select>'
                 + '</td>'
                 + '<td class="voucher-input cd" id="cred_' + itemCount + '">'
-                + '<input class="ncVar NumberOnlyOneDecimal misc-3 amt-cd-' + itemCount + '-3" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." type="text" value="0">'
+                + '<input class="ncVar NumberOnlyOneDecimalMisc misc-3 amt-cd-' + itemCount + '-3" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." type="text" value="0">'
                 + '</td>'
                 + '<input data-val="true" data-val-required="The Account field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_3__ExpNCDtlAcc_Acc_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[3].ExpNCDtlAcc_Acc_ID" type="hidden" value="' + accFirstID + '">'
                 + '<input data-val="true" data-val-required="The Type field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_3__ExpNCDtlAcc_Type_ID" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[3].ExpNCDtlAcc_Type_ID" type="hidden" value="2">'

@@ -8470,6 +8470,7 @@ namespace ExpenseProcessingSystem.Services
                         ExpNCDtl_TR_Title = ncDtl.g.ExpNCDtl_TR_ID > 0 ? _context.DMTR.FirstOrDefault(x=> x.TR_ID == ncDtl.g.ExpNCDtl_TR_ID).TR_WT_Title : "",
                         ExpNCDtl_Vendor_ID = ncDtl.g.ExpNCDtl_Vendor_ID,
                         ExpNCDtl_Vendor_Name = ncDtl.g.ExpNCDtl_Vendor_ID> 0 ?_context.DMVendor.FirstOrDefault(x => x.Vendor_ID == ncDtl.g.ExpNCDtl_Vendor_ID).Vendor_Name : "",
+                        ExpNCDtl_TaxBasedAmt = ncDtl.g.ExpNCDtl_TaxBasedAmt,
                         ExpenseEntryNCDtlAccs = ncDtlAccs
                     };
                     ncDtls.Add(entryNCDtl);
@@ -8926,6 +8927,7 @@ namespace ExpenseProcessingSystem.Services
                             ExpNCDtl_Remarks_Period = ncDtls.ExpNCDtl_Remarks_Period,
                             ExpNCDtl_Vendor_ID = ncDtls.ExpNCDtl_Vendor_ID,
                             ExpNCDtl_TR_ID = ncDtls.ExpNCDtl_TR_ID,
+                            ExpNCDtl_TaxBasedAmt = ncDtls.ExpNCDtl_TaxBasedAmt,
                             ExpenseEntryNCDtlAccs = accountDtls
                         };
                         expenseDtls.Add(expenseDetail);
@@ -11543,14 +11545,16 @@ namespace ExpenseProcessingSystem.Services
         //get xml currency details
         public List<CONSTANT_CCY_VALS> getXMLCurrency()
         {
-            XmlDocument doc = new XmlDocument();
-            doc.Load("wwwroot/xml/NonCashAccounts.xml");
-            XmlNodeList nodeList = doc.SelectNodes("/NONCASHACCOUNTS/GLOBALCCY/CCY");
             List<CONSTANT_CCY_VALS> valList = new List<CONSTANT_CCY_VALS>();
-            foreach (XmlNode no in nodeList)
+            InterEntityValues interEntityValues = new InterEntityValues();
+            List<string> consCurrMasterId = new List<string> {
+                InterEntityValues.Currency_US,
+                InterEntityValues.Currency_Yen,
+                InterEntityValues.Currency_PHP
+            };
+            foreach (string mId in consCurrMasterId)
             {
-                var rawVal = no.InnerText;
-                var acc = _context.DMCurrency.Where(x => (x.Curr_MasterID == int.Parse(rawVal))
+                var acc = _context.DMCurrency.Where(x => (x.Curr_MasterID == int.Parse(mId))
                                                     && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
                 CONSTANT_CCY_VALS vals = new CONSTANT_CCY_VALS
                 {
@@ -11563,26 +11567,27 @@ namespace ExpenseProcessingSystem.Services
             return valList;
         }
         //get specific xml currency details
-        public List<CONSTANT_CCY_VALS> getXMLCurrency(string type)
+        public CONSTANT_CCY_VALS getXMLCurrency(string type)
         {
-            XmlDocument doc = new XmlDocument();
-            doc.Load("wwwroot/xml/NonCashAccounts.xml");
-            XmlNodeList nodeList = doc.SelectNodes("/NONCASHACCOUNTS/GLOBALCCY/CCY[@id='" + type + "']");
-            List<CONSTANT_CCY_VALS> valList = new List<CONSTANT_CCY_VALS>();
-            foreach (XmlNode no in nodeList)
+            var mId = "";
+            InterEntityValues interEntityValues = new InterEntityValues();
+            if (type == "USD") {
+                mId = InterEntityValues.Currency_US;
+            } else if (type == "YEN")
             {
-                var rawVal = no.InnerText;
-                var acc = _context.DMCurrency.Where(x => (x.Curr_MasterID == int.Parse(rawVal))
-                                                    && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
-                CONSTANT_CCY_VALS vals = new CONSTANT_CCY_VALS
-                {
-                    currID = acc.Curr_ID,
-                    currMasterID = acc.Curr_MasterID,
-                    currABBR = acc.Curr_CCY_ABBR
-                };
-                valList.Add(vals);
+                mId = InterEntityValues.Currency_Yen;
+            } else if (type == "PHP")
+            {
+                mId = InterEntityValues.Currency_PHP;
             }
-            return valList;
+            var acc = _context.DMCurrency.Where(x => (x.Curr_MasterID == int.Parse(mId))
+                                                && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
+            return new CONSTANT_CCY_VALS
+            {
+                currID = acc.Curr_ID,
+                currMasterID = acc.Curr_MasterID,
+                currABBR = acc.Curr_CCY_ABBR
+            };
         }
         public List<CONSTANT_NC_VALS> getNCAccsForFilter()
         {

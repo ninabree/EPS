@@ -7,6 +7,9 @@
     var intrFR = Model.accList.FirstOrDefault(x => x.accName == "IEFR").accID;
     var petty = Model.accList.FirstOrDefault(x => x.accName == "PC").accID;
     var ewt = Model.accList.FirstOrDefault(x => x.accName == "ET").accID;
+    var usd = ViewBag.USDmstr;
+    var jpy = ViewBag.JPYmstr;
+    var php = ViewBag.PHPmstr;
 }
 @using ExpenseProcessingSystem.ConstantData
 @using ExpenseProcessingSystem.ViewModels.Entry
@@ -225,7 +228,7 @@
                                     </select>
                                 </td>
                                 <td class="@SetClass(@Model.EntryNC.NC_Category_ID, @i, "db") db" id="deb_@i">
-                                    <input class="ncVar misc-@i amt-db-@i-0 NumberOnlyOneDecimal" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." type="text" value="0">
+                                    <input class="ncVar misc-@i amt-db-@i-0 NumberOnlyOneDecimalMisc" id="amt-db-@i-0" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." type="text" value="0">
                                 </td>
 
                                 @* CREDIT *@
@@ -245,7 +248,7 @@
                                     </select>
                                 </td>
                                 <td class="@SetClass(@Model.EntryNC.NC_Category_ID, @i, "cd") cd" id="cred_@i">
-                                    <input class="ncVar misc-@i amt-cd-@i-0 NumberOnlyOneDecimal" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." type="text" value="0">
+                                    <input class="ncVar misc-@i amt-cd-@i-0 NumberOnlyOneDecimalMisc" id="amt-cd-@i-0"data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." type="text" value="0">
                                 </td>
                                 @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID)
                                 @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Type_ID)
@@ -305,7 +308,7 @@
                                         </select>
                                     </td>
                                     <td class="@SetClass(@Model.EntryNC.NC_Category_ID, @i, "db") db" id="deb_@i">
-                                        <input class="ncVar misc-@j amt-db-@i-@j NumberOnlyOneDecimal" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." type="text" value="0">
+                                        <input class="ncVar misc-@j amt-db-@i-@j NumberOnlyOneDecimalMisc" id="amt-db-@i-@j" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." type="text" value="0">
                                     </td>
 
                                     @* CREDIT *@
@@ -325,7 +328,7 @@
                                         </select>
                                     </td>
                                     <td class="@SetClass(@Model.EntryNC.NC_Category_ID, @i, "cd") cd" id="cred_@i">
-                                        <input class="ncVar misc-@j amt-cd-@i-@j NumberOnlyOneDecimal" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." type="text" value="0">
+                                        <input class="ncVar misc-@j amt-cd-@i-@j NumberOnlyOneDecimalMisc" id="amt-cd-@i-@j" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." type="text" value="0">
                                     </td>
                                     @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_ID)
                                     @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Type_ID)
@@ -867,10 +870,12 @@
             }
         }
 
-
         if ($("#entryID").val() == "") {
             $("#entryID").val(0);
         }
+        //[ BEGIN MISC ENTRIES]
+        //In Misc Entries, two fields(debit & credit) are provided for one ViewModel Amount field
+        //i.e. amount is entered in debit side, credit side will return to 0.
         $('#NCPartialTbl').on('change', '.misc-0', function () {
             var pid = $(this.parentNode)[0].parentNode.id.substring(5);
             var vals = $(this).val();
@@ -903,30 +908,31 @@
             $(this).parent().parent().siblings("[id='EntryNC_ExpenseEntryNCDtls_" + pid + "__ExpenseEntryNCDtlAccs_3__ExpNCDtlAcc_Amount']").val(vals);
             $(this).parent().siblings("[id$='ExpenseEntryNCDtlAccs_3__ExpNCDtlAcc_Type_ID']").val(type);
         });
+        //MISC ENTRIES CURR DROPDOWN CHANGED
+        $('#NCPartialTbl').on('change', '.misc-curr-0', function () {
+            var vals = $(this).val();
+            $(this).parent().parent().siblings("[id$='ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Curr_ID']").val(vals);
+        });
+        $('#NCPartialTbl').on('change', '.misc-curr-1', function () {
+            var vals = $(this).val();
+            $(this).parent().parent().siblings("[id$='ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Curr_ID']").val(vals);
+        });
+        $('#NCPartialTbl').on('change', '.misc-curr-2', function () {
+            var vals = $(this).val();
+            $(this).parent().parent().siblings("[id$='ExpenseEntryNCDtlAccs_2__ExpNCDtlAcc_Curr_ID']").val(vals);
+        });
+        $('#NCPartialTbl').on('change', '.misc-curr-3', function () {
+            var vals = $(this).val();
+            $(this).parent().parent().siblings("[id$='ExpenseEntryNCDtlAccs_3__ExpNCDtlAcc_Curr_ID']").val(vals);
+        });
+        //[ END MISC ENTRIES]
+        
         $('#NCPartialTbl').on('change', '.acc-sel', function () {
             var vals = $(this).val();
             if (vals == @ewt) {
                 $(this).parent().siblings("[id$='DtlAcc_Type_ID']").val(3);
             }
         });
-        //MISC ENTRIES CURR DROPDOWN CHANGED
-        $('#NCPartialTbl').on('change', '.misc-curr-0', function () {
-            var vals = $(this).val();
-            $(this).parent().parent().siblings("[id$='ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount']").val(vals);
-        });
-        $('#NCPartialTbl').on('change', '.misc-curr-1', function () {
-            var vals = $(this).val();
-            $(this).parent().parent().siblings("[id$='ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Amount']").val(vals);
-        });
-        $('#NCPartialTbl').on('change', '.misc-curr-2', function () {
-            var vals = $(this).val();
-            $(this).parent().parent().siblings("[id$='ExpenseEntryNCDtlAccs_2__ExpNCDtlAcc_Amount']").val(vals);
-        });
-        $('#NCPartialTbl').on('change', '.misc-curr-3', function () {
-            var vals = $(this).val();
-            $(this).parent().parent().siblings("[id$='ExpenseEntryNCDtlAccs_3__ExpNCDtlAcc_Amount']").val(vals);
-        });
-
         $('#NCPartialTbl').on('change', '.curr-sel', function () {
             var categoryID = $("select#categoryName option:selected").val();
             var vals = $(this).find("option:selected").val();
@@ -949,7 +955,7 @@
         $('#NCPartialTbl').on('update', function () {
             computeValsNC();
         });
-        $("#NCPartialTbl").on("keyup", ".NumberOnlyOneDecimal", function (e) {
+        $("#NCPartialTbl").on("keypress", ".NumberOnlyOneDecimal", function (e) {
             var val = $(this).val();
             if (isNaN(val)) {
                 val = val.replace(/[^0-9\.]/g, '');
@@ -964,12 +970,26 @@
 
             var pid = $(this.parentNode)[0].parentNode.id;
             var val = $(this).val().replace("-", "");
+            var valId = $(this).attr("id");
+            if (valId.indexOf("ExpNCDtlAcc_Inter_Rate") >= 0){
+                decVal = 4;
+            }
+            $(this).val(roundNumber(val, decVal));
+            if (isNaN($(this).val())) {
+                $(this).val(0);
+            }
+        });
 
-            if ($('#yenID').val() == $("#" + pid).find("[id$='__ExpNCDtlAcc_Type_ID']").val()) {
+        $("#NCPartialTbl").on("change", ".NumberOnlyOneDecimalMisc", function (e) {
+            var decVal = 2;
+            var pid = $(this.parentNode)[0].parentNode.id;
+            var val = $(this).val().replace("-", "");
+            var valId = $(this).attr("id").split("-");
+            var elCurrId = $("#EntryNC_ExpenseEntryNCDtls_" + valId[2] + "__ExpenseEntryNCDtlAccs_" + valId[3] + "__ExpNCDtlAcc_Curr_ID").val();
+            if (@jpy == elCurrId) {
                 decVal = 0;
             }
             $(this).val(roundNumber(val, decVal));
-
             if (isNaN($(this).val())) {
                 $(this).val(0);
             }

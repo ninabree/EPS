@@ -80,6 +80,7 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         public List<SelectListItem> vendorList { get; set; }
         public List<SelectListItem> trList { get; set; }
         public List<CONSTANT_NC_VALS> accList { get; set; }
+        public List<CONSTANT_NC_VALS> consCurrList { get; set; }
         public List<cvBirForm> birForms { get; set; }
 
         public EntryNCViewModelList()

@@ -48,6 +48,56 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             }
             return valList;
         }
+        //get xml currency details
+        public List<CONSTANT_CCY_VALS> getXMLCurrency()
+        {
+            List<CONSTANT_CCY_VALS> valList = new List<CONSTANT_CCY_VALS>();
+            InterEntityValues interEntityValues = new InterEntityValues();
+            List<string> consCurrMasterId = new List<string> {
+                InterEntityValues.Currency_US,
+                InterEntityValues.Currency_Yen,
+                InterEntityValues.Currency_PHP
+            };
+            foreach (string mId in consCurrMasterId)
+            {
+                var acc = _context.DMCurrency.Where(x => (x.Curr_MasterID == int.Parse(mId))
+                                                    && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
+                CONSTANT_CCY_VALS vals = new CONSTANT_CCY_VALS
+                {
+                    currID = acc.Curr_ID,
+                    currMasterID = acc.Curr_MasterID,
+                    currABBR = acc.Curr_CCY_ABBR
+                };
+                valList.Add(vals);
+            }
+            return valList;
+        }
+        //get specific xml currency details
+        public CONSTANT_CCY_VALS getXMLCurrency(string type)
+        {
+            InterEntityValues interEntityValues = new InterEntityValues();
+            var mId = "";
+            if (type == "USD")
+            {
+                mId = InterEntityValues.Currency_US;
+            }
+            else if (type == "YEN")
+            {
+                mId = InterEntityValues.Currency_Yen;
+            }
+            else if (type == "PHP")
+            {
+                mId = InterEntityValues.Currency_PHP;
+            }
+            var acc = _context.DMCurrency.Where(x => (x.Curr_MasterID == int.Parse(mId))
+                                                && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
+            return new CONSTANT_CCY_VALS
+            {
+                currID = acc.Curr_ID,
+                currMasterID = acc.Curr_MasterID,
+                currABBR = acc.Curr_CCY_ABBR
+            };
+        }
         public List<CONSTANT_NC_VALS> getNCAccsForFilter()
         {
             var acc_pettyCash = getNCAccs("/NONCASHACCOUNTS/PCR/ACCOUNT[@class='entry1' and @id='ACCOUNT1']");
@@ -191,6 +241,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         ExpNCDtl_TR_Title = ncDtl.g.ExpNCDtl_TR_ID > 0 ? _context.DMTR.FirstOrDefault(x => x.TR_ID == ncDtl.g.ExpNCDtl_TR_ID).TR_WT_Title : "",
                         ExpNCDtl_Vendor_ID = ncDtl.g.ExpNCDtl_Vendor_ID,
                         ExpNCDtl_Vendor_Name = ncDtl.g.ExpNCDtl_Vendor_ID > 0 ? _context.DMVendor.FirstOrDefault(x => x.Vendor_ID == ncDtl.g.ExpNCDtl_Vendor_ID).Vendor_Name : "",
+                        ExpNCDtl_TaxBasedAmt = ncDtl.g.ExpNCDtl_TaxBasedAmt,
                         ExpenseEntryNCDtlAccs = ncDtlAccs
                     };
                     ncDtls.Add(entryNCDtl);

@@ -48,6 +48,11 @@ namespace ExpenseProcessingSystem.Controllers
             EntryNCViewModelList viewModel = new EntryNCViewModelList();
             var accs = _service.getNCAccsForFilter();
             viewModel.accList = accs;
+
+            ViewData["USDmstr"] = _service.getXMLCurrency("USD").currMasterID;
+            ViewData["JPYmstr"] = _service.getXMLCurrency("YEN").currMasterID;
+            ViewData["PHPmstr"] = _service.getXMLCurrency("PHP").currMasterID;
+
             viewModel = PopulateEntryNC(viewModel);
             DMCurrencyModel currDtl = _context.DMCurrency.Where(x => x.Curr_MasterID == 31 && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
             DMCurrencyModel currDtlUSD = _context.DMCurrency.Where(x => x.Curr_MasterID == 1 && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
