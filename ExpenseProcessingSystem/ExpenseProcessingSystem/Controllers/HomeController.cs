@@ -35,6 +35,7 @@ namespace ExpenseProcessingSystem.Controllers
 {
     [ScreenFltr]
     [ServiceFilter(typeof(HandleExceptionAttribute))]
+    [RequestFormLimits(ValueCountLimit = 5000)]
     public class HomeController : Controller
     {
         private readonly int pageSize = 30;
@@ -3500,7 +3501,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         id = _service.addLiquidationDetail(vm, int.Parse(GetUserID()), exist);
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_SS, GlobalSystemValues.STATUS_EDIT, 0);
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_LIQ, GlobalSystemValues.STATUS_EDIT, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -3913,6 +3914,7 @@ namespace ExpenseProcessingSystem.Controllers
         //------------------------------DM-------------------------------
         //[* ADMIN *]
         //[* PAYEE *]
+        #region dm
         [HttpPost]
         [ExportModelState]
         [OnlineUserCheck]
@@ -4432,8 +4434,10 @@ namespace ExpenseProcessingSystem.Controllers
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_BCS" });
         }
+        #endregion
         //--------------------------------PENDING--------------------------------
         // [PAYEE]
+        #region Pending
         [HttpPost]
         [ExportModelState]
         [OnlineUserCheck]
@@ -5213,7 +5217,7 @@ namespace ExpenseProcessingSystem.Controllers
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_BCS" });
         }
-
+        #endregion
         //[* USER *]
         [ExportModelState]
         [HttpPost]
@@ -5821,6 +5825,16 @@ namespace ExpenseProcessingSystem.Controllers
         {
             _service.generateNewCheck(entryID);
             return RedirectToAction("View_CV", "Home", new { entryID = entryID });
+        }
+
+        public IActionResult printClosing(string closeType)
+        {
+            ExcelGenerateService excelMaker = new ExcelGenerateService();
+            ClosingViewModel model = _service.ClosingGetRecords();
+
+            string path = excelMaker.ExcepProofSheet(model,closeType);
+
+            return File(path, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", closeType + " Proofsheet.xlsx");
         }
     }
 }

@@ -43,10 +43,28 @@ function roundExceptionJPY(value, exp) {
 function reqBtnDisable(idx) {
     if ($('#LiquidationDetails_' + idx + '__ccyAbbrev').val() != $('#phpAbbrv').val()) {
         $('#req_' + idx).find('.reqBtn').css("pointer-events", "none");
-        $('#item_' + idx).find('.reqEWTBtn').css("pointer-events", "none");
     } else {
         $('#req_' + idx).find('.reqBtn').css("pointer-events", "auto");
-        $('#item_' + idx).find('.reqEWTBtn').css("pointer-events", "auto");
+    }
+    var pid = "#item_" + idx;
+    if (!$(pid).find(".chkEwt").is(':checked')) {
+        if ($(pid).find(".chkVat").is(':checked')) {
+            $(pid).find('.reqEWTBtn').css("pointer-events", "auto");
+        } else {
+            $(pid).find('.reqEWTBtn').css("pointer-events", "none");
+        }
+    } else {
+        $(pid).find('.reqEWTBtn').css("pointer-events", "auto");
+    }
+
+    if (!$(pid).find(".chkVat").is(':checked')) {
+        if ($(pid).find(".chkEwt").is(':checked')) {
+            $(pid).find('.reqEWTBtn').css("pointer-events", "auto");
+        } else {
+            $(pid).find('.reqEWTBtn').css("pointer-events", "none");
+        }
+    } else {
+        $(pid).find('.reqEWTBtn').css("pointer-events", "auto");
     }
 };
 function removeDecimalYEN(idx) {
@@ -341,23 +359,23 @@ function assignDivValuesIE(pid) {
     $('#lblIEInput9').text($('#LiquidationDetails_' + ret + '__liqInterEntity_2__Liq_InterRate_1_2').val());
 
     //AMOUNT
-    $('#lblIEInput1').text(AC($('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Amount_1_1').val()));
-    $('#txtIEInput1').val(AC($('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Amount_1_2').val()));
-    $('#txtIEInput2').val($('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_1_1').val());
-    $('#txtIEInput4').val($('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_1_2').val());
-    $('#txtIEInput3').val($('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_2_1').val());
+    $('#lblIEInput1').text(AC(round($('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Amount_1_1').val(), 2)));
+    $('#txtIEInput1').val(AC(round($('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Amount_1_2').val(), 2)));
+    $('#txtIEInput2').val(AC($('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_1_1').val()));
+    $('#txtIEInput4').val(AC($('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_1_2').val()));
+    $('#txtIEInput3').val(AC($('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_2_1').val()));
     $('#lblIEInput2').text(AC($('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_2_2').val()));
     $('#lblIEInput3').text(AC($('#LiquidationDetails_' + ret + '__liqInterEntity_2__Liq_Amount_1_1').val()));
-    $('#lblIEInput4').text(AC($('#LiquidationDetails_' + ret + '__liqInterEntity_2__Liq_Amount_1_2').val()));
-    $('#lblIEInput5').text(AC($('#LiquidationDetails_' + ret + '__liqInterEntity_3__Liq_Amount_1_1').val()));
-    $('#lblIEInput6').text(AC($('#LiquidationDetails_' + ret + '__liqInterEntity_3__Liq_Amount_1_2').val()));
+    $('#lblIEInput4').text(AC(round($('#LiquidationDetails_' + ret + '__liqInterEntity_2__Liq_Amount_1_2').val(), 2)));
+    $('#lblIEInput5').text(AC(round($('#LiquidationDetails_' + ret + '__liqInterEntity_3__Liq_Amount_1_1').val(), 2)));
+    $('#lblIEInput6').text(AC(round($('#LiquidationDetails_' + ret + '__liqInterEntity_3__Liq_Amount_1_2').val(), 2)));
 
     $('#txtIEAmount').val($('#lblIEInput4').text().replace(/\,/g, ''));
     $('#txtIEExRate').val($('#lblIEInput9').text());
     $('#txtIEExRatePhp').val(AC(roundExceptionJPY(parseFloat($('#txtIEAmount').val() * $('#txtIEExRate').val()), 2)));
 
-    $('#lblIEInput7').text(AC($("#txtIEInput1").val().replace(/\,/g, "")));
-    $('#lblIEInput8').text(AC($("#txtIEInput1").val().replace(/\,/g, "")));
+    $('#lblIEInput7').text($("#txtIEInput1").val());
+    $('#lblIEInput8').text($("#txtIEInput1").val());
 };
 
 function setLiqPhpValuetoDivInput(ret) {
@@ -412,8 +430,8 @@ function assignDivValuesLiqPhp(pid) {
     $('#txtLiqPhpInput4').val($('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Amount_2_2').val());
     //$('#txtLiqPhpInput5').val($('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Amount_3_1').val());
 
-    $('#txtLiqPhpInput6').val(AC(parseFloat($('#txtLiqPhpInput1').val()) + parseFloat($('#txtLiqPhpInput2').val())));
-    $('#txtLiqPhpInput7').val(AC(parseFloat($('#txtLiqPhpInput3').val()) + parseFloat($('#txtLiqPhpInput4').val()) + parseFloat($('#txtLiqPhpInput5').val())));
+    $('#txtLiqPhpInput6').val(AC(round(parseFloat($('#txtLiqPhpInput1').val()) + parseFloat($('#txtLiqPhpInput2').val()), 2)));
+    $('#txtLiqPhpInput7').val(AC(round(parseFloat($('#txtLiqPhpInput3').val()) + parseFloat($('#txtLiqPhpInput4').val()) + parseFloat($('#txtLiqPhpInput5').val()), 2)));
 
     //Tax RATE
     setDivTaxRateToLiqPhp(ret);
@@ -499,6 +517,7 @@ $('.number-inputNoDecimal').keyup(function () {
         event.preventDefault();
     }
 });
+
 $('.number-inputNoDecNoBlank').keyup(function () {
     $(this).val($(this).val().replace(/[^\d].+/, "").replace("-", ""));
     if ((event.which < 48 || event.which > 57)) {
@@ -512,6 +531,20 @@ $('.number-inputNoDecNoBlank').keyup(function () {
         $(this).val(0).replace("-", "");
     };
 
+});
+
+$('.number-only-change').change(function () {
+    if ($(this).val() == "" || isNaN($(this).val())) {
+        $(this).val(0);
+    }
+    $(this).val(round($(this).val(), 2));
+});
+
+$('.number-only-ExcRate-change').change(function () {
+    if ($(this).val() == "" || isNaN($(this).val())) {
+        $(this).val(0);
+    }
+    $(this).val(round($(this).val(), 4));
 });
 
 $('.IEBDOPettyInput').keyup(function () {

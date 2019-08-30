@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -1122,6 +1123,101 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
             
             return Encoding.ASCII.GetBytes($"{string.Join(",", header)}\r\n{csvContent.ToString()}");
 
+        }
+
+        public string ExcepProofSheet(ClosingViewModel model, string type)
+        {
+            string rootFolder = "wwwroot";
+            string sourcePath = "/ExcelTemplates/";
+            string destPath = "/ExcelTemplatesTempFolder/";
+            string excelTemplateName = "";
+            string newFileName = "";
+            string wsName = "";
+
+            int generalIndex = 0;
+            int sectionIndex = 0;
+            string prevCcy = "";
+            List<CloseItems> closeTransactions = new List<CloseItems>();
+
+            switch (type)
+            {
+                case "RBU":
+                    excelTemplateName = "RBU_PROOF_SHEET.xlsx";
+                    newFileName = DateTime.Now.ToString("yyyy-MM-dd") + "_RBU_PROOF_SHEET.xlsx";
+                    prevCcy = model.rbuItems.Count > 0 ? model.rbuItems.OrderBy(x => x.ccy).ThenBy(x => x.expTrans).ToList()[0].ccy : "";
+                    closeTransactions = model.rbuItems;
+                    generalIndex = 26;
+                    sectionIndex = 49;
+                    wsName = "Total Checklist (fx) RBU";
+                    break;
+                case "FCDU":
+                    excelTemplateName = "FCDU_PROOF_SHEET.xlsx";
+                    newFileName = DateTime.Now.ToString("yyyy-MM-dd") + "_FCDU_PROOF_SHEET.xlsx";
+                    prevCcy = model.fcduItems.Count > 0 ? model.fcduItems.OrderBy(x => x.ccy).ThenBy(x => x.expTrans).ToList()[0].ccy : "";
+                    closeTransactions = model.fcduItems;
+                    generalIndex = 14;
+                    sectionIndex = 48;
+                    wsName = "Total Checklist (fx) FCDU";
+                    break;
+            }
+
+            System.IO.File.Copy(rootFolder + sourcePath + excelTemplateName, rootFolder + destPath + newFileName, true);
+
+            FileInfo templateFile = new FileInfo(rootFolder + sourcePath + excelTemplateName);
+            FileInfo newFile = new FileInfo(rootFolder + destPath + newFileName);
+
+            using (ExcelPackage package = new ExcelPackage(newFile, templateFile))
+            {
+                ExcelWorksheet ws = package.Workbook.Worksheets[wsName];
+
+                decimal totalAmount = 0M;
+                int totalTransCount = 0;
+
+                int index = 0;
+                int iterator = 0;
+                foreach (var item in closeTransactions.OrderBy(x => x.ccy).ThenBy(x => x.expTrans).ToList())
+                {
+                    if (prevCcy == item.ccy)
+                    {
+                        totalAmount += item.amount;
+                        totalTransCount += item.transCount;
+                    }
+                    else
+                    {
+                        ws.Cells["M" + (generalIndex + index).ToString()].Value = item.ccy;
+                        ws.Cells["P" + (generalIndex + index).ToString()].Value = totalTransCount;
+                        ws.Cells["S" + (generalIndex + index).ToString()].Value = totalAmount;
+
+                        ws.Cells["M" + (sectionIndex + index).ToString()].Value = item.ccy;
+                        ws.Cells["P" + (sectionIndex + index).ToString()].Value = totalTransCount;
+                        ws.Cells["S" + (sectionIndex + index).ToString()].Value = totalAmount;
+
+                        ws.InsertRow(sectionIndex + index,1);
+
+                        totalAmount = item.amount;
+                        totalTransCount = item.transCount;
+                        prevCcy = item.ccy;
+                        index++;
+                    }
+
+                    
+                    if(iterator == closeTransactions.Count - 1)
+                    {
+                        ws.Cells["M" + (generalIndex + index).ToString()].Value = item.ccy;
+                        ws.Cells["P" + (generalIndex + index).ToString()].Value = totalTransCount;
+                        ws.Cells["S" + (generalIndex + index).ToString()].Value = totalAmount;
+
+                        ws.Cells["M" + (sectionIndex + index).ToString()].Value = item.ccy;
+                        ws.Cells["P" + (sectionIndex + index).ToString()].Value = totalTransCount;
+                        ws.Cells["S" + (sectionIndex + index).ToString()].Value = totalAmount;
+                    }
+
+                    iterator++;
+                }
+                package.Save();
+            }
+
+            return destPath + newFileName;
         }
     }
 }

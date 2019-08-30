@@ -10,10 +10,9 @@
     <body>
         <div id="cashBreakdownBody">
             @Html.HiddenFor(x => Model.id, new { @id = "parentIdPCVSSTable" })
-            <div id="divVendor">@if (Model.screencode != "SS" || Model.screencode != "Liquidation_SS")
-            {<text>Vendor/Employee :</text> }
-        else
-        {<text>Payee :</text>} <p class="dis-inline-block w-49">@Html.TextBoxFor(x => Model.vendor, new { @id = "reqVendor", @readonly = "readonly", @class = "input" })</p></div>
+            <div id="divVendor">
+                <text>Payee :</text> <p class="dis-inline-block w-49">@Html.TextBoxFor(x => Model.cashBDPayeeName, new { @id = "reqVendor", @readonly = "readonly", @class = "input" })</p>
+            </div>
         <div>Account :<p class="dis-inline-block w-49">@Html.TextBoxFor(x => Model.accountName, new { @id = "reqAccount", @readonly = "readonly", @class = "input" })</p></div>
         <div>
             Amount :
