@@ -1104,12 +1104,11 @@ namespace ExpenseProcessingSystem.Controllers
             PCVCashBreakdownViewModel model = new PCVCashBreakdownViewModel();
 
             model.id = id;
-            model.vendor = vendor;
+            model.cashBDPayeeName = vendor;
             model.accountName = account;
             model.amount = amount;
             model.screencode = screencode;
             model.cashBreakdown = new List<ExpenseEntryCashBreakdownModel>();
-
 
             foreach (var i in DenominationValues.GetDenominationList())
             {

@@ -42,6 +42,7 @@ namespace ExpenseProcessingSystem.Services
         private ModalService _modalservice;
         private FilterQueryService _filterservice;
         XElement xelemAcc = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
+        XElement xelemLiq = XElement.Load("wwwroot/xml/LiquidationValue.xml");
         private ModelStateDictionary _modelState;
         private NumberToText _class;
         public HomeService(IHttpContextAccessor httpContextAccessor, EPSDbContext context, GOExpressContext goContext, GWriteContext gWriteContext, ModelStateDictionary modelState, IHostingEnvironment hostingEnvironment)
@@ -3140,7 +3141,7 @@ namespace ExpenseProcessingSystem.Services
                                 RateOfTax = tr.TR_Tax_Rate,
                                 ATC = tr.TR_ATC,
                                 NOIP = tr.TR_Nature_Income_Payment,
-                                AOIP = ncAcc.ExpNCDtlAcc_Amount,
+                                AOIP = (ncDtl.ExpNCDtl_TaxBasedAmt != 0 ) ? ncDtl.ExpNCDtl_TaxBasedAmt : ncAcc.ExpNCDtlAcc_Amount,
                                 AOTW = ncAcc2.ExpNCDtlAcc_Amount,
                                 Last_Update_Date = exp.Expense_Last_Updated,
                                 Vendor_masterID = vend.Vendor_MasterID
@@ -3320,7 +3321,7 @@ namespace ExpenseProcessingSystem.Services
                                 RateOfTax = tr.TR_Tax_Rate,
                                 ATC = tr.TR_ATC,
                                 NOIP = tr.TR_Nature_Income_Payment,
-                                TaxBase = ncAcc.ExpNCDtlAcc_Amount,
+                                TaxBase = (ncDtl.ExpNCDtl_TaxBasedAmt != 0) ? ncDtl.ExpNCDtl_TaxBasedAmt : ncAcc.ExpNCDtlAcc_Amount,
                                 AOTW = ncAcc2.ExpNCDtlAcc_Amount,
                                 Last_Update_Date = exp.Expense_Last_Updated,
                                 Vendor_masterID = vend.Vendor_MasterID
@@ -5880,7 +5881,7 @@ namespace ExpenseProcessingSystem.Services
                                 RateOfTax = tr.TR_Tax_Rate,
                                 ATC = tr.TR_ATC,
                                 NOIP = tr.TR_Nature_Income_Payment,
-                                AOIP = ncAcc.ExpNCDtlAcc_Amount,
+                                AOIP = (ncDtl.ExpNCDtl_TaxBasedAmt != 0) ? ncDtl.ExpNCDtl_TaxBasedAmt : ncAcc.ExpNCDtlAcc_Amount,
                                 AOTW = ncAcc2.ExpNCDtlAcc_Amount,
                                 Last_Update_Date = exp.Expense_Last_Updated,
                                 Vendor_masterID = vend.Vendor_MasterID
@@ -5911,7 +5912,6 @@ namespace ExpenseProcessingSystem.Services
             List<HomeReportTransactionListViewModel> list2 = new List<HomeReportTransactionListViewModel>();
 
             List<DMAccountModel> accList = getAccountListIncHist();
-            XElement xelemLiq = XElement.Load("wwwroot/xml/LiquidationValue.xml");
             List<int> ewtTaxes = new List<int> { int.Parse(xelemAcc.Element("C_CV1").Value), int.Parse(xelemAcc.Element("C_DDV1").Value),
                                                 int.Parse(xelemAcc.Element("C_PC1").Value), int.Parse(xelemLiq.Element("ACCOUNT1_PHP").Value) };
             var db1 = (from hist in _context.GOExpressHist
@@ -7852,12 +7852,11 @@ namespace ExpenseProcessingSystem.Services
 
                     int creditAccMasterID1 = 0;
                     int creditAccMasterID2 = 0;
-                    XElement xelem = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
 
                     if (expenseType == GlobalSystemValues.TYPE_CV)
                     {
-                        creditAccMasterID1 = int.Parse(xelem.Element("C_CV1").Value);
-                        creditAccMasterID2 = int.Parse(xelem.Element("C_CV2").Value);
+                        creditAccMasterID1 = int.Parse(xelemAcc.Element("C_CV1").Value);
+                        creditAccMasterID2 = int.Parse(xelemAcc.Element("C_CV2").Value);
 
                         foreach (var amorSchedule in cv.amtDetails)
                         {
@@ -7875,8 +7874,8 @@ namespace ExpenseProcessingSystem.Services
                     }
                     else if (expenseType == GlobalSystemValues.TYPE_PC)
                     {
-                        creditAccMasterID1 = int.Parse(xelem.Element("C_PC1").Value);
-                        creditAccMasterID2 = int.Parse(xelem.Element("C_PC2").Value);
+                        creditAccMasterID1 = int.Parse(xelemAcc.Element("C_PC1").Value);
+                        creditAccMasterID2 = int.Parse(xelemAcc.Element("C_PC2").Value);
 
                         foreach (var cashbd in cv.cashBreakdown)
                         {
@@ -7903,13 +7902,13 @@ namespace ExpenseProcessingSystem.Services
 
                     if (expenseType == GlobalSystemValues.TYPE_SS)
                     {
-                        if (getAccount(cv.account).Account_MasterID == int.Parse(xelem.Element("D_SS1").Value))
+                        if (getAccount(cv.account).Account_MasterID == int.Parse(xelemAcc.Element("D_SS1").Value))
                         {
-                            creditAccMasterID2 = int.Parse(xelem.Element("C_SS1").Value);
+                            creditAccMasterID2 = int.Parse(xelemAcc.Element("C_SS1").Value);
                         }
                         else
                         {
-                            creditAccMasterID2 = int.Parse(xelem.Element("C_SS2").Value);
+                            creditAccMasterID2 = int.Parse(xelemAcc.Element("C_SS2").Value);
                         }
                     }
 
@@ -7947,7 +7946,7 @@ namespace ExpenseProcessingSystem.Services
                         ExpDtl_CreditAccount2 = getAccountByMasterID(creditAccMasterID2).Account_ID,
                         ExpenseEntryAmortizations = expenseAmor,
                         ExpenseEntryGbaseDtls = expenseGbase,
-                        ExpDtl_Ewt_Payor_Name_ID = cv.dtl_Ewt_Payor_Name_ID,
+                        ExpDtl_Ewt_Payor_Name_ID = (cv.chkEwt == false && cv.vat == 0) ? 0 : cv.dtl_Ewt_Payor_Name_ID,
                         ExpenseEntryCashBreakdowns = expenseCashBreakdown
                     };
                     expenseDtls.Add(expenseDetails);
@@ -8811,9 +8810,8 @@ namespace ExpenseProcessingSystem.Services
                             expenseGbase.Add(remarks);
                         }
                     }
-                    XElement xelem = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
-                    int creditAccMasterID1 = creditAccMasterID1 = int.Parse(xelem.Element("C_CV1").Value);
-                    int creditAccMasterID2 = creditAccMasterID2 = int.Parse(xelem.Element("C_CV2").Value);
+                    int creditAccMasterID1 = creditAccMasterID1 = int.Parse(xelemAcc.Element("C_CV1").Value);
+                    int creditAccMasterID2 = creditAccMasterID2 = int.Parse(xelemAcc.Element("C_CV2").Value);
 
                     ExpenseEntryDetailModel expenseDetails = new ExpenseEntryDetailModel
                     {
@@ -9259,7 +9257,7 @@ namespace ExpenseProcessingSystem.Services
                     deptName = GetDeptName(dtl.d.ExpDtl_Dept),
                     chkVat = (dtl.d.ExpDtl_Vat <= 0) ? false : true,
                     vatID = dtl.d.ExpDtl_Vat,
-                    vatValue = (dtl.d.ExpDtl_Vat <= 0) ? 0 : getVat(dtl.d.ExpDtl_Vat) * 100,
+                    vatValue = (dtl.d.ExpDtl_Vat <= 0) ? 0 : (float)Mizuho.round(getVat(dtl.d.ExpDtl_Vat) * 100, 2),
                     chkEwt = dtl.d.ExpDtl_isEwt,
                     ewtID = dtl.d.ExpDtl_Ewt,
                     ewtValue = (dtl.d.ExpDtl_Ewt <= 0) ? 0 : GetEWTValue(dtl.d.ExpDtl_Ewt) * 100,
@@ -9313,13 +9311,12 @@ namespace ExpenseProcessingSystem.Services
         //Add liquidation details
         public int addLiquidationDetail(LiquidationViewModel vm, int userid, int count)
         {
-            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
             LiquidationCashBreakdownModel model = new LiquidationCashBreakdownModel();
             foreach (var i in vm.LiquidationDetails)
             {
                 ExpenseEntryDetailModel dtlModel = _context.ExpenseEntryDetails.Where(x => x.ExpDtl_ID == i.EntryDetailsID).FirstOrDefault();
 
-                if (getCurrency(i.ccyID).Curr_MasterID == int.Parse(xelem.Element("CURRENCY_PHP").Value))
+                if (getCurrency(i.ccyID).Curr_MasterID == int.Parse(xelemLiq.Element("CURRENCY_PHP").Value))
                 {
                     foreach (var j in i.liqCashBreakdown)
                     {
@@ -10273,12 +10270,11 @@ namespace ExpenseProcessingSystem.Services
             Console.WriteLine("-=-=-=-=-=->" + equation);
 
             #region Get elements fron xml (ohr,rentDebit,expatDebit,localDebit,fbtCred)
-            XElement xelem = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
-            int ohr = int.Parse(xelem.Element("HOUSE_RENT").Value);
-            int rentDebit = int.Parse(xelem.Element("D_FBT_RENT").Value);
-            int expatDebit = int.Parse(xelem.Element("D_FBT_EXPAT").Value);
-            int localDebit = int.Parse(xelem.Element("D_FBT_LOCAL").Value);
-            int fbtCred = int.Parse(xelem.Element("C_FBT").Value);
+            int ohr = int.Parse(xelemAcc.Element("HOUSE_RENT").Value);
+            int rentDebit = int.Parse(xelemAcc.Element("D_FBT_RENT").Value);
+            int expatDebit = int.Parse(xelemAcc.Element("D_FBT_EXPAT").Value);
+            int localDebit = int.Parse(xelemAcc.Element("D_FBT_LOCAL").Value);
+            int fbtCred = int.Parse(xelemAcc.Element("C_FBT").Value);
             #endregion
 
             int masterId = _context.DMAccount.FirstOrDefault(x => x.Account_ID == acc).Account_MasterID;
@@ -10371,9 +10367,8 @@ namespace ExpenseProcessingSystem.Services
             DateTime closing = DateTime.Today.AddHours(23.9999);
 
             ClosingViewModel closeVM = new ClosingViewModel();
-
-            XElement xelem = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
-            int pcMasterID = int.Parse(xelem.Element("PC_MASTERID").Value);
+            
+            int pcMasterID = int.Parse(xelemAcc.Element("PC_MASTERID").Value);
 
             ClosingModel closingItemsRBU = _context.Closing.Where(x => x.Close_Type == GlobalSystemValues.BRANCH_RBU)
                                                            .OrderByDescending(x => x.Close_Open_Date).FirstOrDefault();
@@ -10510,12 +10505,11 @@ namespace ExpenseProcessingSystem.Services
                 {
                     CloseItems fbtItem = new CloseItems();
                     #region Get elements fron xml (ohr,rentDebit,expatDebit,localDebit,fbtCred)
-                    XElement xelem = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
-                    int ohr = int.Parse(xelem.Element("HOUSE_RENT").Value);
-                    int rentDebit = int.Parse(xelem.Element("D_FBT_RENT").Value);
-                    int expatDebit = int.Parse(xelem.Element("D_FBT_EXPAT").Value);
-                    int localDebit = int.Parse(xelem.Element("D_FBT_LOCAL").Value);
-                    int fbtCred = int.Parse(xelem.Element("C_FBT").Value);
+                    int ohr = int.Parse(xelemAcc.Element("HOUSE_RENT").Value);
+                    int rentDebit = int.Parse(xelemAcc.Element("D_FBT_RENT").Value);
+                    int expatDebit = int.Parse(xelemAcc.Element("D_FBT_EXPAT").Value);
+                    int localDebit = int.Parse(xelemAcc.Element("D_FBT_LOCAL").Value);
+                    int fbtCred = int.Parse(xelemAcc.Element("C_FBT").Value);
                     #endregion
 
                     #region assign fbtAcc
@@ -12320,7 +12314,14 @@ namespace ExpenseProcessingSystem.Services
                 cddStatus.PS_CDD = true;
                 _context.Entry(cddStatus).State = EntityState.Modified;
                 _context.SaveChanges();
-                updatePrintStatusForCLosing(entryID);
+                if(type == GlobalSystemValues.TYPE_LIQ)
+                {
+                    updatePrintStatusLiquidationForCLosing(entryID);
+                }
+                else
+                {
+                    updatePrintStatusForCLosing(entryID);
+                }
                 return true;
             }
             else
@@ -12380,6 +12381,30 @@ namespace ExpenseProcessingSystem.Services
                 ExpenseEntryModel updItem = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == entryID);
 
                 updItem.Expense_Status = GlobalSystemValues.STATUS_FOR_CLOSING;
+                updItem.Expense_Last_Updated = DateTime.Now;
+
+                _context.SaveChanges();
+            }
+        }
+
+        public void updatePrintStatusLiquidationForCLosing(int entryID)
+        {
+            var expPrintStatus = _context.PrintStatus.Where(x => x.PS_EntryID == entryID && x.PS_Type == GlobalSystemValues.TYPE_LIQ);
+
+            bool updStats = true;
+
+            foreach (var item in expPrintStatus)
+            {
+                if (!item.PS_BIR2307 || !item.PS_CDD || !item.PS_Check || !item.PS_LOI || !item.PS_Voucher)
+                    updStats = false;
+            }
+
+            if (updStats)
+            {
+                LiquidationEntryDetailModel updItem = _context.LiquidationEntryDetails.FirstOrDefault(x => x.ExpenseEntryModel.Expense_ID == entryID);
+
+                updItem.Liq_Status = GlobalSystemValues.STATUS_FOR_CLOSING;
+                updItem.Liq_LastUpdated_Date = DateTime.Now;
 
                 _context.SaveChanges();
             }

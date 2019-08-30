@@ -35,6 +35,7 @@ namespace ExpenseProcessingSystem.Controllers
 {
     [ScreenFltr]
     [ServiceFilter(typeof(HandleExceptionAttribute))]
+    [RequestFormLimits(ValueCountLimit = 5000)]
     public class HomeController : Controller
     {
         private readonly int pageSize = 30;
@@ -49,6 +50,10 @@ namespace ExpenseProcessingSystem.Controllers
         private readonly IStringLocalizer<HomeController> _localizer;
         private IHostingEnvironment _env;
         private ILogger<HomeController> _logger;
+        XElement xelemAcc = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
+        XElement xelemLiq = XElement.Load("wwwroot/xml/LiquidationValue.xml");
+        XElement xelemReport = XElement.Load("wwwroot/xml/ReportHeader.xml");
+        XElement xelemDirectory = XElement.Load("wwwroot/xml/ActiveDirectory.xml");
 
         public HomeController(ILogger<HomeController> logger,IHttpContextAccessor httpContextAccessor, EPSDbContext context, GOExpressContext gocontext,GWriteContext gwritecontext,IHostingEnvironment hostingEnvironment, IStringLocalizer<HomeController> localizer)
         {
@@ -209,6 +214,7 @@ namespace ExpenseProcessingSystem.Controllers
                         (sortedVals.list).Cast<ApplicationsViewModel>().AsQueryable().AsNoTracking(), page ?? 1, pageSize)
             };
             ViewBag.printStat = _service.getStatus(GlobalSystemValues.STATUS_FOR_PRINTING);
+            ViewBag.ddvLink = "View_DDV";
             ViewBag.loi = HomeReportConstantValue.LOI;
             return View(VM);
         }
@@ -582,10 +588,9 @@ namespace ExpenseProcessingSystem.Controllers
             if (ReportTypeID == HomeReportConstantValue.ESAMS)
             {
                 var accounts = _service.getAccountList();
-                XElement xelem = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
                 for(int i = 1; i <=5; i++)
                 {
-                    var acc = accounts.Where(x => x.Account_MasterID == int.Parse(xelem.Element("D_SS" + i).Value)).FirstOrDefault();
+                    var acc = accounts.Where(x => x.Account_MasterID == int.Parse(xelemAcc.Element("D_SS" + i).Value)).FirstOrDefault();
                     if(acc != null)
                     {
                         subtypes.Add(new HomeReportSubTypeAccModel
@@ -623,10 +628,9 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 var accounts = _service.getAccountListIncHist();
                 
-                XElement xelem = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
                 for(int i = 1; i <= 5; i++)
                 {
-                    var acc = accounts.Where(x => x.Account_MasterID == int.Parse(xelem.Element("D_SS" + i).Value)
+                    var acc = accounts.Where(x => x.Account_MasterID == int.Parse(xelemAcc.Element("D_SS" + i).Value)
                                 && x.Account_isActive == true && x.Account_isDeleted == false).FirstOrDefault();
                     if (acc != null)
                     {
@@ -675,14 +679,12 @@ namespace ExpenseProcessingSystem.Controllers
             string pdfFooterFormat = HomeReportConstantValue.PdfFooter2;
             var signatory = model.SignatoryID != 0 ? _service.GetSignatoryInfo(model.SignatoryID) : new DMBCSViewModel();
 
-            XElement xelem = XElement.Load("wwwroot/xml/ReportHeader.xml");
-
             ReportCommonViewModel repComVM = new ReportCommonViewModel
             {
-                Header_Logo = xelem.Element("LOGO").Value,
-                Header_Name = xelem.Element("NAME").Value,
-                Header_TIN = xelem.Element("TIN").Value,
-                Header_Address = xelem.Element("ADDRESS").Value,
+                Header_Logo = xelemReport.Element("LOGO").Value,
+                Header_Name = xelemReport.Element("NAME").Value,
+                Header_TIN = xelemReport.Element("TIN").Value,
+                Header_Address = xelemReport.Element("ADDRESS").Value,
                 Signatory_Name = signatory.BCS_Name,
                 Signatory_Position = signatory.BCS_Position
             };
@@ -810,8 +812,8 @@ namespace ExpenseProcessingSystem.Controllers
                 case HomeReportConstantValue.BIRWTCSV:
                     layoutName = ConstantData.HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
 
-                    fileName = xelem.Element("WHAgentTIN").Value + xelem.Element("WHAgentBranchCode").Value
-                                    + returnPeriod.Replace("/", "") + xelem.Element("FormType").Value.ToLower() + ".csv";
+                    fileName = xelemReport.Element("WHAgentTIN").Value + xelemReport.Element("WHAgentBranchCode").Value
+                                    + returnPeriod.Replace("/", "") + xelemReport.Element("FormType").Value.ToLower() + ".csv";
 
                     //Get the necessary data from Database
                     data = new HomeReportDataFilterViewModel
@@ -1006,11 +1008,10 @@ namespace ExpenseProcessingSystem.Controllers
         public IActionResult Generate2307File(int _vendor, int _ewt, int _tax,  decimal _amount, DateTime date, string approver,int expID)
         {
             string path = "";
-            XElement xelem = XElement.Load("wwwroot/xml/ReportHeader.xml");
 
-            var Header_Name = xelem.Element("NAME").Value;
-            var Header_TIN = xelem.Element("TIN").Value;
-            var Header_Address = xelem.Element("ADDRESS").Value;
+            var Header_Name = xelemReport.Element("NAME").Value;
+            var Header_TIN = xelemReport.Element("TIN").Value;
+            var Header_Address = xelemReport.Element("ADDRESS").Value;
 
             try
             {
@@ -1228,9 +1229,8 @@ namespace ExpenseProcessingSystem.Controllers
         {
             var userId = GetUserID();
             EntryCVViewModelList viewModel = new EntryCVViewModelList();
-            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
-            var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
-            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
+            var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_PHP").Value));
+            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_Yen").Value));
 
             if (entryID > 0)
             {
@@ -1329,10 +1329,9 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 DMAccountModel acc = new DMAccountModel();
                 List<accDetails> acclist = new List<accDetails>();
-                XElement xelem = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
                 for(int i = 1; i <= 5; i++)
                 {
-                    acc = _service.getAccountByMasterID(int.Parse(xelem.Element("D_SS" + i).Value));
+                    acc = _service.getAccountByMasterID(int.Parse(xelemAcc.Element("D_SS" + i).Value));
                     if (acc == null) continue;
                     acclist.Add(new accDetails
                     {
@@ -1341,7 +1340,7 @@ namespace ExpenseProcessingSystem.Controllers
                         accCode = acc.Account_Code
                     });
                 }
-                viewModel.systemValues.acc = acclist.OrderBy(x=> x.accName.Contains("H90")).ThenBy(x=> x.accName).ToList();
+                viewModel.systemValues.acc = acclist;
             }
             else
             {
@@ -1584,8 +1583,7 @@ namespace ExpenseProcessingSystem.Controllers
                 GlobalSystemValues.MESSAGE = "";
             }
 
-            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
-            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
+            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_Yen").Value));
             cvList.yenCurrID = ccyYEN.Curr_ID;
             cvList.yenCurrMasterID = ccyYEN.Curr_MasterID;
             cvList.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
@@ -1604,10 +1602,9 @@ namespace ExpenseProcessingSystem.Controllers
         {
             EntryDDVViewModelList viewModel;
             var userId = GetUserID();
-            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
-            var ccyUSD = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_US").Value));
-            var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
-            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
+            var ccyUSD = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_US").Value));
+            var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_PHP").Value));
+            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_Yen").Value));
 
             if (entryID > 0)
             {
@@ -1744,9 +1741,8 @@ namespace ExpenseProcessingSystem.Controllers
                 ViewData["MESSAGE"] = GlobalSystemValues.MESSAGE;
                 GlobalSystemValues.MESSAGE = "";
             }
-
-            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
-            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
+            
+            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_Yen").Value));
             ddvList.yenCurrID = ccyYEN.Curr_ID;
             ddvList.yenCurrMasterID = ccyYEN.Curr_MasterID;
             ddvList.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
@@ -1986,8 +1982,7 @@ namespace ExpenseProcessingSystem.Controllers
                 EntryCVViewModelList.systemValues.vat = new SelectList("0", "0");
                 return View("Entry_PCV", EntryCVViewModelList);
             }
-            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
-            var phpID = _service.getAccountByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value)).Account_ID;
+            var phpID = _service.getAccountByMasterID(int.Parse(xelemLiq.Element("CURRENCY_PHP").Value)).Account_ID;
             foreach (var i in EntryCVViewModelList.EntryCV)
             {
                 i.ccy = phpID;
@@ -2316,9 +2311,8 @@ namespace ExpenseProcessingSystem.Controllers
         public IActionResult Entry_SS(int entryID)
         {
             var userId = GetUserID();
-            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
-            var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
-            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
+            var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_PHP").Value));
+            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_Yen").Value));
 
             EntryCVViewModelList viewModel = new EntryCVViewModelList();
 
@@ -2403,7 +2397,6 @@ namespace ExpenseProcessingSystem.Controllers
 
                 foreach (var i in EntryCVViewModelList.EntryCV)
                 {
-                    EntryCVViewModelList.systemValues.acc.AddRange(_service.getAccDetailsEntry(i.account));
                     i.screenCode = "SS";
 
                     var vend = _service.getVendor(i.dtl_Ewt_Payor_Name_ID);
@@ -2428,13 +2421,12 @@ namespace ExpenseProcessingSystem.Controllers
                 }
                 EntryCVViewModelList.systemValues.ewt = new SelectList("0", "0");
                 EntryCVViewModelList.systemValues.vat = new SelectList("0", "0");
-
-                XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
-                var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
+                
+                var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_PHP").Value));
                 EntryCVViewModelList.phpCurrID = ccyPHP.Curr_ID;
                 EntryCVViewModelList.phpCurrMasterID = ccyPHP.Curr_MasterID;
                 EntryCVViewModelList.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
-                var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
+                var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_Yen").Value));
                 EntryCVViewModelList.yenCurrID = ccyYEN.Curr_ID;
                 EntryCVViewModelList.yenCurrMasterID = ccyYEN.Curr_MasterID;
                 EntryCVViewModelList.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
@@ -2609,7 +2601,6 @@ namespace ExpenseProcessingSystem.Controllers
 
             foreach (var i in ssList.EntryCV)
             {
-                ssList.systemValues.acc.AddRange(_service.getAccDetailsEntry(i.account));
                 i.screenCode = "SS";
 
                 var vend = _service.getVendor(i.dtl_Ewt_Payor_Name_ID);
@@ -2634,13 +2625,12 @@ namespace ExpenseProcessingSystem.Controllers
             }
             ssList.systemValues.ewt = new SelectList("0", "0");
             ssList.systemValues.vat = new SelectList("0", "0");
-
-            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
-            var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
+            
+            var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_PHP").Value));
             ssList.phpCurrID = ccyPHP.Curr_ID;
             ssList.phpCurrMasterID = ccyPHP.Curr_MasterID;
             ssList.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
-            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
+            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_Yen").Value));
             ssList.yenCurrID = ccyYEN.Curr_ID;
             ssList.yenCurrMasterID = ccyYEN.Curr_MasterID;
             ssList.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
@@ -2711,23 +2701,21 @@ namespace ExpenseProcessingSystem.Controllers
             ssList.systemValues.currency = listOfSysVals[2];
             ssList.systemValues.employees = listOfSysVals[4];
             //int firstId = int.Parse(listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR].First().Value);
-
-            XElement xelemliq = XElement.Load("wwwroot/xml/LiquidationValue.xml");
-            var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelemliq.Element("CURRENCY_PHP").Value));
+            
+            var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_PHP").Value));
             ssList.phpCurrID = ccyPHP.Curr_ID;
             ssList.phpCurrMasterID = ccyPHP.Curr_MasterID;
             ssList.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
-            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelemliq.Element("CURRENCY_Yen").Value));
+            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_Yen").Value));
             ssList.yenCurrID = ccyYEN.Curr_ID;
             ssList.yenCurrMasterID = ccyYEN.Curr_MasterID;
             ssList.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
 
             DMAccountModel acc = new DMAccountModel();
             List<accDetails> acclist = new List<accDetails>();
-            XElement xelem = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
             for (int i = 1; i <= 5; i++)
             {
-                acc = _service.getAccountByMasterID(int.Parse(xelem.Element("D_SS" + i).Value));
+                acc = _service.getAccountByMasterID(int.Parse(xelemAcc.Element("D_SS" + i).Value));
                 if (acc == null) continue;
                 acclist.Add(new accDetails
                     {
@@ -2819,8 +2807,7 @@ namespace ExpenseProcessingSystem.Controllers
                 },
             };
             viewModel.CDDContents = cddContents;
-            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
-            string excelTemplateName = (viewModel.CURRENCY == int.Parse(xelem.Element("CURRENCY_Yen").Value)) ? "CDDIS_Yen.xlsx" : "CDDIS_USD.xlsx";
+            string excelTemplateName = (viewModel.CURRENCY == int.Parse(xelemLiq.Element("CURRENCY_Yen").Value)) ? "CDDIS_Yen.xlsx" : "CDDIS_USD.xlsx";
 
             bool result = _service.UpdateCDDPrintingStatus(entryID, entryDtlID, GlobalSystemValues.TYPE_SS);
 
@@ -3252,8 +3239,7 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.payee_type = GlobalSystemValues.PAYEETYPE_REGEMP;
             viewModel.systemValues.ewt = new SelectList("0", "0");
             viewModel.systemValues.vat = new SelectList("0", "0");
-            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
-            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
+            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_Yen").Value));
             viewModel.yenCurrID = ccyYEN.Curr_ID;
             viewModel.yenCurrMasterID = ccyYEN.Curr_MasterID;
             viewModel.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
@@ -3317,7 +3303,6 @@ namespace ExpenseProcessingSystem.Controllers
         public IActionResult Liquidation_Main(string sortOrder, string currentFilter, string searchString, int? page)
         {
             var userId = GetUserID();
-            InterEntityValues interEntityValues = new InterEntityValues();
 
             //set sort vals
             ViewData["CurrentSort"] = sortOrder;
@@ -3352,7 +3337,6 @@ namespace ExpenseProcessingSystem.Controllers
         public IActionResult Liquidation_SS(int entryID)
         {
             var userId = GetUserID();
-            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
 
             LiquidationViewModel ssList = _service.getExpenseToLiqudate(entryID);
             ssList.accList = _service.getAccountList();
@@ -3373,11 +3357,11 @@ namespace ExpenseProcessingSystem.Controllers
                 i.transNo = _service.getTransactionNoLiquidation(entryID, i.EntryDetailsID).ToString().PadLeft(5, '0');
             }
 
-            var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
+            var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_PHP").Value));
             ssList.phpCurrID = ccyPHP.Curr_ID;
             ssList.phpCurrMasterID = ccyPHP.Curr_MasterID;
             ssList.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
-            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
+            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_Yen").Value));
             ssList.yenCurrID = ccyYEN.Curr_ID;
             ssList.yenCurrMasterID = ccyYEN.Curr_MasterID;
             ssList.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
@@ -3426,7 +3410,6 @@ namespace ExpenseProcessingSystem.Controllers
             var userId = GetUserID();
             if (!ModelState.IsValid)
             {
-                XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
                 vm.accList = _service.getAccountList();
                 vm.accAllList = _service.getAccountListIncHist();
                 vm.vendorList = _service.getVendorList().OrderBy(x => x.Vendor_Name).ToList();
@@ -3446,11 +3429,11 @@ namespace ExpenseProcessingSystem.Controllers
                     i.screenCode = "Liquidation_SS";
                     i.transNo = _service.getTransactionNoLiquidation(vm.entryID, i.EntryDetailsID).ToString().PadLeft(5, '0');
                 }
-                var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
+                var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_PHP").Value));
                 vm.phpCurrID = ccyPHP.Curr_ID;
                 vm.phpCurrMasterID = ccyPHP.Curr_MasterID;
                 vm.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
-                var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
+                var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_Yen").Value));
                 vm.yenCurrID = ccyYEN.Curr_ID;
                 vm.yenCurrMasterID = ccyYEN.Curr_MasterID;
                 vm.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
@@ -3514,7 +3497,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         id = _service.addLiquidationDetail(vm, int.Parse(GetUserID()), exist);
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_SS, GlobalSystemValues.STATUS_EDIT, 0);
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_LIQ, GlobalSystemValues.STATUS_EDIT, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -3538,7 +3521,6 @@ namespace ExpenseProcessingSystem.Controllers
         public IActionResult View_Liquidation_SS(int entryID)
         {
             var userId = GetUserID();
-            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
             
             //Check if entryID is exist or not. if not, redirect to Home/Index screen.
             //Possible senario: Open entry by Approver, then modified by Maker. entry ID will be re-created.
@@ -3576,11 +3558,11 @@ namespace ExpenseProcessingSystem.Controllers
                 i.transNo = _service.getTransactionNoLiquidation(entryID, i.EntryDetailsID).ToString().PadLeft(5, '0');
             }
 
-            var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
+            var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_PHP").Value));
             ssList.phpCurrID = ccyPHP.Curr_ID;
             ssList.phpCurrMasterID = ccyPHP.Curr_MasterID;
             ssList.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
-            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
+            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_Yen").Value));
             ssList.yenCurrID = ccyYEN.Curr_ID;
             ssList.yenCurrMasterID = ccyYEN.Curr_MasterID;
             ssList.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
@@ -3633,8 +3615,6 @@ namespace ExpenseProcessingSystem.Controllers
         {
             var userId = GetUserID();
             var intUser = int.Parse(userId);
-
-            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
 
             string viewLink = "Liquidation_SS";
             LiquidationViewModel ssList;
@@ -3761,11 +3741,11 @@ namespace ExpenseProcessingSystem.Controllers
                 i.screenCode = "Liquidation_SS";
             }
 
-            var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_PHP").Value));
+            var ccyPHP = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_PHP").Value));
             ssList.phpCurrID = ccyPHP.Curr_ID;
             ssList.phpCurrMasterID = ccyPHP.Curr_MasterID;
             ssList.phpAbbrev = ccyPHP.Curr_CCY_ABBR;
-            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelem.Element("CURRENCY_Yen").Value));
+            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_Yen").Value));
             ssList.yenCurrID = ccyYEN.Curr_ID;
             ssList.yenCurrMasterID = ccyYEN.Curr_MasterID;
             ssList.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
@@ -3836,9 +3816,8 @@ namespace ExpenseProcessingSystem.Controllers
                 },
             };
             viewModel.CDDContents = cddContents;
-
-            XElement xelem = XElement.Load("wwwroot/xml/LiquidationValue.xml");
-            string excelTemplateName = (viewModel.CURRENCY == int.Parse(xelem.Element("CURRENCY_Yen").Value)) ? "CDDIS_Liq_Yen.xlsx" : "CDDIS_Liq_USD.xlsx";
+            
+            string excelTemplateName = (viewModel.CURRENCY == int.Parse(xelemLiq.Element("CURRENCY_Yen").Value)) ? "CDDIS_Liq_Yen.xlsx" : "CDDIS_Liq_USD.xlsx";
 
             bool result = _service.UpdateCDDPrintingStatus(entryID, entryDtlID, GlobalSystemValues.TYPE_LIQ);
 
@@ -5247,8 +5226,6 @@ namespace ExpenseProcessingSystem.Controllers
                 return RedirectToAction("UM", "Home");
             }
 
-            XElement xelemDirectory = XElement.Load("wwwroot/xml/ActiveDirectory.xml");
-
             string svcUsername = xelemDirectory.Element("svcUsername").Value;
             string domain = xelemDirectory.Element("domain").Value;
             string svcPwd = EncrytionTool.DecryptString(xelemDirectory.Element("svcPwd").Value,"eXpreSS");
@@ -5373,6 +5350,18 @@ namespace ExpenseProcessingSystem.Controllers
             }
             return Json(trList.ToList());
         }
+        //Used in Liquidation readonly page
+        [HttpPost]
+        [AcceptVerbs("GET")]
+        public JsonResult getAllTaxRate()
+        {
+            var trList = _service.getAllTRList();
+            foreach (var i in trList)
+            {
+                i.TR_WT_Title = i.TR_Tax_Rate + "%";
+            }
+            return Json(trList.ToList());
+        }
         [HttpPost]
         [AcceptVerbs("GET")]
         public JsonResult getAllTRList()
@@ -5463,17 +5452,14 @@ namespace ExpenseProcessingSystem.Controllers
         private VoucherViewModelList GenerateVoucherViewModelCV(EntryCVViewModelList model) {
             VoucherViewModelList vvm = new VoucherViewModelList();
 
-            XElement accXML = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
-            XElement xelem = XElement.Load("wwwroot/xml/ReportHeader.xml");
-
-            int officeID = int.Parse(accXML.Element("HOUSE_RENT").Value);
+            int officeID = int.Parse(xelemAcc.Element("HOUSE_RENT").Value);
             //string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmsstt"); // ORIGINAL
             vvm.date = DateTime.Now.ToString("MM-dd-yyyy");
 
             vvm.headvm.Header_Logo = "";
-            vvm.headvm.Header_Name = xelem.Element("NAME").Value;
-            vvm.headvm.Header_TIN = xelem.Element("TIN").Value;
-            vvm.headvm.Header_Address = xelem.Element("ADDRESS").Value;
+            vvm.headvm.Header_Name = xelemReport.Element("NAME").Value;
+            vvm.headvm.Header_TIN = xelemReport.Element("TIN").Value;
+            vvm.headvm.Header_Address = xelemReport.Element("ADDRESS").Value;
 
             for (var i = 0; i < model.EntryCV.Count(); i++)
             {
@@ -5654,17 +5640,14 @@ namespace ExpenseProcessingSystem.Controllers
         {
             VoucherViewModelList vvm = new VoucherViewModelList();
 
-            XElement accXML = XElement.Load("wwwroot/xml/GlobalAccounts.xml");
-            XElement xelem = XElement.Load("wwwroot/xml/ReportHeader.xml");
-
-            int officeID = int.Parse(accXML.Element("HOUSE_RENT").Value);
+            int officeID = int.Parse(xelemAcc.Element("HOUSE_RENT").Value);
             //string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmsstt"); // ORIGINAL
             vvm.date = DateTime.Now.ToString("MM-dd-yyyy");
 
             vvm.headvm.Header_Logo = "";
-            vvm.headvm.Header_Name = xelem.Element("NAME").Value;
-            vvm.headvm.Header_TIN = xelem.Element("TIN").Value;
-            vvm.headvm.Header_Address = xelem.Element("ADDRESS").Value;
+            vvm.headvm.Header_Name = xelemReport.Element("NAME").Value;
+            vvm.headvm.Header_TIN = xelemReport.Element("TIN").Value;
+            vvm.headvm.Header_Address = xelemReport.Element("ADDRESS").Value;
 
             for (var i = 0; i < model.EntryDDV.Count(); i++)
             {

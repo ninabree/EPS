@@ -357,15 +357,15 @@
 
                                     <tr id="cashbdliqid_@cnt">
                                         <td class="tdPrintLiq">
-                                            <input type="number" class="txtLiqDenomination" readonly="readonly" style="width:100%;background:transparent;text-align:center" value="@i.CashBreak_Denomination" />
+                                            <input type="number" class="txtLiqDenomination" readonly="readonly" style="width:100%;background:transparent;text-align:center" value="@i.CashBreak_Denomination" tabindex = -1 />
 
                                         </td>
                                         <td class="tdPrintLiq">
-                                            <input type="number" class="txtLiqNoPCS number-inputNoDecNoBlank txtLiqPhpInput" style="width:100%;text-align:center" min="0" value="0" />
+                                            <input type="number" class="txtLiqNoPCS number-inputNoDecNoBlank txtLiqPhpInput" style="width:100%;text-align:center" min="0" value="0" tabindex = @cnt + 1 />
 
                                         </td>
                                         <td class="tdPrintLiq">
-                                            <input type="number" class="txtLiqAmount" readonly="readonly" style="width:100%;background:transparent;text-align:center" value="0" />
+                                            <input type="number" class="txtLiqAmount" readonly="readonly" style="width:100%;background:transparent;text-align:center" value="0" tabindex = -1 />
                                         </td>
                                     </tr>
                                     cnt = cnt + 1;
@@ -429,7 +429,7 @@
                                 <input id="txtIECurrency" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="CCY" />
                             </td>
                             <td>
-                                <input id="txtIEAmount" class="txtIEInfoInput input100 number-inputExceptionJPY" style="width:100%;text-align:center" type="text" value="0" />
+                                <input id="txtIEAmount" class="txtIEInfoInput input100 number-inputExceptionJPY number-only-change" style="width:100%;text-align:center" type="text" value="0" />
                             </td>
                         </tr>
                         <tr>
@@ -437,7 +437,7 @@
                                 <label>Exchange Rate:</label>
                             </td>
                             <td>
-                                <input id="txtIEExRate" class="txtIEInfoInput input100 number-input" style="width:100%;text-align:center" type="text" value="0" />
+                                <input id="txtIEExRate" class="txtIEInfoInput input100 number-input number-only-ExcRate-change" style="width:100%;text-align:center" type="text" value="0" />
                             </td>
                             <td></td>
                             <td></td>
@@ -506,7 +506,7 @@
                                 <td></td>
                                 <td></td>
                                 <td><label class="lblCurrency"></label></td>
-                                <td><input id="txtIEInput1" class="txtIEInput number-inputExceptionJPY" style="width:100%;text-align:center" type="text" value="0" /></td>
+                                <td><input id="txtIEInput1" class="txtIEInput number-inputExceptionJPY number-only-change" style="width:100%;text-align:center" type="text" value="0" /></td>
                             </tr>
                             <tr>
                                 <td><label></label></td>
@@ -524,7 +524,7 @@
                                 </td>
                                 <td></td>
                                 <td><label>PHP</label></td>
-                                <td><input id="txtIEInput2" class="txtIEInput number-input" style="width:100%;text-align:center" type="text" value="0" /></td>
+                                <td><input id="txtIEInput2" class="txtIEInput number-input number-only-change" style="width:100%;text-align:center" type="text" value="0" /></td>
                                 <td></td>
                                 <td></td>
                             </tr>
@@ -533,10 +533,10 @@
                                     <select id="ddlAccount11" style="width:100%" class="selectDisabled"></select>
                                 </td>
                                 <td></td>
-                                <td>PHP</td>
-                                <td><input id="txtIEInput3" class="txtIEInput number-input IEBDOPettyInput" style="width:100%;text-align:center" type="text" value="0" /></td>
                                 <td><label>PHP</label></td>
-                                <td><input id="txtIEInput4" class="txtIEInput number-input IEBDOPettyInput" style="width:100%;text-align:center" type="text" value="0" /></td>
+                                <td><input id="txtIEInput3" class="txtIEInput number-input IEBDOPettyInput number-only-change" style="width:100%;text-align:center" type="text" value="0" /></td>
+                                <td><label>PHP</label></td>
+                                <td><input id="txtIEInput4" class="txtIEInput number-input IEBDOPettyInput number-only-change" style="width:100%;text-align:center" type="text" value="0" /></td>
                             </tr>
                             <tr>
                                 <td style="text-align:left">@Html.DropDownListFor(x => Model.acc, new SelectList(Model.accAllList, "Account_ID", "Account_Name", null, "Account_MasterID"), new { @id = "lblAccount3", @style = "width:100%", @class = "selectDisabled", @disabled = "disabled" })</td>
@@ -658,6 +658,7 @@
     <input type="hidden" id="yenAbbrv" value="@Model.yenAbbrev" />
     <input type="hidden" id="yenMasterID" value="@Model.yenCurrMasterID" />
     <input type="hidden" name="command" id="btnID" />
+    <input type="hidden" id="hiddenMode" value="Edit" />
 }
 @*validation message*@
 <div id="ValidationSummary" style="display:none" class="">
@@ -801,8 +802,8 @@
 
             var selectedRow = $('#hiddenSelectedItem').val();
 
-            var value1 = parseFloat($('#txtLiqPhpInput1').val()) + parseFloat($('#txtLiqPhpInput2').val());
-            var value2 = parseFloat($('#txtLiqPhpInput3').val()) + parseFloat($('#txtLiqPhpInput4').val()) + parseFloat($('#txtLiqPhpInput5').val());
+            var value1 = round(parseFloat($('#txtLiqPhpInput1').val()) + parseFloat($('#txtLiqPhpInput2').val()), 2);
+            var value2 = round(parseFloat($('#txtLiqPhpInput3').val()) + parseFloat($('#txtLiqPhpInput4').val()) + parseFloat($('#txtLiqPhpInput5').val()), 2);
 
             if (value1 != value2) {
                 $('#alert').text("The total amount of Debit and Credit did not match.");
@@ -881,8 +882,8 @@
             var selectedRow = $('#hiddenSelectedItem').val();
 
             //DISPLAY ERRORS
-            if ($('#txtIEAmount').val().replace(/\,/g, "") != $('#' + selectedRow).find(".txtGross").val()) {
-                $('#alert').text("Cash advance amount do not match.");
+            if (parseFloat($('#txtIEAmount').val().replace(/\,/g, "")) != parseFloat($('#' + selectedRow).find(".txtGross").val())) {
+                $('#alert').text("Cash advance and Liquidation amount do not match.");
                 $('#divAlertWindow').show();
                 return false;
             }
@@ -893,9 +894,8 @@
                 return false;
             }
 
-            var value1 = parseFloat($('#txtIEInput2').val()) + parseFloat($('#txtIEInput3').val());
-            var value2 = parseFloat($('#txtIEInput4').val()) + parseFloat($('#lblIEInput2').text().replace(/\,/g, ""));
-
+            var value1 = round(parseFloat($('#txtIEInput2').val().replace(/\,/g, "")) + parseFloat($('#txtIEInput3').val().replace(/\,/g, "")), 2);
+            var value2 = round(parseFloat($('#txtIEInput4').val().replace(/\,/g, "")) + parseFloat($('#lblIEInput2').text().replace(/\,/g, "")), 2);
             if (value1 != value2) {
                 $('#alert').text("Inter-Entity(2nd Entry): Debit and Credit amount do not match.");
                 $('#divAlertWindow').show();
@@ -931,9 +931,12 @@
         });
 
         $('.tableLiqPhp').on('change', '.txtLiqPhpInput', function (e) {
+            if ($(this).val() == '' || isNaN($(this).val())) {
+                $(this).val(0);
+            }
             $(this).val(round($(this).val(), 2));
-            $('#txtLiqPhpInput6').val(AC(parseFloat($('#txtLiqPhpInput1').val()) + parseFloat($('#txtLiqPhpInput2').val())));
-            $('#txtLiqPhpInput7').val(AC(parseFloat($('#txtLiqPhpInput3').val()) + parseFloat($('#txtLiqPhpInput4').val()) + parseFloat($('#txtLiqPhpInput5').val())));
+            $('#txtLiqPhpInput6').val(AC(round(parseFloat($('#txtLiqPhpInput1').val()) + parseFloat($('#txtLiqPhpInput2').val()), 2)));
+            $('#txtLiqPhpInput7').val(AC(round(parseFloat($('#txtLiqPhpInput3').val()) + parseFloat($('#txtLiqPhpInput4').val()) + parseFloat($('#txtLiqPhpInput5').val()), 2)));
 
             ChangeOptionMarkForPrint();
         });

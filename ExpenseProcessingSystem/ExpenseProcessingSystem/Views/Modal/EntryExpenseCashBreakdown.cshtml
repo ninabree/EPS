@@ -10,10 +10,9 @@
     <body>
         <div id="cashBreakdownBody">
             @Html.HiddenFor(x => Model.id, new { @id = "parentIdPCVSSTable" })
-            <div id="divVendor">@if (Model.screencode != "SS" || Model.screencode != "Liquidation_SS")
-            {<text>Vendor/Employee :</text> }
-        else
-        {<text>Payee :</text>} <p class="dis-inline-block w-49">@Html.TextBoxFor(x => Model.vendor, new { @id = "reqVendor", @readonly = "readonly", @class = "input" })</p></div>
+            <div id="divVendor">
+                <text>Payee :</text> <p class="dis-inline-block w-49">@Html.TextBoxFor(x => Model.cashBDPayeeName, new { @id = "reqVendor", @readonly = "readonly", @class = "input" })</p>
+            </div>
         <div>Account :<p class="dis-inline-block w-49">@Html.TextBoxFor(x => Model.accountName, new { @id = "reqAccount", @readonly = "readonly", @class = "input" })</p></div>
         <div>
             Amount :
@@ -54,9 +53,9 @@
                     @for (int a = 0; a < Model.cashBreakdown.Count(); a++)
                     {
                         <tr id="cashbreakdownid_@a">
-                            <td class="tdPrint">@Html.TextBoxFor(x => Model.cashBreakdown[a].CashBreak_Denomination, new { @class = "input100 txtDenomination", @type = "number", @readonly = "true", @style = "text-align:center" })</td>
-                            <td class="tdPrint">@Html.TextBoxFor(x => Model.cashBreakdown[a].CashBreak_NoPcs, new { @class = "input100 txtNoPCS number-inputNoDecNoBlank voucher-input", @type = "number", @min = "0", @style = "text-align:center" })</td>
-                            <td class="tdPrint">@Html.TextBoxFor(x => Model.cashBreakdown[a].CashBreak_Amount, new { @class = "input100 txtAmount", @type = "number", @style = "text-align:center", @readonly = "true" })</td>
+                            <td class="tdPrint">@Html.TextBoxFor(x => Model.cashBreakdown[a].CashBreak_Denomination, new { @class = "input100 txtDenomination", @type = "number", @readonly = "true", @style = "text-align:center", tabindex = -1 })</td>
+                            <td class="tdPrint">@Html.TextBoxFor(x => Model.cashBreakdown[a].CashBreak_NoPcs, new { @class = "input100 txtNoPCS number-inputNoDecNoBlank voucher-input", @type = "number", @min = "0", @style = "text-align:center", tabindex = @a + 1 })</td>
+                            <td class="tdPrint">@Html.TextBoxFor(x => Model.cashBreakdown[a].CashBreak_Amount, new { @class = "input100 txtAmount", @type = "number", @style = "text-align:center", @readonly = "true", tabindex = -1 })</td>
                         </tr>
                     }
                     <tr>
@@ -96,9 +95,9 @@
             </table>
         </div>
     </div>
-        <label style="text-align:right; width:100%">
+        <div style="text-align:right; width:100%">
             <input type="button" class="printCashBDBtn btn" value="Print Cash Breakdown" onclick='printDivCashBD("divCashBD");' />
-        </label>
+        </div>
     </body>
 </html>
 <script>

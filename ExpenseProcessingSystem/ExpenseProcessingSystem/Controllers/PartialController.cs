@@ -68,10 +68,12 @@ namespace ExpenseProcessingSystem.Controllers
                 if (categoryID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT.ToString())
                 {
                     viewModel.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_PETTYCASHREPLENISHMENT.Populate_CDD_Instruc_Sheet(currDtl);
+                    viewModel.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpNCDtl_Remarks_Period = viewModel.EntryNC.NC_CS_Period;
                 }
                 else if (categoryID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL.ToString())
                 {
                     viewModel.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_RETURN_OF_JSPAYROLL.Populate_CDD_Instruc_Sheet(currDtl, currDtlUSD);
+                    viewModel.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpNCDtl_Remarks_Period = viewModel.EntryNC.NC_CS_Period;
                 }
             } else
             {

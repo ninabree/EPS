@@ -21,7 +21,7 @@ namespace ExpenseProcessingSystem.ViewModels
         public string deptName { get; set; }
         public bool chkVat { get; set; }
         public int vatID { get; set; }
-        public decimal vatValue { get; set; }
+        public float vatValue { get; set; }
         public bool chkEwt { get; set; }
         public int ewtID { get; set; }
         public float ewtValue { get; set; }

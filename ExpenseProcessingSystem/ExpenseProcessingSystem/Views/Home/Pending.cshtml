@@ -3,6 +3,7 @@
 
 @{
     var printStat = ViewBag.printStat ?? "";
+    var ddvLink = ViewBag.ddvLink ?? "";
     int loi = ViewBag.loi > 0 ? ViewBag.loi : 13;
     var pageNo = Model.GeneralPendingList.PageIndex;
 }
@@ -84,7 +85,7 @@
                         <td>@Html.DisplayFor(model => item.App_Last_Updated, new { @class = "input", @type = "date" })</td>
                         <td>@Html.DisplayFor(model => item.App_Status)</td>
                         <th>
-                            @if (item.App_Status == printStat)
+                            @if (item.App_Status == printStat && item.App_Link == ddvLink)
                             {
                                 <a asp-action="Report"
                                    asp-route-sortOrder="@ViewData["CurrentSort"]"
