@@ -98,6 +98,12 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 currABBR = acc.Curr_CCY_ABBR
             };
         }
+        //Get lastest currency by its currency master ID.
+        public DMCurrencyModel getCurrencyByMasterID(int masterID)
+        {
+            return _context.DMCurrency.Where(x => x.Curr_MasterID == masterID && x.Curr_isActive == true
+                    && x.Curr_isDeleted == false).FirstOrDefault();
+        }
         public List<CONSTANT_NC_VALS> getNCAccsForFilter()
         {
             var acc_pettyCash = getNCAccs("/NONCASHACCOUNTS/PCR/ACCOUNT[@class='entry1' and @id='ACCOUNT1']");
@@ -221,8 +227,8 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         {
                             ncDtlAccs.Add(new ExpenseEntryNCDtlAccViewModel
                             {
-                                ExpNCDtlAcc_Acc_ID = copyAcc.ExpNCDtlAcc_Acc_ID,
-                                ExpNCDtlAcc_Acc_Name = copyAcc.ExpNCDtlAcc_Acc_Name,
+                                ExpNCDtlAcc_Acc_ID = 0,
+                                ExpNCDtlAcc_Acc_Name = "",
                                 ExpNCDtlAcc_Curr_ID = copyAcc.ExpNCDtlAcc_Curr_ID,
                                 ExpNCDtlAcc_Curr_Name = copyAcc.ExpNCDtlAcc_Curr_Name,
                                 ExpNCDtlAcc_Inter_Rate = 0,

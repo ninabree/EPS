@@ -117,7 +117,7 @@
                 } else {
                     $(this).parent().siblings("[id^='cred_']").find("[id$='__ExpNCDtlAcc_Amount']").addClass("nc-cdd-comp-cd");
                 }
-            }  
+            }
         });
         $(document).on('change', '.curr-sel', function (e) {
             e.stopImmediatePropagation();
@@ -218,8 +218,9 @@
         function getCurrOptions(itemCount) {
             var curroptions = "";
             if (itemCount > 0) {
+                var phpCurrId = @ViewBag.phpid;
                 $("#currOptions option").each(function (index, item) {
-                    if (index == 0) {
+                    if (item.value == phpCurrId) {
                         curroptions += '<option value="' + item.value + '" selected>' + item.text + '</option>';
                     } else {
                         curroptions += '<option value="' + item.value + '">' + item.text + '</option>';
@@ -300,7 +301,7 @@
             return  $("#accOptions option:first").val();
         }
         function getValueCurrsOptions() {
-            return $("#currOptions option:first").val();
+            return @ViewBag.phpid;
         }
 
         function forma1RowFormat(itemCount, accoptions, accFirstID, curroptions) {
@@ -465,7 +466,7 @@
                 + '<td class="voucher-input db" id="deb_' + itemCount + '">'
                 + '<input class="ncVar NumberOnlyOneDecimalMisc misc-0 amt-db-' + itemCount + '-0" id="amt-db-' + itemCount + '-0" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." type="text" value="0">'
                 + '</td>'
-                                
+
                 + '<td>'
                 + '<select id="curr[' + itemCount + ']_[0]" class="w-full input curr-sel misc-curr-0" name="curr[' + itemCount + ']_[0]">'
                 + curroptions

@@ -109,7 +109,7 @@
                                 <td colspan="3" data-toggle="tooltip" title="@Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_Name" data-placement="right">
                                     @Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_Name, new { @readonly = "true", @class = "w-full" })
                                 </td>
-                                <td></td>
+                                <td>@Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Inter_Rate, new { @class = "ncVar", @disabled = "disabled", @readonly = "true" })</td>
                                 @if (Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
                                 {
 
@@ -137,7 +137,7 @@
                 }
                 @Html.HiddenFor(x => x.EntryNC.NC_Category_ID)
                 @Html.HiddenFor(x => x.category_of_entry)
-                @Html.HiddenFor(x => x.expenseDate)
+                @*@Html.HiddenFor(x => x.expenseDate)*@
             </tbody>
         </table>
 

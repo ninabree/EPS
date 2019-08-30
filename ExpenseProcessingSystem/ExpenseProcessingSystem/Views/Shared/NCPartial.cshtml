@@ -343,7 +343,7 @@
                                 @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[2].ExpNCDtlAcc_Amount)
                                 @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[2].ExpNCDtlAcc_Curr_ID)
                             }
-                            @if (Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs.Count > 2)
+                            @if (Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs.Count > 3)
                             {
                                 @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[3].ExpNCDtlAcc_Amount)
                                 @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[3].ExpNCDtlAcc_Curr_ID)
@@ -544,7 +544,7 @@
                 }
                 @Html.HiddenFor(x => x.EntryNC.NC_Category_ID)
                 @Html.HiddenFor(x => x.category_of_entry)
-                @Html.HiddenFor(x => x.expenseDate)
+                @*@Html.HiddenFor(x => x.expenseDate)*@
                 @Html.HiddenFor(x => x.entryID)
                 <input type="hidden" name="command" id="btnID" />
                 <tr>
@@ -885,25 +885,40 @@
             $(this).parent().siblings("[id$='ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Type_ID']").val(type);
         });
         $('#NCPartialTbl').on('change', '.misc-1', function () {
-            var pid = $(this.parentNode)[0].id.substring(5);
+            var pid = $(this.parentNode)[0].id;
             var vals = $(this).val();
             var type = $(this).parent().hasClass("db") ? dbType : $(this).parent().hasClass("cd") ? cdType : $(this).parent().hasClass("ewt") ? ewtType : "";
+            if (type == dbType) {
+                pid = pid.substring(4);
+            } else {
+                pid = pid.substring(5);
+            }
             $(this).parent().parent().find("td .misc-1").not(this).val(0);
             $(this).parent().parent().siblings("[id='EntryNC_ExpenseEntryNCDtls_" + pid + "__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Amount']").val(vals);
             $(this).parent().siblings("[id$='ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Type_ID']").val(type);
         });
         $('#NCPartialTbl').on('change', '.misc-2', function () {
-            var pid = $(this.parentNode)[0].id.substring(5);
+            var pid = $(this.parentNode)[0].id;
             var vals = $(this).val();
             var type = $(this).parent().hasClass("db") ? dbType : $(this).parent().hasClass("cd") ? cdType : $(this).parent().hasClass("ewt") ? ewtType : "";
+            if (type == dbType) {
+                pid = pid.substring(4);
+            } else {
+                pid = pid.substring(5);
+            }
             $(this).parent().parent().find("td .misc-2").not(this).val(0);
             $(this).parent().parent().siblings("[id='EntryNC_ExpenseEntryNCDtls_" + pid + "__ExpenseEntryNCDtlAccs_2__ExpNCDtlAcc_Amount']").val(vals);
             $(this).parent().siblings("[id$='ExpenseEntryNCDtlAccs_2__ExpNCDtlAcc_Type_ID']").val(type);
         });
         $('#NCPartialTbl').on('change', '.misc-3', function () {
-            var pid = $(this.parentNode)[0].id.substring(5);
+            var pid = $(this.parentNode)[0].id;
             var vals = $(this).val();
             var type = $(this).parent().hasClass("db") ? dbType : $(this).parent().hasClass("cd") ? cdType : $(this).parent().hasClass("ewt") ? ewtType : "";
+            if (type == dbType) {
+                pid = pid.substring(4);
+            } else {
+                pid = pid.substring(5);
+            }
             $(this).parent().parent().find("td .misc-3").not(this).val(0);
             $(this).parent().parent().siblings("[id='EntryNC_ExpenseEntryNCDtls_" + pid + "__ExpenseEntryNCDtlAccs_3__ExpNCDtlAcc_Amount']").val(vals);
             $(this).parent().siblings("[id$='ExpenseEntryNCDtlAccs_3__ExpNCDtlAcc_Type_ID']").val(type);
@@ -952,10 +967,10 @@
                 $("#EntryNC_ExpenseEntryNCDtls_CDD_0__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Curr_ID").val(vals);
             }
             if (categoryID == @GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES) {
-                var valIdSplt = $(this).attr("id").split("-");
-                var amtInput = $("#EntryNC_ExpenseEntryNCDtls_" + valIdSplt[2] + "__ExpenseEntryNCDtlAccs_" + valIdSplt[3] + "__ExpNCDtlAcc_Amount");
+                var valIdSplt = $(this).attr("id");
+                var amtInput = $("[id$='-" + valIdSplt.substring(5,6) + "-" + valIdSplt.substring(9,10) + "']");
                 $(amtInput).trigger("change");
-            } else {
+                } else {
                 var valId = $(this).attr("id");
                 var valIdSplt = valId.split("_");
                 var amtInput = $("#EntryNC_ExpenseEntryNCDtls_" + valIdSplt[2] + "__ExpenseEntryNCDtlAccs_" + valIdSplt[5] + "__ExpNCDtlAcc_Amount");
@@ -993,14 +1008,12 @@
                 $(this).val(0);
             }
         });
-
         $("#NCPartialTbl").on("change", ".NumberOnlyOneDecimalMisc", function (e) {
             var decVal = 2;
-            var pid = $(this.parentNode)[0].parentNode.id;
             var val = $(this).val().replace("-", "");
             var valId = $(this).attr("id").split("-");
-            var elCurrId = $(this).parent().prevAll().find("#curr[" + valId[2] + "]_[" + valId[3] + "] option:selected").val();
-            alert($(this).parent().prevAll("td:first").find("#curr[" + valId[2] + "]_[" + valId[3] + "]").attr("id"));
+            //TEMP FIX
+            var elCurrId = $("#EntryNC_ExpenseEntryNCDtls_" + valId[2] + "__ExpenseEntryNCDtlAccs_" + valId[3] + "__ExpNCDtlAcc_Curr_ID").val();
             if (@jpy == elCurrId) {
                 decVal = 0;
             }
@@ -1009,6 +1022,22 @@
                 $(this).val(0);
             }
         });
+        @*$("#NCPartialTbl").on("change", ".NumberOnlyOneDecimalMisc", function (e) {
+            var decVal = 2;
+            var pid = $(this.parentNode)[0].parentNode.id;
+            var val = $(this).val().replace("-", "");
+            var valId = $(this).attr("id").split("-");
+            var elCurrId = $(this).parent().prevAll("#curr_sel[" + valId[2] + "]_[" + valId[3] + "]:first").find("#curr[" + valId[2] + "]_[" + valId[3] + "] option:selected").val();
+            alert(elCurrId);
+            if (@jpy == elCurrId) {
+                decVal = 0;
+            }
+            $(this).val(roundNumber(val, decVal));
+            if (isNaN($(this).val())) {
+                $(this).val(0);
+            }
+        });*@
+       
         function computeValsNC() {
             var totalDebit = 0;
             var totalCredit = 0;
@@ -1054,7 +1083,6 @@
 
                     //set values of Credit from Debit
                     var tempInd = parseInt(ind) + 1;
-                    var decVal = 2;
                     if ((categoryID == "4") || (categoryID == "5") || (categoryID == "11") || ((categoryID == "8") && (idNo == 3)) || ((categoryID == "9") && (idNo == 1))) {
                         //nothing will happen when inputting values in debit of PSSC, PCHC and MISC ENTRIES
                         //the value will be manually inputed by the user
@@ -1062,14 +1090,14 @@
                         //nothing will happen when passing the 4th row in Petty Cash Replenishment
                         //the value will only be inputted when rate and credit is not empty
                     } else if ((categoryID == "8") && (idNo == 2)) {
-                        $(el).parent().siblings().find("td[id='cred_" + idNo + "']").find("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + tempInd + "__ExpNCDtlAcc_Amount']").val(roundNumber(debitVal, decVal));
-                        $("#EntryNC_ExpenseEntryNCDtls_3__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Amount").val(roundNumber(debitVal, decVal));
+                        $(el).parent().siblings().find("td[id='cred_" + idNo + "']").find("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + tempInd + "__ExpNCDtlAcc_Amount']").val(debitVal);
+                        $("#EntryNC_ExpenseEntryNCDtls_3__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Amount").val(debitVal);
                     } else if ((categoryID == "9") && (idNo == 0)) {
-                        $(el).parent().siblings().find("td[id='cred_" + idNo + "']").find("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + tempInd + "__ExpNCDtlAcc_Amount']").val(roundNumber(debitVal, decVal));
-                        $("#EntryNC_ExpenseEntryNCDtls_1__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount").val(roundNumber(debitVal, decVal));
-                        $("#EntryNC_ExpenseEntryNCDtls_1__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount").attr('value', roundNumber(debitVal, decVal));
+                        $(el).parent().siblings().find("td[id='cred_" + idNo + "']").find("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + tempInd + "__ExpNCDtlAcc_Amount']").val(debitVal);
+                        $("#EntryNC_ExpenseEntryNCDtls_1__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount").val(debitVal);
+                        $("#EntryNC_ExpenseEntryNCDtls_1__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount").attr('value', debitVal);
                     } else {
-                        $(el).parent().siblings().find("td[id='cred_" + idNo + "']").find("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + tempInd + "__ExpNCDtlAcc_Amount']").val(roundNumber(debitVal, decVal));
+                        $(el).parent().siblings().find("td[id='cred_" + idNo + "']").find("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + tempInd + "__ExpNCDtlAcc_Amount']").val(debitVal);
                     }
                 });
                 //collect values for Credit
@@ -1092,6 +1120,13 @@
                 //In MISC ENTRIES, set value to 1st Entry ACC ID
                 if (categoryID == "11") {
                     var defAccId = $("#accOptions option:first").val();
+                    //set all values to default
+                    $("#EntryNC_ExpenseEntryNCDtls_0__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Acc_ID").val(defAccId);
+                    $("#EntryNC_ExpenseEntryNCDtls_0__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Acc_ID").attr('value', defAccId);
+                    $("#EntryNC_ExpenseEntryNCDtls_0__ExpenseEntryNCDtlAccs_2__ExpNCDtlAcc_Acc_ID").val(defAccId);
+                    $("#EntryNC_ExpenseEntryNCDtls_0__ExpenseEntryNCDtlAccs_2__ExpNCDtlAcc_Acc_ID").attr('value', defAccId);
+                    $("#EntryNC_ExpenseEntryNCDtls_0__ExpenseEntryNCDtlAccs_3__ExpNCDtlAcc_Acc_ID").val(defAccId);
+                    $("#EntryNC_ExpenseEntryNCDtls_0__ExpenseEntryNCDtlAccs_3__ExpNCDtlAcc_Acc_ID").attr('value', defAccId);
                     var accId1 = $("#EntryNC_ExpenseEntryNCDtls_0__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Acc_Name option:selected").val();
                     if (accId1 != "0") {
                         $("#EntryNC_ExpenseEntryNCDtls_0__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Acc_ID").val(accId1);
@@ -1101,10 +1136,6 @@
                     if (accId2 != "0") {
                         $("#EntryNC_ExpenseEntryNCDtls_0__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Acc_ID").val(accId2);
                         $("#EntryNC_ExpenseEntryNCDtls_0__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Acc_ID").attr('value', accId2);
-                        $("#EntryNC_ExpenseEntryNCDtls_0__ExpenseEntryNCDtlAccs_2__ExpNCDtlAcc_Acc_ID").val(defAccId);
-                        $("#EntryNC_ExpenseEntryNCDtls_0__ExpenseEntryNCDtlAccs_2__ExpNCDtlAcc_Acc_ID").attr('value', defAccId);
-                        $("#EntryNC_ExpenseEntryNCDtls_0__ExpenseEntryNCDtlAccs_3__ExpNCDtlAcc_Acc_ID").val(defAccId);
-                        $("#EntryNC_ExpenseEntryNCDtls_0__ExpenseEntryNCDtlAccs_3__ExpNCDtlAcc_Acc_ID").attr('value', defAccId);
                     }
                     var accId3 = $("#EntryNC_ExpenseEntryNCDtls_0__ExpenseEntryNCDtlAccs_2__ExpNCDtlAcc_Acc_Name option:selected").val();
                     if (accId3 != "0") {
@@ -1158,8 +1189,7 @@
                 totalDebit += parseFloat(subtotalDeb);
                 if (categoryID != "11") {
                     totalCredit += parseFloat(subtotalCred);
-                } else if (categoryID == "11")
-                {
+                } else if (categoryID == "11") {
                     subtotalCredMisc += parseFloat($("input.amt-cd-" + idNo + "-0").val());
                     subtotalCredMisc += parseFloat($("input.amt-cd-" + idNo + "-1").val());
                     subtotalCredMisc += parseFloat($("input.amt-cd-" + idNo + "-2").val());
@@ -1186,8 +1216,8 @@
 
             //Assign values to CDD IS in Return of JS Payroll
             if (categoryID == "9") {
-                $("#EntryNC_ExpenseEntryNCDtls_CDD_0__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount").val(parseFloat(totalCSDebit).toFixed(2));
-                $("#EntryNC_ExpenseEntryNCDtls_CDD_0__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Amount").val(parseFloat(subtotalIECred).toFixed(2));
+                $("#EntryNC_ExpenseEntryNCDtls_CDD_0__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount").val(parseFloat(totalCSDebit));
+                $("#EntryNC_ExpenseEntryNCDtls_CDD_0__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Amount").val(parseFloat(subtotalIECred));
             }
             //For Computation of Computer Suspense Balance Checker in Petty Cash Replenishment
             $("tr[id^='item_']").each(function (index, element) {

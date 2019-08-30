@@ -2839,6 +2839,7 @@ namespace ExpenseProcessingSystem.Controllers
                 TempData["amortizationModel"] = Newtonsoft.Json.JsonConvert.SerializeObject(amortizationModel);
                 return View(PopulateEntryNC(amortizationModel));
             }
+            ViewBag.phpid = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_PHP").Value)).Curr_ID;
             return View(PopulateEntryNC(viewModel));
         }
 
@@ -2904,7 +2905,8 @@ namespace ExpenseProcessingSystem.Controllers
             ViewData["USDmstr"] = _service.getXMLCurrency("USD").currMasterID;
             ViewData["JPYmstr"] = _service.getXMLCurrency("YEN").currMasterID;
             ViewData["PHPmstr"] = _service.getXMLCurrency("PHP").currMasterID;
-
+            //for php id
+            ViewBag.phpid = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_PHP").Value)).Curr_ID;
 
             List<cvBirForm> birForms = new List<cvBirForm>();
             foreach (var item in ncList.EntryNC.ExpenseEntryNCDtls)
@@ -3070,6 +3072,8 @@ namespace ExpenseProcessingSystem.Controllers
             var accs = _service.getNCAccsForFilter();
             ncList.accList = accs;
             ViewData["partialName"] = ncList.EntryNC.NC_Category_ID.ToString();
+            //for comparing php id 
+            ViewBag.phpid = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_PHP").Value)).Curr_ID;
             return View(viewLink, ncList);
         }
         [OnlineUserCheck]
