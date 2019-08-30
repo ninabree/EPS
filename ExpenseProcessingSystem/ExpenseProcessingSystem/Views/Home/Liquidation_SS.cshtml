@@ -802,8 +802,8 @@
 
             var selectedRow = $('#hiddenSelectedItem').val();
 
-            var value1 = roundNumber(parseFloat($('#txtLiqPhpInput1').val()) + parseFloat($('#txtLiqPhpInput2').val()), 2);
-            var value2 = roundNumber(parseFloat($('#txtLiqPhpInput3').val()) + parseFloat($('#txtLiqPhpInput4').val()) + parseFloat($('#txtLiqPhpInput5').val()), 2);
+            var value1 = round(parseFloat($('#txtLiqPhpInput1').val()) + parseFloat($('#txtLiqPhpInput2').val()), 2);
+            var value2 = round(parseFloat($('#txtLiqPhpInput3').val()) + parseFloat($('#txtLiqPhpInput4').val()) + parseFloat($('#txtLiqPhpInput5').val()), 2);
 
             if (value1 != value2) {
                 $('#alert').text("The total amount of Debit and Credit did not match.");
@@ -894,8 +894,8 @@
                 return false;
             }
 
-            var value1 = roundNumber(parseFloat($('#txtIEInput2').val().replace(/\,/g, "")) + parseFloat($('#txtIEInput3').val().replace(/\,/g, "")), 2);
-            var value2 = roundNumber(parseFloat($('#txtIEInput4').val().replace(/\,/g, "")) + parseFloat($('#lblIEInput2').text().replace(/\,/g, "")), 2);
+            var value1 = round(parseFloat($('#txtIEInput2').val().replace(/\,/g, "")) + parseFloat($('#txtIEInput3').val().replace(/\,/g, "")), 2);
+            var value2 = round(parseFloat($('#txtIEInput4').val().replace(/\,/g, "")) + parseFloat($('#lblIEInput2').text().replace(/\,/g, "")), 2);
             if (value1 != value2) {
                 $('#alert').text("Inter-Entity(2nd Entry): Debit and Credit amount do not match.");
                 $('#divAlertWindow').show();
@@ -934,9 +934,9 @@
             if ($(this).val() == '' || isNaN($(this).val())) {
                 $(this).val(0);
             }
-            $(this).val(roundNumber($(this).val(), 2));
-            $('#txtLiqPhpInput6').val(AC(roundNumber(parseFloat($('#txtLiqPhpInput1').val()) + parseFloat($('#txtLiqPhpInput2').val()), 2)));
-            $('#txtLiqPhpInput7').val(AC(roundNumber(parseFloat($('#txtLiqPhpInput3').val()) + parseFloat($('#txtLiqPhpInput4').val()) + parseFloat($('#txtLiqPhpInput5').val()), 2)));
+            $(this).val(round($(this).val(), 2));
+            $('#txtLiqPhpInput6').val(AC(round(parseFloat($('#txtLiqPhpInput1').val()) + parseFloat($('#txtLiqPhpInput2').val()), 2)));
+            $('#txtLiqPhpInput7').val(AC(round(parseFloat($('#txtLiqPhpInput3').val()) + parseFloat($('#txtLiqPhpInput4').val()) + parseFloat($('#txtLiqPhpInput5').val()), 2)));
 
             ChangeOptionMarkForPrint();
         });
