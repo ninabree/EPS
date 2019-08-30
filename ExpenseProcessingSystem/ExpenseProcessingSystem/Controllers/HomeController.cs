@@ -3931,6 +3931,7 @@ namespace ExpenseProcessingSystem.Controllers
         //------------------------------DM-------------------------------
         //[* ADMIN *]
         //[* PAYEE *]
+        #region dm
         [HttpPost]
         [ExportModelState]
         [OnlineUserCheck]
@@ -4450,8 +4451,10 @@ namespace ExpenseProcessingSystem.Controllers
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_BCS" });
         }
+        #endregion
         //--------------------------------PENDING--------------------------------
         // [PAYEE]
+        #region Pending
         [HttpPost]
         [ExportModelState]
         [OnlineUserCheck]
@@ -5231,7 +5234,7 @@ namespace ExpenseProcessingSystem.Controllers
 
             return RedirectToAction("DM", "Home", new { partialName = "DMPartial_BCS" });
         }
-
+        #endregion
         //[* USER *]
         [ExportModelState]
         [HttpPost]
@@ -5835,6 +5838,16 @@ namespace ExpenseProcessingSystem.Controllers
         {
             _service.generateNewCheck(entryID);
             return RedirectToAction("View_CV", "Home", new { entryID = entryID });
+        }
+
+        public IActionResult printClosing(string closeType)
+        {
+            ExcelGenerateService excelMaker = new ExcelGenerateService();
+            ClosingViewModel model = _service.ClosingGetRecords();
+
+            string path = excelMaker.ExcepProofSheet(model,closeType);
+
+            return File(path, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", closeType + " Proofsheet.xlsx");
         }
     }
 }

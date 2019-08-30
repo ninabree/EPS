@@ -10556,25 +10556,9 @@ namespace ExpenseProcessingSystem.Services
 
                     if (gTrans != null)
                     {
-
-                        if (getBranchNo(item.Account_No) == GlobalSystemValues.BRANCH_RBU)
-                        {
-                            temp.gBaseTrans += "," + gTrans.TL_GoExpress_ID;
-                            temp.amount += Decimal.Parse(gTrans.GOExpHist_Entry11Amt);
-                            temp.transCount = 2;
-                        }
-                        else
-                        {
-                            fbtItem.expTrans = temp.expTrans;
-                            fbtItem.gBaseTrans = gTrans.TL_GoExpress_ID.ToString();
-                            fbtItem.amount = Decimal.Parse(gTrans.GOExpHist_Entry11Amt);
-                            fbtItem.ccy = item.Curr_CCY_ABBR;
-                            fbtItem.status = GlobalSystemValues.getStatus(item.Expense_Status);
-                            fbtItem.particulars = item.ExpDtl_Gbase_Remarks;
-                            fbtItem.transCount = 1;
-
-                            nmCloseItemsFCDU.Add(temp);
-                        }
+                        temp.gBaseTrans += "," + gTrans.TL_GoExpress_ID;
+                        temp.amount += Decimal.Parse(gTrans.GOExpHist_Entry11Amt);
+                        temp.transCount = 2;
                     }
                 }
 
