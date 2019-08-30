@@ -110,6 +110,7 @@
                 <button class="tbl-btn float-l closeBtn" disabled>Close RBU</button>
                 <button class="tbl-btn float-l closeBtn" disabled>Re-Open RBU</button>
             }
+                <button value="RBU" class="tbl-btn float-r proofSheet">Print Proof Sheet</button>
             <!--<button class="tbl-btn float-l">Print RBU Balance</button>-->
             <!--<button class="tbl-btn float-r">Print RBU Proof sheet</button>-->
         </div>
@@ -209,6 +210,7 @@
                 <button class="tbl-btn float-l closeBtn" disabled>Close FCDU</button>
                 <button class="tbl-btn float-l closeBtn" disabled>Re-Open FCDU</button>
             }
+            <button value="FCDU" class="tbl-btn float-r proofSheet">Print Proof Sheet</button>
         </div>
 
         <div id="tbl-lbl">
@@ -458,6 +460,11 @@
             $("#userString").val($("#userName").val());
             $("#passString").val($("#passWord").val());
             $("#closeForm").submit();
+        });
+
+        $("#closeBody").on("click", ".proofSheet", function () {
+            window.open("/Home/printClosing?closeType=" + $(this).val());
+            return false;
         });
     });
     </script>

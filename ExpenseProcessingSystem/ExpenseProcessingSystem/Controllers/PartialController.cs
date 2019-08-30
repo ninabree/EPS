@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Xml;
+using System.Xml.Linq;
 using ExpenseProcessingSystem.ConstantData;
 using ExpenseProcessingSystem.Data;
 using ExpenseProcessingSystem.Models;
@@ -27,6 +28,7 @@ namespace ExpenseProcessingSystem.Controllers
         private ISession _session => _httpContextAccessor.HttpContext.Session;
         private PartialService _service;
         private SortService _sortService;
+        XElement xelemLiq = XElement.Load("wwwroot/xml/LiquidationValue.xml");
 
         public PartialController(IHttpContextAccessor httpContextAccessor, EPSDbContext context)
         {
@@ -133,7 +135,7 @@ namespace ExpenseProcessingSystem.Controllers
                     }
                 }
             }
-
+            ViewBag.phpid = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_PHP").Value)).Curr_ID;
             return View("NCPartial", viewModel);
         }
 
