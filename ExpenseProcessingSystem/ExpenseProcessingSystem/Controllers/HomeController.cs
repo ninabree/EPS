@@ -1500,6 +1500,21 @@ namespace ExpenseProcessingSystem.Controllers
                     
                     viewLink = "View_CV";
                     break;
+                case "Reversal":
+                    if (_service.updateReversalStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
+                    {
+                        _service.postCV(entryID, "R", int.Parse(GetUserID()));
+                        //----------------------------- NOTIF----------------------------------
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_CV, GlobalSystemValues.STATUS_REVERSED, cvList.maker);
+                        //----------------------------- NOTIF----------------------------------
+                        ViewBag.Success = 1;
+                    }
+                    else
+                    {
+                        ViewBag.Success = 0;
+                    }
+                    viewLink = "View_CV";
+                    break;
                 default:
                     break;
             }
@@ -1831,7 +1846,7 @@ namespace ExpenseProcessingSystem.Controllers
                     }
                     break;
                 case "Reversal":
-                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
+                    if (_service.updateReversalStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
                     {
                         _service.postDDV(entryID, "R", int.Parse(GetUserID()));
                         ViewBag.Success = 1;
@@ -2126,7 +2141,7 @@ namespace ExpenseProcessingSystem.Controllers
                     viewLink = "View_PCV";
                     break;
                 case "Reversal":
-                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
+                    if (_service.updateReversalStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
                     {
                         _service.postCV(entryID, "R", int.Parse(GetUserID()));
                         //----------------------------- NOTIF----------------------------------
@@ -2571,7 +2586,7 @@ namespace ExpenseProcessingSystem.Controllers
                     viewLink = "View_SS";
                     break;
                 case "Reversal":
-                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
+                    if (_service.updateReversalStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
                     {
                         _service.postCV(entryID, "R", int.Parse(GetUserID()));
                         ViewBag.Success = 1;
@@ -3045,7 +3060,7 @@ namespace ExpenseProcessingSystem.Controllers
                 case "PrintCDD_RET":
                     return RedirectToAction("CDD_IS_NC_RET", new { entryID = entryID }); 
                 case "Reversal":
-                    if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
+                    if (_service.updateReversalStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
                     {
                         _service.postNC(entryID, "R", int.Parse(GetUserID()));
                         ViewBag.Success = 1;
@@ -3694,7 +3709,7 @@ namespace ExpenseProcessingSystem.Controllers
                     viewLink = "View_Liquidation_SS";
                     break;
                 case "Reversal":
-                    if (_service.updateLiquidateStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
+                    if (_service.updateLiquidateReversalStatus(entryID, GlobalSystemValues.STATUS_REVERSED, int.Parse(GetUserID())))
                     {
                         _service.postLiq_SS(entryID, "R", int.Parse(GetUserID()));
                         ViewBag.Success = 1;

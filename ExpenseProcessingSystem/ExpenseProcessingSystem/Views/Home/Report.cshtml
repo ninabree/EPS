@@ -40,20 +40,20 @@
                         @Html.LabelFor(m => m.ReportTypesList)
                     </td>
                     <td>
-                        @Html.DropDownListFor(m => m.ReportTypesList, new SelectList(Model.ReportTypesList, "Id", "TypeName"), "----Select Report Type----", new { @class = "dis-inline-block", id = "ddlReportType" })
+                        @Html.DropDownListFor(m => m.ReportTypesList, new SelectList(Model.ReportTypesList, "Id", "TypeName"), "----Select Report Type----", new { @class = "", id = "ddlReportType" })
                     </td>
                     <td class="td-right">
                         @Html.LabelFor(m => m.ReportSubTypesList)
                     </td>
                     <td colspan="">
-                        @Html.DropDownListFor(m => m.ReportTypesList, new SelectList(Model.ReportSubTypesList, "Id", "SubTypeName"), "----Select Report Sub-Type----", new { @class = "dis-inline-block", id = "ddlSubType", disabled = "disabled" })
+                        @Html.DropDownListFor(m => m.ReportTypesList, new SelectList(Model.ReportSubTypesList, "Id", "SubTypeName"), "----Select Report Sub-Type----", new { @class = "", id = "ddlSubType", disabled = "disabled" })
                     </td>
                     <td></td>
                     <td>
                         <label>File Format: </label>
                     </td>
                     <td>
-                        @Html.DropDownListFor(m => m.FileFormatList, new SelectList(Model.FileFormatList, "FileFormatID", "FileFormatName"), null, new { @class = "dis-inline-block", id = "ddlFileFormat", disabled = "disabled" })
+                        @Html.DropDownListFor(m => m.FileFormatList, new SelectList(Model.FileFormatList, "FileFormatID", "FileFormatName"), null, new { @class = "", id = "ddlFileFormat", disabled = "disabled" })
                     </td>
                     <td>
                         <button class="btn" id="btnGenerateFile" disabled="disabled">Generate File</button>
@@ -67,8 +67,8 @@
                     <td class="td-center"></td>
                     <td class="td-right">Year/Month : </td>
                     <td>
-                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-49", id = "ddlYear_" + @HomeReportConstantValue.APSWT_M })
-                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-49", id = "ddlMonth_" + @HomeReportConstantValue.APSWT_M })
+                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = " w-49", id = "ddlYear_" + @HomeReportConstantValue.APSWT_M })
+                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = " w-49", id = "ddlMonth_" + @HomeReportConstantValue.APSWT_M })
                     </td>
                     <td class="td-right"></td>
                     <td></td>
@@ -82,7 +82,7 @@
 
                     </td>
                     <td>
-                        @Html.DropDownListFor(m => m.SignatoryList, new SelectList(Model.SignatoryList, "BCS_ID", "BCS_Name"), null, new { @class = "dis-inline-block", id = "ddlSignatory_" + @HomeReportConstantValue.APSWT_M })
+                        @Html.DropDownListFor(m => m.SignatoryList, new SelectList(Model.SignatoryList, "BCS_ID", "BCS_Name"), null, new { @class = "", id = "ddlSignatory_" + @HomeReportConstantValue.APSWT_M })
                     </td>
                     <td class="td-right"></td>
                     <td></td>
@@ -97,15 +97,15 @@
                         Year/Month :
                     </td>
                     <td>
-                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-49", id = "ddlYear_" + @HomeReportConstantValue.AST1000 })
-                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-49", id = "ddlMonth_" + @HomeReportConstantValue.AST1000 })
+                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = " w-49", id = "ddlYear_" + @HomeReportConstantValue.AST1000 })
+                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = " w-49", id = "ddlMonth_" + @HomeReportConstantValue.AST1000 })
                     </td>
                     <td class="td-right">
                         To :
                     </td>
                     <td>
-                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-49", id = "ddlYearTo_" + @HomeReportConstantValue.AST1000 })
-                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-49", id = "ddlMonthTo_" + @HomeReportConstantValue.AST1000 })
+                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = " w-49", id = "ddlYearTo_" + @HomeReportConstantValue.AST1000 })
+                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = " w-49", id = "ddlMonthTo_" + @HomeReportConstantValue.AST1000 })
                     </td>
                     <td></td>
                 </tr>
@@ -118,13 +118,13 @@
                         Period :
                     </td>
                     <td>
-                        @Html.EditorFor(m => m.PeriodFrom, new { htmlAttributes = new { id = "PeriodFrom_" + @HomeReportConstantValue.AST1000, @class = "input h-20 fs-11 form-control dis-inline-block w-49", @type = "date", disabled = "disabled" } })
+                        @Html.EditorFor(m => m.PeriodFrom, new { htmlAttributes = new { id = "PeriodFrom_" + @HomeReportConstantValue.AST1000, @class = "input h-20 fs-11 form-control  w-49", @type = "date", disabled = "disabled" } })
                     </td>
                     <td class="td-right">
                         To :
                     </td>
                     <td>
-                        @Html.EditorFor(m => m.PeriodTo, new { htmlAttributes = new { id = "PeriodTo_" + @HomeReportConstantValue.AST1000, @class = "input h-20 fs-11 form-control dis-inline-block w-49", @type = "date", disabled = "disabled" } })
+                        @Html.EditorFor(m => m.PeriodTo, new { htmlAttributes = new { id = "PeriodTo_" + @HomeReportConstantValue.AST1000, @class = "input h-20 fs-11 form-control  w-49", @type = "date", disabled = "disabled" } })
                     </td>
                     <td></td>
                 </tr>
@@ -154,7 +154,7 @@
                         Signatory :
                     </td>
                     <td>
-                        @Html.DropDownListFor(m => m.SignatoryList, new SelectList(Model.SignatoryList, "BCS_ID", "BCS_Name"), null, new { @class = "dis-inline-block", id = "ddlSignatory_" + @HomeReportConstantValue.AST1000 })
+                        @Html.DropDownListFor(m => m.SignatoryList, new SelectList(Model.SignatoryList, "BCS_ID", "BCS_Name"), null, new { @class = "", id = "ddlSignatory_" + @HomeReportConstantValue.AST1000 })
                     </td>
                     <td class="td-right"></td>
                     <td></td>
@@ -169,15 +169,15 @@
                         Year/Month :
                     </td>
                     <td>
-                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-49", id = "ddlYear_" + @HomeReportConstantValue.ESAMS })
-                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-49", id = "ddlMonth_" + @HomeReportConstantValue.ESAMS })
+                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = " w-49", id = "ddlYear_" + @HomeReportConstantValue.ESAMS })
+                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = " w-49", id = "ddlMonth_" + @HomeReportConstantValue.ESAMS })
                     </td>
                     <td class="td-right">
                         To :
                     </td>
                     <td>
-                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-49", id = "ddlYearTo_" + @HomeReportConstantValue.ESAMS })
-                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-49", id = "ddlMonthTo_" + @HomeReportConstantValue.ESAMS })
+                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = " w-49", id = "ddlYearTo_" + @HomeReportConstantValue.ESAMS })
+                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = " w-49", id = "ddlMonthTo_" + @HomeReportConstantValue.ESAMS })
                     </td>
                     <td></td>
                 </tr>
@@ -190,13 +190,13 @@
                         Period :
                     </td>
                     <td>
-                        @Html.EditorFor(m => m.PeriodFrom, new { htmlAttributes = new { id = "PeriodFrom_" + @HomeReportConstantValue.ESAMS, @class = "input h-20 fs-11 form-control dis-inline-block w-49", @type = "date", disabled = "disabled" } })
+                        @Html.EditorFor(m => m.PeriodFrom, new { htmlAttributes = new { id = "PeriodFrom_" + @HomeReportConstantValue.ESAMS, @class = "input h-20 fs-11 form-control  w-49", @type = "date", disabled = "disabled" } })
                     </td>
                     <td class="td-right">
                         To :
                     </td>
                     <td>
-                        @Html.EditorFor(m => m.PeriodTo, new { htmlAttributes = new { id = "PeriodTo_" + @HomeReportConstantValue.ESAMS, @class = "input h-20 fs-11 form-control dis-inline-block w-49", @type = "date", disabled = "disabled" } })
+                        @Html.EditorFor(m => m.PeriodTo, new { htmlAttributes = new { id = "PeriodTo_" + @HomeReportConstantValue.ESAMS, @class = "input h-20 fs-11 form-control  w-49", @type = "date", disabled = "disabled" } })
                     </td>
                     <td></td>
                 </tr>
@@ -207,8 +207,8 @@
                         Year/Month :
                     </td>
                     <td>
-                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-49", id = "ddlYear_" + @HomeReportConstantValue.ActualBudgetReport })
-                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-49", id = "ddlMonth_" + @HomeReportConstantValue.ActualBudgetReport })
+                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = " w-49", id = "ddlYear_" + @HomeReportConstantValue.ActualBudgetReport })
+                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = " w-49", id = "ddlMonth_" + @HomeReportConstantValue.ActualBudgetReport })
                     </td>
                     <td class="td-right"></td>
                     <td></td>
@@ -221,15 +221,15 @@
                         Year/Month :
                     </td>
                     <td>
-                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-49", id = "ddlYear_" + @HomeReportConstantValue.BIRWTCSV })
-                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-49", id = "ddlMonth_" + @HomeReportConstantValue.BIRWTCSV })
+                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = " w-49", id = "ddlYear_" + @HomeReportConstantValue.BIRWTCSV })
+                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = " w-49", id = "ddlMonth_" + @HomeReportConstantValue.BIRWTCSV })
                     </td>
                     <td class="td-right">
                         To :
                     </td>
                     <td>
-                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-49", id = "ddlYearTo_" + @HomeReportConstantValue.BIRWTCSV })
-                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-49", id = "ddlMonthTo_" + @HomeReportConstantValue.BIRWTCSV })
+                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = " w-49", id = "ddlYearTo_" + @HomeReportConstantValue.BIRWTCSV })
+                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = " w-49", id = "ddlMonthTo_" + @HomeReportConstantValue.BIRWTCSV })
                     </td>
                     <td></td>
                 </tr>
@@ -244,14 +244,14 @@
                         Year/Month :
                     </td>
                     <td>
-                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-40", id = "ddlYear_" + @HomeReportConstantValue.TransListReport, disabled = "disabled" })
-                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-40", id = "ddlMonth_" + @HomeReportConstantValue.TransListReport, disabled = "disabled" })
+                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = " w-40", id = "ddlYear_" + @HomeReportConstantValue.TransListReport, disabled = "disabled" })
+                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = " w-40", id = "ddlMonth_" + @HomeReportConstantValue.TransListReport, disabled = "disabled" })
                     <td class="td-right">
                         To :
                     </td>
                     <td>
-                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-40", id = "ddlYearTo_" + @HomeReportConstantValue.TransListReport, disabled = "disabled" })
-                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-40", id = "ddlMonthTo_" + @HomeReportConstantValue.TransListReport, disabled = "disabled" })
+                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = " w-40", id = "ddlYearTo_" + @HomeReportConstantValue.TransListReport, disabled = "disabled" })
+                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = " w-40", id = "ddlMonthTo_" + @HomeReportConstantValue.TransListReport, disabled = "disabled" })
                     </td>
                     <td></td>
                 </tr>
@@ -339,7 +339,7 @@
                     <td></td>
                 </tr>
                 <tr id="" class="rep_acc_sum hidden">
-                    <td class="td-center">
+                    <td class="td-center" style="width:5%">
                         <a href="#" class="deselectRadio"><img src="~/images/deselect.png" style="width:30%; vertical-align:middle" /></a>
                     </td>
                     <td class="td-center">
@@ -349,15 +349,15 @@
                         Year/Month :
                     </td>
                     <td>
-                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-40", id = "ddlYear_" + @HomeReportConstantValue.AccSummaryReport, disabled = "disabled" })
-                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-40", id = "ddlMonth_" + @HomeReportConstantValue.AccSummaryReport, disabled = "disabled" })
+                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = " w-40", id = "ddlYear_" + @HomeReportConstantValue.AccSummaryReport, disabled = "disabled" })
+                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = " w-40", id = "ddlMonth_" + @HomeReportConstantValue.AccSummaryReport, disabled = "disabled" })
                     </td>
                     <td class="td-right">
                         To :
                     </td>
                     <td>
-                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-40", id = "ddlYearTo_" + @HomeReportConstantValue.AccSummaryReport, disabled = "disabled" })
-                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-40", id = "ddlMonthTo_" + @HomeReportConstantValue.AccSummaryReport, disabled = "disabled" })
+                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = " w-40", id = "ddlYearTo_" + @HomeReportConstantValue.AccSummaryReport, disabled = "disabled" })
+                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = " w-40", id = "ddlMonthTo_" + @HomeReportConstantValue.AccSummaryReport, disabled = "disabled" })
                     </td>
                     <td></td>
                 </tr>
@@ -389,15 +389,15 @@
                         Year/Month :
                     </td>
                     <td>
-                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-40", id = "ddlYear_" + @HomeReportConstantValue.WTS })
-                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-40", id = "ddlMonth_" + @HomeReportConstantValue.WTS })
+                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = " w-40", id = "ddlYear_" + @HomeReportConstantValue.WTS })
+                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = " w-40", id = "ddlMonth_" + @HomeReportConstantValue.WTS })
                     </td>
                     <td class="td-right">
                         To :
                     </td>
                     <td>
-                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = "dis-inline-block w-40", id = "ddlYearTo_" + @HomeReportConstantValue.WTS })
-                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = "dis-inline-block w-40", id = "ddlMonthTo_" + @HomeReportConstantValue.WTS })
+                        @Html.DropDownListFor(m => m.YearList, new SelectList(Model.YearList, "YearID", "YearID"), null, new { @class = " w-40", id = "ddlYearTo_" + @HomeReportConstantValue.WTS })
+                        @Html.DropDownListFor(m => m.CurrentMonth, new SelectList(Model.MonthList, "MonthID", "MonthName"), null, new { @class = " w-40", id = "ddlMonthTo_" + @HomeReportConstantValue.WTS })
                     </td>
                     <td></td>
                 </tr>
@@ -427,7 +427,7 @@
                         Signatory :
                     </td>
                     <td>
-                        @Html.DropDownListFor(m => m.SignatoryList, new SelectList(Model.SignatoryList, "BCS_ID", "BCS_Name"), null, new { @class = "dis-inline-block", id = "ddlSignatory_" + @HomeReportConstantValue.WTS })
+                        @Html.DropDownListFor(m => m.SignatoryList, new SelectList(Model.SignatoryList, "BCS_ID", "BCS_Name"), null, new { @class = "", id = "ddlSignatory_" + @HomeReportConstantValue.WTS })
                     </td>
                     <td class="td-right"></td>
                     <td></td>
@@ -438,7 +438,7 @@
                     <td class="td-center"></td>
                     <td class="td-right">Voucher No:</td>
                     <td>
-                        @Html.DropDownListFor(m => m.VoucherNo, new SelectList(Model.VoucherNoListPrepaidAmort, "vchr_ID", "vchr_No"), null, new { @class = "dis-inline-block w-49", id = "ddlVoucherNo_" + @HomeReportConstantValue.PrepaidAmortReport })
+                        @Html.DropDownListFor(m => m.VoucherNo, new SelectList(Model.VoucherNoListPrepaidAmort, "vchr_ID", "vchr_No"), null, new { @class = " w-49", id = "ddlVoucherNo_" + @HomeReportConstantValue.PrepaidAmortReport })
                     </td>
                     <td class="td-right"></td>
                     <td></td>
@@ -497,13 +497,13 @@
                             });
                             sig1.AddRange(new SelectList(Model.SignatoryList, "BCS_ID", "BCS_Name"));
                         }
-                        @Html.DropDownListFor(m => m.SignatoryID, sig1, null, new { @class = "dis-inline-block", id = "ddlSignatory_" + @HomeReportConstantValue.LOI })
+                        @Html.DropDownListFor(m => m.SignatoryID, sig1, null, new { @class = "", id = "ddlSignatory_" + @HomeReportConstantValue.LOI })
                     </td>
                     <td class="td-right">
                         Signatory 2:
                     </td>
                     <td>
-                        @Html.DropDownListFor(m => m.SignatoryIDVerifier, sig1, null, new { @class = "dis-inline-block", id = "ddlSignatoryVer_" + @HomeReportConstantValue.LOI })
+                        @Html.DropDownListFor(m => m.SignatoryIDVerifier, sig1, null, new { @class = "", id = "ddlSignatoryVer_" + @HomeReportConstantValue.LOI })
                     </td>
                     <td></td>
                 </tr>

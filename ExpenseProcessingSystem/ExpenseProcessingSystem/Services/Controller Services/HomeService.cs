@@ -8617,6 +8617,37 @@ namespace ExpenseProcessingSystem.Services
             return false;
         }
 
+        //update status of entry of Reversal process
+        public bool updateReversalStatus(int transID, int status, int userid)
+        {
+            ExpenseEntryModel m = new ExpenseEntryModel
+            {
+                Expense_ID = transID,
+            };
+
+            if (_modelState.IsValid)
+            {
+                ExpenseEntryModel dbExpenseEntry = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == transID);
+
+                if (dbExpenseEntry == null)
+                {
+                    GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE3;
+                    return false;
+                }
+                
+                dbExpenseEntry.Expense_Status = status;
+                dbExpenseEntry.Expense_Last_Updated = DateTime.Now;
+
+                if (dbExpenseEntry.Expense_Status == GetCurrentEntryStatus(transID))
+                {
+                    _context.SaveChanges();
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         //Delete expense entry
         public bool deleteExpenseEntry(int expense_ID)
         {
@@ -9468,7 +9499,26 @@ namespace ExpenseProcessingSystem.Services
             else { return false; }
             return true;
         }
+        //Update liquidation status for Reversal process
+        public bool updateLiquidateReversalStatus(int id, int status, int userid)
+        {
+            LiquidationEntryDetailModel dbLiquidation = _context.LiquidationEntryDetails.FirstOrDefault(x => x.ExpenseEntryModel.Expense_ID == id);
 
+            if (dbLiquidation == null)
+            {
+                GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE3;
+                return false;
+            }
+
+            var liquidateEntry = _context.LiquidationEntryDetails.Include(x => x.ExpenseEntryModel)
+            .Where(x => x.ExpenseEntryModel.Expense_ID == id).FirstOrDefault();
+
+            liquidateEntry.Liq_Status = status;
+            liquidateEntry.Liq_LastUpdated_Date = DateTime.Now;
+            _context.SaveChanges();
+
+            return true;
+        }
         //Delete liquidation entry
         public bool deleteLiquidationEntry(int entryID)
         {

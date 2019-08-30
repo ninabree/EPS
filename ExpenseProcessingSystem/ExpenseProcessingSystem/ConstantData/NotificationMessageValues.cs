@@ -29,7 +29,8 @@ namespace ExpenseProcessingSystem.ConstantData
             {GlobalSystemValues.STATUS_DELETE,"deleted"},
             {GlobalSystemValues.STATUS_VERIFIED,"verified" },
             {GlobalSystemValues.STATUS_APPROVED,"approved"},
-            {GlobalSystemValues.STATUS_REJECTED,"rejected"}
+            {GlobalSystemValues.STATUS_REJECTED,"rejected"},
+            {GlobalSystemValues.STATUS_REVERSED,"reversed"}
         };
     }
 }

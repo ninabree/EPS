@@ -129,6 +129,8 @@
 
         } else if (ReportType == 7) {
             ResetTransactionList();
+            ddlFileFormat.children('option').css('display', 'none');
+            ddlFileFormat.children('option[value=1]').show();
 
         } else if (ReportType == 8) {
             ddlFileFormat.children('option').css('display', 'none');
@@ -199,7 +201,6 @@
         ddlYear = $('#ddlYear_7');
         ddlMonthTo = $('#ddlMonthTo_7');
         ddlYearTo = $('#ddlYearTo_7');
-        ddlFileFormat = $('#ddlFileFormat_7');
         ddlSignatory = $('#ddlSignatory_7');
         dtPeriodFrom = $('#PeriodFrom_7');
         dtPeriodTo = $('#PeriodTo_7');
