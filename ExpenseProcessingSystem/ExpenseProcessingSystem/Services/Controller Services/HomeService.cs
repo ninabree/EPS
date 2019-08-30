@@ -7946,7 +7946,7 @@ namespace ExpenseProcessingSystem.Services
                         ExpDtl_CreditAccount2 = getAccountByMasterID(creditAccMasterID2).Account_ID,
                         ExpenseEntryAmortizations = expenseAmor,
                         ExpenseEntryGbaseDtls = expenseGbase,
-                        ExpDtl_Ewt_Payor_Name_ID = cv.dtl_Ewt_Payor_Name_ID,
+                        ExpDtl_Ewt_Payor_Name_ID = (cv.chkEwt == false && cv.vat == 0) ? 0 : cv.dtl_Ewt_Payor_Name_ID,
                         ExpenseEntryCashBreakdowns = expenseCashBreakdown
                     };
                     expenseDtls.Add(expenseDetails);
@@ -9257,7 +9257,7 @@ namespace ExpenseProcessingSystem.Services
                     deptName = GetDeptName(dtl.d.ExpDtl_Dept),
                     chkVat = (dtl.d.ExpDtl_Vat <= 0) ? false : true,
                     vatID = dtl.d.ExpDtl_Vat,
-                    vatValue = (dtl.d.ExpDtl_Vat <= 0) ? 0 : getVat(dtl.d.ExpDtl_Vat) * 100,
+                    vatValue = (dtl.d.ExpDtl_Vat <= 0) ? 0 : (float)Mizuho.round(getVat(dtl.d.ExpDtl_Vat) * 100, 2),
                     chkEwt = dtl.d.ExpDtl_isEwt,
                     ewtID = dtl.d.ExpDtl_Ewt,
                     ewtValue = (dtl.d.ExpDtl_Ewt <= 0) ? 0 : GetEWTValue(dtl.d.ExpDtl_Ewt) * 100,
@@ -12330,7 +12330,14 @@ namespace ExpenseProcessingSystem.Services
                 cddStatus.PS_CDD = true;
                 _context.Entry(cddStatus).State = EntityState.Modified;
                 _context.SaveChanges();
-                updatePrintStatusForCLosing(entryID);
+                if(type == GlobalSystemValues.TYPE_LIQ)
+                {
+                    updatePrintStatusLiquidationForCLosing(entryID);
+                }
+                else
+                {
+                    updatePrintStatusForCLosing(entryID);
+                }
                 return true;
             }
             else
@@ -12390,6 +12397,30 @@ namespace ExpenseProcessingSystem.Services
                 ExpenseEntryModel updItem = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == entryID);
 
                 updItem.Expense_Status = GlobalSystemValues.STATUS_FOR_CLOSING;
+                updItem.Expense_Last_Updated = DateTime.Now;
+
+                _context.SaveChanges();
+            }
+        }
+
+        public void updatePrintStatusLiquidationForCLosing(int entryID)
+        {
+            var expPrintStatus = _context.PrintStatus.Where(x => x.PS_EntryID == entryID && x.PS_Type == GlobalSystemValues.TYPE_LIQ);
+
+            bool updStats = true;
+
+            foreach (var item in expPrintStatus)
+            {
+                if (!item.PS_BIR2307 || !item.PS_CDD || !item.PS_Check || !item.PS_LOI || !item.PS_Voucher)
+                    updStats = false;
+            }
+
+            if (updStats)
+            {
+                LiquidationEntryDetailModel updItem = _context.LiquidationEntryDetails.FirstOrDefault(x => x.ExpenseEntryModel.Expense_ID == entryID);
+
+                updItem.Liq_Status = GlobalSystemValues.STATUS_FOR_CLOSING;
+                updItem.Liq_LastUpdated_Date = DateTime.Now;
 
                 _context.SaveChanges();
             }

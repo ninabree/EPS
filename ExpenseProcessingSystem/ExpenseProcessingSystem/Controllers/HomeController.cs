@@ -35,6 +35,7 @@ namespace ExpenseProcessingSystem.Controllers
 {
     [ScreenFltr]
     [ServiceFilter(typeof(HandleExceptionAttribute))]
+    [RequestFormLimits(ValueCountLimit = 5000)]
     public class HomeController : Controller
     {
         private readonly int pageSize = 30;
@@ -3495,7 +3496,7 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         id = _service.addLiquidationDetail(vm, int.Parse(GetUserID()), exist);
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_SS, GlobalSystemValues.STATUS_EDIT, 0);
+                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_LIQ, GlobalSystemValues.STATUS_EDIT, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }

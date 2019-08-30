@@ -10,7 +10,7 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
     public class PCVCashBreakdownViewModel
     {
         public string id { get; set; }
-        public string vendor { get; set; }
+        public string cashBDPayeeName { get; set; }
         public string account { get; set; }
         public string accountName { get; set; }
         public decimal amount { get; set; }
