@@ -256,6 +256,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     NC_CS_DebitAmt = dtl.d.ExpNC_CS_DebitAmt,
                     NC_IE_CredAmt = dtl.d.ExpNC_IE_CredAmt,
                     NC_IE_DebitAmt = dtl.d.ExpNC_IE_DebitAmt,
+                    NC_CS_Period = dtl.d.ExpNC_CS_Period,
                     NC_TotalAmt = dtl.d.ExpNC_CredAmt + dtl.d.ExpNC_DebitAmt,
                     NC_CS_TotalAmt = dtl.d.ExpNC_CS_CredAmt + dtl.d.ExpNC_CS_DebitAmt,
                     NC_IE_TotalAmt = dtl.d.ExpNC_IE_CredAmt + dtl.d.ExpNC_IE_DebitAmt,

@@ -601,7 +601,7 @@ iframe{
     font-size: 11px;
     height: 20px;
 }
-    .table > tbody > tr > td > .input {
+    .table > tbody > tr > td > .input, .table > tbody > tr > td > input {
         margin: 5px 0px;
     }
 .table > thead > tr > th > a {
@@ -732,7 +732,7 @@ div[aria-describedby=validationSummary] {
 /*-------------------------------------
 [ INPUT FIELDS ]*/
 td.voucher-input, div.voucher-input, input.voucher-input, select.voucher-input {
-    background-color: #fcf8e3;
+    background-color: #faf3d1;
 }
     td.voucher-input > input, div.voucher-input > input {
         background: transparent;
