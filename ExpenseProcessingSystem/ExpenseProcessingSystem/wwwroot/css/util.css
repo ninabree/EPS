@@ -2332,13 +2332,18 @@
 .float-l {float: left;}
 .float-r {float: right;}
 
-
+/*[ Background Color ]
+-----------------------------------------------------------
+*/
+.bg-ccc{
+    background-color: #ccc;
+}
 /*[ Width & Height ]
 -----------------------------------------------------------
 */
 .sizefull {
-	width: 100%;
-	height: 100%;
+    width: 100%;
+    height: 100%;
 }
 .w-2 {width:2%}
 .w-5 { width: 5%}

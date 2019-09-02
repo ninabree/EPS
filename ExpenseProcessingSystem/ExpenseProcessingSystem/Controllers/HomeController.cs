@@ -939,13 +939,24 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 ExcelGenerateService excelGenerate = new ExcelGenerateService();
                 fileName = fileName + ".xlsx";
-                //TEMP
-                if(model.ReportType == HomeReportConstantValue.LOI)
+                //Update LOI Status in PrintStatus Table, if all are true, update record status to For_Closing
+                if (model.ReportType == HomeReportConstantValue.LOI)
                 {
                     foreach (var accs in data.ReportLOI.Rep_LOIEntryIDList)
                     {
-                        _service.updateExpenseStatus(accs, GlobalSystemValues.STATUS_POSTED, int.Parse(GetUserID()));
-                        bool result = _service.updatePrintStatus(GlobalSystemValues.PS_LOI, accs);
+
+                        var loiStatus = _context.PrintStatus.Where(x => x.PS_EntryID == accs).ToList();
+                        foreach (var i in loiStatus)
+                        {
+                            i.PS_LOI = true;
+                            _context.Entry(i).State = EntityState.Modified;
+                        }
+
+                        if (loiStatus != null)
+                        {
+                            _context.SaveChanges();
+                            _service.updatePrintStatusForCLosing(accs);
+                        }
                     }
                 }
                 //Return Excel file
@@ -953,13 +964,24 @@ namespace ExpenseProcessingSystem.Controllers
             }
             else if (model.FileFormat == HomeReportConstantValue.PDFID)
             {
-                //TEMP
+                //Update LOI Status in PrintStatus Table, if all are true, update record status to For_Closing
                 if (model.ReportType == HomeReportConstantValue.LOI)
                 {
                     foreach (var accs in data.ReportLOI.Rep_LOIEntryIDList)
                     {
-                        _service.updateExpenseStatus(accs, GlobalSystemValues.STATUS_POSTED, int.Parse(GetUserID()));
-                        bool result = _service.updatePrintStatus(GlobalSystemValues.PS_LOI, accs);
+
+                        var loiStatus = _context.PrintStatus.Where(x => x.PS_EntryID == accs).ToList();
+                        foreach (var i in loiStatus)
+                        {
+                            i.PS_LOI = true;
+                            _context.Entry(i).State = EntityState.Modified;
+                        }
+
+                        if (loiStatus != null)
+                        {
+                            _context.SaveChanges();
+                            _service.updatePrintStatusForCLosing(accs);
+                        }
                     }
                 }
                 //Return PDF file
@@ -1731,24 +1753,27 @@ namespace ExpenseProcessingSystem.Controllers
             List<cvBirForm> birForms = new List<cvBirForm>();
             foreach (var item in ddvList.EntryDDV)
             {
-                if (birForms.Any(x => x.ewt == item.ewt && x.vendor == item.ewt_Payor_Name_ID))
+                if (!item.inter_entity)
                 {
-                    int index = birForms.FindIndex(x => x.ewt == item.ewt);
-                    birForms[index].amount += item.debitGross;
-                }
-                else
-                {
-                    cvBirForm temp = new cvBirForm
+                    if (birForms.Any(x => x.ewt == item.ewt && x.vendor == item.ewt_Payor_Name_ID))
                     {
-                        amount = item.debitGross,
-                        ewt = item.ewt,
-                        vat = item.vat,
-                        vendor = item.ewt_Payor_Name_ID,
-                        approver = ddvList.approver,
-                        date = ddvList.expenseDate
-                    };
+                        int index = birForms.FindIndex(x => x.ewt == item.ewt);
+                        birForms[index].amount += item.debitGross;
+                    }
+                    else
+                    {
+                        cvBirForm temp = new cvBirForm
+                        {
+                            amount = item.debitGross,
+                            ewt = item.ewt,
+                            vat = item.vat,
+                            vendor = item.ewt_Payor_Name_ID,
+                            approver = ddvList.approver,
+                            date = ddvList.expenseDate
+                        };
 
-                    birForms.Add(temp);
+                        birForms.Add(temp);
+                    }
                 }
             }
             ddvList.birForms.AddRange(birForms);
@@ -2919,8 +2944,10 @@ namespace ExpenseProcessingSystem.Controllers
                 ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Curr_Name = currDtls.ExpNCDtlAcc_Curr_Name;
                 ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount = ncList.EntryNC.NC_CS_DebitAmt;
                 ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Amount = ncList.EntryNC.NC_CS_CredAmt;
+                ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID = ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID;
+                ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name = ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name;
             }
-            ViewData["USDmstr"] = _service.getXMLCurrency("USD").currMasterID;
+           ViewData["USDmstr"] = _service.getXMLCurrency("USD").currMasterID;
             ViewData["JPYmstr"] = _service.getXMLCurrency("YEN").currMasterID;
             ViewData["PHPmstr"] = _service.getXMLCurrency("PHP").currMasterID;
             //for php id
@@ -3231,8 +3258,8 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
             viewModel.systemValues.acc = _service.getAccDetailsEntry();
 
-            viewModel.expenseYear = DateTime.Today.Year.ToString();
-            viewModel.expenseDate = DateTime.Today;
+            viewModel.expenseYear = DateTime.Now.Year.ToString();
+            viewModel.expenseDate = DateTime.Now;
 
             return viewModel;
         }
@@ -3242,7 +3269,10 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.EntryNC.NC_Category_Name = GlobalSystemValues.NC_CATEGORIES_SELECT.Where(x => x.Value == viewModel.EntryNC.NC_Category_ID + "")
                                             .Select(x => x.Text).FirstOrDefault();
             //viewModel.expenseDate = DateTime.Now;
-            viewModel.expenseDate = DateTime.Today;
+            if(viewModel.expenseDate.Year == new DateTime().Year)
+            {
+                viewModel.expenseDate = DateTime.Now;
+            }
             return viewModel;
         }
         public dynamic PopulateEntryDDV(EntryDDVViewModelList viewModel)
@@ -3267,8 +3297,8 @@ namespace ExpenseProcessingSystem.Controllers
 
             if (viewModel.expenseYear == null)
             {
-                viewModel.expenseYear = DateTime.Today.Year.ToString();
-                viewModel.expenseDate = DateTime.Today;
+                viewModel.expenseYear = DateTime.Now.Year.ToString();
+                viewModel.expenseDate = DateTime.Now;
             }
 
             //FOR DDV
