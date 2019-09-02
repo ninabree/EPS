@@ -154,13 +154,13 @@
                                 @Html.TextBoxFor(m => Model.LiquidationDetails[i].deptName, new { @readonly = "true", @style = "width:100%;background:transparent" })
                             </td>
                             <td style="text-align:center;">
-                                @Html.CheckBoxFor(x => Model.LiquidationDetails[i].chkVat, new { @class = "chkVat comVar", disabled = "disabled" })
+                                @Html.CheckBoxFor(x => Model.LiquidationDetails[i].chkVat, new { @class = "chkVat comVar", style = "pointer-events: none;" })
                             </td>
                             <td>
                                 @Html.TextBoxFor(m => Model.LiquidationDetails[i].vatValue, new { @readonly = "true", @style = "width:100%;background:transparent" })
                             </td>
                             <td style="text-align:center">
-                                @Html.CheckBoxFor(x => Model.LiquidationDetails[i].chkEwt, new { @class = "chkEwt comVar", disabled = "disabled" })
+                                @Html.CheckBoxFor(x => Model.LiquidationDetails[i].chkEwt, new { @class = "chkEwt comVar", style = "pointer-events: none;" })
                             </td>
                             <td>
                                 @Html.TextBoxFor(m => Model.LiquidationDetails[i].ewtValue, new { @readonly = "true", @style = "width:100%;background:transparent" })
@@ -357,15 +357,15 @@
 
                                     <tr id="cashbdliqid_@cnt">
                                         <td class="tdPrintLiq">
-                                            <input type="number" class="txtLiqDenomination" readonly="readonly" style="width:100%;background:transparent;text-align:center" value="@i.CashBreak_Denomination" tabindex = -1 />
+                                            <input type="number" class="txtLiqDenomination" readonly="readonly" style="width:100%;background:transparent;text-align:center" value="@i.CashBreak_Denomination" tabindex=-1 />
 
                                         </td>
                                         <td class="tdPrintLiq">
-                                            <input type="number" class="txtLiqNoPCS number-inputNoDecNoBlank txtLiqPhpInput" style="width:100%;text-align:center" min="0" value="0" tabindex = @cnt + 1 />
+                                            <input type="number" class="txtLiqNoPCS number-inputNoDecNoBlank txtLiqPhpInput" style="width:100%;text-align:center" min="0" value="0" tabindex=@cnt + 1 />
 
                                         </td>
                                         <td class="tdPrintLiq">
-                                            <input type="number" class="txtLiqAmount" readonly="readonly" style="width:100%;background:transparent;text-align:center" value="0" tabindex = -1 />
+                                            <input type="number" class="txtLiqAmount" readonly="readonly" style="width:100%;background:transparent;text-align:center" value="0" tabindex=-1 />
                                         </td>
                                     </tr>
                                     cnt = cnt + 1;
@@ -659,11 +659,12 @@
     <input type="hidden" id="yenMasterID" value="@Model.yenCurrMasterID" />
     <input type="hidden" name="command" id="btnID" />
     <input type="hidden" id="hiddenMode" value="Edit" />
+    @*validation message*@
+    <div id="ValidationSummary" style="display:none" class="">
+        @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
+    </div>
 }
-@*validation message*@
-<div id="ValidationSummary" style="display:none" class="">
-    @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
-</div>
+
 
 @Html.Partial("PopupMessage")
 
