@@ -538,7 +538,7 @@
                                     @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Type_ID)
                                 </tr>
                             }
-                            <tr class="NC_spacing_row"><td colspan="13"></td></tr>
+                            <tr class="NC_spacing_row"><td colspan="3" class="cat-hidden hidden"></td><td colspan="11"></td></tr>
                         }
                     }
                 }
@@ -550,10 +550,10 @@
                 <tr>
                     <td class="float-l" colspan="1">
                         @if (@Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_LS_PAYROLL ||
-                            @Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_TAX_REMITTANCE ||
-                            @Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_DEPRECIATION ||
-                            @Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_JS_PAYROLL ||
-                            @Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES)
+                           @Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_TAX_REMITTANCE ||
+                           @Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_DEPRECIATION ||
+                           @Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_JS_PAYROLL ||
+                           @Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES)
                         {
                             <button id="add_new_nc_row" type="button" class="glyphicon glyphicon-plus"></button>
                         }
@@ -582,7 +582,8 @@
                             }
                         </select>
                     </td>
-                    <td colspan="10"></td>
+                    <td colspan="3" class="cat-hidden hidden"></td>
+                    <td colspan="11"></td>
                 </tr>
             </tbody>
         </table>
@@ -670,37 +671,26 @@
             @Html.HiddenFor(x => x.EntryNC.NC_CredAmt)
             @Html.HiddenFor(x => x.EntryNC.NC_TotalAmt)
         }
-        else if (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT
-            || Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL)
+        else if (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT|| Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL)
         {
             <table class="table table-bordered voucher-tbl" style="background-color: #fafafa; border: 2px solid #ccc !important; margin-bottom: 20px!important">
-                @if (!(Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL))
-                {
-                    <tr style="border-bottom: 2px solid #ccc !important;">
-                        <td colspan="2">Total</td>
-                        <td colspan="5"></td>
-                        <td colspan="1" class="border-solid NC_readonly_row">@Html.TextBoxFor(x => x.EntryNC.NC_DebitAmt, new { @readonly = "true", @class = "NumberOnlyOneDecimal" })</td>
-                        <td colspan="1" class="border-solid">@Html.TextBoxFor(x => x.EntryNC.NC_TotalAmt, new { @readonly = "true", @class = "hidden NumberOnlyOneDecimal" })</td>
-                        <td colspan="1" class="border-solid NC_readonly_row">@Html.TextBoxFor(x => x.EntryNC.NC_CredAmt, new { @readonly = "true", @class = "NumberOnlyOneDecimal" })</td>
-                    </tr>
-                    <tr class="NC_spacing_row"><td colspan="13"></td></tr>
-                }
-                else
-                {
-                    @Html.HiddenFor(x => x.EntryNC.NC_DebitAmt)
-                    @Html.HiddenFor(x => x.EntryNC.NC_CredAmt)
-                    @Html.HiddenFor(x => x.EntryNC.NC_TotalAmt)
-                }
+                <tr style="border-bottom: 2px solid #ccc !important;">
+                    <td colspan="2">Total</td>
+                    <td colspan="9"></td>
+                    <td colspan="1" class="border-solid NC_readonly_row">@Html.TextBoxFor(x => x.EntryNC.NC_DebitAmt, new { @readonly = "true", @class = "NumberOnlyOneDecimal" })</td>
+                    <td colspan="1" class="border-solid">@Html.TextBoxFor(x => x.EntryNC.NC_TotalAmt, new { @readonly = "true", @class = "hidden NumberOnlyOneDecimal" })</td>
+                    <td colspan="1" class="border-solid NC_readonly_row">@Html.TextBoxFor(x => x.EntryNC.NC_CredAmt, new { @readonly = "true", @class = "NumberOnlyOneDecimal" })</td>
+                </tr>
+                <tr class="NC_spacing_row"><td colspan="14"></td></tr>
                 <tr>
-                    <td colspan="11"><label class="float-l">CDD Instruction Sheet</label></td>
+                    <td colspan="14"><label class="float-l">CDD Instruction Sheet</label></td>
                 </tr>
                 <tr id="NC_PCR1">
-                    <td>@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpNCDtl_Remarks_Desc, new { @readonly = "true" })</td>
+                    <td colspan="1">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpNCDtl_Remarks_Desc, new { @readonly = "true" })</td>
                     <td colspan="2" class="@SetRemarksClass(@Model.EntryNC.NC_Category_ID)">
                         @Html.EditorFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpNCDtl_Remarks_Period, new { @type = "date", @class = "hidden" })
                     </td>
-
-                    <td colspan="3">
+                    <td colspan="6" data-toggle="tooltip" title="@Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name" data-placement="right">
                         @if(Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT){
                             @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name, new { @readonly = "true", @class = "w-full" })
                         }else{
@@ -740,7 +730,7 @@
                     @if (Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
                     {
                         <td>@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_Name, new { @readonly = "true" })</td>
-                        <td class="" id="">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount, new { @class = "ncVar NumberOnlyOneDecimal", @readonly = "true" })</td>
+                        <td class="NC_readonly_row" id="">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount, new { @class = "ncVar NumberOnlyOneDecimal", @readonly = "true" })</td>
                         <td></td>
                         <td></td>
                     }
@@ -750,7 +740,7 @@
                         <td></td>
                         <td></td>
                         <td>@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_Name, new { @readonly = "true" })</td>
-                        <td class="" id="">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount, new { @class = "ncVar NumberOnlyOneDecimal", @readonly = "true" })</td>
+                        <td class="NC_readonly_row" id="">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount, new { @class = "ncVar NumberOnlyOneDecimal", @readonly = "true" })</td>
                     }
                     @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID)
                     @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID)
@@ -760,14 +750,14 @@
                 @for (int j = 1; j < Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs.Count; j++)
                 {
                     <tr id="NC_PCR2">
-                        <td></td>
+                        <td colspan="1"></td>
                         <td colspan="2"></td>
-                        <td colspan="3">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_Name, new { @readonly = "true", @class = "w-full" })</td>
+                        <td colspan="6" data-toggle="tooltip" title="@Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_Name" data-placement="right">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_Name, new { @readonly = "true", @class = "w-full" })</td>
                         <td></td>
                         @if (Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
                         {
                             <td>@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_Name, new { @readonly = "true" })</td>
-                            <td class="" id="">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Amount, new { @class = "ncVar NumberOnlyOneDecimal", @readonly = "true" })</td>
+                            <td class="NC_readonly_row" id="">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Amount, new { @class = "ncVar NumberOnlyOneDecimal", @readonly = "true" })</td>
                             <td></td>
                             <td></td>
                         }
@@ -777,7 +767,7 @@
                             <td></td>
                             <td></td>
                             <td>@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_Name, new { @readonly = "true" })</td>
-                            <td class="" id="">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Amount, new { @class = "ncVar NumberOnlyOneDecimal", @readonly = "true" })</td>
+                            <td class="NC_readonly_row" id="">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Amount, new { @class = "ncVar NumberOnlyOneDecimal", @readonly = "true" })</td>
                         }
                         @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_ID)
                         @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_ID)
@@ -809,13 +799,29 @@
         }
         else
         {
-            <table class="table table-bordered voucher-tbl m-t-20" style="background-color: #fafafa; border: 2px solid #ccc !important">
+            <table class="table table-bordered voucher-tbl m-t-20 w-full" style="background-color: #fafafa; border: 2px solid #ccc !important">
+                <colgroup>
+                    <col style="width: 7.14%" />
+                    <col style="width: 7.14%" />
+                    <col style="width: 7.14%" />
+                    <col style="width: 7.14%" />
+                    <col style="width: 7.14%" />
+                    <col style="width: 7.14%" />
+                    <col style="width: 7.14%" />
+                    <col style="width: 7.14%" />
+                    <col style="width: 7.14%" />
+                    <col style="width: 7.14%" />
+                    <col style="width: 7.14%" />
+                    <col style="width: 7.14%" />
+                    <col style="width: 7.14%" />
+                    <col style="width: 7.14%" />
+                </colgroup>
                 <tr style="border-bottom: 2px solid #ccc !important;">
-                    <td colspan="2">Total:</td>
-                    <td colspan="5"></td>
-                    <td colspan="1" class="border-solid NC_readonly_row">@Html.TextBoxFor(x => x.EntryNC.NC_DebitAmt, new { @readonly = "true", @class="NumberOnlyOneDecimal" })</td>
+                    <td colspan="1">Total:</td>
+                    <td colspan="9"></td>
+                    <td colspan="1" class="border-solid NC_readonly_row">@Html.TextBoxFor(x => x.EntryNC.NC_DebitAmt, new { @readonly = "true", @class = "NumberOnlyOneDecimal" })</td>
                     <td colspan="1" class="border-solid">@Html.TextBoxFor(x => x.EntryNC.NC_TotalAmt, new { @readonly = "true", @class = "hidden NumberOnlyOneDecimal" })</td>
-                    <td colspan="1" class="border-solid NC_readonly_row">@Html.TextBoxFor(x => x.EntryNC.NC_CredAmt, new { @readonly = "true", @class="NumberOnlyOneDecimal" })</td>
+                    <td colspan="1" class="border-solid NC_readonly_row">@Html.TextBoxFor(x => x.EntryNC.NC_CredAmt, new { @readonly = "true", @class = "NumberOnlyOneDecimal" })</td>
                 </tr>
                 @Html.HiddenFor(x => x.EntryNC.NC_IE_DebitAmt)
                 @Html.HiddenFor(x => x.EntryNC.NC_IE_CredAmt)
