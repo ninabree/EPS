@@ -3229,8 +3229,8 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
             viewModel.systemValues.acc = _service.getAccDetailsEntry();
 
-            viewModel.expenseYear = DateTime.Today.Year.ToString();
-            viewModel.expenseDate = DateTime.Today;
+            viewModel.expenseYear = DateTime.Now.Year.ToString();
+            viewModel.expenseDate = DateTime.Now;
 
             return viewModel;
         }
@@ -3240,7 +3240,10 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.EntryNC.NC_Category_Name = GlobalSystemValues.NC_CATEGORIES_SELECT.Where(x => x.Value == viewModel.EntryNC.NC_Category_ID + "")
                                             .Select(x => x.Text).FirstOrDefault();
             //viewModel.expenseDate = DateTime.Now;
-            viewModel.expenseDate = DateTime.Today;
+            if(viewModel.expenseDate.Year == new DateTime().Year)
+            {
+                viewModel.expenseDate = DateTime.Now;
+            }
             return viewModel;
         }
         public dynamic PopulateEntryDDV(EntryDDVViewModelList viewModel)
@@ -3265,8 +3268,8 @@ namespace ExpenseProcessingSystem.Controllers
 
             if (viewModel.expenseYear == null)
             {
-                viewModel.expenseYear = DateTime.Today.Year.ToString();
-                viewModel.expenseDate = DateTime.Today;
+                viewModel.expenseYear = DateTime.Now.Year.ToString();
+                viewModel.expenseDate = DateTime.Now;
             }
 
             //FOR DDV
