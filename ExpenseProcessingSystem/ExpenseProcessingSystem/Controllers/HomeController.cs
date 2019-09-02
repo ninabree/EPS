@@ -1586,8 +1586,10 @@ namespace ExpenseProcessingSystem.Controllers
                         approver = cvList.approver,
                         date = cvList.createdDate
                     };
-
-                    birForms.Add(temp);
+                    if (item.ewt > 0)
+                    {
+                        birForms.Add(temp);
+                    }
                 }
             }
             cvList.birForms.AddRange(birForms);

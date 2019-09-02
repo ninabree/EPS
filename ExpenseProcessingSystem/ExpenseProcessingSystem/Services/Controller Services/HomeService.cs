@@ -63,8 +63,7 @@ namespace ExpenseProcessingSystem.Services
                 .Select(x => x.User_Role).FirstOrDefault() ?? "";
             return data;
         }
-        private int[] status = { GlobalSystemValues.STATUS_APPROVED, GlobalSystemValues.STATUS_POSTED,
-                            GlobalSystemValues.STATUS_CLOSED, GlobalSystemValues.STATUS_FOR_CLOSING,
+        private int[] status = { GlobalSystemValues.STATUS_POSTED, GlobalSystemValues.STATUS_FOR_CLOSING,
                             GlobalSystemValues.STATUS_FOR_PRINTING, GlobalSystemValues.STATUS_REVERSED };
 
         //-----------------------------------Populate-------------------------------------//
@@ -12430,10 +12429,13 @@ namespace ExpenseProcessingSystem.Services
             {
                 ExpenseEntryModel updItem = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == entryID);
 
-                updItem.Expense_Status = GlobalSystemValues.STATUS_FOR_CLOSING;
-                updItem.Expense_Last_Updated = DateTime.Now;
-
-                _context.SaveChanges();
+                //Update to For Closing only if status is in For Printing.
+                if(updItem.Expense_Status == GlobalSystemValues.STATUS_FOR_PRINTING)
+                {
+                    updItem.Expense_Status = GlobalSystemValues.STATUS_FOR_CLOSING;
+                    updItem.Expense_Last_Updated = DateTime.Now;
+                    _context.SaveChanges();
+                }
             }
         }
 
@@ -12452,11 +12454,13 @@ namespace ExpenseProcessingSystem.Services
             if (updStats)
             {
                 LiquidationEntryDetailModel updItem = _context.LiquidationEntryDetails.FirstOrDefault(x => x.ExpenseEntryModel.Expense_ID == entryID);
-
-                updItem.Liq_Status = GlobalSystemValues.STATUS_FOR_CLOSING;
-                updItem.Liq_LastUpdated_Date = DateTime.Now;
-
-                _context.SaveChanges();
+                //Update to For Closing only if status is in For Printing.
+                if(updItem.Liq_Status == GlobalSystemValues.STATUS_FOR_PRINTING)
+                {
+                    updItem.Liq_Status = GlobalSystemValues.STATUS_FOR_CLOSING;
+                    updItem.Liq_LastUpdated_Date = DateTime.Now;
+                    _context.SaveChanges();
+                }
             }
         }
         public bool UpdatePrintCheckPrintStatus(int entryID)
