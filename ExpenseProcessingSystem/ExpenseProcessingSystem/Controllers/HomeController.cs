@@ -939,13 +939,24 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 ExcelGenerateService excelGenerate = new ExcelGenerateService();
                 fileName = fileName + ".xlsx";
-                //TEMP
-                if(model.ReportType == HomeReportConstantValue.LOI)
+                //Update LOI Status in PrintStatus Table, if all are true, update record status to For_Closing
+                if (model.ReportType == HomeReportConstantValue.LOI)
                 {
                     foreach (var accs in data.ReportLOI.Rep_LOIEntryIDList)
                     {
-                        _service.updateExpenseStatus(accs, GlobalSystemValues.STATUS_POSTED, int.Parse(GetUserID()));
-                        bool result = _service.updatePrintStatus(GlobalSystemValues.PS_LOI, accs);
+
+                        var loiStatus = _context.PrintStatus.Where(x => x.PS_EntryID == accs).ToList();
+                        foreach (var i in loiStatus)
+                        {
+                            i.PS_LOI = true;
+                            _context.Entry(i).State = EntityState.Modified;
+                        }
+
+                        if (loiStatus != null)
+                        {
+                            _context.SaveChanges();
+                            _service.updatePrintStatusForCLosing(accs);
+                        }
                     }
                 }
                 //Return Excel file
@@ -953,13 +964,24 @@ namespace ExpenseProcessingSystem.Controllers
             }
             else if (model.FileFormat == HomeReportConstantValue.PDFID)
             {
-                //TEMP
+                //Update LOI Status in PrintStatus Table, if all are true, update record status to For_Closing
                 if (model.ReportType == HomeReportConstantValue.LOI)
                 {
                     foreach (var accs in data.ReportLOI.Rep_LOIEntryIDList)
                     {
-                        _service.updateExpenseStatus(accs, GlobalSystemValues.STATUS_POSTED, int.Parse(GetUserID()));
-                        bool result = _service.updatePrintStatus(GlobalSystemValues.PS_LOI, accs);
+
+                        var loiStatus = _context.PrintStatus.Where(x => x.PS_EntryID == accs).ToList();
+                        foreach (var i in loiStatus)
+                        {
+                            i.PS_LOI = true;
+                            _context.Entry(i).State = EntityState.Modified;
+                        }
+
+                        if (loiStatus != null)
+                        {
+                            _context.SaveChanges();
+                            _service.updatePrintStatusForCLosing(accs);
+                        }
                     }
                 }
                 //Return PDF file
@@ -1729,24 +1751,27 @@ namespace ExpenseProcessingSystem.Controllers
             List<cvBirForm> birForms = new List<cvBirForm>();
             foreach (var item in ddvList.EntryDDV)
             {
-                if (birForms.Any(x => x.ewt == item.ewt && x.vendor == item.ewt_Payor_Name_ID))
+                if (!item.inter_entity)
                 {
-                    int index = birForms.FindIndex(x => x.ewt == item.ewt);
-                    birForms[index].amount += item.debitGross;
-                }
-                else
-                {
-                    cvBirForm temp = new cvBirForm
+                    if (birForms.Any(x => x.ewt == item.ewt && x.vendor == item.ewt_Payor_Name_ID))
                     {
-                        amount = item.debitGross,
-                        ewt = item.ewt,
-                        vat = item.vat,
-                        vendor = item.ewt_Payor_Name_ID,
-                        approver = ddvList.approver,
-                        date = ddvList.expenseDate
-                    };
+                        int index = birForms.FindIndex(x => x.ewt == item.ewt);
+                        birForms[index].amount += item.debitGross;
+                    }
+                    else
+                    {
+                        cvBirForm temp = new cvBirForm
+                        {
+                            amount = item.debitGross,
+                            ewt = item.ewt,
+                            vat = item.vat,
+                            vendor = item.ewt_Payor_Name_ID,
+                            approver = ddvList.approver,
+                            date = ddvList.expenseDate
+                        };
 
-                    birForms.Add(temp);
+                        birForms.Add(temp);
+                    }
                 }
             }
             ddvList.birForms.AddRange(birForms);
