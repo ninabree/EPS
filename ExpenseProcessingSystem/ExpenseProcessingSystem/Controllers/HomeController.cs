@@ -1113,7 +1113,7 @@ namespace ExpenseProcessingSystem.Controllers
             var expModel = _service.getExpense(ExpenseID);
 
             cd.Date = DateTime.Now;
-            cd.Payee = _service.getVendor(expModel.vendor).Vendor_Name;
+            cd.Payee = _service.getVendor(expModel.selectedPayee).Vendor_Name;
 
             foreach(var item in expModel.EntryCV)
             {
@@ -1582,13 +1582,15 @@ namespace ExpenseProcessingSystem.Controllers
 
             EntryCVViewModelList cvList;
             cvList = _service.getExpense(entryID);
-            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
-            cvList.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
-            cvList.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
-            cvList.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
-            cvList.systemValues.ewt =_service.getVendorTaxRate(cvList.vendor);
-            cvList.systemValues.vat = _service.getVendorVat(cvList.vendor);
-            cvList.systemValues.acc = _service.getAccDetailsEntry();
+            //List<SelectList> listOfSysVals = _service.getEntrySystemVals();
+            //cvList.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
+            //cvList.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
+            //cvList.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
+            //cvList.systemValues.ewt =_service.getVendorTaxRate(cvList.vendor);
+            //cvList.systemValues.vat = _service.getVendorVat(cvList.vendor);
+            //cvList.systemValues.acc = _service.getAccDetailsEntry();
+
+            cvList = PopulateEntry((EntryCVViewModelList)cvList);
 
             List<cvBirForm> birForms = new List<cvBirForm>();
             foreach (var item in cvList.EntryCV)
@@ -1604,7 +1606,7 @@ namespace ExpenseProcessingSystem.Controllers
                         amount = item.debitGross,
                         ewt = item.ewt,
                         vat = item.vat,
-                        vendor = cvList.vendor,
+                        vendor = cvList.selectedPayee,
                         approver = cvList.approver,
                         date = cvList.createdDate
                     };
@@ -5535,7 +5537,7 @@ namespace ExpenseProcessingSystem.Controllers
             vvm.maker = _service.getUserFullName(model.maker);
             if(model.expenseId != null)
                 vvm.voucherNo = _service.getVoucherNo(1,model.expenseDate,int.Parse(model.expenseId));
-            vvm.payee = _service.getVendorName(model.vendor, model.payee_type);
+            vvm.payee = _service.getVendorName(model.selectedPayee, model.payee_type);
             vvm.checkNo = model.checkNo;
             if(model.approver_id > 0)
                 vvm.approver = _service.getUserFullName(model.approver_id);

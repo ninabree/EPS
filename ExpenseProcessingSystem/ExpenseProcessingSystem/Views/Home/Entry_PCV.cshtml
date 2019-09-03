@@ -28,7 +28,7 @@
         <div id="tbl-lbl">
             <div class="dis-inline-block"><p>Payee:</p></div>
             <div class="dis-inline-block">
-                @Html.DropDownListFor(m => m.vendor, new SelectList(Model.systemValues.employeesAll, "Value", "Text", Model.systemValues.employeesAll.SelectedValue), new { @id = "vendorName", @class="voucher-input" })
+                @Html.DropDownListFor(m => m.selectedPayee, new SelectList(Model.systemValues.employeesAll, "Value", "Text", Model.systemValues.employeesAll.SelectedValue), new { @id = "vendorName", @class="voucher-input" })
             </div>
         </div>
         <div class="entry-tbl-cont">

@@ -7979,7 +7979,7 @@ namespace ExpenseProcessingSystem.Services
                 {
                     Expense_Type = expenseType,
                     Expense_Date = entryModel.expenseDate,
-                    Expense_Payee = entryModel.vendor,
+                    Expense_Payee = entryModel.selectedPayee,
                     Expense_Payee_Type = entryModel.payee_type,
                     Expense_Debit_Total = TotalDebit,
                     Expense_Credit_Total = credEwtTotal + credCashTotal,
@@ -8198,7 +8198,7 @@ namespace ExpenseProcessingSystem.Services
             {
                 entryID = EntryDetails.e.Expense_ID,
                 expenseDate = EntryDetails.e.Expense_Date,
-                vendor = EntryDetails.e.Expense_Payee,
+                selectedPayee = EntryDetails.e.Expense_Payee,
                 payee_type = EntryDetails.e.Expense_Payee_Type,
                 expenseYear = EntryDetails.e.Expense_Date.Year.ToString(),
                 expenseId = EntryDetails.e.Expense_Number.ToString().PadLeft(5, '0'),
@@ -9949,7 +9949,7 @@ namespace ExpenseProcessingSystem.Services
                 debit.type = (command != "R") ? "D" : "C";
                 debit.ccy = item.ccy;
                 debit.amount = item.debitGross;
-                debit.vendor = expenseDetails.vendor;
+                debit.vendor = expenseDetails.selectedPayee;
                 debit.account = item.account;
                 debit.chkNo = expenseDetails.checkNo;
                 debit.dept = item.dept;
@@ -9962,7 +9962,7 @@ namespace ExpenseProcessingSystem.Services
                     credit.type = (command != "R") ? "C" : "D";
                     credit.ccy = item.ccy;
                     credit.amount = item.credEwt;
-                    credit.vendor = expenseDetails.vendor;
+                    credit.vendor = expenseDetails.selectedPayee;
                     credit.account = item.creditAccount1;
                     credit.dept = item.dept;
 
@@ -9974,7 +9974,7 @@ namespace ExpenseProcessingSystem.Services
                 credit.type = (command != "R") ? "C" : "D";
                 credit.ccy = item.ccy;
                 credit.amount = item.credCash;
-                credit.vendor = expenseDetails.vendor;
+                credit.vendor = expenseDetails.selectedPayee;
                 credit.account = item.creditAccount2;
                 credit.dept = item.dept;
 
@@ -9989,7 +9989,7 @@ namespace ExpenseProcessingSystem.Services
                 {
                     tempGbase.entries = new List<entryContainer>();
 
-                    Dictionary<string, entryContainer> fbt = createFbt(expenseDetails.vendor, item.account, item.debitGross, debit, credit);
+                    Dictionary<string, entryContainer> fbt = createFbt(expenseDetails.selectedPayee, item.account, item.debitGross, debit, credit);
 
                     fbt["debit"].type = (command != "R") ? "D" : "C"; 
                     fbt["credit"].type = (command != "R") ? "C" : "D";

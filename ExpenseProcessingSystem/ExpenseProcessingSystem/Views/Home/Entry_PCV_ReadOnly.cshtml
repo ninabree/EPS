@@ -42,7 +42,7 @@
     <div id="tbl-lbl">
         <div class="dis-inline-block"><p>Payee:</p></div>
         <div class="dis-inline-block">
-            @Html.DropDownListFor(m => m.vendor, new SelectList(Model.systemValues.employeesAll, "Value", "Text", Model.systemValues.employeesAll.SelectedValue), new { disabled = "disabled", @class = "selectDisabled" })
+            @Html.DropDownListFor(m => m.selectedPayee, new SelectList(Model.systemValues.employeesAll, "Value", "Text", Model.systemValues.employeesAll.SelectedValue), new { disabled = "disabled", @class = "selectDisabled" })
         </div>
     </div>
     <div class="entry-tbl-cont">
@@ -410,7 +410,7 @@
         {
             <Text>
             $("#entry-controls").on("click", "#printBir", function (e) {
-                var vendorID = @Model.vendor;
+                var vendorID = @Model.selectedPayee;
                 var approverID = @Model.approver_id;
                 var link = [
                 @foreach (var item in Model.birForms)
