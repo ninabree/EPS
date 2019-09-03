@@ -190,9 +190,8 @@ namespace BIR_Form_Filler.Functions
 
         private void SetForThePeriod(ExcelWorksheet ws, DateTime fromDate, DateTime toDate)
         {
-            string format = "yyyy-M";
-            DateTime startDt = DateTime.ParseExact(fromDate.Year + "-" + fromDate.Month, format, CultureInfo.InvariantCulture);
-            DateTime endDt = DateTime.ParseExact(toDate.Year + "-" + toDate.Month, format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
+            DateTime startDt = GetFirstMonthDateOfQuarter(fromDate);
+            DateTime endDt = GetLastMonthDateOfQuarter(toDate);
             string fDate = startDt.ToString("MMddyy");
             string tDate = endDt.ToString("MMddyy");
 
@@ -212,6 +211,61 @@ namespace BIR_Form_Filler.Functions
             ws.Cells["AC8"].Value = tDate[4].ToString();
             ws.Cells["AD8"].Value = tDate[5].ToString();
 
+        }
+
+        private DateTime GetFirstMonthDateOfQuarter(DateTime date)
+        {
+            int[] Q1 = { 1, 2, 3 };
+            int[] Q2 = { 4, 5, 6 };
+            int[] Q3 = { 7, 8, 9 };
+            int[] Q4 = { 10, 11, 12 };
+            string format = "yyyy-M";
+
+            if (Q1.Contains(date.Month))
+            {
+                return DateTime.ParseExact(date.Year + "-" + Q1[0], format, CultureInfo.InvariantCulture);
+            }
+            if (Q2.Contains(date.Month))
+            {
+                return DateTime.ParseExact(date.Year + "-" + Q2[0], format, CultureInfo.InvariantCulture);
+            }
+            if (Q3.Contains(date.Month))
+            {
+                return DateTime.ParseExact(date.Year + "-" + Q3[0], format, CultureInfo.InvariantCulture);
+            }
+            if (Q4.Contains(date.Month))
+            {
+                return DateTime.ParseExact(date.Year + "-" + Q4[0], format, CultureInfo.InvariantCulture);
+            }
+
+            return new DateTime();
+        }
+        private DateTime GetLastMonthDateOfQuarter(DateTime date)
+        {
+            int[] Q1 = { 1, 2, 3 };
+            int[] Q2 = { 4, 5, 6 };
+            int[] Q3 = { 7, 8, 9 };
+            int[] Q4 = { 10, 11, 12 };
+            string format = "yyyy-M";
+
+            if (Q1.Contains(date.Month))
+            {
+                return DateTime.ParseExact(date.Year + "-" + Q1[2], format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
+            }
+            if (Q2.Contains(date.Month))
+            {
+                return DateTime.ParseExact(date.Year + "-" + Q2[2], format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
+            }
+            if (Q3.Contains(date.Month))
+            {
+                return DateTime.ParseExact(date.Year + "-" + Q3[2], format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
+            }
+            if (Q4.Contains(date.Month))
+            {
+                return DateTime.ParseExact(date.Year + "-" + Q4[2], format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
+            }
+
+            return new DateTime();
         }
     }
 }

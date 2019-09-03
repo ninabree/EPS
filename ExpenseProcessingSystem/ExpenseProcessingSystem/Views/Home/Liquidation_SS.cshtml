@@ -830,12 +830,12 @@
                     }
                 }
 
-                if ($('#txtCashBDTotal').val().replace(/\,/g, "") > $('#txtLiqPhpInput3').val()) {
+                if ($('#txtCashBDTotal').val().replace(/\,/g, "") > 0 && $('#txtLiqPhpInput2').val() == 0
+                    && $('#txtLiqPhpInput3').val() == 0) {
                     $('#alert').text(msgCashBD);
                     $('#divAlertWindow').show();
                     return false;
                 }
-
             }
             var ret = selectedRow.replace('item_', '');
             var trs = $('#cashBDLiqTable').find("tbody").find("tr");
@@ -1005,7 +1005,7 @@
                 @foreach (var item in Model.birForms)
                 {
                     <Text>
-                         "/Home/Generate2307File?_vendor=@item.vendor&_ewt=@item.ewt&_tax=@item.vat&_amount=@item.amount&approver=@item.approver&expID=@Model.entryID",
+                         "/Home/Generate2307File?_vendor=@item.vendor&_ewt=@item.ewt&_tax=@item.vat&_amount=@item.amount&date=@item.date&approver=@item.approver&expID=@Model.entryID",
                     </Text>
                 }
                     ""
