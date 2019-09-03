@@ -3458,6 +3458,7 @@ namespace ExpenseProcessingSystem.Services
                                     as_Amount = a.Amor_Price
                                 })
                             );
+
                             repAmortVMs.Add(new RepAmortViewModel()
                             {
                                 PA_AmortScheds = amorts,
@@ -7732,7 +7733,10 @@ namespace ExpenseProcessingSystem.Services
         {
             var vn = _context.ExpenseEntry
                 .Where(x => x.Expense_Payee_Type == GlobalSystemValues.PAYEETYPE_REGEMP
-                        && x.Expense_Type == GlobalSystemValues.TYPE_DDV
+                        && x.Expense_Type == GlobalSystemValues.TYPE_DDV 
+                        && (x.Expense_Status == GlobalSystemValues.STATUS_FOR_PRINTING 
+                        || x.Expense_Status == GlobalSystemValues.STATUS_FOR_CLOSING
+                        || x.Expense_Status == GlobalSystemValues.STATUS_POSTED)
                         && x.Expense_Last_Updated.Date == DateTime.Now.Date)
                 .ToList().Distinct();
             List<VoucherNoOptions> vnList = new List<VoucherNoOptions>();
