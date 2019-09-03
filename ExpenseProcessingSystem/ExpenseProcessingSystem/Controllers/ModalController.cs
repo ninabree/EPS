@@ -1065,10 +1065,11 @@ namespace ExpenseProcessingSystem.Controllers
             float InterRate = interRate != null ? float.Parse(interRate) : 1;
             string remarks = remarksTitle + " " + ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == DateTime.Now.Month).Single().MonthName + " " + DateTime.Now.Year;
 
+            List<SelectListItem> currList = _service.getCurrencyIDSelectList(int.Parse(Curr1AbbrID));
+            Curr2AbbrID = Curr2AbbrID == "0" ? currList.Select(x => x.Value).FirstOrDefault() : Curr2AbbrID;
             List<InterEntityParticular> parList1 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular1(account, Curr1AbbrName, decimal.Parse(Curr1Amt), decimal.Parse(Curr2Amt), InterRate, int.Parse(accID), int.Parse(Curr1AbbrID), _service.getInterEntityAccs("/INTERENTITYACCOUNTS/ACCOUNT[@class='entry1']"));
             List<InterEntityParticular> parList2 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular2(Curr1AbbrName, Curr2AbbrName, decimal.Parse(Curr2Amt), InterRate, int.Parse(Curr1AbbrID), int.Parse(Curr2AbbrID), _service.getInterEntityAccs("/INTERENTITYACCOUNTS/ACCOUNT[@class='entry2']"));
             List<InterEntityParticular> parList3 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular3(Curr2AbbrName, decimal.Parse(Curr2Amt), int.Parse(Curr2AbbrID), _service.getInterEntityAccs("/INTERENTITYACCOUNTS/ACCOUNT[@class='entry3']"));
-            List<SelectListItem> currList = _service.getCurrencySelectList();
 
             DDVInterEntityViewModel model = new DDVInterEntityViewModel
             {
@@ -1076,8 +1077,8 @@ namespace ExpenseProcessingSystem.Controllers
                 Inter_Currency1_ID = int.Parse(Curr1AbbrID),
                 Inter_Currency1_ABBR = Curr1AbbrName,
                 Inter_Currency1_Amount = decimal.Parse(Curr1Amt),
-                Inter_Currency2_ID = Curr2AbbrID == "NAN" ? 2 : int.Parse(Curr2AbbrID),
-                Inter_Currency2_ABBR = Curr2AbbrID == "NAN" ? _context.DMCurrency.Where(x => x.Curr_MasterID == 2 && x.Curr_isActive == true && x.Curr_isDeleted == false).Select(x => x.Curr_CCY_ABBR).FirstOrDefault() : Curr2AbbrName,
+                Inter_Currency2_ID = Curr2AbbrID == "0" ? int.Parse(currList.Select(x => x.Value).FirstOrDefault()) : int.Parse(Curr2AbbrID),
+                Inter_Currency2_ABBR = Curr2AbbrID == "0" ? currList.Select(x => x.Text).FirstOrDefault() : Curr2AbbrName,
                 Inter_Currency2_Amount = decimal.Parse(Curr2Amt),
                 Inter_Rate = InterRate,
                 Inter_Check1 = Chk1 == "True" ? true : Chk1 == "true" ? true : false,

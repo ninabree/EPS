@@ -3281,6 +3281,8 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 viewModel.expenseDate = DateTime.Now;
             }
+            //for comparing php id 
+            ViewBag.phpid = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_PHP").Value)).Curr_ID;
             return viewModel;
         }
         public dynamic PopulateEntryDDV(EntryDDVViewModelList viewModel)

@@ -148,3 +148,193 @@
     <tr></tr>
     <tr></tr>
 </table>
+<script>
+    $(document).ready(function () {
+        //set fields
+        var curr1Amt = @Model.Inter_Currency1_Amount;
+        var curr2Amt = @Model.Inter_Currency2_Amount;
+
+        var curr1Val = @Model.Inter_Currency1_Amount;
+        var curr2Val = @Model.Inter_Currency2_Amount;
+        isChk();
+        var conv1Val = @Model.Inter_Convert1_Amount;
+        var conv2Val = @Model.Inter_Convert2_Amount;
+        if ((curr1Val != 0) && isChk2 && (conv2Val != 0)) {
+            UpdateParticulars1(curr1Val, conv2Val);
+        }
+        else if ((curr2Val != 0) && isChk1 && (conv1Val != 0)) {
+            UpdateParticulars2(curr2Val, conv1Val);
+        } else {
+            defaultInter();
+        }
+        defaultCheck();
+        updateCurrency2();
+        
+        // ---------------------- [[ FUNCTIONS ]] ----------------------
+        function updateCurrency2() {
+            var val = $(".curr2").find("option:selected").text();
+            var id = $(".curr2").find("option:selected").val();
+            $("#convertCurr1").text(val);
+            $(".curr2-abbr").text(val);
+            $("#curr2-lbl").text(val + " Amount");
+            $('#interPartList_0__Inter_Particular2_1__Particular_CredCurr_ID').val(id);
+            $('#interPartList_0__Inter_Particular3_0__Particular_CredCurr_ID').val(id);
+            $('#interPartList_0__Inter_Particular3_1__Particular_CredCurr_ID').val(id);
+        }
+        function isChk() {
+            isChk1 = ('@Model.Inter_Check1' == 'True');
+            isChk2 = ('@Model.Inter_Check2' == 'True');
+        }
+        function UpdateParticulars1(currVal, convVal) {
+            var rate = @Model.Inter_Rate;
+            if (!($.isNumeric(currVal) && $.isNumeric(convVal) && $.isNumeric(rate))) {
+                alert("Invalid amount/s provided.");
+            } else {
+                currVal = parseFloat(currVal).toFixed(2);
+                var curr2 = (parseFloat(convVal) * parseFloat(rate));
+                var curr2Dec = (curr2).toFixed(2);
+                var parCredit = (parseFloat(convVal)).toFixed(2);
+                var parDebit = (parseFloat(currVal) + parseFloat(curr2)).toFixed(2);
+                $("#par1-0").text(parDebit);
+                $("#par1-1").text(curr2Dec);
+                $("#par1-2").text(currVal);
+                $("#par2-0").text(curr2Dec);
+                $("#par2-1").text(parCredit);
+                $("#par3-0").text(parCredit);
+                $("#par3-1").text(parCredit);
+                $("#par2-0-1").text(rate);
+            }
+        }
+        function UpdateParticulars2(currVal, convVal) {
+            var rate = @Model.Inter_Rate;
+            if (!($.isNumeric(currVal) && $.isNumeric(convVal) && $.isNumeric(rate))) {
+                alert("Invalid amount/s provided.");
+            } else {
+                var curr1 = (parseFloat(convVal) * parseFloat(rate));
+                var curr1Dec = (curr1).toFixed(2);
+                var parCredit = (parseFloat(convVal)).toFixed(2);
+                var parDebit = (parseFloat(curr1) + parseFloat(currVal)).toFixed(2);
+                $("#par1-0").text(parDebit);
+                $("#par1-1").text(curr1Dec);
+                $("#par1-2").text(currVal);
+                $("#par2-0").text(curr1Dec);
+                $("#par2-1").text(parCredit);
+                $("#par3-0").text(parCredit);
+                $("#par3-1").text(parCredit);
+                $("#par2-0-1").text(rate);
+            }
+        }
+        function UpdateParticulars4(curr1Val, curr2Val, rateVal, checkBox) {
+            if (!($.isNumeric(curr1Val) && $.isNumeric(curr2Val) && $.isNumeric(rateVal))) {
+                alert("Invalid amount/s provided.");
+            } else if (checkBox == "chk1") {
+                var rateValDec = (parseFloat(rateVal).toFixed(4));
+                var curr1Dec = (parseFloat(curr1Val).toFixed(2));
+                var curr2Dec = (parseFloat(curr2Val).toFixed(2));
+                var parCredit = (parseFloat(curr1Val) / parseFloat(rateVal)).toFixed(2);
+                var parDebit = (parseFloat(curr1Val) + parseFloat(curr2Val)).toFixed(2);
+                $("#convertAmt1").val(parCredit);
+                $("#par1-0").text(parDebit);
+                $("#par1-1").text(curr2Dec);
+                $("#par1-2").text(curr1Dec);
+                $("#par2-0").text(curr2Dec);
+                $("#par2-1").text(parCredit);
+                $("#par3-0").text(parCredit);
+                $("#par3-1").text(parCredit);
+                $("#par2-0-1").text(rateValDec);
+            } else if (checkBox == "chk2") {
+                var rateValDec = (parseFloat(rateVal).toFixed(4));
+                var curr1Dec = (parseFloat(curr1Val).toFixed(2));
+                var curr2Dec = (parseFloat(curr2Val).toFixed(2));
+                var parCredit = (parseFloat(curr2Val) / parseFloat(rateVal)).toFixed(2);
+                var parDebit = (parseFloat(curr2Val) + parseFloat(curr1Val)).toFixed(2);
+                $("#convertAmt2").val(parCredit);
+                $("#par1-0").text(parDebit);
+                $("#par1-1").text(curr1Dec);
+                $("#par1-2").text(curr2Dec);
+                $("#par2-0").text(curr1Dec);
+                $("#par2-1").text(parCredit);
+                $("#par3-0").text(parCredit);
+                $("#par3-1").text(parCredit);
+                $("#par2-0-1").text(rateValDec);
+            }
+        }
+        function UpdateParticulars3(currAmt) {
+            //$(currAmt).val(0);
+            $("#par1-0").text(0);
+            $("#par1-1").text(0);
+            $("#par1-2").text(0);
+            $("#par2-0").text(0);
+            $("#par2-1").text(0);
+            $("#par3-0").text(0);
+            $("#par3-1").text(0);
+            $("#par2-0-1").text(0);
+        }
+        ////TEMP FIX
+        function computeValuesDDVInter(parent) {
+            var pNode = parent;
+            var grossAmt = $("#" + pNode.id + " .txtGross").val();
+
+            $("#" + pNode.id + " .txtGross").attr("value", grossAmt);
+
+            var itemNo = pNode.id; //jquery obj
+            var chkEwtVal = $("#" + itemNo).find(".chkEwt").is(':checked');
+            var vatable = $("#" + itemNo).find(".chkVat").is(':checked');
+            if (chkEwtVal) {
+                if (vatable) {
+                    var vatRate = (Number($("#" + itemNo).find(".txtVat option:selected").text()) / 100);
+                    var ewtRate = (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100);
+                    var netVat = roundNumber(grossAmt / (1 + vatRate), 2);
+                    var ewt = roundNumber(netVat * ewtRate, 2);
+                    var netEwt = grossAmt - ewt;
+
+                    $("#" + itemNo).find(".txtCredEwt").val(ewt);
+                    $("#" + itemNo).find(".txtCredCash").val(roundNumber(netEwt, 2));
+                } else {
+                    var ewtAmount = grossAmt * (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100);
+                    $("#" + itemNo).find(".txtCredEwt").val(roundNumber(ewtAmount, 2));
+                    $("#" + itemNo).find(".txtCredCash").val(roundNumber((grossAmt - ewtAmount), 2));
+                }
+            } else {
+                $("#" + itemNo).find(".txtCredEwt").val(0);
+                $("#" + itemNo).find(".txtCredCash").val(roundNumber(grossAmt, 2));
+            }
+
+            var gross = $(".txtGross");
+            var credEwt = $(".txtCredEwt");
+            var credCash = $(".txtCredCash");
+
+            var grossTotal = 0;
+            var ewtSubTotal = 0;
+            var cashSubTotal = 0;
+
+            for (var i = 0; i < gross.length; i++) {
+                grossTotal += Number(gross[i].value);
+            }
+
+            for (var i = 0; i < credEwt.length; i++) {
+                ewtSubTotal += Number(credEwt[i].value);
+            }
+
+            for (var i = 0; i < credCash.length; i++) {
+                cashSubTotal += Number(credCash[i].value);
+            }
+
+            $("#grossTotal").val(roundNumber(grossTotal, 2));
+            $("#credEwtTotal").val(roundNumber(ewtSubTotal, 2));
+            $("#credCashTotal").val(roundNumber(cashSubTotal, 2));
+            $("#credTotal").val(roundNumber(Number(ewtSubTotal + cashSubTotal), 2));
+
+            var ccyList = [];
+            for (var i = 0; i < $('.txtccy:not(#template_ccy)').length; i++) {
+                ccyList.push($($('.txtccy:not(#template_ccy)')[i]).val());
+            }
+            if ($('.txtccy:not(#template_ccy)').length > 1 && !(ccyList.every((val, i, arr) => val === arr[0]))) {
+                $("#grossTotal").val(0.00);
+                $("#credEwtTotal").val(0.00);
+                $("#credCashTotal").val(0.00);
+                $("#credTotal").val(0.00);
+            }
+        }
+    });
+</script>
