@@ -1080,8 +1080,8 @@ namespace ExpenseProcessingSystem.Controllers
                 fp.EeRegAddress = vendor.Vendor_Address;
                 fp.EeTin = vendor.Vendor_TIN;
                 fp.PayeeName = vendor.Vendor_Name;
-                fp.From_Date = DateTime.Now;
-                fp.To_Date = DateTime.Now;
+                fp.From_Date = date;
+                fp.To_Date = date;
 
                 //signatory
                 fp.PayorSig = new Signatories {
