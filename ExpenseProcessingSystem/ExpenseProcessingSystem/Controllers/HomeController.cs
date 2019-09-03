@@ -1771,8 +1771,10 @@ namespace ExpenseProcessingSystem.Controllers
                             approver = ddvList.approver,
                             date = ddvList.expenseDate
                         };
-
-                        birForms.Add(temp);
+                        if (item.ewt > 0)
+                        {
+                            birForms.Add(temp);
+                        }
                     }
                 }
             }
@@ -2929,6 +2931,7 @@ namespace ExpenseProcessingSystem.Controllers
             DMCurrencyModel currDtl = _context.DMCurrency.Where(x => x.Curr_MasterID == 1 && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
             DMCurrencyModel currDtlUSD = _context.DMCurrency.Where(x => x.Curr_MasterID == 2 && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
 
+            //POPULATING CDD IF APPLICABLE
             if (ncList.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT)
             {
                 ncList.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_PETTYCASHREPLENISHMENT.Populate_CDD_Instruc_Sheet(currDtl);
@@ -2947,13 +2950,15 @@ namespace ExpenseProcessingSystem.Controllers
                 ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID = ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID;
                 ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name = ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name;
             }
-           ViewData["USDmstr"] = _service.getXMLCurrency("USD").currMasterID;
+
+            //CURRENCIES FOR COMPARISON
+            ViewData["USDmstr"] = _service.getXMLCurrency("USD").currMasterID;
             ViewData["JPYmstr"] = _service.getXMLCurrency("YEN").currMasterID;
             ViewData["PHPmstr"] = _service.getXMLCurrency("PHP").currMasterID;
-            //for php id
             ViewBag.phpid = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_PHP").Value)).Curr_ID;
 
             List<cvBirForm> birForms = new List<cvBirForm>();
+            
             foreach (var item in ncList.EntryNC.ExpenseEntryNCDtls)
             {
                 if (birForms.Any(x => x.ewt == item.ExpNCDtl_TR_ID && x.vendor == item.ExpNCDtl_Vendor_ID))
@@ -2986,8 +2991,11 @@ namespace ExpenseProcessingSystem.Controllers
                         approver = ncList.approver,
                         date = ncList.expenseDate
                     };
-
-                    birForms.Add(temp);
+                    //If EWT is selected from the DDL
+                    if (item.ExpNCDtl_TR_ID > 0)
+                    {
+                        birForms.Add(temp);
+                    }
                 }
             }
             ncList.birForms.AddRange(birForms);
@@ -3192,39 +3200,39 @@ namespace ExpenseProcessingSystem.Controllers
                 MEMO = " "
             };
             List<CDDISValueContentsViewModel> cddContents = new List<CDDISValueContentsViewModel>();
-            decimal totalDeb = 0;
-            decimal totalCred = 0;
-            entryVals.EntryNC.ExpenseEntryNCDtls.ForEach(x =>
-            {
-                x.ExpenseEntryNCDtlAccs.ForEach(a =>
-                {
-                    //check if acc is Computer Suspense or Computer Suspense(USD)
-                    var filterAccs = _service.getNCAccsForFilter().ToList();
-                   if(filterAccs.Where(f=> f.accName.ToLower().Contains("comp")).Select(n => n.accID).Contains(a.ExpNCDtlAcc_Acc_ID))
-                    {
-                        if(a.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
-                        {
-                            totalDeb += a.ExpNCDtlAcc_Amount;
-                        }
-                        else
-                        {
-                            totalCred += a.ExpNCDtlAcc_Amount;
-                        }
-                    }
-                });
-            });
+            //decimal totalDeb = 0;
+            //decimal totalCred = 0;
+            //entryVals.EntryNC.ExpenseEntryNCDtls_CDD.ForEach(x =>
+            //{
+            //    x.ExpenseEntryNCDtlAccs.ForEach(a =>
+            //    {
+            //       // //check if acc is Computer Suspense or Computer Suspense(USD)
+            //       // var filterAccs = _service.getNCAccsForFilter().ToList();
+            //       //if(filterAccs.Where(f=> f.accName.ToLower().Contains("comp")).Select(n => n.accID).Contains(a.ExpNCDtlAcc_Acc_ID))
+            //       // {
+            //            if(a.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
+            //            {
+            //                totalDeb += a.ExpNCDtlAcc_Amount;
+            //            }
+            //            else
+            //            {
+            //                totalCred += a.ExpNCDtlAcc_Amount;
+            //            }
+            //        //}
+            //    });
+            //});
 
             CDDISValueContentsViewModel vm = new CDDISValueContentsViewModel
             {
                 DEBIT_CREDIT = "D",
                 CCY = currModel.Curr_CCY_ABBR,
-                AMOUNT = totalDeb
+                AMOUNT = entryVals.EntryNC.NC_CS_DebitAmt
             };
             CDDISValueContentsViewModel vm2 = new CDDISValueContentsViewModel
             {
                 DEBIT_CREDIT = "C",
                 CCY = currModel.Curr_CCY_ABBR,
-                AMOUNT = totalCred
+                AMOUNT = entryVals.EntryNC.NC_CS_CredAmt
             };
             cddContents.Add(vm);
             cddContents.Add(vm2);

@@ -11638,55 +11638,76 @@ namespace ExpenseProcessingSystem.Services
                 currABBR = acc.Curr_CCY_ABBR
             };
         }
-        public List<CONSTANT_NC_VALS> getNCAccsForFilter()
+        public List<CONSTANT_NC_VALS> getNCAccs(string Loc)
         {
-            List<CONSTANT_NC_VALS> ts = new List<CONSTANT_NC_VALS>
-            {
-                //accId is really MasterId
-                new CONSTANT_NC_VALS()
-                {
-                    accID = 68,
-                    accName = "COMPUTER SUSPENSE"
-                },
-                new CONSTANT_NC_VALS()
-                {
-                    accID = 76,
-                    accName = "COMPUTER SUSPENSE (US$)"
-                },
-                new CONSTANT_NC_VALS()
-                {
-                    accID = 72,
-                    accName = "INTER ENTITY REG to FCDU"
-                },
-                new CONSTANT_NC_VALS()
-                {
-                    accID = 77,
-                    accName = "	INTER ENTITY FCDU to REG"
-                },
-                new CONSTANT_NC_VALS()
-                {
-                    accID = 95,
-                    accName = "PETTY CASH"
-                },
-                new CONSTANT_NC_VALS()
-                {
-                    accID = 98,
-                    accName = "EWT TAX"
-                }
-            };
+            XmlDocument doc = new XmlDocument();
+            doc.Load("wwwroot/xml/NonCashAccounts.xml");
+            //var xLSPayroll = xelem.Element("LSPAYROLL").Value;
+            XmlNodeList nodeList = doc.SelectNodes(Loc);
             List<CONSTANT_NC_VALS> valList = new List<CONSTANT_NC_VALS>();
-            foreach (CONSTANT_NC_VALS val in ts)
+            foreach (XmlNode no in nodeList)
             {
-                var acc = _context.DMAccount.Where(x => (x.Account_MasterID == val.accID)
+                var rawVal = no.InnerText;
+                var acc = _context.DMAccount.Where(x => (x.Account_MasterID == int.Parse(rawVal))
                                                     && x.Account_isActive == true && x.Account_isDeleted == false).FirstOrDefault();
                 CONSTANT_NC_VALS vals = new CONSTANT_NC_VALS
                 {
                     accID = acc.Account_ID,
-                    accNo = acc.Account_MasterID + "",
+                    accNo = acc.Account_No,
                     accName = acc.Account_Name
                 };
                 valList.Add(vals);
             }
+            return valList;
+        }
+        public List<CONSTANT_NC_VALS> getNCAccsForFilter()
+        {
+            var acc_pettyCash = getNCAccs("/NONCASHACCOUNTS/PCR/ACCOUNT[@class='entry1' and @id='ACCOUNT1']");
+            var acc_computerSus = getNCAccs("/NONCASHACCOUNTS/PCR/ACCOUNT[@class='entry1' and @id='ACCOUNT2']");
+            var acc_computerSusUSD = getNCAccs("/NONCASHACCOUNTS/RETURNOFJSPAYROLL/ACCOUNT[@class='entry1' and @id='ACCOUNT1']");
+            var acc_interRF = getNCAccs("/NONCASHACCOUNTS/RETURNOFJSPAYROLL/ACCOUNT[@class='entry1' and @id='ACCOUNT2']");
+            var acc_interFR = getNCAccs("/NONCASHACCOUNTS/JSPAYROLL/ACCOUNT[@class='entry3' and @id='ACCOUNT1']");
+            var acc_ewtTax = getNCAccs("/NONCASHACCOUNTS/PSSC/ACCOUNT[@class='entry1' and @id='ACCOUNT2']");
+            //Populate Constant NC Accounts
+            List<CONSTANT_NC_VALS> valList = new List<CONSTANT_NC_VALS>
+            {
+                new CONSTANT_NC_VALS()
+                {
+                    accID = acc_computerSus.FirstOrDefault().accID,
+                    accNo = acc_computerSus.FirstOrDefault().accNo+"",
+                    accName = acc_computerSus.FirstOrDefault().accName
+                },
+                new CONSTANT_NC_VALS()
+                {
+                    accID = acc_computerSusUSD.FirstOrDefault().accID,
+                    accNo = acc_computerSusUSD.FirstOrDefault().accNo+"",
+                    accName = acc_computerSusUSD.FirstOrDefault().accName
+                },
+                new CONSTANT_NC_VALS()
+                {
+                    accID = acc_interRF.FirstOrDefault().accID,
+                    accNo = acc_interRF.FirstOrDefault().accNo+"",
+                    accName = acc_interRF.FirstOrDefault().accName
+                },
+                new CONSTANT_NC_VALS()
+                {
+                    accID = acc_interFR.FirstOrDefault().accID,
+                    accNo = acc_interFR.FirstOrDefault().accNo+"",
+                    accName = acc_interFR.FirstOrDefault().accName
+                },
+                new CONSTANT_NC_VALS()
+                {
+                    accID = acc_pettyCash.FirstOrDefault().accID,
+                    accNo = acc_pettyCash.FirstOrDefault().accNo+"",
+                    accName = acc_pettyCash.FirstOrDefault().accName
+                },
+                new CONSTANT_NC_VALS()
+                {
+                    accID = acc_ewtTax.FirstOrDefault().accID,
+                    accNo = acc_ewtTax.FirstOrDefault().accNo+"",
+                    accName = acc_ewtTax.FirstOrDefault().accName
+                }
+            };
             return valList;
         }
         //get vendor

@@ -1073,6 +1073,7 @@
                 $(element).find("td[id='deb_" + idNo + "']").each(function (ind, el) {
                     var debitVal = parseFloat($(el).find("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + ind + "__ExpNCDtlAcc_Amount']").val());
                     if (categoryID == "8") {
+                        //According to a later discussion
                         if ((idNo != 2) && (idNo != 3)) {
                             subtotalDeb += debitVal;
                         }
