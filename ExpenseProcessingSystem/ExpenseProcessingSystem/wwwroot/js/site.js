@@ -99,7 +99,7 @@ $(document).ready(function () {
             }
         });
     }
-    //for tabs
+    //for Highlighting Tabs
     function init() {
         // Grab the tab links and content divs from the page
         var tabListItems = document.getElementById('tabs').childNodes;

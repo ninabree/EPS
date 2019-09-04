@@ -99,6 +99,7 @@
             <tbody>
                 @if (Model.EntryNC != null && Model.EntryNC.ExpenseEntryNCDtls.Count > 0)
                 {
+                    //To Populate Non Cash Entries from Misc Entries
                     @if (@Model.EntryNC.NC_Category_ID == 11)
                     {
                         @for (int i = 0; i < Model.EntryNC.ExpenseEntryNCDtls.Count; i++)
@@ -352,6 +353,7 @@
                     }
                     else
                     {
+                        //To Populate Non Cash Entries ASIDE from Misc Entries
                         @for (int i = 0; i < Model.EntryNC.ExpenseEntryNCDtls.Count; i++)
                         {
                                 <tr id="item_@i">
@@ -544,7 +546,6 @@
                 }
                 @Html.HiddenFor(x => x.EntryNC.NC_Category_ID)
                 @Html.HiddenFor(x => x.category_of_entry)
-                @*@Html.HiddenFor(x => x.expenseDate)*@
                 @Html.HiddenFor(x => x.entryID)
                 <input type="hidden" name="command" id="btnID" />
                 <tr>
@@ -587,7 +588,7 @@
                 </tr>
             </tbody>
         </table>
-
+        //To Populate Total, CDD Instruction Sheet and Balance Checkers in their respective Category Type
         @if (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_LS_PAYROLL)
         {
             <table class="table table-bordered voucher-tbl m-t-20" style="background-color: #fafafa; border: 2px solid #ccc !important">
@@ -844,37 +845,9 @@
             }
         }
         document.addEventListener("change", computeFunction, false);
-        //computeValsNC();
+
         hiddencols();
         onloadModifiedMiscEntries();
-        function onloadModifiedMiscEntries() {
-            var tblRow = $("tr[id^='item_']");
-            var tblRowLen = $(tblRow).length;
-            if (tblRowLen > 0) {
-                jQuery.each(tblRow, function (i, dtl) {
-                    for (var a = 0; a < 4; a++) {
-                        var amount = $("#EntryNC_ExpenseEntryNCDtls_" + i + "__ExpenseEntryNCDtlAccs_" + a + "__ExpNCDtlAcc_Amount").val();
-                        if (parseFloat(amount) > 0) {
-                            var typeId = $("#EntryNC_ExpenseEntryNCDtls_" + i + "__ExpenseEntryNCDtlAccs_" + a + "__ExpNCDtlAcc_Type_ID").val();
-                            if (typeId == @GlobalSystemValues.NC_DEBIT+"") {
-                                $(".amt-db-" + i + "-" + a).val(amount);
-                            } else {
-                                $(".amt-cd-" + i + "-" + a).val(amount);
-                            }
-                        }
-                    }
-                });
-            }
-        }
-
-        function hiddencols() {
-            var catID = $("select#categoryName option:selected").val();
-            if (catID == @GlobalSystemValues.NC_PSSC +"" || catID == @GlobalSystemValues.NC_PCHC +"" || catID == @GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES +"") {
-                $('#NCPartialTbl').find(".cat-hidden").removeClass("hidden");
-            } else {
-                $('#NCPartialTbl').find(".cat-hidden").addClass("hidden");
-            }
-        }
 
         if ($("#entryID").val() == "") {
             $("#entryID").val(0);
@@ -1036,6 +1009,38 @@
                 $(this).val(0);
             }
         });
+
+        /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+         [BEGIN FUNCTIONS]
+         */
+        function onloadModifiedMiscEntries() {
+            var tblRow = $("tr[id^='item_']");
+            var tblRowLen = $(tblRow).length;
+            if (tblRowLen > 0) {
+                jQuery.each(tblRow, function (i, dtl) {
+                    for (var a = 0; a < 4; a++) {
+                        var amount = $("#EntryNC_ExpenseEntryNCDtls_" + i + "__ExpenseEntryNCDtlAccs_" + a + "__ExpNCDtlAcc_Amount").val();
+                        if (parseFloat(amount) > 0) {
+                            var typeId = $("#EntryNC_ExpenseEntryNCDtls_" + i + "__ExpenseEntryNCDtlAccs_" + a + "__ExpNCDtlAcc_Type_ID").val();
+                            if (typeId == @GlobalSystemValues.NC_DEBIT+"") {
+                                $(".amt-db-" + i + "-" + a).val(amount);
+                            } else {
+                                $(".amt-cd-" + i + "-" + a).val(amount);
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function hiddencols() {
+            var catID = $("select#categoryName option:selected").val();
+            if (catID == @GlobalSystemValues.NC_PSSC +"" || catID == @GlobalSystemValues.NC_PCHC +"" || catID == @GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES +"") {
+                $('#NCPartialTbl').find(".cat-hidden").removeClass("hidden");
+            } else {
+                $('#NCPartialTbl').find(".cat-hidden").addClass("hidden");
+            }
+        }
         function computeValsNC() {
             var totalDebit = 0;
             var totalCredit = 0;
@@ -1254,5 +1259,8 @@
                 //$("#EntryNC_ExpenseEntryNCDtls_CDD_0__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Amount").parent().siblings("td:eq(5)").text(parseFloat(subtotalPCRCompDeb).toFixed(2))
             }
         }
+        /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+         [END FUNCTIONS]
+         */
     });
 </script>
