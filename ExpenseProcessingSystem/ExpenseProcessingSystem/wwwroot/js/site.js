@@ -231,35 +231,35 @@ $(document).ready(function () {
             tabLinks[id].onfocus = function () { this.blur() };
             if (id == tabVal) tabLinks[id].className = 'selected';
             //if any entry tab is clicked, 'Entry' tab is selected as well
-            if (ENTRY_VALS.indexOf(tabVal) > 0) {
+            if (ENTRY_VALS.indexOf(tabVal) >= 0) {
                 document.getElementById('entry').firstElementChild.className = 'selected';
                 //if any cv page, cv tab is selected
-                if (ENTRY_VALS_CV.indexOf(tabVal) > 0) {
+                if (ENTRY_VALS_CV.indexOf(tabVal) >= 0) {
                     document.getElementById('cv').firstElementChild.className = 'selected';
                 }
                 //if any ddv page, ddv tab is selected
-                if (ENTRY_VALS_DDV.indexOf(tabVal) > 0) {
+                if (ENTRY_VALS_DDV.indexOf(tabVal) >= 0) {
                     document.getElementById('ddv').firstElementChild.className = 'selected';
                 }
                 //if any nc page, nc tab is selected
-                if (ENTRY_VALS_NC.indexOf(tabVal) > 0) {
+                if (ENTRY_VALS_NC.indexOf(tabVal) >= 0) {
                     document.getElementById('nc').firstElementChild.className = 'selected';
                 }
                 //if any pcv page, pcv tab is selected
-                if (ENTRY_VALS_PCV.indexOf(tabVal) > 0) {
+                if (ENTRY_VALS_PCV.indexOf(tabVal) >= 0) {
                     document.getElementById('pcv').firstElementChild.className = 'selected';
                 }
                 //if any ss page, ss tab is selected
-                if (ENTRY_VALS_SS.indexOf(tabVal) > 0) {
+                if (ENTRY_VALS_SS.indexOf(tabVal) >= 0) {
                     document.getElementById('ss').firstElementChild.className = 'selected';
                 }
                 //if any liquidation page, liquidation tab is selected
-                if (ENTRY_VALS_LIQ.indexOf(tabVal) > 0) {
+                if (ENTRY_VALS_LIQ.indexOf(tabVal) >= 0) {
                     document.getElementById('liqtab').firstElementChild.className = 'selected';
                 }
             }
             //if any home tab is clicked, 'Home' tab is selected as well
-            else if (HOME_VALS.indexOf(tabVal) > 0) {
+            else if (HOME_VALS.indexOf(tabVal) >= 0) {
                 document.getElementById('home').firstElementChild.className = 'selected';
             }
             i++;
@@ -287,29 +287,6 @@ $(document).ready(function () {
         var hashPos = url.lastIndexOf('#');
         return url.substring(hashPos + 1);
     }
-    //modals
-    function showREModal() {
-        alert();
-    }
-
-    //login
-    //function CheckUn() {
-    //    var val = $('#User_UserName').val();
-    //    if (val.length > 0) {
-    //        $('.UN').hide();
-    //    } else {
-    //        $('.UN').show();
-    //    }
-    //}
-    //function CheckPw() {
-    //    var val = $('#User_Password').val();
-    //    if (val.length > 0) {
-    //        //alert(val);
-    //        $('.PW').hide();
-    //    } else {
-    //        $('.PW').show();
-    //    }
-    //}
     //clear validation onload of User Management
     function ClearValidations() {
         $('#validationSummary').empty();
