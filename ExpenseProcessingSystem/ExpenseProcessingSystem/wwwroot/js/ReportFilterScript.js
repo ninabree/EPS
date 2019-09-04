@@ -141,6 +141,10 @@
             ddlFileFormat.children('option').css('display', 'none');
             ddlFileFormat.children('option[value=1]').show();
             ddlFileFormat.val($("#ddlFileFormat option[value=1]").val());
+        } else if (ReportType == 13) {
+            ddlFileFormat.children('option').css('display', 'none');
+            ddlFileFormat.children('option[value=2]').show();
+            ddlFileFormat.val($("#ddlFileFormat option[value=2]").val());
         }
         if (ReportType != 0 || ReportType != '') {
             btnGenerateFile.removeAttr("disabled");

@@ -3,6 +3,7 @@
 @{
     Layout = null;
     var dateNow = DateTime.Now.ToShortDateString();
+    var dateNowStr = DateTime.Now.ToLongDateString();
     var cnt = 1;
 }
 
@@ -17,14 +18,58 @@
         text-decoration: underline;
     }
     .fw-doub-underline {
-        text-decoration: double;
+        border-bottom: 4px double #000;
     }
     .fw-thk-underline{
         font-weight: bold;
     }
+    .w-32p {
+        width: auto;
+        margin-right: 5px;
+    }
+    .w-50p {
+        width: 50%;
+    }
+    .w-65p {
+        width: 65%;
+    }
+    .float-l {
+        float:left;
+    }
+    .m-t-50{
+        margin-top: 50px;
+    }
+    .fs-10{
+        font-size:10px;
+    }
+    .tbl-colps {
+        border-collapse: collapse;
+    }
+    .b-b-1{
+        border-bottom: 1px solid #000;
+    }
+    #phpleft {
+        float: left;
+        width: 13%;
+    }
+    #phpright {
+        float: right;
+        width: 25%;
+    }
+
+    #adjust-div {
+        float: right;
+        width: 87%;
+        border-bottom: 1px solid #000;
+    }
+    #adjust-div-l {
+        float: left;
+        width: 75%;
+        border-bottom: 1px solid #000;
+    }
 </style>
 
-<table border="0" style="width:100%">
+<table border="0" class="w-65p m-t-50 tbl-colps">
     <colgroup>
         <col style="width:8.33%" />
         <col style="width:8.33%" />
@@ -73,7 +118,7 @@
             {
                 @foreach (var val in Model.ReportLOI.Rep_DDVNoList)
                 {
-                    <td>@val</td>
+                    <td class="fs-10">@val</td>
                 }
             }
             else
@@ -110,38 +155,41 @@
         }
         <tr><td colspan="12"><p></p></td></tr>
         <tr>
-            <td colspan="12">This is to authorize BDO Universal Bank - Corporate Center Branch to debit MIZUHO BANK, LTD. - </td>
+            <td colspan="12"><div class="dis-inline-block w-32p float-l">This is to authorize BDO Universal Bank - Corporate Center Branch to debit</div> <div class="fw-bold fw-italic dis-inline-block float-l w-32p">MIZUHO BANK, LTD. - </div></td>
         </tr>
         <tr>
-            <td colspan="12">MANILA BRANCH ACCT. No. 003008019974 today, @dateNow for the total amount of</td>
+            <td colspan="12"><div class="dis-inline-block w-32p float-l fw-bold fw-italic">MANILA BRANCH ACCT. No. 003008019974</div><div class="dis-inline-block w-32p float-l"> today,</div> <div class="dis-inline-block w-32p float-l fw-underline"> @dateNowStr </div><div class="dis-inline-block w-32p float-l"> for the total amount of</div></td>
         </tr>
         <tr>
-            <td colspan="12">Philippine Pesos: @Model.ReportLOI.Rep_AmountInString</td>
+            <td colspan="12"><div id="phpleft" class=""> Philippine Pesos: </div> <div id="adjust-div"> @Model.ReportLOI.Rep_AmountInString <p></p></div></td>
         </tr>
         <tr>
-            <td colspan="12">(PHP @Model.ReportLOI.Rep_Amount), and credit to the account of:</td>
+            <td colspan="12"><div id="adjust-div-l"> (PHP @Model.ReportLOI.Rep_Amount</div> <div id="phpright"> ), and credit to the account of:</div></td>
         </tr>
         <tr><td colspan="12"><p></p></td></tr>
         <tr class="text-center">
             <td></td>
             <td colspan="3"><p class="fw-bold">Name</p></td>
             <td colspan="2"><p class="fw-bold">Account Type</p></td>
-            <td colspan="3"><p class="fw-bold">Account No.</p></td>
-            <td colspan="3"><p class="fw-bold">Amount(PHP)</p></td>
+            <td colspan="2"><p class="fw-bold">Account No.</p></td>
+            <td colspan="1"><p class="fw-bold">Amount(PHP)</p></td>
+            <td colspan="3"><p class="fw-bold"></p></td>
         </tr>
         @foreach (var vals in Model.ReportLOI.Rep_LOIAccList)
         {
-            <tr class="text-center">
+            <tr class="text-center b-b-1">
                 <td>@cnt</td>
-                <td colspan="3" class="fw-underline"><p>@vals.loi_Emp_Name</p></td>
-                <td colspan="2" class="fw-underline"><p>@vals.loi_Acc_Type</p></td>
-                <td colspan="3" class="fw-underline"><p>@vals.loi_Acc_No</p></td>
-                <td colspan="3" class="fw-underline"><p>@vals.loi_Amount</p></td>
+                <td colspan="3"><div class="">@vals.loi_Emp_Name</div></td>
+                <td colspan="2"><div class="">@vals.loi_Acc_Type</div></td>
+                <td colspan="2"><div class="">@vals.loi_Acc_No</div></td>
+                <td colspan="1"><div class="">@vals.loi_Amount</div></td>
+                <td colspan="3"></td>
             </tr>
         }
         <tr>
-            <td colspan="9"></td>
-            <td colspan="3" class="fw-doub-underline">@Model.ReportLOI.Rep_Amount</td>
+            <td colspan="7"></td>
+            <td colspan="2" class="fw-doub-underline">@Model.ReportLOI.Rep_Amount</td>
+            <td colspan="3" class="fw-doub-underline"></td>
         </tr>
         <tr><td colspan="12"><p></p></td></tr>
         <tr>
