@@ -213,7 +213,7 @@
                                 <td class="@SetRateClass(@Model.EntryNC.NC_Category_ID, @i)">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Inter_Rate, @getHtmlAttributes(@Model.EntryNC.NC_Category_ID, @i))</td>
                                 @* DEBIT *@
                                 <td id="curr_sel[@i]_[0]">
-                                    <select id="curr[@i]_[0]" class="w-full input curr-sel misc-curr-0" name="curr[@i]_[0]">
+                                    <select id="curr[@i]_[0]" class="w-full input curr-sel misc-curr-0 db" name="curr[@i]_[0]">
                                         @foreach (var groepModel in Model.currList)
                                         {
                                             if (@groepModel.Value == @Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID + "")
@@ -233,7 +233,7 @@
 
                                 @* CREDIT *@
                                 <td id="curr_sel[@i]_[0]">
-                                    <select id="curr[@i]_[0]" class="w-full input curr-sel misc-curr-0" name="curr[@i]_[0]">
+                                    <select id="curr[@i]_[0]" class="w-full input curr-sel misc-curr-0 cd" name="curr[@i]_[0]">
                                         @foreach (var groepModel in Model.currList)
                                         {
                                             if (@groepModel.Value == @Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID + "")
@@ -293,7 +293,7 @@
                                     <td class="@SetRateClass(@Model.EntryNC.NC_Category_ID, @i)">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Inter_Rate, @getHtmlAttributes(@Model.EntryNC.NC_Category_ID, @i))</td>
                                     @* DEBIT *@
                                     <td id="curr_sel[@i]_[@j]">
-                                        <select id="curr[@i]_[@j]" class="w-full input curr-sel misc-curr-@j" name="curr[@i]_[@j]">
+                                        <select id="curr[@i]_[@j]" class="w-full input curr-sel misc-curr-@j db" name="curr[@i]_[@j]">
                                             @foreach (var groepModel in Model.currList)
                                             {
                                                 if (@groepModel.Value == @Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID + "")
@@ -313,7 +313,7 @@
 
                                     @* CREDIT *@
                                     <td id="curr_sel[@i]_[@j]">
-                                        <select id="curr[@i]_[@j]" class="w-full input curr-sel misc-curr-@j" name="curr[@i]_[@j]">
+                                        <select id="curr[@i]_[@j]" class="w-full input curr-sel misc-curr-@j cd" name="curr[@i]_[@j]">
                                             @foreach (var groepModel in Model.currList)
                                             {
                                                 if (@groepModel.Value == @Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID + "")
@@ -974,7 +974,11 @@
             }
             if (categoryID == @GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES) {
                 var valIdSplt = $(this).attr("id");
-                var amtInput = $("[id$='-" + valIdSplt.substring(5,6) + "-" + valIdSplt.substring(9,10) + "']");
+                if ($(this).hasClass("db")) {
+                    var amtInput = $("[id='amt-db-" + valIdSplt.substring(5, 6) + "-" + valIdSplt.substring(9, 10) + "']");
+                } else if ($(this).hasClass("cd")) {
+                    var amtInput = $("[id='amt-cd-" + valIdSplt.substring(5, 6) + "-" + valIdSplt.substring(9, 10) + "']");
+                }
                 $(amtInput).trigger("change");
                 } else {
                 var valId = $(this).attr("id");
@@ -1018,8 +1022,12 @@
             var decVal = 2;
             var val = $(this).val().replace("-", "");
             var valId = $(this).attr("id").split("-");
-            //TEMP FIX
-            var elCurrId = $("#EntryNC_ExpenseEntryNCDtls_" + valId[2] + "__ExpenseEntryNCDtlAccs_" + valId[3] + "__ExpNCDtlAcc_Curr_ID").val();
+            //Select the id of selected currency designated to either debit or credit
+            var currEl = $(this).parent().prevAll().find("select").last();
+            var elCurrId = $(currEl).find("option:selected").val();
+            //Update the currency id designated to form CurrencyID 
+            //switching from debit to credit also assigns the currency id of either debit or credit accrodingly
+            $("#EntryNC_ExpenseEntryNCDtls_" + valId[2] + "__ExpenseEntryNCDtlAccs_" + valId[3] + "__ExpNCDtlAcc_Curr_ID").val(elCurrId);
             if (@jpy == elCurrId) {
                 decVal = 0;
             }
@@ -1028,22 +1036,6 @@
                 $(this).val(0);
             }
         });
-        @*$("#NCPartialTbl").on("change", ".NumberOnlyOneDecimalMisc", function (e) {
-            var decVal = 2;
-            var pid = $(this.parentNode)[0].parentNode.id;
-            var val = $(this).val().replace("-", "");
-            var valId = $(this).attr("id").split("-");
-            var elCurrId = $(this).parent().prevAll("#curr_sel[" + valId[2] + "]_[" + valId[3] + "]:first").find("#curr[" + valId[2] + "]_[" + valId[3] + "] option:selected").val();
-            alert(elCurrId);
-            if (@jpy == elCurrId) {
-                decVal = 0;
-            }
-            $(this).val(roundNumber(val, decVal));
-            if (isNaN($(this).val())) {
-                $(this).val(0);
-            }
-        });*@
-       
         function computeValsNC() {
             var totalDebit = 0;
             var totalCredit = 0;
