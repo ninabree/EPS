@@ -108,13 +108,13 @@ namespace ExpenseProcessingSystem.Controllers
                 _session.SetString("isAdmin", acc.User_Role == "admin" ? "true" : "false");
                 return RedirectToAction("Index", "Home");
             }
-            _session.SetString("UserID", "11");
-            _session.SetString("UserName", "test user");
-            //Set User Access Info
-            _session.SetString("isLoggedIn", "true");
-            _session.SetString("accessType", "approver");
-            _session.SetString("isAdmin", "false");
-            return RedirectToAction("Index", "Home");
+            //_session.SetString("UserID", "11");
+            //_session.SetString("UserName", "test user");
+            ////Set User Access Info
+            //_session.SetString("isLoggedIn", "true");
+            //_session.SetString("accessType", "approver");
+            //_session.SetString("isAdmin", "false");
+            //return RedirectToAction("Index", "Home");
             //END OF LDAP LOGIN
 
             //var acc = _context.User.Where(x => x.User_UserName == model.User_UserName).Where(x => x.User_InUse == true).Select(x => x).FirstOrDefault();

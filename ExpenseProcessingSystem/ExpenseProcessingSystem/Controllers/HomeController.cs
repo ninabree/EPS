@@ -1146,6 +1146,7 @@ namespace ExpenseProcessingSystem.Controllers
 
         //-----------------------[* BUDGET MONITORING *]-------------------------------------------
 
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [ImportModelState]
         [NonAdminRoleCheck]
@@ -1181,6 +1182,7 @@ namespace ExpenseProcessingSystem.Controllers
                 (sortedVals.list).Cast<BMViewModel>().AsQueryable().AsNoTracking(), page ?? 1, pageSize));
         }
 
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [ImportModelState]
         [NonAdminRoleCheck]
@@ -1250,6 +1252,7 @@ namespace ExpenseProcessingSystem.Controllers
         //Expense Entry Block---------------------------------------------------------------------------------------
 
         //Expense Entry Check Voucher Block=========================================================================
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         [ImportModelState]
@@ -1395,6 +1398,7 @@ namespace ExpenseProcessingSystem.Controllers
             return viewModel;
         }
 
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         [ExportModelState]
@@ -1461,6 +1465,7 @@ namespace ExpenseProcessingSystem.Controllers
             return RedirectToAction("View_CV", "Home");
         }
 
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         public IActionResult VerAppModCV(int entryID, string command)
@@ -1568,6 +1573,7 @@ namespace ExpenseProcessingSystem.Controllers
             return RedirectToAction(viewLink, "Home", new { entryID = entryID });
         }
 
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         public IActionResult View_CV(int entryID)
@@ -1651,6 +1657,7 @@ namespace ExpenseProcessingSystem.Controllers
         //Expense Entry Check Voucher Block End=========================================================================
         //------------------------------------------------------------------
         //[* Entry Direct Deposit *]
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         [ImportModelState]
@@ -1718,6 +1725,7 @@ namespace ExpenseProcessingSystem.Controllers
             return View(viewModel);
         }
 
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         [ExportModelState]
@@ -1749,6 +1757,8 @@ namespace ExpenseProcessingSystem.Controllers
 
             return RedirectToAction("View_DDV", "Home");
         }
+
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         public IActionResult View_DDV(int entryID)
@@ -1811,6 +1821,8 @@ namespace ExpenseProcessingSystem.Controllers
 
             return View("Entry_DDV_ReadOnly", ddvList);
         }
+
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         public IActionResult VerAppModDDV(int entryID, string command)
@@ -1933,6 +1945,7 @@ namespace ExpenseProcessingSystem.Controllers
         }
 
         //-----------------[* Entry Petty Cash *]-----------------------------
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         [ImportModelState]
@@ -1993,6 +2006,7 @@ namespace ExpenseProcessingSystem.Controllers
             return View(viewModel);
         }
 
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         [ExportModelState]
@@ -2103,6 +2117,7 @@ namespace ExpenseProcessingSystem.Controllers
             return RedirectToAction("View_PCV", "Home");
         }
 
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         [NonAdminRoleCheck]
@@ -2275,6 +2290,7 @@ namespace ExpenseProcessingSystem.Controllers
             return RedirectToAction(viewLink, "Home", new { entryID = entryID });
         }
 
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         public IActionResult View_PCV(int entryID)
@@ -2366,6 +2382,7 @@ namespace ExpenseProcessingSystem.Controllers
         //------------------------------------------------------------------
 
         //-------------[* Entry Cash Advance(SS) *]--------------------------
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         [ImportModelState]
@@ -2434,6 +2451,7 @@ namespace ExpenseProcessingSystem.Controllers
             return View(viewModel);
         }
 
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         [ExportModelState]
@@ -2549,6 +2567,7 @@ namespace ExpenseProcessingSystem.Controllers
             return RedirectToAction("View_SS", "Home");
         }
 
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         public IActionResult VerAppModSS(int entryID, string command)
@@ -2729,6 +2748,7 @@ namespace ExpenseProcessingSystem.Controllers
             return RedirectToAction(viewLink, "Home", new { entryID = entryID });
         }
 
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         public IActionResult View_SS(int entryID)
@@ -2841,6 +2861,7 @@ namespace ExpenseProcessingSystem.Controllers
             return View("Entry_SS_ReadOnly", ssList);
         }
 
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         public IActionResult CDD_IS_SS(int entryID, int entryDtlID, string ccyAbbr)
@@ -2882,6 +2903,7 @@ namespace ExpenseProcessingSystem.Controllers
 
         [OnlineUserCheck]
         [NonAdminRoleCheck]
+        [ServiceFilter(typeof(ClosingCheck))]
         //[ImportModelState]
         public IActionResult Entry_NC(EntryNCViewModelList viewModel, string partialName)
         {
@@ -2907,6 +2929,7 @@ namespace ExpenseProcessingSystem.Controllers
         }
 
         //[ExportModelState]
+        [ServiceFilter(typeof(ClosingCheck))]
         public IActionResult AddNewNC(EntryNCViewModelList EntryNCViewModelList)
         {
             var userId = GetUserID();
@@ -2930,6 +2953,7 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [OnlineUserCheck]
         [NonAdminRoleCheck]
+        [ServiceFilter(typeof(ClosingCheck))]
         public IActionResult View_NC(int entryID)
         {
             var userId = GetUserID();
@@ -3028,6 +3052,7 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [OnlineUserCheck]
         [NonAdminRoleCheck]
+        [ServiceFilter(typeof(ClosingCheck))]
         public IActionResult VerAppModNC(int entryID, string command)
         {
             var userId = GetUserID();
@@ -3149,6 +3174,7 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [OnlineUserCheck]
         [NonAdminRoleCheck]
+        [ServiceFilter(typeof(ClosingCheck))]
         public IActionResult CDD_IS_NC_PCR(int entryID)
         {
             var entryVals = _service.getExpenseNC(entryID);
@@ -3198,6 +3224,7 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [OnlineUserCheck]
         [NonAdminRoleCheck]
+        [ServiceFilter(typeof(ClosingCheck))]
         public IActionResult CDD_IS_NC_RET(int entryID)
         {
             var entryVals = _service.getExpenseNC(entryID);
@@ -3379,6 +3406,7 @@ namespace ExpenseProcessingSystem.Controllers
         #region Liquidation
         [OnlineUserCheck]
         [NonAdminRoleCheck]
+        [ServiceFilter(typeof(ClosingCheck))]
         public IActionResult Liquidation_Main(string sortOrder, string currentFilter, string searchString, int? page)
         {
             var userId = GetUserID();
@@ -3907,6 +3935,7 @@ namespace ExpenseProcessingSystem.Controllers
         //----------------[Amortization]--------------------------
         [OnlineUserCheck]
         [NonAdminRoleCheck]
+        [ServiceFilter(typeof(ClosingCheck))]
         public IActionResult Amortization()
         {
             AmortizationList items = new AmortizationList();
@@ -3918,6 +3947,7 @@ namespace ExpenseProcessingSystem.Controllers
 
         [OnlineUserCheck]
         [NonAdminRoleCheck]
+        [ServiceFilter(typeof(ClosingCheck))]
         public IActionResult NCAmortization(int AmorID)
         {
             EntryNCViewModelList model = new EntryNCViewModelList {
