@@ -637,7 +637,7 @@ namespace ExpenseProcessingSystem.Controllers
                         subtypes.Add(new HomeReportSubTypeAccModel
                         {
                             Id = acc.Account_ID.ToString(),
-                            SubTypeName = acc.Account_Name + " - " + acc.Account_No
+                            SubTypeName = acc.Account_No + " - " + acc.Account_Name
                         });
                     }
                 }
@@ -647,6 +647,11 @@ namespace ExpenseProcessingSystem.Controllers
             if(ReportTypeID == HomeReportConstantValue.WTS)
             {
                 var taxList = _service.getAllTaxRateList();
+                subtypes.Add(new HomeReportSubTypeAccModel
+                {
+                    Id = "0",
+                    SubTypeName = "All"
+                });
                 foreach (var i in taxList)
                 {
                     subtypes.Add(new HomeReportSubTypeAccModel
@@ -901,7 +906,7 @@ namespace ExpenseProcessingSystem.Controllers
                     //Get the necessary data from Database
                     data = new HomeReportDataFilterViewModel
                     {
-                        HomeReportOutputAccountSummary = _service.GetAccountSummaryData(model).Where(x => x.Trans_DebitCredit == "D"),
+                        HomeReportOutputAccountSummary = _service.GetOutstandingAdvancesData(model).Where(x => x.Trans_DebitCredit == "D"),
                         HomeReportFilter = model,
                         ReportCommonVM = repComVM
                     };
@@ -1064,27 +1069,6 @@ namespace ExpenseProcessingSystem.Controllers
                 {
                     payItem.M3Quarter = amount;
                 }
-                //assigning Date From and To values to their respective Quarter
-                if (new List<int> { 1, 2, 3 }.Contains(date.Month))
-                {
-                    fp.From_Date = new DateTime(DateTime.Now.Year, 1, 1);
-                    fp.To_Date = new DateTime(DateTime.Now.Year, 3, 31);
-                }
-                else if (new List<int> { 4,5,6 }.Contains(date.Month))
-                {
-                    fp.From_Date = new DateTime(DateTime.Now.Year, 4, 1);
-                    fp.To_Date = new DateTime(DateTime.Now.Year, 6, 30);
-                }
-                else if (new List<int> { 7,8,9 }.Contains(date.Month))
-                {
-                    fp.From_Date = new DateTime(DateTime.Now.Year, 7, 1);
-                    fp.To_Date = new DateTime(DateTime.Now.Year, 9, 30);
-                }
-                else if (new List<int> { 10, 11, 12 }.Contains(date.Month))
-                {
-                    fp.From_Date = new DateTime(DateTime.Now.Year, 10, 1);
-                    fp.To_Date = new DateTime(DateTime.Now.Year, 12, 31);
-                }
                 //payitem
                 payItem.Atc = ewt.TR_ATC;
                 payItem.Payments = ewt.TR_Nature_Income_Payment;
@@ -1101,8 +1085,9 @@ namespace ExpenseProcessingSystem.Controllers
                 fp.EeRegAddress = vendor.Vendor_Address;
                 fp.EeTin = vendor.Vendor_TIN;
                 fp.PayeeName = vendor.Vendor_Name;
-                //fp.From_Date = date;
-                //fp.To_Date = date;
+
+                fp.From_Date = date;
+                fp.To_Date = date;
 
                 //signatory
                 fp.PayorSig = new Signatories {
