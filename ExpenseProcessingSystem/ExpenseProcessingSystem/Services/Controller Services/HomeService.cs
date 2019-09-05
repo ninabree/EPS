@@ -10072,28 +10072,82 @@ namespace ExpenseProcessingSystem.Services
                             maker = expenseDDV.maker,
                             approver = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == expID).Expense_Approver
                         };
-                        foreach (var accs in particular.ExpenseEntryInterEntityAccs)
+
+                        var entryType = "";
+                        var sameCurr = true;
+                        var firstCurr = particular.ExpenseEntryInterEntityAccs[0].Inter_Curr_ID;
+                        //checks if particular have same currency
+                        foreach (var accCurrs in particular.ExpenseEntryInterEntityAccs)
                         {
-                            var entryType = (accs.Inter_Type_ID == GlobalSystemValues.NC_DEBIT) ? "D" :
-                                            (accs.Inter_Type_ID == GlobalSystemValues.NC_CREDIT ||
-                                            accs.Inter_Type_ID == GlobalSystemValues.NC_EWT) ? "C" : "";
-                            if (command == "R")
+                            if (accCurrs.Inter_Curr_ID != firstCurr)
                             {
-                                entryType = (entryType == "D") ? "C" : (entryType == "C") ? "D" : "";
+                                sameCurr = false;
                             }
-                            if (entryType != "")
+                        }
+                        if (sameCurr)
+                        {
+                            foreach (var accs in particular.ExpenseEntryInterEntityAccs)
                             {
-                                entryContainer entry = new entryContainer
+                                entryType = (accs.Inter_Type_ID == GlobalSystemValues.NC_DEBIT) ? "D" :
+                                                (accs.Inter_Type_ID == GlobalSystemValues.NC_CREDIT ||
+                                                accs.Inter_Type_ID == GlobalSystemValues.NC_EWT) ? "C" : "";
+                                if (command == "R")
                                 {
-                                    account = accs.Inter_Acc_ID,
-                                    amount = accs.Inter_Amount,
-                                    ccy = accs.Inter_Curr_ID,
+                                    entryType = (entryType == "D") ? "C" : (entryType == "C") ? "D" : "";
+                                }
+                                if (entryType != "")
+                                {
+                                    entryContainer entry = new entryContainer
+                                    {
+                                        account = accs.Inter_Acc_ID,
+                                        amount = accs.Inter_Amount,
+                                        ccy = accs.Inter_Curr_ID,
+                                        dept = item.dept,
+                                        //this is for exchange rate
+                                        interate = accs.Inter_Rate,
+                                        type = entryType
+                                    };
+                                    tempGbase.entries.Add(entry);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (particular.ExpenseEntryInterEntityAccs.Count > 0)
+                            {
+                                entryType = (particular.ExpenseEntryInterEntityAccs[0].Inter_Type_ID == GlobalSystemValues.NC_DEBIT) ? "D" :
+                                        (particular.ExpenseEntryInterEntityAccs[0].Inter_Type_ID == GlobalSystemValues.NC_CREDIT ||
+                                        particular.ExpenseEntryInterEntityAccs[0].Inter_Type_ID == GlobalSystemValues.NC_EWT) ? "C" : "";
+                                entryContainer entryDB = new entryContainer()
+                                {
+                                    account = particular.ExpenseEntryInterEntityAccs[0].Inter_Acc_ID,
+                                    amount = particular.ExpenseEntryInterEntityAccs[0].Inter_Amount,
+                                    ccy = particular.ExpenseEntryInterEntityAccs[0].Inter_Curr_ID,
+                                    contraCcy = particular.ExpenseEntryInterEntityAccs[1].Inter_Curr_ID,
                                     dept = item.dept,
-                                    interate = accs.Inter_Rate,
-                                    //vendor = item.
+                                    //this is for exchange rate
+                                    interate = particular.ExpenseEntryInterEntityAccs[1].Inter_Rate,
                                     type = entryType
                                 };
-                                tempGbase.entries.Add(entry);
+                                tempGbase.entries.Add(entryDB);
+                            }
+                            if (particular.ExpenseEntryInterEntityAccs.Count > 1)
+                            {
+                                entryType = (particular.ExpenseEntryInterEntityAccs[1].Inter_Type_ID == GlobalSystemValues.NC_DEBIT) ? "D" :
+                                        (particular.ExpenseEntryInterEntityAccs[1].Inter_Type_ID == GlobalSystemValues.NC_CREDIT ||
+                                        particular.ExpenseEntryInterEntityAccs[1].Inter_Type_ID == GlobalSystemValues.NC_EWT) ? "C" : "";
+                                entryContainer entryCD = new entryContainer()
+                                {
+                                    account = particular.ExpenseEntryInterEntityAccs[1].Inter_Acc_ID,
+                                    amount = particular.ExpenseEntryInterEntityAccs[1].Inter_Amount,
+                                    ccy = particular.ExpenseEntryInterEntityAccs[1].Inter_Curr_ID,
+                                    dept = item.dept,
+                                    //this is for exchange rate and inter rate
+                                    interate = particular.ExpenseEntryInterEntityAccs[1].Inter_Rate,
+                                    type = entryType,
+                                    contraCcy = particular.ExpenseEntryInterEntityAccs[0].Inter_Curr_ID,
+                                };
+                                tempGbase.entries.Add(entryCD);
                             }
                         }
                         tempGbase.entries = tempGbase.entries.OrderByDescending(x => x.type).ToList();
@@ -12641,6 +12695,7 @@ namespace ExpenseProcessingSystem.Services
         public int vendor { get; set; }
         public int account { get; set; }
         public decimal interate { get; set; }
+        public decimal interamount { get; set; }
         public int contraCcy { get; set; }
         public string chkNo { get; set; }
         public int dept { get; set; }

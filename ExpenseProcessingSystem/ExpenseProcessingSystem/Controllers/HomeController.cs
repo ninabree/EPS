@@ -1040,10 +1040,20 @@ namespace ExpenseProcessingSystem.Controllers
                 BIRExcelFiller exlFiller = new BIRExcelFiller();
                 FirstPartBIRForm fp = new FirstPartBIRForm();
 
+                decimal ncTaxWithheld = 0;
+                //if Expense Entry is Non Cash
+                var entryNC = _service.getExpenseNC(expID);
+                if (entryNC.EntryNC.ExpenseEntryNCDtls.Count > 0)
+                {
+                    var acc = entryNC.EntryNC.ExpenseEntryNCDtls.FirstOrDefault(x => x.ExpNCDtl_ID == _tax)
+                                        .ExpenseEntryNCDtlAccs.FirstOrDefault(x => x.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_EWT);
+                    ncTaxWithheld = acc != null ? acc.ExpNCDtlAcc_Amount : 0;
+                    _tax = 0;
+                }
+
                 var vendor = _service.getVendor(_vendor);
                 var ewt = _service.GetEWT(_ewt);
                 decimal vat = _service.getVat(_tax);
-
                 var payItem = new PaymentInfo();
                 decimal amount;
 
@@ -1085,10 +1095,11 @@ namespace ExpenseProcessingSystem.Controllers
                     fp.From_Date = new DateTime(DateTime.Now.Year, 10, 1);
                     fp.To_Date = new DateTime(DateTime.Now.Year, 12, 31);
                 }
+
                 //payitem
                 payItem.Atc = ewt.TR_ATC;
                 payItem.Payments = ewt.TR_Nature_Income_Payment;
-                payItem.TaxWithheld = amount * (decimal)ewt.TR_Tax_Rate;
+                payItem.TaxWithheld = ncTaxWithheld > 0 ? ncTaxWithheld : (amount * (decimal)ewt.TR_Tax_Rate);
 
                 fp.IncomePay.Add(payItem);
 
@@ -2997,19 +3008,23 @@ namespace ExpenseProcessingSystem.Controllers
                 }
                 else
                 {
-                    decimal amt = 0;
+                    decimal amt = 0, vat = 0;
                     foreach (var a in item.ExpenseEntryNCDtlAccs)
                     {
                         if (a.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
                         {
                             amt += a.ExpNCDtlAcc_Amount;
+                        }else if (a.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_EWT)
+                        {
+                            vat += a.ExpNCDtlAcc_Amount;
                         }
                     }
                     cvBirForm temp = new cvBirForm
                     {
                         amount = amt,
                         ewt = item.ExpNCDtl_TR_ID,
-                        //vat = item.vat,
+                        //vat will temporarily hold the value for Expense Entry Detail ID
+                        vat = item.ExpNCDtl_ID,
                         vendor = item.ExpNCDtl_Vendor_ID,
                         approver = ncList.approver,
                         date = ncList.expenseDate

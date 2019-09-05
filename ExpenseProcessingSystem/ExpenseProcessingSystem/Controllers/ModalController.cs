@@ -1023,7 +1023,6 @@ namespace ExpenseProcessingSystem.Controllers
         {
             InterEntityParticular par = new InterEntityParticular();
             float InterRate = interRate != null ? float.Parse(interRate) : 1;
-            string remarks = remarksTitle + " " + ConstantData.HomeReportConstantValue.GetMonthList().Where(c => c.MonthID == DateTime.Now.Month).Single().MonthName + " " + DateTime.Now.Year;
 
             List<SelectListItem> currList = _service.getCurrencyIDSelectList(int.Parse(Curr1AbbrID));
             Curr2AbbrID = Curr2AbbrID == "0" ? currList.Select(x => x.Value).FirstOrDefault() : Curr2AbbrID;
@@ -1049,7 +1048,7 @@ namespace ExpenseProcessingSystem.Controllers
                 CurrencyList = currList
             };
             ExpenseEntryInterEntityParticularViewModel particular = new ExpenseEntryInterEntityParticularViewModel {
-                InterPart_Particular_Title = remarks,
+                InterPart_Particular_Title = remarksTitle,
                 Inter_Particular1 = parList1,
                 Inter_Particular2 = parList2,
                 Inter_Particular3 = parList3
