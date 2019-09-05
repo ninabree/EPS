@@ -4,7 +4,7 @@
     string prevCcyFCDU = Model.fcduItems.Count > 0 ? Model.fcduItems.OrderBy(x => x.ccy).ThenBy(x => x.expTrans).ToList()[0].ccy : "";
     decimal totalAmount = 0M;
     int totalTransCount = 0;
-  //  int index = 0;
+    //  int index = 0;
 }
 
 @using ExpenseProcessingSystem.ViewModels
@@ -53,7 +53,14 @@
                             <td>@item.expTrans</td>
                             <td>@item.particulars</td>
                             <td>@item.ccy</td>
-                            <td>@item.amount</td>
+                            @if (item.ccy == "YEN")
+                            {
+                                <td>@item.amount.ToString("N0")</td>
+                            }
+                            else
+                            {
+                                <td>@item.amount.ToString("n")</td>
+                            }
                             <td>@item.transCount</td>
                             <td>@item.status</td>
                         </tr>
@@ -64,7 +71,14 @@
                         <tr class="totalStyle">
                             <td colspan="4">RBU TOTAL</td>
                             <td>@prevCcyRBU</td>
-                            <td>@totalAmount</td>
+                            @if (prevCcyRBU == "YEN")
+                            {
+                                <td>@totalAmount.ToString("N0")</td>
+                            }
+                            else
+                            {
+                                <td>@totalAmount.ToString("n")</td>
+                            }
                             <td>@totalTransCount</td>
                             <td></td>
                         </tr>
@@ -77,7 +91,14 @@
                             <td>@item.expTrans</td>
                             <td>@item.particulars</td>
                             <td>@item.ccy</td>
-                            <td>@item.amount</td>
+                            @if (item.ccy == "YEN")
+                            {
+                                <td>@item.amount.ToString("N0")</td>
+                            }
+                            else
+                            {
+                                <td>@item.amount.ToString("n")</td>
+                            }
                             <td>@item.transCount</td>
                             <td>@item.status</td>
                         </tr>
@@ -87,7 +108,14 @@
                 <tr class="totalStyle">
                     <td colspan="4">RBU TOTAL</td>
                     <td>@prevCcyRBU</td>
-                    <td>@totalAmount</td>
+                    @if (prevCcyRBU == "YEN")
+                    {
+                        <td>@totalAmount.ToString("N0")</td>
+                    }
+                    else
+                    {
+                        <td>@totalAmount.ToString("n")</td>
+                    }
                     <td>@totalTransCount</td>
                     <td></td>
                 </tr>
@@ -110,14 +138,14 @@
                 <button class="tbl-btn float-l closeBtn" disabled>Close RBU</button>
                 <button class="tbl-btn float-l closeBtn" disabled>Re-Open RBU</button>
             }
-                <button value="RBU" class="tbl-btn float-r proofSheet">Print Proof Sheet</button>
+            <button value="RBU" class="tbl-btn float-r proofSheet">Print Proof Sheet</button>
             <!--<button class="tbl-btn float-l">Print RBU Balance</button>-->
             <!--<button class="tbl-btn float-r">Print RBU Proof sheet</button>-->
         </div>
 
         <div id="tbl-lbl">
             <div class="dis-inline-block"><p>Status:</p></div>
-            <div class="dis-inline-block">@Html.TextBoxFor(x=>x.rbuStatus,new { @readonly = "true" })</div>
+            <div class="dis-inline-block">@Html.TextBoxFor(x => x.rbuStatus, new { @readonly = "true" })</div>
         </div>
 
     </div>
@@ -153,7 +181,14 @@
                             <td>@item.expTrans</td>
                             <td>@item.particulars</td>
                             <td>@item.ccy</td>
-                            <td>@item.amount.ToString("0.00")</td>
+                            @if (item.ccy == "YEN")
+                            {
+                                <td>@item.amount.ToString("N0")</td>
+                            }
+                            else
+                            {
+                                <td>@item.amount.ToString("n")</td>
+                            }
                             <td>@item.transCount</td>
                             <td>@item.status</td>
                         </tr>
@@ -164,7 +199,14 @@
                         <tr class="totalStyle">
                             <td colspan="4">FCDU TOTAL</td>
                             <td>@prevCcyFCDU</td>
-                            <td>@totalAmount.ToString("0.00")</td>
+                            @if (prevCcyFCDU == "YEN")
+                            {
+                                <td>@totalAmount.ToString("N0")</td>
+                            }
+                            else
+                            {
+                                <td>@totalAmount.ToString("n")</td>
+                            }
                             <td>@totalTransCount</td>
                             <td></td>
                         </tr>
@@ -177,7 +219,14 @@
                             <td>@item.expTrans</td>
                             <td>@item.particulars</td>
                             <td>@item.ccy</td>
-                            <td>@item.amount.ToString("0.00")</td>
+                            @if (item.ccy == "YEN")
+                            {
+                                <td>@item.amount.ToString("N0")</td>
+                            }
+                            else
+                            {
+                                <td>@item.amount.ToString("n")</td>
+                            }
                             <td>@item.transCount</td>
                             <td>@item.status</td>
                         </tr>
@@ -187,7 +236,14 @@
                 <tr class="totalStyle">
                     <td colspan="4">FCDU TOTAL</td>
                     <td>@prevCcyFCDU</td>
-                    <td>@totalAmount.ToString("0.00")</td>
+                    @if (prevCcyFCDU == "YEN")
+                    {
+                        <td>@totalAmount.ToString("N0")</td>
+                    }
+                    else
+                    {
+                        <td>@totalAmount.ToString("n")</td>
+                    }
                     <td>@totalTransCount</td>
                     <td></td>
                 </tr>
@@ -233,7 +289,7 @@
                     <p>Beginning Balance</p>
                 </td>
                 <td>
-                    @Html.TextBoxFor(x=>x.pettyBegBalance, new { @readonly = "true",@class = "input", @id= "CBD_opeBalance" })
+                    @Html.TextBoxFor(x => x.pettyBegBalance, new { @readonly = "true", @class = "input", @id = "CBD_opeBalance" })
                 </td>
                 <td>
                     <button class="tbl-btn" id="StartPettyCash" value="StartPettyCash">Beginning Cash balance Confirmation</button>
@@ -244,7 +300,7 @@
                     <p>Cash-IN</p>
                 </td>
                 <td>
-                    @Html.TextBoxFor(x=>x.recieve, new { @readonly = "true", @class = "input",@id = "CBD_recieve" })
+                    @Html.TextBoxFor(x => x.recieve, new { @readonly = "true", @class = "input", @id = "CBD_recieve" })
                 </td>
                 <td><button class="tbl-btn" id="ClosePettyCash" value="ClosePettyCash">Petty Cash Breakdown</button></td>
             </tr>
@@ -253,7 +309,7 @@
                     <p>Cash-OUT</p>
                 </td>
                 <td>
-                    @Html.TextBoxFor(x=>x.Disbursed, new { @readonly = "true", @class = "input",@id= "CBD_disburse" })
+                    @Html.TextBoxFor(x => x.Disbursed, new { @readonly = "true", @class = "input", @id = "CBD_disburse" })
                 </td>
                 <td>
                     @if (Model.pcOpen)
@@ -271,7 +327,7 @@
                     <p>Ending Balance</p>
                 </td>
                 <td>
-                    @Html.TextBoxFor(x=>x.closeBal, new { @readonly = "true", @class = "input",@id= "CBD_closeBalance" })
+                    @Html.TextBoxFor(x => x.closeBal, new { @readonly = "true", @class = "input", @id = "CBD_closeBalance" })
                 </td>
                 <td></td>
             </tr>
@@ -371,7 +427,7 @@
     <input type="hidden" name="username" id="userString" />
     <input type="hidden" name="password" id="passString" />
 }
-    <script type="text/javascript">
+<script type="text/javascript">
     $(function () {
          $(window).on("load", function () {
         @if (Model.messages.Count() > 0)
@@ -397,7 +453,7 @@
                         $('#divAlertWindow').show();
                     } else {
                         $('#divAlertWindow').find(".spanTitle").html("Information");
-                        $('#alert').text("Failed to save cash breakdown."); 
+                        $('#alert').text("Failed to save cash breakdown.");
                         $('#pettyCashModal').modal('hide');
                         $('#divAlertWindow').show();
                     }
@@ -434,7 +490,7 @@
                     }
                 }
             });
- 
+
         });
 
         $("#closeBody").on("click", ".closeBtn", function (e) {
@@ -467,4 +523,4 @@
             return false;
         });
     });
-    </script>
+</script>

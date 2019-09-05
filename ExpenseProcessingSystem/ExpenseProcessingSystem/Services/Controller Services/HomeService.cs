@@ -12181,7 +12181,7 @@ namespace ExpenseProcessingSystem.Services
                 {
                     temp.gBaseTrans = _context.ExpenseTransLists.FirstOrDefault(x => x.TL_ExpenseID == item.Expense_ID
                                     && x.TL_GoExpHist_ID == gh.GOExpHist_Id).TL_TransID.ToString();
-                    temp.expTrans = "DDV-" + GetSelectedYearMonthOfTerm(item.Expense_Date.Month, item.Expense_Date.Year).Year + "-" +
+                    temp.expTrans = "NCV-" + GetSelectedYearMonthOfTerm(item.Expense_Date.Month, item.Expense_Date.Year).Year + "-" +
                                         item.Expense_Number.ToString().PadLeft(5, '0');
                 }
                 else
