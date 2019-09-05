@@ -304,6 +304,7 @@ namespace ExpenseProcessingSystem.Controllers
                     if (_service.ClosingCheckStatus())
                     {
                         model = _service.ClosingOpenDailyBook();
+                        messages.Add("New daily book is now open!");
                     }
                     else
                     {
@@ -637,7 +638,7 @@ namespace ExpenseProcessingSystem.Controllers
                         subtypes.Add(new HomeReportSubTypeAccModel
                         {
                             Id = acc.Account_ID.ToString(),
-                            SubTypeName = acc.Account_Name + " - " + acc.Account_No
+                            SubTypeName = acc.Account_No + " - " + acc.Account_Name
                         });
                     }
                 }
@@ -647,6 +648,11 @@ namespace ExpenseProcessingSystem.Controllers
             if(ReportTypeID == HomeReportConstantValue.WTS)
             {
                 var taxList = _service.getAllTaxRateList();
+                subtypes.Add(new HomeReportSubTypeAccModel
+                {
+                    Id = "0",
+                    SubTypeName = "All"
+                });
                 foreach (var i in taxList)
                 {
                     subtypes.Add(new HomeReportSubTypeAccModel
@@ -901,7 +907,7 @@ namespace ExpenseProcessingSystem.Controllers
                     //Get the necessary data from Database
                     data = new HomeReportDataFilterViewModel
                     {
-                        HomeReportOutputAccountSummary = _service.GetAccountSummaryData(model).Where(x => x.Trans_DebitCredit == "D"),
+                        HomeReportOutputAccountSummary = _service.GetOutstandingAdvancesData(model).Where(x => x.Trans_DebitCredit == "D"),
                         HomeReportFilter = model,
                         ReportCommonVM = repComVM
                     };
@@ -1074,28 +1080,6 @@ namespace ExpenseProcessingSystem.Controllers
                 {
                     payItem.M3Quarter = amount;
                 }
-                //assigning Date From and To values to their respective Quarter
-                if (new List<int> { 1, 2, 3 }.Contains(date.Month))
-                {
-                    fp.From_Date = new DateTime(DateTime.Now.Year, 1, 1);
-                    fp.To_Date = new DateTime(DateTime.Now.Year, 3, 31);
-                }
-                else if (new List<int> { 4,5,6 }.Contains(date.Month))
-                {
-                    fp.From_Date = new DateTime(DateTime.Now.Year, 4, 1);
-                    fp.To_Date = new DateTime(DateTime.Now.Year, 6, 30);
-                }
-                else if (new List<int> { 7,8,9 }.Contains(date.Month))
-                {
-                    fp.From_Date = new DateTime(DateTime.Now.Year, 7, 1);
-                    fp.To_Date = new DateTime(DateTime.Now.Year, 9, 30);
-                }
-                else if (new List<int> { 10, 11, 12 }.Contains(date.Month))
-                {
-                    fp.From_Date = new DateTime(DateTime.Now.Year, 10, 1);
-                    fp.To_Date = new DateTime(DateTime.Now.Year, 12, 31);
-                }
-
                 //payitem
                 payItem.Atc = ewt.TR_ATC;
                 payItem.Payments = ewt.TR_Nature_Income_Payment;
@@ -1112,8 +1096,9 @@ namespace ExpenseProcessingSystem.Controllers
                 fp.EeRegAddress = vendor.Vendor_Address;
                 fp.EeTin = vendor.Vendor_TIN;
                 fp.PayeeName = vendor.Vendor_Name;
-                //fp.From_Date = date;
-                //fp.To_Date = date;
+
+                fp.From_Date = date;
+                fp.To_Date = date;
 
                 //signatory
                 fp.PayorSig = new Signatories {
@@ -1171,6 +1156,7 @@ namespace ExpenseProcessingSystem.Controllers
 
         //-----------------------[* BUDGET MONITORING *]-------------------------------------------
 
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [ImportModelState]
         [NonAdminRoleCheck]
@@ -1206,6 +1192,7 @@ namespace ExpenseProcessingSystem.Controllers
                 (sortedVals.list).Cast<BMViewModel>().AsQueryable().AsNoTracking(), page ?? 1, pageSize));
         }
 
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [ImportModelState]
         [NonAdminRoleCheck]
@@ -1275,6 +1262,7 @@ namespace ExpenseProcessingSystem.Controllers
         //Expense Entry Block---------------------------------------------------------------------------------------
 
         //Expense Entry Check Voucher Block=========================================================================
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         [ImportModelState]
@@ -1290,6 +1278,13 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 viewModel = _service.getExpense(entryID);
                 viewModel = PopulateEntry((EntryCVViewModelList)viewModel);
+
+                if(viewModel.payee_type == GlobalSystemValues.PAYEETYPE_VENDOR)
+                {
+                    viewModel.systemValues.ewt = _service.getVendorTaxRate(viewModel.selectedPayee);
+                    viewModel.systemValues.vat = _service.getVendorVat(viewModel.selectedPayee);
+                }
+
                 viewModel.systemValues.payee_type_sel = new SelectList(GlobalSystemValues.PAYEETYPE_SELECT_CV, "Value", "Text", GlobalSystemValues.PAYEETYPE_SELECT_CV.First());
 
                 foreach (var i in viewModel.EntryCV)
@@ -1320,6 +1315,7 @@ namespace ExpenseProcessingSystem.Controllers
             else
             {
                 viewModel = PopulateEntry((EntryCVViewModelList)viewModel);
+
                 var accCCY = _service.getCurrencyByMasterID(_service.getAccount(viewModel.systemValues.acc[0].accId).Account_Currency_MasterID).Curr_ID;
                 //viewModel.vendor = 2;
                 viewModel.EntryCV.Add(new EntryCVViewModel {
@@ -1412,6 +1408,7 @@ namespace ExpenseProcessingSystem.Controllers
             return viewModel;
         }
 
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         [ExportModelState]
@@ -1478,6 +1475,7 @@ namespace ExpenseProcessingSystem.Controllers
             return RedirectToAction("View_CV", "Home");
         }
 
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         public IActionResult VerAppModCV(int entryID, string command)
@@ -1585,6 +1583,7 @@ namespace ExpenseProcessingSystem.Controllers
             return RedirectToAction(viewLink, "Home", new { entryID = entryID });
         }
 
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         public IActionResult View_CV(int entryID)
@@ -1618,11 +1617,12 @@ namespace ExpenseProcessingSystem.Controllers
             //cvList.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
             //cvList.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
             //cvList.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
-            //cvList.systemValues.ewt =_service.getVendorTaxRate(cvList.vendor);
-            //cvList.systemValues.vat = _service.getVendorVat(cvList.vendor);
             //cvList.systemValues.acc = _service.getAccDetailsEntry();
 
             cvList = PopulateEntry((EntryCVViewModelList)cvList);
+
+            cvList.systemValues.ewt = _service.getVendorTaxRate(cvList.selectedPayee);
+            cvList.systemValues.vat = _service.getVendorVat(cvList.selectedPayee);
 
             List<cvBirForm> birForms = new List<cvBirForm>();
             foreach (var item in cvList.EntryCV)
@@ -1667,6 +1667,7 @@ namespace ExpenseProcessingSystem.Controllers
         //Expense Entry Check Voucher Block End=========================================================================
         //------------------------------------------------------------------
         //[* Entry Direct Deposit *]
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         [ImportModelState]
@@ -1734,6 +1735,7 @@ namespace ExpenseProcessingSystem.Controllers
             return View(viewModel);
         }
 
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         [ExportModelState]
@@ -1765,6 +1767,8 @@ namespace ExpenseProcessingSystem.Controllers
 
             return RedirectToAction("View_DDV", "Home");
         }
+
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         public IActionResult View_DDV(int entryID)
@@ -1827,6 +1831,8 @@ namespace ExpenseProcessingSystem.Controllers
 
             return View("Entry_DDV_ReadOnly", ddvList);
         }
+
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         public IActionResult VerAppModDDV(int entryID, string command)
@@ -1949,6 +1955,7 @@ namespace ExpenseProcessingSystem.Controllers
         }
 
         //-----------------[* Entry Petty Cash *]-----------------------------
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         [ImportModelState]
@@ -2009,6 +2016,7 @@ namespace ExpenseProcessingSystem.Controllers
             return View(viewModel);
         }
 
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         [ExportModelState]
@@ -2119,6 +2127,7 @@ namespace ExpenseProcessingSystem.Controllers
             return RedirectToAction("View_PCV", "Home");
         }
 
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         [NonAdminRoleCheck]
@@ -2291,6 +2300,7 @@ namespace ExpenseProcessingSystem.Controllers
             return RedirectToAction(viewLink, "Home", new { entryID = entryID });
         }
 
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         public IActionResult View_PCV(int entryID)
@@ -2382,6 +2392,7 @@ namespace ExpenseProcessingSystem.Controllers
         //------------------------------------------------------------------
 
         //-------------[* Entry Cash Advance(SS) *]--------------------------
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         [ImportModelState]
@@ -2450,6 +2461,7 @@ namespace ExpenseProcessingSystem.Controllers
             return View(viewModel);
         }
 
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         [ExportModelState]
@@ -2565,6 +2577,7 @@ namespace ExpenseProcessingSystem.Controllers
             return RedirectToAction("View_SS", "Home");
         }
 
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         public IActionResult VerAppModSS(int entryID, string command)
@@ -2745,6 +2758,7 @@ namespace ExpenseProcessingSystem.Controllers
             return RedirectToAction(viewLink, "Home", new { entryID = entryID });
         }
 
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         public IActionResult View_SS(int entryID)
@@ -2857,6 +2871,7 @@ namespace ExpenseProcessingSystem.Controllers
             return View("Entry_SS_ReadOnly", ssList);
         }
 
+        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         public IActionResult CDD_IS_SS(int entryID, int entryDtlID, string ccyAbbr)
@@ -2898,6 +2913,7 @@ namespace ExpenseProcessingSystem.Controllers
 
         [OnlineUserCheck]
         [NonAdminRoleCheck]
+        [ServiceFilter(typeof(ClosingCheck))]
         //[ImportModelState]
         public IActionResult Entry_NC(EntryNCViewModelList viewModel, string partialName)
         {
@@ -2923,6 +2939,7 @@ namespace ExpenseProcessingSystem.Controllers
         }
 
         //[ExportModelState]
+        [ServiceFilter(typeof(ClosingCheck))]
         public IActionResult AddNewNC(EntryNCViewModelList EntryNCViewModelList)
         {
             var userId = GetUserID();
@@ -2946,6 +2963,7 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [OnlineUserCheck]
         [NonAdminRoleCheck]
+        [ServiceFilter(typeof(ClosingCheck))]
         public IActionResult View_NC(int entryID)
         {
             var userId = GetUserID();
@@ -3048,6 +3066,7 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [OnlineUserCheck]
         [NonAdminRoleCheck]
+        [ServiceFilter(typeof(ClosingCheck))]
         public IActionResult VerAppModNC(int entryID, string command)
         {
             var userId = GetUserID();
@@ -3169,6 +3188,7 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [OnlineUserCheck]
         [NonAdminRoleCheck]
+        [ServiceFilter(typeof(ClosingCheck))]
         public IActionResult CDD_IS_NC_PCR(int entryID)
         {
             var entryVals = _service.getExpenseNC(entryID);
@@ -3218,6 +3238,7 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [OnlineUserCheck]
         [NonAdminRoleCheck]
+        [ServiceFilter(typeof(ClosingCheck))]
         public IActionResult CDD_IS_NC_RET(int entryID)
         {
             var entryVals = _service.getExpenseNC(entryID);
@@ -3399,6 +3420,7 @@ namespace ExpenseProcessingSystem.Controllers
         #region Liquidation
         [OnlineUserCheck]
         [NonAdminRoleCheck]
+        [ServiceFilter(typeof(ClosingCheck))]
         public IActionResult Liquidation_Main(string sortOrder, string currentFilter, string searchString, int? page)
         {
             var userId = GetUserID();
@@ -3448,7 +3470,7 @@ namespace ExpenseProcessingSystem.Controllers
 
             foreach (var i in ssList.accAllList)
             {
-                i.Account_Name = i.Account_Name + " - " + i.Account_No;
+                i.Account_Name = i.Account_No + " - " + i.Account_Name;
             }
             foreach (var i in ssList.LiquidationDetails)
             {
@@ -3521,7 +3543,7 @@ namespace ExpenseProcessingSystem.Controllers
                 }
                 foreach (var i in vm.accAllList)
                 {
-                    i.Account_Name = i.Account_Name + " - " + i.Account_No;
+                    i.Account_Name = i.Account_No + " - " + i.Account_Name;
                 }
                 foreach (var i in vm.LiquidationDetails)
                 {
@@ -3649,7 +3671,7 @@ namespace ExpenseProcessingSystem.Controllers
 
             foreach (var i in ssList.accAllList)
             {
-                i.Account_Name = i.Account_Name + " - " + i.Account_No;
+                i.Account_Name =  i.Account_No + " - " + i.Account_Name;
             }
             foreach (var i in ssList.LiquidationDetails)
             {
@@ -3927,6 +3949,7 @@ namespace ExpenseProcessingSystem.Controllers
         //----------------[Amortization]--------------------------
         [OnlineUserCheck]
         [NonAdminRoleCheck]
+        [ServiceFilter(typeof(ClosingCheck))]
         public IActionResult Amortization()
         {
             AmortizationList items = new AmortizationList();
@@ -3938,6 +3961,7 @@ namespace ExpenseProcessingSystem.Controllers
 
         [OnlineUserCheck]
         [NonAdminRoleCheck]
+        [ServiceFilter(typeof(ClosingCheck))]
         public IActionResult NCAmortization(int AmorID)
         {
             EntryNCViewModelList model = new EntryNCViewModelList {

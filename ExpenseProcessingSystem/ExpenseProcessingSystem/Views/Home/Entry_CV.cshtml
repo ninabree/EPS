@@ -116,11 +116,26 @@
                             </td>
                             <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].chkVat, new { @class = "chkVat comVar" })</td>
                             <td>
-                                @Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.systemValues.vat.SelectedValue), new { @class = "input100 txtVat comVar voucher-input", @disabled = "true" })
+                                @if (Model.EntryCV[i].chkVat)
+                                {
+                                    @Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.systemValues.vat.SelectedValue), new { @class = "input100 txtVat comVar voucher-input" })
+                                }
+                                else
+                                {
+                                    @Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.systemValues.vat.SelectedValue), new { @class = "input100 txtVat comVar voucher-input", @disabled = "true" })
+                                }
+
                             </td>
                             <td style="text-align:center">@Html.CheckBoxFor(m => m.EntryCV[i].chkEwt, new { @class = "chkEwt comVar" })</td>
                             <td>
-                                @Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt comVar voucher-input", @disabled = "true" })
+                                @if (Model.EntryCV[i].chkEwt)
+                                {
+                                    @Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt comVar voucher-input"})
+                                }
+                                else
+                                {
+                                    @Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt comVar voucher-input", @disabled = "true" })
+                                }
                             </td>
                             <td>
                                 @Html.DropDownListFor(x => Model.EntryCV[i].ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100 voucher-input txtccy comVar" })

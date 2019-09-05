@@ -95,6 +95,7 @@ namespace ExpenseProcessingSystem
             services.AddDbContext<GOExpressContext>(options => options.UseSqlServer(Configuration.GetConnectionString("GOExpressConnection")));
             services.AddDbContext<GWriteContext>(options => options.UseSqlServer(Configuration.GetConnectionString("GoWriteConnection")));
             services.AddScoped<MakerCheck>();
+            services.AddScoped<ClosingCheck>();
             services.AddScoped<MakerCheckLiquidation>();
             services.AddScoped<HandleExceptionAttribute>();
             //services.AddHostedService<HelloWorldHostedService>();

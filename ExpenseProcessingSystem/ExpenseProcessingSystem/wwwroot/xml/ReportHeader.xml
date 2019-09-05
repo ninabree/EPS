@@ -22,4 +22,7 @@ string value4 = xelem.Element("ADDRESS").Value
   <WHAgentTIN>004669467</WHAgentTIN>
   <WHAgentBranchCode>0000</WHAgentBranchCode>
 
+  <!--Withholding tax account master ID uses in Withholding tax summary report-->
+  <WHT_ACCOUNT>114</WHT_ACCOUNT>
+  
 </ReportHeader>
