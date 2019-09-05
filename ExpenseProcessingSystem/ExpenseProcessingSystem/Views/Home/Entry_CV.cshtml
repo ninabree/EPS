@@ -2,6 +2,7 @@
     ViewData["Title"] = "Entry_CV";
 }
 @using ExpenseProcessingSystem.ViewModels
+@using ExpenseProcessingSystem.ConstantData
 @model EntryCVViewModelList
 @inject IJsonHelper Json;
 
@@ -20,10 +21,23 @@
             <div class="dis-inline-block">
                 @Html.DropDownListFor(m => m.payee_type, new SelectList(Model.systemValues.payee_type_sel, "Value", "Text", Model.systemValues.payee_type_sel.SelectedValue), new { @id = "payeeTypeSel", @class = "voucher-input" })
             </div>
+
             <div class="dis-inline-block">
-                @Html.DropDownListFor(m => m.vendor, new SelectList(Model.systemValues.vendors, "Value", "Text", Model.systemValues.vendors.SelectedValue), new { @id = "vendorName", @class = "voucher-input" })
+                @if (Model.payee_type == GlobalSystemValues.PAYEETYPE_VENDOR)
+                {
+                    @Html.DropDownListFor(m => m.selectedPayee, new SelectList(Model.systemValues.vendors, "Value", "Text", Model.selectedPayee), new { @id = "vendorName", @class = "voucher-input" })
+                }
+                else if (Model.payee_type == GlobalSystemValues.PAYEETYPE_REGEMP)
+                {
+                    @Html.DropDownListFor(m => m.selectedPayee, new SelectList(Model.systemValues.employees, "Value", "Text", @Model.selectedPayee), new { @id = "vendorName", @class = "voucher-input" })
+                }
+                else
+                {
+                    @Html.DropDownListFor(m => m.selectedPayee, new SelectList(Model.systemValues.employees, "Value", "Text", @Model.selectedPayee), new { @id = "vendorName", @class = "voucher-input" })
+                }
             </div>
         </div>
+
         <div class="entry-tbl-cont">
             <table class="table table-bordered table-striped voucher-tbl w-97" id="inputTable">
                 <colgroup>
@@ -71,7 +85,7 @@
                                         <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
                                         @for (int y = 0; y < Model.EntryCV[i].gBaseRemarksDetails.Count(); y++)
                                         {
-                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].docType, new { @class= "docType" });
+                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].docType, new { @class = "docType" });
                                             @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].desc, new { @class = "desc" });
                                             @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].invNo, new { @class = "invNo" });
                                             @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].amount, new { @class = "amount" });
@@ -104,7 +118,7 @@
                             <td>
                                 @Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.systemValues.vat.SelectedValue), new { @class = "input100 txtVat comVar voucher-input", @disabled = "true" })
                             </td>
-                            <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].chkEwt, new { @class = "chkEwt comVar" })</td>
+                            <td style="text-align:center">@Html.CheckBoxFor(m => m.EntryCV[i].chkEwt, new { @class = "chkEwt comVar" })</td>
                             <td>
                                 @Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt comVar voucher-input", @disabled = "true" })
                             </td>
@@ -191,7 +205,8 @@
 
 </div>
 <script>
-    $(window).on("load", function () {
+    $(window).on("load", function (e) {
+        e.stopImmediatePropagation();
         var gross = $(".txtGross");
         var credEwt = $(".txtCredEwt");
         var credCash = $(".txtCredCash");
@@ -246,12 +261,18 @@
         $(rowTemplate).find("#template_month").removeAttr("data-val-required");
         $(rowTemplate).find("#template_day").removeAttr("data-val-required");
 
-        $('#iframePreview').prop('src', "/Home/VoucherCV");
-    });
-    
-    $(function () {
-        updatePayeeSelect();
+        @if (Model.payee_type != GlobalSystemValues.PAYEETYPE_VENDOR) {
+        <text>
+        $('.table').find('input.chkEwt').prop('disabled', true);
+        </text>
+        }
 
+
+
+        $('#iframePreview').prop('src', "/Home/VoucherCV");
+        });
+
+    $(function () {
         var trs = $("#inputTable").find("tbody").find("tr").length - 2;
         for (var cnt = 0; cnt < trs; cnt++) {
             var pos = "item_" + cnt;
@@ -354,8 +375,6 @@
         });
 
         $("table").on("click", ".expenseAmortization", function (e) {
-            e.stopImmediatePropagation();
-
             var pNode = $(this.parentNode)[0].parentNode;
 
             var id = pNode.id;
@@ -549,7 +568,8 @@
         };
     });
 </script>
-<script type="text/javascript"> 
+<script type="text/javascript">
+
     // [[ FUNCTIONS ]]
     function updatePayeeSelect() {
         $('.table').find('input.chkVat').prop('checked', false);
@@ -574,7 +594,7 @@
         $("#vendorName").append($(options));
 
         $("#vendorName").trigger("change");
-    } 
+    }
     function tblBuilder(tableRef, begMonth, day, duration, grossAmount) {
         var dvdAmount = roundNumber((grossAmount / duration), 2);
 
@@ -614,7 +634,7 @@
             <tr id="rowTemplate">
                 <td class="p-b-1 p-t-1">
                     <div class="flex-sb">
-                        @Html.TextBoxFor(x => Model.template.GBaseRemarks,new { @class = "input100 w-80 voucher-input", @value = "", @maxlength="30" })
+                        @Html.TextBoxFor(x => Model.template.GBaseRemarks, new { @class = "input100 w-80 voucher-input", @value = "", @maxlength = "30" })
                         <div id="remark_">
                             <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
                         </div>

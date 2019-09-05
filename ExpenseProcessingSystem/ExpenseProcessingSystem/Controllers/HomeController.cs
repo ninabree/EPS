@@ -1045,12 +1045,13 @@ namespace ExpenseProcessingSystem.Controllers
                 decimal vat = _service.getVat(_tax);
 
                 var payItem = new PaymentInfo();
-                 decimal amount;
+                decimal amount;
 
                 if (vat > 0)
                     amount = _amount / (1 + vat);
                 else
                     amount = _amount;
+                //assigning values to their respective 1st, 2nd or 3rd month container
                 if (new List<int> { 1, 4, 7, 10 }.Contains(date.Month))
                 {
                     payItem.M1Quarter = amount;
@@ -1063,7 +1064,27 @@ namespace ExpenseProcessingSystem.Controllers
                 {
                     payItem.M3Quarter = amount;
                 }
-
+                //assigning Date From and To values to their respective Quarter
+                if (new List<int> { 1, 2, 3 }.Contains(date.Month))
+                {
+                    fp.From_Date = new DateTime(DateTime.Now.Year, 1, 1);
+                    fp.To_Date = new DateTime(DateTime.Now.Year, 3, 31);
+                }
+                else if (new List<int> { 4,5,6 }.Contains(date.Month))
+                {
+                    fp.From_Date = new DateTime(DateTime.Now.Year, 4, 1);
+                    fp.To_Date = new DateTime(DateTime.Now.Year, 6, 30);
+                }
+                else if (new List<int> { 7,8,9 }.Contains(date.Month))
+                {
+                    fp.From_Date = new DateTime(DateTime.Now.Year, 7, 1);
+                    fp.To_Date = new DateTime(DateTime.Now.Year, 9, 30);
+                }
+                else if (new List<int> { 10, 11, 12 }.Contains(date.Month))
+                {
+                    fp.From_Date = new DateTime(DateTime.Now.Year, 10, 1);
+                    fp.To_Date = new DateTime(DateTime.Now.Year, 12, 31);
+                }
                 //payitem
                 payItem.Atc = ewt.TR_ATC;
                 payItem.Payments = ewt.TR_Nature_Income_Payment;
@@ -1080,8 +1101,8 @@ namespace ExpenseProcessingSystem.Controllers
                 fp.EeRegAddress = vendor.Vendor_Address;
                 fp.EeTin = vendor.Vendor_TIN;
                 fp.PayeeName = vendor.Vendor_Name;
-                fp.From_Date = date;
-                fp.To_Date = date;
+                //fp.From_Date = date;
+                //fp.To_Date = date;
 
                 //signatory
                 fp.PayorSig = new Signatories {
@@ -1113,7 +1134,7 @@ namespace ExpenseProcessingSystem.Controllers
             var expModel = _service.getExpense(ExpenseID);
 
             cd.Date = DateTime.Now;
-            cd.Payee = _service.getVendor(expModel.vendor).Vendor_Name;
+            cd.Payee = _service.getVendor(expModel.selectedPayee).Vendor_Name;
 
             foreach(var item in expModel.EntryCV)
             {
@@ -1582,13 +1603,15 @@ namespace ExpenseProcessingSystem.Controllers
 
             EntryCVViewModelList cvList;
             cvList = _service.getExpense(entryID);
-            List<SelectList> listOfSysVals = _service.getEntrySystemVals();
-            cvList.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
-            cvList.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
-            cvList.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
-            cvList.systemValues.ewt =_service.getVendorTaxRate(cvList.vendor);
-            cvList.systemValues.vat = _service.getVendorVat(cvList.vendor);
-            cvList.systemValues.acc = _service.getAccDetailsEntry();
+            //List<SelectList> listOfSysVals = _service.getEntrySystemVals();
+            //cvList.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
+            //cvList.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
+            //cvList.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
+            //cvList.systemValues.ewt =_service.getVendorTaxRate(cvList.vendor);
+            //cvList.systemValues.vat = _service.getVendorVat(cvList.vendor);
+            //cvList.systemValues.acc = _service.getAccDetailsEntry();
+
+            cvList = PopulateEntry((EntryCVViewModelList)cvList);
 
             List<cvBirForm> birForms = new List<cvBirForm>();
             foreach (var item in cvList.EntryCV)
@@ -1604,7 +1627,7 @@ namespace ExpenseProcessingSystem.Controllers
                         amount = item.debitGross,
                         ewt = item.ewt,
                         vat = item.vat,
-                        vendor = cvList.vendor,
+                        vendor = cvList.selectedPayee,
                         approver = cvList.approver,
                         date = cvList.createdDate
                     };
@@ -5537,7 +5560,7 @@ namespace ExpenseProcessingSystem.Controllers
             vvm.maker = _service.getUserFullName(model.maker);
             if(model.expenseId != null)
                 vvm.voucherNo = _service.getVoucherNo(1,model.expenseDate,int.Parse(model.expenseId));
-            vvm.payee = _service.getVendorName(model.vendor, model.payee_type);
+            vvm.payee = _service.getVendorName(model.selectedPayee, model.payee_type);
             vvm.checkNo = model.checkNo;
             if(model.approver_id > 0)
                 vvm.approver = _service.getUserFullName(model.approver_id);

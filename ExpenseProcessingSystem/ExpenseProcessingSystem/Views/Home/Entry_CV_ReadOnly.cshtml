@@ -26,7 +26,7 @@
         <div class="dis-inline-block float-r">
             @if (Model.checkNo != "")
             {
-            <button class="tbl-btn" id="newCheck">Generate new check No.</button>
+                <button class="tbl-btn" id="newCheck">Generate new check No.</button>
             }
             Check No : <p class="dis-inline-block">@Html.TextBoxFor(model => model.checkNo, new { @readonly = "true", @class = "input" })</p>
         </div>
@@ -34,9 +34,20 @@
     <div id="tbl-lbl">
         <div class="dis-inline-block"><p>Payee:</p></div>
         <div class="dis-inline-block">
-            @Html.DropDownListFor(m => m.vendor, new SelectList(Model.systemValues.vendors, "Value", "Text", Model.systemValues.vendors.SelectedValue), new { @disabled = "true", @class= "selectDisabled" })
+            @Html.DropDownListFor(m => m.payee_type, new SelectList(Model.systemValues.payee_type_sel, "Value", "Text", Model.systemValues.payee_type_sel.SelectedValue), new { @disabled = "true", @class = "selectDisabled" })
+        </div>
+        <div class="dis-inline-block">
+            @if (Model.payee_type == GlobalSystemValues.PAYEETYPE_VENDOR)
+            {
+                @Html.DropDownListFor(m => m.selectedPayee, new SelectList(Model.systemValues.vendors, "Value", "Text", Model.systemValues.vendors.SelectedValue), new { @disabled = "true", @class = "selectDisabled" })
+            }
+            else if (Model.payee_type == GlobalSystemValues.PAYEETYPE_REGEMP)
+            {
+                @Html.DropDownListFor(m => m.selectedPayee, new SelectList(Model.systemValues.employees, "Value", "Text", Model.systemValues.vendors.SelectedValue), new { @disabled = "true", @class = "selectDisabled" })
+            }
         </div>
     </div>
+
     <div class="entry-tbl-cont">
         <table class="table table-bordered table-striped voucher-tbl w-97" id="inputTable">
             <colgroup>
@@ -75,55 +86,55 @@
             <tbody>
                 @for (int i = 0; i < Model.EntryCV.Count; i++)
                 {
-                <tr id="item_@i">
-                    <td class="p-b-1 p-t-1">
-                        <div class="flex-sb">
-                            <input value="@Model.EntryCV[i].GBaseRemarks" class="txtgbaseRemarks input100 w-80" disabled />
-                            <div id="remark_@i">
-                                <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
-                                @for (int y = 0; y < Model.EntryCV[i].gBaseRemarksDetails.Count(); y++)
-                                {
-                                    @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].docType);
-                                    @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].desc);
-                                    @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].invNo);
-                                    @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].amount);
-                                }
+                    <tr id="item_@i">
+                        <td class="p-b-1 p-t-1">
+                            <div class="flex-sb">
+                                <input value="@Model.EntryCV[i].GBaseRemarks" class="txtgbaseRemarks input100 w-80" disabled />
+                                <div id="remark_@i">
+                                    <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
+                                    @for (int y = 0; y < Model.EntryCV[i].gBaseRemarksDetails.Count(); y++)
+                                    {
+                                        @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].docType);
+                                        @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].desc);
+                                        @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].invNo);
+                                        @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].amount);
+                                    }
+                                </div>
                             </div>
-                        </div>
-                    </td>
-                    <td data-toggle="tooltip" title="@Model.systemValues.acc.FirstOrDefault(x=> x.accId == Model.EntryCV[i].account).accName" data-placement="right">
-                        @Html.DropDownListFor(x => Model.EntryCV[i].account, new SelectList(Model.systemValues.acc, "accId", "accName"), new { @class = "input100 txtAcc selectDisabled", disabled = "disabled" })
-                    </td>
-                    <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].fbt, new { @disabled = "true" })</td>
-                    <td>@Html.DropDownListFor(x => Model.EntryCV[i].dept, new SelectList(Model.systemValues.dept, "Value", "Text", Model.systemValues.dept.SelectedValue), new { @class = "input100 selectDisabled", disabled = "disabled" })</td>
-                    <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].chkVat, new { @class = "chkVat", @disabled = "true" })</td>
-                    <td>@Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.systemValues.vat.SelectedValue), new { @class = "input100 txtVat selectDisabled", disabled = "disabled" })</td>
-                    <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].chkEwt, new { @class = "chkEwt", @disabled = "true" })</td>
-                    <td>@Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt selectDisabled", disabled = "disabled" })</td>
-                    <td><input value="@Model.EntryCV[i].ccyAbbrev" class="input100" disabled /></td>
-                    <td><input value="@Model.EntryCV[i].debitGross" class="input100 txtGross" disabled /></td>
-                    <td><input value="@Model.EntryCV[i].credEwt" class="input100 txtCredEwt" disabled /></td>
-                    <td><input value="@Model.EntryCV[i].credCash" class="input100 txtCredCash" disabled /></td>
-                    <td id="req_@i">
-                        @if (Model.EntryCV[i].amtDetails.Count > 0)
-                        {
-                            <a class="expenseAmortization reqBtn glyphicon glyphicon-list-alt" href="#"></a>
-                            @Html.HiddenFor(x => Model.EntryCV[i].month, new { @class = "txtAmorMonth" })
-                            @Html.HiddenFor(x => Model.EntryCV[i].day, new { @class = "txtAmorDay" })
-                            @Html.HiddenFor(x => Model.EntryCV[i].duration, new { @class = "txtAmorDuration" })
-                            @for (int y = 0; y < Model.EntryCV[i].amtDetails.Count(); y++)
+                        </td>
+                        <td data-toggle="tooltip" title="@Model.systemValues.acc.FirstOrDefault(x=> x.accId == Model.EntryCV[i].account).accName" data-placement="right">
+                            @Html.DropDownListFor(x => Model.EntryCV[i].account, new SelectList(Model.systemValues.acc, "accId", "accName"), new { @class = "input100 txtAcc selectDisabled", disabled = "disabled" })
+                        </td>
+                        <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].fbt, new { @disabled = "true" })</td>
+                        <td>@Html.DropDownListFor(x => Model.EntryCV[i].dept, new SelectList(Model.systemValues.dept, "Value", "Text", Model.systemValues.dept.SelectedValue), new { @class = "input100 selectDisabled", disabled = "disabled" })</td>
+                        <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].chkVat, new { @class = "chkVat", @disabled = "true" })</td>
+                        <td>@Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.systemValues.vat.SelectedValue), new { @class = "input100 txtVat selectDisabled", disabled = "disabled" })</td>
+                        <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].chkEwt, new { @class = "chkEwt", @disabled = "true" })</td>
+                        <td>@Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt selectDisabled", disabled = "disabled" })</td>
+                        <td><input value="@Model.EntryCV[i].ccyAbbrev" class="input100" disabled /></td>
+                        <td><input value="@Model.EntryCV[i].debitGross" class="input100 txtGross" disabled /></td>
+                        <td><input value="@Model.EntryCV[i].credEwt" class="input100 txtCredEwt" disabled /></td>
+                        <td><input value="@Model.EntryCV[i].credCash" class="input100 txtCredCash" disabled /></td>
+                        <td id="req_@i">
+                            @if (Model.EntryCV[i].amtDetails.Count > 0)
                             {
-                                @Html.HiddenFor(x => Model.EntryCV[i].amtDetails[y].amtDate);
-                                @Html.HiddenFor(x => Model.EntryCV[i].amtDetails[y].amtAmount);
+                                <a class="expenseAmortization reqBtn glyphicon glyphicon-list-alt" href="#"></a>
+                                @Html.HiddenFor(x => Model.EntryCV[i].month, new { @class = "txtAmorMonth" })
+                                @Html.HiddenFor(x => Model.EntryCV[i].day, new { @class = "txtAmorDay" })
+                                @Html.HiddenFor(x => Model.EntryCV[i].duration, new { @class = "txtAmorDuration" })
+                                @for (int y = 0; y < Model.EntryCV[i].amtDetails.Count(); y++)
+                                {
+                                    @Html.HiddenFor(x => Model.EntryCV[i].amtDetails[y].amtDate);
+                                    @Html.HiddenFor(x => Model.EntryCV[i].amtDetails[y].amtAmount);
+                                }
                             }
-                        }
-                        else
-                        {
-                            <a class="reqBtn glyphicon glyphicon-list-alt"></a>
-                        }
+                            else
+                            {
+                                <a class="reqBtn glyphicon glyphicon-list-alt"></a>
+                            }
 
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
                 }
 
                 <tr>
@@ -194,18 +205,28 @@
             {
                 <div class="flex-sb">
                     <div>
-                        <div class="dis-inline-block">@if(enableSave) { <button class="tbl-btn">Save</button> }</div>
-                        <div class="dis-inline-block">@if(enableDelete) { <button class="tbl-btn btnEntryAction" value="Delete" name="command">Delete</button> }</div>
-                        <div class="dis-inline-block">@if(enableModify) { <button class="tbl-btn btnEntryAction" value="Modify" name="command">Modify</button> }</div>
-                        <div class="dis-inline-block">@if(enableVerify) { <button class="tbl-btn btnEntryAction" value="verifier" name="command">Verify</button> }</div>
-                        <div class="dis-inline-block">@if(enableApprove) { <button class="tbl-btn btnEntryAction" value="approver" name="command">Approve</button> }</div>
-                        <div class="dis-inline-block">@if(enableReject) { <button class="tbl-btn btnEntryAction" value="Reject" name="command">Reject</button> }</div>
+                        <div class="dis-inline-block">@if (enableSave)
+                        {<button class="tbl-btn">Save</button>}</div>
+                        <div class="dis-inline-block">@if (enableDelete)
+                        {<button class="tbl-btn btnEntryAction" value="Delete" name="command">Delete</button>}</div>
+                        <div class="dis-inline-block">@if (enableModify)
+                        {<button class="tbl-btn btnEntryAction" value="Modify" name="command">Modify</button>}</div>
+                        <div class="dis-inline-block">@if (enableVerify)
+                        {<button class="tbl-btn btnEntryAction" value="verifier" name="command">Verify</button>}</div>
+                        <div class="dis-inline-block">@if (enableApprove)
+                        {<button class="tbl-btn btnEntryAction" value="approver" name="command">Approve</button>}</div>
+                        <div class="dis-inline-block">@if (enableReject)
+                        {<button class="tbl-btn btnEntryAction" value="Reject" name="command">Reject</button>}</div>
                     </div>
                     <div>
-                        <div class="dis-inline-block">@if(enableBIR) { <button class="tbl-btn" id="printBir" value="printBir">Print BIR Certificate</button> }</div>
-                        <div class="dis-inline-block">@if(enableBIR) { <button class="tbl-btn" id="printVoucher" value="printVoucher">Print Check Voucher</button> }</div>
-                        <div class="dis-inline-block">@if(enableBIR) { <button class="tbl-btn" id="printCheck" value="printCheck">Print Check</button> }</div>
-                        <div class="dis-inline-block">@if(enableReversal) { <button class="tbl-btn btnEntryAction" id="reversal_entry" value="Reversal" name="command">Create Reversal Entry</button> }</div>
+                        <div class="dis-inline-block">@if (enableBIR)
+                        {<button class="tbl-btn" id="printBir" value="printBir">Print BIR Certificate</button>}</div>
+                        <div class="dis-inline-block">@if (enableBIR)
+                        {<button class="tbl-btn" id="printVoucher" value="printVoucher">Print Check Voucher</button>}</div>
+                        <div class="dis-inline-block">@if (enableBIR)
+                        {<button class="tbl-btn" id="printCheck" value="printCheck">Print Check</button>}</div>
+                        <div class="dis-inline-block">@if (enableReversal)
+                        {<button class="tbl-btn btnEntryAction" id="reversal_entry" value="Reversal" name="command">Create Reversal Entry</button>}</div>
                     </div>
                 </div>
             }
@@ -234,13 +255,13 @@
         {
             <Text>
             $("#entry-controls").on("click", "#printBir", function (e) {
-                var vendorID = @Model.vendor;
+                var vendorID = @Model.selectedPayee;
                 var approverID = @Model.approver_id;
                 var link = [
                 @foreach (var item in Model.birForms)
                 {
                     <Text>
-                         "/Home/Generate2307File?_vendor=@item.vendor&_ewt=@item.ewt&_tax=@item.vat&_amount=@item.amount&approver=@item.approver&expID=@Model.entryID",
+                    "/Home/Generate2307File?_vendor=@item.vendor&_ewt=@item.ewt&_tax=@item.vat&_amount=@item.amount&date=@item.date&approver=@item.approver&expID=@Model.entryID",
                     </Text>
                 }
                     ""

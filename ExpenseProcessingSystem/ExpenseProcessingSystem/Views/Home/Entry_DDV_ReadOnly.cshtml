@@ -22,6 +22,12 @@
     var Verifiable = Model.verifier_1_id < 1 || Model.verifier_2_id < 1;
 }
 
+@functions{
+    public string SetGBaseRemarkModal(bool isInter)
+    {
+        return (!isInter) ? "gRemarksReadOnly gRemarks" : "";
+    }
+}
 <div class="tabContent">
     <input id="_screen" type="hidden" value="ddv_ViewOnly" />
     <div id="tbl-lbl" class="flex-sb">
@@ -84,7 +90,7 @@
                             <div class="flex-sb">
                                 <input value="@Model.EntryDDV[i].GBaseRemarks" class="input100 w-80 GBaseRemarksTitle txtgbaseRemarks" disabled />
                                 <div id="remark_@i">
-                                    <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5 gRemarksReadOnly"></a>
+                                    <a href="#" class="glyphicon glyphicon-folder-open fs-23 m-r-5 @SetGBaseRemarkModal(Model.EntryDDV[i].inter_entity)"></a>
                                     @for (int y = 0; y < Model.EntryDDV[i].gBaseRemarksDetails.Count(); y++)
                                     {
                                         @Html.HiddenFor(x => Model.EntryDDV[i].gBaseRemarksDetails[y].docType);
@@ -227,31 +233,40 @@
             var enableReversal = (Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
                                 Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING ||
                                 Model.statusID == GlobalSystemValues.STATUS_POSTED) ? true : false;
-              }
-              @using (Html.BeginForm("VerAppModDDV", "Home", FormMethod.Post, new { @class = "validate-form" }))
-              {
-                  @Html.HiddenFor(x => Model.entryID)
-                  @if (isMaker || isVerifier || isApprover || aVerifier || anApprover)
-                  {
-                      <div class="flex-sb">
-                          <div>
-                              <div class="dis-inline-block">@if(enableSave) { <button class="tbl-btn">Save</button> }</div>
-                              <div class="dis-inline-block">@if(enableDelete) { <button class="tbl-btn btnEntryAction" value="Delete" name="command">Delete</button> }</div>
-                              <div class="dis-inline-block">@if(enableModify) { <button class="tbl-btn btnEntryAction" value="Modify" name="command">Modify</button> }</div>
-                              <div class="dis-inline-block">@if(enableVerify) { <button class="tbl-btn btnEntryAction" value="verifier" name="command">Verify</button> }</div>
-                              <div class="dis-inline-block">@if(enableApprove) { <button class="tbl-btn btnEntryAction" value="approver" name="command">Approve</button> }</div>
-                              <div class="dis-inline-block">@if(enableReject) { <button class="tbl-btn btnEntryAction" value="Reject" name="command">Reject</button> }</div>
-                          </div>
-                          <div>
-                              <div class="dis-inline-block">@if(enableBIR) { <button class="tbl-btn" id="printBir" value="printBir">Print BIR Certificate</button> }</div>
-                              <div class="dis-inline-block">@if(enableBIR) { <button class="tbl-btn" id="printVoucher" value="printVoucher">Print Voucher</button> }</div>
-                              <div class="dis-inline-block">@if(enableReversal) { <button class="tbl-btn btnEntryAction" id="reversal_entry" value="Reversal" name="command">Create Reversal Entry</button> }</div>
-                          </div>
-                      </div>
-                  }
-                  <input type="hidden" name="command" id="btnID" />
-              }
-          </div>
+        }
+        @using (Html.BeginForm("VerAppModDDV", "Home", FormMethod.Post, new { @class = "validate-form" }))
+        {
+            @Html.HiddenFor(x => Model.entryID)
+            @if (isMaker || isVerifier || isApprover || aVerifier || anApprover)
+            {
+                <div class="flex-sb">
+                    <div>
+                        <div class="dis-inline-block">@if (enableSave)
+                        {<button class="tbl-btn">Save</button>}</div>
+                        <div class="dis-inline-block">@if (enableDelete)
+                        {<button class="tbl-btn btnEntryAction" value="Delete" name="command">Delete</button>}</div>
+                        <div class="dis-inline-block">@if (enableModify)
+                        {<button class="tbl-btn btnEntryAction" value="Modify" name="command">Modify</button>}</div>
+                        <div class="dis-inline-block">@if (enableVerify)
+                        {<button class="tbl-btn btnEntryAction" value="verifier" name="command">Verify</button>}</div>
+                        <div class="dis-inline-block">@if (enableApprove)
+                        {<button class="tbl-btn btnEntryAction" value="approver" name="command">Approve</button>}</div>
+                        <div class="dis-inline-block">@if (enableReject)
+                        {<button class="tbl-btn btnEntryAction" value="Reject" name="command">Reject</button>}</div>
+                    </div>
+                    <div>
+                        <div class="dis-inline-block">@if (enableBIR)
+                        {<button class="tbl-btn" id="printBir" value="printBir">Print BIR Certificate</button>}</div>
+                        <div class="dis-inline-block">@if (enableBIR)
+                        {<button class="tbl-btn" id="printVoucher" value="printVoucher">Print Voucher</button>}</div>
+                        <div class="dis-inline-block">@if (enableReversal)
+                        {<button class="tbl-btn btnEntryAction" id="reversal_entry" value="Reversal" name="command">Create Reversal Entry</button>}</div>
+                    </div>
+                </div>
+            }
+            <input type="hidden" name="command" id="btnID" />
+        }
+    </div>
 
     <div id="modalDiv">
         @Html.Partial("ModalGbase")
@@ -494,9 +509,9 @@
 <script type="text/javascript">
     $(function () {
         @if (int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.maker
-          || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id
-          || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id
-          || int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.approver_id)
+|| int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_1_id
+|| int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.verifier_2_id
+|| int.Parse(HttpContextAccessor.HttpContext.Session.GetString("UserID")) == Model.approver_id)
         {
             <Text>
             $("#entry-controls").on("click", "#printBir", function (e) {
@@ -509,9 +524,9 @@
                 }
                     ""
                 ];
-                $.getJSON('UpdateCDDPrintingStatus', { entryID: @Html.Raw(Json.Serialize(Model.entryID)) }, function (data) {
+                @*$.getJSON('UpdateCDDPrintingStatus', { entryID: @Html.Raw(Json.Serialize(Model.entryID)) }, function (data) {
 
-                });
+                });*@
                 for (var i = 0; i < link.length-1;i++) {
                     window.open(link[i]);
                 }

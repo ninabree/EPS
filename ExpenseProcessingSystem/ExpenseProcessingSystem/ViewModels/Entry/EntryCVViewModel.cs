@@ -93,7 +93,7 @@ namespace ExpenseProcessingSystem.ViewModels
         public SysValViewModel systemValues { get; set; }
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime expenseDate { get; set; }
-        public int vendor { get; set; }
+        public int selectedPayee { get; set; }
         public string vendor_Name { get; set; }
         public int payee_type { get; set; }
         public string payee_type_Name { get; set; }
