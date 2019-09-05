@@ -3,12 +3,18 @@
         TO UPDATE THESE VALUES, REFER TO THE MASTER ID IN DATA MAINTENANCE: ACCOUNT
     -->
   <!-- First Account in entry1 comes from the DDV form -->
-    <ACCOUNT class="entry1" id="ACCOUNT2">56</ACCOUNT>
-    <ACCOUNT class="entry1" id="ACCOUNT3">84</ACCOUNT>
+    <!--COMPUTER SUSPENSE PHP-->
+    <ACCOUNT class="entry1" id="ACCOUNT2">78</ACCOUNT>
+    <!--BDO MNL-->
+    <ACCOUNT class="entry1" id="ACCOUNT3">73</ACCOUNT>
 
-    <ACCOUNT class="entry2" id="ACCOUNT1">74</ACCOUNT>
-    <ACCOUNT class="entry2" id="ACCOUNT2">88</ACCOUNT>
+    <!--COMPUTER SUSPENSE PHP-->
+    <ACCOUNT class="entry2" id="ACCOUNT1">78</ACCOUNT>
+    <!--B79-767-111111 -INTER-ENTITY $-->
+    <ACCOUNT class="entry2" id="ACCOUNT2">131</ACCOUNT>
 
-    <ACCOUNT class="entry3" id="ACCOUNT1">100</ACCOUNT>
-    <ACCOUNT class="entry3" id="ACCOUNT2">101</ACCOUNT>
+    <!--B79-767-111111 -INTER-ENTITY $-->
+    <ACCOUNT class="entry3" id="ACCOUNT1">131</ACCOUNT>
+    <!--CITI MNL (RBU)-->
+    <ACCOUNT class="entry3" id="ACCOUNT2">77</ACCOUNT>
 </INTERENTITYACCOUNTS>
