@@ -3410,7 +3410,7 @@ namespace ExpenseProcessingSystem.Controllers
 
             foreach (var i in ssList.accAllList)
             {
-                i.Account_Name = i.Account_Name + " - " + i.Account_No;
+                i.Account_Name = i.Account_No + " - " + i.Account_Name;
             }
             foreach (var i in ssList.LiquidationDetails)
             {
@@ -3483,7 +3483,7 @@ namespace ExpenseProcessingSystem.Controllers
                 }
                 foreach (var i in vm.accAllList)
                 {
-                    i.Account_Name = i.Account_Name + " - " + i.Account_No;
+                    i.Account_Name = i.Account_No + " - " + i.Account_Name;
                 }
                 foreach (var i in vm.LiquidationDetails)
                 {
@@ -3611,7 +3611,7 @@ namespace ExpenseProcessingSystem.Controllers
 
             foreach (var i in ssList.accAllList)
             {
-                i.Account_Name = i.Account_Name + " - " + i.Account_No;
+                i.Account_Name =  i.Account_No + " - " + i.Account_Name;
             }
             foreach (var i in ssList.LiquidationDetails)
             {
