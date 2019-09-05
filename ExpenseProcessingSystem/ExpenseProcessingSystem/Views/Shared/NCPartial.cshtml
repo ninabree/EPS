@@ -99,6 +99,7 @@
             <tbody>
                 @if (Model.EntryNC != null && Model.EntryNC.ExpenseEntryNCDtls.Count > 0)
                 {
+                    //To Populate Non Cash Entries from Misc Entries
                     @if (@Model.EntryNC.NC_Category_ID == 11)
                     {
                         @for (int i = 0; i < Model.EntryNC.ExpenseEntryNCDtls.Count; i++)
@@ -213,7 +214,7 @@
                                 <td class="@SetRateClass(@Model.EntryNC.NC_Category_ID, @i)">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Inter_Rate, @getHtmlAttributes(@Model.EntryNC.NC_Category_ID, @i))</td>
                                 @* DEBIT *@
                                 <td id="curr_sel[@i]_[0]">
-                                    <select id="curr[@i]_[0]" class="w-full input curr-sel misc-curr-0" name="curr[@i]_[0]">
+                                    <select id="curr[@i]_[0]" class="w-full input curr-sel misc-curr-0 db" name="curr[@i]_[0]">
                                         @foreach (var groepModel in Model.currList)
                                         {
                                             if (@groepModel.Value == @Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID + "")
@@ -233,7 +234,7 @@
 
                                 @* CREDIT *@
                                 <td id="curr_sel[@i]_[0]">
-                                    <select id="curr[@i]_[0]" class="w-full input curr-sel misc-curr-0" name="curr[@i]_[0]">
+                                    <select id="curr[@i]_[0]" class="w-full input curr-sel misc-curr-0 cd" name="curr[@i]_[0]">
                                         @foreach (var groepModel in Model.currList)
                                         {
                                             if (@groepModel.Value == @Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID + "")
@@ -293,7 +294,7 @@
                                     <td class="@SetRateClass(@Model.EntryNC.NC_Category_ID, @i)">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Inter_Rate, @getHtmlAttributes(@Model.EntryNC.NC_Category_ID, @i))</td>
                                     @* DEBIT *@
                                     <td id="curr_sel[@i]_[@j]">
-                                        <select id="curr[@i]_[@j]" class="w-full input curr-sel misc-curr-@j" name="curr[@i]_[@j]">
+                                        <select id="curr[@i]_[@j]" class="w-full input curr-sel misc-curr-@j db" name="curr[@i]_[@j]">
                                             @foreach (var groepModel in Model.currList)
                                             {
                                                 if (@groepModel.Value == @Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID + "")
@@ -313,7 +314,7 @@
 
                                     @* CREDIT *@
                                     <td id="curr_sel[@i]_[@j]">
-                                        <select id="curr[@i]_[@j]" class="w-full input curr-sel misc-curr-@j" name="curr[@i]_[@j]">
+                                        <select id="curr[@i]_[@j]" class="w-full input curr-sel misc-curr-@j cd" name="curr[@i]_[@j]">
                                             @foreach (var groepModel in Model.currList)
                                             {
                                                 if (@groepModel.Value == @Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID + "")
@@ -352,6 +353,7 @@
                     }
                     else
                     {
+                        //To Populate Non Cash Entries ASIDE from Misc Entries
                         @for (int i = 0; i < Model.EntryNC.ExpenseEntryNCDtls.Count; i++)
                         {
                                 <tr id="item_@i">
@@ -544,7 +546,6 @@
                 }
                 @Html.HiddenFor(x => x.EntryNC.NC_Category_ID)
                 @Html.HiddenFor(x => x.category_of_entry)
-                @*@Html.HiddenFor(x => x.expenseDate)*@
                 @Html.HiddenFor(x => x.entryID)
                 <input type="hidden" name="command" id="btnID" />
                 <tr>
@@ -587,7 +588,7 @@
                 </tr>
             </tbody>
         </table>
-
+        //To Populate Total, CDD Instruction Sheet and Balance Checkers in their respective Category Type
         @if (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_LS_PAYROLL)
         {
             <table class="table table-bordered voucher-tbl m-t-20" style="background-color: #fafafa; border: 2px solid #ccc !important">
@@ -844,37 +845,9 @@
             }
         }
         document.addEventListener("change", computeFunction, false);
-        //computeValsNC();
+
         hiddencols();
         onloadModifiedMiscEntries();
-        function onloadModifiedMiscEntries() {
-            var tblRow = $("tr[id^='item_']");
-            var tblRowLen = $(tblRow).length;
-            if (tblRowLen > 0) {
-                jQuery.each(tblRow, function (i, dtl) {
-                    for (var a = 0; a < 4; a++) {
-                        var amount = $("#EntryNC_ExpenseEntryNCDtls_" + i + "__ExpenseEntryNCDtlAccs_" + a + "__ExpNCDtlAcc_Amount").val();
-                        if (parseFloat(amount) > 0) {
-                            var typeId = $("#EntryNC_ExpenseEntryNCDtls_" + i + "__ExpenseEntryNCDtlAccs_" + a + "__ExpNCDtlAcc_Type_ID").val();
-                            if (typeId == @GlobalSystemValues.NC_DEBIT+"") {
-                                $(".amt-db-" + i + "-" + a).val(amount);
-                            } else {
-                                $(".amt-cd-" + i + "-" + a).val(amount);
-                            }
-                        }
-                    }
-                });
-            }
-        }
-
-        function hiddencols() {
-            var catID = $("select#categoryName option:selected").val();
-            if (catID == @GlobalSystemValues.NC_PSSC +"" || catID == @GlobalSystemValues.NC_PCHC +"" || catID == @GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES +"") {
-                $('#NCPartialTbl').find(".cat-hidden").removeClass("hidden");
-            } else {
-                $('#NCPartialTbl').find(".cat-hidden").addClass("hidden");
-            }
-        }
 
         if ($("#entryID").val() == "") {
             $("#entryID").val(0);
@@ -974,7 +947,11 @@
             }
             if (categoryID == @GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES) {
                 var valIdSplt = $(this).attr("id");
-                var amtInput = $("[id$='-" + valIdSplt.substring(5,6) + "-" + valIdSplt.substring(9,10) + "']");
+                if ($(this).hasClass("db")) {
+                    var amtInput = $("[id='amt-db-" + valIdSplt.substring(5, 6) + "-" + valIdSplt.substring(9, 10) + "']");
+                } else if ($(this).hasClass("cd")) {
+                    var amtInput = $("[id='amt-cd-" + valIdSplt.substring(5, 6) + "-" + valIdSplt.substring(9, 10) + "']");
+                }
                 $(amtInput).trigger("change");
                 } else {
                 var valId = $(this).attr("id");
@@ -1018,8 +995,12 @@
             var decVal = 2;
             var val = $(this).val().replace("-", "");
             var valId = $(this).attr("id").split("-");
-            //TEMP FIX
-            var elCurrId = $("#EntryNC_ExpenseEntryNCDtls_" + valId[2] + "__ExpenseEntryNCDtlAccs_" + valId[3] + "__ExpNCDtlAcc_Curr_ID").val();
+            //Select the id of selected currency designated to either debit or credit
+            var currEl = $(this).parent().prevAll().find("select").last();
+            var elCurrId = $(currEl).find("option:selected").val();
+            //Update the currency id designated to form CurrencyID 
+            //switching from debit to credit also assigns the currency id of either debit or credit accrodingly
+            $("#EntryNC_ExpenseEntryNCDtls_" + valId[2] + "__ExpenseEntryNCDtlAccs_" + valId[3] + "__ExpNCDtlAcc_Curr_ID").val(elCurrId);
             if (@jpy == elCurrId) {
                 decVal = 0;
             }
@@ -1028,22 +1009,38 @@
                 $(this).val(0);
             }
         });
-        @*$("#NCPartialTbl").on("change", ".NumberOnlyOneDecimalMisc", function (e) {
-            var decVal = 2;
-            var pid = $(this.parentNode)[0].parentNode.id;
-            var val = $(this).val().replace("-", "");
-            var valId = $(this).attr("id").split("-");
-            var elCurrId = $(this).parent().prevAll("#curr_sel[" + valId[2] + "]_[" + valId[3] + "]:first").find("#curr[" + valId[2] + "]_[" + valId[3] + "] option:selected").val();
-            alert(elCurrId);
-            if (@jpy == elCurrId) {
-                decVal = 0;
+
+        /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+         [BEGIN FUNCTIONS]
+         */
+        function onloadModifiedMiscEntries() {
+            var tblRow = $("tr[id^='item_']");
+            var tblRowLen = $(tblRow).length;
+            if (tblRowLen > 0) {
+                jQuery.each(tblRow, function (i, dtl) {
+                    for (var a = 0; a < 4; a++) {
+                        var amount = $("#EntryNC_ExpenseEntryNCDtls_" + i + "__ExpenseEntryNCDtlAccs_" + a + "__ExpNCDtlAcc_Amount").val();
+                        if (parseFloat(amount) > 0) {
+                            var typeId = $("#EntryNC_ExpenseEntryNCDtls_" + i + "__ExpenseEntryNCDtlAccs_" + a + "__ExpNCDtlAcc_Type_ID").val();
+                            if (typeId == @GlobalSystemValues.NC_DEBIT+"") {
+                                $(".amt-db-" + i + "-" + a).val(amount);
+                            } else {
+                                $(".amt-cd-" + i + "-" + a).val(amount);
+                            }
+                        }
+                    }
+                });
             }
-            $(this).val(roundNumber(val, decVal));
-            if (isNaN($(this).val())) {
-                $(this).val(0);
+        }
+
+        function hiddencols() {
+            var catID = $("select#categoryName option:selected").val();
+            if (catID == @GlobalSystemValues.NC_PSSC +"" || catID == @GlobalSystemValues.NC_PCHC +"" || catID == @GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES +"") {
+                $('#NCPartialTbl').find(".cat-hidden").removeClass("hidden");
+            } else {
+                $('#NCPartialTbl').find(".cat-hidden").addClass("hidden");
             }
-        });*@
-       
+        }
         function computeValsNC() {
             var totalDebit = 0;
             var totalCredit = 0;
@@ -1262,5 +1259,8 @@
                 //$("#EntryNC_ExpenseEntryNCDtls_CDD_0__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Amount").parent().siblings("td:eq(5)").text(parseFloat(subtotalPCRCompDeb).toFixed(2))
             }
         }
+        /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+         [END FUNCTIONS]
+         */
     });
 </script>

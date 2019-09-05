@@ -638,7 +638,7 @@ namespace ExpenseProcessingSystem.Controllers
                         subtypes.Add(new HomeReportSubTypeAccModel
                         {
                             Id = acc.Account_ID.ToString(),
-                            SubTypeName = acc.Account_Name + " - " + acc.Account_No
+                            SubTypeName = acc.Account_No + " - " + acc.Account_Name
                         });
                     }
                 }
@@ -648,6 +648,11 @@ namespace ExpenseProcessingSystem.Controllers
             if(ReportTypeID == HomeReportConstantValue.WTS)
             {
                 var taxList = _service.getAllTaxRateList();
+                subtypes.Add(new HomeReportSubTypeAccModel
+                {
+                    Id = "0",
+                    SubTypeName = "All"
+                });
                 foreach (var i in taxList)
                 {
                     subtypes.Add(new HomeReportSubTypeAccModel
@@ -902,7 +907,7 @@ namespace ExpenseProcessingSystem.Controllers
                     //Get the necessary data from Database
                     data = new HomeReportDataFilterViewModel
                     {
-                        HomeReportOutputAccountSummary = _service.GetAccountSummaryData(model).Where(x => x.Trans_DebitCredit == "D"),
+                        HomeReportOutputAccountSummary = _service.GetOutstandingAdvancesData(model).Where(x => x.Trans_DebitCredit == "D"),
                         HomeReportFilter = model,
                         ReportCommonVM = repComVM
                     };
@@ -1046,12 +1051,13 @@ namespace ExpenseProcessingSystem.Controllers
                 decimal vat = _service.getVat(_tax);
 
                 var payItem = new PaymentInfo();
-                 decimal amount;
+                decimal amount;
 
                 if (vat > 0)
                     amount = _amount / (1 + vat);
                 else
                     amount = _amount;
+                //assigning values to their respective 1st, 2nd or 3rd month container
                 if (new List<int> { 1, 4, 7, 10 }.Contains(date.Month))
                 {
                     payItem.M1Quarter = amount;
@@ -1064,7 +1070,6 @@ namespace ExpenseProcessingSystem.Controllers
                 {
                     payItem.M3Quarter = amount;
                 }
-
                 //payitem
                 payItem.Atc = ewt.TR_ATC;
                 payItem.Payments = ewt.TR_Nature_Income_Payment;
@@ -1081,6 +1086,7 @@ namespace ExpenseProcessingSystem.Controllers
                 fp.EeRegAddress = vendor.Vendor_Address;
                 fp.EeTin = vendor.Vendor_TIN;
                 fp.PayeeName = vendor.Vendor_Name;
+
                 fp.From_Date = date;
                 fp.To_Date = date;
 
@@ -3422,7 +3428,7 @@ namespace ExpenseProcessingSystem.Controllers
 
             foreach (var i in ssList.accAllList)
             {
-                i.Account_Name = i.Account_Name + " - " + i.Account_No;
+                i.Account_Name = i.Account_No + " - " + i.Account_Name;
             }
             foreach (var i in ssList.LiquidationDetails)
             {
@@ -3495,7 +3501,7 @@ namespace ExpenseProcessingSystem.Controllers
                 }
                 foreach (var i in vm.accAllList)
                 {
-                    i.Account_Name = i.Account_Name + " - " + i.Account_No;
+                    i.Account_Name = i.Account_No + " - " + i.Account_Name;
                 }
                 foreach (var i in vm.LiquidationDetails)
                 {
@@ -3623,7 +3629,7 @@ namespace ExpenseProcessingSystem.Controllers
 
             foreach (var i in ssList.accAllList)
             {
-                i.Account_Name = i.Account_Name + " - " + i.Account_No;
+                i.Account_Name =  i.Account_No + " - " + i.Account_Name;
             }
             foreach (var i in ssList.LiquidationDetails)
             {
