@@ -59,62 +59,62 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             ////START OF LDAP LOGIN
-            try
-            {
-                XElement xelem = XElement.Load("wwwroot/xml/ActiveDirectory.xml");
-
-                string svcUsername = xelem.Element("svcUsername").Value;
-                string domain = xelem.Element("domain").Value;
-                string svcPwd = EncrytionTool.DecryptString(xelem.Element("svcPwd").Value, "eXpreSS");
-
-                //validate the user's username & password in Active Directory
-                using (PrincipalContext context = new PrincipalContext(ContextType.Domain, domain, svcUsername, svcPwd))
-                {
-                    //Username and password for authentication.
-                    bool rslt = context.ValidateCredentials(model.User_UserName, model.User_Password);
-                    if (rslt)
-                    {
-                        var acc = _context.User.Where(x => x.User_UserName == model.User_UserName).Where(x => x.User_InUse == true).Select(x => x).FirstOrDefault();
-                        if (acc != null)
-                        {
-                            //Set Session Info
-                            _session.SetString("UserID", acc.User_ID.ToString());
-                            _session.SetString("UserName", acc.User_FName + " " + acc.User_LName);
-                            //Set User Access Info
-                            _session.SetString("isLoggedIn", "true");
-                            _session.SetString("accessType", acc.User_Role);
-                            _session.SetString("isAdmin", acc.User_Role == "admin" ? "true" : "false");
-                            return RedirectToAction("Index", "Home");
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "User [" + model.User_UserName + "] has encountered a system error at [" + DateTime.Now + "].");
-                return StatusCode(500);
-            }
-
-
-            //var acc = _context.User.Where(x => x.User_UserName == model.User_UserName).Where(x => x.User_InUse == true).Select(x => x).FirstOrDefault();
-            //if (acc != null)
+            //try
             //{
-            //    //Set Session Info
-            //    _session.SetString("UserID", acc.User_ID.ToString());
-            //    _session.SetString("UserName", acc.User_FName + " " + acc.User_LName);
-            //    //Set User Access Info
-            //    _session.SetString("isLoggedIn", "true");
-            //    _session.SetString("accessType", acc.User_Role);
-            //    _session.SetString("isAdmin", acc.User_Role == "admin" ? "true" : "false");
-            //    return RedirectToAction("Index", "Home");
+            //    XElement xelem = XElement.Load("wwwroot/xml/ActiveDirectory.xml");
+
+            //    string svcUsername = xelem.Element("svcUsername").Value;
+            //    string domain = xelem.Element("domain").Value;
+            //    string svcPwd = EncrytionTool.DecryptString(xelem.Element("svcPwd").Value, "eXpreSS");
+
+            //    //validate the user's username & password in Active Directory
+            //    using (PrincipalContext context = new PrincipalContext(ContextType.Domain, domain, svcUsername, svcPwd))
+            //    {
+            //        //Username and password for authentication.
+            //        bool rslt = context.ValidateCredentials(model.User_UserName, model.User_Password);
+            //        if (rslt)
+            //        {
+            //            var acc = _context.User.Where(x => x.User_UserName == model.User_UserName).Where(x => x.User_InUse == true).Select(x => x).FirstOrDefault();
+            //            if (acc != null)
+            //            {
+            //                //Set Session Info
+            //                _session.SetString("UserID", acc.User_ID.ToString());
+            //                _session.SetString("UserName", acc.User_FName + " " + acc.User_LName);
+            //                //Set User Access Info
+            //                _session.SetString("isLoggedIn", "true");
+            //                _session.SetString("accessType", acc.User_Role);
+            //                _session.SetString("isAdmin", acc.User_Role == "admin" ? "true" : "false");
+            //                return RedirectToAction("Index", "Home");
+            //            }
+            //        }
+            //    }
             //}
-            //_session.SetString("UserID", "11");
-            //_session.SetString("UserName", "test user");
-            ////Set User Access Info
-            //_session.SetString("isLoggedIn", "true");
-            //_session.SetString("accessType", "approver");
-            //_session.SetString("isAdmin", "false");
-            //return RedirectToAction("Index", "Home");
+            //catch (Exception ex)
+            //{
+            //    _logger.LogError(ex, "User [" + model.User_UserName + "] has encountered a system error at [" + DateTime.Now + "].");
+            //    return StatusCode(500);
+            //}
+
+
+            var acc = _context.User.Where(x => x.User_UserName == model.User_UserName).Where(x => x.User_InUse == true).Select(x => x).FirstOrDefault();
+            if (acc != null)
+            {
+                //Set Session Info
+                _session.SetString("UserID", acc.User_ID.ToString());
+                _session.SetString("UserName", acc.User_FName + " " + acc.User_LName);
+                //Set User Access Info
+                _session.SetString("isLoggedIn", "true");
+                _session.SetString("accessType", acc.User_Role);
+                _session.SetString("isAdmin", acc.User_Role == "admin" ? "true" : "false");
+                return RedirectToAction("Index", "Home");
+            }
+            _session.SetString("UserID", "11");
+            _session.SetString("UserName", "test user");
+            //Set User Access Info
+            _session.SetString("isLoggedIn", "true");
+            _session.SetString("accessType", "approver");
+            _session.SetString("isAdmin", "false");
+            return RedirectToAction("Index", "Home");
             //END OF LDAP LOGIN
 
             //var acc = _context.User.Where(x => x.User_UserName == model.User_UserName).Where(x => x.User_InUse == true).Select(x => x).FirstOrDefault();

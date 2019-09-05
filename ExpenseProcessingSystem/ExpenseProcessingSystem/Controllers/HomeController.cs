@@ -304,6 +304,7 @@ namespace ExpenseProcessingSystem.Controllers
                     if (_service.ClosingCheckStatus())
                     {
                         model = _service.ClosingOpenDailyBook();
+                        messages.Add("New daily book is now open!");
                     }
                     else
                     {
@@ -1258,6 +1259,13 @@ namespace ExpenseProcessingSystem.Controllers
             {
                 viewModel = _service.getExpense(entryID);
                 viewModel = PopulateEntry((EntryCVViewModelList)viewModel);
+
+                if(viewModel.payee_type == GlobalSystemValues.PAYEETYPE_VENDOR)
+                {
+                    viewModel.systemValues.ewt = _service.getVendorTaxRate(viewModel.selectedPayee);
+                    viewModel.systemValues.vat = _service.getVendorVat(viewModel.selectedPayee);
+                }
+
                 viewModel.systemValues.payee_type_sel = new SelectList(GlobalSystemValues.PAYEETYPE_SELECT_CV, "Value", "Text", GlobalSystemValues.PAYEETYPE_SELECT_CV.First());
 
                 foreach (var i in viewModel.EntryCV)
@@ -1288,6 +1296,7 @@ namespace ExpenseProcessingSystem.Controllers
             else
             {
                 viewModel = PopulateEntry((EntryCVViewModelList)viewModel);
+
                 var accCCY = _service.getCurrencyByMasterID(_service.getAccount(viewModel.systemValues.acc[0].accId).Account_Currency_MasterID).Curr_ID;
                 //viewModel.vendor = 2;
                 viewModel.EntryCV.Add(new EntryCVViewModel {
@@ -1586,11 +1595,12 @@ namespace ExpenseProcessingSystem.Controllers
             //cvList.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
             //cvList.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
             //cvList.systemValues.currency = listOfSysVals[GlobalSystemValues.SELECT_LIST_CURRENCY];
-            //cvList.systemValues.ewt =_service.getVendorTaxRate(cvList.vendor);
-            //cvList.systemValues.vat = _service.getVendorVat(cvList.vendor);
             //cvList.systemValues.acc = _service.getAccDetailsEntry();
 
             cvList = PopulateEntry((EntryCVViewModelList)cvList);
+
+            cvList.systemValues.ewt = _service.getVendorTaxRate(cvList.selectedPayee);
+            cvList.systemValues.vat = _service.getVendorVat(cvList.selectedPayee);
 
             List<cvBirForm> birForms = new List<cvBirForm>();
             foreach (var item in cvList.EntryCV)
