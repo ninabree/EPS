@@ -2200,6 +2200,7 @@ namespace ExpenseProcessingSystem.Services
                     Pending_Account_FBT_MasterID = dm.Account_FBT_MasterID,
                     Pending_Account_Group_MasterID = dm.Account_Group_MasterID,
                     Pending_Account_Currency_MasterID = dm.Account_Currency_MasterID,
+                    Pending_Account_Budget_Code = dm.Account_Budget_Code,
                     Pending_Account_Code = dm.Account_Code,
                     Pending_Account_Cust = dm.Account_Cust,
                     Pending_Account_Div = dm.Account_Div,
@@ -2881,8 +2882,12 @@ namespace ExpenseProcessingSystem.Services
             //save file to uploads folder
             FileService objFile = new FileService();
             string empName = getEmpSelectList().Where(x => x.Value == model.BCS_User_ID + "").FirstOrDefault().Value;
-            string strFilePath = objFile.SaveFile(model.BCS_Signatures, uploads, empName);
+            string strFilePath = "";
 
+            if (model.BCS_Signatures != null)
+            {
+                strFilePath = objFile.SaveFile(model.BCS_Signatures, uploads, empName);
+            }
             DMBIRCertSignModel_Pending m = new DMBIRCertSignModel_Pending
             {
                 Pending_BCS_User_ID = model.BCS_User_ID,
@@ -2913,6 +2918,7 @@ namespace ExpenseProcessingSystem.Services
                 DefaultIfEmpty(0).Max();
             var uploads = Path.Combine(_hostingEnvironment.WebRootPath, _context.FileLocation.Where(x => x.FL_Type == "BCS").Select(x => x.FL_Location).FirstOrDefault());
             int masterIDMax = deptMax > pendingMax ? deptMax : pendingMax;
+
             string strFilePath = _context.DMBCS.Where(x => x.BCS_MasterID == model.BCS_MasterID).Select(x => x.BCS_Signatures).FirstOrDefault();
             //if there is image uploaded
             if (model.BCS_Signatures != null)
@@ -3383,20 +3389,39 @@ namespace ExpenseProcessingSystem.Services
                 model.VoucherNoList = PopulateVoucherNo(entryIDs);
 
                 var entryList = (from e in _context.ExpenseEntry
-                                    join emp in _context.DMEmp on e.Expense_Payee equals emp.Emp_ID
-                                    where entryIDs.Contains(e.Expense_ID)
-                                    select new { e, emp }).ToList();
-                entryList.ForEach(x =>
+                                 join emp in _context.DMEmp on e.Expense_Payee equals emp.Emp_ID
+                                 where entryIDs.Contains(e.Expense_ID)
+                                 select new
+                                 {
+                                     e,
+                                     ExpenseEntryDetails = from d
+                                                           in _context.ExpenseEntryDetails
+                                                           where d.ExpenseEntryModel.Expense_ID == e.Expense_ID
+                                                           select new
+                                                           {
+                                                               d
+                                                           },
+                                    emp
+                                 }).ToList();
+
+                foreach(var ent in entryList)
+                {
+                    decimal amt = 0;
+                    foreach (var dtl in ent.ExpenseEntryDetails)
+                    {
+                        amt += dtl.d.ExpDtl_Credit_Cash;
+                    }
                     accs.Add(
-                        new LOIAccount
-                        {
-                            loi_Emp_Name = x.emp.Emp_Name,
-                            loi_Acc_Type = x.emp.Emp_Acc_No.Substring(0, 2),
-                            loi_Acc_No = x.emp.Emp_Acc_No.Substring(2, x.emp.Emp_Acc_No.Length - 2),
-                            loi_Amount = x.e.Expense_Debit_Total
-                        })
-                );
-                entryList.ForEach(x => totalAmount += x.e.Expense_Debit_Total);
+                       new LOIAccount
+                       {
+                           loi_Emp_Name = ent.emp.Emp_Name,
+                           loi_Acc_Type = ent.emp.Emp_Acc_No.Substring(0, 2),
+                           loi_Acc_No = ent.emp.Emp_Acc_No.Substring(2, ent.emp.Emp_Acc_No.Length - 2),
+                           loi_Amount = amt
+                       }
+                    );
+                    totalAmount += amt;
+                }
                 stringNum = _class.decimalNumberToWords(totalAmount);
             }
             return new ReportLOIViewModel()

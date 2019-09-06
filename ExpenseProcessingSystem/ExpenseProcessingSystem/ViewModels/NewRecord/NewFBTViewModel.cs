@@ -20,7 +20,7 @@ namespace ExpenseProcessingSystem.ViewModels.NewRecord
         [NotNullValidations, TextValidation]
         public string FBT_Formula { get; set; }
         [Display(Name = "FBT Tax Rate")]
-        [NotNullValidations, IntegerValidation]
-        public int FBT_Tax_Rate { get; set; }
+        [NotNullValidations]
+        public float FBT_Tax_Rate { get; set; }
     }
 }

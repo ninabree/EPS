@@ -1025,7 +1025,7 @@ namespace ExpenseProcessingSystem.Controllers
             return new ViewAsPdf(pdfLayoutFilePath, data)
             {
                 FileName = fileName,
-                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape,
+                PageOrientation = (layoutName == "_ReportLayout_13") ? Rotativa.AspNetCore.Options.Orientation.Portrait: Rotativa.AspNetCore.Options.Orientation.Landscape,
                 CustomSwitches = footerFormat,
                 PageSize = Rotativa.AspNetCore.Options.Size.A4
             };
