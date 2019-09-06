@@ -136,6 +136,7 @@ namespace ExpenseProcessingSystem.Controllers
                 }
             }
             ViewBag.phpid = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_PHP").Value)).Curr_ID;
+            viewModel.taxaccID = viewModel.accList.FirstOrDefault(x => x.accName == "ET").accID;
             return View("NCPartial", viewModel);
         }
 
@@ -185,10 +186,11 @@ namespace ExpenseProcessingSystem.Controllers
             //populate and sort
             var sortedVals = _sortService.SortData(_service.populateVendor(filters), sortOrder);
             ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
-
+            var pendingList = (sortedVals.list).Cast<DMVendorViewModel>().Where(x => x.Vendor_Status_ID != GlobalSystemValues.STATUS_APPROVED).ToList();
             DMViewModel VM = new DMViewModel()
             {
                 DMFilters = filters,
+                PendingMasterIDList = pendingList.Count > 0 ? pendingList.Select(x=> x.Vendor_MasterID).ToList() : new List<int>(),
                 //pagination
                 Vendor = PaginatedList<DMVendorViewModel>.CreateAsync(
                         (sortedVals.list).Cast<DMVendorViewModel>().AsQueryable().AsNoTracking(), pg ?? 1, pageSize)
@@ -229,11 +231,13 @@ namespace ExpenseProcessingSystem.Controllers
             //populate and sort
             var sortedVals = _sortService.SortData(_service.populateDept(filters), sortOrder);
             ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
+            var pendingList = (sortedVals.list).Cast<DMDeptViewModel>().Where(x => x.Dept_Status_ID != GlobalSystemValues.STATUS_APPROVED).ToList();
 
             //pagination
             DMViewModel VM = new DMViewModel()
             {
                 DMFilters = filters,
+                PendingMasterIDList = pendingList.Count > 0 ? pendingList.Select(x => x.Dept_MasterID).ToList() : new List<int>(),
                 Dept = PaginatedList<DMDeptViewModel>.CreateAsync(
                     (sortedVals.list).Cast<DMDeptViewModel>().AsQueryable().AsNoTracking(), pg ?? 1, pageSize)
             };
@@ -274,10 +278,12 @@ namespace ExpenseProcessingSystem.Controllers
             //populate and sort
             var sortedVals = _sortService.SortData(_service.populateCheck(filters), sortOrder);
             ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
+            var pendingList = (sortedVals.list).Cast<DMCheckViewModel>().Where(x => x.Check_Status_ID != GlobalSystemValues.STATUS_APPROVED).ToList();
             //pagination
             DMViewModel VM = new DMViewModel()
             {
                 DMFilters = filters,
+                PendingMasterIDList = pendingList.Count > 0 ? pendingList.Select(x => x.Check_MasterID).ToList() : new List<int>(),
                 Check = PaginatedList<DMCheckViewModel>.CreateAsync(
                     (sortedVals.list).Cast<DMCheckViewModel>().AsQueryable().AsNoTracking(), pg ?? 1, pageSize)
             };
@@ -324,11 +330,13 @@ namespace ExpenseProcessingSystem.Controllers
             //populate and sort
             var sortedVals = _sortService.SortData(_service.populateAccount(filters), sortOrder);
             ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
+            var pendingList = (sortedVals.list).Cast<DMAccountViewModel>().Where(x => x.Account_Status_ID != GlobalSystemValues.STATUS_APPROVED).ToList();
 
             //pagination
             DMViewModel VM = new DMViewModel()
             {
                 DMFilters = filters,
+                PendingMasterIDList = pendingList.Count > 0 ? pendingList.Select(x => x.Account_MasterID).ToList() : new List<int>(),
                 Account = PaginatedList<DMAccountViewModel>.CreateAsync(
                     (sortedVals.list).Cast<DMAccountViewModel>().AsQueryable().AsNoTracking(), pg ?? 1, pageSize)
             };
@@ -367,11 +375,13 @@ namespace ExpenseProcessingSystem.Controllers
             //populate and sort
             var sortedVals = _sortService.SortData(_service.populateVAT(filters), sortOrder);
             ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
+            var pendingList = (sortedVals.list).Cast<DMVATViewModel>().Where(x => x.VAT_Status_ID != GlobalSystemValues.STATUS_APPROVED).ToList();
 
             //pagination
             DMViewModel VM = new DMViewModel()
             {
                 DMFilters = filters,
+                PendingMasterIDList = pendingList.Count > 0 ? pendingList.Select(x => x.VAT_MasterID).ToList() : new List<int>(),
                 VAT = PaginatedList<DMVATViewModel>.CreateAsync(
                     (sortedVals.list).Cast<DMVATViewModel>().AsQueryable().AsNoTracking(), pg ?? 1, pageSize)
             };
@@ -412,11 +422,13 @@ namespace ExpenseProcessingSystem.Controllers
             //populate and sort
             var sortedVals = _sortService.SortData(_service.populateFBT(filters), sortOrder);
             ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
+            var pendingList = (sortedVals.list).Cast<DMFBTViewModel>().Where(x => x.FBT_Status_ID != GlobalSystemValues.STATUS_APPROVED).ToList();
 
             //pagination
             DMViewModel VM = new DMViewModel()
             {
                 DMFilters = filters,
+                PendingMasterIDList = pendingList.Count > 0 ? pendingList.Select(x => x.FBT_MasterID).ToList() : new List<int>(),
                 FBT = PaginatedList<DMFBTViewModel>.CreateAsync(
                     (sortedVals.list).Cast<DMFBTViewModel>().AsQueryable().AsNoTracking(), pg ?? 1, pageSize)
             };
@@ -458,11 +470,13 @@ namespace ExpenseProcessingSystem.Controllers
             ////populate and sort
             var sortedVals = _sortService.SortData(_service.populateTR(filters), sortOrder);
             ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
+            var pendingList = (sortedVals.list).Cast<DMTRViewModel>().Where(x => x.TR_Status_ID != GlobalSystemValues.STATUS_APPROVED).ToList();
 
             //pagination
             DMViewModel VM = new DMViewModel()
             {
                 DMFilters = filters,
+                PendingMasterIDList = pendingList.Count > 0 ? pendingList.Select(x => x.TR_MasterID).ToList() : new List<int>(),
                 TR = PaginatedList<DMTRViewModel>.CreateAsync(
                     (sortedVals.list).Cast<DMTRViewModel>().AsQueryable().AsNoTracking(), pg ?? 1, pageSize)
             };
@@ -501,11 +515,13 @@ namespace ExpenseProcessingSystem.Controllers
             //populate and sort
             var sortedVals = _sortService.SortData(_service.populateCurr(filters), sortOrder);
             ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
+            var pendingList = (sortedVals.list).Cast<DMCurrencyViewModel>().Where(x => x.Curr_Status_ID != GlobalSystemValues.STATUS_APPROVED).ToList();
 
             //pagination
             DMViewModel VM = new DMViewModel()
             {
                 DMFilters = filters,
+                PendingMasterIDList = pendingList.Count > 0 ? pendingList.Select(x => x.Curr_MasterID).ToList() : new List<int>(),
                 Curr = PaginatedList<DMCurrencyViewModel>.CreateAsync(
                     (sortedVals.list).Cast<DMCurrencyViewModel>().AsQueryable().AsNoTracking(), pg ?? 1, pageSize)
             };
@@ -546,11 +562,13 @@ namespace ExpenseProcessingSystem.Controllers
             //populate and sort
             var sortedVals = _sortService.SortData(_service.populateRegEmp(filters), sortOrder);
             ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
+            var pendingList = (sortedVals.list).Cast<DMEmpViewModel>().Where(x => x.Emp_Status_ID != GlobalSystemValues.STATUS_APPROVED).ToList();
 
             //pagination
             DMViewModel VM = new DMViewModel()
             {
                 DMFilters = filters,
+                PendingMasterIDList = pendingList.Count > 0 ? pendingList.Select(x => x.Emp_MasterID).ToList() : new List<int>(),
                 Emp = PaginatedList<DMEmpViewModel>.CreateAsync(
                     (sortedVals.list).Cast<DMEmpViewModel>().AsQueryable().AsNoTracking(), pg ?? 1, pageSize)
             };
@@ -590,11 +608,13 @@ namespace ExpenseProcessingSystem.Controllers
             //populate and sort
             var sortedVals = _sortService.SortData(_service.populateTempEmp(filters), sortOrder, "TEMP");
             ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
+            var pendingList = (sortedVals.list).Cast<DMEmpViewModel>().Where(x => x.Emp_Status_ID != GlobalSystemValues.STATUS_APPROVED).ToList();
 
             //pagination
             DMViewModel VM = new DMViewModel()
             {
                 DMFilters = filters,
+                PendingMasterIDList = pendingList.Count > 0 ? pendingList.Select(x => x.Emp_MasterID).ToList() : new List<int>(),
                 Emp = PaginatedList<DMEmpViewModel>.CreateAsync(
                     (sortedVals.list).Cast<DMEmpViewModel>().AsQueryable().AsNoTracking(), pg ?? 1, pageSize)
             };
@@ -634,11 +654,13 @@ namespace ExpenseProcessingSystem.Controllers
             //populate and sort
             var sortedVals = _sortService.SortData(_service.populateCust(filters), sortOrder);
             ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
+            var pendingList = (sortedVals.list).Cast<DMCustViewModel>().Where(x => x.Cust_Status_ID != GlobalSystemValues.STATUS_APPROVED).ToList();
 
             //pagination
             DMViewModel VM = new DMViewModel()
             {
                 DMFilters = filters,
+                PendingMasterIDList = pendingList.Count > 0 ? pendingList.Select(x => x.Cust_MasterID).ToList() : new List<int>(),
                 Cust = PaginatedList<DMCustViewModel>.CreateAsync(
                     (sortedVals.list).Cast<DMCustViewModel>().AsQueryable().AsNoTracking(), pg ?? 1, pageSize)
             };
@@ -679,11 +701,13 @@ namespace ExpenseProcessingSystem.Controllers
             //populate and sort
             var sortedVals = _sortService.SortData(_service.populateBCS(filters), sortOrder);
             ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
+            var pendingList = (sortedVals.list).Cast<DMBCSViewModel>().Where(x => x.BCS_Status_ID != GlobalSystemValues.STATUS_APPROVED).ToList();
 
             //pagination
             DMViewModel VM = new DMViewModel()
             {
                 DMFilters = filters,
+                PendingMasterIDList = pendingList.Count > 0 ? pendingList.Select(x => x.BCS_MasterID).ToList() : new List<int>(),
                 BCS = PaginatedList<DMBCSViewModel>.CreateAsync(
                     (sortedVals.list).Cast<DMBCSViewModel>().AsQueryable().AsNoTracking(), pg ?? 1, pageSize)
             };
@@ -722,11 +746,13 @@ namespace ExpenseProcessingSystem.Controllers
             //populate and sort
             var sortedVals = _sortService.SortData(_service.populateAG(filters), sortOrder);
             ViewData[sortedVals.viewData] = sortedVals.viewDataInfo;
+            var pendingList = (sortedVals.list).Cast<DMAccountGroupViewModel>().Where(x => x.AccountGroup_Status_ID != GlobalSystemValues.STATUS_APPROVED).ToList();
 
             //pagination
             DMViewModel VM = new DMViewModel()
             {
                 DMFilters = filters,
+                PendingMasterIDList = pendingList.Count > 0 ? pendingList.Select(x => x.AccountGroup_MasterID).ToList() : new List<int>(),
                 AccountGroup = PaginatedList<DMAccountGroupViewModel>.CreateAsync(
                     (sortedVals.list).Cast<DMAccountGroupViewModel>().AsQueryable().AsNoTracking(), pg ?? 1, pageSize)
             };

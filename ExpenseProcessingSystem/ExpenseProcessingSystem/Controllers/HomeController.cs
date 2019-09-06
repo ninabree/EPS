@@ -1046,10 +1046,20 @@ namespace ExpenseProcessingSystem.Controllers
                 BIRExcelFiller exlFiller = new BIRExcelFiller();
                 FirstPartBIRForm fp = new FirstPartBIRForm();
 
+                decimal ncTaxWithheld = 0;
+                //if Expense Entry is Non Cash
+                var entryNC = _service.getExpenseNC(expID);
+                if (entryNC.EntryNC.ExpenseEntryNCDtls.Count > 0)
+                {
+                    var acc = entryNC.EntryNC.ExpenseEntryNCDtls.FirstOrDefault(x => x.ExpNCDtl_ID == _tax)
+                                        .ExpenseEntryNCDtlAccs.FirstOrDefault(x => x.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_EWT);
+                    ncTaxWithheld = acc != null ? acc.ExpNCDtlAcc_Amount : 0;
+                    _tax = 0;
+                }
+
                 var vendor = _service.getVendor(_vendor);
                 var ewt = _service.GetEWT(_ewt);
                 decimal vat = _service.getVat(_tax);
-
                 var payItem = new PaymentInfo();
                 decimal amount;
 
@@ -1073,7 +1083,7 @@ namespace ExpenseProcessingSystem.Controllers
                 //payitem
                 payItem.Atc = ewt.TR_ATC;
                 payItem.Payments = ewt.TR_Nature_Income_Payment;
-                payItem.TaxWithheld = amount * (decimal)ewt.TR_Tax_Rate;
+                payItem.TaxWithheld = ncTaxWithheld > 0 ? ncTaxWithheld : (amount * (decimal)ewt.TR_Tax_Rate);
 
                 fp.IncomePay.Add(payItem);
 
@@ -1115,27 +1125,30 @@ namespace ExpenseProcessingSystem.Controllers
         public IActionResult GenerateCheckFile(int ExpenseID)
         {
             ChequeData cd = new ChequeData();
-            string filepath = "";
 
             var expModel = _service.getExpense(ExpenseID);
 
             cd.Date = DateTime.Now;
             cd.Payee = _service.getVendor(expModel.selectedPayee).Vendor_Name;
 
-            foreach(var item in expModel.EntryCV)
+            foreach (var item in expModel.EntryCV)
             {
                 cd.Amount += item.credCash;
             }
 
-            cd.Signatory1 = _service.getUserFullName(expModel.approver_id);
+            cd.Signatory1 = "";
             cd.Signatory2 = "";
-            cd.Voucher = _service.getVoucherNo(1, expModel.expenseDate, int.Parse(expModel.expenseId));
+            cd.Voucher = _service.getVoucherNo(GlobalSystemValues.TYPE_CV, expModel.expenseDate, int.Parse(expModel.expenseId));
 
+            //Services.Check.GenerateCheck gc = new Services.Check.GenerateCheck();
+
+            //filepath = gc.Generate(cd);
+            string filepath = "/ExcelTemplatesTempFolder/";
+            string filename = "Check_" + cd.Voucher + "_" + expModel.checkNo + ".pdf";
             Services.Check.GenerateCheck gc = new Services.Check.GenerateCheck();
+            bool result = gc.GenerateCheckPDF(cd, filename);
 
-            filepath = gc.Generate(cd);
-
-            return File(filepath, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", filepath.Substring(26));
+            return File(filepath + filename, "application/pdf", filename);
         }
         //public IActionResult MizuhoLogo2Image()
         //{
@@ -3016,19 +3029,24 @@ namespace ExpenseProcessingSystem.Controllers
                 }
                 else
                 {
-                    decimal amt = 0;
+                    decimal amt = 0, vat = 0;
                     foreach (var a in item.ExpenseEntryNCDtlAccs)
                     {
                         if (a.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
                         {
-                            amt += a.ExpNCDtlAcc_Amount;
+                            amt += item.ExpNCDtl_TaxBasedAmt;
                         }
+                        //else if (a.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_EWT)
+                        //{
+                        //    vat += a.ExpNCDtlAcc_Amount;
+                        //}
                     }
                     cvBirForm temp = new cvBirForm
                     {
                         amount = amt,
                         ewt = item.ExpNCDtl_TR_ID,
-                        //vat = item.vat,
+                        //vat will temporarily hold the value for Expense Entry Detail ID
+                        vat = item.ExpNCDtl_ID,
                         vendor = item.ExpNCDtl_Vendor_ID,
                         approver = ncList.approver,
                         date = ncList.expenseDate

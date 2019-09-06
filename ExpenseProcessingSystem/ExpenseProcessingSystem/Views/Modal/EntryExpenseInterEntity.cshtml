@@ -354,9 +354,9 @@
                 $("tr#part2.part-tr").each(function (ind, item) {
                     var partNo = parseInt(item.id.substring(4)) - 1;
                     var AccID = $('#interPartList_0__Inter_Particular2_' + ind + '__Particular_Acc_ID').val(),
-                        Amt = $('#par1-' + ind).text(),
+                        Amt = $('#par2-' + ind).text(),
                         CurrID = ($('#interPartList_0__Inter_Particular2_' + ind + '__Particular_DebCurr_ID').val() > 0) ? $('#interPartList_0__Inter_Particular2_' + ind + '__Particular_DebCurr_ID').val() : $('#interPartList_0__Inter_Particular2_' + ind + '__Particular_CredCurr_ID').val(),
-                        Rate = "0",
+                        Rate = $("table").find("#Inter_Rate").val(),
                         TypeID = $('#interPartList_0__Inter_Particular2_' + ind + '__Particular_Type_ID').val();
 
                     parts += '<input data-val="true" data-val-required="The Inter_Acc_ID field is required." id="EntryDDV_' + itemNo + '__interDetails_interPartList_' + partNo + '__ExpenseEntryInterEntityAccs_' + ind + '__Inter_Acc_ID" name="EntryDDV[' + itemNo + '].interDetails.interPartList[' + partNo + '].ExpenseEntryInterEntityAccs[' + ind + '].Inter_Acc_ID" type="hidden" value="' + AccID + '">'
@@ -371,7 +371,7 @@
                 $("tr#part3.part-tr").each(function (ind, item) {
                     var partNo = parseInt(item.id.substring(4)) - 1;
                     var AccID = $('#interPartList_0__Inter_Particular3_' + ind + '__Particular_Acc_ID').val(),
-                        Amt = $('#par1-' + ind).text(),
+                        Amt = $('#par3-' + ind).text(),
                         CurrID = ($('#interPartList_0__Inter_Particular3_' + ind + '__Particular_DebCurr_ID').val() > 0) ? $('#interPartList_0__Inter_Particular3_' + ind + '__Particular_DebCurr_ID').val() : $('#interPartList_0__Inter_Particular3_' + ind + '__Particular_CredCurr_ID').val(),
                         Rate = "0",
                         TypeID = $('#interPartList_0__Inter_Particular3_' + ind + '__Particular_Type_ID').val();

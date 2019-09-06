@@ -53,12 +53,11 @@
         <tbody>
             @if (Model.Curr != null)
             {
-                var pendList = Model.Curr.Where(x => x.Curr_Status_ID != GlobalSystemValues.STATUS_APPROVED).ToList();
                 @foreach (var item in Model.Curr)
                 {
                     <tr>
                         <td>
-                            @if (pendList.Select(x => x.Curr_MasterID).Contains(item.Curr_MasterID) && item.Curr_Status_ID == GlobalSystemValues.STATUS_APPROVED)
+                            @if (Model.PendingMasterIDList.Contains(item.Curr_MasterID) && item.Curr_Status_ID == GlobalSystemValues.STATUS_APPROVED)
                             {
                                 <input class="tbl-chk" id="@item.Curr_MasterID" type="checkbox" disabled />
                             }

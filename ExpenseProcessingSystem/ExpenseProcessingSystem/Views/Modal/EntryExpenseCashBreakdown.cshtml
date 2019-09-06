@@ -144,14 +144,20 @@
 
                 var amountTotal = 0;
                 var trs = $('.cashBreakdowntable').find("tbody").find("tr");
-                
+
                 for (var count = 0; count < trs.length - 1; count++) {
                     var subTotal = parseFloat($('#' + trs[count].id).find('.txtNoPCS').val()) * parseFloat($('#' + trs[count].id).find('.txtDenomination').val());
                     amountTotal = parseFloat(amountTotal) + parseFloat(subTotal);
                 }
                 $('.cashBDAmountTotal').val(AC(round(amountTotal, 2)));
             });
-
+            $("table").on("keydown", "input.txtNoPCS", function (e) {
+                if (e.keyCode == 13) {
+                    var tabInput = document.querySelectorAll(".txtNoPCS");
+                    tabInput[document.activeElement.tabIndex].select();
+                    return false;
+                }
+            });
             $(".modal-footer").on("click", "#saveGbase", function (e) {
                 if ($("#gBaseRemarks").length) {
                     return;

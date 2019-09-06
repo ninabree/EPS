@@ -62,6 +62,7 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime expenseDate { get; set; }
         public int statusID { get; set; }
+        public int taxaccID { get; set; }
         public string status { get; set; }
         public string approver { get; set; }
         public string verifier_1 { get; set; }
@@ -72,7 +73,7 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         public int maker { get; set; }
         public int amortizationID { get; set; }
         public DateTime lastUpdatedDate { get; set; }
-        [BalancedValidations, RemarksLimitValidations, AccountNotNullValidations]
+        [BalancedValidations, RemarksLimitValidations, AccountNotNullValidations, TaxAccountValidations("taxaccID")]
         public EntryNCViewModel EntryNC { get; set; }
         public List<SelectListItem> category_of_entry { get; set; }
         public List<SelectListItem> accountList { get; set; }
