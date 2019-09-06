@@ -222,12 +222,12 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     worksheet.Cells["C" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     if(i.DebCredType == "D")
                     {
-                        worksheet.Cells["D" + lastRow].Value = "(" + i.DRAmount.ToString("N2") + ")";
+                        worksheet.Cells["D" + lastRow].Value = i.DRAmount.ToString("N2");
                     }
                     worksheet.Cells["D" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     if(i.DebCredType == "C")
                     {
-                        worksheet.Cells["E" + lastRow].Value = i.CRAmount;
+                        worksheet.Cells["E" + lastRow].Value = "(" + i.CRAmount + ")";
                     }
                     worksheet.Cells["E" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["F" + lastRow].Value = i.Balance;
@@ -250,7 +250,7 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 worksheet.Cells["D" + lastRow].Value = data.HomeReportOutputESAMS.Sum(x => x.DRAmount);
                 worksheet.Cells["D" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
 
-                worksheet.Cells["E" + lastRow].Value = data.HomeReportOutputESAMS.Sum(x => x.CRAmount);
+                worksheet.Cells["E" + lastRow].Value = "(" + data.HomeReportOutputESAMS.Sum(x => x.CRAmount) + ")";
                 worksheet.Cells["E" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
 
                 worksheet.Cells["F" + lastRow + ":" + "J" + lastRow].Merge = true;

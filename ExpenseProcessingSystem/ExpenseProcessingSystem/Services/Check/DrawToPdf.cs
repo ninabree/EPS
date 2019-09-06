@@ -50,7 +50,7 @@ namespace ExpenseProcessingSystem.Services.Check
             //var enc1252 = Encoding.GetEncoding(1252);
 
             // Create a font
-            XFont font = new XFont("Times New Roman", 11, XFontStyle.Regular);
+            XFont font = new XFont("Arial", 10, XFontStyle.Regular);
 
             //XImage image = XImage.FromFile("C:/Users/akio.fujiwara/Desktop/ChequePrint/chequepic_8-5_11.jpg");
 
@@ -60,16 +60,16 @@ namespace ExpenseProcessingSystem.Services.Check
             /// Drawing information into the document. Please note that x and y coordinates
             /// are in points.
             // Payee Information
-            DrawTextToPdf(gfx, cd.Payee, font, payeeCoord);
+            DrawTextToPdf(gfx, "***" + cd.Payee + "***", font, payeeCoord);
 
             // Amount (Num) Information
-            DrawTextToPdf(gfx, cd.Amount.ToString("N2"), font, amNumCoord);
+            DrawTextToPdf(gfx, "***" + cd.Amount.ToString("N2") + "***", font, amNumCoord);
 
             // Date Information
-            DrawTextToPdf(gfx, cd.Date.ToString("MM/dd/yyyy"), font, dateCoord);
+            DrawTextToPdf(gfx, cd.Date.ToString("MMMM dd, yyyy"), font, dateCoord);
 
             // Amount (Word) Information
-            DrawTextToPdfBox(gfx, ConvertToWord.ToWord(cd.Amount), font, amWorCoord);
+            DrawTextToPdfBox(gfx, "***" + ConvertToWord.ToWord(cd.Amount) + "***", font, amWorCoord);
 
             // Signatory 1
             DrawTextToPdf(gfx, cd.Signatory1, font, sigOnCoord);
@@ -95,7 +95,7 @@ namespace ExpenseProcessingSystem.Services.Check
                                     XFont font, double[] coords)
         {
             XTextFormatter ttx = new XTextFormatter(gfx);
-            ttx.DrawString(toPrint, font, XBrushes.Black, new XRect(coords[0], coords[1], 511.2, 40));
+            ttx.DrawString(toPrint, font, XBrushes.Black, new XRect(coords[0], coords[1], 500, 40));
         }
     }
 }

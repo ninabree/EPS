@@ -7152,6 +7152,7 @@ namespace ExpenseProcessingSystem.Services
         {
             List<HomeReportTransactionListViewModel> list1 = new List<HomeReportTransactionListViewModel>();
             List<HomeReportTransactionListViewModel> list2 = new List<HomeReportTransactionListViewModel>();
+            List<HomeReportTransactionListViewModel> list3 = new List<HomeReportTransactionListViewModel>();
             List<HomeReportESAMSViewModel> esamsData = new List<HomeReportESAMSViewModel>();
 
             DateTime startDT = model.PeriodFrom;
@@ -7164,12 +7165,15 @@ namespace ExpenseProcessingSystem.Services
             List<DMAccountModel> accList = getAccountListIncHist();
             List<UserModel> userList = getAllUsers();
 
+            var allReversedEntry = _context.ReversalEntry.Select(x => x.Reversal_GOExpressHistID).ToList();
+
             //Get all transaction of Cash advance entries
             var db1 = (from hist in _context.GOExpressHist
                        join exp in _context.ExpenseEntry on hist.ExpenseEntryID equals exp.Expense_ID
                        join trans in _context.ExpenseTransLists on hist.GOExpHist_Id equals trans.TL_GoExpHist_ID
                        join expDtl in _context.ExpenseEntryDetails on hist.ExpenseDetailID equals expDtl.ExpDtl_ID
                        where exp.Expense_Type == GlobalSystemValues.TYPE_SS && trans.TL_Liquidation == false
+                            && !allReversedEntry.Contains(hist.GOExpHist_Id)
                        select new
                        {
                            exp.Expense_ID,
@@ -7360,7 +7364,7 @@ namespace ExpenseProcessingSystem.Services
                            trans.TL_Liquidation
                        }).ToList();
 
-            //Convert to List object.
+            //Convert to List object for liquidation.
             foreach (var i in db2.OrderBy(x => x.GOExpHist_ValueDate))
             {
                 var maker = userList.Where(x => x.User_ID == i.Liq_Created_UserID).FirstOrDefault();
@@ -7373,6 +7377,134 @@ namespace ExpenseProcessingSystem.Services
                     ESAMS_ApprvName = approver.User_LName + ", " + approver.User_FName,
                     Trans_Last_Updated_Date = i.Liq_LastUpdated_Date,
                     ExpExpense_Date = i.Liq_Created_Date.Date.ToString(),
+                    HistExpenseEntryID = i.ExpenseEntryID,
+                    HistExpenseDetailID = i.ExpenseDetailID,
+                    HistGOExpHist_Id = i.GOExpHist_Id,
+                    Trans_Value_Date = i.GOExpHist_ValueDate,
+                    Trans_Remarks = i.GOExpHist_Remarks,
+                    Trans_DebitCredit1_1 = i.GOExpHist_Entry11Type,
+                    Trans_Amount1_1 = i.GOExpHist_Entry11Amt,
+                    Trans_Account_Code1_1 = i.GOExpHist_Entry11Actcde,
+                    Trans_Account_Number1_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde),
+                    Trans_DebitCredit1_2 = i.GOExpHist_Entry12Type,
+                    Trans_Amount1_2 = i.GOExpHist_Entry12Amt,
+                    Trans_Account_Code1_2 = i.GOExpHist_Entry12Actcde,
+                    Trans_Account_Number1_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde),
+                    Trans_DebitCredit2_1 = i.GOExpHist_Entry21Type,
+                    Trans_Amount2_1 = i.GOExpHist_Entry21Amt,
+                    Trans_Account_Code2_1 = i.GOExpHist_Entry21Actcde,
+                    Trans_Account_Number2_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde),
+                    Trans_DebitCredit2_2 = i.GOExpHist_Entry22Type,
+                    Trans_Amount2_2 = i.GOExpHist_Entry22Amt,
+                    Trans_Account_Code2_2 = i.GOExpHist_Entry22Actcde,
+                    Trans_Account_Number2_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde),
+                    Trans_DebitCredit3_1 = i.GOExpHist_Entry31Type,
+                    Trans_Amount3_1 = i.GOExpHist_Entry31Amt,
+                    Trans_Account_Code3_1 = i.GOExpHist_Entry31Actcde,
+                    Trans_Account_Number3_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde),
+                    Trans_DebitCredit3_2 = i.GOExpHist_Entry32Type,
+                    Trans_Amount3_2 = i.GOExpHist_Entry32Amt,
+                    Trans_Account_Code3_2 = i.GOExpHist_Entry32Actcde,
+                    Trans_Account_Number3_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde),
+                    Trans_DebitCredit4_1 = i.GOExpHist_Entry41Type,
+                    Trans_Amount4_1 = i.GOExpHist_Entry41Amt,
+                    Trans_Account_Code4_1 = i.GOExpHist_Entry41Actcde,
+                    Trans_Account_Number4_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde),
+                    Trans_DebitCredit4_2 = i.GOExpHist_Entry42Type,
+                    Trans_Amount4_2 = i.GOExpHist_Entry42Amt,
+                    Trans_Account_Code4_2 = i.GOExpHist_Entry42Actcde,
+                    Trans_Account_Number4_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde),
+                    TransTL_ID = i.TL_ID,
+                    TransTL_GoExpress_ID = i.TL_GoExpress_ID,
+                    TransTL_TransID = i.TL_TransID
+                });
+            }
+
+            //Get all transaction of Reversal Entries
+            var db3 = (from hist in _context.GOExpressHist
+                       join exp in _context.ExpenseEntry on hist.ExpenseEntryID equals exp.Expense_ID
+                       join trans in _context.ExpenseTransLists on hist.GOExpHist_Id equals trans.TL_GoExpHist_ID
+                       join expDtl in _context.ExpenseEntryDetails on hist.ExpenseDetailID equals expDtl.ExpDtl_ID
+                       where exp.Expense_Type == GlobalSystemValues.TYPE_SS && trans.TL_Liquidation == false
+                            && allReversedEntry.Contains(hist.GOExpHist_Id)
+                       select new
+                       {
+                           exp.Expense_ID,
+                           exp.Expense_Type,
+                           exp.Expense_Last_Updated,
+                           exp.Expense_Date,
+                           exp.Expense_Number,
+                           exp.Expense_CheckNo,
+                           exp.Expense_Creator_ID,
+                           exp.Expense_Approver,
+                           expDtl.ExpDtl_Account,
+                           expDtl.ExpDtl_CreditAccount1,
+                           expDtl.ExpDtl_CreditAccount2,
+                           hist.ExpenseEntryID,
+                           hist.ExpenseDetailID,
+                           hist.GOExpHist_Id,
+                           hist.GOExpHist_ValueDate,
+                           hist.GOExpHist_Remarks,
+                           hist.GOExpHist_Entry11Type,
+                           hist.GOExpHist_Entry11Amt,
+                           hist.GOExpHist_Entry11Actcde,
+                           hist.GOExpHist_Entry11ActType,
+                           hist.GOExpHist_Entry11ActNo,
+                           hist.GOExpHist_Entry12Type,
+                           hist.GOExpHist_Entry12Amt,
+                           hist.GOExpHist_Entry12Actcde,
+                           hist.GOExpHist_Entry12ActType,
+                           hist.GOExpHist_Entry12ActNo,
+                           hist.GOExpHist_Entry21Type,
+                           hist.GOExpHist_Entry21Amt,
+                           hist.GOExpHist_Entry21Actcde,
+                           hist.GOExpHist_Entry21ActType,
+                           hist.GOExpHist_Entry21ActNo,
+                           hist.GOExpHist_Entry22Type,
+                           hist.GOExpHist_Entry22Amt,
+                           hist.GOExpHist_Entry22Actcde,
+                           hist.GOExpHist_Entry22ActType,
+                           hist.GOExpHist_Entry22ActNo,
+                           hist.GOExpHist_Entry31Type,
+                           hist.GOExpHist_Entry31Amt,
+                           hist.GOExpHist_Entry31Actcde,
+                           hist.GOExpHist_Entry31ActType,
+                           hist.GOExpHist_Entry31ActNo,
+                           hist.GOExpHist_Entry32Type,
+                           hist.GOExpHist_Entry32Amt,
+                           hist.GOExpHist_Entry32Actcde,
+                           hist.GOExpHist_Entry32ActType,
+                           hist.GOExpHist_Entry32ActNo,
+                           hist.GOExpHist_Entry41Type,
+                           hist.GOExpHist_Entry41Amt,
+                           hist.GOExpHist_Entry41Actcde,
+                           hist.GOExpHist_Entry41ActType,
+                           hist.GOExpHist_Entry41ActNo,
+                           hist.GOExpHist_Entry42Type,
+                           hist.GOExpHist_Entry42Amt,
+                           hist.GOExpHist_Entry42Actcde,
+                           hist.GOExpHist_Entry42ActType,
+                           hist.GOExpHist_Entry42ActNo,
+                           trans.TL_ID,
+                           trans.TL_GoExpress_ID,
+                           trans.TL_TransID,
+                           trans.TL_Liquidation
+                       }).ToList();
+
+            //Convert to List object for reversal entry.
+            foreach (var i in db3.OrderBy(x => x.GOExpHist_ValueDate))
+            {
+                var maker = userList.Where(x => x.User_ID == i.Expense_Creator_ID).FirstOrDefault();
+                var approver = userList.Where(x => x.User_ID == i.Expense_Approver).FirstOrDefault();
+                list1.Add(new HomeReportTransactionListViewModel
+                {
+                    ESAMS_SeqNo = "(" + list1.Where(x => x.HistExpenseEntryID == i.ExpenseEntryID && x.HistExpenseDetailID == i.ExpenseDetailID).FirstOrDefault().ESAMS_SeqNo + ")",
+                    ExpExpense_ID = i.Expense_ID,
+                    ExpExpense_Type = i.Expense_Type,
+                    ESAMS_MakerName = maker.User_LName + ", " + maker.User_FName,
+                    ESAMS_ApprvName = approver.User_LName + ", " + approver.User_FName,
+                    Trans_Last_Updated_Date = i.Expense_Last_Updated,
+                    ExpExpense_Date = i.Expense_Date.ToString(),
                     HistExpenseEntryID = i.ExpenseEntryID,
                     HistExpenseDetailID = i.ExpenseDetailID,
                     HistGOExpHist_Id = i.GOExpHist_Id,
@@ -11043,19 +11175,11 @@ namespace ExpenseProcessingSystem.Services
                                 ccy = i.Liq_CCY_1_1,
                                 amount = i.Liq_Amount_1_1,
                                 account = i.Liq_AccountID_1_1,
-                                interate = i.Liq_InterRate_1_1
+                                interate = i.Liq_InterRate_1_2,
+                                contraCcy = (i.Liq_CCY_1_1 != i.Liq_CCY_1_2) ? i.Liq_CCY_1_2 : 0
                             });
                         }
-                         decimal amount = i.Liq_Amount_1_2;
-                        int contraCcy = 0;
-                        int ccy = i.Liq_CCY_1_2;
 
-                        if (i.Liq_CCY_1_1 != i.Liq_CCY_1_2)
-                        {
-                            amount = i.Liq_Amount_1_1;
-                            ccy = i.Liq_CCY_1_1;
-                            contraCcy = i.Liq_CCY_1_2;
-                        }
                         if (i.Liq_Amount_1_2 != 0)
                         {
                             tempGbase.entries.Add(new entryContainer
@@ -11063,52 +11187,40 @@ namespace ExpenseProcessingSystem.Services
                                 type = (i.Liq_DebitCred_1_2 == "D") ?
                                 (command != "R") ? i.Liq_DebitCred_1_2 : "C" :
                                 (command != "R") ? i.Liq_DebitCred_1_2 : "D",
-                                ccy = ccy,
-                                amount = amount,
+                                ccy = i.Liq_CCY_1_2,
+                                amount = i.Liq_Amount_1_2,
                                 account = i.Liq_AccountID_1_2,
                                 interate = i.Liq_InterRate_1_2,
-                                contraCcy = contraCcy
+                                contraCcy = (i.Liq_CCY_1_1 != i.Liq_CCY_1_2) ? i.Liq_CCY_1_1 : 0
                             });
                         }
-                        if (i.Liq_Amount_2_1 > 0 || i.Liq_Amount_2_2 > 0)
-                        {
-                            if (i.Liq_Amount_2_1 != 0)
-                            {
-                                tempGbase.entries.Add(new entryContainer
-                                {
-                                    type = (i.Liq_DebitCred_2_1 == "D") ?
-                                    (command != "R") ? i.Liq_DebitCred_2_1 : "C" :
-                                    (command != "R") ? i.Liq_DebitCred_2_1 : "D",
-                                    ccy = i.Liq_CCY_2_1,
-                                    amount = i.Liq_Amount_2_1,
-                                    account = i.Liq_AccountID_2_1,
-                                    interate = i.Liq_InterRate_2_1
-                                });
-                            }
-                            amount = i.Liq_Amount_2_2;
-                            contraCcy = 0;
-                            ccy = i.Liq_CCY_2_2;
 
-                            if (i.Liq_CCY_2_1 != i.Liq_CCY_2_2)
+                        if (i.Liq_Amount_2_1 != 0)
+                        {
+                            tempGbase.entries.Add(new entryContainer
                             {
-                                amount = i.Liq_Amount_2_1;
-                                ccy = i.Liq_CCY_2_1;
-                                contraCcy = i.Liq_CCY_2_2;
-                            }
-                            if (i.Liq_Amount_2_2 != 0)
+                                type = (i.Liq_DebitCred_2_1 == "D") ?
+                                (command != "R") ? i.Liq_DebitCred_2_1 : "C" :
+                                (command != "R") ? i.Liq_DebitCred_2_1 : "D",
+                                ccy = i.Liq_CCY_2_1,
+                                amount = i.Liq_Amount_2_1,
+                                account = i.Liq_AccountID_2_1,
+                                interate = i.Liq_InterRate_2_1
+                            });
+                        }
+                           
+                        if (i.Liq_Amount_2_2 != 0)
+                        {
+                            tempGbase.entries.Add(new entryContainer
                             {
-                                tempGbase.entries.Add(new entryContainer
-                                {
-                                    type = (i.Liq_DebitCred_2_2 == "D") ?
-                                    (command != "R") ? i.Liq_DebitCred_2_2 : "C" :
-                                    (command != "R") ? i.Liq_DebitCred_2_2 : "D",
-                                    ccy = ccy,
-                                    amount = amount,
-                                    account = i.Liq_AccountID_2_2,
-                                    interate = i.Liq_InterRate_2_2,
-                                    contraCcy = contraCcy
-                                });
-                            }
+                                type = (i.Liq_DebitCred_2_2 == "D") ?
+                                (command != "R") ? i.Liq_DebitCred_2_2 : "C" :
+                                (command != "R") ? i.Liq_DebitCred_2_2 : "D",
+                                ccy = i.Liq_CCY_2_2,
+                                amount = i.Liq_Amount_2_2,
+                                account = i.Liq_AccountID_2_2,
+                                interate = i.Liq_InterRate_2_2
+                            });
                         }
 
                         tempGbase.entries = tempGbase.entries.OrderByDescending(x => x.type).ToList();

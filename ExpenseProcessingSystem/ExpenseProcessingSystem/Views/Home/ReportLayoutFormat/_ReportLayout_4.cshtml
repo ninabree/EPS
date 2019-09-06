@@ -86,8 +86,8 @@
                 <td class="td-PDF">@Html.DisplayFor(x => i.GbaseRemark)</td>
                 <td class="td-PDF" style="text-align:center">@Html.DisplayFor(x => i.SeqNo)</td>
                 <td class="td-PDF" style="text-align:center">@Html.DisplayFor(x => i.SettleDate)</td>
-                <td class="td-PDF" style="text-align:right">@if (i.DebCredType == "D") { <label>(</label>@Html.DisplayFor(x => i.DRAmount) <label>)</label>}</td>
-                <td class="td-PDF" style="text-align:right">@if (i.DebCredType == "C") { @Html.DisplayFor(x => i.CRAmount) }</td>
+                <td class="td-PDF" style="text-align:right">@if (i.DebCredType == "D") { @Html.DisplayFor(x => i.DRAmount) }</td>
+                <td class="td-PDF" style="text-align:right">@if (i.DebCredType == "C") { <label>(</label>@Html.DisplayFor(x => i.CRAmount)<label>)</label>}</td>
                 <td class="td-PDF" style="text-align:right">@Html.DisplayFor(x => i.Balance)</td>
                 <td class="td-PDF">@Html.DisplayFor(x => i.DHName)</td>
                 <td class="td-PDF">@Html.DisplayFor(x => i.ApprvName)</td>
@@ -98,7 +98,7 @@
             <tr class="tr-PDF">
                 <td colspan="3" class="td-PDF">TOTAL: </td>
                 <td class="td-PDF" style="text-align:right">@Model.HomeReportOutputESAMS.Sum(model => model.DRAmount).ToString("#,##0.00")</td>
-                <td class="td-PDF" style="text-align:right">@Model.HomeReportOutputESAMS.Sum(model => model.CRAmount).ToString("#,##0.00")</td>
+                <td class="td-PDF" style="text-align:right"><label>(</label>@Model.HomeReportOutputESAMS.Sum(model => model.CRAmount).ToString("#,##0.00")<label>)</label></td>
                 <td colspan="5" class="td-PDF"></td>
             </tr>
     </tbody>

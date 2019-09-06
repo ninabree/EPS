@@ -134,6 +134,7 @@ function displayInfoIE(pid) {
     $('.txtIEInput').val(0);
 
     $('#txtIECurrency').val($('#' + pid).find('.txtCcyAbbrev').val());
+    $('#txtIEAmount').val($('#' + pid).find('.txtGross').val());
     var curr = "";
     if ($('#' + pid).find('.currMasterID').val() == getXMLLiqValue("CURRENCY_Yen")) {
         curr = "_Yen";
