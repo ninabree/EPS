@@ -39,8 +39,11 @@
     .m-t-50{
         margin-top: 50px;
     }
-    .fs-10{
-        font-size:10px;
+    .fs-10 {
+        font-size: 10px;
+    }
+    .fs-13 {
+        font-size: 13px;
     }
     .tbl-colps {
         border-collapse: collapse;
@@ -50,7 +53,7 @@
     }
     #phpleft {
         float: left;
-        width: 13%;
+        width: 15%;
     }
     #phpright {
         float: right;
@@ -59,13 +62,16 @@
 
     #adjust-div {
         float: right;
-        width: 87%;
+        width: 85%;
         border-bottom: 1px solid #000;
     }
     #adjust-div-l {
         float: left;
         width: 75%;
         border-bottom: 1px solid #000;
+    }
+    .txt-align-r{
+        text-align:right;
     }
 </style>
 
@@ -113,7 +119,7 @@
         </tr>
         <tr>
             <td></td>
-            <td><p class="">DDV No/s. </p></td>
+            <td class="fs-13">DDV No/s. </td>
             @if (@Model.ReportLOI.Rep_DDVNoList.Count <= 8)
             {
                 @foreach (var val in Model.ReportLOI.Rep_DDVNoList)
@@ -185,10 +191,11 @@
                 <td colspan="1"><div class="">@vals.loi_Amount</div></td>
                 <td colspan="3"></td>
             </tr>
+            cnt = cnt+1;
         }
         <tr>
             <td colspan="7"></td>
-            <td colspan="2" class="fw-doub-underline">@Model.ReportLOI.Rep_Amount</td>
+            <td colspan="2" class="fw-doub-underline txt-align-r">@Model.ReportLOI.Rep_Amount</td>
             <td colspan="3" class="fw-doub-underline"></td>
         </tr>
         <tr><td colspan="12"><p></p></td></tr>

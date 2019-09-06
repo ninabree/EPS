@@ -222,6 +222,10 @@
         CheckEachEWT();
         CheckEachInter();
 
+        $(document).on("click", "#saveBtnEntry", function (e) {
+            $(".txtDept").trigger("change");
+        });
+
         $("#addRow").click(function (e) {
             var itemCount = document.getElementById('inputTable').getElementsByTagName('tbody')[0].childElementCount - 2;
             var tableRef = document.getElementById('inputTable').getElementsByTagName('tbody')[0];
