@@ -3034,11 +3034,12 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         if (a.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
                         {
-                            amt += a.ExpNCDtlAcc_Amount;
-                        }else if (a.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_EWT)
-                        {
-                            vat += a.ExpNCDtlAcc_Amount;
+                            amt += item.ExpNCDtl_TaxBasedAmt;
                         }
+                        //else if (a.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_EWT)
+                        //{
+                        //    vat += a.ExpNCDtlAcc_Amount;
+                        //}
                     }
                     cvBirForm temp = new cvBirForm
                     {

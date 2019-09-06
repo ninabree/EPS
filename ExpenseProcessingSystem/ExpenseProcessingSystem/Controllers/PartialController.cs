@@ -136,6 +136,7 @@ namespace ExpenseProcessingSystem.Controllers
                 }
             }
             ViewBag.phpid = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_PHP").Value)).Curr_ID;
+            viewModel.taxaccID = viewModel.accList.FirstOrDefault(x => x.accName == "ET").accID;
             return View("NCPartial", viewModel);
         }
 
