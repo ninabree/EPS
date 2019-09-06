@@ -6,6 +6,7 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Xml.Linq;
 
 namespace ExpenseProcessingSystem.Services.Check
 {
@@ -148,5 +149,41 @@ namespace ExpenseProcessingSystem.Services.Check
             }
             Console.WriteLine(fileExist);
         }
+
+        public bool GenerateCheckPDF(ChequeData cd, string filename)
+        {
+            XElement xelemCoord = XElement.Load("wwwroot/xml/CheckCoordinates.xml");
+            double x_payee = double.Parse(xelemCoord.Element("X_Payee").Value);
+            double y_payee = double.Parse(xelemCoord.Element("Y_Payee").Value);
+
+            double x_amount = double.Parse(xelemCoord.Element("X_Amount").Value);
+            double y_amount = double.Parse(xelemCoord.Element("Y_Amount").Value);
+
+            double x_date = double.Parse(xelemCoord.Element("X_Date").Value);
+            double y_date = double.Parse(xelemCoord.Element("Y_Date").Value);
+
+            double x_amountWord = double.Parse(xelemCoord.Element("X_AmountWord").Value);
+            double y_amountWord = double.Parse(xelemCoord.Element("Y_AmountWord").Value);
+
+            double x_sign1 = double.Parse(xelemCoord.Element("X_Signatory1").Value);
+            double y_sign1 = double.Parse(xelemCoord.Element("Y_Signatory1").Value);
+
+            double x_sign2 = double.Parse(xelemCoord.Element("X_Signatory2").Value);
+            double y_sign2 = double.Parse(xelemCoord.Element("Y_Signatory2").Value);
+            
+            DrawToPdf dtp = new DrawToPdf(new double[] { x_payee * .48, y_payee * .48 },  // Payee
+                                          new double[] { x_amount * .48, y_amount * .48 },  // Amount
+                                          new double[] { x_date * .48, y_date * .48 },   // Date
+                                          new double[] { x_amountWord * .48, y_amountWord * .48 },  // Amount (words)
+                                          new double[] { x_sign1 * .48, x_sign1 * .48 },  // Signatory 1
+                                          new double[] { x_sign2 * .48, y_sign2 * .48 }   // Signatory 2
+                              );
+
+            dtp.CreatePDF(cd, filename);
+
+            return true;
+        }
+
+
     }
 }

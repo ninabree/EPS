@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Check_Coordinate>
+  <X_Payee>185.5</X_Payee>
+  <Y_Payee>148</Y_Payee>
+
+  <X_Amount>930</X_Amount>
+  <Y_Amount>134</Y_Amount>
+
+  <X_Date>930</X_Date>
+  <Y_Date>96</Y_Date>
+
+  <X_AmountWord>145.5</X_AmountWord>
+  <Y_AmountWord>166</Y_AmountWord>
+
+  <X_Signatory1>635.5</X_Signatory1>
+  <Y_Signatory1>318</Y_Signatory1>
+
+  <X_Signatory2>936.5</X_Signatory2>
+  <Y_Signatory2>318</Y_Signatory2>
+</Check_Coordinate>

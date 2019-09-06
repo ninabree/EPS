@@ -86,7 +86,7 @@
                 <td class="td-PDF">@Html.DisplayFor(x => i.GbaseRemark)</td>
                 <td class="td-PDF" style="text-align:center">@Html.DisplayFor(x => i.SeqNo)</td>
                 <td class="td-PDF" style="text-align:center">@Html.DisplayFor(x => i.SettleDate)</td>
-                <td class="td-PDF" style="text-align:right">@if (i.DebCredType == "D") { @Html.DisplayFor(x => i.DRAmount) }</td>
+                <td class="td-PDF" style="text-align:right">@if (i.DebCredType == "D") { <label>(</label>@Html.DisplayFor(x => i.DRAmount) <label>)</label>}</td>
                 <td class="td-PDF" style="text-align:right">@if (i.DebCredType == "C") { @Html.DisplayFor(x => i.CRAmount) }</td>
                 <td class="td-PDF" style="text-align:right">@Html.DisplayFor(x => i.Balance)</td>
                 <td class="td-PDF">@Html.DisplayFor(x => i.DHName)</td>

@@ -40,6 +40,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.EventLog" Version="2.1.1" />
     <PackageReference Include="Microsoft.jQuery.Unobtrusive.Ajax" Version="3.2.6" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.9" />
+    <PackageReference Include="PdfSharp" Version="1.50.5147" />
     <PackageReference Include="Rotativa" Version="1.7.3" />
     <PackageReference Include="rotativa.AspNetCore" Version="1.0.6" />
     <PackageReference Include="RotativaHQ" Version="1.5.0" />
@@ -58,6 +59,7 @@
     <PackageReference Include="System.DirectoryServices.AccountManagement" Version="4.5.0" />
     <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.10" />
+    <PackageReference Include="System.Text.Encodings.Web" Version="4.5.0" />
     <PackageReference Include="WebApiContrib.Formatting.JavaScriptSerializer" Version="0.9.4" />
   </ItemGroup>
 
