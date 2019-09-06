@@ -1191,13 +1191,22 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                         ws.Cells["M" + (sectionIndex + index).ToString()].Value = item.ccy;
                         ws.Cells["P" + (sectionIndex + index).ToString()].Value = totalTransCount;
                         ws.Cells["S" + (sectionIndex + index).ToString()].Value = totalAmount;
+                        index++;
 
-                        ws.InsertRow(sectionIndex + index,1);
+                        ws.InsertRow(generalIndex + index, 1);
+                        ws.InsertRow(sectionIndex + index, 1);
+
+                        string cellRangeCopy = "A" + ((sectionIndex-1) + index).ToString() + ":AN" + ((sectionIndex- 1) + index).ToString();
+                        string cellRangeDest = "A" + (sectionIndex + index).ToString() + ":AN" + (sectionIndex + index).ToString();
+                        ws.Cells[cellRangeCopy].Copy(ws.Cells[cellRangeDest]);
+
+                        string cellRangeCopyGeneral = "A" + ((generalIndex - 1) + index).ToString() + ":AN" + ((generalIndex - 1) + index).ToString();
+                        string cellRangeDestGeneral = "A" + (generalIndex + index).ToString() + ":AN" + (generalIndex + index).ToString();
+                        ws.Cells[cellRangeCopyGeneral].Copy(ws.Cells[cellRangeDestGeneral]);
 
                         totalAmount = item.amount;
                         totalTransCount = item.transCount;
                         prevCcy = item.ccy;
-                        index++;
                     }
 
                     

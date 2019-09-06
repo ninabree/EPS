@@ -53,12 +53,11 @@
         <tbody>
             @if (Model.AccountGroup.Count != 0)
             {
-                var pendList = Model.AccountGroup.Where(x => x.AccountGroup_Status_ID != GlobalSystemValues.STATUS_APPROVED).ToList();
                 @foreach (var item in Model.AccountGroup)
                 {
                     <tr>
                         <td>
-                            @if (pendList.Select(x => x.AccountGroup_MasterID).Contains(item.AccountGroup_MasterID) && item.AccountGroup_Status_ID == GlobalSystemValues.STATUS_APPROVED)
+                            @if (Model.PendingMasterIDList.Contains(item.AccountGroup_MasterID) && item.AccountGroup_Status_ID == GlobalSystemValues.STATUS_APPROVED)
                             {
                                 <input class="tbl-chk" id="@item.AccountGroup_MasterID" type="checkbox" disabled />
                             }

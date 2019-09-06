@@ -47,7 +47,11 @@
                 url: "/Home/VoucherCV",
                 data: $("#inputForm").serialize(),
                 success: function (result) {
-                    $("#iframePreview").contents().find('html').html(result)
+                    //$("#iframePreview").contents().find('html').html(result)
+                    var doc = document.getElementById("iframePreview").contentWindow.document;
+                    doc.open();
+                    doc.write(result);
+                    doc.close();
                 }
             });
         }
@@ -60,7 +64,11 @@
                 url: "/Home/VoucherDDV",
                 data: $("#inputForm").serialize(),
                 success: function (result) {
-                    $("#iframePreview").contents().find('html').html(result)
+                    //$("#iframePreview").contents().find('html').html(result)
+                    var doc = document.getElementById("iframePreview").contentWindow.document;
+                    doc.open();
+                    doc.write(result);
+                    doc.close();
                 }
             });
         }

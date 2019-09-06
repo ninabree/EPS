@@ -3034,11 +3034,12 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         if (a.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
                         {
-                            amt += a.ExpNCDtlAcc_Amount;
-                        }else if (a.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_EWT)
-                        {
-                            vat += a.ExpNCDtlAcc_Amount;
+                            amt += item.ExpNCDtl_TaxBasedAmt;
                         }
+                        //else if (a.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_EWT)
+                        //{
+                        //    vat += a.ExpNCDtlAcc_Amount;
+                        //}
                     }
                     cvBirForm temp = new cvBirForm
                     {
@@ -5579,6 +5580,8 @@ namespace ExpenseProcessingSystem.Controllers
             VoucherViewModelList vvm = new VoucherViewModelList();
 
             int officeID = int.Parse(xelemAcc.Element("HOUSE_RENT").Value);
+            int exp_pre = int.Parse(xelemAcc.Element("C_Amort_EXP").Value);
+            int pe_pre = int.Parse(xelemAcc.Element("C_Amort_PE").Value);
             //string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmsstt"); // ORIGINAL
             vvm.date = DateTime.Now.ToString("MM-dd-yyyy");
 
@@ -5715,14 +5718,32 @@ namespace ExpenseProcessingSystem.Controllers
                 {
                     vvm.isFbt = true;
 
-                    if(_service.getAccount(inputItem.account).Account_MasterID == officeID)
+                    int accMID = _service.getAccount(inputItem.account).Account_MasterID;
+
+
+                    if ((accMID == pe_pre || accMID == exp_pre) && inputItem.amorAcc != 0)
                     {
-                        vvm.fbtAmount += Mizuho.round(((((decimal)inputItem.debitGross * .50M) /.65M)*.35M), 2);
+                        if (_service.getAccount(inputItem.amorAcc).Account_MasterID == officeID)
+                        {
+                            vvm.fbtAmount += Mizuho.round(((((decimal)inputItem.debitGross * .50M) / .65M) * .35M), 2);
+                        }
+                        else
+                        {
+                            vvm.fbtAmount += Mizuho.round((((decimal)inputItem.debitGross / .65M) * .35M), 2);
+                        }
                     }
                     else
                     {
-                        vvm.fbtAmount += Mizuho.round((((decimal)inputItem.debitGross/.65M)*.35M), 2);
+                        if (accMID  == officeID)
+                        {
+                            vvm.fbtAmount += Mizuho.round(((((decimal)inputItem.debitGross * .50M) / .65M) * .35M), 2);
+                        }
+                        else
+                        {
+                            vvm.fbtAmount += Mizuho.round((((decimal)inputItem.debitGross / .65M) * .35M), 2);
+                        }
                     }
+
                     vvm.fbtGross += (decimal)inputItem.debitGross;
                 }
 

@@ -9,6 +9,7 @@ namespace ExpenseProcessingSystem.ViewModels
     public class DMViewModel
     {
         public DMFiltersViewModel DMFilters { get; set; }
+        public List<int> PendingMasterIDList { get; set; }
         public PaginatedList<DMDeptViewModel> Dept { get; set; }
         public PaginatedList<DMVendorViewModel> Vendor { get; set; }
         public PaginatedList<DMCheckViewModel> Check { get; set; }

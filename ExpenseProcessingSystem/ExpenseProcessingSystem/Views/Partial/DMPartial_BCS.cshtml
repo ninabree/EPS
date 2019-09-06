@@ -59,12 +59,11 @@
         <tbody>
             @if (Model.BCS.Count != 0)
             {
-                var pendList = Model.BCS.Where(x => x.BCS_Status_ID != GlobalSystemValues.STATUS_APPROVED).ToList();
                 @foreach (var item in Model.BCS)
                 {
                     <tr>
                         <td>
-                            @if (pendList.Select(x => x.BCS_MasterID).Contains(item.BCS_MasterID) && item.BCS_Status_ID == GlobalSystemValues.STATUS_APPROVED)
+                            @if (Model.PendingMasterIDList.Contains(item.BCS_MasterID) && item.BCS_Status_ID == GlobalSystemValues.STATUS_APPROVED)
                             {
                                 <input class="tbl-chk" id="@item.BCS_MasterID" type="checkbox" disabled />
                             }

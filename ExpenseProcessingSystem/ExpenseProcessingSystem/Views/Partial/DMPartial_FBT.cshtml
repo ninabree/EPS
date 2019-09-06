@@ -56,12 +56,11 @@
         <tbody>
             @if (Model.FBT != null)
             {
-                var pendList = Model.FBT.Where(x => x.FBT_Status_ID != GlobalSystemValues.STATUS_APPROVED).ToList();
                 @foreach (var item in Model.FBT)
                 {
                     <tr>
                         <td>
-                            @if (pendList.Select(x => x.FBT_MasterID).Contains(item.FBT_MasterID) && item.FBT_Status_ID == GlobalSystemValues.STATUS_APPROVED)
+                            @if (Model.PendingMasterIDList.Contains(item.FBT_MasterID) && item.FBT_Status_ID == GlobalSystemValues.STATUS_APPROVED)
                             {
                                 <input class="tbl-chk" id="@item.FBT_MasterID" type="checkbox" disabled />
                             }

@@ -57,12 +57,11 @@
         <tbody>
             @if (Model.Check.Count != 0)
             {
-                var pendList = Model.Check.Where(x => x.Check_Status_ID != GlobalSystemValues.STATUS_APPROVED).ToList();
                 @foreach (var item in Model.Check)
                 {
                     <tr>
                         <td>
-                            @if (pendList.Select(x => x.Check_MasterID).Contains(item.Check_MasterID) && item.Check_Status_ID == GlobalSystemValues.STATUS_APPROVED)
+                            @if (Model.PendingMasterIDList.Contains(item.Check_MasterID) && item.Check_Status_ID == GlobalSystemValues.STATUS_APPROVED)
                             {
                                 <input class="tbl-chk" id="@item.Check_MasterID" type="checkbox" disabled />
                             }
