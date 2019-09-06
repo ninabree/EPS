@@ -1125,27 +1125,30 @@ namespace ExpenseProcessingSystem.Controllers
         public IActionResult GenerateCheckFile(int ExpenseID)
         {
             ChequeData cd = new ChequeData();
-            string filepath = "";
 
             var expModel = _service.getExpense(ExpenseID);
 
             cd.Date = DateTime.Now;
             cd.Payee = _service.getVendor(expModel.selectedPayee).Vendor_Name;
 
-            foreach(var item in expModel.EntryCV)
+            foreach (var item in expModel.EntryCV)
             {
                 cd.Amount += item.credCash;
             }
 
-            cd.Signatory1 = _service.getUserFullName(expModel.approver_id);
+            cd.Signatory1 = "";
             cd.Signatory2 = "";
-            cd.Voucher = _service.getVoucherNo(1, expModel.expenseDate, int.Parse(expModel.expenseId));
+            cd.Voucher = _service.getVoucherNo(GlobalSystemValues.TYPE_CV, expModel.expenseDate, int.Parse(expModel.expenseId));
 
+            //Services.Check.GenerateCheck gc = new Services.Check.GenerateCheck();
+
+            //filepath = gc.Generate(cd);
+            string filepath = "/ExcelTemplatesTempFolder/";
+            string filename = "Check_" + cd.Voucher + "_" + expModel.checkNo + ".pdf";
             Services.Check.GenerateCheck gc = new Services.Check.GenerateCheck();
+            bool result = gc.GenerateCheckPDF(cd, filename);
 
-            filepath = gc.Generate(cd);
-
-            return File(filepath, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", filepath.Substring(26));
+            return File(filepath + filename, "application/pdf", filename);
         }
         //public IActionResult MizuhoLogo2Image()
         //{

@@ -1231,9 +1231,14 @@ body.loading .loadingEffect {
 /*////////////////////////////////////////////////////////////////////////////
     [ MODAL BUTTONS ]
 */
-.expenseAmortization, .expenseEWT[style="pointer-events: auto;"], .expenseInterEntity, .cashBreakdown[style="pointer-events: auto;"] {
+.expenseAmortization, .expenseEWT[style="pointer-events: auto;"], .expenseInterEntity, .cashBreakdown, .cashBreakdown[style="pointer-events: auto;"] {
     color: #0e2cbe;
     text-decoration: underline;
+}
+.cashBreakdown[style="pointer-events: none;"], a.expenseEWT[style="pointer-events: none;"] {
+    color: #1a1a1a;
+    cursor: not-allowed;
+    text-decoration: none;
 }
 /*////////////////////////////////////////////////////////////////////////////
     [ END OF SITE.CSS ]
