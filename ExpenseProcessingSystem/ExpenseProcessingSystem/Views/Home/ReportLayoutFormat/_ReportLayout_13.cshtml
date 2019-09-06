@@ -3,7 +3,11 @@
 @{
     Layout = null;
     var dateNow = DateTime.Now.ToShortDateString();
-    var dateNowStr = DateTime.Now.ToLongDateString();
+    var dateNowStr = DateTime.Now.ToString("MMMM dd,yyyy");
+
+    //var dateNowLn = DateTime.Now.ToLongDateString();
+    //var ind = dateNowLn.IndexOf(", ");
+    //var dateNowStr = dateNowLn.Substring(ind + 2, dateNowLn.Length);
     var cnt = 1;
 }
 
@@ -59,7 +63,12 @@
         float: right;
         width: 25%;
     }
-
+    .m-l-r-40 {
+        margin: 0px 40px;
+    }
+    .m-l-r-35 {
+        margin: 0px 35px;
+    }
     #adjust-div {
         float: right;
         width: 85%;
@@ -70,12 +79,18 @@
         width: 75%;
         border-bottom: 1px solid #000;
     }
-    .txt-align-r{
-        text-align:right;
+    .txt-align-r {
+        text-align: right;
+    }
+    .txt-align-c {
+        text-align: center;
+    }
+    td[colspan="13"] {
+        height: 20px;
     }
 </style>
 
-<table border="0" class="w-65p m-t-50 tbl-colps">
+<table border="0" class="m-l-r-35 m-t-50 tbl-colps">
     <colgroup>
         <col style="width:8.33%" />
         <col style="width:8.33%" />
@@ -91,31 +106,39 @@
         <col style="width:8.33%" />
     </colgroup>
     <tbody>
+        <tr><td colspan="13"><p></p></td></tr>
+        <tr><td colspan="13"><p></p></td></tr>
+        <tr><td colspan="13"><p></p></td></tr>
+        <tr><td colspan="13"><p></p></td></tr>
+        <tr><td colspan="13"><p></p></td></tr>
+        <tr><td colspan="13"><p></p></td></tr>
+        <tr><td colspan="13"><p></p></td></tr>
+        <tr><td colspan="13"><p></p></td></tr>
         <tr>
-            <td colspan="12">@dateNow</td>
+            <td colspan="13">@dateNow</td>
         </tr>
-        <tr><td colspan="12"><p></p></td></tr>
-        <tr><td colspan="12"><p></p></td></tr>
-        <tr><td colspan="12"><p></p></td></tr>
+        <tr><td colspan="13"><p></p></td></tr>
+        <tr><td colspan="13"><p></p></td></tr>
+        <tr><td colspan="13"><p></p></td></tr>
         <tr>
-            <td colspan="12"><p class="fw-bold">MS. MARI ROSE G. SIOSON</p></td>
+            <td colspan="13"><p class="fw-bold">MS. MARI ROSE G. SIOSON</p></td>
         </tr>
         <tr>
-            <td colspan="12"><p class="fw-bold">Senior Asst. Vice President/Branch Head</p></td>
+            <td colspan="13"><p class="fw-bold">Senior Asst. Vice President/Branch Head</p></td>
         </tr>
         <tr>
-            <td colspan="12"><p class="">Banco de Oro Unibank, Inc. - Main Office Branch</p></td>
+            <td colspan="13"><p class="">Banco de Oro Unibank, Inc. - Main Office Branch</p></td>
         </tr>
         <tr>
-            <td colspan="12"><p class="">BDO Corporate Center</p></td>
+            <td colspan="13"><p class="">BDO Corporate Center</p></td>
         </tr>
         <tr>
-            <td colspan="12"><p class="">7899 Makati Avenue, Makati City 0726</p></td>
+            <td colspan="13"><p class="">7899 Makati Avenue, Makati City 0726</p></td>
         </tr>
-        <tr><td colspan="12"><p></p></td></tr>
-        <tr><td colspan="12"><p></p></td></tr>
+        <tr><td colspan="13"><p></p></td></tr>
+        <tr><td colspan="13"><p></p></td></tr>
         <tr>
-            <td colspan="12"><p class="fw-bold">Re: Letter of Instructions </p></td>
+            <td colspan="13"><p class="fw-bold">Re: Letter of Instructions </p></td>
         </tr>
         <tr>
             <td></td>
@@ -159,26 +182,31 @@
                 }
             </tr>
         }
-        <tr><td colspan="12"><p></p></td></tr>
+        <tr><td colspan="13"><p></p></td></tr>
         <tr>
-            <td colspan="12"><div class="dis-inline-block w-32p float-l">This is to authorize BDO Universal Bank - Corporate Center Branch to debit</div> <div class="fw-bold fw-italic dis-inline-block float-l w-32p">MIZUHO BANK, LTD. - </div></td>
+            <td colspan="13"><div class="dis-inline-block w-32p float-l">This is to authorize BDO Universal Bank - Corporate Center Branch to debit</div> <div class="fw-bold fw-italic dis-inline-block float-l w-32p">MIZUHO BANK, LTD. - </div></td>
         </tr>
         <tr>
-            <td colspan="12"><div class="dis-inline-block w-32p float-l fw-bold fw-italic">MANILA BRANCH ACCT. No. 003008019974</div><div class="dis-inline-block w-32p float-l"> today,</div> <div class="dis-inline-block w-32p float-l fw-underline"> @dateNowStr </div><div class="dis-inline-block w-32p float-l"> for the total amount of</div></td>
+            <td colspan="13"><div class="dis-inline-block w-32p float-l fw-bold fw-italic">MANILA BRANCH ACCT. No. 003008019974</div><div class="dis-inline-block w-32p float-l"> today,</div> <div class="dis-inline-block w-32p float-l fw-underline"> @dateNowStr </div><div class="dis-inline-block w-32p float-l"> for the total amount of</div></td>
         </tr>
         <tr>
-            <td colspan="12"><div id="phpleft" class=""> Philippine Pesos: </div> <div id="adjust-div"> @Model.ReportLOI.Rep_AmountInString <p></p></div></td>
+            <td colspan="13">
+                <div id="phpleft" class=""> Philippine Pesos: </div> <div id="adjust-div">
+                    @Model.ReportLOI.Rep_AmountInString @if (Model.ReportLOI.Rep_AmountInString.Length <= 0)
+                    {<p></p>}
+                </div>
+            </td>
         </tr>
         <tr>
-            <td colspan="12"><div id="adjust-div-l"> (PHP @Model.ReportLOI.Rep_Amount</div> <div id="phpright"> ), and credit to the account of:</div></td>
+            <td colspan="13"><div id="adjust-div-l"> (PHP @Model.ReportLOI.Rep_Amount</div> <div id="phpright"> ), and credit to the account of:</div></td>
         </tr>
-        <tr><td colspan="12"><p></p></td></tr>
+        <tr><td colspan="13"><p></p></td></tr>
         <tr class="text-center">
             <td></td>
             <td colspan="3"><p class="fw-bold">Name</p></td>
             <td colspan="2"><p class="fw-bold">Account Type</p></td>
             <td colspan="2"><p class="fw-bold">Account No.</p></td>
-            <td colspan="1"><p class="fw-bold">Amount(PHP)</p></td>
+            <td colspan="2"><p class="fw-bold txt-align-r">Amount(PHP)</p></td>
             <td colspan="3"><p class="fw-bold"></p></td>
         </tr>
         @foreach (var vals in Model.ReportLOI.Rep_LOIAccList)
@@ -188,35 +216,35 @@
                 <td colspan="3"><div class="">@vals.loi_Emp_Name</div></td>
                 <td colspan="2"><div class="">@vals.loi_Acc_Type</div></td>
                 <td colspan="2"><div class="">@vals.loi_Acc_No</div></td>
-                <td colspan="1"><div class="">@vals.loi_Amount</div></td>
+                <td colspan="2"><div class="txt-align-r">@vals.loi_Amount</div></td>
                 <td colspan="3"></td>
             </tr>
-            cnt = cnt+1;
+            cnt = cnt + 1;
         }
         <tr>
-            <td colspan="7"></td>
+            <td colspan="8"></td>
             <td colspan="2" class="fw-doub-underline txt-align-r">@Model.ReportLOI.Rep_Amount</td>
             <td colspan="3" class="fw-doub-underline"></td>
         </tr>
-        <tr><td colspan="12"><p></p></td></tr>
+        <tr><td colspan="13"><p></p></td></tr>
         <tr>
-            <td colspan="12"><p>This authority to debit and credit is issued pursuant to and subject to the terms and conditions of the Company's</p></td>
+            <td colspan="13"><p>This authority to debit and credit is issued pursuant to and subject to the terms and conditions of the Company's</p></td>
         </tr>
         <tr>
-            <td colspan="12"><p>Regular Payroll Agreement with the Bank.</p></td>
+            <td colspan="13"><p>Regular Payroll Agreement with the Bank.</p></td>
         </tr>
-        <tr><td colspan="12"><p></p></td></tr>
-        <tr><td colspan="12"><p></p></td></tr>
-        <tr><td colspan="12"><p></p></td></tr>
+        <tr><td colspan="13"><p></p></td></tr>
+        <tr><td colspan="13"><p></p></td></tr>
+        <tr><td colspan="13"><p></p></td></tr>
         <tr>
-            <td colspan="12"><p>Thank you and best regards.</p></td>
+            <td colspan="13"><p>Thank you and best regards.</p></td>
         </tr>
-        <tr><td colspan="12"><p></p></td></tr>
+        <tr><td colspan="13"><p></p></td></tr>
         <tr>
-            <td colspan="12"><p>Very truly yours, </p></td>
+            <td colspan="13"><p>Very truly yours, </p></td>
         </tr>
-        <tr><td colspan="12"><p></p></td></tr>
-        <tr><td colspan="12"><p></p></td></tr>
+        <tr><td colspan="13"><p> </p></td></tr>
+        <tr><td colspan="13"><p> </p></td></tr>
         <tr>
             <td colspan="3" class="fw-thk-underline">________________________</td>
             <td colspan="9"></td>
@@ -225,8 +253,8 @@
             <td colspan="3" class="fw-bold">@Model.ReportLOI.Rep_Approver_Name.ToUpper()</td>
             <td colspan="9"></td>
         </tr>
-        <tr><td colspan="12"><p></p></td></tr>
-        <tr><td colspan="12"><p></p></td></tr>
+        <tr><td colspan="13"><p> </p></td></tr>
+        <tr><td colspan="13"><p> </p></td></tr>
         <tr>
             <td colspan="3" class="fw-thk-underline">________________________</td>
             <td colspan="9"></td>

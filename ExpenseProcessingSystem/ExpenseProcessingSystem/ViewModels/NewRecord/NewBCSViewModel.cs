@@ -25,7 +25,6 @@ namespace ExpenseProcessingSystem.ViewModels.NewRecord
         [NotNullValidations, TextValidation]
         public string BCS_Position { get; set; }
         [Display(Name = "BCS Signature")]
-        [NotNullValidations, TextValidation]
         public IFormFile BCS_Signatures { get; set; }
     }
 }

@@ -190,16 +190,16 @@
                 alert("Kindly check rows with the same status only.");
                 $('.rec').prop('disabled', true);
                 return false;
-            }
-            else if (creatorId == userId/* && chkCount <= 1*/) {
-                if (stat != "APPROVED") {
-                    defaultOnlyAdd();
-                } else {
-                    defaultApproved();
-                }
-                if (this.checked == false && chkCount <= 0) {
-                    defaultApproved();
-                }
+            //}
+            //else if (creatorId == userId/* && chkCount <= 1*/) {
+            //    if (stat != "APPROVED") {
+            //        defaultOnlyAdd();
+            //    } else {
+            //        defaultApproved();
+            //    }
+            //    if (this.checked == false && chkCount <= 0) {
+            //        defaultApproved();
+            //    }
             } else {
                 //if there is no previously checked box
                 if (txtVal != "") {
@@ -212,7 +212,7 @@
                         }
                         else if (txtVal == stat) {
                             //In BCS, only one row can be selected for edit
-                            if (chkCount >= 2 && stat == "APPROVED" && (tblName == "BIR Cert Signatory")) {
+                            if (chkCount > 1 && stat == "APPROVED" && (tblName == "BIR Cert Signatory")) {
                                 $('.apprv-rec').prop('disabled', true);
                                 $('.rej-rec').prop('disabled', true);
                                 $('.add-rec').prop('disabled', false);
@@ -237,8 +237,16 @@
                     }
                     //if this element is unchecked
                     else {
+                        //In BCS, only one row can be selected for edit
+                        if (chkCount > 1 && stat == "APPROVED" && (tblName == "BIR Cert Signatory")) {
+                            $('.apprv-rec').prop('disabled', true);
+                            $('.rej-rec').prop('disabled', true);
+                            $('.add-rec').prop('disabled', false);
+                            $('.edit-rec').prop('disabled', true);
+                            $('.delete-rec').prop('disabled', false);
+                        }
                         //if no element selected
-                        if (chkCount <= 0) {
+                        else if (chkCount <= 0) {
                             $('input#entryCheckTypes').val("");
                             defaultApproved();
                         }

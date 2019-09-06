@@ -56,7 +56,7 @@ namespace ExpenseProcessingSystem
                 {
                     num[1] += 0;
                 }
-                decword.Append(" & " + float.Parse(num[1]).ToString("0.00") + "/100");
+                decword.Append(" & " + int.Parse(num[1]) + "/100");
             }
             return decword;
         }
