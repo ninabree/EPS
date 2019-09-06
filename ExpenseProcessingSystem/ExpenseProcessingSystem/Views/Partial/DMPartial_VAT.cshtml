@@ -53,12 +53,11 @@
         <tbody>
             @if (Model.VAT.Count != 0)
             {
-                var pendList = Model.VAT.Where(x => x.VAT_Status_ID != GlobalSystemValues.STATUS_APPROVED).ToList();
                 @foreach (var item in Model.VAT)
                 {
                     <tr>
                         <td>
-                            @if (pendList.Select(x => x.VAT_MasterID).Contains(item.VAT_MasterID) && item.VAT_Status_ID == GlobalSystemValues.STATUS_APPROVED)
+                            @if (Model.PendingMasterIDList.Contains(item.VAT_MasterID) && item.VAT_Status_ID == GlobalSystemValues.STATUS_APPROVED)
                             {
                                 <input class="tbl-chk" id="@item.VAT_MasterID" type="checkbox" disabled />
                             }
