@@ -11231,9 +11231,22 @@ namespace ExpenseProcessingSystem.Services
 
                 if (item.fbt)
                 {
+                    int exp_pre = int.Parse(xelemAcc.Element("C_Amort_EXP").Value);
+                    int pe_pre = int.Parse(xelemAcc.Element("C_Amort_PE").Value);
+
+
                     tempGbase.entries = new List<entryContainer>();
 
-                    Dictionary<string, entryContainer> fbt = createFbt(expenseDetails.selectedPayee, item.account, item.debitGross, debit, credit);
+                    Dictionary<string, entryContainer> fbt;
+
+                    if ((item.account == exp_pre || item.account == pe_pre) && item.amorAcc != 0)
+                    {
+                        fbt = createFbt(expenseDetails.selectedPayee, item.amorAcc, item.debitGross, debit, credit);
+                    }
+                    else
+                    {
+                        fbt = createFbt(expenseDetails.selectedPayee, item.account, item.debitGross, debit, credit);
+                    }
 
                     fbt["debit"].type = (command != "R") ? "D" : "C"; 
                     fbt["credit"].type = (command != "R") ? "C" : "D";
@@ -12576,7 +12589,8 @@ namespace ExpenseProcessingSystem.Services
                 goModel.Entry11Details = "";//Replace with proper details default.
                 goModel.Entry11Entity = "010";//Replace with proper entity default.
                 goModel.Entry11Division = entry11Account.Account_Div;//Replace with proper division default.
-                goModel.Entry11InterRate = (containerModel.entries[0].interate > 0) ? containerModel.entries[0].interate.ToString() : "";//Replace with proper interate default.
+                if(containerModel.entries[0].type == "C")
+                    goModel.Entry11InterRate = (containerModel.entries[0].interate > 0) ? containerModel.entries[0].interate.ToString() : "";//Replace with proper interate default.
                 goModel.Entry11InterAmt = "";//Replace with proper interamt default.
 
                 if (containerModel.entries.Count > 1)
@@ -12597,7 +12611,8 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry12Details = "";//Replace with proper details default.
                     goModel.Entry12Entity = "010";//Replace with proper entity default.
                     goModel.Entry12Division = entry12Account.Account_Div;//Replace with proper division default.
-                    goModel.Entry12InterRate = (containerModel.entries[1].interate > 0) ? containerModel.entries[1].interate.ToString() : "";//Replace with proper interate default.
+                    if (containerModel.entries[1].type == "C")
+                        goModel.Entry12InterRate = (containerModel.entries[1].interate > 0) ? containerModel.entries[1].interate.ToString() : "";//Replace with proper interate default.
                     goModel.Entry12InterAmt = "";//Replace with proper interamt default.
                 }
                 if (containerModel.entries.Count > 2)
@@ -12618,7 +12633,8 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry21Details = "";//Replace with proper details default.
                     goModel.Entry21Entity = "010";//Replace with proper entity default.
                     goModel.Entry21Division = entry21Account.Account_Div;//Replace with proper division default.
-                    goModel.Entry21InterRate = (containerModel.entries[2].interate > 0) ? containerModel.entries[2].interate.ToString() : "";//Replace with proper interate default.
+                    if (containerModel.entries[2].type == "C")
+                        goModel.Entry21InterRate = (containerModel.entries[2].interate > 0) ? containerModel.entries[2].interate.ToString() : "";//Replace with proper interate default.
                     goModel.Entry21InterAmt = "";//Replace with proper interamt default.
                 }
                 if (containerModel.entries.Count > 3)
@@ -12639,7 +12655,8 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry22Details = "";//Replace with proper details default.
                     goModel.Entry22Entity = "010";//Replace with proper entity default.
                     goModel.Entry22Division = entry22Account.Account_Div;//Replace with proper division default.
-                    goModel.Entry22InterRate = (containerModel.entries[3].interate > 0) ? containerModel.entries[3].interate.ToString() : "";//Replace with proper interate default.
+                    if (containerModel.entries[3].type == "C")
+                        goModel.Entry22InterRate = (containerModel.entries[3].interate > 0) ? containerModel.entries[3].interate.ToString() : "";//Replace with proper interate default.
                     goModel.Entry22InterAmt = "";//Replace with proper interamt default.
                 }
                 if (containerModel.entries.Count > 4)
@@ -12660,7 +12677,8 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry31Details = "";//Replace with proper details default.
                     goModel.Entry31Entity = "010";//Replace with proper entity default.
                     goModel.Entry31Division = entry31Account.Account_Div;//Replace with proper division default.
-                    goModel.Entry31InterRate = (containerModel.entries[4].interate > 0) ? containerModel.entries[4].interate.ToString() : "";//Replace with proper interate default.
+                    if (containerModel.entries[4].type == "C")
+                        goModel.Entry31InterRate = (containerModel.entries[4].interate > 0) ? containerModel.entries[4].interate.ToString() : "";//Replace with proper interate default.
                     goModel.Entry31InterAmt = "";//Replace with proper interamt default.
                 }
                 if (containerModel.entries.Count > 5)
@@ -12681,7 +12699,8 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry32Details = "";//Replace with proper details default.
                     goModel.Entry32Entity = "010";//Replace with proper entity default.
                     goModel.Entry32Division = entry32Account.Account_Div;//Replace with proper division default.
-                    goModel.Entry32InterRate = (containerModel.entries[5].interate > 0) ? containerModel.entries[5].interate.ToString() : "";//Replace with proper interate default.
+                    if (containerModel.entries[5].type == "C")
+                        goModel.Entry32InterRate = (containerModel.entries[5].interate > 0) ? containerModel.entries[5].interate.ToString() : "";//Replace with proper interate default.
                     goModel.Entry32InterAmt = "";//Replace with proper interamt default.
                 }
                 if (containerModel.entries.Count > 6)
@@ -12702,7 +12721,8 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry41Details = "";//Replace with proper details default.
                     goModel.Entry41Entity = "010";//Replace with proper entity default.
                     goModel.Entry41Division = entry41Account.Account_Div;//Replace with proper division default.
-                    goModel.Entry41InterRate = (containerModel.entries[6].interate > 0) ? containerModel.entries[6].interate.ToString() : "";//Replace with proper interate default.
+                    if (containerModel.entries[6].type == "C")
+                        goModel.Entry41InterRate = (containerModel.entries[6].interate > 0) ? containerModel.entries[6].interate.ToString() : "";//Replace with proper interate default.
                     goModel.Entry41InterAmt = "";//Replace with proper interamt default.
                 }
                 if (containerModel.entries.Count > 7)
@@ -12723,7 +12743,8 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry42Details = "";//Replace with proper details default.
                     goModel.Entry42Entity = "010";//Replace with proper entity default.
                     goModel.Entry42Division = entry42Account.Account_Div;//Replace with proper division default.
-                    goModel.Entry42InterRate = (containerModel.entries[7].interate > 0) ? containerModel.entries[7].interate.ToString() : "";//Replace with proper interate default.
+                    if (containerModel.entries[7].type == "C")
+                        goModel.Entry42InterRate = (containerModel.entries[7].interate > 0) ? containerModel.entries[7].interate.ToString() : "";//Replace with proper interate default.
                     goModel.Entry42InterAmt = "";//Replace with proper interamt default.
                 }
             }
