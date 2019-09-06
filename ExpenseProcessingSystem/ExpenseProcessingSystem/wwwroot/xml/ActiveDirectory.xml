@@ -17,4 +17,5 @@ string value4 = xelem.Element("ADDRESS").Value
   <!--<svcUsername id="svcUsername">tuser</svcUsername>
   <svcPwd id="domain">maniladev.mizuho.com</svcPwd>
   <domain id="svcPwd">VtWGDWa2/mRe7Nda2O3/nA==</domain>-->
+  <reportsDir id="reportsDir">C:\Users\gene.delacruz\Documents\__AAA.EPS\source\eps_source\ExpenseProcessingSystem\ExpenseProcessingSystem\wwwroot\ExcelTemplatesTempFolder</reportsDir>
 </LDAP>
