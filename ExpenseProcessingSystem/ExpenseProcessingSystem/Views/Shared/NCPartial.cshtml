@@ -924,8 +924,10 @@
 
         $('#NCPartialTbl').on('change', '.acc-sel', function () {
             var vals = $(this).val();
+            alert(vals + " --- " + @ewt);
             if (vals == @ewt) {
                 $(this).parent().siblings("[id$='DtlAcc_Type_ID']").val(3);
+                alert($(this).parent().siblings("[id$='DtlAcc_Type_ID']").val());
             }
         });
         $('#NCPartialTbl').on('change', '.curr-sel', function () {

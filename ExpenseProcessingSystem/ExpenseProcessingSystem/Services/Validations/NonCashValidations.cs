@@ -183,7 +183,15 @@ namespace ExpenseProcessingSystem.Services.Validations
                                     return new ValidationResult(valStr);
                                 }
                             }
-                            
+                            //if Vendor, EWT and/or Tax Based is used and tax account is assigned, tax account amount is required
+                            if (acc.ExpNCDtlAcc_Acc_ID == (int)val && 
+                                acc.ExpNCDtlAcc_Amount <=0 && 
+                                (dtl.ExpNCDtl_Vendor_ID > 0 ||
+                                dtl.ExpNCDtl_TR_ID > 0 ||
+                                dtl.ExpNCDtl_TaxBasedAmt > 0 ))
+                            {
+                                return new ValidationResult("If Vendor, EWT and/or Tax Base Amount is assigned, amount for the tax account i.");
+                            }
                         }
                     }
                 }
