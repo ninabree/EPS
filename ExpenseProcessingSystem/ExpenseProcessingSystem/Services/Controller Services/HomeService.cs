@@ -79,8 +79,7 @@ namespace ExpenseProcessingSystem.Services
                                          equals user.User_ID
                                          into c from user in c.DefaultIfEmpty()
                                          where n.Notif_UserFor_ID == loggedUID ||
-                                         (n.Notif_UserFor_ID == 0 && n.Notif_Application_Maker_ID != loggedUID 
-                                         && (user.User_Role != GlobalSystemValues.ROLE_ADMIN && user.User_Role != GlobalSystemValues.ROLE_MAKER))
+                                         (n.Notif_UserFor_ID == 0 && n.Notif_Application_Maker_ID != loggedUID)
                                          select new { n, user })
                          join creator in _context.User
                          on notifs.n.Notif_Application_Maker_ID
