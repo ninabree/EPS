@@ -2983,8 +2983,9 @@ namespace ExpenseProcessingSystem.Controllers
 
             EntryNCViewModelList ncList = _service.getExpenseNC(entryID);
             ncList = PopulateEntryNC(ncList);
-            DMCurrencyModel currDtl = _context.DMCurrency.Where(x => x.Curr_MasterID == 1 && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
-            DMCurrencyModel currDtlUSD = _context.DMCurrency.Where(x => x.Curr_MasterID == 2 && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
+            
+            DMCurrencyModel currDtl = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_PHP").Value));
+            DMCurrencyModel currDtlUSD = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_US").Value));
 
             //POPULATING CDD IF APPLICABLE
             if (ncList.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT)

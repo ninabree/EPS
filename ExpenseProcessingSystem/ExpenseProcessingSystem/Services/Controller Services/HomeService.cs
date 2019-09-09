@@ -11602,14 +11602,15 @@ namespace ExpenseProcessingSystem.Services
                     //Credit 1 - tax withheld if only has tax amount and EWT Account 
                     if (item.credEwt > 0 && item.creditAccount1 > 0)
                     {
-                        credit.type = (command != "R") ? "C" : "D";
-                        credit.ccy = item.ccy;
-                        credit.amount = item.credEwt;
-                        credit.vendor = expenseDDV.vendor;
-                        credit.account = item.creditAccount1;
-                        credit.dept = item.dept;
+                        entryContainer ewt = new entryContainer();
+                        ewt.type = (command != "R") ? "C" : "D";
+                        ewt.ccy = item.ccy;
+                        ewt.amount = item.credEwt;
+                        ewt.vendor = expenseDDV.vendor;
+                        ewt.account = item.creditAccount1;
+                        ewt.dept = item.dept;
 
-                        tempGbase.entries.Add(credit);
+                        tempGbase.entries.Add(ewt);
                     }
 
                     //Credit 2 - Credit amount
