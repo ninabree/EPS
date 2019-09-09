@@ -34,7 +34,7 @@
                 {
                     <tr id="NewVendor-Tr-@i">
                         <td>@Html.TextBoxFor(item => item[i].Vendor_Name, new { @class = "w-full input voucher-input" })</td>
-                        <td>@Html.TextBoxFor(item => item[i].Vendor_TIN, new { @class = "w-full input voucher-input" })</td>
+                        <td>@Html.TextBoxFor(item => item[i].Vendor_TIN, new { @class = "w-full input input-tin voucher-input", @maxlength = "15" })</td>
                         <td>@Html.TextBoxFor(item => item[i].Vendor_Address, new { @class = "w-full input voucher-input" })</td>
                         <td>
                             <div style="height:80px; overflow-y:scroll">
@@ -94,3 +94,15 @@
         </table>
     }
 </div>
+
+<script>
+    $(document).ready(function (e) {
+        $(".input-tin").keypress(function () {
+            var val = $(this).val()
+            var len = val.length;
+            if (len == 3 || len == 7 || len == 11) {
+                $(this).val(val + "-");
+            }
+        });
+    });
+</script>
