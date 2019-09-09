@@ -28,7 +28,7 @@
                 <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_Name, new { @class = "w-full input voucher-input" })</td>
                 <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_Code, new { @class = "w-full input voucher-input" })</td>
                 <td class="bdgcd">@Html.TextBoxFor(m => m.NewAccountVM[0].Account_Budget_Code, new { @class = "w-full input" })</td>
-                <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_No, new { @class = "w-full input input-no voucher-input", @maxlength = "15" })</td>
+                <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_No, new { @class = "w-full input input-no voucher-input", @maxlength = "14" })</td>
                 <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_Cust, new { @class = "w-full input voucher-input" })</td>
                 <td>@Html.TextBoxFor(m => m.NewAccountVM[0].Account_Div, new { @class = "w-full input voucher-input" })</td>
                 <td>@Html.CheckBoxFor(m => m.NewAccountVM[0].Account_Fund, new { @class = "w-full input voucher-input" })</td>
@@ -83,7 +83,7 @@
     $(".input-no").keypress(function () {
         var val = $(this).val()
         var len = val.length;
-        if (len == 3 || len == 7 || len == 11) {
+        if (len == 3 || len == 7) {
             $(this).val(val + "-");
         }
     });
