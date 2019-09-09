@@ -1,4 +1,5 @@
 ﻿@model ExpenseProcessingSystem.ViewModels.HomeReportDataFilterViewModel
+@using ExpenseProcessingSystem.Services
 
 @{
     Layout = null;
@@ -107,7 +108,7 @@
                 <td style="text-align:left" class="td-PDF">@i.Trans_Remarks</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_DebitCredit</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Currency</td>
-                <td style="text-align:right" class="td-PDF">@i.Trans_Amount</td>
+                <td style="text-align:right" class="td-PDF">@ConvStrFrmt.ToNumComma(i.Trans_Amount)</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Customer</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Account_Code</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Account_Number</td>
@@ -127,6 +128,6 @@
 </table>
 
 @*<div style="margin-top:100px; text-align: center">
-    <div style="font-weight:bold; float: left; display: inline-block;">Thursday, March 21, 2019 5:30:30 PM</div>
-    <div style="font-weight:bold; display: inline-block">Page 1</div>
-</div>*@
+        <div style="font-weight:bold; float: left; display: inline-block;">Thursday, March 21, 2019 5:30:30 PM</div>
+        <div style="font-weight:bold; display: inline-block">Page 1</div>
+    </div>*@

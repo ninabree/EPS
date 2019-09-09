@@ -431,6 +431,7 @@ $(document).ready(function () {
                         $summaryUl.append($("<li>").text(result.items[index]));
                     });
                     $('#ValidationSummary').show();
+                    loadingEffectStop();
                 }
                 else {
                     $('#ValidationSummary').hide();
@@ -462,8 +463,8 @@ $(document).ready(function () {
 
                     $('#txtAsOfLabel').text("As of ");
                     $('#txtDatePreviewShow').text(date_time);
+                    loadingEffectStop();
                 }
-                loadingEffectStop();
             },
             error: function (result) {
                 alert('Error');

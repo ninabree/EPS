@@ -39,6 +39,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging.EventLog" Version="2.1.1" />
     <PackageReference Include="Microsoft.jQuery.Unobtrusive.Ajax" Version="3.2.6" />
+    <PackageReference Include="Microsoft.Office.Interop.Excel" Version="15.0.4795.1000" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.9" />
     <PackageReference Include="PdfSharp" Version="1.50.5147" />
     <PackageReference Include="Rotativa" Version="1.7.3" />
