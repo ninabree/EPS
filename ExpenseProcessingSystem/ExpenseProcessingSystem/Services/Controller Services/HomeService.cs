@@ -11749,32 +11749,88 @@ namespace ExpenseProcessingSystem.Services
                 tempGbase.remarks = dtls.ExpNCDtl_Remarks_Desc + " " + dtls.ExpNCDtl_Remarks_Period;
                 tempGbase.maker = expenseDetails.maker;
                 tempGbase.approver = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == expID).Expense_Approver;
-                foreach (var item in dtls.ExpenseEntryNCDtlAccs)
+
+                var sameCurr = true;
+                var firstCurr = dtls.ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID;
+                //checks if particular have same currency
+                foreach (var accCurrs in dtls.ExpenseEntryNCDtlAccs)
                 {
-                    if (item.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_CREDIT || item.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_EWT)
+                    if (accCurrs.ExpNCDtlAcc_Curr_ID != firstCurr)
                     {
-                        entryContainer credit = new entryContainer
-                        {
-                            type = (command != "R") ? "C" : "D",
-                            ccy = item.ExpNCDtlAcc_Curr_ID,
-                            amount = item.ExpNCDtlAcc_Amount,
-                            account = item.ExpNCDtlAcc_Acc_ID,
-                            interate = item.ExpNCDtlAcc_Inter_Rate
-                        };
-                        tempGbase.entries.Add(credit);
+                        sameCurr = false;
                     }
-                    else if (item.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
+                }
+                if (sameCurr)
+                {
+                    foreach (var item in dtls.ExpenseEntryNCDtlAccs)
                     {
-                        entryContainer debit = new entryContainer
+                        if (item.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_CREDIT || item.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_EWT)
                         {
-                            type = (command != "R") ? "D" : "C",
-                            ccy = item.ExpNCDtlAcc_Curr_ID,
-                            amount = item.ExpNCDtlAcc_Amount,
-                            account = item.ExpNCDtlAcc_Acc_ID,
-                            interate = item.ExpNCDtlAcc_Inter_Rate
-                        };
-                        tempGbase.entries.Add(debit);
+                            entryContainer credit = new entryContainer
+                            {
+                                type = (command != "R") ? "C" : "D",
+                                ccy = item.ExpNCDtlAcc_Curr_ID,
+                                amount = item.ExpNCDtlAcc_Amount,
+                                account = item.ExpNCDtlAcc_Acc_ID,
+                                interate = item.ExpNCDtlAcc_Inter_Rate
+                            };
+                            tempGbase.entries.Add(credit);
+                        }
+                        else if (item.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
+                        {
+                            entryContainer debit = new entryContainer
+                            {
+                                type = (command != "R") ? "D" : "C",
+                                ccy = item.ExpNCDtlAcc_Curr_ID,
+                                amount = item.ExpNCDtlAcc_Amount,
+                                account = item.ExpNCDtlAcc_Acc_ID,
+                                interate = item.ExpNCDtlAcc_Inter_Rate
+                            };
+                            tempGbase.entries.Add(debit);
+                        }
                     }
+                }
+                else
+                {
+                    var entryType = "";
+                    if (dtls.ExpenseEntryNCDtlAccs.Count > 0)
+                    {
+                        entryType = (dtls.ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT) ? "D" :
+                                (dtls.ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_CREDIT ||
+                                dtls.ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_EWT) ? "C" : "";
+                        entryContainer entryDB = new entryContainer()
+                        {
+                            account = dtls.ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID,
+                            amount = dtls.ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount,
+                            ccy = dtls.ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID,
+                            contraCcy = dtls.ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Curr_ID,
+                            //dept = "",
+                            //this is for exchange rate
+                            interate = dtls.ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Inter_Rate,
+                            type = entryType,
+                            vendor = dtls.ExpNCDtl_Vendor_ID
+                        };
+                        tempGbase.entries.Add(entryDB);
+                    }
+                    if (dtls.ExpenseEntryNCDtlAccs.Count > 1)
+                    {
+                        entryType = (dtls.ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT) ? "D" :
+                                (dtls.ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_CREDIT ||
+                                dtls.ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_EWT) ? "C" : "";
+                        entryContainer entryCD = new entryContainer()
+                        {
+                            account = dtls.ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Acc_ID,
+                            amount = dtls.ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Amount,
+                            ccy = dtls.ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Curr_ID,
+                            //dept = item.dept,
+                            //this is for exchange rate and inter rate
+                            interate = dtls.ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Inter_Rate,
+                            type = entryType,
+                            contraCcy = dtls.ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID,
+                            vendor = dtls.ExpNCDtl_Vendor_ID
+                        };
+                        tempGbase.entries.Add(entryCD);
+                    }                    
                 }
 
                 tempGbase.entries = tempGbase.entries.OrderByDescending(x => x.type == "D").ToList();

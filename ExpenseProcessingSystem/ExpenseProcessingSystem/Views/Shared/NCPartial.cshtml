@@ -457,7 +457,7 @@
                                 <td colspan="3" data-toggle="tooltip" title="@Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name" data-placement="right">
                                     @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name, new { @readonly = "true", @class = "w-full" })
                                 </td>
-                                <td class="@SetRateClass(@Model.EntryNC.NC_Category_ID, @i)">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Inter_Rate, @getHtmlAttributes(@Model.EntryNC.NC_Category_ID, @i))</td>
+                                <td></td>
                                 @if (Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
                                 {
 
@@ -512,12 +512,15 @@
                                     <td colspan="3" data-toggle="tooltip" title="@Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_Name" data-placement="right">
                                         @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_Name, new { @readonly = "true", @class = "w-full" })
                                     </td>
-                                    <td></td>
+                                    <td class="@SetRateClass(@Model.EntryNC.NC_Category_ID, @i)">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Inter_Rate, @getHtmlAttributes(@Model.EntryNC.NC_Category_ID, @i))</td>
                                     @if (Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
                                     {
 
                                         <td>@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_Name, new { @readonly = "true" })</td>
-                                        <td class="@SetClass(@Model.EntryNC.NC_Category_ID, @i, "db")" id="deb_@i">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount, @getHtmlAttributesDebit(@Model.EntryNC.NC_Category_ID, @i, @SetClassCompSusp(Model.EntryNC.NC_Category_ID, Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID, "db", cs, csUSD, intrRF, intrFR, petty)))</td>
+                                        <td class="@SetClass(@Model.EntryNC.NC_Category_ID, @i, "db")" id="deb_@i">
+                                                @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Amount, 
+                                               @getHtmlAttributesDebit(@Model.EntryNC.NC_Category_ID, @i, 
+                                               @SetClassCompSusp(Model.EntryNC.NC_Category_ID, Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_ID, "db", cs, csUSD, intrRF, intrFR, petty)))</td>
                                         <td></td>
                                         <td></td>
                                     }
