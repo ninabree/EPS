@@ -3388,28 +3388,71 @@ namespace ExpenseProcessingSystem.Services
                 entryIDs = voucherNoList.Select(x => int.Parse(x)).ToList();
                 model.VoucherNoList = PopulateVoucherNo(entryIDs);
 
-                var entryList = (from e in _context.ExpenseEntry
-                                 join emp in _context.DMEmp on e.Expense_Payee equals emp.Emp_ID
-                                 where entryIDs.Contains(e.Expense_ID)
-                                 select new
-                                 {
-                                     e,
-                                     ExpenseEntryDetails = from d
-                                                           in _context.ExpenseEntryDetails
-                                                           where d.ExpenseEntryModel.Expense_ID == e.Expense_ID
-                                                           select new
-                                                           {
-                                                               d
-                                                           },
-                                    emp
-                                 }).ToList();
+                //get BDO MNL Master ID from XML
+                var bdoAcc = getAccountByMasterID(int.Parse(xelemAcc.Element("C_DDV2").Value));
 
-                foreach(var ent in entryList)
+                var entryList = (from e in _context.ExpenseEntry
+                                   join emp in _context.DMEmp on e.Expense_Payee equals emp.Emp_ID
+                                   where entryIDs.Contains(e.Expense_ID)
+                                   select new
+                                    {
+                                        e,
+                                        emp,
+                                        ExpenseEntryDetails = from d
+                                                              in _context.ExpenseEntryDetails
+                                                              where d.ExpenseEntryModel.Expense_ID == e.Expense_ID
+                                                              select new
+                                                              {
+                                                                  d,
+                                                                  ExpenseEntryGbaseDtls = from g
+                                                                                          in _context.ExpenseEntryGbaseDtls
+                                                                                          where g.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
+                                                                                          select g,
+                                                                  ExpenseEntryInterEntity = from a
+                                                                                              in _context.ExpenseEntryInterEntity
+                                                                                            where a.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
+                                                                                            select new
+                                                                                            {
+                                                                                                a,
+                                                                                                ExpenseEntryInterEntityParticular = from p
+                                                                                                                                    in _context.ExpenseEntryInterEntityParticular
+                                                                                                                                    where p.ExpenseEntryInterEntityModel.ExpDtl_DDVInter_ID == a.ExpDtl_DDVInter_ID
+                                                                                                                                    select new
+                                                                                                                                    {
+                                                                                                                                        p,
+                                                                                                                                        ExpenseEntryEntityAccounts = from acc
+                                                                                                                                                                     in _context.ExpenseEntryInterEntityAccs
+                                                                                                                                                                     where acc.ExpenseEntryInterEntityParticular.InterPart_ID == p.InterPart_ID
+                                                                                                                                                                     select acc
+                                                                                                                                    }
+                                                                                            }
+                                                              }
+                                    }).ToList();
+                foreach (var ent in entryList)
                 {
                     decimal amt = 0;
                     foreach (var dtl in ent.ExpenseEntryDetails)
                     {
-                        amt += dtl.d.ExpDtl_Credit_Cash;
+                        if (dtl.d.ExpDtl_Inter_Entity)
+                        {
+                            foreach(var inter in dtl.ExpenseEntryInterEntity)
+                            {
+                                foreach (var part in inter.ExpenseEntryInterEntityParticular)
+                                {
+                                    foreach (var acc in part.ExpenseEntryEntityAccounts)
+                                    {
+                                        if (bdoAcc.Account_ID == acc.InterAcc_Acc_ID) {
+                                            amt += acc.InterAcc_Amount;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            //gets Amount when Gbase Remarks and w/ EWT
+                            amt += dtl.d.ExpDtl_Credit_Cash;
+                        }
                     }
                     accs.Add(
                        new LOIAccount
