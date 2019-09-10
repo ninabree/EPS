@@ -1,5 +1,5 @@
 ﻿@model ExpenseProcessingSystem.ViewModels.HomeReportDataFilterViewModel
-
+@using ExpenseProcessingSystem.Services
 @{
     Layout = null;
 }
@@ -195,7 +195,7 @@
                 <td style="text-align:left" class="td-PDF">@i.Trans_Remarks</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_DebitCredit1_1</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Currency1_1</td>
-                <td style="text-align:right" class="td-PDF">@i.Trans_Amount1_1</td>
+                <td style="text-align:right" class="td-PDF">@(ConvStrFrmt.ToNumComma(i.Trans_Amount1_1))</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Customer1_1</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Account_Code1_1</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Account_Number1_1</td>
@@ -211,7 +211,7 @@
                 <td style="text-align:right" class="td-PDF">@i.Trans_InterRate1_1</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_DebitCredit1_2</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Currency1_2</td>
-                <td style="text-align:right" class="td-PDF">@i.Trans_Amount1_2</td>
+                <td style="text-align:right" class="td-PDF">@(ConvStrFrmt.ToNumComma(i.Trans_Amount1_2))</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Customer1_2</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Account_Code1_2</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Account_Number1_2</td>
@@ -227,7 +227,7 @@
                 <td style="text-align:right" class="td-PDF">@i.Trans_InterRate1_2</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_DebitCredit2_1</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Currency2_1</td>
-                <td style="text-align:right" class="td-PDF">@i.Trans_Amount2_1</td>
+                <td style="text-align:right" class="td-PDF">@(ConvStrFrmt.ToNumComma(i.Trans_Amount2_1))</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Customer2_1</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Account_Code2_1</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Account_Number2_1</td>
@@ -243,7 +243,7 @@
                 <td style="text-align:right" class="td-PDF">@i.Trans_InterRate2_1</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_DebitCredit2_2</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Currency2_2</td>
-                <td style="text-align:right" class="td-PDF">@i.Trans_Amount2_2</td>
+                <td style="text-align:right" class="td-PDF">@(ConvStrFrmt.ToNumComma(i.Trans_Amount2_2))</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Customer2_2</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Account_Code2_2</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Account_Number2_2</td>
@@ -259,7 +259,7 @@
                 <td style="text-align:right" class="td-PDF">@i.Trans_InterRate2_2</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_DebitCredit3_1</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Currency3_1</td>
-                <td style="text-align:right" class="td-PDF">@i.Trans_Amount3_1</td>
+                <td style="text-align:right" class="td-PDF">@(ConvStrFrmt.ToNumComma(i.Trans_Amount3_1))</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Customer3_1</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Account_Code3_1</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Account_Number3_1</td>
@@ -275,7 +275,7 @@
                 <td style="text-align:right" class="td-PDF">@i.Trans_InterRate3_1</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_DebitCredit3_2</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Currency3_2</td>
-                <td style="text-align:right" class="td-PDF">@i.Trans_Amount3_2</td>
+                <td style="text-align:right" class="td-PDF">@(ConvStrFrmt.ToNumComma(i.Trans_Amount3_2))</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Customer3_2</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Account_Code3_2</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Account_Number3_2</td>
@@ -291,7 +291,7 @@
                 <td style="text-align:right" class="td-PDF">@i.Trans_InterRate3_2</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_DebitCredit4_1</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Currency4_1</td>
-                <td style="text-align:right" class="td-PDF">@i.Trans_Amount4_1</td>
+                <td style="text-align:right" class="td-PDF">@(ConvStrFrmt.ToNumComma(i.Trans_Amount4_1))</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Customer4_1</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Account_Code4_1</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Account_Number4_1</td>
@@ -307,7 +307,7 @@
                 <td style="text-align:right" class="td-PDF">@i.Trans_InterRate4_1</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_DebitCredit4_2</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Currency4_2</td>
-                <td style="text-align:right" class="td-PDF">@i.Trans_Amount4_2</td>
+                <td style="text-align:right" class="td-PDF">@(ConvStrFrmt.ToNumComma(i.Trans_Amount4_2))</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Customer4_2</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Account_Code4_2</td>
                 <td style="text-align:center" class="td-PDF">@i.Trans_Account_Number4_2</td>

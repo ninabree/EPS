@@ -1,4 +1,5 @@
-﻿using ExpenseProcessingSystem.ViewModels;
+﻿using ExpenseProcessingSystem.Services;
+using ExpenseProcessingSystem.ViewModels;
 using ExpenseProcessingSystem.ViewModels.Reports;
 using Microsoft.AspNetCore.Mvc;
 using OfficeOpenXml;
@@ -374,7 +375,7 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     worksheet.Cells["F" + lastRow].Value = i.Trans_Remarks;
                     worksheet.Cells["G" + lastRow].Value = i.Trans_DebitCredit1_1;
                     worksheet.Cells["H" + lastRow].Value = i.Trans_Currency1_1;
-                    worksheet.Cells["I" + lastRow].Value = i.Trans_Amount1_1;
+                    worksheet.Cells["I" + lastRow].Value = ConvStrFrmt.ToNumComma(i.Trans_Amount1_1);
                     worksheet.Cells["J" + lastRow].Value = i.Trans_Customer1_1;
                     worksheet.Cells["K" + lastRow].Value = i.Trans_Account_Code1_1;
                     worksheet.Cells["L" + lastRow].Value = i.Trans_Account_Number1_1;
@@ -390,7 +391,7 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     worksheet.Cells["V" + lastRow].Value = i.Trans_InterRate1_1;
                     worksheet.Cells["W" + lastRow].Value = i.Trans_DebitCredit1_2;
                     worksheet.Cells["X" + lastRow].Value = i.Trans_Currency1_2;
-                    worksheet.Cells["Y" + lastRow].Value = i.Trans_Amount1_2;
+                    worksheet.Cells["Y" + lastRow].Value = ConvStrFrmt.ToNumComma(i.Trans_Amount1_2);
                     worksheet.Cells["Z" + lastRow].Value = i.Trans_Customer1_2;
                     worksheet.Cells["AA" + lastRow].Value = i.Trans_Account_Code1_2;
                     worksheet.Cells["AB" + lastRow].Value = i.Trans_Account_Number1_2;
@@ -406,7 +407,7 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     worksheet.Cells["AL" + lastRow].Value = i.Trans_InterRate1_2;
                     worksheet.Cells["AM" + lastRow].Value = i.Trans_DebitCredit2_1;
                     worksheet.Cells["AN" + lastRow].Value = i.Trans_Currency2_1;
-                    worksheet.Cells["AO" + lastRow].Value = i.Trans_Amount2_1;
+                    worksheet.Cells["AO" + lastRow].Value = ConvStrFrmt.ToNumComma(i.Trans_Amount2_1);
                     worksheet.Cells["AP" + lastRow].Value = i.Trans_Customer2_1;
                     worksheet.Cells["AQ" + lastRow].Value = i.Trans_Account_Code2_1;
                     worksheet.Cells["AR" + lastRow].Value = i.Trans_Account_Number2_1;
@@ -422,7 +423,7 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     worksheet.Cells["BB" + lastRow].Value = i.Trans_InterRate2_1;
                     worksheet.Cells["BC" + lastRow].Value = i.Trans_DebitCredit2_2;
                     worksheet.Cells["BD" + lastRow].Value = i.Trans_Currency2_2;
-                    worksheet.Cells["BE" + lastRow].Value = i.Trans_Amount2_2;
+                    worksheet.Cells["BE" + lastRow].Value = ConvStrFrmt.ToNumComma(i.Trans_Amount2_2);
                     worksheet.Cells["BF" + lastRow].Value = i.Trans_Customer2_2;
                     worksheet.Cells["BG" + lastRow].Value = i.Trans_Account_Code2_2;
                     worksheet.Cells["BH" + lastRow].Value = i.Trans_Account_Number2_2;
@@ -438,7 +439,7 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     worksheet.Cells["BR" + lastRow].Value = i.Trans_InterRate2_2;
                     worksheet.Cells["BS" + lastRow].Value = i.Trans_DebitCredit3_1;
                     worksheet.Cells["BT" + lastRow].Value = i.Trans_Currency3_1;
-                    worksheet.Cells["BU" + lastRow].Value = i.Trans_Amount3_1;
+                    worksheet.Cells["BU" + lastRow].Value = ConvStrFrmt.ToNumComma(i.Trans_Amount3_1);
                     worksheet.Cells["BV" + lastRow].Value = i.Trans_Customer3_1;
                     worksheet.Cells["BW" + lastRow].Value = i.Trans_Account_Code3_1;
                     worksheet.Cells["BX" + lastRow].Value = i.Trans_Account_Number3_1;
@@ -454,7 +455,7 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     worksheet.Cells["CH" + lastRow].Value = i.Trans_InterRate3_1;
                     worksheet.Cells["CI" + lastRow].Value = i.Trans_DebitCredit3_2;
                     worksheet.Cells["CJ" + lastRow].Value = i.Trans_Currency3_2;
-                    worksheet.Cells["CK" + lastRow].Value = i.Trans_Amount3_2;
+                    worksheet.Cells["CK" + lastRow].Value = ConvStrFrmt.ToNumComma(i.Trans_Amount3_2);
                     worksheet.Cells["CL" + lastRow].Value = i.Trans_Customer3_2;
                     worksheet.Cells["CM" + lastRow].Value = i.Trans_Account_Code3_2;
                     worksheet.Cells["CN" + lastRow].Value = i.Trans_Account_Number3_2;
@@ -470,7 +471,7 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     worksheet.Cells["CX" + lastRow].Value = i.Trans_InterRate3_2;
                     worksheet.Cells["CY" + lastRow].Value = i.Trans_DebitCredit4_1;
                     worksheet.Cells["CZ" + lastRow].Value = i.Trans_Currency4_1;
-                    worksheet.Cells["DA" + lastRow].Value = i.Trans_Amount4_1;
+                    worksheet.Cells["DA" + lastRow].Value = ConvStrFrmt.ToNumComma(i.Trans_Amount4_1);
                     worksheet.Cells["DB" + lastRow].Value = i.Trans_Customer4_1;
                     worksheet.Cells["DC" + lastRow].Value = i.Trans_Account_Code4_1;
                     worksheet.Cells["DD" + lastRow].Value = i.Trans_Account_Number4_1;
@@ -486,7 +487,7 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     worksheet.Cells["DN" + lastRow].Value = i.Trans_InterRate4_1;
                     worksheet.Cells["DO" + lastRow].Value = i.Trans_DebitCredit4_2;
                     worksheet.Cells["DP" + lastRow].Value = i.Trans_Currency4_2;
-                    worksheet.Cells["DQ" + lastRow].Value = i.Trans_Amount4_2;
+                    worksheet.Cells["DQ" + lastRow].Value = ConvStrFrmt.ToNumComma(i.Trans_Amount4_2);
                     worksheet.Cells["DR" + lastRow].Value = i.Trans_Customer4_2;
                     worksheet.Cells["DS" + lastRow].Value = i.Trans_Account_Code4_2;
                     worksheet.Cells["DT" + lastRow].Value = i.Trans_Account_Number4_2;
@@ -527,7 +528,7 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     worksheet.Cells["F" + lastRow].Value = i.Trans_Remarks;
                     worksheet.Cells["G" + lastRow].Value = i.Trans_DebitCredit;
                     worksheet.Cells["H" + lastRow].Value = i.Trans_Currency;
-                    worksheet.Cells["I" + lastRow].Value = i.Trans_Amount;
+                    worksheet.Cells["I" + lastRow].Value = ConvStrFrmt.ToNumComma(i.Trans_Amount);
                     worksheet.Cells["J" + lastRow].Value = i.Trans_Customer;
                     worksheet.Cells["K" + lastRow].Value = i.Trans_Account_Code;
                     worksheet.Cells["L" + lastRow].Value = i.Trans_Account_Number;
@@ -576,7 +577,7 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     worksheet.Cells["F" + lastRow].Value = i.Trans_Remarks;
                     worksheet.Cells["G" + lastRow].Value = i.Trans_DebitCredit;
                     worksheet.Cells["H" + lastRow].Value = i.Trans_Currency;
-                    worksheet.Cells["I" + lastRow].Value = i.Trans_Amount;
+                    worksheet.Cells["I" + lastRow].Value = ConvStrFrmt.ToNumComma(i.Trans_Amount);
                     worksheet.Cells["J" + lastRow].Value = i.Trans_Customer;
                     worksheet.Cells["K" + lastRow].Value = i.Trans_Account_Code;
                     worksheet.Cells["L" + lastRow].Value = i.Trans_Account_Number;
@@ -621,7 +622,7 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     worksheet.Cells["F" + lastRow].Value = i.Trans_Remarks;
                     worksheet.Cells["G" + lastRow].Value = i.Trans_DebitCredit;
                     worksheet.Cells["H" + lastRow].Value = i.Trans_Currency;
-                    worksheet.Cells["I" + lastRow].Value = i.Trans_Amount;
+                    worksheet.Cells["I" + lastRow].Value = ConvStrFrmt.ToNumComma(i.Trans_Amount);
                     worksheet.Cells["J" + lastRow].Value = i.Trans_Customer;
                     worksheet.Cells["K" + lastRow].Value = i.Trans_Account_Code;
                     worksheet.Cells["L" + lastRow].Value = i.Trans_Account_Number;
@@ -1228,5 +1229,6 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
 
             return destPath + newFileName;
         }
+
     }
 }
