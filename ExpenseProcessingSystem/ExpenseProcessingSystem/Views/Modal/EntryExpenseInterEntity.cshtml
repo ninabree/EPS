@@ -331,7 +331,6 @@
                 $("#EntryDDV_" + itemNo + "__interDetails_Inter_Rate").val($("table").find("#Inter_Rate").val());
                 $("#EntryDDV_" + itemNo + "__debitGross").val($("#par1-0").text());
 
-
                 //Populate the Particulars and Accs Lists
                 $('#req_' + itemNo).find('#interDtls').empty();
 
@@ -387,7 +386,6 @@
 
                 //trigger recomputation of debit and credit
                 computeValuesDDVInter($("#item_" + itemNo)[0]);
-
                 $('.modal-body2').empty();
                 $('.myModal2').modal('hide');
             }

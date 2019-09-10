@@ -266,6 +266,14 @@
                             <td class="rightA">PHP @Html.DisplayFor(x => item.amount, "{0:n}")</td>
                         </tr>
                     }
+                    else if (item.account == "CITI MNL")
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(x => item.account)</td>
+                            <td><!--Insert Value here--></td>
+                            <td class="rightA">USD @Html.DisplayFor(x => item.amount, "{0:n}")</td>
+                        </tr>
+                    }
                     else
                     {
                         <tr>
@@ -290,8 +298,18 @@
                 </tr>
                 <tr>
                     <td>Total<!--Insert Value here--></td>
-                    <td class="rightA" style="border-top:1px solid black;border-bottom:3px double black;">PHP @Html.DisplayFor(x => x.amountGross, "{0:n}")</td>
-                    <td class="rightA" style="border-top:1px solid black;border-bottom:3px double black;">PHP @Html.DisplayFor(x => x.amountGross, "{0:n}")</td>
+                    @* NO TOTAL IF INTER ENTITY *@
+                    @if (Model.accountCredit.Where(x => x.account == "CITI MNL").ToList().Count > 0)
+                    {
+                        <td class="rightA" style="border-top:1px solid black;border-bottom:3px double black;"></td>
+                        <td class="rightA" style="border-top:1px solid black;border-bottom:3px double black;"></td>
+                    }
+                    else
+                    {
+
+                        <td class="rightA" style="border-top:1px solid black;border-bottom:3px double black;">PHP @Html.DisplayFor(x => x.amountGross, "{0:n}")</td>
+                        <td class="rightA" style="border-top:1px solid black;border-bottom:3px double black;">PHP @Html.DisplayFor(x => x.amountCredit, "{0:n}")</td>
+                    }
                 </tr>
                 <tr>
                     <td colspan="3"><!--Insert Value here--></td>

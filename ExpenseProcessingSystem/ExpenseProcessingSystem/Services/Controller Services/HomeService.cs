@@ -9232,7 +9232,7 @@ namespace ExpenseProcessingSystem.Services
                 vnList.Add(new VoucherNoOptions
                 {
                     vchr_ID = x.Expense_ID,
-                    vchr_No = GlobalSystemValues.getApplicationCode(x.Expense_Type) + "-" + x.Expense_Date.Year + "-" + x.Expense_Number.ToString().PadLeft(5, '0'),
+                    vchr_No = x.Expense_Date.Year.ToString().Substring(2, 2) + "-" + x.Expense_Number.ToString().PadLeft(5, '0'),
                     vchr_EmployeeName = getVendorName(x.Expense_Payee, x.Expense_Payee_Type)
                 });
             }
@@ -9924,6 +9924,8 @@ namespace ExpenseProcessingSystem.Services
                         }
                         ncDtlAccs.Add(entryNCDtlAcc);
                     }
+                    //sort accs by debit, then tax accounts, then credit
+                    ncDtlAccs = ncDtlAccs.OrderByDescending(x => x.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT).ThenByDescending(x => x.ExpNCDtlAcc_Type_ID).ToList();
                     entryNCDtl = new ExpenseEntryNCDtlViewModel()
                     {
                         ExpNCDtl_ID = ncDtl.g.ExpNCDtl_ID,
@@ -9971,7 +9973,6 @@ namespace ExpenseProcessingSystem.Services
                 lastUpdatedDate = EntryDetails.e.Expense_Last_Updated,
                 EntryNC = ncDtlVM
             };
-
             return ncModel;
         }
 
@@ -13281,6 +13282,12 @@ namespace ExpenseProcessingSystem.Services
             }
 
             return accDetails;
+        }
+
+        public int getAccIDByMasterID(int mID)
+        {
+            var detail = _context.DMAccount.Where(x => x.Account_MasterID == mID && x.Account_isActive == true).Select(q => new { q.Account_ID, q.Account_Name, q.Account_Code }).FirstOrDefault();
+            return detail.Account_ID;
         }
         //Account list only Active and not deleted
         public List<DMAccountModel> getAccountList()
