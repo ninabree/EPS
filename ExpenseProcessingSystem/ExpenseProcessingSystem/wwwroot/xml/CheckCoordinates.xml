@@ -11,11 +11,27 @@
   <Y_Date>96</Y_Date>
 
   <X_AmountWord>155.5</X_AmountWord>
-  <Y_AmountWord>167</Y_AmountWord>
+  <Y_AmountWord>168</Y_AmountWord>
 
   <X_Signatory1>645.5</X_Signatory1>
   <Y_Signatory1>318</Y_Signatory1>
 
   <X_Signatory2>946.5</X_Signatory2>
   <Y_Signatory2>318</Y_Signatory2>
+
+  <ConvValue>.48</ConvValue>
+  <Payee_NextLine_CharLength>52</Payee_NextLine_CharLength>
+  <Payee_PosAdj_Y>20</Payee_PosAdj_Y>
+
+  <Payee_Field_Width>330</Payee_Field_Width>
+  <Payee_Field_Height>40</Payee_Field_Height>
+
+  <AmntWord_Field_Width>500</AmntWord_Field_Width>
+  <AmntWord_Field_Height>40</AmntWord_Field_Height>
+
+  <PaperSize_Width>576</PaperSize_Width>
+  <PaperSize_Height>216</PaperSize_Height>
+
+  <FontFamily>Arial</FontFamily>
+  <FontSize>10</FontSize>
 </Check_Coordinate>

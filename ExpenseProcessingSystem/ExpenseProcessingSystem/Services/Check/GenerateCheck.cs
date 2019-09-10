@@ -170,13 +170,17 @@ namespace ExpenseProcessingSystem.Services.Check
 
             double x_sign2 = double.Parse(xelemCoord.Element("X_Signatory2").Value);
             double y_sign2 = double.Parse(xelemCoord.Element("Y_Signatory2").Value);
-            
-            DrawToPdf dtp = new DrawToPdf(new double[] { x_payee * .48, y_payee * .48 },  // Payee
-                                          new double[] { x_amount * .48, y_amount * .48 },  // Amount
-                                          new double[] { x_date * .48, y_date * .48 },   // Date
-                                          new double[] { x_amountWord * .48, y_amountWord * .48 },  // Amount (words)
-                                          new double[] { x_sign1 * .48, x_sign1 * .48 },  // Signatory 1
-                                          new double[] { x_sign2 * .48, y_sign2 * .48 }   // Signatory 2
+
+            int payeeadjust = 0;
+            if (cd.Payee.Length >= int.Parse(xelemCoord.Element("Payee_NextLine_CharLength").Value)) payeeadjust = int.Parse(xelemCoord.Element("Payee_PosAdj_Y").Value);
+            double pixConv = double.Parse(xelemCoord.Element("ConvValue").Value);
+
+            DrawToPdf dtp = new DrawToPdf(new double[] { x_payee * pixConv, (y_payee * pixConv) - payeeadjust },  // Payee
+                                          new double[] { x_amount * pixConv, y_amount * pixConv },  // Amount
+                                          new double[] { x_date * pixConv, y_date * pixConv },   // Date
+                                          new double[] { x_amountWord * pixConv, y_amountWord * pixConv },  // Amount (words)
+                                          new double[] { x_sign1 * pixConv, x_sign1 * pixConv },  // Signatory 1
+                                          new double[] { x_sign2 * pixConv, y_sign2 * pixConv }   // Signatory 2
                               );
 
             dtp.CreatePDF(cd, filename);
