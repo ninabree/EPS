@@ -144,31 +144,39 @@
         @if (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_LS_PAYROLL)
         {
             <table class="table table-bordered voucher-tbl m-t-20" style="background-color: #fafafa; border: 2px solid #ccc !important">
+                <colgroup>
+                    <col style="width: 12.5%" />
+                    <col style="width: 12.5%" />
+                    <col style="width: 12.5%" />
+                    <col style="width: 12.5%" />
+                    <col style="width: 12.5%" />
+                    <col style="width: 12.5%" />
+                    <col style="width: 12.5%" />
+                    <col style="width: 12.5%" />
+                </colgroup>
                 <tr style="border-bottom: 2px solid #ccc !important;">
-                    <td colspan="2">Total</td>
-                    <td colspan="5"></td>
+                    <td colspan="5">Total</td>
                     <td colspan="1" class="border-solid NC_readonly_row">@Html.DisplayFor(x => x.EntryNC.NC_DebitAmt, new { @readonly = "true" })</td>
                     <td colspan="1" class="border-solid"></td>
                     <td colspan="1" class="border-solid NC_readonly_row">@Html.DisplayFor(x => x.EntryNC.NC_CredAmt, new { @readonly = "true" })</td>
                 </tr>
                 <tr>
-                    <td colspan="7"></td>
+                    <td colspan="5"></td>
                     <td colspan="1">Debit</td>
                     <td colspan="1"></td>
                     <td colspan="1">Credit</td>
                 </tr>
                 <tr>
-                    <td colspan="2">Balance Checker</td>
+                    <td colspan="1">Balance Checker</td>
                     <td colspan="1"></td>
-                    <td colspan="3">Computer Suspense</td>
+                    <td colspan="2">Computer Suspense</td>
                     <td colspan="1"></td>
                     <td colspan="1" class="border-solid NC_readonly_row">@Html.DisplayFor(x => x.EntryNC.NC_CS_DebitAmt, new { @readonly = "true" })</td>
                     <td colspan="1"></td>
                     <td colspan="1" class="border-solid NC_readonly_row">@Html.DisplayFor(x => x.EntryNC.NC_CS_CredAmt, new { @readonly = "true" })</td>
                 </tr>
                 <tr>
-                    <td colspan="2">Total</td>
-                    <td colspan="5"></td>
+                    <td colspan="5">Total</td>
                     <td colspan="3" class="border-solid NC_readonly_row">@Html.DisplayFor(x => x.EntryNC.NC_CS_TotalAmt, new { @readonly = "true" })</td>
                 </tr>
                 @Html.HiddenFor(x => x.EntryNC.NC_IE_DebitAmt)
@@ -179,44 +187,52 @@
         else if (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_JS_PAYROLL)
         {
             <table class="table table-bordered voucher-tbl m-t-20" style="background-color: #fafafa; border: 2px solid #ccc !important">
+                <colgroup>
+                    <col style="width: 12.5%" />
+                    <col style="width: 12.5%" />
+                    <col style="width: 12.5%" />
+                    <col style="width: 12.5%" />
+                    <col style="width: 12.5%" />
+                    <col style="width: 12.5%" />
+                    <col style="width: 12.5%" />
+                    <col style="width: 12.5%" />
+                </colgroup>
                 <tr>
-                    <td colspan="7"></td>
+                    <td colspan="5"></td>
                     <td colspan="1">Debit</td>
                     <td colspan="1"></td>
                     <td colspan="1">Credit</td>
                 </tr>
                 <tr>
-                    <td colspan="2">Balance Checker</td>
+                    <td colspan="1">Balance Checker</td>
                     <td colspan="1"></td>
-                    <td colspan="3">Computer Suspense</td>
+                    <td colspan="2">Computer Suspense</td>
                     <td colspan="1"></td>
                     <td colspan="1" class="border-solid NC_readonly_row">@Html.DisplayFor(x => x.EntryNC.NC_CS_DebitAmt, new { @readonly = "true" })</td>
                     <td colspan="1"></td>
                     <td colspan="1" class="border-solid NC_readonly_row">@Html.DisplayFor(x => x.EntryNC.NC_CS_CredAmt, new { @readonly = "true" })</td>
                 </tr>
                 <tr>
-                    <td colspan="2">Total</td>
-                    <td colspan="5"></td>
+                    <td colspan="5">Total</td>
                     <td colspan="3" class="border-solid NC_readonly_row">@Html.DisplayFor(x => x.EntryNC.NC_CS_TotalAmt, new { @readonly = "true" })</td>
                 </tr>
                 <tr>
-                    <td colspan="7"></td>
+                    <td colspan="5"></td>
                     <td colspan="1">Debit</td>
                     <td colspan="1"></td>
                     <td colspan="1">Credit</td>
                 </tr>
                 <tr>
-                    <td colspan="2">Balance Checker</td>
+                    <td colspan="1">Balance Checker</td>
                     <td colspan="1"></td>
-                    <td colspan="3">Inter-Entity Liability</td>
+                    <td colspan="2">Inter-Entity Liability</td>
                     <td colspan="1"></td>
                     <td colspan="1" class="border-solid NC_readonly_row">@Html.DisplayFor(x => x.EntryNC.NC_IE_DebitAmt, new { @readonly = "true" })</td>
                     <td colspan="1"></td>
                     <td colspan="1" class="border-solid NC_readonly_row">@Html.DisplayFor(x => x.EntryNC.NC_IE_CredAmt, new { @readonly = "true" })</td>
                 </tr>
                 <tr>
-                    <td colspan="2">Total</td>
-                    <td colspan="5"></td>
+                    <td colspan="5">Total</td>
                     <td colspan="3" class="border-solid NC_readonly_row">@Html.DisplayFor(x => x.EntryNC.NC_IE_TotalAmt, new { @readonly = "true" })</td>
                 </tr>
             </table>
@@ -227,26 +243,35 @@
         else if (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT || Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL)
         {
             <table class="table table-bordered voucher-tbl" style="background-color: #fafafa; border: 2px solid #ccc !important; margin-bottom: 20px!important">
+                <colgroup>
+                    <col style="width: 12.5%" />
+                    <col style="width: 12.5%" />
+                    <col style="width: 12.5%" />
+                    <col style="width: 12.5%" />
+                    <col style="width: 12.5%" />
+                    <col style="width: 12.5%" />
+                    <col style="width: 12.5%" />
+                    <col style="width: 12.5%" />
+                </colgroup>
                 <tr style="border-bottom: 2px solid #ccc !important;">
-                    <td colspan="2">Total</td>
-                    <td colspan="9"></td>
+                    <td colspan="5">Total</td>
                     <td colspan="1" class="border-solid NC_readonly_row">@Html.DisplayFor(x => x.EntryNC.NC_DebitAmt, new { @readonly = "true" })</td>
                     <td colspan="1" class="border-solid"></td>
                     <td colspan="1" class="border-solid NC_readonly_row">@Html.DisplayFor(x => x.EntryNC.NC_CredAmt, new { @readonly = "true" })</td>
                 </tr>
-                <tr class="NC_spacing_row"><td colspan="14"></td></tr>
+                <tr class="NC_spacing_row"><td colspan="8"></td></tr>
                 <tr>
-                    <td colspan="14"><label class="float-l">CDD Instruction Sheet</label></td>
+                    <td colspan="8"><label class="float-l">CDD Instruction Sheet</label></td>
                 </tr>
                 <tr id="NC_PCR1">
                     <td>@Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpNCDtl_Remarks_Desc, new { @readonly = "true" })</td>
-                    <td colspan="2">
-                        @Html.DisplayFor(modelItem => Model.EntryNC.NC_CS_Period, new { @type = "date"})
+                    <td colspan="1">
+                        @Html.DisplayFor(modelItem => Model.EntryNC.NC_CS_Period, new { @type = "date" })
                     </td>
 
-                    <td colspan="6">@Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name, new { @readonly = "true", @class = "w-full" })</td>
-                    
-                    <td class="voucher-inter">@Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Inter_Rate, new {  @readonly = "true" })</td>
+                    <td colspan="1">@Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name, new { @readonly = "true", @class = "w-full" })</td>
+
+                    <td class="voucher-inter">@Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Inter_Rate, new { @readonly = "true" })</td>
                     @if (Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
                     {
                         <td>@Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_Name, new { @readonly = "true" })</td>
@@ -271,8 +296,8 @@
                 {
                     <tr id="NC_PCR2">
                         <td></td>
-                        <td colspan="2"></td>
-                        <td colspan="6">@Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_Name, new { @readonly = "true", @class = "w-full" })</td>
+                        <td colspan="1"></td>
+                        <td colspan="1">@Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_Name, new { @readonly = "true", @class = "w-full" })</td>
                         <td></td>
                         @if (Model.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
                         {
@@ -321,24 +346,17 @@
         {
             <table class="table table-bordered voucher-tbl m-t-20 w-full" style="background-color: #fafafa; border: 2px solid #ccc !important">
                 <colgroup>
-                    <col style="width: 7.14%" />
-                    <col style="width: 7.14%" />
-                    <col style="width: 7.14%" />
-                    <col style="width: 7.14%" />
-                    <col style="width: 7.14%" />
-                    <col style="width: 7.14%" />
-                    <col style="width: 7.14%" />
-                    <col style="width: 7.14%" />
-                    <col style="width: 7.14%" />
-                    <col style="width: 7.14%" />
-                    <col style="width: 7.14%" />
-                    <col style="width: 7.14%" />
-                    <col style="width: 7.14%" />
-                    <col style="width: 7.14%" />
+                    <col style="width: 12.5%" />
+                    <col style="width: 12.5%" />
+                    <col style="width: 12.5%" />
+                    <col style="width: 12.5%" />
+                    <col style="width: 12.5%" />
+                    <col style="width: 12.5%" />
+                    <col style="width: 12.5%" />
+                    <col style="width: 12.5%" />
                 </colgroup>
                 <tr style="border-bottom: 2px solid #ccc !important;">
-                    <td colspan="1">Total:</td>
-                    <td colspan="9"></td>
+                    <td colspan="5">Total:</td>
                     <td colspan="1" class="border-solid NC_readonly_row">@Html.DisplayFor(x => x.EntryNC.NC_DebitAmt, new { @readonly = "true" })</td>
                     <td colspan="1" class="border-solid"></td>
                     <td colspan="1" class="border-solid NC_readonly_row">@Html.DisplayFor(x => x.EntryNC.NC_CredAmt, new { @readonly = "true" })</td>

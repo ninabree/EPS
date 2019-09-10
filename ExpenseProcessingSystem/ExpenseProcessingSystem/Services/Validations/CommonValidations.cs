@@ -104,7 +104,7 @@ namespace ExpenseProcessingSystem.Services.Validations
                 var name = validationContext.DisplayName;
                 if (!(value == null))
                 {
-                    Regex r = new Regex("^[a-zA-Z0-9@#$%&*+\\-_(),+':;?.,ñ!\\[\\]\\s\\/]+$");
+                    Regex r = new Regex("^[a-zA-Z0-9@#$%&*+\\-_(),+':;?.,ñÑ!\\[\\]\\s\\/]+$");
                     if (!r.IsMatch(value.ToString()))
                     {
                         return new ValidationResult(name + " has an invalid 'string' input");

@@ -1081,8 +1081,8 @@ namespace ExpenseProcessingSystem.Controllers
                     payItem.M3Quarter = amount;
                 }
                 //payitem
+                payItem.Payments = ewt.TR_Nature;
                 payItem.Atc = ewt.TR_ATC;
-                payItem.Payments = ewt.TR_Nature_Income_Payment;
                 payItem.TaxWithheld = ncTaxWithheld > 0 ? ncTaxWithheld : (amount * (decimal)ewt.TR_Tax_Rate);
 
                 fp.IncomePay.Add(payItem);
@@ -1100,13 +1100,18 @@ namespace ExpenseProcessingSystem.Controllers
                 fp.From_Date = date;
                 fp.To_Date = date;
 
+                var entry = _service.getExpense(expID);
+
                 //signatory
-                fp.PayorSig = new Signatories {
-                    Name = approver
+                var apprvBcs = _context.DMBCS.Where(x => x.BCS_User_ID == entry.approver_id && x.BCS_isActive == true && x.BCS_isDeleted == false).FirstOrDefault();
+                var apprvUser = _context.User.Where(x => x.User_ID == entry.approver_id).FirstOrDefault();
+
+                fp.PayorSig = new Signatories
+                {
+                    Name = apprvUser.User_LName + ", " + apprvUser.User_FName,
+                    ESigPath = (apprvBcs != null) ? apprvBcs.BCS_Signatures : ""
                 };
                 fp.PayeeSig = new Signatories();
-
-                var entry = _service.getExpense(expID);
 
                 fp.VoucherNo = _service.getVoucherNo(entry.expenseType,entry.expenseDate,int.Parse(entry.expenseId),false);
 
@@ -2983,8 +2988,9 @@ namespace ExpenseProcessingSystem.Controllers
 
             EntryNCViewModelList ncList = _service.getExpenseNC(entryID);
             ncList = PopulateEntryNC(ncList);
-            DMCurrencyModel currDtl = _context.DMCurrency.Where(x => x.Curr_MasterID == 1 && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
-            DMCurrencyModel currDtlUSD = _context.DMCurrency.Where(x => x.Curr_MasterID == 2 && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
+            
+            DMCurrencyModel currDtl = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_PHP").Value));
+            DMCurrencyModel currDtlUSD = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_US").Value));
 
             //POPULATING CDD IF APPLICABLE
             if (ncList.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT)
@@ -5979,5 +5985,6 @@ namespace ExpenseProcessingSystem.Controllers
 
             return File(path, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", closeType + " Proofsheet.xlsx");
         }
+
     }
 }

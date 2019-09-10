@@ -56,8 +56,8 @@ namespace ExpenseProcessingSystem.Controllers
             ViewData["PHPmstr"] = _service.getXMLCurrency("PHP").currMasterID;
 
             viewModel = PopulateEntryNC(viewModel);
-            DMCurrencyModel currDtl = _context.DMCurrency.Where(x => x.Curr_MasterID == 31 && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
-            DMCurrencyModel currDtlUSD = _context.DMCurrency.Where(x => x.Curr_MasterID == 1 && x.Curr_isActive == true && x.Curr_isDeleted == false).FirstOrDefault();
+            DMCurrencyModel currDtl = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_PHP").Value));
+            DMCurrencyModel currDtlUSD = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_US").Value));
 
 
             if ((entryID != "0") && (entryID != null) && (categoryID != null))
