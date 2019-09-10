@@ -1105,11 +1105,13 @@ namespace ExpenseProcessingSystem.Controllers
                 //signatory
                 var apprvBcs = _context.DMBCS.Where(x => x.BCS_User_ID == entry.approver_id && x.BCS_isActive == true && x.BCS_isDeleted == false).FirstOrDefault();
                 var apprvUser = _context.User.Where(x => x.User_ID == entry.approver_id).FirstOrDefault();
-
+                var bcsPath = _context.FileLocation.Where(x => x.FL_Type == "BCS").Select(x => x.FL_Location).FirstOrDefault();
                 fp.PayorSig = new Signatories
                 {
                     Name = apprvUser.User_LName + ", " + apprvUser.User_FName,
-                    ESigPath = (apprvBcs != null) ? apprvBcs.BCS_Signatures : ""
+                    ESigPath = (apprvBcs != null) ? (!String.IsNullOrEmpty(apprvBcs.BCS_Signatures)) ? "wwwroot/" + bcsPath + apprvBcs.BCS_Signatures : "" : "",
+                    Title = (apprvBcs != null) ? apprvBcs.BCS_Position : "",
+                    Tin = (apprvBcs != null) ? apprvBcs.BCS_TIN : ""
                 };
                 fp.PayeeSig = new Signatories();
 

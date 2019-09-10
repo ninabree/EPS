@@ -34,7 +34,7 @@ namespace ExpenseProcessingSystem.ConstantData
 
                 var liqExpense = _dbContext.LiquidationEntryDetails.FirstOrDefault(x => x.ExpenseEntryModel.Expense_ID == id);
 
-                if (liqExpense != null && (userID != liqExpense.Liq_Created_UserID || liqExpense.Liq_Status != GlobalSystemValues.STATUS_PENDING))
+                if (liqExpense != null && (userID != liqExpense.Liq_Created_UserID || (liqExpense.Liq_Status != GlobalSystemValues.STATUS_PENDING && liqExpense.Liq_Status != GlobalSystemValues.STATUS_REJECTED)))
                 {
                     context.Result =
                         new RedirectToRouteResult(new RouteValueDictionary(new

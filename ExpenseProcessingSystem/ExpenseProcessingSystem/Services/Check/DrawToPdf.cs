@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace ExpenseProcessingSystem.Services.Check
 {
@@ -17,6 +18,8 @@ namespace ExpenseProcessingSystem.Services.Check
         private double[] amWorCoord;
         private double[] sigOnCoord;
         private double[] sigTwCoord;
+        
+        XElement xelemVal = XElement.Load("wwwroot/xml/CheckCoordinates.xml");
 
         public DrawToPdf(double[] payeeCoord, double[] amNumCoord,
                          double[] dateCoord, double[] amWorCoord,
@@ -40,8 +43,8 @@ namespace ExpenseProcessingSystem.Services.Check
             PdfPage page = document.AddPage();
 
             // Set page size in points
-            page.Width = 576;
-            page.Height = 216;
+            page.Width = int.Parse(xelemVal.Element("PaperSize_Width").Value);
+            page.Height = int.Parse(xelemVal.Element("PaperSize_Height").Value);
 
             // Get an XGraphics object for drawing
             XGraphics gfx = XGraphics.FromPdfPage(page);
@@ -50,7 +53,8 @@ namespace ExpenseProcessingSystem.Services.Check
             //var enc1252 = Encoding.GetEncoding(1252);
 
             // Create a font
-            XFont font = new XFont("Arial", 10, XFontStyle.Regular);
+            XFont font = new XFont(xelemVal.Element("FontFamily").Value, 
+                int.Parse(xelemVal.Element("FontSize").Value), XFontStyle.Regular);
 
             //XImage image = XImage.FromFile("C:/Users/akio.fujiwara/Desktop/ChequePrint/chequepic_8-5_11.jpg");
 
@@ -60,7 +64,15 @@ namespace ExpenseProcessingSystem.Services.Check
             /// Drawing information into the document. Please note that x and y coordinates
             /// are in points.
             // Payee Information
-            DrawTextToPdf(gfx, "***" + cd.Payee + "***", font, payeeCoord);
+            if(cd.Payee.Length >= int.Parse(xelemVal.Element("Payee_NextLine_CharLength").Value))
+            {
+                DrawTextToPdfBox2(gfx, "***" + cd.Payee + "***", font, payeeCoord);
+            }
+            else
+            {
+                DrawTextToPdf(gfx, "***" + cd.Payee + "***", font, payeeCoord);
+            }
+            
 
             // Amount (Num) Information
             DrawTextToPdf(gfx, "***" + cd.Amount.ToString("N2") + "***", font, amNumCoord);
@@ -95,7 +107,17 @@ namespace ExpenseProcessingSystem.Services.Check
                                     XFont font, double[] coords)
         {
             XTextFormatter ttx = new XTextFormatter(gfx);
-            ttx.DrawString(toPrint, font, XBrushes.Black, new XRect(coords[0], coords[1], 500, 40));
+            ttx.DrawString(toPrint, font, XBrushes.Black, new XRect(coords[0], coords[1], 
+                int.Parse(xelemVal.Element("AmntWord_Field_Width").Value), int.Parse(xelemVal.Element("AmntWord_Field_Height").Value)));
+        }
+
+        private void DrawTextToPdfBox2(XGraphics gfx, string toPrint,
+                            XFont font, double[] coords)
+        {
+            XTextFormatter ttx = new XTextFormatter(gfx);
+            ttx.DrawString(toPrint, font, XBrushes.Black, new XRect(coords[0], coords[1], 
+                int.Parse(xelemVal.Element("Payee_Field_Width").Value), 
+                int.Parse(xelemVal.Element("Payee_Field_Height").Value)));
         }
     }
 }

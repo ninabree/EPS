@@ -11,6 +11,8 @@ using System.Xml.Linq;
 using BIR_Form_Filler.Models;
 using System.Collections.Generic;
 using System.Globalization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
 
 namespace BIR_Form_Filler.Functions
 {
@@ -501,7 +503,26 @@ namespace BIR_Form_Filler.Functions
                     }
                     //====================================================================================
                     //Payor Signatory++================================================================
-                        worksheet.Cells["P62"].Value = fpbf.PayorSig.Name;
+                    worksheet.Cells["P62"].Value = fpbf.PayorSig.Name;
+                    string belowName = "";
+                    if (!String.IsNullOrEmpty(fpbf.PayorSig.Title)) belowName = fpbf.PayorSig.Title;
+                    if (!String.IsNullOrEmpty(belowName))
+                    {
+                        if (!String.IsNullOrEmpty(fpbf.PayorSig.Tin)) belowName = belowName + " / " + fpbf.PayorSig.Tin;
+                    }
+                    else
+                    {
+                        if (!String.IsNullOrEmpty(fpbf.PayorSig.Tin)) belowName = fpbf.PayorSig.Tin;
+                    }
+                    worksheet.Cells["P64"].Value = belowName;
+                    worksheet.Cells["P64"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    if (!String.IsNullOrEmpty(fpbf.PayorSig.ESigPath))
+                    {
+                        FileInfo imgSign = new FileInfo(fpbf.PayorSig.ESigPath);
+                        var eSignature = worksheet.Drawings.AddPicture("sigImage", imgSign);
+                        eSignature.SetSize(124, 53);
+                        eSignature.SetPosition(60, 45, 17, 3);
+                    }
                     //====================================================================================
                     package.Save();
                     package.Dispose();
