@@ -128,13 +128,19 @@ string value1 = xNC.Element("LOGO").Value
   </JSPAYROLL>
 
   <RETURNOFJSPAYROLL>
+    <!--COMPUTER SUSPENSE $-->
     <ACCOUNT class="entry1" id="ACCOUNT1">79</ACCOUNT>
-    <ACCOUNT class="entry1" id="ACCOUNT2">91</ACCOUNT>
+    <!--INTERENTITY LIAB-->
+    <ACCOUNT class="entry1" id="ACCOUNT2">142</ACCOUNT>
 
+    <!--INTERENTITY LIAB-->
     <ACCOUNT class="entry2" id="ACCOUNT1">91</ACCOUNT>
+    <!--COMPUTER SUSPENSE PHP-->
     <ACCOUNT class="entry2" id="ACCOUNT2">78</ACCOUNT>
 
+    <!--COMPUTER SUSPENSE PHP-->
     <ACCOUNT class="entry3" id="ACCOUNT1">78</ACCOUNT>
+    <!--PERSONNEL EXPENSE JAP STAFF-->
     <ACCOUNT class="entry3" id="ACCOUNT2">101</ACCOUNT>
   </RETURNOFJSPAYROLL>
 </NONCASHACCOUNTS>
