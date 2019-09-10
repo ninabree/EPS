@@ -305,7 +305,9 @@
             var dvdAmount = roundNumber((grossAmount / duration), 2);
 
             for (var i = 0; i < duration; i++){
-                var brkDate = new Date(Year, begMonth + i, day).toLocaleDateString("en-US");
+                var newMonth = Number(begMonth) + i;
+                var tempDateHolder = new Date(Year, newMonth , day);
+                var brkDate = tempDateHolder.getUTCFullYear() + "/" + (tempDateHolder.getUTCMonth() + 1) + "/" + day;
                 htmlTxt += "<input data-val='true' data-val-required='The amtDate field is required.' id='EntryCV_" + itemNo + "__amtDetails_" + i + "__amtDate' name='EntryCV[" + itemNo + "].amtDetails[" + i + "].amtDate' type='hidden' value='" + brkDate + "'>";
                 if (i == duration - 1) {
                     var lastAmt = grossAmount - (dvdAmount * i);
