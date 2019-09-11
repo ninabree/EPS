@@ -439,12 +439,21 @@ namespace BIR_Form_Filler.Functions
                     //Income Payments Subject to Expanded Withholding Tax
                     {
                         int index = 38;
+                        int height = 11;
+                        int minchar = 35;
                         if (fpbf.IncomePay != null)
                         {
                             IEnumerator<PaymentInfo> iterator = fpbf.IncomePay.GetEnumerator();
                             while (iterator.MoveNext())
                             {
                                 worksheet.Cells[$"A{index}"].Value = iterator.Current.Payments;
+                                if(iterator.Current.Payments.Length > minchar)
+                                {
+                                    double value = iterator.Current.Payments.Length / minchar;
+                                    int rnd = (int)Math.Round(value);
+                                    worksheet.Row(index).Height = height * rnd;
+                                }
+
                                 worksheet.Cells[$"L{index}"].Value = iterator.Current.Atc;
 
                                 if (iterator.Current.M1Quarter > 0)
@@ -473,12 +482,21 @@ namespace BIR_Form_Filler.Functions
                     //Money Payments Subject to Withholding of Business Tax (Government & Private)
                     { 
                         int index = 51;
+                        int height = 11;
+                        int minchar = 35;
                         if (fpbf.MoneyPay != null)
                         {
                             IEnumerator<PaymentInfo> iterator = fpbf.IncomePay.GetEnumerator();
                             while (iterator.MoveNext())
                             {
                                 worksheet.Cells[$"A{index}"].Value = iterator.Current.Payments;
+                                if (iterator.Current.Payments.Length > minchar)
+                                {
+                                    double value = iterator.Current.Payments.Length / minchar;
+                                    int rnd = (int)Math.Round(value);
+                                    worksheet.Row(index).Height = height * rnd;
+                                }
+
                                 worksheet.Cells[$"L{index}"].Value = iterator.Current.Atc;
 
                                 if (iterator.Current.M1Quarter > 0)
