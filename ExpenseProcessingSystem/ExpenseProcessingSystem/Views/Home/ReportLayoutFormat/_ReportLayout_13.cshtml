@@ -68,11 +68,10 @@
         margin: 0px 40px;
     }
     .m-l-r-35 {
-        margin: 0px 35px;
+        margin: 0px 50px 0px 35px;
     }
     #adjust-div {
         float: left;
-        min-width: 100%;
         width: auto;
         /*border-bottom: 1px solid #000;*/
         text-decoration: underline;
@@ -96,6 +95,14 @@
     .textdeco {
         border-bottom: 1px solid #000;
         text-decoration:none;
+        min-width: 100%;
+    }
+    .justified {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        align-content: space-between;
+        flex-wrap: wrap;
     }
 </style>
 @functions{
@@ -104,7 +111,7 @@
         return (isEmpty) ? "textdeco" : "";
     }
 }
-<table border="0" class="m-l-r-40 m-t-50 tbl-colps">
+<table border="0" class="m-l-r-35 m-t-50 tbl-colps">
     <colgroup>
         <col style="width:8.33%" />
         <col style="width:8.33%" />
@@ -198,18 +205,16 @@
         }
         <tr><td colspan="13"><p></p></td></tr>
         <tr>
-            <td colspan="13"><div class="dis-inline-block w-32p float-l">This is to authorize BDO Universal Bank - Corporate Center Branch to debit</div> <div class="fw-bold fw-italic dis-inline-block float-l w-32p">MIZUHO BANK, LTD. - MANILA BRANCH </div></td>
-        </tr>
-        <tr>
-            <td colspan="13"><div class="dis-inline-block w-32p float-l fw-bold fw-italic">ACCT. No. 003008019974</div><div class="dis-inline-block w-32p float-l"> today,</div> <div class="dis-inline-block w-32p float-l fw-underline"> @dateNowStr </div><div class="dis-inline-block w-32p float-l"> for the total amount of  Philippine Pesos: </div></td>
-        </tr>
-        <tr>
             <td colspan="13">
-                <div id="adjust-div" class="@AmountUnderline(Model.ReportLOI.Rep_AmountInString.Length <= 0)">
-                    @Model.ReportLOI.Rep_AmountInString @if (Model.ReportLOI.Rep_AmountInString.Length <= 0)
-                    {<p></p>}
+                <div class="justified">
+                    <div class="dis-inline-block w-32p float-l">This is to authorize BDO Universal Bank - Corporate Center Branch to debit</div> <div class="fw-bold fw-italic dis-inline-block float-l w-32p">MIZUHO BANK, LTD. - MANILA </div>
+                    <div class="dis-inline-block w-32p float-l fw-bold fw-italic">BRANCH ACCT. No. 003008019974</div><div class="dis-inline-block w-32p float-l"> today,</div> <div class="dis-inline-block w-32p float-l fw-underline"> @dateNowStr </div><div class="dis-inline-block w-32p float-l"> for the total amount of  Philippine Pesos: </div>
+                    <div id="adjust-div" class="@AmountUnderline(Model.ReportLOI.Rep_AmountInString.Length <= 0)">
+                         @Model.ReportLOI.Rep_AmountInString  @if (Model.ReportLOI.Rep_AmountInString.Length <= 0)
+                        {<p></p>}
+                    </div>
+                    <div id="adjust-div-l"> (PHP @Model.ReportLOI.Rep_Amount</div> <div id="phpright"> ), and credit to the account of:</div>
                 </div>
-                <div id="adjust-div-l"> (PHP @Model.ReportLOI.Rep_Amount</div> <div id="phpright"> ), and credit to the account of:</div>
             </td>
         </tr>
         <tr><td colspan="13"><p></p></td></tr>
