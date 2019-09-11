@@ -163,7 +163,7 @@
             }
         }
 
-        $('.BudgetEnterAction').on('keyup keypress', function (e) {
+        $('.BudgetEnterAction').on('keyup', function (e) {
             $(this).val($(this).val().replace("-", ""));
             var keyCode = e.keyCode || e.which;
             if (keyCode === 13) {
@@ -217,6 +217,7 @@
                 $('#loginModal').show().addClass('in');
                 $('#userName').val("");
                 $('#passWord').val("");
+                $('.lblInvalid').hide();
                 $('#userName').focus();
                 $('#loginSubmit').val('NEW');
             });
