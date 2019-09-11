@@ -759,7 +759,6 @@
             IEBDOPettyInputChange();
             LiqPhpBDOPettyInputChange();
         });
-
         $(".cashBDLiqTable").on("change", ".txtLiqNoPCS", function (e) {
             var cashBDLiqItemNo = $(this.parentNode)[0].parentNode.id; //jquery obj
 
@@ -783,7 +782,7 @@
         $(".cashBDLiqTable").on("keydown", "input.txtLiqNoPCS", function (e) {
             if (e.keyCode == 13) {
                 var tabInputLiq = document.querySelectorAll("input.txtLiqNoPCS");
-                tabInputLiq[document.activeElement.tabIndex].select();
+                tabInputLiq[(parseInt(document.activeElement.tabIndex) - 20)].select();
                 return false;
             }
         });
@@ -796,13 +795,11 @@
             $('#lblIEInput6').text(AC(round($("#txtIEAmount").val(), 2)));
             $('#lblIEInput9').text(AC(parseFloat($("#txtIEExRate").val())));
         });
-
         $('#IEInputTable').on("change", "#txtIEInput1", function (e) {
             $('#lblIEInput1').text(AC(round($("#txtIEInput1").val(), 2)));
             $('#lblIEInput7').text(AC(round($("#txtIEInput1").val(), 2)));
             $('#lblIEInput8').text(AC(round($("#txtIEInput1").val(), 2)));
         });
-
         $("table").on("click", "#saveLiqPhp", function (e) {
 
             e.stopImmediatePropagation();
@@ -887,7 +884,6 @@
                 $('#' + selectedRow).find('#imgLiq').attr('src', '/images/liqLogo_chk.png');
             }
         });
-
         $("table").on("click", "#saveLiqIE", function (e) {
 
             e.stopImmediatePropagation();

@@ -319,12 +319,20 @@ namespace ExpenseProcessingSystem.Controllers
                         {
                             closeFail = true;
                         }
+                        else
+                        {
+                            messages.Add("RBU is now closed.");
+                        }
                     }
                     break;
                 case "reOpenRBU":
                     if (!_service.closeTransaction(GlobalSystemValues.BRANCH_RBU, username, password, "reopen"))
                     {
                         closeFail = true;
+                    }
+                    else
+                    {
+                        messages.Add("RBU is now re-opened.");
                     }
                     break;
                 case "CloseFCDU":
@@ -335,12 +343,20 @@ namespace ExpenseProcessingSystem.Controllers
                         {
                             closeFail = true;
                         }
+                        else
+                        {
+                            messages.Add("FCDU is now closed.");
+                        }
                     }
                     break;
                 case "reOpenFCDU":
                     if (!_service.closeTransaction(GlobalSystemValues.BRANCH_FCDU, username, password, "reopen"))
                     {
                         closeFail = true;
+                    }
+                    else
+                    {
+                        messages.Add("FCDU is now re-opened.");
                     }
                     break;
                 case "Close":

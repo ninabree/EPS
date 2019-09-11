@@ -13350,7 +13350,7 @@ namespace ExpenseProcessingSystem.Services
         {
             List<DMAccountModel> accList = new List<DMAccountModel>();
             var acc = _context.DMAccount.Where(x => x.Account_isActive == true
-                        && x.Account_isDeleted == false).ToList().OrderBy(x => x.Account_Name);
+                        && x.Account_isDeleted == false).ToList().OrderByDescending(x => x.Account_No.Contains("H90")).ThenBy(x => x.Account_No);
             foreach (var i in acc)
             {
                 accList.Add(new DMAccountModel
@@ -13368,7 +13368,7 @@ namespace ExpenseProcessingSystem.Services
         //Account list including history
         public List<DMAccountModel> getAccountListIncHist()
         {
-            return _context.DMAccount.OrderBy(x => x.Account_No).ToList();
+            return _context.DMAccount.OrderByDescending(x => x.Account_No.Contains("H90")).ThenBy(x => x.Account_No).ToList();
         }
         //get dept name
         public string GetDeptName(int id)
