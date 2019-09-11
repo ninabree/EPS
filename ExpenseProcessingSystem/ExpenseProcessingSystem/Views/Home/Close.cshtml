@@ -427,9 +427,8 @@
     <input type="hidden" name="username" id="userString" />
     <input type="hidden" name="password" id="passString" />
 }
-<script type="text/javascript">
+    <script type="text/javascript">
     $(function () {
-         $(window).on("load", function () {
         @if (Model.messages.Count() > 0)
         {
             <text>
@@ -438,9 +437,17 @@
                 $('#divAlertWindow').show();
             </text>
         }
+         $(window).on("load", function () {
+
         });
 
         $("#pettyCashModal").on("click", "#brkDwnSubmit", function () {
+            if (parseFloat($('#CBD_closeBalance_pop').text().replace(/\,/g, "")) != parseFloat($('#ClosingTotal').text().replace(/\,/g, ""))) {
+                $('#divAlertWindow').find(".spanTitle").html("Error");
+                $('#alert').text("Cash breakdown is not equal to ending balance.");
+                $('#divAlertWindow').show();
+                return false;
+            }
             $.ajax({
                 type: 'POST',
                 url: "/Modal/closeSveBrkDown",
@@ -523,4 +530,4 @@
             return false;
         });
     });
-</script>
+    </script>

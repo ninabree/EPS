@@ -164,7 +164,9 @@
                 }
                 e.stopImmediatePropagation();
                 if ($(".cashBDAmountTotal").val().replace(/\,/g, "") != $("#reqAmount").val()) {
-                    alert("Amount do not match.");
+                    $('#divAlertWindow').find(".spanTitle").html("Error");
+                    $('#alert').text("Amount do not match.");
+                    $('#divAlertWindow').show();
                     return false;
                 }
 
