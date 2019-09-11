@@ -155,6 +155,14 @@ namespace ExpenseProcessingSystem.Services.Validations
                         {
                             return new ValidationResult("Only up to one Tax Account can be assigned.");
                         }
+                        if (dtl.ExpNCDtl_TR_ID > 0 && dtl.ExpNCDtl_Vendor_ID <= 0)
+                        {
+                            return new ValidationResult("If a tax rate is assigned, vendor is required.");
+                        }
+                        if (dtl.ExpNCDtl_Vendor_ID > 0 && dtl.ExpNCDtl_TR_ID <= 0)
+                        {
+                            return new ValidationResult("If a vendor is assigned, tax rate is required.");
+                        }
                         foreach (ExpenseEntryNCDtlAccViewModel acc in dtl.ExpenseEntryNCDtlAccs)
                         {
                             //if tax account is used, amount is required
