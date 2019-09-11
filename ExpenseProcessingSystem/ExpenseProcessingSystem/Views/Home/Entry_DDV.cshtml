@@ -17,13 +17,13 @@
 
 <div class="tabContent">
     <input id="_screen" type="hidden" value="ddv" />
-    @using (Html.BeginForm("AddNewDDV", "Home", FormMethod.Post, new { @class = "validate-form" ,@id = "inputForm" }))
+    @using (Html.BeginForm("AddNewDDV", "Home", FormMethod.Post, new { @class = "validate-form", @id = "inputForm" }))
     {
-    <div id="tbl-lbl" class="flex-sb">
-        <div class="dis-inline-block w-20">Date: <p class="dis-inline-block w-70">@Html.EditorFor(m => m.expenseDate, new { htmlAttributes = new { @class = "input w-97", @type = "date", @readonly = "readonly", @id = "entryDate" } })</p> </div>
-        <div class="dis-inline-block"><p class="dis-inline-block">@Html.TextBoxFor(model => model.expenseYear, new { @readonly = "true", @class = "input" })</p> - <p class="dis-inline-block">@Html.TextBoxFor(model => model.expenseId, new { @readonly = "true", @class = "input" })</p></div>
-        <div class="dis-inline-block float-r"></div>
-    </div>
+        <div id="tbl-lbl" class="flex-sb">
+            <div class="dis-inline-block w-20">Date: <p class="dis-inline-block w-70">@Html.EditorFor(m => m.expenseDate, new { htmlAttributes = new { @class = "input w-97", @type = "date", @readonly = "readonly", @id = "entryDate" } })</p> </div>
+            <div class="dis-inline-block"><p class="dis-inline-block">@Html.TextBoxFor(model => model.expenseYear, new { @readonly = "true", @class = "input" })</p> - <p class="dis-inline-block">@Html.TextBoxFor(model => model.expenseId, new { @readonly = "true", @class = "input" })</p></div>
+            <div class="dis-inline-block float-r"></div>
+        </div>
         <div id="tbl-lbl">
             <div class="dis-inline-block"><p>Payee:</p> </div>
             <div class="dis-inline-block">
@@ -205,7 +205,7 @@
         var modalDivHeader2 = $(modalDiv2).find('.modal-header2');
         var modalDivBody2 = $(modalDiv2).find('.modal-body2');
         var modalDivFooter2 = $(modalDiv2).find('.modal-footer2');
-    
+
         function eachTr() {
             //Enable VAT/EWT dropdown list if corresponding checkbox is checked
             var trs = $("#inputTable").find("tbody").find("tr");
@@ -374,7 +374,7 @@
             } else {
                 $('#alert').text("Kindly input the GBase Remarks Title before entering Inter Entity values.");
                 $('#divAlertWindow').show();
-            }    
+            }
         });
 
         //EWT
@@ -494,7 +494,7 @@
             $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkEwt").prop('disabled', true);
             $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkVat").prop("checked", false);
             $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkEwt").prop("checked", false);
-            
+
             $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkVat").trigger("change");
             $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkEwt").trigger("change");
             computeValuesDDV($("#" + pNode)[0]);
@@ -726,3 +726,4 @@
     };
 </script>
 <script type="text/javascript" src="~/js/EntryScripts.js"></script>
+<script type="text/javascript" src="~/js/HighlightTab.js"></script>

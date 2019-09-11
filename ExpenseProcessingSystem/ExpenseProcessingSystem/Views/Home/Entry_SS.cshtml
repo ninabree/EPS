@@ -171,7 +171,7 @@
     <input type="hidden" id="phpID" value="@Model.phpCurrID" />
     <input type="hidden" id="phpAbbrv" value="@Model.phpAbbrev" />
     <input type="hidden" id="phpMasterID" value="@Model.phpCurrMasterID" />
-    <input type="hidden" id="yenID" value="@Model.yenCurrID"/>
+    <input type="hidden" id="yenID" value="@Model.yenCurrID" />
     <input type="hidden" id="yenAbbrv" value="@Model.yenAbbrev" />
     <input type="hidden" id="yenMasterID" value="@Model.yenCurrMasterID" />
     <div id="modalDiv">
@@ -581,7 +581,7 @@
             cashSubTotal += Number(credCash[i].value);
         }
 
-        $("#grossTotal").val(roundNumber(grossTotal,2));
+        $("#grossTotal").val(roundNumber(grossTotal, 2));
         $("#credEwtTotal").val(roundNumber(ewtSubTotal, 2));
         $("#credCashTotal").val(roundNumber(cashSubTotal, 2));
         $("#credTotal").val(roundNumber(Number(ewtSubTotal + cashSubTotal), 2));
@@ -598,3 +598,4 @@
         }
     };
 </script>
+<script type="text/javascript" src="~/js/HighlightTab.js"></script>
