@@ -211,7 +211,7 @@
                                         }
                                     </select>
                                 </td>
-                                <td class="@SetRateClass(@Model.EntryNC.NC_Category_ID, @i)">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Inter_Rate, @getHtmlAttributes(@Model.EntryNC.NC_Category_ID, @i))</td>
+                                <td class="@SetRateClass(@Model.EntryNC.NC_Category_ID, @i)">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Inter_Rate, @getHtmlAttributes(@Model.EntryNC.NC_Category_ID, @i))</td>
                                 @* DEBIT *@
                                 <td id="curr_sel[@i]_[0]">
                                     <select id="curr[@i]_[0]" class="w-full input curr-sel misc-curr-0 db" name="curr[@i]_[0]">
@@ -1073,7 +1073,6 @@
             var totalCSCredit = 0;
 
             var subtotalPCRPettyDeb = 0;
-            var subtotalCredMisc = 0;
             var subtotalPCRPettyCred = 0;
             var subtotalPCRCompDeb = 0;
             var subtotalPCRCompCred = 0;
@@ -1100,12 +1099,16 @@
                             subtotalDeb += debitVal;
                         }
                     } else if (categoryID == "11") {
-                        debitVal = parseFloat($(".amt-db-" + idNo + "-" + ind + "").val());
-                        var rateVal = parseFloat($("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + ind + "__ExpNCDtlAcc_Inter_Rate']").val());
-                        if (rateVal != 0) {
-                            debitVal *= rateVal;
+                        var miscInd = 0;
+                        while (miscInd < 4) {
+                            debitVal = parseFloat($(".amt-db-" + idNo + "-" + miscInd + "").val());
+                            //var rateVal = parseFloat($("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + ind + "__ExpNCDtlAcc_Inter_Rate']").val());
+                            //if (rateVal != 0) {
+                            //    debitVal *= rateVal;
+                            //}
+                            subtotalDeb += debitVal;
+                            miscInd += 1;
                         }
-                        subtotalDeb += debitVal;
                     } else {
                         subtotalDeb += debitVal;
                     }
@@ -1129,14 +1132,18 @@
                         $(el).parent().siblings().find("td[id='cred_" + idNo + "']").find("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + tempInd + "__ExpNCDtlAcc_Amount']").val(debitVal);
                     }
                 });
-                //collect values for Credit
-                $(element).find("td[id='cred_" + idNo + "']").each(function (ind, el) {
-                    subtotalCred += parseFloat($(el).find("[id$='__ExpNCDtlAcc_Amount']").val());
-                });
+                //collect values for Subt Total Credit
+                if (categoryID == "11") {
+                    //values handled separately for Misc Entries
+                } else {
+                    $(element).find("td[id='cred_" + idNo + "']").each(function (ind, el) {
+                        subtotalCred += parseFloat($(el).find("[id$='__ExpNCDtlAcc_Amount']").val());
+                    });
+                }
 
                 //In RETURN OF JSPAYROLL, set value to 2nd Entry Debit
-                if ((categoryID == "9") && (idNo == 1) && ($(element).find("#EntryNC_ExpenseEntryNCDtls_1__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Inter_Rate").length != 0)) {
-                    var rateVal = $(element).find("#EntryNC_ExpenseEntryNCDtls_1__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Inter_Rate").val();
+                if ((categoryID == "9") && (idNo == 1) && ($(element).find("#EntryNC_ExpenseEntryNCDtls_1__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Inter_Rate").length != 0)) {
+                    var rateVal = $(element).find("#EntryNC_ExpenseEntryNCDtls_1__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Inter_Rate").val();
                     var debitVal = $("#EntryNC_ExpenseEntryNCDtls_1__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount").val();
                     if (((rateVal != "0") && ($.isNumeric(rateVal))) && ((debitVal != "0") && ($.isNumeric(debitVal)))) {
                         var credVal = parseFloat(rateVal) * parseFloat(debitVal);
@@ -1214,8 +1221,10 @@
                     });
                 }
 
-
                 totalDebit += parseFloat(subtotalDeb);
+
+                var subtotalCredMisc = 0;
+
                 if (categoryID != "11") {
                     totalCredit += parseFloat(subtotalCred);
                 } else if (categoryID == "11") {
@@ -1230,10 +1239,10 @@
                 totalCSCredit += parseFloat(subtotalCSCred);
             });
 
+            //Populate Values of Subtotals and Totals
             $("#EntryNC_NC_DebitAmt").val(parseFloat(totalDebit).toFixed(2));
             $("#EntryNC_NC_CredAmt").val(parseFloat(totalCredit).toFixed(2));
             $("#EntryNC_NC_TotalAmt").val(parseFloat(totalDebit).toFixed(2));
-
 
             $("#EntryNC_NC_IE_DebitAmt").val(parseFloat(subtotalIEDeb).toFixed(2));
             $("#EntryNC_NC_IE_CredAmt").val(parseFloat(subtotalIECred).toFixed(2));
