@@ -119,6 +119,87 @@ namespace ExpenseProcessingSystem.Services.Validations
             }
         }
     }
+
+    public class JSPValidations : ValidationAttribute
+    {
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            try
+            {
+                var name = validationContext.DisplayName;
+                var data = (EntryNCViewModelList)validationContext.ObjectInstance;
+                if (data.EntryNC.NC_Category_ID == GlobalSystemValues.NC_JS_PAYROLL)
+                {
+                    int count = 0;
+                    while(count < 5)
+                    {
+                        if (data.EntryNC.ExpenseEntryNCDtls[count].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount <= 0)
+                        {
+                            return new ValidationResult("All fields in JS Payroll needs to be inputted accordingly.");
+                        }
+                        count++;
+                    }
+                }
+                return ValidationResult.Success;
+            }
+            catch (Exception ex)
+            {
+                //sample fatal error log
+                Log.Fatal(ex, "User: {user}, StackTrace : {trace}, Error Message: {message}", "[UserID]", ex.StackTrace, ex.Message);
+                return new ValidationResult("Invalid input");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
+        }
+    }
+    public class DebitCreditNotNullValidations : ValidationAttribute
+    {
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            try
+            {
+                var name = validationContext.DisplayName;
+                var data = (EntryNCViewModelList)validationContext.ObjectInstance;
+                if (data.EntryNC.NC_Category_ID == GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES)
+                {
+                    foreach (ExpenseEntryNCDtlViewModel dtl in data.EntryNC.ExpenseEntryNCDtls)
+                    {
+                        decimal dbAmt = 0;
+                        decimal cdAmt = 0;
+                        foreach (ExpenseEntryNCDtlAccViewModel accs in dtl.ExpenseEntryNCDtlAccs)
+                        {
+                            if (accs.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
+                            {
+                                dbAmt += accs.ExpNCDtlAcc_Amount;
+                            }
+                            else if (accs.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_CREDIT ||
+                                   accs.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_EWT)
+                            {
+                                cdAmt += accs.ExpNCDtlAcc_Amount;
+                            }
+                        }
+                        if ((dbAmt == 0) || (cdAmt == 0))
+                        {
+                            return new ValidationResult("Debit and Credit amount needs to be assigned accordingly.");
+                        }
+                    }
+                }
+                return ValidationResult.Success;
+            }
+            catch (Exception ex)
+            {
+                //sample fatal error log
+                Log.Fatal(ex, "User: {user}, StackTrace : {trace}, Error Message: {message}", "[UserID]", ex.StackTrace, ex.Message);
+                return new ValidationResult("Invalid input");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
+        }
+    }
     public class TaxAccountValidations : ValidationAttribute
     {
         private readonly string _ewtID;

@@ -10369,11 +10369,24 @@ namespace ExpenseProcessingSystem.Services
             if (_modelState.IsValid)
             {
                 List<ExpenseEntryNCDtlModel> expenseDtls = new List<ExpenseEntryNCDtlModel>();
-
+                decimal dbAmt = 0;
+                decimal cdAmt = 0;
                 foreach (var ncDtls in entryModel.EntryNC.ExpenseEntryNCDtls)
                 {
+                    //checks if debit and credit have values
+                    foreach (var accs in ncDtls.ExpenseEntryNCDtlAccs)
+                    {
+                        if (accs.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
+                        {
+                            dbAmt += accs.ExpNCDtlAcc_Amount;
+                        }else if (accs.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_CREDIT ||
+                                accs.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_EWT)
+                        {
+                            cdAmt += accs.ExpNCDtlAcc_Amount;
+                        }
+                    }
                     //Only if Debit and Credit is Not Equal to 0
-                    if ((ncDtls.ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount != 0) && (ncDtls.ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Amount != 0))
+                    if ((dbAmt != 0) && (cdAmt != 0))
                     {
                         List<ExpenseEntryNCDtlAccModel> accountDtls = new List<ExpenseEntryNCDtlAccModel>();
                         foreach (var accDtls in ncDtls.ExpenseEntryNCDtlAccs)

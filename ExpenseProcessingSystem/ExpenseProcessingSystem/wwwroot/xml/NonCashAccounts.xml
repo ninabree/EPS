@@ -131,7 +131,7 @@ string value1 = xNC.Element("LOGO").Value
     <!--COMPUTER SUSPENSE $-->
     <ACCOUNT class="entry1" id="ACCOUNT1">79</ACCOUNT>
     <!--INTERENTITY LIAB-->
-    <ACCOUNT class="entry1" id="ACCOUNT2">142</ACCOUNT>
+    <ACCOUNT class="entry1" id="ACCOUNT2">133</ACCOUNT>
 
     <!--INTERENTITY LIAB-->
     <ACCOUNT class="entry2" id="ACCOUNT1">91</ACCOUNT>
