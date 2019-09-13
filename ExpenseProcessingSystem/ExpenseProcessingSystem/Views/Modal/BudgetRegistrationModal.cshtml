@@ -53,7 +53,7 @@
                                     @Html.TextBoxFor(x => Model[i].BM_Budget_Current, "{0:#,##0.00#}", new { @class = "input100 txtCurrBudget", style = "text-align:right;", @readonly = "readonly", tabindex = -1 })
                                 </td>
                                 <td>
-                                    @Html.TextBoxFor(x => Model[i].BM_Budget_Amount, "{0:#,##0.00#}", new { @class = "input100 txtNewBudget BudgetEnterAction", @type = "Number", @min = "0", style = "text-align:right;", tabindex = @i + 1 })
+                                    @Html.TextBoxFor(x => Model[i].BM_Budget_Amount, "{0:#,##0.00#}", new { @class = "input100 txtNewBudget BudgetEnterAction", @type = "Number", @min = "0", style = "text-align:right;", step="any", tabindex = @i + 1 })
                                 </td>
                                 <td style="text-align:center"><input type="checkbox" id="chk_@i" class="chkRetain"></td>
                             </tr>
