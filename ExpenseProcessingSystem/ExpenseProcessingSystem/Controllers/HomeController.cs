@@ -5894,12 +5894,12 @@ namespace ExpenseProcessingSystem.Controllers
                 if (inputItem.inter_entity)
                 {
                     
-                    amountCredit += (inputItem.interDetails.Inter_Check1) ? inputItem.interDetails.Inter_Currency1_Amount : 
-                        (inputItem.interDetails.Inter_Check2) ? inputItem.interDetails.Inter_Currency2_Amount : 0;
+                    amountCredit += inputItem.interDetails.Inter_Currency1_Amount;
                     vvm.accountCredit.Add(new accountList
                     {
                         account = "CITI MNL",
-                        amount = inputItem.interDetails.Inter_Convert2_Amount,
+                        amount = (inputItem.interDetails.Inter_Check1) ? inputItem.interDetails.Inter_Convert1_Amount :
+                        (inputItem.interDetails.Inter_Check2) ? inputItem.interDetails.Inter_Convert2_Amount : 0,
                         accountid = _service.getAccIDByMasterID(int.Parse(xelemInter.Elements("ACCOUNT").Where(x=> x.Attribute("id").Value == "ACCOUNT2" && x.Attribute("class").Value == "entry3").FirstOrDefault().Value))
                     });
                 }

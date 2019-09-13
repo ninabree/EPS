@@ -386,10 +386,11 @@
 
                 //trigger recomputation of debit and credit
                 computeValuesDDVInter($("#item_" + itemNo)[0]);
+                alert("#item_" + itemNo);
                 $('.modal-body2').empty();
                 $('.myModal2').modal('hide');
             }
-        });
+        });  
         // ---------------------- [[ FUNCTIONS ]] ----------------------
         function updateCurrency2() {
             var val = $(".curr2").find("option:selected").text();
@@ -544,6 +545,8 @@
         ////TEMP FIX
         function computeValuesDDVInter(parent) {
             var pNode = parent;
+            alert("PNODE --> " + pNode.id);
+            alert("#" + pNode.id + " .txtGross");
             var grossAmt = $("#" + pNode.id + " .txtGross").val();
             
             $("#" + pNode.id + " .txtGross").attr("value", grossAmt);

@@ -32,7 +32,6 @@ namespace ExpenseProcessingSystem.ViewModels
         public string Account_Cust { get; set; }
 
         [Display(Name = "Account Div")]
-        [NotNullValidations, TextValidation]
         public string Account_Div { get; set; }
 
         [Display(Name = "Account Fund")]

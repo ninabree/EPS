@@ -3,8 +3,9 @@
     Layout = null;
     var cs = Model.accList.FirstOrDefault(x => x.accName == "CS").accID;
     var csUSD = Model.accList.FirstOrDefault(x => x.accName == "CSU").accID;
-    var intrRF = Model.accList.FirstOrDefault(x => x.accName == "IERF").accID;
-    var intrFR = Model.accList.FirstOrDefault(x => x.accName == "IEFR").accID;
+    var IERF_RET = Model.accList.FirstOrDefault(x => x.accName == "IERF_RET").accID;
+    var IERF_JS = Model.accList.FirstOrDefault(x => x.accName == "IERF_JS").accID;
+    var IEFR_JS = Model.accList.FirstOrDefault(x => x.accName == "IEFR_JS").accID;
     var petty = Model.accList.FirstOrDefault(x => x.accName == "PC").accID;
     var ewt = Model.accList.FirstOrDefault(x => x.accName == "ET").accID;
     var usd = ViewBag.USDmstr;
@@ -15,9 +16,9 @@
 @using ExpenseProcessingSystem.ViewModels.Entry
 @model EntryNCViewModelList
 @functions{
-    public string SetClassCompSusp(int catID, int csID, string suffix, int cs, int csUSD, int intrRF, int intrFR, int petty)
+    public string SetClassCompSusp(int catID, int csID, string suffix, int cs, int csUSD, int IERF_RET, int IERF_JS, int IEFR_JS, int petty)
     {
-        return (csID == cs && catID == 7) ? "nc-cdd-comp-" + suffix : (csID == cs && catID != 9) ? "nc-comp-susp-" + suffix : ((csID == cs && catID == 8) || ((csID == csUSD) && catID == 9)) ? "nc-comp-susp-" + suffix : (csID == petty) ? "nc-cdd-petty-" + suffix : (csID == intrRF || csID == intrFR) ? "nc-inter-" + suffix : "";
+        return (csID == cs && catID == 7) ? "nc-cdd-comp-" + suffix : (csID == cs && catID != 9) ? "nc-comp-susp-" + suffix : ((csID == cs && catID == 8) || ((csID == csUSD) && catID == 9)) ? "nc-comp-susp-" + suffix : (csID == petty) ? "nc-cdd-petty-" + suffix : (csID == IERF_JS || csID == IEFR_JS || csID == IERF_RET) ? "nc-inter-" + suffix : "";
     }
     object getHtmlAttributes(int catID, int count)
     {
@@ -483,7 +484,7 @@
                                             @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_Name, new { @readonly = "true" })
                                         }
                                     </td>
-                                    <td class="@SetClass(@Model.EntryNC.NC_Category_ID, @i, "db")" id="deb_@i">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount, @getHtmlAttributesDebit(@Model.EntryNC.NC_Category_ID, @i, @SetClassCompSusp(Model.EntryNC.NC_Category_ID, Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID, "db", cs, csUSD, intrRF, intrFR, petty)))</td>
+                                    <td class="@SetClass(@Model.EntryNC.NC_Category_ID, @i, "db")" id="deb_@i">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount, @getHtmlAttributesDebit(@Model.EntryNC.NC_Category_ID, @i, @SetClassCompSusp(Model.EntryNC.NC_Category_ID, Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID, "db", cs, csUSD, IERF_RET, IERF_JS, IEFR_JS, petty)))</td>
                                     <td></td>
                                     <td></td>
                                 }
@@ -496,7 +497,7 @@
                                     <td class="@SetClass(@Model.EntryNC.NC_Category_ID, @i, "cd")" id="cred_@i">
                                         @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount,
                                         @getHtmlAttributesCredit(@Model.EntryNC.NC_Category_ID, @i,
-                                        @SetClassCompSusp(Model.EntryNC.NC_Category_ID, Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID, "cd", cs, csUSD, intrRF, intrFR, petty)))
+                                        @SetClassCompSusp(Model.EntryNC.NC_Category_ID, Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID, "cd", cs, csUSD, IERF_RET, IERF_JS, IEFR_JS, petty)))
                                     </td>
                                 }
                                 @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID)
@@ -520,7 +521,7 @@
                                         <td class="@SetClass(@Model.EntryNC.NC_Category_ID, @i, "db")" id="deb_@i">
                                                 @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Amount, 
                                                @getHtmlAttributesDebit(@Model.EntryNC.NC_Category_ID, @i, 
-                                               @SetClassCompSusp(Model.EntryNC.NC_Category_ID, Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_ID, "db", cs, csUSD, intrRF, intrFR, petty)))</td>
+                                               @SetClassCompSusp(Model.EntryNC.NC_Category_ID, Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_ID, "db", cs, csUSD, IERF_RET, IERF_JS, IEFR_JS, petty)))</td>
                                         <td></td>
                                         <td></td>
                                     }
@@ -535,7 +536,7 @@
                                         <td class="@SetClass(@Model.EntryNC.NC_Category_ID, @i, "cd")" id="cred_@i">
                                             @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Amount,
                                             @getHtmlAttributesCredit(@Model.EntryNC.NC_Category_ID, @i,
-                                            @SetClassCompSusp(Model.EntryNC.NC_Category_ID, Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_ID, "cd", cs, csUSD, intrRF, intrFR, petty)))
+                                            @SetClassCompSusp(Model.EntryNC.NC_Category_ID, Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_ID, "cd", cs, csUSD, IERF_RET, IERF_JS, IEFR_JS, petty)))
                                         </td>
                                     }
                                     @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_ID)
@@ -665,8 +666,8 @@
                     <td colspan="1" class="border-solid NC_readonly_row">@Html.TextBoxFor(x => x.EntryNC.NC_CS_CredAmt, new { @readonly = "true", @class = "NumberOnlyOneDecimal" })</td>
                 </tr>
                 <tr>
-                    <td colspan="5">Total</td>
-                    <td colspan="3" class="border-solid NC_readonly_row">@Html.TextBoxFor(x => x.EntryNC.NC_CS_TotalAmt, new { @readonly = "true", @class = "NumberOnlyOneDecimal" })</td>
+                    <td colspan="5"></td>
+                    <td colspan="3" class="border-solid NC_readonly_row">@Html.HiddenFor(x => x.EntryNC.NC_CS_TotalAmt, new { @readonly = "true", @class = "NumberOnlyOneDecimal" })</td>
                 </tr>
                 <tr>
                     <td colspan="5"></td>
@@ -684,8 +685,8 @@
                     <td colspan="1" class="border-solid NC_readonly_row">@Html.TextBoxFor(x => x.EntryNC.NC_IE_CredAmt, new { @readonly = "true", @class = "NumberOnlyOneDecimal" })</td>
                 </tr>
                 <tr>
-                    <td colspan="5">Total</td>
-                    <td colspan="3" class="border-solid NC_readonly_row">@Html.TextBoxFor(x => x.EntryNC.NC_IE_TotalAmt, new { @readonly = "true", @class = "NumberOnlyOneDecimal" })</td>
+                    <td colspan="5"></td>
+                    <td colspan="3" class="border-solid NC_readonly_row">@Html.HiddenFor(x => x.EntryNC.NC_IE_TotalAmt, new { @readonly = "true", @class = "NumberOnlyOneDecimal" })</td>
                 </tr>
             </table>
             @Html.HiddenFor(x => x.EntryNC.NC_DebitAmt)
