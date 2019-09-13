@@ -1430,7 +1430,7 @@ namespace ExpenseProcessingSystem.ConstantData
                 }
             };
         }
-        public static List<ExpenseEntryNCDtlViewModel> Populate_CDD_Instruc_Sheet(DMCurrencyModel currDetailsPHP, DMCurrencyModel currDetailsUSD)
+        public static List<ExpenseEntryNCDtlViewModel> Populate_CDD_Instruc_Sheet(DMCurrencyModel currDetailsPHP, DMCurrencyModel currDetailsUSD, List<CONSTANT_NC_VALS> accList)
         {
             return new List<ExpenseEntryNCDtlViewModel>()
             {
@@ -1441,8 +1441,8 @@ namespace ExpenseProcessingSystem.ConstantData
                     ExpenseEntryNCDtlAccs = new List<ExpenseEntryNCDtlAccViewModel>
                     {
                         new ExpenseEntryNCDtlAccViewModel{
-                            ExpNCDtlAcc_Acc_ID = 496,
-                            ExpNCDtlAcc_Acc_Name = "F79789151137 - USD CASH",
+                            ExpNCDtlAcc_Acc_ID = accList[0].accID,
+                            ExpNCDtlAcc_Acc_Name = accList[0].accNo + " - " + accList[0].accName,
                             ExpNCDtlAcc_Amount = 0,
                             ExpNCDtlAcc_Curr_ID = currDetailsUSD.Curr_ID,
                             ExpNCDtlAcc_Curr_Name = currDetailsUSD.Curr_CCY_ABBR,
@@ -1450,8 +1450,8 @@ namespace ExpenseProcessingSystem.ConstantData
                             ExpNCDtlAcc_Type_ID = GlobalSystemValues.NC_DEBIT
                         },
                         new ExpenseEntryNCDtlAccViewModel{
-                            ExpNCDtlAcc_Acc_ID = 495,
-                            ExpNCDtlAcc_Acc_Name = "B79-789-111111 - COMPUTER SUSPENSE USD",
+                            ExpNCDtlAcc_Acc_ID = accList[1].accID,
+                            ExpNCDtlAcc_Acc_Name = accList[1].accNo + " - " + accList[1].accName,
                             ExpNCDtlAcc_Amount = 0,
                             ExpNCDtlAcc_Curr_ID = currDetailsUSD.Curr_ID,
                             ExpNCDtlAcc_Curr_Name = currDetailsUSD.Curr_CCY_ABBR,

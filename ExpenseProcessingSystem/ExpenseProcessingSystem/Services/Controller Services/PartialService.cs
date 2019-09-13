@@ -112,7 +112,10 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             var acc_interRF_RET = getNCAccs("/NONCASHACCOUNTS/RETURNOFJSPAYROLL/ACCOUNT[@class='entry1' and @id='ACCOUNT2']");
             var acc_interRF_JS = getNCAccs("/NONCASHACCOUNTS/JSPAYROLL/ACCOUNT[@class='entry1' and @id='ACCOUNT2']");
             var acc_interFR_JS = getNCAccs("/NONCASHACCOUNTS/JSPAYROLL/ACCOUNT[@class='entry4' and @id='ACCOUNT2']");
+            var acc_interFR_JS_2 = getNCAccs("/NONCASHACCOUNTS/JSPAYROLL/ACCOUNT[@class='entry3' and @id='ACCOUNT1']");
             var acc_ewtTax = getNCAccs("/NONCASHACCOUNTS/PSSC/ACCOUNT[@class='entry1' and @id='ACCOUNT2']");
+            var acc_usdCash = getNCAccs("/NONCASHACCOUNTS/RETURNOFJSPAYROLLCDD/ACCOUNT[@class='entry1' and @id='ACCOUNT1']");
+            var acc_yenCash = getNCAccs("/NONCASHACCOUNTS/RETURNOFJSPAYROLLCDD/ACCOUNT[@class='entry1' and @id='ACCOUNT3']");
             //Populate Constant NC Accounts
             List<CONSTANT_NC_VALS> valList = new List<CONSTANT_NC_VALS>
             {
@@ -148,6 +151,12 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 },
                 new CONSTANT_NC_VALS()
                 {
+                    accID = acc_interFR_JS_2.FirstOrDefault().accID,
+                    accNo = acc_interFR_JS_2.FirstOrDefault().accNo+"",
+                    accName = "IEFR_JS_2"
+                },
+                new CONSTANT_NC_VALS()
+                {
                     accID = acc_pettyCash.FirstOrDefault().accID,
                     accNo = acc_pettyCash.FirstOrDefault().accNo+"",
                     accName = "PC"
@@ -157,6 +166,18 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     accID = acc_ewtTax.FirstOrDefault().accID,
                     accNo = acc_ewtTax.FirstOrDefault().accNo+"",
                     accName = "ET"
+                },
+                new CONSTANT_NC_VALS()
+                {
+                    accID = acc_usdCash.FirstOrDefault().accID,
+                    accNo = acc_usdCash.FirstOrDefault().accNo+"",
+                    accName = "USD"
+                },
+                new CONSTANT_NC_VALS()
+                {
+                    accID = acc_yenCash.FirstOrDefault().accID,
+                    accNo = acc_yenCash.FirstOrDefault().accNo+"",
+                    accName = "YEN"
                 }
             };
             return valList;
