@@ -109,8 +109,9 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             var acc_pettyCash = getNCAccs("/NONCASHACCOUNTS/PCR/ACCOUNT[@class='entry1' and @id='ACCOUNT1']");
             var acc_computerSus = getNCAccs("/NONCASHACCOUNTS/PCR/ACCOUNT[@class='entry1' and @id='ACCOUNT2']");
             var acc_computerSusUSD = getNCAccs("/NONCASHACCOUNTS/RETURNOFJSPAYROLL/ACCOUNT[@class='entry1' and @id='ACCOUNT1']");
-            var acc_interRF = getNCAccs("/NONCASHACCOUNTS/RETURNOFJSPAYROLL/ACCOUNT[@class='entry1' and @id='ACCOUNT2']");
-            var acc_interFR = getNCAccs("/NONCASHACCOUNTS/JSPAYROLL/ACCOUNT[@class='entry3' and @id='ACCOUNT1']");
+            var acc_interRF_RET = getNCAccs("/NONCASHACCOUNTS/RETURNOFJSPAYROLL/ACCOUNT[@class='entry1' and @id='ACCOUNT2']");
+            var acc_interRF_JS = getNCAccs("/NONCASHACCOUNTS/JSPAYROLL/ACCOUNT[@class='entry1' and @id='ACCOUNT2']");
+            var acc_interFR_JS = getNCAccs("/NONCASHACCOUNTS/JSPAYROLL/ACCOUNT[@class='entry4' and @id='ACCOUNT2']");
             var acc_ewtTax = getNCAccs("/NONCASHACCOUNTS/PSSC/ACCOUNT[@class='entry1' and @id='ACCOUNT2']");
             //Populate Constant NC Accounts
             List<CONSTANT_NC_VALS> valList = new List<CONSTANT_NC_VALS>
@@ -129,15 +130,21 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 },
                 new CONSTANT_NC_VALS()
                 {
-                    accID = acc_interRF.FirstOrDefault().accID,
-                    accNo = acc_interRF.FirstOrDefault().accNo+"",
-                    accName = "IERF"
+                    accID = acc_interRF_RET.FirstOrDefault().accID,
+                    accNo = acc_interRF_RET.FirstOrDefault().accNo+"",
+                    accName = "IERF_RET"
                 },
                 new CONSTANT_NC_VALS()
                 {
-                    accID = acc_interFR.FirstOrDefault().accID,
-                    accNo = acc_interFR.FirstOrDefault().accNo+"",
-                    accName = "IEFR"
+                    accID = acc_interRF_JS.FirstOrDefault().accID,
+                    accNo = acc_interRF_JS.FirstOrDefault().accNo+"",
+                    accName = "IERF_JS"
+                },
+                new CONSTANT_NC_VALS()
+                {
+                    accID = acc_interFR_JS.FirstOrDefault().accID,
+                    accNo = acc_interFR_JS.FirstOrDefault().accNo+"",
+                    accName = "IEFR_JS"
                 },
                 new CONSTANT_NC_VALS()
                 {
