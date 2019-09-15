@@ -970,7 +970,6 @@
                     $(this).parent().siblings("[id^='cred_']").find("input").removeClass("nc-comp-susp-cd");
                 }
                 //if newly added entry selects INTER ENTITY AND CURR ID is USD
-                alert(("vals: " + vals + " IEFR_JS:" +@IEFR_JS  +" IEFR_JS_2:" +@IEFR_JS_2  +" IERF_JS:" +@IERF_JS +" IERF_RET:" +@IERF_RET+" currID:" + currID + " ViewBag.usdid:" + @ViewBag.usdid));
                 if ((vals == @IEFR_JS || vals == @IEFR_JS_2 || vals == @IERF_JS || vals == @IERF_RET) && currID == @ViewBag.usdid) {
                     $(this).parent().siblings("[id^='deb_']").find("input").addClass("nc-inter-db");
                 }else {
