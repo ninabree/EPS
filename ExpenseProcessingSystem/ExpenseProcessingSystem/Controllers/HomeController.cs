@@ -4207,6 +4207,24 @@ namespace ExpenseProcessingSystem.Controllers
                         _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_APPROVED, vm.Account_Creator_ID);
                         //----------------------------- NOTIF----------------------------------
                     }
+                    //Update Budget monitoring info for affected account budget information.
+                    foreach(var i in model)
+                    {
+                        int accID = i.Account_ID;
+                        int accMasterID = i.Account_MasterID;
+                        int accGrpMasterID = i.Account_Group_MasterID;
+                        if(i.Account_Status == GlobalSystemValues.getStatus(GlobalSystemValues.STATUS_EDIT))
+                        {
+                            var newAccInfo = _service.getAccountByMasterID(accMasterID);
+                            _service.UpdateBMIinfoByDMAccountEdit(accMasterID, newAccInfo.Account_ID, 
+                                newAccInfo.Account_Group_MasterID, GlobalSystemValues.STATUS_EDIT);
+                        }
+                        else if (i.Account_Status == GlobalSystemValues.getStatus(GlobalSystemValues.STATUS_DELETE))
+                        {
+                            _service.UpdateBMIinfoByDMAccountEdit(accMasterID, 0,
+                                0, GlobalSystemValues.STATUS_DELETE);
+                        }
+                    }
                 }
             }
 

@@ -2974,6 +2974,7 @@ namespace ExpenseProcessingSystem.Services
                             where bud.Budget_IsActive == true && bud.Budget_isDeleted == false &&
                             acc.Account_isActive == true && acc.Account_isDeleted == false &&
                             accGrp.AccountGroup_isActive == true && accGrp.AccountGroup_isDeleted == false
+                            orderby acc.Account_Budget_Code
                             select new
                             {
                                 bud.Budget_ID,
@@ -3010,6 +3011,30 @@ namespace ExpenseProcessingSystem.Services
             return bmvmList;
         }
 
+        public bool UpdateBMIinfoByDMAccountEdit(int AccMasterID, int newAccID, int newAccGrpMasterID, int action)
+        {
+            BudgetModel budget = _context.Budget.Where(x => x.Budget_Account_MasterID == AccMasterID &&
+                                                x.Budget_IsActive == true && x.Budget_isDeleted == false).FirstOrDefault();
+            if(budget == null)
+            {
+                return false;
+            }
+
+            if(action == GlobalSystemValues.STATUS_EDIT)
+            {
+                budget.Budget_Account_ID = newAccID;
+                _context.Entry(budget).State = EntityState.Modified;
+                _context.SaveChanges();
+            }
+            else if (action == GlobalSystemValues.STATUS_DELETE)
+            {
+                budget.Budget_IsActive = false;
+                budget.Budget_isDeleted = true;
+                _context.Entry(budget).State = EntityState.Modified;
+                _context.SaveChanges();
+            }
+            return true;
+        }
         // [Report]
         public IEnumerable<HomeReportOutputAPSWT_MModel> GetAPSWT_MData(int month, int year)
         {
@@ -3563,12 +3588,12 @@ namespace ExpenseProcessingSystem.Services
 
             //Get latest Budget of fiscal year of selected month/year of each account
             var accountList = _context.DMAccount.Where(x => x.Account_isActive == true && x.Account_isDeleted == false
-                                                        && x.Account_Fund == true).OrderBy(x => x.Account_Group_MasterID);
+                                                        && x.Account_Fund == true && x.Account_Group_MasterID != 0).OrderBy(x => x.Account_Group_MasterID);
             var accountGrpList = _context.DMAccountGroup.Where(x => x.AccountGroup_isActive == true && x.AccountGroup_isDeleted == false);
             var budgetList = _context.Budget.Where(x => x.Budget_Date_Registered.Date <= EndFiscal.Date)
                                                         .OrderByDescending(x => x.Budget_Date_Registered);
             int currGroup = accountList.First().Account_Group_MasterID;
-             decimal budgetAmount = 0.0M;
+            decimal budgetAmount = 0.0M;
 
 
             if (budgetList.Count() == 0M)
@@ -3585,7 +3610,8 @@ namespace ExpenseProcessingSystem.Services
 
             foreach (var i in accountList)
             {
-                var budget = budgetList.Where(x => x.Budget_Account_MasterID == i.Account_MasterID)
+                var budget = budgetList.Where(x => x.Budget_Account_MasterID == i.Account_MasterID
+                                            && x.Budget_IsActive == true && x.Budget_isDeleted == false)
                     .DefaultIfEmpty(new BudgetModel
                     {
                         Budget_Account_MasterID = i.Account_MasterID,
@@ -3598,10 +3624,16 @@ namespace ExpenseProcessingSystem.Services
                 }
                 else
                 {
+                    var accgrp = accountGrpList.Where(x => x.AccountGroup_MasterID == currGroup).FirstOrDefault();
+                    if(accgrp == null)
+                    {
+                        currGroup = i.Account_Group_MasterID;
+                        continue;
+                    }
                     accountCategory.Add(new AccGroupBudgetModel
                     {
                         StartOfTerm = startOfTerm,
-                        AccountGroupName = accountGrpList.Where(x => x.AccountGroup_MasterID == currGroup).FirstOrDefault().AccountGroup_Name,
+                        AccountGroupName = accgrp.AccountGroup_Name,
                         AccountGroupMasterID = currGroup,
                         Remarks = "Budget Amount - This Term",
                         Budget = budgetAmount

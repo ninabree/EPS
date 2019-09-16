@@ -1579,7 +1579,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 {
                     if(i.BM_Budget_Current != i.BM_Budget_Amount && i.BM_GWrite_StatusID != GlobalSystemValues.STATUS_PENDING)
                     {
-                        var currentInfo = allCurrBudgetInfo.Where(x => x.Budget_Account_ID == i.BM_Account_ID).FirstOrDefault();
+                        var currentInfo = allCurrBudgetInfo.Where(x => x.Budget_Account_MasterID == i.BM_Account_MasterID).FirstOrDefault();
                         if(currentInfo != null)
                         {
                             currentInfo.Budget_IsActive = false;
@@ -1706,7 +1706,6 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             _context.GwriteTransLists.AddRange(gtransList);
             _context.SaveChanges();
         }
-
 
         public IEnumerable<DMAccountModel> GetAccountListForBudgetMonitoring()
         {
