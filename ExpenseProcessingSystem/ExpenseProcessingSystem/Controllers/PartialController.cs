@@ -74,7 +74,7 @@ namespace ExpenseProcessingSystem.Controllers
                 }
                 else if (categoryID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL.ToString())
                 {
-                    viewModel.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_RETURN_OF_JSPAYROLL.Populate_CDD_Instruc_Sheet(currDtl, currDtlUSD);
+                    viewModel.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_RETURN_OF_JSPAYROLL.Populate_CDD_Instruc_Sheet(currDtl, currDtlUSD, _service.getNCAccs("/NONCASHACCOUNTS/RETURNOFJSPAYROLLCDD/ACCOUNT"));
                     viewModel.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpNCDtl_Remarks_Period = viewModel.EntryNC.NC_CS_Period;
                 }
             } else
@@ -118,7 +118,7 @@ namespace ExpenseProcessingSystem.Controllers
                 else if (categoryID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL.ToString())
                 {
                     viewModel.EntryNC = CONSTANT_NC_RETURN_OF_JSPAYROLL.Populate_RETURN_OF_JSPAYROLL(currDtl, currDtlUSD, _service.getNCAccs("/NONCASHACCOUNTS/RETURNOFJSPAYROLL/ACCOUNT"));
-                    viewModel.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_RETURN_OF_JSPAYROLL.Populate_CDD_Instruc_Sheet(currDtl, currDtlUSD);
+                    viewModel.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_RETURN_OF_JSPAYROLL.Populate_CDD_Instruc_Sheet(currDtl, currDtlUSD, _service.getNCAccs("/NONCASHACCOUNTS/RETURNOFJSPAYROLLCDD/ACCOUNT"));
                 }
                 else if (categoryID == GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES.ToString())
                 {
@@ -136,7 +136,11 @@ namespace ExpenseProcessingSystem.Controllers
                 }
             }
             ViewBag.phpid = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_PHP").Value)).Curr_ID;
+            ViewBag.usdid = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_US").Value)).Curr_ID;
+            ViewBag.yenid = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_Yen").Value)).Curr_ID;
             viewModel.taxaccID = viewModel.accList.FirstOrDefault(x => x.accName == "ET").accID;
+            viewModel.usdCashAccID = viewModel.accList.FirstOrDefault(x => x.accName == "USD").accID;
+            viewModel.yenCashAccID = viewModel.accList.FirstOrDefault(x => x.accName == "YEN").accID;
             return View("NCPartial", viewModel);
         }
 

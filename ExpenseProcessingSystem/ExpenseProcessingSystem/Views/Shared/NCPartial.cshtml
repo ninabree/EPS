@@ -5,7 +5,8 @@
     var csUSD = Model.accList.FirstOrDefault(x => x.accName == "CSU").accID;
     var IERF_RET = Model.accList.FirstOrDefault(x => x.accName == "IERF_RET").accID;
     var IERF_JS = Model.accList.FirstOrDefault(x => x.accName == "IERF_JS").accID;
-    var IEFR_JS = Model.accList.FirstOrDefault(x => x.accName == "IEFR_JS").accID;
+    var IEFR_JS = Model.accList.FirstOrDefault(x => x.accName == "IEFR_JS").accID; 
+    var IEFR_JS_2 = Model.accList.FirstOrDefault(x => x.accName == "IEFR_JS_2").accID;
     var petty = Model.accList.FirstOrDefault(x => x.accName == "PC").accID;
     var ewt = Model.accList.FirstOrDefault(x => x.accName == "ET").accID;
     var usd = ViewBag.USDmstr;
@@ -16,9 +17,9 @@
 @using ExpenseProcessingSystem.ViewModels.Entry
 @model EntryNCViewModelList
 @functions{
-    public string SetClassCompSusp(int catID, int csID, string suffix, int cs, int csUSD, int IERF_RET, int IERF_JS, int IEFR_JS, int petty)
+    public string SetClassCompSusp(int catID, int csID, string suffix, int cs, int csUSD, int IERF_RET, int IERF_JS, int IEFR_JS, int IEFR_JS_2, int petty)
     {
-        return (csID == cs && catID == 7) ? "nc-cdd-comp-" + suffix : (csID == cs && catID != 9) ? "nc-comp-susp-" + suffix : ((csID == cs && catID == 8) || ((csID == csUSD) && catID == 9)) ? "nc-comp-susp-" + suffix : (csID == petty) ? "nc-cdd-petty-" + suffix : (csID == IERF_JS || csID == IEFR_JS || csID == IERF_RET) ? "nc-inter-" + suffix : "";
+        return (csID == cs && catID == 7) ? "nc-cdd-comp-" + suffix : (csID == cs && catID != 9) ? "nc-comp-susp-" + suffix : ((csID == cs && catID == 8) || ((csID == csUSD) && catID == 9)) ? "nc-comp-susp-" + suffix : (csID == petty) ? "nc-cdd-petty-" + suffix : (csID == IERF_JS || csID == IEFR_JS || csID == IERF_RET || csID == IEFR_JS_2) ? "nc-inter-" + suffix : "";
     }
     object getHtmlAttributes(int catID, int count)
     {
@@ -468,11 +469,11 @@
                                             <select id="@Html.IdFor(x => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID)" class="w-full input curr-sel" name="@Html.NameFor(x => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID)">
                                                 @foreach (var groepModel in Model.currList)
                                                 {
-                                                    if (@groepModel.Value == @Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID + "")
+                                                    if (@groepModel.Value == ViewBag.usdid + "")
                                                     {
                                                         <option value="@groepModel.Value" selected>@groepModel.Text</option>
                                                     }
-                                                    else
+                                                    else if(@groepModel.Value == ViewBag.yenid + "")
                                                     {
                                                         <option value="@groepModel.Value">@groepModel.Text</option>
                                                     }
@@ -484,7 +485,7 @@
                                             @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_Name, new { @readonly = "true" })
                                         }
                                     </td>
-                                    <td class="@SetClass(@Model.EntryNC.NC_Category_ID, @i, "db")" id="deb_@i">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount, @getHtmlAttributesDebit(@Model.EntryNC.NC_Category_ID, @i, @SetClassCompSusp(Model.EntryNC.NC_Category_ID, Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID, "db", cs, csUSD, IERF_RET, IERF_JS, IEFR_JS, petty)))</td>
+                                    <td class="@SetClass(@Model.EntryNC.NC_Category_ID, @i, "db")" id="deb_@i">@Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount, @getHtmlAttributesDebit(@Model.EntryNC.NC_Category_ID, @i, @SetClassCompSusp(Model.EntryNC.NC_Category_ID, Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID, "db", cs, csUSD, IERF_RET, IERF_JS, IEFR_JS, IEFR_JS_2, petty)))</td>
                                     <td></td>
                                     <td></td>
                                 }
@@ -497,7 +498,7 @@
                                     <td class="@SetClass(@Model.EntryNC.NC_Category_ID, @i, "cd")" id="cred_@i">
                                         @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount,
                                         @getHtmlAttributesCredit(@Model.EntryNC.NC_Category_ID, @i,
-                                        @SetClassCompSusp(Model.EntryNC.NC_Category_ID, Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID, "cd", cs, csUSD, IERF_RET, IERF_JS, IEFR_JS, petty)))
+                                        @SetClassCompSusp(Model.EntryNC.NC_Category_ID, Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID, "cd", cs, csUSD, IERF_RET, IERF_JS, IEFR_JS, IEFR_JS_2, petty)))
                                     </td>
                                 }
                                 @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID)
@@ -521,7 +522,7 @@
                                         <td class="@SetClass(@Model.EntryNC.NC_Category_ID, @i, "db")" id="deb_@i">
                                                 @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Amount, 
                                                @getHtmlAttributesDebit(@Model.EntryNC.NC_Category_ID, @i, 
-                                               @SetClassCompSusp(Model.EntryNC.NC_Category_ID, Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_ID, "db", cs, csUSD, IERF_RET, IERF_JS, IEFR_JS, petty)))</td>
+                                               @SetClassCompSusp(Model.EntryNC.NC_Category_ID, Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_ID, "db", cs, csUSD, IERF_RET, IERF_JS, IEFR_JS, IEFR_JS_2, petty)))</td>
                                         <td></td>
                                         <td></td>
                                     }
@@ -536,7 +537,7 @@
                                         <td class="@SetClass(@Model.EntryNC.NC_Category_ID, @i, "cd")" id="cred_@i">
                                             @Html.TextBoxFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Amount,
                                             @getHtmlAttributesCredit(@Model.EntryNC.NC_Category_ID, @i,
-                                            @SetClassCompSusp(Model.EntryNC.NC_Category_ID, Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_ID, "cd", cs, csUSD, IERF_RET, IERF_JS, IEFR_JS, petty)))
+                                            @SetClassCompSusp(Model.EntryNC.NC_Category_ID, Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_ID, "cd", cs, csUSD, IERF_RET, IERF_JS, IEFR_JS, IEFR_JS_2, petty)))
                                         </td>
                                     }
                                     @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_ID)
@@ -737,7 +738,7 @@
                                         {
                                             <option value="@groepModel.Value" selected>@groepModel.Text</option>
                                         }
-                                        else
+                                        else if(groepModel.Value == Model.yenCashAccID + "")
                                         {
                                             <option value="@groepModel.Value">@groepModel.Text</option>
                                         }
@@ -870,6 +871,7 @@
                 computeValsNC();
             }
         }
+
         document.addEventListener("change", computeFunction, false);
 
         hiddencols();
@@ -949,8 +951,35 @@
 
         $('#NCPartialTbl').on('change', '.acc-sel', function () {
             var vals = $(this).val();
+            var categoryID = $("select#categoryName option:selected").val();
             if (vals == @ewt) {
                 $(this).parent().siblings("[id$='DtlAcc_Type_ID']").val(3);
+            }
+            if (categoryID == "8") {
+                var currID = $(this).parent().siblings("[id$='__ExpNCDtlAcc_Curr_ID']").val();
+                //if cateegory is JS Payroll
+                //if newly added entry selects COMPUTER SUSPENSE PHP AND CURR ID is PHP
+                if (vals == @cs && currID == @ViewBag.phpid) {
+                    $(this).parent().siblings("[id^='deb_']").find("input").addClass("nc-comp-susp-db");
+                }else {
+                    $(this).parent().siblings("[id^='deb_']").find("input").removeClass("nc-comp-susp-db");
+                }
+                if (vals == @cs && currID == @ViewBag.phpid) {
+                    $(this).parent().siblings("[id^='cred_']").find("input").addClass("nc-comp-susp-cd");
+                }else if (vals != @cs) {
+                    $(this).parent().siblings("[id^='cred_']").find("input").removeClass("nc-comp-susp-cd");
+                }
+                //if newly added entry selects INTER ENTITY AND CURR ID is USD
+                if ((vals == @IEFR_JS || vals == @IEFR_JS_2 || vals == @IERF_JS || vals == @IERF_RET) && currID == @ViewBag.usdid) {
+                    $(this).parent().siblings("[id^='deb_']").find("input").addClass("nc-inter-db");
+                }else {
+                    $(this).parent().siblings("[id^='deb_']").find("input").removeClass("nc-inter-db");
+                }
+                if ((vals == @IEFR_JS || vals == @IEFR_JS_2 || vals == @IERF_JS || vals == @IERF_RET) && currID == @ViewBag.usdid) {
+                    $(this).parent().siblings("[id^='cred_']").find("input").addClass("nc-inter-cd");
+                }else{
+                    $(this).parent().siblings("[id^='cred_']").find("input").removeClass("nc-inter-cd");
+                }
             }
         });
         $('#NCPartialTbl').on('change', '.curr-sel', function () {
@@ -970,6 +999,14 @@
 
                 $("#EntryNC_ExpenseEntryNCDtls_CDD_0__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Curr_Name").val(texts);
                 $("#EntryNC_ExpenseEntryNCDtls_CDD_0__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Curr_ID").val(vals);
+
+                if (vals == @ViewBag.usdid) {
+                    $("#EntryNC_ExpenseEntryNCDtls_CDD_0__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Acc_Name").val(@Model.usdCashAccID);
+                    $("#EntryNC_ExpenseEntryNCDtls_CDD_0__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Acc_ID").val(@Model.usdCashAccID);
+                } else if (vals == @ViewBag.yenid) {
+                    $("#EntryNC_ExpenseEntryNCDtls_CDD_0__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Acc_Name").val(@Model.yenCashAccID);
+                    $("#EntryNC_ExpenseEntryNCDtls_CDD_0__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Acc_ID").val(@Model.yenCashAccID);
+                }
             }
             if (categoryID == @GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES) {
                 var valIdSplt = $(this).attr("id");
@@ -985,6 +1022,9 @@
                 var amtInput = $("#EntryNC_ExpenseEntryNCDtls_" + valIdSplt[2] + "__ExpenseEntryNCDtlAccs_" + valIdSplt[5] + "__ExpNCDtlAcc_Amount");
                 $(amtInput).trigger("change");
             }
+        });
+        $('#NCPartialTbl').on('change', '.ncVar', function () {
+            computeValsNC();
         });
         $('#NCPartialTbl').on('update', function () {
             computeValsNC();
@@ -1024,7 +1064,7 @@
             //Select the id of selected currency designated to either debit or credit
             var currEl = $(this).parent().prevAll().find("select").last();
             var elCurrId = $(currEl).find("option:selected").val();
-            //Update the currency id designated to form CurrencyID 
+            //Update the currency id designated to form CurrencyID
             //switching from debit to credit also assigns the currency id of either debit or credit accrodingly
             $("#EntryNC_ExpenseEntryNCDtls_" + valId[2] + "__ExpenseEntryNCDtlAccs_" + valId[3] + "__ExpNCDtlAcc_Curr_ID").val(elCurrId);
             if (@jpy == elCurrId) {
@@ -1193,7 +1233,7 @@
 
                         if ($(el).find("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + ind + "__ExpNCDtlAcc_Amount']").hasClass("nc-comp-susp-db")) {
                             var debitVal = parseFloat($(el).find("#EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + ind + "__ExpNCDtlAcc_Amount").val());
-                            if ((categoryID == "8") && ((idNo != 1) && (idNo != 3) && (idNo != 4))) {
+                            if ((categoryID == "8") && ((idNo == 0) || (idNo == 2))) {
                                 debitVal = 0;
                             }
                             subtotalCSDeb += debitVal;
@@ -1216,6 +1256,9 @@
                         }
                         if ($(el).find("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + tempInd + "__ExpNCDtlAcc_Amount']").hasClass("nc-inter-cd")) {
                             var creditVal = parseFloat($(el).find("#EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + tempInd + "__ExpNCDtlAcc_Amount").val());
+                            if ((categoryID == "9") && (idNo != 0)) {
+                                creditVal = 0;
+                            }
                             subtotalIECred += creditVal;
                         }
 

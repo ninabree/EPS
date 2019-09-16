@@ -63,6 +63,8 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         public DateTime expenseDate { get; set; }
         public int statusID { get; set; }
         public int taxaccID { get; set; }
+        public int usdCashAccID { get; set; }
+        public int yenCashAccID { get; set; }
         public string status { get; set; }
         public string approver { get; set; }
         public string verifier_1 { get; set; }

@@ -131,7 +131,7 @@ string value1 = xNC.Element("LOGO").Value
     <!--COMPUTER SUSPENSE $-->
     <ACCOUNT class="entry1" id="ACCOUNT1">79</ACCOUNT>
     <!--INTERENTITY LIAB-->
-    <ACCOUNT class="entry1" id="ACCOUNT2">133</ACCOUNT>
+    <ACCOUNT class="entry1" id="ACCOUNT2">142</ACCOUNT>
 
     <!--INTERENTITY LIAB-->
     <ACCOUNT class="entry2" id="ACCOUNT1">91</ACCOUNT>
@@ -143,4 +143,12 @@ string value1 = xNC.Element("LOGO").Value
     <!--PERSONNEL EXPENSE JAP STAFF-->
     <ACCOUNT class="entry3" id="ACCOUNT2">101</ACCOUNT>
   </RETURNOFJSPAYROLL>
+  <RETURNOFJSPAYROLLCDD>
+    <!--DEFAULT USD CASH-->
+    <ACCOUNT class="entry1" id="ACCOUNT1">133</ACCOUNT>
+    <!--COMPUTER SUSPENSE USD-->
+    <ACCOUNT class="entry1" id="ACCOUNT2">79</ACCOUNT>
+    <!--YEN CASH-->
+    <ACCOUNT class="entry1" id="ACCOUNT3">137</ACCOUNT>
+  </RETURNOFJSPAYROLLCDD>
 </NONCASHACCOUNTS>

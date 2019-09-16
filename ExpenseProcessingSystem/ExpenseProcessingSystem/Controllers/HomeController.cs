@@ -3019,7 +3019,7 @@ namespace ExpenseProcessingSystem.Controllers
                 ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Amount = ncList.EntryNC.NC_CS_CredAmt;
             }else if (ncList.EntryNC.NC_Category_ID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL)
             {
-                ncList.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_RETURN_OF_JSPAYROLL.Populate_CDD_Instruc_Sheet(currDtl, currDtlUSD);
+                ncList.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_RETURN_OF_JSPAYROLL.Populate_CDD_Instruc_Sheet(currDtl, currDtlUSD, _service.getNCAccs("/NONCASHACCOUNTS/RETURNOFJSPAYROLLCDD/ACCOUNT"));
                 var currDtls = ncList.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0];
                 ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID = currDtls.ExpNCDtlAcc_Curr_ID;
                 ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Curr_ID = currDtls.ExpNCDtlAcc_Curr_ID;
