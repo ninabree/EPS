@@ -38,5 +38,7 @@ namespace ExpenseProcessingSystem.ViewModels
         public byte BM_Budget_Status { get; set; }
         public bool BM_Budget_isDeleted { get; set; }
         public DateTime BM_Last_Budget_Approved { get; set; }
+
+        public string BM_GWrite_Msg { get; set; }
     }
 }

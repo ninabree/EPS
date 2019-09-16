@@ -33,7 +33,7 @@
                         <td style="text-align:center">@Html.DisplayFor(modelItem => item.BM_Acc_Num)</td>
                         <td style="text-align:right">@Html.DisplayFor(modelItem => item.BM_Budget_Current)</td>
                         <td style="text-align:right">@Html.DisplayFor(modelItem => item.BM_Budget_Amount)</td>
-                        <td style="text-align:center">@Html.DisplayFor(modelItem => item.BM_GWrite_Status)</td>
+                        <td style="text-align:center"><label title="@item.BM_GWrite_Msg">@Html.DisplayFor(modelItem => item.BM_GWrite_Status)</label></td>
                         <td style="text-align:center">@Html.DisplayFor(modelItem => item.BM_Date_Registered)</td>
                     </tr>
                     }
@@ -73,6 +73,7 @@
         </div>
     </div>
 }
+
 <script>
     $(document).ready(function () {
         $(function () {

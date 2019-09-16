@@ -3004,7 +3004,8 @@ namespace ExpenseProcessingSystem.Services
                     BM_Budget_Current = i.Budget_Amount,
                     BM_Budget_Amount = i.Budget_New_Amount,
                     BM_GWrite_Status = GlobalSystemValues.getStatus(i.Budget_GWrite_Status),
-                    BM_Date_Registered = i.Budget_Date_Registered
+                    BM_Date_Registered = i.Budget_Date_Registered,
+                    BM_GWrite_Msg = GetGWriteErrorMsgForBM(i.Budget_ID, "budget")
                 });
             };
 
@@ -3034,6 +3035,21 @@ namespace ExpenseProcessingSystem.Services
                 _context.SaveChanges();
             }
             return true;
+        }
+
+        public string GetGWriteErrorMsgForBM(int GWTransID, string GWType)
+        {
+            var gwriteTrans = _context.GwriteTransLists.Where(x => x.GW_TransID == GWTransID).FirstOrDefault();
+            if (gwriteTrans == null)
+                return "GWrite Message Not Available.";
+            var gwriteDtl = _gWriteContext.TblRequestDetails.Where(x => x.RequestId == gwriteTrans.GW_GWrite_ID).FirstOrDefault();
+            if (gwriteDtl == null)
+                return "GWrite Message Not Available.";
+
+            if (String.IsNullOrEmpty(gwriteDtl.ReturnMessage))
+                return "Waiting For GWrite to be processed.";
+            return gwriteDtl.ReturnMessage;
+
         }
         // [Report]
         public IEnumerable<HomeReportOutputAPSWT_MModel> GetAPSWT_MData(int month, int year)
