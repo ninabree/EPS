@@ -1,0 +1,46 @@
+﻿@model ExpenseProcessingSystem.ViewModels.TransFailed.TransFailedViewModel
+@{
+    ViewData["Title"] = "Transaction failed";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<table class="m-l-50 m-t-5">
+    <tbody>
+        @foreach (var msg in Model.TF_MSGs)
+        {
+            <tr>
+                <td><b>@Html.DisplayFor(model => msg)</b></td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div class="m-t-10 w-100">
+    <div class="tbl-cont">
+        <table class="table table-striped tab-tbl table-bordered">
+            <thead>
+                <tr>
+                    <th class="text-center">VALUE DATE</th>
+                    <th class="text-center">TRANS NO.</th>
+                    <th class="text-center">VOUCHER No.</th>
+                    <th class="text-center">REMARKS</th>
+                    <th class="text-center">DEBIT ACCOUNT/s</th>
+                    <th class="text-center">CREDIT ACCOUNT/s</th>
+                    <th class="text-center">STATUS</th>
+                    <th class="text-center">ACTION</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-center">09/16/2019</td>
+                    <td class="text-center">00011</td>
+                    <td class="text-center">PCV-2019-00011</td>
+                    <td>SAGARA:TUITION FEE 1ST SEM</td>
+                    <td>H90-767-121113 - Office Rent222 / H90-767-121113 - Office Rent222</td>
+                    <td>H90-767-121113 - Office Rent222 / H90-767-121113 - Office Rent222</td>
+                    <td class="text-center"><label title="GBASE ERROR MESSAGE">COMPLETED</label></td>
+                    <td class="text-center"><button type="button" class="tbl-btn">Reverse</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

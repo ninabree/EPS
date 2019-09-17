@@ -26,16 +26,21 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
-                    <tr>
-                        <td>@Html.DisplayFor(modelItem => item.BM_Acc_Group_Name)</td>
-                        <td>@Html.DisplayFor(modelItem => item.BM_Acc_Name)</td>
-                        <td style="text-align:center">@Html.DisplayFor(modelItem => item.BM_GBase_Code)</td>
-                        <td style="text-align:center">@Html.DisplayFor(modelItem => item.BM_Acc_Num)</td>
-                        <td style="text-align:right">@Html.DisplayFor(modelItem => item.BM_Budget_Current)</td>
-                        <td style="text-align:right">@Html.DisplayFor(modelItem => item.BM_Budget_Amount)</td>
-                        <td style="text-align:center"><label title="@item.BM_GWrite_Msg">@Html.DisplayFor(modelItem => item.BM_GWrite_Status)</label></td>
-                        <td style="text-align:center">@Html.DisplayFor(modelItem => item.BM_Date_Registered)</td>
-                    </tr>
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.BM_Acc_Group_Name)</td>
+                            <td>@Html.DisplayFor(modelItem => item.BM_Acc_Name)</td>
+                            <td style="text-align:center">@Html.DisplayFor(modelItem => item.BM_GBase_Code)</td>
+                            <td style="text-align:center">@Html.DisplayFor(modelItem => item.BM_Acc_Num)</td>
+                            <td style="text-align:right">@Html.DisplayFor(modelItem => item.BM_Budget_Current)</td>
+                            <td style="text-align:right">@Html.DisplayFor(modelItem => item.BM_Budget_Amount)</td>
+                            <td style="text-align:center">
+                                <text>
+                                    <a id="@item.BM_Budget_ID" class="btnGWriteError" href="#">@Html.DisplayFor(modelItem => item.BM_GWrite_Status)</a>
+                                </text>
+                                @Html.HiddenFor(modelItem => item.BM_GWrite_Msg, new { @class = "message_" + item.BM_Budget_ID })
+                            </td>
+                            <td style="text-align:center">@Html.DisplayFor(modelItem => item.BM_Date_Registered)</td>
+                        </tr>
                     }
                 </tbody>
             </table>
@@ -69,6 +74,27 @@
             @*validation message*@
             <div id="ValidationSummary" style="display:none" class="">
                 @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
+            </div>
+        </div>
+    </div>
+    <div class="modal gbaseError fade" id="GWriteMessageModal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="vertical-alignment-helper">
+                <div class="modal-dialog vertical-align-center">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 style="display:inline">GBASE RETURN MESSAGE</h4>
+                            <button type="button" class="close" onclick="$('#GWriteMessageModal').hide();">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <textarea style="width:700px;height:250px" id="gbaseMsgArea" readonly></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn float-r" onclick="$('#GWriteMessageModal').hide();">Close</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -131,6 +157,10 @@
                 e.preventDefault();
                 window.location.href = "/Home/BM_PrintList";
             });
+        });
+        $(".table").on("click", ".btnGWriteError", function (e) {
+            $('#GWriteMessageModal').show().addClass('in');
+            $('#gbaseMsgArea').val($('.message_' + $(this).attr('id')).val());
         });
     });
 </script>
