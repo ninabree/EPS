@@ -22,9 +22,9 @@ namespace ExpenseProcessingSystem.ConstantData
         {
             var closingRBU = _dbContext.Closing.Where(x => x.Close_Type == "767").OrderByDescending(x => x.Close_ID).FirstOrDefault();
             var closingFCDU = _dbContext.Closing.Where(x => x.Close_Type == "789").OrderByDescending(x => x.Close_ID).FirstOrDefault();
+            var closingPettyCash = _dbContext.PettyCash.OrderByDescending(x => x.PC_ID).FirstOrDefault();
 
-
-            if(closingFCDU.Close_Status == GlobalSystemValues.STATUS_CLOSED || closingRBU.Close_Status == GlobalSystemValues.STATUS_CLOSED)
+            if (closingFCDU.Close_Status != GlobalSystemValues.STATUS_OPEN || closingRBU.Close_Status != GlobalSystemValues.STATUS_OPEN)
             {
                 context.Result =
                         new RedirectToRouteResult(new RouteValueDictionary(new
@@ -32,8 +32,22 @@ namespace ExpenseProcessingSystem.ConstantData
                             controller = "Home",
                             action = "Index"
                         }));
+                if (closingPettyCash.PC_Status != GlobalSystemValues.STATUS_OPEN)
+                    GlobalSystemValues.MESSAGE = "Daily book and Petty Cash is currently closed, cannot make any transactions.";
+                else
+                    GlobalSystemValues.MESSAGE = "Daily book is currently closed, cannot make any transactions.";
+            }
 
-                GlobalSystemValues.MESSAGE = "Daily book is currently closed, cannot make any transactions.";
+            if (closingPettyCash.PC_Status != GlobalSystemValues.STATUS_OPEN)
+            {
+                context.Result =
+                    new RedirectToRouteResult(new RouteValueDictionary(new
+                    {
+                        controller = "Home",
+                        action = "Index"
+                    }));
+
+                GlobalSystemValues.MESSAGE = "Petty Cash is currently closed, cannot make any transactions.";
             }
 
             base.OnActionExecuting(context);
