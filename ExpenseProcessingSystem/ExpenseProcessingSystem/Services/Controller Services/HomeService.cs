@@ -13855,7 +13855,7 @@ namespace ExpenseProcessingSystem.Services
                                                                 && x.VTV_VAT_ID > 0)
                                                        .Select(q => q.VTV_VAT_ID).ToList();
 
-            var select = new SelectList(_context.DMVAT.Where(x => vendorVatIDList.Contains(x.VAT_ID)
+            var select = new SelectList(_context.DMVAT.Where(x => vendorVatIDList.Contains(x.VAT_MasterID)
                                                              && x.VAT_isActive == true
                                                              && x.VAT_isDeleted == false)
                                                       .Select(q => new { q.VAT_ID, VAT_Rate = Mizuho.round((q.VAT_Rate * 100), 2) }),
