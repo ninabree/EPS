@@ -9664,8 +9664,8 @@ namespace ExpenseProcessingSystem.Services
                     chkEwt = dtl.d.ExpDtl_isEwt,
                     ewt = dtl.d.ExpDtl_Ewt,
                     ccy = dtl.d.ExpDtl_Ccy,
-                    ccyMasterID = (dtl.d.ExpDtl_Ccy != 0) ? getCurrencyByMasterID(dtl.d.ExpDtl_Ccy).Curr_MasterID : 0,
-                    ccyAbbrev = (dtl.d.ExpDtl_Ccy != 0) ? getCurrencyByMasterID(dtl.d.ExpDtl_Ccy).Curr_CCY_ABBR : "",
+                    ccyMasterID = (dtl.d.ExpDtl_Ccy != 0) ? getCurrency(dtl.d.ExpDtl_Ccy).Curr_MasterID : 0,
+                    ccyAbbrev = (dtl.d.ExpDtl_Ccy != 0) ? getCurrency(dtl.d.ExpDtl_Ccy).Curr_CCY_ABBR : "",
                     debitGross = dtl.d.ExpDtl_Debit,
                     credEwt = dtl.d.ExpDtl_Credit_Ewt,
                     credCash = dtl.d.ExpDtl_Credit_Cash,
@@ -13894,6 +13894,15 @@ namespace ExpenseProcessingSystem.Services
         public List<DMCurrencyModel> getAllCurrency()
         {
             return _context.DMCurrency.Where(x => x.Curr_isActive == true && x.Curr_isDeleted == false).OrderBy(x => x.Curr_CCY_ABBR).ToList();
+        }
+        //get all currency active include history
+        public SelectList getAllCurrencyIncHist()
+        {
+            var select = new SelectList(_context.DMCurrency.OrderBy(x => x.Curr_CCY_ABBR)
+                                                     .Select(q => new { q.Curr_ID, q.Curr_CCY_ABBR }),
+                        "Curr_ID", "Curr_CCY_ABBR");
+
+            return select;
         }
         //retrieve vendor list
         public List<SelectList> getEntrySystemVals()

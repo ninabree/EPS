@@ -1664,7 +1664,7 @@ namespace ExpenseProcessingSystem.Controllers
                 cvList.systemValues.vat = _service.getAllVat();
             }
 
-
+            cvList.systemValues.currency = _service.getAllCurrencyIncHist();
             List<cvBirForm> birForms = new List<cvBirForm>();
             foreach (var item in cvList.EntryCV)
             {
@@ -1829,6 +1829,7 @@ namespace ExpenseProcessingSystem.Controllers
             EntryDDVViewModelList ddvList = _service.getExpenseDDV(entryID);
             ddvList = PopulateEntry((EntryDDVViewModelList)ddvList);
 
+            ddvList.systemValues.currency = _service.getAllCurrencyIncHist();
             List<cvBirForm> birForms = new List<cvBirForm>();
             foreach (var item in ddvList.EntryDDV)
             {
@@ -2831,7 +2832,7 @@ namespace ExpenseProcessingSystem.Controllers
             List<SelectList> listOfSysVals = _service.getEntrySystemVals();
             ssList.systemValues.vendors = listOfSysVals[0];
             ssList.systemValues.dept = listOfSysVals[1];
-            ssList.systemValues.currency = listOfSysVals[2];
+            ssList.systemValues.currency = _service.getAllCurrencyIncHist();
             ssList.systemValues.employees = listOfSysVals[4];
             //int firstId = int.Parse(listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR].First().Value);
             
