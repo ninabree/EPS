@@ -77,86 +77,100 @@
                 <tbody>
                     @for (int i = 0; i < Model.EntryCV.Count; i++)
                     {
-                        <tr id="item_@i">
-                            <td class="p-b-1 p-t-1">
-                                <div class="flex-sb">
-                                    @Html.TextBoxFor(x => Model.EntryCV[i].GBaseRemarks, new { @class = "input100 w-80 voucher-input", @maxlength = "30" })
-                                    <div id="remark_@i">
-                                        <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
-                                        @for (int y = 0; y < Model.EntryCV[i].gBaseRemarksDetails.Count(); y++)
-                                        {
-                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].docType, new { @class = "docType" });
-                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].desc, new { @class = "desc" });
-                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].invNo, new { @class = "invNo" });
-                                            @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].amount, new { @class = "amount" });
-                                        }
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                @*@Html.DropDownListFor(x => Model.EntryCV[i].account, new SelectList(Model.systemValues.acc, "accId", "accName", Model.systemValues.acc.Where(x=> x.accId == Model.EntryCV[i].account)), new { @class = "input100 txtAcc" })*@
-                                <select id="@Html.IdFor(x => Model.EntryCV[i].account)" class="input100 txtAcc voucher-input" name="@Html.NameFor(x => Model.EntryCV[i].account)">
-                                    @foreach (var groepModel in Model.systemValues.acc)
+                    <tr id="item_@i">
+                        <td class="p-b-1 p-t-1">
+                            <div class="flex-sb">
+                                @Html.TextBoxFor(x => Model.EntryCV[i].GBaseRemarks, new { @class = "input100 w-80 voucher-input", @maxlength = "30" })
+                                <div id="remark_@i">
+                                    <a href="#" class="gRemarks glyphicon glyphicon-folder-open fs-23 m-r-5"></a>
+                                    @for (int y = 0; y < Model.EntryCV[i].gBaseRemarksDetails.Count(); y++)
                                     {
-                                        if (@groepModel.accId == @Model.EntryCV[0].account)
-                                        {
-                                            <option value="@groepModel.accId" class="@groepModel.accCode" selected>@groepModel.accName</option>
-                                        }
-                                        else
-                                        {
-                                            <option value="@groepModel.accId" class="@groepModel.accCode">@groepModel.accName</option>
-                                        }
-
+                                        @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].docType, new { @class = "docType" });
+                                        @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].desc, new { @class = "desc" });
+                                        @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].invNo, new { @class = "invNo" });
+                                        @Html.HiddenFor(x => Model.EntryCV[i].gBaseRemarksDetails[y].amount, new { @class = "amount" });
                                     }
-                                </select>
-                            </td>
-                            <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].fbt)</td>
-                            <td>
-                                @Html.DropDownListFor(x => Model.EntryCV[i].dept, new SelectList(Model.systemValues.dept, "Value", "Text", Model.systemValues.dept.SelectedValue), new { @class = "input100 txtDept voucher-input" })
-                            </td>
-                            <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].chkVat, new { @class = "chkVat comVar" })</td>
-                            <td>
-                                @if (Model.EntryCV[i].chkVat)
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            @*@Html.DropDownListFor(x => Model.EntryCV[i].account, new SelectList(Model.systemValues.acc, "accId", "accName", Model.systemValues.acc.Where(x=> x.accId == Model.EntryCV[i].account)), new { @class = "input100 txtAcc" })*@
+                            <select id="@Html.IdFor(x => Model.EntryCV[i].account)" class="input100 txtAcc voucher-input" name="@Html.NameFor(x => Model.EntryCV[i].account)">
+                                @foreach (var groepModel in Model.systemValues.acc)
                                 {
-                                    @Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.systemValues.vat.SelectedValue), new { @class = "input100 txtVat comVar voucher-input" })
-                                }
-                                else
-                                {
-                                    @Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.systemValues.vat.SelectedValue), new { @class = "input100 txtVat comVar voucher-input", @disabled = "true" })
-                                }
+                                    if (@groepModel.accId == @Model.EntryCV[0].account)
+                                    {
+                                        <option value="@groepModel.accId" class="@groepModel.accCode" selected>@groepModel.accName</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@groepModel.accId" class="@groepModel.accCode">@groepModel.accName</option>
+                                    }
 
-                            </td>
-                            <td style="text-align:center">@Html.CheckBoxFor(m => m.EntryCV[i].chkEwt, new { @class = "chkEwt comVar" })</td>
-                            <td>
-                                @if (Model.EntryCV[i].chkEwt)
-                                {
-                                    @Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt comVar voucher-input" })
                                 }
-                                else
-                                {
-                                    @Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt comVar voucher-input", @disabled = "true" })
-                                }
-                            </td>
-                            <td>
-                                @Html.DropDownListFor(x => Model.EntryCV[i].ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100 voucher-input txtccy comVar" })
-                            </td>
-                            <td>@Html.TextBoxFor(x => Model.EntryCV[i].debitGross, new { @class = "input100 txtGross", @readonly = "readonly" })</td>
-                            <td>@Html.TextBoxFor(x => Model.EntryCV[i].credEwt, new { @class = "input100 txtCredEwt", @readonly = "readonly" })</td>
-                            <td>@Html.TextBoxFor(x => Model.EntryCV[i].credCash, new { @class = "input100 txtCredCash", @readonly = "readonly" })</td>
-                            <td id="req_@i">
+                            </select>
+                        </td>
+                        @if (Model.payee_type == GlobalSystemValues.PAYEETYPE_VENDOR)
+                        {
+                            <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].fbt, new {@class="fbtChk" ,@disabled = "true" })</td>
+                        }
+                        else
+                        {
+                            <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].fbt, new { @class = "fbtChk", })</td>
+                        }
+                        <td>
+                            @Html.DropDownListFor(x => Model.EntryCV[i].dept, new SelectList(Model.systemValues.dept, "Value", "Text", Model.systemValues.dept.SelectedValue), new { @class = "input100 txtDept voucher-input" })
+                        </td>
+                        <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].chkVat, new { @class = "chkVat comVar" })</td>
+                        <td>
+                            @if (Model.EntryCV[i].chkVat)
+                            {
+                                @Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.systemValues.vat.SelectedValue), new { @class = "input100 txtVat comVar voucher-input" })
+                            }
+                            else
+                            {
+                                @Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.systemValues.vat.SelectedValue), new { @class = "input100 txtVat comVar voucher-input", @disabled = "true" })
+                            }
+
+                        </td>
+                        <td style="text-align:center">@Html.CheckBoxFor(m => m.EntryCV[i].chkEwt, new { @class = "chkEwt comVar" })</td>
+                        <td>
+                            @if (Model.EntryCV[i].chkEwt)
+                            {
+                                @Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt comVar voucher-input" })
+                            }
+                            else
+                            {
+                                @Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt comVar voucher-input", @disabled = "true" })
+                            }
+                        </td>
+                        <td>
+                            @Html.DropDownListFor(x => Model.EntryCV[i].ccy, new SelectList(Model.systemValues.currency, "Value", "Text", Model.systemValues.currency.SelectedValue), new { @class = "input100 voucher-input txtccy comVar" })
+                        </td>
+                        <td>@Html.TextBoxFor(x => Model.EntryCV[i].debitGross, new { @class = "input100 txtGross", @readonly = "readonly" })</td>
+                        <td>@Html.TextBoxFor(x => Model.EntryCV[i].credEwt, new { @class = "input100 txtCredEwt", @readonly = "readonly" })</td>
+                        <td>@Html.TextBoxFor(x => Model.EntryCV[i].credCash, new { @class = "input100 txtCredCash", @readonly = "readonly" })</td>
+                        <td id="req_@i">
+                            @if (Model.EntryCV[i].amtDetails.Count() > 0)
+                            {
+                                <a class="expenseAmortization reqBtn glyphicon glyphicon-list-alt" href="#"></a>
+                            }
+                            else
+                            {
                                 <a class="reqBtn glyphicon glyphicon-list-alt"></a>
-                                @Html.HiddenFor(x => Model.EntryCV[i].month, new { @class = "txtAmorMonth" })
-                                @Html.HiddenFor(x => Model.EntryCV[i].day, new { @class = "txtAmorDay" })
-                                @Html.HiddenFor(x => Model.EntryCV[i].duration, new { @class = "txtAmorDuration" })
-                                @Html.HiddenFor(x => Model.EntryCV[i].amorAcc, new { @class = "txtAmorAccount" })
-                                @for (int y = 0; y < Model.EntryCV[i].amtDetails.Count(); y++)
-                                {
-                                    @Html.HiddenFor(x => Model.EntryCV[i].amtDetails[y].amtDate, new { @class = "txtAmorDate" });
-                                    @Html.HiddenFor(x => Model.EntryCV[i].amtDetails[y].amtAmount, new { @class = "txtAmorAmount" });
-                                }
-                                @Html.HiddenFor(x => Model.EntryCV[i].screenCode, new { @class = "hiddenScreencode" })
-                            </td>
-                        </tr>
+                            }
+                            @Html.HiddenFor(x => Model.EntryCV[i].month, new { @class = "txtAmorMonth" })
+                            @Html.HiddenFor(x => Model.EntryCV[i].day, new { @class = "txtAmorDay" })
+                            @Html.HiddenFor(x => Model.EntryCV[i].duration, new { @class = "txtAmorDuration" })
+                            @Html.HiddenFor(x => Model.EntryCV[i].amorAcc, new { @class = "txtAmorAccount" })
+                            @for (int y = 0; y < Model.EntryCV[i].amtDetails.Count(); y++)
+                            {
+                                @Html.HiddenFor(x => Model.EntryCV[i].amtDetails[y].amtDate, new { @class = "txtAmorDate" });
+                                @Html.HiddenFor(x => Model.EntryCV[i].amtDetails[y].amtAmount, new { @class = "txtAmorAmount" });
+                            }
+                            @Html.HiddenFor(x => Model.EntryCV[i].screenCode, new { @class = "hiddenScreencode" })
+                        </td>
+                    </tr>
                     }
 
                     <tr>
@@ -375,6 +389,9 @@
             if ($("#payeeTypeSel").val() == "2") {
                 $('.table').find('.chkEwt').attr('disabled', 'disabled');
                 $('.table').find('.txtEwt').attr('disabled', 'disabled');
+                $('.table').find('.fbtChk').removeAttr('disabled');
+            } else {
+                $('.table').find('.fbtChk').attr('disabled', 'disabled');
             }
 
             var ccyList = [];
@@ -476,13 +493,16 @@
                 $('#' + pos).find('.chkEwt').prop("checked", false);
                 $('#' + pos).find('.chkVat').prop("checked", false);
             } else {
-                $('#' + pos).find('.chkEwt').removeAttr("disabled");
                 $('#' + pos).find('.chkVat').removeAttr("disabled");
-                if ($('#' + pos).find('.chkEwt').is(':checked')) {
-                    $('#' + pos).find('.txtEwt').removeAttr("disabled");
-                }
                 if ($('#' + pos).find('.chkVat').is(':checked')) {
                     $('#' + pos).find('.txtVat').removeAttr("disabled");
+                }
+
+                if ($('#payeeTypeSel').val() != "2") {
+                    $('#' + pos).find('.chkEwt').removeAttr("disabled");
+                    if ($('#' + pos).find('.chkEwt').is(':checked')) {
+                        $('#' + pos).find('.txtEwt').removeAttr("disabled");
+                    }
                 }
             }
             if ($('#EntryCV_' + idx + '__ccy option:selected').text() == $('#yenAbbrv').val()) {
@@ -597,6 +617,7 @@
                 options += '<option value="' + opt[i].value + '">' + opt[i].text + '</option>';
             }
             $('.table').find('.chkEwt').removeAttr('disabled');
+            $('.table').find('.fbtChk').attr('disabled', 'disabled');
         } else if (paytype == "2") {
             var opt = @Html.Raw(Json.Serialize(Model.systemValues.employees));
             for (var i = 0; i < opt.length; i++) {
@@ -604,6 +625,7 @@
             }
             $('.table').find('.chkEwt').attr('disabled', 'disabled');
             $('.table').find('.txtEwt').attr('disabled', 'disabled');
+            $('.table').find('.fbtChk').removeAttr('disabled');
         }
         $("#vendorName").empty();
         $("#vendorName").append($(options));
@@ -672,7 +694,7 @@
                         }
                     </select>
                 </td>
-                <td style="text-align:center">@Html.CheckBoxFor(x => Model.template.fbt)</td>
+                <td style="text-align:center">@Html.CheckBoxFor(x => Model.template.fbt, new { @class = "fbtChk", })</td>
                 <td>
                     @Html.DropDownListFor(x => Model.template.dept, new SelectList(Model.systemValues.dept, "Value", "Text", Model.systemValues.dept.SelectedValue), new { @class = "input100 txtDept voucher-input" })
                 </td>
