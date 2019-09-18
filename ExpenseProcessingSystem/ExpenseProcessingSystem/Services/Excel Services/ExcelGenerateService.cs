@@ -1185,24 +1185,32 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     }
                     else
                     {
-                        ws.Cells["M" + (generalIndex + index).ToString()].Value = item.ccy;
+                        ws.Cells["M" + (generalIndex + index).ToString()].Value = prevCcy;
                         ws.Cells["P" + (generalIndex + index).ToString()].Value = totalTransCount;
-                        ws.Cells["S" + (generalIndex + index).ToString()].Value = totalAmount;
+                        if (prevCcy != "YEN")
+                            ws.Cells["S" + (generalIndex + index).ToString()].Value = totalAmount;
+                        else
+                            ws.Cells["S" + (generalIndex + index).ToString()].Value = totalAmount.ToString("N0");
 
-                        ws.Cells["M" + (sectionIndex + index).ToString()].Value = item.ccy;
+                        ws.Cells["M" + (sectionIndex + index).ToString()].Value = prevCcy;
                         ws.Cells["P" + (sectionIndex + index).ToString()].Value = totalTransCount;
-                        ws.Cells["S" + (sectionIndex + index).ToString()].Value = totalAmount;
+                        if (prevCcy != "YEN")
+                            ws.Cells["S" + (sectionIndex + index).ToString()].Value = totalAmount;
+                        else
+                            ws.Cells["S" + (sectionIndex + index).ToString()].Value = totalAmount.ToString("N0");
+
                         index++;
+                        sectionIndex++;
 
                         ws.InsertRow(generalIndex + index, 1);
                         ws.InsertRow(sectionIndex + index, 1);
 
-                        string cellRangeCopy = "A" + ((sectionIndex-1) + index).ToString() + ":AN" + ((sectionIndex- 1) + index).ToString();
-                        string cellRangeDest = "A" + (sectionIndex + index).ToString() + ":AN" + (sectionIndex + index).ToString();
+                        string cellRangeCopy = "A" + ((sectionIndex - 1) + index).ToString() + ":AN" + ((sectionIndex   - 1) + index).ToString();
+                        string cellRangeDest = "A" + (sectionIndex + index ).ToString() + ":AN" + (sectionIndex + index ).ToString();
                         ws.Cells[cellRangeCopy].Copy(ws.Cells[cellRangeDest]);
 
                         string cellRangeCopyGeneral = "A" + ((generalIndex - 1) + index).ToString() + ":AN" + ((generalIndex - 1) + index).ToString();
-                        string cellRangeDestGeneral = "A" + (generalIndex + index).ToString() + ":AN" + (generalIndex + index).ToString();
+                        string cellRangeDestGeneral = "A" + (generalIndex + index ).ToString() + ":AN" + (generalIndex + index ).ToString();
                         ws.Cells[cellRangeCopyGeneral].Copy(ws.Cells[cellRangeDestGeneral]);
 
                         totalAmount = item.amount;
@@ -1210,16 +1218,22 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                         prevCcy = item.ccy;
                     }
 
-                    
-                    if(iterator == closeTransactions.Count - 1)
+
+                    if (iterator == closeTransactions.Count - 1)
                     {
                         ws.Cells["M" + (generalIndex + index).ToString()].Value = item.ccy;
                         ws.Cells["P" + (generalIndex + index).ToString()].Value = totalTransCount;
-                        ws.Cells["S" + (generalIndex + index).ToString()].Value = totalAmount;
+                        if (prevCcy != "YEN")
+                            ws.Cells["S" + (generalIndex + index).ToString()].Value = totalAmount;
+                        else
+                            ws.Cells["S" + (generalIndex + index).ToString()].Value = totalAmount.ToString("N0");
 
                         ws.Cells["M" + (sectionIndex + index).ToString()].Value = item.ccy;
                         ws.Cells["P" + (sectionIndex + index).ToString()].Value = totalTransCount;
-                        ws.Cells["S" + (sectionIndex + index).ToString()].Value = totalAmount;
+                        if (prevCcy != "YEN")
+                            ws.Cells["S" + (sectionIndex + index).ToString()].Value = totalAmount;
+                        else
+                            ws.Cells["S" + (sectionIndex + index).ToString()].Value = totalAmount.ToString("N0");
                     }
 
                     iterator++;
