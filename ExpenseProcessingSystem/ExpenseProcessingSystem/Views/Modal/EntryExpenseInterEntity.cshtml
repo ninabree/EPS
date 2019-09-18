@@ -319,13 +319,18 @@
                 var itemNo = $("#parentIdInter").val();
                 isChk();
 
+                var curr1Amt = $("table").find("#Inter_Currency1_Amount").val();
+                var curr2Amt = $("table").find("#Inter_Currency2_Amount").val();
+                var conv1Amt = $("table").find("#convertAmt1").val();
+                var conv2Amt = $("table").find("#convertAmt2").val();
+
                 $("#EntryDDV_" + itemNo + "__interDetails_Inter_Currency1_ID").val($("#curr1-abbr").find("input#Inter_Currency1_ID").val());
                 $("#EntryDDV_" + itemNo + "__interDetails_Inter_Currency2_ID").val($("#curr2-abbr").find("#Inter_Currency2_ID option:selected").val());
                 $("#EntryDDV_" + itemNo + "__interDetails_Inter_Currency2_ABBR").val($("#curr2-abbr").find("#Inter_Currency2_ID option:selected").text());
-                $("#EntryDDV_" + itemNo + "__interDetails_Inter_Currency1_Amount").val($(curr1Amt).val());
-                $("#EntryDDV_" + itemNo + "__interDetails_Inter_Currency2_Amount").val($(curr2Amt).val());
-                $("#EntryDDV_" + itemNo + "__interDetails_Inter_Convert1_Amount").val($(conv1Amt).val());
-                $("#EntryDDV_" + itemNo + "__interDetails_Inter_Convert2_Amount").val($(conv2Amt).val());
+                $("#EntryDDV_" + itemNo + "__interDetails_Inter_Currency1_Amount").val(curr1Amt);
+                $("#EntryDDV_" + itemNo + "__interDetails_Inter_Currency2_Amount").val(curr2Amt);
+                $("#EntryDDV_" + itemNo + "__interDetails_Inter_Convert1_Amount").val(conv1Amt);
+                $("#EntryDDV_" + itemNo + "__interDetails_Inter_Convert2_Amount").val(conv2Amt);
                 $("#EntryDDV_" + itemNo + "__interDetails_Inter_Check1").val(isChk1);
                 $("#EntryDDV_" + itemNo + "__interDetails_Inter_Check2").val(isChk2);
                 $("#EntryDDV_" + itemNo + "__interDetails_Inter_Rate").val($("table").find("#Inter_Rate").val());
