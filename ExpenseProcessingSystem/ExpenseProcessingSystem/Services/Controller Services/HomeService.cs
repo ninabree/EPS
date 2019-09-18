@@ -65,7 +65,7 @@ namespace ExpenseProcessingSystem.Services
             return data;
         }
         private int[] status = { GlobalSystemValues.STATUS_POSTED, GlobalSystemValues.STATUS_FOR_CLOSING,
-                            GlobalSystemValues.STATUS_FOR_PRINTING, GlobalSystemValues.STATUS_REVERSED };
+                            GlobalSystemValues.STATUS_FOR_PRINTING };
 
         //-----------------------------------Populate-------------------------------------//
         //[ Home ]
@@ -3049,7 +3049,6 @@ namespace ExpenseProcessingSystem.Services
             if (String.IsNullOrEmpty(gwriteDtl.ReturnMessage))
                 return "Waiting For GWrite to be processed.";
             return gwriteDtl.ReturnMessage;
-
         }
         // [Report]
         public IEnumerable<HomeReportOutputAPSWT_MModel> GetAPSWT_MData(int month, int year)

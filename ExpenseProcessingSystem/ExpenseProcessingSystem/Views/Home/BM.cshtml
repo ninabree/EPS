@@ -10,17 +10,18 @@
 {
     <div class="tab-content-cont m-t-10">
         <div class="tbl-cont">
+            <table class="w-100"><tr><td class="text-right"><text>*Click G-Write Status to check the G-Write Return Message.</text></td></tr></table>
             <table class="table table-striped tab-tbl table-hover">
                 <thead>
                     <tr>
-                        <th style="text-align:center"><a asp-action="BM" asp-route-sortOrder="@ViewData["AccountMappingSortParm"]">Account Mapping<p class="btn-xs glyphicon @ViewData["glyph-1"]"></p></a></th>
-                        <th style="text-align:center"><a asp-action="BM" asp-route-sortOrder="@ViewData["AccountNameSortParm"]">Account Name<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
-                        <th style="text-align:center"><a asp-action="BM" asp-route-sortOrder="@ViewData["GBaseBudgetCodeSortParm"]">G-Base Budget Code<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
-                        <th style="text-align:center"><a asp-action="BM" asp-route-sortOrder="@ViewData["AccountNumberSortParm"]">Account Number<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
-                        <th style="text-align:center"><a asp-action="BM" asp-route-sortOrder="@ViewData["BudgetSortParm"]">Current Budget<p class="btn-xs glyphicon @ViewData["glyph-5"]"></p></a></th>
-                        <th style="text-align:center"><a asp-action="BM" asp-route-sortOrder="@ViewData["BudgetNewSortParm"]">Processing budget<p class="btn-xs glyphicon @ViewData["glyph-6"]"></p></a></th>
-                        <th style="text-align:center"><a asp-action="BM" asp-route-sortOrder="@ViewData["GWriteStatusParm"]">G-Write Status<p class="btn-xs glyphicon @ViewData["glyph-7"]"></p></a></th>
-                        <th style="text-align:center"><a asp-action="BM" asp-route-sortOrder="@ViewData["DateRegisteredSortParm"]">Date Registered<p class="btn-xs glyphicon @ViewData["glyph-8"]"></p></a></th>
+                        <th class="text-center"><a asp-action="BM" asp-route-sortOrder="@ViewData["AccountMappingSortParm"]">Account Mapping<p class="btn-xs glyphicon @ViewData["glyph-1"]"></p></a></th>
+                        <th class="text-center"><a asp-action="BM" asp-route-sortOrder="@ViewData["AccountNameSortParm"]">Account Name<p class="btn-xs glyphicon @ViewData["glyph-2"]"></p></a></th>
+                        <th class="text-center"><a asp-action="BM" asp-route-sortOrder="@ViewData["GBaseBudgetCodeSortParm"]">G-Base Budget Code<p class="btn-xs glyphicon @ViewData["glyph-3"]"></p></a></th>
+                        <th class="text-center"><a asp-action="BM" asp-route-sortOrder="@ViewData["AccountNumberSortParm"]">Account Number<p class="btn-xs glyphicon @ViewData["glyph-4"]"></p></a></th>
+                        <th class="text-center"><a asp-action="BM" asp-route-sortOrder="@ViewData["BudgetSortParm"]">Current Budget<p class="btn-xs glyphicon @ViewData["glyph-5"]"></p></a></th>
+                        <th class="text-center"><a asp-action="BM" asp-route-sortOrder="@ViewData["BudgetNewSortParm"]">Processing budget<p class="btn-xs glyphicon @ViewData["glyph-6"]"></p></a></th>
+                        <th class="text-center"><a asp-action="BM" asp-route-sortOrder="@ViewData["GWriteStatusParm"]">G-Write Status<p class="btn-xs glyphicon @ViewData["glyph-7"]"></p></a></th>
+                        <th class="text-center"><a asp-action="BM" asp-route-sortOrder="@ViewData["DateRegisteredSortParm"]">Date Registered<p class="btn-xs glyphicon @ViewData["glyph-8"]"></p></a></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -29,17 +30,15 @@
                         <tr>
                             <td>@Html.DisplayFor(modelItem => item.BM_Acc_Group_Name)</td>
                             <td>@Html.DisplayFor(modelItem => item.BM_Acc_Name)</td>
-                            <td style="text-align:center">@Html.DisplayFor(modelItem => item.BM_GBase_Code)</td>
-                            <td style="text-align:center">@Html.DisplayFor(modelItem => item.BM_Acc_Num)</td>
-                            <td style="text-align:right">@Html.DisplayFor(modelItem => item.BM_Budget_Current)</td>
-                            <td style="text-align:right">@Html.DisplayFor(modelItem => item.BM_Budget_Amount)</td>
-                            <td style="text-align:center">
-                                <text>
-                                    <a id="@item.BM_Budget_ID" class="btnGWriteError" href="#">@Html.DisplayFor(modelItem => item.BM_GWrite_Status)</a>
-                                </text>
+                            <td class="text-center">@Html.DisplayFor(modelItem => item.BM_GBase_Code)</td>
+                            <td class="text-center">@Html.DisplayFor(modelItem => item.BM_Acc_Num)</td>
+                            <td class="text-right">@Html.DisplayFor(modelItem => item.BM_Budget_Current)</td>
+                            <td class="text-right">@Html.DisplayFor(modelItem => item.BM_Budget_Amount)</td>
+                            <td class="text-center">
+                                <a id="@item.BM_Budget_ID" class="btnGWriteError" href="#" style="font-size:11px">@Html.DisplayFor(modelItem => item.BM_GWrite_Status)</a>
                                 @Html.HiddenFor(modelItem => item.BM_GWrite_Msg, new { @class = "message_" + item.BM_Budget_ID })
                             </td>
-                            <td style="text-align:center">@Html.DisplayFor(modelItem => item.BM_Date_Registered)</td>
+                            <td class="text-center">@Html.DisplayFor(modelItem => item.BM_Date_Registered)</td>
                         </tr>
                     }
                 </tbody>
@@ -85,13 +84,13 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h4 style="display:inline">GBASE RETURN MESSAGE</h4>
-                            <button type="button" class="close" onclick="$('#GWriteMessageModal').hide();">&times;</button>
+                            <button type="button" class="close" onclick="$('#GWriteMessageModal').modal('hide');">&times;</button>
                         </div>
                         <div class="modal-body">
-                            <textarea style="width:700px;height:250px" id="gbaseMsgArea" readonly></textarea>
+                            <textarea style="width:800px;height:400px;font-size:medium" id="gbaseMsgArea" readonly></textarea>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn float-r" onclick="$('#GWriteMessageModal').hide();">Close</button>
+                            <button type="button" class="btn float-r" onclick="$('#GWriteMessageModal').modal('hide');">Close</button>
                         </div>
                     </div>
                 </div>
@@ -159,7 +158,7 @@
             });
         });
         $(".table").on("click", ".btnGWriteError", function (e) {
-            $('#GWriteMessageModal').show().addClass('in');
+            $('#GWriteMessageModal').modal('show');
             $('#gbaseMsgArea').val($('.message_' + $(this).attr('id')).val());
         });
     });
