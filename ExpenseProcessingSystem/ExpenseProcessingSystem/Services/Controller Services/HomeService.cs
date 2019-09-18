@@ -752,7 +752,9 @@ namespace ExpenseProcessingSystem.Services
             List<int> intList = model.Select(c => c.Vendor_MasterID).ToList();
 
             var allPending = (from pp in _context.DMVendor_Pending
-                              from pm in _context.DMVendor.Where(x => x.Vendor_MasterID == pp.Pending_Vendor_MasterID).DefaultIfEmpty()
+                              from pm in _context.DMVendor.Where(x => x.Vendor_MasterID == pp.Pending_Vendor_MasterID
+                              && x.Vendor_isActive == true
+                              && x.Vendor_isDeleted == false).DefaultIfEmpty()
                               select new
                               {
                                   pp.Pending_Vendor_MasterID,
@@ -851,7 +853,9 @@ namespace ExpenseProcessingSystem.Services
             List<int> intList = model.Select(c => c.Dept_MasterID).ToList();
 
             var allPending = ((from pp in _context.DMDept_Pending
-                               from pm in _context.DMDept.Where(x => x.Dept_MasterID == pp.Pending_Dept_MasterID).DefaultIfEmpty()
+                               from pm in _context.DMDept.Where(x => x.Dept_MasterID == pp.Pending_Dept_MasterID
+                              && x.Dept_isActive == true
+                              && x.Dept_isDeleted == false).DefaultIfEmpty()
                                select new
                                {
                                    pp.Pending_Dept_MasterID,
@@ -926,7 +930,9 @@ namespace ExpenseProcessingSystem.Services
             List<int> intList = model.Select(c => c.Check_MasterID).ToList();
 
             var allPending = ((from pp in _context.DMCheck_Pending
-                               from pm in _context.DMCheck.Where(x => x.Check_MasterID == pp.Pending_Check_MasterID).DefaultIfEmpty()
+                               from pm in _context.DMCheck.Where(x => x.Check_MasterID == pp.Pending_Check_MasterID
+                              && x.Check_isActive == true
+                              && x.Check_isDeleted == false).DefaultIfEmpty()
                                select new
                                {
                                    pp.Pending_Check_MasterID,
@@ -1003,7 +1009,9 @@ namespace ExpenseProcessingSystem.Services
             List<int> intList = model.Select(c => c.Account_MasterID).ToList();
 
             var allPending = (from pp in _context.DMAccount_Pending
-                              from pm in _context.DMAccount.Where(x => x.Account_MasterID == pp.Pending_Account_MasterID).DefaultIfEmpty()
+                              from pm in _context.DMAccount.Where(x => x.Account_MasterID == pp.Pending_Account_MasterID 
+                              && x.Account_isActive == true 
+                              && x.Account_isDeleted == false).DefaultIfEmpty()
                               select new
                               {
                                   pp.Pending_Account_MasterID,
@@ -1091,7 +1099,9 @@ namespace ExpenseProcessingSystem.Services
             List<int> intList = model.Select(c => c.AccountGroup_MasterID).ToList();
 
             var allPending = (from pp in _context.DMAccountGroup_Pending
-                              from pm in _context.DMAccountGroup.Where(x => x.AccountGroup_MasterID == pp.Pending_AccountGroup_MasterID).DefaultIfEmpty()
+                              from pm in _context.DMAccountGroup.Where(x => x.AccountGroup_MasterID == pp.Pending_AccountGroup_MasterID
+                              && x.AccountGroup_isActive == true
+                              && x.AccountGroup_isDeleted == false).DefaultIfEmpty()
                               select new
                               {
                                   pp.Pending_AccountGroup_MasterID,
@@ -1163,7 +1173,9 @@ namespace ExpenseProcessingSystem.Services
             List<int> intList = model.Select(c => c.VAT_MasterID).ToList();
 
             var allPending = (from pp in _context.DMVAT_Pending
-                              from pm in _context.DMVAT.Where(x => x.VAT_MasterID == pp.Pending_VAT_MasterID).DefaultIfEmpty()
+                              from pm in _context.DMVAT.Where(x => x.VAT_MasterID == pp.Pending_VAT_MasterID
+                              && x.VAT_isActive == true
+                              && x.VAT_isDeleted == false).DefaultIfEmpty()
                               select new
                               {
                                   pp.Pending_VAT_MasterID,
@@ -1235,7 +1247,9 @@ namespace ExpenseProcessingSystem.Services
             List<int> intList = model.Select(c => c.FBT_MasterID).ToList();
 
             var allPending = (from pp in _context.DMFBT_Pending
-                              from pm in _context.DMFBT.Where(x => x.FBT_MasterID == pp.Pending_FBT_MasterID).DefaultIfEmpty()
+                              from pm in _context.DMFBT.Where(x => x.FBT_MasterID == pp.Pending_FBT_MasterID
+                              && x.FBT_isActive == true
+                              && x.FBT_isDeleted == false).DefaultIfEmpty()
                               select new
                               {
                                   pp.Pending_FBT_MasterID,
@@ -1309,7 +1323,9 @@ namespace ExpenseProcessingSystem.Services
             List<int> intList = model.Select(c => c.TR_MasterID).ToList();
 
             var allPending = (from pp in _context.DMTR_Pending
-                              from pm in _context.DMTR.Where(x => x.TR_MasterID == pp.Pending_TR_MasterID).DefaultIfEmpty()
+                              from pm in _context.DMTR.Where(x => x.TR_MasterID == pp.Pending_TR_MasterID
+                              && x.TR_isActive == true
+                              && x.TR_isDeleted == false).DefaultIfEmpty()
                               select new
                               {
                                   pp.Pending_TR_WT_Title,
@@ -1387,7 +1403,9 @@ namespace ExpenseProcessingSystem.Services
             List<int> intList = model.Select(c => c.Curr_MasterID).ToList();
 
             var allPending = (from pp in _context.DMCurrency_Pending
-                              from pm in _context.DMCurrency.Where(x => x.Curr_MasterID == pp.Pending_Curr_MasterID).DefaultIfEmpty()
+                              from pm in _context.DMCurrency.Where(x => x.Curr_MasterID == pp.Pending_Curr_MasterID
+                              && x.Curr_isActive == true
+                              && x.Curr_isDeleted == false).DefaultIfEmpty()
                               select new
                               {
                                   pp.Pending_Curr_MasterID,
@@ -1459,7 +1477,9 @@ namespace ExpenseProcessingSystem.Services
             List<int> intList = model.Select(c => c.Emp_MasterID).ToList();
 
             var allPending = ((from pp in _context.DMEmp_Pending
-                               from pm in _context.DMEmp.Where(x => x.Emp_MasterID == pp.Pending_Emp_MasterID).DefaultIfEmpty()
+                               from pm in _context.DMEmp.Where(x => x.Emp_MasterID == pp.Pending_Emp_MasterID
+                              && x.Emp_isActive == true
+                              && x.Emp_isDeleted == false).DefaultIfEmpty()
                                select new
                                {
                                    pp.Pending_Emp_MasterID,
@@ -1538,7 +1558,9 @@ namespace ExpenseProcessingSystem.Services
             List<int> intList = model.Select(c => c.Cust_MasterID).ToList();
 
             var allPending = ((from pp in _context.DMCust_Pending
-                               from pm in _context.DMCust.Where(x => x.Cust_MasterID == pp.Pending_Cust_MasterID).DefaultIfEmpty()
+                               from pm in _context.DMCust.Where(x => x.Cust_MasterID == pp.Pending_Cust_MasterID
+                              && x.Cust_isActive == true
+                              && x.Cust_isDeleted == false).DefaultIfEmpty()
                                select new
                                {
                                    pp.Pending_Cust_MasterID,
@@ -1613,7 +1635,9 @@ namespace ExpenseProcessingSystem.Services
             List<int> intList = model.Select(c => c.BCS_MasterID).ToList();
 
             var allPending = ((from pp in _context.DMBCS_Pending
-                               from pm in _context.DMBCS.Where(x => x.BCS_MasterID == pp.Pending_BCS_MasterID).DefaultIfEmpty()
+                               from pm in _context.DMBCS.Where(x => x.BCS_MasterID == pp.Pending_BCS_MasterID
+                              && x.BCS_isActive == true
+                              && x.BCS_isDeleted == false).DefaultIfEmpty()
                                select new
                                {
                                    pp.Pending_BCS_MasterID,
@@ -3556,7 +3580,7 @@ namespace ExpenseProcessingSystem.Services
                                 PA_Vendor_Name = getVendorName(list.ent.Expense_Payee, list.ent.Expense_Payee_Type),
                                 PA_Total_Amt = dtl.d.ExpDtl_Debit,
                                 PA_Day = dtl.d.ExpDtl_Amor_Day,
-                                PA_Month = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(dtl.d.ExpDtl_Amor_Month),
+                                PA_Month = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(dtl.d.ExpDtl_Amor_Month + 1),
                                 PA_No_Of_Months = dtl.d.ExpDtl_Amor_Duration
                             });
                         }
@@ -10160,7 +10184,7 @@ namespace ExpenseProcessingSystem.Services
 
             return true;
         }
-        //Delete expense entry NC
+        //Delete expense entry NC / DDV
         public bool deleteExpenseEntry(int expense_ID, int expenseType)
         {
             var entry = _context.ExpenseEntry.Where(x => x.Expense_ID == expense_ID).First();
@@ -10380,27 +10404,37 @@ namespace ExpenseProcessingSystem.Services
                     insertIntoNotif(userId, GlobalSystemValues.TYPE_DDV, GlobalSystemValues.STATUS_NEW, 0);
                     //----------------------------- NOTIF----------------------------------
                 }
+                //else
+                //{
+                //    List<int> EditableStatus = new List<int>{
+                //    GlobalSystemValues.STATUS_PENDING,
+                //    GlobalSystemValues.STATUS_REJECTED
+                //    };
+                //    int currentStat = getSingleEntryRecord(entryID).Expense_Status;
+                //    if (EditableStatus.Contains(currentStat))
+                //    {
+                //        // Update entity in DbSet
+                //        expenseEntry.Expense_ID = entryModel.entryID;
+                //        removeDDVChild(entryModel.entryID);
+                //        _context.ExpenseEntry.Update(expenseEntry);
+                //        //----------------------------- NOTIF----------------------------------
+                //        insertIntoNotif(userId, GlobalSystemValues.TYPE_DDV, GlobalSystemValues.STATUS_EDIT, 0);
+                //        //----------------------------- NOTIF----------------------------------
+                //    }
+                //    else
+                //    {
+                //        expenseEntry.Expense_ID = entryID;
+                //        GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE1;
+                //    }
+                //}
                 else
                 {
-                    List<int> EditableStatus = new List<int>{
-                    GlobalSystemValues.STATUS_PENDING,
-                    GlobalSystemValues.STATUS_REJECTED
-                    };
-                    int currentStat = getSingleEntryRecord(entryID).Expense_Status;
-                    if (EditableStatus.Contains(currentStat))
+                    if (deleteExpenseEntry(entryModel.entryID, GlobalSystemValues.TYPE_DDV))
                     {
-                        // Update entity in DbSet
-                        expenseEntry.Expense_ID = entryModel.entryID;
-                        removeDDVChild(entryModel.entryID);
-                        _context.ExpenseEntry.Update(expenseEntry);
+                        _context.ExpenseEntry.Add(expenseEntry);
                         //----------------------------- NOTIF----------------------------------
                         insertIntoNotif(userId, GlobalSystemValues.TYPE_DDV, GlobalSystemValues.STATUS_EDIT, 0);
                         //----------------------------- NOTIF----------------------------------
-                    }
-                    else
-                    {
-                        expenseEntry.Expense_ID = entryID;
-                        GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE1;
                     }
                 }
                 _context.SaveChanges();
