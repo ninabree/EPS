@@ -1311,6 +1311,11 @@ namespace ExpenseProcessingSystem.Controllers
                     viewModel.systemValues.ewt = _service.getVendorTaxRate(viewModel.selectedPayee);
                     viewModel.systemValues.vat = _service.getVendorVat(viewModel.selectedPayee);
                 }
+                else
+                {
+                    viewModel.systemValues.vat = _service.getAllVat();
+                    viewModel.systemValues.ewt = new SelectList("0", "0");
+                }
 
                 viewModel.systemValues.payee_type_sel = new SelectList(GlobalSystemValues.PAYEETYPE_SELECT_CV, "Value", "Text", GlobalSystemValues.PAYEETYPE_SELECT_CV.First());
 
@@ -1342,7 +1347,7 @@ namespace ExpenseProcessingSystem.Controllers
             else
             {
                 viewModel = PopulateEntry((EntryCVViewModelList)viewModel);
-
+                viewModel.systemValues.vat = _service.getAllVat();
                 var accCCY = _service.getCurrencyByMasterID(_service.getAccount(viewModel.systemValues.acc[0].accId).Account_Currency_MasterID).Curr_ID;
                 //viewModel.vendor = 2;
                 viewModel.EntryCV.Add(new EntryCVViewModel {
@@ -1648,8 +1653,17 @@ namespace ExpenseProcessingSystem.Controllers
 
             cvList = PopulateEntry((EntryCVViewModelList)cvList);
 
-            cvList.systemValues.ewt = _service.getVendorTaxRate(cvList.selectedPayee);
-            cvList.systemValues.vat = _service.getVendorVat(cvList.selectedPayee);
+            if(cvList.payee_type == GlobalSystemValues.PAYEETYPE_VENDOR)
+            {
+                cvList.systemValues.ewt = _service.getVendorTaxRate(cvList.selectedPayee);
+                cvList.systemValues.vat = _service.getVendorVat(cvList.selectedPayee);
+            }
+            else
+            {
+                cvList.systemValues.ewt = new SelectList("0", "0");
+                cvList.systemValues.vat = _service.getAllVat();
+            }
+
 
             List<cvBirForm> birForms = new List<cvBirForm>();
             foreach (var item in cvList.EntryCV)
