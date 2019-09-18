@@ -1313,6 +1313,7 @@ namespace ExpenseProcessingSystem.Controllers
                 }
                 else
                 {
+                    viewModel.systemValues.vat = _service.getAllVat();
                     viewModel.systemValues.ewt = new SelectList("0", "0");
                 }
 
