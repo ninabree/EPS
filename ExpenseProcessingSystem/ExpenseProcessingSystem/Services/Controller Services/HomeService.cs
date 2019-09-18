@@ -12810,11 +12810,17 @@ namespace ExpenseProcessingSystem.Services
                             && liqInter.Liq_Amount_1_1 > 0
                             && acc.Account_No.Substring(4, 3) == branchCode
                             && liqDtl.Liq_Status != 14
-                            && (opening <= exp.Expense_Date && closing >= exp.Expense_Date)
+                            && (opening <= liqDtl.Liq_Created_Date && closing >= liqDtl.Liq_Created_Date)
                             select new
                             { exp.Expense_ID,expDtl.ExpDtl_ID,exp.Expense_Number,liqDtl.Liq_Status,acc.Account_No}).ToList().Count;
 
-            if (liqStatus > 0 || ddvInterStatus > 0 || nmStatus > 0)
+            var ncStatus = (from exp in _context.ExpenseEntry
+                            where exp.Expense_Type == 5
+                            && exp.Expense_Status != 14
+                            && (opening <= exp.Expense_Date && closing >= exp.Expense_Date)
+                            select new {exp.Expense_ID}).ToList().Count;
+
+            if (liqStatus > 0 || ddvInterStatus > 0 || nmStatus > 0 || ncStatus > 0)
                 return true;
 
             return false;
