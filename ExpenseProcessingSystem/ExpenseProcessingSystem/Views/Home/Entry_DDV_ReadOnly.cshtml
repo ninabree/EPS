@@ -103,6 +103,7 @@
                         </td>
                         <td data-toggle="tooltip" title="@Model.EntryDDV[i].account_Name" data-placement="right">
                             <input value="@Model.EntryDDV[i].account_Name" class="input100 accName" disabled />
+                            @Html.HiddenFor(x => Model.EntryDDV[i].account, new { @class = "accId" })
                         </td>
                         <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryDDV[i].inter_entity, new { @disabled = "true" })</td>
                         <td style="text-align:center">@Html.DisplayFor(x => Model.EntryDDV[i].fbt)</td>
@@ -348,7 +349,7 @@
             var interRate = $("#" + pNode.id).find('#EntryDDV_' + idNo + '__interDetails_Inter_Rate').val();
             var remarksTitle = $("#" + pNode.id).find("td div .GBaseRemarksTitle").val();
             var account = $("#" + pNode.id).find("td .accName").val();
-            var accountID = $("#" + pNode.id).find("#EntryDDV_" + idNo + "__interDetails_interPartList_" + idNo + "__ExpenseEntryInterEntityAccs_" + idNo + "__Inter_Acc_ID").val();
+            var accountID = $("#" + pNode.id).find("td .accId").val();
 
             //remove prev contents
             modalDivBody2.empty();
