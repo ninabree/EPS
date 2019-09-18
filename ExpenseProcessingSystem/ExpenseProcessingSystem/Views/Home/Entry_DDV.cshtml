@@ -206,6 +206,27 @@
         var modalDivBody2 = $(modalDiv2).find('.modal-body2');
         var modalDivFooter2 = $(modalDiv2).find('.modal-footer2');
 
+        //trigger recomputation of DDV voucher onload
+        reComputeDDVVoucher();
+
+        function reComputeDDVVoucher() {
+            var screen = $("#_screen").val();
+            if (screen == "ddv") {
+                var myform = document.getElementById("inputForm");
+                var data = new FormData(myform);
+                $.ajax({
+                    type: 'POST',
+                    url: "/Home/VoucherDDV",
+                    data: $("#inputForm").serialize(),
+                    success: function (result) {
+                        var doc = document.getElementById("iframePreview").contentWindow.document;
+                        doc.open();
+                        doc.write(result);
+                        doc.close();
+                    }
+                });
+            }
+        }
         function eachTr() {
             //Enable VAT/EWT dropdown list if corresponding checkbox is checked
             var trs = $("#inputTable").find("tbody").find("tr");

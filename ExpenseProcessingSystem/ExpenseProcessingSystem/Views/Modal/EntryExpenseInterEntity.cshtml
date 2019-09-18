@@ -384,9 +384,26 @@
                 //append the particulars list to model to post
                 $('#req_' + itemNo).find('#interDtls').append(parts);
 
+                //trigger recomputation of DDV voucher
+                var screen = $("#_screen").val();
+                if (screen == "ddv") {
+                    var myform = document.getElementById("inputForm");
+                    var data = new FormData(myform);
+                    $.ajax({
+                        type: 'POST',
+                        url: "/Home/VoucherDDV",
+                        data: $("#inputForm").serialize(),
+                        success: function (result) {
+                            //$("#iframePreview").contents().find('html').html(result)
+                            var doc = document.getElementById("iframePreview").contentWindow.document;
+                            doc.open();
+                            doc.write(result);
+                            doc.close();
+                        }
+                    });
+                }
                 //trigger recomputation of debit and credit
                 computeValuesDDVInter($("#item_" + itemNo)[0]);
-                alert("#item_" + itemNo);
                 $('.modal-body2').empty();
                 $('.myModal2').modal('hide');
             }
@@ -545,8 +562,6 @@
         ////TEMP FIX
         function computeValuesDDVInter(parent) {
             var pNode = parent;
-            alert("PNODE --> " + pNode.id);
-            alert("#" + pNode.id + " .txtGross");
             var grossAmt = $("#" + pNode.id + " .txtGross").val();
             
             $("#" + pNode.id + " .txtGross").attr("value", grossAmt);
