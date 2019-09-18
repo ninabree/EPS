@@ -886,7 +886,7 @@
         $('#NCPartialTbl').on('change', '.misc-0', function () {
             var pid = $(this.parentNode)[0].parentNode.id.substring(5);
             var vals = $(this).val();
-            var type = $(this).parent().hasClass("db") ? dbType : $(this).parent().hasClass("cd") ? cdType : $(this).parent().hasClass("ewt") ? ewtType : "";
+            var type = $(this).parent().hasClass("ewt") ? ewtType : $(this).parent().hasClass("db") ? dbType : $(this).parent().hasClass("cd") ? cdType : "";
             $(this).parent().parent().find("td .misc-0").not(this).val(0);
             $(this).parent().parent().siblings("[id='EntryNC_ExpenseEntryNCDtls_" + pid + "__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount']").val(vals);
             $(this).parent().siblings("[id$='ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Type_ID']").val(type);
@@ -894,7 +894,7 @@
         $('#NCPartialTbl').on('change', '.misc-1', function () {
             var pid = $(this.parentNode)[0].id;
             var vals = $(this).val();
-            var type = $(this).parent().hasClass("db") ? dbType : $(this).parent().hasClass("cd") ? cdType : $(this).parent().hasClass("ewt") ? ewtType : "";
+            var type = $(this).parent().hasClass("ewt") ? ewtType : $(this).parent().hasClass("db") ? dbType : $(this).parent().hasClass("cd") ? cdType : "";
             if (type == dbType) {
                 pid = pid.substring(4);
             } else {
@@ -907,7 +907,7 @@
         $('#NCPartialTbl').on('change', '.misc-2', function () {
             var pid = $(this.parentNode)[0].id;
             var vals = $(this).val();
-            var type = $(this).parent().hasClass("db") ? dbType : $(this).parent().hasClass("cd") ? cdType : $(this).parent().hasClass("ewt") ? ewtType : "";
+            var type = $(this).parent().hasClass("ewt") ? ewtType : $(this).parent().hasClass("db") ? dbType : $(this).parent().hasClass("cd") ? cdType : "";
             if (type == dbType) {
                 pid = pid.substring(4);
             } else {
@@ -920,7 +920,7 @@
         $('#NCPartialTbl').on('change', '.misc-3', function () {
             var pid = $(this.parentNode)[0].id;
             var vals = $(this).val();
-            var type = $(this).parent().hasClass("db") ? dbType : $(this).parent().hasClass("cd") ? cdType : $(this).parent().hasClass("ewt") ? ewtType : "";
+            var type = $(this).parent().hasClass("ewt") ? ewtType : $(this).parent().hasClass("db") ? dbType : $(this).parent().hasClass("cd") ? cdType : "";
             if (type == dbType) {
                 pid = pid.substring(4);
             } else {
@@ -952,8 +952,18 @@
         $('#NCPartialTbl').on('change', '.acc-sel', function () {
             var vals = $(this).val();
             var categoryID = $("select#categoryName option:selected").val();
+            //check if assigned account is tax account
             if (vals == @ewt) {
                 $(this).parent().siblings("[id$='DtlAcc_Type_ID']").val(3);
+                $(this).parent().siblings(".voucher-input.db").addClass("ewt");
+                $(this).parent().siblings(".voucher-input.cd").addClass("ewt");
+            } else {
+                var dbAmt = parseInt($(this).parent().siblings(".voucher-input.db").find("input").val());
+                var cdAmt = parseInt($(this).parent().siblings(".voucher-input.cd").find("input").val());
+                var typeId = dbAmt > 0 ? 1 : cdAmt > 0 ? 2 : 0;
+                 $(this).parent().siblings("[id$='DtlAcc_Type_ID']").val(typeId);
+                $(this).parent().siblings(".voucher-input.db").removeClass("ewt");
+                $(this).parent().siblings(".voucher-input.cd").removeClass("ewt");
             }
             if (categoryID == "8") {
                 var currID = $(this).parent().siblings("[id$='__ExpNCDtlAcc_Curr_ID']").val();
