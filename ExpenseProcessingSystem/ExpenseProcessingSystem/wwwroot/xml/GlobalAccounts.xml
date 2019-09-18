@@ -69,5 +69,7 @@ string value4 = xelem.Element("ADDRESS").Value
   <!--Closing Petty Cash-->
   <PC_MASTERID id="PC_MASTERID">108</PC_MASTERID>
 
+  <NC_USD id="NC_USD">1</NC_USD>
+  <NC_YES id="NC_YEN">50</NC_YES>
 
 </GlobalAccount>
