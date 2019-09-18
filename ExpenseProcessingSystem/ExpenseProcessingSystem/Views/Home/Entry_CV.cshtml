@@ -98,7 +98,7 @@
                             <select id="@Html.IdFor(x => Model.EntryCV[i].account)" class="input100 txtAcc voucher-input" name="@Html.NameFor(x => Model.EntryCV[i].account)">
                                 @foreach (var groepModel in Model.systemValues.acc)
                                 {
-                                    if (@groepModel.accId == @Model.EntryCV[0].account)
+                                    if (@groepModel.accId == @Model.EntryCV[i].account)
                                     {
                                         <option value="@groepModel.accId" class="@groepModel.accCode" selected>@groepModel.accName</option>
                                     }
@@ -112,7 +112,7 @@
                         </td>
                         @if (Model.payee_type == GlobalSystemValues.PAYEETYPE_VENDOR)
                         {
-                            <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].fbt, new {@class="fbtChk" ,@disabled = "true" })</td>
+                            <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].fbt, new { @class = "fbtChk", @disabled = "true" })</td>
                         }
                         else
                         {
@@ -133,7 +133,14 @@
                             }
 
                         </td>
-                        <td style="text-align:center">@Html.CheckBoxFor(m => m.EntryCV[i].chkEwt, new { @class = "chkEwt comVar" })</td>
+                        @if (Model.payee_type != GlobalSystemValues.PAYEETYPE_VENDOR)
+                        {
+                            <td style="text-align:center">@Html.CheckBoxFor(m => m.EntryCV[i].chkEwt, new { @class = "chkEwt comVar" })</td>
+                        }
+                        else
+                        {
+                            <td style="text-align:center">@Html.CheckBoxFor(m => m.EntryCV[i].chkEwt, new { @class = "chkEwt comVar" ,@disabled="true"})</td>
+                        }
                         <td>
                             @if (Model.EntryCV[i].chkEwt)
                             {
@@ -295,8 +302,6 @@
         $('.table').find('input.chkEwt').prop('disabled', true);
         </text>
         }
-
-
 
         $('#iframePreview').prop('src', "/Home/VoucherCV");
         });
