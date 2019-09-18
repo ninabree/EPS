@@ -213,7 +213,7 @@
                          @Model.ReportLOI.Rep_AmountInString  @if (Model.ReportLOI.Rep_AmountInString.Length <= 0)
                         {<p></p>}
                     </div>
-                    <div id="adjust-div-l"> (PHP @Model.ReportLOI.Rep_Amount</div> <div id="phpright"> ), and credit to the account of:</div>
+                    <div id="adjust-div-l"> (PHP @String.Format("{0:n}", Model.ReportLOI.Rep_Amount)</div> <div id="phpright"> ), and credit to the account of:</div>
                 </div>
             </td>
         </tr>
@@ -233,14 +233,14 @@
                 <td colspan="3"><div class="">@vals.loi_Emp_Name</div></td>
                 <td colspan="2"><div class="">@vals.loi_Acc_Type</div></td>
                 <td colspan="2"><div class="">@vals.loi_Acc_No</div></td>
-                <td colspan="2"><div class="txt-align-r">@vals.loi_Amount</div></td>
+                <td colspan="2"><div class="txt-align-r">@String.Format("{0:n}", vals.loi_Amount)</div></td>
                 <td colspan="3"></td>
             </tr>
             cnt = cnt + 1;
         }
         <tr>
             <td colspan="8"></td>
-            <td colspan="2" class="fw-doub-underline txt-align-r">@Model.ReportLOI.Rep_Amount</td>
+            <td colspan="2" class="fw-doub-underline txt-align-r">@String.Format("{0:n}", Model.ReportLOI.Rep_Amount)</td>
             <td colspan="3" class="fw-doub-underline"></td>
         </tr>
         <tr><td colspan="13"><p></p></td></tr>

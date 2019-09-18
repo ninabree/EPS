@@ -3327,6 +3327,7 @@ namespace ExpenseProcessingSystem.Controllers
             viewModel.CDDContents = cddContents;
             var xlFileName = masterid == currUSD.currMasterID
                 ? "CDDIS_NC_RET_USD.xlsx" : masterid == currJPY.currMasterID ? "CDDIS_NC_RET_YEN.xlsx" : "CDDIS_NC_PCR.xlsx";
+            bool result = _service.updatePrintStatus(GlobalSystemValues.PS_CDD, entryID);
             return File(excelGenerate.ExcelCDDIS_RET(viewModel, newFileName, xlFileName), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", newFileName);
 
         }
@@ -5626,7 +5627,7 @@ namespace ExpenseProcessingSystem.Controllers
             int exp_pre = int.Parse(xelemAcc.Element("C_Amort_EXP").Value);
             int pe_pre = int.Parse(xelemAcc.Element("C_Amort_PE").Value);
             //string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmsstt"); // ORIGINAL
-            vvm.date = DateTime.Now.ToString("MM-dd-yyyy");
+            vvm.date = model.expenseDate.ToString("MM-dd-yyyy");
 
             vvm.headvm.Header_Logo = "";
             vvm.headvm.Header_Name = xelemReport.Element("NAME").Value;
@@ -5832,7 +5833,7 @@ namespace ExpenseProcessingSystem.Controllers
 
             int officeID = int.Parse(xelemAcc.Element("HOUSE_RENT").Value);
             //string dateNow = DateTime.Now.ToString("MM-dd-yyyy_hhmmsstt"); // ORIGINAL
-            vvm.date = DateTime.Now.ToString("MM-dd-yyyy");
+            vvm.date = model.expenseDate.ToString("MM-dd-yyyy");
 
             vvm.headvm.Header_Logo = "";
             vvm.headvm.Header_Name = xelemReport.Element("NAME").Value;
