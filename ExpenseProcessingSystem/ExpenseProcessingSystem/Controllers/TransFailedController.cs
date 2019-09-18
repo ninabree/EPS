@@ -27,15 +27,15 @@ namespace ExpenseProcessingSystem.Controllers
         private readonly GOExpressContext _GOContext;
         private readonly GWriteContext _GwriteContext;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
-        private HomeService _service;
+        private TransFailedService _service;
         private SortService _sortService;
         //to access resources
-        private readonly IStringLocalizer<HomeController> _localizer;
+        private readonly IStringLocalizer<TransFailedController> _localizer;
         private IHostingEnvironment _env;
-        private ILogger<HomeController> _logger;
+        private ILogger<TransFailedController> _logger;
         XElement xelemTFIntro = XElement.Load("wwwroot/xml/TransFailedIntro.xml");
 
-        public TransFailedController(ILogger<HomeController> logger, IHttpContextAccessor httpContextAccessor, EPSDbContext context, GOExpressContext gocontext, GWriteContext gwritecontext, IHostingEnvironment hostingEnvironment, IStringLocalizer<HomeController> localizer)
+        public TransFailedController(ILogger<TransFailedController> logger, IHttpContextAccessor httpContextAccessor, EPSDbContext context, GOExpressContext gocontext, GWriteContext gwritecontext, IHostingEnvironment hostingEnvironment, IStringLocalizer<TransFailedController> localizer)
         {
             _logger = logger;
             _localizer = localizer;
@@ -43,7 +43,7 @@ namespace ExpenseProcessingSystem.Controllers
             _context = context;
             _GOContext = gocontext;
             _GwriteContext = gwritecontext;
-            _service = new HomeService(_httpContextAccessor, _context, _GOContext, _GwriteContext, this.ModelState, hostingEnvironment);
+            _service = new TransFailedService(_httpContextAccessor, _context, _GOContext, _GwriteContext, this.ModelState, hostingEnvironment);
             _sortService = new SortService();
             _env = hostingEnvironment;
         }
@@ -68,6 +68,7 @@ namespace ExpenseProcessingSystem.Controllers
                     vm.TF_MSGs.Add(msg);
                 }
             }
+            _service.TEST();
 
             return View(vm);
         }

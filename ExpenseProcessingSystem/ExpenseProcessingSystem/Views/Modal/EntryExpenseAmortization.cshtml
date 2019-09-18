@@ -317,7 +317,27 @@
                 }
             }
 
-
+            //trigger recomputation of CV voucher
+            var screen = $("#_screen").val();
+            if (screen == "cv") {
+                var myform = document.getElementById("inputForm");
+                var data = new FormData(myform);
+                if ($('#iframePreview').length == 0) {
+                    return false;
+                }
+                $.ajax({
+                    type: 'POST',
+                    url: "/Home/VoucherCV",
+                    data: $("#inputForm").serialize(),
+                    success: function (result) {
+                        //$("#iframePreview").contents().find('html').html(result)
+                        var doc = document.getElementById("iframePreview").contentWindow.document;
+                        doc.open();
+                        doc.write(result);
+                        doc.close();
+                    }
+                });
+            }
             parentEntry.append(htmlTxt);
             $('#myModal').modal('hide');
         });
