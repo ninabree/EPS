@@ -5694,10 +5694,11 @@ namespace ExpenseProcessingSystem.Controllers
                     particulars temp = new particulars();
 
                     if (vvm.particulars.Any(x => x.documentType.Trim() == particular.docType
-                                              && x.invoiceNo.Trim() == particular.invNo))
+                                              && x.invoiceNo.Trim() == particular.invNo
+                                              && x.description.Trim() == particular.desc))
                     {
                         int index = vvm.particulars.FindIndex(x => x.documentType.Trim() == particular.docType.Trim()
-                            && x.invoiceNo.Trim() == particular.invNo.Trim());
+                            && x.invoiceNo.Trim() == particular.invNo.Trim() && x.description.Trim() == particular.desc);
 
                         vvm.particulars[index].amount += particular.amount;
                     }
@@ -5901,10 +5902,11 @@ namespace ExpenseProcessingSystem.Controllers
                     particulars temp = new particulars();
 
                     if (vvm.particulars.Any(x => x.documentType.Trim() == particular.docType
-                                              && x.invoiceNo.Trim() == particular.invNo))
+                                              && x.invoiceNo.Trim() == particular.invNo
+                                              && x.description.Trim() == particular.desc))
                     {
                         int index = vvm.particulars.FindIndex(x => x.documentType.Trim() == particular.docType.Trim()
-                            && x.invoiceNo.Trim() == particular.invNo.Trim());
+                            && x.invoiceNo.Trim() == particular.invNo.Trim() && x.description.Trim() == particular.desc);
 
                         vvm.particulars[index].amount += particular.amount;
                     }

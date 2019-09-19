@@ -375,10 +375,11 @@
                         <h4 style="display:inline">Cash Break Down</h4>
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" id="pettyprntBody">
 
                     </div>
                     <div class="modal-footer">
+                        <button type="button" id="pettyPrnt" class="btn float-l" data-dismiss="modal">Print</button>
                         <button type="button" class="btn float-r" data-dismiss="modal">Close</button>
                         <button class="btn float-r comVar" id="brkDwnSubmit">Submit</button>
                     </div>
@@ -517,6 +518,22 @@
             $("#userString").val("-");
             $("#passString").val("-");
             $("#closeForm").submit();
+        });
+
+        $("#pettyCashModal").on("click", "#pettyPrnt", function () {
+            var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+
+            mywindow.document.write('<html><head><title>' + document.title + '</title>');
+            mywindow.document.write(document.getElementById("pettyprntBody").innerHTML);
+            mywindow.document.write('</body></html>');
+
+            mywindow.document.close(); // necessary for IE >= 10
+            mywindow.focus(); // necessary for IE >= 10*/
+
+            mywindow.print();
+            mywindow.close();
+
+            return true;
         });
 
         $("#login").on("click", "#loginSubmit", function (e) {
