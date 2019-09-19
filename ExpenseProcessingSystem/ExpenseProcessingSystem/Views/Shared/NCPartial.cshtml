@@ -967,6 +967,32 @@
                     $(this).parent().siblings(".voucher-input.cd").removeClass("ewt");
                 }
             }
+             if (categoryID == "1") {
+                var currID = $(this).parent().siblings("[id$='__ExpNCDtlAcc_Curr_ID']").val();
+                //if category is LS Payroll
+                //if newly added entry selects COMPUTER SUSPENSE PHP AND CURR ID is PHP
+                if (vals == @cs && currID == @ViewBag.phpid) {
+                    $(this).parent().siblings("[id^='deb_']").find("input").addClass("nc-comp-susp-db");
+                }else {
+                    $(this).parent().siblings("[id^='deb_']").find("input").removeClass("nc-comp-susp-db");
+                }
+                if (vals == @cs && currID == @ViewBag.phpid) {
+                    $(this).parent().siblings("[id^='cred_']").find("input").addClass("nc-comp-susp-cd");
+                }else if (vals != @cs) {
+                    $(this).parent().siblings("[id^='cred_']").find("input").removeClass("nc-comp-susp-cd");
+                }
+                //if newly added entry selects INTER ENTITY AND CURR ID is USD
+                if ((vals == @IEFR_JS || vals == @IEFR_JS_2 || vals == @IERF_JS || vals == @IERF_RET) && currID == @ViewBag.usdid) {
+                    $(this).parent().siblings("[id^='deb_']").find("input").addClass("nc-inter-db");
+                }else {
+                    $(this).parent().siblings("[id^='deb_']").find("input").removeClass("nc-inter-db");
+                }
+                if ((vals == @IEFR_JS || vals == @IEFR_JS_2 || vals == @IERF_JS || vals == @IERF_RET) && currID == @ViewBag.usdid) {
+                    $(this).parent().siblings("[id^='cred_']").find("input").addClass("nc-inter-cd");
+                }else{
+                    $(this).parent().siblings("[id^='cred_']").find("input").removeClass("nc-inter-cd");
+                }
+            }
             if (categoryID == "8") {
                 var currID = $(this).parent().siblings("[id$='__ExpNCDtlAcc_Curr_ID']").val();
                 //if cateegory is JS Payroll
