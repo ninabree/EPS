@@ -5,6 +5,8 @@
     var uid = ViewBag.userID;
     var usd = ViewBag.USDmstr;
     var jpy = ViewBag.JPYmstr;
+    var usdid = ViewBag.usdid;
+    var jpyid = ViewBag.jpyid;
     var php = ViewBag.PHPmstr;
 }
 @using ExpenseProcessingSystem.ViewModels.Entry
@@ -451,8 +453,8 @@
                             {<button class="tbl-btn" value="PrintCDD" name="command">Print CDD Instruction Sheet</button>}</div>
                         }
                         else if (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL &&
-                        (Model.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID == @usd ||
-                        Model.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID == @jpy))
+                        (Model.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID == usdid ||
+                        Model.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID == jpyid))
                         {
                             <div class="dis-inline-block">@if (enablePrint)
                             {<button class="tbl-btn" @*id="printBir"*@ value="PrintCDD_RET" name="command">Print CDD Instruction Sheet</button>}</div>

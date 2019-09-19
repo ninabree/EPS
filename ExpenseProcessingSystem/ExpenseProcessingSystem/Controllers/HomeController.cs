@@ -3051,6 +3051,8 @@ namespace ExpenseProcessingSystem.Controllers
             ViewData["JPYmstr"] = _service.getXMLCurrency("YEN").currMasterID;
             ViewData["PHPmstr"] = _service.getXMLCurrency("PHP").currMasterID;
             ViewBag.phpid = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_PHP").Value)).Curr_ID;
+            ViewBag.usdid = _service.getXMLCurrency("USD").currID;
+            ViewBag.jpyid = _service.getXMLCurrency("YEN").currID;
 
             List<cvBirForm> birForms = new List<cvBirForm>();
             
