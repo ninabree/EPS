@@ -952,18 +952,20 @@
         $('#NCPartialTbl').on('change', '.acc-sel', function () {
             var vals = $(this).val();
             var categoryID = $("select#categoryName option:selected").val();
-            //check if assigned account is tax account
-            if (vals == @ewt) {
-                $(this).parent().siblings("[id$='DtlAcc_Type_ID']").val(3);
-                $(this).parent().siblings(".voucher-input.db").addClass("ewt");
-                $(this).parent().siblings(".voucher-input.cd").addClass("ewt");
-            } else {
-                var dbAmt = parseInt($(this).parent().siblings(".voucher-input.db").find("input").val());
-                var cdAmt = parseInt($(this).parent().siblings(".voucher-input.cd").find("input").val());
-                var typeId = dbAmt > 0 ? 1 : cdAmt > 0 ? 2 : 0;
-                 $(this).parent().siblings("[id$='DtlAcc_Type_ID']").val(typeId);
-                $(this).parent().siblings(".voucher-input.db").removeClass("ewt");
-                $(this).parent().siblings(".voucher-input.cd").removeClass("ewt");
+            if (categoryID == "11") {
+                //check if assigned account is tax account
+                if (vals == @ewt) {
+                    $(this).parent().siblings("[id$='DtlAcc_Type_ID']").val(3);
+                    $(this).parent().siblings(".voucher-input.db").addClass("ewt");
+                    $(this).parent().siblings(".voucher-input.cd").addClass("ewt");
+                } else {
+                    var dbAmt = parseInt($(this).parent().siblings(".voucher-input.db").find("input").val());
+                    var cdAmt = parseInt($(this).parent().siblings(".voucher-input.cd").find("input").val());
+                    var typeId = dbAmt > 0 ? 1 : cdAmt > 0 ? 2 : 0;
+                     $(this).parent().siblings("[id$='DtlAcc_Type_ID']").val(typeId);
+                    $(this).parent().siblings(".voucher-input.db").removeClass("ewt");
+                    $(this).parent().siblings(".voucher-input.cd").removeClass("ewt");
+                }
             }
             if (categoryID == "8") {
                 var currID = $(this).parent().siblings("[id$='__ExpNCDtlAcc_Curr_ID']").val();
