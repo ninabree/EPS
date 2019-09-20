@@ -11876,7 +11876,7 @@ namespace ExpenseProcessingSystem.Services
                             ccy = dtls.ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID,
                             contraCcy = dtls.ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Curr_ID,
                             //this is for exchange rate
-                            interate = dtls.ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Inter_Rate,
+                            interate = (dtls.ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Inter_Rate > 0) ? dtls.ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Inter_Rate : dtls.ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Inter_Rate,
                             type = entryType,
                             vendor = dtls.ExpNCDtl_Vendor_ID
                         };
@@ -11894,7 +11894,7 @@ namespace ExpenseProcessingSystem.Services
                             ccy = dtls.ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Curr_ID,
                             contraCcy = dtls.ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID,
                             //this is for exchange rate and inter rate
-                            interate = dtls.ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Inter_Rate,
+                            interate = (dtls.ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Inter_Rate > 0) ? dtls.ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Inter_Rate : dtls.ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Inter_Rate,
                             type = entryType,
                             vendor = dtls.ExpNCDtl_Vendor_ID
                         };
@@ -13158,7 +13158,7 @@ namespace ExpenseProcessingSystem.Services
                 goModel.Entry11Actcde = entry11Account.Account_Code;
                 goModel.Entry11ActType = entry11Account.Account_No.Substring(0, 3);
                 goModel.Entry11ActNo = entry11Account.Account_No.Substring(Math.Max(0, entry11Account.Account_No.Length - 6));
-                goModel.Entry11ExchRate = containerModel.entries[0].interate == 0 ? "" : containerModel.entries[0].interate.ToString();
+                goModel.Entry11ExchRate = (containerModel.entries[0].interate > 0) ? containerModel.entries[0].interate.ToString() : (containerModel.entries[1].interate > 0) ? containerModel.entries[1].interate.ToString() : "";
                 goModel.Entry11ExchCcy = (containerModel.entries[0].contraCcy > 0) ? GetCurrencyAbbrv(containerModel.entries[0].contraCcy) : "";
                 goModel.Entry11Fund = (entry11Account.Account_Fund == true) ? "O" : "";//Replace with proper fund default.
                 goModel.Entry11Available = "";//Replace with proper available default.
@@ -13166,7 +13166,7 @@ namespace ExpenseProcessingSystem.Services
                 goModel.Entry11Entity = "010";//Replace with proper entity default.
                 goModel.Entry11Division = entry11Account.Account_Div;//Replace with proper division default.
                 if ((!sameCurr) && (containerModel.entries[0].ccy != phpID))
-                    goModel.Entry11InterRate = (containerModel.entries[0].interate > 0) ? containerModel.entries[0].interate.ToString() : "";//Replace with proper interate default.
+                    goModel.Entry11InterRate = (containerModel.entries[0].interate > 0) ? containerModel.entries[0].interate.ToString() : (containerModel.entries[1].interate > 0) ? containerModel.entries[1].interate.ToString() : "";
                 goModel.Entry11InterAmt = "";//Replace with proper interamt default.
 
                 if (containerModel.entries.Count > 1)
@@ -13180,7 +13180,7 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry12Actcde = entry12Account.Account_Code;
                     goModel.Entry12ActType = entry12Account.Account_No.Substring(0, 3);
                     goModel.Entry12ActNo = entry12Account.Account_No.Substring(Math.Max(0, entry12Account.Account_No.Length - 6));
-                    goModel.Entry12ExchRate = containerModel.entries[1].interate == 0 ? "" : containerModel.entries[1].interate.ToString();
+                    goModel.Entry12ExchRate = (containerModel.entries[0].interate > 0) ? containerModel.entries[0].interate.ToString() : (containerModel.entries[1].interate > 0) ? containerModel.entries[1].interate.ToString() : "";
                     goModel.Entry12ExchCcy = (containerModel.entries[1].contraCcy > 0) ? GetCurrencyAbbrv(containerModel.entries[1].contraCcy) : "";
                     goModel.Entry12Fund = (entry12Account.Account_Fund == true) ? "O" : "";//Replace with proper fund default.
                     goModel.Entry12Available = "";//Replace with proper available default.
@@ -13188,7 +13188,7 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry12Entity = "010";//Replace with proper entity default.
                     goModel.Entry12Division = entry12Account.Account_Div;//Replace with proper division default.
                     if ((!sameCurr) && (containerModel.entries[1].ccy != phpID))
-                        goModel.Entry12InterRate = (containerModel.entries[1].interate > 0) ? containerModel.entries[1].interate.ToString() : "";//Replace with proper interate default.
+                        goModel.Entry12InterRate = (containerModel.entries[1].interate > 0) ? containerModel.entries[1].interate.ToString() : (containerModel.entries[0].interate > 0) ? containerModel.entries[0].interate.ToString() : "";
                     goModel.Entry12InterAmt = "";//Replace with proper interamt default.
                 }
                 if (containerModel.entries.Count > 2)
