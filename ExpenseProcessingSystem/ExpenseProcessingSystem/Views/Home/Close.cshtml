@@ -521,9 +521,19 @@
         });
 
         $("#pettyCashModal").on("click", "#pettyPrnt", function () {
-            var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+            var mywindow = window.open('', 'PRINT', 'height=800,width=1200');
 
             mywindow.document.write('<html><head><title>' + document.title + '</title>');
+            mywindow.document.write('<link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.css">' +
+                                    '<link rel="stylesheet" href="/css/site.css">' +
+                                    '<link rel="stylesheet" href="/css/util.css">' +
+                                    '<link rel="stylesheet" href="/css/editable-table.css">' +
+                                    '<script src="/lib/jquery/dist/jquery.min.js"><' +'/script>' +
+                                    '<script src="/lib/jquery-ui/jquery-ui.js"><' +'/script>' +
+                                    '<link type="text/css" rel="stylesheet" href="/lib/jquery-ui/jquery-ui.css">' +
+                                    '<script src="/lib/bootstrap/dist/js/bootstrap.js"><' +'/script>' +
+                                    '<script src="/lib/bootbox/bootbox.min.js?v=PHbNrx02NI7i8kNF1kIX06hZX5M82wI7oXyPDsWNS2Y"><' +'/script>');
+            mywindow.document.write('</head><body>');
             mywindow.document.write(document.getElementById("pettyprntBody").innerHTML);
             mywindow.document.write('</body></html>');
 
