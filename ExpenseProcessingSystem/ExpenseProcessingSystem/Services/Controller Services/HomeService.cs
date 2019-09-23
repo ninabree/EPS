@@ -13749,6 +13749,12 @@ namespace ExpenseProcessingSystem.Services
             return _context.DMCurrency.Where(x => x.Curr_MasterID == masterID && x.Curr_isActive == true
                     && x.Curr_isDeleted == false).FirstOrDefault();
         }
+        //Get lastest currency by its currency master ID.
+        public DMCurrencyModel getCurrencyByID(int currID)
+        {
+            return _context.DMCurrency.Where(x => x.Curr_ID == currID && x.Curr_isActive == true
+                    && x.Curr_isDeleted == false).FirstOrDefault();
+        }
         //get Tax Rate list for specific vendor in List<T>
         public List<DMTRModel> getVendorTaxList(int vendorMasterID)
         {
