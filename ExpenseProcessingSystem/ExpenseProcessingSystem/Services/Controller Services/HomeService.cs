@@ -10407,7 +10407,7 @@ namespace ExpenseProcessingSystem.Services
                     Expense_Credit_Total = credEwtTotal + credCashTotal,
                     Expense_Creator_ID = userId,
                     Expense_Created_Date = entryModel.expenseDate,
-                    Expense_Last_Updated = entryModel.expenseDate,
+                    Expense_Last_Updated = DateTime.Now,
                     Expense_isDeleted = false,
                     Expense_Status = 1,
                     ExpenseEntryDetails = expenseDtls
