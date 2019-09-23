@@ -22,6 +22,7 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         public int ExpNCDtl_TR_ID { get; set; }
         public string ExpNCDtl_TR_Title { get; set; }
         [Display(Name = "Tax Based Amount")]
+        [DisplayFormat(DataFormatString = "{0:N}")]
         public decimal ExpNCDtl_TaxBasedAmt { get; set; }
         public List<ExpenseEntryNCDtlAccViewModel> ExpenseEntryNCDtlAccs { get; set; }
 

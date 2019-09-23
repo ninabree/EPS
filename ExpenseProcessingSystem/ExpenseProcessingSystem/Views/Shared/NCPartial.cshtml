@@ -630,8 +630,8 @@
                     <td colspan="1" class="border-solid NC_readonly_row">@Html.TextBoxFor(x => x.EntryNC.NC_CS_CredAmt, new { @readonly = "true", @class = "NumberOnlyOneDecimal" })</td>
                 </tr>
                 <tr>
-                    <td colspan="5">Total</td>
-                    <td colspan="3" class="border-solid NC_readonly_row">@Html.TextBoxFor(x => x.EntryNC.NC_CS_TotalAmt, new { @readonly = "true", @class = "NumberOnlyOneDecimal" })</td>
+                    <td colspan="5"></td>
+                    <td colspan="3" class="border-solid NC_readonly_row">@Html.HiddenFor(x => x.EntryNC.NC_CS_TotalAmt, new { @readonly = "true", @class = "NumberOnlyOneDecimal" })</td>
                 </tr>
                 @Html.HiddenFor(x => x.EntryNC.NC_IE_DebitAmt)
                 @Html.HiddenFor(x => x.EntryNC.NC_IE_CredAmt)

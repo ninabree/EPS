@@ -22,7 +22,7 @@
         <td colspan="4">@Html.DisplayFor(m => m.Inter_Currency1_Amount, new { @class = "" })</td>
         <td colspan="3">
             @Html.CheckBoxFor(model => model.Inter_Check1, new { @disabled = "disabled" })
-            Convert from <label id="convertCurr1">@Model.Inter_Currency2_ABBR</label>
+            Convert <label id="convertCurr1">@Model.Inter_Currency2_ABBR</label>
         </td>
         <td colspan="4"><input type="number" id="convertAmt1" class="" value="@Model.Inter_Convert1_Amount" readonly/></td>
     </tr>
@@ -34,7 +34,7 @@
         <td colspan="4"><input type="number" id="convertAmt2" value="@Model.Inter_Convert2_Amount" class="" readonly /></td>
         <td colspan="3">
             @Html.CheckBoxFor(model => model.Inter_Check2, new { @disabled = "disabled" })
-            Convert from <label id="convertCurr2">@Model.Inter_Currency1_ABBR</label>
+            Convert <label id="convertCurr2">@Model.Inter_Currency1_ABBR</label>
         </td>
         <td colspan="4">@Html.DisplayFor(m => m.Inter_Currency2_Amount, new { @class = "" })</td>
     </tr>

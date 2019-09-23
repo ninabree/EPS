@@ -178,8 +178,8 @@
                     <td colspan="1" class="border-solid NC_readonly_row">@Html.DisplayFor(x => x.EntryNC.NC_CS_CredAmt, new { @readonly = "true" })</td>
                 </tr>
                 <tr>
-                    <td colspan="5">Total</td>
-                    <td colspan="3" class="border-solid NC_readonly_row">@Html.DisplayFor(x => x.EntryNC.NC_CS_TotalAmt, new { @readonly = "true" })</td>
+                    <td colspan="5"></td>
+                    <td colspan="3" class="border-solid NC_readonly_row">@Html.HiddenFor(x => x.EntryNC.NC_CS_TotalAmt, new { @readonly = "true" })</td>
                 </tr>
                 @Html.HiddenFor(x => x.EntryNC.NC_IE_DebitAmt)
                 @Html.HiddenFor(x => x.EntryNC.NC_IE_CredAmt)
@@ -215,8 +215,8 @@
                     <td colspan="1" class="border-solid NC_readonly_row">@Html.DisplayFor(x => x.EntryNC.NC_CS_CredAmt, new { @readonly = "true" })</td>
                 </tr>
                 <tr>
-                    <td colspan="5">Total</td>
-                    <td colspan="3" class="border-solid NC_readonly_row">@Html.DisplayFor(x => x.EntryNC.NC_CS_TotalAmt, new { @readonly = "true" })</td>
+                    <td colspan="5"></td>
+                    <td colspan="3" class="border-solid NC_readonly_row"></td>
                 </tr>
                 <tr>
                     <td colspan="5"></td>
@@ -234,8 +234,8 @@
                     <td colspan="1" class="border-solid NC_readonly_row">@Html.DisplayFor(x => x.EntryNC.NC_IE_CredAmt, new { @readonly = "true" })</td>
                 </tr>
                 <tr>
-                    <td colspan="5">Total</td>
-                    <td colspan="3" class="border-solid NC_readonly_row">@Html.DisplayFor(x => x.EntryNC.NC_IE_TotalAmt, new { @readonly = "true" })</td>
+                    <td colspan="5"></td>
+                    <td colspan="3" class="border-solid NC_readonly_row"></td>
                 </tr>
             </table>
             @Html.HiddenFor(x => x.EntryNC.NC_DebitAmt)

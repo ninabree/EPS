@@ -135,7 +135,7 @@ namespace ExpenseProcessingSystem.Services.Validations
                     {
                         if (data.EntryNC.ExpenseEntryNCDtls[count].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount <= 0)
                         {
-                            return new ValidationResult("All fields in JS Payroll needs to be inputted accordingly.");
+                            return new ValidationResult("All fields in JS Payroll are required (except Remarks Period).");
                         }
                         count++;
                     }

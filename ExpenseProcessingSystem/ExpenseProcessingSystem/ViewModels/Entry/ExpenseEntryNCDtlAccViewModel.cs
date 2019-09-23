@@ -25,6 +25,7 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         public decimal ExpNCDtlAcc_Inter_Rate { get; set; }
         [NotNullValidations]
         [Display(Name = "Amount")]
+        [DisplayFormat(DataFormatString = "{0:N}")]
         public decimal ExpNCDtlAcc_Amount { get; set; }
     }
 }

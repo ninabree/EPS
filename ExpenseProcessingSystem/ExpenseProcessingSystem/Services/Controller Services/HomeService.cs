@@ -3618,9 +3618,9 @@ namespace ExpenseProcessingSystem.Services
             DateTime EndFiscal = GetStartOfFiscal(filterMonth, filterYear, false);
             int termYear = startOfTerm.Year;
             int termMonth = startOfTerm.Month;
-             decimal budgetBalance;
-             decimal totalExpenseThisTermToPrevMonthend;
-             decimal subTotal;
+            decimal budgetBalance;
+            decimal totalExpenseThisTermToPrevMonthend;
+            decimal subTotal;
             string format = "yyyy-M";
 
             endDT = DateTime.ParseExact(filterYear + "-" + filterMonth, format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
@@ -3646,9 +3646,11 @@ namespace ExpenseProcessingSystem.Services
                 });
                 return actualBudgetData;
             }
-
+            int lastCnt = accountList.Count();
+            int cnt = 0;
             foreach (var i in accountList)
             {
+                cnt++;
                 var budget = budgetList.Where(x => x.Budget_Account_MasterID == i.Account_MasterID
                                             && x.Budget_IsActive == true && x.Budget_isDeleted == false)
                     .DefaultIfEmpty(new BudgetModel
@@ -3657,14 +3659,15 @@ namespace ExpenseProcessingSystem.Services
                         Budget_Amount = 0.0M
                     }).OrderByDescending(x => x.Budget_Date_Registered).First();
 
+                var accgrp = accountGrpList.Where(x => x.AccountGroup_MasterID == currGroup).FirstOrDefault();
+
                 if (currGroup == i.Account_Group_MasterID)
                 {
                     budgetAmount += budget.Budget_Amount;
                 }
                 else
                 {
-                    var accgrp = accountGrpList.Where(x => x.AccountGroup_MasterID == currGroup).FirstOrDefault();
-                    if(accgrp == null)
+                    if (accgrp == null)
                     {
                         currGroup = i.Account_Group_MasterID;
                         continue;
@@ -3680,6 +3683,19 @@ namespace ExpenseProcessingSystem.Services
 
                     budgetAmount = budget.Budget_Amount;
                     currGroup = i.Account_Group_MasterID;
+                }
+                //Add last account category
+                if (cnt == lastCnt)
+                {
+                    accgrp = accountGrpList.Where(x => x.AccountGroup_MasterID == currGroup).FirstOrDefault();
+                    accountCategory.Add(new AccGroupBudgetModel
+                    {
+                        StartOfTerm = startOfTerm,
+                        AccountGroupName = accgrp.AccountGroup_Name,
+                        AccountGroupMasterID = currGroup,
+                        Remarks = "Budget Amount - This Term",
+                        Budget = budgetAmount
+                    });
                 }
             }
 
