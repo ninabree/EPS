@@ -3912,7 +3912,7 @@ namespace ExpenseProcessingSystem.Services
                                 actualBudgetData.Add(new HomeReportActualBudgetModel()
                                 {
                                     BudgetBalance = budgetBalance,
-                                    ExpenseAmount = Decimal.Parse(hist.GOExpHist_Entry11Amt),
+                                    ExpenseAmount = Decimal.Parse(hist.GOExpHist_Entry11Amt) * -1, //Credit convert to negative value
                                     Remarks = hist.GOExpHist_Remarks,
                                     Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
                                     ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
@@ -3946,7 +3946,7 @@ namespace ExpenseProcessingSystem.Services
                                 actualBudgetData.Add(new HomeReportActualBudgetModel()
                                 {
                                     BudgetBalance = budgetBalance,
-                                    ExpenseAmount = Decimal.Parse(hist.GOExpHist_Entry12Amt),
+                                    ExpenseAmount = Decimal.Parse(hist.GOExpHist_Entry12Amt) * -1, //Credit convert to negative value
                                     Remarks = hist.GOExpHist_Remarks,
                                     Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
                                     ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
@@ -3980,7 +3980,7 @@ namespace ExpenseProcessingSystem.Services
                                 actualBudgetData.Add(new HomeReportActualBudgetModel()
                                 {
                                     BudgetBalance = budgetBalance,
-                                    ExpenseAmount = Decimal.Parse(hist.GOExpHist_Entry21Amt),
+                                    ExpenseAmount = Decimal.Parse(hist.GOExpHist_Entry21Amt) * -1, //Credit convert to negative value
                                     Remarks = hist.GOExpHist_Remarks,
                                     Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
                                     ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
@@ -4014,7 +4014,7 @@ namespace ExpenseProcessingSystem.Services
                                 actualBudgetData.Add(new HomeReportActualBudgetModel()
                                 {
                                     BudgetBalance = budgetBalance,
-                                    ExpenseAmount = Decimal.Parse(hist.GOExpHist_Entry22Amt),
+                                    ExpenseAmount = Decimal.Parse(hist.GOExpHist_Entry22Amt) * -1, //Credit convert to negative value
                                     Remarks = hist.GOExpHist_Remarks,
                                     Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
                                     ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
@@ -4048,7 +4048,7 @@ namespace ExpenseProcessingSystem.Services
                                 actualBudgetData.Add(new HomeReportActualBudgetModel()
                                 {
                                     BudgetBalance = budgetBalance,
-                                    ExpenseAmount = Decimal.Parse(hist.GOExpHist_Entry31Amt),
+                                    ExpenseAmount = Decimal.Parse(hist.GOExpHist_Entry31Amt) * -1, //Credit convert to negative value
                                     Remarks = hist.GOExpHist_Remarks,
                                     Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
                                     ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
@@ -4082,7 +4082,7 @@ namespace ExpenseProcessingSystem.Services
                                 actualBudgetData.Add(new HomeReportActualBudgetModel()
                                 {
                                     BudgetBalance = budgetBalance,
-                                    ExpenseAmount = Decimal.Parse(hist.GOExpHist_Entry32Amt),
+                                    ExpenseAmount = Decimal.Parse(hist.GOExpHist_Entry32Amt) * -1, //Credit convert to negative value
                                     Remarks = hist.GOExpHist_Remarks,
                                     Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
                                     ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
@@ -4116,7 +4116,7 @@ namespace ExpenseProcessingSystem.Services
                                 actualBudgetData.Add(new HomeReportActualBudgetModel()
                                 {
                                     BudgetBalance = budgetBalance,
-                                    ExpenseAmount = Decimal.Parse(hist.GOExpHist_Entry41Amt),
+                                    ExpenseAmount = Decimal.Parse(hist.GOExpHist_Entry41Amt) * -1, //Credit convert to negative value
                                     Remarks = hist.GOExpHist_Remarks,
                                     Department = (deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).Count() > 0) ? deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).FirstOrDefault().Dept_Name : "",
                                     ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
@@ -4150,7 +4150,7 @@ namespace ExpenseProcessingSystem.Services
                                 actualBudgetData.Add(new HomeReportActualBudgetModel()
                                 {
                                     BudgetBalance = budgetBalance,
-                                    ExpenseAmount = Decimal.Parse(hist.GOExpHist_Entry42Amt),
+                                    ExpenseAmount = Decimal.Parse(hist.GOExpHist_Entry42Amt) * -1, //Credit convert to negative value
                                     Remarks = hist.GOExpHist_Remarks,
                                     Department = deptInfo.Where(x => x.ExpDtl_ID == hist.ExpenseDetailID).DefaultIfEmpty("").FirstOrDefault().Dept_Name,
                                     ValueDate = DateTime.Parse(hist.GOExpHist_ValueDate.Substring(0, 2) + "/" + hist.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(hist.GOExpHist_ValueDate.Substring(4, 2))))
