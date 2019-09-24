@@ -31,6 +31,8 @@
                     </div>
 
                     <div class="container-login-form-btn m-t-25">
+
+                        <p id="caps_warning">WARNING! Caps lock is ON.</p>
                         <button class="login-form-btn" type="submit">
                             Submit
                         </button>
@@ -45,3 +47,25 @@
         @Html.Partial("ModalPartial")
     </div>
 </div>
+<style>
+    #caps_warning {
+        display: none;
+        font-size: 10px;
+        color: red;
+    }
+    .container-login-form-btn {
+        height: 40px;
+    }
+</style>
+<script>
+    var input = document.getElementById("User_Password");
+    var text = document.getElementById("caps_warning");
+    input.addEventListener("keyup", function(event) {
+
+    if (event.getModifierState("CapsLock")) {
+        text.style.display = "block";
+      } else {
+        text.style.display = "none"
+      }
+    });
+</script>

@@ -58,7 +58,7 @@ namespace ExpenseProcessingSystem.Controllers
                 return View(model);
             }
 
-            ////START OF LDAP LOGIN
+            //START OF LDAP LOGIN
             try
             {
                 XElement xelem = XElement.Load("wwwroot/xml/ActiveDirectory.xml");

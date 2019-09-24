@@ -3025,6 +3025,7 @@ namespace ExpenseProcessingSystem.Controllers
             
             DMCurrencyModel currDtl = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_PHP").Value));
             DMCurrencyModel currDtlUSD = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_US").Value));
+            DMCurrencyModel currDtlJPY = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_Yen").Value));
 
             //POPULATING CDD IF APPLICABLE
             if (ncList.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT)
@@ -3034,7 +3035,9 @@ namespace ExpenseProcessingSystem.Controllers
                 ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Amount = ncList.EntryNC.NC_CS_CredAmt;
             }else if (ncList.EntryNC.NC_Category_ID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL)
             {
-                ncList.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_RETURN_OF_JSPAYROLL.Populate_CDD_Instruc_Sheet(currDtl, currDtlUSD, _service.getNCAccs("/NONCASHACCOUNTS/RETURNOFJSPAYROLLCDD/ACCOUNT"));
+                DMCurrencyModel CDDcurrDtl = _service.getCurrencyByID(ncList.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID);
+                List<CONSTANT_NC_VALS> CDDaccDtl = _service.getNCAccs((CDDcurrDtl == currDtlUSD) ? "/NONCASHACCOUNTS/RETURNOFJSPAYROLLCDD/ACCOUNT[@class='entry1' and @id='ACCOUNT1']" : "/NONCASHACCOUNTS/RETURNOFJSPAYROLLCDD/ACCOUNT[@class='entry1' and @id='ACCOUNT3']");
+                ncList.EntryNC.ExpenseEntryNCDtls_CDD = CONSTANT_NC_RETURN_OF_JSPAYROLL.Populate_CDD_Instruc_Sheet(currDtl, CDDcurrDtl, _service.getNCAccs("/NONCASHACCOUNTS/RETURNOFJSPAYROLLCDD/ACCOUNT"));
                 var currDtls = ncList.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0];
                 ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID = currDtls.ExpNCDtlAcc_Curr_ID;
                 ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Curr_ID = currDtls.ExpNCDtlAcc_Curr_ID;
@@ -3042,8 +3045,8 @@ namespace ExpenseProcessingSystem.Controllers
                 ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Curr_Name = currDtls.ExpNCDtlAcc_Curr_Name;
                 ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount = ncList.EntryNC.NC_CS_DebitAmt;
                 ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Amount = ncList.EntryNC.NC_CS_CredAmt;
-                ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID = ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID;
-                ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name = ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name;
+                ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID = CDDaccDtl[0].accID;
+                ncList.EntryNC.ExpenseEntryNCDtls_CDD[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name = CDDaccDtl[0].accName;
             }
 
             //CURRENCIES FOR COMPARISON

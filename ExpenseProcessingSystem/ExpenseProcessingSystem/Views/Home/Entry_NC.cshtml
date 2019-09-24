@@ -22,7 +22,7 @@
     <div id="entry-controls" class="m-b-10">
         <div class="flex-sb m-t-15">
             <div>
-                <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" name="command" value="Save" onclick="$('.nc-form').submit();">Save</button></div>
+                <div class="dis-inline-block"><button class="tbl-btn btnEntryAction" name="command" value="Save">Save</button></div>
             </div>
         </div>
     </div>
@@ -45,6 +45,33 @@
         var $NC_TABLE = $('#NCPartialTbl');
         initPartial();
         //------------------- [[ Events ]] ---------------------
+
+        $('.btnEntryAction').click(function (e) {
+            e.stopImmediatePropagation();
+            loadingEffectStart();
+            var msg = "";
+            var warning = [];
+            var command = $(this).val();
+            if (command == "approver") {
+                msg = "Approval";
+                OpenConfirmationPopup(msg, command, warning);
+                $('#divConfirmWindow').fadeIn(100);
+                loadingEffectStop();
+
+            } else if (command == "verifier") {
+                msg = "Verify";
+                OpenConfirmationPopup(msg, command, warning);
+                $('#divConfirmWindow').fadeIn(100);
+                loadingEffectStop();
+            } else {
+                msg = command;
+                OpenConfirmationPopup(msg, command, warning);
+                $('#divConfirmWindow').fadeIn(100);
+                loadingEffectStop();
+            }
+
+            return false;
+        });
         $(document).on('click', '.nc-table-remove', function (e) {
             e.stopImmediatePropagation();
             var tr = $(this).closest('tr');

@@ -152,6 +152,9 @@ a.sidebar-link {
     height: 100%;
     text-align: left;
 }
+.text-v-bottom {
+    vertical-align: bottom !important;
+}
 #tbl-lbl > div > select {
     width: 50vh;
     height: 20px;
