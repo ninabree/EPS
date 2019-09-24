@@ -223,7 +223,7 @@
                     </tr>
                 }
                 <tr>
-                    <td colspan="4" style="border:1px solid black">Total <a style="float:right;">PHP @Html.DisplayFor(x => x.amountGross, "{0:n}")</a></td>
+                    <td colspan="4" style="border:1px solid black">Total <a style="float:right;">@Html.DisplayFor(x => x.amountGross, "{0:n}")</a></td>
                 </tr>
             </tbody>
         </table>
@@ -251,7 +251,7 @@
                 {
                     <tr>
                         <td>@Html.DisplayFor(x => item.account)</td>
-                        <td class="rightA">PHP @Html.DisplayFor(x => item.amount, "{0:n}")</td>
+                        <td class="rightA">@Html.DisplayFor(x => item.amount, "{0:n}")</td>
                         <td><!--Insert Value here--></td>
                     </tr>
                 }
@@ -263,7 +263,7 @@
                         <tr>
                             <td>@Html.DisplayFor(x => item.account)</td>
                             <td><!--Insert Value here--></td>
-                            <td class="rightA">PHP @Html.DisplayFor(x => item.amount, "{0:n}")</td>
+                            <td class="rightA">@Html.DisplayFor(x => item.amount, "{0:n}")</td>
                         </tr>
                     }
                     else if (item.account == "CITI MNL")
@@ -279,7 +279,7 @@
                         <tr>
                             <td>@Html.DisplayFor(x => item.account)%</td>
                             <td><!--Insert Value here--></td>
-                            <td class="rightA">PHP @Html.DisplayFor(x => item.amount, "{0:n}")</td>
+                            <td class="rightA">@Html.DisplayFor(x => item.amount, "{0:n}")</td>
                         </tr>
                     }
 
@@ -307,8 +307,8 @@
                     else
                     {
 
-                        <td class="rightA" style="border-top:1px solid black;border-bottom:3px double black;">PHP @Html.DisplayFor(x => x.amountGross, "{0:n}")</td>
-                        <td class="rightA" style="border-top:1px solid black;border-bottom:3px double black;">PHP @Html.DisplayFor(x => x.amountGross, "{0:n}")</td>
+                        <td class="rightA" style="border-top:1px solid black;border-bottom:3px double black;">@Html.DisplayFor(x => x.amountGross, "{0:n}")</td>
+                        <td class="rightA" style="border-top:1px solid black;border-bottom:3px double black;">@Html.DisplayFor(x => x.amountGross, "{0:n}")</td>
                     }
                 </tr>
                 <tr>
@@ -338,7 +338,7 @@
                     <td><!--Insert Value here--></td>
                     @if (Model.taxInfos.Count() > 0)
                     {
-                        <td>PHP @Model.taxInfos[0].taxInfo_gross</td>
+                        <td>@Model.taxInfos[0].taxInfo_gross.ToString("N2")</td>
                     }
                     else
                     {
@@ -346,7 +346,7 @@
                     }
                     @if (Model.taxInfos.Count() > 1)
                     {
-                        <td>PHP @Model.taxInfos[1].taxInfo_gross</td>
+                        <td>@Model.taxInfos[1].taxInfo_gross.ToString("N2")</td>
                     }
                     else
                     {
@@ -360,7 +360,7 @@
                     {
                         @if (@Model.taxInfos[0].taxInfo_vat > 0)
                         {
-                            <td>PHP @Model.taxInfos[0].taxInfo_vat</td>
+                            <td>@Model.taxInfos[0].taxInfo_vat.ToString("N2")</td>
 
                         }
                         else
@@ -376,7 +376,7 @@
                     {
                         @if (@Model.taxInfos[1].taxInfo_vat > 0)
                         {
-                            <td>PHP @Model.taxInfos[1].taxInfo_vat</td>
+                            <td>@Model.taxInfos[1].taxInfo_vat.ToString("N2")</td>
 
                         }
                         else
@@ -394,7 +394,7 @@
                     <td><!--Insert Value here--></td>
                     @if (Model.taxInfos.Count() > 0)
                     {
-                        <td>PHP @Model.taxInfos[0].taxInfo_taxBase</td>
+                        <td>@Model.taxInfos[0].taxInfo_taxBase.ToString("N2")</td>
                     }
                     else
                     {
@@ -402,7 +402,7 @@
                     }
                     @if (Model.taxInfos.Count() > 1)
                     {
-                        <td>PHP @Model.taxInfos[1].taxInfo_taxBase</td>
+                        <td>@Model.taxInfos[1].taxInfo_taxBase.ToString("N2")</td>
                     }
                     else
                     {
@@ -416,7 +416,7 @@
                         <tr>
                             <td>EWT @Html.DisplayFor(x => item.ewt)%</td>
                             <td><!--Insert Value here--></td>
-                            <td>PHP @Html.DisplayFor(x => item.ewtAmt, "{0:n}")</td>
+                            <td>@Html.DisplayFor(x => item.ewtAmt, "{0:n}")</td>
                             <td><!--Insert Value here--></td>
                         </tr>
                     }
@@ -426,7 +426,7 @@
                             <td>EWT @Html.DisplayFor(x => item.ewt)%</td>
                             <td><!--Insert Value here--></td>
                             <td><!--Insert Value here--></td>
-                            <td>PHP @Html.DisplayFor(x => item.ewtAmt, "{0:n}")</td>
+                            <td>@Html.DisplayFor(x => item.ewtAmt, "{0:n}")</td>
                         </tr>
                     }
 
@@ -631,11 +631,11 @@
                                                 <td>@Html.DisplayFor(x => item.documentType)</td>
                                                 <td>@Html.DisplayFor(x => item.invoiceNo)</td>
                                                 <td>@Html.DisplayFor(x => item.description)</td>
-                                                <td>PHP @item.amount.ToString("N")</td>
+                                                <td>@item.amount.ToString("N")</td>
                                             </tr>
                                         }
                                         <tr>
-                                            <td colspan="4" style="border:1px solid black">Total <a style="float:right;">PHP @Html.DisplayFor(x => x.amountGross, "{0:n.00}")</a></td>
+                                            <td colspan="4" style="border:1px solid black">Total <a style="float:right;">@Html.DisplayFor(x => x.amountGross, "{0:n.00}")</a></td>
                                         </tr>
                                     </tbody>
                                 </table>
