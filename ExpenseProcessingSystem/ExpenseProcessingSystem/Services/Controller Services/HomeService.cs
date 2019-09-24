@@ -9451,7 +9451,7 @@ namespace ExpenseProcessingSystem.Services
                         };
                         expenseGbase.Add(remarks);
                     }
-
+                    //(dtl.d.ExpDtl_Vat <= 0) ? false : true
                     ExpenseEntryDetailModel expenseDetails = new ExpenseEntryDetailModel
                     {
                         ExpDtl_Gbase_Remarks = cv.GBaseRemarks,
@@ -9463,7 +9463,7 @@ namespace ExpenseProcessingSystem.Services
                         ExpDtl_Ewt = cv.ewt,
                         ExpDtl_Ccy = cv.ccy,
                         ExpDtl_Debit = cv.debitGross,
-                        ExpDtl_isEwt = cv.chkEwt,
+                        ExpDtl_isEwt = (cv.ewt <= 0) ? false : true,
                         ExpDtl_Credit_Ewt = cv.credEwt,
                         ExpDtl_Credit_Cash = cv.credCash,
                         ExpDtl_SS_Payee = cv.dtlSSPayee,
@@ -10391,7 +10391,7 @@ namespace ExpenseProcessingSystem.Services
                         ExpDtl_CreditAccount2 = getAccountByMasterID(creditAccMasterID2).Account_ID,
                         ExpDtl_Ewt_Payor_Name_ID = ddv.ewt_Payor_Name_ID,
                         ExpenseEntryInterEntity = expenseInter,
-                        ExpDtl_isEwt = ddv.chkEwt,
+                        ExpDtl_isEwt = (ddv.ewt <= 0) ? false : true,
                         ExpenseEntryGbaseDtls = expenseGbase
                     };
                     expenseDtls.Add(expenseDetails);
@@ -13971,25 +13971,27 @@ namespace ExpenseProcessingSystem.Services
         public int getExpTransNo(int transType)
         {
             ExpenseEntryModel transNoMax;
+
             int transno;
             int maxNumber = 0;
             var maxNumberObj = _context.ExpenseEntry
-                        .Where(y => y.Expense_Date.Year == DateTime.Now.Year && y.Expense_Number != 0);
+                        .Where(y => y.Expense_Date.Year == DateTime.Now.Year && y.Expense_Number != 0 && y.Expense_Type == transType);
             do
             {
 
-                if (_context.ExpenseEntry.Where(x => x.Expense_Number != 0).Count() > 0)
+                if (_context.ExpenseEntry.Where(x => x.Expense_Number != 0 && x.Expense_Type == transType).Count() > 0)
                 {
                     if (maxNumber != _context.ExpenseEntry
-                                        .Where(y => y.Expense_Date.Year == DateTime.Now.Year && y.Expense_Number != 0)
+                                        .Where(y => y.Expense_Date.Year == DateTime.Now.Year && y.Expense_Number != 0 && y.Expense_Type == transType)
                                         .Max(y => y.Expense_Number))
                     {
                         maxNumberObj = _context.ExpenseEntry
-                        .Where(y => y.Expense_Date.Year == DateTime.Now.Year && y.Expense_Number != 0);
+                        .Where(y => y.Expense_Date.Year == DateTime.Now.Year && y.Expense_Number != 0 && y.Expense_Type == transType);
                     }
 
                     maxNumber = maxNumberObj.Max(y => y.Expense_Number);
                     transNoMax = _context.ExpenseEntry.OrderByDescending(x => x.Expense_ID).First();
+
                     transno = (transNoMax.Expense_Created_Date.Year < DateTime.Now.Year) ? 1 : (maxNumber + 1);
                 }
                 else
@@ -13997,7 +13999,7 @@ namespace ExpenseProcessingSystem.Services
                     return 1;
                 }
             } while (maxNumber != _context.ExpenseEntry
-                                        .Where(y => y.Expense_Date.Year == DateTime.Now.Year && y.Expense_Number != 0)
+                                        .Where(y => y.Expense_Date.Year == DateTime.Now.Year && y.Expense_Number != 0 && y.Expense_Type == transType)
                                         .Max(y => y.Expense_Number));
             //_context.Entry<ExpenseEntryModel>(transNoMax).State = EntityState.Detached;
             return transno;
