@@ -1161,6 +1161,7 @@ namespace ExpenseProcessingSystem.Controllers
                     model.CBD_displayMode = false;
                     model.CBD_ConfirmClose = true;
                     break;
+
             }
             if(pc != null)
             {
@@ -1203,6 +1204,58 @@ namespace ExpenseProcessingSystem.Controllers
             }
             
             return PartialView(model);
+        }
+
+        public IActionResult HistoryPettyCash(DateTime date)
+        {
+            ClosingBrkDwnViewModel model = new ClosingBrkDwnViewModel();
+            var pc = _service.getHistory(date);
+
+            model.enableBtn = false;
+            model.CBD_displayMode = false;
+            model.CBD_ConfirmClose = true;
+
+            if (pc != null)
+            {
+                model.CBD_Date = pc.PC_OpenDate;
+                model.CBD_opeBalance = pc.PC_StartBal;
+                model.CBD_recieve = pc.PC_Recieved;
+                model.CBD_disburse = pc.PC_Disbursed;
+                model.CBD_closeBalance = pc.PC_EndBal;
+
+                model.CBD_oneK = pc.PCB_OneThousand;
+                model.CBD_oneKAmount = pc.PCB_OneThousand * 1000;
+                model.CBD_fiveH = pc.PCB_FiveHundred;
+                model.CBD_fiveHAmount = pc.PCB_FiveHundred * 500;
+                model.CBD_twoH = pc.PCB_TwoHundred;
+                model.CBD_twoHAmount = pc.PCB_TwoHundred * 200;
+                model.CBD_oneH = pc.PCB_OneHundred;
+                model.CBD_oneHAmount = pc.PCB_OneHundred * 100;
+                model.CBD_fifty = pc.PCB_Fifty;
+                model.CBD_fiftyAmount = pc.PCB_Fifty * 50;
+                model.CBD_twenty = pc.PCB_Twenty;
+                model.CBD_twentyAmount = pc.PCB_Twenty * 20;
+                model.CBD_ten = pc.PCB_Ten;
+                model.CBD_tenAmount = pc.PCB_Ten * 10;
+                model.CBD_five = pc.PCB_Five;
+                model.CBD_fiveAmount = pc.PCB_Five * 5;
+                model.CBD_one = pc.PCB_One;
+                model.CBD_oneAmount = pc.PCB_One * 1;
+                model.CBD_c25 = pc.PCB_TwentyFiveCents;
+                model.CBD_c25Amount = (decimal)(pc.PCB_TwentyFiveCents * .25);
+                model.CBD_c10 = pc.PCB_TenCents;
+                model.CBD_c10Amount = (decimal)(pc.PCB_TenCents * .10);
+                model.CBD_c5 = pc.PCB_FiveCents;
+                model.CBD_c5Amount = (decimal)(pc.PCB_FiveCents * .05);
+                model.CBD_c1 = pc.PCB_OneCents;
+                model.CBD_c1Amount = (decimal)(pc.PCB_OneCents * .01);
+            }
+            else
+            {
+                model.message = "Petty Cash Record Does't Exist.";
+            }
+
+            return PartialView("ClosePettyCash", model);
         }
 
         public IActionResult CloseConfirmPettyCash()

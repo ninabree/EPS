@@ -12812,7 +12812,7 @@ namespace ExpenseProcessingSystem.Services
         }
         public bool ClosingCheckStatus(string branchCode)
         {
-            var closeModel = _context.Closing.Where(x => x.Close_Status == GlobalSystemValues.STATUS_OPEN).FirstOrDefault();
+            var closeModel = _context.Closing.Where(x => x.Close_Status == GlobalSystemValues.STATUS_OPEN || x.Close_Status == GlobalSystemValues.STATUS_ERROR).FirstOrDefault();
 
             DateTime opening = closeModel.Close_Open_Date.AddHours(00);
             DateTime closing = closeModel.Close_Open_Date.AddHours(23.9999);
