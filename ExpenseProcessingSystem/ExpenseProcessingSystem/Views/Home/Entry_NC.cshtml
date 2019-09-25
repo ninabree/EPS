@@ -91,6 +91,37 @@
             checkRemarksDescLength(trID, periodLength);
         });
 
+        $(document).on('change', '[id$="ExpNCDtl_Remarks_Desc"]', function (e) {
+            e.stopImmediatePropagation();
+            var trID = $(this).closest('tr').attr('id').substring(5);
+            var descLength = $(this).val().length;
+
+            var periodElement = $("#EntryNC_ExpenseEntryNCDtls_" + trID + "__ExpNCDtl_Remarks_Period");
+            var periodLength = periodElement.val().length;
+            if (parseInt(descLength) + parseInt(periodLength) > 29)
+            {
+                alert("Remarks Description and Period exceeds the limit of 29 characters in total.");
+                $(this).val("");
+                descLength = 0;
+            }
+            checkRemarksPeriodLength(trID, descLength);
+
+        });
+
+        $(document).on('change', '[id$="ExpNCDtl_Remarks_Period"]', function (e) {
+            e.stopImmediatePropagation();
+            var trID = $(this).closest('tr').attr('id').substring(5);
+            var periodLength = $(this).val().length;
+
+            var descElement = $("#EntryNC_ExpenseEntryNCDtls_" + trID + "__ExpNCDtl_Remarks_Desc");
+            var descLength = descElement.val().length;
+            if (parseInt(descLength) + parseInt(periodLength) > 29) {
+                alert("Remarks Description and Period exceeds the limit of 29 characters in total.");
+                $(this).val("");
+                periodLength = 0;
+            }
+            checkRemarksDescLength(trID, periodLength);
+        });
         //when Remarks Desc is changed, compares the Length of Desc and Period to not surpass the Gbase Remarks Limit
         function checkRemarksPeriodLength(trID, descLength) {
             var descElement = $("#EntryNC_ExpenseEntryNCDtls_" + trID + "__ExpNCDtl_Remarks_Desc");
