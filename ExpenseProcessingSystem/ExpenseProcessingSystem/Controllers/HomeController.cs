@@ -1615,7 +1615,6 @@ namespace ExpenseProcessingSystem.Controllers
             return RedirectToAction(viewLink, "Home", new { entryID = entryID });
         }
 
-        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         public IActionResult View_CV(int entryID)
@@ -1809,7 +1808,6 @@ namespace ExpenseProcessingSystem.Controllers
             return RedirectToAction("View_DDV", "Home");
         }
 
-        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         public IActionResult View_DDV(int entryID)
@@ -2342,7 +2340,6 @@ namespace ExpenseProcessingSystem.Controllers
             return RedirectToAction(viewLink, "Home", new { entryID = entryID });
         }
 
-        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         public IActionResult View_PCV(int entryID)
@@ -2800,7 +2797,6 @@ namespace ExpenseProcessingSystem.Controllers
             return RedirectToAction(viewLink, "Home", new { entryID = entryID });
         }
 
-        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         public IActionResult View_SS(int entryID)
@@ -2913,7 +2909,6 @@ namespace ExpenseProcessingSystem.Controllers
             return View("Entry_SS_ReadOnly", ssList);
         }
 
-        [ServiceFilter(typeof(ClosingCheck))]
         [OnlineUserCheck]
         [NonAdminRoleCheck]
         public IActionResult CDD_IS_SS(int entryID, int entryDtlID, string ccyAbbr)
@@ -3005,7 +3000,6 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [OnlineUserCheck]
         [NonAdminRoleCheck]
-        [ServiceFilter(typeof(ClosingCheck))]
         public IActionResult View_NC(int entryID)
         {
             var userId = GetUserID();
@@ -3237,7 +3231,6 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [OnlineUserCheck]
         [NonAdminRoleCheck]
-        [ServiceFilter(typeof(ClosingCheck))]
         public IActionResult CDD_IS_NC_PCR(int entryID)
         {
             var entryVals = _service.getExpenseNC(entryID);
@@ -3287,7 +3280,6 @@ namespace ExpenseProcessingSystem.Controllers
         }
         [OnlineUserCheck]
         [NonAdminRoleCheck]
-        [ServiceFilter(typeof(ClosingCheck))]
         public IActionResult CDD_IS_NC_RET(int entryID)
         {
             var entryVals = _service.getExpenseNC(entryID);

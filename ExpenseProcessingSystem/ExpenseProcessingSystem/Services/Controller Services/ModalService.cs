@@ -1868,6 +1868,12 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             }
             return model;
         }
+        public PettyCashModel getHistory(DateTime date)
+        {
+            PettyCashModel model = _context.PettyCash.FirstOrDefault(x => x.PC_OpenDate.Date == date.Date);
+
+            return model;
+        }
         public bool confirmPC(int userID)
         {
             var lastPC = _context.PettyCash.OrderByDescending(x => x.PC_ID).FirstOrDefault();

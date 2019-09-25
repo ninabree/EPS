@@ -128,7 +128,7 @@
                 <button class="tbl-btn float-l closeBtn" disabled>Close RBU</button>
                 <button value="reOpenRBU" class="tbl-btn float-l closeBtn">Re-Open RBU</button>
             }
-            else if (Model.rbuStatus == "OPEN")
+            else if (Model.rbuStatus == "OPEN" || Model.rbuStatus == "ERROR")
             {
                 <button value="CloseRBU" class="tbl-btn float-l closeBtn">Close RBU</button>
                 <button class="tbl-btn float-l closeBtn" disabled>Re-Open RBU</button>
@@ -256,7 +256,7 @@
                 <button class="tbl-btn float-l closeBtn" disabled>Close FCDU</button>
                 <button value="reOpenFCDU" class="tbl-btn float-l closeBtn">Re-Open FCDU</button>
             }
-            else if (Model.fcduStatus == "OPEN")
+            else if (Model.fcduStatus == "OPEN" || Model.fcduStatus == "ERROR")
             {
                 <button value="CloseFCDU" class="tbl-btn float-l closeBtn">Close FCDU</button>
                 <button class="tbl-btn float-l closeBtn" disabled>Re-Open FCDU</button>
@@ -275,12 +275,14 @@
         </div>
     </div>
     <hr class="dotted" />
+    <br /><br />
     <div id="tbl-lbl"><h4 style="font-weight:bold;">Petty Cash Balance:</h4></div>
     <br />
     <table class="table" id="close-tbl">
         <colgroup>
             <col style="width:15%;" />
             <col style="width:15%;" />
+            <col />
             <col />
         </colgroup>
         <tbody>
@@ -294,6 +296,7 @@
                 <td>
                     <button class="tbl-btn" id="StartPettyCash" value="StartPettyCash">Beginning Cash balance Confirmation</button>
                 </td>
+                <td><input type="date" class="input" id="histDate" /></td>
             </tr>
             <tr>
                 <td>
@@ -303,6 +306,7 @@
                     @Html.TextBoxFor(x => x.recieve, new { @readonly = "true", @class = "input", @id = "CBD_recieve" })
                 </td>
                 <td><button class="tbl-btn" id="ClosePettyCash" value="ClosePettyCash">Petty Cash Breakdown</button></td>
+                <td><button class="tbl-btn" id="History" value="History">View Petty Cash History</button></td>
             </tr>
             <tr>
                 <td>
@@ -321,6 +325,7 @@
                         <button class="tbl-btn" disabled>Close</button>
                     }
                 </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -329,6 +334,7 @@
                 <td>
                     @Html.TextBoxFor(x => x.closeBal, new { @readonly = "true", @class = "input", @id = "CBD_closeBalance" })
                 </td>
+                <td></td>
                 <td></td>
             </tr>
         </tbody>
@@ -469,6 +475,19 @@
             });
         });
 
+        $("#closeBody").on("click", "#History", function () {
+            var histDate = $("#histDate").val();
+
+            $("#pettyCashModal").find("#pettyprntBody").empty();
+            $("#pettyCashModal").find(".modal-body").load("@Url.Action("HistoryPettyCash", "Modal")", { date: histDate}, function (response, status, xhr) {
+                if (status == "error") {
+                    alert("Something went wrong.");
+                }
+                $('#brkDwnSubmit').hide();
+            });
+            $('#pettyCashModal').modal('show');
+        });
+
         $("#closeBody").on("click", "#StartPettyCash", function (e) {
             var command = $(this).val();
             $("#pettyCashModal").find(".modal-body").empty();
@@ -541,7 +560,6 @@
             mywindow.focus(); // necessary for IE >= 10*/
 
             mywindow.print();
-            mywindow.close();
 
             return true;
         });
