@@ -299,7 +299,7 @@
                                         <select id="curr[@i]_[@j]" class="w-full input curr-sel misc-curr-@j db" name="curr[@i]_[@j]">
                                             @foreach (var groepModel in Model.currList)
                                             {
-                                                if (@groepModel.Value == @Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID + "")
+                                                if (@groepModel.Value == @Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_ID + "")
                                                 {
                                                     <option value="@groepModel.Value" selected>@groepModel.Text</option>
                                                 }
@@ -319,7 +319,7 @@
                                         <select id="curr[@i]_[@j]" class="w-full input curr-sel misc-curr-@j cd" name="curr[@i]_[@j]">
                                             @foreach (var groepModel in Model.currList)
                                             {
-                                                if (@groepModel.Value == @Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID + "")
+                                                if (@groepModel.Value == @Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Curr_ID + "")
                                                 {
                                                     <option value="@groepModel.Value" selected>@groepModel.Text</option>
                                                 }
@@ -886,6 +886,14 @@
         $('#NCPartialTbl').on('change', '.misc-0', function () {
             var pid = $(this.parentNode)[0].parentNode.id.substring(5);
             var vals = $(this).val();
+            //check if currency is yen before sending value to hidden
+            var elCurrId = $("#EntryNC_ExpenseEntryNCDtls_" + pid + "__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Curr_ID").val();
+            if (@jpy == elCurrId) {
+                vals = roundNumber(vals, 0);
+                if (isNaN(vals)) {
+                    vals = 0;
+                }
+            }
             var type = $(this).parent().hasClass("ewt") ? ewtType : $(this).parent().hasClass("db") ? dbType : $(this).parent().hasClass("cd") ? cdType : "";
             $(this).parent().parent().find("td .misc-0").not(this).val(0);
             $(this).parent().parent().siblings("[id='EntryNC_ExpenseEntryNCDtls_" + pid + "__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount']").val(vals);
@@ -900,6 +908,14 @@
             } else {
                 pid = pid.substring(5);
             }
+            //check if currency is yen before sending value to hidden
+            var elCurrId = $("#EntryNC_ExpenseEntryNCDtls_" + pid + "__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Curr_ID").val();
+            if (@jpy == elCurrId) {
+                vals = roundNumber(vals, 0);
+                if (isNaN(vals)) {
+                    vals = 0;
+                }
+            }
             $(this).parent().parent().find("td .misc-1").not(this).val(0);
             $(this).parent().parent().siblings("[id='EntryNC_ExpenseEntryNCDtls_" + pid + "__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Amount']").val(vals);
             $(this).parent().siblings("[id$='ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Type_ID']").val(type);
@@ -913,6 +929,14 @@
             } else {
                 pid = pid.substring(5);
             }
+            //check if currency is yen before sending value to hidden
+            var elCurrId = $("#EntryNC_ExpenseEntryNCDtls_" + pid + "__ExpenseEntryNCDtlAccs_2__ExpNCDtlAcc_Curr_ID").val();
+            if (@jpy == elCurrId) {
+                vals = roundNumber(vals, 0);
+                if (isNaN(vals)) {
+                    vals = 0;
+                }
+            }
             $(this).parent().parent().find("td .misc-2").not(this).val(0);
             $(this).parent().parent().siblings("[id='EntryNC_ExpenseEntryNCDtls_" + pid + "__ExpenseEntryNCDtlAccs_2__ExpNCDtlAcc_Amount']").val(vals);
             $(this).parent().siblings("[id$='ExpenseEntryNCDtlAccs_2__ExpNCDtlAcc_Type_ID']").val(type);
@@ -925,6 +949,14 @@
                 pid = pid.substring(4);
             } else {
                 pid = pid.substring(5);
+            }
+            //check if currency is yen before sending value to hidden
+            var elCurrId = $("#EntryNC_ExpenseEntryNCDtls_" + pid + "__ExpenseEntryNCDtlAccs_3__ExpNCDtlAcc_Curr_ID").val();
+            if (@jpy == elCurrId) {
+                vals = roundNumber(vals, 0);
+                if (isNaN(vals)) {
+                    vals = 0;
+                }
             }
             $(this).parent().parent().find("td .misc-3").not(this).val(0);
             $(this).parent().parent().siblings("[id='EntryNC_ExpenseEntryNCDtls_" + pid + "__ExpenseEntryNCDtlAccs_3__ExpNCDtlAcc_Amount']").val(vals);
@@ -1086,7 +1118,7 @@
             if (valId.indexOf("ExpNCDtlAcc_Inter_Rate") >= 0) {
                 decVal = 4;
             }
-            if (@jpy == elCurrId) {
+            if (@jpy == elCurrId && !(valId.indexOf("ExpNCDtlAcc_Inter_Rate") >= 0)) {
                 decVal = 0;
             }
             $(this).val(roundNumber(val, decVal));
