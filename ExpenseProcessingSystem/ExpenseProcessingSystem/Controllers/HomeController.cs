@@ -389,7 +389,7 @@ namespace ExpenseProcessingSystem.Controllers
             model.pcOpen = _service.lastPCEntry();
 
             if (closeFail)
-                model.messages.Add("Can't close book there are still ongoing transactions!");
+                model.messages.Add("Cannot close book there are still ongoing transactions!");
 
             var confirmMessage = TempData["closeMessage"];
 

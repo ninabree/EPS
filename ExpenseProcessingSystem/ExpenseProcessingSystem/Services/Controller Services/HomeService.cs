@@ -12378,11 +12378,11 @@ namespace ExpenseProcessingSystem.Services
                     x.ExpenseDetailID,
                     x.GOExpHist_Entry11Actcde,
                     x.GOExpHist_Entry11ActNo
-                })
-                                                   .FirstOrDefault(x => x.ExpenseEntryID == item.Expense_ID
-                                                                     && x.ExpenseDetailID == item.ExpDtl_ID
-                                                                     && x.GOExpHist_Entry11ActNo == item.Account_No.Substring(Math.Max(0, item.Account_No.Length - 6))
-                                                                     && x.GOExpHist_Entry11Actcde == item.Account_Code);
+                }).FirstOrDefault(x => x.ExpenseEntryID == item.Expense_ID
+                                    && x.ExpenseDetailID == item.ExpDtl_ID
+                                    && x.GOExpHist_Entry11ActNo == item.Account_No.Substring(Math.Max(0, item.Account_No.Length - 6))
+                                    && x.GOExpHist_Entry11Actcde == item.Account_Code);
+
 
                 var index = 0;
 
@@ -12399,6 +12399,7 @@ namespace ExpenseProcessingSystem.Services
                         var transList = _context.ExpenseTransLists.FirstOrDefault(x => x.TL_GoExpHist_ID == goHist.GOExpHist_Id
                                                                                     && x.TL_ExpenseID == item.Expense_ID);
                         temp.gBaseTrans = transList.TL_TransID.ToString();
+                        if(item.Expense_Status == GlobalSystemValues.STATUS_REVERSED)
                         temp.expTrans = GlobalSystemValues.getApplicationCode(item.Expense_Type) + "-" +
                                         GetSelectedYearMonthOfTerm(item.Expense_Date.Month, item.Expense_Date.Year).Year + "-" +
                                         item.Expense_Number.ToString().PadLeft(5, '0');
@@ -12825,7 +12826,8 @@ namespace ExpenseProcessingSystem.Services
                            && dtl.ExpDtl_Inter_Entity == false
                            && new List<int> { 1, 2, 4, 3 }.Contains(exp.Expense_Type)
                            && acc.Account_No.Substring(4, 3) == branchCode
-                           && exp.Expense_Status != 14
+                           && exp.Expense_Status != GlobalSystemValues.STATUS_FOR_CLOSING
+                           && exp.Expense_Status != GlobalSystemValues.STATUS_REVERSED
                            && (opening <= exp.Expense_Date && closing >= exp.Expense_Date)
                            select new { exp.Expense_ID, exp.Expense_Number, dtl.ExpDtl_ID, acc.Account_No, exp.Expense_Status }).ToList().Count;
 
@@ -12844,7 +12846,8 @@ namespace ExpenseProcessingSystem.Services
                                   && dtl.ExpDtl_Inter_Entity == true
                                   && exp.Expense_Type == 2
                                   && acc.Account_No.Substring(4, 3) == branchCode
-                                  && exp.Expense_Status != 14
+                                  && exp.Expense_Status != GlobalSystemValues.STATUS_FOR_CLOSING
+                                  && exp.Expense_Status != GlobalSystemValues.STATUS_REVERSED
                                   && (opening <= exp.Expense_Date && closing >= exp.Expense_Date)
                                   select new { exp.Expense_ID, dtl.ExpDtl_ID, acc.Account_No, exp.Expense_Status }).ToList().Count;
 
@@ -12859,14 +12862,16 @@ namespace ExpenseProcessingSystem.Services
                             && acc.Account_ID == liqInter.Liq_AccountID_1_1
                             && liqInter.Liq_Amount_1_1 > 0
                             && acc.Account_No.Substring(4, 3) == branchCode
-                            && liqDtl.Liq_Status != 14
+                            && liqDtl.Liq_Status != GlobalSystemValues.STATUS_FOR_CLOSING
+                            && liqDtl.Liq_Status != GlobalSystemValues.STATUS_REVERSED
                             && (opening <= liqDtl.Liq_Created_Date && closing >= liqDtl.Liq_Created_Date)
                             select new
                             { exp.Expense_ID,expDtl.ExpDtl_ID,exp.Expense_Number,liqDtl.Liq_Status,acc.Account_No}).ToList().Count;
 
             var ncStatus = (from exp in _context.ExpenseEntry
                             where exp.Expense_Type == 5
-                            && exp.Expense_Status != 14
+                            && exp.Expense_Status != GlobalSystemValues.STATUS_FOR_CLOSING
+                            && exp.Expense_Status != GlobalSystemValues.STATUS_REVERSED
                             && (opening <= exp.Expense_Date && closing >= exp.Expense_Date)
                             select new {exp.Expense_ID}).ToList().Count;
 
