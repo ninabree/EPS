@@ -15,67 +15,86 @@
     .fw-bold {
         font-weight: bold;
     }
-    .fw-italic{
+
+    .fw-italic {
         font-style: italic;
     }
-    .fw-underline{
+
+    .fw-underline {
         text-decoration: underline;
     }
+
     .fw-doub-underline {
         border-bottom: 4px double #000;
     }
-    .fw-thk-underline{
+
+    .fw-thk-underline {
         font-weight: bold;
     }
+
     .w-32p {
         width: auto;
         margin-right: 5px;
     }
+
     .w-50p {
         width: 50%;
     }
+
     .w-65p {
         width: 65%;
     }
+
     .float-l {
-        float:left;
+        float: left;
     }
-    .m-t-50{
+
+    .m-t-50 {
         margin-top: 50px;
     }
+
     .fs-10 {
         font-size: 10px;
     }
+
     .fs-13 {
         font-size: 13px;
     }
+
     .tbl-colps {
         border-collapse: collapse;
     }
-    .b-b-1{
+
+    .b-b-1 {
         border-bottom: 1px solid #000;
     }
+
     #phpleft {
         float: left;
         width: 15%;
     }
+
     #phpright {
-        /*float: right;*/ 
+        /*float: right;*/
         display: inline-block;
         width: 25%;
     }
+
     .m-l-r-40 {
         margin: 0px 40px;
     }
+
     .m-l-r-35 {
         margin: 0px 50px 0px 35px;
     }
+
     #adjust-div {
         float: left;
         width: auto;
         /*border-bottom: 1px solid #000;*/
         text-decoration: underline;
     }
+
     #adjust-div-l {
         float: left;
         min-width: 25%;
@@ -83,20 +102,32 @@
         border-bottom: 1px solid #000;
         display: inline-block;
     }
+
     .txt-align-r {
         text-align: right;
     }
+
     .txt-align-c {
         text-align: center;
     }
+
     td[colspan="13"] {
         height: 20px;
     }
+
     .textdeco {
         border-bottom: 1px solid #000;
-        text-decoration:none;
+        text-decoration: none;
         min-width: 100%;
     }
+
+    .textdecoleft {
+        float: left;
+        width: auto;
+        border-bottom: none;
+        text-decoration: underline;
+    }
+
     .justified {
         display: flex;
         align-items: center;
@@ -109,6 +140,10 @@
     public string AmountUnderline(bool isEmpty)
     {
         return (isEmpty) ? "textdeco" : "";
+    }
+    public string AmountUnderlineLeft(bool isEmpty)
+    {
+        return (isEmpty) ? "textdecoleft" : "";
     }
 }
 <table border="0" class="m-l-r-35 m-t-50 tbl-colps">
@@ -166,42 +201,42 @@
             <td class="fs-13">DDV No/s. </td>
             @if (@Model.ReportLOI.Rep_DDVNoList.Count <= 8)
             {
-                @foreach (var val in Model.ReportLOI.Rep_DDVNoList)
-                {
-                    <td class="fs-10">@val</td>
-                }
+            @foreach (var val in Model.ReportLOI.Rep_DDVNoList)
+            {
+            <td class="fs-10">@val</td>
+            }
             }
             else
             {
-                int lmt = (@Model.ReportLOI.Rep_DDVNoList.Count < 8) ? @Model.ReportLOI.Rep_DDVNoList.Count : 7;
-                for (int cnt1 = 0; cnt1 <= lmt; cnt1++)
-                {
-                    <td>@Model.ReportLOI.Rep_DDVNoList[cnt1]</td>
-                }
+            int lmt = (@Model.ReportLOI.Rep_DDVNoList.Count < 8) ? @Model.ReportLOI.Rep_DDVNoList.Count : 7;
+            for (int cnt1 = 0; cnt1 <= lmt; cnt1++)
+            {
+            <td>@Model.ReportLOI.Rep_DDVNoList[cnt1]</td>
+            }
             }
         </tr>
         @if (@Model.ReportLOI.Rep_DDVNoList.Count >= 9)
         {
-            var lmt = (@Model.ReportLOI.Rep_DDVNoList.Count < 16) ? @Model.ReportLOI.Rep_DDVNoList.Count : 16;
-            <tr>
-                <td></td>
-                <td></td>
-                @for (int count = 8; count < lmt; count++)
-                {
-                    <td>@Model.ReportLOI.Rep_DDVNoList[count]</td>
-                }
-            </tr>
+        var lmt = (@Model.ReportLOI.Rep_DDVNoList.Count < 16) ? @Model.ReportLOI.Rep_DDVNoList.Count : 16;
+        <tr>
+            <td></td>
+            <td></td>
+            @for (int count = 8; count < lmt; count++)
+            {
+            <td>@Model.ReportLOI.Rep_DDVNoList[count]</td>
+            }
+        </tr>
         }
         @if (@Model.ReportLOI.Rep_DDVNoList.Count >= 16)
         {
-            <tr>
-                <td></td>
-                <td></td>
-                @for (int count = 16; count < 16; count++)
-                {
-                    <td>@Model.ReportLOI.Rep_DDVNoList[count]</td>
-                }
-            </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            @for (int count = 16; count < 16; count++)
+            {
+            <td>@Model.ReportLOI.Rep_DDVNoList[count]</td>
+            }
+        </tr>
         }
         <tr><td colspan="13"><p></p></td></tr>
         <tr>
@@ -210,10 +245,10 @@
                     <div class="dis-inline-block w-32p float-l">This is to authorize BDO Universal Bank - Corporate Center Branch to debit</div> <div class="fw-bold fw-italic dis-inline-block float-l w-32p">MIZUHO BANK, LTD. - MANILA </div>
                     <div class="dis-inline-block w-32p float-l fw-bold fw-italic">BRANCH ACCT. No. 003008019974</div><div class="dis-inline-block w-32p float-l"> today,</div> <div class="dis-inline-block w-32p float-l fw-underline"> @dateNowStr </div><div class="dis-inline-block w-32p float-l"> for the total amount of  Philippine Pesos: </div>
                     <div id="adjust-div" class="@AmountUnderline(Model.ReportLOI.Rep_AmountInString.Length <= 0)">
-                         @Model.ReportLOI.Rep_AmountInString  @if (Model.ReportLOI.Rep_AmountInString.Length <= 0)
+                        @Model.ReportLOI.Rep_AmountInString  @if (Model.ReportLOI.Rep_AmountInString.Length <= 0)
                         {<p></p>}
                     </div>
-                    <div id="adjust-div-l"> (PHP @String.Format("{0:n}", Model.ReportLOI.Rep_Amount)</div> <div id="phpright"> ), and credit to the account of:</div>
+                    <div id="adjust-div-l">&nbsp; (PHP @String.Format("{0:n}", Model.ReportLOI.Rep_Amount)</div> <div id="phpright"> ), and credit to the account of:</div>
                 </div>
             </td>
         </tr>
@@ -228,15 +263,15 @@
         </tr>
         @foreach (var vals in Model.ReportLOI.Rep_LOIAccList)
         {
-            <tr class="text-center b-b-1">
-                <td>@cnt</td>
-                <td colspan="3"><div class="">@vals.loi_Emp_Name</div></td>
-                <td colspan="2"><div class="">@vals.loi_Acc_Type</div></td>
-                <td colspan="2"><div class="">@vals.loi_Acc_No</div></td>
-                <td colspan="2"><div class="txt-align-r">@String.Format("{0:n}", vals.loi_Amount)</div></td>
-                <td colspan="3"></td>
-            </tr>
-            cnt = cnt + 1;
+        <tr class="text-center b-b-1">
+            <td>@cnt</td>
+            <td colspan="3"><div class="">@vals.loi_Emp_Name</div></td>
+            <td colspan="2"><div class="">@vals.loi_Acc_Type</div></td>
+            <td colspan="2"><div class="">@vals.loi_Acc_No</div></td>
+            <td colspan="2"><div class="txt-align-r">@String.Format("{0:n}", vals.loi_Amount)</div></td>
+            <td colspan="3"></td>
+        </tr>
+        cnt = cnt + 1;
         }
         <tr>
             <td colspan="8"></td>
