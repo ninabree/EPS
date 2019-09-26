@@ -47,6 +47,7 @@ $('.btnCloseConfirm').click(function () {
     $('#specialMsgUL').hide();
     $('#specialMsgUL').empty();
     $('#specialMsgUL').append($('<li>Warning:<li/>'));
+    $('#specialMsgUL').append($('<li id="specialMsg">Warning:<li/>'));
     $('#divConfirmcss').css('top', '');
     $('#divConfirmcss').css('left', '');
 });

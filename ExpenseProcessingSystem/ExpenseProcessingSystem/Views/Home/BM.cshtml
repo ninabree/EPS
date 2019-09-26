@@ -35,7 +35,7 @@
                             <td class="text-right">@Html.DisplayFor(modelItem => item.BM_Budget_Current)</td>
                             <td class="text-right">@Html.DisplayFor(modelItem => item.BM_Budget_Amount)</td>
                             <td class="text-center">
-                                <a id="@item.BM_Budget_ID" class="btnGWriteError" href="#" style="font-size:11px">@Html.DisplayFor(modelItem => item.BM_GWrite_Status)</a>
+                                <a id="@item.BM_Budget_ID" class="btnGWriteError" style="font-size:11px;cursor:pointer">@Html.DisplayFor(modelItem => item.BM_GWrite_Status)</a>
                                 @Html.HiddenFor(modelItem => item.BM_GWrite_Msg, new { @class = "message_" + item.BM_Budget_ID })
                             </td>
                             <td class="text-center">@Html.DisplayFor(modelItem => item.BM_Date_Registered)</td>
@@ -83,7 +83,7 @@
                 <div class="modal-dialog vertical-align-center">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4 style="display:inline">GBASE RETURN MESSAGE</h4>
+                            <h4 style="display:inline">G-WRITE RETURN MESSAGE</h4>
                             <button type="button" class="close" onclick="$('#GWriteMessageModal').modal('hide');">&times;</button>
                         </div>
                         <div class="modal-body">

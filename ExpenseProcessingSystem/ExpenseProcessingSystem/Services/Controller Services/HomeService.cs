@@ -7695,6 +7695,9 @@ namespace ExpenseProcessingSystem.Services
                     }
                     else
                     {
+                        var list1Hist = finalList.Where(x => x.ESAMS_SeqNo == i.ESAMS_SeqNo.Replace("(", "").Replace(")", "")).FirstOrDefault();
+                        if (list1Hist.Trans_Amount1_1 != i.Trans_Amount1_1) continue;
+
                         balance -= Decimal.Parse(i.Trans_Amount1_1);
                     }
 
@@ -7722,6 +7725,9 @@ namespace ExpenseProcessingSystem.Services
                     }
                     else
                     {
+                        var list1Hist = finalList.Where(x => x.ESAMS_SeqNo == i.ESAMS_SeqNo.Replace("(", "").Replace(")", "")).FirstOrDefault();
+                        if (list1Hist.Trans_Amount1_1 != i.Trans_Amount1_2) continue;
+
                         balance -= Decimal.Parse(i.Trans_Amount1_2);
                     }
 
@@ -7749,6 +7755,9 @@ namespace ExpenseProcessingSystem.Services
                     }
                     else
                     {
+                        var list1Hist = finalList.Where(x => x.ESAMS_SeqNo == i.ESAMS_SeqNo.Replace("(", "").Replace(")", "")).FirstOrDefault();
+                        if (list1Hist.Trans_Amount1_1 != i.Trans_Amount2_1) continue;
+
                         balance -= Decimal.Parse(i.Trans_Amount2_1);
                     }
 
@@ -7776,6 +7785,9 @@ namespace ExpenseProcessingSystem.Services
                     }
                     else
                     {
+                        var list1Hist = finalList.Where(x => x.ESAMS_SeqNo == i.ESAMS_SeqNo.Replace("(", "").Replace(")", "")).FirstOrDefault();
+                        if (list1Hist.Trans_Amount1_1 != i.Trans_Amount2_2) continue;
+
                         balance -= Decimal.Parse(i.Trans_Amount2_2);
                     }
 
@@ -7803,6 +7815,9 @@ namespace ExpenseProcessingSystem.Services
                     }
                     else
                     {
+                        var list1Hist = finalList.Where(x => x.ESAMS_SeqNo == i.ESAMS_SeqNo.Replace("(", "").Replace(")", "")).FirstOrDefault();
+                        if (list1Hist.Trans_Amount1_1 != i.Trans_Amount3_1) continue;
+
                         balance -= Decimal.Parse(i.Trans_Amount3_1);
                     }
 
@@ -7830,6 +7845,9 @@ namespace ExpenseProcessingSystem.Services
                     }
                     else
                     {
+                        var list1Hist = finalList.Where(x => x.ESAMS_SeqNo == i.ESAMS_SeqNo.Replace("(", "").Replace(")", "")).FirstOrDefault();
+                        if (list1Hist.Trans_Amount1_1 != i.Trans_Amount3_2) continue;
+
                         balance -= Decimal.Parse(i.Trans_Amount3_2);
                     }
 
@@ -7857,6 +7875,9 @@ namespace ExpenseProcessingSystem.Services
                     }
                     else
                     {
+                        var list1Hist = finalList.Where(x => x.ESAMS_SeqNo == i.ESAMS_SeqNo.Replace("(", "").Replace(")", "")).FirstOrDefault();
+                        if (list1Hist.Trans_Amount1_1 != i.Trans_Amount4_1) continue;
+
                         balance -= Decimal.Parse(i.Trans_Amount4_1);
                     }
 
@@ -7884,6 +7905,9 @@ namespace ExpenseProcessingSystem.Services
                     }
                     else
                     {
+                        var list1Hist = finalList.Where(x => x.ESAMS_SeqNo == i.ESAMS_SeqNo.Replace("(", "").Replace(")", "")).FirstOrDefault();
+                        if (list1Hist.Trans_Amount1_1 != i.Trans_Amount4_2) continue;
+
                         balance -= Decimal.Parse(i.Trans_Amount4_2);
                     }
 
