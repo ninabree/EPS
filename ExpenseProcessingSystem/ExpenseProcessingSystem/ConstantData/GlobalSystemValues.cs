@@ -28,6 +28,12 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly int STATUS_FOR_PRINTING = 13;
         public static readonly int STATUS_FOR_CLOSING = 14;
         public static readonly int STATUS_ERROR = 15;
+        public static readonly int STATUS_REVERSING = 16;
+        public static readonly int STATUS_REVERSING_ERROR = 17;
+        public static readonly int STATUS_REVERSING_COMPLETE = 18;
+        public static readonly int STATUS_RESENDING = 19;
+        public static readonly int STATUS_RESENDING_COMPLETE = 20;
+        public static readonly int STATUS_REVERSED_GBASE_ERROR = 21;
 
         //Static values for the index of certain lists that are to be stored inside a list object.
         //i.e: Retrieving system values for the dropdown boxes of entry views.
@@ -133,6 +139,12 @@ namespace ExpenseProcessingSystem.ConstantData
                 case 13: return "FOR PRINTING";
                 case 14: return "POSTED";
                 case 15: return "ERROR";
+                case 16: return "REVERSING";
+                case 17: return "REVERSING ERROR";
+                case 18: return "REVERSING COMPLETED";
+                case 19: return "RE-SENDING";
+                case 20: return "RE-SENDING COMPLETED";
+                case 21: return "REVERSED DUE TO G-BASE ERROR";
             };
 
             return "";
@@ -225,6 +237,7 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly string HOME_INDEX = "/Home/Index";
         public static readonly string HOME_PENDING = "/Home/Pending";
         public static readonly string HOME_HISTORY = "/Home/History";
+        //public static readonly string TRANSFAILED_INDEX = "/TransFailed/Index";
 
 
         public static readonly string HOME_DM = "/Home/DM";
@@ -232,7 +245,8 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly List<string> HOME_VALS = new List<string> {
             GlobalSystemValues.HOME_INDEX,
             GlobalSystemValues.HOME_PENDING,
-            GlobalSystemValues.HOME_HISTORY
+            GlobalSystemValues.HOME_HISTORY//,
+            //GlobalSystemValues.TRANSFAILED_INDEX
         };
 
         //Static values for Login page
@@ -299,6 +313,11 @@ namespace ExpenseProcessingSystem.ConstantData
         //Static values for Notification.
         public static readonly int UF_ALL = 0; // For General Messages; Notif for someone creating changes in
 
+        //G-Base Error handling action value
+        public const int GBaseErrResend = 1;
+        public const int GBaseErrReverse = 2;
+        public const int GBaseErrReverseResend = 3;
+
         //System message
         public static string MESSAGE = "";
         public static readonly string MESSAGE1 = "You can only edit the entry in Pending or Rejected status.";
@@ -310,6 +329,8 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly string MESSAGE7 = "This entry was already in Rejected status. Cannot proceed with your request.";
         public static readonly string MESSAGE8 = "This entry was already verified by other verifier/s. Cannot proceed with your request.";
         public static readonly string MESSAGE9 = "There are is no check series registered. Check the Data Maintenance and try again.";
+        public static readonly string MESSAGE10 = "Only approver can access to G-Base transaction failure list page.";
+
     }
     public class CONSTANT_NC_VALS
     {
