@@ -29,7 +29,7 @@ namespace ExpenseProcessingSystem.Services.Validations
                             decimal db1Amt = data.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount;
                             decimal cd1Amt = data.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Amount + data.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[2].ExpNCDtlAcc_Amount;
                             decimal db2Amt = data.EntryNC.ExpenseEntryNCDtls[1].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount;
-                            decimal cd2Amt = data.EntryNC.ExpenseEntryNCDtls[1].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Amount + data.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[2].ExpNCDtlAcc_Amount;
+                            decimal cd2Amt = data.EntryNC.ExpenseEntryNCDtls[1].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Amount + data.EntryNC.ExpenseEntryNCDtls[1].ExpenseEntryNCDtlAccs[2].ExpNCDtlAcc_Amount;
                             if ((db1Amt != cd1Amt) || (db2Amt != cd2Amt))
                             {
                                 return new ValidationResult("Total Debit and Total Credit Amounts are unbalanced.");
