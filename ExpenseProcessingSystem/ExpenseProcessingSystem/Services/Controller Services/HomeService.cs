@@ -12195,6 +12195,7 @@ namespace ExpenseProcessingSystem.Services
                                              from acc in _context.DMAccount
                                              from ccy in _context.DMCurrency
                                              where exp.Expense_ID == dtl.ExpenseEntryModel.Expense_ID
+                                             && exp.Expense_Status != GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR
                                              && dtl.ExpDtl_Account == acc.Account_ID
                                              && dtl.ExpDtl_Ccy == ccy.Curr_ID
                                              && dtl.ExpDtl_Inter_Entity == false
@@ -12421,6 +12422,7 @@ namespace ExpenseProcessingSystem.Services
                                                                 e.InterAcc_Type_ID
                                                             })
                                                   .Where(x => x.ExpDtl_Inter_Entity == true
+                                                           && x.Expense_Status != GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR
                                                            && x.Expense_Type == GlobalSystemValues.TYPE_DDV
                                                            && x.InterAcc_Type_ID == GlobalSystemValues.NC_DEBIT
                                                            && (opening <= x.Expense_Date
@@ -12501,12 +12503,10 @@ namespace ExpenseProcessingSystem.Services
                     x.ExpenseDetailID,
                     x.GOExpHist_Entry11Actcde,
                     x.GOExpHist_Entry11ActNo
-                })
-                                                   .FirstOrDefault(x => x.ExpenseEntryID == item.Expense_ID
-                                                                     && x.ExpenseDetailID == item.ExpDtl_ID
-                                                                     && x.GOExpHist_Entry11ActNo == item.Account_No.Substring(Math.Max(0, item.Account_No.Length - 6))
-                                                                     && x.GOExpHist_Entry11Actcde == item.Account_Code);
-
+                }).FirstOrDefault(x => x.ExpenseEntryID == item.Expense_ID
+                                    && x.ExpenseDetailID == item.ExpDtl_ID
+                                    && x.GOExpHist_Entry11ActNo == item.Account_No.Substring(Math.Max(0, item.Account_No.Length - 6))
+                                    && x.GOExpHist_Entry11Actcde == item.Account_Code);
                 var index = 0;
 
                 if (goHist != null)
@@ -12618,6 +12618,7 @@ namespace ExpenseProcessingSystem.Services
                                             ccy.Curr_CCY_ABBR
                                         })
                                   .Where(x => x.Expense_Type == GlobalSystemValues.TYPE_NC
+                                           && x.Expense_Status != GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR
                                            && (opening <= x.Expense_Date
                                            && closing >= x.Expense_Date)
                                            && x.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT);
@@ -12684,6 +12685,7 @@ namespace ExpenseProcessingSystem.Services
             var caItems = from expense in (from a in _context.ExpenseEntry
                                            from b in _context.ExpenseEntryDetails
                                            where a.Expense_ID == b.ExpenseEntryModel.Expense_ID
+                                           && a.Expense_Status != GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR
                                            && opening <= a.Expense_Date && closing >= a.Expense_Date
                                            && a.Expense_Type == GlobalSystemValues.TYPE_SS
                                            select new { a.Expense_ID, b.ExpDtl_ID, a.Expense_Number, a.Expense_Date, b.ExpDtl_Gbase_Remarks,
@@ -12769,6 +12771,7 @@ namespace ExpenseProcessingSystem.Services
                                             from acc in _context.DMAccount
                                             from ccy in _context.DMCurrency
                                             where exp.Expense_ID == expDtl.ExpenseEntryModel.Expense_ID
+                                            && liqDtl.Liq_Status != GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR
                                             && exp.Expense_ID == liqDtl.ExpenseEntryModel.Expense_ID
                                             && expDtl.ExpDtl_ID == liqInter.ExpenseEntryDetailModel.ExpDtl_ID
                                             && acc.Account_ID == liqInter.Liq_AccountID_1_1
@@ -12890,6 +12893,7 @@ namespace ExpenseProcessingSystem.Services
                            && acc.Account_No.Substring(4, 3) == branchCode
                            && exp.Expense_Status != GlobalSystemValues.STATUS_FOR_CLOSING
                            && exp.Expense_Status != GlobalSystemValues.STATUS_REVERSED
+                           && exp.Expense_Status != GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR
                            && (opening <= exp.Expense_Date && closing >= exp.Expense_Date)
                            select new { exp.Expense_ID, exp.Expense_Number, dtl.ExpDtl_ID, acc.Account_No, exp.Expense_Status }).ToList().Count;
 
@@ -12910,6 +12914,7 @@ namespace ExpenseProcessingSystem.Services
                                   && acc.Account_No.Substring(4, 3) == branchCode
                                   && exp.Expense_Status != GlobalSystemValues.STATUS_FOR_CLOSING
                                   && exp.Expense_Status != GlobalSystemValues.STATUS_REVERSED
+                                  && exp.Expense_Status != GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR
                                   && (opening <= exp.Expense_Date && closing >= exp.Expense_Date)
                                   select new { exp.Expense_ID, dtl.ExpDtl_ID, acc.Account_No, exp.Expense_Status }).ToList().Count;
 
@@ -12926,6 +12931,7 @@ namespace ExpenseProcessingSystem.Services
                             && acc.Account_No.Substring(4, 3) == branchCode
                             && liqDtl.Liq_Status != GlobalSystemValues.STATUS_FOR_CLOSING
                             && liqDtl.Liq_Status != GlobalSystemValues.STATUS_REVERSED
+                            && liqDtl.Liq_Status != GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR
                             && (opening <= liqDtl.Liq_Created_Date && closing >= liqDtl.Liq_Created_Date)
                             select new
                             { exp.Expense_ID,expDtl.ExpDtl_ID,exp.Expense_Number,liqDtl.Liq_Status,acc.Account_No}).ToList().Count;
@@ -12934,6 +12940,7 @@ namespace ExpenseProcessingSystem.Services
                             where exp.Expense_Type == 5
                             && exp.Expense_Status != GlobalSystemValues.STATUS_FOR_CLOSING
                             && exp.Expense_Status != GlobalSystemValues.STATUS_REVERSED
+                            && exp.Expense_Status != GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR
                             && (opening <= exp.Expense_Date && closing >= exp.Expense_Date)
                             select new {exp.Expense_ID}).ToList().Count;
 
