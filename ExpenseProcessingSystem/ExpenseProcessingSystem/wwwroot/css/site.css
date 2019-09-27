@@ -686,29 +686,7 @@ iframe{
             padding: 5px 5px;
             font-family: /*HelveticaNeue,*/ 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;: HelveticaNeueBold;
         }
-/*----------------------------------------
-   [ Tab Content - GBase Error Tab]*/
-.gbaseError-btn {
-    /* height: 35px; */
-    /*width: 120%;*/
-    font - size: 9px;
-    border: 1px solid #0a1b81;
-    border - radius: 2px;
-    padding: 4px 10px;
-    background - image: linear - gradient(to bottom, rgba(255, 255, 255, .4) 0 %, rgba(255, 255, 255, .4) 100 %), linear - gradient(to bottom, rgba(255, 255, 255, .4) 0 %, rgba(255, 255, 255, .4) 100 %);
-    /*background-clip: content-box, padding-box;*/
-    margin: 1px 3px;
-    font - family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans - serif;
-}
 
-    .gbaseError-btn: hover {
-        background - color: #0a1b81;
-        color: #fff;
-    }
-
-    .gbaseError-btn.btn -default, .gbaseError.btn -default [disabled] {
-        padding: 2px 10px;
-    }
 /*---------------------------------------
     [Tab Content - User Management]*/
 tr {

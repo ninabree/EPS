@@ -18,10 +18,10 @@
     <table class="w-100">
         <tbody>
             <tr>
-                <td class="text-right"><text>*Click GOExpress Status to check the GOExpress Return Message.</text></td>
+                <td class="text-right"><button type="button" id="btnPageRefresh" class="gbaseError-btn" style="height:20px">Refresh</button></td>
             </tr>
             <tr>
-                <td class="text-right"><button type="button" id="btnPageRefresh" class="gbaseError-btn" style="height:20px">Refresh</button></td>
+                <td class="text-right"><text>*Click GOExpress Status to check the GOExpress Return Message.</text></td>
             </tr>
         </tbody>
     </table>
@@ -29,14 +29,12 @@
         <div class="tbl-cont">
             <table class="table table-striped tab-tbl table-bordered table-hover">
                 <colgroup>
-                    <col style="width:8%" />
-                    <col style="width:6%" />
-                    <col style="width:8%" />
-                    <col style="width:20%" />
-                    <col style="width:21%" />
-                    <col style="width:21%" />
-                    <col style="width:8%" />
-                    <col style="width:8%" />
+                    <col style="width:15%" />
+                    <col style="width:10%" />
+                    <col style="width:15%" />
+                    <col style="width:30%" />
+                    <col style="width:15%" />
+                    <col style="width:15%" />
                 </colgroup>
                 <thead>
                     <tr>
@@ -44,8 +42,6 @@
                         <th class="text-center">TRANS NO.</th>
                         <th class="text-center">VOUCHER NO.</th>
                         <th class="text-center">REMARKS</th>
-                        <th class="text-center">DEBIT ACCOUNT/s</th>
-                        <th class="text-center">CREDIT ACCOUNT/s</th>
                         <th class="text-center">GOExpress STATUS</th>
                         <th class="text-center">ACTION</th>
                     </tr>
@@ -65,12 +61,6 @@
                             </td>
                             <td>
                                 @Html.DisplayFor(x => x.TF_TBL_DATA[i].TF_REMARKS)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(x => x.TF_TBL_DATA[i].TF_DEBIT_ACCOUNTS)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(x => x.TF_TBL_DATA[i].TF_CREDIT_ACCONTS)
                             </td>
                             <td class="text-center">
                                 <a id="btnStatus_@i" class="btnStatus" style="cursor:pointer">
