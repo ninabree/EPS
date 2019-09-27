@@ -12268,7 +12268,7 @@ namespace ExpenseProcessingSystem.Services
                 temp.particulars = item.ExpDtl_Gbase_Remarks;
                 temp.transCount = 1;
 
-                if (item.ExpDtl_Fbt && temp.expTrans != "")
+                if (item.ExpDtl_Fbt && (nmCloseItemsRBU.Any(x=>x.expTrans==temp.expTrans) || nmCloseItemsFCDU.Any(x => x.expTrans == temp.expTrans)))
                 {
                     CloseItems fbtItem = new CloseItems();
                     #region Get elements fron xml (ohr,rentDebit,expatDebit,localDebit,fbtCred)
@@ -12313,11 +12313,11 @@ namespace ExpenseProcessingSystem.Services
                                   where hist.ExpenseDetailID == item.ExpDtl_ID
                                   && hist.ExpenseEntryID == item.Expense_ID
                                   && hist.GOExpHist_Entry11ActNo == fbtAcc.Substring(Math.Max(0, fbtAcc.Length - 6))
-                                  select new { tran.TL_GoExpress_ID, hist.GOExpHist_Entry11Amt }).FirstOrDefault();
+                                  select new { tran.TL_TransID, hist.GOExpHist_Entry11Amt }).FirstOrDefault();
 
                     if (gTrans != null)
                     {
-                        temp.gBaseTrans += "," + gTrans.TL_GoExpress_ID;
+                        temp.gBaseTrans += "," + gTrans.TL_TransID;
                         temp.amount += Decimal.Parse(gTrans.GOExpHist_Entry11Amt);
                         temp.transCount = 2;
                     }
@@ -12450,7 +12450,7 @@ namespace ExpenseProcessingSystem.Services
 
                 var index = 0;
 
-                if (goHist != null)
+                if (goHist != null && ddvCloseItemsRBU.Count > 0)
                     index = ddvCloseItemsRBU.FindIndex(x => x.ccy == GetCurrencyAbbrv(item.InterAcc_Curr_ID)
                                                          && x.expTrans != ""
                                                          && int.Parse(x.expTrans.Substring(9)) == item.Expense_Number);
@@ -12463,7 +12463,6 @@ namespace ExpenseProcessingSystem.Services
                         var transList = _context.ExpenseTransLists.FirstOrDefault(x => x.TL_GoExpHist_ID == goHist.GOExpHist_Id
                                                                                     && x.TL_ExpenseID == item.Expense_ID);
                         temp.gBaseTrans = transList.TL_TransID.ToString();
-                        if(item.Expense_Status == GlobalSystemValues.STATUS_REVERSED)
                         temp.expTrans = GlobalSystemValues.getApplicationCode(item.Expense_Type) + "-" +
                                         GetSelectedYearMonthOfTerm(item.Expense_Date.Month, item.Expense_Date.Year).Year + "-" +
                                         item.Expense_Number.ToString().PadLeft(5, '0');
@@ -12509,7 +12508,7 @@ namespace ExpenseProcessingSystem.Services
                                     && x.GOExpHist_Entry11Actcde == item.Account_Code);
                 var index = 0;
 
-                if (goHist != null)
+                if (goHist != null && ddvCloseItemsFCDU.Count > 0)
                     index = ddvCloseItemsFCDU.FindIndex(x => x.ccy == GetCurrencyAbbrv(item.InterAcc_Curr_ID)
                                                          && x.expTrans != ""
                                                          && int.Parse(x.expTrans.Substring(9)) == item.Expense_Number);
