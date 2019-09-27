@@ -52,6 +52,39 @@ namespace ExpenseProcessingSystem.Services.Validations
             }
         }
     }
+    public class RJSPValidations : ValidationAttribute
+    {
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            try
+            {
+                var data = (EntryNCViewModelList)validationContext.ObjectInstance;
+
+                if (data.EntryNC.ExpenseEntryNCDtls.Count > 0)
+                {
+                    if (data.EntryNC.NC_Category_ID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL)
+                    {
+                        if (data.EntryNC.ExpenseEntryNCDtls[1].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Inter_Rate <= 0)
+                        {
+                            return new ValidationResult("2nd entry inter-rate is required to compute the Credit amount.");
+                        }
+                    }
+
+                }
+                return ValidationResult.Success;
+            }
+            catch (Exception ex)
+            {
+                //sample fatal error log
+                Log.Fatal(ex, "User: {user}, StackTrace : {trace}, Error Message: {message}", "[UserID]", ex.StackTrace, ex.Message);
+                return new ValidationResult("Invalid input");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
+        }
+    }
     public class RemarksLimitValidations : ValidationAttribute
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
