@@ -15,7 +15,7 @@ namespace ExpenseProcessingSystem.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.0-rtm-35687")
+                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -981,11 +981,15 @@ namespace ExpenseProcessingSystem.Migrations
 
                     b.Property<int>("TL_ExpenseID");
 
+                    b.Property<string>("TL_GBaseMessage");
+
                     b.Property<int>("TL_GoExpHist_ID");
 
                     b.Property<int>("TL_GoExpress_ID");
 
                     b.Property<bool>("TL_Liquidation");
+
+                    b.Property<int>("TL_StatusID");
 
                     b.Property<int>("TL_TransID");
 
@@ -1007,6 +1011,24 @@ namespace ExpenseProcessingSystem.Migrations
                     b.HasKey("FL_ID");
 
                     b.ToTable("FileLocation");
+                });
+
+            modelBuilder.Entity("ExpenseProcessingSystem.Models.Gbase.GbaseErrorCodes", b =>
+                {
+                    b.Property<string>("GERR_ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("GERR_COMMENT");
+
+                    b.Property<string>("GERR_MESSAGE");
+
+                    b.Property<string>("GERR_NO");
+
+                    b.Property<string>("GERR_STATUS");
+
+                    b.HasKey("GERR_ID");
+
+                    b.ToTable("GbaseErrorCodes");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.GOExpressHistModel", b =>
@@ -1358,24 +1380,6 @@ namespace ExpenseProcessingSystem.Migrations
                     b.HasKey("GOExpHist_Id");
 
                     b.ToTable("GOExpressHist");
-                });
-
-            modelBuilder.Entity("ExpenseProcessingSystem.Models.Gbase.GbaseErrorCodes", b =>
-                {
-                    b.Property<string>("GERR_ID")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("GERR_COMMENT");
-
-                    b.Property<string>("GERR_MESSAGE");
-
-                    b.Property<string>("GERR_NO");
-
-                    b.Property<string>("GERR_STATUS");
-
-                    b.HasKey("GERR_ID");
-
-                    b.ToTable("GbaseErrorCodes");
                 });
 
             modelBuilder.Entity("ExpenseProcessingSystem.Models.GwriteTransList", b =>

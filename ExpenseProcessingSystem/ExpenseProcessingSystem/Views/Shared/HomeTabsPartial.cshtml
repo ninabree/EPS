@@ -1,4 +1,6 @@
-﻿
+﻿@using ExpenseProcessingSystem.ConstantData
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
 @{
     ViewData["Title"] = "HomeTabsPartial";
 }
@@ -7,9 +9,9 @@
         <li class="active ent-tabs" id="notif">@Html.ActionLink("Notification/s", "Index", "Home")</li>
         <li class="ent-tabs" id="ddv">@Html.ActionLink("Pending Application/s", "Pending", "Home")</li>
         <li class="ent-tabs" id="pcv">@Html.ActionLink("Expense Application History", "History", "Home")</li>
-        @*@if (HttpContextAccessor.HttpContext.Session.GetString("accessType") == GlobalSystemValues.ROLE_APPROVER)
+        @if (HttpContextAccessor.HttpContext.Session.GetString("accessType") == GlobalSystemValues.ROLE_APPROVER)
         {
-            <li class="ent-tabs" id="transFailed">@Html.ActionLink("G-Base Transaction Failure/s", "Index", "TransFailed")</li>
-        }*@
+            <li class="ent-tabs" id="transFailed">@Html.ActionLink("G-Base Transaction Error/s", "Index", "TransFailed")</li>
+        }
     </ul>
 </div>

@@ -6,12 +6,13 @@ namespace ExpenseProcessingSystem.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "status",
-                table: "ExpenseEntryAmortizations");
+            migrationBuilder.AddColumn<string>(
+                name: "TL_GBaseMessage",
+                table: "ExpenseTransLists",
+                nullable: true);
 
             migrationBuilder.AddColumn<int>(
-                name: "TL_ExpenseDtlID",
+                name: "TL_StatusID",
                 table: "ExpenseTransLists",
                 nullable: false,
                 defaultValue: 0);
@@ -20,13 +21,12 @@ namespace ExpenseProcessingSystem.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "TL_ExpenseDtlID",
+                name: "TL_GBaseMessage",
                 table: "ExpenseTransLists");
 
-            migrationBuilder.AddColumn<string>(
-                name: "status",
-                table: "ExpenseEntryAmortizations",
-                nullable: true);
+            migrationBuilder.DropColumn(
+                name: "TL_StatusID",
+                table: "ExpenseTransLists");
         }
     }
 }

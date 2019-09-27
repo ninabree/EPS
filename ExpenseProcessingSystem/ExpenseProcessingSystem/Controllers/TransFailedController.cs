@@ -57,6 +57,23 @@ namespace ExpenseProcessingSystem.Controllers
         [NonAdminRoleCheck]
         public IActionResult Index()
         {
+            //Allow Access only to APPROVER
+            if (_session.GetString("accessType") != GlobalSystemValues.ROLE_APPROVER)
+            {
+                GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE10;
+                return RedirectToAction("Index", "Home");
+            }
+
+            //Update Transaction list records before loading page.
+            //Updates only to below status
+            //STATUS_REVERSING = 16;
+            //STATUS_REVERSING_ERROR = 17;
+            //STATUS_REVERSING_COMPLETE = 18;
+            //STATUS_RESENDING = 19;
+            //STATUS_RESENDING_COMPLETE = 20;
+            _service.UpdateResendingTransactions();
+            _service.UpdateReversingTransactions();
+
             TransFailedViewModel vm = new TransFailedViewModel();
 
             //Assign XML Introduction to viewmodel
@@ -68,9 +85,50 @@ namespace ExpenseProcessingSystem.Controllers
                     vm.TF_MSGs.Add(msg);
                 }
             }
-            _service.TEST();
+
+            //Get list of transactions that not accepted by G-BASE SYSTEM.
+            vm.TF_TBL_DATA = _service.GetTransFailedList();
 
             return View(vm);
+        }
+
+        [AcceptVerbs("GET")]
+        public JsonResult GetTest()
+        {
+            //_service.TEST();
+            return Json("");
+        }
+
+        [AcceptVerbs("GET")]
+        public JsonResult IsPendingTransactionInGOExpress()
+        {
+            return Json(_service.IsPendingTransactionInGOExpress());
+        }
+
+        [AcceptVerbs("GET")]
+        public JsonResult IsSameTransactionStatus(int entryID, bool IsLiq)
+        {
+            return Json(_service.GetCurrentTransListStatus(entryID, IsLiq));
+        }
+
+        [AcceptVerbs("GET")]
+        public JsonResult ProcessActionButton(int entryID, int actCmd, bool IsLiq)
+        {
+            switch (actCmd)
+            {
+                case GlobalSystemValues.GBaseErrResend:
+                    _service.ResendToGOExpress(entryID, IsLiq, int.Parse(GetUserID()));
+                    break;
+                case GlobalSystemValues.GBaseErrReverse:
+                    _service.ReverseToGOExpress(entryID, IsLiq, int.Parse(GetUserID()));
+                    break;
+
+                case GlobalSystemValues.GBaseErrReverseResend:
+                    _service.ResendReversingErrorToGOExpress(entryID, IsLiq, int.Parse(GetUserID()));
+                    break;
+            }
+
+            return Json(true);
         }
     }
 }

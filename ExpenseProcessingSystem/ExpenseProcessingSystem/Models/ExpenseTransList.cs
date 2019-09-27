@@ -16,5 +16,7 @@ namespace ExpenseProcessingSystem.Models
         public bool TL_Liquidation { get; set; }
         public int TL_GoExpress_ID { get; set; }
         public int TL_TransID { get; set; }
+        public int TL_StatusID { get; set; }
+        public string TL_GBaseMessage { get; set; }
     }
 }

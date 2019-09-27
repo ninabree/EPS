@@ -237,7 +237,7 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly string HOME_INDEX = "/Home/Index";
         public static readonly string HOME_PENDING = "/Home/Pending";
         public static readonly string HOME_HISTORY = "/Home/History";
-        //public static readonly string TRANSFAILED_INDEX = "/TransFailed/Index";
+        public static readonly string TRANSFAILED_INDEX = "/TransFailed/Index";
 
 
         public static readonly string HOME_DM = "/Home/DM";
@@ -245,8 +245,8 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly List<string> HOME_VALS = new List<string> {
             GlobalSystemValues.HOME_INDEX,
             GlobalSystemValues.HOME_PENDING,
-            GlobalSystemValues.HOME_HISTORY//,
-            //GlobalSystemValues.TRANSFAILED_INDEX
+            GlobalSystemValues.HOME_HISTORY,
+            GlobalSystemValues.TRANSFAILED_INDEX
         };
 
         //Static values for Login page

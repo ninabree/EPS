@@ -66,6 +66,7 @@ namespace ExpenseProcessingSystem.Services
         }
         private int[] status = { GlobalSystemValues.STATUS_POSTED, GlobalSystemValues.STATUS_FOR_CLOSING,
                             GlobalSystemValues.STATUS_FOR_PRINTING };
+        private int[] statusTrans = { GlobalSystemValues.STATUS_APPROVED, GlobalSystemValues.STATUS_RESENDING_COMPLETE };
 
         //-----------------------------------Populate-------------------------------------//
         //[ Home ]
@@ -3633,7 +3634,7 @@ namespace ExpenseProcessingSystem.Services
                                                         .OrderByDescending(x => x.Budget_Date_Registered);
             int currGroup = accountList.First().Account_Group_MasterID;
             decimal budgetAmount = 0.0M;
-
+            var transList = _context.ExpenseTransLists.ToList();
 
             if (budgetList.Count() == 0M)
             {
@@ -3741,6 +3742,13 @@ namespace ExpenseProcessingSystem.Services
                     foreach (var hist in GOExpHist.Where(x => startOfTerm <= DateTime.Parse(x.GOExpHist_ValueDate.Substring(0, 2) + "/" + x.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(x.GOExpHist_ValueDate.Substring(4, 2))))
                              && DateTime.Parse(x.GOExpHist_ValueDate.Substring(0, 2) + "/" + x.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(x.GOExpHist_ValueDate.Substring(4, 2)))) <= endDT.AddDays(-1).Date))
                     {
+                        var transData = transList.Where(x => x.TL_GoExpHist_ID == hist.GOExpHist_Id).FirstOrDefault();
+                        if(transList != null)
+                        {
+                            if (transData.TL_StatusID != GlobalSystemValues.STATUS_RESENDING_COMPLETE 
+                                && transData.TL_StatusID != GlobalSystemValues.STATUS_APPROVED) continue;
+                        }
+
                         if (!String.IsNullOrEmpty(hist.GOExpHist_Entry11ActNo)
                             && acc.Account_No.Contains(hist.GOExpHist_Entry11ActType)
                             && acc.Account_No.Contains(hist.GOExpHist_Entry11ActNo)
@@ -3885,6 +3893,13 @@ namespace ExpenseProcessingSystem.Services
                     foreach (var hist in GOExpHist.Where(x => x.GOExpHist_ValueDate.Substring(0, 2) == filterMonth.ToString().ToString().PadLeft(2, '0')
                                                         && (2000 + int.Parse(x.GOExpHist_ValueDate.Substring(4, 2))) == filterYear))
                     {
+                        var transData = transList.Where(x => x.TL_GoExpHist_ID == hist.GOExpHist_Id).FirstOrDefault();
+                        if (transList != null)
+                        {
+                            if (transData.TL_StatusID != GlobalSystemValues.STATUS_RESENDING_COMPLETE
+                                && transData.TL_StatusID != GlobalSystemValues.STATUS_APPROVED) continue;
+                        }
+
                         if (!String.IsNullOrEmpty(hist.GOExpHist_Entry11ActNo)
                             && acc.Account_No.Contains(hist.GOExpHist_Entry11ActType)
                             && acc.Account_No.Contains(hist.GOExpHist_Entry11ActNo)
@@ -4462,10 +4477,11 @@ namespace ExpenseProcessingSystem.Services
                                hist.GOExpHist_Entry42InterRate,
                                trans.TL_ID,
                                trans.TL_GoExpress_ID,
-                               trans.TL_TransID
-                           }).Where(whereQuery1, subType, startDT.Date, endDT.Date, model.PeriodFrom.Date,
+                               trans.TL_TransID,
+                               trans.TL_StatusID
+                           }).Where("@13.Contains(TL_StatusID) && " + whereQuery1, subType, startDT.Date, endDT.Date, model.PeriodFrom.Date,
                                    model.PeriodTo.Date, model.CheckNoFrom, model.CheckNoTo, model.VoucherNoFrom, model.VoucherNoTo,
-                                   model.TransNoFrom, model.TransNoTo, model.SubjName, expType1).ToList();
+                                   model.TransNoFrom, model.TransNoTo, model.SubjName, expType1, statusTrans).ToList();
                 
                 //Convert to List object.
                 foreach (var i in db1)
@@ -4832,10 +4848,11 @@ namespace ExpenseProcessingSystem.Services
                                hist.GOExpHist_Entry42InterRate,
                                trans.TL_ID,
                                trans.TL_GoExpress_ID,
-                               trans.TL_TransID
-                           }).Where(whereQuery2 + " && Expense_Type = @13", model.ReportSubType, startDT.Date, endDT.Date, model.PeriodFrom.Date,
+                               trans.TL_TransID,
+                               trans.TL_StatusID
+                           }).Where("@14.Contains(TL_StatusID) && " + whereQuery2 + " && Expense_Type = @13", model.ReportSubType, startDT.Date, endDT.Date, model.PeriodFrom.Date,
             model.PeriodTo.Date, model.CheckNoFrom, model.CheckNoTo, model.VoucherNoFrom, model.VoucherNoTo,
-            model.TransNoFrom, model.TransNoTo, model.SubjName, expType2, GlobalSystemValues.TYPE_NC).ToList();
+            model.TransNoFrom, model.TransNoTo, model.SubjName, expType2, GlobalSystemValues.TYPE_NC, statusTrans).ToList();
 
                 //Convert to List object.
                 foreach (var i in db2)
@@ -5196,9 +5213,10 @@ namespace ExpenseProcessingSystem.Services
                            hist.GOExpHist_Entry42InterRate,
                            trans.TL_ID,
                            trans.TL_GoExpress_ID,
-                           trans.TL_TransID
-                       }).Where(whereQuery1, startDT.Date, endDT.Date, model.PeriodFrom.Date,
-                               model.PeriodTo.Date, GlobalSystemValues.TYPE_NC).ToList();
+                           trans.TL_TransID,
+                           trans.TL_StatusID
+                       }).Where("@5.Contains(TL_StatusID) && " + whereQuery1, startDT.Date, endDT.Date, model.PeriodFrom.Date,
+                               model.PeriodTo.Date, GlobalSystemValues.TYPE_NC, statusTrans).ToList();
 
             //Convert to List object.
             foreach (var i in db1)
@@ -5521,8 +5539,10 @@ namespace ExpenseProcessingSystem.Services
                            hist.GOExpHist_Entry42InterRate,
                            trans.TL_ID,
                            trans.TL_GoExpress_ID,
-                           trans.TL_TransID
-                       }).Where(whereQuery2, startDT.Date, endDT.Date, model.PeriodFrom.Date, model.PeriodTo.Date, GlobalSystemValues.TYPE_NC).ToList();
+                           trans.TL_TransID,
+                           trans.TL_StatusID
+                       }).Where("@5.Contains(TL_StatusID) && " + whereQuery2, startDT.Date, endDT.Date, model.PeriodFrom.Date, 
+                                model.PeriodTo.Date, GlobalSystemValues.TYPE_NC, statusTrans).ToList();
 
             //Convert to List object.
             foreach (var i in db2)
@@ -6093,6 +6113,7 @@ namespace ExpenseProcessingSystem.Services
                             && exp.Expense_Last_Updated.Date <= endDT.Date
                             && ewtTaxes.Contains(acc.Account_MasterID)
                             && TRMasterIDs.Contains(tr.TR_MasterID)
+                            && status.Contains(exp.Expense_Status)
                        select new
                        {
                            exp.Expense_ID,
@@ -6403,15 +6424,17 @@ namespace ExpenseProcessingSystem.Services
             //Liquidation
             var db2 = (from hist in _context.GOExpressHist
                        join exp in _context.ExpenseEntry on hist.ExpenseEntryID equals exp.Expense_ID
+                       join liqDtl in _context.LiquidationEntryDetails on hist.ExpenseEntryID equals liqDtl.ExpenseEntryModel.Expense_ID
                        join trans in _context.ExpenseTransLists on hist.GOExpHist_Id equals trans.TL_GoExpHist_ID
                        join ie in _context.LiquidationInterEntity on hist.ExpenseDetailID equals ie.ExpenseEntryDetailModel.ExpDtl_ID
                        join tr in _context.DMTR on ie.Liq_TaxRate equals tr.TR_ID
                        join acc in _context.DMAccount on ie.Liq_AccountID_2_2 equals acc.Account_ID
                        where exp.Expense_Type == GlobalSystemValues.TYPE_SS
-                            && startDT.Date <= exp.Expense_Last_Updated.Date
-                            && exp.Expense_Last_Updated.Date <= endDT.Date
+                            && startDT.Date <= liqDtl.Liq_LastUpdated_Date.Date
+                            && liqDtl.Liq_LastUpdated_Date.Date <= endDT.Date
                             && ewtTaxes.Contains(acc.Account_MasterID)
                             && TRMasterIDs.Contains(tr.TR_MasterID)
+                            && status.Contains(liqDtl.Liq_Status)
                        select new
                        {
                            exp.Expense_ID,
@@ -6730,6 +6753,7 @@ namespace ExpenseProcessingSystem.Services
                             && startDT.Date <= exp.Expense_Last_Updated.Date
                             && exp.Expense_Last_Updated.Date <= endDT.Date
                             && TRMasterIDs.Contains(tr.TR_MasterID)
+                            && status.Contains(exp.Expense_Status)
                        select new
                        {
                            exp.Expense_ID,
@@ -7304,7 +7328,7 @@ namespace ExpenseProcessingSystem.Services
                        join trans in _context.ExpenseTransLists on hist.GOExpHist_Id equals trans.TL_GoExpHist_ID
                        join expDtl in _context.ExpenseEntryDetails on hist.ExpenseDetailID equals expDtl.ExpDtl_ID
                        where exp.Expense_Type == GlobalSystemValues.TYPE_SS && trans.TL_Liquidation == false
-                            && !allReversedEntry.Contains(hist.GOExpHist_Id)
+                            && !allReversedEntry.Contains(hist.GOExpHist_Id) && statusTrans.Contains(trans.TL_StatusID)
                        select new
                        {
                            exp.Expense_ID,
@@ -7433,7 +7457,7 @@ namespace ExpenseProcessingSystem.Services
                        join liq in _context.LiquidationEntryDetails on hist.ExpenseEntryID equals liq.ExpenseEntryModel.Expense_ID
                        join trans in _context.ExpenseTransLists on hist.GOExpHist_Id equals trans.TL_GoExpHist_ID
                        join expDtl in _context.ExpenseEntryDetails on hist.ExpenseDetailID equals expDtl.ExpDtl_ID
-                       where trans.TL_Liquidation == true
+                       where trans.TL_Liquidation == true && statusTrans.Contains(trans.TL_StatusID)
                        select new
                        {
                            liq.ExpenseEntryModel.Expense_ID,
@@ -7500,6 +7524,7 @@ namespace ExpenseProcessingSystem.Services
             {
                 var maker = userList.Where(x => x.User_ID == i.Liq_Created_UserID).FirstOrDefault();
                 var approver = userList.Where(x => x.User_ID == i.Liq_Approver).FirstOrDefault();
+
                 list2.Add(new HomeReportTransactionListViewModel
                 {
                     ESAMS_SeqNo = "(" + list1.Where(x => x.HistExpenseEntryID == i.ExpenseEntryID && x.HistExpenseDetailID == i.ExpenseDetailID).FirstOrDefault().ESAMS_SeqNo + ")",
@@ -7557,7 +7582,7 @@ namespace ExpenseProcessingSystem.Services
                        join trans in _context.ExpenseTransLists on hist.GOExpHist_Id equals trans.TL_GoExpHist_ID
                        join expDtl in _context.ExpenseEntryDetails on hist.ExpenseDetailID equals expDtl.ExpDtl_ID
                        where exp.Expense_Type == GlobalSystemValues.TYPE_SS && trans.TL_Liquidation == false
-                            && allReversedEntry.Contains(hist.GOExpHist_Id)
+                            && allReversedEntry.Contains(hist.GOExpHist_Id) && statusTrans.Contains(trans.TL_StatusID)
                        select new
                        {
                            exp.Expense_ID,
@@ -11237,6 +11262,7 @@ namespace ExpenseProcessingSystem.Services
         //            TL_GoExpress_ID = int.Parse(item.goExp.Id.ToString()),
         //            TL_GoExpHist_ID = int.Parse(item.goExpHist.GOExpHist_Id.ToString()),
         //            TL_Liquidation = false
+        //            TL_StatusID = GlobalSystemValues.STATUS_PENDING
         //        };
         //        transactions.Add(tran);
         //    }
@@ -11431,7 +11457,8 @@ namespace ExpenseProcessingSystem.Services
                     TL_ExpenseID = item.expEntryID,
                     TL_GoExpress_ID = int.Parse(item.goExp.Id.ToString()),
                     TL_GoExpHist_ID = int.Parse(item.goExpHist.GOExpHist_Id.ToString()),
-                    TL_Liquidation = true
+                    TL_Liquidation = true,
+                    TL_StatusID = GlobalSystemValues.STATUS_PENDING
                 };
                 transactions.Add(tran);
                 if (command == "R")
@@ -11564,7 +11591,8 @@ namespace ExpenseProcessingSystem.Services
                     TL_ExpenseID = item.expEntryID,
                     TL_GoExpress_ID = int.Parse(item.goExp.Id.ToString()),
                     TL_GoExpHist_ID = int.Parse(item.goExpHist.GOExpHist_Id.ToString()),
-                    TL_Liquidation = false
+                    TL_Liquidation = false,
+                    TL_StatusID = GlobalSystemValues.STATUS_PENDING
                 };
                 transactions.Add(tran);
 
@@ -11818,7 +11846,8 @@ namespace ExpenseProcessingSystem.Services
                     TL_ExpenseID = item.expEntryID,
                     TL_GoExpress_ID = int.Parse(item.goExp.Id.ToString()),
                     TL_GoExpHist_ID = int.Parse(item.goExpHist.GOExpHist_Id.ToString()),
-                    TL_Liquidation = false
+                    TL_Liquidation = false,
+                    TL_StatusID = GlobalSystemValues.STATUS_PENDING
                 };
                 transactions.Add(tran);
 
@@ -11962,7 +11991,8 @@ namespace ExpenseProcessingSystem.Services
                     TL_ExpenseID = item.expEntryID,
                     TL_GoExpress_ID = int.Parse(item.goExp.Id.ToString()),
                     TL_GoExpHist_ID = int.Parse(item.goExpHist.GOExpHist_Id.ToString()),
-                    TL_Liquidation = false
+                    TL_Liquidation = false,
+                    TL_StatusID = GlobalSystemValues.STATUS_PENDING
                 };
                 transactions.Add(tran);
                 if (command == "R")

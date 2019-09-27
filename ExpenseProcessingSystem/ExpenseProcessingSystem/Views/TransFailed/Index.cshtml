@@ -1,46 +1,130 @@
 ﻿@model ExpenseProcessingSystem.ViewModels.TransFailed.TransFailedViewModel
+@using ExpenseProcessingSystem.ConstantData
 @{
     ViewData["Title"] = "Transaction failed";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<table class="m-l-50 m-t-5">
-    <tbody>
-        @foreach (var msg in Model.TF_MSGs)
-        {
+<div class="tabContent hometabContent">
+    <table class="m-l-50 m-t-5">
+        <tbody>
+            @foreach (var msg in Model.TF_MSGs)
+            {
+                <tr>
+                    <td><b>@Html.DisplayFor(model => msg)</b></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <table class="w-100">
+        <tbody>
             <tr>
-                <td><b>@Html.DisplayFor(model => msg)</b></td>
+                <td class="text-right"><text>*Click GOExpress Status to check the GOExpress Return Message.</text></td>
             </tr>
-        }
-    </tbody>
-</table>
-<div class="m-t-10 w-100">
-    <div class="tbl-cont">
-        <table class="table table-striped tab-tbl table-bordered">
-            <thead>
-                <tr>
-                    <th class="text-center">VALUE DATE</th>
-                    <th class="text-center">TRANS NO.</th>
-                    <th class="text-center">VOUCHER No.</th>
-                    <th class="text-center">REMARKS</th>
-                    <th class="text-center">DEBIT ACCOUNT/s</th>
-                    <th class="text-center">CREDIT ACCOUNT/s</th>
-                    <th class="text-center">STATUS</th>
-                    <th class="text-center">ACTION</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="text-center">09/16/2019</td>
-                    <td class="text-center">00011</td>
-                    <td class="text-center">PCV-2019-00011</td>
-                    <td>SAGARA:TUITION FEE 1ST SEM</td>
-                    <td>H90-767-121113 - Office Rent222 / H90-767-121113 - Office Rent222</td>
-                    <td>H90-767-121113 - Office Rent222 / H90-767-121113 - Office Rent222</td>
-                    <td class="text-center"><label title="GBASE ERROR MESSAGE">COMPLETED</label></td>
-                    <td class="text-center"><button type="button" class="tbl-btn">Reverse</button></td>
-                </tr>
-            </tbody>
-        </table>
+            <tr>
+                <td class="text-right"><button type="button" id="btnPageRefresh" class="gbaseError-btn" style="height:20px">Refresh</button></td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="m-t-10 w-100">
+        <div class="tbl-cont">
+            <table class="table table-striped tab-tbl table-bordered table-hover">
+                <colgroup>
+                    <col style="width:8%" />
+                    <col style="width:6%" />
+                    <col style="width:8%" />
+                    <col style="width:20%" />
+                    <col style="width:21%" />
+                    <col style="width:21%" />
+                    <col style="width:8%" />
+                    <col style="width:8%" />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th class="text-center">VALUE DATE</th>
+                        <th class="text-center">TRANS NO.</th>
+                        <th class="text-center">VOUCHER NO.</th>
+                        <th class="text-center">REMARKS</th>
+                        <th class="text-center">DEBIT ACCOUNT/s</th>
+                        <th class="text-center">CREDIT ACCOUNT/s</th>
+                        <th class="text-center">GOExpress STATUS</th>
+                        <th class="text-center">ACTION</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.TF_TBL_DATA.Count; i++)
+                    {
+                        <tr id="tbl_@i">
+                            <td class="text-center">
+                                @Html.DisplayFor(x => Model.TF_TBL_DATA[i].TF_VALUE_DATE)
+                            </td>
+                            <td class="text-center">
+                                @Html.DisplayFor(x => x.TF_TBL_DATA[i].TF_TRANS_NO)
+                            </td>
+                            <td class="text-center">
+                                @Html.DisplayFor(x => x.TF_TBL_DATA[i].TF_VOUCHER_NO)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(x => x.TF_TBL_DATA[i].TF_REMARKS)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(x => x.TF_TBL_DATA[i].TF_DEBIT_ACCOUNTS)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(x => x.TF_TBL_DATA[i].TF_CREDIT_ACCONTS)
+                            </td>
+                            <td class="text-center">
+                                <a id="btnStatus_@i" class="btnStatus" style="cursor:pointer">
+                                    @Html.DisplayFor(x => x.TF_TBL_DATA[i].TF_STATUS, new { @style = "font-size:small" })
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                @if (!Model.TF_TBL_DATA[i].TF_ACTION_IS_DISABLED)
+                                {
+                                    if (Model.TF_TBL_DATA[i].TF_STATUS_ID != GlobalSystemValues.STATUS_RESENDING_COMPLETE
+                                        && Model.TF_TBL_DATA[i].TF_STATUS_ID != GlobalSystemValues.STATUS_REVERSING_COMPLETE)
+                                    {
+                                        <button type="button" id="btnCommand_@i" class="btnCommand tbl-btn">
+                                            @Html.DisplayFor(x => x.TF_TBL_DATA[i].TF_ACTION_LABEL)
+                                        </button>
+                                    }
+                                }
+                            </td>
+                            <td hidden="hidden">
+                                @Html.HiddenFor(x => x.TF_TBL_DATA[i].TF_GBASE_MESSAGE, new { @class = "gbaseMsg" })
+                                @Html.HiddenFor(x => x.TF_TBL_DATA[i].TF_STATUS_ID, new { @class = "statusID" })
+                                @Html.HiddenFor(x => x.TF_TBL_DATA[i].TF_ACTION_ID, new { @class = "actionID" })
+                                @Html.HiddenFor(x => x.TF_TBL_DATA[i].TF_TRANS_LIST_ID, new { @class = "TransListID" })
+                                @Html.HiddenFor(x => x.TF_TBL_DATA[i].TF_TRANS_ENTRY_ID, new { @class = "TransEntryID" })
+                                @Html.HiddenFor(x => x.TF_TBL_DATA[i].TF_TRANS_IS_LIQ, new { @class = "TransIsLiq" })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <input type="hidden" id="btnID" />
+        <input type="hidden" id="selectedPID" />
+    </div>
+    <div class="modal gbaseError fade" id="GBaseMessageModal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="vertical-alignment-helper">
+                <div class="modal-dialog vertical-align-center">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 style="display:inline">GOEXPRESS RETURN MESSAGE</h4>
+                            <button type="button" class="close" onclick="$('#GBaseMessageModal').modal('hide');">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <textarea style="width:647px; height:428px;font-size:medium" id="gbaseMsgArea" readonly></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn float-r" onclick="$('#GBaseMessageModal').modal('hide');">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+<script type="text/javascript" src="~/js/TransFailedScript.js"></script>

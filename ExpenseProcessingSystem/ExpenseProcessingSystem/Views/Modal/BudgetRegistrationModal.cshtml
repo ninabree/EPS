@@ -244,6 +244,10 @@
                 if (valid == 1) {
                     return false;
                 }
+                $('.loadingEffect').css('z-index', '9999999');
+                loadingEffectStart();
+                $('#userName').blur();
+                $('#passWord').blur();
             });
         });
 
