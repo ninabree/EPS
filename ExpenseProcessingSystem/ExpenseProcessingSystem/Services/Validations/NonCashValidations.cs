@@ -29,7 +29,7 @@ namespace ExpenseProcessingSystem.Services.Validations
                             decimal db1Amt = data.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount;
                             decimal cd1Amt = data.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Amount + data.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[2].ExpNCDtlAcc_Amount;
                             decimal db2Amt = data.EntryNC.ExpenseEntryNCDtls[1].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Amount;
-                            decimal cd2Amt = data.EntryNC.ExpenseEntryNCDtls[1].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Amount + data.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[2].ExpNCDtlAcc_Amount;
+                            decimal cd2Amt = data.EntryNC.ExpenseEntryNCDtls[1].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Amount + data.EntryNC.ExpenseEntryNCDtls[1].ExpenseEntryNCDtlAccs[2].ExpNCDtlAcc_Amount;
                             if ((db1Amt != cd1Amt) || (db2Amt != cd2Amt))
                             {
                                 return new ValidationResult("Total Debit and Total Credit Amounts are unbalanced.");
@@ -37,6 +37,39 @@ namespace ExpenseProcessingSystem.Services.Validations
                         }
                     }
                     
+                }
+                return ValidationResult.Success;
+            }
+            catch (Exception ex)
+            {
+                //sample fatal error log
+                Log.Fatal(ex, "User: {user}, StackTrace : {trace}, Error Message: {message}", "[UserID]", ex.StackTrace, ex.Message);
+                return new ValidationResult("Invalid input");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
+        }
+    }
+    public class RJSPValidations : ValidationAttribute
+    {
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            try
+            {
+                var data = (EntryNCViewModelList)validationContext.ObjectInstance;
+
+                if (data.EntryNC.ExpenseEntryNCDtls.Count > 0)
+                {
+                    if (data.EntryNC.NC_Category_ID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL)
+                    {
+                        if (data.EntryNC.ExpenseEntryNCDtls[1].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Inter_Rate <= 0)
+                        {
+                            return new ValidationResult("2nd entry inter-rate is required to compute the Credit amount.");
+                        }
+                    }
+
                 }
                 return ValidationResult.Success;
             }

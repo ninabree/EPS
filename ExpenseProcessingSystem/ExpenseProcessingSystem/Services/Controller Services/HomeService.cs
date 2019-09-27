@@ -11640,7 +11640,7 @@ namespace ExpenseProcessingSystem.Services
                         tempGbase = new gbaseContainer
                         {
                             valDate = expenseDDV.expenseDate,
-                            remarks = particular.InterPart_Particular_Title,
+                            remarks = item.GBaseRemarks,
                             maker = expenseDDV.maker,
                             approver = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == expID).Expense_Approver
                         };
@@ -11685,6 +11685,14 @@ namespace ExpenseProcessingSystem.Services
                         }
                         else
                         {
+                            tempGbase = new gbaseContainer
+                            {
+                                valDate = expenseDDV.expenseDate,
+                                remarks = item.GBaseRemarks,
+                                maker = expenseDDV.maker,
+                                approver = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == expID).Expense_Approver
+                            };
+
                             if (particular.ExpenseEntryInterEntityAccs.Count > 0)
                             {
                                 entryType = (particular.ExpenseEntryInterEntityAccs[0].Inter_Type_ID == GlobalSystemValues.NC_DEBIT) ? "D" :

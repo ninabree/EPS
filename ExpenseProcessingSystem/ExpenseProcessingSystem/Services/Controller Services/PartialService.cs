@@ -238,7 +238,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         };
                         if (entryNCDtlAcc.ExpNCDtlAcc_Acc_ID != 0)
                         {
-                            entryNCDtlAcc.ExpNCDtlAcc_Acc_Name = _context.DMAccount.Where(x => x.Account_ID == entryNCDtlAcc.ExpNCDtlAcc_Acc_ID).Select(x => x.Account_Name).FirstOrDefault() ?? "";
+                            entryNCDtlAcc.ExpNCDtlAcc_Acc_Name = _context.DMAccount.Where(x => x.Account_ID == entryNCDtlAcc.ExpNCDtlAcc_Acc_ID).Select(x => x.Account_No + " - " + x.Account_Name).FirstOrDefault() ?? "";
                         }
                         if (entryNCDtlAcc.ExpNCDtlAcc_Curr_ID != 0)
                         {

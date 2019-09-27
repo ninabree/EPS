@@ -88,7 +88,7 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         public int maker { get; set; }
         public int amortizationID { get; set; }
         public DateTime lastUpdatedDate { get; set; }
-        [BalancedValidations, RemarksLimitValidations, AccountNotNullValidations, TaxAccountValidations("taxaccID"), DebitCreditNotNullValidations, JSPValidations]
+        [BalancedValidations, RJSPValidations, RemarksLimitValidations, AccountNotNullValidations, TaxAccountValidations("taxaccID"), DebitCreditNotNullValidations, JSPValidations]
         public EntryNCViewModel EntryNC { get; set; }
         public List<SelectListItem> category_of_entry { get; set; }
         public List<SelectListItem> accountList { get; set; }
