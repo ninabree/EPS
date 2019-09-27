@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <TransFailedIntro>
   <TF_MSG1 id="TF_MSG1"><b>Introduction:</b></TF_MSG1>
-  <TF_MSG2 id="TF_MSG2">1. Intro Intro Intro Intro Intro Intro Intro Intro Intro Intro Intro Intro Intro Intro Intro</TF_MSG2>
+  <TF_MSG2 id="TF_MSG2">[*Customiziable by the Mizuho Bank IT Department]</TF_MSG2>
   <TF_MSG3 id="TF_MSG3">Note:</TF_MSG3>
-  <TF_MSG4 id="TF_MSG4">1. NOTE 1 NOTE 1 NOTE 1 NOTE 1 NOTE 1 NOTE 1 NOTE 1 NOTE 1 NOTE 1 NOTE 1 NOTE 1 NOTE 1 NOTE 1 NOTE 1 </TF_MSG4>
-  <TF_MSG5 id="TF_MSG5">2. NOTE 2 NOTE 2 NOTE 2 NOTE 2 NOTE 2 NOTE 2 NOTE 2 NOTE 2 NOTE 2 NOTE 2 NOTE 2 NOTE 2 NOTE 2 NOTE 2 </TF_MSG5>
+  <TF_MSG4 id="TF_MSG4">[*Customiziable by the Mizuho Bank IT Department]</TF_MSG4>
+  <TF_MSG5 id="TF_MSG5"></TF_MSG5>
   <TF_MSG6 id="TF_MSG6"></TF_MSG6>
   <TF_MSG7 id="TF_MSG7"></TF_MSG7>
   <TF_MSG8 id="TF_MSG8"></TF_MSG8>

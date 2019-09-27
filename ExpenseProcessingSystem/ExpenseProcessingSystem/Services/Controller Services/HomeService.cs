@@ -511,13 +511,13 @@ namespace ExpenseProcessingSystem.Services
                                                 {
                                                     App_Entry_ID = exp.Expense_ID,
                                                     //AppCode 6 == LIQ
-                                                    App_Voucher_No = GlobalSystemValues.getApplicationCode(6) + "-" + exp.Expense_Date.Year + "-" + exp.Expense_Number.ToString().PadLeft(5, '0'),
-                                                    App_Maker_ID = exp.Expense_Creator_ID,
-                                                    App_Approver_ID = exp.Expense_Approver,
-                                                    App_Verifier_Name_List = new List<string> { exp.Expense_Verifier_1 == 0 ? null : exp.Expense_Verifier_1 + "", exp.Expense_Verifier_2 == 0 ? null : exp.Expense_Verifier_2 + "" },
-                                                    App_Date = exp.Expense_Date,
-                                                    App_Last_Updated = exp.Expense_Last_Updated,
-                                                    App_Status = exp.Expense_Status + "",
+                                                    App_Voucher_No = GlobalSystemValues.getApplicationCode(6) + "-" + liq.Liq_Created_Date.Year + "-" + exp.Expense_Number.ToString().PadLeft(5, '0'),
+                                                    App_Maker_ID = liq.Liq_Created_UserID,
+                                                    App_Approver_ID = liq.Liq_Approver,
+                                                    App_Verifier_Name_List = new List<string> { liq.Liq_Verifier1 == 0 ? null : liq.Liq_Verifier1 + "", liq.Liq_Verifier2 == 0 ? null : liq.Liq_Verifier2 + "" },
+                                                    App_Date = liq.Liq_Created_Date.Date,
+                                                    App_Last_Updated = liq.Liq_LastUpdated_Date,
+                                                    App_Status = liq.Liq_Status + "",
                                                     App_Link = "View_Liquidation_SS"
                                                 })).ToList();
             }
