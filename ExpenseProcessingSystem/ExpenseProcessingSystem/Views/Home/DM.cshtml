@@ -169,6 +169,7 @@
             var stat = $(this).parent().siblings(":eq(" + count + ")").text();
             var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
             var remainingCheckStat = $('input.tbl-chk[type="checkbox"]:checked').parent().siblings(":eq(" + count + ")").text();
+            var remainingCheckCreator = $('input.tbl-chk[type="checkbox"]:checked').parent().find("[id$='_Creator_ID']").val();
             //to check if entries are of same status
             var txtVal = $('input#entryCheckTypes').val();
             //get table name
@@ -254,6 +255,8 @@
                         else {
                             if (remainingCheckStat == "APPROVED") {
                                 defaultApproved();
+                            } else if (remainingCheckCreator == userId && (remainingCheckStat != "APPROVED")) {
+                                defaultOnlyAdd();
                             } else {
                                 defaultForApproval();
                             }
@@ -264,7 +267,9 @@
                     //format only avail buttons for clicked checkbox
                     if (remainingCheckStat == "APPROVED") {
                         defaultApproved();
-                    } else {
+                    } else if (remainingCheckCreator == userId && (remainingCheckStat != "APPROVED")) {
+                            defaultOnlyAdd();
+                    }else {
                         defaultForApproval();
                     }
                 }
