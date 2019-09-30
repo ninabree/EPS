@@ -190,16 +190,16 @@
                 alert("Kindly check rows with the same status only.");
                 $('.rec').prop('disabled', true);
                 return false;
-            //}
-            //else if (creatorId == userId/* && chkCount <= 1*/) {
-            //    if (stat != "APPROVED") {
-            //        defaultOnlyAdd();
-            //    } else {
-            //        defaultApproved();
-            //    }
-            //    if (this.checked == false && chkCount <= 0) {
-            //        defaultApproved();
-            //    }
+            }
+            else if (creatorId == userId/* && chkCount <= 1*/) {
+                if (stat != "APPROVED") {
+                    defaultOnlyAdd();
+                } else {
+                    defaultApproved();
+                }
+                if (this.checked == false/* && chkCount <= 0*/) {
+                    defaultApproved();
+                }
             } else {
                 //if there is no previously checked box
                 if (txtVal != "") {
