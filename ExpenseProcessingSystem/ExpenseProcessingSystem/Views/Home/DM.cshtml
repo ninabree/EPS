@@ -84,7 +84,7 @@
                     $pageInput = $('#paginationInput');
                     $pageInput.data("value", $pageInput.val());
 
-                    ////DM ON LOAD
+                    ////Data Maintenance ON LOAD
                     $('input#entryCheckTypes').val("");
                     //get column # of status per table
                     var countDoc = $('#partialContainer #partcontains div div table thead tr th').length - 2;
@@ -187,7 +187,7 @@
                     return false;
                 }
             });
-            if (!isSameStat && chkCount <= 2) {
+            if (!isSameStat /*&& chkCount <= 2*/) {
                 alert("Kindly check rows with the same status only.");
                 $('.rec').prop('disabled', true);
                 return false;
