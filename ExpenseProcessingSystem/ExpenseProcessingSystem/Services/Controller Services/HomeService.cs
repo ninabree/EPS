@@ -3480,6 +3480,8 @@ namespace ExpenseProcessingSystem.Services
             if (model.VoucherArray != null) {
                 voucherNoList = model.VoucherArray.Split(',').ToList();
                 entryIDs = voucherNoList.Select(x => int.Parse(x)).ToList();
+                //sort list
+                entryIDs.Sort();
                 model.VoucherNoList = PopulateVoucherNo(entryIDs);
 
                 //get BDO MNL Master ID from XML
