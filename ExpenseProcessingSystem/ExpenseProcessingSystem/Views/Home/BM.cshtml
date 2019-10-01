@@ -3,6 +3,7 @@
     ViewData["Title"] = "BM";
 }
 @using ExpenseProcessingSystem.ViewModels
+@using ExpenseProcessingSystem.ConstantData
 
 @model PaginatedList<BMViewModel>
 
@@ -22,144 +23,175 @@
                         <th class="text-center"><a asp-action="BM" asp-route-sortOrder="@ViewData["BudgetNewSortParm"]">Processing budget<p class="btn-xs glyphicon @ViewData["glyph-6"]"></p></a></th>
                         <th class="text-center"><a asp-action="BM" asp-route-sortOrder="@ViewData["GWriteStatusParm"]">G-Write Status<p class="btn-xs glyphicon @ViewData["glyph-7"]"></p></a></th>
                         <th class="text-center"><a asp-action="BM" asp-route-sortOrder="@ViewData["DateRegisteredSortParm"]">Date Registered<p class="btn-xs glyphicon @ViewData["glyph-8"]"></p></a></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>@Html.DisplayFor(modelItem => item.BM_Acc_Group_Name)</td>
-                            <td>@Html.DisplayFor(modelItem => item.BM_Acc_Name)</td>
-                            <td class="text-center">@Html.DisplayFor(modelItem => item.BM_GBase_Code)</td>
-                            <td class="text-center">@Html.DisplayFor(modelItem => item.BM_Acc_Num)</td>
-                            <td class="text-right">@Html.DisplayFor(modelItem => item.BM_Budget_Current)</td>
-                            <td class="text-right">@Html.DisplayFor(modelItem => item.BM_Budget_Amount)</td>
-                            <td class="text-center">
-                                <a id="@item.BM_Budget_ID" class="btnGWriteError" style="font-size:11px;cursor:pointer">@Html.DisplayFor(modelItem => item.BM_GWrite_Status)</a>
-                                @Html.HiddenFor(modelItem => item.BM_GWrite_Msg, new { @class = "message_" + item.BM_Budget_ID })
-                            </td>
-                            <td class="text-center">@Html.DisplayFor(modelItem => item.BM_Date_Registered)</td>
-                        </tr>
+                    @{int cnt = 0;
+                        @foreach (var item in Model)
+                        {
+                            <tr id="id_@cnt">
+                                <td>@Html.DisplayFor(modelItem => item.BM_Acc_Group_Name)</td>
+                                <td>@Html.DisplayFor(modelItem => item.BM_Acc_Name)</td>
+                                <td class="text-center">@Html.DisplayFor(modelItem => item.BM_GBase_Code)</td>
+                                <td class="text-center">@Html.DisplayFor(modelItem => item.BM_Acc_Num)</td>
+                                <td class="text-right">@Html.DisplayFor(modelItem => item.BM_Budget_Current)</td>
+                                <td class="text-right">@Html.DisplayFor(modelItem => item.BM_Budget_Amount)</td>
+                                <td class="text-center">
+                                    <a id="@item.BM_Budget_ID" class="btnGWriteError" style="font-size:11px;cursor:pointer">@Html.DisplayFor(modelItem => item.BM_GWrite_Status)</a>
+                                    @Html.HiddenFor(modelItem => item.BM_GWrite_Msg, new { @class = "message_" + item.BM_Budget_ID })
+                                </td>
+                                <td class="text-center">@Html.DisplayFor(modelItem => item.BM_Date_Registered)</td>
+                                <td class="text-center">
+                                    @if (item.BM_GWrite_StatusID == GlobalSystemValues.STATUS_ERROR)
+                                    {
+                                        <button type="button" class="btnCancel btn-cancel">CANCEL</button>
+                                    }
+                                    @Html.HiddenFor(modelItem => item.BM_Budget_ID, new { @class="hidBudgetID"})
+                                </td>
+                            </tr>
+                            cnt=cnt+1;
+                        }
                     }
                 </tbody>
-            </table>
-            @{
-                var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+                </table>
+                @{
+                    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
                 var nextDisabled = !Model.HasNextPage ? "disabled" : "";
-            }
+                }
 
-            <a asp-action="BM"
-               asp-route-sortOrder="@ViewData["CurrentSort"]"
-               asp-route-page="@(Model.PageIndex - 1)"
-               asp-route-currentFilter="@ViewData["CurrentFilter"]"
-               class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left">
-            </a>
-            <input type="text" class="pagination-input" id="paginationInput" placeholder="@(Model.PageIndex)" style="text-align:center" />
-            <input type="text" class="pagination-input txtMaxPage" value="of @(Model.TotalPages)" style="text-align:center" disabled />
-            <a asp-action="BM"
-               asp-route-sortOrder="@ViewData["CurrentSort"]"
-               asp-route-page="@(Model.PageIndex + 1)"
-               asp-route-currentFilter="@ViewData["CurrentFilter"]"
-               class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right btnForInputPagination">
-            </a>
-            <div class="float-r m-r-10 divBtn">
-                <button type="button" class="tbl-btn btnBudgetReg">Budget Registration</button>
-                <button type="button" class="tbl-btn btnBudgetRegHist">History of Budget Registration</button>
-                <button type="button" class="tbl-btn btnPrintBudget">Print Budget List</button>
-            </div>
-            <div id="modalDiv2">
-                @Html.Partial("ModalPartial2")
-            </div>
-            @*validation message*@
-            <div id="ValidationSummary" style="display:none" class="">
-                @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
+                <a asp-action="BM"
+                    asp-route-sortOrder="@ViewData["CurrentSort"]"
+                    asp-route-page="@(Model.PageIndex - 1)"
+                    asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                    class="btn pagination-btn btn-xs btn-default @prevDisabled glyphicon glyphicon-menu-left">
+                </a>
+                <input type="text" class="pagination-input" id="paginationInput" placeholder="@(Model.PageIndex)" style="text-align:center" />
+                <input type="text" class="pagination-input txtMaxPage" value="of @(Model.TotalPages)" style="text-align:center" disabled />
+                <a asp-action="BM"
+                    asp-route-sortOrder="@ViewData["CurrentSort"]"
+                    asp-route-page="@(Model.PageIndex + 1)"
+                    asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                    class="btn pagination-btn btn-default @nextDisabled glyphicon glyphicon-menu-right btnForInputPagination">
+                </a>
+                <div class="float-r m-r-10 divBtn">
+                    <button type="button" class="tbl-btn btnBudgetReg">Budget Registration</button>
+                    <button type="button" class="tbl-btn btnBudgetRegHist">History of Budget Registration</button>
+                    <button type="button" class="tbl-btn btnPrintBudget">Print Budget List</button>
+                </div>
+                <div id="modalDiv2">
+                    @Html.Partial("ModalPartial2")
+                </div>
+                @*validation message*@
+                <div id="ValidationSummary" style="display:none" class="">
+                    @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
+                </div>
             </div>
         </div>
-    </div>
-    <div class="modal gbaseError fade" id="GWriteMessageModal" role="dialog">
-        <div class="modal-dialog">
-            <!-- Modal content-->
-            <div class="vertical-alignment-helper">
-                <div class="modal-dialog vertical-align-center">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 style="display:inline">G-WRITE RETURN MESSAGE</h4>
-                            <button type="button" class="close" onclick="$('#GWriteMessageModal').modal('hide');">&times;</button>
-                        </div>
-                        <div class="modal-body">
-                            <textarea style="width:800px;height:400px;font-size:medium" id="gbaseMsgArea" readonly></textarea>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn float-r" onclick="$('#GWriteMessageModal').modal('hide');">Close</button>
+        <div class="modal gbaseError fade" id="GWriteMessageModal" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="vertical-alignment-helper">
+                    <div class="modal-dialog vertical-align-center">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 style="display:inline">G-WRITE RETURN MESSAGE</h4>
+                                <button type="button" class="close" onclick="$('#GWriteMessageModal').modal('hide');">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <textarea style="width:800px;height:400px;font-size:medium" id="gbaseMsgArea" readonly></textarea>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn float-r" onclick="$('#GWriteMessageModal').modal('hide');">Close</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-}
+
+    }
 
 <script>
     $(document).ready(function () {
-        $(function () {
-            //Budget registration modal
-            $(".divBtn").on("click", ".btnBudgetReg", function (e) {
-                e.stopImmediatePropagation();
+        var MSG1 = "This action will cancel the selected ERROR status and will back to last budget amount.";
+        var MSG2 = "Selected budget was already Re-sent/canceled by another user. Please refresh the page.";
 
-                var modalDivBody = $('.modal-body2');
-                modalDivBody.empty();
-                if ($('.modal-header2').find(".modal-title")[0] == null) {
-                    $('.modal-header2').append('<h4 class="modal-title">Budget Registration</h4>');
+        //Budget registration modal
+        $(".divBtn").on("click", ".btnBudgetReg", function (e) {
+            e.stopImmediatePropagation();
+
+            var modalDivBody = $('.modal-body2');
+            modalDivBody.empty();
+            if ($('.modal-header2').find(".modal-title")[0] == null) {
+                $('.modal-header2').append('<h4 class="modal-title">Budget Registration</h4>');
+            } else {
+                $('.modal-title').text("Budget Registration");
+            }
+
+            modalDivBody.load("@Url.Action("BudgetRegistrationModal", "Modal")", {
+
+            }, function (response, status, xhr) {
+                if (status == "error") {
+                    alert("Something went wrong.");
                 } else {
-                    $('.modal-title').text("Budget Registration");
+
                 }
-
-                modalDivBody.load("@Url.Action("BudgetRegistrationModal", "Modal")", {
-
-                }, function (response, status, xhr) {
-                    if (status == "error") {
-                        alert("Something went wrong.");
-                    } else {
-
-                    }
-                });
-
-                $('.myModal2').removeData('bs.modal').modal({ backdrop: 'static', keyboard: false });
             });
 
-            //History of budget registration modal
-            $(".divBtn").on("click", ".btnBudgetRegHist", function (e) {
-                e.stopImmediatePropagation();
+            $('.myModal2').removeData('bs.modal').modal({ backdrop: 'static', keyboard: false });
+        });
 
-                var modalDivBody = $('.modal-body2');
-                modalDivBody.empty();
+        //History of budget registration modal
+        $(".divBtn").on("click", ".btnBudgetRegHist", function (e) {
+            e.stopImmediatePropagation();
 
-                if ($('.modal-header2').find(".modal-title")[0] == null) {
-                    $('.modal-header2').append('<h4 class="modal-title">History of Budget Registration</h4>');
+            var modalDivBody = $('.modal-body2');
+            modalDivBody.empty();
+
+            if ($('.modal-header2').find(".modal-title")[0] == null) {
+                $('.modal-header2').append('<h4 class="modal-title">History of Budget Registration</h4>');
+            } else {
+                $('.modal-title').text("History of Budget Registration");
+            }
+
+            modalDivBody.load("@Url.Action("BudgetRegHistModal", "Modal")", {
+
+            }, function (response, status, xhr) {
+                if (status == "error") {
+                    alert("Something went wrong.");
                 } else {
-                    $('.modal-title').text("History of Budget Registration");
+
                 }
-
-                modalDivBody.load("@Url.Action("BudgetRegHistModal", "Modal")", {
-
-                }, function (response, status, xhr) {
-                    if (status == "error") {
-                        alert("Something went wrong.");
-                    } else {
-
-                    }
-                });
-                $('.myModal2').removeData('bs.modal').modal({ backdrop: true, keyboard: true });
-                //$('.myModal2').modal({ backdrop: false, keyboard: true });
             });
-            $(".btnPrintBudget").click(function (e) {
-                e.preventDefault();
-                window.location.href = "/Home/BM_PrintList";
-            });
+            $('.myModal2').removeData('bs.modal').modal({ backdrop: true, keyboard: true });
+            //$('.myModal2').modal({ backdrop: false, keyboard: true });
+        });
+        $(".btnPrintBudget").click(function (e) {
+            e.preventDefault();
+            window.location.href = "/Home/BM_PrintList";
         });
         $(".table").on("click", ".btnGWriteError", function (e) {
             $('#GWriteMessageModal').modal('show');
             $('#gbaseMsgArea').val($('.message_' + $(this).attr('id')).val());
+        });
+        $('.table').on('click', '.btnCancel', function () {
+            loadingEffectStart();
+            var pid = "#" + $(this.parentNode)[0].parentNode.id;
+            var budgetID = $(pid).find('.hidBudgetID').val();
+
+            $.getJSON('CancelBudgetRegistration', {
+                budgetID: budgetID
+            }, function (data) {
+                if (data) {
+                    window.location.reload();
+                } else {
+                    loadingEffectStop();
+                    $('#alert').text(MSG2);
+                    $('#divAlertWindow').show();
+
+                }
+            });
         });
     });
 </script>

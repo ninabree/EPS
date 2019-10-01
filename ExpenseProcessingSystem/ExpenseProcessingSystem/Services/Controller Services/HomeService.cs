@@ -3028,6 +3028,7 @@ namespace ExpenseProcessingSystem.Services
                     BM_Acc_Num = accInfo.Account_No,
                     BM_Budget_Current = i.Budget_Amount,
                     BM_Budget_Amount = i.Budget_New_Amount,
+                    BM_GWrite_StatusID = i.Budget_GWrite_Status,
                     BM_GWrite_Status = GlobalSystemValues.getStatus(i.Budget_GWrite_Status),
                     BM_Date_Registered = i.Budget_Date_Registered,
                     BM_GWrite_Msg = GetGWriteErrorMsgForBM(i.Budget_ID, "budget")
@@ -3064,7 +3065,7 @@ namespace ExpenseProcessingSystem.Services
 
         public string GetGWriteErrorMsgForBM(int GWTransID, string GWType)
         {
-            var gwriteTrans = _context.GwriteTransLists.Where(x => x.GW_TransID == GWTransID).FirstOrDefault();
+            var gwriteTrans = _context.GwriteTransLists.Where(x => x.GW_TransID == GWTransID).LastOrDefault();
             if (gwriteTrans == null)
                 return "GWrite Message Not Available.";
             var gwriteDtl = _gWriteContext.TblRequestDetails.Where(x => x.RequestId == gwriteTrans.GW_GWrite_ID).FirstOrDefault();
@@ -3074,6 +3075,22 @@ namespace ExpenseProcessingSystem.Services
             if (String.IsNullOrEmpty(gwriteDtl.ReturnMessage))
                 return "Waiting For GWrite to be processed.";
             return gwriteDtl.ReturnMessage;
+        }
+
+        public bool CancelBudgetRegistration(int budgetID)
+        {
+            var budget = _context.Budget.Where(x => x.Budget_ID == budgetID).FirstOrDefault();
+
+            if (budget == null) return false;
+            if(budget.Budget_GWrite_Status != GlobalSystemValues.STATUS_ERROR) return false;
+
+            budget.Budget_GWrite_Status = GlobalSystemValues.STATUS_APPROVED;
+            budget.Budget_Date_Registered = DateTime.Now;
+            budget.Budget_New_Amount = 0.00M;
+            _context.Entry(budget).State = EntityState.Modified;
+            _context.SaveChanges();
+
+            return true;
         }
         // [Report]
         public IEnumerable<HomeReportOutputAPSWT_MModel> GetAPSWT_MData(int month, int year)

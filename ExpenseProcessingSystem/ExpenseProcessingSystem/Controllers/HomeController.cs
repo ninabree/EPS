@@ -6054,5 +6054,10 @@ namespace ExpenseProcessingSystem.Controllers
             return File(path, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", closeType + " Proofsheet.xlsx");
         }
 
+        [AcceptVerbs("GET")]
+        public JsonResult CancelBudgetRegistration(int budgetID)
+        {
+            return Json(_service.CancelBudgetRegistration(budgetID));
+        }
     }
 }
