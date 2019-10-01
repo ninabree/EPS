@@ -364,7 +364,7 @@
             <h5 style="font-size:14px">Opening Balance Confirmation</h5>
         </div>
         <div style="float:right;">
-            <p class="dis-inline"> Date : </p> <h5 class="dis-inline" style="text-decoration-line:underline;">@Model.CBD_Date.ToString("yyyy/MM/dd")</h5>
+            <p class="dis-inline"> Date : </p> <h5 class="dis-inline" style="text-decoration-line:underline;">@Model.CBD_Date.AddDays(1).ToString("yyyy/MM/dd")</h5>
         </div>
         <br />        <br />
         <p style="font-style:italic;font-size:11px;width:100%">
