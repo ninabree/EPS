@@ -16,7 +16,7 @@
                     <tr>
                         <td>@Html.LabelFor(model => model.Filters.GenPendFil.Pending_Type)</td>
                         <td>
-                            @Html.DropDownListFor(model => model.Filters.GenPendFil.Pending_Type, new SelectList(Model.Filters.GenPendFil.Pending_Type_Select, "Value", "Text", "1"), "-- Voucher Type --", new { @class = "w-49" })
+                            @Html.DropDownListFor(model => model.Filters.GenPendFil.Pending_Type, new SelectList(Model.Filters.GenPendFil.Pending_Type_Select, "Value", "Text", "1"), "-- Application Type --", new { @class = "w-49" })
                         </td>
                         <td>@Html.LabelFor(model => model.Filters.GenPendFil.Pending_Amount)</td>
                         <td>@Html.TextBoxFor(model => model.Filters.GenPendFil.Pending_Amount, new { @class = "input" })</td>

@@ -80,7 +80,7 @@
             $(this).parent().siblings("td.bdgcd").find("input").removeClass("voucher-input");
         }
     });
-    $(".input-no").keypress(function () {
+    $("table").on("keypress", ".input-no", function () {
         var val = $(this).val()
         var len = val.length;
         if (len == 3 || len == 7) {

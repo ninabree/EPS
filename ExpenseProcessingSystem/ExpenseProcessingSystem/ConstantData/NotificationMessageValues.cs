@@ -22,6 +22,22 @@ namespace ExpenseProcessingSystem.ConstantData
             {GlobalSystemValues.TYPE_BUDGET,"G-Write"},
             {GlobalSystemValues.TYPE_CLOSING,"Closing"}
         };
+        public static readonly Dictionary<int, string> DMTIONARY = new Dictionary<int, string>
+        {
+            {GlobalSystemValues.TYPE_DM_VEN,"Vendor" },
+            {GlobalSystemValues.TYPE_DM_CHK,"Check"},
+            {GlobalSystemValues.TYPE_DM_ACC,"Account"},
+            {GlobalSystemValues.TYPE_DM_ACC_GRP,"Account Group"},
+            {GlobalSystemValues.TYPE_DM_DEPT,"Department"},
+            {GlobalSystemValues.TYPE_DM_VAT,"Value Added Tax"},
+            {GlobalSystemValues.TYPE_DM_FBT,"Fringe Benefit Tax"},
+            {GlobalSystemValues.TYPE_DM_TR,"Tax Rates"},
+            {GlobalSystemValues.TYPE_DM_CURR,"Currency"},
+            {GlobalSystemValues.TYPE_DM_REG_EMP,"Regular Employees"},
+            {GlobalSystemValues.TYPE_DM_TEMP_EMP,"Temporary Employees"},
+            {GlobalSystemValues.TYPE_DM_BCS,"BIR Cert Signatories"},
+            {GlobalSystemValues.TYPE_DM_CUST,"Customer"}
+        };
         public static readonly Dictionary<int, string> action = new Dictionary<int, string>
         {
             {GlobalSystemValues.STATUS_NEW,"created" },
