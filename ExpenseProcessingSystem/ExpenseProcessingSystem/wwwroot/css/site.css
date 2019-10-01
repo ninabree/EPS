@@ -1239,7 +1239,9 @@ body.loading .loadingEffect {
     box-shadow: 0 0 3px #CC0000;
     margin: 10px;
 }
-
+/*.ven-sel{
+    width: 60%!important;
+}*/
 .gbaseError-btn {
     /* height: 35px; */
     /*width: 120%;*/

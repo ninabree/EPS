@@ -40,13 +40,40 @@
 
     <div id="nc_container" class="border-solid entry-tbl-cont">
         <table id="NCPartialTbl" class="table table-bordered voucher-tbl" style="background-color: #fff; text-align: center">
+            <colgroup>
+                @if (Model.EntryNC.NC_Category_ID != GlobalSystemValues.NC_PSSC && Model.EntryNC.NC_Category_ID != GlobalSystemValues.NC_PCHC && Model.EntryNC.NC_Category_ID != GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES)
+                {
+                    <col style="width: 10%" />
+                    <col style="width: 12%" />
+                    <col style="width: 18%" />
+                    <col style="width: 10%" />
+                    <col style="width: 12.5%" />
+                    <col style="width: 12.5%" />
+                    <col style="width: 12.5%" />
+                    <col style="width: 12.5%" />
+                }
+                else
+                {
+                    <col style="width: 10.2%" />
+                    <col style="width: 9.1%" />
+                    <col style="width: 9.1%" />
+                    <col style="width: 9.1%" />
+                    <col style="width: 8%" />
+                    <col style="width: 11.3%" />
+                    <col style="width: 9.1%" />
+                    <col style="width: 8%" />
+                    <col style="width: 9.1%" />
+                    <col style="width: 8%" />
+                    <col style="width: 9.1%" />
+                }
+            </colgroup>
             <thead class="bg-ccc">
                 <tr>
-                    <th rowspan="1" colspan="3">Remarks</th>
+                    <th rowspan="1" colspan="2">Remarks</th>
                     <th rowspan="2" colspan="1" class="cat-hidden">Vendor</th>
                     <th rowspan="2" colspan="1" class="cat-hidden">Tax Rate</th>
                     <th rowspan="2" colspan="1" class="cat-hidden">Tax Base Amount</th>
-                    <th rowspan="2" colspan="3">Accounts</th>
+                    <th rowspan="2" colspan="1">Accounts</th>
                     <th rowspan="2">Inter-Rate</th>
                     <th rowspan="2">CCY</th>
                     <th rowspan="2">Debit</th>
@@ -55,7 +82,7 @@
                 </tr>
                 <tr>
                     <th colspan="1">Description</th>
-                    <th colspan="2">Period</th>
+                    <th colspan="1">Period</th>
                 </tr>
             </thead>
             <tbody>
@@ -65,7 +92,7 @@
                     {
                         <tr id="item_@i" class="">
                             <td>@Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Remarks_Desc, new { @readonly = "true" })</td>
-                            <td colspan="2">
+                            <td colspan="1">
                                 @Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_Remarks_Period, new { @type = "date", @class = "" })
                             </td>
 
@@ -78,7 +105,7 @@
                             <td class="cat-hidden" colspan="1" rowspan="@Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs.Count">
                                 @Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpNCDtl_TaxBasedAmt, new { @readonly = "true", @class = "w-full cat-hidden" })
                             </td>
-                            <td colspan="3" data-toggle="tooltip" title="@Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name" data-placement="right">
+                            <td colspan="1" data-toggle="tooltip" title="@Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name" data-placement="right">
                                 @Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_Name, new { @readonly = "true", @class = "w-full" })
                             </td>
                             <td>@Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Inter_Rate</td>
@@ -107,8 +134,8 @@
                         {
                             <tr id="item_@i" class="">
                                 <td></td>
-                                <td colspan="2"></td>
-                                <td colspan="3" data-toggle="tooltip" title="@Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_Name" data-placement="right">
+                                <td colspan="1"></td>
+                                <td colspan="1" data-toggle="tooltip" title="@Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_Name" data-placement="right">
                                     @Html.DisplayFor(modelItem => Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Acc_Name, new { @readonly = "true", @class = "w-full" })
                                 </td>
                                 <td>@Model.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[j].ExpNCDtlAcc_Inter_Rate</td>
@@ -147,10 +174,10 @@
         {
             <table class="table table-bordered voucher-tbl m-t-20" style="background-color: #fafafa; border: 2px solid #ccc !important">
                 <colgroup>
-                    <col style="width: 12.5%" />
-                    <col style="width: 12.5%" />
-                    <col style="width: 12.5%" />
-                    <col style="width: 12.5%" />
+                    <col style="width: 10%" />
+                    <col style="width: 12%" />
+                    <col style="width: 18%" />
+                    <col style="width: 10%" />
                     <col style="width: 12.5%" />
                     <col style="width: 12.5%" />
                     <col style="width: 12.5%" />
@@ -190,10 +217,10 @@
         {
             <table class="table table-bordered voucher-tbl m-t-20" style="background-color: #fafafa; border: 2px solid #ccc !important">
                 <colgroup>
-                    <col style="width: 12.5%" />
-                    <col style="width: 12.5%" />
-                    <col style="width: 12.5%" />
-                    <col style="width: 12.5%" />
+                    <col style="width: 10%" />
+                    <col style="width: 12%" />
+                    <col style="width: 18%" />
+                    <col style="width: 10%" />
                     <col style="width: 12.5%" />
                     <col style="width: 12.5%" />
                     <col style="width: 12.5%" />
@@ -246,10 +273,10 @@
         {
             <table class="table table-bordered voucher-tbl" style="background-color: #fafafa; border: 2px solid #ccc !important; margin-bottom: 20px!important">
                 <colgroup>
-                    <col style="width: 12.5%" />
-                    <col style="width: 12.5%" />
-                    <col style="width: 12.5%" />
-                    <col style="width: 12.5%" />
+                    <col style="width: 10%" />
+                    <col style="width: 12%" />
+                    <col style="width: 18%" />
+                    <col style="width: 10%" />
                     <col style="width: 12.5%" />
                     <col style="width: 12.5%" />
                     <col style="width: 12.5%" />
@@ -332,6 +359,20 @@
         else if (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES)
         {
             <table class="table table-bordered voucher-tbl m-t-20" style="background-color: #fafafa; border: 2px solid #ccc !important">
+
+                <colgroup>
+                    <col style="width: 10.2%" />
+                    <col style="width: 9.1%" />
+                    <col style="width: 9.1%" />
+                    <col style="width: 9.1%" />
+                    <col style="width: 8%" />
+                    <col style="width: 11.3%" />
+                    <col style="width: 9.1%" />
+                    <col style="width: 8%" />
+                    <col style="width: 9.1%" />
+                    <col style="width: 8%" />
+                    <col style="width: 9.1%" />
+                </colgroup>
                 @Html.HiddenFor(x => Model.EntryNC.NC_DebitAmt)
                 @Html.HiddenFor(x => Model.EntryNC.NC_CredAmt)
                 @Html.HiddenFor(x => Model.EntryNC.NC_TotalAmt)
@@ -348,14 +389,28 @@
         {
             <table class="table table-bordered voucher-tbl m-t-20 w-full" style="background-color: #fafafa; border: 2px solid #ccc !important">
                 <colgroup>
-                    <col style="width: 12.5%" />
-                    <col style="width: 12.5%" />
-                    <col style="width: 12.5%" />
-                    <col style="width: 12.5%" />
-                    <col style="width: 12.5%" />
-                    <col style="width: 12.5%" />
-                    <col style="width: 12.5%" />
-                    <col style="width: 12.5%" />
+                    @if (Model.EntryNC.NC_Category_ID != GlobalSystemValues.NC_PSSC && Model.EntryNC.NC_Category_ID != GlobalSystemValues.NC_PCHC && Model.EntryNC.NC_Category_ID != GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES)
+                    {
+                        <col style="width: 10%" />
+                        <col style="width: 12%" />
+                        <col style="width: 18%" />
+                        <col style="width: 10%" />
+                        <col style="width: 12.5%" />
+                        <col style="width: 12.5%" />
+                        <col style="width: 12.5%" />
+                        <col style="width: 12.5%" />
+                    }
+                    else
+                    {
+                        <col style="width: 14.76%" />
+                        <col style="width: 14.76%" />
+                        <col style="width: 14.76%" />
+                        <col style="width: 14.76%" />
+                        <col style="width: 14.76%" />
+                        <col style="width: 9.1%" />
+                        <col style="width: 8%" />
+                        <col style="width: 9.1%" />
+                    }
                 </colgroup>
                 <tr style="border-bottom: 2px solid #ccc !important;">
                     <td colspan="5">Total:</td>
