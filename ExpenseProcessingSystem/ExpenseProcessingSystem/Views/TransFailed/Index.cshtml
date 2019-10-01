@@ -70,8 +70,7 @@
                             <td class="text-center">
                                 @if (!Model.TF_TBL_DATA[i].TF_ACTION_IS_DISABLED)
                                 {
-                                    if (Model.TF_TBL_DATA[i].TF_STATUS_ID != GlobalSystemValues.STATUS_RESENDING_COMPLETE
-                                        && Model.TF_TBL_DATA[i].TF_STATUS_ID != GlobalSystemValues.STATUS_REVERSING_COMPLETE)
+                                    if (Model.TF_TBL_DATA[i].TF_STATUS_ID != GlobalSystemValues.STATUS_REVERSING_COMPLETE)
                                     {
                                         <button type="button" id="btnCommand_@i" class="btnCommand tbl-btn">
                                             @Html.DisplayFor(x => x.TF_TBL_DATA[i].TF_ACTION_LABEL)
