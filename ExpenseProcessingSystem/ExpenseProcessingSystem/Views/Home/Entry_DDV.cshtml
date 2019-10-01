@@ -126,6 +126,26 @@
                             <td id="req_@i">
                                 <a class="reqBtn glyphicon glyphicon-list-alt"></a>
                                 <div id="interDtls">
+                                    @if (Model.EntryDDV[i].interDetails.interPartList.Count > 0)
+                                    {
+                                        var pint = 0;
+                                        foreach (ExpenseEntryInterEntityParticularViewModel part in Model.EntryDDV[i].interDetails.interPartList)
+                                        {
+                                            var aint = 0;
+                                            @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.interPartList[pint].InterPart_Particular_Title);
+                                            foreach (var acc in part.ExpenseEntryInterEntityAccs)
+                                            {
+                                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.interPartList[pint].ExpenseEntryInterEntityAccs[aint].Inter_Acc_ID);
+                                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.interPartList[pint].ExpenseEntryInterEntityAccs[aint].Inter_Amount);
+                                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.interPartList[pint].ExpenseEntryInterEntityAccs[aint].Inter_Curr_ID);
+                                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.interPartList[pint].ExpenseEntryInterEntityAccs[aint].Inter_Rate);
+                                                @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.interPartList[pint].ExpenseEntryInterEntityAccs[aint].Inter_Type_ID);
+
+                                                aint += 1;
+                                            }
+                                            pint += 1;
+                                        }
+                                    }
                                 </div>
                                 @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.Inter_Currency1_ID, new { @class = "txtCurr1AbbrID comVar" })
                                 @Html.HiddenFor(x => Model.EntryDDV[i].interDetails.Inter_Currency1_ABBR, new { @class = "txtCurr1Abbr comVar" })
