@@ -195,6 +195,39 @@ namespace ExpenseProcessingSystem.Services
             _context.SaveChanges();
             return true;
         }
+        //Insert new records in Notif for Data Maintenance
+        public bool insertIntoNotifDM(int UserID, int TypeID, int StatusID, int Maker_UserID = 0)
+        {
+            string uName = getName(UserID);
+            string strMessPers = "You " + NotificationMessageValues.action[StatusID] + NotificationMessageValues.commonstr + "Data Maintenance: " +NotificationMessageValues.DMTIONARY[TypeID];
+            string strMessGen = uName + " " + NotificationMessageValues.action[StatusID] + NotificationMessageValues.commonstr + "Data Maintenance: " + NotificationMessageValues.DMTIONARY[TypeID];
+
+            List<HomeNotifModel> model = new List<HomeNotifModel>()
+            {
+                new HomeNotifModel()
+                {
+                    Notif_Application_Type_ID = GlobalSystemValues.TYPE_DM,
+                    Notif_Application_Maker_ID = UserID,
+                    Notif_UserFor_ID = UserID,
+                    Notif_Message = strMessPers,
+                    Notif_Date = DateTime.Now,
+                    Notif_Status_ID = StatusID
+                },
+                new HomeNotifModel()
+                {
+                    Notif_Application_Type_ID = GlobalSystemValues.TYPE_DM,
+                    Notif_Application_Maker_ID = UserID,
+                    Notif_UserFor_ID = Maker_UserID,
+                    Notif_Message = strMessGen,
+                    Notif_Date = DateTime.Now,
+                    Notif_Status_ID = StatusID
+
+                }
+            };
+            _context.HomeNotif.AddRange(model);
+            _context.SaveChanges();
+            return true;
+        }
         //Pending
         public List<ApplicationsViewModel> getPending(int userID, FiltersViewModel filters)
         {
@@ -840,10 +873,12 @@ namespace ExpenseProcessingSystem.Services
         {
             List<int> intList = model.Select(c => c.Vendor_MasterID).ToList();
             List<DMVendorModel_Pending> allPending = _context.DMVendor_Pending.Where(x => intList.Contains(x.Pending_Vendor_MasterID)).ToList();
+            List<DMVendorTRVATModel_Pending> allPendingTRVAT = _context.DMVendorTRVAT_Pending.Where(x => intList.Contains(x.Pending_VTV_Vendor_ID)).ToList();
 
             if (_modelState.IsValid)
             {
                 _context.DMVendor_Pending.RemoveRange(allPending);
+                _context.DMVendorTRVAT_Pending.RemoveRange(allPendingTRVAT);
                 _context.SaveChanges();
             }
             return true;
@@ -3028,6 +3063,7 @@ namespace ExpenseProcessingSystem.Services
                     BM_Acc_Num = accInfo.Account_No,
                     BM_Budget_Current = i.Budget_Amount,
                     BM_Budget_Amount = i.Budget_New_Amount,
+                    BM_GWrite_StatusID = i.Budget_GWrite_Status,
                     BM_GWrite_Status = GlobalSystemValues.getStatus(i.Budget_GWrite_Status),
                     BM_Date_Registered = i.Budget_Date_Registered,
                     BM_GWrite_Msg = GetGWriteErrorMsgForBM(i.Budget_ID, "budget")
@@ -3064,7 +3100,7 @@ namespace ExpenseProcessingSystem.Services
 
         public string GetGWriteErrorMsgForBM(int GWTransID, string GWType)
         {
-            var gwriteTrans = _context.GwriteTransLists.Where(x => x.GW_TransID == GWTransID).FirstOrDefault();
+            var gwriteTrans = _context.GwriteTransLists.Where(x => x.GW_TransID == GWTransID).LastOrDefault();
             if (gwriteTrans == null)
                 return "GWrite Message Not Available.";
             var gwriteDtl = _gWriteContext.TblRequestDetails.Where(x => x.RequestId == gwriteTrans.GW_GWrite_ID).FirstOrDefault();
@@ -3074,6 +3110,22 @@ namespace ExpenseProcessingSystem.Services
             if (String.IsNullOrEmpty(gwriteDtl.ReturnMessage))
                 return "Waiting For GWrite to be processed.";
             return gwriteDtl.ReturnMessage;
+        }
+
+        public bool CancelBudgetRegistration(int budgetID)
+        {
+            var budget = _context.Budget.Where(x => x.Budget_ID == budgetID).FirstOrDefault();
+
+            if (budget == null) return false;
+            if(budget.Budget_GWrite_Status != GlobalSystemValues.STATUS_ERROR) return false;
+
+            budget.Budget_GWrite_Status = GlobalSystemValues.STATUS_APPROVED;
+            budget.Budget_Date_Registered = DateTime.Now;
+            budget.Budget_New_Amount = 0.00M;
+            _context.Entry(budget).State = EntityState.Modified;
+            _context.SaveChanges();
+
+            return true;
         }
         // [Report]
         public IEnumerable<HomeReportOutputAPSWT_MModel> GetAPSWT_MData(int month, int year)
@@ -3428,6 +3480,8 @@ namespace ExpenseProcessingSystem.Services
             if (model.VoucherArray != null) {
                 voucherNoList = model.VoucherArray.Split(',').ToList();
                 entryIDs = voucherNoList.Select(x => int.Parse(x)).ToList();
+                //sort list
+                entryIDs.Sort();
                 model.VoucherNoList = PopulateVoucherNo(entryIDs);
 
                 //get BDO MNL Master ID from XML

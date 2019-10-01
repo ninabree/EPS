@@ -42,7 +42,7 @@
                                 {
                                     @foreach (var trName in trList)
                                     {
-                                        if (Model[i].Vendor_Tax_Rates.Contains(trName.TR_WT_Title))
+                                        if (Model[i].Vendor_Tax_Rates_ID_List.Contains(trName.TR_ID))
                                         {
                                             <label>
                                                 @Html.CheckBox(trName.TR_WT_Title, true, new { @id = "chk" + trName.TR_MasterID, @class = "trChk", value = trName.TR_MasterID })

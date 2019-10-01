@@ -28,6 +28,7 @@
                             <td colspan="2">@Html.TextBoxFor(item => item[i].Emp_FBT_Name, new { @class = "w-full", @readonly = "readonly" })</td>
                             <td>@Html.TextBoxFor(item => item[i].Emp_Status, new { @class = "w-full", @readonly = "readonly" })</td>
                             @Html.HiddenFor(item => item[i].Emp_MasterID)
+                            @Html.HiddenFor(item => item[i].Emp_Creator_ID)
                         </tr>
                     }
                 }

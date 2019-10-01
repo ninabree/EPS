@@ -23,6 +23,7 @@
                             <td>@Html.TextBoxFor(item => item[i].AccountGroup_Code, new { @class = "w-full", @readonly = "readonly" })</td>
                             <td>@Html.TextBoxFor(item => item[i].AccountGroup_Status_Name, new { @class = "w-full", @readonly = "readonly" })</td>
                             @Html.HiddenFor(item => item[i].AccountGroup_MasterID)
+                            @Html.HiddenFor(item => item[i].AccountGroup_Creator_ID)
                         </tr>
                     }
                 }

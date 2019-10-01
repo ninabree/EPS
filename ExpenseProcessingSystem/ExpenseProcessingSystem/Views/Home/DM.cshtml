@@ -84,7 +84,7 @@
                     $pageInput = $('#paginationInput');
                     $pageInput.data("value", $pageInput.val());
 
-                    ////DM ON LOAD
+                    ////Data Maintenance ON LOAD
                     $('input#entryCheckTypes').val("");
                     //get column # of status per table
                     var countDoc = $('#partialContainer #partcontains div div table thead tr th').length - 2;
@@ -169,6 +169,7 @@
             var stat = $(this).parent().siblings(":eq(" + count + ")").text();
             var chkCount = $('input.tbl-chk[type="checkbox"]:checked').length;
             var remainingCheckStat = $('input.tbl-chk[type="checkbox"]:checked').parent().siblings(":eq(" + count + ")").text();
+            var remainingCheckCreator = $('input.tbl-chk[type="checkbox"]:checked').parent().find("[id$='_Creator_ID']").val();
             //to check if entries are of same status
             var txtVal = $('input#entryCheckTypes').val();
             //get table name
@@ -186,20 +187,20 @@
                     return false;
                 }
             });
-            if (!isSameStat && chkCount <= 2) {
+            if (!isSameStat /*&& chkCount <= 2*/) {
                 alert("Kindly check rows with the same status only.");
                 $('.rec').prop('disabled', true);
                 return false;
-            //}
-            //else if (creatorId == userId/* && chkCount <= 1*/) {
-            //    if (stat != "APPROVED") {
-            //        defaultOnlyAdd();
-            //    } else {
-            //        defaultApproved();
-            //    }
-            //    if (this.checked == false && chkCount <= 0) {
-            //        defaultApproved();
-            //    }
+            }
+            else if (creatorId == userId/* && chkCount <= 1*/) {
+                if (stat != "APPROVED") {
+                    defaultOnlyAdd();
+                } else {
+                    defaultApproved();
+                }
+                if (this.checked == false/* && chkCount <= 0*/) {
+                    defaultApproved();
+                }
             } else {
                 //if there is no previously checked box
                 if (txtVal != "") {
@@ -254,6 +255,8 @@
                         else {
                             if (remainingCheckStat == "APPROVED") {
                                 defaultApproved();
+                            } else if (remainingCheckCreator == userId && (remainingCheckStat != "APPROVED")) {
+                                defaultOnlyAdd();
                             } else {
                                 defaultForApproval();
                             }
@@ -264,7 +267,9 @@
                     //format only avail buttons for clicked checkbox
                     if (remainingCheckStat == "APPROVED") {
                         defaultApproved();
-                    } else {
+                    } else if (remainingCheckCreator == userId && (remainingCheckStat != "APPROVED")) {
+                            defaultOnlyAdd();
+                    }else {
                         defaultForApproval();
                     }
                 }

@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<BudgetMonitoring>
+  <!--Max input possible amount-->
+  <MaxAmount id="MaxAmount">99999999.99</MaxAmount>
+</BudgetMonitoring>

@@ -28,7 +28,8 @@
                             <td>@Html.TextBoxFor(item => item[i].BCS_Signatures, new { @class = "w-full", @readonly = "readonly" })</td>
                             <td>@Html.TextBoxFor(item => item[i].BCS_Status, new { @class = "w-full", @readonly = "readonly" })</td>
                             @Html.HiddenFor(item => item[i].BCS_MasterID)
-                        @Html.HiddenFor(item => item[i].BCS_User_ID)
+                            @Html.HiddenFor(item => item[i].BCS_User_ID)
+                            @Html.HiddenFor(item => item[i].BCS_Creator_ID)
                         </tr>
                     }
                 }

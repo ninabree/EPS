@@ -26,6 +26,7 @@
                         <td>@Html.TextBoxFor(item => item[i].Cust_No, new { @class = "w-full", @readonly = "readonly" })</td>
                         <td>@Html.TextBoxFor(item => item[i].Cust_Status, new { @class = "w-full", @readonly = "readonly" })</td>
                         @Html.HiddenFor(item => item[i].Cust_MasterID)
+                        @Html.HiddenFor(item => item[i].Cust_Creator_ID)
                     </tr>
                 }
             }

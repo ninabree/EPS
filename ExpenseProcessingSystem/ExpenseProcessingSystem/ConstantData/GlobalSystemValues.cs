@@ -98,6 +98,23 @@ namespace ExpenseProcessingSystem.ConstantData
         public const int TYPE_BUDGET = 7;
         public const int TYPE_CLOSING = 8;
 
+        //Static value for application types used for checking DM application type
+        //i.e: displaying pending applications
+        //Example : [Expense.Type = TYPE_DM_VEN] instead of [Expense.Type = 1]
+        public const int TYPE_DM_VEN = 1;
+        public const int TYPE_DM_CHK = 2;
+        public const int TYPE_DM_ACC = 3;
+        public const int TYPE_DM_ACC_GRP = 4;
+        public const int TYPE_DM_DEPT = 5;
+        public const int TYPE_DM_VAT = 6;
+        public const int TYPE_DM_FBT = 7;
+        public const int TYPE_DM_TR = 8;
+        public const int TYPE_DM_CURR = 9;
+        public const int TYPE_DM_REG_EMP = 10;
+        public const int TYPE_DM_TEMP_EMP = 11;
+        public const int TYPE_DM_BCS = 12;
+        public const int TYPE_DM_CUST= 13;
+
         //Static value for branch Type/Name/Code
         //i.e: determining what is the branch code for the transaction
         //Example : RBU = 767, FCDU = 789

@@ -105,7 +105,7 @@
                             <button type="button" class="close" onclick="$('#loginModal').hide();">&times;</button>
                         </div>
                         <div class="modal-body">
-                            <table style="margin:5px;">
+                            <table style="margin:5px;" id="tblLogin">
                                 <tr>
                                     <td>RACFID : </td>
                                     <td>
@@ -124,6 +124,12 @@
                                     <td>
                                         &nbsp;
                                         <input type="password" id="passWord" name="password" class="input LoginEnterAction" maxlength="8" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <input type="checkbox" id="chkShowPass">Show Password
                                     </td>
                                 </tr>
                                 <tr>
@@ -189,6 +195,13 @@
                 var budRegItemNo = budRegPNode.id; //jquery obj
                 var txtnewbud = $("#" + budRegItemNo).find('.txtNewBudget');
                 txtnewbud.val(round(txtnewbud.val(), 2));
+                if (parseFloat($(this).val()) > parseFloat(getXMLBudgetMonitoring("MaxAmount"))) {
+                    $('#alert').text("INVALID AMOUNT(" + addCommas($(this).val()) + "). Budget must be less than or equal to PHP "
+                        + addCommas(getXMLBudgetMonitoring("MaxAmount")));
+                    $('#divAlertWindow').show();
+                    $(this).val("0.00");
+                    return false;
+                }
             });
 
             //Change all check box based on the Check all check box.
@@ -248,6 +261,14 @@
                 loadingEffectStart();
                 $('#userName').blur();
                 $('#passWord').blur();
+            });
+
+            $("#tblLogin").on("change", "#chkShowPass", function () {
+                if ($('#chkShowPass').is(':checked')) {
+                    $('#passWord').attr("type", 'text');;
+                } else {
+                    $('#passWord').attr("type", 'password');;
+                }
             });
         });
 

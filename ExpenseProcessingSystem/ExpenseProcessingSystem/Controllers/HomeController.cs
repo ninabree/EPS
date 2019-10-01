@@ -4089,7 +4089,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMVendorViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_APPROVED, vm.Vendor_Creator_ID);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_VEN, GlobalSystemValues.STATUS_APPROVED, vm.Vendor_Creator_ID);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4110,7 +4110,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMVendorViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_REJECTED, vm.Vendor_Creator_ID);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_VEN, GlobalSystemValues.STATUS_REJECTED, vm.Vendor_Creator_ID);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4132,7 +4132,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMDeptViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_APPROVED, vm.Dept_Creator_ID);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_DEPT, GlobalSystemValues.STATUS_APPROVED, vm.Dept_Creator_ID);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4153,7 +4153,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMDeptViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_REJECTED, vm.Dept_Creator_ID);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_DEPT, GlobalSystemValues.STATUS_REJECTED, vm.Dept_Creator_ID);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4175,7 +4175,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMCheckViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_APPROVED, vm.Check_Creator_ID);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_CHK, GlobalSystemValues.STATUS_APPROVED, vm.Check_Creator_ID);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4196,7 +4196,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMCheckViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_REJECTED, vm.Check_Creator_ID);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_CHK, GlobalSystemValues.STATUS_REJECTED, vm.Check_Creator_ID);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4217,7 +4217,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach(DMAccountViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_APPROVED, vm.Account_Creator_ID);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_ACC, GlobalSystemValues.STATUS_APPROVED, vm.Account_Creator_ID);
                         //----------------------------- NOTIF----------------------------------
                     }
                     //Update Budget monitoring info for affected account budget information.
@@ -4256,7 +4256,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMAccountViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_REJECTED, vm.Account_Creator_ID);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_ACC, GlobalSystemValues.STATUS_REJECTED, vm.Account_Creator_ID);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4281,7 +4281,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMAccountGroupViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_APPROVED, vm.AccountGroup_Creator_ID);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_ACC_GRP, GlobalSystemValues.STATUS_APPROVED, vm.AccountGroup_Creator_ID);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4305,7 +4305,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMAccountGroupViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_REJECTED, vm.AccountGroup_Creator_ID);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_ACC_GRP, GlobalSystemValues.STATUS_REJECTED, vm.AccountGroup_Creator_ID);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4327,7 +4327,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMVATViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_APPROVED, vm.VAT_Creator_ID);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_VAT, GlobalSystemValues.STATUS_APPROVED, vm.VAT_Creator_ID);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4348,7 +4348,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMVATViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_REJECTED, vm.VAT_Creator_ID);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_VAT, GlobalSystemValues.STATUS_REJECTED, vm.VAT_Creator_ID);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4370,7 +4370,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMFBTViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_APPROVED, vm.FBT_Creator_ID);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_FBT, GlobalSystemValues.STATUS_APPROVED, vm.FBT_Creator_ID);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4391,7 +4391,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMFBTViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_REJECTED, vm.FBT_Creator_ID);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_FBT, GlobalSystemValues.STATUS_REJECTED, vm.FBT_Creator_ID);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4413,7 +4413,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMTRViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_APPROVED, vm.TR_Creator_ID);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_TR, GlobalSystemValues.STATUS_APPROVED, vm.TR_Creator_ID);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4434,7 +4434,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMTRViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_REJECTED, vm.TR_Creator_ID);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_TR, GlobalSystemValues.STATUS_REJECTED, vm.TR_Creator_ID);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4456,7 +4456,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMCurrencyViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_APPROVED, vm.Curr_Creator_ID);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_CURR, GlobalSystemValues.STATUS_APPROVED, vm.Curr_Creator_ID);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4477,7 +4477,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMCurrencyViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_REJECTED, vm.Curr_Creator_ID);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_CURR, GlobalSystemValues.STATUS_REJECTED, vm.Curr_Creator_ID);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4499,7 +4499,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMEmpViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_APPROVED, vm.Emp_Creator_ID);
+                        _service.insertIntoNotifDM(int.Parse(userId), (vm.Emp_Acc_No == null) ? GlobalSystemValues.TYPE_DM_TEMP_EMP : GlobalSystemValues.TYPE_DM_REG_EMP, GlobalSystemValues.STATUS_APPROVED, vm.Emp_Creator_ID);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4520,7 +4520,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMEmpViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_REJECTED, vm.Emp_Creator_ID);
+                        _service.insertIntoNotifDM(int.Parse(userId), (vm.Emp_Acc_No == null) ? GlobalSystemValues.TYPE_DM_TEMP_EMP : GlobalSystemValues.TYPE_DM_REG_EMP, GlobalSystemValues.STATUS_REJECTED, vm.Emp_Creator_ID);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4542,7 +4542,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMCustViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_APPROVED, vm.Cust_Creator_ID);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_CUST, GlobalSystemValues.STATUS_APPROVED, vm.Cust_Creator_ID);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4563,7 +4563,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMCustViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_REJECTED, vm.Cust_Creator_ID);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_CUST, GlobalSystemValues.STATUS_REJECTED, vm.Cust_Creator_ID);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4584,7 +4584,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMBCSViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_APPROVED, vm.BCS_Creator_ID);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_BCS, GlobalSystemValues.STATUS_APPROVED, vm.BCS_Creator_ID);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4605,7 +4605,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMBCSViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_REJECTED, vm.BCS_Creator_ID);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_BCS, GlobalSystemValues.STATUS_REJECTED, vm.BCS_Creator_ID);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4630,7 +4630,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (NewVendorViewModel vm in model.NewVendorVM)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_NEW, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_VEN, GlobalSystemValues.STATUS_NEW, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4651,7 +4651,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMVendorViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_EDIT, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_VEN, GlobalSystemValues.STATUS_EDIT, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4672,7 +4672,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMVendorViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_DELETE, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_VEN, GlobalSystemValues.STATUS_DELETE, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4694,7 +4694,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (NewDeptViewModel vm in model.NewDeptVM)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_NEW, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_DEPT, GlobalSystemValues.STATUS_NEW, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4715,7 +4715,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMDeptViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_EDIT, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_DEPT, GlobalSystemValues.STATUS_EDIT, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4736,7 +4736,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMDeptViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_DELETE, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_DEPT, GlobalSystemValues.STATUS_DELETE, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4758,7 +4758,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (NewCheckViewModel vm in model.NewCheckVM)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_NEW, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_CHK, GlobalSystemValues.STATUS_NEW, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4779,7 +4779,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMCheckViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_EDIT, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_CHK, GlobalSystemValues.STATUS_EDIT, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4800,7 +4800,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMCheckViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_DELETE, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_CHK, GlobalSystemValues.STATUS_DELETE, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4822,7 +4822,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (NewAccountViewModel vm in model.NewAccountVM)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_NEW, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_ACC, GlobalSystemValues.STATUS_NEW, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4843,7 +4843,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMAccountViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_EDIT, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_ACC, GlobalSystemValues.STATUS_EDIT, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4864,7 +4864,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMAccountViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_DELETE, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_ACC, GlobalSystemValues.STATUS_DELETE, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4889,7 +4889,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (NewAccountGroupViewModel vm in model.NewAccountGroupVM)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_NEW, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_ACC_GRP, GlobalSystemValues.STATUS_NEW, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4913,7 +4913,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMAccountGroupViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_EDIT, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_ACC_GRP, GlobalSystemValues.STATUS_EDIT, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4937,7 +4937,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMAccountGroupViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_DELETE, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_ACC_GRP, GlobalSystemValues.STATUS_DELETE, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4959,7 +4959,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (NewVATViewModel vm in model.NewVATVM)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_NEW, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_VAT, GlobalSystemValues.STATUS_NEW, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -4980,7 +4980,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMVATViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_EDIT, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_VAT, GlobalSystemValues.STATUS_EDIT, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -5001,7 +5001,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMVATViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_DELETE, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_VAT, GlobalSystemValues.STATUS_DELETE, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -5023,7 +5023,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (NewFBTViewModel vm in model.NewFBTVM)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_NEW, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_FBT, GlobalSystemValues.STATUS_NEW, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -5044,7 +5044,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMFBTViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_EDIT, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_FBT, GlobalSystemValues.STATUS_EDIT, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -5065,7 +5065,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMFBTViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_DELETE, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_FBT, GlobalSystemValues.STATUS_DELETE, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -5087,7 +5087,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (NewTRViewModel vm in model.NewTRVM)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_NEW, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_TR, GlobalSystemValues.STATUS_NEW, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -5108,7 +5108,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMTRViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_EDIT, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_TR, GlobalSystemValues.STATUS_EDIT, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -5129,7 +5129,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMTRViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_DELETE, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_TR, GlobalSystemValues.STATUS_DELETE, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -5151,7 +5151,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (NewCurrViewModel vm in model.NewCurrVM)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_NEW, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_CURR, GlobalSystemValues.STATUS_NEW, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -5172,7 +5172,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMCurrencyViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_EDIT, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_CURR, GlobalSystemValues.STATUS_EDIT, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -5193,7 +5193,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMCurrencyViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_DELETE, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_CURR, GlobalSystemValues.STATUS_DELETE, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -5215,7 +5215,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach(NewEmpViewModel vm in model.NewEmpVM)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_NEW, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), (vm.Emp_Acc_No == null) ? GlobalSystemValues.TYPE_DM_TEMP_EMP : GlobalSystemValues.TYPE_DM_REG_EMP, GlobalSystemValues.STATUS_NEW, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -5237,7 +5237,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMEmpViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_EDIT, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), (vm.Emp_Acc_No == null) ? GlobalSystemValues.TYPE_DM_TEMP_EMP : GlobalSystemValues.TYPE_DM_REG_EMP, GlobalSystemValues.STATUS_EDIT, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -5259,7 +5259,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMEmpViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_DELETE, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), (vm.Emp_Acc_No == null) ? GlobalSystemValues.TYPE_DM_TEMP_EMP : GlobalSystemValues.TYPE_DM_REG_EMP, GlobalSystemValues.STATUS_DELETE, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -5282,7 +5282,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (NewCustViewModel vm in model.NewCustVM)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_NEW, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_CUST, GlobalSystemValues.STATUS_NEW, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -5302,7 +5302,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMCustViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_EDIT, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_CUST, GlobalSystemValues.STATUS_EDIT, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -5322,7 +5322,7 @@ namespace ExpenseProcessingSystem.Controllers
                     foreach (DMCustViewModel vm in model)
                     {
                         //----------------------------- NOTIF----------------------------------
-                        _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_DELETE, 0);
+                        _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_CUST, GlobalSystemValues.STATUS_DELETE, 0);
                         //----------------------------- NOTIF----------------------------------
                     }
                 }
@@ -5341,7 +5341,7 @@ namespace ExpenseProcessingSystem.Controllers
                 if (_service.addBCS_Pending(model, userId))
                 {
                     //----------------------------- NOTIF----------------------------------
-                    _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_NEW, 0);
+                    _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_BCS, GlobalSystemValues.STATUS_NEW, 0);
                     //----------------------------- NOTIF----------------------------------
                 }
             }
@@ -5358,7 +5358,7 @@ namespace ExpenseProcessingSystem.Controllers
                 if (_service.editBCS_Pending(model, userId))
                 {
                     //----------------------------- NOTIF----------------------------------
-                    _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_EDIT, 0);
+                    _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_BCS, GlobalSystemValues.STATUS_EDIT, 0);
                     //----------------------------- NOTIF----------------------------------
                 }
             }
@@ -5379,7 +5379,7 @@ namespace ExpenseProcessingSystem.Controllers
                         foreach (DMBCSViewModel vm in model)
                         {
                             //----------------------------- NOTIF----------------------------------
-                            _service.insertIntoNotif(int.Parse(userId), GlobalSystemValues.TYPE_DM, GlobalSystemValues.STATUS_DELETE, 0);
+                            _service.insertIntoNotifDM(int.Parse(userId), GlobalSystemValues.TYPE_DM_BCS, GlobalSystemValues.STATUS_DELETE, 0);
                             //----------------------------- NOTIF----------------------------------
                         }
                     }
@@ -6054,5 +6054,10 @@ namespace ExpenseProcessingSystem.Controllers
             return File(path, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", closeType + " Proofsheet.xlsx");
         }
 
+        [AcceptVerbs("GET")]
+        public JsonResult CancelBudgetRegistration(int budgetID)
+        {
+            return Json(_service.CancelBudgetRegistration(budgetID));
+        }
     }
 }
