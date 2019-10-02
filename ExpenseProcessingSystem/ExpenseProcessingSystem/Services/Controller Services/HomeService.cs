@@ -12322,7 +12322,7 @@ namespace ExpenseProcessingSystem.Services
                 temp.particulars = item.ExpDtl_Gbase_Remarks;
                 temp.transCount = 1;
 
-                if (item.ExpDtl_Fbt && (nmCloseItemsRBU.Any(x=>x.expTrans==temp.expTrans) || nmCloseItemsFCDU.Any(x => x.expTrans == temp.expTrans)))
+                if (item.ExpDtl_Fbt)
                 {
                     CloseItems fbtItem = new CloseItems();
                     #region Get elements fron xml (ohr,rentDebit,expatDebit,localDebit,fbtCred)
@@ -12383,8 +12383,16 @@ namespace ExpenseProcessingSystem.Services
                                                                 && x.gBaseTrans == temp.gBaseTrans
                                                                 && x.particulars == temp.particulars
                                                                 && x.ccy == temp.ccy);
-                    if(itemIndex < 0)
-                        nmCloseItemsRBU.Add(temp);
+                    if (item.ExpDtl_Fbt)
+                    {
+                        if (!nmCloseItemsRBU.Any(x => x.particulars == temp.particulars && x.expTrans == temp.expTrans))
+                            nmCloseItemsRBU.Add(temp);
+                    }
+                    else
+                    {
+                        if (itemIndex < 0)
+                            nmCloseItemsRBU.Add(temp);
+                    }
                 }
                 else {
                     int itemIndex = nmCloseItemsFCDU.FindIndex(x => x.expTrans == temp.expTrans
@@ -12477,6 +12485,7 @@ namespace ExpenseProcessingSystem.Services
                                                             })
                                                   .Where(x => x.ExpDtl_Inter_Entity == true
                                                            && x.Expense_Status != GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR
+                                                           && x.ExpDtl_Inter_Entity == true
                                                            && x.Expense_Type == GlobalSystemValues.TYPE_DDV
                                                            && x.InterAcc_Type_ID == GlobalSystemValues.NC_DEBIT
                                                            && (opening <= x.Expense_Date

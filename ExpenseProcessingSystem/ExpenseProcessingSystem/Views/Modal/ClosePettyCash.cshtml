@@ -17,7 +17,7 @@
 <div style="float:right;width:40%">
     @if (Model.CBD_displayMode)
     {
-        if (Model.enableBtn)
+        if (Model.enableBtn && ViewBag.Approver == "approver")
         {
             <button id="pcConfirm" class="tbl-btn float-r w-70">Confirm</button>
         }
