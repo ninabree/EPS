@@ -314,6 +314,9 @@ namespace ExpenseProcessingSystem.Services
                                             || exp.Expense_Verifier_1 == userID
                                             || exp.Expense_Verifier_2 == userID
                                             || exp.Expense_Approver == userID))
+                                         ||   
+                                            (exp.Expense_Status == GlobalSystemValues.STATUS_REJECTED
+                                             && exp.Expense_Creator_ID == userID)
                                          )
                                      select new ApplicationsViewModel
                                      {
@@ -348,6 +351,9 @@ namespace ExpenseProcessingSystem.Services
                                             || liq.Liq_Verifier1 == userID
                                             || liq.Liq_Verifier2 == userID
                                             || liq.Liq_Approver == userID))
+                                         ||
+                                            (liq.Liq_Status == GlobalSystemValues.STATUS_REJECTED
+                                             && liq.Liq_Created_UserID == userID)
                                          )
                                           select new ApplicationsViewModel
                                           {
@@ -382,7 +388,9 @@ namespace ExpenseProcessingSystem.Services
                                             || exp.Expense_Verifier_1 == userID
                                             || exp.Expense_Verifier_2 == userID
                                             || exp.Expense_Approver == userID))
-                                         )
+                                         ||
+                                            (exp.Expense_Status == GlobalSystemValues.STATUS_REJECTED
+                                             && exp.Expense_Creator_ID == userID))
                                      select new ApplicationsViewModel
                                      {
                                          App_ID = exp.Expense_ID,
@@ -415,6 +423,9 @@ namespace ExpenseProcessingSystem.Services
                                             || liq.Liq_Verifier1 == userID
                                             || liq.Liq_Verifier2 == userID
                                             || liq.Liq_Approver == userID))
+                                         ||
+                                            (liq.Liq_Status == GlobalSystemValues.STATUS_REJECTED
+                                             && liq.Liq_Created_UserID == userID)
                                          )
                                           select new ApplicationsViewModel
                                           {
