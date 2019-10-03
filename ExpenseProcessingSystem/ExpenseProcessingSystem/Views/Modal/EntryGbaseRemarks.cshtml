@@ -87,6 +87,7 @@
         }
 
         $('#' + pid).find('.NumberOnlyOneDecimal').val(roundNumber(val, decVal));
+        //$('#' + pid).find('.NumberOnlyOneDecimal').val(round(val, decVal));
 
         if (isNaN($('#' + pid).find('.NumberOnlyOneDecimal').val())) {
             $('#' + pid).find('.NumberOnlyOneDecimal').val(0);

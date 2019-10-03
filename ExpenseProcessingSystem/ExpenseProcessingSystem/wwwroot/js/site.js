@@ -338,3 +338,21 @@ function roundNumber(num, scale) {
         return +(Math.round(+arr[0] + "e" + sig + (+arr[1] + scale)) + "e-" + scale);
     }
 };
+function round(num, scale) {
+    if (typeof scale === 'undefined' || +scale === 0)
+        return Math.round(num).toFixed(scale);
+
+    num = +num;
+    scale = +scale;
+
+    if (isNaN(num) || !(typeof scale === 'number' && scale % 1 === 0))
+        return NaN;
+
+    // Shift
+    num = num.toString().split('e');
+    num = Math.round(+(num[0] + 'e' + (num[1] ? (+num[1] + scale) : scale)));
+
+    // Shift back
+    num = num.toString().split('e');
+    return (+(num[0] + 'e' + (num[1] ? (+num[1] - scale) : -scale))).toFixed(scale);
+}
