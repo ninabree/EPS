@@ -113,6 +113,15 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     status = GlobalSystemValues.getStatus(GlobalSystemValues.STATUS_FOR_CLOSING);
                     actionLabel = "REVERSE";
                     actionID = actionReverse;
+
+                    int[] noReverse = { GlobalSystemValues.STATUS_REVERSING_ERROR };
+
+                    //If already reversed but it was error, avoid double reversing process to one transaction.
+                    int hasReversingError = data.Where(x => x.Expense_ID == i.Expense_ID && noReverse.Contains(x.TL_StatusID)).ToList().Count;
+                    if (hasReversingError > 0)
+                    {
+                        isDisable = true;
+                    }
                 }
                 else if (i.TL_StatusID == GlobalSystemValues.STATUS_REVERSING_ERROR)
                 {
@@ -224,6 +233,15 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     status = GlobalSystemValues.getStatus(GlobalSystemValues.STATUS_FOR_CLOSING);
                     actionLabel = "REVERSE";
                     actionID = actionReverse;
+
+                    int[] noReverse = { GlobalSystemValues.STATUS_REVERSING_ERROR };
+
+                    //If already reversed but it was error, avoid double reversing process to one transaction.
+                    int hasReversingError = dataLiq.Where(x => x.Expense_ID == i.Expense_ID && noReverse.Contains(x.TL_StatusID)).ToList().Count;
+                    if (hasReversingError > 0)
+                    {
+                        isDisable = true;
+                    }
                 }
                 else if (i.TL_StatusID == GlobalSystemValues.STATUS_REVERSING_ERROR)
                 {
@@ -826,7 +844,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     IsAllTrue = false;
                 }
 
-                if (getCurrency(i.ExpDtl_Ccy).Curr_MasterID != int.Parse(xelemLiq.Element("CURRENCY_PHP").Value))
+                if (GetCurrency(i.ExpDtl_Ccy).Curr_MasterID != int.Parse(xelemLiq.Element("CURRENCY_PHP").Value))
                 {
                     CDD = false;
                     IsAllTrue = false;
@@ -923,7 +941,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             foreach (var i in expDtl)
             {
                 bool CDD = true;
-                if (getCurrency(i.ExpDtl_Ccy).Curr_MasterID != int.Parse(xelemLiq.Element("CURRENCY_PHP").Value))
+                if (GetCurrency(i.ExpDtl_Ccy).Curr_MasterID != int.Parse(xelemLiq.Element("CURRENCY_PHP").Value))
                 {
                     var liqInter = _context.LiquidationInterEntity.Where(x => x.ExpenseEntryDetailModel.ExpDtl_ID == i.ExpDtl_ID).FirstOrDefault().Liq_Amount_1_1;
                     if (liqInter > 0)
@@ -1199,11 +1217,13 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             List<GOExpContainer> container = ArrangeToGOExpContainer(goexphist);
             container = container.OrderByDescending(x => x.GOExpCont_Entry_Type).ToList();
 
+            var acc = GetAccount(goexpress.Entry11ActType, goexpress.Entry11ActNo, goexpress.Entry11Actcde, goexpress.Entry11Ccy);
+
             goexpress = ConvGOExpContToTblCM10(container);
 
             goexpress.SystemName = goexphist.GOExpHist_SystemName;
             goexpress.Groupcode = goexphist.GOExpHist_Groupcode;
-            goexpress.Branchno = goexphist.GOExpHist_Branchno;
+            goexpress.Branchno = goexpress.Branchno;
             goexpress.OpeKind = goexphist.GOExpHist_OpeKind;
             goexpress.AutoApproved = goexphist.GOExpHist_AutoApproved;
             goexpress.WarningOverride = goexphist.GOExpHist_WarningOverride;
@@ -1840,9 +1860,21 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         }
 
         //get currency
-        public DMCurrencyModel getCurrency(int id)
+        public DMCurrencyModel GetCurrency(int id)
         {
             return _context.DMCurrency.FirstOrDefault(x => x.Curr_ID == id);
+        }
+        public DMCurrencyModel GetCurrency(string abbrev)
+        {
+            return _context.DMCurrency.FirstOrDefault(x => x.Curr_CCY_ABBR == abbrev);
+        }
+
+        public DMAccountModel GetAccount(string accountType, string accountNumber, string accountCode, string ccy)
+        {
+            return _context.DMAccount.Where(x => x.Account_No.Contains(accountType)
+                                                && x.Account_No.Contains(accountNumber)
+                                                && x.Account_Code == accountCode
+                                                && x.Account_Currency_MasterID == GetCurrency(ccy).Curr_MasterID).LastOrDefault();
         }
     }
 
