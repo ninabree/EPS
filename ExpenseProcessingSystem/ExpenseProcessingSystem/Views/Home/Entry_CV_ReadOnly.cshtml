@@ -24,7 +24,11 @@
         <div class="dis-inline-block w-20">Date: <p class="dis-inline-block w-70">@Html.TextBoxFor(model => model.expenseDate, new { @readonly = "true", @class = "input w-97" })</p> </div>
         <div class="dis-inline-block"><p class="dis-inline-block">@Html.TextBoxFor(model => model.expenseYear, new { @readonly = "true", @class = "input" })</p> - <p class="dis-inline-block">@Html.TextBoxFor(model => model.expenseId, new { @readonly = "true", @class = "input" })</p></div>
         <div class="dis-inline-block float-r">
-            @if (Model.checkNo != "")
+            @if (Model.checkNo != "" 
+              && Model.statusID != GlobalSystemValues.STATUS_PENDING
+              && Model.statusID != GlobalSystemValues.STATUS_VERIFIED
+              && Model.statusID != GlobalSystemValues.STATUS_APPROVED
+              && Model.statusID != GlobalSystemValues.STATUS_REVERSED)
             {
                 @if (Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING || Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING)
                 {
@@ -284,7 +288,20 @@
         }
 
         $("body").on("click", "#newCheck", function () {
-            window.location.href = "generateNewCheckNo?entryID=@Model.entryID";
+
+            loadingEffectStart();
+            var msg = "Generate new check No.";
+            var warning = [];
+            var command = "Generate new check No.";
+            OpenConfirmationPopup(msg, command, warning);
+            $('#divConfirmWindow').fadeIn(100);
+            loadingEffectStop();
+
+            $("body").on("click", "#btnProceedConfirm", function () {
+                window.location.href = "generateNewCheckNo?entryID=@Model.entryID";
+            });
+
+            return false;
         });
 
         $("#entry-controls").on("click", "#printCheck", function (e) {

@@ -21,48 +21,49 @@
             {
                 @for (int i = 0; i < Model.Count(); i++)
                 {
-                    <tr>
-                        <td>@Html.TextBoxFor(item => item[i].Vendor_Name, new { @class = "w-full", @readonly = "readonly" })</td>
-                        <td>@Html.TextBoxFor(item => item[i].Vendor_TIN, new { @class = "w-full", @readonly = "readonly" })</td>
-                        <td>@Html.TextBoxFor(item => item[i].Vendor_Address, new { @class = "w-full", @readonly = "readonly" })</td>
-                        <td colspan="3">
-                            @if (Model[i].Vendor_Tax_Rates.Count > 0)
+            <tr>
+                <td>@Html.TextBoxFor(item => item[i].Vendor_Name, new { @class = "w-full", @readonly = "readonly" })</td>
+                <td>@Html.TextBoxFor(item => item[i].Vendor_TIN, new { @class = "w-full", @readonly = "readonly" })</td>
+                <td>@Html.TextBoxFor(item => item[i].Vendor_Address, new { @class = "w-full", @readonly = "readonly" })</td>
+                <td colspan="3">
+                    @if (Model[i].Vendor_Tax_Rates.Count > 0)
+                    {
+                        var last = Model[i].Vendor_Tax_Rates.Last();
+                        @foreach (var trName in Model[i].Vendor_Tax_Rates)
+                        {
+                            if (trName.Equals(last))
                             {
-                                var last = Model[i].Vendor_Tax_Rates.Last();
-                                @foreach (var trName in Model[i].Vendor_Tax_Rates)
-                                {
-                                    if (trName.Equals(last))
-                                    {
-                                        @(trName)
-                                    }
-                                    else
-                                    {
-                                        @(trName + ", ")
-                                    }
+                                @(trName)
+                            }
+                            else
+                            {
+                                @(trName + ", ")
+                            }
 
-                                }
-                            }
-                        </td>
-                        <td colspan="3">
-                            @if (Model[i].Vendor_VAT.Count > 0)
+                        }
+                    }
+                </td>
+                <td colspan="3">
+                    @if (Model[i].Vendor_VAT.Count > 0)
+                    {
+                        var last = Model[i].Vendor_VAT.Last();
+                        @foreach (var vatName in Model[i].Vendor_VAT)
+                        {
+                            if (vatName.Equals(last))
                             {
-                                var last = Model[i].Vendor_VAT.Last();
-                                @foreach (var vatName in Model[i].Vendor_VAT)
-                                {
-                                    if (vatName.Equals(last))
-                                    {
-                                        @(vatName)
-                                    }
-                                    else
-                                    {
-                                        @(vatName + ", ")
-                                    }
-                                }
+                                @(vatName)
                             }
-                        </td>
-                        <td>@Html.TextBoxFor(item => item[i].Vendor_Status, new { @class = "w-full", @readonly = "readonly" })</td>
-                        @Html.HiddenFor(item => item[i].Vendor_MasterID)
-                    </tr>
+                            else
+                            {
+                                @(vatName + ", ")
+                            }
+                        }
+                    }
+                </td>
+                <td>@Html.TextBoxFor(item => item[i].Vendor_Status, new { @class = "w-full", @readonly = "readonly" })</td>
+                @Html.HiddenFor(item => item[i].Vendor_MasterID)
+                @Html.HiddenFor(item => item[i].Vendor_Creator_ID)
+            </tr>
                 }
             }
         </table>

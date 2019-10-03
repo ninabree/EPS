@@ -69,7 +69,7 @@
 </div>
 <script>
     $(document).ready(function (e) {
-        $(".input-tin").keypress(function () {
+        $("table").on("keypress", ".input-tin", function () {
             var val = $(this).val()
             var len = val.length;
             if (len == 3 || len == 7 || len == 11) {

@@ -41,5 +41,7 @@ namespace ExpenseProcessingSystem.ViewModels
         [Display(Name = "Vendor Status")]
         public int Vendor_Status_ID { get; set; }
         public string Vendor_Status { get; set; }
+        //FOR EDIT MODAL
+        public List<int> Vendor_Tax_Rates_ID_List { get; set; }
     }
 }

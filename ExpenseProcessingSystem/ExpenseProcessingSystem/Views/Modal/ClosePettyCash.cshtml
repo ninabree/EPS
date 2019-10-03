@@ -17,7 +17,7 @@
 <div style="float:right;width:40%">
     @if (Model.CBD_displayMode)
     {
-        if (Model.enableBtn)
+        if (Model.enableBtn && ViewBag.Approver == "approver")
         {
             <button id="pcConfirm" class="tbl-btn float-r w-70">Confirm</button>
         }
@@ -65,45 +65,45 @@
 <br />
 <div style="text-align:center"><p>CLOSING Balance Confirmation</p></div>
 <div class="flex-c" style="margin:0px" id="brkDwnContent">
-    @using (Html.BeginForm("SaveBrkDwn", "Modal", FormMethod.Post, new { @id = "inputForm" }))
+    @using (Html.BeginForm("SaveBrkDwn", "Modal", FormMethod.Post, new { @id = "inputForm", @class="w-97" }))
     {
-        <table class="table-striped tab-tbl w-97">
+        <table class="table-striped tab-tbl w-100" style="border:2px solid black;" >
             <tbody>
-                <tr style="height: 18px; border-color: black;">
-                    <td style="width: 40%; height: 18px;" colspan="3">&nbsp;</td>
-                    <td style="width: 20%; height: 18px;" colspan="2"><strong>Currency</strong></td>
-                    <td style="width: 40%; height: 18px;" colspan="2"><strong>Total Amount</strong></td>
+                <tr style="height: 18px; border:2px solid black;">
+                    <td style="width: 40%; height: 18px; border:2px solid black;" colspan="3">&nbsp;</td>
+                    <td style="width: 20%; height: 18px; border:2px solid black;" colspan="2"><strong>Currency</strong></td>
+                    <td style="width: 40%; height: 18px; border:2px solid black;" colspan="2"><strong>Total Amount</strong></td>
+                </tr>
+                <tr style="height: 18px;border:1px solid black;">
+                    <td style="width: 40%; height: 18px; text-align: center; border:1px solid black;" colspan="3"><strong>Opening Balance</strong></td>
+                    <td style="width: 20%; height: 18px; text-align: center; border:1px solid black;" colspan="2">PHP</td>
+                    <td class="p" style="width: 40%; height: 18px; text-align: center; border:1px solid black;" colspan="2"><em style="font-style:normal;" id="CBD_opeBalance_pop">@Model.CBD_opeBalance.ToString("N2")</em></td>
+                </tr>
+                <tr style="height: 18px; border:1px solid black;">
+                    <td style="width: 40%; height: 18px; text-align: center; border:1px solid black;" colspan="3">Recieved</td>
+                    <td style="width: 20%; height: 18px; text-align: center; border:1px solid black;" colspan="2">PHP</td>
+                    <td style="width: 40%; height: 18px; text-align: center; border:1px solid black;" colspan="2"><em style="font-style:normal;" id="CBD_recieve_pop">@Model.CBD_recieve.ToString("N2")</em></td>
                 </tr>
                 <tr style="height: 18px;">
-                    <td style="width: 40%; height: 18px; text-align: center;" colspan="3"><strong>Opening Balance</strong></td>
-                    <td style="width: 20%; height: 18px; text-align: center;" colspan="2">PHP</td>
-                    <td class="p" style="width: 40%; height: 18px; text-align: center;" colspan="2"><em style="font-style:normal;" id="CBD_opeBalance_pop">@Model.CBD_opeBalance.ToString("0.00")</em></td>
+                    <td style="width: 40%; height: 18px; text-align: center; border:1px solid black;" colspan="3">Disbursed</td>
+                    <td style="width: 20%; height: 18px; text-align: center; border:1px solid black;" colspan="2">PHP</td>
+                    <td style="width: 40%; height: 18px; text-align: center; border:1px solid black;" colspan="2"><em style="font-style:normal;" id="CBD_disburse_pop">@Model.CBD_disburse.ToString("N2")</em></td>
                 </tr>
                 <tr style="height: 18px;">
-                    <td style="width: 40%; height: 18px; text-align: center;" colspan="3">Recieved</td>
-                    <td style="width: 20%; height: 18px; text-align: center;" colspan="2">PHP</td>
-                    <td style="width: 40%; height: 18px; text-align: center;" colspan="2"><em style="font-style:normal;" id="CBD_recieve_pop">@Model.CBD_recieve.ToString("0.00")</em></td>
+                    <td style="width: 40%; height: 18px; text-align: center; border:1px solid black;" colspan="3"><strong>Closing Balance</strong></td>
+                    <td style="width: 20%; height: 18px; text-align: center; border:1px solid black;" colspan="2">PHP</td>
+                    <td style="width: 40%; height: 18px; text-align: center; border:1px solid black;" colspan="2"><em style="font-style:normal;" id="CBD_closeBalance_pop"> @Model.CBD_closeBalance.ToString("N2")</em></td>
+                </tr>
+                <tr style="height: 18px; border:2px solid black;">
+                    <td style="width: 30%; height: 18px; text-align: center; border:2px solid black;" colspan="2"><strong>Denomination</strong></td>
+                    <td style="width: 20%; height: 18px; text-align: center; border:2px solid black;" colspan="2"><strong>No. Of Pieces</strong></td>
+                    <td style="width: 10%; height: 18px; text-align: center; border:2px solid black;" colspan="2"><strong>Vault</strong></td>
+                    <td style="width: 40%; height: 18px; text-align: center; border:2px solid black;"><strong>Amount</strong></td>
                 </tr>
                 <tr style="height: 18px;">
-                    <td style="width: 40%; height: 18px; text-align: center;" colspan="3">Disbursed</td>
-                    <td style="width: 20%; height: 18px; text-align: center;" colspan="2">PHP</td>
-                    <td style="width: 40%; height: 18px; text-align: center;" colspan="2"><em style="font-style:normal;" id="CBD_disburse_pop">@Model.CBD_disburse.ToString("0.00")</em></td>
-                </tr>
-                <tr style="height: 18px;">
-                    <td style="width: 40%; height: 18px; text-align: center;" colspan="3"><strong>Closing Balance</strong></td>
-                    <td style="width: 20%; height: 18px; text-align: center;" colspan="2">PHP</td>
-                    <td style="width: 40%; height: 18px; text-align: center;" colspan="2"><em style="font-style:normal;" id="CBD_closeBalance_pop"> @Model.CBD_closeBalance.ToString("0.00")</em></td>
-                </tr>
-                <tr style="height: 18px;">
-                    <td style="width: 30%; height: 18px; text-align: center;" colspan="2"><strong>Denomination</strong></td>
-                    <td style="width: 20%; height: 18px; text-align: center;" colspan="2"><strong>No. Of Pieces</strong></td>
-                    <td style="width: 10%; height: 18px; text-align: center;" colspan="2"><strong>Vault</strong></td>
-                    <td style="width: 40%; height: 18px; text-align: center;"><strong>Amount</strong></td>
-                </tr>
-                <tr style="height: 18px;">
-                    <td style="width: 10%; height: 109px;" rowspan="6"><p style=" writing-mode:tb-rl;padding-top:50%;">B&nbsp;I&nbsp;L&nbsp;L&nbsp;S</p></td>
-                    <td style="width: 20%; height: 18px; text-align: center;">1,000.00</td>
-                    <td style="width: 20%; height: 18px; text-align: center;" colspan="2">
+                    <td style="width: 10%; height: 109px; border:1px solid black; padding:3px" rowspan="6"><p style=" writing-mode:tb-rl;padding-top:50%;">B&nbsp;I&nbsp;L&nbsp;L&nbsp;S</p></td>
+                    <td style="width: 20%; height: 18px; text-align: center; border:1px solid black; padding:3px">1,000.00</td>
+                    <td style="width: 20%; height: 18px; text-align: center; border:1px solid black; padding:3px" colspan="2">
                         @if (Model.CBD_displayMode)
                         {
                             @Model.CBD_oneK
@@ -113,14 +113,14 @@
                             @Html.TextBoxFor(x => x.CBD_oneK, new { @id = "CBD_oneK", @class = "w-49" })
                         }
                     </td>
-                    <td style="width: 10%; height: 18px; text-align: center;" colspan="2">N/A</td>
-                    <td style="width: 40%; height: 18px; text-align: center;">
-                        <em style="font-style:normal" id="CBD_oneKAmount">@Model.CBD_oneKAmount.ToString("0.00")</em>
+                    <td style="width: 10%; height: 18px; text-align: center; border:1px solid black; padding:3px" colspan="2">N/A</td>
+                    <td style="width: 40%; height: 18px; text-align: center; border:1px solid black; padding:3px">
+                        <em style="font-style:normal" id="CBD_oneKAmount">@Model.CBD_oneKAmount.ToString("N2")</em>
                     </td>
                 </tr>
-                <tr style="height: 18px;">
-                    <td style="width: 20%; height: 18px; text-align: center;">500.00</td>
-                    <td style="width: 20%; height: 18px; text-align: center;" colspan="2">
+                <tr style="height: 18px; border:1px solid black;">
+                    <td style="width: 20%; height: 18px; text-align: center; border:1px solid black; padding:3px">500.00</td>
+                    <td style="width: 20%; height: 18px; text-align: center; border:1px solid black; padding:3px" colspan="2">
                         @if (Model.CBD_displayMode)
                         {
                             @Model.CBD_fiveH
@@ -130,14 +130,14 @@
                             @Html.TextBoxFor(x => x.CBD_fiveH, new { @id = "CBD_fiveH", @class = "w-49" })
                         }
                     </td>
-                    <td style="width: 10%; height: 18px; text-align: center;" colspan="2">N/A</td>
-                    <td style="width: 40%; height: 18px; text-align: center;">
-                        <em style="font-style:normal" id="CBD_fiveHAmount">@Model.CBD_fiveHAmount.ToString("0.00")</em>
+                    <td style="width: 10%; height: 18px; text-align: center; border:1px solid black; padding:3px" colspan="2">N/A</td>
+                    <td style="width: 40%; height: 18px; text-align: center; border:1px solid black; padding:3px">
+                        <em style="font-style:normal" id="CBD_fiveHAmount">@Model.CBD_fiveHAmount.ToString("N2")</em>
                     </td>
                 </tr>
-                <tr style="height: 18px;">
-                    <td style="width: 20%; height: 18px; text-align: center;">200.00</td>
-                    <td style="width: 20%; height: 18px; text-align: center;" colspan="2">
+                <tr style="height: 18px; border:1px solid black;">
+                    <td style="width: 20%; height: 18px; text-align: center; border:1px solid black; padding:3px">200.00</td>
+                    <td style="width: 20%; height: 18px; text-align: center; border:1px solid black; padding:3px" colspan="2">
                         @if (Model.CBD_displayMode)
                         {
                             @Model.CBD_twoH
@@ -147,14 +147,14 @@
                             @Html.TextBoxFor(x => x.CBD_twoH, new { @id = "CBD_twoH", @class = "w-49" })
                         }
                     </td>
-                    <td style="width: 10%; height: 18px; text-align: center;" colspan="2">N/A</td>
-                    <td style="width: 40%; height: 18px; text-align: center;">
-                        <em style="font-style:normal" id="CBD_twoHAmount">@Model.CBD_twoHAmount.ToString("0.00")</em>
+                    <td style="width: 10%; height: 18px; text-align: center; border:1px solid black; padding:3px" colspan="2">N/A</td>
+                    <td style="width: 40%; height: 18px; text-align: center; border:1px solid black; padding:3px">
+                        <em style="font-style:normal" id="CBD_twoHAmount">@Model.CBD_twoHAmount.ToString("N2")</em>
                     </td>
                 </tr>
-                <tr style="height: 19px;">
-                    <td style="width: 20%; height: 19px; text-align: center;">100.00</td>
-                    <td style="width: 20%; height: 19px; text-align: center;" colspan="2">
+                <tr style="height: 19px; border:1px solid black;">
+                    <td style="width: 20%; height: 19px; text-align: center; border:1px solid black; padding:3px">100.00</td>
+                    <td style="width: 20%; height: 19px; text-align: center; border:1px solid black; padding:3px" colspan="2">
                         @if (Model.CBD_displayMode)
                         {
                             @Model.CBD_oneH
@@ -164,14 +164,14 @@
                             @Html.TextBoxFor(x => x.CBD_oneH, new { @id = "CBD_oneH", @class = "w-49" })
                         }
                     </td>
-                    <td style="width: 10%; height: 19px; text-align: center;" colspan="2">N/A</td>
-                    <td style="width: 40%; height: 19px; text-align: center;">
-                        <em style="font-style:normal" id="CBD_oneHAmount">@Model.CBD_oneHAmount.ToString("0.00")</em>
+                    <td style="width: 10%; height: 19px; text-align: center; border:1px solid black; padding:3px" colspan="2">N/A</td>
+                    <td style="width: 40%; height: 19px; text-align: center; border:1px solid black; padding:3px">
+                        <em style="font-style:normal" id="CBD_oneHAmount">@Model.CBD_oneHAmount.ToString("N2")</em>
                     </td>
                 </tr>
-                <tr style="height: 18px;">
-                    <td style="width: 20%; height: 18px; text-align: center;">50.00</td>
-                    <td style="width: 20%; height: 18px; text-align: center;" colspan="2">
+                <tr style="height: 18px; border:1px solid black;">
+                    <td style="width: 20%; height: 18px; text-align: center; border:1px solid black; padding:3px">50.00</td>
+                    <td style="width: 20%; height: 18px; text-align: center; border:1px solid black; padding:3px" colspan="2">
                         @if (Model.CBD_displayMode)
                         {
                             @Model.CBD_fifty
@@ -181,14 +181,14 @@
                             @Html.TextBoxFor(x => x.CBD_fifty, new { @id = "CBD_fifty", @class = "w-49" })
                         }
                     </td>
-                    <td style="width: 10%; height: 18px; text-align: center;" colspan="2">N/A</td>
-                    <td style="width: 40%; height: 18px; text-align: center;">
-                        <em style="font-style:normal" id="CBD_fiftyAmount">@Model.CBD_fiftyAmount.ToString("0.00")</em>
+                    <td style="width: 10%; height: 18px; text-align: center; border:1px solid black; padding:3px" colspan="2">N/A</td>
+                    <td style="width: 40%; height: 18px; text-align: center; border:1px solid black; padding:3px">
+                        <em style="font-style:normal" id="CBD_fiftyAmount">@Model.CBD_fiftyAmount.ToString("N2")</em>
                     </td>
                 </tr>
-                <tr style="height: 18px;">
-                    <td style="width: 20%; height: 18px; text-align: center;">20.00</td>
-                    <td style="width: 20%; height: 18px; text-align: center;" colspan="2">
+                <tr style="height: 18px; border:1px solid black;">
+                    <td style="width: 20%; height: 18px; text-align: center; border:1px solid black; padding:3px">20.00</td>
+                    <td style="width: 20%; height: 18px; text-align: center; border:1px solid black; padding:3px" colspan="2">
                         @if (Model.CBD_displayMode)
                         {
                             @Model.CBD_twenty
@@ -198,24 +198,24 @@
                             @Html.TextBoxFor(x => x.CBD_twenty, new { @id = "CBD_twenty", @class = "w-49" })
                         }
                     </td>
-                    <td style="width: 10%; height: 18px; text-align: center;" colspan="2">N/A</td>
-                    <td style="width: 40%; height: 18px; text-align: center;">
-                        <em style="font-style:normal" id="CBD_twentyAmount">@Model.CBD_twentyAmount.ToString("0.00")</em>
+                    <td style="width: 10%; height: 18px; text-align: center; border:1px solid black; padding:3px" colspan="2">N/A</td>
+                    <td style="width: 40%; height: 18px; text-align: center; border:1px solid black; padding:3px">
+                        <em style="font-style:normal" id="CBD_twentyAmount">@Model.CBD_twentyAmount.ToString("N2")</em>
                     </td>
                 </tr>
-                <tr style="height: 18px;">
-                    <td style="width: 30%; height: 18px; text-align: center;" colspan="2"><strong>Sub Total</strong></td>
-                    <td style="width: 30%; height: 18px; text-align: center; background-color:black;" colspan="4">&nbsp;</td>
-                    <td style="width: 40%; height: 18px; text-align: center;">
+                <tr style="height: 18px; border:2px solid black;">
+                    <td style="width: 30%; height: 18px; text-align: center; border:2px solid black;" colspan="2"><strong>Sub Total</strong></td>
+                    <td style="width: 30%; height: 18px; text-align: center; background-color:black; border:2px solid black;" colspan="4">&nbsp;</td>
+                    <td style="width: 40%; height: 18px; text-align: center; border:2px solid black;">
                         <strong>
-                            <em style="font-style:normal" id="CBD_billTotal">@billsTotal</em>
+                            <em style="font-style:normal" id="CBD_billTotal">@billsTotal.ToString("N2")</em>
                         </strong>
                     </td>
                 </tr>
-                <tr style="height: 18px;">
-                    <td style="width: 10%; height: 18px;" rowspan="7"><p style=" writing-mode:tb-rl;padding-top:50%;">C&nbsp;O&nbsp;I&nbsp;N&nbsp;S</p></td>
-                    <td style="width: 20%; height: 18px; text-align: center;">10.00</td>
-                    <td style="width: 20%; height: 18px; text-align: center;" colspan="2">
+                <tr style="height: 18px; border:1px solid black;">
+                    <td style="width: 10%; height: 18px; border:1px solid black;" rowspan="7"><p style=" writing-mode:tb-rl;padding-top:50%;">C&nbsp;O&nbsp;I&nbsp;N&nbsp;S</p></td>
+                    <td style="width: 20%; height: 18px; text-align: center; border:1px solid black; padding:3px">10.00</td>
+                    <td style="width: 20%; height: 18px; text-align: center; border:1px solid black; padding:3px" colspan="2">
                         @if (Model.CBD_displayMode)
                         {
                             @Model.CBD_ten
@@ -225,14 +225,14 @@
                             @Html.TextBoxFor(x => x.CBD_ten, new { @id = "CBD_ten", @class = "w-49" })
                         }
                     </td>
-                    <td style="width: 10%; height: 18px; text-align: center;" colspan="2">N/A</td>
-                    <td style="width: 40%; height: 18px; text-align: center;">
-                        <em style="font-style:normal" id="CBD_tenAmount">@Model.CBD_tenAmount.ToString("0.00")</em>
+                    <td style="width: 10%; height: 18px; text-align: center; border:1px solid black; padding:3px" colspan="2">N/A</td>
+                    <td style="width: 40%; height: 18px; text-align: center; border:1px solid black; padding:3px">
+                        <em style="font-style:normal" id="CBD_tenAmount">@Model.CBD_tenAmount.ToString("N2")</em>
                     </td>
                 </tr>
-                <tr style="height: 18px;">
-                    <td style="width: 20%; height: 18px; text-align: center;">5.00</td>
-                    <td style="width: 20%; height: 18px; text-align: center;" colspan="2">
+                <tr style="height: 18px; border:1px solid black;">
+                    <td style="width: 20%; height: 18px; text-align: center; border:1px solid black; padding:3px">5.00</td>
+                    <td style="width: 20%; height: 18px; text-align: center; border:1px solid black; padding:3px" colspan="2">
                         @if (Model.CBD_displayMode)
                         {
                             @Model.CBD_five
@@ -242,14 +242,14 @@
                             @Html.TextBoxFor(x => x.CBD_five, new { @id = "CBD_five", @class = "w-49" })
                         }
                     </td>
-                    <td style="width: 10%; height: 18px; text-align: center;" colspan="2">N/A</td>
-                    <td style="width: 40%; height: 18px; text-align: center;">
-                        <em style="font-style:normal" id="CBD_fiveAmount">@Model.CBD_fiveAmount.ToString("0.00")</em>
+                    <td style="width: 10%; height: 18px; text-align: center; border:1px solid black; padding:3px" colspan="2">N/A</td>
+                    <td style="width: 40%; height: 18px; text-align: center; border:1px solid black; padding:3px">
+                        <em style="font-style:normal" id="CBD_fiveAmount">@Model.CBD_fiveAmount.ToString("N2")</em>
                     </td>
                 </tr>
-                <tr style="height: 18px;">
-                    <td style="width: 20%; height: 18px; text-align: center;">1.00</td>
-                    <td style="width: 20%; height: 18px; text-align: center;" colspan="2">
+                <tr style="height: 18px; border:1px solid black;">
+                    <td style="width: 20%; height: 18px; text-align: center; border:1px solid black; padding:3px">1.00</td>
+                    <td style="width: 20%; height: 18px; text-align: center; border:1px solid black; padding:3px" colspan="2">
                         @if (Model.CBD_displayMode)
                         {
                             @Model.CBD_one
@@ -259,14 +259,14 @@
                             @Html.TextBoxFor(x => x.CBD_one, new { @id = "CBD_one", @class = "w-49" })
                         }
                     </td>
-                    <td style="width: 10%; height: 18px; text-align: center;" colspan="2">N/A</td>
-                    <td style="width: 40%; height: 18px; text-align: center;">
-                        <em style="font-style:normal" id="CBD_oneAmount">@Model.CBD_oneAmount.ToString("0.00")</em>
+                    <td style="width: 10%; height: 18px; text-align: center; border:1px solid black; padding:3px" colspan="2">N/A</td>
+                    <td style="width: 40%; height: 18px; text-align: center; border:1px solid black; padding:3px">
+                        <em style="font-style:normal" id="CBD_oneAmount">@Model.CBD_oneAmount.ToString("N2")</em>
                     </td>
                 </tr>
-                <tr style="height: 18px;">
-                    <td style="width: 20%; height: 18px; text-align: center;">0.25</td>
-                    <td style="width: 20%; height: 18px; text-align: center;" colspan="2">
+                <tr style="height: 18px; border:1px solid black;">
+                    <td style="width: 20%; height: 18px; text-align: center; border:1px solid black; padding:3px">0.25</td>
+                    <td style="width: 20%; height: 18px; text-align: center; border:1px solid black; padding:3px" colspan="2">
                         @if (Model.CBD_displayMode)
                         {
                             @Model.CBD_c25
@@ -276,14 +276,14 @@
                             @Html.TextBoxFor(x => x.CBD_c25, new { @id = "CBD_c25", @class = "w-49" })
                         }
                     </td>
-                    <td style="width: 10%; height: 18px; text-align: center;" colspan="2">N/A</td>
-                    <td style="width: 40%; height: 18px; text-align: center;">
-                        <em style="font-style:normal" id="CBD_c25Amount">@Model.CBD_c25Amount.ToString("0.00")</em>
+                    <td style="width: 10%; height: 18px; text-align: center; border:1px solid black; padding:3px" colspan="2">N/A</td>
+                    <td style="width: 40%; height: 18px; text-align: center; border:1px solid black; padding:3px">
+                        <em style="font-style:normal" id="CBD_c25Amount">@Model.CBD_c25Amount.ToString("N2")</em>
                     </td>
                 </tr>
-                <tr style="height: 18px;">
-                    <td style="width: 20%; height: 18px; text-align: center;">0.10</td>
-                    <td style="width: 20%; height: 18px; text-align: center;" colspan="2">
+                <tr style="height: 18px; border:1px solid black;">
+                    <td style="width: 20%; height: 18px; text-align: center; border:1px solid black; padding:3px">0.10</td>
+                    <td style="width: 20%; height: 18px; text-align: center; border:1px solid black; padding:3px" colspan="2">
                         @if (Model.CBD_displayMode)
                         {
                             @Model.CBD_c10
@@ -293,14 +293,14 @@
                             @Html.TextBoxFor(x => x.CBD_c10, new { @id = "CBD_c10", @class = "w-49" })
                         }
                     </td>
-                    <td style="width: 10%; height: 18px; text-align: center;" colspan="2">N/A</td>
-                    <td style="width: 40%; height: 18px; text-align: center;">
-                        <em style="font-style:normal" id="CBD_c10Amount">@Model.CBD_c10Amount.ToString("0.00")</em>
+                    <td style="width: 10%; height: 18px; text-align: center; border:1px solid black; padding:3px" colspan="2">N/A</td>
+                    <td style="width: 40%; height: 18px; text-align: center; border:1px solid black; padding:3px">
+                        <em style="font-style:normal" id="CBD_c10Amount">@Model.CBD_c10Amount.ToString("N2")</em>
                     </td>
                 </tr>
-                <tr style="height: 18px;">
-                    <td style="width: 20%; height: 18px; text-align: center;">0.05</td>
-                    <td style="width: 20%; height: 18px; text-align: center;" colspan="2">
+                <tr style="height: 18px; border:1px solid black;">
+                    <td style="width: 20%; height: 18px; text-align: center; border:1px solid black; padding:3px">0.05</td>
+                    <td style="width: 20%; height: 18px; text-align: center; border:1px solid black; padding:3px" colspan="2">
                         @if (Model.CBD_displayMode)
                         {
                             @Model.CBD_c5
@@ -310,14 +310,14 @@
                             @Html.TextBoxFor(x => x.CBD_c5, new { @id = "CBD_c5", @class = "w-49" })
                         }
                     </td>
-                    <td style="width: 10%; height: 18px; text-align: center;" colspan="2">N/A</td>
-                    <td style="width: 40%; height: 18px; text-align: center;">
-                        <em style="font-style:normal" id="CBD_c5Amount">@Model.CBD_c5Amount.ToString("0.00")</em>
+                    <td style="width: 10%; height: 18px; text-align: center; border:1px solid black; padding:3px" colspan="2">N/A</td>
+                    <td style="width: 40%; height: 18px; text-align: center; border:1px solid black; padding:3px">
+                        <em style="font-style:normal" id="CBD_c5Amount">@Model.CBD_c5Amount.ToString("N2")</em>
                     </td>
                 </tr>
-                <tr style="height: 18px;">
-                    <td style="width: 20%; height: 18px; text-align: center;">0.01</td>
-                    <td style="width: 20%; height: 18px; text-align: center;" colspan="2">
+                <tr style="height: 18px; border:1px solid black;">
+                    <td style="width: 20%; height: 18px; text-align: center; border:1px solid black; padding:3px">0.01</td>
+                    <td style="width: 20%; height: 18px; text-align: center; border:1px solid black; padding:3px" colspan="2">
                         @if (Model.CBD_displayMode)
                         {
                             @Model.CBD_c1
@@ -327,26 +327,26 @@
                             @Html.TextBoxFor(x => x.CBD_c1, new { @id = "CBD_c1", @class = "w-49" })
                         }
                     </td>
-                    <td style="width: 10%; height: 18px; text-align: center;" colspan="2">N/A</td>
-                    <td style="width: 40%; height: 18px; text-align: center;">
-                        <em style="font-style:normal" id="CBD_c1Amount">@Model.CBD_c1Amount.ToString("0.00")</em>
+                    <td style="width: 10%; height: 18px; text-align: center; border:1px solid black; padding:3px" colspan="2">N/A</td>
+                    <td style="width: 40%; height: 18px; text-align: center; border:1px solid black; padding:3px">
+                        <em style="font-style:normal" id="CBD_c1Amount">@Model.CBD_c1Amount.ToString("N2")</em>
                     </td>
                 </tr>
-                <tr style="height: 18px;">
-                    <td style="width: 30%; height: 18px; text-align: center;" colspan="2"><strong>Subtotal</strong></td>
-                    <td style="width: 30%; height: 18px; text-align: center; background-color:black;" colspan="4">&nbsp;</td>
-                    <td style="width: 40%; height: 18px; text-align: center;">
+                <tr style="height: 18px; border:2px solid black;">
+                    <td style="width: 30%; height: 18px; text-align: center; border:2px solid black;" colspan="2"><strong>Subtotal</strong></td>
+                    <td style="width: 30%; height: 18px; text-align: center; background-color:black; border:2px solid black;" colspan="4">&nbsp;</td>
+                    <td style="width: 40%; height: 18px; text-align: center; border:2px solid black;">
                         <strong>
-                            <em style="font-style:normal" id="CBD_coinTotal">@coinsTotal</em>
+                            <em style="font-style:normal" id="CBD_coinTotal">@coinsTotal.ToString("N2")</em>
                         </strong>
                     </td>
                 </tr>
-                <tr style="height: 18px;">
-                    <td style="width: 70%; height: 18px; text-align: center;" colspan="6"><strong>Closing Balance</strong></td>
-                    <td style="width: 30%; height: 18px; text-align: center;">
+                <tr style="height: 18px; border:1px solid black;">
+                    <td style="width: 70%; height: 18px; text-align: center; border:1px solid black;" colspan="6"><strong>Closing Balance</strong></td>
+                    <td style="width: 30%; height: 18px; text-align: center; border:1px solid black;">
                         <span style="text-decoration: underline;">
                             <strong>
-                                <em id="ClosingTotal">@(billsTotal + coinsTotal)</em>
+                                <em id="ClosingTotal">@((billsTotal + coinsTotal).ToString("N2"))</em>
                             </strong>
                         </span>
                     </td>
@@ -364,7 +364,7 @@
             <h5 style="font-size:14px">Opening Balance Confirmation</h5>
         </div>
         <div style="float:right;">
-            <p class="dis-inline"> Date : </p> <h5 class="dis-inline" style="text-decoration-line:underline;">@Model.CBD_Date.ToString("yyyy/MM/dd")</h5>
+            <p class="dis-inline"> Date : </p> <h5 class="dis-inline" style="text-decoration-line:underline;">@Model.CBD_Date.AddDays(1).ToString("yyyy/MM/dd")</h5>
         </div>
         <br />        <br />
         <p style="font-style:italic;font-size:11px;width:100%">
@@ -431,23 +431,48 @@
 
             var id = $(this).attr("id");
             var total = roundNumber(($(this).val() * dict[id]), 2);
-            $("#" + id + "Amount").html(total);
+            var totalStringFormat = total.toLocaleString(undefined, { maximumFractionDigits: 2 })
+            var totalDecHolder = totalStringFormat.split(".");
+            if (totalDecHolder.length <= 1) {
+                totalStringFormat += ".00";
+            }
+
+            $("#" + id + "Amount").html(totalStringFormat);
 
             total = 0;
             var index = 0;
             for (var key in dict) {
                 var value = dict[key];
 
-                total += parseFloat($("#" + key + "Amount").html());
+                total += parseFloat($("#" + key + "Amount").html().replace(/,/g, ''));
                 if (index == 5) {
-                    $("#CBD_billTotal").html(roundNumber(total,2));
+                    var billNumber = roundNumber(total, 2);
+                    var billTotal = billNumber.toLocaleString(undefined, { maximumFractionDigits: 2 })
+                    var billDecHolder = billTotal.split(".");
+                    if (billDecHolder.length <= 1) {
+                        billTotal += ".00";
+                    }
+                    $("#CBD_billTotal").html(billTotal);
                     total = 0.00;
                 }
                 index++;
             }
-            $("#CBD_coinTotal").html(roundNumber(total, 2));
 
-            $("#ClosingTotal").html(roundNumber((total + parseFloat($("#CBD_billTotal").html())), 2));
+            var coinNumber = roundNumber(total, 2);
+            var coinTotal = coinNumber.toLocaleString(undefined, { maximumFractionDigits: 2 })
+            var coinDecHolder = coinTotal.split(".");
+            if (coinDecHolder.length <= 1) {
+                coinTotal += ".00";
+            }
+            $("#CBD_coinTotal").html(coinTotal);
+
+            var grandTotal = roundNumber((total + parseFloat($("#CBD_billTotal").html().replace(/,/g, ''))), 2);
+            var grandString = grandTotal.toLocaleString(undefined, { maximumFractionDigits: 2 })
+            var GrandHolder = grandString.split(".");
+            if (GrandHolder.length <= 1) {
+                grandString += ".00";
+            }
+            $("#ClosingTotal").html(grandString);
         });
 
         $(".modal-body").on("click", "#pcConfirm", function () {

@@ -71,7 +71,8 @@ namespace ExpenseProcessingSystem.ViewModels.Search_Filters.Home
                     new SelectListItem { Text = GlobalSystemValues.getApplicationCode(GlobalSystemValues.TYPE_DDV), Value = GlobalSystemValues.getApplicationCode(GlobalSystemValues.TYPE_DDV)},
                     new SelectListItem { Text = GlobalSystemValues.getApplicationCode(GlobalSystemValues.TYPE_NC), Value = GlobalSystemValues.getApplicationCode(GlobalSystemValues.TYPE_NC)},
                     new SelectListItem { Text = GlobalSystemValues.getApplicationCode(GlobalSystemValues.TYPE_PC), Value = GlobalSystemValues.getApplicationCode(GlobalSystemValues.TYPE_PC)},
-                    new SelectListItem { Text = GlobalSystemValues.getApplicationCode(GlobalSystemValues.TYPE_SS), Value = GlobalSystemValues.getApplicationCode(GlobalSystemValues.TYPE_SS)}
+                    new SelectListItem { Text = GlobalSystemValues.getApplicationCode(GlobalSystemValues.TYPE_SS), Value = GlobalSystemValues.getApplicationCode(GlobalSystemValues.TYPE_SS)},
+                    new SelectListItem { Text = GlobalSystemValues.getApplicationCode(GlobalSystemValues.TYPE_LIQ), Value = GlobalSystemValues.getApplicationCode(GlobalSystemValues.TYPE_LIQ)}
                 }, "Value", "Text");
 
             Hist_YearList = ConstantData.HomeReportConstantValue.GetYearList();

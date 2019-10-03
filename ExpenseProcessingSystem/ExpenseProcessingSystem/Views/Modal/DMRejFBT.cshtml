@@ -25,6 +25,7 @@
                         <td>@Html.TextBoxFor(item => item[i].FBT_Tax_Rate, new { @class = "w-full", @readonly = "readonly" })</td>
                         <td>@Html.TextBoxFor(item => item[i].FBT_Status, new { @class = "w-full", @readonly = "readonly" })</td>
                         @Html.HiddenFor(item => item[i].FBT_MasterID)
+                        @Html.HiddenFor(item => item[i].FBT_Creator_ID)
                     </tr>
                 }
             }

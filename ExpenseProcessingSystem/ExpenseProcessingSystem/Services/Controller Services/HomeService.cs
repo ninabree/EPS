@@ -196,6 +196,39 @@ namespace ExpenseProcessingSystem.Services
             _context.SaveChanges();
             return true;
         }
+        //Insert new records in Notif for Data Maintenance
+        public bool insertIntoNotifDM(int UserID, int TypeID, int StatusID, int Maker_UserID = 0)
+        {
+            string uName = getName(UserID);
+            string strMessPers = "You " + NotificationMessageValues.action[StatusID] + NotificationMessageValues.commonstr + "Data Maintenance: " +NotificationMessageValues.DMTIONARY[TypeID];
+            string strMessGen = uName + " " + NotificationMessageValues.action[StatusID] + NotificationMessageValues.commonstr + "Data Maintenance: " + NotificationMessageValues.DMTIONARY[TypeID];
+
+            List<HomeNotifModel> model = new List<HomeNotifModel>()
+            {
+                new HomeNotifModel()
+                {
+                    Notif_Application_Type_ID = GlobalSystemValues.TYPE_DM,
+                    Notif_Application_Maker_ID = UserID,
+                    Notif_UserFor_ID = UserID,
+                    Notif_Message = strMessPers,
+                    Notif_Date = DateTime.Now,
+                    Notif_Status_ID = StatusID
+                },
+                new HomeNotifModel()
+                {
+                    Notif_Application_Type_ID = GlobalSystemValues.TYPE_DM,
+                    Notif_Application_Maker_ID = UserID,
+                    Notif_UserFor_ID = Maker_UserID,
+                    Notif_Message = strMessGen,
+                    Notif_Date = DateTime.Now,
+                    Notif_Status_ID = StatusID
+
+                }
+            };
+            _context.HomeNotif.AddRange(model);
+            _context.SaveChanges();
+            return true;
+        }
         //Pending
         public List<ApplicationsViewModel> getPending(int userID, FiltersViewModel filters)
         {
@@ -282,6 +315,9 @@ namespace ExpenseProcessingSystem.Services
                                             || exp.Expense_Verifier_1 == userID
                                             || exp.Expense_Verifier_2 == userID
                                             || exp.Expense_Approver == userID))
+                                         ||   
+                                            (exp.Expense_Status == GlobalSystemValues.STATUS_REJECTED
+                                             && exp.Expense_Creator_ID == userID)
                                          )
                                      select new ApplicationsViewModel
                                      {
@@ -316,6 +352,9 @@ namespace ExpenseProcessingSystem.Services
                                             || liq.Liq_Verifier1 == userID
                                             || liq.Liq_Verifier2 == userID
                                             || liq.Liq_Approver == userID))
+                                         ||
+                                            (liq.Liq_Status == GlobalSystemValues.STATUS_REJECTED
+                                             && liq.Liq_Created_UserID == userID)
                                          )
                                           select new ApplicationsViewModel
                                           {
@@ -350,7 +389,9 @@ namespace ExpenseProcessingSystem.Services
                                             || exp.Expense_Verifier_1 == userID
                                             || exp.Expense_Verifier_2 == userID
                                             || exp.Expense_Approver == userID))
-                                         )
+                                         ||
+                                            (exp.Expense_Status == GlobalSystemValues.STATUS_REJECTED
+                                             && exp.Expense_Creator_ID == userID))
                                      select new ApplicationsViewModel
                                      {
                                          App_ID = exp.Expense_ID,
@@ -383,6 +424,9 @@ namespace ExpenseProcessingSystem.Services
                                             || liq.Liq_Verifier1 == userID
                                             || liq.Liq_Verifier2 == userID
                                             || liq.Liq_Approver == userID))
+                                         ||
+                                            (liq.Liq_Status == GlobalSystemValues.STATUS_REJECTED
+                                             && liq.Liq_Created_UserID == userID)
                                          )
                                           select new ApplicationsViewModel
                                           {
@@ -841,10 +885,12 @@ namespace ExpenseProcessingSystem.Services
         {
             List<int> intList = model.Select(c => c.Vendor_MasterID).ToList();
             List<DMVendorModel_Pending> allPending = _context.DMVendor_Pending.Where(x => intList.Contains(x.Pending_Vendor_MasterID)).ToList();
+            List<DMVendorTRVATModel_Pending> allPendingTRVAT = _context.DMVendorTRVAT_Pending.Where(x => intList.Contains(x.Pending_VTV_Vendor_ID)).ToList();
 
             if (_modelState.IsValid)
             {
                 _context.DMVendor_Pending.RemoveRange(allPending);
+                _context.DMVendorTRVAT_Pending.RemoveRange(allPendingTRVAT);
                 _context.SaveChanges();
             }
             return true;
@@ -3446,6 +3492,8 @@ namespace ExpenseProcessingSystem.Services
             if (model.VoucherArray != null) {
                 voucherNoList = model.VoucherArray.Split(',').ToList();
                 entryIDs = voucherNoList.Select(x => int.Parse(x)).ToList();
+                //sort list
+                entryIDs.Sort();
                 model.VoucherNoList = PopulateVoucherNo(entryIDs);
 
                 //get BDO MNL Master ID from XML
@@ -12301,7 +12349,7 @@ namespace ExpenseProcessingSystem.Services
                 temp.particulars = item.ExpDtl_Gbase_Remarks;
                 temp.transCount = 1;
 
-                if (item.ExpDtl_Fbt && (nmCloseItemsRBU.Any(x=>x.expTrans==temp.expTrans) || nmCloseItemsFCDU.Any(x => x.expTrans == temp.expTrans)))
+                if (item.ExpDtl_Fbt)
                 {
                     CloseItems fbtItem = new CloseItems();
                     #region Get elements fron xml (ohr,rentDebit,expatDebit,localDebit,fbtCred)
@@ -12362,8 +12410,16 @@ namespace ExpenseProcessingSystem.Services
                                                                 && x.gBaseTrans == temp.gBaseTrans
                                                                 && x.particulars == temp.particulars
                                                                 && x.ccy == temp.ccy);
-                    if(itemIndex < 0)
-                        nmCloseItemsRBU.Add(temp);
+                    if (item.ExpDtl_Fbt)
+                    {
+                        if (!nmCloseItemsRBU.Any(x => x.particulars == temp.particulars && x.expTrans == temp.expTrans))
+                            nmCloseItemsRBU.Add(temp);
+                    }
+                    else
+                    {
+                        if (itemIndex < 0)
+                            nmCloseItemsRBU.Add(temp);
+                    }
                 }
                 else {
                     int itemIndex = nmCloseItemsFCDU.FindIndex(x => x.expTrans == temp.expTrans
@@ -12456,6 +12512,7 @@ namespace ExpenseProcessingSystem.Services
                                                             })
                                                   .Where(x => x.ExpDtl_Inter_Entity == true
                                                            && x.Expense_Status != GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR
+                                                           && x.ExpDtl_Inter_Entity == true
                                                            && x.Expense_Type == GlobalSystemValues.TYPE_DDV
                                                            && x.InterAcc_Type_ID == GlobalSystemValues.NC_DEBIT
                                                            && (opening <= x.Expense_Date

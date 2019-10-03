@@ -69,7 +69,7 @@
             $(this).parent().siblings("td.bdgcd").find("input").removeClass("voucher-input");
         }
     });
-    $("[id$='_Account_Fund']").on("change", function (e) {
+    $("table").on("change", "[id$='_Account_Fund']",function (e) {
         e.stopImmediatePropagation();
         if ($(this).is(':checked')) {
             $(this).parent().siblings("td.bdgcd").find("input").addClass("voucher-input");
@@ -80,7 +80,7 @@
             $(this).parent().siblings("td.bdgcd").find("input").removeClass("voucher-input");
         }
     });
-    $(".input-no").keypress(function () {
+    $("table").on("keypress", ".input-no", function () {
         var val = $(this).val()
         var len = val.length;
         if (len == 3 || len == 7) {

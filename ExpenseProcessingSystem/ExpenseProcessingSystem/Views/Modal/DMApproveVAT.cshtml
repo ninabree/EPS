@@ -23,6 +23,7 @@
                         <td>@Html.TextBoxFor(item => item[i].VAT_Rate, new { @class = "w-full", @readonly = "readonly" })</td>
                         <td>@Html.TextBoxFor(item => item[i].VAT_Status, new { @class = "w-full", @readonly = "readonly" })</td>
                         @Html.HiddenFor(item => item[i].VAT_MasterID)
+                        @Html.HiddenFor(item => item[i].VAT_Creator_ID)
                     </tr>
                 }
             }

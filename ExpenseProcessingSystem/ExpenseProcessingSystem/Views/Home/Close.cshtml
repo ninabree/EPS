@@ -405,7 +405,7 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
-                        <table style="margin:5px;">
+                        <table style="margin:5px;" id="tblLogin">
                             <tr>
                                 <td>Racfid : </td>
                                 <td>&nbsp;<input type="text" id="userName" class="input" /></td>
@@ -416,6 +416,12 @@
                             <tr>
                                 <td>Racfpassword : </td>
                                 <td>&nbsp;<input type="password" id="passWord" class="input" /></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <input type="checkbox" id="chkShowPass">Show Password
+                                </td>
                             </tr>
                         </table>
                     </div>
@@ -473,6 +479,14 @@
                     }
                 }
             });
+        });
+
+        $("#tblLogin").on("change", "#chkShowPass", function () {
+            if ($('#chkShowPass').is(':checked')) {
+                $('#passWord').attr("type", 'text');;
+            } else {
+                $('#passWord').attr("type", 'password');;
+            }
         });
 
         $("#closeBody").on("click", "#History", function () {
@@ -552,7 +566,7 @@
                                     '<link type="text/css" rel="stylesheet" href="/lib/jquery-ui/jquery-ui.css">' +
                                     '<script src="/lib/bootstrap/dist/js/bootstrap.js"><' +'/script>' +
                                     '<script src="/lib/bootbox/bootbox.min.js?v=PHbNrx02NI7i8kNF1kIX06hZX5M82wI7oXyPDsWNS2Y"><' +'/script>');
-            mywindow.document.write('</head><body>');
+            mywindow.document.write('</head><body style="width:75%; margin: 10% auto 10%;">');
             mywindow.document.write(document.getElementById("pettyprntBody").innerHTML);
             mywindow.document.write('</body></html>');
 

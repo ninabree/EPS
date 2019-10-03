@@ -1050,6 +1050,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             Vendor_Status_ID = m.Vendor_Status_ID,
                             Vendor_Status = statList.Where(a => a.Vendor_ID == m.Vendor_ID).Select(x => x.Status_Name).FirstOrDefault() ?? "N/A",
                             Vendor_Tax_Rates = trList.Where(x => x.VTV_Vendor_ID == m.Vendor_MasterID).Select(x => (x.TR_Tax_Rate * 100) + "% - " + x.TR_WT_Title).ToList(),
+                            Vendor_Tax_Rates_ID_List = trList.Where(x => x.VTV_Vendor_ID == m.Vendor_MasterID).Select(x => (x.TR_ID)).ToList(),
                             Vendor_VAT = vatList.Where(x => x.VTV_Vendor_ID == m.Vendor_MasterID).Select(x => (x.VAT_Rate * 100) + "% - " + x.VAT_Name).ToList()
                         };
                         tempList.Add(vm);

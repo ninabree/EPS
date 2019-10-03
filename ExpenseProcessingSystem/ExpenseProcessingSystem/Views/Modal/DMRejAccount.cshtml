@@ -41,6 +41,7 @@
                         <td>@Html.TextBoxFor(item => item[i].Account_Status, new { @class = "w-full", @readonly = "readonly" })</td>
                         @Html.HiddenFor(item => item[i].Account_MasterID)
                         @Html.HiddenFor(item => item[i].Account_Currency_MasterID)
+                        @Html.HiddenFor(item => item[i].Account_Creator_ID)
                     </tr>
                 }
             }
