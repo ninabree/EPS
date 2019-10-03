@@ -126,6 +126,9 @@ namespace ExpenseProcessingSystem.Controllers
                 case GlobalSystemValues.GBaseErrReverseResend:
                     _service.ResendReversingErrorToGOExpress(entryID, IsLiq, int.Parse(GetUserID()));
                     break;
+                case GlobalSystemValues.GBaseErrReject:
+                    _service.RejectExpenseEntry(entryID, IsLiq, int.Parse(GetUserID()));
+                    break;
             }
 
             return Json(true);

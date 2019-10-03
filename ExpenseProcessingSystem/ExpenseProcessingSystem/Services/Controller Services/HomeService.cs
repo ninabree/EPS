@@ -66,7 +66,8 @@ namespace ExpenseProcessingSystem.Services
         }
         private int[] status = { GlobalSystemValues.STATUS_POSTED, GlobalSystemValues.STATUS_FOR_CLOSING,
                             GlobalSystemValues.STATUS_FOR_PRINTING };
-        private int[] statusTrans = { GlobalSystemValues.STATUS_APPROVED, GlobalSystemValues.STATUS_RESENDING_COMPLETE };
+        private int[] statusTrans = { GlobalSystemValues.STATUS_APPROVED, GlobalSystemValues.STATUS_RESENDING_COMPLETE,
+                            GlobalSystemValues.STATUS_REVERSING_COMPLETE };
 
         //-----------------------------------Populate-------------------------------------//
         //[ Home ]
@@ -3073,7 +3074,7 @@ namespace ExpenseProcessingSystem.Services
                 return "GWrite Message Not Available.";
 
             if (String.IsNullOrEmpty(gwriteDtl.ReturnMessage))
-                return "Waiting For GWrite to be processed.";
+                return "Waiting for G-Write to be processed.";
             return gwriteDtl.ReturnMessage;
         }
 
@@ -3740,6 +3741,7 @@ namespace ExpenseProcessingSystem.Services
                 startDT = DateTime.ParseExact(termYear + "-" + termMonth, format, CultureInfo.InvariantCulture);
                 endDT = DateTime.ParseExact(filterYear + "-" + filterMonth, format, CultureInfo.InvariantCulture);
                 subTotal = 0.00M;
+                bool subTotalFlag = false;
                 totalExpenseThisTermToPrevMonthend = 0.00M;
 
                 budgetBalance = category.Budget;
@@ -3763,7 +3765,8 @@ namespace ExpenseProcessingSystem.Services
                         if(transList != null)
                         {
                             if (transData.TL_StatusID != GlobalSystemValues.STATUS_RESENDING_COMPLETE 
-                                && transData.TL_StatusID != GlobalSystemValues.STATUS_APPROVED) continue;
+                                && transData.TL_StatusID != GlobalSystemValues.STATUS_APPROVED
+                                && transData.TL_StatusID != GlobalSystemValues.STATUS_REVERSING_COMPLETE) continue;
                         }
 
                         if (!String.IsNullOrEmpty(hist.GOExpHist_Entry11ActNo)
@@ -3914,7 +3917,8 @@ namespace ExpenseProcessingSystem.Services
                         if (transList != null)
                         {
                             if (transData.TL_StatusID != GlobalSystemValues.STATUS_RESENDING_COMPLETE
-                                && transData.TL_StatusID != GlobalSystemValues.STATUS_APPROVED) continue;
+                                && transData.TL_StatusID != GlobalSystemValues.STATUS_APPROVED
+                                && transData.TL_StatusID != GlobalSystemValues.STATUS_REVERSING_COMPLETE) continue;
                         }
 
                         if (!String.IsNullOrEmpty(hist.GOExpHist_Entry11ActNo)
@@ -3922,6 +3926,7 @@ namespace ExpenseProcessingSystem.Services
                             && acc.Account_No.Contains(hist.GOExpHist_Entry11ActNo)
                             && acc.Account_Code == hist.GOExpHist_Entry11Actcde)
                         {
+                            subTotalFlag = true;
                             if (hist.GOExpHist_Entry11Type == "D")
                             {
                                 budgetBalance -= Decimal.Parse(hist.GOExpHist_Entry11Amt);
@@ -3956,6 +3961,7 @@ namespace ExpenseProcessingSystem.Services
                         && acc.Account_No.Contains(hist.GOExpHist_Entry12ActNo)
                         && acc.Account_Code == hist.GOExpHist_Entry12Actcde)
                         {
+                            subTotalFlag = true;
                             if (hist.GOExpHist_Entry12Type == "D")
                             {
                                 budgetBalance -= Decimal.Parse(hist.GOExpHist_Entry12Amt);
@@ -3990,6 +3996,7 @@ namespace ExpenseProcessingSystem.Services
                         && acc.Account_No.Contains(hist.GOExpHist_Entry21ActNo)
                         && acc.Account_Code == hist.GOExpHist_Entry21Actcde)
                         {
+                            subTotalFlag = true;
                             if (hist.GOExpHist_Entry21Type == "D")
                             {
                                 budgetBalance -= Decimal.Parse(hist.GOExpHist_Entry21Amt);
@@ -4024,6 +4031,7 @@ namespace ExpenseProcessingSystem.Services
                         && acc.Account_No.Contains(hist.GOExpHist_Entry22ActNo)
                         && acc.Account_Code == hist.GOExpHist_Entry22Actcde)
                         {
+                            subTotalFlag = true;
                             if (hist.GOExpHist_Entry22Type == "D")
                             {
                                 budgetBalance -= Decimal.Parse(hist.GOExpHist_Entry22Amt);
@@ -4058,6 +4066,7 @@ namespace ExpenseProcessingSystem.Services
                         && acc.Account_No.Contains(hist.GOExpHist_Entry31ActNo)
                         && acc.Account_Code == hist.GOExpHist_Entry31Actcde)
                         {
+                            subTotalFlag = true;
                             if (hist.GOExpHist_Entry31Type == "D")
                             {
                                 budgetBalance -= Decimal.Parse(hist.GOExpHist_Entry31Amt);
@@ -4092,6 +4101,7 @@ namespace ExpenseProcessingSystem.Services
                         && acc.Account_No.Contains(hist.GOExpHist_Entry32ActNo)
                         && acc.Account_Code == hist.GOExpHist_Entry32Actcde)
                         {
+                            subTotalFlag = true;
                             if (hist.GOExpHist_Entry32Type == "D")
                             {
                                 budgetBalance -= Decimal.Parse(hist.GOExpHist_Entry32Amt);
@@ -4126,6 +4136,7 @@ namespace ExpenseProcessingSystem.Services
                         && acc.Account_No.Contains(hist.GOExpHist_Entry41ActNo)
                         && acc.Account_Code == hist.GOExpHist_Entry41Actcde)
                         {
+                            subTotalFlag = true;
                             if (hist.GOExpHist_Entry41Type == "D")
                             {
                                 budgetBalance -= Decimal.Parse(hist.GOExpHist_Entry41Amt);
@@ -4160,6 +4171,7 @@ namespace ExpenseProcessingSystem.Services
                         && acc.Account_No.Contains(hist.GOExpHist_Entry42ActNo)
                         && acc.Account_Code == hist.GOExpHist_Entry42Actcde)
                         {
+                            subTotalFlag = true;
                             if (hist.GOExpHist_Entry42Type == "D")
                             {
                                 budgetBalance -= Decimal.Parse(hist.GOExpHist_Entry42Amt);
@@ -4194,7 +4206,7 @@ namespace ExpenseProcessingSystem.Services
 
                 //#3
                 //Add Sub-Total to List
-                if (subTotal != 0)
+                if (subTotalFlag == true)
                 {
                     actualBudgetData.Add(new HomeReportActualBudgetModel()
                     {
@@ -7474,7 +7486,7 @@ namespace ExpenseProcessingSystem.Services
                        join liq in _context.LiquidationEntryDetails on hist.ExpenseEntryID equals liq.ExpenseEntryModel.Expense_ID
                        join trans in _context.ExpenseTransLists on hist.GOExpHist_Id equals trans.TL_GoExpHist_ID
                        join expDtl in _context.ExpenseEntryDetails on hist.ExpenseDetailID equals expDtl.ExpDtl_ID
-                       where trans.TL_Liquidation == true && statusTrans.Contains(trans.TL_StatusID)
+                       where trans.TL_Liquidation == true && status.Contains(liq.Liq_Status)
                        select new
                        {
                            liq.ExpenseEntryModel.Expense_ID,
@@ -9561,8 +9573,9 @@ namespace ExpenseProcessingSystem.Services
                     Expense_Last_Updated = DateTime.Now,
                     Expense_isDeleted = false,
                     Expense_Status = 1,
-                    Expense_CheckNo = "",
-                    Expense_CheckId = 0,
+                    Expense_Number = (String.IsNullOrEmpty(entryModel.expenseId)) ? 0 : int.Parse(entryModel.expenseId),
+                    Expense_CheckNo = entryModel.checkNo,
+                    Expense_CheckId = entryModel.checkId,
                     ExpenseEntryDetails = expenseDtls
                 };
 
@@ -9776,6 +9789,7 @@ namespace ExpenseProcessingSystem.Services
                 expenseYear = EntryDetails.e.Expense_Date.Year.ToString(),
                 expenseId = EntryDetails.e.Expense_Number.ToString().PadLeft(5, '0'),
                 checkNo = EntryDetails.e.Expense_CheckNo,
+                checkId = EntryDetails.e.Expense_CheckId,
                 status = getStatus(EntryDetails.e.Expense_Status),
                 statusID = EntryDetails.e.Expense_Status,
                 approver_id = EntryDetails.e.Expense_Approver,
@@ -10473,6 +10487,7 @@ namespace ExpenseProcessingSystem.Services
                     Expense_Credit_Total = credEwtTotal + credCashTotal,
                     Expense_Creator_ID = userId,
                     Expense_Created_Date = entryModel.expenseDate,
+                    Expense_Number = (String.IsNullOrEmpty(entryModel.expenseId)) ? 0 : int.Parse(entryModel.expenseId),
                     Expense_Last_Updated = DateTime.Now,
                     Expense_isDeleted = false,
                     Expense_Status = 1,
@@ -10606,6 +10621,7 @@ namespace ExpenseProcessingSystem.Services
                     Expense_Creator_ID = userId,
                     Expense_Created_Date = DateTime.Now,
                     Expense_Last_Updated = DateTime.Now,
+                    Expense_Number = entryModel.voucherNumber,
                     Expense_isDeleted = false, 
                     Expense_Status = 1,
                     ExpenseEntryNC = expenseNCList

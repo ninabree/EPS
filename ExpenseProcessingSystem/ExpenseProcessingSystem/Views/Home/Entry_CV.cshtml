@@ -15,6 +15,7 @@
             <div class="dis-inline-block w-20">Date: <p class="dis-inline-block w-70">@Html.EditorFor(m => m.expenseDate, new { htmlAttributes = new { @class = "input w-97", @type = "date", @readonly = "readonly", @id = "entryDate" } })</p> </div>
             <div class="dis-inline-block"><p class="dis-inline-block">@Html.TextBoxFor(model => model.expenseYear, new { @readonly = "true", @class = "input" })</p> - <p class="dis-inline-block">@Html.TextBoxFor(model => model.expenseId, new { @readonly = "true", @class = "input", @id = "voucherNo" })</p></div>
             <div class="dis-inline-block float-r">Check No : <p class="dis-inline-block">@Html.TextBoxFor(model => model.checkNo, new { @readonly = "true", @class = "input", @id = "checkNo" })</p></div>
+            @Html.HiddenFor(model => model.checkId)
         </div>
         <div id="tbl-lbl">
             <div class="dis-inline-block"><p>Payee:</p></div>

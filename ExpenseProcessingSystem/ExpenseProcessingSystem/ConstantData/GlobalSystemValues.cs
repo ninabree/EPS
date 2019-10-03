@@ -317,6 +317,7 @@ namespace ExpenseProcessingSystem.ConstantData
         public const int GBaseErrResend = 1;
         public const int GBaseErrReverse = 2;
         public const int GBaseErrReverseResend = 3;
+        public const int GBaseErrReject = 4;
 
         //System message
         public static string MESSAGE = "";

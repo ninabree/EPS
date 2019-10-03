@@ -99,6 +99,7 @@ namespace ExpenseProcessingSystem.ViewModels
         public string payee_type_Name { get; set; }
         public string expenseYear { get; set; }
         public string expenseId { get; set; }
+        public int checkId { get; set; }
         public string checkNo { get; set; }
         public int statusID { get; set; }
         public string status { get; set; }
