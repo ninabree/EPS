@@ -1394,8 +1394,8 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
 
             goexpress.MakerEmpno = user.User_EmpCode;
             goexpress.Empno = user.User_EmpCode.Substring(2);
-            goexpress.Datestamp = DateTime.Now; ;
-            goexpress.Timesent = DateTime.Now; ;
+            goexpress.Datestamp = DateTime.Now;
+            goexpress.Timesent = DateTime.Now;
             goexpress.Timerespond = DateTime.Now;
             goexpress.Recstatus = "READY";
 
