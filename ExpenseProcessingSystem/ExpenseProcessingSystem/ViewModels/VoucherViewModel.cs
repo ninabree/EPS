@@ -14,13 +14,6 @@ namespace ExpenseProcessingSystem.ViewModels
         public decimal amount { get; set; }
     }
 
-    public class ewtAmtList
-    {
-        public float ewt { get; set; }
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:n}")]
-        public decimal ewtAmt { get; set; }
-    }
-
     public class particulars
     {
         public string documentType { get; set; }
@@ -37,6 +30,10 @@ namespace ExpenseProcessingSystem.ViewModels
         public decimal taxInfo_gross { get; set; }
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:n}")]
         public decimal taxInfo_taxBase { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:n}")]
+        public decimal ewtAmt { get; set; }
+        public float ewt { get; set; }
+        public int ewtID { get; set; }
     }
 
     public class VoucherViewModelList
@@ -72,14 +69,12 @@ namespace ExpenseProcessingSystem.ViewModels
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:n}")]
         public List<particulars> particulars { get; set; }
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:n}")]
-        public List<ewtAmtList> vatAmtList { get; set; }
         public List<taxInfo> taxInfos { get; set; }
         public bool isCheck { get; set; }
 
         public VoucherViewModelList()
         {
             particulars = new List<particulars>();
-            vatAmtList = new List<ewtAmtList>();
             accountsDebit = new List<accountList>();
             accountCredit = new List<accountList>();
             taxInfos = new List<taxInfo>();
