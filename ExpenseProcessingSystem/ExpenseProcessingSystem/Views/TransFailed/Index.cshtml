@@ -1,7 +1,7 @@
 ﻿@model ExpenseProcessingSystem.ViewModels.TransFailed.TransFailedViewModel
 @using ExpenseProcessingSystem.ConstantData
 @{
-    ViewData["Title"] = "Transaction failed";
+    ViewData["Title"] = "G-Base Transaction Error/s";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="tabContent hometabContent">
@@ -76,6 +76,10 @@
                                             @Html.DisplayFor(x => x.TF_TBL_DATA[i].TF_ACTION_LABEL)
                                         </button>
                                     }
+                                }
+                                @if (Model.TF_TBL_DATA[i].TF_CAN_REJECT)
+                                {
+                                    <button type="button" id="btnReject_@i" class="btnReject tbl-btn">REJECT</button>
                                 }
                             </td>
                             <td hidden="hidden">

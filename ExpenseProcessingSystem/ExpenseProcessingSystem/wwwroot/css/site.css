@@ -71,6 +71,9 @@ body, html {
 .table > tbody > tr > td {
     border-top: none;
 }
+.m-5-1-1-1p {
+    margin: 5% 1% 1% 1% !important;
+}
 /*---------------------------------------------*/
 a {
     /*font-family: HelveticaNeue;*/

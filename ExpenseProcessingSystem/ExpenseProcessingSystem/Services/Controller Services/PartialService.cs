@@ -311,7 +311,8 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 verifier_2_id = EntryDetails.e.Expense_Verifier_2,
                 maker = EntryDetails.e.Expense_Creator_ID,
                 lastUpdatedDate = EntryDetails.e.Expense_Last_Updated,
-                EntryNC = ncDtlVM
+                EntryNC = ncDtlVM,
+                voucherNumber = EntryDetails.e.Expense_Number
             };
 
             return ncModel;
