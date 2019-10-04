@@ -274,15 +274,14 @@
                             <td class="rightA">USD @Html.DisplayFor(x => item.amount, "{0:n}")</td>
                         </tr>
                     }
-                    else
-                    {
-                        <tr>
-                            <td>@Html.DisplayFor(x => item.account)%</td>
-                            <td><!--Insert Value here--></td>
-                            <td class="rightA">@Html.DisplayFor(x => item.amount, "{0:n}")</td>
-                        </tr>
-                    }
-
+                }
+                @foreach (var item in Model.taxInfos)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(x => item.ewt)%</td>
+                        <td><!--Insert Value here--></td>
+                        <td class="rightA">@Html.DisplayFor(x => item.ewtAmt, "{0:n}")</td>
+                    </tr>
                 }
 
                 @for (int i = 4; i > Model.accountCredit.Count + Model.accountsDebit.Count; i--)
@@ -338,7 +337,7 @@
                     <td><!--Insert Value here--></td>
                     @if (Model.taxInfos.Count() > 0)
                     {
-                        <td>@Model.taxInfos[0].taxInfo_gross.ToString("N2")</td>
+                        <td style="text-align:right">@Model.taxInfos[0].taxInfo_gross.ToString("N2")</td>
                     }
                     else
                     {
@@ -346,7 +345,7 @@
                     }
                     @if (Model.taxInfos.Count() > 1)
                     {
-                        <td>@Model.taxInfos[1].taxInfo_gross.ToString("N2")</td>
+                        <td style="text-align:right">@Model.taxInfos[1].taxInfo_gross.ToString("N2")</td>
                     }
                     else
                     {
@@ -360,33 +359,33 @@
                     {
                         @if (@Model.taxInfos[0].taxInfo_vat > 0)
                         {
-                            <td>@Model.taxInfos[0].taxInfo_vat.ToString("N2")</td>
+                            <td style="text-align:right">@Model.taxInfos[0].taxInfo_vat.ToString("N2")</td>
 
                         }
                         else
                         {
-                            <td>-</td>
+                            <td style="text-align:right">-</td>
                         }
                     }
                     else
                     {
-                        <td>-</td>
+                        <td style="text-align:right">-</td>
                     }
                     @if (Model.taxInfos.Count() > 1)
                     {
                         @if (@Model.taxInfos[1].taxInfo_vat > 0)
                         {
-                            <td>@Model.taxInfos[1].taxInfo_vat.ToString("N2")</td>
+                            <td style="text-align:right">@Model.taxInfos[1].taxInfo_vat.ToString("N2")</td>
 
                         }
                         else
                         {
-                            <td>-</td>
+                            <td style="text-align:right">-</td>
                         }
                     }
                     else
                     {
-                        <td>-</td>
+                        <td style="text-align:right">-</td>
                     }
                 </tr>
                 <tr>
@@ -394,63 +393,40 @@
                     <td><!--Insert Value here--></td>
                     @if (Model.taxInfos.Count() > 0)
                     {
-                        <td>@Model.taxInfos[0].taxInfo_taxBase.ToString("N2")</td>
+                        <td style="text-align:right">@Model.taxInfos[0].taxInfo_taxBase.ToString("N2")</td>
                     }
                     else
                     {
-                        <td>-</td>
+                        <td style="text-align:right">-</td>
                     }
                     @if (Model.taxInfos.Count() > 1)
                     {
-                        <td>@Model.taxInfos[1].taxInfo_taxBase.ToString("N2")</td>
+                        <td style="text-align:right">@Model.taxInfos[1].taxInfo_taxBase.ToString("N2")</td>
                     }
                     else
                     {
-                        <td>-</td>
+                        <td style="text-align:right">-</td>
                     }
                 </tr>
-                @foreach (var item in Model.vatAmtList)
-                {
-                    if (Model.vatAmtList.IndexOf(item) == 0)
-                    {
-                        <tr>
-                            <td>EWT @Html.DisplayFor(x => item.ewt)%</td>
-                            <td><!--Insert Value here--></td>
-                            <td>@Html.DisplayFor(x => item.ewtAmt, "{0:n}")</td>
-                            <td><!--Insert Value here--></td>
-                        </tr>
-                    }
-                    else if (Model.vatAmtList.IndexOf(item) == 1)
-                    {
-                        <tr>
-                            <td>EWT @Html.DisplayFor(x => item.ewt)%</td>
-                            <td><!--Insert Value here--></td>
-                            <td><!--Insert Value here--></td>
-                            <td>@Html.DisplayFor(x => item.ewtAmt, "{0:n}")</td>
-                        </tr>
-                    }
-
-                }
-
-                @if (Model.vatAmtList.Count <= 0)
-                {
-                    for (int i = 0; i < Model.accountsDebit.Count; i++)
-                    {
-                        <tr>
-                            <td colspan="4"></td>
-                        </tr>
-                    }
-                }
-
-                @for (int i = 3; i < Model.accountsDebit.Count; i++)
+                @if (Model.taxInfos.Count() > 0)
                 {
                     <tr>
-                        <td colspan="4"></td>
+                        <td>EWT @Model.taxInfos[0].ewt%</td>
+                        <td><!--Insert Value here--></td>
+                        <td style="text-align:right">@Model.taxInfos[0].ewtAmt.ToString("N2")</td>
+                        <td><!--Insert Value here--></td>
                     </tr>
                 }
-                <tr>
-                    <td colspan="4"></td>
-                </tr>
+                @if (Model.taxInfos.Count() > 1)
+                {
+                    <tr>
+                        <td>EWT @Model.taxInfos[1].ewt%</td>
+                        <td><!--Insert Value here--></td>
+                        <td><!--Insert Value here--></td>
+                        <td style="text-align:right">@Model.taxInfos[1].ewtAmt.ToString("N2")</td>
+                    </tr>
+                }
+
                 @*<tr>
             <td colspan="3" style="font-style:italic;padding-bottom:3px;">Fringe Benefit Tax</td>
         </tr>

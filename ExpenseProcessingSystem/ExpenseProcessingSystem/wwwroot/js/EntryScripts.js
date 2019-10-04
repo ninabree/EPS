@@ -276,7 +276,7 @@
                     $("#" + pNode.id).find(".txtGross").val(roundNumber(netEwt, 2));
                 }
             } else {
-                var ewtAmount = roundNumber(grossAmt * (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100),2);
+                var ewtAmount = roundNumber(grossAmt * (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100), 2);
                 $("#" + itemNo).find(".txtCredEwt").val(roundNumber(ewtAmount, 2));
                 $("#" + itemNo).find(".txtCredCash").val(roundNumber((grossAmt - ewtAmount), 2));
                 if ($(".hiddenScreencode").val() == "SS") {
@@ -291,7 +291,6 @@
                 $("#" + pNode.id).find(".txtGross").val(roundNumber(grossAmt, 2));
             }
         }
-
         //For PCS,SS - resetting of Cash breakdown list.
         if ($(".hiddenScreencode").val() == "PCV" || $(".hiddenScreencode").val() == "SS") {
             if (origCredAmt != $("#" + itemNo).find(".txtCredCash").val()) {
@@ -336,12 +335,15 @@
             $("#credCashTotal").val(0.00);
             $("#credTotal").val(0.00);
         }
+        //format values to add comma
+        $(".commaClass").digits();
     }
+    
 
     function computeValuesOfAllRecordVatTR() {
 
         var trs = $("#inputTable").find("tbody").find("tr").length - 2;
-        
+
         for (var cnt = 0; cnt < trs; cnt++) {
             var id = "item_" + cnt;
 
@@ -461,7 +463,7 @@
                     for (var i = 0; i < vatData.length; i++) {
                         $(".txtVat").append($("<option></option>").attr("value", vatData[i].vaT_ID).text(vatData[i].vaT_Rate));
                     }
-                    
+
                 } else {
                     $(".txtVat").append('<option value="0">0</option>');
                 }

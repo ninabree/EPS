@@ -12233,6 +12233,8 @@ namespace ExpenseProcessingSystem.Services
             var ncvItems = getNCV(opening, closing);
             var caItems = getCA(opening, closing);
             var liqItems = getLiq(opening, closing);
+            var revItems = getReversed(opening);
+            var revError = getErrReversed(opening, closing);
 
             //add results of getter methods to the return view model
             closeVM.fcduItems.AddRange(nmItems[GlobalSystemValues.BRANCH_FCDU]);
@@ -12249,6 +12251,12 @@ namespace ExpenseProcessingSystem.Services
 
             closeVM.fcduItems.AddRange(liqItems[GlobalSystemValues.BRANCH_FCDU]);
             closeVM.rbuItems.AddRange(liqItems[GlobalSystemValues.BRANCH_RBU]);
+
+            closeVM.rbuItems.AddRange(revItems[GlobalSystemValues.BRANCH_RBU]);
+            closeVM.fcduItems.AddRange(revItems[GlobalSystemValues.BRANCH_FCDU]);
+
+            closeVM.rbuItems.AddRange(revError[GlobalSystemValues.BRANCH_RBU]);
+            closeVM.fcduItems.AddRange(revError[GlobalSystemValues.BRANCH_FCDU]);
 
             Dictionary<int, List<int>> expenseRbuId = new Dictionary<int, List<int>>();
             Dictionary<int, List<int>> expenseFcduId = new Dictionary<int, List<int>>();
@@ -12420,7 +12428,9 @@ namespace ExpenseProcessingSystem.Services
                     }
                     else
                     {
-                        if (itemIndex < 0)
+                        var reversedToday = _context.ReversalEntry.Where(x=>x.Reversal_ReversedDate >= opening);
+
+                        if (itemIndex < 0 && !reversedToday.Any(x=>x.Reversal_GOExpressHistID == item.histId))
                             nmCloseItemsRBU.Add(temp);
                     }
                 }
@@ -12429,7 +12439,10 @@ namespace ExpenseProcessingSystem.Services
                                             && x.gBaseTrans == temp.gBaseTrans
                                             && x.particulars == temp.particulars
                                             && x.ccy == temp.ccy);
-                    if (itemIndex < 0)
+
+                    var reversedToday = _context.ReversalEntry.Where(x => x.Reversal_ReversedDate >= opening);
+
+                    if (itemIndex < 0 && !reversedToday.Any(x => x.Reversal_GOExpressHistID == item.histId))
                         nmCloseItemsFCDU.Add(temp);
                 }
             }
@@ -12823,10 +12836,14 @@ namespace ExpenseProcessingSystem.Services
                 temp.particulars = item.ExpDtl_Gbase_Remarks;
                 temp.transCount = 1;
 
-                if (getBranchNo(item.Account_No) == GlobalSystemValues.BRANCH_RBU)
-                    caCloseItemsRBU.Add(temp);
-                else
-                    caCloseItemsFCDU.Add(temp);
+                var reversedToday = _context.ReversalEntry.Where(x => x.Reversal_ReversedDate >= opening);
+                if(!reversedToday.Any(x => x.Reversal_GOExpressHistID == item.histId))
+                {
+                    if (getBranchNo(item.Account_No) == GlobalSystemValues.BRANCH_RBU)
+                        caCloseItemsRBU.Add(temp);
+                    else
+                        caCloseItemsFCDU.Add(temp);
+                }
             }
 
             caDic.Add(GlobalSystemValues.BRANCH_RBU, caCloseItemsRBU);
@@ -12939,6 +12956,172 @@ namespace ExpenseProcessingSystem.Services
             #endregion
 
             return liqDic;
+        }
+        public Dictionary<string, List<CloseItems>> getReversed(DateTime opening)
+        {
+            Dictionary<string, List<CloseItems>> returnModel = new Dictionary<string, List<CloseItems>>();
+            List<CloseItems> rbuList = new List<CloseItems>();
+            List<CloseItems> fcduList = new List<CloseItems>();
+
+            var model = from rev in _context.ReversalEntry
+                        join expTrans in _context.ExpenseTransLists
+                        on rev.Reversal_GOExpressHistID
+                        equals expTrans.TL_GoExpHist_ID
+                        into x
+                        from expTrans in x.DefaultIfEmpty()
+                        where rev.Reversal_ReversedDate >= opening
+                        select new
+                        {
+                            rev.Reversal_ID,
+                            rev.Reversal_ExpenseEntryID,
+                            rev.Reversal_ExpenseType,
+                            rev.Reversal_ExpenseDtlID,
+                            rev.Reversal_NonCashDtlID,
+                            rev.Reversal_LiqDtlID,
+                            rev.Reversal_LiqInterEntityID,
+                            rev.Reversal_GOExpressHistID,
+                            expTrans.TL_TransID,
+                            expTrans.TL_StatusID,
+                            expTrans.TL_Liquidation
+                        };
+
+            foreach (var item in model)
+            {
+                var expense = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == item.Reversal_ExpenseEntryID);
+                string stat = item.TL_StatusID == 3 ? "REVERSED" : GlobalSystemValues.getStatus(item.TL_StatusID);
+                var goHist = _context.GOExpressHist.FirstOrDefault(x => x.GOExpHist_Id == item.Reversal_GOExpressHistID);
+
+                decimal amtTotal = 0.00M;
+                amtTotal += Decimal.Parse(goHist.GOExpHist_Entry11Amt);
+                if(goHist.GOExpHist_Entry12Type != null)
+                    amtTotal += goHist.GOExpHist_Entry12Type != "D" ? 0 : Decimal.Parse(goHist.GOExpHist_Entry12Amt);
+                if (goHist.GOExpHist_Entry21Type != null)
+                    amtTotal += goHist.GOExpHist_Entry21Type != "D" ? 0 : Decimal.Parse(goHist.GOExpHist_Entry21Amt);
+                if (goHist.GOExpHist_Entry22Type != null)
+                    amtTotal += goHist.GOExpHist_Entry22Type != "D" ? 0 : Decimal.Parse(goHist.GOExpHist_Entry22Amt);
+                if (goHist.GOExpHist_Entry31Type != null)
+                    amtTotal += goHist.GOExpHist_Entry31Type != "D" ? 0 : Decimal.Parse(goHist.GOExpHist_Entry31Amt);
+                if (goHist.GOExpHist_Entry32Type != null)
+                    amtTotal += goHist.GOExpHist_Entry32Type != "D" ? 0 : Decimal.Parse(goHist.GOExpHist_Entry32Amt);
+                if (goHist.GOExpHist_Entry41Type != null)
+                    amtTotal += goHist.GOExpHist_Entry41Type != "D" ? 0 : Decimal.Parse(goHist.GOExpHist_Entry41Amt);
+                if (goHist.GOExpHist_Entry42Type != null)
+                    amtTotal += goHist.GOExpHist_Entry42Type != "D" ? 0 : Decimal.Parse(goHist.GOExpHist_Entry42Amt);
+
+                string expTransNo = "";
+
+                if (item.TL_Liquidation)
+                {
+                    expTransNo = "LIQ-" + GetSelectedYearMonthOfTerm(expense.Expense_Date.Month, expense.Expense_Date.Year).Year + "-" +
+                                          expense.Expense_Number.ToString().PadLeft(5, '0');
+                }
+                else
+                {
+                    expTransNo = GlobalSystemValues.getApplicationCode(expense.Expense_Type) + "-" + GetSelectedYearMonthOfTerm(expense.Expense_Date.Month, expense.Expense_Date.Year).Year + "-" +
+                                        expense.Expense_Number.ToString().PadLeft(5, '0');
+                }
+
+                CloseItems tempItem = new CloseItems
+                {
+                    gBaseTrans = item.TL_TransID.ToString(),
+                    transCount = 1,
+                    status = stat,
+                    expTrans = expTransNo,
+                    particulars = goHist.GOExpHist_Remarks,
+                    amount = amtTotal,
+                    ccy = goHist.GOExpHist_Entry11Ccy
+                };
+
+                if (goHist.GOExpHist_Branchno == GlobalSystemValues.BRANCH_RBU)
+                {
+                    rbuList.Add(tempItem);
+                }
+                else
+                {
+                    fcduList.Add(tempItem);
+                }
+            }
+
+            returnModel.Add(GlobalSystemValues.BRANCH_RBU, rbuList);
+            returnModel.Add(GlobalSystemValues.BRANCH_FCDU, fcduList);
+
+            return returnModel;
+        }
+        public Dictionary<string, List<CloseItems>> getErrReversed(DateTime opening, DateTime closing)
+        {
+            Dictionary<string, List<CloseItems>> returnModel = new Dictionary<string, List<CloseItems>>();
+            List<CloseItems> rbuList = new List<CloseItems>();
+            List<CloseItems> fcduList = new List<CloseItems>();
+
+            var model = from exp in _context.ExpenseEntry
+                        join tl in _context.ExpenseTransLists
+                        on exp.Expense_ID
+                        equals tl.TL_ExpenseID
+                        join gh in _context.GOExpressHist
+                        on tl.TL_GoExpHist_ID equals gh.GOExpHist_Id
+                        where exp.Expense_Status == 21
+                        && tl.TL_StatusID == 3
+                        && (exp.Expense_Last_Updated >= opening && exp.Expense_Last_Updated <= closing)
+                        select new { exp.Expense_Status,exp.Expense_Date,exp.Expense_Type, exp.Expense_Number, tl.TL_TransID, tl.TL_Liquidation, tl.TL_GoExpHist_ID, gh };
+
+            foreach(var item in model)
+            {
+                decimal amtTotal = 0.00M;
+                amtTotal += Decimal.Parse(item.gh.GOExpHist_Entry11Amt);
+                if (item.gh.GOExpHist_Entry12Type != null)
+                    amtTotal += item.gh.GOExpHist_Entry12Type != "D" ? 0 : Decimal.Parse(item.gh.GOExpHist_Entry12Amt);
+                if (item.gh.GOExpHist_Entry21Type != null)
+                    amtTotal += item.gh.GOExpHist_Entry21Type != "D" ? 0 : Decimal.Parse(item.gh.GOExpHist_Entry21Amt);
+                if (item.gh.GOExpHist_Entry22Type != null)
+                    amtTotal += item.gh.GOExpHist_Entry22Type != "D" ? 0 : Decimal.Parse(item.gh.GOExpHist_Entry22Amt);
+                if (item.gh.GOExpHist_Entry31Type != null)
+                    amtTotal += item.gh.GOExpHist_Entry31Type != "D" ? 0 : Decimal.Parse(item.gh.GOExpHist_Entry31Amt);
+                if (item.gh.GOExpHist_Entry32Type != null)
+                    amtTotal += item.gh.GOExpHist_Entry32Type != "D" ? 0 : Decimal.Parse(item.gh.GOExpHist_Entry32Amt);
+                if (item.gh.GOExpHist_Entry41Type != null)
+                    amtTotal += item.gh.GOExpHist_Entry41Type != "D" ? 0 : Decimal.Parse(item.gh.GOExpHist_Entry41Amt);
+                if (item.gh.GOExpHist_Entry42Type != null)
+                    amtTotal += item.gh.GOExpHist_Entry42Type != "D" ? 0 : Decimal.Parse(item.gh.GOExpHist_Entry42Amt);
+
+                string expTransNo = "";
+
+                if (item.TL_Liquidation)
+                {
+                    expTransNo = "LIQ-" + GetSelectedYearMonthOfTerm(item.Expense_Date.Month, item.Expense_Date.Year).Year + "-" +
+                                          item.Expense_Number.ToString().PadLeft(5, '0');
+                }
+                else
+                {
+                    expTransNo = GlobalSystemValues.getApplicationCode(item.Expense_Type) + "-" + GetSelectedYearMonthOfTerm(item.Expense_Date.Month, item.Expense_Date.Year).Year + "-" +
+                                        item.Expense_Number.ToString().PadLeft(5, '0');
+                }
+
+                CloseItems tempItem = new CloseItems
+                {
+                    gBaseTrans = item.TL_TransID.ToString(),
+                    transCount = 1,
+                    status = GlobalSystemValues.getStatus(item.Expense_Status),
+                    expTrans = expTransNo,
+                    particulars = item.gh.GOExpHist_Remarks,
+                    amount = amtTotal,
+                    ccy = item.gh.GOExpHist_Entry11Ccy
+                };
+
+                if (item.gh.GOExpHist_Branchno == GlobalSystemValues.BRANCH_RBU)
+                {
+                    rbuList.Add(tempItem);
+                }
+                else
+                {
+                    fcduList.Add(tempItem);
+                }
+
+            }
+
+            returnModel.Add(GlobalSystemValues.BRANCH_RBU, rbuList);
+            returnModel.Add(GlobalSystemValues.BRANCH_FCDU, fcduList);
+
+            return returnModel;
         }
 
         public ClosingViewModel ClosingOpenDailyBook()

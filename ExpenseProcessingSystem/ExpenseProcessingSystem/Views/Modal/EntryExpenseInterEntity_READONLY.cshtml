@@ -24,14 +24,18 @@
             @Html.CheckBoxFor(model => model.Inter_Check1, new { @disabled = "disabled" })
             Convert <label id="convertCurr1">@Model.Inter_Currency2_ABBR</label>
         </td>
-        <td colspan="4"><input type="number" id="convertAmt1" class="" value="@Model.Inter_Convert1_Amount" readonly/></td>
+        <td colspan="4">
+            @Html.DisplayFor(m => m.Inter_Convert1_Amount, new { @disabled = "disabled", id = "convertAmt1" })
+        </td>
     </tr>
     <tr>
         <td colspan="3"><label id="curr2-lbl">@Html.DisplayFor(m => m.Inter_Currency2_ABBR, new { @disabled = "disabled" }) Amount</label></td>
         <td colspan="2" id="curr2-abbr">
             @Html.DisplayFor(m => m.Inter_Currency2_ABBR, new { @disabled = "disabled" })
         </td>
-        <td colspan="4"><input type="number" id="convertAmt2" value="@Model.Inter_Convert2_Amount" class="" readonly /></td>
+        <td colspan="4">
+            @Html.DisplayFor(m => m.Inter_Convert2_Amount, new { @disabled = "disabled", id = "convertAmt2" })
+        </td>
         <td colspan="3">
             @Html.CheckBoxFor(model => model.Inter_Check2, new { @disabled = "disabled" })
             Convert <label id="convertCurr2">@Model.Inter_Currency1_ABBR</label>
@@ -151,7 +155,7 @@
 <script>
     $(document).ready(function () {
         //set fields
-        var curr1Amt = @Model.Inter_Currency1_Amount;
+        @*var curr1Amt = @Model.Inter_Currency1_Amount;
         var curr2Amt = @Model.Inter_Currency2_Amount;
 
         var curr1Val = @Model.Inter_Currency1_Amount;
@@ -166,10 +170,10 @@
             UpdateParticulars2(curr2Val, conv1Val);
         } else {
             defaultInter();
-        }
-        defaultCheck();
-        updateCurrency2();
-        
+        }*@
+        //defaultCheck();
+        //updateCurrency2();
+
         // ---------------------- [[ FUNCTIONS ]] ----------------------
         function updateCurrency2() {
             var val = $(".curr2").find("option:selected").text();

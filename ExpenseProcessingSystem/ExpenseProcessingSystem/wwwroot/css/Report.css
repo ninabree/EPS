@@ -20,4 +20,8 @@
 .td-right {
     text-align: right;
 }
-
+input[disabled] {
+    border: none;
+    text-decoration: none;
+     background-color: #eee !important; 
+}

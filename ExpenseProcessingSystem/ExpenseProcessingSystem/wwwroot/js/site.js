@@ -328,13 +328,64 @@ function loadingEffectStop() { $('body').removeClass("loading"); }
 
 function roundNumber(num, scale) {
     if (!("" + num).includes("e")) {
-        return +(Math.round(num + "e+" + scale) + "e-" + scale);
+        return (+(Math.round(num + "e+" + scale) + "e-" + scale)).toFixed(scale);
     } else {
         var arr = ("" + num).split("e");
         var sig = ""
         if (+arr[1] + scale > 0) {
             sig = "+";
         }
-        return +(Math.round(+arr[0] + "e" + sig + (+arr[1] + scale)) + "e-" + scale);
+        return (+(Math.round(+arr[0] + "e" + sig + (+arr[1] + scale)) + "e-" + scale)).toFixed(scale);
     }
+};
+function round(num, scale) {
+    if (typeof scale === 'undefined' || +scale === 0)
+        return Math.round(num).toFixed(scale);
+
+    num = +num;
+    scale = +scale;
+
+    if (isNaN(num) || !(typeof scale === 'number' && scale % 1 === 0))
+        return NaN;
+
+    // Shift
+    num = num.toString().split('e');
+    num = Math.round(+(num[0] + 'e' + (num[1] ? (+num[1] + scale) : scale)));
+
+    // Shift back
+    num = num.toString().split('e');
+    return commaDigits((+(num[0] + 'e' + (num[1] ? (+num[1] - scale) : -scale))).toFixed(scale));
+}
+function commaDigits(num) { 
+    return (num).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"); 
+}
+$.fn.digits = function () {
+    return this.each(function () {
+        $(this).val($(this).val().replace(/\,/g, ""));
+        var val = $(this).val();
+        $(this).val(AC(val));
+    })
+}
+//$.fn.digitsText = function () {
+//    return this.each(function () {
+//        $(this).text($(this).text().replace(/\,/g, ""));
+//        $(this).text(AC(Number($(this).text())));
+//    })
+//}
+function AC(nStr) {
+    nStr += '';
+    x = nStr.split('.');
+    x1 = x[0];
+    x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x1 + x2;
+};
+function RD(num, scale) {
+    return num.ToFixed(scale);
+};
+function twoDec(num, scale) {
+    return num.ToFixed(scale);
 };
