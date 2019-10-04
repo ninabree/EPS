@@ -650,7 +650,134 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             {
                 bool isAllTrue = InsertRecToPrintStatusTbl(entryID, IsLiq);
                 ChangeExpStatToPrintingOrClosing(entryID, IsLiq, isAllTrue);
+
+                //Update Petty Cash Balance
+                var petty = _context.PettyCash.LastOrDefault();
+                var pc2 = int.Parse(xelemAcc.Element("C_PC2").Value);
+                var pettyCashAcc = GetAccountByMasterID(int.Parse(xelemAcc.Element("C_PC2").Value));
+
+                if (pettyCashAcc != null)
+                {
+                    decimal cashIn = 0.0M;
+                    decimal cashOut = 0.0M;
+
+                    foreach (var i in trans)
+                    {
+                        (string, decimal) result = GetePettyCashInOut(i, pettyCashAcc);
+                        if (result.Item1 == "D")
+                        {
+                            cashIn += result.Item2;
+                        }
+                        else if (result.Item1 == "C")
+                        {
+                            cashOut += result.Item2;
+                        }
+                    }
+
+                    petty.PC_Recieved = petty.PC_Recieved + cashIn;
+                    petty.PC_Disbursed = petty.PC_Disbursed + cashOut;
+                    petty.PC_EndBal = petty.PC_StartBal + (petty.PC_Recieved - petty.PC_Disbursed);
+                    _context.Entry(petty).State = EntityState.Modified;
+                }
+                
             }
+        }
+
+        private (string, decimal) GetePettyCashInOut(ExpenseTransList trans, DMAccountModel pettyCashAcc)
+        {
+            var gohist = _context.GOExpressHist.Where(x => x.GOExpHist_Id == trans.TL_GoExpHist_ID).FirstOrDefault();
+            if (gohist == null) return ("", 0M);
+
+            if (!String.IsNullOrEmpty(gohist.GOExpHist_Entry11Type))
+            {
+                string gohistAccount = gohist.GOExpHist_Entry11ActType + "-" + gohist.GOExpHist_Branchno + "-" + gohist.GOExpHist_Entry11ActNo;
+                int currMasterID = GetCurrency(gohist.GOExpHist_Entry11Ccy).Curr_MasterID;
+
+                if (gohistAccount == pettyCashAcc.Account_No && gohist.GOExpHist_Entry11Actcde == pettyCashAcc.Account_Code &&
+                    currMasterID == pettyCashAcc.Account_Currency_MasterID)
+                {
+                    return (gohist.GOExpHist_Entry11Type, decimal.Parse(gohist.GOExpHist_Entry11Amt));
+                }
+            }
+            if (!String.IsNullOrEmpty(gohist.GOExpHist_Entry12Type))
+            {
+                string gohistAccount = gohist.GOExpHist_Entry12ActType + "-" + gohist.GOExpHist_Branchno + "-" + gohist.GOExpHist_Entry12ActNo;
+                int currMasterID = GetCurrency(gohist.GOExpHist_Entry12Ccy).Curr_MasterID;
+
+                if (gohistAccount == pettyCashAcc.Account_No && gohist.GOExpHist_Entry12Actcde == pettyCashAcc.Account_Code &&
+                    currMasterID == pettyCashAcc.Account_Currency_MasterID)
+                {
+                    return (gohist.GOExpHist_Entry12Type, decimal.Parse(gohist.GOExpHist_Entry12Amt));
+                }
+            }
+            if (!String.IsNullOrEmpty(gohist.GOExpHist_Entry21Type))
+            {
+                string gohistAccount = gohist.GOExpHist_Entry21ActType + "-" + gohist.GOExpHist_Branchno + "-" + gohist.GOExpHist_Entry21ActNo;
+                int currMasterID = GetCurrency(gohist.GOExpHist_Entry21Ccy).Curr_MasterID;
+
+                if (gohistAccount == pettyCashAcc.Account_No && gohist.GOExpHist_Entry21Actcde == pettyCashAcc.Account_Code &&
+                    currMasterID == pettyCashAcc.Account_Currency_MasterID)
+                {
+                    return (gohist.GOExpHist_Entry21Type, decimal.Parse(gohist.GOExpHist_Entry21Amt));
+                }
+            }
+            if (!String.IsNullOrEmpty(gohist.GOExpHist_Entry22Type))
+            {
+                string gohistAccount = gohist.GOExpHist_Entry22ActType + "-" + gohist.GOExpHist_Branchno + "-" + gohist.GOExpHist_Entry22ActNo;
+                int currMasterID = GetCurrency(gohist.GOExpHist_Entry22Ccy).Curr_MasterID;
+
+                if (gohistAccount == pettyCashAcc.Account_No && gohist.GOExpHist_Entry22Actcde == pettyCashAcc.Account_Code &&
+                    currMasterID == pettyCashAcc.Account_Currency_MasterID)
+                {
+                    return (gohist.GOExpHist_Entry22Type, decimal.Parse(gohist.GOExpHist_Entry22Amt));
+                }
+            }
+            if (!String.IsNullOrEmpty(gohist.GOExpHist_Entry31Type))
+            {
+                string gohistAccount = gohist.GOExpHist_Entry31ActType + "-" + gohist.GOExpHist_Branchno + "-" + gohist.GOExpHist_Entry31ActNo;
+                int currMasterID = GetCurrency(gohist.GOExpHist_Entry31Ccy).Curr_MasterID;
+
+                if (gohistAccount == pettyCashAcc.Account_No && gohist.GOExpHist_Entry31Actcde == pettyCashAcc.Account_Code &&
+                    currMasterID == pettyCashAcc.Account_Currency_MasterID)
+                {
+                    return (gohist.GOExpHist_Entry31Type, decimal.Parse(gohist.GOExpHist_Entry31Amt));
+                }
+            }
+            if (!String.IsNullOrEmpty(gohist.GOExpHist_Entry32Type))
+            {
+                string gohistAccount = gohist.GOExpHist_Entry32ActType + "-" + gohist.GOExpHist_Branchno + "-" + gohist.GOExpHist_Entry32ActNo;
+                int currMasterID = GetCurrency(gohist.GOExpHist_Entry32Ccy).Curr_MasterID;
+
+                if (gohistAccount == pettyCashAcc.Account_No && gohist.GOExpHist_Entry32Actcde == pettyCashAcc.Account_Code &&
+                    currMasterID == pettyCashAcc.Account_Currency_MasterID)
+                {
+                    return (gohist.GOExpHist_Entry32Type, decimal.Parse(gohist.GOExpHist_Entry32Amt));
+                }
+            }
+            if (!String.IsNullOrEmpty(gohist.GOExpHist_Entry41Type))
+            {
+                string gohistAccount = gohist.GOExpHist_Entry41ActType + "-" + gohist.GOExpHist_Branchno + "-" + gohist.GOExpHist_Entry41ActNo;
+                int currMasterID = GetCurrency(gohist.GOExpHist_Entry41Ccy).Curr_MasterID;
+
+                if (gohistAccount == pettyCashAcc.Account_No && gohist.GOExpHist_Entry41Actcde == pettyCashAcc.Account_Code &&
+                    currMasterID == pettyCashAcc.Account_Currency_MasterID)
+                {
+                    return (gohist.GOExpHist_Entry41Type, decimal.Parse(gohist.GOExpHist_Entry41Amt));
+                }
+            }
+            if (!String.IsNullOrEmpty(gohist.GOExpHist_Entry42Type))
+            {
+                string gohistAccount = gohist.GOExpHist_Entry42ActType + "-" + gohist.GOExpHist_Branchno + "-" + gohist.GOExpHist_Entry42ActNo;
+                int currMasterID = GetCurrency(gohist.GOExpHist_Entry42Ccy).Curr_MasterID;
+
+                if (gohistAccount == pettyCashAcc.Account_No && gohist.GOExpHist_Entry42Actcde == pettyCashAcc.Account_Code &&
+                    currMasterID == pettyCashAcc.Account_Currency_MasterID)
+                {
+                    return (gohist.GOExpHist_Entry42Type, decimal.Parse(gohist.GOExpHist_Entry42Amt));
+                }
+            }
+
+            return ("", 0M);
         }
 
         //Update status of all reversing transactions
@@ -713,6 +840,36 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                 if (flag)
                 {
                     UpdateExpenseLiquidationEntryStatus(entryID, IsLiq);
+
+                    //Update Petty Cash Balance
+                    var petty = _context.PettyCash.LastOrDefault();
+                    var pettyCashAcc = GetAccountByMasterID(int.Parse(xelemAcc.Element("C_PC2").Value));
+
+                    if (pettyCashAcc != null)
+                    {
+                        decimal cashIn = 0.0M;
+                        decimal cashOut = 0.0M;
+
+                        foreach (var i in trans)
+                        {
+                            if (i.TL_StatusID == GlobalSystemValues.STATUS_ERROR) continue;
+
+                            (string, decimal) result = GetePettyCashInOut(i, pettyCashAcc);
+                            if (result.Item1 == "D")
+                            {
+                                cashIn += result.Item2;
+                            }
+                            else if (result.Item1 == "C")
+                            {
+                                cashOut += result.Item2;
+                            }
+                        }
+
+                        petty.PC_Recieved = petty.PC_Recieved + cashIn;
+                        petty.PC_Disbursed = petty.PC_Disbursed + cashOut;
+                        petty.PC_EndBal = petty.PC_StartBal + (petty.PC_Recieved - petty.PC_Disbursed);
+                        _context.Entry(petty).State = EntityState.Modified;
+                    }
                 }
             }
 
@@ -727,7 +884,6 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             {
                 case GlobalSystemValues.TYPE_CV:
                     return AddPrintStatusCV(expEntry);
-
                 case GlobalSystemValues.TYPE_DDV:
                     return AddPrintStatusDDV(expEntry);
                 case GlobalSystemValues.TYPE_PC:
@@ -1217,13 +1373,11 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             List<GOExpContainer> container = ArrangeToGOExpContainer(goexphist);
             container = container.OrderByDescending(x => x.GOExpCont_Entry_Type).ToList();
 
-            var acc = GetAccount(goexpress.Entry11ActType, goexpress.Entry11ActNo, goexpress.Entry11Actcde, goexpress.Entry11Ccy);
-
             goexpress = ConvGOExpContToTblCM10(container);
 
             goexpress.SystemName = goexphist.GOExpHist_SystemName;
             goexpress.Groupcode = goexphist.GOExpHist_Groupcode;
-            goexpress.Branchno = goexpress.Branchno;
+            goexpress.Branchno = goexphist.GOExpHist_Branchno;
             goexpress.OpeKind = goexphist.GOExpHist_OpeKind;
             goexpress.AutoApproved = goexphist.GOExpHist_AutoApproved;
             goexpress.WarningOverride = goexphist.GOExpHist_WarningOverride;
@@ -1864,6 +2018,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
         {
             return _context.DMCurrency.FirstOrDefault(x => x.Curr_ID == id);
         }
+
         public DMCurrencyModel GetCurrency(string abbrev)
         {
             return _context.DMCurrency.FirstOrDefault(x => x.Curr_CCY_ABBR == abbrev);
@@ -1875,6 +2030,13 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                                                 && x.Account_No.Contains(accountNumber)
                                                 && x.Account_Code == accountCode
                                                 && x.Account_Currency_MasterID == GetCurrency(ccy).Curr_MasterID).LastOrDefault();
+        }
+        
+        public DMAccountModel GetAccountByMasterID(int masterID)
+        {
+            return _context.DMAccount.Where(x => x.Account_MasterID == masterID &&
+                                                        x.Account_isActive == true && 
+                                                        x.Account_isDeleted == false).FirstOrDefault();
         }
     }
 
