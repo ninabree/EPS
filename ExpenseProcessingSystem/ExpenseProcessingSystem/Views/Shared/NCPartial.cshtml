@@ -587,15 +587,16 @@
             @Html.HiddenFor(x => x.EntryNC.NC_Category_ID)
             @Html.HiddenFor(x => x.category_of_entry)
             @Html.HiddenFor(x => x.entryID)
+            @Html.HiddenFor(x => x.voucherNumber)
             @Html.HiddenFor(x => x.taxaccID)
             <input type="hidden" name="command" id="btnID" />
             <tr>
                 <td class="float-l" colspan="1">
                     @if (@Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_LS_PAYROLL ||
-                     @Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_TAX_REMITTANCE ||
-                     @Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_DEPRECIATION ||
-                     @Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_JS_PAYROLL ||
-                     @Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES)
+                    @Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_TAX_REMITTANCE ||
+                    @Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_DEPRECIATION ||
+                    @Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_JS_PAYROLL ||
+                    @Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_MISCELLANEOUS_ENTRIES)
                     {
                         <button id="add_new_nc_row" type="button" class="glyphicon glyphicon-plus"></button>
                     }

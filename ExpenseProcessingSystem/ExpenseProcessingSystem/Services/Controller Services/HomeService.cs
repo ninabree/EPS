@@ -66,7 +66,8 @@ namespace ExpenseProcessingSystem.Services
         }
         private int[] status = { GlobalSystemValues.STATUS_POSTED, GlobalSystemValues.STATUS_FOR_CLOSING,
                             GlobalSystemValues.STATUS_FOR_PRINTING };
-        private int[] statusTrans = { GlobalSystemValues.STATUS_APPROVED, GlobalSystemValues.STATUS_RESENDING_COMPLETE };
+        private int[] statusTrans = { GlobalSystemValues.STATUS_APPROVED, GlobalSystemValues.STATUS_RESENDING_COMPLETE,
+                            GlobalSystemValues.STATUS_REVERSING_COMPLETE };
 
         //-----------------------------------Populate-------------------------------------//
         //[ Home ]
@@ -3119,7 +3120,7 @@ namespace ExpenseProcessingSystem.Services
                 return "GWrite Message Not Available.";
 
             if (String.IsNullOrEmpty(gwriteDtl.ReturnMessage))
-                return "Waiting For GWrite to be processed.";
+                return "Waiting for G-Write to be processed.";
             return gwriteDtl.ReturnMessage;
         }
 
@@ -3788,6 +3789,7 @@ namespace ExpenseProcessingSystem.Services
                 startDT = DateTime.ParseExact(termYear + "-" + termMonth, format, CultureInfo.InvariantCulture);
                 endDT = DateTime.ParseExact(filterYear + "-" + filterMonth, format, CultureInfo.InvariantCulture);
                 subTotal = 0.00M;
+                bool subTotalFlag = false;
                 totalExpenseThisTermToPrevMonthend = 0.00M;
 
                 budgetBalance = category.Budget;
@@ -3811,7 +3813,8 @@ namespace ExpenseProcessingSystem.Services
                         if(transList != null)
                         {
                             if (transData.TL_StatusID != GlobalSystemValues.STATUS_RESENDING_COMPLETE 
-                                && transData.TL_StatusID != GlobalSystemValues.STATUS_APPROVED) continue;
+                                && transData.TL_StatusID != GlobalSystemValues.STATUS_APPROVED
+                                && transData.TL_StatusID != GlobalSystemValues.STATUS_REVERSING_COMPLETE) continue;
                         }
 
                         if (!String.IsNullOrEmpty(hist.GOExpHist_Entry11ActNo)
@@ -3962,7 +3965,8 @@ namespace ExpenseProcessingSystem.Services
                         if (transList != null)
                         {
                             if (transData.TL_StatusID != GlobalSystemValues.STATUS_RESENDING_COMPLETE
-                                && transData.TL_StatusID != GlobalSystemValues.STATUS_APPROVED) continue;
+                                && transData.TL_StatusID != GlobalSystemValues.STATUS_APPROVED
+                                && transData.TL_StatusID != GlobalSystemValues.STATUS_REVERSING_COMPLETE) continue;
                         }
 
                         if (!String.IsNullOrEmpty(hist.GOExpHist_Entry11ActNo)
@@ -3970,6 +3974,7 @@ namespace ExpenseProcessingSystem.Services
                             && acc.Account_No.Contains(hist.GOExpHist_Entry11ActNo)
                             && acc.Account_Code == hist.GOExpHist_Entry11Actcde)
                         {
+                            subTotalFlag = true;
                             if (hist.GOExpHist_Entry11Type == "D")
                             {
                                 budgetBalance -= Decimal.Parse(hist.GOExpHist_Entry11Amt);
@@ -4004,6 +4009,7 @@ namespace ExpenseProcessingSystem.Services
                         && acc.Account_No.Contains(hist.GOExpHist_Entry12ActNo)
                         && acc.Account_Code == hist.GOExpHist_Entry12Actcde)
                         {
+                            subTotalFlag = true;
                             if (hist.GOExpHist_Entry12Type == "D")
                             {
                                 budgetBalance -= Decimal.Parse(hist.GOExpHist_Entry12Amt);
@@ -4038,6 +4044,7 @@ namespace ExpenseProcessingSystem.Services
                         && acc.Account_No.Contains(hist.GOExpHist_Entry21ActNo)
                         && acc.Account_Code == hist.GOExpHist_Entry21Actcde)
                         {
+                            subTotalFlag = true;
                             if (hist.GOExpHist_Entry21Type == "D")
                             {
                                 budgetBalance -= Decimal.Parse(hist.GOExpHist_Entry21Amt);
@@ -4072,6 +4079,7 @@ namespace ExpenseProcessingSystem.Services
                         && acc.Account_No.Contains(hist.GOExpHist_Entry22ActNo)
                         && acc.Account_Code == hist.GOExpHist_Entry22Actcde)
                         {
+                            subTotalFlag = true;
                             if (hist.GOExpHist_Entry22Type == "D")
                             {
                                 budgetBalance -= Decimal.Parse(hist.GOExpHist_Entry22Amt);
@@ -4106,6 +4114,7 @@ namespace ExpenseProcessingSystem.Services
                         && acc.Account_No.Contains(hist.GOExpHist_Entry31ActNo)
                         && acc.Account_Code == hist.GOExpHist_Entry31Actcde)
                         {
+                            subTotalFlag = true;
                             if (hist.GOExpHist_Entry31Type == "D")
                             {
                                 budgetBalance -= Decimal.Parse(hist.GOExpHist_Entry31Amt);
@@ -4140,6 +4149,7 @@ namespace ExpenseProcessingSystem.Services
                         && acc.Account_No.Contains(hist.GOExpHist_Entry32ActNo)
                         && acc.Account_Code == hist.GOExpHist_Entry32Actcde)
                         {
+                            subTotalFlag = true;
                             if (hist.GOExpHist_Entry32Type == "D")
                             {
                                 budgetBalance -= Decimal.Parse(hist.GOExpHist_Entry32Amt);
@@ -4174,6 +4184,7 @@ namespace ExpenseProcessingSystem.Services
                         && acc.Account_No.Contains(hist.GOExpHist_Entry41ActNo)
                         && acc.Account_Code == hist.GOExpHist_Entry41Actcde)
                         {
+                            subTotalFlag = true;
                             if (hist.GOExpHist_Entry41Type == "D")
                             {
                                 budgetBalance -= Decimal.Parse(hist.GOExpHist_Entry41Amt);
@@ -4208,6 +4219,7 @@ namespace ExpenseProcessingSystem.Services
                         && acc.Account_No.Contains(hist.GOExpHist_Entry42ActNo)
                         && acc.Account_Code == hist.GOExpHist_Entry42Actcde)
                         {
+                            subTotalFlag = true;
                             if (hist.GOExpHist_Entry42Type == "D")
                             {
                                 budgetBalance -= Decimal.Parse(hist.GOExpHist_Entry42Amt);
@@ -4242,7 +4254,7 @@ namespace ExpenseProcessingSystem.Services
 
                 //#3
                 //Add Sub-Total to List
-                if (subTotal != 0)
+                if (subTotalFlag == true)
                 {
                     actualBudgetData.Add(new HomeReportActualBudgetModel()
                     {
@@ -4591,8 +4603,8 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount1_1 = i.GOExpHist_Entry11Amt,
                         Trans_Customer1_1 = i.GOExpHist_Entry11Cust,
                         Trans_Account_Code1_1 = i.GOExpHist_Entry11Actcde,
-                        Trans_Account_Name1_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                        Trans_Account_Number1_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde),
+                        Trans_Account_Name1_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde, i.GOExpHist_Entry11Ccy, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                        Trans_Account_Number1_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry11ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry11ActType)) ? i.GOExpHist_Entry11ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry11ActNo : "",
                         Trans_Exchange_Rate1_1 = i.GOExpHist_Entry11ExchRate,
                         Trans_Contra_Currency1_1 = i.GOExpHist_Entry11ExchCcy,
                         Trans_Fund1_1 = i.GOExpHist_Entry11Fund,
@@ -4607,8 +4619,8 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount1_2 = i.GOExpHist_Entry12Amt,
                         Trans_Customer1_2 = i.GOExpHist_Entry12Cust,
                         Trans_Account_Code1_2 = i.GOExpHist_Entry12Actcde,
-                        Trans_Account_Name1_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                        Trans_Account_Number1_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde),
+                        Trans_Account_Name1_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde, i.GOExpHist_Entry12Ccy, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                        Trans_Account_Number1_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry12ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry12ActType)) ? i.GOExpHist_Entry12ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry12ActNo : "",
                         Trans_Exchange_Rate1_2 = i.GOExpHist_Entry12ExchRate,
                         Trans_Contra_Currency1_2 = i.GOExpHist_Entry12ExchCcy,
                         Trans_Fund1_2 = i.GOExpHist_Entry12Fund,
@@ -4623,8 +4635,8 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount2_1 = i.GOExpHist_Entry21Amt,
                         Trans_Customer2_1 = i.GOExpHist_Entry21Cust,
                         Trans_Account_Code2_1 = i.GOExpHist_Entry21Actcde,
-                        Trans_Account_Name2_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                        Trans_Account_Number2_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde),
+                        Trans_Account_Name2_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde, i.GOExpHist_Entry21Ccy, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                        Trans_Account_Number2_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry21ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry21ActType)) ? i.GOExpHist_Entry21ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry21ActNo : "",
                         Trans_Exchange_Rate2_1 = i.GOExpHist_Entry21ExchRate,
                         Trans_Contra_Currency2_1 = i.GOExpHist_Entry21ExchCcy,
                         Trans_Fund2_1 = i.GOExpHist_Entry21Fund,
@@ -4639,8 +4651,8 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount2_2 = i.GOExpHist_Entry22Amt,
                         Trans_Customer2_2 = i.GOExpHist_Entry22Cust,
                         Trans_Account_Code2_2 = i.GOExpHist_Entry22Actcde,
-                        Trans_Account_Name2_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                        Trans_Account_Number2_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde),
+                        Trans_Account_Name2_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde, i.GOExpHist_Entry22Ccy, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                        Trans_Account_Number2_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry22ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry22ActType)) ? i.GOExpHist_Entry22ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry22ActNo : "",
                         Trans_Exchange_Rate2_2 = i.GOExpHist_Entry22ExchRate,
                         Trans_Contra_Currency2_2 = i.GOExpHist_Entry22ExchCcy,
                         Trans_Fund2_2 = i.GOExpHist_Entry22Fund,
@@ -4655,8 +4667,8 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount3_1 = i.GOExpHist_Entry31Amt,
                         Trans_Customer3_1 = i.GOExpHist_Entry31Cust,
                         Trans_Account_Code3_1 = i.GOExpHist_Entry31Actcde,
-                        Trans_Account_Name3_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                        Trans_Account_Number3_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde),
+                        Trans_Account_Name3_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde, i.GOExpHist_Entry31Ccy, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                        Trans_Account_Number3_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry31ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry31ActType)) ? i.GOExpHist_Entry31ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry31ActNo : "",
                         Trans_Exchange_Rate3_1 = i.GOExpHist_Entry31ExchRate,
                         Trans_Contra_Currency3_1 = i.GOExpHist_Entry31ExchCcy,
                         Trans_Fund3_1 = i.GOExpHist_Entry31Fund,
@@ -4671,8 +4683,8 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount3_2 = i.GOExpHist_Entry32Amt,
                         Trans_Customer3_2 = i.GOExpHist_Entry32Cust,
                         Trans_Account_Code3_2 = i.GOExpHist_Entry32Actcde,
-                        Trans_Account_Name3_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                        Trans_Account_Number3_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde),
+                        Trans_Account_Name3_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde, i.GOExpHist_Entry32Ccy, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                        Trans_Account_Number3_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry32ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry32ActType)) ? i.GOExpHist_Entry32ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry32ActNo : "",
                         Trans_Exchange_Rate3_2 = i.GOExpHist_Entry32ExchRate,
                         Trans_Contra_Currency3_2 = i.GOExpHist_Entry32ExchCcy,
                         Trans_Fund3_2 = i.GOExpHist_Entry32Fund,
@@ -4687,8 +4699,8 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount4_1 = i.GOExpHist_Entry41Amt,
                         Trans_Customer4_1 = i.GOExpHist_Entry41Cust,
                         Trans_Account_Code4_1 = i.GOExpHist_Entry41Actcde,
-                        Trans_Account_Name4_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                        Trans_Account_Number4_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde),
+                        Trans_Account_Name4_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde, i.GOExpHist_Entry41Ccy, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                        Trans_Account_Number4_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry41ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry41ActType)) ? i.GOExpHist_Entry41ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry41ActNo : "",
                         Trans_Exchange_Rate4_1 = i.GOExpHist_Entry41ExchRate,
                         Trans_Contra_Currency4_1 = i.GOExpHist_Entry41ExchCcy,
                         Trans_Fund4_1 = i.GOExpHist_Entry41Fund,
@@ -4703,8 +4715,8 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Amount4_2 = i.GOExpHist_Entry42Amt,
                         Trans_Customer4_2 = i.GOExpHist_Entry42Cust,
                         Trans_Account_Code4_2 = i.GOExpHist_Entry42Actcde,
-                        Trans_Account_Name4_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                        Trans_Account_Number4_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde),
+                        Trans_Account_Name4_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde, i.GOExpHist_Entry42Ccy, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                        Trans_Account_Number4_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry42ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry42ActType)) ? i.GOExpHist_Entry42ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry42ActNo : "",
                         Trans_Exchange_Rate4_2 = i.GOExpHist_Entry42ExchRate,
                         Trans_Contra_Currency4_2 = i.GOExpHist_Entry42ExchCcy,
                         Trans_Fund4_2 = i.GOExpHist_Entry42Fund,
@@ -4944,7 +4956,7 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Customer1_1 = i.GOExpHist_Entry11Cust,
                         Trans_Account_Code1_1 = i.GOExpHist_Entry11Actcde,
                         Trans_Account_Name1_1 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde, ncDtlList, i.ExpenseDetailID),
-                        Trans_Account_Number1_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde),
+                        Trans_Account_Number1_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry11ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry11ActType)) ? i.GOExpHist_Entry11ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry11ActNo : "",
                         Trans_Exchange_Rate1_1 = i.GOExpHist_Entry11ExchRate,
                         Trans_Contra_Currency1_1 = i.GOExpHist_Entry11ExchCcy,
                         Trans_Fund1_1 = i.GOExpHist_Entry11Fund,
@@ -4960,7 +4972,7 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Customer1_2 = i.GOExpHist_Entry12Cust,
                         Trans_Account_Code1_2 = i.GOExpHist_Entry12Actcde,
                         Trans_Account_Name1_2 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde, ncDtlList, i.ExpenseDetailID),
-                        Trans_Account_Number1_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde),
+                        Trans_Account_Number1_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry12ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry12ActType)) ? i.GOExpHist_Entry12ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry12ActNo : "",
                         Trans_Exchange_Rate1_2 = i.GOExpHist_Entry12ExchRate,
                         Trans_Contra_Currency1_2 = i.GOExpHist_Entry12ExchCcy,
                         Trans_Fund1_2 = i.GOExpHist_Entry12Fund,
@@ -4976,7 +4988,7 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Customer2_1 = i.GOExpHist_Entry21Cust,
                         Trans_Account_Code2_1 = i.GOExpHist_Entry21Actcde,
                         Trans_Account_Name2_1 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde, ncDtlList, i.ExpenseDetailID),
-                        Trans_Account_Number2_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde),
+                        Trans_Account_Number2_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry21ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry21ActType)) ? i.GOExpHist_Entry21ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry21ActNo : "",
                         Trans_Exchange_Rate2_1 = i.GOExpHist_Entry21ExchRate,
                         Trans_Contra_Currency2_1 = i.GOExpHist_Entry21ExchCcy,
                         Trans_Fund2_1 = i.GOExpHist_Entry21Fund,
@@ -4992,7 +5004,7 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Customer2_2 = i.GOExpHist_Entry22Cust,
                         Trans_Account_Code2_2 = i.GOExpHist_Entry22Actcde,
                         Trans_Account_Name2_2 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde, ncDtlList, i.ExpenseDetailID),
-                        Trans_Account_Number2_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde),
+                        Trans_Account_Number2_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry22ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry22ActType)) ? i.GOExpHist_Entry22ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry22ActNo : "",
                         Trans_Exchange_Rate2_2 = i.GOExpHist_Entry22ExchRate,
                         Trans_Contra_Currency2_2 = i.GOExpHist_Entry22ExchCcy,
                         Trans_Fund2_2 = i.GOExpHist_Entry22Fund,
@@ -5008,7 +5020,7 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Customer3_1 = i.GOExpHist_Entry31Cust,
                         Trans_Account_Code3_1 = i.GOExpHist_Entry31Actcde,
                         Trans_Account_Name3_1 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde, ncDtlList, i.ExpenseDetailID),
-                        Trans_Account_Number3_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde),
+                        Trans_Account_Number3_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry31ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry31ActType)) ? i.GOExpHist_Entry31ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry31ActNo : "",
                         Trans_Exchange_Rate3_1 = i.GOExpHist_Entry31ExchRate,
                         Trans_Contra_Currency3_1 = i.GOExpHist_Entry31ExchCcy,
                         Trans_Fund3_1 = i.GOExpHist_Entry31Fund,
@@ -5024,7 +5036,7 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Customer3_2 = i.GOExpHist_Entry32Cust,
                         Trans_Account_Code3_2 = i.GOExpHist_Entry32Actcde,
                         Trans_Account_Name3_2 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde, ncDtlList, i.ExpenseDetailID),
-                        Trans_Account_Number3_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde),
+                        Trans_Account_Number3_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry32ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry32ActType)) ? i.GOExpHist_Entry32ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry32ActNo : "",
                         Trans_Exchange_Rate3_2 = i.GOExpHist_Entry32ExchRate,
                         Trans_Contra_Currency3_2 = i.GOExpHist_Entry32ExchCcy,
                         Trans_Fund3_2 = i.GOExpHist_Entry32Fund,
@@ -5040,7 +5052,7 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Customer4_1 = i.GOExpHist_Entry41Cust,
                         Trans_Account_Code4_1 = i.GOExpHist_Entry41Actcde,
                         Trans_Account_Name4_1 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde, ncDtlList, i.ExpenseDetailID),
-                        Trans_Account_Number4_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde),
+                        Trans_Account_Number4_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry41ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry41ActType)) ? i.GOExpHist_Entry41ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry41ActNo : "",
                         Trans_Exchange_Rate4_1 = i.GOExpHist_Entry41ExchRate,
                         Trans_Contra_Currency4_1 = i.GOExpHist_Entry41ExchCcy,
                         Trans_Fund4_1 = i.GOExpHist_Entry41Fund,
@@ -5056,7 +5068,7 @@ namespace ExpenseProcessingSystem.Services
                         Trans_Customer4_2 = i.GOExpHist_Entry42Cust,
                         Trans_Account_Code4_2 = i.GOExpHist_Entry42Actcde,
                         Trans_Account_Name4_2 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde, ncDtlList, i.ExpenseDetailID),
-                        Trans_Account_Number4_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde),
+                        Trans_Account_Number4_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry42ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry42ActType)) ? i.GOExpHist_Entry42ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry42ActNo : "",
                         Trans_Exchange_Rate4_2 = i.GOExpHist_Entry42ExchRate,
                         Trans_Contra_Currency4_2 = i.GOExpHist_Entry42ExchCcy,
                         Trans_Fund4_2 = i.GOExpHist_Entry42Fund,
@@ -5309,8 +5321,8 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Amount1_1 = i.GOExpHist_Entry11Amt,
                     Trans_Customer1_1 = i.GOExpHist_Entry11Cust,
                     Trans_Account_Code1_1 = i.GOExpHist_Entry11Actcde,
-                    Trans_Account_Name1_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                    Trans_Account_Number1_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde),
+                    Trans_Account_Name1_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde, i.GOExpHist_Entry11Ccy, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number1_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry11ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry11ActType)) ? i.GOExpHist_Entry11ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry11ActNo : "",
                     Trans_Exchange_Rate1_1 = i.GOExpHist_Entry11ExchRate,
                     Trans_Contra_Currency1_1 = i.GOExpHist_Entry11ExchCcy,
                     Trans_Fund1_1 = i.GOExpHist_Entry11Fund,
@@ -5325,8 +5337,8 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Amount1_2 = i.GOExpHist_Entry12Amt,
                     Trans_Customer1_2 = i.GOExpHist_Entry12Cust,
                     Trans_Account_Code1_2 = i.GOExpHist_Entry12Actcde,
-                    Trans_Account_Name1_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                    Trans_Account_Number1_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde),
+                    Trans_Account_Name1_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde, i.GOExpHist_Entry12Ccy, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number1_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry12ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry12ActType)) ? i.GOExpHist_Entry12ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry12ActNo : "",
                     Trans_Exchange_Rate1_2 = i.GOExpHist_Entry12ExchRate,
                     Trans_Contra_Currency1_2 = i.GOExpHist_Entry12ExchCcy,
                     Trans_Fund1_2 = i.GOExpHist_Entry12Fund,
@@ -5341,8 +5353,8 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Amount2_1 = i.GOExpHist_Entry21Amt,
                     Trans_Customer2_1 = i.GOExpHist_Entry21Cust,
                     Trans_Account_Code2_1 = i.GOExpHist_Entry21Actcde,
-                    Trans_Account_Name2_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                    Trans_Account_Number2_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde),
+                    Trans_Account_Name2_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde, i.GOExpHist_Entry21Ccy, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number2_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry21ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry21ActType)) ? i.GOExpHist_Entry21ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry21ActNo : "",
                     Trans_Exchange_Rate2_1 = i.GOExpHist_Entry21ExchRate,
                     Trans_Contra_Currency2_1 = i.GOExpHist_Entry21ExchCcy,
                     Trans_Fund2_1 = i.GOExpHist_Entry21Fund,
@@ -5357,8 +5369,8 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Amount2_2 = i.GOExpHist_Entry22Amt,
                     Trans_Customer2_2 = i.GOExpHist_Entry22Cust,
                     Trans_Account_Code2_2 = i.GOExpHist_Entry22Actcde,
-                    Trans_Account_Name2_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                    Trans_Account_Number2_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde),
+                    Trans_Account_Name2_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde, i.GOExpHist_Entry22Ccy, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number2_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry22ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry22ActType)) ? i.GOExpHist_Entry22ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry22ActNo : "",
                     Trans_Exchange_Rate2_2 = i.GOExpHist_Entry22ExchRate,
                     Trans_Contra_Currency2_2 = i.GOExpHist_Entry22ExchCcy,
                     Trans_Fund2_2 = i.GOExpHist_Entry22Fund,
@@ -5373,8 +5385,8 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Amount3_1 = i.GOExpHist_Entry31Amt,
                     Trans_Customer3_1 = i.GOExpHist_Entry31Cust,
                     Trans_Account_Code3_1 = i.GOExpHist_Entry31Actcde,
-                    Trans_Account_Name3_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                    Trans_Account_Number3_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde),
+                    Trans_Account_Name3_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde, i.GOExpHist_Entry31Ccy, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number3_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry31ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry31ActType)) ? i.GOExpHist_Entry31ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry31ActNo : "",
                     Trans_Exchange_Rate3_1 = i.GOExpHist_Entry31ExchRate,
                     Trans_Contra_Currency3_1 = i.GOExpHist_Entry31ExchCcy,
                     Trans_Fund3_1 = i.GOExpHist_Entry31Fund,
@@ -5389,8 +5401,8 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Amount3_2 = i.GOExpHist_Entry32Amt,
                     Trans_Customer3_2 = i.GOExpHist_Entry32Cust,
                     Trans_Account_Code3_2 = i.GOExpHist_Entry32Actcde,
-                    Trans_Account_Name3_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                    Trans_Account_Number3_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde),
+                    Trans_Account_Name3_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde, i.GOExpHist_Entry32Ccy, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number3_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry32ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry32ActType)) ? i.GOExpHist_Entry32ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry32ActNo : "",
                     Trans_Exchange_Rate3_2 = i.GOExpHist_Entry32ExchRate,
                     Trans_Contra_Currency3_2 = i.GOExpHist_Entry32ExchCcy,
                     Trans_Fund3_2 = i.GOExpHist_Entry32Fund,
@@ -5405,8 +5417,8 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Amount4_1 = i.GOExpHist_Entry41Amt,
                     Trans_Customer4_1 = i.GOExpHist_Entry41Cust,
                     Trans_Account_Code4_1 = i.GOExpHist_Entry41Actcde,
-                    Trans_Account_Name4_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                    Trans_Account_Number4_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde),
+                    Trans_Account_Name4_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde, i.GOExpHist_Entry41Ccy, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number4_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry41ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry41ActType)) ? i.GOExpHist_Entry41ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry41ActNo : "",
                     Trans_Exchange_Rate4_1 = i.GOExpHist_Entry41ExchRate,
                     Trans_Contra_Currency4_1 = i.GOExpHist_Entry41ExchCcy,
                     Trans_Fund4_1 = i.GOExpHist_Entry41Fund,
@@ -5421,8 +5433,8 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Amount4_2 = i.GOExpHist_Entry42Amt,
                     Trans_Customer4_2 = i.GOExpHist_Entry42Cust,
                     Trans_Account_Code4_2 = i.GOExpHist_Entry42Actcde,
-                    Trans_Account_Name4_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                    Trans_Account_Number4_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde),
+                    Trans_Account_Name4_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde, i.GOExpHist_Entry42Ccy, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number4_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry42ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry42ActType)) ? i.GOExpHist_Entry42ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry42ActNo : "",
                     Trans_Exchange_Rate4_2 = i.GOExpHist_Entry42ExchRate,
                     Trans_Contra_Currency4_2 = i.GOExpHist_Entry42ExchCcy,
                     Trans_Fund4_2 = i.GOExpHist_Entry42Fund,
@@ -5634,7 +5646,7 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Customer1_1 = i.GOExpHist_Entry11Cust,
                     Trans_Account_Code1_1 = i.GOExpHist_Entry11Actcde,
                     Trans_Account_Name1_1 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde, ncDtlList, i.ExpenseDetailID),
-                    Trans_Account_Number1_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde),
+                    Trans_Account_Number1_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry11ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry11ActType)) ? i.GOExpHist_Entry11ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry11ActNo : "",
                     Trans_Exchange_Rate1_1 = i.GOExpHist_Entry11ExchRate,
                     Trans_Contra_Currency1_1 = i.GOExpHist_Entry11ExchCcy,
                     Trans_Fund1_1 = i.GOExpHist_Entry11Fund,
@@ -5650,7 +5662,7 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Customer1_2 = i.GOExpHist_Entry12Cust,
                     Trans_Account_Code1_2 = i.GOExpHist_Entry12Actcde,
                     Trans_Account_Name1_2 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde, ncDtlList, i.ExpenseDetailID),
-                    Trans_Account_Number1_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde),
+                    Trans_Account_Number1_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry12ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry12ActType)) ? i.GOExpHist_Entry12ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry12ActNo : "",
                     Trans_Exchange_Rate1_2 = i.GOExpHist_Entry12ExchRate,
                     Trans_Contra_Currency1_2 = i.GOExpHist_Entry12ExchCcy,
                     Trans_Fund1_2 = i.GOExpHist_Entry12Fund,
@@ -5666,7 +5678,7 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Customer2_1 = i.GOExpHist_Entry21Cust,
                     Trans_Account_Code2_1 = i.GOExpHist_Entry21Actcde,
                     Trans_Account_Name2_1 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde, ncDtlList, i.ExpenseDetailID),
-                    Trans_Account_Number2_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde),
+                    Trans_Account_Number2_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry21ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry21ActType)) ? i.GOExpHist_Entry21ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry21ActNo : "",
                     Trans_Exchange_Rate2_1 = i.GOExpHist_Entry21ExchRate,
                     Trans_Contra_Currency2_1 = i.GOExpHist_Entry21ExchCcy,
                     Trans_Fund2_1 = i.GOExpHist_Entry21Fund,
@@ -5682,7 +5694,7 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Customer2_2 = i.GOExpHist_Entry22Cust,
                     Trans_Account_Code2_2 = i.GOExpHist_Entry22Actcde,
                     Trans_Account_Name2_2 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde, ncDtlList, i.ExpenseDetailID),
-                    Trans_Account_Number2_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde),
+                    Trans_Account_Number2_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry22ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry22ActType)) ? i.GOExpHist_Entry22ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry22ActNo : "",
                     Trans_Exchange_Rate2_2 = i.GOExpHist_Entry22ExchRate,
                     Trans_Contra_Currency2_2 = i.GOExpHist_Entry22ExchCcy,
                     Trans_Fund2_2 = i.GOExpHist_Entry22Fund,
@@ -5698,7 +5710,7 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Customer3_1 = i.GOExpHist_Entry31Cust,
                     Trans_Account_Code3_1 = i.GOExpHist_Entry31Actcde,
                     Trans_Account_Name3_1 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde, ncDtlList, i.ExpenseDetailID),
-                    Trans_Account_Number3_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde),
+                    Trans_Account_Number3_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry31ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry31ActType)) ? i.GOExpHist_Entry31ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry31ActNo : "",
                     Trans_Exchange_Rate3_1 = i.GOExpHist_Entry31ExchRate,
                     Trans_Contra_Currency3_1 = i.GOExpHist_Entry31ExchCcy,
                     Trans_Fund3_1 = i.GOExpHist_Entry31Fund,
@@ -5714,7 +5726,7 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Customer3_2 = i.GOExpHist_Entry32Cust,
                     Trans_Account_Code3_2 = i.GOExpHist_Entry32Actcde,
                     Trans_Account_Name3_2 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde, ncDtlList, i.ExpenseDetailID),
-                    Trans_Account_Number3_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde),
+                    Trans_Account_Number3_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry32ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry32ActType)) ? i.GOExpHist_Entry32ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry32ActNo : "",
                     Trans_Exchange_Rate3_2 = i.GOExpHist_Entry32ExchRate,
                     Trans_Contra_Currency3_2 = i.GOExpHist_Entry32ExchCcy,
                     Trans_Fund3_2 = i.GOExpHist_Entry32Fund,
@@ -5730,7 +5742,7 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Customer4_1 = i.GOExpHist_Entry41Cust,
                     Trans_Account_Code4_1 = i.GOExpHist_Entry41Actcde,
                     Trans_Account_Name4_1 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde, ncDtlList, i.ExpenseDetailID),
-                    Trans_Account_Number4_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde),
+                    Trans_Account_Number4_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry41ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry41ActType)) ? i.GOExpHist_Entry41ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry41ActNo : "",
                     Trans_Exchange_Rate4_1 = i.GOExpHist_Entry41ExchRate,
                     Trans_Contra_Currency4_1 = i.GOExpHist_Entry41ExchCcy,
                     Trans_Fund4_1 = i.GOExpHist_Entry41Fund,
@@ -5746,7 +5758,7 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Customer4_2 = i.GOExpHist_Entry42Cust,
                     Trans_Account_Code4_2 = i.GOExpHist_Entry42Actcde,
                     Trans_Account_Name4_2 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde, ncDtlList, i.ExpenseDetailID),
-                    Trans_Account_Number4_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde),
+                    Trans_Account_Number4_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry42ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry42ActType)) ? i.GOExpHist_Entry42ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry42ActNo : "",
                     Trans_Exchange_Rate4_2 = i.GOExpHist_Entry42ExchRate,
                     Trans_Contra_Currency4_2 = i.GOExpHist_Entry42ExchCcy,
                     Trans_Fund4_2 = i.GOExpHist_Entry42Fund,
@@ -6356,8 +6368,8 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Amount1_1 = i.GOExpHist_Entry11Amt,
                     Trans_Customer1_1 = i.GOExpHist_Entry11Cust,
                     Trans_Account_Code1_1 = i.GOExpHist_Entry11Actcde,
-                    Trans_Account_Name1_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                    Trans_Account_Number1_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde),
+                    Trans_Account_Name1_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde, i.GOExpHist_Entry11Ccy, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number1_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry11ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry11ActType)) ? i.GOExpHist_Entry11ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry11ActNo : "",
                     Trans_Exchange_Rate1_1 = i.GOExpHist_Entry11ExchRate,
                     Trans_Contra_Currency1_1 = i.GOExpHist_Entry11ExchCcy,
                     Trans_Fund1_1 = i.GOExpHist_Entry11Fund,
@@ -6372,8 +6384,8 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Amount1_2 = i.GOExpHist_Entry12Amt,
                     Trans_Customer1_2 = i.GOExpHist_Entry12Cust,
                     Trans_Account_Code1_2 = i.GOExpHist_Entry12Actcde,
-                    Trans_Account_Name1_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                    Trans_Account_Number1_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde),
+                    Trans_Account_Name1_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde, i.GOExpHist_Entry12Ccy, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number1_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry12ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry12ActType)) ? i.GOExpHist_Entry12ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry12ActNo : "",
                     Trans_Exchange_Rate1_2 = i.GOExpHist_Entry12ExchRate,
                     Trans_Contra_Currency1_2 = i.GOExpHist_Entry12ExchCcy,
                     Trans_Fund1_2 = i.GOExpHist_Entry12Fund,
@@ -6388,8 +6400,8 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Amount2_1 = i.GOExpHist_Entry21Amt,
                     Trans_Customer2_1 = i.GOExpHist_Entry21Cust,
                     Trans_Account_Code2_1 = i.GOExpHist_Entry21Actcde,
-                    Trans_Account_Name2_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                    Trans_Account_Number2_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde),
+                    Trans_Account_Name2_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde, i.GOExpHist_Entry21Ccy, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number2_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry21ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry21ActType)) ? i.GOExpHist_Entry21ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry21ActNo : "",
                     Trans_Exchange_Rate2_1 = i.GOExpHist_Entry21ExchRate,
                     Trans_Contra_Currency2_1 = i.GOExpHist_Entry21ExchCcy,
                     Trans_Fund2_1 = i.GOExpHist_Entry21Fund,
@@ -6404,8 +6416,8 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Amount2_2 = i.GOExpHist_Entry22Amt,
                     Trans_Customer2_2 = i.GOExpHist_Entry22Cust,
                     Trans_Account_Code2_2 = i.GOExpHist_Entry22Actcde,
-                    Trans_Account_Name2_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                    Trans_Account_Number2_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde),
+                    Trans_Account_Name2_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde, i.GOExpHist_Entry22Ccy, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number2_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry22ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry22ActType)) ? i.GOExpHist_Entry22ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry22ActNo : "",
                     Trans_Exchange_Rate2_2 = i.GOExpHist_Entry22ExchRate,
                     Trans_Contra_Currency2_2 = i.GOExpHist_Entry22ExchCcy,
                     Trans_Fund2_2 = i.GOExpHist_Entry22Fund,
@@ -6420,8 +6432,8 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Amount3_1 = i.GOExpHist_Entry31Amt,
                     Trans_Customer3_1 = i.GOExpHist_Entry31Cust,
                     Trans_Account_Code3_1 = i.GOExpHist_Entry31Actcde,
-                    Trans_Account_Name3_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                    Trans_Account_Number3_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde),
+                    Trans_Account_Name3_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde, i.GOExpHist_Entry31Ccy, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number3_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry31ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry31ActType)) ? i.GOExpHist_Entry31ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry31ActNo : "",
                     Trans_Exchange_Rate3_1 = i.GOExpHist_Entry31ExchRate,
                     Trans_Contra_Currency3_1 = i.GOExpHist_Entry31ExchCcy,
                     Trans_Fund3_1 = i.GOExpHist_Entry31Fund,
@@ -6436,8 +6448,8 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Amount3_2 = i.GOExpHist_Entry32Amt,
                     Trans_Customer3_2 = i.GOExpHist_Entry32Cust,
                     Trans_Account_Code3_2 = i.GOExpHist_Entry32Actcde,
-                    Trans_Account_Name3_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                    Trans_Account_Number3_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde),
+                    Trans_Account_Name3_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde, i.GOExpHist_Entry32Ccy, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number3_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry32ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry32ActType)) ? i.GOExpHist_Entry32ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry32ActNo : "",
                     Trans_Exchange_Rate3_2 = i.GOExpHist_Entry32ExchRate,
                     Trans_Contra_Currency3_2 = i.GOExpHist_Entry32ExchCcy,
                     Trans_Fund3_2 = i.GOExpHist_Entry32Fund,
@@ -6452,8 +6464,8 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Amount4_1 = i.GOExpHist_Entry41Amt,
                     Trans_Customer4_1 = i.GOExpHist_Entry41Cust,
                     Trans_Account_Code4_1 = i.GOExpHist_Entry41Actcde,
-                    Trans_Account_Name4_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                    Trans_Account_Number4_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde),
+                    Trans_Account_Name4_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde, i.GOExpHist_Entry41Ccy, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number4_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry41ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry41ActType)) ? i.GOExpHist_Entry41ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry41ActNo : "",
                     Trans_Exchange_Rate4_1 = i.GOExpHist_Entry41ExchRate,
                     Trans_Contra_Currency4_1 = i.GOExpHist_Entry41ExchCcy,
                     Trans_Fund4_1 = i.GOExpHist_Entry41Fund,
@@ -6468,8 +6480,8 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Amount4_2 = i.GOExpHist_Entry42Amt,
                     Trans_Customer4_2 = i.GOExpHist_Entry42Cust,
                     Trans_Account_Code4_2 = i.GOExpHist_Entry42Actcde,
-                    Trans_Account_Name4_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                    Trans_Account_Number4_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde),
+                    Trans_Account_Name4_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde, i.GOExpHist_Entry42Ccy, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number4_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry42ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry42ActType)) ? i.GOExpHist_Entry42ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry42ActNo : "",
                     Trans_Exchange_Rate4_2 = i.GOExpHist_Entry42ExchRate,
                     Trans_Contra_Currency4_2 = i.GOExpHist_Entry42ExchCcy,
                     Trans_Fund4_2 = i.GOExpHist_Entry42Fund,
@@ -6677,8 +6689,8 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Amount1_1 = i.GOExpHist_Entry11Amt,
                     Trans_Customer1_1 = i.GOExpHist_Entry11Cust,
                     Trans_Account_Code1_1 = i.GOExpHist_Entry11Actcde,
-                    Trans_Account_Name1_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde, 0, 0, 0, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                    Trans_Account_Number1_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde),
+                    Trans_Account_Name1_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde, i.GOExpHist_Entry11Ccy, 0, 0, 0, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number1_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry11ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry11ActType)) ? i.GOExpHist_Entry11ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry11ActNo : "",
                     Trans_Exchange_Rate1_1 = i.GOExpHist_Entry11ExchRate,
                     Trans_Contra_Currency1_1 = i.GOExpHist_Entry11ExchCcy,
                     Trans_Fund1_1 = i.GOExpHist_Entry11Fund,
@@ -6693,8 +6705,8 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Amount1_2 = i.GOExpHist_Entry12Amt,
                     Trans_Customer1_2 = i.GOExpHist_Entry12Cust,
                     Trans_Account_Code1_2 = i.GOExpHist_Entry12Actcde,
-                    Trans_Account_Name1_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde, 0, 0, 0, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                    Trans_Account_Number1_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde),
+                    Trans_Account_Name1_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde, i.GOExpHist_Entry12Ccy, 0, 0, 0, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number1_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry12ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry12ActType)) ? i.GOExpHist_Entry12ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry12ActNo : "",
                     Trans_Exchange_Rate1_2 = i.GOExpHist_Entry12ExchRate,
                     Trans_Contra_Currency1_2 = i.GOExpHist_Entry12ExchCcy,
                     Trans_Fund1_2 = i.GOExpHist_Entry12Fund,
@@ -6709,8 +6721,8 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Amount2_1 = i.GOExpHist_Entry21Amt,
                     Trans_Customer2_1 = i.GOExpHist_Entry21Cust,
                     Trans_Account_Code2_1 = i.GOExpHist_Entry21Actcde,
-                    Trans_Account_Name2_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde, 0, 0, 0, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                    Trans_Account_Number2_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde),
+                    Trans_Account_Name2_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde, i.GOExpHist_Entry21Ccy, 0, 0, 0, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number2_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry21ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry21ActType)) ? i.GOExpHist_Entry21ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry21ActNo : "",
                     Trans_Exchange_Rate2_1 = i.GOExpHist_Entry21ExchRate,
                     Trans_Contra_Currency2_1 = i.GOExpHist_Entry21ExchCcy,
                     Trans_Fund2_1 = i.GOExpHist_Entry21Fund,
@@ -6725,8 +6737,8 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Amount2_2 = i.GOExpHist_Entry22Amt,
                     Trans_Customer2_2 = i.GOExpHist_Entry22Cust,
                     Trans_Account_Code2_2 = i.GOExpHist_Entry22Actcde,
-                    Trans_Account_Name2_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde, 0, 0, 0, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                    Trans_Account_Number2_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde),
+                    Trans_Account_Name2_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde, i.GOExpHist_Entry22Ccy, 0, 0, 0, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number2_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry22ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry22ActType)) ? i.GOExpHist_Entry22ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry22ActNo : "",
                     Trans_Exchange_Rate2_2 = i.GOExpHist_Entry22ExchRate,
                     Trans_Contra_Currency2_2 = i.GOExpHist_Entry22ExchCcy,
                     Trans_Fund2_2 = i.GOExpHist_Entry22Fund,
@@ -6741,8 +6753,8 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Amount3_1 = i.GOExpHist_Entry31Amt,
                     Trans_Customer3_1 = i.GOExpHist_Entry31Cust,
                     Trans_Account_Code3_1 = i.GOExpHist_Entry31Actcde,
-                    Trans_Account_Name3_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde, 0, 0, 0, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                    Trans_Account_Number3_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde),
+                    Trans_Account_Name3_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde, i.GOExpHist_Entry31Ccy, 0, 0, 0, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number3_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry31ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry31ActType)) ? i.GOExpHist_Entry31ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry31ActNo : "",
                     Trans_Exchange_Rate3_1 = i.GOExpHist_Entry31ExchRate,
                     Trans_Contra_Currency3_1 = i.GOExpHist_Entry31ExchCcy,
                     Trans_Fund3_1 = i.GOExpHist_Entry31Fund,
@@ -6757,8 +6769,8 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Amount3_2 = i.GOExpHist_Entry32Amt,
                     Trans_Customer3_2 = i.GOExpHist_Entry32Cust,
                     Trans_Account_Code3_2 = i.GOExpHist_Entry32Actcde,
-                    Trans_Account_Name3_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde, 0, 0, 0, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                    Trans_Account_Number3_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde),
+                    Trans_Account_Name3_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde, i.GOExpHist_Entry32Ccy, 0, 0, 0, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number3_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry32ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry32ActType)) ? i.GOExpHist_Entry32ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry32ActNo : "",
                     Trans_Exchange_Rate3_2 = i.GOExpHist_Entry32ExchRate,
                     Trans_Contra_Currency3_2 = i.GOExpHist_Entry32ExchCcy,
                     Trans_Fund3_2 = i.GOExpHist_Entry32Fund,
@@ -6773,8 +6785,8 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Amount4_1 = i.GOExpHist_Entry41Amt,
                     Trans_Customer4_1 = i.GOExpHist_Entry41Cust,
                     Trans_Account_Code4_1 = i.GOExpHist_Entry41Actcde,
-                    Trans_Account_Name4_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde, 0, 0, 0, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                    Trans_Account_Number4_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde),
+                    Trans_Account_Name4_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde, i.GOExpHist_Entry41Ccy, 0, 0, 0, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number4_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry41ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry41ActType)) ? i.GOExpHist_Entry41ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry41ActNo : "",
                     Trans_Exchange_Rate4_1 = i.GOExpHist_Entry41ExchRate,
                     Trans_Contra_Currency4_1 = i.GOExpHist_Entry41ExchCcy,
                     Trans_Fund4_1 = i.GOExpHist_Entry41Fund,
@@ -6789,8 +6801,8 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Amount4_2 = i.GOExpHist_Entry42Amt,
                     Trans_Customer4_2 = i.GOExpHist_Entry42Cust,
                     Trans_Account_Code4_2 = i.GOExpHist_Entry42Actcde,
-                    Trans_Account_Name4_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde, 0, 0, 0, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                    Trans_Account_Number4_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde),
+                    Trans_Account_Name4_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde, i.GOExpHist_Entry42Ccy, 0, 0, 0, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number4_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry42ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry42ActType)) ? i.GOExpHist_Entry42ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry42ActNo : "",
                     Trans_Exchange_Rate4_2 = i.GOExpHist_Entry42ExchRate,
                     Trans_Contra_Currency4_2 = i.GOExpHist_Entry42ExchCcy,
                     Trans_Fund4_2 = i.GOExpHist_Entry42Fund,
@@ -6996,7 +7008,7 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Customer1_1 = i.GOExpHist_Entry11Cust,
                     Trans_Account_Code1_1 = i.GOExpHist_Entry11Actcde,
                     Trans_Account_Name1_1 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde, ncDtlList, i.ExpenseDetailID),
-                    Trans_Account_Number1_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde),
+                    Trans_Account_Number1_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry11ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry11ActType)) ? i.GOExpHist_Entry11ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry11ActNo : "",
                     Trans_Exchange_Rate1_1 = i.GOExpHist_Entry11ExchRate,
                     Trans_Contra_Currency1_1 = i.GOExpHist_Entry11ExchCcy,
                     Trans_Fund1_1 = i.GOExpHist_Entry11Fund,
@@ -7012,7 +7024,7 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Customer1_2 = i.GOExpHist_Entry12Cust,
                     Trans_Account_Code1_2 = i.GOExpHist_Entry12Actcde,
                     Trans_Account_Name1_2 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde, ncDtlList, i.ExpenseDetailID),
-                    Trans_Account_Number1_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde),
+                    Trans_Account_Number1_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry12ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry12ActType)) ? i.GOExpHist_Entry12ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry12ActNo : "",
                     Trans_Exchange_Rate1_2 = i.GOExpHist_Entry12ExchRate,
                     Trans_Contra_Currency1_2 = i.GOExpHist_Entry12ExchCcy,
                     Trans_Fund1_2 = i.GOExpHist_Entry12Fund,
@@ -7028,7 +7040,7 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Customer2_1 = i.GOExpHist_Entry21Cust,
                     Trans_Account_Code2_1 = i.GOExpHist_Entry21Actcde,
                     Trans_Account_Name2_1 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde, ncDtlList, i.ExpenseDetailID),
-                    Trans_Account_Number2_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde),
+                    Trans_Account_Number2_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry21ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry21ActType)) ? i.GOExpHist_Entry21ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry21ActNo : "",
                     Trans_Exchange_Rate2_1 = i.GOExpHist_Entry21ExchRate,
                     Trans_Contra_Currency2_1 = i.GOExpHist_Entry21ExchCcy,
                     Trans_Fund2_1 = i.GOExpHist_Entry21Fund,
@@ -7044,7 +7056,7 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Customer2_2 = i.GOExpHist_Entry22Cust,
                     Trans_Account_Code2_2 = i.GOExpHist_Entry22Actcde,
                     Trans_Account_Name2_2 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde, ncDtlList, i.ExpenseDetailID),
-                    Trans_Account_Number2_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde),
+                    Trans_Account_Number2_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry22ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry22ActType)) ? i.GOExpHist_Entry22ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry22ActNo : "",
                     Trans_Exchange_Rate2_2 = i.GOExpHist_Entry22ExchRate,
                     Trans_Contra_Currency2_2 = i.GOExpHist_Entry22ExchCcy,
                     Trans_Fund2_2 = i.GOExpHist_Entry22Fund,
@@ -7060,7 +7072,7 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Customer3_1 = i.GOExpHist_Entry31Cust,
                     Trans_Account_Code3_1 = i.GOExpHist_Entry31Actcde,
                     Trans_Account_Name3_1 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde, ncDtlList, i.ExpenseDetailID),
-                    Trans_Account_Number3_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde),
+                    Trans_Account_Number3_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry31ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry31ActType)) ? i.GOExpHist_Entry31ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry31ActNo : "",
                     Trans_Exchange_Rate3_1 = i.GOExpHist_Entry31ExchRate,
                     Trans_Contra_Currency3_1 = i.GOExpHist_Entry31ExchCcy,
                     Trans_Fund3_1 = i.GOExpHist_Entry31Fund,
@@ -7076,7 +7088,7 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Customer3_2 = i.GOExpHist_Entry32Cust,
                     Trans_Account_Code3_2 = i.GOExpHist_Entry32Actcde,
                     Trans_Account_Name3_2 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde, ncDtlList, i.ExpenseDetailID),
-                    Trans_Account_Number3_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde),
+                    Trans_Account_Number3_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry32ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry32ActType)) ? i.GOExpHist_Entry32ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry32ActNo : "",
                     Trans_Exchange_Rate3_2 = i.GOExpHist_Entry32ExchRate,
                     Trans_Contra_Currency3_2 = i.GOExpHist_Entry32ExchCcy,
                     Trans_Fund3_2 = i.GOExpHist_Entry32Fund,
@@ -7092,7 +7104,7 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Customer4_1 = i.GOExpHist_Entry41Cust,
                     Trans_Account_Code4_1 = i.GOExpHist_Entry41Actcde,
                     Trans_Account_Name4_1 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde, ncDtlList, i.ExpenseDetailID),
-                    Trans_Account_Number4_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde),
+                    Trans_Account_Number4_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry41ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry41ActType)) ? i.GOExpHist_Entry41ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry41ActNo : "",
                     Trans_Exchange_Rate4_1 = i.GOExpHist_Entry41ExchRate,
                     Trans_Contra_Currency4_1 = i.GOExpHist_Entry41ExchCcy,
                     Trans_Fund4_1 = i.GOExpHist_Entry41Fund,
@@ -7108,7 +7120,7 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Customer4_2 = i.GOExpHist_Entry42Cust,
                     Trans_Account_Code4_2 = i.GOExpHist_Entry42Actcde,
                     Trans_Account_Name4_2 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde, ncDtlList, i.ExpenseDetailID),
-                    Trans_Account_Number4_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde),
+                    Trans_Account_Number4_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry42ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry42ActType)) ? i.GOExpHist_Entry42ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry42ActNo : "",
                     Trans_Exchange_Rate4_2 = i.GOExpHist_Entry42ExchRate,
                     Trans_Contra_Currency4_2 = i.GOExpHist_Entry42ExchCcy,
                     Trans_Fund4_2 = i.GOExpHist_Entry42Fund,
@@ -7412,6 +7424,7 @@ namespace ExpenseProcessingSystem.Services
                            hist.GOExpHist_Id,
                            hist.GOExpHist_ValueDate,
                            hist.GOExpHist_Remarks,
+                           hist.GOExpHist_Branchno,
                            hist.GOExpHist_Entry11Type,
                            hist.GOExpHist_Entry11Amt,
                            hist.GOExpHist_Entry11Actcde,
@@ -7481,35 +7494,35 @@ namespace ExpenseProcessingSystem.Services
                     Trans_DebitCredit1_1 = i.GOExpHist_Entry11Type,
                     Trans_Amount1_1 = i.GOExpHist_Entry11Amt,
                     Trans_Account_Code1_1 = i.GOExpHist_Entry11Actcde,
-                    Trans_Account_Number1_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde),
+                    Trans_Account_Number1_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry11ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry11ActType)) ? i.GOExpHist_Entry11ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry11ActNo : "",
                     Trans_DebitCredit1_2 = i.GOExpHist_Entry12Type,
                     Trans_Amount1_2 = i.GOExpHist_Entry12Amt,
                     Trans_Account_Code1_2 = i.GOExpHist_Entry12Actcde,
-                    Trans_Account_Number1_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde),
+                    Trans_Account_Number1_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry12ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry12ActType)) ? i.GOExpHist_Entry12ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry12ActNo : "",
                     Trans_DebitCredit2_1 = i.GOExpHist_Entry21Type,
                     Trans_Amount2_1 = i.GOExpHist_Entry21Amt,
                     Trans_Account_Code2_1 = i.GOExpHist_Entry21Actcde,
-                    Trans_Account_Number2_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde),
+                    Trans_Account_Number2_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry21ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry21ActType)) ? i.GOExpHist_Entry21ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry21ActNo : "",
                     Trans_DebitCredit2_2 = i.GOExpHist_Entry22Type,
                     Trans_Amount2_2 = i.GOExpHist_Entry22Amt,
                     Trans_Account_Code2_2 = i.GOExpHist_Entry22Actcde,
-                    Trans_Account_Number2_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde),
+                    Trans_Account_Number2_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry22ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry22ActType)) ? i.GOExpHist_Entry22ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry22ActNo : "",
                     Trans_DebitCredit3_1 = i.GOExpHist_Entry31Type,
                     Trans_Amount3_1 = i.GOExpHist_Entry31Amt,
                     Trans_Account_Code3_1 = i.GOExpHist_Entry31Actcde,
-                    Trans_Account_Number3_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde),
+                    Trans_Account_Number3_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry31ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry31ActType)) ? i.GOExpHist_Entry31ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry31ActNo : "",
                     Trans_DebitCredit3_2 = i.GOExpHist_Entry32Type,
                     Trans_Amount3_2 = i.GOExpHist_Entry32Amt,
                     Trans_Account_Code3_2 = i.GOExpHist_Entry32Actcde,
-                    Trans_Account_Number3_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde),
+                    Trans_Account_Number3_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry32ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry32ActType)) ? i.GOExpHist_Entry32ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry32ActNo : "",
                     Trans_DebitCredit4_1 = i.GOExpHist_Entry41Type,
                     Trans_Amount4_1 = i.GOExpHist_Entry41Amt,
                     Trans_Account_Code4_1 = i.GOExpHist_Entry41Actcde,
-                    Trans_Account_Number4_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde),
+                    Trans_Account_Number4_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry41ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry41ActType)) ? i.GOExpHist_Entry41ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry41ActNo : "",
                     Trans_DebitCredit4_2 = i.GOExpHist_Entry42Type,
                     Trans_Amount4_2 = i.GOExpHist_Entry42Amt,
                     Trans_Account_Code4_2 = i.GOExpHist_Entry42Actcde,
-                    Trans_Account_Number4_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde),
+                    Trans_Account_Number4_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry42ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry42ActType)) ? i.GOExpHist_Entry42ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry42ActNo : "",
                     TransTL_ID = i.TL_ID,
                     TransTL_GoExpress_ID = i.TL_GoExpress_ID,
                     TransTL_TransID = i.TL_TransID
@@ -7522,7 +7535,7 @@ namespace ExpenseProcessingSystem.Services
                        join liq in _context.LiquidationEntryDetails on hist.ExpenseEntryID equals liq.ExpenseEntryModel.Expense_ID
                        join trans in _context.ExpenseTransLists on hist.GOExpHist_Id equals trans.TL_GoExpHist_ID
                        join expDtl in _context.ExpenseEntryDetails on hist.ExpenseDetailID equals expDtl.ExpDtl_ID
-                       where trans.TL_Liquidation == true && statusTrans.Contains(trans.TL_StatusID)
+                       where trans.TL_Liquidation == true && status.Contains(liq.Liq_Status)
                        select new
                        {
                            liq.ExpenseEntryModel.Expense_ID,
@@ -7538,6 +7551,7 @@ namespace ExpenseProcessingSystem.Services
                            hist.GOExpHist_Id,
                            hist.GOExpHist_ValueDate,
                            hist.GOExpHist_Remarks,
+                           hist.GOExpHist_Branchno,
                            hist.GOExpHist_Entry11Type,
                            hist.GOExpHist_Entry11Amt,
                            hist.GOExpHist_Entry11Actcde,
@@ -7606,35 +7620,35 @@ namespace ExpenseProcessingSystem.Services
                     Trans_DebitCredit1_1 = i.GOExpHist_Entry11Type,
                     Trans_Amount1_1 = i.GOExpHist_Entry11Amt,
                     Trans_Account_Code1_1 = i.GOExpHist_Entry11Actcde,
-                    Trans_Account_Number1_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde),
+                    Trans_Account_Number1_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry11ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry11ActType)) ? i.GOExpHist_Entry11ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry11ActNo : "",
                     Trans_DebitCredit1_2 = i.GOExpHist_Entry12Type,
                     Trans_Amount1_2 = i.GOExpHist_Entry12Amt,
                     Trans_Account_Code1_2 = i.GOExpHist_Entry12Actcde,
-                    Trans_Account_Number1_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde),
+                    Trans_Account_Number1_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry12ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry12ActType)) ? i.GOExpHist_Entry12ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry12ActNo : "",
                     Trans_DebitCredit2_1 = i.GOExpHist_Entry21Type,
                     Trans_Amount2_1 = i.GOExpHist_Entry21Amt,
                     Trans_Account_Code2_1 = i.GOExpHist_Entry21Actcde,
-                    Trans_Account_Number2_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde),
+                    Trans_Account_Number2_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry21ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry21ActType)) ? i.GOExpHist_Entry21ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry21ActNo : "",
                     Trans_DebitCredit2_2 = i.GOExpHist_Entry22Type,
                     Trans_Amount2_2 = i.GOExpHist_Entry22Amt,
                     Trans_Account_Code2_2 = i.GOExpHist_Entry22Actcde,
-                    Trans_Account_Number2_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde),
+                    Trans_Account_Number2_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry22ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry22ActType)) ? i.GOExpHist_Entry22ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry22ActNo : "",
                     Trans_DebitCredit3_1 = i.GOExpHist_Entry31Type,
                     Trans_Amount3_1 = i.GOExpHist_Entry31Amt,
                     Trans_Account_Code3_1 = i.GOExpHist_Entry31Actcde,
-                    Trans_Account_Number3_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde),
+                    Trans_Account_Number3_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry31ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry31ActType)) ? i.GOExpHist_Entry31ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry31ActNo : "",
                     Trans_DebitCredit3_2 = i.GOExpHist_Entry32Type,
                     Trans_Amount3_2 = i.GOExpHist_Entry32Amt,
                     Trans_Account_Code3_2 = i.GOExpHist_Entry32Actcde,
-                    Trans_Account_Number3_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde),
+                    Trans_Account_Number3_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry32ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry32ActType)) ? i.GOExpHist_Entry32ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry32ActNo : "",
                     Trans_DebitCredit4_1 = i.GOExpHist_Entry41Type,
                     Trans_Amount4_1 = i.GOExpHist_Entry41Amt,
                     Trans_Account_Code4_1 = i.GOExpHist_Entry41Actcde,
-                    Trans_Account_Number4_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde),
+                    Trans_Account_Number4_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry41ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry41ActType)) ? i.GOExpHist_Entry41ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry41ActNo : "",
                     Trans_DebitCredit4_2 = i.GOExpHist_Entry42Type,
                     Trans_Amount4_2 = i.GOExpHist_Entry42Amt,
                     Trans_Account_Code4_2 = i.GOExpHist_Entry42Actcde,
-                    Trans_Account_Number4_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde),
+                    Trans_Account_Number4_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry42ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry42ActType)) ? i.GOExpHist_Entry42ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry42ActNo : "",
                     TransTL_ID = i.TL_ID,
                     TransTL_GoExpress_ID = i.TL_GoExpress_ID,
                     TransTL_TransID = i.TL_TransID
@@ -7666,6 +7680,7 @@ namespace ExpenseProcessingSystem.Services
                            hist.GOExpHist_Id,
                            hist.GOExpHist_ValueDate,
                            hist.GOExpHist_Remarks,
+                           hist.GOExpHist_Branchno,
                            hist.GOExpHist_Entry11Type,
                            hist.GOExpHist_Entry11Amt,
                            hist.GOExpHist_Entry11Actcde,
@@ -7734,35 +7749,35 @@ namespace ExpenseProcessingSystem.Services
                     Trans_DebitCredit1_1 = i.GOExpHist_Entry11Type,
                     Trans_Amount1_1 = i.GOExpHist_Entry11Amt,
                     Trans_Account_Code1_1 = i.GOExpHist_Entry11Actcde,
-                    Trans_Account_Number1_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde),
+                    Trans_Account_Number1_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry11ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry11ActType)) ? i.GOExpHist_Entry11ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry11ActNo : "",
                     Trans_DebitCredit1_2 = i.GOExpHist_Entry12Type,
                     Trans_Amount1_2 = i.GOExpHist_Entry12Amt,
                     Trans_Account_Code1_2 = i.GOExpHist_Entry12Actcde,
-                    Trans_Account_Number1_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde),
+                    Trans_Account_Number1_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry12ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry12ActType)) ? i.GOExpHist_Entry12ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry12ActNo : "",
                     Trans_DebitCredit2_1 = i.GOExpHist_Entry21Type,
                     Trans_Amount2_1 = i.GOExpHist_Entry21Amt,
                     Trans_Account_Code2_1 = i.GOExpHist_Entry21Actcde,
-                    Trans_Account_Number2_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde),
+                    Trans_Account_Number2_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry21ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry21ActType)) ? i.GOExpHist_Entry21ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry21ActNo : "",
                     Trans_DebitCredit2_2 = i.GOExpHist_Entry22Type,
                     Trans_Amount2_2 = i.GOExpHist_Entry22Amt,
                     Trans_Account_Code2_2 = i.GOExpHist_Entry22Actcde,
-                    Trans_Account_Number2_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde),
+                    Trans_Account_Number2_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry22ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry22ActType)) ? i.GOExpHist_Entry22ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry22ActNo : "",
                     Trans_DebitCredit3_1 = i.GOExpHist_Entry31Type,
                     Trans_Amount3_1 = i.GOExpHist_Entry31Amt,
                     Trans_Account_Code3_1 = i.GOExpHist_Entry31Actcde,
-                    Trans_Account_Number3_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde),
+                    Trans_Account_Number3_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry31ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry31ActType)) ? i.GOExpHist_Entry31ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry31ActNo : "",
                     Trans_DebitCredit3_2 = i.GOExpHist_Entry32Type,
                     Trans_Amount3_2 = i.GOExpHist_Entry32Amt,
                     Trans_Account_Code3_2 = i.GOExpHist_Entry32Actcde,
-                    Trans_Account_Number3_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde),
+                    Trans_Account_Number3_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry32ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry32ActType)) ? i.GOExpHist_Entry32ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry32ActNo : "",
                     Trans_DebitCredit4_1 = i.GOExpHist_Entry41Type,
                     Trans_Amount4_1 = i.GOExpHist_Entry41Amt,
                     Trans_Account_Code4_1 = i.GOExpHist_Entry41Actcde,
-                    Trans_Account_Number4_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde),
+                    Trans_Account_Number4_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry41ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry41ActType)) ? i.GOExpHist_Entry41ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry41ActNo : "",
                     Trans_DebitCredit4_2 = i.GOExpHist_Entry42Type,
                     Trans_Amount4_2 = i.GOExpHist_Entry42Amt,
                     Trans_Account_Code4_2 = i.GOExpHist_Entry42Actcde,
-                    Trans_Account_Number4_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde),
+                    Trans_Account_Number4_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry42ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry42ActType)) ? i.GOExpHist_Entry42ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry42ActNo : "",
                     TransTL_ID = i.TL_ID,
                     TransTL_GoExpress_ID = i.TL_GoExpress_ID,
                     TransTL_TransID = i.TL_TransID
@@ -8232,8 +8247,8 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Amount1_1 = i.GOExpHist_Entry11Amt,
                     Trans_Customer1_1 = i.GOExpHist_Entry11Cust,
                     Trans_Account_Code1_1 = i.GOExpHist_Entry11Actcde,
-                    Trans_Account_Name1_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                    Trans_Account_Number1_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde),
+                    Trans_Account_Name1_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde, i.GOExpHist_Entry11Ccy, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number1_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry11ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry11ActType)) ? i.GOExpHist_Entry11ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry11ActNo : "",
                     Trans_Exchange_Rate1_1 = i.GOExpHist_Entry11ExchRate,
                     Trans_Contra_Currency1_1 = i.GOExpHist_Entry11ExchCcy,
                     Trans_Fund1_1 = i.GOExpHist_Entry11Fund,
@@ -8248,8 +8263,8 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Amount1_2 = i.GOExpHist_Entry12Amt,
                     Trans_Customer1_2 = i.GOExpHist_Entry12Cust,
                     Trans_Account_Code1_2 = i.GOExpHist_Entry12Actcde,
-                    Trans_Account_Name1_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                    Trans_Account_Number1_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde),
+                    Trans_Account_Name1_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde, i.GOExpHist_Entry12Ccy, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number1_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry12ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry12ActType)) ? i.GOExpHist_Entry12ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry12ActNo : "",
                     Trans_Exchange_Rate1_2 = i.GOExpHist_Entry12ExchRate,
                     Trans_Contra_Currency1_2 = i.GOExpHist_Entry12ExchCcy,
                     Trans_Fund1_2 = i.GOExpHist_Entry12Fund,
@@ -8264,8 +8279,8 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Amount2_1 = i.GOExpHist_Entry21Amt,
                     Trans_Customer2_1 = i.GOExpHist_Entry21Cust,
                     Trans_Account_Code2_1 = i.GOExpHist_Entry21Actcde,
-                    Trans_Account_Name2_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                    Trans_Account_Number2_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde),
+                    Trans_Account_Name2_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde, i.GOExpHist_Entry21Ccy, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number2_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry21ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry21ActType)) ? i.GOExpHist_Entry21ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry21ActNo : "",
                     Trans_Exchange_Rate2_1 = i.GOExpHist_Entry21ExchRate,
                     Trans_Contra_Currency2_1 = i.GOExpHist_Entry21ExchCcy,
                     Trans_Fund2_1 = i.GOExpHist_Entry21Fund,
@@ -8280,8 +8295,8 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Amount2_2 = i.GOExpHist_Entry22Amt,
                     Trans_Customer2_2 = i.GOExpHist_Entry22Cust,
                     Trans_Account_Code2_2 = i.GOExpHist_Entry22Actcde,
-                    Trans_Account_Name2_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                    Trans_Account_Number2_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde),
+                    Trans_Account_Name2_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde, i.GOExpHist_Entry22Ccy, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number2_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry22ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry22ActType)) ? i.GOExpHist_Entry22ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry22ActNo : "",
                     Trans_Exchange_Rate2_2 = i.GOExpHist_Entry22ExchRate,
                     Trans_Contra_Currency2_2 = i.GOExpHist_Entry22ExchCcy,
                     Trans_Fund2_2 = i.GOExpHist_Entry22Fund,
@@ -8296,8 +8311,8 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Amount3_1 = i.GOExpHist_Entry31Amt,
                     Trans_Customer3_1 = i.GOExpHist_Entry31Cust,
                     Trans_Account_Code3_1 = i.GOExpHist_Entry31Actcde,
-                    Trans_Account_Name3_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                    Trans_Account_Number3_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde),
+                    Trans_Account_Name3_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde, i.GOExpHist_Entry31Ccy, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number3_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry31ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry31ActType)) ? i.GOExpHist_Entry31ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry31ActNo : "",
                     Trans_Exchange_Rate3_1 = i.GOExpHist_Entry31ExchRate,
                     Trans_Contra_Currency3_1 = i.GOExpHist_Entry31ExchCcy,
                     Trans_Fund3_1 = i.GOExpHist_Entry31Fund,
@@ -8312,8 +8327,8 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Amount3_2 = i.GOExpHist_Entry32Amt,
                     Trans_Customer3_2 = i.GOExpHist_Entry32Cust,
                     Trans_Account_Code3_2 = i.GOExpHist_Entry32Actcde,
-                    Trans_Account_Name3_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                    Trans_Account_Number3_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde),
+                    Trans_Account_Name3_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde, i.GOExpHist_Entry32Ccy, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number3_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry32ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry32ActType)) ? i.GOExpHist_Entry32ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry32ActNo : "",
                     Trans_Exchange_Rate3_2 = i.GOExpHist_Entry32ExchRate,
                     Trans_Contra_Currency3_2 = i.GOExpHist_Entry32ExchCcy,
                     Trans_Fund3_2 = i.GOExpHist_Entry32Fund,
@@ -8328,8 +8343,8 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Amount4_1 = i.GOExpHist_Entry41Amt,
                     Trans_Customer4_1 = i.GOExpHist_Entry41Cust,
                     Trans_Account_Code4_1 = i.GOExpHist_Entry41Actcde,
-                    Trans_Account_Name4_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                    Trans_Account_Number4_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde),
+                    Trans_Account_Name4_1 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde, i.GOExpHist_Entry41Ccy, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number4_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry41ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry41ActType)) ? i.GOExpHist_Entry41ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry41ActNo : "",
                     Trans_Exchange_Rate4_1 = i.GOExpHist_Entry41ExchRate,
                     Trans_Contra_Currency4_1 = i.GOExpHist_Entry41ExchCcy,
                     Trans_Fund4_1 = i.GOExpHist_Entry41Fund,
@@ -8344,8 +8359,8 @@ namespace ExpenseProcessingSystem.Services
                     Trans_Amount4_2 = i.GOExpHist_Entry42Amt,
                     Trans_Customer4_2 = i.GOExpHist_Entry42Cust,
                     Trans_Account_Code4_2 = i.GOExpHist_Entry42Actcde,
-                    Trans_Account_Name4_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
-                    Trans_Account_Number4_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde),
+                    Trans_Account_Name4_2 = GetAccountNameForCADDVPCSS(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde, i.GOExpHist_Entry42Ccy, i.ExpDtl_Account, i.ExpDtl_CreditAccount1, i.ExpDtl_CreditAccount2, i.Expense_Type, ddvDetails, i.ExpenseEntryID, i.ExpenseDetailID),
+                    Trans_Account_Number4_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry42ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry42ActType)) ? i.GOExpHist_Entry42ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry42ActNo : "",
                     Trans_Exchange_Rate4_2 = i.GOExpHist_Entry42ExchRate,
                     Trans_Contra_Currency4_2 = i.GOExpHist_Entry42ExchCcy,
                     Trans_Fund4_2 = i.GOExpHist_Entry42Fund,
@@ -8554,7 +8569,7 @@ namespace ExpenseProcessingSystem.Services
             //        Trans_Customer1_1 = i.GOExpHist_Entry11Cust,
             //        Trans_Account_Code1_1 = i.GOExpHist_Entry11Actcde,
             //        Trans_Account_Name1_1 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde, ncDtlList, i.ExpenseDetailID),
-            //        Trans_Account_Number1_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry11ActType, i.GOExpHist_Entry11ActNo, i.GOExpHist_Entry11Actcde),
+            //        Trans_Account_Number1_1 = i.GOExpHist_Entry11ActType + "-" + hist.GOExpHist_Branchno + "-" + i.GOExpHist_Entry11ActNo,
             //        Trans_Exchange_Rate1_1 = i.GOExpHist_Entry11ExchRate,
             //        Trans_Contra_Currency1_1 = i.GOExpHist_Entry11ExchCcy,
             //        Trans_Fund1_1 = i.GOExpHist_Entry11Fund,
@@ -8570,7 +8585,7 @@ namespace ExpenseProcessingSystem.Services
             //        Trans_Customer1_2 = i.GOExpHist_Entry12Cust,
             //        Trans_Account_Code1_2 = i.GOExpHist_Entry12Actcde,
             //        Trans_Account_Name1_2 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde, ncDtlList, i.ExpenseDetailID),
-            //        Trans_Account_Number1_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry12ActType, i.GOExpHist_Entry12ActNo, i.GOExpHist_Entry12Actcde),
+            //        Trans_Account_Number1_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry12ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry12ActType)) ? i.GOExpHist_Entry12ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry12ActNo : "",
             //        Trans_Exchange_Rate1_2 = i.GOExpHist_Entry12ExchRate,
             //        Trans_Contra_Currency1_2 = i.GOExpHist_Entry12ExchCcy,
             //        Trans_Fund1_2 = i.GOExpHist_Entry12Fund,
@@ -8586,7 +8601,7 @@ namespace ExpenseProcessingSystem.Services
             //        Trans_Customer2_1 = i.GOExpHist_Entry21Cust,
             //        Trans_Account_Code2_1 = i.GOExpHist_Entry21Actcde,
             //        Trans_Account_Name2_1 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde, ncDtlList, i.ExpenseDetailID),
-            //        Trans_Account_Number2_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry21ActType, i.GOExpHist_Entry21ActNo, i.GOExpHist_Entry21Actcde),
+            //        Trans_Account_Number2_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry21ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry21ActType)) ? i.GOExpHist_Entry21ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry21ActNo : "",
             //        Trans_Exchange_Rate2_1 = i.GOExpHist_Entry21ExchRate,
             //        Trans_Contra_Currency2_1 = i.GOExpHist_Entry21ExchCcy,
             //        Trans_Fund2_1 = i.GOExpHist_Entry21Fund,
@@ -8602,7 +8617,7 @@ namespace ExpenseProcessingSystem.Services
             //        Trans_Customer2_2 = i.GOExpHist_Entry22Cust,
             //        Trans_Account_Code2_2 = i.GOExpHist_Entry22Actcde,
             //        Trans_Account_Name2_2 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde, ncDtlList, i.ExpenseDetailID),
-            //        Trans_Account_Number2_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry22ActType, i.GOExpHist_Entry22ActNo, i.GOExpHist_Entry22Actcde),
+            //        Trans_Account_Number2_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry22ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry22ActType)) ? i.GOExpHist_Entry22ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry22ActNo : "",
             //        Trans_Exchange_Rate2_2 = i.GOExpHist_Entry22ExchRate,
             //        Trans_Contra_Currency2_2 = i.GOExpHist_Entry22ExchCcy,
             //        Trans_Fund2_2 = i.GOExpHist_Entry22Fund,
@@ -8618,7 +8633,7 @@ namespace ExpenseProcessingSystem.Services
             //        Trans_Customer3_1 = i.GOExpHist_Entry31Cust,
             //        Trans_Account_Code3_1 = i.GOExpHist_Entry31Actcde,
             //        Trans_Account_Name3_1 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde, ncDtlList, i.ExpenseDetailID),
-            //        Trans_Account_Number3_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry31ActType, i.GOExpHist_Entry31ActNo, i.GOExpHist_Entry31Actcde),
+            //        Trans_Account_Number3_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry31ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry31ActType)) ? i.GOExpHist_Entry31ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry31ActNo : "",
             //        Trans_Exchange_Rate3_1 = i.GOExpHist_Entry31ExchRate,
             //        Trans_Contra_Currency3_1 = i.GOExpHist_Entry31ExchCcy,
             //        Trans_Fund3_1 = i.GOExpHist_Entry31Fund,
@@ -8634,7 +8649,7 @@ namespace ExpenseProcessingSystem.Services
             //        Trans_Customer3_2 = i.GOExpHist_Entry32Cust,
             //        Trans_Account_Code3_2 = i.GOExpHist_Entry32Actcde,
             //        Trans_Account_Name3_2 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde, ncDtlList, i.ExpenseDetailID),
-            //        Trans_Account_Number3_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry32ActType, i.GOExpHist_Entry32ActNo, i.GOExpHist_Entry32Actcde),
+            //        Trans_Account_Number3_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry32ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry32ActType)) ? i.GOExpHist_Entry32ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry32ActNo : "",
             //        Trans_Exchange_Rate3_2 = i.GOExpHist_Entry32ExchRate,
             //        Trans_Contra_Currency3_2 = i.GOExpHist_Entry32ExchCcy,
             //        Trans_Fund3_2 = i.GOExpHist_Entry32Fund,
@@ -8650,7 +8665,7 @@ namespace ExpenseProcessingSystem.Services
             //        Trans_Customer4_1 = i.GOExpHist_Entry41Cust,
             //        Trans_Account_Code4_1 = i.GOExpHist_Entry41Actcde,
             //        Trans_Account_Name4_1 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde, ncDtlList, i.ExpenseDetailID),
-            //        Trans_Account_Number4_1 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry41ActType, i.GOExpHist_Entry41ActNo, i.GOExpHist_Entry41Actcde),
+            //        Trans_Account_Number4_1 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry41ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry41ActType)) ? i.GOExpHist_Entry41ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry41ActNo : "",
             //        Trans_Exchange_Rate4_1 = i.GOExpHist_Entry41ExchRate,
             //        Trans_Contra_Currency4_1 = i.GOExpHist_Entry41ExchCcy,
             //        Trans_Fund4_1 = i.GOExpHist_Entry41Fund,
@@ -8666,7 +8681,7 @@ namespace ExpenseProcessingSystem.Services
             //        Trans_Customer4_2 = i.GOExpHist_Entry42Cust,
             //        Trans_Account_Code4_2 = i.GOExpHist_Entry42Actcde,
             //        Trans_Account_Name4_2 = GetAccountNameForNonCash(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde, ncDtlList, i.ExpenseDetailID),
-            //        Trans_Account_Number4_2 = GetAccountNoByAccNoAccTypeAccCde(accList, i.GOExpHist_Entry42ActType, i.GOExpHist_Entry42ActNo, i.GOExpHist_Entry42Actcde),
+            //        Trans_Account_Number4_2 = (!String.IsNullOrEmpty(i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry42ActNo) && !String.IsNullOrEmpty(i.GOExpHist_Entry42ActType)) ? i.GOExpHist_Entry42ActType + "-" + i.GOExpHist_Branchno + "-" + i.GOExpHist_Entry42ActNo : "",
             //        Trans_Exchange_Rate4_2 = i.GOExpHist_Entry42ExchRate,
             //        Trans_Contra_Currency4_2 = i.GOExpHist_Entry42ExchCcy,
             //        Trans_Fund4_2 = i.GOExpHist_Entry42Fund,
@@ -8992,7 +9007,7 @@ namespace ExpenseProcessingSystem.Services
             return ncDtls;
         }
         //Get account name for CV, PC, DDV, SS for Transaction List report
-        public string GetAccountNameForCADDVPCSS(List<DMAccountModel> accList, string accType, string accNo, string accCode, int acc1, int? acc2, int? acc3, int expType, List<EntryDDVViewModel> entryDtlListDDV, int expID, int dtlID)
+        public string GetAccountNameForCADDVPCSS(List<DMAccountModel> accList, string accType, string accNo, string accCode, string currAbbrev, int acc1, int? acc2, int? acc3, int expType, List<EntryDDVViewModel> entryDtlListDDV, int expID, int dtlID)
         {
             if (String.IsNullOrEmpty(accType) || String.IsNullOrEmpty(accNo))
                 return "";
@@ -9003,17 +9018,17 @@ namespace ExpenseProcessingSystem.Services
 
             if (expType == GlobalSystemValues.TYPE_CV || expType == GlobalSystemValues.TYPE_PC || expType == GlobalSystemValues.TYPE_SS)
             {
-                if (accno1 != null && accno1.Account_No.Contains(accType) && accno1.Account_No.Contains(accNo) && accno1.Account_Code == accCode)
+                if (accno1 != null && accno1.Account_No.Contains(accType) && accno1.Account_No.Contains(accNo) && accno1.Account_Code == accCode && getCurrencyByMasterID(accno1.Account_Currency_MasterID).Curr_CCY_ABBR == currAbbrev)
                 {
                     return accno1.Account_Name;
                 }
 
-                if (accno2 != null && accno2.Account_No.Contains(accType) && accno2.Account_No.Contains(accNo) && accno2.Account_Code == accCode)
+                if (accno2 != null && accno2.Account_No.Contains(accType) && accno2.Account_No.Contains(accNo) && accno2.Account_Code == accCode && getCurrencyByMasterID(accno2.Account_Currency_MasterID).Curr_CCY_ABBR == currAbbrev)
                 {
                     return accno2.Account_Name;
                 }
 
-                if (accno3 != null && accno3.Account_No.Contains(accType) && accno3.Account_No.Contains(accNo) && accno3.Account_Code == accCode)
+                if (accno3 != null && accno3.Account_No.Contains(accType) && accno3.Account_No.Contains(accNo) && accno3.Account_Code == accCode && getCurrencyByMasterID(accno3.Account_Currency_MasterID).Curr_CCY_ABBR == currAbbrev)
                 {
                     return accno3.Account_Name;
                 }
@@ -9031,7 +9046,7 @@ namespace ExpenseProcessingSystem.Services
                         {
                             DMAccountModel interAcc = accList.Where(x => x.Account_ID == j.Inter_Acc_ID).FirstOrDefault();
 
-                            if (interAcc.Account_No.Contains(accType) && interAcc.Account_No.Contains(accNo) && interAcc.Account_Code == accCode)
+                            if (interAcc.Account_No.Contains(accType) && interAcc.Account_No.Contains(accNo) && interAcc.Account_Code == accCode && getCurrencyByMasterID(interAcc.Account_Currency_MasterID).Curr_CCY_ABBR == currAbbrev)
                             {
                                 return interAcc.Account_Name;
                             }
@@ -9040,17 +9055,17 @@ namespace ExpenseProcessingSystem.Services
                 }
                 else
                 {
-                    if (accno1 != null && accno1.Account_No.Contains(accType) && accno1.Account_No.Contains(accNo) && accno1.Account_Code == accCode)
+                    if (accno1 != null && accno1.Account_No.Contains(accType) && accno1.Account_No.Contains(accNo) && accno1.Account_Code == accCode && getCurrencyByMasterID(accno1.Account_Currency_MasterID).Curr_CCY_ABBR == currAbbrev)
                     {
                         return accno1.Account_Name;
                     }
 
-                    if (accno2 != null && accno2.Account_No.Contains(accType) && accno2.Account_No.Contains(accNo) && accno2.Account_Code == accCode)
+                    if (accno2 != null && accno2.Account_No.Contains(accType) && accno2.Account_No.Contains(accNo) && accno2.Account_Code == accCode && getCurrencyByMasterID(accno2.Account_Currency_MasterID).Curr_CCY_ABBR == currAbbrev)
                     {
                         return accno2.Account_Name;
                     }
 
-                    if (accno3 != null && accno3.Account_No.Contains(accType) && accno3.Account_No.Contains(accNo) && accno3.Account_Code == accCode)
+                    if (accno3 != null && accno3.Account_No.Contains(accType) && accno3.Account_No.Contains(accNo) && accno3.Account_Code == accCode && getCurrencyByMasterID(accno3.Account_Currency_MasterID).Curr_CCY_ABBR == currAbbrev)
                     {
                         return accno3.Account_Name;
                     }
@@ -9095,7 +9110,7 @@ namespace ExpenseProcessingSystem.Services
                         if (i.Liq_AccountID_1_1 != 0)
                         {
                             var liq = accList.Where(x => x.Account_ID == i.Liq_AccountID_1_1).FirstOrDefault();
-                            if (liq.Account_No.Contains(accType) && liq.Account_No.Contains(accNo) && liq.Account_Code == accCode)
+                            if (liq.Account_No.Contains(accType) && liq.Account_No.Contains(accNo) && liq.Account_Code == accCode && getCurrencyByMasterID(liq.Account_Currency_MasterID).Curr_CCY_ABBR == currAbbrev)
                             {
                                 return liq.Account_Name;
                             }
@@ -9104,7 +9119,7 @@ namespace ExpenseProcessingSystem.Services
                         if (i.Liq_AccountID_1_2 != 0)
                         {
                             var liq = accList.Where(x => x.Account_ID == i.Liq_AccountID_1_2).FirstOrDefault();
-                            if (liq.Account_No.Contains(accType) && liq.Account_No.Contains(accNo) && liq.Account_Code == accCode)
+                            if (liq.Account_No.Contains(accType) && liq.Account_No.Contains(accNo) && liq.Account_Code == accCode && getCurrencyByMasterID(liq.Account_Currency_MasterID).Curr_CCY_ABBR == currAbbrev)
                             {
                                 return liq.Account_Name;
                             }
@@ -9113,7 +9128,7 @@ namespace ExpenseProcessingSystem.Services
                         if (i.Liq_AccountID_2_1 != 0)
                         {
                             var liq = accList.Where(x => x.Account_ID == i.Liq_AccountID_2_1).FirstOrDefault();
-                            if (liq.Account_No.Contains(accType) && liq.Account_No.Contains(accNo) && liq.Account_Code == accCode)
+                            if (liq.Account_No.Contains(accType) && liq.Account_No.Contains(accNo) && liq.Account_Code == accCode && getCurrencyByMasterID(liq.Account_Currency_MasterID).Curr_CCY_ABBR == currAbbrev)
                             {
                                 return liq.Account_Name;
                             }
@@ -9122,7 +9137,7 @@ namespace ExpenseProcessingSystem.Services
                         if (i.Liq_AccountID_2_2 != 0)
                         {
                             var liq = accList.Where(x => x.Account_ID == i.Liq_AccountID_2_2).FirstOrDefault();
-                            if (liq.Account_No.Contains(accType) && liq.Account_No.Contains(accNo) && liq.Account_Code == accCode)
+                            if (liq.Account_No.Contains(accType) && liq.Account_No.Contains(accNo) && liq.Account_Code == accCode && getCurrencyByMasterID(liq.Account_Currency_MasterID).Curr_CCY_ABBR == currAbbrev)
                             {
                                 return liq.Account_Name;
                             }
@@ -9131,7 +9146,7 @@ namespace ExpenseProcessingSystem.Services
                         if (i.Liq_AccountID_3_1 != 0)
                         {
                             var liq = accList.Where(x => x.Account_ID == i.Liq_AccountID_3_1).FirstOrDefault();
-                            if (liq.Account_No.Contains(accType) && liq.Account_No.Contains(accNo) && liq.Account_Code == accCode)
+                            if (liq.Account_No.Contains(accType) && liq.Account_No.Contains(accNo) && liq.Account_Code == accCode && getCurrencyByMasterID(liq.Account_Currency_MasterID).Curr_CCY_ABBR == currAbbrev)
                             {
                                 return liq.Account_Name;
                             }
@@ -9140,7 +9155,7 @@ namespace ExpenseProcessingSystem.Services
                         if (i.Liq_AccountID_3_2 != 0)
                         {
                             var liq = accList.Where(x => x.Account_ID == i.Liq_AccountID_3_2).FirstOrDefault();
-                            if (liq.Account_No.Contains(accType) && liq.Account_No.Contains(accNo) && liq.Account_Code == accCode)
+                            if (liq.Account_No.Contains(accType) && liq.Account_No.Contains(accNo) && liq.Account_Code == accCode && getCurrencyByMasterID(liq.Account_Currency_MasterID).Curr_CCY_ABBR == currAbbrev)
                             {
                                 return liq.Account_Name;
                             }
@@ -9609,8 +9624,9 @@ namespace ExpenseProcessingSystem.Services
                     Expense_Last_Updated = DateTime.Now,
                     Expense_isDeleted = false,
                     Expense_Status = 1,
-                    Expense_CheckNo = "",
-                    Expense_CheckId = 0,
+                    Expense_Number = (String.IsNullOrEmpty(entryModel.expenseId)) ? 0 : int.Parse(entryModel.expenseId),
+                    Expense_CheckNo = entryModel.checkNo,
+                    Expense_CheckId = entryModel.checkId,
                     ExpenseEntryDetails = expenseDtls
                 };
 
@@ -9824,6 +9840,7 @@ namespace ExpenseProcessingSystem.Services
                 expenseYear = EntryDetails.e.Expense_Date.Year.ToString(),
                 expenseId = EntryDetails.e.Expense_Number.ToString().PadLeft(5, '0'),
                 checkNo = EntryDetails.e.Expense_CheckNo,
+                checkId = EntryDetails.e.Expense_CheckId,
                 status = getStatus(EntryDetails.e.Expense_Status),
                 statusID = EntryDetails.e.Expense_Status,
                 approver_id = EntryDetails.e.Expense_Approver,
@@ -10521,6 +10538,7 @@ namespace ExpenseProcessingSystem.Services
                     Expense_Credit_Total = credEwtTotal + credCashTotal,
                     Expense_Creator_ID = userId,
                     Expense_Created_Date = entryModel.expenseDate,
+                    Expense_Number = (String.IsNullOrEmpty(entryModel.expenseId)) ? 0 : int.Parse(entryModel.expenseId),
                     Expense_Last_Updated = DateTime.Now,
                     Expense_isDeleted = false,
                     Expense_Status = 1,
@@ -10654,6 +10672,7 @@ namespace ExpenseProcessingSystem.Services
                     Expense_Creator_ID = userId,
                     Expense_Created_Date = DateTime.Now,
                     Expense_Last_Updated = DateTime.Now,
+                    Expense_Number = entryModel.voucherNumber,
                     Expense_isDeleted = false, 
                     Expense_Status = 1,
                     ExpenseEntryNC = expenseNCList
@@ -12214,6 +12233,8 @@ namespace ExpenseProcessingSystem.Services
             var ncvItems = getNCV(opening, closing);
             var caItems = getCA(opening, closing);
             var liqItems = getLiq(opening, closing);
+            var revItems = getReversed(opening);
+            var revError = getErrReversed(opening, closing);
 
             //add results of getter methods to the return view model
             closeVM.fcduItems.AddRange(nmItems[GlobalSystemValues.BRANCH_FCDU]);
@@ -12230,6 +12251,12 @@ namespace ExpenseProcessingSystem.Services
 
             closeVM.fcduItems.AddRange(liqItems[GlobalSystemValues.BRANCH_FCDU]);
             closeVM.rbuItems.AddRange(liqItems[GlobalSystemValues.BRANCH_RBU]);
+
+            closeVM.rbuItems.AddRange(revItems[GlobalSystemValues.BRANCH_RBU]);
+            closeVM.fcduItems.AddRange(revItems[GlobalSystemValues.BRANCH_FCDU]);
+
+            closeVM.rbuItems.AddRange(revError[GlobalSystemValues.BRANCH_RBU]);
+            closeVM.fcduItems.AddRange(revError[GlobalSystemValues.BRANCH_FCDU]);
 
             Dictionary<int, List<int>> expenseRbuId = new Dictionary<int, List<int>>();
             Dictionary<int, List<int>> expenseFcduId = new Dictionary<int, List<int>>();
@@ -12401,7 +12428,9 @@ namespace ExpenseProcessingSystem.Services
                     }
                     else
                     {
-                        if (itemIndex < 0)
+                        var reversedToday = _context.ReversalEntry.Where(x=>x.Reversal_ReversedDate >= opening);
+
+                        if (itemIndex < 0 && !reversedToday.Any(x=>x.Reversal_GOExpressHistID == item.histId))
                             nmCloseItemsRBU.Add(temp);
                     }
                 }
@@ -12410,7 +12439,10 @@ namespace ExpenseProcessingSystem.Services
                                             && x.gBaseTrans == temp.gBaseTrans
                                             && x.particulars == temp.particulars
                                             && x.ccy == temp.ccy);
-                    if (itemIndex < 0)
+
+                    var reversedToday = _context.ReversalEntry.Where(x => x.Reversal_ReversedDate >= opening);
+
+                    if (itemIndex < 0 && !reversedToday.Any(x => x.Reversal_GOExpressHistID == item.histId))
                         nmCloseItemsFCDU.Add(temp);
                 }
             }
@@ -12804,10 +12836,14 @@ namespace ExpenseProcessingSystem.Services
                 temp.particulars = item.ExpDtl_Gbase_Remarks;
                 temp.transCount = 1;
 
-                if (getBranchNo(item.Account_No) == GlobalSystemValues.BRANCH_RBU)
-                    caCloseItemsRBU.Add(temp);
-                else
-                    caCloseItemsFCDU.Add(temp);
+                var reversedToday = _context.ReversalEntry.Where(x => x.Reversal_ReversedDate >= opening);
+                if(!reversedToday.Any(x => x.Reversal_GOExpressHistID == item.histId))
+                {
+                    if (getBranchNo(item.Account_No) == GlobalSystemValues.BRANCH_RBU)
+                        caCloseItemsRBU.Add(temp);
+                    else
+                        caCloseItemsFCDU.Add(temp);
+                }
             }
 
             caDic.Add(GlobalSystemValues.BRANCH_RBU, caCloseItemsRBU);
@@ -12920,6 +12956,172 @@ namespace ExpenseProcessingSystem.Services
             #endregion
 
             return liqDic;
+        }
+        public Dictionary<string, List<CloseItems>> getReversed(DateTime opening)
+        {
+            Dictionary<string, List<CloseItems>> returnModel = new Dictionary<string, List<CloseItems>>();
+            List<CloseItems> rbuList = new List<CloseItems>();
+            List<CloseItems> fcduList = new List<CloseItems>();
+
+            var model = from rev in _context.ReversalEntry
+                        join expTrans in _context.ExpenseTransLists
+                        on rev.Reversal_GOExpressHistID
+                        equals expTrans.TL_GoExpHist_ID
+                        into x
+                        from expTrans in x.DefaultIfEmpty()
+                        where rev.Reversal_ReversedDate >= opening
+                        select new
+                        {
+                            rev.Reversal_ID,
+                            rev.Reversal_ExpenseEntryID,
+                            rev.Reversal_ExpenseType,
+                            rev.Reversal_ExpenseDtlID,
+                            rev.Reversal_NonCashDtlID,
+                            rev.Reversal_LiqDtlID,
+                            rev.Reversal_LiqInterEntityID,
+                            rev.Reversal_GOExpressHistID,
+                            expTrans.TL_TransID,
+                            expTrans.TL_StatusID,
+                            expTrans.TL_Liquidation
+                        };
+
+            foreach (var item in model)
+            {
+                var expense = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == item.Reversal_ExpenseEntryID);
+                string stat = item.TL_StatusID == 3 ? "REVERSED" : GlobalSystemValues.getStatus(item.TL_StatusID);
+                var goHist = _context.GOExpressHist.FirstOrDefault(x => x.GOExpHist_Id == item.Reversal_GOExpressHistID);
+
+                decimal amtTotal = 0.00M;
+                amtTotal += Decimal.Parse(goHist.GOExpHist_Entry11Amt);
+                if(goHist.GOExpHist_Entry12Type != null)
+                    amtTotal += goHist.GOExpHist_Entry12Type != "D" ? 0 : Decimal.Parse(goHist.GOExpHist_Entry12Amt);
+                if (goHist.GOExpHist_Entry21Type != null)
+                    amtTotal += goHist.GOExpHist_Entry21Type != "D" ? 0 : Decimal.Parse(goHist.GOExpHist_Entry21Amt);
+                if (goHist.GOExpHist_Entry22Type != null)
+                    amtTotal += goHist.GOExpHist_Entry22Type != "D" ? 0 : Decimal.Parse(goHist.GOExpHist_Entry22Amt);
+                if (goHist.GOExpHist_Entry31Type != null)
+                    amtTotal += goHist.GOExpHist_Entry31Type != "D" ? 0 : Decimal.Parse(goHist.GOExpHist_Entry31Amt);
+                if (goHist.GOExpHist_Entry32Type != null)
+                    amtTotal += goHist.GOExpHist_Entry32Type != "D" ? 0 : Decimal.Parse(goHist.GOExpHist_Entry32Amt);
+                if (goHist.GOExpHist_Entry41Type != null)
+                    amtTotal += goHist.GOExpHist_Entry41Type != "D" ? 0 : Decimal.Parse(goHist.GOExpHist_Entry41Amt);
+                if (goHist.GOExpHist_Entry42Type != null)
+                    amtTotal += goHist.GOExpHist_Entry42Type != "D" ? 0 : Decimal.Parse(goHist.GOExpHist_Entry42Amt);
+
+                string expTransNo = "";
+
+                if (item.TL_Liquidation)
+                {
+                    expTransNo = "LIQ-" + GetSelectedYearMonthOfTerm(expense.Expense_Date.Month, expense.Expense_Date.Year).Year + "-" +
+                                          expense.Expense_Number.ToString().PadLeft(5, '0');
+                }
+                else
+                {
+                    expTransNo = GlobalSystemValues.getApplicationCode(expense.Expense_Type) + "-" + GetSelectedYearMonthOfTerm(expense.Expense_Date.Month, expense.Expense_Date.Year).Year + "-" +
+                                        expense.Expense_Number.ToString().PadLeft(5, '0');
+                }
+
+                CloseItems tempItem = new CloseItems
+                {
+                    gBaseTrans = item.TL_TransID.ToString(),
+                    transCount = 1,
+                    status = stat,
+                    expTrans = expTransNo,
+                    particulars = goHist.GOExpHist_Remarks,
+                    amount = amtTotal,
+                    ccy = goHist.GOExpHist_Entry11Ccy
+                };
+
+                if (goHist.GOExpHist_Branchno == GlobalSystemValues.BRANCH_RBU)
+                {
+                    rbuList.Add(tempItem);
+                }
+                else
+                {
+                    fcduList.Add(tempItem);
+                }
+            }
+
+            returnModel.Add(GlobalSystemValues.BRANCH_RBU, rbuList);
+            returnModel.Add(GlobalSystemValues.BRANCH_FCDU, fcduList);
+
+            return returnModel;
+        }
+        public Dictionary<string, List<CloseItems>> getErrReversed(DateTime opening, DateTime closing)
+        {
+            Dictionary<string, List<CloseItems>> returnModel = new Dictionary<string, List<CloseItems>>();
+            List<CloseItems> rbuList = new List<CloseItems>();
+            List<CloseItems> fcduList = new List<CloseItems>();
+
+            var model = from exp in _context.ExpenseEntry
+                        join tl in _context.ExpenseTransLists
+                        on exp.Expense_ID
+                        equals tl.TL_ExpenseID
+                        join gh in _context.GOExpressHist
+                        on tl.TL_GoExpHist_ID equals gh.GOExpHist_Id
+                        where exp.Expense_Status == 21
+                        && tl.TL_StatusID == 3
+                        && (exp.Expense_Last_Updated >= opening && exp.Expense_Last_Updated <= closing)
+                        select new { exp.Expense_Status,exp.Expense_Date,exp.Expense_Type, exp.Expense_Number, tl.TL_TransID, tl.TL_Liquidation, tl.TL_GoExpHist_ID, gh };
+
+            foreach(var item in model)
+            {
+                decimal amtTotal = 0.00M;
+                amtTotal += Decimal.Parse(item.gh.GOExpHist_Entry11Amt);
+                if (item.gh.GOExpHist_Entry12Type != null)
+                    amtTotal += item.gh.GOExpHist_Entry12Type != "D" ? 0 : Decimal.Parse(item.gh.GOExpHist_Entry12Amt);
+                if (item.gh.GOExpHist_Entry21Type != null)
+                    amtTotal += item.gh.GOExpHist_Entry21Type != "D" ? 0 : Decimal.Parse(item.gh.GOExpHist_Entry21Amt);
+                if (item.gh.GOExpHist_Entry22Type != null)
+                    amtTotal += item.gh.GOExpHist_Entry22Type != "D" ? 0 : Decimal.Parse(item.gh.GOExpHist_Entry22Amt);
+                if (item.gh.GOExpHist_Entry31Type != null)
+                    amtTotal += item.gh.GOExpHist_Entry31Type != "D" ? 0 : Decimal.Parse(item.gh.GOExpHist_Entry31Amt);
+                if (item.gh.GOExpHist_Entry32Type != null)
+                    amtTotal += item.gh.GOExpHist_Entry32Type != "D" ? 0 : Decimal.Parse(item.gh.GOExpHist_Entry32Amt);
+                if (item.gh.GOExpHist_Entry41Type != null)
+                    amtTotal += item.gh.GOExpHist_Entry41Type != "D" ? 0 : Decimal.Parse(item.gh.GOExpHist_Entry41Amt);
+                if (item.gh.GOExpHist_Entry42Type != null)
+                    amtTotal += item.gh.GOExpHist_Entry42Type != "D" ? 0 : Decimal.Parse(item.gh.GOExpHist_Entry42Amt);
+
+                string expTransNo = "";
+
+                if (item.TL_Liquidation)
+                {
+                    expTransNo = "LIQ-" + GetSelectedYearMonthOfTerm(item.Expense_Date.Month, item.Expense_Date.Year).Year + "-" +
+                                          item.Expense_Number.ToString().PadLeft(5, '0');
+                }
+                else
+                {
+                    expTransNo = GlobalSystemValues.getApplicationCode(item.Expense_Type) + "-" + GetSelectedYearMonthOfTerm(item.Expense_Date.Month, item.Expense_Date.Year).Year + "-" +
+                                        item.Expense_Number.ToString().PadLeft(5, '0');
+                }
+
+                CloseItems tempItem = new CloseItems
+                {
+                    gBaseTrans = item.TL_TransID.ToString(),
+                    transCount = 1,
+                    status = GlobalSystemValues.getStatus(item.Expense_Status),
+                    expTrans = expTransNo,
+                    particulars = item.gh.GOExpHist_Remarks,
+                    amount = amtTotal,
+                    ccy = item.gh.GOExpHist_Entry11Ccy
+                };
+
+                if (item.gh.GOExpHist_Branchno == GlobalSystemValues.BRANCH_RBU)
+                {
+                    rbuList.Add(tempItem);
+                }
+                else
+                {
+                    fcduList.Add(tempItem);
+                }
+
+            }
+
+            returnModel.Add(GlobalSystemValues.BRANCH_RBU, rbuList);
+            returnModel.Add(GlobalSystemValues.BRANCH_FCDU, fcduList);
+
+            return returnModel;
         }
 
         public ClosingViewModel ClosingOpenDailyBook()
@@ -13911,6 +14113,10 @@ namespace ExpenseProcessingSystem.Services
         {
             return _context.DMCurrency.Where(x => x.Curr_MasterID == masterID && x.Curr_isActive == true
                     && x.Curr_isDeleted == false).FirstOrDefault();
+        }
+        public DMCurrencyModel getCurrencyByMasterID(string abbrev)
+        {
+            return _context.DMCurrency.Where(x => x.Curr_CCY_ABBR == abbrev).FirstOrDefault();
         }
         //Get lastest currency by its currency master ID.
         public DMCurrencyModel getCurrencyByID(int currID)

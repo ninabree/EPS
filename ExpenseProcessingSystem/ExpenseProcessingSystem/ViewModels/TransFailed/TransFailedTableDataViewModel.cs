@@ -16,6 +16,7 @@ namespace ExpenseProcessingSystem.ViewModels.TransFailed
         public string TF_STATUS { get; set; }
         public string TF_ACTION_LABEL { get; set; }
         public bool TF_ACTION_IS_DISABLED { get; set; }
+        public bool TF_CAN_REJECT { get; set; }
         public string TF_GBASE_MESSAGE { get; set; }
         public int TF_STATUS_ID { get; set; }
         public int TF_ACTION_ID { get; set; }
