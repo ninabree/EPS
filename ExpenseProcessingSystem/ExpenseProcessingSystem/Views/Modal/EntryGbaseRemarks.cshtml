@@ -50,10 +50,12 @@
                 $("#gRemarks-tr-" + count).find(".gInvoiceNo").attr("readonly", "readonly");
                 $("#gRemarks-tr-" + count).find(".gDescription").attr("readonly", "readonly");
                 $("#gRemarks-tr-" + count).find(".gAmount").attr("readonly", "readonly");
+                $("#gRemarks-tr-" + count).find(".gAmount").addClass("commaClass");
                 $("#gRemarks-tr-" + count).find(".flex-c").find(".table-remove").css("pointer-events", "none");
             }
             $("#add_row_btn").css("display", "none");
             $("#saveGbase").css("display", "none");
+            $(".commaClass").digits();
         }
 
         if ($('#EntryCV_' + idNum + '__screenCode').val() == "SS") {

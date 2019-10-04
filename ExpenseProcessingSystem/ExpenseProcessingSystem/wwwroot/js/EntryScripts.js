@@ -276,7 +276,7 @@
                     $("#" + pNode.id).find(".txtGross").val(roundNumber(netEwt, 2));
                 }
             } else {
-                var ewtAmount = roundNumber(grossAmt * (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100),2);
+                var ewtAmount = roundNumber(grossAmt * (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100), 2);
                 $("#" + itemNo).find(".txtCredEwt").val(roundNumber(ewtAmount, 2));
                 $("#" + itemNo).find(".txtCredCash").val(roundNumber((grossAmt - ewtAmount), 2));
                 if ($(".hiddenScreencode").val() == "SS") {
@@ -291,57 +291,6 @@
                 $("#" + pNode.id).find(".txtGross").val(roundNumber(grossAmt, 2));
             }
         }
-
-        //function computeValues(parent) {
-        //    var pNode = parent;
-        //    var itemNo = pNode.id;
-        //    var amounts = $("");
-        //    var grossAmt = 0;
-        //    var origGrossAmt = 0;
-        //    var origCredAmt = $("#" + itemNo).find(".txtCredCash").val();
-
-        //    amounts = $("#" + pNode.id + " .amount");
-        //    grossAmt = 0;
-        //    origGrossAmt = $("#" + pNode.id + " .txtGross").val();
-        //    for (var i = 0; i < amounts.length; i++) {
-        //        grossAmt += Number(amounts[i].value);
-        //    }
-
-        //    $("#" + pNode.id + " td .txtGross").val(roundNumber(grossAmt, 2));
-
-        //    var itemNo = pNode.id; //jquery obj
-        //    var chkEwtVal = $("#" + itemNo).find(".chkEwt").is(':checked');
-        //    var vatable = $("#" + itemNo).find(".chkVat").is(':checked');
-        //    if (chkEwtVal) {
-        //        if (vatable) {
-        //            var vatRate = (Number($("#" + itemNo).find(".txtVat option:selected").text()) / 100);
-        //            var ewtRate = (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100);
-        //            var netVat = round(grossAmt / (1 + vatRate), 2);
-        //            var ewt = round(netVat * ewtRate, 2);
-        //            var netEwt = grossAmt - ewt;
-
-        //            $("#" + itemNo).find(".txtCredEwt").val(round(ewt, 2));
-        //            $("#" + itemNo).find(".txtCredCash").val(round(netEwt, 2));
-        //            if ($(".hiddenScreencode").val() == "SS") {
-        //                $("#" + itemNo).find(".txtCredEwt").val(0);
-        //                $("#" + pNode.id).find(".txtGross").val(round(netEwt, 2));
-        //            }
-        //        } else {
-        //            var ewtAmount = round(grossAmt * (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100), 2);
-        //            $("#" + itemNo).find(".txtCredEwt").val(round(ewtAmount, 2));
-        //            $("#" + itemNo).find(".txtCredCash").val(round((grossAmt - ewtAmount), 2));
-        //            if ($(".hiddenScreencode").val() == "SS") {
-        //                $("#" + itemNo).find(".txtCredEwt").val(0);
-        //                $("#" + pNode.id).find(".txtGross").val(round((grossAmt - ewtAmount), 2));
-        //            }
-        //        }
-        //    } else {
-        //        $("#" + itemNo).find(".txtCredEwt").val(0);
-        //        $("#" + itemNo).find(".txtCredCash").val(round(grossAmt, 2));
-        //        if ($(".hiddenScreencode").val() == "SS") {
-        //            $("#" + pNode.id).find(".txtGross").val(round(grossAmt, 2));
-        //        }
-        //    }
         //For PCS,SS - resetting of Cash breakdown list.
         if ($(".hiddenScreencode").val() == "PCV" || $(".hiddenScreencode").val() == "SS") {
             if (origCredAmt != $("#" + itemNo).find(".txtCredCash").val()) {
@@ -386,12 +335,15 @@
             $("#credCashTotal").val(0.00);
             $("#credTotal").val(0.00);
         }
+        //format values to add comma
+        $(".commaClass").digits();
     }
+    
 
     function computeValuesOfAllRecordVatTR() {
 
         var trs = $("#inputTable").find("tbody").find("tr").length - 2;
-        
+
         for (var cnt = 0; cnt < trs; cnt++) {
             var id = "item_" + cnt;
 
@@ -511,7 +463,7 @@
                     for (var i = 0; i < vatData.length; i++) {
                         $(".txtVat").append($("<option></option>").attr("value", vatData[i].vaT_ID).text(vatData[i].vaT_Rate));
                     }
-                    
+
                 } else {
                     $(".txtVat").append('<option value="0">0</option>');
                 }

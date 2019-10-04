@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace ExpenseProcessingSystem.ViewModels.Entry
 {
@@ -11,9 +12,13 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
         public int Inter_Currency2_ID { get; set; }
         public string Inter_Currency1_ABBR { get; set; }
         public string Inter_Currency2_ABBR { get; set; }
+        [DisplayFormat(DataFormatString = "{0:N}")]
         public decimal Inter_Currency1_Amount { get; set; }
+        [DisplayFormat(DataFormatString = "{0:N}")]
         public decimal Inter_Currency2_Amount { get; set; }
+        [DisplayFormat(DataFormatString = "{0:N}")]
         public decimal Inter_Convert1_Amount { get; set; }
+        [DisplayFormat(DataFormatString = "{0:N}")]
         public decimal Inter_Convert2_Amount { get; set; }
         public bool Inter_Check1 { get; set; }
         public bool Inter_Check2 { get; set; }
@@ -54,9 +59,11 @@ namespace ExpenseProcessingSystem.ViewModels.Entry
     {
         public int Particular_Acc_ID { get; set; }
         public string Particular_Account_Name { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:N}")]
         public decimal Particular_Debit_Amount { get; set; }
         public int Particular_DebCurr_ID { get; set; }
         public string Particular_Debit_Curr { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:N}")]
         public decimal Particular_Credit_Amount { get; set; }
         public int Particular_CredCurr_ID { get; set; }
         public string Particular_Credit_Curr { get; set; }

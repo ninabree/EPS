@@ -120,9 +120,9 @@
                             <input value="@Model.EntryDDV[i].ccy_Name" class="input100 txtccy selectDisabled" disabled />
                             @Html.HiddenFor(x => x.EntryDDV[i].ccy)
                         </td>
-                        <td><input value="@Model.EntryDDV[i].debitGross" class="input100 txtGross" disabled /></td>
-                        <td><input value="@Model.EntryDDV[i].credEwt" class="input100 txtCredEwt" disabled /></td>
-                        <td><input value="@Model.EntryDDV[i].credCash" class="input100 txtCredCash" disabled /></td>
+                        <td><input value="@Model.EntryDDV[i].debitGross" class="input100 txtGross commaClass" disabled /></td>
+                        <td><input value="@Model.EntryDDV[i].credEwt" class="input100 txtCredEwt commaClass" disabled /></td>
+                        <td><input value="@Model.EntryDDV[i].credCash" class="input100 txtCredCash commaClass" disabled /></td>
                         <td id="req_@i">
                             @if (Model.EntryDDV[i].interDetails != null)
                             {
@@ -177,13 +177,13 @@
                 <tr>
                     <td style="border:none; background-color:#f2f2f2" rowspan="2"></td>
                     <td colspan="10" style="text-align:right; border:none; background-color:#f2f2f2">Subtotal : </td>
-                    <td rowspan="2" class="text-v-bottom"><div class="flex-c"><input type="text" class="input100" readonly id="grossTotal" /></div></td>
-                    <td><input type="text" readonly class="input100" id="credEwtTotal" /></td>
-                    <td><input type="text" readonly class="input100" id="credCashTotal" /></td>
+                    <td rowspan="2" class="text-v-bottom"><div class="flex-c"><input type="text" class="input100 commaClass" readonly id="grossTotal" /></div></td>
+                    <td><input type="text" readonly class="input100 commaClass" id="credEwtTotal" /></td>
+                    <td><input type="text" readonly class="input100 commaClass" id="credCashTotal" /></td>
                 </tr>
                 <tr>
                     <td colspan="10" style="text-align:right; border:none; background-color:#f2f2f2 ">Total : </td>
-                    <td colspan="2"><div class="flex-c"><input type="text" class="input100" readonly id="credTotal" /></div></td>
+                    <td colspan="2"><div class="flex-c"><input type="text" class="input100 commaClass" readonly id="credTotal" /></div></td>
                 </tr>
             </tbody>
         </table>
@@ -297,6 +297,11 @@
         //checks each checkbox and enables corresponding modals
         CheckEachEWT();
         CheckEachInter();
+        //format values with appropriate comma and decimal places
+        $(".commaClass").digits();
+        $(".commaClass").each(function (){
+            $(this).val(rdDDV($(this)));
+        });
 
          $("#entry-controls").on("click", "#printVoucher", function (e) {
             $("#iframePreview").get(0).contentWindow.print();
@@ -304,7 +309,6 @@
             });
             return false;
         });
-
         //EWT
         $("table").on("click", ".expenseEWT", function (e) {
             e.stopImmediatePropagation();
@@ -385,6 +389,16 @@
             $(myModal2).modal('show');
 
         });
+        function rdDDV(el) {
+            var val = $(el).val();
+            var currVal = $(el).parent().siblings(":eq(10)").find("[id$='ccy']").val();
+            if (currVal == @Model.yenCurrID) {
+                x = val.split(".");
+                return x[0];
+            } else {
+                return val;
+            }
+        }
         function currenableVATEWT(pNode, val) {
 
             var inter = $("#EntryDDV_" + pNode.substring(5) + "__inter_entity");
