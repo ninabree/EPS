@@ -371,13 +371,13 @@
                         </thead>
                         <tbody>
                             @{
-                                int cnt = 0;
+                                int cnt = 20;
                                 foreach (var i in DenominationValues.GetDenominationList())
                                 {
 
                                     <tr id="cashbdliqid_@cnt">
                                         <td class="tdPrintLiq">
-                                            <input type="number" class="txtLiqDenomination" readonly="readonly" style="width:100%;background:transparent;text-align:center" value="@i.CashBreak_Denomination" />
+                                            <input type="text" class="txtLiqDenomination" readonly="readonly" style="width:100%;background:transparent;text-align:center" value="@i.CashBreak_Denomination" />
 
                                         </td>
                                         <td class="tdPrintLiq">
@@ -385,7 +385,7 @@
 
                                         </td>
                                         <td class="tdPrintLiq">
-                                            <input type="number" class="txtLiqAmount" readonly="readonly" style="width:100%;background:transparent;text-align:center" value="0" />
+                                            <input type="text" class="txtLiqAmount" readonly="readonly" style="width:100%;background:transparent;text-align:center" value="0" />
                                         </td>
                                     </tr>
                                     cnt = cnt + 1;
@@ -449,7 +449,7 @@
                                 <input id="txtIECurrency" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="CCY" />
                             </td>
                             <td>
-                                <input id="txtIEAmount" class="input100" readonly="readonly" style="width:100%;text-align:center" type="number" min="0" value="0" />
+                                <input id="txtIEAmount" class="input100" readonly="readonly" style="width:100%;text-align:center" type="text" value="0" />
                             </td>
                         </tr>
                         <tr>
