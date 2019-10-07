@@ -316,7 +316,9 @@
                 $('#' + pos).find('.chkEwt').attr("disabled", "disabled");
                 $('#' + pos).find('.chkVat').attr("disabled", "disabled");
             } else {
-                $('#' + pos).find('.chkEwt').removeAttr("disabled");
+                if ($("#payeeTypeSel").val() == "1") {
+                    $('#' + pos).find('.chkEwt').removeAttr("disabled");
+                }
                 $('#' + pos).find('.chkVat').removeAttr("disabled");
             }
         }
