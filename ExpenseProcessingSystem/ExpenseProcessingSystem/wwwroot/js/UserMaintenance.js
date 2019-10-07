@@ -22,7 +22,7 @@ rows.on('click', function (e) {
         $('#NewAcc_User_DeptID').val($(row).children(":eq(3)").attr('id'));
         $('#NewAcc_User_Email').val($(row).children(":eq(5)").text());
         $('#NewAcc_User_Role').val($(row).children(":eq(4)").text());
-        $('#NewAcc_User_ID').val(parseInt($(row).children(":eq(13)").val()));
+        $('#NewAcc_User_ID').val(parseInt($(row).children(":eq(11)").val()));
         $('#NewAcc_User_Comment').val($(row).children(":eq(6)").text());
         $('#NewAcc_User_InUse').prop('checked', ($(row).children(":eq(7)").find('input').is(":checked")) ? true : false);
 
