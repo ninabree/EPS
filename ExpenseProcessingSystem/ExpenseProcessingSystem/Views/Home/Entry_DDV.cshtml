@@ -502,7 +502,7 @@
     function interenableVATEWT(pNode, ischecked) {
 
         var curr1_ID = $("#" + pNode).find("select[id$='__ccy']  option:selected").val() + "";
-        if (curr1_ID == "31" && (!ischecked)) {
+        if (curr1_ID == @phpId && (!ischecked)) {
             //enable VAT and EWT when INTER ENTITY
             $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkVat").prop('disabled', false);
             $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkEwt").prop('disabled', false);
@@ -523,7 +523,7 @@
 
         var inter = $("#EntryDDV_" + pNode.substring(5) + "__inter_entity");
         var isInter = $(inter).is(":checked");
-        if (val == "31" && (!isInter)) {
+        if (val == @phpId && (!isInter)) {
             //enable VAT and EWT when INTER ENTITY
             $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkVat").prop('disabled', false);
             $("#" + pNode).find("#EntryDDV_" + pNode.substring(5) + "__chkEwt").prop('disabled', false);
