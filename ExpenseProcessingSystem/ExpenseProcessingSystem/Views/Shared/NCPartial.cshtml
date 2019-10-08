@@ -1025,19 +1025,51 @@
         //MISC ENTRIES CURR DROPDOWN CHANGED
         $('#NCPartialTbl').on('change', '.misc-curr-0', function () {
             var vals = $(this).val();
-            $(this).parent().parent().siblings("[id$='ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Curr_ID']").val(vals);
+            var pid = $(this.parentNode)[0].id;
+            var type = $(this).hasClass("db") ? dbType : cdType;
+
+            if (type == dbType) {
+                pid = pid.substring(4);
+            } else {
+                pid = pid.substring(5);
+            }
+            $(this).parent().parent().siblings("[id='EntryNC_ExpenseEntryNCDtls_" + pid + "__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Curr_ID']").val(vals);
         });
         $('#NCPartialTbl').on('change', '.misc-curr-1', function () {
             var vals = $(this).val();
-            $(this).parent().parent().siblings("[id$='ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Curr_ID']").val(vals);
+            var pid = $(this.parentNode)[0].id;
+            var type = $(this).hasClass("db") ? dbType : cdType;
+
+            if (type == dbType) {
+                pid = pid.substring(4);
+            } else {
+                pid = pid.substring(5);
+            }
+            $(this).parent().parent().siblings("[id='EntryNC_ExpenseEntryNCDtls_" + pid + "__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Curr_ID']").val(vals);
         });
         $('#NCPartialTbl').on('change', '.misc-curr-2', function () {
             var vals = $(this).val();
-            $(this).parent().parent().siblings("[id$='ExpenseEntryNCDtlAccs_2__ExpNCDtlAcc_Curr_ID']").val(vals);
+            var pid = $(this.parentNode)[0].id;
+            var type = $(this).hasClass("db") ? dbType : cdType;
+
+            if (type == dbType) {
+                pid = pid.substring(4);
+            } else {
+                pid = pid.substring(5);
+            }
+            $(this).parent().parent().siblings("[id='EntryNC_ExpenseEntryNCDtls_" + pid + "__ExpenseEntryNCDtlAccs_2__ExpNCDtlAcc_Curr_ID']").val(vals);
         });
         $('#NCPartialTbl').on('change', '.misc-curr-3', function () {
             var vals = $(this).val();
-            $(this).parent().parent().siblings("[id$='ExpenseEntryNCDtlAccs_3__ExpNCDtlAcc_Curr_ID']").val(vals);
+            var pid = $(this.parentNode)[0].id;
+            var type = $(this).hasClass("db") ? dbType : cdType;
+
+            if (type == dbType) {
+                pid = pid.substring(4);
+            } else {
+                pid = pid.substring(5);
+            }
+            $(this).parent().parent().siblings("[id='EntryNC_ExpenseEntryNCDtls_" + pid + "__ExpenseEntryNCDtlAccs_3__ExpNCDtlAcc_Curr_ID']").val(vals);
         });
         //[ END MISC ENTRIES]
 

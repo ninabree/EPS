@@ -24,8 +24,7 @@ rows.on('click', function (e) {
         $('#NewAcc_User_Role').val($(row).children(":eq(4)").text());
         $('#NewAcc_User_ID').val(parseInt($(row).children(":eq(11)").val()));
         $('#NewAcc_User_Comment').val($(row).children(":eq(6)").text());
-        $('#NewAcc_User_InUse').prop('checked', ($(row).children(":eq(7)").find('input').is(":checked")) ? true : false);
-
+        $('#NewAcc_User_InUse').prop('checked', ($(row).children(":eq(12)").val() == "True") ? true : false);
         /* Otherwise just highlight one row and clean others */
         rows.removeClass('highlight');
         row.addClass('highlight');
