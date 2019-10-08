@@ -1068,9 +1068,10 @@ namespace ExpenseProcessingSystem.Controllers
                 var entryNC = _service.getExpenseNC(expID);
                 if (entryNC.EntryNC.ExpenseEntryNCDtls.Count > 0)
                 {
-                    var acc = entryNC.EntryNC.ExpenseEntryNCDtls.FirstOrDefault(x => x.ExpNCDtl_ID == _tax)
-                                        .ExpenseEntryNCDtlAccs.FirstOrDefault(x => x.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_EWT);
-                    ncTaxWithheld = acc != null ? acc.ExpNCDtlAcc_Amount : 0;
+                    decimal amt = 0.00M;
+                    entryNC.EntryNC.ExpenseEntryNCDtls.Where(x => x.ExpNCDtl_TR_ID == _ewt && x.ExpNCDtl_Vendor_ID == _vendor).ToList()
+                           .ForEach(x=> { amt += x.ExpenseEntryNCDtlAccs.FirstOrDefault(y => y.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_EWT).ExpNCDtlAcc_Amount; });
+                    ncTaxWithheld = amt != 0 ? amt : 0;
                     _tax = 0;
                 }
 
@@ -3056,28 +3057,36 @@ namespace ExpenseProcessingSystem.Controllers
                 if (birForms.Any(x => x.ewt == item.ExpNCDtl_TR_ID && x.vendor == item.ExpNCDtl_Vendor_ID))
                 {
                     int index = birForms.FindIndex(x => x.ewt == item.ExpNCDtl_TR_ID);
-                    foreach (var a in item.ExpenseEntryNCDtlAccs)
-                    {
-                        if (a.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
-                        {
-                            birForms[index].amount += a.ExpNCDtlAcc_Amount;
-                        }
-                    }
+                    //foreach (var a in item.ExpenseEntryNCDtlAccs)
+                    //{
+                        //if (a.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
+                        //{
+                            birForms[index].amount += item.ExpNCDtl_TaxBasedAmt;
+                        //}
+                    //}
                 }
                 else
                 {
                     decimal amt = 0, vat = 0;
-                    foreach (var a in item.ExpenseEntryNCDtlAccs)
-                    {
-                        if (a.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
-                        {
-                            amt += item.ExpNCDtl_TaxBasedAmt;
-                        }
-                        //else if (a.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_EWT)
-                        //{
-                        //    vat += a.ExpNCDtlAcc_Amount;
-                        //}
-                    }
+                    //if(item.ExpNCDtl_TaxBasedAmt > 0)
+                    //{
+                    amt += item.ExpNCDtl_TaxBasedAmt;
+                    //}
+                    //else
+                    //{
+                    //    foreach (var a in item.ExpenseEntryNCDtlAccs)
+                    //    {
+                    //        if (a.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
+                    //        {
+                    //            amt += a.ExpNCDtlAcc_Amount;
+                    //        }
+                    //        //else if (a.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_EWT)
+                    //        //{
+                    //        //    vat += a.ExpNCDtlAcc_Amount;
+                    //        //}
+                    //    }
+                    //}
+                    
                     cvBirForm temp = new cvBirForm
                     {
                         amount = amt,
