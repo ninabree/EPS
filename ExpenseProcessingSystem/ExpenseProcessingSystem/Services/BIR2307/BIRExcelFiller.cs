@@ -178,7 +178,7 @@ namespace BIR_Form_Filler.Functions
                         string PayeeTin = String.Join("", fpbf.EeTin.Split('-'));
 
                         var shape = worksheet.Drawings.AddShape("payeetin1", eShapeStyle.Rect);
-                        shape.Text = PayeeTin.Substring(0, 3);
+                        shape.Text = (PayeeTin.Length >= 3) ? PayeeTin.Substring(0, 3) : PayeeTin;
                         shape.SetPosition(13, 6, 13, 2);
                         shape.SetSize(53, 23);
                         shape.Fill.Color = Color.Transparent;
@@ -201,7 +201,7 @@ namespace BIR_Form_Filler.Functions
                         shape.Border.Width = 1 / 4;
 
                         shape = worksheet.Drawings.AddShape("payeetin2", eShapeStyle.Rect);
-                        shape.Text = PayeeTin.Substring(3, 3);
+                        shape.Text = (PayeeTin.Length >= 6) ? PayeeTin.Substring(3, 3) : (PayeeTin.Length > 3) ? PayeeTin.Substring(3) : "";
                         shape.SetPosition(13, 6, 16, 14);
                         shape.SetSize(53, 23);
                         shape.Fill.Color = Color.Transparent;
@@ -224,7 +224,7 @@ namespace BIR_Form_Filler.Functions
                         shape.Border.Width = 1 / 4;
 
                         shape = worksheet.Drawings.AddShape("payeetin3", eShapeStyle.Rect);
-                        shape.Text = PayeeTin.Substring(6, 3);
+                        shape.Text = (PayeeTin.Length >= 9) ? PayeeTin.Substring(6, 3) : (PayeeTin.Length > 6) ? PayeeTin.Substring(6) : "";
                         shape.SetPosition(13, 6, 20, 3);
                         shape.SetSize(53, 23);
                         shape.Fill.Color = Color.Transparent;
@@ -247,7 +247,7 @@ namespace BIR_Form_Filler.Functions
                         shape.Border.Width = 1 / 4;
 
                         shape = worksheet.Drawings.AddShape("payeetin4", eShapeStyle.Rect);
-                        shape.Text = PayeeTin.Substring(9);
+                        shape.Text = (PayeeTin.Length >= 10) ? PayeeTin.Substring(9) : "";
                         shape.SetPosition(13, 6, 23, 12);
                         shape.SetSize(64, 23);
                         shape.Fill.Color = Color.Transparent;
@@ -309,7 +309,7 @@ namespace BIR_Form_Filler.Functions
                         string PayorTin = String.Join("", fpbf.OrTin.Split('-'));
 
                         var shape = worksheet.Drawings.AddShape("payortin1", eShapeStyle.Rect);
-                        shape.Text = PayorTin.Substring(0, 3);
+                        shape.Text = (PayorTin.Length >= 3) ? PayorTin.Substring(0, 3) : PayorTin;
                         shape.SetPosition(25, 6, 13, 2);
                         shape.SetSize(53, 23);
                         shape.Fill.Color = Color.Transparent;
@@ -332,7 +332,7 @@ namespace BIR_Form_Filler.Functions
                         shape.Border.Width = 1 / 4;
 
                         shape = worksheet.Drawings.AddShape("payortin2", eShapeStyle.Rect);
-                        shape.Text = PayorTin.Substring(3, 3);
+                        shape.Text = (PayorTin.Length >= 6) ? PayorTin.Substring(3, 3) : (PayorTin.Length > 3) ? PayorTin.Substring(3) : "";
                         shape.SetPosition(25, 6, 16, 14);
                         shape.SetSize(53, 23);
                         shape.Fill.Color = Color.Transparent;
@@ -355,7 +355,7 @@ namespace BIR_Form_Filler.Functions
                         shape.Border.Width = 1 / 4;
 
                         shape = worksheet.Drawings.AddShape("payortin3", eShapeStyle.Rect);
-                        shape.Text = PayorTin.Substring(6, 3);
+                        shape.Text = (PayorTin.Length >= 9) ? PayorTin.Substring(6, 3) : (PayorTin.Length > 6) ? PayorTin.Substring(6) : "";
                         shape.SetPosition(25, 6, 20, 3);
                         shape.SetSize(53, 23);
                         shape.Fill.Color = Color.Transparent;
@@ -378,7 +378,7 @@ namespace BIR_Form_Filler.Functions
                         shape.Border.Width = 1 / 4;
 
                         shape = worksheet.Drawings.AddShape("payortin4", eShapeStyle.Rect);
-                        shape.Text = PayorTin.Substring(9);
+                        shape.Text = (PayorTin.Length >= 10) ? PayorTin.Substring(9) : "";
                         shape.SetPosition(25, 6, 23, 12);
                         shape.SetSize(64, 23);
                         shape.Fill.Color = Color.Transparent;

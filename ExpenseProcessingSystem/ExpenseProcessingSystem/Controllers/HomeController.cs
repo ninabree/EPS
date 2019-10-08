@@ -2115,7 +2115,7 @@ namespace ExpenseProcessingSystem.Controllers
                 i.ccy = phpID;
             }
             EntryCVViewModelList pcvList = new EntryCVViewModelList();
-            var currentStat = _service.GetCurrentEntryStatus(EntryCVViewModelList.entryID);
+            var currentStat = (EntryCVViewModelList.entryID > 0) ? _service.GetCurrentEntryStatus(EntryCVViewModelList.entryID) : 0;
             int id = 0;
 
             if(currentStat == GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR)
