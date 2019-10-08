@@ -48,10 +48,41 @@
 
         $('.btnEntryAction').click(function (e) {
             e.stopImmediatePropagation();
+
+            if ($('#categoryName').val() == '11') {
+                var rows = $('#NCPartialTbl').find('tbody').find('[id^="item_"]').length;
+                var invFlag = 0;
+                for (var i = 0; i < rows; i++) {
+                    for (var j = 0; j < 4; j++) {
+                        if (parseFloat($('#EntryNC_ExpenseEntryNCDtls_' + i + '__ExpenseEntryNCDtlAccs_' + j + '__ExpNCDtlAcc_Amount').val()) > 0) {
+                            if (parseInt($('#EntryNC_ExpenseEntryNCDtls_' + i + '__ExpenseEntryNCDtlAccs_' + j + '__ExpNCDtlAcc_Acc_ID').val()) == 0) {
+                                invFlag = 1;
+                            }
+                        }
+                        if (parseFloat($('#EntryNC_ExpenseEntryNCDtls_' + i + '__ExpenseEntryNCDtlAccs_' + j + '__ExpNCDtlAcc_Acc_ID').val()) > 0) {
+                            if (parseInt($('#EntryNC_ExpenseEntryNCDtls_' + i + '__ExpenseEntryNCDtlAccs_' + j + '__ExpNCDtlAcc_Amount').val()) <= 0) {
+                                invFlag = 2;
+                            }
+                        }
+                    }
+                }
+                if (invFlag == 1) {
+                    $('#alert').text("Kindly assign an 'Account' to entries with amount accordingly.");
+                    $('#divAlertWindow').show();
+                    return false;
+                }
+                if (invFlag == 2) {
+                    $('#alert').text("Kindly assign an amount to entries with 'Account' accordingly.");
+                    $('#divAlertWindow').show();
+                    return false;
+                }
+            }
+
             loadingEffectStart();
             var msg = "";
             var warning = [];
             var command = $(this).val();
+
             if (command == "approver") {
                 msg = "Approval";
                 OpenConfirmationPopup(msg, command, warning);
