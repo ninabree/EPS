@@ -447,7 +447,8 @@
             var enableDelete = (Model.statusID == GlobalSystemValues.STATUS_PENDING ||
                                   Model.statusID == GlobalSystemValues.STATUS_REJECTED) && (isMaker) ? true : false;
             var enableModify = (Model.statusID == GlobalSystemValues.STATUS_PENDING ||
-                                  Model.statusID == GlobalSystemValues.STATUS_REJECTED) && (isMaker) ? true : false;
+                                  Model.statusID == GlobalSystemValues.STATUS_REJECTED ||
+                                  Model.statusID == GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR) && (isMaker) ? true : false;
 
             //enable verify when status is Pending
             var enableVerify = ((Model.statusID == GlobalSystemValues.STATUS_PENDING
