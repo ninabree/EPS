@@ -2108,14 +2108,25 @@ namespace ExpenseProcessingSystem.Controllers
                 EntryCVViewModelList.systemValues.vat = new SelectList("0", "0");
                 return View("Entry_PCV", EntryCVViewModelList);
             }
+
             var phpID = _service.getAccountByMasterID(int.Parse(xelemLiq.Element("CURRENCY_PHP").Value)).Account_ID;
             foreach (var i in EntryCVViewModelList.EntryCV)
             {
                 i.ccy = phpID;
             }
             EntryCVViewModelList pcvList = new EntryCVViewModelList();
-
+            var currentStat = (EntryCVViewModelList.entryID > 0) ? _service.GetCurrentEntryStatus(EntryCVViewModelList.entryID) : 0;
             int id = 0;
+
+            if(currentStat == GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR)
+            {
+                EntryCVViewModelList.entryID = 0;
+                EntryCVViewModelList.checkId = 0;
+                EntryCVViewModelList.checkNo = null;
+                EntryCVViewModelList.expenseDate = DateTime.Now.Date;
+                EntryCVViewModelList.expenseId = null;
+            }
+
             if (EntryCVViewModelList.entryID == 0)
             {
                 id = _service.addExpense_CV(EntryCVViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_PC);
@@ -2126,10 +2137,10 @@ namespace ExpenseProcessingSystem.Controllers
             else
             {
                 List<int> EditableStatus = new List<int>{
-                    GlobalSystemValues.STATUS_PENDING,
-                    GlobalSystemValues.STATUS_REJECTED
-                };
-                var currentStat = _service.GetCurrentEntryStatus(EntryCVViewModelList.entryID);
+                GlobalSystemValues.STATUS_PENDING,
+                GlobalSystemValues.STATUS_REJECTED
+            };
+
                 if (EditableStatus.Contains(currentStat))
                 {
                     if (_service.deleteExpenseEntry(EntryCVViewModelList.entryID))
@@ -2148,19 +2159,6 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             ModelState.Clear();
-
-            //if (id > -1)
-            //{
-            //    pcvList = _service.getExpense(id);
-            //    List<SelectList> listOfSysVals = _service.getEntrySystemVals();
-            //    pcvList.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
-            //    pcvList.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
-            //    pcvList.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
-            //    pcvList.systemValues.acc = _service.getAccDetailsEntry();
-            //    ViewBag.Status = pcvList.status;
-            //}
-
-            //return View("Entry_PCV_ReadOnly", pcvList);
 
             TempData["entryIDAddtoView"] = id;
 

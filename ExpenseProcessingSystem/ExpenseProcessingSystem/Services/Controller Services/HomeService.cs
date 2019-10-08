@@ -10666,7 +10666,7 @@ namespace ExpenseProcessingSystem.Services
                 ExpenseEntryModel expenseEntry = new ExpenseEntryModel
                 {
                     Expense_Type = expenseType,
-                    Expense_Date = DateTime.Now,
+                    Expense_Date = DateTime.Now.Date,
                     Expense_Debit_Total = entryModel.EntryNC.NC_DebitAmt,
                     Expense_Credit_Total = entryModel.EntryNC.NC_CredAmt,
                     Expense_Creator_ID = userId,
@@ -10677,6 +10677,17 @@ namespace ExpenseProcessingSystem.Services
                     Expense_Status = 1,
                     ExpenseEntryNC = expenseNCList
                 };
+
+                int currentStat = (entryModel.entryID > 0) ? getSingleEntryRecord(entryID).Expense_Status : 0;
+                
+                if (currentStat == GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR)
+                {
+                    entryModel.entryID = 0;
+                    expenseEntry.Expense_CheckId = 0;
+                    expenseEntry.Expense_CheckNo = null;
+                    expenseEntry.Expense_Number = 0;
+                }
+
                 if (entryModel.entryID == 0)
                 {
                     _context.ExpenseEntry.Add(expenseEntry);
@@ -10691,7 +10702,6 @@ namespace ExpenseProcessingSystem.Services
                     GlobalSystemValues.STATUS_PENDING,
                     GlobalSystemValues.STATUS_REJECTED
                     };
-                    var currentStat = getSingleEntryRecord(entryID).Expense_Status;
                     if (EditableStatus.Contains(currentStat))
                     {
                         // Update entity in DbSet
