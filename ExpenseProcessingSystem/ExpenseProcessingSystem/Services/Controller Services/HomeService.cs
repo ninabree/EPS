@@ -12873,72 +12873,127 @@ namespace ExpenseProcessingSystem.Services
             List<CloseItems> liqCloseItemsRBU = new List<CloseItems>();
             List<CloseItems> liqCloseItemsFCDU = new List<CloseItems>();
 
-            var liqItems = from expense in (from exp in _context.ExpenseEntry
-                                            from expDtl in _context.ExpenseEntryDetails
-                                            from liqDtl in _context.LiquidationEntryDetails
-                                            from liqInter in _context.LiquidationInterEntity
-                                            from acc in _context.DMAccount
-                                            from ccy in _context.DMCurrency
-                                            where exp.Expense_ID == expDtl.ExpenseEntryModel.Expense_ID
-                                            && liqDtl.Liq_Status != GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR
-                                            && exp.Expense_ID == liqDtl.ExpenseEntryModel.Expense_ID
-                                            && expDtl.ExpDtl_ID == liqInter.ExpenseEntryDetailModel.ExpDtl_ID
-                                            && acc.Account_ID == liqInter.Liq_AccountID_1_1
-                                            && ((liqInter.Liq_CCY_1_1 == 0) ? ccy.Curr_ID == 31 : ccy.Curr_ID == liqInter.Liq_CCY_1_1)
-                                            && liqInter.Liq_Amount_1_1 > 0
-                                            && (opening <= liqDtl.Liq_Created_Date
-                                            && closing >= liqDtl.Liq_Created_Date)
-                                            select new
-                                            { exp.Expense_ID, expDtl.ExpDtl_ID, exp.Expense_Number, liqDtl.Liq_Created_Date,
-                                                remarks = string.Concat('S', expDtl.ExpDtl_Gbase_Remarks),
-                                                liqDtl.Liq_Status, ccy.Curr_CCY_ABBR, acc.Account_No, acc.Account_Code,
-                                                liqInter.Liq_Amount_1_1, liqInter.Liq_DebitCred_1_1, liqInter.Liq_DebitCred_1_2,
-                                                liqInter.Liq_Amount_1_2 })
-                           join goHist in _context.GOExpressHist
-                           on new { expenseId = expense.Expense_ID, dtlId = expense.ExpDtl_ID,
-                               rmrk = expense.remarks, acc = expense.Account_No.Substring(Math.Max(0, expense.Account_No.Length - 6)),
-                               cde = expense.Account_Code }
-                           equals new { expenseId = goHist.ExpenseEntryID, dtlId = goHist.ExpenseDetailID,
-                               rmrk = goHist.GOExpHist_Remarks, acc = goHist.GOExpHist_Entry11ActNo,
-                               cde = goHist.GOExpHist_Entry11Actcde }
-                           into x
-                           from goHist in x.DefaultIfEmpty()
+            var liqItems = from exp in _context.ExpenseEntry
+                           from expDtl in _context.ExpenseEntryDetails
+                           from liqDtl in _context.LiquidationEntryDetails
+                           from liqInter in _context.LiquidationInterEntity
+                           from ccy in _context.DMCurrency
+                           where exp.Expense_ID == expDtl.ExpenseEntryModel.Expense_ID
+                           && liqDtl.Liq_Status != GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR
+                           && exp.Expense_ID == liqDtl.ExpenseEntryModel.Expense_ID
+                           && expDtl.ExpDtl_ID == liqInter.ExpenseEntryDetailModel.ExpDtl_ID
+                           && ((liqInter.Liq_CCY_1_1 == 0) ? ccy.Curr_ID == 31 : ccy.Curr_ID == liqInter.Liq_CCY_1_1)
+                           && (opening <= liqDtl.Liq_Created_Date
+                           && closing >= liqDtl.Liq_Created_Date)
                            select new
-                           { expense.Expense_ID, expense.ExpDtl_ID, expense.Expense_Number, expense.Account_No, expense.Liq_DebitCred_1_2,
-                               expense.Curr_CCY_ABBR, expense.Liq_Created_Date, expense.Liq_Status, expense.Liq_Amount_1_1,
-                               expense.Liq_Amount_1_2, expense.remarks, histId = goHist.GOExpHist_Id == null ? 0 : goHist.GOExpHist_Id };
+                           { exp.Expense_ID, expDtl.ExpDtl_ID, exp.Expense_Number, liqDtl.Liq_Created_Date,
+                               remarks = string.Concat('S', expDtl.ExpDtl_Gbase_Remarks),
+                               liqDtl.Liq_Status, ccy.Curr_CCY_ABBR,liqInter };
+                           //join goHist in _context.GOExpressHist
+                           //on new { expenseId = expense.Expense_ID, dtlId = expense.ExpDtl_ID,
+                           //    rmrk = expense.remarks, acc = expense.Account_No.Substring(Math.Max(0, expense.Account_No.Length - 6)),
+                           //    cde = expense.Account_Code }
+                           //equals new { expenseId = goHist.ExpenseEntryID, dtlId = goHist.ExpenseDetailID,
+                           //    rmrk = goHist.GOExpHist_Remarks, acc = goHist.GOExpHist_Entry11ActNo,
+                           //    cde = goHist.GOExpHist_Entry11Actcde }
+                           //into x
+                           //from goHist in x.DefaultIfEmpty()
+                           //select new
+                           //{ expense.Expense_ID, expense.ExpDtl_ID, expense.Expense_Number, expense.Account_No, expense.Liq_DebitCred_1_2,
+                           //    expense.Curr_CCY_ABBR, expense.Liq_Created_Date, expense.Liq_Status, expense.Liq_Amount_1_1,
+                           //    expense.Liq_Amount_1_2, expense.remarks, histId = goHist.GOExpHist_Id == null ? 0 : goHist.GOExpHist_Id };
 
             foreach (var item in liqItems)
             {
-                CloseItems temp = new CloseItems();
-                if (item.histId > 0)
+                decimal total = 0.00M;
+                DMAccountModel accItem = new DMAccountModel();
+                GOExpressHistModel goHist = new GOExpressHistModel();
+                bool ignoreFlag = false;
+                total += item.liqInter.Liq_Amount_1_1 > 0 ? item.liqInter.Liq_Amount_1_1 : 0;
+                total += item.liqInter.Liq_Amount_1_2 > 0 && item.liqInter.Liq_DebitCred_1_2 == "D" ? item.liqInter.Liq_Amount_1_2 : 0;
+                total += item.liqInter.Liq_Amount_2_1 > 0 && item.liqInter.Liq_DebitCred_2_1 == "D" ? item.liqInter.Liq_Amount_2_1 : 0;
+                total += item.liqInter.Liq_Amount_2_2 > 0 && item.liqInter.Liq_DebitCred_2_2 == "D" ? item.liqInter.Liq_Amount_2_2 : 0;
+                total += item.liqInter.Liq_Amount_3_1 > 0 && item.liqInter.Liq_DebitCred_3_1 == "D" ? item.liqInter.Liq_Amount_3_1 : 0;
+                total += item.liqInter.Liq_Amount_3_2 > 0 && item.liqInter.Liq_DebitCred_3_2 == "D" ? item.liqInter.Liq_Amount_3_2 : 0;
+
+                if (item.liqInter.Liq_Amount_1_1 > 0)
                 {
-                    int transNo = _context.ExpenseTransLists.Select(x => new { x.TL_TransID, x.TL_GoExpHist_ID, x.TL_ExpenseID })
-                                                            .Where(x => x.TL_ExpenseID == item.Expense_ID
-                                                                     && x.TL_GoExpHist_ID == item.histId).FirstOrDefault().TL_TransID;
-                    temp.expTrans = "LIQ-" + GetSelectedYearMonthOfTerm(item.Liq_Created_Date.Month, item.Liq_Created_Date.Year).Year + "-" +
-                                        item.Expense_Number.ToString().PadLeft(5, '0');
-                    temp.gBaseTrans = transNo.ToString();
+                    accItem = getAccount(item.liqInter.Liq_AccountID_1_1);
+                }
+                else if (item.liqInter.Liq_Amount_1_2 > 0 && item.liqInter.Liq_DebitCred_1_2 == "D")
+                {
+                    accItem = getAccount(item.liqInter.Liq_AccountID_1_2);
+                }
+                else if (item.liqInter.Liq_Amount_2_1 > 0 && item.liqInter.Liq_DebitCred_2_1 == "D")
+                {
+                    accItem = getAccount(item.liqInter.Liq_AccountID_2_1);
+                }
+                else if (item.liqInter.Liq_Amount_2_2 > 0 && item.liqInter.Liq_DebitCred_2_2 == "D")
+                {
+                    accItem = getAccount(item.liqInter.Liq_AccountID_2_2);
+                }
+                else if (item.liqInter.Liq_Amount_3_1 > 0 && item.liqInter.Liq_DebitCred_3_1 == "D")
+                {
+                    accItem = getAccount(item.liqInter.Liq_AccountID_3_1);
+                }
+                else if (item.liqInter.Liq_Amount_3_2 > 0 && item.liqInter.Liq_DebitCred_3_2 == "D")
+                {
+                    accItem = getAccount(item.liqInter.Liq_AccountID_3_2);
+                }
+                else
+                {
+                    ignoreFlag = true;
+                }
+
+                if (!ignoreFlag)
+                {
+                    goHist = _context.GOExpressHist.FirstOrDefault(x => x.ExpenseEntryID == item.Expense_ID
+                                                                     && x.ExpenseDetailID == item.ExpDtl_ID
+                                                                     && x.GOExpHist_Remarks == item.remarks
+                                                                     && x.GOExpHist_Entry11Actcde == accItem.Account_Code
+                                                                     && x.GOExpHist_Branchno == accItem.Account_No.Substring(4, 3)
+                                                                     && x.GOExpHist_Entry11ActNo == accItem.Account_No.Substring(Math.Max(0, accItem.Account_No.Length - 6))
+                                                                     && x.GOExpHist_Entry11ActType == accItem.Account_No.Substring(0, 3));
+                }
+                
+                CloseItems temp = new CloseItems();
+                if(goHist != null)
+                {
+                    if (goHist.GOExpHist_Id > 0)
+                    {
+                        int transNo = _context.ExpenseTransLists.Select(x => new { x.TL_TransID, x.TL_GoExpHist_ID, x.TL_ExpenseID })
+                                                                .Where(x => x.TL_ExpenseID == item.Expense_ID
+                                                                         && x.TL_GoExpHist_ID == goHist.GOExpHist_Id).FirstOrDefault().TL_TransID;
+                        temp.expTrans = "LIQ-" + GetSelectedYearMonthOfTerm(item.Liq_Created_Date.Month, item.Liq_Created_Date.Year).Year + "-" +
+                                            item.Expense_Number.ToString().PadLeft(5, '0');
+                        temp.gBaseTrans = transNo.ToString();
+                    }
+                    else
+                    {
+                        temp.expTrans = "";
+                        temp.gBaseTrans = "";
+                    }
                 }
                 else
                 {
                     temp.expTrans = "";
                     temp.gBaseTrans = "";
                 }
-                if (item.Liq_DebitCred_1_2 == "D")
-                    temp.amount = item.Liq_Amount_1_1 + item.Liq_Amount_1_2;
-                else
-                    temp.amount = item.Liq_Amount_1_1;
 
+
+                temp.amount = total;
                 temp.ccy = item.Curr_CCY_ABBR;
                 temp.status = GlobalSystemValues.getStatus(item.Liq_Status);
                 temp.particulars = item.remarks;
                 temp.transCount = 1;
 
-                if (getBranchNo(item.Account_No) == GlobalSystemValues.BRANCH_RBU)
-                    liqCloseItemsRBU.Add(temp);
-                else
-                    liqCloseItemsFCDU.Add(temp);
+                if (!ignoreFlag)
+                {
+                    if (accItem.Account_No.Substring(4, 3) == GlobalSystemValues.BRANCH_RBU)
+                        liqCloseItemsRBU.Add(temp);
+                    else
+                        liqCloseItemsFCDU.Add(temp);
+                }
             }
 
             liqDic.Add(GlobalSystemValues.BRANCH_RBU, liqCloseItemsRBU);
