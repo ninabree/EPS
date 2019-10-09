@@ -7497,8 +7497,161 @@ namespace ExpenseProcessingSystem.Services
                            trans.TL_Liquidation
                        }).ToList();
 
+            //======================SPECIAL CASE requested by Mizuho bank due to wrong entry in NC instead of CA.
+            list1.Add(new HomeReportTransactionListViewModel
+            {
+                ESAMS_SeqNo = "1",
+                ExpExpense_ID = 0,
+                ExpExpense_Type = 0,
+                ESAMS_MakerName = "Madrinan, Tonierose",
+                ESAMS_ApprvName = "Advincula, Albert",
+                Trans_Last_Updated_Date = DateTime.Parse("10/4/2019 16:45:46"),
+                ExpExpense_Date = "10/4/2019 00:00:00",
+                HistExpenseEntryID = 0,
+                HistExpenseDetailID = 0,
+                HistGOExpHist_Id = 0,
+                Trans_Value_Date = "100419",
+                Trans_Remarks = "NAGAMINE:WHT PAYROLL OCT'19",
+                Trans_DebitCredit1_1 = "D",
+                Trans_Amount1_1 = "49421.87",
+                Trans_Account_Code1_1 = "",
+                Trans_Account_Number1_1 = "H79-767-151446",
+                Trans_DebitCredit1_2 = "C",
+                Trans_Amount1_2 = "49421.87",
+                Trans_Account_Code1_2 = "",
+                Trans_Account_Number1_2 = "H79-767-151234",
+                Trans_DebitCredit2_1 = "",
+                Trans_Amount2_1 = "",
+                Trans_Account_Code2_1 = "",
+                Trans_Account_Number2_1 = "",
+                Trans_DebitCredit2_2 = "",
+                Trans_Amount2_2 = "",
+                Trans_Account_Code2_2 = "",
+                Trans_Account_Number2_2 = "",
+                Trans_DebitCredit3_1 = "",
+                Trans_Amount3_1 = "",
+                Trans_Account_Code3_1 = "",
+                Trans_Account_Number3_1 = "",
+                Trans_DebitCredit3_2 = "",
+                Trans_Amount3_2 = "",
+                Trans_Account_Code3_2 = "",
+                Trans_Account_Number3_2 = "",
+                Trans_DebitCredit4_1 = "",
+                Trans_Amount4_1 = "",
+                Trans_Account_Code4_1 = "",
+                Trans_Account_Number4_1 = "",
+                Trans_DebitCredit4_2 = "",
+                Trans_Amount4_2 = "",
+                Trans_Account_Code4_2 = "",
+                Trans_Account_Number4_2 = "",
+                TransTL_ID = 0,
+                TransTL_GoExpress_ID = 0,
+                TransTL_TransID = 0
+            });
+            list1.Add(new HomeReportTransactionListViewModel
+            {
+                ESAMS_SeqNo = "2",
+                ExpExpense_ID = 0,
+                ExpExpense_Type = 0,
+                ESAMS_MakerName = "Madrinan, Tonierose",
+                ESAMS_ApprvName = "Advincula, Albert",
+                Trans_Last_Updated_Date = DateTime.Parse("10/4/2019 16:46:35"),
+                ExpExpense_Date = "10/4/2019 00:00:00",
+                HistExpenseEntryID = 0,
+                HistExpenseDetailID = 0,
+                HistGOExpHist_Id = 0,
+                Trans_Value_Date = "100419",
+                Trans_Remarks = "NAGAMINE:CAR ADJ OCT'19",
+                Trans_DebitCredit1_1 = "D",
+                Trans_Amount1_1 = "5000.00",
+                Trans_Account_Code1_1 = "",
+                Trans_Account_Number1_1 = "H79-767-151446",
+                Trans_DebitCredit1_2 = "C",
+                Trans_Amount1_2 = "5000.00",
+                Trans_Account_Code1_2 = "",
+                Trans_Account_Number1_2 = "H90-767-121684",
+                Trans_DebitCredit2_1 = "",
+                Trans_Amount2_1 = "",
+                Trans_Account_Code2_1 = "",
+                Trans_Account_Number2_1 = "",
+                Trans_DebitCredit2_2 = "",
+                Trans_Amount2_2 = "",
+                Trans_Account_Code2_2 = "",
+                Trans_Account_Number2_2 = "",
+                Trans_DebitCredit3_1 = "",
+                Trans_Amount3_1 = "",
+                Trans_Account_Code3_1 = "",
+                Trans_Account_Number3_1 = "",
+                Trans_DebitCredit3_2 = "",
+                Trans_Amount3_2 = "",
+                Trans_Account_Code3_2 = "",
+                Trans_Account_Number3_2 = "",
+                Trans_DebitCredit4_1 = "",
+                Trans_Amount4_1 = "",
+                Trans_Account_Code4_1 = "",
+                Trans_Account_Number4_1 = "",
+                Trans_DebitCredit4_2 = "",
+                Trans_Amount4_2 = "",
+                Trans_Account_Code4_2 = "",
+                Trans_Account_Number4_2 = "",
+                TransTL_ID = 0,
+                TransTL_GoExpress_ID = 0,
+                TransTL_TransID = 0
+            });
+            list1.Add(new HomeReportTransactionListViewModel
+            {
+                ESAMS_SeqNo = "3",
+                ExpExpense_ID = 0,
+                ExpExpense_Type = 0,
+                ESAMS_MakerName = "Madrinan, Tonierose",
+                ESAMS_ApprvName = "Advincula, Albert",
+                Trans_Last_Updated_Date = DateTime.Parse("10/4/2019 16:46:10"),
+                ExpExpense_Date = "10/4/2019 00:00:00",
+                HistExpenseEntryID = 0,
+                HistExpenseDetailID = 0,
+                HistGOExpHist_Id = 0,
+                Trans_Value_Date = "100419",
+                Trans_Remarks = "NAGAMINE:PAYROLL OCT'19",
+                Trans_DebitCredit1_1 = "D",
+                Trans_Amount1_1 = "2050.35",
+                Trans_Account_Code1_1 = "",
+                Trans_Account_Number1_1 = "F79-789-151446",
+                Trans_DebitCredit1_2 = "C",
+                Trans_Amount1_2 = "2050.35",
+                Trans_Account_Code1_2 = "",
+                Trans_Account_Number1_2 = "F60-789-801042",
+                Trans_DebitCredit2_1 = "",
+                Trans_Amount2_1 = "",
+                Trans_Account_Code2_1 = "",
+                Trans_Account_Number2_1 = "",
+                Trans_DebitCredit2_2 = "",
+                Trans_Amount2_2 = "",
+                Trans_Account_Code2_2 = "",
+                Trans_Account_Number2_2 = "",
+                Trans_DebitCredit3_1 = "",
+                Trans_Amount3_1 = "",
+                Trans_Account_Code3_1 = "",
+                Trans_Account_Number3_1 = "",
+                Trans_DebitCredit3_2 = "",
+                Trans_Amount3_2 = "",
+                Trans_Account_Code3_2 = "",
+                Trans_Account_Number3_2 = "",
+                Trans_DebitCredit4_1 = "",
+                Trans_Amount4_1 = "",
+                Trans_Account_Code4_1 = "",
+                Trans_Account_Number4_1 = "",
+                Trans_DebitCredit4_2 = "",
+                Trans_Amount4_2 = "",
+                Trans_Account_Code4_2 = "",
+                Trans_Account_Number4_2 = "",
+                TransTL_ID = 0,
+                TransTL_GoExpress_ID = 0,
+                TransTL_TransID = 0
+            });
+            //==========END============SPECIAL CASE requested by Mizuho bank due to wrong entry in NC instead of CA.
+
             //Convert to List object.
-            int count = 1;
+            int count = 4;
             foreach (var i in db1.OrderBy(x => x.GOExpHist_ValueDate))
             {
                 var maker = userList.Where(x => x.User_ID == i.Expense_Creator_ID).FirstOrDefault();
@@ -7816,7 +7969,7 @@ namespace ExpenseProcessingSystem.Services
 
 
             foreach (var i in finalList.Where(x => StartFiscal.Date <= ConvGbDateToDateTime(x.Trans_Value_Date)
-                                                && ConvGbDateToDateTime(x.Trans_Value_Date) <= endDT.Date))
+                                                && ConvGbDateToDateTime(x.Trans_Value_Date) <= endDT.Date).OrderBy(x => ConvGbDateToDateTime(x.Trans_Value_Date)).ThenBy(x => int.Parse(x.ESAMS_SeqNo.Replace("(", "").Replace(")", ""))))
             {
                 if (selectedAccount.Account_No.Replace("-", "") == i.Trans_Account_Number1_1.Replace("-", ""))
                 {
