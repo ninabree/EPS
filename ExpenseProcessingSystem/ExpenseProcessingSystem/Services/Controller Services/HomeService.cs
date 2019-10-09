@@ -3242,7 +3242,7 @@ namespace ExpenseProcessingSystem.Services
                                             where ncAcc2.ExpNCDtlAcc_Type_ID == 3
                                             select new { ncAcc2.ExpNCDtlAcc_Amount, ncAcc2.ExpenseEntryNCDtlModel.ExpNCDtl_ID }) on ncAcc.ExpenseEntryNCDtlModel.ExpNCDtl_ID equals ncAcc2.ExpNCDtl_ID
                             where status.Contains(exp.Expense_Status)
-                            && ncAcc.ExpNCDtlAcc_Type_ID == 1
+                            && ncAcc.ExpNCDtlAcc_Type_ID == 3
                             && exp.Expense_Last_Updated.Month == month
                             && exp.Expense_Last_Updated.Year == year
                             select new HomeReportOutputAPSWT_MModel
@@ -3257,6 +3257,32 @@ namespace ExpenseProcessingSystem.Services
                                 Last_Update_Date = exp.Expense_Last_Updated,
                                 Vendor_masterID = vend.Vendor_MasterID
                             }).Where(x => x.AOTW > 0).ToList();
+            //dbAPSWT_M_NC = (from ncDtl in _context.ExpenseEntryNonCashDetails
+            //                join ncAcc in _context.ExpenseEntryNonCashDetailAccounts on ncDtl.ExpNCDtl_ID equals ncAcc.ExpenseEntryNCDtlModel.ExpNCDtl_ID
+            //                join nc in _context.ExpenseEntryNonCash on ncDtl.ExpenseEntryNCModel.ExpNC_ID equals nc.ExpNC_ID
+            //                join exp in _context.ExpenseEntry on nc.ExpenseEntryModel.Expense_ID equals exp.Expense_ID
+            //                join tr in _context.DMTR on ncDtl.ExpNCDtl_TR_ID equals tr.TR_ID
+            //                join vend in _context.DMVendor on ncDtl.ExpNCDtl_Vendor_ID equals vend.Vendor_ID
+            //                join ncAcc2 in (from ncDtl2 in _context.ExpenseEntryNonCashDetails
+            //                                join ncAcc2 in _context.ExpenseEntryNonCashDetailAccounts on ncDtl2.ExpNCDtl_ID equals ncAcc2.ExpenseEntryNCDtlModel.ExpNCDtl_ID
+            //                                where ncAcc2.ExpNCDtlAcc_Type_ID == 3
+            //                                select new { ncAcc2.ExpNCDtlAcc_Amount, ncAcc2.ExpenseEntryNCDtlModel.ExpNCDtl_ID }) on ncAcc.ExpenseEntryNCDtlModel.ExpNCDtl_ID equals ncAcc2.ExpNCDtl_ID
+            //                where status.Contains(exp.Expense_Status)
+            //                && ncAcc.ExpNCDtlAcc_Type_ID == 1
+            //                && exp.Expense_Last_Updated.Month == month
+            //                && exp.Expense_Last_Updated.Year == year
+            //                select new HomeReportOutputAPSWT_MModel
+            //                {
+            //                    Payee = vend.Vendor_Name,
+            //                    Tin = vend.Vendor_TIN,
+            //                    RateOfTax = tr.TR_Tax_Rate,
+            //                    ATC = tr.TR_ATC,
+            //                    NOIP = tr.TR_Nature_Income_Payment,
+            //                    AOIP = (ncDtl.ExpNCDtl_TaxBasedAmt != 0 ) ? ncDtl.ExpNCDtl_TaxBasedAmt : ncAcc.ExpNCDtlAcc_Amount,
+            //                    AOTW = ncAcc2.ExpNCDtlAcc_Amount,
+            //                    Last_Update_Date = exp.Expense_Last_Updated,
+            //                    Vendor_masterID = vend.Vendor_MasterID
+            //                }).Where(x => x.AOTW > 0).ToList();
 
             var dbAPSWT_Conc = dbAPSWT_M.Concat(dbAPSWT_M_Check).Concat(dbAPSWT_M_LIQ).Concat(dbAPSWT_M_NC).OrderBy(x => x.Payee);
 
@@ -3421,7 +3447,7 @@ namespace ExpenseProcessingSystem.Services
                                             where ncAcc2.ExpNCDtlAcc_Type_ID == 3
                                             select new { ncAcc2.ExpNCDtlAcc_Amount, ncAcc2.ExpenseEntryNCDtlModel.ExpNCDtl_ID }) on ncAcc.ExpenseEntryNCDtlModel.ExpNCDtl_ID equals ncAcc2.ExpNCDtl_ID
                             where status.Contains(exp.Expense_Status)
-                            && ncAcc.ExpNCDtlAcc_Type_ID == 1
+                            && ncAcc.ExpNCDtlAcc_Type_ID == 3
                             && model.TaxRateList.Contains(tr.TR_Tax_Rate)
                             && startDT.Date <= exp.Expense_Last_Updated.Date
                             && exp.Expense_Last_Updated.Date <= endDT.Date
@@ -6122,7 +6148,7 @@ namespace ExpenseProcessingSystem.Services
                                             where ncAcc2.ExpNCDtlAcc_Type_ID == 3
                                             select new { ncAcc2.ExpNCDtlAcc_Amount, ncAcc2.ExpenseEntryNCDtlModel.ExpNCDtl_ID }) on ncAcc.ExpenseEntryNCDtlModel.ExpNCDtl_ID equals ncAcc2.ExpNCDtl_ID
                             where status.Contains(exp.Expense_Status)
-                            && ncAcc.ExpNCDtlAcc_Type_ID == 1
+                            && ncAcc.ExpNCDtlAcc_Type_ID == 3
                                && startDT.Date <= exp.Expense_Last_Updated.Date
                                && exp.Expense_Last_Updated.Date <= endDT.Date
                             select new HomeReportOutputAPSWT_MModel
