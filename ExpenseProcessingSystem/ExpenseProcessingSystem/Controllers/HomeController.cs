@@ -1068,9 +1068,10 @@ namespace ExpenseProcessingSystem.Controllers
                 var entryNC = _service.getExpenseNC(expID);
                 if (entryNC.EntryNC.ExpenseEntryNCDtls.Count > 0)
                 {
-                    var acc = entryNC.EntryNC.ExpenseEntryNCDtls.FirstOrDefault(x => x.ExpNCDtl_ID == _tax)
-                                        .ExpenseEntryNCDtlAccs.FirstOrDefault(x => x.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_EWT);
-                    ncTaxWithheld = acc != null ? acc.ExpNCDtlAcc_Amount : 0;
+                    decimal amt = 0.00M;
+                    entryNC.EntryNC.ExpenseEntryNCDtls.Where(x => x.ExpNCDtl_TR_ID == _ewt && x.ExpNCDtl_Vendor_ID == _vendor).ToList()
+                           .ForEach(x=> { amt += x.ExpenseEntryNCDtlAccs.FirstOrDefault(y => y.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_EWT).ExpNCDtlAcc_Amount; });
+                    ncTaxWithheld = amt != 0 ? amt : 0;
                     _tax = 0;
                 }
 
@@ -2108,14 +2109,25 @@ namespace ExpenseProcessingSystem.Controllers
                 EntryCVViewModelList.systemValues.vat = new SelectList("0", "0");
                 return View("Entry_PCV", EntryCVViewModelList);
             }
+
             var phpID = _service.getAccountByMasterID(int.Parse(xelemLiq.Element("CURRENCY_PHP").Value)).Account_ID;
             foreach (var i in EntryCVViewModelList.EntryCV)
             {
                 i.ccy = phpID;
             }
             EntryCVViewModelList pcvList = new EntryCVViewModelList();
-
+            var currentStat = (EntryCVViewModelList.entryID > 0) ? _service.GetCurrentEntryStatus(EntryCVViewModelList.entryID) : 0;
             int id = 0;
+
+            if(currentStat == GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR)
+            {
+                EntryCVViewModelList.entryID = 0;
+                EntryCVViewModelList.checkId = 0;
+                EntryCVViewModelList.checkNo = null;
+                EntryCVViewModelList.expenseDate = DateTime.Now.Date;
+                EntryCVViewModelList.expenseId = null;
+            }
+
             if (EntryCVViewModelList.entryID == 0)
             {
                 id = _service.addExpense_CV(EntryCVViewModelList, int.Parse(GetUserID()), GlobalSystemValues.TYPE_PC);
@@ -2126,10 +2138,10 @@ namespace ExpenseProcessingSystem.Controllers
             else
             {
                 List<int> EditableStatus = new List<int>{
-                    GlobalSystemValues.STATUS_PENDING,
-                    GlobalSystemValues.STATUS_REJECTED
-                };
-                var currentStat = _service.GetCurrentEntryStatus(EntryCVViewModelList.entryID);
+                GlobalSystemValues.STATUS_PENDING,
+                GlobalSystemValues.STATUS_REJECTED
+            };
+
                 if (EditableStatus.Contains(currentStat))
                 {
                     if (_service.deleteExpenseEntry(EntryCVViewModelList.entryID))
@@ -2148,19 +2160,6 @@ namespace ExpenseProcessingSystem.Controllers
             }
 
             ModelState.Clear();
-
-            //if (id > -1)
-            //{
-            //    pcvList = _service.getExpense(id);
-            //    List<SelectList> listOfSysVals = _service.getEntrySystemVals();
-            //    pcvList.systemValues.vendors = listOfSysVals[GlobalSystemValues.SELECT_LIST_VENDOR];
-            //    pcvList.systemValues.dept = listOfSysVals[GlobalSystemValues.SELECT_LIST_DEPARTMENT];
-            //    pcvList.systemValues.ewt = listOfSysVals[GlobalSystemValues.SELECT_LIST_TAXRATE];
-            //    pcvList.systemValues.acc = _service.getAccDetailsEntry();
-            //    ViewBag.Status = pcvList.status;
-            //}
-
-            //return View("Entry_PCV_ReadOnly", pcvList);
 
             TempData["entryIDAddtoView"] = id;
 
@@ -3058,28 +3057,36 @@ namespace ExpenseProcessingSystem.Controllers
                 if (birForms.Any(x => x.ewt == item.ExpNCDtl_TR_ID && x.vendor == item.ExpNCDtl_Vendor_ID))
                 {
                     int index = birForms.FindIndex(x => x.ewt == item.ExpNCDtl_TR_ID);
-                    foreach (var a in item.ExpenseEntryNCDtlAccs)
-                    {
-                        if (a.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
-                        {
-                            birForms[index].amount += a.ExpNCDtlAcc_Amount;
-                        }
-                    }
+                    //foreach (var a in item.ExpenseEntryNCDtlAccs)
+                    //{
+                        //if (a.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
+                        //{
+                            birForms[index].amount += item.ExpNCDtl_TaxBasedAmt;
+                        //}
+                    //}
                 }
                 else
                 {
                     decimal amt = 0, vat = 0;
-                    foreach (var a in item.ExpenseEntryNCDtlAccs)
-                    {
-                        if (a.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
-                        {
-                            amt += item.ExpNCDtl_TaxBasedAmt;
-                        }
-                        //else if (a.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_EWT)
-                        //{
-                        //    vat += a.ExpNCDtlAcc_Amount;
-                        //}
-                    }
+                    //if(item.ExpNCDtl_TaxBasedAmt > 0)
+                    //{
+                    amt += item.ExpNCDtl_TaxBasedAmt;
+                    //}
+                    //else
+                    //{
+                    //    foreach (var a in item.ExpenseEntryNCDtlAccs)
+                    //    {
+                    //        if (a.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
+                    //        {
+                    //            amt += a.ExpNCDtlAcc_Amount;
+                    //        }
+                    //        //else if (a.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_EWT)
+                    //        //{
+                    //        //    vat += a.ExpNCDtlAcc_Amount;
+                    //        //}
+                    //    }
+                    //}
+                    
                     cvBirForm temp = new cvBirForm
                     {
                         amount = amt,

@@ -265,7 +265,7 @@
                                 </select>
                             </td>
                             <td class="@SetClass(@Model.EntryNC.NC_Category_ID, @i, "db") db" id="deb_@i">
-                                <input class="ncVar misc-@i amt-db-@i-0 NumberOnlyOneDecimalMisc" id="amt-db-@i-0" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." type="text" value="0">
+                                <input class="ncVar misc-0 amt-db-@i-0 NumberOnlyOneDecimalMisc" id="amt-db-@i-0" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." type="text" value="0">
                             </td>
 
                             @* CREDIT *@
@@ -285,7 +285,7 @@
                                 </select>
                             </td>
                             <td class="@SetClass(@Model.EntryNC.NC_Category_ID, @i, "cd") cd" id="cred_@i">
-                                <input class="ncVar misc-@i amt-cd-@i-0 NumberOnlyOneDecimalMisc" id="amt-cd-@i-0" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." type="text" value="0">
+                                <input class="ncVar misc-0 amt-cd-@i-0 NumberOnlyOneDecimalMisc" id="amt-cd-@i-0" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." type="text" value="0">
                             </td>
                             @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID)
                             @Html.HiddenFor(x => x.EntryNC.ExpenseEntryNCDtls[i].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Type_ID)
@@ -1025,19 +1025,51 @@
         //MISC ENTRIES CURR DROPDOWN CHANGED
         $('#NCPartialTbl').on('change', '.misc-curr-0', function () {
             var vals = $(this).val();
-            $(this).parent().parent().siblings("[id$='ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Curr_ID']").val(vals);
+            var pid = $(this.parentNode)[0].id;
+            var type = $(this).hasClass("db") ? dbType : cdType;
+
+            if (type == dbType) {
+                pid = pid.substring(4);
+            } else {
+                pid = pid.substring(5);
+            }
+            $(this).parent().parent().siblings("[id='EntryNC_ExpenseEntryNCDtls_" + pid + "__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Curr_ID']").val(vals);
         });
         $('#NCPartialTbl').on('change', '.misc-curr-1', function () {
             var vals = $(this).val();
-            $(this).parent().parent().siblings("[id$='ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Curr_ID']").val(vals);
+            var pid = $(this.parentNode)[0].id;
+            var type = $(this).hasClass("db") ? dbType : cdType;
+
+            if (type == dbType) {
+                pid = pid.substring(4);
+            } else {
+                pid = pid.substring(5);
+            }
+            $(this).parent().parent().siblings("[id='EntryNC_ExpenseEntryNCDtls_" + pid + "__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Curr_ID']").val(vals);
         });
         $('#NCPartialTbl').on('change', '.misc-curr-2', function () {
             var vals = $(this).val();
-            $(this).parent().parent().siblings("[id$='ExpenseEntryNCDtlAccs_2__ExpNCDtlAcc_Curr_ID']").val(vals);
+            var pid = $(this.parentNode)[0].id;
+            var type = $(this).hasClass("db") ? dbType : cdType;
+
+            if (type == dbType) {
+                pid = pid.substring(4);
+            } else {
+                pid = pid.substring(5);
+            }
+            $(this).parent().parent().siblings("[id='EntryNC_ExpenseEntryNCDtls_" + pid + "__ExpenseEntryNCDtlAccs_2__ExpNCDtlAcc_Curr_ID']").val(vals);
         });
         $('#NCPartialTbl').on('change', '.misc-curr-3', function () {
             var vals = $(this).val();
-            $(this).parent().parent().siblings("[id$='ExpenseEntryNCDtlAccs_3__ExpNCDtlAcc_Curr_ID']").val(vals);
+            var pid = $(this.parentNode)[0].id;
+            var type = $(this).hasClass("db") ? dbType : cdType;
+
+            if (type == dbType) {
+                pid = pid.substring(4);
+            } else {
+                pid = pid.substring(5);
+            }
+            $(this).parent().parent().siblings("[id='EntryNC_ExpenseEntryNCDtls_" + pid + "__ExpenseEntryNCDtlAccs_3__ExpNCDtlAcc_Curr_ID']").val(vals);
         });
         //[ END MISC ENTRIES]
 

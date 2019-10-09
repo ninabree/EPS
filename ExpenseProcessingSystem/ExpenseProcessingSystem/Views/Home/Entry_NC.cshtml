@@ -48,10 +48,41 @@
 
         $('.btnEntryAction').click(function (e) {
             e.stopImmediatePropagation();
+
+            if ($('#categoryName').val() == '11') {
+                var rows = $('#NCPartialTbl').find('tbody').find('[id^="item_"]').length;
+                var invFlag = 0;
+                for (var i = 0; i < rows; i++) {
+                    for (var j = 0; j < 4; j++) {
+                        if (parseFloat($('#EntryNC_ExpenseEntryNCDtls_' + i + '__ExpenseEntryNCDtlAccs_' + j + '__ExpNCDtlAcc_Amount').val()) > 0) {
+                            if (parseInt($('#EntryNC_ExpenseEntryNCDtls_' + i + '__ExpenseEntryNCDtlAccs_' + j + '__ExpNCDtlAcc_Acc_ID').val()) == 0) {
+                                invFlag = 1;
+                            }
+                        }
+                        if (parseFloat($('#EntryNC_ExpenseEntryNCDtls_' + i + '__ExpenseEntryNCDtlAccs_' + j + '__ExpNCDtlAcc_Acc_ID').val()) > 0) {
+                            if (parseInt($('#EntryNC_ExpenseEntryNCDtls_' + i + '__ExpenseEntryNCDtlAccs_' + j + '__ExpNCDtlAcc_Amount').val()) <= 0) {
+                                invFlag = 2;
+                            }
+                        }
+                    }
+                }
+                if (invFlag == 1) {
+                    $('#alert').text("Kindly assign an 'Account' to entries with amount accordingly.");
+                    $('#divAlertWindow').show();
+                    return false;
+                }
+                if (invFlag == 2) {
+                    $('#alert').text("Kindly assign an amount to entries with 'Account' accordingly.");
+                    $('#divAlertWindow').show();
+                    return false;
+                }
+            }
+
             loadingEffectStart();
             var msg = "";
             var warning = [];
             var command = $(this).val();
+
             if (command == "approver") {
                 msg = "Approval";
                 OpenConfirmationPopup(msg, command, warning);
@@ -518,7 +549,7 @@
                 + '</td>'
                 + '<td class="voucher-input"><input class="ncVar NumberOnlyOneDecimal" data-val="true" data-val-number="The field Inter-Rate must be a number." data-val-required="The Inter-Rate field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Inter_Rate" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Inter_Rate" type="text" value="0"></td>'
                 + '<td>'
-                + '<select id="curr[' + itemCount + ']_[0]" class="w-full input curr-sel misc-curr-0" name="curr[' + itemCount + ']_[0]">'
+                + '<select id="curr[' + itemCount + ']_[0]" class="w-full input curr-sel misc-curr-0 db" name="curr[' + itemCount + ']_[0]">'
                 + curroptions
                 + '</select>'
                 + '</td>'
@@ -527,7 +558,7 @@
                 + '</td>'
 
                 + '<td>'
-                + '<select id="curr[' + itemCount + ']_[0]" class="w-full input curr-sel misc-curr-0" name="curr[' + itemCount + ']_[0]">'
+                + '<select id="curr[' + itemCount + ']_[0]" class="w-full input curr-sel misc-curr-0 cd" name="curr[' + itemCount + ']_[0]">'
                 + curroptions
                 + '</select>'
                 + '</td>'
@@ -547,7 +578,7 @@
                 + '</td>'
                 + '<td class="voucher-input"><input class="ncVar NumberOnlyOneDecimal" data-val="true" data-val-number="The field Inter-Rate must be a number." data-val-required="The Inter-Rate field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_1__ExpNCDtlAcc_Inter_Rate" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Inter_Rate" type="text" value="0"></td>'
                 + '<td>'
-                + '<select id="curr[' + itemCount + ']_[1]" class="w-full input curr-sel misc-curr-1" name="curr[' + itemCount + ']_[1]">'
+                + '<select id="curr[' + itemCount + ']_[1]" class="w-full input curr-sel misc-curr-1 db" name="curr[' + itemCount + ']_[1]">'
                 + curroptions
                 + '</select>'
                 + '</td>'
@@ -556,7 +587,7 @@
                 + '</td>'
 
                 + '<td>'
-                + '<select id="curr[' + itemCount + ']_[1]" class="w-full input curr-sel misc-curr-1" name="curr[' + itemCount + ']_[1]">'
+                + '<select id="curr[' + itemCount + ']_[1]" class="w-full input curr-sel misc-curr-1 cd" name="curr[' + itemCount + ']_[1]">'
                 + curroptions
                 + '</select>'
                 + '</td>'
@@ -576,7 +607,7 @@
                 + '</td>'
                 + '<td class="voucher-input"><input class="ncVar NumberOnlyOneDecimal" data-val="true" data-val-number="The field Inter-Rate must be a number." data-val-required="The Inter-Rate field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_2__ExpNCDtlAcc_Inter_Rate" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[2].ExpNCDtlAcc_Inter_Rate" type="text" value="0"></td>'
                 + '<td>'
-                + '<select id="curr[' + itemCount + ']_[2]" class="w-full input curr-sel misc-curr-2" name="curr[' + itemCount + ']_[2]">'
+                + '<select id="curr[' + itemCount + ']_[2]" class="w-full input curr-sel misc-curr-2 db" name="curr[' + itemCount + ']_[2]">'
                 + curroptions
                 + '</select>'
                 + '</td>'
@@ -585,7 +616,7 @@
                 + '</td>'
 
                 + '<td>'
-                + '<select id="curr[' + itemCount + ']_[2]" class="w-full input curr-sel misc-curr-2" name="curr[' + itemCount + ']_[2]">'
+                + '<select id="curr[' + itemCount + ']_[2]" class="w-full input curr-sel misc-curr-2 cd" name="curr[' + itemCount + ']_[2]">'
                 + curroptions
                 + '</select>'
                 + '</td>'
@@ -605,7 +636,7 @@
                 + '</td>'
                 + '<td class="voucher-input"><input class="ncVar NumberOnlyOneDecimal" data-val="true" data-val-number="The field Inter-Rate must be a number." data-val-required="The Inter-Rate field is required." id="EntryNC_ExpenseEntryNCDtls_' + itemCount + '__ExpenseEntryNCDtlAccs_3__ExpNCDtlAcc_Inter_Rate" name="EntryNC.ExpenseEntryNCDtls[' + itemCount + '].ExpenseEntryNCDtlAccs[3].ExpNCDtlAcc_Inter_Rate" type="text" value="0"></td>'
                 + '<td>'
-                + '<select id="curr[' + itemCount + ']_[3]" class="w-full input curr-sel misc-curr-3" name="curr[' + itemCount + ']_[3]">'
+                + '<select id="curr[' + itemCount + ']_[3]" class="w-full input curr-sel misc-curr-3 db" name="curr[' + itemCount + ']_[3]">'
                 + curroptions
                 + '</select>'
                 + '</td>'
@@ -614,7 +645,7 @@
                 + '</td>'
 
                 + '<td>'
-                + '<select id="curr[' + itemCount + ']_[3]" class="w-full input curr-sel misc-curr-3" name="curr[' + itemCount + ']_[3]">'
+                + '<select id="curr[' + itemCount + ']_[3]" class="w-full input curr-sel misc-curr-3 cd" name="curr[' + itemCount + ']_[3]">'
                 + curroptions
                 + '</select>'
                 + '</td>'

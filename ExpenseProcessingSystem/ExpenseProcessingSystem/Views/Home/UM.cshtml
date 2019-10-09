@@ -90,13 +90,14 @@
                         <td>@Html.DisplayFor(modelItem => item.User_Role)</td>
                         <td>@Html.DisplayFor(modelItem => item.User_Email)</td>
                         <td>@Html.DisplayFor(modelItem => item.User_Comment)</td>
-                        @*<td>@Html.DisplayFor(modelItem => item.User_InUse)</td>*@
+                        @*<td></td>*@
                         <td>@Html.DisplayFor(modelItem => item.User_Creator_Name)</td>
                         <td>@Html.DisplayFor(modelItem => item.User_Approver_Name)</td>
                         <td>@Html.DisplayFor(modelItem => item.User_Created_Date)</td>
                         <td>@Html.DisplayFor(modelItem => item.User_Last_Updated)</td>
                         @*<td>@Html.DisplayFor(modelItem => item.User_Status)</td>*@
                         @Html.HiddenFor(modelItem => item.User_ID)
+                        @Html.HiddenFor(modelItem => item.User_InUse)
                     </tr>
                 }
             }
