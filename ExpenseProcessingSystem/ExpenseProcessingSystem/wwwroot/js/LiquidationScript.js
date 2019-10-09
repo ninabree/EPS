@@ -632,11 +632,11 @@ function HideCashBreakdownTable() {
 }
 
 function ChangeOptionMarkForPrint() {
-    if ($('#txtLiqPhpInput2').val() > 0) {
+    if (parseFloat(RC($('#txtLiqPhpInput2').val())) > 0) {
         $('#printOptExpenseLiq').html("&#9645;");
         $('#printOptReverseLiq').html("&#8999;");
     }
-    if ($('#txtLiqPhpInput3').val() > 0){
+    if (parseFloat(RC($('#txtLiqPhpInput3').val())) > 0){
         $('#printOptExpenseLiq').html("&#8999;");
         $('#printOptReverseLiq').html("&#9645;");
     }
