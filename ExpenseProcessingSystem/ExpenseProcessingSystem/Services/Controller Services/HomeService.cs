@@ -9589,9 +9589,13 @@ namespace ExpenseProcessingSystem.Services
                         {
                             creditAccMasterID2 = int.Parse(xelemAcc.Element("C_SS1").Value);
                         }
-                        else
+                        else if(getAccount(cv.account).Account_MasterID == int.Parse(xelemAcc.Element("D_SS4").Value))
                         {
                             creditAccMasterID2 = int.Parse(xelemAcc.Element("C_SS2").Value);
+                        }
+                        else
+                        {
+                            creditAccMasterID2 = int.Parse(xelemAcc.Element("C_SS3").Value);
                         }
                     }
 

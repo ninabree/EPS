@@ -44,8 +44,10 @@ string value4 = xelem.Element("ADDRESS").Value
 <!--Credit Account - SS-->
   <!--PETTY CASH-->
   <C_SS1 id="C_SS1">108</C_SS1>
-  <!--COMP SUSP-->
-  <C_SS2 id="C_SS2">79</C_SS2>
+  <!--COMP SUSP(767)    <==========Changes -->
+  <C_SS2 id="C_SS2">78</C_SS2> 
+  <!--COMP SUSP(789)    <==========Changes-->
+  <C_SS3 id="C_SS3">79</C_SS3>
 
 <!--FBT debit/credit account-->
   <!--Master ID For House Rent-->
