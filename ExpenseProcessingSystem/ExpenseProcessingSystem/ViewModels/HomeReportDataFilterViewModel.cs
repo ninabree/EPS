@@ -39,6 +39,7 @@ namespace ExpenseProcessingSystem.ViewModels
         public List<RepAmortViewModel> ReportAmort { get; set; }
 
         public string ReportAccountNo { get; set; }
+        public string ReportAccountCode { get; set; }
 
         public string ReportCurrency { get; set; }
 

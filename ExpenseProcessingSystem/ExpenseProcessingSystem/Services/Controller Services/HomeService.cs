@@ -3326,7 +3326,7 @@ namespace ExpenseProcessingSystem.Services
                 }
             }
 
-            return finalOutput;
+            return finalOutput.OrderBy(x => x.Payee).ThenBy(x => x.RateOfTax);
         }
 
         public IEnumerable<HomeReportOutputAST1000Model> GetAST1000_Data(HomeReportViewModel model)
@@ -3505,7 +3505,7 @@ namespace ExpenseProcessingSystem.Services
                 }
             }
 
-            return finalOutput;
+            return finalOutput.OrderBy(x => x.SupplierName).ThenBy(x => x.RateOfTax);
         }
 
         public ReportLOIViewModel GetLOIData(HomeReportViewModel model)

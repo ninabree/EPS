@@ -44,7 +44,7 @@
 <table border="0" style="width:100%">
     <tr>
         <td style="width:10%" rowspan="2"><img src="@Model.ReportCommonVM.Header_Logo" style="width:100%;height:40%" /></td>
-        <td style="text-align:center"><b>ELECTRONIC SUNDRY ACCOUNT MANAGEMENT SYSTEM (REPORT)</b></td>
+        <td style="text-align:center"><b>SUSPENSE PAYMENT / ETC. CONTROL SHEET</b></td>
         <td style="width:10%"></td>
     </tr>
     <tr>
@@ -57,11 +57,11 @@
     </tr>
     <tr>
         <td style="padding-left:3%">Account</td>
-        <td colspan="2">@Model.ReportAccountNo</td>
+        <td colspan="2">@Model.ReportAccountNo&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Code: @Model.ReportAccountCode</td>
     </tr>
     <tr>
         <td style="padding-left:3%">Currency</td>
-        <td colspan="2">@Model.ReportCurrency</td>
+        <td colspan="2">@Model.ReportCurrency<div style="float:right">Form:III-15</div></td>
     </tr>
 </table>
 <table border="1" style="width:100%" class="table-PDF">

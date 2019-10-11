@@ -788,7 +788,7 @@ namespace ExpenseProcessingSystem.Controllers
 
                 //For ESAMS Report
                 case HomeReportConstantValue.ESAMS:
-                    fileName = "ESAMSReport_" + dateNow;
+                    fileName = "SuspPaymEtcCtrlSheetReport_" + dateNow;
                     layoutName = HomeReportConstantValue.ReportLayoutFormatName + model.ReportType;
                     DateTime DateFromLayout = model.PeriodFrom;
                     DateTime DateToLayout = model.PeriodTo;
@@ -809,6 +809,7 @@ namespace ExpenseProcessingSystem.Controllers
                         HomeReportFilter = model,
                         ReportCommonVM = repComVM,
                         ReportAccountNo = accountno.Account_No,
+                        ReportAccountCode = accountno.Account_Code,
                         ReportCurrency = currency.Curr_CCY_ABBR,
                         DateFrom = DateFromLayout,
                         DateTo = DateToLayout

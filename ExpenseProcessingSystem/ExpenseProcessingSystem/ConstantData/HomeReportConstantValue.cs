@@ -260,7 +260,7 @@ namespace ExpenseProcessingSystem.ConstantData
                 new HomeReportTypesModel
                 {
                     Id = ESAMS,
-                    TypeName = "ESAMS",
+                    TypeName = "Suspense Payment/Etc. Control Sheet",
                     SubTypeAvail = false
                 },
                 new HomeReportTypesModel
