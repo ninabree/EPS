@@ -12980,6 +12980,9 @@ namespace ExpenseProcessingSystem.Services
                         entryType = (dtls.ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT) ? "D" :
                                 (dtls.ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_CREDIT ||
                                 dtls.ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_EWT) ? "C" : "";
+                        if (command == "R") {
+                            entryType = (entryType == "D") ? "C" : "D";
+                        }
                         entryContainer entryDB = new entryContainer()
                         {
                             account = dtls.ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Acc_ID,
@@ -12998,6 +13001,10 @@ namespace ExpenseProcessingSystem.Services
                         entryType = (dtls.ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT) ? "D" :
                                 (dtls.ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_CREDIT ||
                                 dtls.ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_EWT) ? "C" : "";
+                        if (command == "R")
+                        {
+                            entryType = (entryType == "D") ? "C" : "D";
+                        }
                         entryContainer entryCD = new entryContainer()
                         {
                             account = dtls.ExpenseEntryNCDtlAccs[1].ExpNCDtlAcc_Acc_ID,
