@@ -2905,7 +2905,7 @@ namespace ExpenseProcessingSystem.Controllers
                 ViewData["MESSAGE"] = GlobalSystemValues.MESSAGE;
                 GlobalSystemValues.MESSAGE = "";
             }
-
+            ViewData["ISLIQEXIST"] = (_service.getLiquidationExistence(entryID) > 0) ? true : false;
             return View("Entry_SS_ReadOnly", ssList);
         }
 
