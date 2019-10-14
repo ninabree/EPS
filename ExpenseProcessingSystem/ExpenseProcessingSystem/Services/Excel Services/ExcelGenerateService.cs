@@ -209,7 +209,7 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                 worksheet.Cells["A2"].Value = data.DateFrom.ToShortDateString() + " - "
                                             + data.DateTo.ToShortDateString();
                 worksheet.Cells["A3"].Value = worksheet.Cells["A3"].Value + data.ReportCommonVM.Header_Name;
-                worksheet.Cells["A4"].Value = worksheet.Cells["A4"].Value + data.ReportAccountNo;
+                worksheet.Cells["A4"].Value = worksheet.Cells["A4"].Value + data.ReportAccountNo + "         Code " + data.ReportAccountCode;
                 worksheet.Cells["A5"].Value = worksheet.Cells["A5"].Value + data.ReportCurrency;
                 //Content
                 foreach (var i in data.HomeReportOutputESAMS)

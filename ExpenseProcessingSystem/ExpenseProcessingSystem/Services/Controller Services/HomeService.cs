@@ -3326,7 +3326,7 @@ namespace ExpenseProcessingSystem.Services
                 }
             }
 
-            return finalOutput;
+            return finalOutput.OrderBy(x => x.Payee).ThenBy(x => x.RateOfTax);
         }
 
         public IEnumerable<HomeReportOutputAST1000Model> GetAST1000_Data(HomeReportViewModel model)
@@ -3505,7 +3505,7 @@ namespace ExpenseProcessingSystem.Services
                 }
             }
 
-            return finalOutput;
+            return finalOutput.OrderBy(x => x.SupplierName).ThenBy(x => x.RateOfTax);
         }
 
         public ReportLOIViewModel GetLOIData(HomeReportViewModel model)
@@ -14298,7 +14298,8 @@ namespace ExpenseProcessingSystem.Services
             TblCm10 goModel = new TblCm10();
 
             var user = _context.User.FirstOrDefault(x => x.User_ID == userID);
-            
+            var phpID = getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_PHP").Value)).Curr_ID;
+
             //goModel.Id = -1;
             goModel.SystemName = "EXPRESS";
             goModel.Branchno = getAccount(containerModel.entries[0].account).Account_No.Substring(4, 3);
@@ -14332,7 +14333,8 @@ namespace ExpenseProcessingSystem.Services
                 goModel.Entry11Details = "";//Replace with proper details default.
                 goModel.Entry11Entity = "010";//Replace with proper entity default.
                 goModel.Entry11Division = entry11Account.Account_Div;//Replace with proper division default.
-                if(containerModel.entries[0].type == "C")
+                //if(containerModel.entries[0].type == "C")
+                if(containerModel.entries[0].ccy != containerModel.entries[1].ccy && containerModel.entries[0].ccy != phpID)
                     goModel.Entry11InterRate = (containerModel.entries[0].interate > 0) ? containerModel.entries[0].interate.ToString() : "";//Replace with proper interate default.
                 goModel.Entry11InterAmt = "";//Replace with proper interamt default.
 
@@ -14354,7 +14356,8 @@ namespace ExpenseProcessingSystem.Services
                     goModel.Entry12Details = "";//Replace with proper details default.
                     goModel.Entry12Entity = "010";//Replace with proper entity default.
                     goModel.Entry12Division = entry12Account.Account_Div;//Replace with proper division default.
-                    if (containerModel.entries[1].type == "C")
+                    //if (containerModel.entries[1].type == "C")
+                    if ((containerModel.entries[0].ccy != containerModel.entries[1].ccy) && containerModel.entries[1].ccy != phpID)
                         goModel.Entry12InterRate = (containerModel.entries[1].interate > 0) ? containerModel.entries[1].interate.ToString() : "";//Replace with proper interate default.
                     goModel.Entry12InterAmt = "";//Replace with proper interamt default.
                 }
