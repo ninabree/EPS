@@ -305,7 +305,7 @@
         });
 
         $("#entry-controls").on("click", "#printCheck", function (e) {
-            window.open("/Home/GenerateCheckFile?ExpenseID=@Model.entryID");
+            window.open("/Home/GenerateCheckFile_Updated?ExpenseID=@Model.entryID");
             $.getJSON('updateCheckPrintStatus', { entryID: @Html.Raw(Json.Serialize(Model.entryID)) }, function (data) {
             });
             return false;

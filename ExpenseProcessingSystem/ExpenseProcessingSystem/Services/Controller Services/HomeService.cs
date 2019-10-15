@@ -14936,6 +14936,11 @@ namespace ExpenseProcessingSystem.Services
         {
             return _context.DMVendor.FirstOrDefault(x => x.Vendor_ID == id);
         }
+        //get vendor
+        public DMEmpModel getEmployee(int id)
+        {
+            return _context.DMEmp.FirstOrDefault(x => x.Emp_ID == id);
+        }
         //get vendor list
         public List<DMVendorModel> getVendorList()
         {

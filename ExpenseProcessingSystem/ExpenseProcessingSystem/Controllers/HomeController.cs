@@ -1176,6 +1176,45 @@ namespace ExpenseProcessingSystem.Controllers
 
             return File(filepath + filename, "application/pdf", filename);
         }
+
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
+        public IActionResult GenerateCheckFile_Updated(int ExpenseID)
+        {
+            ChequeData cd = new ChequeData();
+
+            var expModel = _service.getExpense(ExpenseID);
+
+            cd.Date = DateTime.Now;
+
+            if (expModel.payee_type == GlobalSystemValues.PAYEETYPE_REGEMP)
+            {
+                cd.Payee = _service.getEmployee(expModel.selectedPayee).Emp_Name;
+            }
+            else if (expModel.payee_type == GlobalSystemValues.PAYEETYPE_VENDOR)
+            {
+                cd.Payee = _service.getVendor(expModel.selectedPayee).Vendor_Name;
+            }
+
+            foreach (var item in expModel.EntryCV)
+            {
+                cd.Amount += item.credCash;
+            }
+
+            cd.Signatory1 = "";
+            cd.Signatory2 = "";
+            cd.Voucher = _service.getVoucherNo(GlobalSystemValues.TYPE_CV, expModel.expenseDate, int.Parse(expModel.expenseId));
+
+            //Services.Check.GenerateCheck gc = new Services.Check.GenerateCheck();
+
+            //filepath = gc.Generate(cd);
+            string filepath = "/ExcelTemplatesTempFolder/";
+            string filename = "Check_" + cd.Voucher + "_" + expModel.checkNo + ".pdf";
+            Services.Check.GenerateCheck gc = new Services.Check.GenerateCheck();
+            bool result = gc.GenerateCheckPDF(cd, filename);
+
+            return File(filepath + filename, "application/pdf", filename);
+        }
         //public IActionResult MizuhoLogo2Image()
         //{
         //    var dir = _env.WebRootPath;

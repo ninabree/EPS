@@ -1066,10 +1066,23 @@ namespace ExpenseProcessingSystem.Controllers
 
             List<SelectListItem> currList = _service.getCurrencyIDSelectList(int.Parse(Curr1AbbrID));
             Curr2AbbrID = Curr2AbbrID == "0" ? currList.Select(x => x.Value).FirstOrDefault() : Curr2AbbrID;
-            List<InterEntityParticular> parList1 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular1(account, Curr1AbbrName, decimal.Parse(Curr1Amt), decimal.Parse(Curr2Amt), InterRate, int.Parse(accID), int.Parse(Curr1AbbrID), _service.getInterEntityAccs("/INTERENTITYACCOUNTS/ACCOUNT[@class='entry1']"));
-            List<InterEntityParticular> parList2 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular2(Curr1AbbrName, Curr2AbbrName, decimal.Parse(Curr2Amt), InterRate, int.Parse(Curr1AbbrID), int.Parse(Curr2AbbrID), _service.getInterEntityAccs("/INTERENTITYACCOUNTS/ACCOUNT[@class='entry2']"));
-            List<InterEntityParticular> parList3 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular3(Curr2AbbrName, decimal.Parse(Curr2Amt), int.Parse(Curr2AbbrID), _service.getInterEntityAccs("/INTERENTITYACCOUNTS/ACCOUNT[@class='entry3']"));
 
+            List<InterEntityParticular> parList1 = new List<InterEntityParticular>();
+            List<InterEntityParticular> parList2 = new List<InterEntityParticular>();
+            List<InterEntityParticular> parList3 = new List<InterEntityParticular>();
+
+            if (Chk2 == "True")
+            {
+                parList1 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular1(account, Curr1AbbrName, decimal.Parse(Curr1Amt), decimal.Parse(Conv2Amt), InterRate, int.Parse(accID), int.Parse(Curr1AbbrID), _service.getInterEntityAccs("/INTERENTITYACCOUNTS/ACCOUNT[@class='entry1']"));
+                parList2 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular2(Curr1AbbrName, Curr2AbbrName, decimal.Parse(Conv2Amt), InterRate, int.Parse(Curr1AbbrID), int.Parse(Curr2AbbrID), _service.getInterEntityAccs("/INTERENTITYACCOUNTS/ACCOUNT[@class='entry2']"));
+                parList3 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular3(Curr2AbbrName, decimal.Parse(Conv2Amt), int.Parse(Curr2AbbrID), _service.getInterEntityAccs("/INTERENTITYACCOUNTS/ACCOUNT[@class='entry3']"));
+            }
+            else
+            {
+                parList1 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular1(account, Curr1AbbrName, decimal.Parse(Curr2Amt), decimal.Parse(Conv1Amt), InterRate, int.Parse(accID), int.Parse(Curr1AbbrID), _service.getInterEntityAccs("/INTERENTITYACCOUNTS/ACCOUNT[@class='entry1']"));
+                parList2 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular2(Curr1AbbrName, Curr2AbbrName, decimal.Parse(Conv1Amt), InterRate, int.Parse(Curr1AbbrID), int.Parse(Curr2AbbrID), _service.getInterEntityAccs("/INTERENTITYACCOUNTS/ACCOUNT[@class='entry2']"));
+                parList3 = CONSTANT_DDV_INTER_PARTICULARS.PopulateParticular3(Curr2AbbrName, decimal.Parse(Conv1Amt), int.Parse(Curr2AbbrID), _service.getInterEntityAccs("/INTERENTITYACCOUNTS/ACCOUNT[@class='entry3']"));
+            }
             DDVInterEntityViewModel model = new DDVInterEntityViewModel
             {
                 Inter_ID = int.Parse(id.Substring(5)),
