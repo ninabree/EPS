@@ -305,11 +305,11 @@ namespace ExpenseProcessingSystem.Controllers
                     if (_service.ClosingCheckStatus())
                     {
                         model = _service.ClosingOpenDailyBook();
-                        messages.Add("New daily book is now open!");
+                        TempData["closeMessage"] = "New daily book is now open!";
                     }
                     else
                     {
-                        messages.Add("Can't open a new book, status still open.");
+                        TempData["closeMessage"] = "Cannot open a new book, status still open.";
                     }
                     break;
                 case "CloseRBU":
@@ -321,7 +321,7 @@ namespace ExpenseProcessingSystem.Controllers
                         }
                         else
                         {
-                            messages.Add("RBU is now closed.");
+                            TempData["closeMessage"] = "RBU is now closed.";
                         }
                     }
                     break;
@@ -332,7 +332,7 @@ namespace ExpenseProcessingSystem.Controllers
                     }
                     else
                     {
-                        messages.Add("RBU is now re-opened.");
+                        TempData["closeMessage"] = "RBU is now re-opened.";
                     }
                     break;
                 case "CloseFCDU":
@@ -345,7 +345,7 @@ namespace ExpenseProcessingSystem.Controllers
                         }
                         else
                         {
-                            messages.Add("FCDU is now closed.");
+                            TempData["closeMessage"] = "FCDU is now closed.";
                         }
                     }
                     break;
@@ -356,7 +356,7 @@ namespace ExpenseProcessingSystem.Controllers
                     }
                     else
                     {
-                        messages.Add("FCDU is now re-opened.");
+                        TempData["closeMessage"] = "FCDU is now re-opened.";
                     }
                     break;
                 case "Close":
@@ -383,13 +383,19 @@ namespace ExpenseProcessingSystem.Controllers
                         messages.Add("Petty cash already closed!");
                     }
                     break;
+                case "reOpen":
+                    if (_service.reopenPC())
+                    {
+                        messages.Add("Petty cash re-opened.");
+                    }
+                    break;
             }
 
             model = _service.ClosingGetRecords();
             model.pcOpen = _service.lastPCEntry();
 
             if (closeFail)
-                model.messages.Add("Cannot close book there are still ongoing transactions!");
+                TempData["closeMessage"] = "Cannot close book there are still ongoing transactions!";
 
             var confirmMessage = TempData["closeMessage"];
 
@@ -399,7 +405,12 @@ namespace ExpenseProcessingSystem.Controllers
             foreach (string text in messages)
                 model.messages.Add(text);
 
-            return View(model);
+            ViewBag.Approver = _session.GetString("accessType");
+
+            if (command == "load" || command == "Close" || command == "reOpen")
+                return View(model);
+            else
+                return RedirectToAction("Close", "Home");
         }
 
         //----------End Closing Screen--------------

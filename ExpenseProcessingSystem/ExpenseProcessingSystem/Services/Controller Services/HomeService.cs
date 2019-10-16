@@ -14169,8 +14169,8 @@ namespace ExpenseProcessingSystem.Services
         {
             var closeModel = _context.Closing.Where(x => x.Close_Status == GlobalSystemValues.STATUS_OPEN || x.Close_Status == GlobalSystemValues.STATUS_ERROR).FirstOrDefault();
 
-            DateTime opening = closeModel.Close_Open_Date.AddHours(00);
-            DateTime closing = closeModel.Close_Open_Date.AddHours(23.9999);
+            DateTime opening = closeModel.Close_Open_Date.Date + new TimeSpan(0, 0, 0);
+            DateTime closing = closeModel.Close_Open_Date.Date + new TimeSpan(23, 59, 59);
 
             var nmStatus = (from exp in _context.ExpenseEntry
                            from dtl in _context.ExpenseEntryDetails
@@ -15835,6 +15835,15 @@ namespace ExpenseProcessingSystem.Services
             pc.PC_CloseDate = DateTime.Now;
             pc.PC_CloseUser = userID;
 
+            _context.SaveChanges();
+
+            return true;
+        }
+        public bool reopenPC()
+        {
+            PettyCashModel pc = _context.PettyCash.OrderByDescending(x => x.PC_ID).FirstOrDefault();
+
+            pc.PC_Status = GlobalSystemValues.STATUS_OPEN;
             _context.SaveChanges();
 
             return true;

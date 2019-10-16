@@ -1216,7 +1216,7 @@ namespace ExpenseProcessingSystem.Controllers
                 model.message =  "There are no Pettycash records yet.";
             }
 
-            ViewBag.Approver = _session.GetString("accessType"); ;
+            ViewBag.Approver = _session.GetString("accessType");
 
             return PartialView(model);
         }
