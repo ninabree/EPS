@@ -3654,18 +3654,18 @@ namespace ExpenseProcessingSystem.Services
                         {
                             amorts = new List<AmortSched>();
 
-                            IQueryable<ExpenseEntryAmortizationModel> amort = dtl.ExpenseEntryAmortizations.OrderBy(x => x.Amor_Sched_Date);
-                            amort.ToList().ForEach(a =>
+                            foreach (var i in dtl.ExpenseEntryAmortizations)
+                            {
                                 amorts.Add(new AmortSched
                                 {
-                                    as_Amort_Name = a.Amor_Sched_Date.ToShortDateString(),
-                                    as_Amount = a.Amor_Price
-                                })
-                            );
+                                    as_Amort_Name = i.Amor_Sched_Date.ToShortDateString(),
+                                    as_Amount = i.Amor_Price
+                                });
+                            }
 
                             repAmortVMs.Add(new RepAmortViewModel()
                             {
-                                PA_AmortScheds = amorts,
+                                PA_AmortScheds = amorts.OrderBy(x => DateTime.Parse(x.as_Amort_Name)).ToList(),
                                 PA_VoucherNo = GlobalSystemValues.getApplicationCode(list.ent.Expense_Type) + "-" + list.ent.Expense_Date.Year + "-" + list.ent.Expense_Number.ToString().PadLeft(5, '0'),
                                 PA_CheckNo = list.ent.Expense_CheckNo,
                                 PA_RefNo = "",
@@ -3682,7 +3682,8 @@ namespace ExpenseProcessingSystem.Services
                     };
                 }
             }
-            else {
+            else
+            {
                 repAmortVMs.Add(new RepAmortViewModel()
                 {
                     PA_AmortScheds = amorts,
