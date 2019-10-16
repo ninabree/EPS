@@ -14167,8 +14167,8 @@ namespace ExpenseProcessingSystem.Services
         {
             var closeModel = _context.Closing.Where(x => x.Close_Status == GlobalSystemValues.STATUS_OPEN || x.Close_Status == GlobalSystemValues.STATUS_ERROR).FirstOrDefault();
 
-            DateTime opening = closeModel.Close_Open_Date.AddHours(00);
-            DateTime closing = closeModel.Close_Open_Date.AddHours(23.9999);
+            DateTime opening = closeModel.Close_Open_Date.Date + new TimeSpan(0, 0, 0);
+            DateTime closing = closeModel.Close_Open_Date.Date + new TimeSpan(23, 59, 59);
 
             var nmStatus = (from exp in _context.ExpenseEntry
                            from dtl in _context.ExpenseEntryDetails
