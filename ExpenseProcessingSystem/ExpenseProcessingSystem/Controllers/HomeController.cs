@@ -1568,6 +1568,9 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         
                         _service.postCV(entryID,"P",int.Parse(GetUserID()));
+                        //----------------------------- NOTIF----------------------------------
+                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_CV, GlobalSystemValues.STATUS_APPROVED, cvList.maker);
+                        //----------------------------- NOTIF----------------------------------    
                         ViewBag.Success = 1;
                     }
                     else
@@ -1580,6 +1583,9 @@ namespace ExpenseProcessingSystem.Controllers
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_VERIFIED, int.Parse(GetUserID())))
                     {
                         ViewBag.Success = 1;
+                        //----------------------------- NOTIF----------------------------------
+                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_CV, GlobalSystemValues.STATUS_VERIFIED, cvList.maker);
+                        //----------------------------- NOTIF----------------------------------              
                     }
                     else
                     {

@@ -3653,7 +3653,9 @@ namespace ExpenseProcessingSystem.Services
                         foreach (var dtl in list.ExpenseEntryDetails)
                         {
                             amorts = new List<AmortSched>();
-                            dtl.ExpenseEntryAmortizations.ToList().ForEach(a =>
+
+                            IQueryable<ExpenseEntryAmortizationModel> amort = dtl.ExpenseEntryAmortizations.OrderBy(x => x.Amor_Sched_Date);
+                            amort.ToList().ForEach(a =>
                                 amorts.Add(new AmortSched
                                 {
                                     as_Amort_Name = a.Amor_Sched_Date.ToShortDateString(),
