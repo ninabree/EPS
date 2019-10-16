@@ -309,7 +309,7 @@ namespace ExpenseProcessingSystem.Controllers
                     }
                     else
                     {
-                        messages.Add("Can't open a new book, status still open.");
+                        messages.Add("Cannot open a new book, status still open.");
                     }
                     break;
                 case "CloseRBU":
@@ -383,6 +383,12 @@ namespace ExpenseProcessingSystem.Controllers
                         messages.Add("Petty cash already closed!");
                     }
                     break;
+                case "reOpen":
+                    if (_service.reopenPC())
+                    {
+                        messages.Add("Petty cash re-opened.");
+                    }
+                    break;
             }
 
             model = _service.ClosingGetRecords();
@@ -399,7 +405,12 @@ namespace ExpenseProcessingSystem.Controllers
             foreach (string text in messages)
                 model.messages.Add(text);
 
-            return View(model);
+            ViewBag.Approver = _session.GetString("accessType");
+
+            if (command == "load" || command == "Close" || command == "reOpen")
+                return View(model);
+            else
+                return RedirectToAction("Close", "Home");
         }
 
         //----------End Closing Screen--------------

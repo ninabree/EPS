@@ -15837,6 +15837,15 @@ namespace ExpenseProcessingSystem.Services
 
             return true;
         }
+        public bool reopenPC()
+        {
+            PettyCashModel pc = _context.PettyCash.OrderByDescending(x => x.PC_ID).FirstOrDefault();
+
+            pc.PC_Status = GlobalSystemValues.STATUS_OPEN;
+            _context.SaveChanges();
+
+            return true;
+        }
         //Update Status for closing
         public bool forClosingStatus(int expenseID)
         {
