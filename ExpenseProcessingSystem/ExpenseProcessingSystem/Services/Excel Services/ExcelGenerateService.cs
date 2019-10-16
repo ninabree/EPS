@@ -217,29 +217,41 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                     lastRow += 1;
                     worksheet.Cells["A" + lastRow].Value = i.GbaseRemark;
                     worksheet.Cells["A" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
+                    worksheet.Cells["A" + lastRow].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
                     worksheet.Cells["B" + lastRow].Value = i.SeqNo;
                     worksheet.Cells["B" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
+                    worksheet.Cells["B" + lastRow].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
                     worksheet.Cells["C" + lastRow].Value = i.SettleDate;
                     worksheet.Cells["C" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
-                    if(i.DebCredType == "D")
+                    worksheet.Cells["C" + lastRow].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    if (i.DebCredType == "D")
                     {
                         worksheet.Cells["D" + lastRow].Value = i.DRAmount.ToString("N2");
                     }
                     worksheet.Cells["D" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
-                    if(i.DebCredType == "C")
+                    worksheet.Cells["D" + lastRow].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    if (i.DebCredType == "C")
                     {
                         worksheet.Cells["E" + lastRow].Value = "(" + i.CRAmount + ")";
                     }
                     worksheet.Cells["E" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
+                    worksheet.Cells["E" + lastRow].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
                     worksheet.Cells["F" + lastRow].Value = i.Balance;
                     worksheet.Cells["F" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
+                    worksheet.Cells["F" + lastRow].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
                     worksheet.Cells["G" + lastRow].Value = i.DHName;
                     worksheet.Cells["G" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                     worksheet.Cells["H" + lastRow].Value = i.ApprvName;
                     worksheet.Cells["H" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
+                    worksheet.Cells["H" + lastRow].Style.WrapText = true;
                     worksheet.Cells["I" + lastRow].Value = i.MakerName;
                     worksheet.Cells["I" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
+                    worksheet.Cells["I" + lastRow].Style.WrapText = true;
+                    worksheet.Cells["J" + lastRow].Value = i.Remarks;
                     worksheet.Cells["J" + lastRow].Style.Border.BorderAround(ExcelBorderStyle.Medium);
+                    worksheet.Cells["J" + lastRow].Style.Font.Size = 8;
+                    worksheet.Cells["J" + lastRow].Style.WrapText = true;
+                    worksheet.Cells["J" + lastRow].Style.VerticalAlignment = ExcelVerticalAlignment.Top;
                 }
 
                 dataEndRow = lastRow;

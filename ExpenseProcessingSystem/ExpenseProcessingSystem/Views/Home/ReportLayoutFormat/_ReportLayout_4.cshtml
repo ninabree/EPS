@@ -73,10 +73,10 @@
             <th class="th-PDF" style="width:10%">DR AMOUNT</th>
             <th class="th-PDF" style="width:10%">CR AMOUNT</th>
             <th class="th-PDF" style="width:10%">BALANCE</th>
-            <th class="th-PDF" style="width:10%">DH</th>
+            <th class="th-PDF" style="width:4%">DH</th>
             <th class="th-PDF" style="width:10%">APRV</th>
             <th class="th-PDF" style="width:10%">MADE</th>
-            <th class="th-PDF" style="width:10%">REMARKS</th>
+            <th class="th-PDF" style="width:16%">REMARKS</th>
         </tr>
     </thead>
     <tbody>
@@ -92,7 +92,7 @@
                 <td class="td-PDF">@Html.DisplayFor(x => i.DHName)</td>
                 <td class="td-PDF">@Html.DisplayFor(x => i.ApprvName)</td>
                 <td class="td-PDF">@Html.DisplayFor(x => i.MakerName)</td>
-                <td class="td-PDF"></td>
+                <td class="td-PDF" style="font-size:small;vertical-align:top">@Html.DisplayFor(x => i.Remarks)</td>
             </tr>
         }
             <tr class="tr-PDF">

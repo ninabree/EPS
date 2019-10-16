@@ -23,6 +23,7 @@ namespace ExpenseProcessingSystem.ViewModels
         public string DHName { get; set; }
         public string ApprvName { get; set; }
         public string MakerName { get; set; }
+        public string Remarks { get; set; }
 
     }
 }
