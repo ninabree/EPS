@@ -349,6 +349,9 @@ namespace ExpenseProcessingSystem.ConstantData
         public static readonly string MESSAGE9 = "There are is no check series registered. Check the Data Maintenance and try again.";
         public static readonly string MESSAGE10 = "Only approver can access to G-Base transaction failure list page.";
 
+        //Static values for DEBIT/CREDIT transaction type.
+        public static readonly int TRANS_DEBIT = 1;
+        public static readonly int TRANS_CREDIT = 2;
     }
     public class CONSTANT_NC_VALS
     {

@@ -118,7 +118,7 @@
                         <td>@Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.systemValues.vat.SelectedValue), new { @class = "input100 txtVat selectDisabled", disabled = "disabled" })</td>
                         <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].chkEwt, new { @class = "chkEwt", @disabled = "true" })</td>
                         <td>@Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt selectDisabled", disabled = "disabled" })</td>
-                        <td><input value="@Model.EntryCV[i].ccyAbbrev" class="input100" disabled /></td>
+                        <td><input value="@Model.EntryCV[i].ccyAbbrev" class="input100 txtccytotal" disabled /></td>
                         <td><input value="@Model.EntryCV[i].debitGross" class="input100 txtGross" disabled /></td>
                         <td><input value="@Model.EntryCV[i].credEwt" class="input100 txtCredEwt" disabled /></td>
                         <td><input value="@Model.EntryCV[i].credCash" class="input100 txtCredCash" disabled /></td>
@@ -408,10 +408,10 @@
         $("#credTotal").val(roundNumber(Number(ewtSubTotal + cashSubTotal), 2));
 
         var ccyList = [];
-        for (var i = 0; i < $('.txtccy:not(#template_ccy)').length; i++) {
-            ccyList.push($($('.txtccy:not(#template_ccy)')[i]).val());
+        for (var i = 0; i < $('.txtccytotal:not(#template_ccy)').length; i++) {
+            ccyList.push($($('.txtccytotal:not(#template_ccy)')[i]).val());
         }
-        if ($('.txtccy:not(#template_ccy)').length > 1 && !(ccyList.every((val, i, arr) => val === arr[0]))) {
+        if ($('.txtccytotal:not(#template_ccy)').length > 1 && !(ccyList.every((val, i, arr) => val === arr[0]))) {
             $("#grossTotal").val(0.00);
             $("#credEwtTotal").val(0.00);
             $("#credCashTotal").val(0.00);

@@ -83,6 +83,9 @@ namespace ExpenseProcessingSystem.ConstantData
 
         public static readonly int REP_LIQUIDATION = 10;
 
+        public static readonly string ESAMS_CA_REV_MESSAGE = "Settled by using reversal entry";
+        public static readonly string ESAMS_NC_MESSAGE = "Settled by using non-cash misc entry";
+
         //========================================================================
         //Public IEnumerable class constant values
 
