@@ -14168,7 +14168,6 @@ namespace ExpenseProcessingSystem.Services
             var closeModel = _context.Closing.Where(x => x.Close_Status == GlobalSystemValues.STATUS_OPEN || x.Close_Status == GlobalSystemValues.STATUS_ERROR).FirstOrDefault();
 
             DateTime opening = closeModel.Close_Open_Date.Date + new TimeSpan(0, 0, 0);
-            DateTime closing = closeModel.Close_Open_Date.Date + new TimeSpan(23, 59, 59);
 
             var nmStatus = (from exp in _context.ExpenseEntry
                            from dtl in _context.ExpenseEntryDetails
@@ -14181,7 +14180,7 @@ namespace ExpenseProcessingSystem.Services
                            && exp.Expense_Status != GlobalSystemValues.STATUS_FOR_CLOSING
                            && exp.Expense_Status != GlobalSystemValues.STATUS_REVERSED
                            && exp.Expense_Status != GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR
-                           && (opening <= exp.Expense_Date && closing >= exp.Expense_Date)
+                           && opening <= exp.Expense_Date
                            select new { exp.Expense_ID, exp.Expense_Number, dtl.ExpDtl_ID, acc.Account_No, exp.Expense_Status }).ToList().Count;
 
             var ddvInterStatus = (from exp in _context.ExpenseEntry
@@ -14202,7 +14201,7 @@ namespace ExpenseProcessingSystem.Services
                                   && exp.Expense_Status != GlobalSystemValues.STATUS_FOR_CLOSING
                                   && exp.Expense_Status != GlobalSystemValues.STATUS_REVERSED
                                   && exp.Expense_Status != GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR
-                                  && (opening <= exp.Expense_Date && closing >= exp.Expense_Date)
+                                  && opening <= exp.Expense_Date
                                   select new { exp.Expense_ID, dtl.ExpDtl_ID, acc.Account_No, exp.Expense_Status }).ToList().Count;
 
             var liqStatus = (from exp in _context.ExpenseEntry
@@ -14219,7 +14218,7 @@ namespace ExpenseProcessingSystem.Services
                             && liqDtl.Liq_Status != GlobalSystemValues.STATUS_FOR_CLOSING
                             && liqDtl.Liq_Status != GlobalSystemValues.STATUS_REVERSED
                             && liqDtl.Liq_Status != GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR
-                            && (opening <= liqDtl.Liq_Created_Date && closing >= liqDtl.Liq_Created_Date)
+                            && opening <= liqDtl.Liq_Created_Date
                             select new
                             { exp.Expense_ID,expDtl.ExpDtl_ID,exp.Expense_Number,liqDtl.Liq_Status,acc.Account_No}).ToList().Count;
 
@@ -14228,7 +14227,7 @@ namespace ExpenseProcessingSystem.Services
                             && exp.Expense_Status != GlobalSystemValues.STATUS_FOR_CLOSING
                             && exp.Expense_Status != GlobalSystemValues.STATUS_REVERSED
                             && exp.Expense_Status != GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR
-                            && (opening <= exp.Expense_Date && closing >= exp.Expense_Date)
+                            && opening <= exp.Expense_Date 
                             select new {exp.Expense_ID}).ToList().Count;
 
             if (liqStatus > 0 || ddvInterStatus > 0 || nmStatus > 0 || ncStatus > 0)
