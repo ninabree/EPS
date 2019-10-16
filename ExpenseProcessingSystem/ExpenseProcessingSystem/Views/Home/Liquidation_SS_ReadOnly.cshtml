@@ -718,7 +718,7 @@
                                     || Model.LiqEntryDetails.Liq_Status == GlobalSystemValues.STATUS_FOR_CLOSING
                                     || Model.LiqEntryDetails.Liq_Status == GlobalSystemValues.STATUS_POSTED
                                     || Model.LiqEntryDetails.Liq_Status == GlobalSystemValues.STATUS_CLOSED)
-                                    && (isMakerLiq || isVerifierLiq || isApproverLiq)) ? true : false;
+                                    && (isApproverLiq)) ? true : false;
             }
             @Html.HiddenFor(x => Model.entryID, new { @class = "entryID" })
             @Html.HiddenFor(x => Model.LiqEntryDetails.Liq_Created_Date, new { @class = "LiqEntryDetails_Liq_Created_Date" })

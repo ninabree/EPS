@@ -58,16 +58,16 @@ string value1 = xNC.Element("LOGO").Value
     <ACCOUNT class="entry4" id="ACCOUNT1">112</ACCOUNT>
     <ACCOUNT class="entry4" id="ACCOUNT2">75</ACCOUNT>
 
-    <ACCOUNT class="entry5" id="ACCOUNT1">69</ACCOUNT>
+    <ACCOUNT class="entry5" id="ACCOUNT1">115</ACCOUNT>
     <ACCOUNT class="entry5" id="ACCOUNT2">75</ACCOUNT>
 
     <ACCOUNT class="entry6" id="ACCOUNT1">117</ACCOUNT>
     <ACCOUNT class="entry6" id="ACCOUNT2">75</ACCOUNT>
 
-    <ACCOUNT class="entry7" id="ACCOUNT1">108</ACCOUNT>
+    <ACCOUNT class="entry7" id="ACCOUNT1">116</ACCOUNT>
     <ACCOUNT class="entry7" id="ACCOUNT2">75</ACCOUNT>
 
-    <ACCOUNT class="entry8" id="ACCOUNT1">68</ACCOUNT>
+    <ACCOUNT class="entry8" id="ACCOUNT1">113</ACCOUNT>
     <ACCOUNT class="entry8" id="ACCOUNT2">75</ACCOUNT>
 
     <ACCOUNT class="entry9" id="ACCOUNT1">110</ACCOUNT>

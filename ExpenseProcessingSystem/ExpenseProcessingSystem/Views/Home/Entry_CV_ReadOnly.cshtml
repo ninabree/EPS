@@ -21,7 +21,7 @@
 <div class="tabContent">
     <input id="_screen" type="hidden" value="cv_ViewOnly" />
     <div id="tbl-lbl" class="flex-sb">
-        <div class="dis-inline-block w-20">Date: <p class="dis-inline-block w-70">@Html.TextBoxFor(model => model.expenseDate, new { @readonly = "true", @class = "input w-97" })</p> </div>
+        <div class="dis-inline-block w-20">Date: <p class="dis-inline-block w-70">@Html.EditorFor(model => model.expenseDate, new { htmlAttributes = new { @class = "input w-97", @type = "date", @readonly = "readonly", @id = "entryDate" } })</p> </div>
         <div class="dis-inline-block"><p class="dis-inline-block">@Html.TextBoxFor(model => model.expenseYear, new { @readonly = "true", @class = "input" })</p> - <p class="dis-inline-block">@Html.TextBoxFor(model => model.expenseId, new { @readonly = "true", @class = "input" })</p></div>
         <div class="dis-inline-block float-r">
             @if (Model.checkNo != "" 
@@ -202,9 +202,9 @@
                                 Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING ||
                                 Model.statusID == GlobalSystemValues.STATUS_POSTED) ? true : false;
 
-            var enableReversal = (Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
+            var enableReversal = ((Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
                                 Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING ||
-                                Model.statusID == GlobalSystemValues.STATUS_POSTED) ? true : false;
+                                Model.statusID == GlobalSystemValues.STATUS_POSTED) && isApprover) ? true : false;
         }
         @using (Html.BeginForm("VerAppModCV", "Home", FormMethod.Post, new { @class = "validate-form" }))
         {
@@ -305,7 +305,7 @@
         });
 
         $("#entry-controls").on("click", "#printCheck", function (e) {
-            window.open("/Home/GenerateCheckFile?ExpenseID=@Model.entryID");
+            window.open("/Home/GenerateCheckFile_Updated?ExpenseID=@Model.entryID");
             $.getJSON('updateCheckPrintStatus', { entryID: @Html.Raw(Json.Serialize(Model.entryID)) }, function (data) {
             });
             return false;

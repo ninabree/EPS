@@ -305,11 +305,11 @@ namespace ExpenseProcessingSystem.Controllers
                     if (_service.ClosingCheckStatus())
                     {
                         model = _service.ClosingOpenDailyBook();
-                        messages.Add("New daily book is now open!");
+                        TempData["closeMessage"] = "New daily book is now open!";
                     }
                     else
                     {
-                        messages.Add("Can't open a new book, status still open.");
+                        TempData["closeMessage"] = "Cannot open a new book, status still open.";
                     }
                     break;
                 case "CloseRBU":
@@ -321,7 +321,7 @@ namespace ExpenseProcessingSystem.Controllers
                         }
                         else
                         {
-                            messages.Add("RBU is now closed.");
+                            TempData["closeMessage"] = "RBU is now closed.";
                         }
                     }
                     break;
@@ -332,7 +332,7 @@ namespace ExpenseProcessingSystem.Controllers
                     }
                     else
                     {
-                        messages.Add("RBU is now re-opened.");
+                        TempData["closeMessage"] = "RBU is now re-opened.";
                     }
                     break;
                 case "CloseFCDU":
@@ -345,7 +345,7 @@ namespace ExpenseProcessingSystem.Controllers
                         }
                         else
                         {
-                            messages.Add("FCDU is now closed.");
+                            TempData["closeMessage"] = "FCDU is now closed.";
                         }
                     }
                     break;
@@ -356,7 +356,7 @@ namespace ExpenseProcessingSystem.Controllers
                     }
                     else
                     {
-                        messages.Add("FCDU is now re-opened.");
+                        TempData["closeMessage"] = "FCDU is now re-opened.";
                     }
                     break;
                 case "Close":
@@ -383,13 +383,19 @@ namespace ExpenseProcessingSystem.Controllers
                         messages.Add("Petty cash already closed!");
                     }
                     break;
+                case "reOpen":
+                    if (_service.reopenPC())
+                    {
+                        messages.Add("Petty cash re-opened.");
+                    }
+                    break;
             }
 
             model = _service.ClosingGetRecords();
             model.pcOpen = _service.lastPCEntry();
 
             if (closeFail)
-                model.messages.Add("Cannot close book there are still ongoing transactions!");
+                TempData["closeMessage"] = "Cannot close book there are still ongoing transactions!";
 
             var confirmMessage = TempData["closeMessage"];
 
@@ -399,7 +405,12 @@ namespace ExpenseProcessingSystem.Controllers
             foreach (string text in messages)
                 model.messages.Add(text);
 
-            return View(model);
+            ViewBag.Approver = _session.GetString("accessType");
+
+            if (command == "load" || command == "Close" || command == "reOpen")
+                return View(model);
+            else
+                return RedirectToAction("Close", "Home");
         }
 
         //----------End Closing Screen--------------
@@ -1176,6 +1187,45 @@ namespace ExpenseProcessingSystem.Controllers
 
             return File(filepath + filename, "application/pdf", filename);
         }
+
+        [OnlineUserCheck]
+        [NonAdminRoleCheck]
+        public IActionResult GenerateCheckFile_Updated(int ExpenseID)
+        {
+            ChequeData cd = new ChequeData();
+
+            var expModel = _service.getExpense(ExpenseID);
+
+            cd.Date = DateTime.Now;
+
+            if (expModel.payee_type == GlobalSystemValues.PAYEETYPE_REGEMP)
+            {
+                cd.Payee = _service.getEmployee(expModel.selectedPayee).Emp_Name;
+            }
+            else if (expModel.payee_type == GlobalSystemValues.PAYEETYPE_VENDOR)
+            {
+                cd.Payee = _service.getVendor(expModel.selectedPayee).Vendor_Name;
+            }
+
+            foreach (var item in expModel.EntryCV)
+            {
+                cd.Amount += item.credCash;
+            }
+
+            cd.Signatory1 = "";
+            cd.Signatory2 = "";
+            cd.Voucher = _service.getVoucherNo(GlobalSystemValues.TYPE_CV, expModel.expenseDate, int.Parse(expModel.expenseId));
+
+            //Services.Check.GenerateCheck gc = new Services.Check.GenerateCheck();
+
+            //filepath = gc.Generate(cd);
+            string filepath = "/ExcelTemplatesTempFolder/";
+            string filename = "Check_" + cd.Voucher + "_" + expModel.checkNo + ".pdf";
+            Services.Check.GenerateCheck gc = new Services.Check.GenerateCheck();
+            bool result = gc.GenerateCheckPDF(cd, filename);
+
+            return File(filepath + filename, "application/pdf", filename);
+        }
         //public IActionResult MizuhoLogo2Image()
         //{
         //    var dir = _env.WebRootPath;
@@ -1529,6 +1579,9 @@ namespace ExpenseProcessingSystem.Controllers
                     {
                         
                         _service.postCV(entryID,"P",int.Parse(GetUserID()));
+                        //----------------------------- NOTIF----------------------------------
+                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_CV, GlobalSystemValues.STATUS_APPROVED, cvList.maker);
+                        //----------------------------- NOTIF----------------------------------    
                         ViewBag.Success = 1;
                     }
                     else
@@ -1541,6 +1594,9 @@ namespace ExpenseProcessingSystem.Controllers
                     if (_service.updateExpenseStatus(entryID, GlobalSystemValues.STATUS_VERIFIED, int.Parse(GetUserID())))
                     {
                         ViewBag.Success = 1;
+                        //----------------------------- NOTIF----------------------------------
+                        _service.insertIntoNotif(intUser, GlobalSystemValues.TYPE_CV, GlobalSystemValues.STATUS_VERIFIED, cvList.maker);
+                        //----------------------------- NOTIF----------------------------------              
                     }
                     else
                     {
@@ -2905,7 +2961,7 @@ namespace ExpenseProcessingSystem.Controllers
                 ViewData["MESSAGE"] = GlobalSystemValues.MESSAGE;
                 GlobalSystemValues.MESSAGE = "";
             }
-
+            ViewData["ISLIQEXIST"] = (_service.getLiquidationExistence(entryID) > 0) ? true : false;
             return View("Entry_SS_ReadOnly", ssList);
         }
 

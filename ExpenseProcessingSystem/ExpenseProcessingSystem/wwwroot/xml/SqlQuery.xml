@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--How to call value in c#.
+
+XElement xNC = XElement.Load("wwwroot/xml/SqlQuery.xml"); <- xml path
+
+string value1 = xNC.Element("QUERY_1").Value
+-->
+<SQL>
+  <!-- For Modification-->
+  <QUERY_1>
+  </QUERY_1>
+  <QUERY_READY>
+    UPDATE ExpenseEntry
+    SET Expense_Last_Updated = DATEADD(HOUR, 15, CAST(CAST(Expense_Created_Date AS DATE) AS DATETIME))
+    WHERE Expense_ID = 1
+  </QUERY_READY>
+</SQL>

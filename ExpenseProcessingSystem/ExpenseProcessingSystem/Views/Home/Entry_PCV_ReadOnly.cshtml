@@ -207,9 +207,9 @@
                             Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING ||
                             Model.statusID == GlobalSystemValues.STATUS_POSTED) ? true : false;
 
-            var enableReversal = (Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
+            var enableReversal = ((Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
                                 Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING ||
-                                Model.statusID == GlobalSystemValues.STATUS_POSTED) ? true : false;
+                                Model.statusID == GlobalSystemValues.STATUS_POSTED) && isApprover) ? true : false;
         }
         @Html.HiddenFor(x => Model.entryID)
         @if (isMaker || isVerifier || isApprover || aVerifier || anApprover)

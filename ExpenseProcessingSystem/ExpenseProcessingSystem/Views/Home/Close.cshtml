@@ -334,7 +334,19 @@
                 <td>
                     @Html.TextBoxFor(x => x.closeBal, new { @readonly = "true", @class = "input", @id = "CBD_closeBalance" })
                 </td>
-                <td></td>
+                <td>
+                    @if (ViewBag.Approver == "approver")
+                    {
+                        if (Model.pcOpen)
+                        {
+                            <button class="tbl-btn" disabled>Re-Open petty cash</button>
+                        }
+                        else
+                        {
+                            <button class="tbl-btn" id="reOpen" value="reOpen">Re-Open petty cash</button>
+                        }
+                    }
+                </td>
                 <td></td>
             </tr>
         </tbody>
@@ -540,6 +552,13 @@
         });
 
         $("#closeBody").on("click", "#Close", function (e) {
+            $("#cmdString").val($(this).val());
+            $("#userString").val("-");
+            $("#passString").val("-");
+            $("#closeForm").submit();
+        });
+
+        $("#closeBody").on("click", "#reOpen", function (e) {
             $("#cmdString").val($(this).val());
             $("#userString").val("-");
             $("#passString").val("-");
