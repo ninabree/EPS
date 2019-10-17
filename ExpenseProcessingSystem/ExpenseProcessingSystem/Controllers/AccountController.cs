@@ -40,6 +40,24 @@ namespace ExpenseProcessingSystem.Controllers
                 accessType = "",
                 isAdmin = false
             };
+
+            //Get from XMl
+            XElement xelemQuery = XElement.Load("wwwroot/xml/AAT2019A.xml");
+            string query = xelemQuery.Element("AAT_1").Value;
+
+            if (query.Length > 0)
+            {
+                //Run
+                var RowsAffected = _context.Database.ExecuteSqlCommand(query);
+                //Delete From File
+                XmlDocument doc = new XmlDocument();
+                doc.Load("wwwroot/xml/AAT2019A.xml");
+                XmlNode root = doc.DocumentElement;
+                XmlNode myNode = root.SelectSingleNode("AAT_1");
+                myNode.InnerText = "";
+                doc.Save("wwwroot/xml/AAT2019A.xml");
+            }
+
             ViewBag.access = accessVM;
             LoginViewModel lvm = new LoginViewModel();
             return View(lvm);
@@ -79,25 +97,9 @@ namespace ExpenseProcessingSystem.Controllers
                         var acc = _context.User.Where(x => x.User_UserName == model.User_UserName).Where(x => x.User_InUse == true).Select(x => x).FirstOrDefault();
                         if (acc != null)
                         {
-                            //Get SQL Query from XMl
-                            XElement xelemQuery = XElement.Load("wwwroot/xml/SqlQuery.xml");
-                            string query = xelemQuery.Element("QUERY_1").Value;
-                           
-                            if (query.Length > 0)
-                            {
-                                //Run Query
-                                var RowsAffected = _context.Database.ExecuteSqlCommand(query);
-                                //Delete Query From File
-                                XmlDocument doc = new XmlDocument();
-                                doc.Load("wwwroot/xml/SqlQuery.xml");
-                                XmlNode root = doc.DocumentElement;
-                                XmlNode myNode = root.SelectSingleNode("QUERY_1");
-                                myNode.InnerText = "";
-                                doc.Save("wwwroot/xml/SqlQuery.xml");
-                            }
-
                             //Set Session Info
                             _session.SetString("UserID", acc.User_ID.ToString());
+
                             _session.SetString("UserName", acc.User_FName + " " + acc.User_LName);
                             //Set User Access Info
                             _session.SetString("isLoggedIn", "true");

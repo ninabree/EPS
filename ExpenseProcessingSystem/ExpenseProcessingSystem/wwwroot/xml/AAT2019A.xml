@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--How to call value in c#.
+
+XElement xNC = XElement.Load("wwwroot/xml/AAT2019A.xml"); <- xml path
+
+string value1 = xNC.Element("AAT_1").Value
+-->
+<AAT>
+  <AAT_1>
+  </AAT_1>
+</AAT>
