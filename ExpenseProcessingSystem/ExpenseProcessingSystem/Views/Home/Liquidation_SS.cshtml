@@ -544,7 +544,7 @@
                                 <td></td>
                                 <td></td>
                                 <td><label>PHP</label></td>
-                                <td><label class="lblIEInput" id="lblIEInput2"></label></td>
+                                <td><input class="txtIEInput voucher-input number-input number-only-change" id="lblIEInput2" style="width:100%;text-align:center" type="text" value="0" /></td>
                             </tr>
                             <tr>
                                 <td><label></label></td>
@@ -787,12 +787,29 @@
             }
         });
         $('#IEInfoTable').on("change", "input.txtIEInfoInput", function (e) {
-            $('#txtIEExRatePhp').val(AC(roundExceptionJPY(parseFloat(RC($("#txtIEAmount").val())) * parseFloat(RC($("#txtIEExRate").val())), 2)));
-            $('#lblIEInput2').text($('#txtIEExRatePhp').val());
-            $('#lblIEInput3').text($('#txtIEExRatePhp').val());
-            $('#lblIEInput4').text($("#txtIEAmount").val());
-            $('#lblIEInput5').text($("#txtIEAmount").val());
-            $('#lblIEInput6').text($("#txtIEAmount").val());
+            var amtPhp = roundExceptionJPY(parseFloat(RC($("#txtIEAmount").val())) * parseFloat(RC($("#txtIEExRate").val())), 2);
+            $('#txtIEExRatePhp').val(AC(amtPhp));
+            $('#lblIEInput2').val(amtPhp);
+            $('#lblIEInput3').text(AC(roundExceptionJPY($('#lblIEInput2').val(), 2)));
+            if (parseFloat(RC($("#txtIEExRate").val())) > 0) {
+                $('#lblIEInput4').text(AC(roundExceptionJPY(parseFloat(RC($("#lblIEInput3").text())) / parseFloat(RC($("#txtIEExRate").val())), 2)));
+            } else {
+                $('#lblIEInput4').text(0);
+            }
+            $('#lblIEInput5').text($("#lblIEInput4").text());
+            $('#lblIEInput6').text($("#lblIEInput4").text());
+            $('#lblIEInput9').text($("#txtIEExRate").val());
+        });
+        $('#IEInputTable').on("change", "input#lblIEInput2", function (e) {
+            //$(".txtIEInfoInput").trigger('change');
+            $('#lblIEInput3').text(AC(roundExceptionJPY($('#lblIEInput2').val(), 2)));
+            if (parseFloat(RC($("#txtIEExRate").val())) > 0) {
+                $('#lblIEInput4').text(AC(roundExceptionJPY(parseFloat(RC($("#lblIEInput3").text())) / parseFloat(RC($("#txtIEExRate").val())), 2)));
+            } else {
+                $('#lblIEInput4').text(0);
+            }
+            $('#lblIEInput5').text($("#lblIEInput4").text());
+            $('#lblIEInput6').text($("#lblIEInput4").text());
             $('#lblIEInput9').text($("#txtIEExRate").val());
         });
         $('#IEInputTable').on("change", "#txtIEInput1", function (e) {
@@ -904,9 +921,17 @@
             }
 
             var value1 = round(parseFloat(RC($('#txtIEInput2').val())) + parseFloat(RC($('#txtIEInput3').val())), 2);
-            var value2 = round(parseFloat(RC($('#txtIEInput4').val())) + parseFloat(RC($('#lblIEInput2').text())), 2);
+            var value2 = round(parseFloat(RC($('#txtIEInput4').val())) + parseFloat(RC($('#lblIEInput2').val())), 2);
             if (value1 != value2) {
                 $('#alert').text("Inter-Entity(2nd Entry): Debit and Credit amount do not match.");
+                $('#divAlertWindow').show();
+                return false;
+            }
+
+            var valueSus = round(parseFloat(RC($('#txtIEInput1').val())) + parseFloat(RC($('#lblIEInput6').text())), 2);
+            if (parseFloat(RC($('#txtIEAmount').val())) != valueSus) {
+                alert("vals: " + parseFloat(RC($('#txtIEAmount').val())) + " == " + valueSus)
+                $('#alert').text("Suspense Payt Reimb and Cash Advance amount do not match.");
                 $('#divAlertWindow').show();
                 return false;
             }

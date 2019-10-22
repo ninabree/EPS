@@ -223,6 +223,7 @@ function printDivCashLiqBD(divID) {
 };
 
 function AC(nStr) {
+    alert();
     if (parseFloat(nStr) % 1 == 0 && $('.highlight').find('.currMasterID').val() != getXMLLiqValue("CURRENCY_Yen")) {
         nStr = nStr + ".00";
     }
@@ -352,7 +353,7 @@ function setIEValuetoDivInput(ret) {
     $('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_1_1').val($('#txtIEInput2').val().replace(/\,/g, ''));
     $('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_1_2').val($('#txtIEInput3').val().replace(/\,/g, ''));
     $('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_2_1').val($('#txtIEInput4').val().replace(/\,/g, ''));
-    $('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_2_2').val($('#lblIEInput2').text().replace(/\,/g, ''));
+    $('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_2_2').val($('#lblIEInput2').val().replace(/\,/g, ''));
     $('#LiquidationDetails_' + ret + '__liqInterEntity_2__Liq_Amount_1_1').val($('#lblIEInput3').text().replace(/\,/g, ''));
     $('#LiquidationDetails_' + ret + '__liqInterEntity_2__Liq_Amount_1_2').val($('#lblIEInput4').text().replace(/\,/g, ''));
     $('#LiquidationDetails_' + ret + '__liqInterEntity_3__Liq_Amount_1_1').val($('#lblIEInput5').text().replace(/\,/g, ''));
@@ -383,7 +384,7 @@ function assignDivValuesIE(pid) {
     $('#txtIEInput2').val(AC($('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_1_1').val()));
     $('#txtIEInput3').val(AC($('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_1_2').val()));
     $('#txtIEInput4').val(AC($('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_2_1').val()));
-    $('#lblIEInput2').text(AC($('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_2_2').val()));
+    $('#lblIEInput2').val(AC($('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_2_2').val()));
     $('#lblIEInput3').text(AC($('#LiquidationDetails_' + ret + '__liqInterEntity_2__Liq_Amount_1_1').val()));
     $('#lblIEInput4').text(AC(round($('#LiquidationDetails_' + ret + '__liqInterEntity_2__Liq_Amount_1_2').val(), 2)));
     $('#lblIEInput5').text(AC(round($('#LiquidationDetails_' + ret + '__liqInterEntity_3__Liq_Amount_1_1').val(), 2)));
