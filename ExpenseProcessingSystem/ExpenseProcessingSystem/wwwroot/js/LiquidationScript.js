@@ -223,7 +223,6 @@ function printDivCashLiqBD(divID) {
 };
 
 function AC(nStr) {
-    alert();
     if (parseFloat(nStr) % 1 == 0 && $('.highlight').find('.currMasterID').val() != getXMLLiqValue("CURRENCY_Yen")) {
         nStr = nStr + ".00";
     }
