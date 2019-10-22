@@ -373,6 +373,10 @@ $.fn.digits = function () {
 //    })
 //}
 function AC(nStr) {
+    if (parseFloat(nStr) % 1 == 0 && $('.highlight').find('.currMasterID').val() != getXMLLiqValue("CURRENCY_Yen")) {
+        nStr = nStr + ".00";
+    }
+
     nStr += '';
     x = nStr.split('.');
     x1 = x[0];

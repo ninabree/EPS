@@ -39,7 +39,7 @@ function roundExceptionJPY(value, exp) {
     value = value.toString().split('e');
 
     var res = +(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp));
-    if (parseFloat(res) % 1 == 0 ) {
+    if (parseFloat(res) % 1 == 0 && $('.highlight').find('.currMasterID').val() != getXMLLiqValue("CURRENCY_Yen")) {
         res = res + ".00";
     }
     return res;
