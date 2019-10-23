@@ -794,7 +794,7 @@
             if (parseFloat(RC($("#txtIEExRate").val())) > 0) {
                 //checker if YEN
                 var decCount = 2;
-                if (parseFloat(RC($("#lblIEInput3").text())) % 1 == 0 && $('.highlight').find('.currMasterID').val() != getXMLLiqValue("CURRENCY_Yen")) {
+                if ($('.highlight').find('.currMasterID').val() == getXMLLiqValue("CURRENCY_Yen")) {
                     decCount = 0;
                 }
                 $('#lblIEInput4').text(AC(roundExceptionJPY(parseFloat(RC($("#lblIEInput3").text())) / parseFloat(RC($("#txtIEExRate").val())), decCount)));
@@ -811,7 +811,7 @@
             if (parseFloat(RC($("#txtIEExRate").val())) > 0) {
                 //checker if YEN
                 var decCount = 2;
-                if (parseFloat(RC($("#lblIEInput3").text())) % 1 == 0 && $('.highlight').find('.currMasterID').val() != getXMLLiqValue("CURRENCY_Yen")) {
+                if ($('.highlight').find('.currMasterID').val() == getXMLLiqValue("CURRENCY_Yen")) {
                     decCount = 0;
                 }
                 $('#lblIEInput4').text(AC(roundExceptionJPY(parseFloat(RC($("#lblIEInput3").text())) / parseFloat(RC($("#txtIEExRate").val())), decCount)));
