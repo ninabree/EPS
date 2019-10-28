@@ -18,13 +18,13 @@ string value1 = xNC.Element("LOGO").Value
     <ACCOUNT class="entry2" id="ACCOUNT2">78</ACCOUNT>
 
     <ACCOUNT class="entry3" id="ACCOUNT1">78</ACCOUNT>
-    <ACCOUNT class="entry3" id="ACCOUNT2">119</ACCOUNT>
+    <ACCOUNT class="entry3" id="ACCOUNT2">117</ACCOUNT> <!-- CHANGE - OLD 119-->
 
     <ACCOUNT class="entry4" id="ACCOUNT1">78</ACCOUNT>
     <ACCOUNT class="entry4" id="ACCOUNT2">89</ACCOUNT>
 
     <ACCOUNT class="entry5" id="ACCOUNT1">78</ACCOUNT>
-    <ACCOUNT class="entry5" id="ACCOUNT2">117</ACCOUNT>
+    <ACCOUNT class="entry5" id="ACCOUNT2">73</ACCOUNT>  <!-- CHANGE - OLD 117-->
 
     <ACCOUNT class="entry6" id="ACCOUNT1">78</ACCOUNT>
     <ACCOUNT class="entry6" id="ACCOUNT2">119</ACCOUNT>
@@ -38,7 +38,7 @@ string value1 = xNC.Element("LOGO").Value
     <ACCOUNT class="entry9" id="ACCOUNT1">78</ACCOUNT>
     <ACCOUNT class="entry9" id="ACCOUNT2">119</ACCOUNT>
 
-    <ACCOUNT class="entry10" id="ACCOUNT1">105</ACCOUNT>
+    <ACCOUNT class="entry10" id="ACCOUNT1">106</ACCOUNT> <!-- CHANGE- OLD 105-->
     <ACCOUNT class="entry10" id="ACCOUNT2">78</ACCOUNT>
 
     <ACCOUNT class="entry11" id="ACCOUNT1">103</ACCOUNT>

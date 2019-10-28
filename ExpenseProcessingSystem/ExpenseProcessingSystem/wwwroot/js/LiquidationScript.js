@@ -137,7 +137,6 @@ function displayInfoCashBD(pid) {
 };
 
 function displayInfoIE(pid) {
-
     $('.lblIEInput').text("");
     $('.txtIEExRatePhp').text("");
     $('.txtIEInfoInput').val(0);
@@ -389,7 +388,9 @@ function assignDivValuesIE(pid) {
     $('#lblIEInput5').text(AC(round($('#LiquidationDetails_' + ret + '__liqInterEntity_3__Liq_Amount_1_1').val(), 2)));
     $('#lblIEInput6').text(AC(round($('#LiquidationDetails_' + ret + '__liqInterEntity_3__Liq_Amount_1_2').val(), 2)));
 
-    $('#txtIEAmount').val(AC($('#lblIEInput4').text()));
+    //$('#txtIEAmount').val(AC($('#lblIEInput4').text())); <---ORIGINAL
+    $('#txtIEAmount').val(AC($('.highlight').find('td .txtGross').val())); //<--- CHANGED
+    
     $('#txtIEExRate').val($('#lblIEInput9').text());
     $('#txtIEExRatePhp').val(AC(roundExceptionJPY(parseFloat(RC($('#txtIEAmount').val())) * parseFloat(RC($('#txtIEExRate').val())), 2)));
 

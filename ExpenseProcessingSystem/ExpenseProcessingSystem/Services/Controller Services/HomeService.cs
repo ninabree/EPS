@@ -8357,31 +8357,92 @@ namespace ExpenseProcessingSystem.Services
                                                x.ExpenseDetailID == i.ExpenseDetailID).ToList();
                 if (liqCA.Count > 0)
                 {
+                    RepESAMSViewModel newLiq = new RepESAMSViewModel();
                     foreach (var credLiq in liqCA)
                     {
                         if (!usedGOExpHistID.Contains(credLiq.GOExpHist_Id))
                         {
-                            decimal debitAmount = (esamsData.LastOrDefault() != null) ? esamsData.LastOrDefault().DRAmount : 0.00M;
+                            //Assign values to newLiq
+                            newLiq.GOExpHist_Id = credLiq.GOExpHist_Id;
+                            newLiq.Expense_Creator_ID = credLiq.Expense_Creator_ID;
+                            newLiq.Expense_Approver = credLiq.Expense_Approver;
+                            newLiq.GOExpHist_Branchno = credLiq.GOExpHist_Branchno;
+                            newLiq.GOExpHist_Remarks = credLiq.GOExpHist_Remarks;
+                            newLiq.GOExpHist_ValueDate = credLiq.GOExpHist_ValueDate;
+                            //entry 1-1
+                            newLiq.GOExpHist_Entry11ActType = credLiq.GOExpHist_Entry11ActType;
+                            newLiq.GOExpHist_Entry11ActNo = credLiq.GOExpHist_Entry11ActNo;
+                            newLiq.GOExpHist_Entry11Type = credLiq.GOExpHist_Entry11Type;
+                            //entry 1-2
+                            newLiq.GOExpHist_Entry12ActType = credLiq.GOExpHist_Entry12ActType;
+                            newLiq.GOExpHist_Entry12ActNo = credLiq.GOExpHist_Entry12ActNo;
+                            newLiq.GOExpHist_Entry12Type = credLiq.GOExpHist_Entry12Type;
+                            //entry 2-1
+                            newLiq.GOExpHist_Entry21ActType = credLiq.GOExpHist_Entry21ActType;
+                            newLiq.GOExpHist_Entry21ActNo = credLiq.GOExpHist_Entry21ActNo;
+                            newLiq.GOExpHist_Entry21Type = credLiq.GOExpHist_Entry21Type;
+                            //entry 2-2
+                            newLiq.GOExpHist_Entry22ActType = credLiq.GOExpHist_Entry22ActType;
+                            newLiq.GOExpHist_Entry22ActNo = credLiq.GOExpHist_Entry22ActNo;
+                            newLiq.GOExpHist_Entry22Type = credLiq.GOExpHist_Entry22Type;
+                            //entry 3-1
+                            newLiq.GOExpHist_Entry31ActType = credLiq.GOExpHist_Entry31ActType;
+                            newLiq.GOExpHist_Entry31ActNo = credLiq.GOExpHist_Entry31ActNo;
+                            newLiq.GOExpHist_Entry31Type = credLiq.GOExpHist_Entry31Type;
+                            //entry 3-2
+                            newLiq.GOExpHist_Entry32ActType = credLiq.GOExpHist_Entry32ActType;
+                            newLiq.GOExpHist_Entry32ActNo = credLiq.GOExpHist_Entry32ActNo;
+                            newLiq.GOExpHist_Entry32Type = credLiq.GOExpHist_Entry32Type;
+                            //entry 4-1
+                            newLiq.GOExpHist_Entry41ActType = credLiq.GOExpHist_Entry41ActType;
+                            newLiq.GOExpHist_Entry41ActNo = credLiq.GOExpHist_Entry41ActNo;
+                            newLiq.GOExpHist_Entry41Type = credLiq.GOExpHist_Entry41Type;
+                            //entry 4-2
+                            newLiq.GOExpHist_Entry42ActType = credLiq.GOExpHist_Entry42ActType;
+                            newLiq.GOExpHist_Entry42ActNo = credLiq.GOExpHist_Entry42ActNo;
+                            newLiq.GOExpHist_Entry42Type = credLiq.GOExpHist_Entry42Type;
 
-                            if((credLiq.GOExpHist_Entry11Type == "C" && decimal.Parse(credLiq.GOExpHist_Entry11Amt) == debitAmount) ||
-                               (credLiq.GOExpHist_Entry12Type == "C" && decimal.Parse(credLiq.GOExpHist_Entry12Amt) == debitAmount) ||
-                               (credLiq.GOExpHist_Entry21Type == "C" && decimal.Parse(credLiq.GOExpHist_Entry21Amt) == debitAmount) ||
-                               (credLiq.GOExpHist_Entry22Type == "C" && decimal.Parse(credLiq.GOExpHist_Entry22Amt) == debitAmount) ||
-                               (credLiq.GOExpHist_Entry31Type == "C" && decimal.Parse(credLiq.GOExpHist_Entry31Amt) == debitAmount) ||
-                               (credLiq.GOExpHist_Entry32Type == "C" && decimal.Parse(credLiq.GOExpHist_Entry32Amt) == debitAmount) ||
-                               (credLiq.GOExpHist_Entry41Type == "C" && decimal.Parse(credLiq.GOExpHist_Entry41Amt) == debitAmount) ||
-                               (credLiq.GOExpHist_Entry42Type == "C" && decimal.Parse(credLiq.GOExpHist_Entry42Amt) == debitAmount))
+                            if ((credLiq.GOExpHist_Entry11Type == "C") ||
+                               (credLiq.GOExpHist_Entry12Type == "C") ||
+                               (credLiq.GOExpHist_Entry21Type == "C") ||
+                               (credLiq.GOExpHist_Entry22Type == "C") ||
+                               (credLiq.GOExpHist_Entry31Type == "C") ||
+                               (credLiq.GOExpHist_Entry32Type == "C") ||
+                               (credLiq.GOExpHist_Entry41Type == "C") ||
+                               (credLiq.GOExpHist_Entry42Type == "C"))
                             {
-                                HomeReportESAMSViewModel res = AddToESAMViewList(cnt, credLiq, selectedAccount, userList, GlobalSystemValues.TRANS_CREDIT);
-                                if (res != null)
-                                {
-                                    res.Remarks = "";
-                                    esamsData.Add(res);
-                                    flag = true;
-                                    usedGOExpHistID.Add(credLiq.GOExpHist_Id);
-                                    break;
-                                }
-                            }
+                                //add up values of similar entries
+                                newLiq.GOExpHist_Entry11Amt = "" +(decimal.Parse(credLiq.GOExpHist_Entry11Amt ?? "0") + decimal.Parse(newLiq.GOExpHist_Entry11Amt ?? "0"));
+                                newLiq.GOExpHist_Entry12Amt = "" + (decimal.Parse(credLiq.GOExpHist_Entry12Amt ?? "0") + decimal.Parse(newLiq.GOExpHist_Entry12Amt ?? "0"));
+                                newLiq.GOExpHist_Entry21Amt = "" + (decimal.Parse(credLiq.GOExpHist_Entry21Amt ?? "0") + decimal.Parse(newLiq.GOExpHist_Entry21Amt ?? "0"));
+                                newLiq.GOExpHist_Entry22Amt = "" + (decimal.Parse(credLiq.GOExpHist_Entry22Amt ?? "0") + decimal.Parse(newLiq.GOExpHist_Entry22Amt ?? "0"));
+                                newLiq.GOExpHist_Entry31Amt = "" + (decimal.Parse(credLiq.GOExpHist_Entry31Amt ?? "0") + decimal.Parse(newLiq.GOExpHist_Entry31Amt ?? "0"));
+                                newLiq.GOExpHist_Entry32Amt = "" + (decimal.Parse(credLiq.GOExpHist_Entry32Amt ?? "0") + decimal.Parse(newLiq.GOExpHist_Entry32Amt ?? "0"));
+                                newLiq.GOExpHist_Entry41Amt = "" + (decimal.Parse(credLiq.GOExpHist_Entry41Amt ?? "0") + decimal.Parse(newLiq.GOExpHist_Entry41Amt ?? "0"));
+                                newLiq.GOExpHist_Entry42Amt = "" + (decimal.Parse(credLiq.GOExpHist_Entry42Amt ?? "0") + decimal.Parse(newLiq.GOExpHist_Entry42Amt ?? "0"));
+                            }  
+                        }
+                    }
+
+                    decimal debitAmount = (esamsData.LastOrDefault() != null) ? esamsData.LastOrDefault().DRAmount : 0.00M;
+                    //compare if LIQ amount equates to the debit amount from CA
+                    if ((newLiq.GOExpHist_Entry11Type == "C" && decimal.Parse(newLiq.GOExpHist_Entry11Amt) == debitAmount) ||
+                       (newLiq.GOExpHist_Entry12Type == "C" && decimal.Parse(newLiq.GOExpHist_Entry12Amt) == debitAmount) ||
+                       (newLiq.GOExpHist_Entry21Type == "C" && decimal.Parse(newLiq.GOExpHist_Entry21Amt) == debitAmount) ||
+                       (newLiq.GOExpHist_Entry22Type == "C" && decimal.Parse(newLiq.GOExpHist_Entry22Amt) == debitAmount) ||
+                       (newLiq.GOExpHist_Entry31Type == "C" && decimal.Parse(newLiq.GOExpHist_Entry31Amt) == debitAmount) ||
+                       (newLiq.GOExpHist_Entry32Type == "C" && decimal.Parse(newLiq.GOExpHist_Entry32Amt) == debitAmount) ||
+                       (newLiq.GOExpHist_Entry41Type == "C" && decimal.Parse(newLiq.GOExpHist_Entry41Amt) == debitAmount) ||
+                       (newLiq.GOExpHist_Entry42Type == "C" && decimal.Parse(newLiq.GOExpHist_Entry42Amt) == debitAmount))
+                    {
+                        HomeReportESAMSViewModel res = AddToESAMViewList(cnt, newLiq, selectedAccount, userList, GlobalSystemValues.TRANS_CREDIT);
+                        if (res != null)
+                        {
+                            res.Remarks = "";
+                            esamsData.Add(res);
+                            flag = true;
+                            usedGOExpHistID.Add(newLiq.GOExpHist_Id);
+                            //break; //<-- ADDED COMMENT
                         }
                     }
                 }
