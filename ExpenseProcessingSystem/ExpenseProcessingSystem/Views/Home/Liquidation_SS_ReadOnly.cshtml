@@ -434,6 +434,129 @@
                     </table>
                 </div>
             </div>
+            @*+++++++++++Liquidation form for Expense HO USD account+++++++++++*@
+            <div id="divGenExp" style="display:none;text-align:center">
+                <div style="display:inline-block;width:100%">
+                    <label>Liquidation for Foreign currency</label>
+                </div>
+                <div style="display:inline-block;text-align:center;width:55%;vertical-align:top">
+                    <table style="width:100%;" class="tableLiqPhp table-bordered table-striped voucher-tbl">
+                        <colgroup>
+                            <col style="width:40%" />
+                            <col style="width:10%" />
+                            <col style="width:15%" />
+                            <col style="width:17.5%" />
+                            <col style="width:17.5%" />
+                        </colgroup>
+                        <tr>
+                            <th style="text-align:center"><label>ACCOUNT NO.</label></th>
+                            <th style="text-align:center"><label>ACCONT CODE</label></th>
+                            <th style="text-align:center"><label>EWT(%)</label></th>
+                            <th style="text-align:center"><label>DEBIT</label></th>
+                            <th style="text-align:center"><label>CREDIT</label></th>
+                        </tr>
+                        <tr>
+                            <td>
+                                @Html.DropDownListFor(x => Model.acc, new SelectList(Model.accList, "Account_ID", "Account_Name", null, "Account_MasterID"), new { @id = "lblGenExp1", @style = "width:100%", @class = "input100 selectDisabled", @disabled = "disabled" })
+                            </td>
+                            <td>
+                                <input id="txtGenExpAccCode1" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="">
+                            </td>
+                            <td></td>
+                            <td>
+                                <input id="txtGenExpInput1" class="input100 txtGenExppInput" readonly="readonly" style="width:100%;text-align:center" type="text" value="0" />
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left;">
+                                @Html.DropDownListFor(x => Model.acc, new SelectList(Model.accAllList, "Account_ID", "Account_Name", null, "Account_MasterID"), new { @id = "lblGenExp2", @style = "width:100%", @class = "input100 selectDisabled", @disabled = "disabled" })
+                            <td>
+                                <input id="txtGenExpAccCode2" class="input100" readonly="readonly" style="width:100%;background:transparent;text-align:center" type="text" value="">
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <input id="txtGenExpInput2" class="input100 txtGenExppInput" readonly="readonly" style="width:100%;text-align:center" type="text" value="0" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="text-align:right;">
+                                <label>Total:</label>
+                            </td>
+                            <td>
+                                <input id="txtGenExpInput3" class="input100" style="width:100%;text-align:center" readonly="readonly" type="text" value="0" />
+                            </td>
+                            <td>
+                                <input id="txtGenExpInput4" class="input100" style="width:100%;text-align:center" readonly="readonly" type="text" value="0" />
+                            </td>
+                        </tr>
+                    </table>
+                    <table style="width:100%;margin-top:5%">
+                        <tr>
+                            <td colspan="2" style="text-align:left">
+                                <label>Transaction No.: </label><input type="text" id="TransIDPhp" readonly="readonly" style="background-color:transparent" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="button" id="saveGenExp" class="saveGenExpBtn btn" value="Save Liquidation" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="divCashBDLiq" style="display:inline-block;text-align:center;width:35%">
+                    <table style="width:100%;" id="tableTitlePrint" border="0" class="tblHidePrintLiq">
+                        <tr>
+                            <td style="text-align:left"><img src="~/images/mizuho-logo.png" style="width:50%;height:30%" /></td>
+                            <td style="text-align:right">PETTY CASH BREAKDOWN</td>
+                        </tr>
+                        <tr style="border-top:solid">
+                            <td style="text-align:left"></td>
+                            <td style="text-align:right">Mizuho Bank, Ltd - Manila Branch</td>
+                        </tr>
+                    </table>
+                    <table style="width:60%;" id="tableHeaderPrint" border="0" class="tblHidePrintLiq">
+                        <tr>
+                            <td style="width:5%;text-align:left">Date : </td>
+                            <td><input id="cashbdDatePrintLiq" style="text-align:center" /></td>
+                        </tr>
+                        <tr>
+                            <td style="width:5%;text-align:left">Amount: </td>
+                            <td><input id="cashbdAmountPrintLiq" style="text-align:center" /></td>
+                        </tr>
+                    </table>
+                    <table style="width:60%;" id="tableOptionPrint" border="0" class="tblHidePrintLiq">
+                        <tr>
+                            <td style="width:5%;text-align:left">EXPENSE</td>
+                            <td style="text-align:center"><label style="font-size:x-large;text-align:center" value="&#9645;" id="printOptExpenseLiq"></label></td>
+                        </tr>
+                        <tr>
+                            <td style="width:5%;text-align:left">REVERSAL</td>
+                            <td style="text-align:center"><label style="font-size:x-large;text-align:center" value="&#9645;" id="printOptReverseLiq"></label></td>
+                        </tr>
+                    </table>
+                    <table style="width:60%;" id="tableSignPrint" border="1" class="tblHidePrintLiq">
+                        <colgroup>
+                            <col style="width:20%" />
+                            <col style="width:10%" />
+                            <col style="width:30%" />
+                        </colgroup>
+                        <tr>
+                            <td colspan="2">PAYMENT RECEIVED BY :</td>
+                            <td style="text-align:center"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">PAYMENT PAID BY :</td>
+                            <td style="text-align:center"></td>
+                        </tr>
+                        <tr>
+                            <td>PAYMENT FOR :</td>
+                            <td colspan="2" style="text-align:center"><input id="paymentForLiq" /></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
             @*+++++++++++Liquidation form for FOREIGN currency+++++++++++*@
             <div id="divForeign" style="display:none;">
                 <div style="display:inline-block;width:100%">
@@ -484,9 +607,9 @@
                             <td></td>
                             <td>
                                 @if (Model.statusID == GlobalSystemValues.STATUS_REVERSED || Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING
-                                || Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING || Model.statusID == GlobalSystemValues.STATUS_CLOSED
-                                || Model.statusID == GlobalSystemValues.STATUS_POSTED || Model.statusID == GlobalSystemValues.STATUS_ERROR
-                                || Model.statusID == GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR)
+                               || Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING || Model.statusID == GlobalSystemValues.STATUS_CLOSED
+                               || Model.statusID == GlobalSystemValues.STATUS_POSTED || Model.statusID == GlobalSystemValues.STATUS_ERROR
+                               || Model.statusID == GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR)
                                 {
                                     <a class="cddISLiqBtn" href="#"><img id="imgLiqCDD" src="~/images/cddLiqLogo.png" style="width:20%;height:30%" /></a>
                                 }
@@ -838,6 +961,7 @@
 
             if ($('#' + pid).find('.currMasterID').val() == getXMLLiqValue("CURRENCY_PHP")) {
                 $('#divForeign').hide();
+                $('#divGenExp').hide();
                 $('#divPHP').show();
                 $('#txtLiqVendor').val($('#' + pid).find('.txtPayor').val());
                 $('#txtLiqPhpInput5').val($('#' + pid).find('.txtGross').val());
@@ -849,10 +973,36 @@
                 $('#txtLiqPhpInput4').attr('disabled', 'disabled');
                 ChangeOptionMarkForPrint();
                 $('#TransIDPhp').val($('#' + pid).find('.transNo').val());
+            } else if (($('#' + pid).find('.currMasterID').val() == getXMLLiqValue("CURRENCY_US")) &&
+                (($('#' + pid).find('.hidAccID').val() == getXMLLiqValueAccount("GENEXP_ACCOUNT_US", "1")))) {
+                var bonyAccId = getXMLLiqValueAccount("BONY_ACCOUNT_US", "1");
+                var bonyAccCode = getXMLLiqValueAccount("BONY_ACCOUNT_US", "2").replace(/\"/g, '');
 
+                $('#divGenExp').show();
+                $('#divForeign').hide();
+                $('#divPHP').hide();
+
+                $('#lblGenExp1').find('option[value="' + bonyAccId + '"]').attr('selected', 'selected');
+                $('#lblGenExp2').find('option[value="' + $('#' + pid).find('.hidAccID').val() + '"]').attr('selected', 'selected');
+
+                $('#txtGenExpInput1').val($('#' + pid).find('.txtGross').val());
+                $('#txtGenExpInput1').attr('value', $('#' + pid).find('.txtGross').val());
+                $('#txtGenExpInput2').val($('#' + pid).find('.txtGross').val());
+                $('#txtGenExpInput2').attr('value', $('#' + pid).find('.txtGross').val());
+                $('#txtGenExpInput3').val($('#txtGenExpInput1').val());
+                $('#txtGenExpInput3').attr('value', $('#txtGenExpInput1').val());
+                $('#txtGenExpInput4').val($('#txtGenExpInput2').val());
+                $('#txtGenExpInput4').attr('value', $('#txtGenExpInput2').val());
+
+                $('#txtGenExpAccCode1').val(bonyAccCode);
+                $('#txtGenExpAccCode1').attr('value', bonyAccCode);
+
+                $('#txtGenExpAccCode2').val($('#' + pid).find('.hidAccCode').val());
+                $('#txtGenExpAccCode2').attr('value', $('#' + pid).find('.hidAccCode').val());
             } else {
                 $('#divForeign').show();
                 $('#divPHP').hide();
+                $('#divGenExp').hide();
                 displayInfoIE($(this.parentNode)[0].parentNode.id);
                 $('#TransIDForeign').val($('#' + pid).find('.transNo').val());
                 //For Readonly

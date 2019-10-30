@@ -5641,6 +5641,28 @@ namespace ExpenseProcessingSystem.Controllers
 
             return Json(acc);
         }
+        [AcceptVerbs("Post")]
+        public ActionResult getAccountStr(string masterID)
+        {
+            if (masterID != null)
+            {
+                var acc = _service.getAccountByMasterID(int.Parse(masterID));
+
+                return Json(acc.Account_ID);
+            }
+            return Json(null);
+        }
+        [AcceptVerbs("Post")]
+        public ActionResult getAccountCodeStr(string masterID)
+        {
+            if (masterID != null)
+            {
+                var acc = _service.getAccountByMasterID(int.Parse(masterID));
+
+                return Json(acc.Account_Code);
+            }
+            return Json(null);
+        }
         [AcceptVerbs("GET")]
         public JsonResult getCurrency(int masterID)
         {
