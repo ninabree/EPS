@@ -8362,45 +8362,8 @@ namespace ExpenseProcessingSystem.Services
                     {
                         if (!usedGOExpHistID.Contains(credLiq.GOExpHist_Id))
                         {
-                            //Assign values to newLiq
-                            newLiq.GOExpHist_Id = credLiq.GOExpHist_Id;
-                            newLiq.Expense_Creator_ID = credLiq.Expense_Creator_ID;
-                            newLiq.Expense_Approver = credLiq.Expense_Approver;
-                            newLiq.GOExpHist_Branchno = credLiq.GOExpHist_Branchno;
-                            newLiq.GOExpHist_Remarks = credLiq.GOExpHist_Remarks;
-                            newLiq.GOExpHist_ValueDate = credLiq.GOExpHist_ValueDate;
-                            //entry 1-1
-                            newLiq.GOExpHist_Entry11ActType = credLiq.GOExpHist_Entry11ActType;
-                            newLiq.GOExpHist_Entry11ActNo = credLiq.GOExpHist_Entry11ActNo;
-                            newLiq.GOExpHist_Entry11Type = credLiq.GOExpHist_Entry11Type;
-                            //entry 1-2
-                            newLiq.GOExpHist_Entry12ActType = credLiq.GOExpHist_Entry12ActType;
-                            newLiq.GOExpHist_Entry12ActNo = credLiq.GOExpHist_Entry12ActNo;
-                            newLiq.GOExpHist_Entry12Type = credLiq.GOExpHist_Entry12Type;
-                            //entry 2-1
-                            newLiq.GOExpHist_Entry21ActType = credLiq.GOExpHist_Entry21ActType;
-                            newLiq.GOExpHist_Entry21ActNo = credLiq.GOExpHist_Entry21ActNo;
-                            newLiq.GOExpHist_Entry21Type = credLiq.GOExpHist_Entry21Type;
-                            //entry 2-2
-                            newLiq.GOExpHist_Entry22ActType = credLiq.GOExpHist_Entry22ActType;
-                            newLiq.GOExpHist_Entry22ActNo = credLiq.GOExpHist_Entry22ActNo;
-                            newLiq.GOExpHist_Entry22Type = credLiq.GOExpHist_Entry22Type;
-                            //entry 3-1
-                            newLiq.GOExpHist_Entry31ActType = credLiq.GOExpHist_Entry31ActType;
-                            newLiq.GOExpHist_Entry31ActNo = credLiq.GOExpHist_Entry31ActNo;
-                            newLiq.GOExpHist_Entry31Type = credLiq.GOExpHist_Entry31Type;
-                            //entry 3-2
-                            newLiq.GOExpHist_Entry32ActType = credLiq.GOExpHist_Entry32ActType;
-                            newLiq.GOExpHist_Entry32ActNo = credLiq.GOExpHist_Entry32ActNo;
-                            newLiq.GOExpHist_Entry32Type = credLiq.GOExpHist_Entry32Type;
-                            //entry 4-1
-                            newLiq.GOExpHist_Entry41ActType = credLiq.GOExpHist_Entry41ActType;
-                            newLiq.GOExpHist_Entry41ActNo = credLiq.GOExpHist_Entry41ActNo;
-                            newLiq.GOExpHist_Entry41Type = credLiq.GOExpHist_Entry41Type;
-                            //entry 4-2
-                            newLiq.GOExpHist_Entry42ActType = credLiq.GOExpHist_Entry42ActType;
-                            newLiq.GOExpHist_Entry42ActNo = credLiq.GOExpHist_Entry42ActNo;
-                            newLiq.GOExpHist_Entry42Type = credLiq.GOExpHist_Entry42Type;
+                            //populate new LIQ viewmodel
+                            newLiq = PopulateNewLiq(newLiq, credLiq);
 
                             if ((credLiq.GOExpHist_Entry11Type == "C") ||
                                (credLiq.GOExpHist_Entry12Type == "C") ||
@@ -8472,45 +8435,8 @@ namespace ExpenseProcessingSystem.Services
                     {
                         if (!usedGOExpHistID.Contains(credNC.GOExpHist_Id))
                         {
-                            //Assign values to newLiq
-                            newLiqCA.GOExpHist_Id = credNC.GOExpHist_Id;
-                            newLiqCA.Expense_Creator_ID = credNC.Expense_Creator_ID;
-                            newLiqCA.Expense_Approver = credNC.Expense_Approver;
-                            newLiqCA.GOExpHist_Branchno = credNC.GOExpHist_Branchno;
-                            newLiqCA.GOExpHist_Remarks = credNC.GOExpHist_Remarks;
-                            newLiqCA.GOExpHist_ValueDate = credNC.GOExpHist_ValueDate;
-                            //entry 1-1
-                            newLiqCA.GOExpHist_Entry11ActType = credNC.GOExpHist_Entry11ActType;
-                            newLiqCA.GOExpHist_Entry11ActNo = credNC.GOExpHist_Entry11ActNo;
-                            newLiqCA.GOExpHist_Entry11Type = credNC.GOExpHist_Entry11Type;
-                            //entry 1-2
-                            newLiqCA.GOExpHist_Entry12ActType = credNC.GOExpHist_Entry12ActType;
-                            newLiqCA.GOExpHist_Entry12ActNo = credNC.GOExpHist_Entry12ActNo;
-                            newLiqCA.GOExpHist_Entry12Type = credNC.GOExpHist_Entry12Type;
-                            //entry 2-1
-                            newLiqCA.GOExpHist_Entry21ActType = credNC.GOExpHist_Entry21ActType;
-                            newLiqCA.GOExpHist_Entry21ActNo = credNC.GOExpHist_Entry21ActNo;
-                            newLiqCA.GOExpHist_Entry21Type = credNC.GOExpHist_Entry21Type;
-                            //entry 2-2
-                            newLiqCA.GOExpHist_Entry22ActType = credNC.GOExpHist_Entry22ActType;
-                            newLiqCA.GOExpHist_Entry22ActNo = credNC.GOExpHist_Entry22ActNo;
-                            newLiqCA.GOExpHist_Entry22Type = credNC.GOExpHist_Entry22Type;
-                            //entry 3-1
-                            newLiqCA.GOExpHist_Entry31ActType = credNC.GOExpHist_Entry31ActType;
-                            newLiqCA.GOExpHist_Entry31ActNo = credNC.GOExpHist_Entry31ActNo;
-                            newLiqCA.GOExpHist_Entry31Type = credNC.GOExpHist_Entry31Type;
-                            //entry 3-2
-                            newLiqCA.GOExpHist_Entry32ActType = credNC.GOExpHist_Entry32ActType;
-                            newLiqCA.GOExpHist_Entry32ActNo = credNC.GOExpHist_Entry32ActNo;
-                            newLiqCA.GOExpHist_Entry32Type = credNC.GOExpHist_Entry32Type;
-                            //entry 4-1
-                            newLiqCA.GOExpHist_Entry41ActType = credNC.GOExpHist_Entry41ActType;
-                            newLiqCA.GOExpHist_Entry41ActNo = credNC.GOExpHist_Entry41ActNo;
-                            newLiqCA.GOExpHist_Entry41Type = credNC.GOExpHist_Entry41Type;
-                            //entry 4-2
-                            newLiqCA.GOExpHist_Entry42ActType = credNC.GOExpHist_Entry42ActType;
-                            newLiqCA.GOExpHist_Entry42ActNo = credNC.GOExpHist_Entry42ActNo;
-                            newLiqCA.GOExpHist_Entry42Type = credNC.GOExpHist_Entry42Type;
+                            //populate new LIQ viewmodel
+                            newLiqCA = PopulateNewLiq(newLiqCA, credNC);
 
                             if (prefix + i.GOExpHist_Remarks.Trim() == credNC.GOExpHist_Remarks.Trim() &&
                                 ((credNC.GOExpHist_Entry11Type == "C") ||
@@ -9000,31 +8926,53 @@ namespace ExpenseProcessingSystem.Services
                                                x.ExpenseDetailID == i.ExpenseDetailID).ToList();
                 if (liqCA.Count > 0)
                 {
+                    RepOutstandingViewModel newLiq = new RepOutstandingViewModel();
                     foreach (var credLiq in liqCA)
                     {
                         if (!usedGOExpHistID.Contains(credLiq.GOExpHist_Id))
                         {
-                            string debitAmount = (outstandResult.LastOrDefault() != null) ? outstandResult.LastOrDefault().Trans_Amount : "";
+                            //populate new LIQ viewmodel
+                            newLiq = PopulateNewLiqOutstanding(newLiq, credLiq);
 
-                            if((credLiq.GOExpHist_Entry11Type == "C" && credLiq.GOExpHist_Entry11Amt == debitAmount) ||
-                               (credLiq.GOExpHist_Entry12Type == "C" && credLiq.GOExpHist_Entry12Amt == debitAmount) ||
-                               (credLiq.GOExpHist_Entry21Type == "C" && credLiq.GOExpHist_Entry21Amt == debitAmount) ||
-                               (credLiq.GOExpHist_Entry22Type == "C" && credLiq.GOExpHist_Entry22Amt == debitAmount) ||
-                               (credLiq.GOExpHist_Entry31Type == "C" && credLiq.GOExpHist_Entry31Amt == debitAmount) ||
-                               (credLiq.GOExpHist_Entry32Type == "C" && credLiq.GOExpHist_Entry32Amt == debitAmount) ||
-                               (credLiq.GOExpHist_Entry41Type == "C" && credLiq.GOExpHist_Entry41Amt == debitAmount) ||
-                               (credLiq.GOExpHist_Entry42Type == "C" && credLiq.GOExpHist_Entry42Amt == debitAmount))
+                            if ((credLiq.GOExpHist_Entry11Type == "C") ||
+                               (credLiq.GOExpHist_Entry12Type == "C") ||
+                               (credLiq.GOExpHist_Entry21Type == "C") ||
+                               (credLiq.GOExpHist_Entry22Type == "C") ||
+                               (credLiq.GOExpHist_Entry31Type == "C") ||
+                               (credLiq.GOExpHist_Entry32Type == "C") ||
+                               (credLiq.GOExpHist_Entry41Type == "C") ||
+                               (credLiq.GOExpHist_Entry42Type == "C"))
                             {
-                                HomeReportAccountSummaryViewModel res = AddToOutstandingViewList(credLiq, selectedAccount);
-                                if (res != null)
-                                {
-                                    var removeItem = outstandResult.Where(x => x.HistGOExpHist_Id == i.GOExpHist_Id).FirstOrDefault();
-                                    if (removeItem != null) outstandResult.Remove(removeItem);
-                                    flag = true;
-                                    usedGOExpHistID.Add(credLiq.GOExpHist_Id);
-                                    break;
-                                }
+                                //add up values of similar entries
+                                newLiq.GOExpHist_Entry11Amt = "" + (decimal.Parse(credLiq.GOExpHist_Entry11Amt ?? "0") + decimal.Parse(newLiq.GOExpHist_Entry11Amt ?? "0"));
+                                newLiq.GOExpHist_Entry12Amt = "" + (decimal.Parse(credLiq.GOExpHist_Entry12Amt ?? "0") + decimal.Parse(newLiq.GOExpHist_Entry12Amt ?? "0"));
+                                newLiq.GOExpHist_Entry21Amt = "" + (decimal.Parse(credLiq.GOExpHist_Entry21Amt ?? "0") + decimal.Parse(newLiq.GOExpHist_Entry21Amt ?? "0"));
+                                newLiq.GOExpHist_Entry22Amt = "" + (decimal.Parse(credLiq.GOExpHist_Entry22Amt ?? "0") + decimal.Parse(newLiq.GOExpHist_Entry22Amt ?? "0"));
+                                newLiq.GOExpHist_Entry31Amt = "" + (decimal.Parse(credLiq.GOExpHist_Entry31Amt ?? "0") + decimal.Parse(newLiq.GOExpHist_Entry31Amt ?? "0"));
+                                newLiq.GOExpHist_Entry32Amt = "" + (decimal.Parse(credLiq.GOExpHist_Entry32Amt ?? "0") + decimal.Parse(newLiq.GOExpHist_Entry32Amt ?? "0"));
+                                newLiq.GOExpHist_Entry41Amt = "" + (decimal.Parse(credLiq.GOExpHist_Entry41Amt ?? "0") + decimal.Parse(newLiq.GOExpHist_Entry41Amt ?? "0"));
+                                newLiq.GOExpHist_Entry42Amt = "" + (decimal.Parse(credLiq.GOExpHist_Entry42Amt ?? "0") + decimal.Parse(newLiq.GOExpHist_Entry42Amt ?? "0"));
                             }
+                        }
+                    }
+                    string debitAmount = (outstandResult.LastOrDefault() != null) ? outstandResult.LastOrDefault().Trans_Amount : "";
+
+                    if ((newLiq.GOExpHist_Entry11Type == "C" && newLiq.GOExpHist_Entry11Amt == debitAmount) ||
+                       (newLiq.GOExpHist_Entry12Type == "C" && newLiq.GOExpHist_Entry12Amt == debitAmount) ||
+                       (newLiq.GOExpHist_Entry21Type == "C" && newLiq.GOExpHist_Entry21Amt == debitAmount) ||
+                       (newLiq.GOExpHist_Entry22Type == "C" && newLiq.GOExpHist_Entry22Amt == debitAmount) ||
+                       (newLiq.GOExpHist_Entry31Type == "C" && newLiq.GOExpHist_Entry31Amt == debitAmount) ||
+                       (newLiq.GOExpHist_Entry32Type == "C" && newLiq.GOExpHist_Entry32Amt == debitAmount) ||
+                       (newLiq.GOExpHist_Entry41Type == "C" && newLiq.GOExpHist_Entry41Amt == debitAmount) ||
+                       (newLiq.GOExpHist_Entry42Type == "C" && newLiq.GOExpHist_Entry42Amt == debitAmount))
+                    {
+                        HomeReportAccountSummaryViewModel res = AddToOutstandingViewList(newLiq, selectedAccount);
+                        if (res != null)
+                        {
+                            var removeItem = outstandResult.Where(x => x.HistGOExpHist_Id == i.GOExpHist_Id).FirstOrDefault();
+                            if (removeItem != null) outstandResult.Remove(removeItem);
+                            flag = true;
+                            usedGOExpHistID.Add(newLiq.GOExpHist_Id);
                         }
                     }
                 }
@@ -9048,33 +8996,57 @@ namespace ExpenseProcessingSystem.Services
                 if (ncCA.Count > 0)
                 {
                     string prefix = (i.Expense_Type == GlobalSystemValues.TYPE_SS || status.Contains(i.Expense_Status)) ? "S" : "";
+                    RepOutstandingViewModel newNC = new RepOutstandingViewModel();
 
                     foreach (var credNC in ncCA)
                     {
                         if (!usedGOExpHistID.Contains(credNC.GOExpHist_Id))
                         {
-                            string debitAmount = (outstandResult.LastOrDefault() != null) ? outstandResult.LastOrDefault().Trans_Amount : "";
+                            //populate new LIQ viewmodel
+                            newNC = PopulateNewLiqOutstanding(newNC, credNC);
 
-                            if (prefix + i.GOExpHist_Remarks.Trim() == credNC.GOExpHist_Remarks.Trim() &&
-                                ((credNC.GOExpHist_Entry11Type == "C" && credNC.GOExpHist_Entry11Amt == debitAmount) ||
-                                 (credNC.GOExpHist_Entry12Type == "C" && credNC.GOExpHist_Entry12Amt == debitAmount) ||
-                                 (credNC.GOExpHist_Entry21Type == "C" && credNC.GOExpHist_Entry21Amt == debitAmount) ||
-                                 (credNC.GOExpHist_Entry22Type == "C" && credNC.GOExpHist_Entry22Amt == debitAmount) ||
-                                 (credNC.GOExpHist_Entry31Type == "C" && credNC.GOExpHist_Entry31Amt == debitAmount) ||
-                                 (credNC.GOExpHist_Entry32Type == "C" && credNC.GOExpHist_Entry32Amt == debitAmount) ||
-                                 (credNC.GOExpHist_Entry41Type == "C" && credNC.GOExpHist_Entry41Amt == debitAmount) ||
-                                 (credNC.GOExpHist_Entry42Type == "C" && credNC.GOExpHist_Entry42Amt == debitAmount)))
+                            if ((credNC.GOExpHist_Entry11Type == "C") ||
+                               (credNC.GOExpHist_Entry12Type == "C") ||
+                               (credNC.GOExpHist_Entry21Type == "C") ||
+                               (credNC.GOExpHist_Entry22Type == "C") ||
+                               (credNC.GOExpHist_Entry31Type == "C") ||
+                               (credNC.GOExpHist_Entry32Type == "C") ||
+                               (credNC.GOExpHist_Entry41Type == "C") ||
+                               (credNC.GOExpHist_Entry42Type == "C"))
                             {
-                                HomeReportESAMSViewModel res = AddToESAMViewList(cnt, credNC, selectedAccount, userList, GlobalSystemValues.TRANS_CREDIT);
-                                if (res != null)
-                                {
-                                    var removeItem = outstandResult.Where(x => x.HistGOExpHist_Id == i.GOExpHist_Id).FirstOrDefault();
-                                    if (removeItem != null) outstandResult.Remove(removeItem);
-                                    flag = true;
-                                    usedGOExpHistID.Add(credNC.GOExpHist_Id);
-                                    break;
-                                }
+                                //add up values of similar entries
+                                newNC.GOExpHist_Entry11Amt = "" + (decimal.Parse(credNC.GOExpHist_Entry11Amt ?? "0") + decimal.Parse(newNC.GOExpHist_Entry11Amt ?? "0"));
+                                newNC.GOExpHist_Entry12Amt = "" + (decimal.Parse(credNC.GOExpHist_Entry12Amt ?? "0") + decimal.Parse(newNC.GOExpHist_Entry12Amt ?? "0"));
+                                newNC.GOExpHist_Entry21Amt = "" + (decimal.Parse(credNC.GOExpHist_Entry21Amt ?? "0") + decimal.Parse(newNC.GOExpHist_Entry21Amt ?? "0"));
+                                newNC.GOExpHist_Entry22Amt = "" + (decimal.Parse(credNC.GOExpHist_Entry22Amt ?? "0") + decimal.Parse(newNC.GOExpHist_Entry22Amt ?? "0"));
+                                newNC.GOExpHist_Entry31Amt = "" + (decimal.Parse(credNC.GOExpHist_Entry31Amt ?? "0") + decimal.Parse(newNC.GOExpHist_Entry31Amt ?? "0"));
+                                newNC.GOExpHist_Entry32Amt = "" + (decimal.Parse(credNC.GOExpHist_Entry32Amt ?? "0") + decimal.Parse(newNC.GOExpHist_Entry32Amt ?? "0"));
+                                newNC.GOExpHist_Entry41Amt = "" + (decimal.Parse(credNC.GOExpHist_Entry41Amt ?? "0") + decimal.Parse(newNC.GOExpHist_Entry41Amt ?? "0"));
+                                newNC.GOExpHist_Entry42Amt = "" + (decimal.Parse(credNC.GOExpHist_Entry42Amt ?? "0") + decimal.Parse(newNC.GOExpHist_Entry42Amt ?? "0"));
                             }
+                        }
+                    }
+
+                    string debitAmount = (outstandResult.LastOrDefault() != null) ? outstandResult.LastOrDefault().Trans_Amount : "";
+
+                    if (prefix + i.GOExpHist_Remarks.Trim() == newNC.GOExpHist_Remarks.Trim() &&
+                        ((newNC.GOExpHist_Entry11Type == "C" && newNC.GOExpHist_Entry11Amt == debitAmount) ||
+                         (newNC.GOExpHist_Entry12Type == "C" && newNC.GOExpHist_Entry12Amt == debitAmount) ||
+                         (newNC.GOExpHist_Entry21Type == "C" && newNC.GOExpHist_Entry21Amt == debitAmount) ||
+                         (newNC.GOExpHist_Entry22Type == "C" && newNC.GOExpHist_Entry22Amt == debitAmount) ||
+                         (newNC.GOExpHist_Entry31Type == "C" && newNC.GOExpHist_Entry31Amt == debitAmount) ||
+                         (newNC.GOExpHist_Entry32Type == "C" && newNC.GOExpHist_Entry32Amt == debitAmount) ||
+                         (newNC.GOExpHist_Entry41Type == "C" && newNC.GOExpHist_Entry41Amt == debitAmount) ||
+                         (newNC.GOExpHist_Entry42Type == "C" && newNC.GOExpHist_Entry42Amt == debitAmount)))
+                    {
+                        HomeReportESAMSViewModel res = AddToESAMViewList(cnt, newNC, selectedAccount, userList, GlobalSystemValues.TRANS_CREDIT);
+                        if (res != null)
+                        {
+                            var removeItem = outstandResult.Where(x => x.HistGOExpHist_Id == i.GOExpHist_Id).FirstOrDefault();
+                            if (removeItem != null) outstandResult.Remove(removeItem);
+                            flag = true;
+                            usedGOExpHistID.Add(newNC.GOExpHist_Id);
+                            break;
                         }
                     }
                 }
@@ -9120,7 +9092,7 @@ namespace ExpenseProcessingSystem.Services
                 {
                     HistGOExpHist_Id = record.GOExpHist_Id,
                     Trans_Voucher_Number = getVoucherNo(record.Expense_Type, record.Expense_Last_Updated, record.Expense_Number, false),
-                    Trans_Check_Number = record.Expense_CheckNo,
+                    Trans_Check_Number = record.Expense_CheckNo+"",
                     Trans_Value_Date = record.GOExpHist_ValueDate,
                     Trans_Reference_No = "",
                     Trans_Section = record.GOExpHist_Section,
@@ -9814,7 +9786,196 @@ namespace ExpenseProcessingSystem.Services
                 e => e.User_ID, (b, e) => new DMBCSViewModel
                 {BCS_ID = b.BCS_ID, BCS_Name = e.User_LName + ", " + e.User_FName }).OrderBy(x => x.BCS_Name).ToList();
         }
+        public RepESAMSViewModel PopulateNewLiq(RepESAMSViewModel newLiq, dynamic credLiq) {
 
+            //Assign values to newLiq
+            newLiq.GOExpHist_Id = credLiq.GOExpHist_Id;
+            newLiq.Expense_Creator_ID = credLiq.Expense_Creator_ID;
+            newLiq.Expense_Approver = credLiq.Expense_Approver;
+            newLiq.GOExpHist_Branchno = credLiq.GOExpHist_Branchno;
+            newLiq.GOExpHist_Remarks = credLiq.GOExpHist_Remarks;
+            newLiq.GOExpHist_ValueDate = credLiq.GOExpHist_ValueDate;
+            //entry 1-1
+            newLiq.GOExpHist_Entry11ActType = credLiq.GOExpHist_Entry11ActType;
+            newLiq.GOExpHist_Entry11ActNo = credLiq.GOExpHist_Entry11ActNo;
+            newLiq.GOExpHist_Entry11Type = credLiq.GOExpHist_Entry11Type;
+            //entry 1-2
+            newLiq.GOExpHist_Entry12ActType = credLiq.GOExpHist_Entry12ActType;
+            newLiq.GOExpHist_Entry12ActNo = credLiq.GOExpHist_Entry12ActNo;
+            newLiq.GOExpHist_Entry12Type = credLiq.GOExpHist_Entry12Type;
+            //entry 2-1
+            newLiq.GOExpHist_Entry21ActType = credLiq.GOExpHist_Entry21ActType;
+            newLiq.GOExpHist_Entry21ActNo = credLiq.GOExpHist_Entry21ActNo;
+            newLiq.GOExpHist_Entry21Type = credLiq.GOExpHist_Entry21Type;
+            //entry 2-2
+            newLiq.GOExpHist_Entry22ActType = credLiq.GOExpHist_Entry22ActType;
+            newLiq.GOExpHist_Entry22ActNo = credLiq.GOExpHist_Entry22ActNo;
+            newLiq.GOExpHist_Entry22Type = credLiq.GOExpHist_Entry22Type;
+            //entry 3-1
+            newLiq.GOExpHist_Entry31ActType = credLiq.GOExpHist_Entry31ActType;
+            newLiq.GOExpHist_Entry31ActNo = credLiq.GOExpHist_Entry31ActNo;
+            newLiq.GOExpHist_Entry31Type = credLiq.GOExpHist_Entry31Type;
+            //entry 3-2
+            newLiq.GOExpHist_Entry32ActType = credLiq.GOExpHist_Entry32ActType;
+            newLiq.GOExpHist_Entry32ActNo = credLiq.GOExpHist_Entry32ActNo;
+            newLiq.GOExpHist_Entry32Type = credLiq.GOExpHist_Entry32Type;
+            //entry 4-1
+            newLiq.GOExpHist_Entry41ActType = credLiq.GOExpHist_Entry41ActType;
+            newLiq.GOExpHist_Entry41ActNo = credLiq.GOExpHist_Entry41ActNo;
+            newLiq.GOExpHist_Entry41Type = credLiq.GOExpHist_Entry41Type;
+            //entry 4-2
+            newLiq.GOExpHist_Entry42ActType = credLiq.GOExpHist_Entry42ActType;
+            newLiq.GOExpHist_Entry42ActNo = credLiq.GOExpHist_Entry42ActNo;
+            newLiq.GOExpHist_Entry42Type = credLiq.GOExpHist_Entry42Type;
+
+            return newLiq;
+        }
+        public RepOutstandingViewModel PopulateNewLiqOutstanding(RepOutstandingViewModel newLiq, dynamic credLiq)
+        {
+            //Assign values to newLiq
+            newLiq.GOExpHist_Id = credLiq.GOExpHist_Id;
+            //newLiq.Expense_Creator_ID = credLiq.Expense_Creator_ID;
+            //newLiq.Expense_Approver = credLiq.Expense_Approver;
+            newLiq.GOExpHist_Branchno = credLiq.GOExpHist_Branchno;
+            newLiq.GOExpHist_Remarks = credLiq.GOExpHist_Remarks;
+            newLiq.GOExpHist_ValueDate = credLiq.GOExpHist_ValueDate;
+            newLiq.Expense_Type = credLiq.Expense_Type;
+            newLiq.Expense_Last_Updated = credLiq.Expense_Last_Updated;
+            newLiq.Expense_Number = credLiq.Expense_Number;
+            newLiq.Expense_CheckNo = credLiq.Expense_CheckNo ?? 0;
+            newLiq.GOExpHist_Section = credLiq.GOExpHist_Section;
+
+            //entry 1-1
+            newLiq.GOExpHist_Entry11Type = credLiq.GOExpHist_Entry11Type;
+            newLiq.GOExpHist_Entry11Ccy = credLiq.GOExpHist_Entry11Ccy;
+            newLiq.GOExpHist_Entry11Cust = credLiq.GOExpHist_Entry11Cust;
+            newLiq.GOExpHist_Entry11Actcde = credLiq.GOExpHist_Entry11Actcde;
+            newLiq.GOExpHist_Entry11ActType = credLiq.GOExpHist_Entry11ActType;
+            newLiq.GOExpHist_Entry11ActNo = credLiq.GOExpHist_Entry11ActNo;
+            newLiq.GOExpHist_Entry11ExchRate = credLiq.GOExpHist_Entry11ExchRate;
+            newLiq.GOExpHist_Entry11ExchCcy = credLiq.GOExpHist_Entry11ExchCcy;
+            newLiq.GOExpHist_Entry11Fund = credLiq.GOExpHist_Entry11Fund;
+            newLiq.GOExpHist_Entry11AdvcPrnt = credLiq.GOExpHist_Entry11AdvcPrnt;
+            newLiq.GOExpHist_Entry11Details = credLiq.GOExpHist_Entry11Details;
+            newLiq.GOExpHist_Entry11Entity = credLiq.GOExpHist_Entry11Entity;
+            newLiq.GOExpHist_Entry11Division = credLiq.GOExpHist_Entry11Division;
+            newLiq.GOExpHist_Entry11InterAmt = credLiq.GOExpHist_Entry11InterAmt;
+            newLiq.GOExpHist_Entry11InterRate = credLiq.GOExpHist_Entry11InterRate;
+            //entry 1-2
+            newLiq.GOExpHist_Entry12Type = credLiq.GOExpHist_Entry12Type;
+            newLiq.GOExpHist_Entry12Ccy = credLiq.GOExpHist_Entry12Ccy;
+            newLiq.GOExpHist_Entry12Cust = credLiq.GOExpHist_Entry12Cust;
+            newLiq.GOExpHist_Entry12Actcde = credLiq.GOExpHist_Entry12Actcde;
+            newLiq.GOExpHist_Entry12ActType = credLiq.GOExpHist_Entry12ActType;
+            newLiq.GOExpHist_Entry12ActNo = credLiq.GOExpHist_Entry12ActNo;
+            newLiq.GOExpHist_Entry12ExchRate = credLiq.GOExpHist_Entry12ExchRate;
+            newLiq.GOExpHist_Entry12ExchCcy = credLiq.GOExpHist_Entry12ExchCcy;
+            newLiq.GOExpHist_Entry12Fund = credLiq.GOExpHist_Entry12Fund;
+            newLiq.GOExpHist_Entry12AdvcPrnt = credLiq.GOExpHist_Entry12AdvcPrnt;
+            newLiq.GOExpHist_Entry12Details = credLiq.GOExpHist_Entry12Details;
+            newLiq.GOExpHist_Entry12Entity = credLiq.GOExpHist_Entry12Entity;
+            newLiq.GOExpHist_Entry12Division = credLiq.GOExpHist_Entry12Division;
+            newLiq.GOExpHist_Entry12InterAmt = credLiq.GOExpHist_Entry12InterAmt;
+            newLiq.GOExpHist_Entry12InterRate = credLiq.GOExpHist_Entry12InterRate;
+            //entry 2-1
+            newLiq.GOExpHist_Entry21Type = credLiq.GOExpHist_Entry21Type;
+            newLiq.GOExpHist_Entry21Ccy = credLiq.GOExpHist_Entry21Ccy;
+            newLiq.GOExpHist_Entry21Cust = credLiq.GOExpHist_Entry21Cust;
+            newLiq.GOExpHist_Entry21Actcde = credLiq.GOExpHist_Entry21Actcde;
+            newLiq.GOExpHist_Entry21ActType = credLiq.GOExpHist_Entry21ActType;
+            newLiq.GOExpHist_Entry21ActNo = credLiq.GOExpHist_Entry21ActNo;
+            newLiq.GOExpHist_Entry21ExchRate = credLiq.GOExpHist_Entry21ExchRate;
+            newLiq.GOExpHist_Entry21ExchCcy = credLiq.GOExpHist_Entry21ExchCcy;
+            newLiq.GOExpHist_Entry21Fund = credLiq.GOExpHist_Entry21Fund;
+            newLiq.GOExpHist_Entry21AdvcPrnt = credLiq.GOExpHist_Entry21AdvcPrnt;
+            newLiq.GOExpHist_Entry21Details = credLiq.GOExpHist_Entry21Details;
+            newLiq.GOExpHist_Entry21Entity = credLiq.GOExpHist_Entry21Entity;
+            newLiq.GOExpHist_Entry21Division = credLiq.GOExpHist_Entry21Division;
+            newLiq.GOExpHist_Entry21InterAmt = credLiq.GOExpHist_Entry21InterAmt;
+            newLiq.GOExpHist_Entry21InterRate = credLiq.GOExpHist_Entry21InterRate;
+            //entry 2-2
+            newLiq.GOExpHist_Entry22Type = credLiq.GOExpHist_Entry22Type;
+            newLiq.GOExpHist_Entry22Ccy = credLiq.GOExpHist_Entry22Ccy;
+            newLiq.GOExpHist_Entry22Cust = credLiq.GOExpHist_Entry22Cust;
+            newLiq.GOExpHist_Entry22Actcde = credLiq.GOExpHist_Entry22Actcde;
+            newLiq.GOExpHist_Entry22ActType = credLiq.GOExpHist_Entry22ActType;
+            newLiq.GOExpHist_Entry22ActNo = credLiq.GOExpHist_Entry22ActNo;
+            newLiq.GOExpHist_Entry22ExchRate = credLiq.GOExpHist_Entry22ExchRate;
+            newLiq.GOExpHist_Entry22ExchCcy = credLiq.GOExpHist_Entry22ExchCcy;
+            newLiq.GOExpHist_Entry22Fund = credLiq.GOExpHist_Entry22Fund;
+            newLiq.GOExpHist_Entry22AdvcPrnt = credLiq.GOExpHist_Entry22AdvcPrnt;
+            newLiq.GOExpHist_Entry22Details = credLiq.GOExpHist_Entry22Details;
+            newLiq.GOExpHist_Entry22Entity = credLiq.GOExpHist_Entry22Entity;
+            newLiq.GOExpHist_Entry22Division = credLiq.GOExpHist_Entry22Division;
+            newLiq.GOExpHist_Entry22InterAmt = credLiq.GOExpHist_Entry22InterAmt;
+            newLiq.GOExpHist_Entry22InterRate = credLiq.GOExpHist_Entry22InterRate;
+            //entry 3-1
+            newLiq.GOExpHist_Entry31Type = credLiq.GOExpHist_Entry31Type;
+            newLiq.GOExpHist_Entry31Ccy = credLiq.GOExpHist_Entry31Ccy;
+            newLiq.GOExpHist_Entry31Cust = credLiq.GOExpHist_Entry31Cust;
+            newLiq.GOExpHist_Entry31Actcde = credLiq.GOExpHist_Entry31Actcde;
+            newLiq.GOExpHist_Entry31ActType = credLiq.GOExpHist_Entry31ActType;
+            newLiq.GOExpHist_Entry31ActNo = credLiq.GOExpHist_Entry31ActNo;
+            newLiq.GOExpHist_Entry31ExchRate = credLiq.GOExpHist_Entry31ExchRate;
+            newLiq.GOExpHist_Entry31ExchCcy = credLiq.GOExpHist_Entry31ExchCcy;
+            newLiq.GOExpHist_Entry31Fund = credLiq.GOExpHist_Entry31Fund;
+            newLiq.GOExpHist_Entry31AdvcPrnt = credLiq.GOExpHist_Entry31AdvcPrnt;
+            newLiq.GOExpHist_Entry31Details = credLiq.GOExpHist_Entry31Details;
+            newLiq.GOExpHist_Entry31Entity = credLiq.GOExpHist_Entry31Entity;
+            newLiq.GOExpHist_Entry31Division = credLiq.GOExpHist_Entry31Division;
+            newLiq.GOExpHist_Entry31InterAmt = credLiq.GOExpHist_Entry31InterAmt;
+            newLiq.GOExpHist_Entry31InterRate = credLiq.GOExpHist_Entry31InterRate;
+            //entry 3-2
+            newLiq.GOExpHist_Entry32Type = credLiq.GOExpHist_Entry32Type;
+            newLiq.GOExpHist_Entry32Ccy = credLiq.GOExpHist_Entry32Ccy;
+            newLiq.GOExpHist_Entry32Cust = credLiq.GOExpHist_Entry32Cust;
+            newLiq.GOExpHist_Entry32Actcde = credLiq.GOExpHist_Entry32Actcde;
+            newLiq.GOExpHist_Entry32ActType = credLiq.GOExpHist_Entry32ActType;
+            newLiq.GOExpHist_Entry32ActNo = credLiq.GOExpHist_Entry32ActNo;
+            newLiq.GOExpHist_Entry32ExchRate = credLiq.GOExpHist_Entry32ExchRate;
+            newLiq.GOExpHist_Entry32ExchCcy = credLiq.GOExpHist_Entry32ExchCcy;
+            newLiq.GOExpHist_Entry32Fund = credLiq.GOExpHist_Entry32Fund;
+            newLiq.GOExpHist_Entry32AdvcPrnt = credLiq.GOExpHist_Entry32AdvcPrnt;
+            newLiq.GOExpHist_Entry32Details = credLiq.GOExpHist_Entry32Details;
+            newLiq.GOExpHist_Entry32Entity = credLiq.GOExpHist_Entry32Entity;
+            newLiq.GOExpHist_Entry32Division = credLiq.GOExpHist_Entry32Division;
+            newLiq.GOExpHist_Entry32InterAmt = credLiq.GOExpHist_Entry32InterAmt;
+            newLiq.GOExpHist_Entry32InterRate = credLiq.GOExpHist_Entry32InterRate;
+            //entry 4-1
+            newLiq.GOExpHist_Entry41Type = credLiq.GOExpHist_Entry41Type;
+            newLiq.GOExpHist_Entry41Ccy = credLiq.GOExpHist_Entry41Ccy;
+            newLiq.GOExpHist_Entry41Cust = credLiq.GOExpHist_Entry41Cust;
+            newLiq.GOExpHist_Entry41Actcde = credLiq.GOExpHist_Entry41Actcde;
+            newLiq.GOExpHist_Entry41ActType = credLiq.GOExpHist_Entry41ActType;
+            newLiq.GOExpHist_Entry41ActNo = credLiq.GOExpHist_Entry41ActNo;
+            newLiq.GOExpHist_Entry41ExchRate = credLiq.GOExpHist_Entry41ExchRate;
+            newLiq.GOExpHist_Entry41ExchCcy = credLiq.GOExpHist_Entry41ExchCcy;
+            newLiq.GOExpHist_Entry41Fund = credLiq.GOExpHist_Entry41Fund;
+            newLiq.GOExpHist_Entry41AdvcPrnt = credLiq.GOExpHist_Entry41AdvcPrnt;
+            newLiq.GOExpHist_Entry41Details = credLiq.GOExpHist_Entry41Details;
+            newLiq.GOExpHist_Entry41Entity = credLiq.GOExpHist_Entry41Entity;
+            newLiq.GOExpHist_Entry41Division = credLiq.GOExpHist_Entry41Division;
+            newLiq.GOExpHist_Entry41InterAmt = credLiq.GOExpHist_Entry41InterAmt;
+            newLiq.GOExpHist_Entry41InterRate = credLiq.GOExpHist_Entry41InterRate;
+            //entry 4-2
+            newLiq.GOExpHist_Entry42Type = credLiq.GOExpHist_Entry42Type;
+            newLiq.GOExpHist_Entry42Ccy = credLiq.GOExpHist_Entry42Ccy;
+            newLiq.GOExpHist_Entry42Cust = credLiq.GOExpHist_Entry42Cust;
+            newLiq.GOExpHist_Entry42Actcde = credLiq.GOExpHist_Entry42Actcde;
+            newLiq.GOExpHist_Entry42ActType = credLiq.GOExpHist_Entry42ActType;
+            newLiq.GOExpHist_Entry42ActNo = credLiq.GOExpHist_Entry42ActNo;
+            newLiq.GOExpHist_Entry42ExchRate = credLiq.GOExpHist_Entry42ExchRate;
+            newLiq.GOExpHist_Entry42ExchCcy = credLiq.GOExpHist_Entry42ExchCcy;
+            newLiq.GOExpHist_Entry42Fund = credLiq.GOExpHist_Entry42Fund;
+            newLiq.GOExpHist_Entry42AdvcPrnt = credLiq.GOExpHist_Entry42AdvcPrnt;
+            newLiq.GOExpHist_Entry42Details = credLiq.GOExpHist_Entry42Details;
+            newLiq.GOExpHist_Entry42Entity = credLiq.GOExpHist_Entry42Entity;
+            newLiq.GOExpHist_Entry42Division = credLiq.GOExpHist_Entry42Division;
+            newLiq.GOExpHist_Entry42InterAmt = credLiq.GOExpHist_Entry42InterAmt;
+            newLiq.GOExpHist_Entry42InterRate = credLiq.GOExpHist_Entry42InterRate;
+
+            return newLiq;
+        }
         public DMBCSViewModel GetSignatoryInfo(int id)
         {
             return _context.DMBCS.Where(x => x.BCS_ID == id).Join(_context.User, b=> b.BCS_User_ID,

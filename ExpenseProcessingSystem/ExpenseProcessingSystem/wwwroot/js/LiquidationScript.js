@@ -404,13 +404,16 @@ function setGenExpValuetoDivInput(ret) {
     $('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_AccountID_1_2').val($('#lblGenExp2').val());
 
     //DEBIT/CREDIT
-    $('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_DebitCred_1_1').val("D");
+    $('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_DebitCred_1_1').val("D"); 
     $('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_DebitCred_1_2').val("C");
 
     //AMOUNT
     $('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_1_1').val(RC($('#txtGenExpInput1').val()));
     $('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_Amount_1_2').val(RC($('#txtGenExpInput2').val()));
 
+    //CURRENCY
+    $('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_CCY_1_1').val($('.highlight').find('.currID').val());
+    $('#LiquidationDetails_' + ret + '__liqInterEntity_1__Liq_CCY_1_2').val($('.highlight').find('.currID').val());
     //Tax RATE
     //$('#LiquidationDetails_' + ret + '__liqInterEntity_0__Liq_Tax_Rate').val(0);
     ////Vendor ID

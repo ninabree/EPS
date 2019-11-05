@@ -495,12 +495,7 @@
                     <table style="width:100%;margin-top:5%">
                         <tr>
                             <td colspan="2" style="text-align:left">
-                                <label>Transaction No.: </label><input type="text" id="TransIDPhp" readonly="readonly" style="background-color:transparent" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <input type="button" id="saveGenExp" class="saveGenExpBtn btn" value="Save Liquidation" />
+                                <label>Transaction No.: </label><input type="text" id="TransIDGenExp" readonly="readonly" style="background-color:transparent" />
                             </td>
                         </tr>
                     </table>
@@ -999,6 +994,8 @@
 
                 $('#txtGenExpAccCode2').val($('#' + pid).find('.hidAccCode').val());
                 $('#txtGenExpAccCode2').attr('value', $('#' + pid).find('.hidAccCode').val());
+
+                $('#TransIDGenExp').val($('#' + pid).find('.transNo').val());
             } else {
                 $('#divForeign').show();
                 $('#divPHP').hide();
