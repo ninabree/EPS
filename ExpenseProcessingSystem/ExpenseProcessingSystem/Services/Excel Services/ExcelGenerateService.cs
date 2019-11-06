@@ -1118,11 +1118,11 @@ namespace ExpenseProcessingSystem.Services.Excel_Services
                                             $"{i.SeqNo.ToString().PadLeft(6, '0')}", //5
                                             $"{i.Tin.Replace("-", "")}", //6
                                             $"{xelem.Element("WHAgentBranchCode").Value}", //7
-                                            $"{i.Payee}", //8
+                                            $"{i.Payee.Replace(",","").Replace(")","").Replace("(","").Replace("-","").Replace("&","").Replace("!","")}", //8
                                             $"{""}", //9
                                             $"{""}", //10
-                                            $"{"".Replace(",","").Replace(")","").Replace("(","").Replace("&","").Replace("!","")}", //11
-                                            $"{i.ATC.Replace(",","").Replace(")","").Replace("(","").Replace("&","").Replace("!","")}", //12
+                                            $"{"".Replace(",","").Replace(")","").Replace("(","").Replace("-","").Replace("&","").Replace("!","")}", //11
+                                            $"{i.ATC.Replace(",","").Replace(")","").Replace("(","").Replace("-","").Replace("&","").Replace("!","")}", //12
                                             $"{string.Format("{0:0.00}", i.AOIP)}", //13
                                             $"{string.Format("{0:0.00}", i.RateOfTax)}", //14
                                             string.Format("{0:0.00}", i.AOTW) //15
