@@ -9063,7 +9063,7 @@ namespace ExpenseProcessingSystem.Services
                 {
                     HistGOExpHist_Id = record.GOExpHist_Id,
                     Trans_Voucher_Number = getVoucherNo(record.Expense_Type, record.Expense_Last_Updated, record.Expense_Number, false),
-                    Trans_Check_Number = record.Expense_CheckNo,
+                    Trans_Check_Number = record.Expense_CheckNo + "",
                     Trans_Value_Date = record.GOExpHist_ValueDate,
                     Trans_Reference_No = "",
                     Trans_Section = record.GOExpHist_Section,
@@ -9121,7 +9121,7 @@ namespace ExpenseProcessingSystem.Services
                 {
                     HistGOExpHist_Id = record.GOExpHist_Id,
                     Trans_Voucher_Number = getVoucherNo(record.Expense_Type, record.Expense_Last_Updated, record.Expense_Number, false),
-                    Trans_Check_Number = record.Expense_CheckNo,
+                    Trans_Check_Number = record.Expense_CheckNo + "",
                     Trans_Value_Date = record.GOExpHist_ValueDate,
                     Trans_Reference_No = "",
                     Trans_Section = record.GOExpHist_Section,
@@ -9150,7 +9150,7 @@ namespace ExpenseProcessingSystem.Services
                 {
                     HistGOExpHist_Id = record.GOExpHist_Id,
                     Trans_Voucher_Number = getVoucherNo(record.Expense_Type, record.Expense_Last_Updated, record.Expense_Number, false),
-                    Trans_Check_Number = record.Expense_CheckNo,
+                    Trans_Check_Number = record.Expense_CheckNo + "",
                     Trans_Value_Date = record.GOExpHist_ValueDate,
                     Trans_Reference_No = "",
                     Trans_Section = record.GOExpHist_Section,
@@ -9179,7 +9179,7 @@ namespace ExpenseProcessingSystem.Services
                 {
                     HistGOExpHist_Id = record.GOExpHist_Id,
                     Trans_Voucher_Number = getVoucherNo(record.Expense_Type, record.Expense_Last_Updated, record.Expense_Number, false),
-                    Trans_Check_Number = record.Expense_CheckNo,
+                    Trans_Check_Number = record.Expense_CheckNo + "",
                     Trans_Value_Date = record.GOExpHist_ValueDate,
                     Trans_Reference_No = "",
                     Trans_Section = record.GOExpHist_Section,
@@ -9208,7 +9208,7 @@ namespace ExpenseProcessingSystem.Services
                 {
                     HistGOExpHist_Id = record.GOExpHist_Id,
                     Trans_Voucher_Number = getVoucherNo(record.Expense_Type, record.Expense_Last_Updated, record.Expense_Number, false),
-                    Trans_Check_Number = record.Expense_CheckNo,
+                    Trans_Check_Number = record.Expense_CheckNo + "",
                     Trans_Value_Date = record.GOExpHist_ValueDate,
                     Trans_Reference_No = "",
                     Trans_Section = record.GOExpHist_Section,
@@ -9237,7 +9237,7 @@ namespace ExpenseProcessingSystem.Services
                 {
                     HistGOExpHist_Id = record.GOExpHist_Id,
                     Trans_Voucher_Number = getVoucherNo(record.Expense_Type, record.Expense_Last_Updated, record.Expense_Number, false),
-                    Trans_Check_Number = record.Expense_CheckNo,
+                    Trans_Check_Number = record.Expense_CheckNo + "",
                     Trans_Value_Date = record.GOExpHist_ValueDate,
                     Trans_Reference_No = "",
                     Trans_Section = record.GOExpHist_Section,
@@ -9266,7 +9266,7 @@ namespace ExpenseProcessingSystem.Services
                 {
                     HistGOExpHist_Id = record.GOExpHist_Id,
                     Trans_Voucher_Number = getVoucherNo(record.Expense_Type, record.Expense_Last_Updated, record.Expense_Number, false),
-                    Trans_Check_Number = record.Expense_CheckNo,
+                    Trans_Check_Number = record.Expense_CheckNo + "",
                     Trans_Value_Date = record.GOExpHist_ValueDate,
                     Trans_Reference_No = "",
                     Trans_Section = record.GOExpHist_Section,
