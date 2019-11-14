@@ -953,7 +953,7 @@
             $('#cashBDLiqTable').find('#txtCashBDTotal').val(0);
             $('#ddlLiqPhpAccount1').val($("#ddlLiqPhpAccount1 option:first").val());
             $('#ddlAccount3').val($("#ddlAccount3 option:first").val());
-
+            
             if ($('#' + pid).find('.currMasterID').val() == getXMLLiqValue("CURRENCY_PHP")) {
                 $('#divForeign').hide();
                 $('#divGenExp').hide();
@@ -969,7 +969,7 @@
                 ChangeOptionMarkForPrint();
                 $('#TransIDPhp').val($('#' + pid).find('.transNo').val());
             } else if (($('#' + pid).find('.currMasterID').val() == getXMLLiqValue("CURRENCY_US")) &&
-                (($('#' + pid).find('.hidAccID').val() == getXMLLiqValueAccount("GENEXP_ACCOUNT_US", "1")))) {
+                ((getXMLLiqValueAccountID($('#' + pid).find('.hidAccID').val(), "1") == getXMLLiqValue("GENEXP_ACCOUNT_US")))) {
                 var bonyAccId = getXMLLiqValueAccount("BONY_ACCOUNT_US", "1");
                 var bonyAccCode = getXMLLiqValueAccount("BONY_ACCOUNT_US", "2").replace(/\"/g, '');
 

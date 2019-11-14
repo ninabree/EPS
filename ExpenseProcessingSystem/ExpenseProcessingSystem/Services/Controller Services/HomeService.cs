@@ -13584,6 +13584,7 @@ namespace ExpenseProcessingSystem.Services
                         into x
                         from expTrans in x.DefaultIfEmpty()
                         where rev.Reversal_ReversedDate >= opening
+                        && expTrans.TL_StatusID != GlobalSystemValues.STATUS_ERROR
                         select new
                         {
                             rev.Reversal_ID,

@@ -5663,6 +5663,17 @@ namespace ExpenseProcessingSystem.Controllers
             }
             return Json(null);
         }
+        [AcceptVerbs("Post")]
+        public ActionResult getAccountMasterStr(string ID)
+        {
+            if (ID != null)
+            {
+                var acc = _service.getAccount(int.Parse(ID));
+
+                return Json(acc.Account_MasterID);
+            }
+            return Json(null);
+        }
         [AcceptVerbs("GET")]
         public JsonResult getCurrency(int masterID)
         {

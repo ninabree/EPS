@@ -93,7 +93,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                         }).ToList();
 
             var goexphistlist = _context.GOExpressHist.Where(x => data.Select(y => y.TL_GoExpHist_ID).Contains(x.GOExpHist_Id)).ToList();
-
+            ///join rev in _context.ReversalEntry on trans.TL_GoExpHist_ID equals rev.Reversal_GOExpressHistID // CHANGED
             foreach (var i in data)
             {
                 var gohist = goexphistlist.Where(x => x.GOExpHist_Id == i.TL_GoExpHist_ID).FirstOrDefault();
