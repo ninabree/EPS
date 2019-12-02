@@ -1728,8 +1728,8 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                          into a
                          from apprv in a.DefaultIfEmpty()
                          join f in _context.DMFBT
-                         on e.Emp_FBT_MasterID
-                         equals f.FBT_MasterID
+                         on new { FirstProperty = e.Emp_FBT_MasterID, SecondProperty = true }
+                         equals new { FirstProperty = f.FBT_MasterID, SecondProperty = f.FBT_isActive }
                          into b
                          from f in b.DefaultIfEmpty()
                          select new
@@ -1780,8 +1780,8 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                                into a
                                from apprv in a.DefaultIfEmpty()
                                join f in _context.DMFBT
-                               on e.Pending_Emp_FBT_MasterID
-                               equals f.FBT_MasterID
+                               on new { FirstProperty = e.Pending_Emp_FBT_MasterID, SecondProperty = true }
+                               equals new { FirstProperty = f.FBT_MasterID, SecondProperty = f.FBT_isActive }
                                into b
                                from f in b.DefaultIfEmpty()
                                select new
@@ -1898,8 +1898,8 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                          into a
                          from apprv in a.DefaultIfEmpty()
                          join f in _context.DMFBT
-                         on e.Emp_FBT_MasterID
-                         equals f.FBT_MasterID
+                         on new { FirstProperty = e.Emp_FBT_MasterID, SecondProperty = true }
+                         equals new { FirstProperty = f.FBT_MasterID, SecondProperty = f.FBT_isActive }
                          into b
                          from f in b.DefaultIfEmpty()
                          select new
@@ -1950,8 +1950,8 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                                into a
                                from apprv in a.DefaultIfEmpty()
                                join f in _context.DMFBT
-                               on e.Pending_Emp_FBT_MasterID
-                               equals f.FBT_MasterID
+                               on new { FirstProperty = e.Pending_Emp_FBT_MasterID, SecondProperty = true }
+                               equals new { FirstProperty = f.FBT_MasterID, SecondProperty = f.FBT_isActive }
                                into b
                                from f in b.DefaultIfEmpty()
                                select new

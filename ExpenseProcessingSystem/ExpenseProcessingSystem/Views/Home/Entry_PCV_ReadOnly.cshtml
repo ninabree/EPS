@@ -127,13 +127,13 @@
                             @Html.HiddenFor(x => Model.EntryCV[i].dtl_Ewt_Payor_Name_ID, new { @class = "txtPayor" })
                         </td>
                         <td>
-                            <input value="@Model.EntryCV[i].debitGross" class="input100 txtGross" disabled />
+                            <input value="@Model.EntryCV[i].debitGross" class="input100 txtGross commaClass" disabled />
                         </td>
                         <td>
-                            <input value="@Model.EntryCV[i].credEwt" class="input100 txtCredEwt" disabled />
+                            <input value="@Model.EntryCV[i].credEwt" class="input100 txtCredEwt commaClass" disabled />
                         </td>
                         <td>
-                            <input value="@Model.EntryCV[i].credCash" class="input100 txtCredCash" disabled />
+                            <input value="@Model.EntryCV[i].credCash" class="input100 txtCredCash commaClass" disabled />
                         </td>
                         <td id="req_@i">
                             <a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#" data-title="Cash Breakdown"></a>
@@ -157,13 +157,13 @@
                     <td style="border:none; background-color:#f2f2f2" rowspan="2"></td>
                     <td style="border:none; background-color:#f2f2f2" rowspan="2"></td>
                     <td style="border:none; background-color:#f2f2f2;text-align:right" colspan="4">Subtotal:</td>
-                    <td rowspan="2" class="text-v-bottom"><input type="text" class="input100" disabled="disabled" id="grossTotal" value="0" /></td>
-                    <td><input type="text" disabled="disabled" class="input100" id="credEwtTotal" value="0" /></td>
-                    <td><input type="text" disabled="disabled" class="input100" id="credCashTotal" value="0" /></td>
+                    <td rowspan="2" class="text-v-bottom"><input type="text" class="input100 commaClass" disabled="disabled" id="grossTotal" value="0" /></td>
+                    <td><input type="text" disabled="disabled" class="input100 commaClass" id="credEwtTotal" value="0" /></td>
+                    <td><input type="text" disabled="disabled" class="input100 commaClass" id="credCashTotal" value="0" /></td>
                 </tr>
                 <tr>
                     <td style="border:none; background-color: #f2f2f2;text-align:right" colspan="4">Total:</td>
-                    <td colspan="2"><div class="flex-c"><input type="text" class="input100" disabled="disabled" id="credTotal" value="0" /></div></td>
+                    <td colspan="2"><div class="flex-c"><input type="text" class="input100 commaClass" disabled="disabled" id="credTotal" value="0" /></div></td>
                 </tr>
             </tbody>
         </table>
@@ -226,6 +226,7 @@
                 <div>
                     <div class="dis-inline-block">@if(enableBIR) { <button class="tbl-btn" id="printBir" value="printBir">Print BIR Certificate</button> }</div>
                     <div class="dis-inline-block">@if(enableReversal) { <button class="tbl-btn btnEntryAction" id="reversal_entry" value="Reversal" name="command">Create Reversal Entry</button> }</div>
+                    <div class="dis-inline-block">@if (enableReversal) {<a class="tbl-btn tbl-btn-redirect red-pend" href="/Home/Pending">Redirect to Pending Screen</a>}</div>
                 </div>
             </div>
         }
@@ -297,6 +298,8 @@
         $("#credCashTotal").val(roundNumber(cashSubTotal, 2));
         $("#credTotal").val(roundNumber(Number(ewtSubTotal + cashSubTotal), 2));
 
+        //format values with appropriate comma and decimal places
+        $(".commaClass").digits();
         $(function () {
             //Cash Breakdown Modal
             $("table").on("click", ".cashBreakdown", function (e) {

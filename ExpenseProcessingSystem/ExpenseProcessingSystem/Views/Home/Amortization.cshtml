@@ -35,7 +35,7 @@
                     <td>@Html.DisplayFor(model => item.account)</td>
                     <td>@Html.DisplayFor(model => item.sched)</td>
                     <td>@Html.DisplayFor(model => item.maker)</td>
-                    <td>@Html.DisplayFor(model => item.amount)</td>
+                    <td>@Html.DisplayFor(model => item.amount, new { @class="commaClass"})</td>
                 </tr>
             }
         </tbody>

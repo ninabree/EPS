@@ -13,10 +13,12 @@
             <tr>
                 <th>VAT Name</th>
                 <th>VAT Tax Rate</th>
+                <th></th>
             </tr>
             <tr id="NewVAT-Tr-0">
                 <td>@Html.TextBoxFor(m => m.NewVATVM[0].VAT_Name, new { @class = "w-full input voucher-input" })</td>
-                <td>@Html.TextBoxFor(m => m.NewVATVM[0].VAT_Rate, new { @class = "w-full input voucher-input" })</td>
+                <td>@Html.TextBoxFor(m => m.NewVATVM[0].VAT_Rate, new { @class = "w-full input voucher-input", @type = "number", @min = "0" })</td>
+                <td></td>
             </tr>
         </table>
     }

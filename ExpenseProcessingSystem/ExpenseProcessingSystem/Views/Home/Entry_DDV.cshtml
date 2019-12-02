@@ -489,9 +489,20 @@
             currenableVATEWT(pNode, $(this).val());
             computeValuesDDV($(this.parentNode)[0].parentNode);
             if ($("option:selected", this).text() == "@ViewData["yenAbbrev"]") {
-                $("#remark_" + pNode.substring(5)).find('input').remove();
-                $("#req_" + pNode.substring(5)).find('#interDtls').empty();
+                var itemNo = pNode.substring(5);
+                $("#remark_" + itemNo).find('input').remove();
+                $("#req_" + itemNo).find('#interDtls').empty();
                 $("#" + pNode + " .txtGross").val(0);
+                $("#EntryDDV_" + itemNo + "__interDetails_Inter_Currency1_ID").val(0);
+                $("#EntryDDV_" + itemNo + "__interDetails_Inter_Currency2_ID").val(0);
+                $("#EntryDDV_" + itemNo + "__interDetails_Inter_Currency2_ABBR").val("");
+                $("#EntryDDV_" + itemNo + "__interDetails_Inter_Currency1_Amount").val(0);
+                $("#EntryDDV_" + itemNo + "__interDetails_Inter_Currency2_Amount").val(0);
+                $("#EntryDDV_" + itemNo + "__interDetails_Inter_Convert1_Amount").val(0);
+                $("#EntryDDV_" + itemNo + "__interDetails_Inter_Convert2_Amount").val(0);
+                $("#EntryDDV_" + itemNo + "__interDetails_Inter_Check1").val(false);
+                $("#EntryDDV_" + itemNo + "__interDetails_Inter_Check2").val(false);
+                $("#EntryDDV_" + itemNo + "__interDetails_Inter_Rate").val(0);
                 computeValuesDDV($(this.parentNode)[0].parentNode);
             }
         });
@@ -663,6 +674,17 @@
         $("#" + itemNo).find(".txtGross").val(0);
         $("#" + itemNo).find(".txtCredEwt").val(0);
         $("#" + itemNo).find(".txtCredCash").val(0);
+        itemNo = itemNo.substring(5);
+        $("#EntryDDV_" + itemNo + "__interDetails_Inter_Currency1_ID").val(0);
+        $("#EntryDDV_" + itemNo + "__interDetails_Inter_Currency2_ID").val(0);
+        $("#EntryDDV_" + itemNo + "__interDetails_Inter_Currency2_ABBR").val("");
+        $("#EntryDDV_" + itemNo + "__interDetails_Inter_Currency1_Amount").val(0);
+        $("#EntryDDV_" + itemNo + "__interDetails_Inter_Currency2_Amount").val(0);
+        $("#EntryDDV_" + itemNo + "__interDetails_Inter_Convert1_Amount").val(0);
+        $("#EntryDDV_" + itemNo + "__interDetails_Inter_Convert2_Amount").val(0);
+        $("#EntryDDV_" + itemNo + "__interDetails_Inter_Check1").val(false);
+        $("#EntryDDV_" + itemNo + "__interDetails_Inter_Check2").val(false);
+        $("#EntryDDV_" + itemNo + "__interDetails_Inter_Rate").val(0);
     }
     function computeValuesDDV(pNode) {
         var grossAmt = 0;
@@ -743,19 +765,30 @@
     }
 </script>
 <script type="text/javascript">
+    //function roundNumber(num, scale) {
+    //    if (!("" + num).includes("e")) {
+    //        return +(Math.round(num + "e+" + scale) + "e-" + scale);
+    //    } else {
+    //        var arr = ("" + num).split("e");
+    //        var sig = ""
+    //        if (+arr[1] + scale > 0) {
+    //            sig = "+";
+    //        }
+    //        return +(Math.round(+arr[0] + "e" + sig + (+arr[1] + scale)) + "e-" + scale);
+    //    }
+    //};
     function roundNumber(num, scale) {
         if (!("" + num).includes("e")) {
-            return +(Math.round(num + "e+" + scale) + "e-" + scale);
+            return (+(Math.round(num + "e+" + scale) + "e-" + scale)).toFixed(scale);
         } else {
             var arr = ("" + num).split("e");
             var sig = ""
             if (+arr[1] + scale > 0) {
                 sig = "+";
             }
-            return +(Math.round(+arr[0] + "e" + sig + (+arr[1] + scale)) + "e-" + scale);
+            return (+(Math.round(+arr[0] + "e" + sig + (+arr[1] + scale)) + "e-" + scale)).toFixed(scale);
         }
     };
-
     function ddlEnabled(idx) {
         if ($('#item_' + idx).find('.chkVat').is(':checked')) {
             $('#item_' + idx).find('.txtVat').removeAttr('disabled');

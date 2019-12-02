@@ -131,13 +131,13 @@
                                 @Html.HiddenFor(x => Model.EntryCV[i].ccyAbbrev, new { @class = "txtCcyAbbrev" })
                             </td>
                             <td>
-                                <input value="@Model.EntryCV[i].debitGross" class="input100 txtGross" disabled />
+                                <input value="@Model.EntryCV[i].debitGross" class="input100 txtGross commaClass" disabled />
                             </td>
                             <td>
-                                <input value="@Model.EntryCV[i].credEwt" class="input100 txtCredEwt" disabled />
+                                <input value="@Model.EntryCV[i].credEwt" class="input100 txtCredEwt commaClass" disabled />
                             </td>
                             <td>
-                                <input value="@Model.EntryCV[i].credCash" class="input100 txtCredCash" disabled />
+                                <input value="@Model.EntryCV[i].credCash" class="input100 txtCredCash commaClass" disabled />
                             </td>
                             <td id="req_@i">
                                 <a class="cashBreakdown reqBtn glyphicon glyphicon-list-alt" href="#" data-title="Cash Breakdown"></a>
@@ -165,13 +165,13 @@
                     <tr>
                         <td style="border:none; background-color:#f2f2f2" rowspan="2"><a id="addRow" href="#" class="glyphicon glyphicon-plus" style="display:none;"></a></td>
                         <td colspan="9" style="text-align:right; border:none; background-color:#f2f2f2">Subtotal : </td>
-                        <td rowspan="2" class="text-v-bottom"><div class="flex-c"><input type="text" class="input100" readonly id="grossTotal" value="0" /></div></td>
-                        <td><input type="text" readonly class="input100" id="credEwtTotal" value="0" /></td>
-                        <td><input type="text" readonly class="input100" id="credCashTotal" value="0" /></td>
+                        <td rowspan="2" class="text-v-bottom"><div class="flex-c"><input type="text" class="input100 commaClass" readonly id="grossTotal" value="0" /></div></td>
+                        <td><input type="text" readonly class="input100 commaClass" id="credEwtTotal" value="0" /></td>
+                        <td><input type="text" readonly class="input100 commaClass" id="credCashTotal" value="0" /></td>
                     </tr>
                     <tr>
                         <td colspan="9" style="text-align:right; border:none; background-color:#f2f2f2 ">Total:</td>
-                        <td colspan="2"><div class="flex-c"><input type="text" class="input100" readonly id="credTotal" value="0" /></div></td>
+                        <td colspan="2"><div class="flex-c"><input type="text" class="input100 commaClass" readonly id="credTotal" value="0" /></div></td>
                     </tr>
                 </tbody>
             </table>
@@ -216,9 +216,14 @@
 
                 var enableReversal = ((Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
                                     Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING ||
-                                    Model.statusID == GlobalSystemValues.STATUS_POSTED) 
+                                    Model.statusID == GlobalSystemValues.STATUS_POSTED)
                                     && (bool)ViewData["ISLIQEXIST"] == false
-                                    && isApprover)  ? true : false;
+                                    && isApprover) ? true : false;
+
+                var enableRedirect = ((Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
+                                    Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING ||
+                                    Model.statusID == GlobalSystemValues.STATUS_POSTED)
+                                    && isApprover) ? true : false;
             }
             @Html.HiddenFor(x => Model.entryID, new { @class= "entryID" })
             @if (isMaker || isVerifier || isApprover || aVerifier || anApprover)
@@ -235,6 +240,7 @@
                     <div>
                         <div class="dis-inline-block">@if(enableBIR) { <button class="tbl-btn" id="printBir" value="printBir">Print BIR Certificate</button> }</div>
                         <div class="dis-inline-block">@if(enableReversal) { <button class="tbl-btn btnEntryAction" id="reversal_entry" value="Reversal" name="command">Create Reversal Entry</button> }</div>
+                    <div class="dis-inline-block">@if (enableRedirect) {<a class="tbl-btn tbl-btn-redirect red-pend" href="/Home/Pending">Redirect to Pending Screen</a>}</div>
                     </div>
                 </div>
             }
@@ -302,6 +308,35 @@
             $("#credTotal").val(0.00);
         }
 
+        //format values with appropriate comma and decimal places
+        $(".commaClass").digits();
+        $(".commaClass").each(function () {
+            $(this).val(rdDDV($(this)));
+        });
+        
+        function rdDDV(el) {
+            var val = $(el).val();
+            var currVal = $(el).parent().siblings(":eq(9)").find("[id$='ccy']").val();
+            if (currVal == @Model.yenCurrID) {
+                x = val.split(".");
+                return x[0];
+            } else if (currVal == "" || currVal == null) {
+                var hasJPY = false;
+                $("[id$='ccy']").each(function () {
+                    if ($(this).val() == @Model.yenCurrID) {
+                        hasJPY = true;
+                    }
+                });
+                if (hasJPY) {
+                    x = val.split(".");
+                    return x[0];
+                } else {
+                    return val;
+                }
+            } else {
+                return val;
+            }
+        }
         $(function () {
             //Cash Breakdown Modal
             $("table").on("click", ".cashBreakdown", function (e) {

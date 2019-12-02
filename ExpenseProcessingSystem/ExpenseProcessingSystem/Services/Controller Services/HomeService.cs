@@ -2109,7 +2109,7 @@ namespace ExpenseProcessingSystem.Services
             {
                 DMCheckModel_Pending m = new DMCheckModel_Pending
                 {
-                    Pending_Check_Input_Date = DateTime.Now,
+                    Pending_Check_Input_Date = dm.Check_Input_Date,
                     Pending_Check_MasterID = dm.Check_MasterID,
                     Pending_Check_Series_From = dm.Check_Series_From,
                     Pending_Check_Series_To = dm.Check_Series_To,
@@ -14736,7 +14736,7 @@ namespace ExpenseProcessingSystem.Services
             return _context.DMCurrency.Where(x => x.Curr_MasterID == masterID && x.Curr_isActive == true
                     && x.Curr_isDeleted == false).FirstOrDefault();
         }
-        public DMCurrencyModel getCurrencyByMasterID(string abbrev)
+        public DMCurrencyModel getCurrencyByAbbrev(string abbrev)
         {
             return _context.DMCurrency.Where(x => x.Curr_CCY_ABBR == abbrev).FirstOrDefault();
         }

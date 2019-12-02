@@ -20,7 +20,7 @@
             <tr id="NewFBT-Tr-0">
                 <td>@Html.TextBoxFor(m => m.NewFBTVM[0].FBT_Name, new { @class = "w-full input voucher-input" })</td>
                 <td>@Html.TextBoxFor(m => m.NewFBTVM[0].FBT_Formula, new { @class = "w-full input voucher-input" })</td>
-                <td>@Html.TextBoxFor(m => m.NewFBTVM[0].FBT_Tax_Rate, new { @class = "w-full input voucher-input" })</td>
+                <td>@Html.TextBoxFor(m => m.NewFBTVM[0].FBT_Tax_Rate, new { @class = "w-full input voucher-input", @type = "number", @min = "0" })</td>
                 <td>
                 </td>
             </tr>

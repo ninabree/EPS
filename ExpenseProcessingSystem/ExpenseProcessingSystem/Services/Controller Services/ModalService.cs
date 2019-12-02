@@ -1187,6 +1187,9 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             //TEMP where clause until FBT is updated
             var defaultFBT = _context.DMFBT.Where(x => x.FBT_MasterID == 1).FirstOrDefault();
 
+            var statList = (from a in mList
+                            join d in _context.StatusList on a.AccountGroup_Status_ID equals d.Status_ID
+                            select new { a.AccountGroup_ID, d.Status_Name }).ToList();
             List<DMAccountGroupViewModel> tempList = new List<DMAccountGroupViewModel>();
             foreach (DMAccountGroupModel m in mList)
             {
@@ -1202,7 +1205,8 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                             AccountGroup_Creator_ID = m.AccountGroup_Creator_ID,
                             AccountGroup_Created_Date = m.AccountGroup_Created_Date,
                             AccountGroup_Last_Updated = DateTime.Now,
-                            AccountGroup_Status_ID = m.AccountGroup_Status_ID
+                            AccountGroup_Status_ID = m.AccountGroup_Status_ID,
+                            AccountGroup_Status_Name = statList.Where(a => a.AccountGroup_ID == m.AccountGroup_ID).Select(x => x.Status_Name).FirstOrDefault() ?? "N/A"
                         };
                         tempList.Add(vm);
                     }

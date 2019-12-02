@@ -224,7 +224,7 @@ $(document).ready(function () {
     function vatRowFormat(itemCount) {
         return $('<tr id="NewVAT-Tr-' + itemCount + '">'
             + '<td><input  class="w-full input voucher-input" id="NewVATVM_' + itemCount + '__VAT_Name" name="NewVATVM[' + itemCount + '].VAT_Name" type="text" value=""></td>'
-            + '<td><input  class="w-full input voucher-input" id="NewVATVM_' + itemCount + '__VAT_Rate" name="NewVATVM[' + itemCount + '].VAT_Rate" type="text" value=""></td>'
+            + '<td><input  class="w-full input voucher-input" id="NewVATVM_' + itemCount + '__VAT_Rate" name="NewVATVM[' + itemCount + '].VAT_Rate" type="number" min="0" value="0"></td>'
             + '<td><span class="table-remove glyphicon glyphicon-remove"></span>'
             + '</td>'
             + '</tr>');
@@ -233,7 +233,7 @@ $(document).ready(function () {
         return $('<tr id="NewFBT-Tr-' + itemCount + '">'
             + '<td><input  class="w-full input voucher-input" id="NewFBTVM_' + itemCount + '__FBT_Name" name="NewFBTVM[' + itemCount + '].FBT_Name" type="text" value=""></td>'
             + '<td><input  class="w-full input voucher-input" id="NewFBTVM_' + itemCount + '__FBT_Formula" name="NewFBTVM[' + itemCount + '].FBT_Formula" type="text" value=""></td>'
-            + '<td><input  class="w-full input voucher-input" data-val="true" data-val-required="The FBT Tax Rate field is required." id="NewFBTVM_' + itemCount + '__FBT_Tax_Rate" name="NewFBTVM[' + itemCount + '].FBT_Tax_Rate" type="text" value="0"></td>'
+            + '<td><input  class="w-full input voucher-input" data-val="true" data-val-required="The FBT Tax Rate field is required." id="NewFBTVM_' + itemCount + '__FBT_Tax_Rate" name="NewFBTVM[' + itemCount + '].FBT_Tax_Rate" type="number" min="0" value="0"></td>'
             + '<td>'
             + '<span class="table-remove glyphicon glyphicon-remove"></span>'
             + '</td>'
@@ -243,7 +243,7 @@ $(document).ready(function () {
         return $('<tr id="NewTR-Tr-' + itemCount + '">'
             + '<td><input  class="w-full input voucher-input" id="NewTRVM_' + itemCount + '__TR_WT_Title" name="NewTRVM[' + itemCount + '].TR_WT_Title" type="text" value=""></td>'
             + '<td><input  class="w-full input voucher-input" id="NewTRVM_' + itemCount + '__TR_Nature" name="NewTRVM[' + itemCount + '].TR_Nature" type="text" value=""></td>'
-            + '<td><input  class="w-full input voucher-input" data-val="true" data-val-required="The Tax Rate field is required." id="NewTRVM_' + itemCount + '__TR_Tax_Rate" name="NewTRVM[' + itemCount + '].TR_Tax_Rate" type="text" value="0"></td>'
+            + '<td><input  class="w-full input voucher-input" data-val="true" data-val-required="The Tax Rate field is required." id="NewTRVM_' + itemCount + '__TR_Tax_Rate" name="NewTRVM[' + itemCount + '].TR_Tax_Rate" type="number" min="0" value="0"></td>'
             + '<td><input  class="w-full input voucher-input" id="NewTRVM_' + itemCount + '__TR_ATC" name="NewTRVM[' + itemCount + '].TR_ATC" type="text" value=""></td>'
             + '<td><input  class="w-full input voucher-input" id="NewTRVM_' + itemCount + '__TR_Nature_Income_Payment" name="NewTRVM[' + itemCount + '].TR_Nature_Income_Payment" type="text" value=""></td>'
             + '<td>'

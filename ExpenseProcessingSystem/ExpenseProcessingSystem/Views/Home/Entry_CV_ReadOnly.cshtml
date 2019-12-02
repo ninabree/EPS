@@ -118,10 +118,13 @@
                         <td>@Html.DropDownListFor(x => Model.EntryCV[i].vat, new SelectList(Model.systemValues.vat, "Value", "Text", Model.systemValues.vat.SelectedValue), new { @class = "input100 txtVat selectDisabled", disabled = "disabled" })</td>
                         <td style="text-align:center">@Html.CheckBoxFor(x => Model.EntryCV[i].chkEwt, new { @class = "chkEwt", @disabled = "true" })</td>
                         <td>@Html.DropDownListFor(x => Model.EntryCV[i].ewt, new SelectList(Model.systemValues.ewt, "Value", "Text", Model.systemValues.ewt.SelectedValue), new { @class = "input100 txtEwt selectDisabled", disabled = "disabled" })</td>
-                        <td><input value="@Model.EntryCV[i].ccyAbbrev" class="input100 txtccytotal" disabled /></td>
-                        <td><input value="@Model.EntryCV[i].debitGross" class="input100 txtGross" disabled /></td>
-                        <td><input value="@Model.EntryCV[i].credEwt" class="input100 txtCredEwt" disabled /></td>
-                        <td><input value="@Model.EntryCV[i].credCash" class="input100 txtCredCash" disabled /></td>
+                        <td>
+                            <input value="@Model.EntryCV[i].ccyAbbrev" class="input100 txtccytotal" disabled />
+                            @Html.HiddenFor(x => x.EntryCV[i].ccy)
+                        </td>
+                        <td><input value="@Model.EntryCV[i].debitGross" class="input100 txtGross commaClass" disabled /></td>
+                        <td><input value="@Model.EntryCV[i].credEwt" class="input100 txtCredEwt commaClass" disabled /></td>
+                        <td><input value="@Model.EntryCV[i].credCash" class="input100 txtCredCash commaClass" disabled /></td>
                         <td id="req_@i">
                             @if (Model.EntryCV[i].amtDetails.Count > 0)
                             {
@@ -148,13 +151,13 @@
                 <tr>
                     <td style="border:none; background-color:#f2f2f2" rowspan="2"></td>
                     <td colspan="8" style="text-align:right; border:none; background-color:#f2f2f2">Subtotal : </td>
-                    <td rowspan="2" class="text-v-bottom"><div class="flex-c"><input type="text" class="input100" readonly id="grossTotal" /></div></td>
-                    <td><input type="text" readonly class="input100" id="credEwtTotal" /></td>
-                    <td><input type="text" readonly class="input100" id="credCashTotal" /></td>
+                    <td rowspan="2" class="text-v-bottom"><div class="flex-c"><input type="text" class="input100 commaClass" readonly id="grossTotal" /></div></td>
+                    <td><input type="text" readonly class="input100 commaClass" id="credEwtTotal" /></td>
+                    <td><input type="text" readonly class="input100 commaClass" id="credCashTotal" /></td>
                 </tr>
                 <tr>
                     <td colspan="8" style="text-align:right; border:none; background-color:#f2f2f2 ">Total : </td>
-                    <td colspan="2"><div class="flex-c"><input type="text" class="input100" readonly id="credTotal" /></div></td>
+                    <td colspan="2"><div class="flex-c"><input type="text" class="input100 commaClass" readonly id="credTotal" /></div></td>
                 </tr>
             </tbody>
         </table>
@@ -235,6 +238,8 @@
                         {<button class="tbl-btn" id="printCheck" value="printCheck">Print Check</button>}</div>
                         <div class="dis-inline-block">@if (enableReversal)
                         {<button class="tbl-btn btnEntryAction" id="reversal_entry" value="Reversal" name="command">Create Reversal Entry</button>}</div>
+                        <div class="dis-inline-block">@if (enableReversal)
+                        {<a class="tbl-btn tbl-btn-redirect red-pend" href="/Home/Pending">Redirect to Pending Screen</a>}</div>
                     </div>
                 </div>
             }
@@ -319,6 +324,11 @@
         });
 
         $("#saveBtn").hide();
+        $("table").on("click", "#pending_redirect", function (e) {
+            e.stopImmediatePropagation();
+            window.location.href = Url.Action("Home", "History");
+            //window.open = "/Home/Pending";
+        });
 
         $("table").on("click", ".expenseAmortization", function (e) {
             e.stopImmediatePropagation();
@@ -416,6 +426,33 @@
             $("#credEwtTotal").val(0.00);
             $("#credCashTotal").val(0.00);
             $("#credTotal").val(0.00);
+        }
+        $(".commaClass").digits();
+        $(".commaClass").each(function () {
+            $(this).val(rdDDV($(this)));
+        });
+        function rdDDV(el) {
+            var val = $(el).val();
+            var currVal = $(el).parent().siblings(":eq(8)").find("[id$='ccy']").val();
+            if (currVal == @Model.yenCurrID) {
+                x = val.split(".");
+                return x[0];
+            } else if (currVal == "" || currVal == null) {
+                var hasJPY = false;
+                $("[id$='ccy']").each(function () {
+                    if ($(this).val() == @Model.yenCurrID) {
+                        hasJPY = true;
+                    }
+                });
+                if (hasJPY) {
+                    x = val.split(".");
+                    return x[0];
+                } else {
+                    return val;
+                }
+            } else {
+                return val;
+            }
         }
     });
 </script>

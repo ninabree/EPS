@@ -24,7 +24,7 @@
             @Html.CheckBoxFor(model => model.Inter_Check1, new { @class = "convertChk" })
             Convert <label id="convertCurr1">@Model.Inter_Currency2_ABBR</label>
         </td>
-        <td colspan="4"><input type="number" id="convertAmt1" class="NumberOnlyOneDecimal" value="@Model.Inter_Convert1_Amount" /></td>
+        <td colspan="4"><input type="number" id="convertAmt1" class="NumberOnlyOneDecimal NumberOnlyOneDecimal2" value="@Model.Inter_Convert1_Amount" /></td>
     </tr>
     <tr>
         <td colspan="3"><label id="curr2-lbl"> @Model.CurrencyList.Where(x => x.Value == @Model.Inter_Currency2_ID + "").Select(x => x.Text).FirstOrDefault() Amount</label></td>
@@ -43,7 +43,7 @@
                 }
             </select>
         </td>
-        <td colspan="4"><input type="number" id="convertAmt2" value="@Model.Inter_Convert2_Amount" class="NumberOnlyOneDecimal" /></td>
+        <td colspan="4"><input type="number" id="convertAmt2" value="@Model.Inter_Convert2_Amount" class="NumberOnlyOneDecimal NumberOnlyOneDecimal2" /></td>
         <td colspan="3">
             @Html.CheckBoxFor(model => model.Inter_Check2, new { @class = "convertChk" })
             Convert <label id="convertCurr2">@Model.Inter_Currency1_ABBR</label>
@@ -201,16 +201,25 @@
         });
         $(".NumberOnlyOneDecimal").on("change", function (e) {
             var decVal = 2;
-            
+            var decVal2 = 2;
             var val = $(this).val().replace("-", "");
             var valId = $(this).attr("id");
+            var isCurr2El = $(this).hasClass("NumberOnlyOneDecimal2");
+
+            if ($("table").find("#Inter_Currency1_ID").val() == $(document).find("#yenID").val()) {
+                decVal = 0;
+            }
+            if ($("table").find("#Inter_Currency2_ID").val() == $(document).find("#yenID").val()) {
+                decVal2 = 0;
+            }
             if (valId == "Inter_Rate") {
                 decVal = 4;
             }
-            //if ($('#yenID').val() == $("#" + pid).find("[id$='__ExpNCDtlAcc_Type_ID']").val()) {
-            //    decVal = 0;
-            //}
-            $(this).val(roundNumber(val, decVal));
+            if (isCurr2El) {
+                $(this).val(roundNumber(val, decVal2));
+            } else {
+                $(this).val(roundNumber(val, decVal));
+            }
             if (isNaN($(this).val())) {
                 $(this).val(0);
             }
@@ -235,7 +244,6 @@
                 defaultInter();
             }
         });
-
         $("#convertAmt2").on("change", function (e) {
             e.stopImmediatePropagation();
             isChk();
@@ -257,7 +265,6 @@
                 }
             }
         });
-
         $("#convertAmt1").on("change", function (e) {
             e.stopImmediatePropagation();
             isChk();
@@ -309,11 +316,12 @@
                 }
             }
         });
-
         $(".curr2").on("change", function (e) {
             e.stopImmediatePropagation();
             updateCurrency2();
+            $(".changeable").trigger("change");
         });
+
         $(".modal-footer2").on("click", "#saveBtnEntry", function (e) {
             if ($(this).parent().siblings().find('h4.modal-title', this).text() == "Inter-Entity") {
                 var itemNo = $("#parentIdInter").val();
@@ -334,7 +342,7 @@
                 $("#EntryDDV_" + itemNo + "__interDetails_Inter_Check1").val(isChk1);
                 $("#EntryDDV_" + itemNo + "__interDetails_Inter_Check2").val(isChk2);
                 $("#EntryDDV_" + itemNo + "__interDetails_Inter_Rate").val($("table").find("#Inter_Rate").val());
-                $("#EntryDDV_" + itemNo + "__debitGross").val($("#par1-0").text());
+                $("#EntryDDV_" + itemNo + "__debitGross").val(RC($("#par1-0").text()));
 
                 //Populate the Particulars and Accs Lists
                 $('#req_' + itemNo).find('#interDtls').empty();
@@ -477,24 +485,34 @@
                 defaultVals();
             }
         }
+        //UPDATE VALUES IN INTER ENTITY PARTICULARS TABLE
         function UpdateParticulars1(currVal, convVal) {
             var rate = $("table").find("#Inter_Rate").val();
             if (!($.isNumeric(currVal) && $.isNumeric(convVal) && $.isNumeric(rate))) {
                 alert("Invalid amount/s provided.");
             } else {
-                currVal = parseFloat(currVal).toFixed(2);
-                var curr2 = (parseFloat(convVal) * parseFloat(rate));
-                var curr2Dec = (curr2).toFixed(2);
-                var parCredit = (parseFloat(convVal)).toFixed(2);
-                var parDebit = (parseFloat(currVal) + parseFloat(curr2)).toFixed(2);
+                var decVal = 2;
+                var decVal2 = 2;
+                if ($("table").find("#Inter_Currency1_ID").val() == $(document).find("#yenID").val()) {
+                    decVal = 0;
+                }
+                if ($("table").find("#Inter_Currency2_ID").val() == $(document).find("#yenID").val()) {
+                    decVal2 = 0;
+                }
+                currVal = AC(roundInter(parseFloat(RC(currVal)), decVal));
+                var curr2 = AC(roundInter(parseFloat(RC(convVal)) * parseFloat(RC(rate)), decVal));
+                var curr2Dec = AC(roundInter(parseFloat(RC(curr2)), decVal));
+                var parCredit = AC2(roundInter(parseFloat(RC(convVal)), decVal2));
+                var parDebit = AC(roundInter(parseFloat(RC(currVal)) + parseFloat(RC(curr2)), decVal));
+
                 $(curr2Amt).val(curr2Dec);
                 $("#par1-0").text(parDebit);
                 $("#par1-1").text(curr2Dec);
                 $("#par1-2").text(currVal);
                 $("#par2-0").text(curr2Dec);
-                $("#par2-1").text(parCredit);
-                $("#par3-0").text(parCredit);
-                $("#par3-1").text(parCredit);
+                $("#par2-1").text((parCredit))
+                $("#par3-0").text((parCredit));
+                $("#par3-1").text((parCredit));
                 $("#par2-0-1").text(rate);
             }
         }
@@ -503,18 +521,27 @@
             if (!($.isNumeric(currVal) && $.isNumeric(convVal) && $.isNumeric(rate))) {
                 alert("Invalid amount/s provided.");
             } else {
-                var curr1 = (parseFloat(convVal) * parseFloat(rate));
-                var curr1Dec = (curr1).toFixed(2);
-                var parCredit = (parseFloat(convVal)).toFixed(2);
-                var parDebit = (parseFloat(curr1) + parseFloat(currVal)).toFixed(2);
+                var decVal = 2;
+                var decVal2 = 2;
+                if ($("table").find("#Inter_Currency1_ID").val() == $(document).find("#yenID").val()) {
+                    decVal = 0;
+                }
+                if ($("table").find("#Inter_Currency2_ID").val() == $(document).find("#yenID").val()) {
+                    decVal2 = 0;
+                }
+                var curr1 = AC(roundInter(parseFloat(RC(convVal)) * parseFloat(RC(rate)), decVal));
+                var curr1Dec = AC(roundInter(parseFloat(RC(curr1)), decVal));
+                var parCredit = AC2(roundInter(parseFloat(RC(convVal)), decVal2));
+                var parDebit = AC(roundInter(parseFloat(RC(currVal)) + parseFloat(RC(curr1)), decVal));
+
                 $(curr1Amt).val(curr1Dec);
                 $("#par1-0").text(parDebit);
                 $("#par1-1").text(curr1Dec);
                 $("#par1-2").text(currVal);
                 $("#par2-0").text(curr1Dec);
-                $("#par2-1").text(parCredit);
-                $("#par3-0").text(parCredit);
-                $("#par3-1").text(parCredit);
+                $("#par2-1").text((parCredit));
+                $("#par3-0").text((parCredit));
+                $("#par3-1").text((parCredit));
                 $("#par2-0-1").text(rate);
             }
         }
@@ -522,39 +549,56 @@
             if (!($.isNumeric(curr1Val) && $.isNumeric(curr2Val) && $.isNumeric(rateVal))) {
                 alert("Invalid amount/s provided.");
             } else if (checkBox == "chk1") {
-                var rateValDec = (parseFloat(rateVal).toFixed(4));
-                var curr1Dec = (parseFloat(curr1Val).toFixed(2));
-                var curr2Dec = (parseFloat(curr2Val).toFixed(2));
-                var parCredit = (parseFloat(curr1Val) / parseFloat(rateVal)).toFixed(2);
-                var parDebit = (parseFloat(curr1Val) + parseFloat(curr2Val)).toFixed(2);
+                var decVal = 2;
+                var decVal2 = 2;
+                if ($("table").find("#Inter_Currency1_ID").val() == $(document).find("#yenID").val()) {
+                    decVal = 0;
+                }
+                if ($("table").find("#Inter_Currency2_ID").val() == $(document).find("#yenID").val()) {
+                    decVal2 = 0;
+                }
+                var rateValDec = parseFloat(RC(rateVal));
+                var curr1Dec = AC(roundInter(parseFloat(RC(curr1Val)), decVal));
+                var curr2Dec = AC(roundInter(parseFloat(RC(curr2Val)), decVal));
+                var parCredit = AC2(roundInter(parseFloat(RC(curr1Val)) / parseFloat(RC(rateVal)), decVal2));
+                var parDebit = AC(roundInter(parseFloat(RC(curr1Val)) + parseFloat(RC(curr2Val)), decVal));
+
                 $("#convertAmt1").val(parCredit);
                 $("#par1-0").text(parDebit);
                 $("#par1-1").text(curr2Dec);
                 $("#par1-2").text(curr1Dec);
                 $("#par2-0").text(curr2Dec);
-                $("#par2-1").text(parCredit);
-                $("#par3-0").text(parCredit);
-                $("#par3-1").text(parCredit);
+                $("#par2-1").text((parCredit));
+                $("#par3-0").text((parCredit));
+                $("#par3-1").text((parCredit));
                 $("#par2-0-1").text(rateValDec);
             } else if (checkBox == "chk2") {
-                var rateValDec = (parseFloat(rateVal).toFixed(4));
-                var curr1Dec = (parseFloat(curr1Val).toFixed(2));
-                var curr2Dec = (parseFloat(curr2Val).toFixed(2));
-                var parCredit = (parseFloat(curr2Val) / parseFloat(rateVal)).toFixed(2);
-                var parDebit = (parseFloat(curr2Val) + parseFloat(curr1Val)).toFixed(2);
-                $("#convertAmt2").val(parCredit);
+                var decVal = 2;
+                var decVal2 = 2;
+                if ($("table").find("#Inter_Currency1_ID").val() == $(document).find("#yenID").val()) {
+                    decVal = 0;
+                }
+                if ($("table").find("#Inter_Currency2_ID").val() == $(document).find("#yenID").val()) {
+                    decVal2 = 0;
+                }
+                var rateValDec = parseFloat(RC(rateVal));
+                var curr1Dec = AC(roundInter(parseFloat(RC(curr1Val)), decVal));
+                var curr2Dec = AC(roundInter(parseFloat(RC(curr2Val)), decVal));
+                var parCredit = AC2(roundInter(parseFloat(RC(curr2Val)) / parseFloat(RC(rateVal)), decVal2));
+                var parDebit = AC(roundInter(parseFloat(RC(curr2Val)) + parseFloat(RC(curr1Val)), decVal));
+                $("#convertAmt2").val((parCredit));
                 $("#par1-0").text(parDebit);
                 $("#par1-1").text(curr2Dec);
                 $("#par1-2").text(curr1Dec);
                 $("#par2-0").text(curr2Dec);
-                $("#par2-1").text(parCredit);
-                $("#par3-0").text(parCredit);
-                $("#par3-1").text(parCredit);
+                $("#par2-1").text((parCredit));
+                $("#par3-0").text((parCredit));
+                $("#par3-1").text((parCredit));
                 $("#par2-0-1").text(rateValDec);
             }
         }
+        //RESET VALUES IN PARTICULARS TABLE
         function UpdateParticulars3(currAmt) {
-            //$(currAmt).val(0);
             $("#par1-0").text(0);
             $("#par1-1").text(0);
             $("#par1-2").text(0);
@@ -564,10 +608,67 @@
             $("#par3-1").text(0);
             $("#par2-0-1").text(0);
         }
-        ////TEMP FIX
+
+        //ADD COMMA IN ENTRY 1-0, 1-1, 1-2 AND 2-0
+        function AC(nStr) {
+            if ($("table").find("#Inter_Currency1_ID").val() != $(document).find("#yenID").val()) {
+                nStr = nStr + ".00";
+            }
+
+            nStr += '';
+            x = nStr.split('.');
+            x1 = x[0];
+            x2 = x.length > 1 ? '.' + x[1] : '';
+            var rgx = /(\d+)(\d{3})/;
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + ',' + '$2');
+            }
+            
+            return x1 + x2;
+        };
+        //ADD COMMA IN ENTRY 2-1, 3-0 AND 3-1
+        function AC2(nStr) {
+            if ($("table").find("#Inter_Currency2_ID").val() != $(document).find("#yenID").val()) {
+                nStr = nStr + ".00";
+            }
+
+            nStr += '';
+            x = nStr.split('.');
+            x1 = x[0];
+            x2 = x.length > 1 ? '.' + x[1] : '';
+            var rgx = /(\d+)(\d{3})/;
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + ',' + '$2');
+            }
+
+            return x1 + x2;
+        };
+        //REMOVE COMMA
+        function RC(nStr) {
+            return nStr.replace(/\,/g, "");
+        };
+        //ROUNDING OF VALUES FOR INTER ENTITY
+        function roundInter(num, scale) {
+            if (typeof scale === 'undefined' || +scale === 0)
+                return Math.round(num).toFixed(scale);
+
+            num = +num;
+            scale = +scale;
+
+            if (isNaN(num) || !(typeof scale === 'number' && scale % 1 === 0))
+                return NaN;
+
+            // Shift
+            num = num.toString().split('e');
+            num = Math.round(+(num[0] + 'e' + (num[1] ? (+num[1] + scale) : scale)));
+
+            // Shift back
+            num = num.toString().split('e');
+            return commaDigits((+(num[0] + 'e' + (num[1] ? (+num[1] - scale) : -scale))).toFixed(scale));
+        }
         function computeValuesDDVInter(parent) {
             var pNode = parent;
-            var grossAmt = $("#" + pNode.id + " .txtGross").val();
+            var grossAmt = RC($("#" + pNode.id + " .txtGross").val());
             
             $("#" + pNode.id + " .txtGross").attr("value", grossAmt);
 
@@ -576,8 +677,8 @@
             var vatable = $("#" + itemNo).find(".chkVat").is(':checked');
             if (chkEwtVal) {
                 if (vatable) {
-                    var vatRate = (Number($("#" + itemNo).find(".txtVat option:selected").text()) / 100);
-                    var ewtRate = (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100);
+                    var vatRate = (Number(RC($("#" + itemNo).find(".txtVat option:selected").text())) / 100);
+                    var ewtRate = (Number(RC($("#" + itemNo).find(".txtEwt option:selected").text())) / 100);
                     var netVat = roundNumber(grossAmt / (1 + vatRate), 2);
                     var ewt = roundNumber(netVat * ewtRate, 2);
                     var netEwt = grossAmt - ewt;
@@ -603,15 +704,15 @@
             var cashSubTotal = 0;
 
             for (var i = 0; i < gross.length; i++) {
-                grossTotal += Number(gross[i].value);
+                grossTotal += Number(RC(gross[i].value));
             }
 
             for (var i = 0; i < credEwt.length; i++) {
-                ewtSubTotal += Number(credEwt[i].value);
+                ewtSubTotal += Number(RC(credEwt[i].value));
             }
 
             for (var i = 0; i < credCash.length; i++) {
-                cashSubTotal += Number(credCash[i].value);
+                cashSubTotal += Number(RC(credCash[i].value));
             }
 
             $("#grossTotal").val(roundNumber(grossTotal, 2));

@@ -149,7 +149,7 @@
                     var subTotal = parseFloat($('#' + trs[count].id).find('.txtNoPCS').val()) * parseFloat($('#' + trs[count].id).find('.txtDenomination').val());
                     amountTotal = parseFloat(amountTotal) + parseFloat(subTotal);
                 }
-                $('.cashBDAmountTotal').val(AC(round(amountTotal, 2)));
+                $('.cashBDAmountTotal').val(AC(roundNumber(amountTotal, 2)));
             });
             $("table").on("keydown", "input.txtNoPCS", function (e) {
                 if (e.keyCode == 13) {

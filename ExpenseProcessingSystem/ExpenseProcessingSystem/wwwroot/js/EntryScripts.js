@@ -241,6 +241,105 @@
         return isComplete;
     }
 
+    //function computeValues(parent) {
+    //    var pNode = parent;
+    //    var itemNo = pNode.id;
+    //    var amounts = $("");
+    //    var grossAmt = 0;
+    //    var origGrossAmt = 0;
+    //    var origCredAmt = $("#" + itemNo).find(".txtCredCash").val();
+
+    //    amounts = $("#" + pNode.id + " .amount");
+    //    grossAmt = 0;
+    //    origGrossAmt = $("#" + pNode.id + " .txtGross").val();
+    //    for (var i = 0; i < amounts.length; i++) {
+    //        grossAmt += Number(amounts[i].value);
+    //    }
+
+    //    $("#" + pNode.id + " td .txtGross").val(roundNumber(grossAmt, 2));
+
+    //    var itemNo = pNode.id; //jquery obj
+    //    var chkEwtVal = $("#" + itemNo).find(".chkEwt").is(':checked');
+    //    var vatable = $("#" + itemNo).find(".chkVat").is(':checked');
+    //    if (chkEwtVal) {
+    //        if (vatable) {
+    //            var vatRate = (Number($("#" + itemNo).find(".txtVat option:selected").text()) / 100);
+    //            var ewtRate = (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100);
+    //            var netVat = roundNumber(grossAmt / (1 + vatRate), 2);
+    //            var ewt = roundNumber(netVat * ewtRate, 2);
+    //            var netEwt = grossAmt - ewt;
+
+    //            $("#" + itemNo).find(".txtCredEwt").val(roundNumber(ewt, 2));
+    //            $("#" + itemNo).find(".txtCredCash").val(roundNumber(netEwt, 2));
+    //            if ($(".hiddenScreencode").val() == "SS") {
+    //                $("#" + itemNo).find(".txtCredEwt").val(0);
+    //                $("#" + pNode.id).find(".txtGross").val(roundNumber(netEwt, 2));
+    //            }
+    //        } else {
+    //            var ewtAmount = roundNumber(grossAmt * (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100), 2);
+    //            $("#" + itemNo).find(".txtCredEwt").val(roundNumber(ewtAmount, 2));
+    //            $("#" + itemNo).find(".txtCredCash").val(roundNumber((grossAmt - ewtAmount), 2));
+    //            if ($(".hiddenScreencode").val() == "SS") {
+    //                $("#" + itemNo).find(".txtCredEwt").val(0);
+    //                $("#" + pNode.id).find(".txtGross").val(roundNumber((grossAmt - ewtAmount), 2));
+    //            }
+    //        }
+    //    } else {
+    //        $("#" + itemNo).find(".txtCredEwt").val(0);
+    //        $("#" + itemNo).find(".txtCredCash").val(roundNumber(grossAmt, 2));
+    //        if ($(".hiddenScreencode").val() == "SS") {
+    //            $("#" + pNode.id).find(".txtGross").val(roundNumber(grossAmt, 2));
+    //        }
+    //    }
+    //    //For PCS,SS - resetting of Cash breakdown list.
+    //    if ($(".hiddenScreencode").val() == "PCV" || $(".hiddenScreencode").val() == "SS") {
+    //        if (origCredAmt != $("#" + itemNo).find(".txtCredCash").val()) {
+    //            var ret = pNode.id.replace('item_', '');
+    //            $('#divCashBD_' + ret).empty();
+    //            $('#EntryCV_' + ret + '__modalInputFlag').val(0);
+    //        }
+    //    }
+
+    //    var gross = $(".txtGross");
+    //    var credEwt = $(".txtCredEwt");
+    //    var credCash = $(".txtCredCash");
+
+    //    var grossTotal = 0;
+    //    var ewtSubTotal = 0;
+    //    var cashSubTotal = 0;
+
+    //    for (var i = 0; i < gross.length; i++) {
+    //        grossTotal += Number(gross[i].value);
+    //    }
+
+    //    for (var i = 0; i < credEwt.length; i++) {
+    //        ewtSubTotal += Number(credEwt[i].value);
+    //    }
+
+    //    for (var i = 0; i < credCash.length; i++) {
+    //        cashSubTotal += Number(credCash[i].value);
+    //    }
+
+    //    $("#grossTotal").val(roundNumber(grossTotal, 2));
+    //    $("#credEwtTotal").val(roundNumber(ewtSubTotal, 2));
+    //    $("#credCashTotal").val(roundNumber(cashSubTotal, 2));
+    //    $("#credTotal").val(roundNumber(Number(ewtSubTotal + cashSubTotal), 2));
+
+    //    var ccyList = [];
+    //    for (var i = 0; i < $('.txtccy:not(#template_ccy)').length; i++) {
+    //        ccyList.push($($('.txtccy:not(#template_ccy)')[i]).val());
+    //    }
+    //    if ($('.txtccy:not(#template_ccy)').length > 1 && !(ccyList.every((val, i, arr) => val === arr[0]))) {
+    //        $("#grossTotal").val(0.00);
+    //        $("#credEwtTotal").val(0.00);
+    //        $("#credCashTotal").val(0.00);
+    //        $("#credTotal").val(0.00);
+    //    }
+    //    //format values to add comma
+    //    $(".commaClass").digits();
+    //}
+
+    //----------NEW COMPUTE VALUES---------------
     function computeValues(parent) {
         var pNode = parent;
         var itemNo = pNode.id;
@@ -249,6 +348,12 @@
         var origGrossAmt = 0;
         var origCredAmt = $("#" + itemNo).find(".txtCredCash").val();
 
+        var isJPY = $("#" + itemNo).find("[id$='__ccy']").val() == getJPYCurrId();
+        var decVal = 2;
+
+        if (isJPY) {
+            decVal = 0;
+        }
         amounts = $("#" + pNode.id + " .amount");
         grossAmt = 0;
         origGrossAmt = $("#" + pNode.id + " .txtGross").val();
@@ -256,7 +361,7 @@
             grossAmt += Number(amounts[i].value);
         }
 
-        $("#" + pNode.id + " td .txtGross").val(roundNumber(grossAmt, 2));
+        $("#" + pNode.id + " td .txtGross").val(roundNumber(grossAmt, decVal));
 
         var itemNo = pNode.id; //jquery obj
         var chkEwtVal = $("#" + itemNo).find(".chkEwt").is(':checked');
@@ -265,30 +370,30 @@
             if (vatable) {
                 var vatRate = (Number($("#" + itemNo).find(".txtVat option:selected").text()) / 100);
                 var ewtRate = (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100);
-                var netVat = roundNumber(grossAmt / (1 + vatRate), 2);
-                var ewt = roundNumber(netVat * ewtRate, 2);
+                var netVat = roundNumber(grossAmt / (1 + vatRate), decVal);
+                var ewt = roundNumber(netVat * ewtRate, decVal);
                 var netEwt = grossAmt - ewt;
 
-                $("#" + itemNo).find(".txtCredEwt").val(roundNumber(ewt, 2));
-                $("#" + itemNo).find(".txtCredCash").val(roundNumber(netEwt, 2));
+                $("#" + itemNo).find(".txtCredEwt").val(roundNumber(ewt, decVal));
+                $("#" + itemNo).find(".txtCredCash").val(roundNumber(netEwt, decVal));
                 if ($(".hiddenScreencode").val() == "SS") {
                     $("#" + itemNo).find(".txtCredEwt").val(0);
-                    $("#" + pNode.id).find(".txtGross").val(roundNumber(netEwt, 2));
+                    $("#" + pNode.id).find(".txtGross").val(roundNumber(netEwt, decVal));
                 }
             } else {
-                var ewtAmount = roundNumber(grossAmt * (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100), 2);
-                $("#" + itemNo).find(".txtCredEwt").val(roundNumber(ewtAmount, 2));
-                $("#" + itemNo).find(".txtCredCash").val(roundNumber((grossAmt - ewtAmount), 2));
+                var ewtAmount = roundNumber(grossAmt * (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100), decVal);
+                $("#" + itemNo).find(".txtCredEwt").val(roundNumber(ewtAmount, decVal));
+                $("#" + itemNo).find(".txtCredCash").val(roundNumber((grossAmt - ewtAmount), decVal));
                 if ($(".hiddenScreencode").val() == "SS") {
                     $("#" + itemNo).find(".txtCredEwt").val(0);
-                    $("#" + pNode.id).find(".txtGross").val(roundNumber((grossAmt - ewtAmount), 2));
+                    $("#" + pNode.id).find(".txtGross").val(roundNumber((grossAmt - ewtAmount), decVal));
                 }
             }
         } else {
             $("#" + itemNo).find(".txtCredEwt").val(0);
-            $("#" + itemNo).find(".txtCredCash").val(roundNumber(grossAmt, 2));
+            $("#" + itemNo).find(".txtCredCash").val(roundNumber(grossAmt, decVal));
             if ($(".hiddenScreencode").val() == "SS") {
-                $("#" + pNode.id).find(".txtGross").val(roundNumber(grossAmt, 2));
+                $("#" + pNode.id).find(".txtGross").val(roundNumber(grossAmt, decVal));
             }
         }
         //For PCS,SS - resetting of Cash breakdown list.
@@ -319,11 +424,10 @@
         for (var i = 0; i < credCash.length; i++) {
             cashSubTotal += Number(credCash[i].value);
         }
-
-        $("#grossTotal").val(roundNumber(grossTotal, 2));
-        $("#credEwtTotal").val(roundNumber(ewtSubTotal, 2));
-        $("#credCashTotal").val(roundNumber(cashSubTotal, 2));
-        $("#credTotal").val(roundNumber(Number(ewtSubTotal + cashSubTotal), 2));
+        $("#grossTotal").val(roundNumber(grossTotal, decVal));
+        $("#credEwtTotal").val(roundNumber(ewtSubTotal, decVal));
+        $("#credCashTotal").val(roundNumber(cashSubTotal, decVal));
+        $("#credTotal").val(roundNumber(Number(ewtSubTotal + cashSubTotal), decVal));
 
         var ccyList = [];
         for (var i = 0; i < $('.txtccy:not(#template_ccy)').length; i++) {
@@ -338,7 +442,6 @@
         //format values to add comma
         $(".commaClass").digits();
     }
-    
 
     function computeValuesOfAllRecordVatTR() {
 
@@ -420,7 +523,27 @@
             $("#credTotal").val(0.00);
         }
     }
-
+    //check JPY CURR ID
+    function getJPYCurrId() {
+        var tmp = 0;
+        $.ajax({
+            url: '/Home/getJPYCurrId',
+            type: "POST",
+            dataType: 'json',
+            contentType: 'application/json',
+            async: false,
+            processData: false,
+            cache: false,
+            data: '{}',
+            success: function (data) {
+                    tmp = data;
+            },
+            error: function (xhr) {
+                alert('error');
+            }
+        });
+        return tmp;
+    }
     function ajaxCall(url, data) {
         return $.ajax({
             url: url,

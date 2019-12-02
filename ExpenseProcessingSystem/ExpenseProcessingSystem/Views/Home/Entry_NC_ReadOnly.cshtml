@@ -501,22 +501,33 @@
                         {<button class="tbl-btn btnEntryAction" value="Reject" name="command">Reject</button>}</div>
                     </div>
                     <div>
-                        <div class="dis-inline-block">@if (enableBIR)
-                        {<button class="tbl-btn" id="printBir" value="printBir">Print BIR Certificate</button>}</div>
-                        @if (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT)
-                        {
-                            <div class="dis-inline-block">@if (enablePrint)
-                            {<button class="tbl-btn" value="PrintCDD" name="command">Print CDD Instruction Sheet</button>}</div>
-                        }
-                        else if (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL &&
-                        (Model.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID == usdid ||
-                        Model.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID == jpyid))
-                        {
-                            <div class="dis-inline-block">@if (enablePrint)
-                            {<button class="tbl-btn" @*id="printBir"*@ value="PrintCDD_RET" name="command">Print CDD Instruction Sheet</button>}</div>
-                        }
-                        <div class="dis-inline-block">@if (enableReversal)
-                        {<button class="tbl-btn btnEntryAction" id="reversal_entry" value="Reversal" name="command">Create Reversal Entry</button>}</div>
+                        <div class="dis-inline-block">
+                            @if (enableBIR)
+                            {<button class="tbl-btn" id="printBir" value="printBir">Print BIR Certificate</button>}
+                    </div>
+                    @if (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_PETTY_CASH_REPLENISHMENT)
+                    {
+                        <div class="dis-inline-block">
+                            @if (enablePrint)
+                            {<button class="tbl-btn" value="PrintCDD" name="command">Print CDD Instruction Sheet</button>}
+                    </div>
+                }
+                else if (Model.EntryNC.NC_Category_ID == GlobalSystemValues.NC_RETURN_OF_JS_PAYROLL &&
+                (Model.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID == usdid ||
+                Model.EntryNC.ExpenseEntryNCDtls[0].ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Curr_ID == jpyid))
+                {
+                    <div class="dis-inline-block">
+                        @if (enablePrint)
+                        {<button class="tbl-btn" @*id="printBir" *@ value="PrintCDD_RET" name="command">Print CDD Instruction Sheet</button>}
+                    </div>
+                }
+                    <div class="dis-inline-block">
+                        @if (enableReversal)
+                        {<button class="tbl-btn btnEntryAction" id="reversal_entry" value="Reversal" name="command">Create Reversal Entry</button>}
+                    </div>
+                    <div class="dis-inline-block">
+                        @if (enableReversal)
+                        {<a class="tbl-btn tbl-btn-redirect red-pend" href="/Home/Pending">Redirect to Pending Screen</a>}</div>
                     </div>
                 </div>
             }

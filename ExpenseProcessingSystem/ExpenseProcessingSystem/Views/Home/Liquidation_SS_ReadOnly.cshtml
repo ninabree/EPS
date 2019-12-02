@@ -858,8 +858,14 @@
                 </div>
                 <div>
                     <div class="dis-inline-block"><button class="tbl-btn" id="printBir" value="printBir">Print BIR Certificate</button></div>
-                    <div class="dis-inline-block">@if (enableReversal)
-                    {<button id="reversal_entry" value="Reversal" name="command" class="btnEntryAction tbl-btn">Create Reversal Entry</button>}</div>
+                    <div class="dis-inline-block">
+                        @if (enableReversal)
+                        {<button id="reversal_entry" value="Reversal" name="command" class="btnEntryAction tbl-btn">Create Reversal Entry</button>}
+                    </div>
+                    <div class="dis-inline-block">
+                        @if (enableReversal)
+                        {<a class="tbl-btn tbl-btn-redirect red-pend" href="/Home/Pending">Redirect to Pending Screen</a>}
+                    </div>
                 </div>
             </div>
         </div>

@@ -1178,7 +1178,7 @@
                     var amtInput = $("[id='amt-cd-" + valIdSplt.substring(5, 6) + "-" + valIdSplt.substring(9, 10) + "']");
                 }
                 $(amtInput).trigger("change");
-                } else {
+            } else {
                 var valId = $(this).attr("id");
                 var valIdSplt = valId.split("_");
                 var amtInput = $("#EntryNC_ExpenseEntryNCDtls_" + valIdSplt[2] + "__ExpenseEntryNCDtlAccs_" + valIdSplt[5] + "__ExpNCDtlAcc_Amount");
@@ -1294,7 +1294,14 @@
 
                 //collecting values for Debit
                 $(element).find("td[id='deb_" + idNo + "']").each(function (ind, el) {
-                    var debitVal = parseFloat($(el).find("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + ind + "__ExpNCDtlAcc_Amount']").val());
+                    var exp = 2;
+                    var expCred = 2;
+                    //IF YEN CURR
+                    var debitCurrId = $(el).find("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + ind + "__ExpNCDtlAcc_Curr_ID']").val();
+                    if (debitCurrId == @ViewBag.yenid) {
+                        exp = 0;
+                    }
+                    var debitVal = roundNumber(parseFloat($(el).find("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + ind + "__ExpNCDtlAcc_Amount']").val()), exp);
                     if (categoryID == "8") {
                         //According to a later discussion
                         if ((idNo != 2) && (idNo != 3)) {
@@ -1331,7 +1338,13 @@
                         $("#EntryNC_ExpenseEntryNCDtls_1__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount").val(debitVal);
                         $("#EntryNC_ExpenseEntryNCDtls_1__ExpenseEntryNCDtlAccs_0__ExpNCDtlAcc_Amount").attr('value', debitVal);
                     } else {
-                        $(el).parent().siblings().find("td[id='cred_" + idNo + "']").find("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + tempInd + "__ExpNCDtlAcc_Amount']").val(debitVal);
+                    //IF YEN CURR
+                        expCred = 2;
+                        var creditCurrId = $(el).parent().siblings().find("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + tempInd + "__ExpNCDtlAcc_Curr_ID']").val();
+                        if (creditCurrId == @ViewBag.yenid) {
+                            expCred = 0;
+                        }
+                        $(el).parent().siblings().find("td[id='cred_" + idNo + "']").find("[id='EntryNC_ExpenseEntryNCDtls_" + idNo + "__ExpenseEntryNCDtlAccs_" + tempInd + "__ExpNCDtlAcc_Amount']").val(roundNumber(parseFloat(debitVal), expCred));
                     }
                 });
                 //collect values for Subt Total Credit

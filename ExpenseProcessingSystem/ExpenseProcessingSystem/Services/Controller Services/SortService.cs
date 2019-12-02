@@ -1,4 +1,5 @@
-﻿using ExpenseProcessingSystem.ViewModels;
+﻿using ExpenseProcessingSystem.ConstantData;
+using ExpenseProcessingSystem.ViewModels;
 using ExpenseProcessingSystem.ViewModels.Entry;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,8 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
 {
     public class SortService
     {
-        int[] statusIDs = { 7, 8, 9 };
+        int[] statusIDs = { GlobalSystemValues.STATUS_NEW, GlobalSystemValues.STATUS_EDIT, GlobalSystemValues.STATUS_DELETE };
+
         public SortViewModel SortData(IEnumerable<BMViewModel> list, string sortOrder)
         {
             var tempList = list.AsQueryable();
@@ -114,7 +116,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             switch (sortOrder)
             {
                 case "vendor_stat":
-                    tempList = tempList.OrderBy(x => statusIDs.Contains(x.Vendor_Status_ID));
+                    tempList = tempList.OrderBy(x => statusIDs.Contains(x.Vendor_Status_ID)).ThenBy(x => x.Vendor_Name);
                     viewData = "glyph-6";
                     vdInfo = "glyphicon-menu-up";
                     break;
@@ -170,7 +172,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     break;
                 default:
                     //tempList = tempList.OrderBy(s => s.Vendor_Name);
-                    tempList = tempList.OrderByDescending(x => statusIDs.Contains(x.Vendor_Status_ID));
+                    tempList = tempList.OrderByDescending(x => statusIDs.Contains(x.Vendor_Status_ID)).ThenBy(x => x.Vendor_Name);
                     viewData = "glyph-6";
                     vdInfo = "glyphicon-menu-down";
                     break;
@@ -191,7 +193,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             switch (sortOrder)
             {
                 case "chk_stat":
-                    tempList = tempList.OrderBy(x => statusIDs.Contains(x.Check_Status_ID));
+                    tempList = tempList.OrderBy(x => statusIDs.Contains(x.Check_Status_ID)).ThenBy(x => x.Check_Input_Date);
                     viewData = "glyph-8";
                     vdInfo = "glyphicon-menu-up";
                     break;
@@ -266,7 +268,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     vdInfo = "glyphicon-menu-up";
                     break;
                 default:
-                    tempList = tempList.OrderByDescending(x=> statusIDs.Contains(x.Check_Status_ID));
+                    tempList = tempList.OrderByDescending(x=> statusIDs.Contains(x.Check_Status_ID)).ThenBy(x => x.Check_Input_Date);
                     viewData = "glyph-8";
                     vdInfo = "glyphicon-menu-down";
                     break;
@@ -287,7 +289,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             switch (sortOrder)
             {
                 case "acc_stat":
-                    tempList = tempList.OrderBy(x => statusIDs.Contains(x.Account_Status_ID)).OrderBy(x=> x.Account_Status_ID);
+                    tempList = tempList.OrderBy(x => statusIDs.Contains(x.Account_Status_ID)).ThenBy(x=> x.Account_Name);
                     viewData = "glyph-10";
                     vdInfo = "glyphicon-menu-up";
                     break;
@@ -422,7 +424,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     vdInfo = "glyphicon-menu-up";
                     break;
                 default:
-                    tempList = tempList.OrderByDescending(x => statusIDs.Contains(x.Account_Status_ID)).OrderByDescending(x => x.Account_Status_ID);
+                    tempList = tempList.OrderByDescending(x => statusIDs.Contains(x.Account_Status_ID)).ThenBy(x => x.Account_Name);
                     viewData = "glyph-10";
                     vdInfo = "glyphicon-menu-down";
                     break;
@@ -579,7 +581,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             switch (sortOrder)
             {
                 case "dept_stat":
-                    tempList = tempList.OrderBy(x => statusIDs.Contains(x.Dept_Status_ID));
+                    tempList = tempList.OrderBy(x => statusIDs.Contains(x.Dept_Status_ID)).ThenBy(x=> x.Dept_Name);
                     viewData = "glyph-6";
                     vdInfo = "glyphicon-menu-up";
                     break;
@@ -644,7 +646,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     vdInfo = "glyphicon-menu-up";
                     break;
                 default:
-                    tempList = tempList.OrderByDescending(x => statusIDs.Contains(x.Dept_Status_ID));
+                    tempList = tempList.OrderByDescending(x => statusIDs.Contains(x.Dept_Status_ID)).ThenBy(x => x.Dept_Name);
                     viewData = "glyph-6";
                     vdInfo = "glyphicon-menu-down";
                     break;
@@ -665,7 +667,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             switch (sortOrder)
             {
                 case "vat_stat":
-                    tempList = tempList.OrderBy(x => statusIDs.Contains(x.VAT_Status_ID));
+                    tempList = tempList.OrderBy(x => statusIDs.Contains(x.VAT_Status_ID)).ThenBy(x => x.VAT_Name);
                     viewData = "glyph-6";
                     vdInfo = "glyphicon-menu-up";
                     break;
@@ -720,7 +722,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     vdInfo = "glyphicon-menu-up";
                     break;
                 default:
-                    tempList = tempList.OrderByDescending(x => statusIDs.Contains(x.VAT_Status_ID));
+                    tempList = tempList.OrderByDescending(x => statusIDs.Contains(x.VAT_Status_ID)).ThenBy(x => x.VAT_Name);
                     viewData = "glyph-6";
                     vdInfo = "glyphicon-menu-down";
                     break;
@@ -741,7 +743,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             switch (sortOrder)
             {
                 case "fbt_stat":
-                    tempList = tempList.OrderBy(x => statusIDs.Contains(x.FBT_Status_ID));
+                    tempList = tempList.OrderBy(x => statusIDs.Contains(x.FBT_Status_ID)).ThenBy(x => x.FBT_Name);
                     viewData = "glyph-8";
                     vdInfo = "glyphicon-menu-up";
                     break;
@@ -806,7 +808,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     vdInfo = "glyphicon-menu-up";
                     break;
                 default:
-                    tempList = tempList.OrderByDescending(x => statusIDs.Contains(x.FBT_Status_ID));
+                    tempList = tempList.OrderByDescending(x => statusIDs.Contains(x.FBT_Status_ID)).ThenBy(x => x.FBT_Name);
                     viewData = "glyph-8";
                     vdInfo = "glyphicon-menu-down";
                     break;
@@ -827,7 +829,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             switch (sortOrder)
             {
                 case "tr_stat":
-                    tempList = tempList.OrderBy(x => statusIDs.Contains(x.TR_Status_ID));
+                    tempList = tempList.OrderBy(x => statusIDs.Contains(x.TR_Status_ID)).ThenBy(x => x.TR_WT_Title);
                     viewData = "glyph-9";
                     vdInfo = "glyphicon-menu-up";
                     break;
@@ -912,7 +914,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     vdInfo = "glyphicon-menu-up";
                     break;
                 default:
-                    tempList = tempList.OrderByDescending(x => statusIDs.Contains(x.TR_Status_ID));
+                    tempList = tempList.OrderByDescending(x => statusIDs.Contains(x.TR_Status_ID)).ThenBy(x => x.TR_WT_Title);
                     viewData = "glyph-9";
                     vdInfo = "glyphicon-menu-down";
                     break;
@@ -933,7 +935,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             switch (sortOrder)
             {
                 case "curr_stat":
-                    tempList = tempList.OrderBy(x => statusIDs.Contains(x.Curr_Status_ID));
+                    tempList = tempList.OrderBy(x => statusIDs.Contains(x.Curr_Status_ID)).ThenBy(x => x.Curr_Name);
                     viewData = "glyph-6";
                     vdInfo = "glyphicon-menu-up";
                     break;
@@ -988,7 +990,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     vdInfo = "glyphicon-menu-up";
                     break;
                 default:
-                    tempList = tempList.OrderByDescending(x => statusIDs.Contains(x.Curr_Status_ID));
+                    tempList = tempList.OrderByDescending(x => statusIDs.Contains(x.Curr_Status_ID)).ThenBy(x => x.Curr_Name);
                     viewData = "glyph-6";
                     vdInfo = "glyphicon-menu-down";
                     break;
@@ -1047,7 +1049,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             switch (sortOrder)
             {
                 case "regemp_stat":
-                    tempList = tempList.OrderBy(x => statusIDs.Contains(x.Emp_Status_ID));
+                    tempList = tempList.OrderBy(x => statusIDs.Contains(x.Emp_Status_ID)).ThenBy(x => x.Emp_Name);
                     viewData = "glyph-6";
                     vdInfo = "glyphicon-menu-up";
                     break;
@@ -1122,7 +1124,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     vdInfo = "glyphicon-menu-up";
                     break;
                 default:
-                    tempList = tempList.OrderByDescending(x => statusIDs.Contains(x.Emp_Status_ID));
+                    tempList = tempList.OrderByDescending(x => statusIDs.Contains(x.Emp_Status_ID)).ThenBy(x => x.Emp_Name);
                     viewData = "glyph-6";
                     vdInfo = "glyphicon-menu-down";
                     break;
@@ -1143,7 +1145,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             switch (sortOrder)
             {
                 case "tempemp_stat":
-                    tempList = tempList.OrderBy(x => statusIDs.Contains(x.Emp_Status_ID));
+                    tempList = tempList.OrderBy(x => statusIDs.Contains(x.Emp_Status_ID)).ThenBy(x => x.Emp_Name);
                     viewData = "glyph-5";
                     vdInfo = "glyphicon-menu-up";
                     break;
@@ -1208,7 +1210,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     vdInfo = "glyphicon-menu-up";
                     break;
                 default:
-                    tempList = tempList.OrderByDescending(x => statusIDs.Contains(x.Emp_Status_ID));
+                    tempList = tempList.OrderByDescending(x => statusIDs.Contains(x.Emp_Status_ID)).ThenBy(x => x.Emp_Name);
                     viewData = "glyph-5";
                     vdInfo = "glyphicon-menu-down";
                     break;
@@ -1229,7 +1231,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             switch (sortOrder)
             {
                 case "cust_stat":
-                    tempList = tempList.OrderBy(x => statusIDs.Contains(x.Cust_Status_ID));
+                    tempList = tempList.OrderBy(x => statusIDs.Contains(x.Cust_Status_ID)).ThenBy(x => x.Cust_Name);
                     viewData = "glyph-7";
                     vdInfo = "glyphicon-menu-up";
                     break;
@@ -1294,7 +1296,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     vdInfo = "glyphicon-menu-up";
                     break;
                 default:
-                    tempList = tempList.OrderByDescending(x => statusIDs.Contains(x.Cust_Status_ID));
+                    tempList = tempList.OrderByDescending(x => statusIDs.Contains(x.Cust_Status_ID)).ThenBy(x => x.Cust_Name);
                     viewData = "glyph-7";
                     vdInfo = "glyphicon-menu-down";
                     break;
@@ -1315,7 +1317,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             switch (sortOrder)
             {
                 case "bcs_stat":
-                    tempList = tempList.OrderBy(x => statusIDs.Contains(x.BCS_Status_ID));
+                    tempList = tempList.OrderBy(x => statusIDs.Contains(x.BCS_Status_ID)).ThenBy(x => x.BCS_Name);
                     viewData = "glyph-8";
                     vdInfo = "glyphicon-menu-up";
                     break;
@@ -1390,7 +1392,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     vdInfo = "glyphicon-menu-up";
                     break;
                 default:
-                    tempList = tempList.OrderByDescending(x => statusIDs.Contains(x.BCS_Status_ID));
+                    tempList = tempList.OrderByDescending(x => statusIDs.Contains(x.BCS_Status_ID)).ThenBy(x => x.BCS_Name);
                     viewData = "glyph-8";
                     vdInfo = "glyphicon-menu-down";
                     break;
@@ -1477,7 +1479,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
             switch (sortOrder)
             {
                 case "ag_stat":
-                    tempList = tempList.OrderBy(x => statusIDs.Contains(x.AccountGroup_Status_ID));
+                    tempList = tempList.OrderBy(x => statusIDs.Contains(x.AccountGroup_Status_ID)).ThenBy(x => x.AccountGroup_Name);
                     viewData = "glyph-6";
                     vdInfo = "glyphicon-menu-up";
                     break;
@@ -1532,7 +1534,7 @@ namespace ExpenseProcessingSystem.Services.Controller_Services
                     vdInfo = "glyphicon-menu-up";
                     break;
                 default:
-                    tempList = tempList.OrderByDescending(x => statusIDs.Contains(x.AccountGroup_Status_ID));
+                    tempList = tempList.OrderByDescending(x => statusIDs.Contains(x.AccountGroup_Status_ID)).ThenBy(x => x.AccountGroup_Name);
                     viewData = "glyph-6";
                     vdInfo = "glyphicon-menu-down";
                     break;

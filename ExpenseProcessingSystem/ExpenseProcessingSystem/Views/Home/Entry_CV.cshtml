@@ -529,6 +529,12 @@
             var grossAmt = 0;
             var origGrossAmt = 0;
             var origCredAmt = $("#" + parentID).find(".txtCredCash").val();
+            var isJPY = $("#" + parentID).find("[id$='__ccy']").val() == @Model.yenCurrID;
+            var decVal = 2;
+            
+            if (isJPY) {
+                decVal = 0;
+            }
 
             amounts = $("#" + parentID + " .amount");
             grossAmt = 0;
@@ -537,7 +543,7 @@
                 grossAmt += Number(amounts[i].value);
             }
 
-            $("#" + parentID + " td .txtGross").val(roundNumber(grossAmt, 2));
+            $("#" + parentID + " td .txtGross").val(roundNumber(grossAmt, decVal));
 
             var itemNo = parentID; //jquery obj
             var chkEwtVal = $("#" + itemNo).find(".chkEwt").is(':checked');
@@ -546,30 +552,30 @@
                 if (vatable) {
                     var vatRate = (Number($("#" + itemNo).find(".txtVat option:selected").text()) / 100);
                     var ewtRate = (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100);
-                    var netVat = roundNumber(grossAmt / (1 + vatRate), 2);
-                    var ewt = roundNumber(netVat * ewtRate, 2);
+                    var netVat = roundNumber(grossAmt / (1 + vatRate), decVal);
+                    var ewt = roundNumber(netVat * ewtRate, decVal);
                     var netEwt = grossAmt - ewt;
 
-                    $("#" + itemNo).find(".txtCredEwt").val(roundNumber(ewt, 2));
-                    $("#" + itemNo).find(".txtCredCash").val(roundNumber(netEwt, 2));
+                    $("#" + itemNo).find(".txtCredEwt").val(roundNumber(ewt, decVal));
+                    $("#" + itemNo).find(".txtCredCash").val(roundNumber(netEwt, decVal));
                     if ($(".hiddenScreencode").val() == "SS") {
                         $("#" + itemNo).find(".txtCredEwt").val(0);
-                        $("#" + itemNo).find(".txtGross").val(roundNumber(netEwt, 2));
+                        $("#" + itemNo).find(".txtGross").val(roundNumber(netEwt, decVal));
                     }
                 } else {
                     var ewtAmount = grossAmt * (Number($("#" + itemNo).find(".txtEwt option:selected").text()) / 100);
-                    $("#" + itemNo).find(".txtCredEwt").val(roundNumber(ewtAmount, 2));
-                    $("#" + itemNo).find(".txtCredCash").val(roundNumber((grossAmt - ewtAmount), 2));
+                    $("#" + itemNo).find(".txtCredEwt").val(roundNumber(ewtAmount, decVal));
+                    $("#" + itemNo).find(".txtCredCash").val(roundNumber((grossAmt - ewtAmount), decVal));
                     if ($(".hiddenScreencode").val() == "SS") {
                         $("#" + itemNo).find(".txtCredEwt").val(0);
-                        $("#" + itemNo).find(".txtGross").val(roundNumber((grossAmt - ewtAmount), 2));
+                        $("#" + itemNo).find(".txtGross").val(roundNumber((grossAmt - ewtAmount), decVal));
                     }
                 }
             } else {
                 $("#" + itemNo).find(".txtCredEwt").val(0);
-                $("#" + itemNo).find(".txtCredCash").val(roundNumber(grossAmt, 2));
+                $("#" + itemNo).find(".txtCredCash").val(roundNumber(grossAmt, decVal));
                 if ($(".hiddenScreencode").val() == "SS") {
-                    $("#" + itemNo).find(".txtGross").val(roundNumber(grossAmt, 2));
+                    $("#" + itemNo).find(".txtGross").val(roundNumber(grossAmt, decVal));
                 }
             }
 
@@ -593,10 +599,10 @@
                 cashSubTotal += Number(credCash[i].value);
             }
 
-            $("#grossTotal").val(roundNumber(grossTotal, 2));
-            $("#credEwtTotal").val(roundNumber(ewtSubTotal, 2));
-            $("#credCashTotal").val(roundNumber(cashSubTotal, 2));
-            $("#credTotal").val(roundNumber(Number(ewtSubTotal + cashSubTotal), 2));
+            $("#grossTotal").val(roundNumber(grossTotal, decVal));
+            $("#credEwtTotal").val(roundNumber(ewtSubTotal, decVal));
+            $("#credCashTotal").val(roundNumber(cashSubTotal, decVal));
+            $("#credTotal").val(roundNumber(Number(ewtSubTotal + cashSubTotal), decVal));
 
             var ccyList = [];
             for (var i = 0; i < $('.txtccy:not(#template_ccy)').length; i++) {

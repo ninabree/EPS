@@ -6147,6 +6147,12 @@ namespace ExpenseProcessingSystem.Controllers
             return File(path, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", closeType + " Proofsheet.xlsx");
         }
 
+        public JsonResult getJPYCurrId()
+        {
+            var tmp = (_service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_Yen").Value)).Curr_ID);
+            return Json(tmp);
+        }
+
         [AcceptVerbs("GET")]
         public JsonResult CancelBudgetRegistration(int budgetID)
         {
