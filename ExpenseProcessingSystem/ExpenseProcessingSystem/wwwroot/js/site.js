@@ -326,6 +326,12 @@ function loadingEffectStop() { $('body').removeClass("loading"); }
 //    return parseFloat(Math.round(num * (Math.pow(10, scale))) / Math.pow(10, scale)).ToFixed(2);
 //};
 
+//REMOVE DECIMAL
+//currently used for viewonly values
+function RDec(num) {
+    var x = ("" + num).split(".");
+    return AC_GBR(x[0]);
+};
 function roundNumber(num, scale) {
     if (!("" + num).includes("e")) {
         return (+(Math.round(num + "e+" + scale) + "e-" + scale)).toFixed(scale);

@@ -837,6 +837,13 @@
                                     || Model.LiqEntryDetails.Liq_Status == GlobalSystemValues.STATUS_POSTED
                                     || Model.LiqEntryDetails.Liq_Status == GlobalSystemValues.STATUS_CLOSED)
                                     && (isApproverLiq)) ? true : false;
+
+                var enableRedirect = ((Model.LiqEntryDetails.Liq_Status == GlobalSystemValues.STATUS_FOR_PRINTING
+                                    || Model.LiqEntryDetails.Liq_Status == GlobalSystemValues.STATUS_FOR_CLOSING
+                                    || Model.LiqEntryDetails.Liq_Status == GlobalSystemValues.STATUS_POSTED
+                                    || Model.LiqEntryDetails.Liq_Status == GlobalSystemValues.STATUS_APPROVED
+                                    || Model.LiqEntryDetails.Liq_Status == GlobalSystemValues.STATUS_CLOSED)
+                                    && (isApproverLiq)) ? true : false;
             }
             @Html.HiddenFor(x => Model.entryID, new { @class = "entryID" })
             @Html.HiddenFor(x => Model.LiqEntryDetails.Liq_Created_Date, new { @class = "LiqEntryDetails_Liq_Created_Date" })
@@ -863,7 +870,7 @@
                         {<button id="reversal_entry" value="Reversal" name="command" class="btnEntryAction tbl-btn">Create Reversal Entry</button>}
                     </div>
                     <div class="dis-inline-block">
-                        @if (enableReversal)
+                        @if (enableRedirect)
                         {<a class="tbl-btn tbl-btn-redirect red-pend" href="/Home/Pending">Redirect to Pending Screen</a>}
                     </div>
                 </div>

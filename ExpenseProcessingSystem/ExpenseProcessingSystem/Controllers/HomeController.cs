@@ -3168,7 +3168,7 @@ namespace ExpenseProcessingSystem.Controllers
                 ViewData["MESSAGE"] = GlobalSystemValues.MESSAGE;
                 GlobalSystemValues.MESSAGE = "";
             }
-
+            ViewBag.yenCurrId = getJPYId();
             return View("Entry_NC_ReadOnly", ncList);
         }
         [OnlineUserCheck]
@@ -6153,6 +6153,10 @@ namespace ExpenseProcessingSystem.Controllers
             return Json(tmp);
         }
 
+        public int getJPYId()
+        {
+            return (_service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_Yen").Value)).Curr_ID);
+        }
         [AcceptVerbs("GET")]
         public JsonResult CancelBudgetRegistration(int budgetID)
         {

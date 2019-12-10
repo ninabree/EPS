@@ -222,6 +222,7 @@
 
                 var enableRedirect = ((Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
                                     Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING ||
+                                    Model.statusID == GlobalSystemValues.STATUS_APPROVED ||
                                     Model.statusID == GlobalSystemValues.STATUS_POSTED)
                                     && isApprover) ? true : false;
             }

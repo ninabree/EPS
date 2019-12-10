@@ -65,6 +65,19 @@
     });
 </script>
 <script>
+    $(document).ready(function () {
+        $("input.NumberOnlyOneDecimal").each(function () {
+            if($('#entryID').val() != 0) {
+                var pid = $(this.parentNode)[0].parentNode.id;
+                var val = $('#' + pid).find('.NumberOnlyOneDecimal').val().replace("-", "");
+                var idNum = $("#parentId").val().replace('remark_', '');
+                if (($('#yenCurrID').val() + "") == ($("#item_" + idNum).find("[id$='_" + idNum + "__ccy']").val() + "")) {
+                    $('#' + pid).find('.NumberOnlyOneDecimal').val(RDec(parseFloat(RC_GBR(val))));
+                }
+            }
+            
+        });
+    });
     $("#gBaseTable").on("keyup", "input.NumberOnlyOneDecimal", function (e) {
         var pid = $(this.parentNode)[0].parentNode.id;
         var val = $('#' + pid).find('.NumberOnlyOneDecimal').val();
@@ -87,7 +100,6 @@
         if ($("#item_" + idNum).find(".txtccy").length == 1 && ($('#yenID').val() == $("#item_" + idNum).find(".txtccy").val())) {
             decVal = 0;
         }
-
         $('#' + pid).find('.NumberOnlyOneDecimal').val(roundNumber(val, decVal));
         //$('#' + pid).find('.NumberOnlyOneDecimal').val(round(val, decVal));
 
@@ -95,4 +107,19 @@
             $('#' + pid).find('.NumberOnlyOneDecimal').val(0);
         }
     });
+    function RC_GBR(nStr) {
+        return nStr.replace(/\,/g, "");
+    };
+    function AC_GBR(nStr) {
+        nStr += '';
+        x = nStr.split('.');
+        x1 = x[0];
+        x2 = x.length > 1 ? '.' + x[1] : '';
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        }
+
+        return x1 + x2;
+    };
 </script>

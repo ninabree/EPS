@@ -127,7 +127,7 @@
                     $("#saveGbase").css("display", "none");
                 }
             }
-            $('.cashBDAmountTotal').val(AC(round(amountTotal, 2)));
+            $('.cashBDAmountTotal').val(AC(roundNumber(amountTotal, 2)));
         }
         $(function () {
             $("table").on("change", "input.txtNoPCS", function (e) {
@@ -214,7 +214,6 @@
 </script>
 <script>
     function printDivCashBD(divID) {
-
         //Set Cash Breakdown Liquidation table value(property) to table attribute value.
         var tableCnt = $('#modalTable').find('tbody').find('tr');
 

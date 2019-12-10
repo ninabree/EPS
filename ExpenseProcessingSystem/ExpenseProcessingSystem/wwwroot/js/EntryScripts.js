@@ -341,6 +341,7 @@
 
     //----------NEW COMPUTE VALUES---------------
     function computeValues(parent) {
+        
         var pNode = parent;
         var itemNo = pNode.id;
         var amounts = $("");

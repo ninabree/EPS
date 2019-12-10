@@ -234,6 +234,11 @@
             var enableReversal = ((Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
                                 Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING ||
                                 Model.statusID == GlobalSystemValues.STATUS_POSTED) && isApprover) ? true : false;
+
+            var enableRedirect = ((Model.statusID == GlobalSystemValues.STATUS_FOR_PRINTING ||
+                                Model.statusID == GlobalSystemValues.STATUS_FOR_CLOSING ||
+                                Model.statusID == GlobalSystemValues.STATUS_APPROVED ||
+                                Model.statusID == GlobalSystemValues.STATUS_POSTED) && isApprover) ? true : false;
         }
         @using (Html.BeginForm("VerAppModDDV", "Home", FormMethod.Post, new { @class = "validate-form" }))
         {
@@ -262,12 +267,14 @@
                         {<button class="tbl-btn" id="printVoucher" value="printVoucher">Print Voucher</button>}</div>
                         <div class="dis-inline-block">@if (enableReversal)
                         {<button class="tbl-btn btnEntryAction" id="reversal_entry" value="Reversal" name="command">Create Reversal Entry</button>}</div>
-                        <div class="dis-inline-block">@if (enableReversal)
+                        <div class="dis-inline-block">@if (enableRedirect)
                         {<a class="tbl-btn tbl-btn-redirect red-pend" href="/Home/Pending">Redirect to Pending Screen</a>}</div>
                     </div>
                 </div>
             }
             <input type="hidden" name="command" id="btnID" />
+            <input type = "hidden" id = "yenID" value = "@Model.yenCurrID" />
+            <input type="hidden" id="yenCurrID" value="@Model.yenCurrID" />
         }
     </div>
 
