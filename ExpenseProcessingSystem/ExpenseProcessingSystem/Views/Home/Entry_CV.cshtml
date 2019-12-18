@@ -651,7 +651,10 @@
 
         var now = new Date();
         var Year = now.getFullYear();
-
+        //Checks if beginning month is for which year
+        if (begMonth < now.getMonth()) {
+            Year += 1;
+        }
         var total = 0;
 
         for (var i = 0; i < duration; i++) {

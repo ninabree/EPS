@@ -963,6 +963,7 @@
                 if ($('.highlight').find('.currMasterID').val() == getXMLLiqValue("CURRENCY_Yen")) {
                     decCount = 0;
                 }
+                alert(parseFloat(RC($("#lblIEInput3").text())) / parseFloat(RC($("#txtIEExRate").val())));
                 $('#lblIEInput4').text(AC(roundExceptionJPY(parseFloat(RC($("#lblIEInput3").text())) / parseFloat(RC($("#txtIEExRate").val())), decCount)));
             } else {
                 $('#lblIEInput4').text(0);

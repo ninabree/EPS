@@ -34,12 +34,15 @@
 
         .container {
             width: 150px;
-            height: 75px;
+            /*height: 75px;*/
+            height: 50px;
         }
 
             .container img {
-                max-height: 100%;
-                max-width: 100%;
+                /*max-height: 100%;
+                max-width: 100%;*/
+                max-height: 80%;
+                max-width: 80%;
             }
         /*end header styles*/
         /*main body styles*/
@@ -48,7 +51,8 @@
         }
 
         #mainBody .wordAmount {
-            height: 36px
+            /*height: 36px*/
+            height: 18px
         }
         /*end main body styles*/
 
@@ -56,7 +60,8 @@
         .payment table {
             width: 95%;
             float: right;
-            margin-bottom: 30px;
+            /*margin-bottom: 30px;*/
+            margin-bottom: 10px;
         }
 
         .payment table,
@@ -96,7 +101,7 @@
             border: 1px solid black;
         }
 
-        table{
+        table {
             margin: 0 auto;
         }
 
@@ -117,6 +122,12 @@
             }
         }
 
+        h1 {
+            margin: 2px 0px !important;
+        }
+        .hidden{
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -130,15 +141,16 @@
                 <td>
                     <div>
                         <div class="container"><a href="#" id="header-logo"><img src="~/images/ReportLogo.png"></a></div>
-                        <div class="container"><a href="#" id="header-logo"><img src="~/images/voucherLogo.png"></a></div>
+                        @*<div class="container"><a href="#" id="header-logo"><img src="~/images/voucherLogo.png"></a></div>*@
                     </div>
                 </td>
                 <td>
                     <div id="headers">
                         <h3>@Html.DisplayFor(x => x.headvm.Header_Name)</h3>
-                        <br />
+                        @*<br />*@
                         <a>@Html.DisplayFor(x => x.headvm.Header_Address)</a>
-                        <br /><br /><br /><br />
+                        <br />
+                        @*<br /><br /><br />*@
                         <a>Tel. No.:  8860-3500</a><br />
                         <a>TIN:  @Html.DisplayFor(x => x.headvm.Header_TIN)</a>
                     </div>
@@ -182,12 +194,12 @@
                     <td colspan="2"><div class="flexContainer">@Html.TextBoxFor(x => x.checkNo, new { @class = "flexstuff", @type = "text", @disabled = "disabled" })</div></td>
                 </tr>
             }
-            <tr>
-                <td colspan="3"> &nbsp; &nbsp; &nbsp;</td>
-            </tr>
+            @*<tr>
+                    <td colspan="3"> &nbsp; &nbsp; &nbsp;</td>
+                </tr>*@
             <tr>
                 <td><a class="heading">Payment Amount in Figures</a></td>
-                <td colspan="2"><div class="flexContainer">@Html.TextBoxFor(x => x.amountCredit, "{0:n}",new { @class = "flexstuff", @type = "text", @disabled = "disabled" })</div></td>
+                <td colspan="2"><div class="flexContainer">@Html.TextBoxFor(x => x.amountCredit, "{0:n}", new { @class = "flexstuff", @type = "text", @disabled = "disabled" })</div></td>
             </tr>
             <tr>
                 <td><a class="heading">Payment Amount in Words</a> <br /><div><a> &nbsp; &nbsp;</a></div></td>
@@ -292,9 +304,15 @@
                         <td><!--Insert Value here--></td>
                     </tr>
                 }
-                <tr>
-                    <td colspan="3"><!--Insert Value here--></td>
-                </tr>
+                @if (Model.taxInfos.Count() > 1)
+                {
+                    @for (int i = 1; i < Model.taxInfos.Count; i++)
+                    {
+                        <tr>
+                            <td colspan="3"></td>
+                        </tr>
+                    }
+                }
                 <tr>
                     <td>Total<!--Insert Value here--></td>
                     @* NO TOTAL IF INTER ENTITY *@
@@ -310,12 +328,22 @@
                         <td class="rightA" style="border-top:1px solid black;border-bottom:3px double black;">@Html.DisplayFor(x => x.amountGross, "{0:n}")</td>
                     }
                 </tr>
-                <tr>
-                    <td colspan="3"><!--Insert Value here--></td>
-                </tr>
-                <tr>
-                    <td colspan="3"><!--Insert Value here--></td>
-                </tr>
+
+                @if (Model.isFbt)
+                {
+                    <tr>
+                        <td colspan="3"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"></td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3" style="height:4px"></td>
+                    </tr>
+                }
             </tbody>
         </table>
         <table id="tblTaxInfo" border="0" cellspacing="0">
@@ -428,18 +456,22 @@
                 }
 
                 @*<tr>
-            <td colspan="3" style="font-style:italic;padding-bottom:3px;">Fringe Benefit Tax</td>
-        </tr>
-        <tr>
-            <td colspan="2">Benefit Amount</td>
-            <td class="rightA">222</td>
-        </tr>
-        <tr>
-            <td colspan="2">35% Tax</td>
-            <td class="rightA">-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        </tr>*@
+                        <td colspan="3" style="font-style:italic;padding-bottom:3px;">Fringe Benefit Tax</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">Benefit Amount</td>
+                        <td class="rightA">222</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">35% Tax</td>
+                        <td class="rightA">-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                    </tr>*@
                 @if (Model.isFbt)
                 {
+                    <tr>
+                        <td colspan="3"></td>
+                        <td class="rightA"></td>
+                    </tr>
                     <tr>
                         <td colspan="4" style="font-style:italic;padding-bottom:3px;">Fringe Benefit Tax</td>
                     </tr>
@@ -454,10 +486,17 @@
                 }
                 else
                 {
-                    <tr>
-                        <td colspan="4" style="font-style:italic;padding-bottom:3px;"></td>
-                    </tr>
-                    <tr>
+                    @*@if (Model.taxInfos.Count() > 0)
+                        {
+                            <tr>
+                                <td colspan="3"></td>
+                                <td class="rightA"></td>
+                            </tr>
+                        }*@
+                    @*<tr>
+                            <td colspan="4" style="font-style:italic;padding-bottom:3px;"></td>
+                        </tr>*@
+                    <tr id="tax-info" class="hidden">
                         <td colspan="3"></td>
                         <td class="rightA"></td>
                     </tr>
@@ -496,7 +535,8 @@
                 <tr>
                     <td colspan="2" rowspan="2">
                         <a>Payment Recieved By : </a>
-                        <input class="input100" disabled style="width:70%;height:64px" />
+                        @*<input class="input100" disabled style="width:70%;height:64px" />*@
+                        <input class="input100" disabled style="width:70%;height:18px" />
                     </td>
                     <td><a>Date : </a></td>
                     <td>@Html.TextBoxFor(x => x.date, new { @class = "input100", @type = "text", @disabled = "disabled" })</td>
@@ -576,9 +616,9 @@
                         <td><a>Payment Amount : </a>@Html.TextBoxFor(x => totalAmountPay, "{0:n}", new { @class = "input100", @type = "text", @disabled = "disabled" })</td>
                         <td colspan="2"><a>Taxes Withheld : </a>@Html.TextBoxFor(x => x.taxWithheld, "{0:n}", new { @class = "input100", @type = "text", @disabled = "disabled" })</td>
                     </tr>
-                    <tr><td></td></tr>
-                    <tr><td></td></tr>
-                    <tr><td></td></tr>
+                    @*<tr><td></td></tr>
+                        <tr><td></td></tr>
+                        <tr><td></td></tr>*@
                     <tr>
                         <td><a class="heading">Payment for: </a></td>
                     </tr>
@@ -625,3 +665,21 @@
     </div>
 </body>
 </html>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery-ui/jquery-ui.js"></script>
+<script language="JavaScript" type="text/javascript" src="/js/jquery-1.2.6.min.js"></script>
+<script>
+    $(document).ready(function (e) {
+        setTaxRows();
+
+        function setTaxRows() {
+            var partRows = $("#tblParticular tr").length;
+            var taxRows = $("#tblTaxInfo tr").length;
+            if (partRows <= taxRows) {
+                $("#tax-info").addClass("hidden");
+            } else {
+                $("#tax-info").removeClass("hidden");
+            }
+        }
+    });
+</script>

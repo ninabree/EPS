@@ -41,23 +41,6 @@ namespace ExpenseProcessingSystem.Controllers
                 isAdmin = false
             };
 
-            //Get from XMl
-            XElement xelemQuery = XElement.Load("wwwroot/xml/AAT2019A.xml");
-            string query = xelemQuery.Element("AAT_1").Value;
-
-            if (query.Length > 0)
-            {
-                //Run
-                var RowsAffected = _context.Database.ExecuteSqlCommand(query);
-                //Delete From File
-                XmlDocument doc = new XmlDocument();
-                doc.Load("wwwroot/xml/AAT2019A.xml");
-                XmlNode root = doc.DocumentElement;
-                XmlNode myNode = root.SelectSingleNode("AAT_1");
-                myNode.InnerText = "";
-                doc.Save("wwwroot/xml/AAT2019A.xml");
-            }
-
             ViewBag.access = accessVM;
             LoginViewModel lvm = new LoginViewModel();
             return View(lvm);
