@@ -2481,6 +2481,10 @@ namespace ExpenseProcessingSystem.Controllers
                 GlobalSystemValues.MESSAGE = "";
             }
 
+            var ccyYEN = _service.getCurrencyByMasterID(int.Parse(xelemLiq.Element("CURRENCY_Yen").Value));
+            pcvList.yenCurrID = ccyYEN.Curr_ID;
+            pcvList.yenCurrMasterID = ccyYEN.Curr_MasterID;
+            pcvList.yenAbbrev = ccyYEN.Curr_CCY_ABBR;
             return View("Entry_PCV_ReadOnly", pcvList);
         }
         //[* Entry Petty Cash *]

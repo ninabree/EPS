@@ -1,9 +1,9 @@
 ﻿@{
     ViewData["Title"] = "Login";
 
-    Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+    //Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
 
-    string dispVer = $"{version}";
+    string dispVer = "20191219-001";
 }
 @using ExpenseProcessingSystem.ViewModels
 @model LoginViewModel
@@ -42,7 +42,7 @@
                         </button>
                     </div>
                 }
-                <p style="font-size:12px;">Ver.: @dispVer</p>
+                <p style="font-size:12px;">EXPRESS-@dispVer</p>
                 @*validation message*@
                 <div id="ValidationSummary" style="display:none" class="">
                     @Html.ValidationSummary(false, "", new { @id = "validationSummary" })
