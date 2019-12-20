@@ -8329,6 +8329,39 @@ namespace ExpenseProcessingSystem.Services
                 //Add debited suspense account transaction
                 esamsData.Add(AddToESAMViewList(cnt, i, selectedAccount, userList, GlobalSystemValues.TRANS_DEBIT));
 
+                //============================SPECIAL REQUEST START======================================
+                //2019/12/20 requested by Sir Albert.
+                //Requested email proof: 2019/12/20 11:13AM
+                //Email title: ExPReSS - Sundry/Suspense Control Sheet
+                //Hardcode the specific liquidation entry in Non-cash due to wrong remarks inputted by user.
+                //Cannot modify the remarks due to mismatch record with G-base side and ExPReSS side.
+                //Only applicable to below account:
+                //Account no: H79-767-151446
+                //Account code: 14025
+                //Account name: ADVANCE EXPENSES
+                //Condition to add this record:
+                //1. Selected account info must be mentioned account info above
+                //2. Based on the database of ExPReSS in Mizuho bank, target record is Seq.No.17.
+                if(cnt == 17 && selectedAccount.Account_No.Replace("-", "") == "H79767151446" && selectedAccount.Account_Code == "14025")
+                {
+                    esamsData.Add(new HomeReportESAMSViewModel
+                    {
+                        SeqNo = "(17)",
+                        DebCredType = "C",
+                        GbaseRemark = "AOCBDSH:MEETING AC HEALTH",
+                        SettleDate = ConvGbDateToDateTime("112719"),
+                        DRAmount = 0,
+                        CRAmount = 3431.25M,
+                        BudgetAmount = 0,
+                        Balance = 0,
+                        DHName = "",
+                        ApprvName = "Advincula, Albert",
+                        MakerName = "Madrinan, Tonierose"
+                    });
+                    continue;
+                }
+                //============================SPECIAL REQUEST END======================================
+
                 //Check if debited transaction's expense entry was reversed or not.
                 var revCA = dbCARev.Where(x => x.ExpenseEntryID == i.ExpenseEntryID &&
                                                x.ExpenseDetailID == i.ExpenseDetailID).ToList();
