@@ -75,11 +75,12 @@ namespace ExpenseProcessingSystem.Services
         public List<HomeNotifViewModel> populateNotif(FiltersViewModel filters, int loggedUID)
         {
             var mList = (from notifs in (from n in _context.HomeNotif
-                                         //for currently logged in User
+                                             //for currently logged in User
                                          join user in _context.User
                                          on loggedUID
                                          equals user.User_ID
-                                         into c from user in c.DefaultIfEmpty()
+                                         into c
+                                         from user in c.DefaultIfEmpty()
                                          where n.Notif_UserFor_ID == loggedUID ||
                                          (n.Notif_UserFor_ID == 0 && n.Notif_Application_Maker_ID != loggedUID)
                                          select new { n, user })
@@ -138,7 +139,7 @@ namespace ExpenseProcessingSystem.Services
                 DateTime dt;
                 DateTime.TryParseExact(toStr, "yyyy-dd-MM h:mm tt", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt);
                 if (toStr != "" && toStr != "0")
-                {                    
+                {
                     if (subStr == "Date")
                     {
                         if ((dt.ToShortDateString() != new DateTime().ToShortDateString()))
@@ -168,7 +169,7 @@ namespace ExpenseProcessingSystem.Services
         {
             string uName = getName(UserID);
             string strMessPers = "You " + NotificationMessageValues.action[StatusID] + NotificationMessageValues.commonstr + NotificationMessageValues.TYTIONARY[TypeID];
-            string strMessGen = uName+ " " + NotificationMessageValues.action[StatusID] + NotificationMessageValues.commonstr + NotificationMessageValues.TYTIONARY[TypeID];
+            string strMessGen = uName + " " + NotificationMessageValues.action[StatusID] + NotificationMessageValues.commonstr + NotificationMessageValues.TYTIONARY[TypeID];
 
             List<HomeNotifModel> model = new List<HomeNotifModel>()
             {
@@ -200,7 +201,7 @@ namespace ExpenseProcessingSystem.Services
         public bool insertIntoNotifDM(int UserID, int TypeID, int StatusID, int Maker_UserID = 0)
         {
             string uName = getName(UserID);
-            string strMessPers = "You " + NotificationMessageValues.action[StatusID] + NotificationMessageValues.commonstr + "Data Maintenance: " +NotificationMessageValues.DMTIONARY[TypeID];
+            string strMessPers = "You " + NotificationMessageValues.action[StatusID] + NotificationMessageValues.commonstr + "Data Maintenance: " + NotificationMessageValues.DMTIONARY[TypeID];
             string strMessGen = uName + " " + NotificationMessageValues.action[StatusID] + NotificationMessageValues.commonstr + "Data Maintenance: " + NotificationMessageValues.DMTIONARY[TypeID];
 
             List<HomeNotifModel> model = new List<HomeNotifModel>()
@@ -248,7 +249,7 @@ namespace ExpenseProcessingSystem.Services
                     };
             List<ApplicationsViewModel> dbPending = new List<ApplicationsViewModel>();
             var userInfo = _context.User.Where(x => x.User_ID == userID).FirstOrDefault();
-            if(userInfo != null)
+            if (userInfo != null)
             {
                 switch (userInfo.User_Role)
                 {
@@ -274,26 +275,26 @@ namespace ExpenseProcessingSystem.Services
                                          App_Link = linktionary[exp.Expense_Type]
                                      }).ToList();
                         dbPending = dbPending.Concat((from liq in _context.LiquidationEntryDetails
-                                      join us in _context.User on liq.Liq_Created_UserID equals us.User_ID
-                                      join exp in _context.ExpenseEntry on liq.ExpenseEntryModel.Expense_ID equals exp.Expense_ID
-                                      where (
-                                          (liq.Liq_Status == GlobalSystemValues.STATUS_FOR_PRINTING ||
-                                          liq.Liq_Status == GlobalSystemValues.STATUS_REJECTED)
-                                          && liq.Liq_Created_UserID == userID
-                                      )
-                                      select new ApplicationsViewModel
-                                      {
-                                          App_ID = liq.ExpenseEntryModel.Expense_ID,
-                                          App_Type = "Liquidation",
-                                          App_Amount = exp.Expense_Debit_Total,
-                                          App_Payee = "",
-                                          App_Maker = liq.Liq_Created_UserID+"",
-                                          App_Verifier_ID_List = new List<string> { liq.Liq_Verifier1 == 0 ? null : liq.Liq_Verifier1 + "", liq.Liq_Verifier2 == 0 ? null : liq.Liq_Verifier2 + "" },
-                                          App_Date = liq.Liq_Created_Date,
-                                          App_Last_Updated = liq.Liq_LastUpdated_Date,
-                                          App_Status = liq.Liq_Status + "",
-                                          App_Link = "View_Liquidation_SS"
-                                      })).ToList();
+                                                      join us in _context.User on liq.Liq_Created_UserID equals us.User_ID
+                                                      join exp in _context.ExpenseEntry on liq.ExpenseEntryModel.Expense_ID equals exp.Expense_ID
+                                                      where (
+                                                          (liq.Liq_Status == GlobalSystemValues.STATUS_FOR_PRINTING ||
+                                                          liq.Liq_Status == GlobalSystemValues.STATUS_REJECTED)
+                                                          && liq.Liq_Created_UserID == userID
+                                                      )
+                                                      select new ApplicationsViewModel
+                                                      {
+                                                          App_ID = liq.ExpenseEntryModel.Expense_ID,
+                                                          App_Type = "Liquidation",
+                                                          App_Amount = exp.Expense_Debit_Total,
+                                                          App_Payee = "",
+                                                          App_Maker = liq.Liq_Created_UserID + "",
+                                                          App_Verifier_ID_List = new List<string> { liq.Liq_Verifier1 == 0 ? null : liq.Liq_Verifier1 + "", liq.Liq_Verifier2 == 0 ? null : liq.Liq_Verifier2 + "" },
+                                                          App_Date = liq.Liq_Created_Date,
+                                                          App_Last_Updated = liq.Liq_LastUpdated_Date,
+                                                          App_Status = liq.Liq_Status + "",
+                                                          App_Link = "View_Liquidation_SS"
+                                                      })).ToList();
                         break;
                     case "verifier":
                         dbPending = (from exp in _context.ExpenseEntry
@@ -310,12 +311,12 @@ namespace ExpenseProcessingSystem.Services
                                              && (exp.Expense_Verifier_1 == 0 || exp.Expense_Verifier_2 == 0)
                                              && us.User_DeptID == userInfo.User_DeptID)
                                          ||
-                                            ((exp.Expense_Status == GlobalSystemValues.STATUS_FOR_PRINTING)&&
+                                            ((exp.Expense_Status == GlobalSystemValues.STATUS_FOR_PRINTING) &&
                                             (exp.Expense_Creator_ID == userID
                                             || exp.Expense_Verifier_1 == userID
                                             || exp.Expense_Verifier_2 == userID
                                             || exp.Expense_Approver == userID))
-                                         ||   
+                                         ||
                                             (exp.Expense_Status == GlobalSystemValues.STATUS_REJECTED
                                              && exp.Expense_Creator_ID == userID)
                                          )
@@ -333,42 +334,42 @@ namespace ExpenseProcessingSystem.Services
                                          App_Link = linktionary[exp.Expense_Type]
                                      }).ToList();
                         dbPending = dbPending.Concat((from liq in _context.LiquidationEntryDetails
-                                          join us in _context.User on liq.Liq_Created_UserID equals us.User_ID
-                                          join exp in _context.ExpenseEntry on liq.ExpenseEntryModel.Expense_ID equals exp.Expense_ID
-                                          where (
-                                             (liq.Liq_Status == GlobalSystemValues.STATUS_PENDING
-                                             && liq.Liq_Created_UserID != userID
-                                             && us.User_DeptID == userInfo.User_DeptID)
-                                         ||
-                                             (liq.Liq_Status == GlobalSystemValues.STATUS_VERIFIED
-                                             && liq.Liq_Created_UserID != userID
-                                             && liq.Liq_Verifier1 != userID
-                                             && liq.Liq_Verifier2 != userID
-                                             && (liq.Liq_Verifier1 == 0 || liq.Liq_Verifier2 == 0)
-                                             && us.User_DeptID == userInfo.User_DeptID)
-                                         ||
-                                            ((liq.Liq_Status == GlobalSystemValues.STATUS_FOR_PRINTING) &&
-                                            (liq.Liq_Created_UserID == userID
-                                            || liq.Liq_Verifier1 == userID
-                                            || liq.Liq_Verifier2 == userID
-                                            || liq.Liq_Approver == userID))
-                                         ||
-                                            (liq.Liq_Status == GlobalSystemValues.STATUS_REJECTED
-                                             && liq.Liq_Created_UserID == userID)
-                                         )
-                                          select new ApplicationsViewModel
-                                          {
-                                              App_ID = liq.ExpenseEntryModel.Expense_ID,
-                                              App_Type = "Liquidation",
-                                              App_Amount = exp.Expense_Debit_Total,
-                                              App_Payee = "",
-                                              App_Maker = liq.Liq_Created_UserID + "",
-                                              App_Verifier_ID_List = new List<string> { liq.Liq_Verifier1 == 0 ? null : liq.Liq_Verifier1 + "", liq.Liq_Verifier2 == 0 ? null : liq.Liq_Verifier2 + "" },
-                                              App_Date = liq.Liq_Created_Date,
-                                              App_Last_Updated = liq.Liq_LastUpdated_Date,
-                                              App_Status = liq.Liq_Status + "",
-                                              App_Link = "View_Liquidation_SS"
-                                          })).ToList();
+                                                      join us in _context.User on liq.Liq_Created_UserID equals us.User_ID
+                                                      join exp in _context.ExpenseEntry on liq.ExpenseEntryModel.Expense_ID equals exp.Expense_ID
+                                                      where (
+                                                         (liq.Liq_Status == GlobalSystemValues.STATUS_PENDING
+                                                         && liq.Liq_Created_UserID != userID
+                                                         && us.User_DeptID == userInfo.User_DeptID)
+                                                     ||
+                                                         (liq.Liq_Status == GlobalSystemValues.STATUS_VERIFIED
+                                                         && liq.Liq_Created_UserID != userID
+                                                         && liq.Liq_Verifier1 != userID
+                                                         && liq.Liq_Verifier2 != userID
+                                                         && (liq.Liq_Verifier1 == 0 || liq.Liq_Verifier2 == 0)
+                                                         && us.User_DeptID == userInfo.User_DeptID)
+                                                     ||
+                                                        ((liq.Liq_Status == GlobalSystemValues.STATUS_FOR_PRINTING) &&
+                                                        (liq.Liq_Created_UserID == userID
+                                                        || liq.Liq_Verifier1 == userID
+                                                        || liq.Liq_Verifier2 == userID
+                                                        || liq.Liq_Approver == userID))
+                                                     ||
+                                                        (liq.Liq_Status == GlobalSystemValues.STATUS_REJECTED
+                                                         && liq.Liq_Created_UserID == userID)
+                                                     )
+                                                      select new ApplicationsViewModel
+                                                      {
+                                                          App_ID = liq.ExpenseEntryModel.Expense_ID,
+                                                          App_Type = "Liquidation",
+                                                          App_Amount = exp.Expense_Debit_Total,
+                                                          App_Payee = "",
+                                                          App_Maker = liq.Liq_Created_UserID + "",
+                                                          App_Verifier_ID_List = new List<string> { liq.Liq_Verifier1 == 0 ? null : liq.Liq_Verifier1 + "", liq.Liq_Verifier2 == 0 ? null : liq.Liq_Verifier2 + "" },
+                                                          App_Date = liq.Liq_Created_Date,
+                                                          App_Last_Updated = liq.Liq_LastUpdated_Date,
+                                                          App_Status = liq.Liq_Status + "",
+                                                          App_Link = "View_Liquidation_SS"
+                                                      })).ToList();
                         break;
                     case "approver":
                         dbPending = (from exp in _context.ExpenseEntry
@@ -405,42 +406,42 @@ namespace ExpenseProcessingSystem.Services
                                          App_Status = exp.Expense_Status + "",
                                          App_Link = linktionary[exp.Expense_Type]
                                      }).ToList();
-                        dbPending =  dbPending.Concat((from liq in _context.LiquidationEntryDetails
-                                          join us in _context.User on liq.Liq_Created_UserID equals us.User_ID
-                                          join exp in _context.ExpenseEntry on liq.ExpenseEntryModel.Expense_ID equals exp.Expense_ID
-                                          where (
-                                             (liq.Liq_Status == GlobalSystemValues.STATUS_PENDING
-                                             && liq.Liq_Created_UserID != userID
-                                             && us.User_DeptID == userInfo.User_DeptID)
-                                         ||
-                                             (liq.Liq_Status == GlobalSystemValues.STATUS_VERIFIED
-                                             && liq.Liq_Created_UserID != userID
-                                             && liq.Liq_Verifier1 != userID
-                                             && liq.Liq_Verifier2 != userID
-                                             && us.User_DeptID == userInfo.User_DeptID)
-                                         ||
-                                            ((liq.Liq_Status == GlobalSystemValues.STATUS_FOR_PRINTING) &&
-                                            (liq.Liq_Created_UserID == userID
-                                            || liq.Liq_Verifier1 == userID
-                                            || liq.Liq_Verifier2 == userID
-                                            || liq.Liq_Approver == userID))
-                                         ||
-                                            (liq.Liq_Status == GlobalSystemValues.STATUS_REJECTED
-                                             && liq.Liq_Created_UserID == userID)
-                                         )
-                                          select new ApplicationsViewModel
-                                          {
-                                              App_ID = liq.ExpenseEntryModel.Expense_ID,
-                                              App_Type = "Liquidation",
-                                              App_Amount = exp.Expense_Debit_Total,
-                                              App_Payee = "",
-                                              App_Maker = liq.Liq_Created_UserID + "",
-                                              App_Verifier_ID_List = new List<string> { liq.Liq_Verifier1 == 0 ? null : liq.Liq_Verifier1 + "", liq.Liq_Verifier2 == 0 ? null : liq.Liq_Verifier2 + "" },
-                                              App_Date = liq.Liq_Created_Date,
-                                              App_Last_Updated = liq.Liq_LastUpdated_Date,
-                                              App_Status = liq.Liq_Status + "",
-                                              App_Link = "View_Liquidation_SS"
-                                          })).ToList();
+                        dbPending = dbPending.Concat((from liq in _context.LiquidationEntryDetails
+                                                      join us in _context.User on liq.Liq_Created_UserID equals us.User_ID
+                                                      join exp in _context.ExpenseEntry on liq.ExpenseEntryModel.Expense_ID equals exp.Expense_ID
+                                                      where (
+                                                         (liq.Liq_Status == GlobalSystemValues.STATUS_PENDING
+                                                         && liq.Liq_Created_UserID != userID
+                                                         && us.User_DeptID == userInfo.User_DeptID)
+                                                     ||
+                                                         (liq.Liq_Status == GlobalSystemValues.STATUS_VERIFIED
+                                                         && liq.Liq_Created_UserID != userID
+                                                         && liq.Liq_Verifier1 != userID
+                                                         && liq.Liq_Verifier2 != userID
+                                                         && us.User_DeptID == userInfo.User_DeptID)
+                                                     ||
+                                                        ((liq.Liq_Status == GlobalSystemValues.STATUS_FOR_PRINTING) &&
+                                                        (liq.Liq_Created_UserID == userID
+                                                        || liq.Liq_Verifier1 == userID
+                                                        || liq.Liq_Verifier2 == userID
+                                                        || liq.Liq_Approver == userID))
+                                                     ||
+                                                        (liq.Liq_Status == GlobalSystemValues.STATUS_REJECTED
+                                                         && liq.Liq_Created_UserID == userID)
+                                                     )
+                                                      select new ApplicationsViewModel
+                                                      {
+                                                          App_ID = liq.ExpenseEntryModel.Expense_ID,
+                                                          App_Type = "Liquidation",
+                                                          App_Amount = exp.Expense_Debit_Total,
+                                                          App_Payee = "",
+                                                          App_Maker = liq.Liq_Created_UserID + "",
+                                                          App_Verifier_ID_List = new List<string> { liq.Liq_Verifier1 == 0 ? null : liq.Liq_Verifier1 + "", liq.Liq_Verifier2 == 0 ? null : liq.Liq_Verifier2 + "" },
+                                                          App_Date = liq.Liq_Created_Date,
+                                                          App_Last_Updated = liq.Liq_LastUpdated_Date,
+                                                          App_Status = liq.Liq_Status + "",
+                                                          App_Link = "View_Liquidation_SS"
+                                                      })).ToList();
                         break;
                     default:
                         break;
@@ -488,7 +489,8 @@ namespace ExpenseProcessingSystem.Services
                                                 .Select(e => e).ToList();
                                 }
                             }
-                        }else if (subStr == "Type_Select")
+                        }
+                        else if (subStr == "Type_Select")
                         {
 
                         }
@@ -526,45 +528,45 @@ namespace ExpenseProcessingSystem.Services
             if (userInfo != null)
             {
                 historyList = (from exp in _context.ExpenseEntry
-                                join us in _context.User on exp.Expense_Creator_ID equals us.User_ID
-                                where ((exp.Expense_Creator_ID == userID
-                                        || exp.Expense_Verifier_1 == userID
-                                        || exp.Expense_Verifier_2 == userID
-                                        || exp.Expense_Approver == userID)
-                                        && us.User_DeptID == userInfo.User_DeptID)
-                                select new AppHistoryViewModel
-                                {
-                                    App_Entry_ID = exp.Expense_ID,
-                                    App_Voucher_No = GlobalSystemValues.getApplicationCode(exp.Expense_Type) + "-" + exp.Expense_Date.Year + "-" + exp.Expense_Number.ToString().PadLeft(5, '0'),
-                                    App_Maker_ID = exp.Expense_Creator_ID,
-                                    App_Approver_ID = exp.Expense_Approver,
-                                    App_Verifier_Name_List = new List<string> { exp.Expense_Verifier_1 == 0 ? null : exp.Expense_Verifier_1 + "", exp.Expense_Verifier_2 == 0 ? null : exp.Expense_Verifier_2 + "" },
-                                    App_Date = exp.Expense_Date,
-                                    App_Last_Updated = exp.Expense_Last_Updated,
-                                    App_Status = exp.Expense_Status + "",
-                                    App_Link = linktionary[exp.Expense_Type]
-                                }).ToList();
+                               join us in _context.User on exp.Expense_Creator_ID equals us.User_ID
+                               where ((exp.Expense_Creator_ID == userID
+                                       || exp.Expense_Verifier_1 == userID
+                                       || exp.Expense_Verifier_2 == userID
+                                       || exp.Expense_Approver == userID)
+                                       && us.User_DeptID == userInfo.User_DeptID)
+                               select new AppHistoryViewModel
+                               {
+                                   App_Entry_ID = exp.Expense_ID,
+                                   App_Voucher_No = GlobalSystemValues.getApplicationCode(exp.Expense_Type) + "-" + exp.Expense_Date.Year + "-" + exp.Expense_Number.ToString().PadLeft(5, '0'),
+                                   App_Maker_ID = exp.Expense_Creator_ID,
+                                   App_Approver_ID = exp.Expense_Approver,
+                                   App_Verifier_Name_List = new List<string> { exp.Expense_Verifier_1 == 0 ? null : exp.Expense_Verifier_1 + "", exp.Expense_Verifier_2 == 0 ? null : exp.Expense_Verifier_2 + "" },
+                                   App_Date = exp.Expense_Date,
+                                   App_Last_Updated = exp.Expense_Last_Updated,
+                                   App_Status = exp.Expense_Status + "",
+                                   App_Link = linktionary[exp.Expense_Type]
+                               }).ToList();
                 historyList = historyList.Concat((from liq in _context.LiquidationEntryDetails
-                                                join us in _context.User on liq.Liq_Created_UserID equals us.User_ID
-                                                join exp in _context.ExpenseEntry on liq.ExpenseEntryModel.Expense_ID equals exp.Expense_ID
-                                                where ((liq.Liq_Created_UserID == userID
-                                                    || liq.Liq_Verifier1 == userID
-                                                    || liq.Liq_Verifier2 == userID
-                                                    || liq.Liq_Approver == userID)
-                                                    && us.User_DeptID == userInfo.User_DeptID)
-                                                select new AppHistoryViewModel
-                                                {
-                                                    App_Entry_ID = exp.Expense_ID,
-                                                    //AppCode 6 == LIQ
-                                                    App_Voucher_No = GlobalSystemValues.getApplicationCode(6) + "-" + liq.Liq_Created_Date.Year + "-" + exp.Expense_Number.ToString().PadLeft(5, '0'),
-                                                    App_Maker_ID = liq.Liq_Created_UserID,
-                                                    App_Approver_ID = liq.Liq_Approver,
-                                                    App_Verifier_Name_List = new List<string> { liq.Liq_Verifier1 == 0 ? null : liq.Liq_Verifier1 + "", liq.Liq_Verifier2 == 0 ? null : liq.Liq_Verifier2 + "" },
-                                                    App_Date = liq.Liq_Created_Date.Date,
-                                                    App_Last_Updated = liq.Liq_LastUpdated_Date,
-                                                    App_Status = liq.Liq_Status + "",
-                                                    App_Link = "View_Liquidation_SS"
-                                                })).ToList();
+                                                  join us in _context.User on liq.Liq_Created_UserID equals us.User_ID
+                                                  join exp in _context.ExpenseEntry on liq.ExpenseEntryModel.Expense_ID equals exp.Expense_ID
+                                                  where ((liq.Liq_Created_UserID == userID
+                                                      || liq.Liq_Verifier1 == userID
+                                                      || liq.Liq_Verifier2 == userID
+                                                      || liq.Liq_Approver == userID)
+                                                      && us.User_DeptID == userInfo.User_DeptID)
+                                                  select new AppHistoryViewModel
+                                                  {
+                                                      App_Entry_ID = exp.Expense_ID,
+                                                      //AppCode 6 == LIQ
+                                                      App_Voucher_No = GlobalSystemValues.getApplicationCode(6) + "-" + liq.Liq_Created_Date.Year + "-" + exp.Expense_Number.ToString().PadLeft(5, '0'),
+                                                      App_Maker_ID = liq.Liq_Created_UserID,
+                                                      App_Approver_ID = liq.Liq_Approver,
+                                                      App_Verifier_Name_List = new List<string> { liq.Liq_Verifier1 == 0 ? null : liq.Liq_Verifier1 + "", liq.Liq_Verifier2 == 0 ? null : liq.Liq_Verifier2 + "" },
+                                                      App_Date = liq.Liq_Created_Date.Date,
+                                                      App_Last_Updated = liq.Liq_LastUpdated_Date,
+                                                      App_Status = liq.Liq_Status + "",
+                                                      App_Link = "View_Liquidation_SS"
+                                                  })).ToList();
             }
             //Get Name of Maker, Verifier, Approver and Status.
             historyList.ForEach(hist =>
@@ -1057,8 +1059,8 @@ namespace ExpenseProcessingSystem.Services
             List<int> intList = model.Select(c => c.Account_MasterID).ToList();
 
             var allPending = (from pp in _context.DMAccount_Pending
-                              from pm in _context.DMAccount.Where(x => x.Account_MasterID == pp.Pending_Account_MasterID 
-                              && x.Account_isActive == true 
+                              from pm in _context.DMAccount.Where(x => x.Account_MasterID == pp.Pending_Account_MasterID
+                              && x.Account_isActive == true
                               && x.Account_isDeleted == false).DefaultIfEmpty()
                               select new
                               {
@@ -3089,12 +3091,12 @@ namespace ExpenseProcessingSystem.Services
         {
             BudgetModel budget = _context.Budget.Where(x => x.Budget_Account_MasterID == AccMasterID &&
                                                 x.Budget_IsActive == true && x.Budget_isDeleted == false).FirstOrDefault();
-            if(budget == null)
+            if (budget == null)
             {
                 return false;
             }
 
-            if(action == GlobalSystemValues.STATUS_EDIT)
+            if (action == GlobalSystemValues.STATUS_EDIT)
             {
                 budget.Budget_Account_ID = newAccID;
                 _context.Entry(budget).State = EntityState.Modified;
@@ -3129,7 +3131,7 @@ namespace ExpenseProcessingSystem.Services
             var budget = _context.Budget.Where(x => x.Budget_ID == budgetID).FirstOrDefault();
 
             if (budget == null) return false;
-            if(budget.Budget_GWrite_Status != GlobalSystemValues.STATUS_ERROR) return false;
+            if (budget.Budget_GWrite_Status != GlobalSystemValues.STATUS_ERROR) return false;
 
             budget.Budget_GWrite_Status = GlobalSystemValues.STATUS_APPROVED;
             budget.Budget_Date_Registered = DateTime.Now;
@@ -3180,30 +3182,30 @@ namespace ExpenseProcessingSystem.Services
 
             //Get data from Taxable expense table for Check Payment
             dbAPSWT_M_Check = (from expEntryDetl in _context.ExpenseEntryDetails
-                         join expense in _context.ExpenseEntry on expEntryDetl.ExpenseEntryModel.Expense_ID equals expense.Expense_ID
-                         join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
-                         join vend in _context.DMVendor on expense.Expense_Payee equals vend.Vendor_ID
-                         where status.Contains(expense.Expense_Status)
-                         && expense.Expense_Last_Updated.Month == month
-                         && expense.Expense_Last_Updated.Year == year
-                         && expense.Expense_Type == GlobalSystemValues.TYPE_CV
-                         && expense.Expense_Payee_Type == GlobalSystemValues.PAYEETYPE_VENDOR
-                         orderby expense.Expense_Last_Updated
-                         select new HomeReportOutputAPSWT_MModel
-                         {
-                             Payee = vend.Vendor_Name,
-                             Tin = vend.Vendor_TIN,
-                             ATC = tr.TR_ATC,
-                             NOIP = tr.TR_Nature_Income_Payment,
-                             //B. AMOUNT NET OF VAT = (GROSS AMOUNT/( 1 + VAT RATE))
-                             //Example: 45,000 / 1.12 = 40,178.57
-                             AOIP = (expEntryDetl.ExpDtl_Vat != 0) ? (expEntryDetl.ExpDtl_Debit / (decimal)(1 + vatList
-                                    .Where(x => x.VAT_ID == expEntryDetl.ExpDtl_Vat).FirstOrDefault().VAT_Rate)) : expEntryDetl.ExpDtl_Debit,
-                             RateOfTax = tr.TR_Tax_Rate,
-                             AOTW = expEntryDetl.ExpDtl_Credit_Ewt,
-                             Last_Update_Date = expense.Expense_Last_Updated,
-                             Vendor_masterID = vend.Vendor_MasterID
-                         }).ToList();
+                               join expense in _context.ExpenseEntry on expEntryDetl.ExpenseEntryModel.Expense_ID equals expense.Expense_ID
+                               join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
+                               join vend in _context.DMVendor on expense.Expense_Payee equals vend.Vendor_ID
+                               where status.Contains(expense.Expense_Status)
+                               && expense.Expense_Last_Updated.Month == month
+                               && expense.Expense_Last_Updated.Year == year
+                               && expense.Expense_Type == GlobalSystemValues.TYPE_CV
+                               && expense.Expense_Payee_Type == GlobalSystemValues.PAYEETYPE_VENDOR
+                               orderby expense.Expense_Last_Updated
+                               select new HomeReportOutputAPSWT_MModel
+                               {
+                                   Payee = vend.Vendor_Name,
+                                   Tin = vend.Vendor_TIN,
+                                   ATC = tr.TR_ATC,
+                                   NOIP = tr.TR_Nature_Income_Payment,
+                                   //B. AMOUNT NET OF VAT = (GROSS AMOUNT/( 1 + VAT RATE))
+                                   //Example: 45,000 / 1.12 = 40,178.57
+                                   AOIP = (expEntryDetl.ExpDtl_Vat != 0) ? (expEntryDetl.ExpDtl_Debit / (decimal)(1 + vatList
+                                          .Where(x => x.VAT_ID == expEntryDetl.ExpDtl_Vat).FirstOrDefault().VAT_Rate)) : expEntryDetl.ExpDtl_Debit,
+                                   RateOfTax = tr.TR_Tax_Rate,
+                                   AOTW = expEntryDetl.ExpDtl_Credit_Ewt,
+                                   Last_Update_Date = expense.Expense_Last_Updated,
+                                   Vendor_masterID = vend.Vendor_MasterID
+                               }).ToList();
 
             //Get data from Taxable liquidation table.
             dbAPSWT_M_LIQ = (from ie in _context.LiquidationInterEntity
@@ -3252,7 +3254,7 @@ namespace ExpenseProcessingSystem.Services
                                 RateOfTax = tr.TR_Tax_Rate,
                                 ATC = tr.TR_ATC,
                                 NOIP = tr.TR_Nature_Income_Payment,
-                                AOIP = (ncDtl.ExpNCDtl_TaxBasedAmt != 0 ) ? ncDtl.ExpNCDtl_TaxBasedAmt : ncAcc.ExpNCDtlAcc_Amount,
+                                AOIP = (ncDtl.ExpNCDtl_TaxBasedAmt != 0) ? ncDtl.ExpNCDtl_TaxBasedAmt : ncAcc.ExpNCDtlAcc_Amount,
                                 AOTW = ncAcc2.ExpNCDtlAcc_Amount,
                                 Last_Update_Date = exp.Expense_Last_Updated,
                                 Vendor_masterID = vend.Vendor_MasterID
@@ -3297,9 +3299,9 @@ namespace ExpenseProcessingSystem.Services
                 foreach (var j in taxRatesList)
                 {
                     //NATURE OF INCOME PAYMENT
-                     decimal aoipTotal = 0;
+                    decimal aoipTotal = 0;
                     //AMOUNT OF TAX WITHHELD
-                     decimal aotwTotal = 0;
+                    decimal aotwTotal = 0;
                     foreach (var k in dbAPSWT_Conc.Where(x => x.Vendor_masterID == i && x.RateOfTax == j))
                     {
                         aoipTotal = aoipTotal + k.AOIP;
@@ -3310,7 +3312,7 @@ namespace ExpenseProcessingSystem.Services
                         atc = k.ATC;
                         noip = k.NOIP;
                     }
-                    if(aoipTotal != 0 && aotwTotal != 0)
+                    if (aoipTotal != 0 && aotwTotal != 0)
                     {
                         finalOutput.Add(new HomeReportOutputAPSWT_MModel
                         {
@@ -3344,7 +3346,7 @@ namespace ExpenseProcessingSystem.Services
                 startDT = model.PeriodFrom;
                 endDT = model.PeriodTo;
             }
-            
+
             List<HomeReportOutputAST1000Model> dbAST1000 = new List<HomeReportOutputAST1000Model>();
             List<HomeReportOutputAST1000Model> dbAST1000_Check = new List<HomeReportOutputAST1000Model>();
             List<HomeReportOutputAST1000Model> dbAST1000_LIQ = new List<HomeReportOutputAST1000Model>();
@@ -3384,30 +3386,30 @@ namespace ExpenseProcessingSystem.Services
 
             //Get data from Taxable expense table for Check Payment.
             dbAST1000_Check = (from expEntryDetl in _context.ExpenseEntryDetails
-                         join expense in _context.ExpenseEntry on expEntryDetl.ExpenseEntryModel.Expense_ID equals expense.Expense_ID
-                         join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
-                         join vend in _context.DMVendor on expense.Expense_Payee equals vend.Vendor_ID
-                         where status.Contains(expense.Expense_Status)
-                         && model.TaxRateList.Contains(tr.TR_Tax_Rate)
-                         && startDT.Date <= expense.Expense_Last_Updated.Date
-                         && expense.Expense_Last_Updated.Date <= endDT.Date
-                         && expense.Expense_Type == GlobalSystemValues.TYPE_CV
-                         && expense.Expense_Payee_Type == GlobalSystemValues.PAYEETYPE_VENDOR
-                         orderby expense.Expense_Last_Updated
-                         select new HomeReportOutputAST1000Model
-                         {
-                             SupplierName = vend.Vendor_Name,
-                             Tin = vend.Vendor_TIN,
-                             ATC = tr.TR_ATC,
-                             NOIP = tr.TR_Nature_Income_Payment,
-                             //B. AMOUNT NET OF VAT = (GROSS AMOUNT/( 1 + VAT RATE))
-                             //Example: 45,000 / 1.12 = 40,178.57
-                             TaxBase = (expEntryDetl.ExpDtl_Vat != 0) ? (expEntryDetl.ExpDtl_Debit / (decimal)(1 + vatList
-                                    .Where(x => x.VAT_ID == expEntryDetl.ExpDtl_Vat).FirstOrDefault().VAT_Rate)) : expEntryDetl.ExpDtl_Debit,
-                             RateOfTax = tr.TR_Tax_Rate,
-                             AOTW = expEntryDetl.ExpDtl_Credit_Ewt,
-                             Vendor_masterID = vend.Vendor_MasterID
-                         }).ToList();
+                               join expense in _context.ExpenseEntry on expEntryDetl.ExpenseEntryModel.Expense_ID equals expense.Expense_ID
+                               join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
+                               join vend in _context.DMVendor on expense.Expense_Payee equals vend.Vendor_ID
+                               where status.Contains(expense.Expense_Status)
+                               && model.TaxRateList.Contains(tr.TR_Tax_Rate)
+                               && startDT.Date <= expense.Expense_Last_Updated.Date
+                               && expense.Expense_Last_Updated.Date <= endDT.Date
+                               && expense.Expense_Type == GlobalSystemValues.TYPE_CV
+                               && expense.Expense_Payee_Type == GlobalSystemValues.PAYEETYPE_VENDOR
+                               orderby expense.Expense_Last_Updated
+                               select new HomeReportOutputAST1000Model
+                               {
+                                   SupplierName = vend.Vendor_Name,
+                                   Tin = vend.Vendor_TIN,
+                                   ATC = tr.TR_ATC,
+                                   NOIP = tr.TR_Nature_Income_Payment,
+                                   //B. AMOUNT NET OF VAT = (GROSS AMOUNT/( 1 + VAT RATE))
+                                   //Example: 45,000 / 1.12 = 40,178.57
+                                   TaxBase = (expEntryDetl.ExpDtl_Vat != 0) ? (expEntryDetl.ExpDtl_Debit / (decimal)(1 + vatList
+                                          .Where(x => x.VAT_ID == expEntryDetl.ExpDtl_Vat).FirstOrDefault().VAT_Rate)) : expEntryDetl.ExpDtl_Debit,
+                                   RateOfTax = tr.TR_Tax_Rate,
+                                   AOTW = expEntryDetl.ExpDtl_Credit_Ewt,
+                                   Vendor_masterID = vend.Vendor_MasterID
+                               }).ToList();
 
             //Get data from Taxable liquidation table.
             dbAST1000_LIQ = (from ie in _context.LiquidationInterEntity
@@ -3476,9 +3478,9 @@ namespace ExpenseProcessingSystem.Services
                 foreach (var j in taxRatesList)
                 {
                     //NATURE OF INCOME PAYMENT
-                     decimal aoipTotal = 0;
+                    decimal aoipTotal = 0;
                     //AMOUNT OF TAX WITHHELD
-                     decimal aotwTotal = 0;
+                    decimal aotwTotal = 0;
                     foreach (var k in dbAPSWT_Conc.Where(x => x.Vendor_masterID == i && x.RateOfTax == j))
                     {
                         aoipTotal = aoipTotal + k.TaxBase;
@@ -3515,7 +3517,8 @@ namespace ExpenseProcessingSystem.Services
             string stringNum = "";
             List<string> voucherNoList = new List<string>();
             List<int> entryIDs = new List<int>();
-            if (model.VoucherArray != null) {
+            if (model.VoucherArray != null)
+            {
                 voucherNoList = model.VoucherArray.Split(',').ToList();
                 entryIDs = voucherNoList.Select(x => int.Parse(x)).ToList();
                 //sort list
@@ -3526,42 +3529,42 @@ namespace ExpenseProcessingSystem.Services
                 var bdoAcc = getAccountByMasterID(int.Parse(xelemAcc.Element("C_DDV2").Value));
 
                 var entryList = (from e in _context.ExpenseEntry
-                                   join emp in _context.DMEmp on e.Expense_Payee equals emp.Emp_ID
-                                   where entryIDs.Contains(e.Expense_ID)
-                                   select new
-                                    {
-                                        e,
-                                        emp,
-                                        ExpenseEntryDetails = from d
-                                                              in _context.ExpenseEntryDetails
-                                                              where d.ExpenseEntryModel.Expense_ID == e.Expense_ID
-                                                              select new
-                                                              {
-                                                                  d,
-                                                                  ExpenseEntryGbaseDtls = from g
-                                                                                          in _context.ExpenseEntryGbaseDtls
-                                                                                          where g.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
-                                                                                          select g,
-                                                                  ExpenseEntryInterEntity = from a
-                                                                                              in _context.ExpenseEntryInterEntity
-                                                                                            where a.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
-                                                                                            select new
-                                                                                            {
-                                                                                                a,
-                                                                                                ExpenseEntryInterEntityParticular = from p
-                                                                                                                                    in _context.ExpenseEntryInterEntityParticular
-                                                                                                                                    where p.ExpenseEntryInterEntityModel.ExpDtl_DDVInter_ID == a.ExpDtl_DDVInter_ID
-                                                                                                                                    select new
-                                                                                                                                    {
-                                                                                                                                        p,
-                                                                                                                                        ExpenseEntryEntityAccounts = from acc
-                                                                                                                                                                     in _context.ExpenseEntryInterEntityAccs
-                                                                                                                                                                     where acc.ExpenseEntryInterEntityParticular.InterPart_ID == p.InterPart_ID
-                                                                                                                                                                     select acc
-                                                                                                                                    }
-                                                                                            }
-                                                              }
-                                    }).ToList();
+                                 join emp in _context.DMEmp on e.Expense_Payee equals emp.Emp_ID
+                                 where entryIDs.Contains(e.Expense_ID)
+                                 select new
+                                 {
+                                     e,
+                                     emp,
+                                     ExpenseEntryDetails = from d
+                                                           in _context.ExpenseEntryDetails
+                                                           where d.ExpenseEntryModel.Expense_ID == e.Expense_ID
+                                                           select new
+                                                           {
+                                                               d,
+                                                               ExpenseEntryGbaseDtls = from g
+                                                                                       in _context.ExpenseEntryGbaseDtls
+                                                                                       where g.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
+                                                                                       select g,
+                                                               ExpenseEntryInterEntity = from a
+                                                                                           in _context.ExpenseEntryInterEntity
+                                                                                         where a.ExpenseEntryDetailModel.ExpDtl_ID == d.ExpDtl_ID
+                                                                                         select new
+                                                                                         {
+                                                                                             a,
+                                                                                             ExpenseEntryInterEntityParticular = from p
+                                                                                                                                 in _context.ExpenseEntryInterEntityParticular
+                                                                                                                                 where p.ExpenseEntryInterEntityModel.ExpDtl_DDVInter_ID == a.ExpDtl_DDVInter_ID
+                                                                                                                                 select new
+                                                                                                                                 {
+                                                                                                                                     p,
+                                                                                                                                     ExpenseEntryEntityAccounts = from acc
+                                                                                                                                                                  in _context.ExpenseEntryInterEntityAccs
+                                                                                                                                                                  where acc.ExpenseEntryInterEntityParticular.InterPart_ID == p.InterPart_ID
+                                                                                                                                                                  select acc
+                                                                                                                                 }
+                                                                                         }
+                                                           }
+                                 }).ToList();
                 foreach (var ent in entryList)
                 {
                     decimal amt = 0;
@@ -3569,13 +3572,14 @@ namespace ExpenseProcessingSystem.Services
                     {
                         if (dtl.d.ExpDtl_Inter_Entity)
                         {
-                            foreach(var inter in dtl.ExpenseEntryInterEntity)
+                            foreach (var inter in dtl.ExpenseEntryInterEntity)
                             {
                                 foreach (var part in inter.ExpenseEntryInterEntityParticular)
                                 {
                                     foreach (var acc in part.ExpenseEntryEntityAccounts)
                                     {
-                                        if (bdoAcc.Account_ID == acc.InterAcc_Acc_ID) {
+                                        if (bdoAcc.Account_ID == acc.InterAcc_Acc_ID)
+                                        {
                                             amt += acc.InterAcc_Amount;
                                         }
                                     }
@@ -3839,9 +3843,9 @@ namespace ExpenseProcessingSystem.Services
                              && DateTime.Parse(x.GOExpHist_ValueDate.Substring(0, 2) + "/" + x.GOExpHist_ValueDate.Substring(2, 2) + "/" + (2000 + int.Parse(x.GOExpHist_ValueDate.Substring(4, 2)))) <= endDT.AddDays(-1).Date))
                     {
                         var transData = transList.Where(x => x.TL_GoExpHist_ID == hist.GOExpHist_Id).FirstOrDefault();
-                        if(transList != null)
+                        if (transList != null)
                         {
-                            if (transData.TL_StatusID != GlobalSystemValues.STATUS_RESENDING_COMPLETE 
+                            if (transData.TL_StatusID != GlobalSystemValues.STATUS_RESENDING_COMPLETE
                                 && transData.TL_StatusID != GlobalSystemValues.STATUS_APPROVED
                                 && transData.TL_StatusID != GlobalSystemValues.STATUS_REVERSING_COMPLETE) continue;
                         }
@@ -4595,7 +4599,7 @@ namespace ExpenseProcessingSystem.Services
                            }).Where("@13.Contains(TL_StatusID) && " + whereQuery1, subType, startDT.Date, endDT.Date, model.PeriodFrom.Date,
                                    model.PeriodTo.Date, model.CheckNoFrom, model.CheckNoTo, model.VoucherNoFrom, model.VoucherNoTo,
                                    model.TransNoFrom, model.TransNoTo, model.SubjName, expType1, statusTrans).ToList();
-                
+
                 //Convert to List object.
                 foreach (var i in db1)
                 {
@@ -6065,7 +6069,7 @@ namespace ExpenseProcessingSystem.Services
                            trans.TL_GoExpress_ID,
                            trans.TL_TransID,
                            trans.TL_StatusID
-                       }).Where("@5.Contains(TL_StatusID) && " + whereQuery2, startDT.Date, endDT.Date, model.PeriodFrom.Date, 
+                       }).Where("@5.Contains(TL_StatusID) && " + whereQuery2, startDT.Date, endDT.Date, model.PeriodFrom.Date,
                                 model.PeriodTo.Date, GlobalSystemValues.TYPE_NC, statusTrans).ToList();
 
             //Convert to List object.
@@ -6812,9 +6816,9 @@ namespace ExpenseProcessingSystem.Services
             string format = "yyyy-M";
             DateTime startDT = DateTime.ParseExact(model.Year + "-" + model.Month, format, CultureInfo.InvariantCulture);
             DateTime endDT = DateTime.ParseExact(model.YearTo + "-" + model.MonthTo, format, CultureInfo.InvariantCulture).AddMonths(1).AddDays(-1);
-            
+
             List<HomeReportOutputAPSWT_MModel> dbBIRCSV = new List<HomeReportOutputAPSWT_MModel>();
-            List<HomeReportOutputAPSWT_MModel> dbBIRCSV_Check= new List<HomeReportOutputAPSWT_MModel>();
+            List<HomeReportOutputAPSWT_MModel> dbBIRCSV_Check = new List<HomeReportOutputAPSWT_MModel>();
             List<HomeReportOutputAPSWT_MModel> dbBIRCSV_LIQ = new List<HomeReportOutputAPSWT_MModel>();
             List<HomeReportOutputAPSWT_MModel> dbBIRCSV_NC = new List<HomeReportOutputAPSWT_MModel>();
 
@@ -6848,29 +6852,29 @@ namespace ExpenseProcessingSystem.Services
 
             //Get data from Taxable expense table for Check payment.
             dbBIRCSV_Check = (from expEntryDetl in _context.ExpenseEntryDetails
-                        join expense in _context.ExpenseEntry on expEntryDetl.ExpenseEntryModel.Expense_ID equals expense.Expense_ID
-                        join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
-                        join vend in _context.DMVendor on expense.Expense_Payee equals vend.Vendor_ID
-                        where status.Contains(expense.Expense_Status)
-                               && startDT.Date <= expense.Expense_Last_Updated.Date
-                               && expense.Expense_Last_Updated.Date <= endDT.Date
-                               && expense.Expense_Type == GlobalSystemValues.TYPE_CV
-                               && expense.Expense_Payee_Type == GlobalSystemValues.PAYEETYPE_VENDOR
+                              join expense in _context.ExpenseEntry on expEntryDetl.ExpenseEntryModel.Expense_ID equals expense.Expense_ID
+                              join tr in _context.DMTR on expEntryDetl.ExpDtl_Ewt equals tr.TR_ID
+                              join vend in _context.DMVendor on expense.Expense_Payee equals vend.Vendor_ID
+                              where status.Contains(expense.Expense_Status)
+                                     && startDT.Date <= expense.Expense_Last_Updated.Date
+                                     && expense.Expense_Last_Updated.Date <= endDT.Date
+                                     && expense.Expense_Type == GlobalSystemValues.TYPE_CV
+                                     && expense.Expense_Payee_Type == GlobalSystemValues.PAYEETYPE_VENDOR
                               orderby expense.Expense_Last_Updated
-                        select new HomeReportOutputAPSWT_MModel
-                        {
-                            Payee = vend.Vendor_Name,
-                            Tin = vend.Vendor_TIN,
-                            ATC = tr.TR_ATC,
-                            NOIP = tr.TR_Nature_Income_Payment,
-                            //B. AMOUNT NET OF VAT = (GROSS AMOUNT/( 1 + VAT RATE))
-                            //Example: 45,000 / 1.12 = 40,178.57
-                            AOIP = (expEntryDetl.ExpDtl_Vat != 0) ? (expEntryDetl.ExpDtl_Debit / (decimal)(1 + vatList
-                                    .Where(x => x.VAT_ID == expEntryDetl.ExpDtl_Vat).FirstOrDefault().VAT_Rate)) : expEntryDetl.ExpDtl_Debit,
-                            RateOfTax = tr.TR_Tax_Rate,
-                            AOTW = expEntryDetl.ExpDtl_Credit_Ewt,
-                            Last_Update_Date = expense.Expense_Last_Updated
-                        }).ToList();
+                              select new HomeReportOutputAPSWT_MModel
+                              {
+                                  Payee = vend.Vendor_Name,
+                                  Tin = vend.Vendor_TIN,
+                                  ATC = tr.TR_ATC,
+                                  NOIP = tr.TR_Nature_Income_Payment,
+                                  //B. AMOUNT NET OF VAT = (GROSS AMOUNT/( 1 + VAT RATE))
+                                  //Example: 45,000 / 1.12 = 40,178.57
+                                  AOIP = (expEntryDetl.ExpDtl_Vat != 0) ? (expEntryDetl.ExpDtl_Debit / (decimal)(1 + vatList
+                                          .Where(x => x.VAT_ID == expEntryDetl.ExpDtl_Vat).FirstOrDefault().VAT_Rate)) : expEntryDetl.ExpDtl_Debit,
+                                  RateOfTax = tr.TR_Tax_Rate,
+                                  AOTW = expEntryDetl.ExpDtl_Credit_Ewt,
+                                  Last_Update_Date = expense.Expense_Last_Updated
+                              }).ToList();
 
             //Get data from Taxable liquidation table.
             dbBIRCSV_LIQ = (from ie in _context.LiquidationInterEntity
@@ -6898,31 +6902,31 @@ namespace ExpenseProcessingSystem.Services
 
             //Get data from Taxable Non-cash  table.
             dbBIRCSV_NC = (from ncDtl in _context.ExpenseEntryNonCashDetails
-                            join ncAcc in _context.ExpenseEntryNonCashDetailAccounts on ncDtl.ExpNCDtl_ID equals ncAcc.ExpenseEntryNCDtlModel.ExpNCDtl_ID
-                            join nc in _context.ExpenseEntryNonCash on ncDtl.ExpenseEntryNCModel.ExpNC_ID equals nc.ExpNC_ID
-                            join exp in _context.ExpenseEntry on nc.ExpenseEntryModel.Expense_ID equals exp.Expense_ID
-                            join tr in _context.DMTR on ncDtl.ExpNCDtl_TR_ID equals tr.TR_ID
-                            join vend in _context.DMVendor on ncDtl.ExpNCDtl_Vendor_ID equals vend.Vendor_ID
-                            join ncAcc2 in (from ncDtl2 in _context.ExpenseEntryNonCashDetails
-                                            join ncAcc2 in _context.ExpenseEntryNonCashDetailAccounts on ncDtl2.ExpNCDtl_ID equals ncAcc2.ExpenseEntryNCDtlModel.ExpNCDtl_ID
-                                            where ncAcc2.ExpNCDtlAcc_Type_ID == 3
-                                            select new { ncAcc2.ExpNCDtlAcc_Amount, ncAcc2.ExpenseEntryNCDtlModel.ExpNCDtl_ID }) on ncAcc.ExpenseEntryNCDtlModel.ExpNCDtl_ID equals ncAcc2.ExpNCDtl_ID
-                            where status.Contains(exp.Expense_Status)
-                            && ncAcc.ExpNCDtlAcc_Type_ID == 3
-                               && startDT.Date <= exp.Expense_Last_Updated.Date
-                               && exp.Expense_Last_Updated.Date <= endDT.Date
-                            select new HomeReportOutputAPSWT_MModel
-                            {
-                                Payee = vend.Vendor_Name,
-                                Tin = vend.Vendor_TIN,
-                                RateOfTax = tr.TR_Tax_Rate,
-                                ATC = tr.TR_ATC,
-                                NOIP = tr.TR_Nature_Income_Payment,
-                                AOIP = (ncDtl.ExpNCDtl_TaxBasedAmt != 0) ? ncDtl.ExpNCDtl_TaxBasedAmt : ncAcc.ExpNCDtlAcc_Amount,
-                                AOTW = ncAcc2.ExpNCDtlAcc_Amount,
-                                Last_Update_Date = exp.Expense_Last_Updated,
-                                Vendor_masterID = vend.Vendor_MasterID
-                            }).Where(x => x.AOTW > 0).ToList();
+                           join ncAcc in _context.ExpenseEntryNonCashDetailAccounts on ncDtl.ExpNCDtl_ID equals ncAcc.ExpenseEntryNCDtlModel.ExpNCDtl_ID
+                           join nc in _context.ExpenseEntryNonCash on ncDtl.ExpenseEntryNCModel.ExpNC_ID equals nc.ExpNC_ID
+                           join exp in _context.ExpenseEntry on nc.ExpenseEntryModel.Expense_ID equals exp.Expense_ID
+                           join tr in _context.DMTR on ncDtl.ExpNCDtl_TR_ID equals tr.TR_ID
+                           join vend in _context.DMVendor on ncDtl.ExpNCDtl_Vendor_ID equals vend.Vendor_ID
+                           join ncAcc2 in (from ncDtl2 in _context.ExpenseEntryNonCashDetails
+                                           join ncAcc2 in _context.ExpenseEntryNonCashDetailAccounts on ncDtl2.ExpNCDtl_ID equals ncAcc2.ExpenseEntryNCDtlModel.ExpNCDtl_ID
+                                           where ncAcc2.ExpNCDtlAcc_Type_ID == 3
+                                           select new { ncAcc2.ExpNCDtlAcc_Amount, ncAcc2.ExpenseEntryNCDtlModel.ExpNCDtl_ID }) on ncAcc.ExpenseEntryNCDtlModel.ExpNCDtl_ID equals ncAcc2.ExpNCDtl_ID
+                           where status.Contains(exp.Expense_Status)
+                           && ncAcc.ExpNCDtlAcc_Type_ID == 3
+                              && startDT.Date <= exp.Expense_Last_Updated.Date
+                              && exp.Expense_Last_Updated.Date <= endDT.Date
+                           select new HomeReportOutputAPSWT_MModel
+                           {
+                               Payee = vend.Vendor_Name,
+                               Tin = vend.Vendor_TIN,
+                               RateOfTax = tr.TR_Tax_Rate,
+                               ATC = tr.TR_ATC,
+                               NOIP = tr.TR_Nature_Income_Payment,
+                               AOIP = (ncDtl.ExpNCDtl_TaxBasedAmt != 0) ? ncDtl.ExpNCDtl_TaxBasedAmt : ncAcc.ExpNCDtlAcc_Amount,
+                               AOTW = ncAcc2.ExpNCDtlAcc_Amount,
+                               Last_Update_Date = exp.Expense_Last_Updated,
+                               Vendor_masterID = vend.Vendor_MasterID
+                           }).Where(x => x.AOTW > 0).ToList();
 
             return dbBIRCSV.Concat(dbBIRCSV_Check).Concat(dbBIRCSV_LIQ).Concat(dbBIRCSV_NC).OrderBy(x => x.Payee).ThenBy(x => x.RateOfTax);
         }
@@ -6942,7 +6946,7 @@ namespace ExpenseProcessingSystem.Services
                 endDT = model.PeriodTo;
             }
             int[] TRMasterIDs = null;
-            if(model.ReportSubType == 0)
+            if (model.ReportSubType == 0)
             {
                 TRMasterIDs = _context.DMTR.Select(x => x.TR_MasterID).Distinct().ToArray();
             }
@@ -8162,7 +8166,7 @@ namespace ExpenseProcessingSystem.Services
                 }
             }
 
-            return list.Where(x => x.Trans_Account_Number == WHTAccount.Account_No 
+            return list.Where(x => x.Trans_Account_Number == WHTAccount.Account_No
                                 && x.Trans_Account_Code == WHTAccount.Account_Code).OrderBy(x => x.Trans_Value_Date);
         }
 
@@ -8181,7 +8185,7 @@ namespace ExpenseProcessingSystem.Services
             var dbDebit = (from hist in _context.GOExpressHist
                            join exp in _context.ExpenseEntry on hist.ExpenseEntryID equals exp.Expense_ID
                            join trans in _context.ExpenseTransLists on hist.GOExpHist_Id equals trans.TL_GoExpHist_ID
-                           where trans.TL_Liquidation == false && 
+                           where trans.TL_Liquidation == false &&
                                 (exp.Expense_Status == GlobalSystemValues.STATUS_FOR_PRINTING ||
                                  exp.Expense_Status == GlobalSystemValues.STATUS_FOR_CLOSING ||
                                  (exp.Expense_Status == GlobalSystemValues.STATUS_REVERSED &&
@@ -8196,20 +8200,65 @@ namespace ExpenseProcessingSystem.Services
                                     (hist.GOExpHist_Entry42Type == "D" && hist.GOExpHist_Entry42Actcde == selectedAccount.Account_Code && selectedAccount.Account_No.Replace("-", "") == hist.GOExpHist_Entry42ActType + hist.GOExpHist_Branchno + hist.GOExpHist_Entry42ActNo))
                            select new
                            {
-                               exp.Expense_ID, exp.Expense_Type, exp.Expense_Last_Updated, exp.Expense_Date, exp.Expense_Number, exp.Expense_CheckNo, 
-                               exp.Expense_Creator_ID, exp.Expense_Approver, hist.ExpenseEntryID, hist.ExpenseDetailID, exp.Expense_Status, /*Non-NC: ExpDtlID. NC: NCDtlID*/
-                               hist.GOExpHist_Id, hist.GOExpHist_ValueDate, hist.GOExpHist_Remarks, hist.GOExpHist_Branchno, hist.GOExpHist_Entry11Type, 
-                               hist.GOExpHist_Entry11Amt, hist.GOExpHist_Entry11Actcde, hist.GOExpHist_Entry11ActType, hist.GOExpHist_Entry11ActNo, 
-                               hist.GOExpHist_Entry12Type, hist.GOExpHist_Entry12Amt, hist.GOExpHist_Entry12Actcde, hist.GOExpHist_Entry12ActType, 
-                               hist.GOExpHist_Entry12ActNo, hist.GOExpHist_Entry21Type, hist.GOExpHist_Entry21Amt, hist.GOExpHist_Entry21Actcde, 
-                               hist.GOExpHist_Entry21ActType, hist.GOExpHist_Entry21ActNo, hist.GOExpHist_Entry22Type, hist.GOExpHist_Entry22Amt, 
-                               hist.GOExpHist_Entry22Actcde, hist.GOExpHist_Entry22ActType, hist.GOExpHist_Entry22ActNo, hist.GOExpHist_Entry31Type, 
-                               hist.GOExpHist_Entry31Amt, hist.GOExpHist_Entry31Actcde, hist.GOExpHist_Entry31ActType, hist.GOExpHist_Entry31ActNo, 
-                               hist.GOExpHist_Entry32Type, hist.GOExpHist_Entry32Amt, hist.GOExpHist_Entry32Actcde, hist.GOExpHist_Entry32ActType, 
-                               hist.GOExpHist_Entry32ActNo, hist.GOExpHist_Entry41Type, hist.GOExpHist_Entry41Amt, hist.GOExpHist_Entry41Actcde, 
-                               hist.GOExpHist_Entry41ActType, hist.GOExpHist_Entry41ActNo, hist.GOExpHist_Entry42Type, hist.GOExpHist_Entry42Amt, 
-                               hist.GOExpHist_Entry42Actcde, hist.GOExpHist_Entry42ActType, hist.GOExpHist_Entry42ActNo, trans.TL_ID, 
-                               trans.TL_GoExpress_ID, trans.TL_TransID, trans.TL_Liquidation
+                               exp.Expense_ID,
+                               exp.Expense_Type,
+                               exp.Expense_Last_Updated,
+                               exp.Expense_Date,
+                               exp.Expense_Number,
+                               exp.Expense_CheckNo,
+                               exp.Expense_Creator_ID,
+                               exp.Expense_Approver,
+                               hist.ExpenseEntryID,
+                               hist.ExpenseDetailID,
+                               exp.Expense_Status, /*Non-NC: ExpDtlID. NC: NCDtlID*/
+                               hist.GOExpHist_Id,
+                               hist.GOExpHist_ValueDate,
+                               hist.GOExpHist_Remarks,
+                               hist.GOExpHist_Branchno,
+                               hist.GOExpHist_Entry11Type,
+                               hist.GOExpHist_Entry11Amt,
+                               hist.GOExpHist_Entry11Actcde,
+                               hist.GOExpHist_Entry11ActType,
+                               hist.GOExpHist_Entry11ActNo,
+                               hist.GOExpHist_Entry12Type,
+                               hist.GOExpHist_Entry12Amt,
+                               hist.GOExpHist_Entry12Actcde,
+                               hist.GOExpHist_Entry12ActType,
+                               hist.GOExpHist_Entry12ActNo,
+                               hist.GOExpHist_Entry21Type,
+                               hist.GOExpHist_Entry21Amt,
+                               hist.GOExpHist_Entry21Actcde,
+                               hist.GOExpHist_Entry21ActType,
+                               hist.GOExpHist_Entry21ActNo,
+                               hist.GOExpHist_Entry22Type,
+                               hist.GOExpHist_Entry22Amt,
+                               hist.GOExpHist_Entry22Actcde,
+                               hist.GOExpHist_Entry22ActType,
+                               hist.GOExpHist_Entry22ActNo,
+                               hist.GOExpHist_Entry31Type,
+                               hist.GOExpHist_Entry31Amt,
+                               hist.GOExpHist_Entry31Actcde,
+                               hist.GOExpHist_Entry31ActType,
+                               hist.GOExpHist_Entry31ActNo,
+                               hist.GOExpHist_Entry32Type,
+                               hist.GOExpHist_Entry32Amt,
+                               hist.GOExpHist_Entry32Actcde,
+                               hist.GOExpHist_Entry32ActType,
+                               hist.GOExpHist_Entry32ActNo,
+                               hist.GOExpHist_Entry41Type,
+                               hist.GOExpHist_Entry41Amt,
+                               hist.GOExpHist_Entry41Actcde,
+                               hist.GOExpHist_Entry41ActType,
+                               hist.GOExpHist_Entry41ActNo,
+                               hist.GOExpHist_Entry42Type,
+                               hist.GOExpHist_Entry42Amt,
+                               hist.GOExpHist_Entry42Actcde,
+                               hist.GOExpHist_Entry42ActType,
+                               hist.GOExpHist_Entry42ActNo,
+                               trans.TL_ID,
+                               trans.TL_GoExpress_ID,
+                               trans.TL_TransID,
+                               trans.TL_Liquidation
                            }).ToList();
 
             //Get all liquidated credit transaction of selected suspense account transactions in GOExpress
@@ -8228,20 +8277,64 @@ namespace ExpenseProcessingSystem.Services
                                   (hist.GOExpHist_Entry42Type == "C" && hist.GOExpHist_Entry42Actcde == selectedAccount.Account_Code && selectedAccount.Account_No.Replace("-", "") == hist.GOExpHist_Entry42ActType + hist.GOExpHist_Branchno + hist.GOExpHist_Entry42ActNo))
                          select new
                          {
-                             exp.Expense_ID, exp.Expense_Type, exp.Expense_Last_Updated, exp.Expense_Date, exp.Expense_Number, exp.Expense_CheckNo, 
-                             exp.Expense_Creator_ID, exp.Expense_Approver, hist.ExpenseEntryID, hist.ExpenseDetailID, /*Non-NC: ExpDtlID. NC: NCDtlID*/
-                             hist.GOExpHist_Id, hist.GOExpHist_ValueDate, hist.GOExpHist_Remarks, hist.GOExpHist_Branchno, hist.GOExpHist_Entry11Type, 
-                             hist.GOExpHist_Entry11Amt, hist.GOExpHist_Entry11Actcde, hist.GOExpHist_Entry11ActType, hist.GOExpHist_Entry11ActNo, 
-                             hist.GOExpHist_Entry12Type, hist.GOExpHist_Entry12Amt, hist.GOExpHist_Entry12Actcde, hist.GOExpHist_Entry12ActType, 
-                             hist.GOExpHist_Entry12ActNo, hist.GOExpHist_Entry21Type, hist.GOExpHist_Entry21Amt, hist.GOExpHist_Entry21Actcde, 
-                             hist.GOExpHist_Entry21ActType, hist.GOExpHist_Entry21ActNo, hist.GOExpHist_Entry22Type, hist.GOExpHist_Entry22Amt, 
-                             hist.GOExpHist_Entry22Actcde, hist.GOExpHist_Entry22ActType, hist.GOExpHist_Entry22ActNo, hist.GOExpHist_Entry31Type, 
-                             hist.GOExpHist_Entry31Amt, hist.GOExpHist_Entry31Actcde, hist.GOExpHist_Entry31ActType, hist.GOExpHist_Entry31ActNo, 
-                             hist.GOExpHist_Entry32Type, hist.GOExpHist_Entry32Amt, hist.GOExpHist_Entry32Actcde, hist.GOExpHist_Entry32ActType, 
-                             hist.GOExpHist_Entry32ActNo, hist.GOExpHist_Entry41Type, hist.GOExpHist_Entry41Amt, hist.GOExpHist_Entry41Actcde, 
-                             hist.GOExpHist_Entry41ActType, hist.GOExpHist_Entry41ActNo, hist.GOExpHist_Entry42Type, hist.GOExpHist_Entry42Amt, 
-                             hist.GOExpHist_Entry42Actcde, hist.GOExpHist_Entry42ActType, hist.GOExpHist_Entry42ActNo, trans.TL_ID, 
-                             trans.TL_GoExpress_ID, trans.TL_TransID, trans.TL_Liquidation
+                             exp.Expense_ID,
+                             exp.Expense_Type,
+                             exp.Expense_Last_Updated,
+                             exp.Expense_Date,
+                             exp.Expense_Number,
+                             exp.Expense_CheckNo,
+                             exp.Expense_Creator_ID,
+                             exp.Expense_Approver,
+                             hist.ExpenseEntryID,
+                             hist.ExpenseDetailID, /*Non-NC: ExpDtlID. NC: NCDtlID*/
+                             hist.GOExpHist_Id,
+                             hist.GOExpHist_ValueDate,
+                             hist.GOExpHist_Remarks,
+                             hist.GOExpHist_Branchno,
+                             hist.GOExpHist_Entry11Type,
+                             hist.GOExpHist_Entry11Amt,
+                             hist.GOExpHist_Entry11Actcde,
+                             hist.GOExpHist_Entry11ActType,
+                             hist.GOExpHist_Entry11ActNo,
+                             hist.GOExpHist_Entry12Type,
+                             hist.GOExpHist_Entry12Amt,
+                             hist.GOExpHist_Entry12Actcde,
+                             hist.GOExpHist_Entry12ActType,
+                             hist.GOExpHist_Entry12ActNo,
+                             hist.GOExpHist_Entry21Type,
+                             hist.GOExpHist_Entry21Amt,
+                             hist.GOExpHist_Entry21Actcde,
+                             hist.GOExpHist_Entry21ActType,
+                             hist.GOExpHist_Entry21ActNo,
+                             hist.GOExpHist_Entry22Type,
+                             hist.GOExpHist_Entry22Amt,
+                             hist.GOExpHist_Entry22Actcde,
+                             hist.GOExpHist_Entry22ActType,
+                             hist.GOExpHist_Entry22ActNo,
+                             hist.GOExpHist_Entry31Type,
+                             hist.GOExpHist_Entry31Amt,
+                             hist.GOExpHist_Entry31Actcde,
+                             hist.GOExpHist_Entry31ActType,
+                             hist.GOExpHist_Entry31ActNo,
+                             hist.GOExpHist_Entry32Type,
+                             hist.GOExpHist_Entry32Amt,
+                             hist.GOExpHist_Entry32Actcde,
+                             hist.GOExpHist_Entry32ActType,
+                             hist.GOExpHist_Entry32ActNo,
+                             hist.GOExpHist_Entry41Type,
+                             hist.GOExpHist_Entry41Amt,
+                             hist.GOExpHist_Entry41Actcde,
+                             hist.GOExpHist_Entry41ActType,
+                             hist.GOExpHist_Entry41ActNo,
+                             hist.GOExpHist_Entry42Type,
+                             hist.GOExpHist_Entry42Amt,
+                             hist.GOExpHist_Entry42Actcde,
+                             hist.GOExpHist_Entry42ActType,
+                             hist.GOExpHist_Entry42ActNo,
+                             trans.TL_ID,
+                             trans.TL_GoExpress_ID,
+                             trans.TL_TransID,
+                             trans.TL_Liquidation
                          }).ToList();
 
             //Get all reversed(CA) credit transaction of selected suspense account transactions in GOExpress
@@ -8249,8 +8342,8 @@ namespace ExpenseProcessingSystem.Services
                            join exp in _context.ExpenseEntry on hist.ExpenseEntryID equals exp.Expense_ID
                            join trans in _context.ExpenseTransLists on hist.GOExpHist_Id equals trans.TL_GoExpHist_ID
                            join rev in _context.ReversalEntry on hist.GOExpHist_Id equals rev.Reversal_GOExpressHistID
-                           where exp.Expense_Type == GlobalSystemValues.TYPE_SS && 
-                                (exp.Expense_Status == GlobalSystemValues.STATUS_REVERSED || 
+                           where exp.Expense_Type == GlobalSystemValues.TYPE_SS &&
+                                (exp.Expense_Status == GlobalSystemValues.STATUS_REVERSED ||
                                  exp.Expense_Status == GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR) &&
                                 ((hist.GOExpHist_Entry11Type == "C" && hist.GOExpHist_Entry11Actcde == selectedAccount.Account_Code && selectedAccount.Account_No.Replace("-", "") == hist.GOExpHist_Entry11ActType + hist.GOExpHist_Branchno + hist.GOExpHist_Entry11ActNo) ||
                                  (hist.GOExpHist_Entry12Type == "C" && hist.GOExpHist_Entry12Actcde == selectedAccount.Account_Code && selectedAccount.Account_No.Replace("-", "") == hist.GOExpHist_Entry12ActType + hist.GOExpHist_Branchno + hist.GOExpHist_Entry12ActNo) ||
@@ -8262,20 +8355,64 @@ namespace ExpenseProcessingSystem.Services
                                  (hist.GOExpHist_Entry42Type == "C" && hist.GOExpHist_Entry42Actcde == selectedAccount.Account_Code && selectedAccount.Account_No.Replace("-", "") == hist.GOExpHist_Entry42ActType + hist.GOExpHist_Branchno + hist.GOExpHist_Entry42ActNo))
                            select new
                            {
-                               exp.Expense_ID, exp.Expense_Type, exp.Expense_Last_Updated, exp.Expense_Date, exp.Expense_Number, exp.Expense_CheckNo, 
-                               exp.Expense_Creator_ID, exp.Expense_Approver, hist.ExpenseEntryID, hist.ExpenseDetailID, /*Non-NC: ExpDtlID. NC: NCDtlID*/
-                               hist.GOExpHist_Id, hist.GOExpHist_ValueDate, hist.GOExpHist_Remarks, hist.GOExpHist_Branchno, hist.GOExpHist_Entry11Type, 
-                               hist.GOExpHist_Entry11Amt, hist.GOExpHist_Entry11Actcde, hist.GOExpHist_Entry11ActType, hist.GOExpHist_Entry11ActNo, 
-                               hist.GOExpHist_Entry12Type, hist.GOExpHist_Entry12Amt, hist.GOExpHist_Entry12Actcde, hist.GOExpHist_Entry12ActType, 
-                               hist.GOExpHist_Entry12ActNo, hist.GOExpHist_Entry21Type, hist.GOExpHist_Entry21Amt, hist.GOExpHist_Entry21Actcde, 
-                               hist.GOExpHist_Entry21ActType, hist.GOExpHist_Entry21ActNo, hist.GOExpHist_Entry22Type, hist.GOExpHist_Entry22Amt, 
-                               hist.GOExpHist_Entry22Actcde, hist.GOExpHist_Entry22ActType, hist.GOExpHist_Entry22ActNo, hist.GOExpHist_Entry31Type, 
-                               hist.GOExpHist_Entry31Amt, hist.GOExpHist_Entry31Actcde, hist.GOExpHist_Entry31ActType, hist.GOExpHist_Entry31ActNo, 
-                               hist.GOExpHist_Entry32Type, hist.GOExpHist_Entry32Amt, hist.GOExpHist_Entry32Actcde, hist.GOExpHist_Entry32ActType, 
-                               hist.GOExpHist_Entry32ActNo, hist.GOExpHist_Entry41Type, hist.GOExpHist_Entry41Amt, hist.GOExpHist_Entry41Actcde, 
-                               hist.GOExpHist_Entry41ActType, hist.GOExpHist_Entry41ActNo, hist.GOExpHist_Entry42Type, hist.GOExpHist_Entry42Amt, 
-                               hist.GOExpHist_Entry42Actcde, hist.GOExpHist_Entry42ActType, hist.GOExpHist_Entry42ActNo, trans.TL_ID, 
-                               trans.TL_GoExpress_ID, trans.TL_TransID, trans.TL_Liquidation
+                               exp.Expense_ID,
+                               exp.Expense_Type,
+                               exp.Expense_Last_Updated,
+                               exp.Expense_Date,
+                               exp.Expense_Number,
+                               exp.Expense_CheckNo,
+                               exp.Expense_Creator_ID,
+                               exp.Expense_Approver,
+                               hist.ExpenseEntryID,
+                               hist.ExpenseDetailID, /*Non-NC: ExpDtlID. NC: NCDtlID*/
+                               hist.GOExpHist_Id,
+                               hist.GOExpHist_ValueDate,
+                               hist.GOExpHist_Remarks,
+                               hist.GOExpHist_Branchno,
+                               hist.GOExpHist_Entry11Type,
+                               hist.GOExpHist_Entry11Amt,
+                               hist.GOExpHist_Entry11Actcde,
+                               hist.GOExpHist_Entry11ActType,
+                               hist.GOExpHist_Entry11ActNo,
+                               hist.GOExpHist_Entry12Type,
+                               hist.GOExpHist_Entry12Amt,
+                               hist.GOExpHist_Entry12Actcde,
+                               hist.GOExpHist_Entry12ActType,
+                               hist.GOExpHist_Entry12ActNo,
+                               hist.GOExpHist_Entry21Type,
+                               hist.GOExpHist_Entry21Amt,
+                               hist.GOExpHist_Entry21Actcde,
+                               hist.GOExpHist_Entry21ActType,
+                               hist.GOExpHist_Entry21ActNo,
+                               hist.GOExpHist_Entry22Type,
+                               hist.GOExpHist_Entry22Amt,
+                               hist.GOExpHist_Entry22Actcde,
+                               hist.GOExpHist_Entry22ActType,
+                               hist.GOExpHist_Entry22ActNo,
+                               hist.GOExpHist_Entry31Type,
+                               hist.GOExpHist_Entry31Amt,
+                               hist.GOExpHist_Entry31Actcde,
+                               hist.GOExpHist_Entry31ActType,
+                               hist.GOExpHist_Entry31ActNo,
+                               hist.GOExpHist_Entry32Type,
+                               hist.GOExpHist_Entry32Amt,
+                               hist.GOExpHist_Entry32Actcde,
+                               hist.GOExpHist_Entry32ActType,
+                               hist.GOExpHist_Entry32ActNo,
+                               hist.GOExpHist_Entry41Type,
+                               hist.GOExpHist_Entry41Amt,
+                               hist.GOExpHist_Entry41Actcde,
+                               hist.GOExpHist_Entry41ActType,
+                               hist.GOExpHist_Entry41ActNo,
+                               hist.GOExpHist_Entry42Type,
+                               hist.GOExpHist_Entry42Amt,
+                               hist.GOExpHist_Entry42Actcde,
+                               hist.GOExpHist_Entry42ActType,
+                               hist.GOExpHist_Entry42ActNo,
+                               trans.TL_ID,
+                               trans.TL_GoExpress_ID,
+                               trans.TL_TransID,
+                               trans.TL_Liquidation
                            }).ToList();
 
             //Get all Non-cash credit transaction of selected suspense account transactions in GOExpress
@@ -8297,20 +8434,64 @@ namespace ExpenseProcessingSystem.Services
                                (hist.GOExpHist_Entry42Type == "C" && hist.GOExpHist_Entry42Actcde == selectedAccount.Account_Code && selectedAccount.Account_No.Replace("-", "") == hist.GOExpHist_Entry42ActType + hist.GOExpHist_Branchno + hist.GOExpHist_Entry42ActNo))
                           select new
                           {
-                             exp.Expense_ID, exp.Expense_Type, exp.Expense_Last_Updated, exp.Expense_Date, exp.Expense_Number, exp.Expense_CheckNo, 
-                             exp.Expense_Creator_ID, exp.Expense_Approver, hist.ExpenseEntryID, hist.ExpenseDetailID, /*Non-NC: ExpDtlID. NC: NCDtlID*/
-                             hist.GOExpHist_Id, hist.GOExpHist_ValueDate, hist.GOExpHist_Remarks, hist.GOExpHist_Branchno, hist.GOExpHist_Entry11Type, 
-                             hist.GOExpHist_Entry11Amt, hist.GOExpHist_Entry11Actcde, hist.GOExpHist_Entry11ActType, hist.GOExpHist_Entry11ActNo, 
-                             hist.GOExpHist_Entry12Type, hist.GOExpHist_Entry12Amt, hist.GOExpHist_Entry12Actcde, hist.GOExpHist_Entry12ActType, 
-                             hist.GOExpHist_Entry12ActNo, hist.GOExpHist_Entry21Type, hist.GOExpHist_Entry21Amt, hist.GOExpHist_Entry21Actcde, 
-                             hist.GOExpHist_Entry21ActType, hist.GOExpHist_Entry21ActNo, hist.GOExpHist_Entry22Type, hist.GOExpHist_Entry22Amt, 
-                             hist.GOExpHist_Entry22Actcde, hist.GOExpHist_Entry22ActType, hist.GOExpHist_Entry22ActNo, hist.GOExpHist_Entry31Type, 
-                             hist.GOExpHist_Entry31Amt, hist.GOExpHist_Entry31Actcde, hist.GOExpHist_Entry31ActType, hist.GOExpHist_Entry31ActNo, 
-                             hist.GOExpHist_Entry32Type, hist.GOExpHist_Entry32Amt, hist.GOExpHist_Entry32Actcde, hist.GOExpHist_Entry32ActType, 
-                             hist.GOExpHist_Entry32ActNo, hist.GOExpHist_Entry41Type, hist.GOExpHist_Entry41Amt, hist.GOExpHist_Entry41Actcde, 
-                             hist.GOExpHist_Entry41ActType, hist.GOExpHist_Entry41ActNo, hist.GOExpHist_Entry42Type, hist.GOExpHist_Entry42Amt, 
-                             hist.GOExpHist_Entry42Actcde, hist.GOExpHist_Entry42ActType, hist.GOExpHist_Entry42ActNo, trans.TL_ID, 
-                             trans.TL_GoExpress_ID, trans.TL_TransID, trans.TL_Liquidation
+                              exp.Expense_ID,
+                              exp.Expense_Type,
+                              exp.Expense_Last_Updated,
+                              exp.Expense_Date,
+                              exp.Expense_Number,
+                              exp.Expense_CheckNo,
+                              exp.Expense_Creator_ID,
+                              exp.Expense_Approver,
+                              hist.ExpenseEntryID,
+                              hist.ExpenseDetailID, /*Non-NC: ExpDtlID. NC: NCDtlID*/
+                              hist.GOExpHist_Id,
+                              hist.GOExpHist_ValueDate,
+                              hist.GOExpHist_Remarks,
+                              hist.GOExpHist_Branchno,
+                              hist.GOExpHist_Entry11Type,
+                              hist.GOExpHist_Entry11Amt,
+                              hist.GOExpHist_Entry11Actcde,
+                              hist.GOExpHist_Entry11ActType,
+                              hist.GOExpHist_Entry11ActNo,
+                              hist.GOExpHist_Entry12Type,
+                              hist.GOExpHist_Entry12Amt,
+                              hist.GOExpHist_Entry12Actcde,
+                              hist.GOExpHist_Entry12ActType,
+                              hist.GOExpHist_Entry12ActNo,
+                              hist.GOExpHist_Entry21Type,
+                              hist.GOExpHist_Entry21Amt,
+                              hist.GOExpHist_Entry21Actcde,
+                              hist.GOExpHist_Entry21ActType,
+                              hist.GOExpHist_Entry21ActNo,
+                              hist.GOExpHist_Entry22Type,
+                              hist.GOExpHist_Entry22Amt,
+                              hist.GOExpHist_Entry22Actcde,
+                              hist.GOExpHist_Entry22ActType,
+                              hist.GOExpHist_Entry22ActNo,
+                              hist.GOExpHist_Entry31Type,
+                              hist.GOExpHist_Entry31Amt,
+                              hist.GOExpHist_Entry31Actcde,
+                              hist.GOExpHist_Entry31ActType,
+                              hist.GOExpHist_Entry31ActNo,
+                              hist.GOExpHist_Entry32Type,
+                              hist.GOExpHist_Entry32Amt,
+                              hist.GOExpHist_Entry32Actcde,
+                              hist.GOExpHist_Entry32ActType,
+                              hist.GOExpHist_Entry32ActNo,
+                              hist.GOExpHist_Entry41Type,
+                              hist.GOExpHist_Entry41Amt,
+                              hist.GOExpHist_Entry41Actcde,
+                              hist.GOExpHist_Entry41ActType,
+                              hist.GOExpHist_Entry41ActNo,
+                              hist.GOExpHist_Entry42Type,
+                              hist.GOExpHist_Entry42Amt,
+                              hist.GOExpHist_Entry42Actcde,
+                              hist.GOExpHist_Entry42ActType,
+                              hist.GOExpHist_Entry42ActNo,
+                              trans.TL_ID,
+                              trans.TL_GoExpress_ID,
+                              trans.TL_TransID,
+                              trans.TL_Liquidation
                           }).ToList();
 
             //Process 1:
@@ -8342,7 +8523,7 @@ namespace ExpenseProcessingSystem.Services
                 //Condition to add this record:
                 //1. Selected account info must be mentioned account info above
                 //2. Based on the database of ExPReSS in Mizuho bank, target record is Seq.No.17.
-                if(cnt == 17 && selectedAccount.Account_No.Replace("-", "") == "H79767151446" && selectedAccount.Account_Code == "14025")
+                if (cnt == 17 && selectedAccount.Account_No.Replace("-", "") == "H79767151446" && selectedAccount.Account_Code == "14025")
                 {
                     esamsData.Add(new HomeReportESAMSViewModel
                     {
@@ -8365,14 +8546,14 @@ namespace ExpenseProcessingSystem.Services
                 //Check if debited transaction's expense entry was reversed or not.
                 var revCA = dbCARev.Where(x => x.ExpenseEntryID == i.ExpenseEntryID &&
                                                x.ExpenseDetailID == i.ExpenseDetailID).ToList();
-                if(revCA.Count > 0)
+                if (revCA.Count > 0)
                 {
-                    foreach(var credRev in revCA)
+                    foreach (var credRev in revCA)
                     {
                         if (!usedGOExpHistID.Contains(credRev.GOExpHist_Id))
                         {
                             HomeReportESAMSViewModel res = AddToESAMViewList(cnt, credRev, selectedAccount, userList, GlobalSystemValues.TRANS_CREDIT);
-                            if(res != null)
+                            if (res != null)
                             {
                                 res.Remarks = HomeReportConstantValue.ESAMS_CA_REV_MESSAGE;
                                 esamsData.Add(res);
@@ -8408,7 +8589,7 @@ namespace ExpenseProcessingSystem.Services
                                (credLiq.GOExpHist_Entry42Type == "C"))
                             {
                                 //add up values of similar entries
-                                newLiq.GOExpHist_Entry11Amt = "" +(decimal.Parse(credLiq.GOExpHist_Entry11Amt ?? "0") + decimal.Parse(newLiq.GOExpHist_Entry11Amt ?? "0"));
+                                newLiq.GOExpHist_Entry11Amt = "" + (decimal.Parse(credLiq.GOExpHist_Entry11Amt ?? "0") + decimal.Parse(newLiq.GOExpHist_Entry11Amt ?? "0"));
                                 newLiq.GOExpHist_Entry12Amt = "" + (decimal.Parse(credLiq.GOExpHist_Entry12Amt ?? "0") + decimal.Parse(newLiq.GOExpHist_Entry12Amt ?? "0"));
                                 newLiq.GOExpHist_Entry21Amt = "" + (decimal.Parse(credLiq.GOExpHist_Entry21Amt ?? "0") + decimal.Parse(newLiq.GOExpHist_Entry21Amt ?? "0"));
                                 newLiq.GOExpHist_Entry22Amt = "" + (decimal.Parse(credLiq.GOExpHist_Entry22Amt ?? "0") + decimal.Parse(newLiq.GOExpHist_Entry22Amt ?? "0"));
@@ -8416,7 +8597,7 @@ namespace ExpenseProcessingSystem.Services
                                 newLiq.GOExpHist_Entry32Amt = "" + (decimal.Parse(credLiq.GOExpHist_Entry32Amt ?? "0") + decimal.Parse(newLiq.GOExpHist_Entry32Amt ?? "0"));
                                 newLiq.GOExpHist_Entry41Amt = "" + (decimal.Parse(credLiq.GOExpHist_Entry41Amt ?? "0") + decimal.Parse(newLiq.GOExpHist_Entry41Amt ?? "0"));
                                 newLiq.GOExpHist_Entry42Amt = "" + (decimal.Parse(credLiq.GOExpHist_Entry42Amt ?? "0") + decimal.Parse(newLiq.GOExpHist_Entry42Amt ?? "0"));
-                            }  
+                            }
                         }
                     }
 
@@ -8447,7 +8628,7 @@ namespace ExpenseProcessingSystem.Services
                 //Check if CA Entry's liquidation status is in REVERSED or REVERSED DUE TO G-BASE ERROR.
                 //If yes, check the non-cash transaction to find its liquidation entry.
                 //If not, will not proceed to non-cash entry since it was not yet processed in liquidation screen.
-                if(i.Expense_Type == GlobalSystemValues.TYPE_SS)
+                if (i.Expense_Type == GlobalSystemValues.TYPE_SS)
                 {
                     var liqExist = _context.LiquidationEntryDetails.Where(x => x.ExpenseEntryModel.Expense_ID == i.Expense_ID).FirstOrDefault();
                     int liqstat = (liqExist != null) ? liqExist.Liq_Status : 0;
@@ -8455,13 +8636,14 @@ namespace ExpenseProcessingSystem.Services
                     if (liqstat != GlobalSystemValues.STATUS_REVERSED &&
                         liqstat != GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR) continue;
                 }
-                
+
                 //Filter to value > debit transaction
                 var ncCA = dbCANC.Where(x => ConvGbDateToDateTime(i.GOExpHist_ValueDate).Date <= ConvGbDateToDateTime(x.GOExpHist_ValueDate).Date).ToList();
 
                 if (ncCA.Count > 0)
                 {
                     string prefix = (i.Expense_Type == GlobalSystemValues.TYPE_SS || status.Contains(i.Expense_Status)) ? "S" : "";
+                    string credNCRemark = "";
                     RepESAMSViewModel newLiqCA = new RepESAMSViewModel();
 
                     foreach (var credNC in ncCA)
@@ -8470,8 +8652,9 @@ namespace ExpenseProcessingSystem.Services
                         {
                             //populate new LIQ viewmodel
                             newLiqCA = PopulateNewLiq(newLiqCA, credNC);
+                            credNCRemark = (credNC.GOExpHist_Remarks.Trim().Length == 30) ? credNC.GOExpHist_Remarks.Trim().Substring(0, 29) : credNC.GOExpHist_Remarks.Trim();
 
-                            if (prefix + i.GOExpHist_Remarks.Trim() == credNC.GOExpHist_Remarks.Trim() &&
+                            if ((prefix + i.GOExpHist_Remarks.Trim()).Contains(credNCRemark) &&
                                 ((credNC.GOExpHist_Entry11Type == "C") ||
                                  (credNC.GOExpHist_Entry12Type == "C") ||
                                  (credNC.GOExpHist_Entry21Type == "C") ||
@@ -8495,8 +8678,9 @@ namespace ExpenseProcessingSystem.Services
                     }
 
                     decimal debitAmount = (esamsData.LastOrDefault() != null) ? esamsData.LastOrDefault().DRAmount : 0.00M;
+                    credNCRemark = (newLiqCA.GOExpHist_Remarks.Trim().Length == 30) ? newLiqCA.GOExpHist_Remarks.Trim().Substring(0, 29) : newLiqCA.GOExpHist_Remarks.Trim();
 
-                    if (prefix + i.GOExpHist_Remarks.Trim() == newLiqCA.GOExpHist_Remarks.Trim() &&
+                    if ((prefix + i.GOExpHist_Remarks.Trim()).Contains(credNCRemark) &&
                         ((newLiqCA.GOExpHist_Entry11Type == "C" && decimal.Parse(newLiqCA.GOExpHist_Entry11Amt) == debitAmount) ||
                          (newLiqCA.GOExpHist_Entry12Type == "C" && decimal.Parse(newLiqCA.GOExpHist_Entry12Amt) == debitAmount) ||
                          (newLiqCA.GOExpHist_Entry21Type == "C" && decimal.Parse(newLiqCA.GOExpHist_Entry21Amt) == debitAmount) ||
@@ -8522,9 +8706,9 @@ namespace ExpenseProcessingSystem.Services
             var esamsDataSorted = esamsData.OrderBy(x => x.SettleDate).ThenBy(x => int.Parse(x.SeqNo.Replace("(", "").Replace(")", "")));
             decimal totBal = 0.00M;
 
-            foreach(var i in esamsDataSorted)
+            foreach (var i in esamsDataSorted)
             {
-                if(i.DRAmount > 0)
+                if (i.DRAmount > 0)
                 {
                     i.Balance = totBal = totBal + i.DRAmount;
                 }
@@ -8699,7 +8883,7 @@ namespace ExpenseProcessingSystem.Services
             var dbDebit = (from hist in _context.GOExpressHist
                            join exp in _context.ExpenseEntry on hist.ExpenseEntryID equals exp.Expense_ID
                            join trans in _context.ExpenseTransLists on hist.GOExpHist_Id equals trans.TL_GoExpHist_ID
-                           where trans.TL_Liquidation == false && 
+                           where trans.TL_Liquidation == false &&
                                 (exp.Expense_Status == GlobalSystemValues.STATUS_FOR_PRINTING ||
                                  exp.Expense_Status == GlobalSystemValues.STATUS_FOR_CLOSING ||
                                  (exp.Expense_Status == GlobalSystemValues.STATUS_REVERSED &&
@@ -8714,42 +8898,156 @@ namespace ExpenseProcessingSystem.Services
                                     (hist.GOExpHist_Entry42Type == "D" && hist.GOExpHist_Entry42Actcde == selectedAccount.Account_Code && selectedAccount.Account_No.Replace("-", "") == hist.GOExpHist_Entry42ActType + hist.GOExpHist_Branchno + hist.GOExpHist_Entry42ActNo))
                            select new
                            {
-                               exp.Expense_ID, exp.Expense_Type, exp.Expense_Last_Updated, exp.Expense_Date, exp.Expense_Number, exp.Expense_CheckNo, 
-                               exp.Expense_Creator_ID, exp.Expense_Approver, hist.ExpenseEntryID, hist.ExpenseDetailID, exp.Expense_Status, /*Non-NC: ExpDtlID. NC: NCDtlID*/
-                               hist.GOExpHist_Id, hist.GOExpHist_ValueDate, hist.GOExpHist_ReferenceNo, hist.GOExpHist_Branchno, hist.GOExpHist_Section, 
-                             hist.GOExpHist_Remarks, hist.GOExpHist_Entry11Type, hist.GOExpHist_Entry11Ccy, hist.GOExpHist_Entry11Amt, 
-                             hist.GOExpHist_Entry11Cust, hist.GOExpHist_Entry11Actcde, hist.GOExpHist_Entry11ActType, hist.GOExpHist_Entry11ActNo, 
-                             hist.GOExpHist_Entry11ExchRate, hist.GOExpHist_Entry11ExchCcy, hist.GOExpHist_Entry11Fund, hist.GOExpHist_Entry11AdvcPrnt, 
-                             hist.GOExpHist_Entry11Details, hist.GOExpHist_Entry11Entity, hist.GOExpHist_Entry11Division, hist.GOExpHist_Entry11InterAmt, 
-                             hist.GOExpHist_Entry11InterRate, hist.GOExpHist_Entry12Type, hist.GOExpHist_Entry12Ccy, hist.GOExpHist_Entry12Amt, 
-                             hist.GOExpHist_Entry12Cust, hist.GOExpHist_Entry12Actcde, hist.GOExpHist_Entry12ActType, hist.GOExpHist_Entry12ActNo, 
-                             hist.GOExpHist_Entry12ExchRate, hist.GOExpHist_Entry12ExchCcy, hist.GOExpHist_Entry12Fund, hist.GOExpHist_Entry12AdvcPrnt, 
-                             hist.GOExpHist_Entry12Details, hist.GOExpHist_Entry12Entity, hist.GOExpHist_Entry12Division, hist.GOExpHist_Entry12InterAmt, 
-                             hist.GOExpHist_Entry12InterRate, hist.GOExpHist_Entry21Type, hist.GOExpHist_Entry21Ccy, hist.GOExpHist_Entry21Amt, 
-                             hist.GOExpHist_Entry21Cust, hist.GOExpHist_Entry21Actcde, hist.GOExpHist_Entry21ActType, hist.GOExpHist_Entry21ActNo, 
-                             hist.GOExpHist_Entry21ExchRate, hist.GOExpHist_Entry21ExchCcy, hist.GOExpHist_Entry21Fund, hist.GOExpHist_Entry21AdvcPrnt, 
-                             hist.GOExpHist_Entry21Details, hist.GOExpHist_Entry21Entity, hist.GOExpHist_Entry21Division, hist.GOExpHist_Entry21InterAmt, 
-                             hist.GOExpHist_Entry21InterRate, hist.GOExpHist_Entry22Type, hist.GOExpHist_Entry22Ccy, hist.GOExpHist_Entry22Amt, 
-                             hist.GOExpHist_Entry22Cust, hist.GOExpHist_Entry22Actcde, hist.GOExpHist_Entry22ActType, hist.GOExpHist_Entry22ActNo, 
-                             hist.GOExpHist_Entry22ExchRate, hist.GOExpHist_Entry22ExchCcy, hist.GOExpHist_Entry22Fund, hist.GOExpHist_Entry22AdvcPrnt, 
-                             hist.GOExpHist_Entry22Details, hist.GOExpHist_Entry22Entity, hist.GOExpHist_Entry22Division, hist.GOExpHist_Entry22InterAmt, 
-                             hist.GOExpHist_Entry22InterRate, hist.GOExpHist_Entry31Type, hist.GOExpHist_Entry31Ccy, hist.GOExpHist_Entry31Amt, 
-                             hist.GOExpHist_Entry31Cust, hist.GOExpHist_Entry31Actcde, hist.GOExpHist_Entry31ActType, hist.GOExpHist_Entry31ActNo, 
-                             hist.GOExpHist_Entry31ExchRate, hist.GOExpHist_Entry31ExchCcy, hist.GOExpHist_Entry31Fund, hist.GOExpHist_Entry31AdvcPrnt, 
-                             hist.GOExpHist_Entry31Details, hist.GOExpHist_Entry31Entity, hist.GOExpHist_Entry31Division, hist.GOExpHist_Entry31InterAmt, 
-                             hist.GOExpHist_Entry31InterRate, hist.GOExpHist_Entry32Type, hist.GOExpHist_Entry32Ccy, hist.GOExpHist_Entry32Amt, 
-                             hist.GOExpHist_Entry32Cust, hist.GOExpHist_Entry32Actcde, hist.GOExpHist_Entry32ActType, hist.GOExpHist_Entry32ActNo, 
-                             hist.GOExpHist_Entry32ExchRate, hist.GOExpHist_Entry32ExchCcy, hist.GOExpHist_Entry32Fund, hist.GOExpHist_Entry32AdvcPrnt, 
-                             hist.GOExpHist_Entry32Details, hist.GOExpHist_Entry32Entity, hist.GOExpHist_Entry32Division, hist.GOExpHist_Entry32InterAmt, 
-                             hist.GOExpHist_Entry32InterRate, hist.GOExpHist_Entry41Type, hist.GOExpHist_Entry41Ccy, hist.GOExpHist_Entry41Amt, 
-                             hist.GOExpHist_Entry41Cust, hist.GOExpHist_Entry41Actcde, hist.GOExpHist_Entry41ActType, hist.GOExpHist_Entry41ActNo, 
-                             hist.GOExpHist_Entry41ExchRate, hist.GOExpHist_Entry41ExchCcy, hist.GOExpHist_Entry41Fund, hist.GOExpHist_Entry41AdvcPrnt, 
-                             hist.GOExpHist_Entry41Details, hist.GOExpHist_Entry41Entity, hist.GOExpHist_Entry41Division, hist.GOExpHist_Entry41InterAmt, 
-                             hist.GOExpHist_Entry41InterRate, hist.GOExpHist_Entry42Type, hist.GOExpHist_Entry42Ccy, hist.GOExpHist_Entry42Amt, 
-                             hist.GOExpHist_Entry42Cust, hist.GOExpHist_Entry42Actcde, hist.GOExpHist_Entry42ActType, hist.GOExpHist_Entry42ActNo, 
-                             hist.GOExpHist_Entry42ExchRate, hist.GOExpHist_Entry42ExchCcy, hist.GOExpHist_Entry42Fund, hist.GOExpHist_Entry42AdvcPrnt, 
-                             hist.GOExpHist_Entry42Details, hist.GOExpHist_Entry42Entity, hist.GOExpHist_Entry42Division, hist.GOExpHist_Entry42InterAmt, 
-                             hist.GOExpHist_Entry42InterRate, trans.TL_ID, trans.TL_GoExpress_ID, trans.TL_TransID, trans.TL_Liquidation }).ToList();
+                               exp.Expense_ID,
+                               exp.Expense_Type,
+                               exp.Expense_Last_Updated,
+                               exp.Expense_Date,
+                               exp.Expense_Number,
+                               exp.Expense_CheckNo,
+                               exp.Expense_Creator_ID,
+                               exp.Expense_Approver,
+                               hist.ExpenseEntryID,
+                               hist.ExpenseDetailID,
+                               exp.Expense_Status, /*Non-NC: ExpDtlID. NC: NCDtlID*/
+                               hist.GOExpHist_Id,
+                               hist.GOExpHist_ValueDate,
+                               hist.GOExpHist_ReferenceNo,
+                               hist.GOExpHist_Branchno,
+                               hist.GOExpHist_Section,
+                               hist.GOExpHist_Remarks,
+                               hist.GOExpHist_Entry11Type,
+                               hist.GOExpHist_Entry11Ccy,
+                               hist.GOExpHist_Entry11Amt,
+                               hist.GOExpHist_Entry11Cust,
+                               hist.GOExpHist_Entry11Actcde,
+                               hist.GOExpHist_Entry11ActType,
+                               hist.GOExpHist_Entry11ActNo,
+                               hist.GOExpHist_Entry11ExchRate,
+                               hist.GOExpHist_Entry11ExchCcy,
+                               hist.GOExpHist_Entry11Fund,
+                               hist.GOExpHist_Entry11AdvcPrnt,
+                               hist.GOExpHist_Entry11Details,
+                               hist.GOExpHist_Entry11Entity,
+                               hist.GOExpHist_Entry11Division,
+                               hist.GOExpHist_Entry11InterAmt,
+                               hist.GOExpHist_Entry11InterRate,
+                               hist.GOExpHist_Entry12Type,
+                               hist.GOExpHist_Entry12Ccy,
+                               hist.GOExpHist_Entry12Amt,
+                               hist.GOExpHist_Entry12Cust,
+                               hist.GOExpHist_Entry12Actcde,
+                               hist.GOExpHist_Entry12ActType,
+                               hist.GOExpHist_Entry12ActNo,
+                               hist.GOExpHist_Entry12ExchRate,
+                               hist.GOExpHist_Entry12ExchCcy,
+                               hist.GOExpHist_Entry12Fund,
+                               hist.GOExpHist_Entry12AdvcPrnt,
+                               hist.GOExpHist_Entry12Details,
+                               hist.GOExpHist_Entry12Entity,
+                               hist.GOExpHist_Entry12Division,
+                               hist.GOExpHist_Entry12InterAmt,
+                               hist.GOExpHist_Entry12InterRate,
+                               hist.GOExpHist_Entry21Type,
+                               hist.GOExpHist_Entry21Ccy,
+                               hist.GOExpHist_Entry21Amt,
+                               hist.GOExpHist_Entry21Cust,
+                               hist.GOExpHist_Entry21Actcde,
+                               hist.GOExpHist_Entry21ActType,
+                               hist.GOExpHist_Entry21ActNo,
+                               hist.GOExpHist_Entry21ExchRate,
+                               hist.GOExpHist_Entry21ExchCcy,
+                               hist.GOExpHist_Entry21Fund,
+                               hist.GOExpHist_Entry21AdvcPrnt,
+                               hist.GOExpHist_Entry21Details,
+                               hist.GOExpHist_Entry21Entity,
+                               hist.GOExpHist_Entry21Division,
+                               hist.GOExpHist_Entry21InterAmt,
+                               hist.GOExpHist_Entry21InterRate,
+                               hist.GOExpHist_Entry22Type,
+                               hist.GOExpHist_Entry22Ccy,
+                               hist.GOExpHist_Entry22Amt,
+                               hist.GOExpHist_Entry22Cust,
+                               hist.GOExpHist_Entry22Actcde,
+                               hist.GOExpHist_Entry22ActType,
+                               hist.GOExpHist_Entry22ActNo,
+                               hist.GOExpHist_Entry22ExchRate,
+                               hist.GOExpHist_Entry22ExchCcy,
+                               hist.GOExpHist_Entry22Fund,
+                               hist.GOExpHist_Entry22AdvcPrnt,
+                               hist.GOExpHist_Entry22Details,
+                               hist.GOExpHist_Entry22Entity,
+                               hist.GOExpHist_Entry22Division,
+                               hist.GOExpHist_Entry22InterAmt,
+                               hist.GOExpHist_Entry22InterRate,
+                               hist.GOExpHist_Entry31Type,
+                               hist.GOExpHist_Entry31Ccy,
+                               hist.GOExpHist_Entry31Amt,
+                               hist.GOExpHist_Entry31Cust,
+                               hist.GOExpHist_Entry31Actcde,
+                               hist.GOExpHist_Entry31ActType,
+                               hist.GOExpHist_Entry31ActNo,
+                               hist.GOExpHist_Entry31ExchRate,
+                               hist.GOExpHist_Entry31ExchCcy,
+                               hist.GOExpHist_Entry31Fund,
+                               hist.GOExpHist_Entry31AdvcPrnt,
+                               hist.GOExpHist_Entry31Details,
+                               hist.GOExpHist_Entry31Entity,
+                               hist.GOExpHist_Entry31Division,
+                               hist.GOExpHist_Entry31InterAmt,
+                               hist.GOExpHist_Entry31InterRate,
+                               hist.GOExpHist_Entry32Type,
+                               hist.GOExpHist_Entry32Ccy,
+                               hist.GOExpHist_Entry32Amt,
+                               hist.GOExpHist_Entry32Cust,
+                               hist.GOExpHist_Entry32Actcde,
+                               hist.GOExpHist_Entry32ActType,
+                               hist.GOExpHist_Entry32ActNo,
+                               hist.GOExpHist_Entry32ExchRate,
+                               hist.GOExpHist_Entry32ExchCcy,
+                               hist.GOExpHist_Entry32Fund,
+                               hist.GOExpHist_Entry32AdvcPrnt,
+                               hist.GOExpHist_Entry32Details,
+                               hist.GOExpHist_Entry32Entity,
+                               hist.GOExpHist_Entry32Division,
+                               hist.GOExpHist_Entry32InterAmt,
+                               hist.GOExpHist_Entry32InterRate,
+                               hist.GOExpHist_Entry41Type,
+                               hist.GOExpHist_Entry41Ccy,
+                               hist.GOExpHist_Entry41Amt,
+                               hist.GOExpHist_Entry41Cust,
+                               hist.GOExpHist_Entry41Actcde,
+                               hist.GOExpHist_Entry41ActType,
+                               hist.GOExpHist_Entry41ActNo,
+                               hist.GOExpHist_Entry41ExchRate,
+                               hist.GOExpHist_Entry41ExchCcy,
+                               hist.GOExpHist_Entry41Fund,
+                               hist.GOExpHist_Entry41AdvcPrnt,
+                               hist.GOExpHist_Entry41Details,
+                               hist.GOExpHist_Entry41Entity,
+                               hist.GOExpHist_Entry41Division,
+                               hist.GOExpHist_Entry41InterAmt,
+                               hist.GOExpHist_Entry41InterRate,
+                               hist.GOExpHist_Entry42Type,
+                               hist.GOExpHist_Entry42Ccy,
+                               hist.GOExpHist_Entry42Amt,
+                               hist.GOExpHist_Entry42Cust,
+                               hist.GOExpHist_Entry42Actcde,
+                               hist.GOExpHist_Entry42ActType,
+                               hist.GOExpHist_Entry42ActNo,
+                               hist.GOExpHist_Entry42ExchRate,
+                               hist.GOExpHist_Entry42ExchCcy,
+                               hist.GOExpHist_Entry42Fund,
+                               hist.GOExpHist_Entry42AdvcPrnt,
+                               hist.GOExpHist_Entry42Details,
+                               hist.GOExpHist_Entry42Entity,
+                               hist.GOExpHist_Entry42Division,
+                               hist.GOExpHist_Entry42InterAmt,
+                               hist.GOExpHist_Entry42InterRate,
+                               trans.TL_ID,
+                               trans.TL_GoExpress_ID,
+                               trans.TL_TransID,
+                               trans.TL_Liquidation
+                           }).ToList();
 
             //Get all liquidated credit transaction of selected suspense account transactions in GOExpress
             var dbLiq = (from hist in _context.GOExpressHist
@@ -8767,50 +9065,163 @@ namespace ExpenseProcessingSystem.Services
                                   (hist.GOExpHist_Entry42Type == "C" && hist.GOExpHist_Entry42Actcde == selectedAccount.Account_Code && selectedAccount.Account_No.Replace("-", "") == hist.GOExpHist_Entry42ActType + hist.GOExpHist_Branchno + hist.GOExpHist_Entry42ActNo))
                          select new
                          {
-                             exp.Expense_ID, exp.Expense_Type, exp.Expense_Last_Updated, exp.Expense_Date, exp.Expense_Number, exp.Expense_CheckNo, 
-                             exp.Expense_Creator_ID, exp.Expense_Approver, hist.ExpenseEntryID, hist.ExpenseDetailID, /*Non-NC: ExpDtlID. NC: NCDtlID*/
-                             hist.GOExpHist_Id, hist.GOExpHist_ValueDate, hist.GOExpHist_ReferenceNo, hist.GOExpHist_Branchno, hist.GOExpHist_Section, 
-                             hist.GOExpHist_Remarks, hist.GOExpHist_Entry11Type, hist.GOExpHist_Entry11Ccy, hist.GOExpHist_Entry11Amt, 
-                             hist.GOExpHist_Entry11Cust, hist.GOExpHist_Entry11Actcde, hist.GOExpHist_Entry11ActType, hist.GOExpHist_Entry11ActNo, 
-                             hist.GOExpHist_Entry11ExchRate, hist.GOExpHist_Entry11ExchCcy, hist.GOExpHist_Entry11Fund, hist.GOExpHist_Entry11AdvcPrnt, 
-                             hist.GOExpHist_Entry11Details, hist.GOExpHist_Entry11Entity, hist.GOExpHist_Entry11Division, hist.GOExpHist_Entry11InterAmt, 
-                             hist.GOExpHist_Entry11InterRate, hist.GOExpHist_Entry12Type, hist.GOExpHist_Entry12Ccy, hist.GOExpHist_Entry12Amt, 
-                             hist.GOExpHist_Entry12Cust, hist.GOExpHist_Entry12Actcde, hist.GOExpHist_Entry12ActType, hist.GOExpHist_Entry12ActNo, 
-                             hist.GOExpHist_Entry12ExchRate, hist.GOExpHist_Entry12ExchCcy, hist.GOExpHist_Entry12Fund, hist.GOExpHist_Entry12AdvcPrnt, 
-                             hist.GOExpHist_Entry12Details, hist.GOExpHist_Entry12Entity, hist.GOExpHist_Entry12Division, hist.GOExpHist_Entry12InterAmt, 
-                             hist.GOExpHist_Entry12InterRate, hist.GOExpHist_Entry21Type, hist.GOExpHist_Entry21Ccy, hist.GOExpHist_Entry21Amt, 
-                             hist.GOExpHist_Entry21Cust, hist.GOExpHist_Entry21Actcde, hist.GOExpHist_Entry21ActType, hist.GOExpHist_Entry21ActNo, 
-                             hist.GOExpHist_Entry21ExchRate, hist.GOExpHist_Entry21ExchCcy, hist.GOExpHist_Entry21Fund, hist.GOExpHist_Entry21AdvcPrnt, 
-                             hist.GOExpHist_Entry21Details, hist.GOExpHist_Entry21Entity, hist.GOExpHist_Entry21Division, hist.GOExpHist_Entry21InterAmt, 
-                             hist.GOExpHist_Entry21InterRate, hist.GOExpHist_Entry22Type, hist.GOExpHist_Entry22Ccy, hist.GOExpHist_Entry22Amt, 
-                             hist.GOExpHist_Entry22Cust, hist.GOExpHist_Entry22Actcde, hist.GOExpHist_Entry22ActType, hist.GOExpHist_Entry22ActNo, 
-                             hist.GOExpHist_Entry22ExchRate, hist.GOExpHist_Entry22ExchCcy, hist.GOExpHist_Entry22Fund, hist.GOExpHist_Entry22AdvcPrnt, 
-                             hist.GOExpHist_Entry22Details, hist.GOExpHist_Entry22Entity, hist.GOExpHist_Entry22Division, hist.GOExpHist_Entry22InterAmt, 
-                             hist.GOExpHist_Entry22InterRate, hist.GOExpHist_Entry31Type, hist.GOExpHist_Entry31Ccy, hist.GOExpHist_Entry31Amt, 
-                             hist.GOExpHist_Entry31Cust, hist.GOExpHist_Entry31Actcde, hist.GOExpHist_Entry31ActType, hist.GOExpHist_Entry31ActNo, 
-                             hist.GOExpHist_Entry31ExchRate, hist.GOExpHist_Entry31ExchCcy, hist.GOExpHist_Entry31Fund, hist.GOExpHist_Entry31AdvcPrnt, 
-                             hist.GOExpHist_Entry31Details, hist.GOExpHist_Entry31Entity, hist.GOExpHist_Entry31Division, hist.GOExpHist_Entry31InterAmt, 
-                             hist.GOExpHist_Entry31InterRate, hist.GOExpHist_Entry32Type, hist.GOExpHist_Entry32Ccy, hist.GOExpHist_Entry32Amt, 
-                             hist.GOExpHist_Entry32Cust, hist.GOExpHist_Entry32Actcde, hist.GOExpHist_Entry32ActType, hist.GOExpHist_Entry32ActNo, 
-                             hist.GOExpHist_Entry32ExchRate, hist.GOExpHist_Entry32ExchCcy, hist.GOExpHist_Entry32Fund, hist.GOExpHist_Entry32AdvcPrnt, 
-                             hist.GOExpHist_Entry32Details, hist.GOExpHist_Entry32Entity, hist.GOExpHist_Entry32Division, hist.GOExpHist_Entry32InterAmt, 
-                             hist.GOExpHist_Entry32InterRate, hist.GOExpHist_Entry41Type, hist.GOExpHist_Entry41Ccy, hist.GOExpHist_Entry41Amt, 
-                             hist.GOExpHist_Entry41Cust, hist.GOExpHist_Entry41Actcde, hist.GOExpHist_Entry41ActType, hist.GOExpHist_Entry41ActNo, 
-                             hist.GOExpHist_Entry41ExchRate, hist.GOExpHist_Entry41ExchCcy, hist.GOExpHist_Entry41Fund, hist.GOExpHist_Entry41AdvcPrnt, 
-                             hist.GOExpHist_Entry41Details, hist.GOExpHist_Entry41Entity, hist.GOExpHist_Entry41Division, hist.GOExpHist_Entry41InterAmt, 
-                             hist.GOExpHist_Entry41InterRate, hist.GOExpHist_Entry42Type, hist.GOExpHist_Entry42Ccy, hist.GOExpHist_Entry42Amt, 
-                             hist.GOExpHist_Entry42Cust, hist.GOExpHist_Entry42Actcde, hist.GOExpHist_Entry42ActType, hist.GOExpHist_Entry42ActNo, 
-                             hist.GOExpHist_Entry42ExchRate, hist.GOExpHist_Entry42ExchCcy, hist.GOExpHist_Entry42Fund, hist.GOExpHist_Entry42AdvcPrnt, 
-                             hist.GOExpHist_Entry42Details, hist.GOExpHist_Entry42Entity, hist.GOExpHist_Entry42Division, hist.GOExpHist_Entry42InterAmt, 
-                             hist.GOExpHist_Entry42InterRate, trans.TL_ID, trans.TL_GoExpress_ID, trans.TL_TransID, trans.TL_Liquidation }).ToList();
+                             exp.Expense_ID,
+                             exp.Expense_Type,
+                             exp.Expense_Last_Updated,
+                             exp.Expense_Date,
+                             exp.Expense_Number,
+                             exp.Expense_CheckNo,
+                             exp.Expense_Creator_ID,
+                             exp.Expense_Approver,
+                             hist.ExpenseEntryID,
+                             hist.ExpenseDetailID, /*Non-NC: ExpDtlID. NC: NCDtlID*/
+                             hist.GOExpHist_Id,
+                             hist.GOExpHist_ValueDate,
+                             hist.GOExpHist_ReferenceNo,
+                             hist.GOExpHist_Branchno,
+                             hist.GOExpHist_Section,
+                             hist.GOExpHist_Remarks,
+                             hist.GOExpHist_Entry11Type,
+                             hist.GOExpHist_Entry11Ccy,
+                             hist.GOExpHist_Entry11Amt,
+                             hist.GOExpHist_Entry11Cust,
+                             hist.GOExpHist_Entry11Actcde,
+                             hist.GOExpHist_Entry11ActType,
+                             hist.GOExpHist_Entry11ActNo,
+                             hist.GOExpHist_Entry11ExchRate,
+                             hist.GOExpHist_Entry11ExchCcy,
+                             hist.GOExpHist_Entry11Fund,
+                             hist.GOExpHist_Entry11AdvcPrnt,
+                             hist.GOExpHist_Entry11Details,
+                             hist.GOExpHist_Entry11Entity,
+                             hist.GOExpHist_Entry11Division,
+                             hist.GOExpHist_Entry11InterAmt,
+                             hist.GOExpHist_Entry11InterRate,
+                             hist.GOExpHist_Entry12Type,
+                             hist.GOExpHist_Entry12Ccy,
+                             hist.GOExpHist_Entry12Amt,
+                             hist.GOExpHist_Entry12Cust,
+                             hist.GOExpHist_Entry12Actcde,
+                             hist.GOExpHist_Entry12ActType,
+                             hist.GOExpHist_Entry12ActNo,
+                             hist.GOExpHist_Entry12ExchRate,
+                             hist.GOExpHist_Entry12ExchCcy,
+                             hist.GOExpHist_Entry12Fund,
+                             hist.GOExpHist_Entry12AdvcPrnt,
+                             hist.GOExpHist_Entry12Details,
+                             hist.GOExpHist_Entry12Entity,
+                             hist.GOExpHist_Entry12Division,
+                             hist.GOExpHist_Entry12InterAmt,
+                             hist.GOExpHist_Entry12InterRate,
+                             hist.GOExpHist_Entry21Type,
+                             hist.GOExpHist_Entry21Ccy,
+                             hist.GOExpHist_Entry21Amt,
+                             hist.GOExpHist_Entry21Cust,
+                             hist.GOExpHist_Entry21Actcde,
+                             hist.GOExpHist_Entry21ActType,
+                             hist.GOExpHist_Entry21ActNo,
+                             hist.GOExpHist_Entry21ExchRate,
+                             hist.GOExpHist_Entry21ExchCcy,
+                             hist.GOExpHist_Entry21Fund,
+                             hist.GOExpHist_Entry21AdvcPrnt,
+                             hist.GOExpHist_Entry21Details,
+                             hist.GOExpHist_Entry21Entity,
+                             hist.GOExpHist_Entry21Division,
+                             hist.GOExpHist_Entry21InterAmt,
+                             hist.GOExpHist_Entry21InterRate,
+                             hist.GOExpHist_Entry22Type,
+                             hist.GOExpHist_Entry22Ccy,
+                             hist.GOExpHist_Entry22Amt,
+                             hist.GOExpHist_Entry22Cust,
+                             hist.GOExpHist_Entry22Actcde,
+                             hist.GOExpHist_Entry22ActType,
+                             hist.GOExpHist_Entry22ActNo,
+                             hist.GOExpHist_Entry22ExchRate,
+                             hist.GOExpHist_Entry22ExchCcy,
+                             hist.GOExpHist_Entry22Fund,
+                             hist.GOExpHist_Entry22AdvcPrnt,
+                             hist.GOExpHist_Entry22Details,
+                             hist.GOExpHist_Entry22Entity,
+                             hist.GOExpHist_Entry22Division,
+                             hist.GOExpHist_Entry22InterAmt,
+                             hist.GOExpHist_Entry22InterRate,
+                             hist.GOExpHist_Entry31Type,
+                             hist.GOExpHist_Entry31Ccy,
+                             hist.GOExpHist_Entry31Amt,
+                             hist.GOExpHist_Entry31Cust,
+                             hist.GOExpHist_Entry31Actcde,
+                             hist.GOExpHist_Entry31ActType,
+                             hist.GOExpHist_Entry31ActNo,
+                             hist.GOExpHist_Entry31ExchRate,
+                             hist.GOExpHist_Entry31ExchCcy,
+                             hist.GOExpHist_Entry31Fund,
+                             hist.GOExpHist_Entry31AdvcPrnt,
+                             hist.GOExpHist_Entry31Details,
+                             hist.GOExpHist_Entry31Entity,
+                             hist.GOExpHist_Entry31Division,
+                             hist.GOExpHist_Entry31InterAmt,
+                             hist.GOExpHist_Entry31InterRate,
+                             hist.GOExpHist_Entry32Type,
+                             hist.GOExpHist_Entry32Ccy,
+                             hist.GOExpHist_Entry32Amt,
+                             hist.GOExpHist_Entry32Cust,
+                             hist.GOExpHist_Entry32Actcde,
+                             hist.GOExpHist_Entry32ActType,
+                             hist.GOExpHist_Entry32ActNo,
+                             hist.GOExpHist_Entry32ExchRate,
+                             hist.GOExpHist_Entry32ExchCcy,
+                             hist.GOExpHist_Entry32Fund,
+                             hist.GOExpHist_Entry32AdvcPrnt,
+                             hist.GOExpHist_Entry32Details,
+                             hist.GOExpHist_Entry32Entity,
+                             hist.GOExpHist_Entry32Division,
+                             hist.GOExpHist_Entry32InterAmt,
+                             hist.GOExpHist_Entry32InterRate,
+                             hist.GOExpHist_Entry41Type,
+                             hist.GOExpHist_Entry41Ccy,
+                             hist.GOExpHist_Entry41Amt,
+                             hist.GOExpHist_Entry41Cust,
+                             hist.GOExpHist_Entry41Actcde,
+                             hist.GOExpHist_Entry41ActType,
+                             hist.GOExpHist_Entry41ActNo,
+                             hist.GOExpHist_Entry41ExchRate,
+                             hist.GOExpHist_Entry41ExchCcy,
+                             hist.GOExpHist_Entry41Fund,
+                             hist.GOExpHist_Entry41AdvcPrnt,
+                             hist.GOExpHist_Entry41Details,
+                             hist.GOExpHist_Entry41Entity,
+                             hist.GOExpHist_Entry41Division,
+                             hist.GOExpHist_Entry41InterAmt,
+                             hist.GOExpHist_Entry41InterRate,
+                             hist.GOExpHist_Entry42Type,
+                             hist.GOExpHist_Entry42Ccy,
+                             hist.GOExpHist_Entry42Amt,
+                             hist.GOExpHist_Entry42Cust,
+                             hist.GOExpHist_Entry42Actcde,
+                             hist.GOExpHist_Entry42ActType,
+                             hist.GOExpHist_Entry42ActNo,
+                             hist.GOExpHist_Entry42ExchRate,
+                             hist.GOExpHist_Entry42ExchCcy,
+                             hist.GOExpHist_Entry42Fund,
+                             hist.GOExpHist_Entry42AdvcPrnt,
+                             hist.GOExpHist_Entry42Details,
+                             hist.GOExpHist_Entry42Entity,
+                             hist.GOExpHist_Entry42Division,
+                             hist.GOExpHist_Entry42InterAmt,
+                             hist.GOExpHist_Entry42InterRate,
+                             trans.TL_ID,
+                             trans.TL_GoExpress_ID,
+                             trans.TL_TransID,
+                             trans.TL_Liquidation
+                         }).ToList();
 
             //Get all reversed(CA) credit transaction of selected suspense account transactions in GOExpress
             var dbCARev = (from hist in _context.GOExpressHist
                            join exp in _context.ExpenseEntry on hist.ExpenseEntryID equals exp.Expense_ID
                            join trans in _context.ExpenseTransLists on hist.GOExpHist_Id equals trans.TL_GoExpHist_ID
                            join rev in _context.ReversalEntry on hist.GOExpHist_Id equals rev.Reversal_GOExpressHistID
-                           where exp.Expense_Type == GlobalSystemValues.TYPE_SS && 
-                                (exp.Expense_Status == GlobalSystemValues.STATUS_REVERSED || 
+                           where exp.Expense_Type == GlobalSystemValues.TYPE_SS &&
+                                (exp.Expense_Status == GlobalSystemValues.STATUS_REVERSED ||
                                  exp.Expense_Status == GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR) &&
                                 ((hist.GOExpHist_Entry11Type == "C" && hist.GOExpHist_Entry11Actcde == selectedAccount.Account_Code && selectedAccount.Account_No.Replace("-", "") == hist.GOExpHist_Entry11ActType + hist.GOExpHist_Branchno + hist.GOExpHist_Entry11ActNo) ||
                                  (hist.GOExpHist_Entry12Type == "C" && hist.GOExpHist_Entry12Actcde == selectedAccount.Account_Code && selectedAccount.Account_No.Replace("-", "") == hist.GOExpHist_Entry12ActType + hist.GOExpHist_Branchno + hist.GOExpHist_Entry12ActNo) ||
@@ -8822,42 +9233,155 @@ namespace ExpenseProcessingSystem.Services
                                  (hist.GOExpHist_Entry42Type == "C" && hist.GOExpHist_Entry42Actcde == selectedAccount.Account_Code && selectedAccount.Account_No.Replace("-", "") == hist.GOExpHist_Entry42ActType + hist.GOExpHist_Branchno + hist.GOExpHist_Entry42ActNo))
                            select new
                            {
-                               exp.Expense_ID, exp.Expense_Type, exp.Expense_Last_Updated, exp.Expense_Date, exp.Expense_Number, exp.Expense_CheckNo, 
-                               exp.Expense_Creator_ID, exp.Expense_Approver, hist.ExpenseEntryID, hist.ExpenseDetailID, /*Non-NC: ExpDtlID. NC: NCDtlID*/
-                               hist.GOExpHist_Id, hist.GOExpHist_ValueDate, hist.GOExpHist_ReferenceNo, hist.GOExpHist_Branchno, hist.GOExpHist_Section, 
-                             hist.GOExpHist_Remarks, hist.GOExpHist_Entry11Type, hist.GOExpHist_Entry11Ccy, hist.GOExpHist_Entry11Amt, 
-                             hist.GOExpHist_Entry11Cust, hist.GOExpHist_Entry11Actcde, hist.GOExpHist_Entry11ActType, hist.GOExpHist_Entry11ActNo, 
-                             hist.GOExpHist_Entry11ExchRate, hist.GOExpHist_Entry11ExchCcy, hist.GOExpHist_Entry11Fund, hist.GOExpHist_Entry11AdvcPrnt, 
-                             hist.GOExpHist_Entry11Details, hist.GOExpHist_Entry11Entity, hist.GOExpHist_Entry11Division, hist.GOExpHist_Entry11InterAmt, 
-                             hist.GOExpHist_Entry11InterRate, hist.GOExpHist_Entry12Type, hist.GOExpHist_Entry12Ccy, hist.GOExpHist_Entry12Amt, 
-                             hist.GOExpHist_Entry12Cust, hist.GOExpHist_Entry12Actcde, hist.GOExpHist_Entry12ActType, hist.GOExpHist_Entry12ActNo, 
-                             hist.GOExpHist_Entry12ExchRate, hist.GOExpHist_Entry12ExchCcy, hist.GOExpHist_Entry12Fund, hist.GOExpHist_Entry12AdvcPrnt, 
-                             hist.GOExpHist_Entry12Details, hist.GOExpHist_Entry12Entity, hist.GOExpHist_Entry12Division, hist.GOExpHist_Entry12InterAmt, 
-                             hist.GOExpHist_Entry12InterRate, hist.GOExpHist_Entry21Type, hist.GOExpHist_Entry21Ccy, hist.GOExpHist_Entry21Amt, 
-                             hist.GOExpHist_Entry21Cust, hist.GOExpHist_Entry21Actcde, hist.GOExpHist_Entry21ActType, hist.GOExpHist_Entry21ActNo, 
-                             hist.GOExpHist_Entry21ExchRate, hist.GOExpHist_Entry21ExchCcy, hist.GOExpHist_Entry21Fund, hist.GOExpHist_Entry21AdvcPrnt, 
-                             hist.GOExpHist_Entry21Details, hist.GOExpHist_Entry21Entity, hist.GOExpHist_Entry21Division, hist.GOExpHist_Entry21InterAmt, 
-                             hist.GOExpHist_Entry21InterRate, hist.GOExpHist_Entry22Type, hist.GOExpHist_Entry22Ccy, hist.GOExpHist_Entry22Amt, 
-                             hist.GOExpHist_Entry22Cust, hist.GOExpHist_Entry22Actcde, hist.GOExpHist_Entry22ActType, hist.GOExpHist_Entry22ActNo, 
-                             hist.GOExpHist_Entry22ExchRate, hist.GOExpHist_Entry22ExchCcy, hist.GOExpHist_Entry22Fund, hist.GOExpHist_Entry22AdvcPrnt, 
-                             hist.GOExpHist_Entry22Details, hist.GOExpHist_Entry22Entity, hist.GOExpHist_Entry22Division, hist.GOExpHist_Entry22InterAmt, 
-                             hist.GOExpHist_Entry22InterRate, hist.GOExpHist_Entry31Type, hist.GOExpHist_Entry31Ccy, hist.GOExpHist_Entry31Amt, 
-                             hist.GOExpHist_Entry31Cust, hist.GOExpHist_Entry31Actcde, hist.GOExpHist_Entry31ActType, hist.GOExpHist_Entry31ActNo, 
-                             hist.GOExpHist_Entry31ExchRate, hist.GOExpHist_Entry31ExchCcy, hist.GOExpHist_Entry31Fund, hist.GOExpHist_Entry31AdvcPrnt, 
-                             hist.GOExpHist_Entry31Details, hist.GOExpHist_Entry31Entity, hist.GOExpHist_Entry31Division, hist.GOExpHist_Entry31InterAmt, 
-                             hist.GOExpHist_Entry31InterRate, hist.GOExpHist_Entry32Type, hist.GOExpHist_Entry32Ccy, hist.GOExpHist_Entry32Amt, 
-                             hist.GOExpHist_Entry32Cust, hist.GOExpHist_Entry32Actcde, hist.GOExpHist_Entry32ActType, hist.GOExpHist_Entry32ActNo, 
-                             hist.GOExpHist_Entry32ExchRate, hist.GOExpHist_Entry32ExchCcy, hist.GOExpHist_Entry32Fund, hist.GOExpHist_Entry32AdvcPrnt, 
-                             hist.GOExpHist_Entry32Details, hist.GOExpHist_Entry32Entity, hist.GOExpHist_Entry32Division, hist.GOExpHist_Entry32InterAmt, 
-                             hist.GOExpHist_Entry32InterRate, hist.GOExpHist_Entry41Type, hist.GOExpHist_Entry41Ccy, hist.GOExpHist_Entry41Amt, 
-                             hist.GOExpHist_Entry41Cust, hist.GOExpHist_Entry41Actcde, hist.GOExpHist_Entry41ActType, hist.GOExpHist_Entry41ActNo, 
-                             hist.GOExpHist_Entry41ExchRate, hist.GOExpHist_Entry41ExchCcy, hist.GOExpHist_Entry41Fund, hist.GOExpHist_Entry41AdvcPrnt, 
-                             hist.GOExpHist_Entry41Details, hist.GOExpHist_Entry41Entity, hist.GOExpHist_Entry41Division, hist.GOExpHist_Entry41InterAmt, 
-                             hist.GOExpHist_Entry41InterRate, hist.GOExpHist_Entry42Type, hist.GOExpHist_Entry42Ccy, hist.GOExpHist_Entry42Amt, 
-                             hist.GOExpHist_Entry42Cust, hist.GOExpHist_Entry42Actcde, hist.GOExpHist_Entry42ActType, hist.GOExpHist_Entry42ActNo, 
-                             hist.GOExpHist_Entry42ExchRate, hist.GOExpHist_Entry42ExchCcy, hist.GOExpHist_Entry42Fund, hist.GOExpHist_Entry42AdvcPrnt, 
-                             hist.GOExpHist_Entry42Details, hist.GOExpHist_Entry42Entity, hist.GOExpHist_Entry42Division, hist.GOExpHist_Entry42InterAmt, 
-                             hist.GOExpHist_Entry42InterRate, trans.TL_ID, trans.TL_GoExpress_ID, trans.TL_TransID, trans.TL_Liquidation }).ToList();
+                               exp.Expense_ID,
+                               exp.Expense_Type,
+                               exp.Expense_Last_Updated,
+                               exp.Expense_Date,
+                               exp.Expense_Number,
+                               exp.Expense_CheckNo,
+                               exp.Expense_Creator_ID,
+                               exp.Expense_Approver,
+                               hist.ExpenseEntryID,
+                               hist.ExpenseDetailID, /*Non-NC: ExpDtlID. NC: NCDtlID*/
+                               hist.GOExpHist_Id,
+                               hist.GOExpHist_ValueDate,
+                               hist.GOExpHist_ReferenceNo,
+                               hist.GOExpHist_Branchno,
+                               hist.GOExpHist_Section,
+                               hist.GOExpHist_Remarks,
+                               hist.GOExpHist_Entry11Type,
+                               hist.GOExpHist_Entry11Ccy,
+                               hist.GOExpHist_Entry11Amt,
+                               hist.GOExpHist_Entry11Cust,
+                               hist.GOExpHist_Entry11Actcde,
+                               hist.GOExpHist_Entry11ActType,
+                               hist.GOExpHist_Entry11ActNo,
+                               hist.GOExpHist_Entry11ExchRate,
+                               hist.GOExpHist_Entry11ExchCcy,
+                               hist.GOExpHist_Entry11Fund,
+                               hist.GOExpHist_Entry11AdvcPrnt,
+                               hist.GOExpHist_Entry11Details,
+                               hist.GOExpHist_Entry11Entity,
+                               hist.GOExpHist_Entry11Division,
+                               hist.GOExpHist_Entry11InterAmt,
+                               hist.GOExpHist_Entry11InterRate,
+                               hist.GOExpHist_Entry12Type,
+                               hist.GOExpHist_Entry12Ccy,
+                               hist.GOExpHist_Entry12Amt,
+                               hist.GOExpHist_Entry12Cust,
+                               hist.GOExpHist_Entry12Actcde,
+                               hist.GOExpHist_Entry12ActType,
+                               hist.GOExpHist_Entry12ActNo,
+                               hist.GOExpHist_Entry12ExchRate,
+                               hist.GOExpHist_Entry12ExchCcy,
+                               hist.GOExpHist_Entry12Fund,
+                               hist.GOExpHist_Entry12AdvcPrnt,
+                               hist.GOExpHist_Entry12Details,
+                               hist.GOExpHist_Entry12Entity,
+                               hist.GOExpHist_Entry12Division,
+                               hist.GOExpHist_Entry12InterAmt,
+                               hist.GOExpHist_Entry12InterRate,
+                               hist.GOExpHist_Entry21Type,
+                               hist.GOExpHist_Entry21Ccy,
+                               hist.GOExpHist_Entry21Amt,
+                               hist.GOExpHist_Entry21Cust,
+                               hist.GOExpHist_Entry21Actcde,
+                               hist.GOExpHist_Entry21ActType,
+                               hist.GOExpHist_Entry21ActNo,
+                               hist.GOExpHist_Entry21ExchRate,
+                               hist.GOExpHist_Entry21ExchCcy,
+                               hist.GOExpHist_Entry21Fund,
+                               hist.GOExpHist_Entry21AdvcPrnt,
+                               hist.GOExpHist_Entry21Details,
+                               hist.GOExpHist_Entry21Entity,
+                               hist.GOExpHist_Entry21Division,
+                               hist.GOExpHist_Entry21InterAmt,
+                               hist.GOExpHist_Entry21InterRate,
+                               hist.GOExpHist_Entry22Type,
+                               hist.GOExpHist_Entry22Ccy,
+                               hist.GOExpHist_Entry22Amt,
+                               hist.GOExpHist_Entry22Cust,
+                               hist.GOExpHist_Entry22Actcde,
+                               hist.GOExpHist_Entry22ActType,
+                               hist.GOExpHist_Entry22ActNo,
+                               hist.GOExpHist_Entry22ExchRate,
+                               hist.GOExpHist_Entry22ExchCcy,
+                               hist.GOExpHist_Entry22Fund,
+                               hist.GOExpHist_Entry22AdvcPrnt,
+                               hist.GOExpHist_Entry22Details,
+                               hist.GOExpHist_Entry22Entity,
+                               hist.GOExpHist_Entry22Division,
+                               hist.GOExpHist_Entry22InterAmt,
+                               hist.GOExpHist_Entry22InterRate,
+                               hist.GOExpHist_Entry31Type,
+                               hist.GOExpHist_Entry31Ccy,
+                               hist.GOExpHist_Entry31Amt,
+                               hist.GOExpHist_Entry31Cust,
+                               hist.GOExpHist_Entry31Actcde,
+                               hist.GOExpHist_Entry31ActType,
+                               hist.GOExpHist_Entry31ActNo,
+                               hist.GOExpHist_Entry31ExchRate,
+                               hist.GOExpHist_Entry31ExchCcy,
+                               hist.GOExpHist_Entry31Fund,
+                               hist.GOExpHist_Entry31AdvcPrnt,
+                               hist.GOExpHist_Entry31Details,
+                               hist.GOExpHist_Entry31Entity,
+                               hist.GOExpHist_Entry31Division,
+                               hist.GOExpHist_Entry31InterAmt,
+                               hist.GOExpHist_Entry31InterRate,
+                               hist.GOExpHist_Entry32Type,
+                               hist.GOExpHist_Entry32Ccy,
+                               hist.GOExpHist_Entry32Amt,
+                               hist.GOExpHist_Entry32Cust,
+                               hist.GOExpHist_Entry32Actcde,
+                               hist.GOExpHist_Entry32ActType,
+                               hist.GOExpHist_Entry32ActNo,
+                               hist.GOExpHist_Entry32ExchRate,
+                               hist.GOExpHist_Entry32ExchCcy,
+                               hist.GOExpHist_Entry32Fund,
+                               hist.GOExpHist_Entry32AdvcPrnt,
+                               hist.GOExpHist_Entry32Details,
+                               hist.GOExpHist_Entry32Entity,
+                               hist.GOExpHist_Entry32Division,
+                               hist.GOExpHist_Entry32InterAmt,
+                               hist.GOExpHist_Entry32InterRate,
+                               hist.GOExpHist_Entry41Type,
+                               hist.GOExpHist_Entry41Ccy,
+                               hist.GOExpHist_Entry41Amt,
+                               hist.GOExpHist_Entry41Cust,
+                               hist.GOExpHist_Entry41Actcde,
+                               hist.GOExpHist_Entry41ActType,
+                               hist.GOExpHist_Entry41ActNo,
+                               hist.GOExpHist_Entry41ExchRate,
+                               hist.GOExpHist_Entry41ExchCcy,
+                               hist.GOExpHist_Entry41Fund,
+                               hist.GOExpHist_Entry41AdvcPrnt,
+                               hist.GOExpHist_Entry41Details,
+                               hist.GOExpHist_Entry41Entity,
+                               hist.GOExpHist_Entry41Division,
+                               hist.GOExpHist_Entry41InterAmt,
+                               hist.GOExpHist_Entry41InterRate,
+                               hist.GOExpHist_Entry42Type,
+                               hist.GOExpHist_Entry42Ccy,
+                               hist.GOExpHist_Entry42Amt,
+                               hist.GOExpHist_Entry42Cust,
+                               hist.GOExpHist_Entry42Actcde,
+                               hist.GOExpHist_Entry42ActType,
+                               hist.GOExpHist_Entry42ActNo,
+                               hist.GOExpHist_Entry42ExchRate,
+                               hist.GOExpHist_Entry42ExchCcy,
+                               hist.GOExpHist_Entry42Fund,
+                               hist.GOExpHist_Entry42AdvcPrnt,
+                               hist.GOExpHist_Entry42Details,
+                               hist.GOExpHist_Entry42Entity,
+                               hist.GOExpHist_Entry42Division,
+                               hist.GOExpHist_Entry42InterAmt,
+                               hist.GOExpHist_Entry42InterRate,
+                               trans.TL_ID,
+                               trans.TL_GoExpress_ID,
+                               trans.TL_TransID,
+                               trans.TL_Liquidation
+                           }).ToList();
 
             //Get all Non-cash credit transaction of selected suspense account transactions in GOExpress
             var dbCANC = (from hist in _context.GOExpressHist
@@ -8878,42 +9402,155 @@ namespace ExpenseProcessingSystem.Services
                                (hist.GOExpHist_Entry42Type == "C" && hist.GOExpHist_Entry42Actcde == selectedAccount.Account_Code && selectedAccount.Account_No.Replace("-", "") == hist.GOExpHist_Entry42ActType + hist.GOExpHist_Branchno + hist.GOExpHist_Entry42ActNo))
                           select new
                           {
-                             exp.Expense_ID, exp.Expense_Type, exp.Expense_Last_Updated, exp.Expense_Date, exp.Expense_Number, exp.Expense_CheckNo, 
-                             exp.Expense_Creator_ID, exp.Expense_Approver, hist.ExpenseEntryID, hist.ExpenseDetailID, /*Non-NC: ExpDtlID. NC: NCDtlID*/
-                             hist.GOExpHist_Id, hist.GOExpHist_ValueDate, hist.GOExpHist_ReferenceNo, hist.GOExpHist_Branchno, hist.GOExpHist_Section, 
-                             hist.GOExpHist_Remarks, hist.GOExpHist_Entry11Type, hist.GOExpHist_Entry11Ccy, hist.GOExpHist_Entry11Amt, 
-                             hist.GOExpHist_Entry11Cust, hist.GOExpHist_Entry11Actcde, hist.GOExpHist_Entry11ActType, hist.GOExpHist_Entry11ActNo, 
-                             hist.GOExpHist_Entry11ExchRate, hist.GOExpHist_Entry11ExchCcy, hist.GOExpHist_Entry11Fund, hist.GOExpHist_Entry11AdvcPrnt, 
-                             hist.GOExpHist_Entry11Details, hist.GOExpHist_Entry11Entity, hist.GOExpHist_Entry11Division, hist.GOExpHist_Entry11InterAmt, 
-                             hist.GOExpHist_Entry11InterRate, hist.GOExpHist_Entry12Type, hist.GOExpHist_Entry12Ccy, hist.GOExpHist_Entry12Amt, 
-                             hist.GOExpHist_Entry12Cust, hist.GOExpHist_Entry12Actcde, hist.GOExpHist_Entry12ActType, hist.GOExpHist_Entry12ActNo, 
-                             hist.GOExpHist_Entry12ExchRate, hist.GOExpHist_Entry12ExchCcy, hist.GOExpHist_Entry12Fund, hist.GOExpHist_Entry12AdvcPrnt, 
-                             hist.GOExpHist_Entry12Details, hist.GOExpHist_Entry12Entity, hist.GOExpHist_Entry12Division, hist.GOExpHist_Entry12InterAmt, 
-                             hist.GOExpHist_Entry12InterRate, hist.GOExpHist_Entry21Type, hist.GOExpHist_Entry21Ccy, hist.GOExpHist_Entry21Amt, 
-                             hist.GOExpHist_Entry21Cust, hist.GOExpHist_Entry21Actcde, hist.GOExpHist_Entry21ActType, hist.GOExpHist_Entry21ActNo, 
-                             hist.GOExpHist_Entry21ExchRate, hist.GOExpHist_Entry21ExchCcy, hist.GOExpHist_Entry21Fund, hist.GOExpHist_Entry21AdvcPrnt, 
-                             hist.GOExpHist_Entry21Details, hist.GOExpHist_Entry21Entity, hist.GOExpHist_Entry21Division, hist.GOExpHist_Entry21InterAmt, 
-                             hist.GOExpHist_Entry21InterRate, hist.GOExpHist_Entry22Type, hist.GOExpHist_Entry22Ccy, hist.GOExpHist_Entry22Amt, 
-                             hist.GOExpHist_Entry22Cust, hist.GOExpHist_Entry22Actcde, hist.GOExpHist_Entry22ActType, hist.GOExpHist_Entry22ActNo, 
-                             hist.GOExpHist_Entry22ExchRate, hist.GOExpHist_Entry22ExchCcy, hist.GOExpHist_Entry22Fund, hist.GOExpHist_Entry22AdvcPrnt, 
-                             hist.GOExpHist_Entry22Details, hist.GOExpHist_Entry22Entity, hist.GOExpHist_Entry22Division, hist.GOExpHist_Entry22InterAmt, 
-                             hist.GOExpHist_Entry22InterRate, hist.GOExpHist_Entry31Type, hist.GOExpHist_Entry31Ccy, hist.GOExpHist_Entry31Amt, 
-                             hist.GOExpHist_Entry31Cust, hist.GOExpHist_Entry31Actcde, hist.GOExpHist_Entry31ActType, hist.GOExpHist_Entry31ActNo, 
-                             hist.GOExpHist_Entry31ExchRate, hist.GOExpHist_Entry31ExchCcy, hist.GOExpHist_Entry31Fund, hist.GOExpHist_Entry31AdvcPrnt, 
-                             hist.GOExpHist_Entry31Details, hist.GOExpHist_Entry31Entity, hist.GOExpHist_Entry31Division, hist.GOExpHist_Entry31InterAmt, 
-                             hist.GOExpHist_Entry31InterRate, hist.GOExpHist_Entry32Type, hist.GOExpHist_Entry32Ccy, hist.GOExpHist_Entry32Amt, 
-                             hist.GOExpHist_Entry32Cust, hist.GOExpHist_Entry32Actcde, hist.GOExpHist_Entry32ActType, hist.GOExpHist_Entry32ActNo, 
-                             hist.GOExpHist_Entry32ExchRate, hist.GOExpHist_Entry32ExchCcy, hist.GOExpHist_Entry32Fund, hist.GOExpHist_Entry32AdvcPrnt, 
-                             hist.GOExpHist_Entry32Details, hist.GOExpHist_Entry32Entity, hist.GOExpHist_Entry32Division, hist.GOExpHist_Entry32InterAmt, 
-                             hist.GOExpHist_Entry32InterRate, hist.GOExpHist_Entry41Type, hist.GOExpHist_Entry41Ccy, hist.GOExpHist_Entry41Amt, 
-                             hist.GOExpHist_Entry41Cust, hist.GOExpHist_Entry41Actcde, hist.GOExpHist_Entry41ActType, hist.GOExpHist_Entry41ActNo, 
-                             hist.GOExpHist_Entry41ExchRate, hist.GOExpHist_Entry41ExchCcy, hist.GOExpHist_Entry41Fund, hist.GOExpHist_Entry41AdvcPrnt, 
-                             hist.GOExpHist_Entry41Details, hist.GOExpHist_Entry41Entity, hist.GOExpHist_Entry41Division, hist.GOExpHist_Entry41InterAmt, 
-                             hist.GOExpHist_Entry41InterRate, hist.GOExpHist_Entry42Type, hist.GOExpHist_Entry42Ccy, hist.GOExpHist_Entry42Amt, 
-                             hist.GOExpHist_Entry42Cust, hist.GOExpHist_Entry42Actcde, hist.GOExpHist_Entry42ActType, hist.GOExpHist_Entry42ActNo, 
-                             hist.GOExpHist_Entry42ExchRate, hist.GOExpHist_Entry42ExchCcy, hist.GOExpHist_Entry42Fund, hist.GOExpHist_Entry42AdvcPrnt, 
-                             hist.GOExpHist_Entry42Details, hist.GOExpHist_Entry42Entity, hist.GOExpHist_Entry42Division, hist.GOExpHist_Entry42InterAmt, 
-                             hist.GOExpHist_Entry42InterRate, trans.TL_ID, trans.TL_GoExpress_ID, trans.TL_TransID, trans.TL_Liquidation }).ToList();
+                              exp.Expense_ID,
+                              exp.Expense_Type,
+                              exp.Expense_Last_Updated,
+                              exp.Expense_Date,
+                              exp.Expense_Number,
+                              exp.Expense_CheckNo,
+                              exp.Expense_Creator_ID,
+                              exp.Expense_Approver,
+                              hist.ExpenseEntryID,
+                              hist.ExpenseDetailID, /*Non-NC: ExpDtlID. NC: NCDtlID*/
+                              hist.GOExpHist_Id,
+                              hist.GOExpHist_ValueDate,
+                              hist.GOExpHist_ReferenceNo,
+                              hist.GOExpHist_Branchno,
+                              hist.GOExpHist_Section,
+                              hist.GOExpHist_Remarks,
+                              hist.GOExpHist_Entry11Type,
+                              hist.GOExpHist_Entry11Ccy,
+                              hist.GOExpHist_Entry11Amt,
+                              hist.GOExpHist_Entry11Cust,
+                              hist.GOExpHist_Entry11Actcde,
+                              hist.GOExpHist_Entry11ActType,
+                              hist.GOExpHist_Entry11ActNo,
+                              hist.GOExpHist_Entry11ExchRate,
+                              hist.GOExpHist_Entry11ExchCcy,
+                              hist.GOExpHist_Entry11Fund,
+                              hist.GOExpHist_Entry11AdvcPrnt,
+                              hist.GOExpHist_Entry11Details,
+                              hist.GOExpHist_Entry11Entity,
+                              hist.GOExpHist_Entry11Division,
+                              hist.GOExpHist_Entry11InterAmt,
+                              hist.GOExpHist_Entry11InterRate,
+                              hist.GOExpHist_Entry12Type,
+                              hist.GOExpHist_Entry12Ccy,
+                              hist.GOExpHist_Entry12Amt,
+                              hist.GOExpHist_Entry12Cust,
+                              hist.GOExpHist_Entry12Actcde,
+                              hist.GOExpHist_Entry12ActType,
+                              hist.GOExpHist_Entry12ActNo,
+                              hist.GOExpHist_Entry12ExchRate,
+                              hist.GOExpHist_Entry12ExchCcy,
+                              hist.GOExpHist_Entry12Fund,
+                              hist.GOExpHist_Entry12AdvcPrnt,
+                              hist.GOExpHist_Entry12Details,
+                              hist.GOExpHist_Entry12Entity,
+                              hist.GOExpHist_Entry12Division,
+                              hist.GOExpHist_Entry12InterAmt,
+                              hist.GOExpHist_Entry12InterRate,
+                              hist.GOExpHist_Entry21Type,
+                              hist.GOExpHist_Entry21Ccy,
+                              hist.GOExpHist_Entry21Amt,
+                              hist.GOExpHist_Entry21Cust,
+                              hist.GOExpHist_Entry21Actcde,
+                              hist.GOExpHist_Entry21ActType,
+                              hist.GOExpHist_Entry21ActNo,
+                              hist.GOExpHist_Entry21ExchRate,
+                              hist.GOExpHist_Entry21ExchCcy,
+                              hist.GOExpHist_Entry21Fund,
+                              hist.GOExpHist_Entry21AdvcPrnt,
+                              hist.GOExpHist_Entry21Details,
+                              hist.GOExpHist_Entry21Entity,
+                              hist.GOExpHist_Entry21Division,
+                              hist.GOExpHist_Entry21InterAmt,
+                              hist.GOExpHist_Entry21InterRate,
+                              hist.GOExpHist_Entry22Type,
+                              hist.GOExpHist_Entry22Ccy,
+                              hist.GOExpHist_Entry22Amt,
+                              hist.GOExpHist_Entry22Cust,
+                              hist.GOExpHist_Entry22Actcde,
+                              hist.GOExpHist_Entry22ActType,
+                              hist.GOExpHist_Entry22ActNo,
+                              hist.GOExpHist_Entry22ExchRate,
+                              hist.GOExpHist_Entry22ExchCcy,
+                              hist.GOExpHist_Entry22Fund,
+                              hist.GOExpHist_Entry22AdvcPrnt,
+                              hist.GOExpHist_Entry22Details,
+                              hist.GOExpHist_Entry22Entity,
+                              hist.GOExpHist_Entry22Division,
+                              hist.GOExpHist_Entry22InterAmt,
+                              hist.GOExpHist_Entry22InterRate,
+                              hist.GOExpHist_Entry31Type,
+                              hist.GOExpHist_Entry31Ccy,
+                              hist.GOExpHist_Entry31Amt,
+                              hist.GOExpHist_Entry31Cust,
+                              hist.GOExpHist_Entry31Actcde,
+                              hist.GOExpHist_Entry31ActType,
+                              hist.GOExpHist_Entry31ActNo,
+                              hist.GOExpHist_Entry31ExchRate,
+                              hist.GOExpHist_Entry31ExchCcy,
+                              hist.GOExpHist_Entry31Fund,
+                              hist.GOExpHist_Entry31AdvcPrnt,
+                              hist.GOExpHist_Entry31Details,
+                              hist.GOExpHist_Entry31Entity,
+                              hist.GOExpHist_Entry31Division,
+                              hist.GOExpHist_Entry31InterAmt,
+                              hist.GOExpHist_Entry31InterRate,
+                              hist.GOExpHist_Entry32Type,
+                              hist.GOExpHist_Entry32Ccy,
+                              hist.GOExpHist_Entry32Amt,
+                              hist.GOExpHist_Entry32Cust,
+                              hist.GOExpHist_Entry32Actcde,
+                              hist.GOExpHist_Entry32ActType,
+                              hist.GOExpHist_Entry32ActNo,
+                              hist.GOExpHist_Entry32ExchRate,
+                              hist.GOExpHist_Entry32ExchCcy,
+                              hist.GOExpHist_Entry32Fund,
+                              hist.GOExpHist_Entry32AdvcPrnt,
+                              hist.GOExpHist_Entry32Details,
+                              hist.GOExpHist_Entry32Entity,
+                              hist.GOExpHist_Entry32Division,
+                              hist.GOExpHist_Entry32InterAmt,
+                              hist.GOExpHist_Entry32InterRate,
+                              hist.GOExpHist_Entry41Type,
+                              hist.GOExpHist_Entry41Ccy,
+                              hist.GOExpHist_Entry41Amt,
+                              hist.GOExpHist_Entry41Cust,
+                              hist.GOExpHist_Entry41Actcde,
+                              hist.GOExpHist_Entry41ActType,
+                              hist.GOExpHist_Entry41ActNo,
+                              hist.GOExpHist_Entry41ExchRate,
+                              hist.GOExpHist_Entry41ExchCcy,
+                              hist.GOExpHist_Entry41Fund,
+                              hist.GOExpHist_Entry41AdvcPrnt,
+                              hist.GOExpHist_Entry41Details,
+                              hist.GOExpHist_Entry41Entity,
+                              hist.GOExpHist_Entry41Division,
+                              hist.GOExpHist_Entry41InterAmt,
+                              hist.GOExpHist_Entry41InterRate,
+                              hist.GOExpHist_Entry42Type,
+                              hist.GOExpHist_Entry42Ccy,
+                              hist.GOExpHist_Entry42Amt,
+                              hist.GOExpHist_Entry42Cust,
+                              hist.GOExpHist_Entry42Actcde,
+                              hist.GOExpHist_Entry42ActType,
+                              hist.GOExpHist_Entry42ActNo,
+                              hist.GOExpHist_Entry42ExchRate,
+                              hist.GOExpHist_Entry42ExchCcy,
+                              hist.GOExpHist_Entry42Fund,
+                              hist.GOExpHist_Entry42AdvcPrnt,
+                              hist.GOExpHist_Entry42Details,
+                              hist.GOExpHist_Entry42Entity,
+                              hist.GOExpHist_Entry42Division,
+                              hist.GOExpHist_Entry42InterAmt,
+                              hist.GOExpHist_Entry42InterRate,
+                              trans.TL_ID,
+                              trans.TL_GoExpress_ID,
+                              trans.TL_TransID,
+                              trans.TL_Liquidation
+                          }).ToList();
 
             //Process 1:
             //Check reversal entry of Cash Advance if exist.
@@ -8934,14 +9571,14 @@ namespace ExpenseProcessingSystem.Services
                 //Check if debited transaction's expense entry was reversed or not.
                 var revCA = dbCARev.Where(x => x.ExpenseEntryID == i.ExpenseEntryID &&
                                                x.ExpenseDetailID == i.ExpenseDetailID).ToList();
-                if(revCA.Count > 0)
+                if (revCA.Count > 0)
                 {
-                    foreach(var credRev in revCA)
+                    foreach (var credRev in revCA)
                     {
                         if (!usedGOExpHistID.Contains(credRev.GOExpHist_Id))
                         {
                             HomeReportAccountSummaryViewModel res = AddToOutstandingViewList(credRev, selectedAccount);
-                            if(res != null)
+                            if (res != null)
                             {
                                 var removeItem = outstandResult.Where(x => x.HistGOExpHist_Id == i.GOExpHist_Id).FirstOrDefault();
                                 if (removeItem != null) outstandResult.Remove(removeItem);
@@ -9014,7 +9651,7 @@ namespace ExpenseProcessingSystem.Services
                 //Check if CA Entry's liquidation status is in REVERSED or REVERSED DUE TO G-BASE ERROR.
                 //If yes, check the non-cash transaction to find its liquidation entry.
                 //If not, will not proceed to non-cash entry since it was not yet processed in liquidation screen.
-                if(i.Expense_Type == GlobalSystemValues.TYPE_SS)
+                if (i.Expense_Type == GlobalSystemValues.TYPE_SS)
                 {
                     var liqExist = _context.LiquidationEntryDetails.Where(x => x.ExpenseEntryModel.Expense_ID == i.Expense_ID).FirstOrDefault();
                     int liqstat = (liqExist != null) ? liqExist.Liq_Status : 0;
@@ -9022,7 +9659,7 @@ namespace ExpenseProcessingSystem.Services
                     if (liqstat != GlobalSystemValues.STATUS_REVERSED &&
                         liqstat != GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR) continue;
                 }
-                
+
                 //Filter to value > debit transaction
                 var ncCA = dbCANC.Where(x => ConvGbDateToDateTime(i.GOExpHist_ValueDate).Date <= ConvGbDateToDateTime(x.GOExpHist_ValueDate).Date).ToList();
 
@@ -9125,7 +9762,7 @@ namespace ExpenseProcessingSystem.Services
                 {
                     HistGOExpHist_Id = record.GOExpHist_Id,
                     Trans_Voucher_Number = getVoucherNo(record.Expense_Type, record.Expense_Last_Updated, record.Expense_Number, false),
-                    Trans_Check_Number = record.Expense_CheckNo+"",
+                    Trans_Check_Number = record.Expense_CheckNo + "",
                     Trans_Value_Date = record.GOExpHist_ValueDate,
                     Trans_Reference_No = "",
                     Trans_Section = record.GOExpHist_Section,
@@ -9747,8 +10384,8 @@ namespace ExpenseProcessingSystem.Services
         {
             var vn = _context.ExpenseEntry
                 .Where(x => x.Expense_Payee_Type == GlobalSystemValues.PAYEETYPE_REGEMP
-                        && x.Expense_Type == GlobalSystemValues.TYPE_DDV 
-                        && (x.Expense_Status == GlobalSystemValues.STATUS_FOR_PRINTING 
+                        && x.Expense_Type == GlobalSystemValues.TYPE_DDV
+                        && (x.Expense_Status == GlobalSystemValues.STATUS_FOR_PRINTING
                         || x.Expense_Status == GlobalSystemValues.STATUS_FOR_CLOSING
                         || x.Expense_Status == GlobalSystemValues.STATUS_POSTED)
                         && x.Expense_Last_Updated.Date == DateTime.Now.Date)
@@ -9817,9 +10454,10 @@ namespace ExpenseProcessingSystem.Services
         {
             return _context.DMBCS.Where(x => x.BCS_isActive == true && x.BCS_isDeleted == false).Join(_context.User, b => b.BCS_User_ID,
                 e => e.User_ID, (b, e) => new DMBCSViewModel
-                {BCS_ID = b.BCS_ID, BCS_Name = e.User_LName + ", " + e.User_FName }).OrderBy(x => x.BCS_Name).ToList();
+                { BCS_ID = b.BCS_ID, BCS_Name = e.User_LName + ", " + e.User_FName }).OrderBy(x => x.BCS_Name).ToList();
         }
-        public RepESAMSViewModel PopulateNewLiq(RepESAMSViewModel newLiq, dynamic credLiq) {
+        public RepESAMSViewModel PopulateNewLiq(RepESAMSViewModel newLiq, dynamic credLiq)
+        {
 
             //Assign values to newLiq
             newLiq.GOExpHist_Id = credLiq.GOExpHist_Id;
@@ -10011,9 +10649,9 @@ namespace ExpenseProcessingSystem.Services
         }
         public DMBCSViewModel GetSignatoryInfo(int id)
         {
-            return _context.DMBCS.Where(x => x.BCS_ID == id).Join(_context.User, b=> b.BCS_User_ID,
-                e=> e.User_ID, (b,e) => new DMBCSViewModel
-                {  BCS_Position= b.BCS_Position, BCS_Name = e.User_LName + ", " + e.User_FName }).FirstOrDefault();
+            return _context.DMBCS.Where(x => x.BCS_ID == id).Join(_context.User, b => b.BCS_User_ID,
+                e => e.User_ID, (b, e) => new DMBCSViewModel
+                { BCS_Position = b.BCS_Position, BCS_Name = e.User_LName + ", " + e.User_FName }).FirstOrDefault();
         }
 
         // [Entry Petty Cash Voucher]
@@ -10134,7 +10772,7 @@ namespace ExpenseProcessingSystem.Services
                         {
                             creditAccMasterID2 = int.Parse(xelemAcc.Element("C_SS1").Value);
                         }
-                        else if(getAccount(cv.account).Account_MasterID == int.Parse(xelemAcc.Element("D_SS4").Value))
+                        else if (getAccount(cv.account).Account_MasterID == int.Parse(xelemAcc.Element("D_SS4").Value))
                         {
                             creditAccMasterID2 = int.Parse(xelemAcc.Element("C_SS2").Value);
                         }
@@ -10216,7 +10854,7 @@ namespace ExpenseProcessingSystem.Services
         {
             var expense = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == entryID);
 
-            if(expense != null)
+            if (expense != null)
             {
 
                 var newCheckNo = getCheckNo();
@@ -10261,13 +10899,15 @@ namespace ExpenseProcessingSystem.Services
                                                && expectedStatus.Contains(y.Expense_Status)
                                                && y.Amor_Sched_Date <= DateTime.Now);
 
-            foreach (var item in amorPending) {
-                model.amortizations.Add(new amorViewModel {
+            foreach (var item in amorPending)
+            {
+                model.amortizations.Add(new amorViewModel
+                {
                     account = item.Account_Name,
                     amount = item.Amor_Price,
                     maker = getUserFullName(item.Expense_Creator_ID),
                     sched = item.Amor_Sched_Date,
-                    voucherNo = getVoucherNo(1,item.Expense_Date,item.Expense_Number),
+                    voucherNo = getVoucherNo(1, item.Expense_Date, item.Expense_Number),
                     link = "NCAmortization?AmorID=" + item.Amor_ID
                 });
             }
@@ -10290,7 +10930,8 @@ namespace ExpenseProcessingSystem.Services
 
             return model;
         }
-        public void updateAmorStatus(int amorID) {
+        public void updateAmorStatus(int amorID)
+        {
             var amortizationRecord = _context.ExpenseEntryAmortizations.FirstOrDefault(x => x.Amor_ID == amorID);
 
             amortizationRecord.Amor_Status = GlobalSystemValues.STATUS_APPROVED;
@@ -10702,9 +11343,9 @@ namespace ExpenseProcessingSystem.Services
                         ExpNCDtl_Remarks_Desc = ncDtl.g.ExpNCDtl_Remarks_Desc,
                         ExpNCDtl_Remarks_Period = ncDtl.g.ExpNCDtl_Remarks_Period,
                         ExpNCDtl_TR_ID = ncDtl.g.ExpNCDtl_TR_ID,
-                        ExpNCDtl_TR_Title = ncDtl.g.ExpNCDtl_TR_ID > 0 ? _context.DMTR.FirstOrDefault(x=> x.TR_ID == ncDtl.g.ExpNCDtl_TR_ID).TR_WT_Title : "",
+                        ExpNCDtl_TR_Title = ncDtl.g.ExpNCDtl_TR_ID > 0 ? _context.DMTR.FirstOrDefault(x => x.TR_ID == ncDtl.g.ExpNCDtl_TR_ID).TR_WT_Title : "",
                         ExpNCDtl_Vendor_ID = ncDtl.g.ExpNCDtl_Vendor_ID,
-                        ExpNCDtl_Vendor_Name = ncDtl.g.ExpNCDtl_Vendor_ID> 0 ?_context.DMVendor.FirstOrDefault(x => x.Vendor_ID == ncDtl.g.ExpNCDtl_Vendor_ID).Vendor_Name : "",
+                        ExpNCDtl_Vendor_Name = ncDtl.g.ExpNCDtl_Vendor_ID > 0 ? _context.DMVendor.FirstOrDefault(x => x.Vendor_ID == ncDtl.g.ExpNCDtl_Vendor_ID).Vendor_Name : "",
                         ExpNCDtl_TaxBasedAmt = ncDtl.g.ExpNCDtl_TaxBasedAmt,
                         ExpenseEntryNCDtlAccs = ncDtlAccs
                     };
@@ -10766,14 +11407,14 @@ namespace ExpenseProcessingSystem.Services
 
                 ExpenseEntryModel dbExpenseEntry = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == transID);
 
-                if(dbExpenseEntry == null)
+                if (dbExpenseEntry == null)
                 {
                     GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE3;
                     return false;
                 }
                 if (forbiddenStatus.Contains(dbExpenseEntry.Expense_Status))
                 {
-                    if(dbExpenseEntry.Expense_Status == GlobalSystemValues.STATUS_APPROVED)
+                    if (dbExpenseEntry.Expense_Status == GlobalSystemValues.STATUS_APPROVED)
                     {
                         GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE4;
                     }
@@ -10798,7 +11439,7 @@ namespace ExpenseProcessingSystem.Services
                     {
                         dbExpenseEntry.Expense_Verifier_1 = userid;
                     }
-                    else if(dbExpenseEntry.Expense_Verifier_1 != userid)
+                    else if (dbExpenseEntry.Expense_Verifier_1 != userid)
                     {
                         if (dbExpenseEntry.Expense_Verifier_2 == 0)
                         {
@@ -10819,14 +11460,14 @@ namespace ExpenseProcessingSystem.Services
                 if (status == GlobalSystemValues.STATUS_APPROVED || status == GlobalSystemValues.STATUS_REJECTED)
                 {
                     dbExpenseEntry.Expense_Approver = userid;
-                    
+
                     if (status == GlobalSystemValues.STATUS_APPROVED)
                     {
                         dbExpenseEntry.Expense_Number = getExpTransNo(dbExpenseEntry.Expense_Type);
-                        if(dbExpenseEntry.Expense_Type == GlobalSystemValues.TYPE_CV)
+                        if (dbExpenseEntry.Expense_Type == GlobalSystemValues.TYPE_CV)
                         {
                             var checkNo = getCheckNo();
-                            if(checkNo != null)
+                            if (checkNo != null)
                             {
                                 dbExpenseEntry.Expense_CheckNo = checkNo["check"];
                                 dbExpenseEntry.Expense_CheckId = int.Parse(checkNo["id"]);
@@ -10869,7 +11510,7 @@ namespace ExpenseProcessingSystem.Services
                     GlobalSystemValues.MESSAGE = GlobalSystemValues.MESSAGE3;
                     return false;
                 }
-                
+
                 dbExpenseEntry.Expense_Status = status;
                 dbExpenseEntry.Expense_Last_Updated = DateTime.Now;
 
@@ -11183,8 +11824,9 @@ namespace ExpenseProcessingSystem.Services
                         if (accs.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT)
                         {
                             dbAmt += accs.ExpNCDtlAcc_Amount;
-                        }else if (accs.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_CREDIT ||
-                                accs.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_EWT)
+                        }
+                        else if (accs.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_CREDIT ||
+                               accs.ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_EWT)
                         {
                             cdAmt += accs.ExpNCDtlAcc_Amount;
                         }
@@ -11248,13 +11890,13 @@ namespace ExpenseProcessingSystem.Services
                     Expense_Created_Date = DateTime.Now,
                     Expense_Last_Updated = DateTime.Now,
                     Expense_Number = entryModel.voucherNumber,
-                    Expense_isDeleted = false, 
+                    Expense_isDeleted = false,
                     Expense_Status = 1,
                     ExpenseEntryNC = expenseNCList
                 };
 
                 int currentStat = (entryModel.entryID > 0) ? getSingleEntryRecord(entryID).Expense_Status : 0;
-                
+
                 if (currentStat == GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR)
                 {
                     entryModel.entryID = 0;
@@ -11361,7 +12003,7 @@ namespace ExpenseProcessingSystem.Services
             List<LiquidationMainListViewModel> postedEntryList = new List<LiquidationMainListViewModel>();
 
             var dbPostedEntry = from p in _context.ExpenseEntry
-                                where (p.Expense_Status == GlobalSystemValues.STATUS_FOR_CLOSING 
+                                where (p.Expense_Status == GlobalSystemValues.STATUS_FOR_CLOSING
                                 || p.Expense_Status == GlobalSystemValues.STATUS_POSTED)
                                 && p.Expense_Type == GlobalSystemValues.TYPE_SS
                                 && p.Expense_Last_Updated.Date < DateTime.Now.Date
@@ -12018,12 +12660,18 @@ namespace ExpenseProcessingSystem.Services
                         });
                     }
                     tempGbase.entries = tempGbase.entries.OrderByDescending(x => x.type).ToList();
-                    goExpData = InsertGbaseEntry(tempGbase, expID,userID);
+                    goExpData = InsertGbaseEntry(tempGbase, expID, userID);
                     goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.EntryDetailsID);
-                    list.Add(new { expEntryID = expID, expDtl = item.EntryDetailsID, expType = GlobalSystemValues.TYPE_SS,
+                    list.Add(new
+                    {
+                        expEntryID = expID,
+                        expDtl = item.EntryDetailsID,
+                        expType = GlobalSystemValues.TYPE_SS,
                         LiqDtlID = liquidationDetails.LiqEntryDetails.Liq_DtlID,
                         LiqInterEntityID = item.liqInterEntity[0].Liq_InterEntityID,
-                        goExp = goExpData, goExpHist = goExpHistData });
+                        goExp = goExpData,
+                        goExpHist = goExpHistData
+                    });
                 }
                 else if (item.liqInterEntity.Count() != 0 && item.liqCashBreakdown.Count() == 0)
                 {
@@ -12082,7 +12730,7 @@ namespace ExpenseProcessingSystem.Services
                                 interate = i.Liq_InterRate_2_1
                             });
                         }
-                           
+
                         if (i.Liq_Amount_2_2 != 0)
                         {
                             tempGbase.entries.Add(new entryContainer
@@ -12098,7 +12746,7 @@ namespace ExpenseProcessingSystem.Services
                         }
 
                         tempGbase.entries = tempGbase.entries.OrderByDescending(x => x.type).ToList();
-                        goExpData = InsertGbaseEntry(tempGbase, expID,userID);
+                        goExpData = InsertGbaseEntry(tempGbase, expID, userID);
                         goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, item.EntryDetailsID);
                         list.Add(new
                         {
@@ -12235,7 +12883,7 @@ namespace ExpenseProcessingSystem.Services
                         fbt = createFbt(expenseDetails.selectedPayee, item.account, item.debitGross, debit, credit);
                     }
 
-                    fbt["debit"].type = (command != "R") ? "D" : "C"; 
+                    fbt["debit"].type = (command != "R") ? "D" : "C";
                     fbt["credit"].type = (command != "R") ? "C" : "D";
 
                     tempGbase.entries.Add(fbt["debit"]);
@@ -12410,7 +13058,7 @@ namespace ExpenseProcessingSystem.Services
                             tempGbase.entries = new List<entryContainer>();
                             entryContainer credit = new entryContainer
                             {
-                                amount = tempGbase.entries.Where(x => x.type == "C").Sum(x=> x.amount),
+                                amount = tempGbase.entries.Where(x => x.type == "C").Sum(x => x.amount),
                                 dept = item.dept,
                                 type = "C"
                             };
@@ -12615,7 +13263,8 @@ namespace ExpenseProcessingSystem.Services
                         entryType = (dtls.ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_DEBIT) ? "D" :
                                 (dtls.ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_CREDIT ||
                                 dtls.ExpenseEntryNCDtlAccs[0].ExpNCDtlAcc_Type_ID == GlobalSystemValues.NC_EWT) ? "C" : "";
-                        if (command == "R") {
+                        if (command == "R")
+                        {
                             entryType = (entryType == "D") ? "C" : "D";
                         }
                         entryContainer entryDB = new entryContainer()
@@ -12652,15 +13301,21 @@ namespace ExpenseProcessingSystem.Services
                             vendor = dtls.ExpNCDtl_Vendor_ID
                         };
                         tempGbase.entries.Add(entryCD);
-                    }                    
+                    }
                 }
 
                 tempGbase.entries = tempGbase.entries.OrderByDescending(x => x.type == "D").ToList();
                 //insert
                 goExpData = InsertGbaseEntryNonCash(tempGbase, expID, userID, sameCurr);
                 goExpHistData = convertTblCm10ToGOExHist(goExpData, expID, dtls.ExpNCDtl_ID);
-                list.Add(new { expEntryID = expID, nonCashDtlID = dtls.ExpNCDtl_ID, expType = GlobalSystemValues.TYPE_NC,
-                    goExp = goExpData, goExpHist = goExpHistData });
+                list.Add(new
+                {
+                    expEntryID = expID,
+                    nonCashDtlID = dtls.ExpNCDtl_ID,
+                    expType = GlobalSystemValues.TYPE_NC,
+                    goExp = goExpData,
+                    goExpHist = goExpHistData
+                });
             }
 
             _GOContext.SaveChanges();
@@ -12700,7 +13355,7 @@ namespace ExpenseProcessingSystem.Services
             return true;
         }
 
-        internal Dictionary<string, entryContainer> createFbt(int payee, int acc,  decimal gross, entryContainer d, entryContainer c)
+        internal Dictionary<string, entryContainer> createFbt(int payee, int acc, decimal gross, entryContainer d, entryContainer c)
         {
             //((ExpenseAmount*.50)/.65)*.35
             string fbt = getFbtFormula(getAccount(acc).Account_FBT_MasterID);
@@ -12771,7 +13426,7 @@ namespace ExpenseProcessingSystem.Services
         ///============[End Post Entries]============
 
         ///================[Closing]=================
-        public bool closeTransaction(string transactionType, string username, string password,string operation)
+        public bool closeTransaction(string transactionType, string username, string password, string operation)
         {
             string closeCommand = "cm00@E*1@E@E17-@E1_10@E";
 
@@ -12803,13 +13458,13 @@ namespace ExpenseProcessingSystem.Services
 
         public ClosingViewModel ClosingGetRecords()
         {
-            var closeModel = _context.Closing.OrderByDescending(x=>x.Close_ID).FirstOrDefault();
+            var closeModel = _context.Closing.OrderByDescending(x => x.Close_ID).FirstOrDefault();
 
-            DateTime opening = closeModel.Close_Open_Date.Date + new TimeSpan(0,0,0);
+            DateTime opening = closeModel.Close_Open_Date.Date + new TimeSpan(0, 0, 0);
             DateTime closing = DateTime.Today.AddHours(23.9999);
 
             ClosingViewModel closeVM = new ClosingViewModel();
-            
+
             int pcMasterID = int.Parse(xelemAcc.Element("PC_MASTERID").Value);
 
             ClosingModel closingItemsRBU = _context.Closing.Where(x => x.Close_Type == GlobalSystemValues.BRANCH_RBU)
@@ -13020,13 +13675,14 @@ namespace ExpenseProcessingSystem.Services
                     }
                     else
                     {
-                        var reversedToday = _context.ReversalEntry.Where(x=>x.Reversal_ReversedDate >= opening);
+                        var reversedToday = _context.ReversalEntry.Where(x => x.Reversal_ReversedDate >= opening);
 
-                        if (itemIndex < 0 && !reversedToday.Any(x=>x.Reversal_GOExpressHistID == item.histId))
+                        if (itemIndex < 0 && !reversedToday.Any(x => x.Reversal_GOExpressHistID == item.histId))
                             nmCloseItemsRBU.Add(temp);
                     }
                 }
-                else {
+                else
+                {
                     int itemIndex = nmCloseItemsFCDU.FindIndex(x => x.expTrans == temp.expTrans
                                             && x.gBaseTrans == temp.gBaseTrans
                                             && x.particulars == temp.particulars
@@ -13385,8 +14041,18 @@ namespace ExpenseProcessingSystem.Services
                                            && a.Expense_Status != GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR
                                            && opening <= a.Expense_Date && closing >= a.Expense_Date
                                            && a.Expense_Type == GlobalSystemValues.TYPE_SS
-                                           select new { a.Expense_ID, b.ExpDtl_ID, a.Expense_Number, a.Expense_Date, b.ExpDtl_Gbase_Remarks,
-                                               a.Expense_Status, b.ExpDtl_Ccy, b.ExpDtl_Debit, b.ExpDtl_Account })
+                                           select new
+                                           {
+                                               a.Expense_ID,
+                                               b.ExpDtl_ID,
+                                               a.Expense_Number,
+                                               a.Expense_Date,
+                                               b.ExpDtl_Gbase_Remarks,
+                                               a.Expense_Status,
+                                               b.ExpDtl_Ccy,
+                                               b.ExpDtl_Debit,
+                                               b.ExpDtl_Account
+                                           })
                           join goHist in _context.GOExpressHist
                           on new { expenseId = expense.Expense_ID, dtlId = expense.ExpDtl_ID }
                           equals new { expenseId = goHist.ExpenseEntryID, dtlId = goHist.ExpenseDetailID }
@@ -13398,11 +14064,21 @@ namespace ExpenseProcessingSystem.Services
                           from acc in accCode.DefaultIfEmpty()
                           join ccy in _context.DMCurrency
                           on expense.ExpDtl_Ccy equals ccy.Curr_ID
-                          into ccyAbbr from ccy in ccyAbbr.DefaultIfEmpty()
-                          select new { expense.Expense_ID, expense.ExpDtl_ID, expense.Expense_Number,
-                              acc.Account_No, ccy.Curr_CCY_ABBR, expense.Expense_Date,
-                              expense.Expense_Status, expense.ExpDtl_Debit, expense.ExpDtl_Gbase_Remarks,
-                              histId = goHist.GOExpHist_Id == null ? 0 : goHist.GOExpHist_Id };
+                          into ccyAbbr
+                          from ccy in ccyAbbr.DefaultIfEmpty()
+                          select new
+                          {
+                              expense.Expense_ID,
+                              expense.ExpDtl_ID,
+                              expense.Expense_Number,
+                              acc.Account_No,
+                              ccy.Curr_CCY_ABBR,
+                              expense.Expense_Date,
+                              expense.Expense_Status,
+                              expense.ExpDtl_Debit,
+                              expense.ExpDtl_Gbase_Remarks,
+                              histId = goHist.GOExpHist_Id == null ? 0 : goHist.GOExpHist_Id
+                          };
 
             foreach (var item in caItems)
             {
@@ -13429,7 +14105,7 @@ namespace ExpenseProcessingSystem.Services
                 temp.transCount = 1;
 
                 var reversedToday = _context.ReversalEntry.Where(x => x.Reversal_ReversedDate >= opening);
-                if(!reversedToday.Any(x => x.Reversal_GOExpressHistID == item.histId))
+                if (!reversedToday.Any(x => x.Reversal_GOExpressHistID == item.histId))
                 {
                     if (getBranchNo(item.Account_No) == GlobalSystemValues.BRANCH_RBU)
                         caCloseItemsRBU.Add(temp);
@@ -13478,22 +14154,29 @@ namespace ExpenseProcessingSystem.Services
                            && (opening <= liqDtl.Liq_Created_Date
                            && closing >= liqDtl.Liq_Created_Date)
                            select new
-                           { exp.Expense_ID, expDtl.ExpDtl_ID, exp.Expense_Number, liqDtl.Liq_Created_Date,
+                           {
+                               exp.Expense_ID,
+                               expDtl.ExpDtl_ID,
+                               exp.Expense_Number,
+                               liqDtl.Liq_Created_Date,
                                remarks = string.Concat('S', expDtl.ExpDtl_Gbase_Remarks),
-                               liqDtl.Liq_Status, ccy.Curr_CCY_ABBR,liqInter };
-                           //join goHist in _context.GOExpressHist
-                           //on new { expenseId = expense.Expense_ID, dtlId = expense.ExpDtl_ID,
-                           //    rmrk = expense.remarks, acc = expense.Account_No.Substring(Math.Max(0, expense.Account_No.Length - 6)),
-                           //    cde = expense.Account_Code }
-                           //equals new { expenseId = goHist.ExpenseEntryID, dtlId = goHist.ExpenseDetailID,
-                           //    rmrk = goHist.GOExpHist_Remarks, acc = goHist.GOExpHist_Entry11ActNo,
-                           //    cde = goHist.GOExpHist_Entry11Actcde }
-                           //into x
-                           //from goHist in x.DefaultIfEmpty()
-                           //select new
-                           //{ expense.Expense_ID, expense.ExpDtl_ID, expense.Expense_Number, expense.Account_No, expense.Liq_DebitCred_1_2,
-                           //    expense.Curr_CCY_ABBR, expense.Liq_Created_Date, expense.Liq_Status, expense.Liq_Amount_1_1,
-                           //    expense.Liq_Amount_1_2, expense.remarks, histId = goHist.GOExpHist_Id == null ? 0 : goHist.GOExpHist_Id };
+                               liqDtl.Liq_Status,
+                               ccy.Curr_CCY_ABBR,
+                               liqInter
+                           };
+            //join goHist in _context.GOExpressHist
+            //on new { expenseId = expense.Expense_ID, dtlId = expense.ExpDtl_ID,
+            //    rmrk = expense.remarks, acc = expense.Account_No.Substring(Math.Max(0, expense.Account_No.Length - 6)),
+            //    cde = expense.Account_Code }
+            //equals new { expenseId = goHist.ExpenseEntryID, dtlId = goHist.ExpenseDetailID,
+            //    rmrk = goHist.GOExpHist_Remarks, acc = goHist.GOExpHist_Entry11ActNo,
+            //    cde = goHist.GOExpHist_Entry11Actcde }
+            //into x
+            //from goHist in x.DefaultIfEmpty()
+            //select new
+            //{ expense.Expense_ID, expense.ExpDtl_ID, expense.Expense_Number, expense.Account_No, expense.Liq_DebitCred_1_2,
+            //    expense.Curr_CCY_ABBR, expense.Liq_Created_Date, expense.Liq_Status, expense.Liq_Amount_1_1,
+            //    expense.Liq_Amount_1_2, expense.remarks, histId = goHist.GOExpHist_Id == null ? 0 : goHist.GOExpHist_Id };
 
             foreach (var item in liqItems)
             {
@@ -13547,9 +14230,9 @@ namespace ExpenseProcessingSystem.Services
                                                                      && x.GOExpHist_Entry11ActNo == accItem.Account_No.Substring(Math.Max(0, accItem.Account_No.Length - 6))
                                                                      && x.GOExpHist_Entry11ActType == accItem.Account_No.Substring(0, 3));
                 }
-                
+
                 CloseItems temp = new CloseItems();
-                if(goHist != null)
+                if (goHist != null)
                 {
                     if (goHist.GOExpHist_Id > 0)
                     {
@@ -13641,7 +14324,7 @@ namespace ExpenseProcessingSystem.Services
 
                 decimal amtTotal = 0.00M;
                 amtTotal += Decimal.Parse(goHist.GOExpHist_Entry11Amt);
-                if(goHist.GOExpHist_Entry12Type != null)
+                if (goHist.GOExpHist_Entry12Type != null)
                     amtTotal += goHist.GOExpHist_Entry12Type != "D" ? 0 : Decimal.Parse(goHist.GOExpHist_Entry12Amt);
                 if (goHist.GOExpHist_Entry21Type != null)
                     amtTotal += goHist.GOExpHist_Entry21Type != "D" ? 0 : Decimal.Parse(goHist.GOExpHist_Entry21Amt);
@@ -13710,9 +14393,9 @@ namespace ExpenseProcessingSystem.Services
                         where exp.Expense_Status == 21
                         && tl.TL_StatusID == 3
                         && (exp.Expense_Last_Updated >= opening && exp.Expense_Last_Updated <= closing)
-                        select new { exp.Expense_Status,exp.Expense_Date,exp.Expense_Type, exp.Expense_Number, tl.TL_TransID, tl.TL_Liquidation, tl.TL_GoExpHist_ID, gh };
+                        select new { exp.Expense_Status, exp.Expense_Date, exp.Expense_Type, exp.Expense_Number, tl.TL_TransID, tl.TL_Liquidation, tl.TL_GoExpHist_ID, gh };
 
-            foreach(var item in model)
+            foreach (var item in model)
             {
                 decimal amtTotal = 0.00M;
                 amtTotal += Decimal.Parse(item.gh.GOExpHist_Entry11Amt);
@@ -13806,18 +14489,18 @@ namespace ExpenseProcessingSystem.Services
             DateTime opening = closeModel.Close_Open_Date.Date + new TimeSpan(0, 0, 0);
 
             var nmStatus = (from exp in _context.ExpenseEntry
-                           from dtl in _context.ExpenseEntryDetails
-                           from acc in _context.DMAccount
-                           where exp.Expense_ID == dtl.ExpenseEntryModel.Expense_ID
-                           && dtl.ExpDtl_Account == acc.Account_ID
-                           && dtl.ExpDtl_Inter_Entity == false
-                           && new List<int> { 1, 2, 4, 3 }.Contains(exp.Expense_Type)
-                           && acc.Account_No.Substring(4, 3) == branchCode
-                           && exp.Expense_Status != GlobalSystemValues.STATUS_FOR_CLOSING
-                           && exp.Expense_Status != GlobalSystemValues.STATUS_REVERSED
-                           && exp.Expense_Status != GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR
-                           && opening <= exp.Expense_Date
-                           select new { exp.Expense_ID, exp.Expense_Number, dtl.ExpDtl_ID, acc.Account_No, exp.Expense_Status }).ToList().Count;
+                            from dtl in _context.ExpenseEntryDetails
+                            from acc in _context.DMAccount
+                            where exp.Expense_ID == dtl.ExpenseEntryModel.Expense_ID
+                            && dtl.ExpDtl_Account == acc.Account_ID
+                            && dtl.ExpDtl_Inter_Entity == false
+                            && new List<int> { 1, 2, 4, 3 }.Contains(exp.Expense_Type)
+                            && acc.Account_No.Substring(4, 3) == branchCode
+                            && exp.Expense_Status != GlobalSystemValues.STATUS_FOR_CLOSING
+                            && exp.Expense_Status != GlobalSystemValues.STATUS_REVERSED
+                            && exp.Expense_Status != GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR
+                            && opening <= exp.Expense_Date
+                            select new { exp.Expense_ID, exp.Expense_Number, dtl.ExpDtl_ID, acc.Account_No, exp.Expense_Status }).ToList().Count;
 
             var ddvInterStatus = (from exp in _context.ExpenseEntry
                                   from dtl in _context.ExpenseEntryDetails
@@ -13841,30 +14524,30 @@ namespace ExpenseProcessingSystem.Services
                                   select new { exp.Expense_ID, dtl.ExpDtl_ID, acc.Account_No, exp.Expense_Status }).ToList().Count;
 
             var liqStatus = (from exp in _context.ExpenseEntry
-                            from expDtl in _context.ExpenseEntryDetails
-                            from liqDtl in _context.LiquidationEntryDetails
-                            from liqInter in _context.LiquidationInterEntity
-                            from acc in _context.DMAccount
-                            where exp.Expense_ID == expDtl.ExpenseEntryModel.Expense_ID
-                            && exp.Expense_ID == liqDtl.ExpenseEntryModel.Expense_ID
-                            && expDtl.ExpDtl_ID == liqInter.ExpenseEntryDetailModel.ExpDtl_ID
-                            && acc.Account_ID == liqInter.Liq_AccountID_1_1
-                            && liqInter.Liq_Amount_1_1 > 0
-                            && acc.Account_No.Substring(4, 3) == branchCode
-                            && liqDtl.Liq_Status != GlobalSystemValues.STATUS_FOR_CLOSING
-                            && liqDtl.Liq_Status != GlobalSystemValues.STATUS_REVERSED
-                            && liqDtl.Liq_Status != GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR
-                            && opening <= liqDtl.Liq_Created_Date
-                            select new
-                            { exp.Expense_ID,expDtl.ExpDtl_ID,exp.Expense_Number,liqDtl.Liq_Status,acc.Account_No}).ToList().Count;
+                             from expDtl in _context.ExpenseEntryDetails
+                             from liqDtl in _context.LiquidationEntryDetails
+                             from liqInter in _context.LiquidationInterEntity
+                             from acc in _context.DMAccount
+                             where exp.Expense_ID == expDtl.ExpenseEntryModel.Expense_ID
+                             && exp.Expense_ID == liqDtl.ExpenseEntryModel.Expense_ID
+                             && expDtl.ExpDtl_ID == liqInter.ExpenseEntryDetailModel.ExpDtl_ID
+                             && acc.Account_ID == liqInter.Liq_AccountID_1_1
+                             && liqInter.Liq_Amount_1_1 > 0
+                             && acc.Account_No.Substring(4, 3) == branchCode
+                             && liqDtl.Liq_Status != GlobalSystemValues.STATUS_FOR_CLOSING
+                             && liqDtl.Liq_Status != GlobalSystemValues.STATUS_REVERSED
+                             && liqDtl.Liq_Status != GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR
+                             && opening <= liqDtl.Liq_Created_Date
+                             select new
+                             { exp.Expense_ID, expDtl.ExpDtl_ID, exp.Expense_Number, liqDtl.Liq_Status, acc.Account_No }).ToList().Count;
 
             var ncStatus = (from exp in _context.ExpenseEntry
                             where exp.Expense_Type == 5
                             && exp.Expense_Status != GlobalSystemValues.STATUS_FOR_CLOSING
                             && exp.Expense_Status != GlobalSystemValues.STATUS_REVERSED
                             && exp.Expense_Status != GlobalSystemValues.STATUS_REVERSED_GBASE_ERROR
-                            && opening <= exp.Expense_Date 
-                            select new {exp.Expense_ID}).ToList().Count;
+                            && opening <= exp.Expense_Date
+                            select new { exp.Expense_ID }).ToList().Count;
 
             if (liqStatus > 0 || ddvInterStatus > 0 || nmStatus > 0 || ncStatus > 0)
                 return true;
@@ -13928,7 +14611,7 @@ namespace ExpenseProcessingSystem.Services
         ///==========[End Post to Gwrite]============
 
         ///==============[Begin Gbase Entry Section]================
-        private TblCm10 InsertGbaseEntry(gbaseContainer containerModel, int expenseID,int userID)
+        private TblCm10 InsertGbaseEntry(gbaseContainer containerModel, int expenseID, int userID)
         {
             TblCm10 goModel = new TblCm10();
 
@@ -13969,7 +14652,7 @@ namespace ExpenseProcessingSystem.Services
                 goModel.Entry11Entity = "010";//Replace with proper entity default.
                 goModel.Entry11Division = entry11Account.Account_Div;//Replace with proper division default.
                 //if(containerModel.entries[0].type == "C")
-                if(containerModel.entries[0].ccy != containerModel.entries[1].ccy && containerModel.entries[0].ccy != phpID)
+                if (containerModel.entries[0].ccy != containerModel.entries[1].ccy && containerModel.entries[0].ccy != phpID)
                     goModel.Entry11InterRate = (containerModel.entries[0].interate > 0) ? containerModel.entries[0].interate.ToString() : "";//Replace with proper interate default.
                 goModel.Entry11InterAmt = "";//Replace with proper interamt default.
 
@@ -14476,12 +15159,15 @@ namespace ExpenseProcessingSystem.Services
         {
             var mId = "";
             InterEntityValues interEntityValues = new InterEntityValues();
-            if (type == "USD") {
+            if (type == "USD")
+            {
                 mId = InterEntityValues.Currency_US;
-            } else if (type == "YEN")
+            }
+            else if (type == "YEN")
             {
                 mId = InterEntityValues.Currency_Yen;
-            } else if (type == "PHP")
+            }
+            else if (type == "PHP")
             {
                 mId = InterEntityValues.Currency_PHP;
             }
@@ -14601,7 +15287,7 @@ namespace ExpenseProcessingSystem.Services
         public DMAccountModel getAccountByMasterID(int masterID)
         {
             return _context.DMAccount.Where(x => x.Account_MasterID == masterID && x.Account_isActive == true
-                    && x.Account_isDeleted == false).OrderBy(x=> x.Account_Name).FirstOrDefault();
+                    && x.Account_isDeleted == false).OrderBy(x => x.Account_Name).FirstOrDefault();
         }
         public int getAccountID(string accountNo)
         {
@@ -14612,7 +15298,7 @@ namespace ExpenseProcessingSystem.Services
         {
             List<accDetails> accDetails = new List<accDetails>();
 
-            var accDbDetails = _context.DMAccount.Where(x => x.Account_isDeleted == false && x.Account_isActive == true).OrderByDescending(x => x.Account_No.Contains("H90")).ThenBy(x => x.Account_No).Select(q => new { q.Account_ID, q.Account_Name, q.Account_No,q.Account_Code });
+            var accDbDetails = _context.DMAccount.Where(x => x.Account_isDeleted == false && x.Account_isActive == true).OrderByDescending(x => x.Account_No.Contains("H90")).ThenBy(x => x.Account_No).Select(q => new { q.Account_ID, q.Account_Name, q.Account_No, q.Account_Code });
 
             foreach (var detail in accDbDetails)
             {
@@ -14784,11 +15470,11 @@ namespace ExpenseProcessingSystem.Services
         {
             return (from vendTr in _context.DMVendorTRVAT
                     join tr in _context.DMTR on vendTr.VTV_TR_ID equals tr.TR_MasterID
-                    where tr.TR_isActive == true && tr.TR_isDeleted == false 
+                    where tr.TR_isActive == true && tr.TR_isDeleted == false
                         && vendTr.VTV_Vendor_ID == vendorMasterID
                     select new DMTRModel
                     {
-                        TR_ID =  tr.TR_ID,
+                        TR_ID = tr.TR_ID,
                         TR_MasterID = tr.TR_MasterID,
                         TR_Tax_Rate = Mizuho.round(tr.TR_Tax_Rate * 100, 2),
                         TR_WT_Title = tr.TR_WT_Title
@@ -14857,7 +15543,7 @@ namespace ExpenseProcessingSystem.Services
                         VAT_MasterID = vat.VAT_MasterID,
                         VAT_Rate = Mizuho.round(vat.VAT_Rate * 100, 2),
                         VAT_Name = vat.VAT_Name
-                    }).OrderBy(x=> x.VAT_Rate).ToList();
+                    }).OrderBy(x => x.VAT_Rate).ToList();
         }
         //get all VAT including history
         public List<DMVATModel> getAllVATList()
@@ -14873,7 +15559,7 @@ namespace ExpenseProcessingSystem.Services
         //get user account without username and password
         public string getUserFullName(int id)
         {
-            var user = _context.User.FirstOrDefault(x=>x.User_ID == id);
+            var user = _context.User.FirstOrDefault(x => x.User_ID == id);
 
             return user.User_FName + " " + user.User_LName;
         }
@@ -14939,7 +15625,7 @@ namespace ExpenseProcessingSystem.Services
         {
             List<SelectList> listOfLists = new List<SelectList>();
 
-            listOfLists.Add(new SelectList(_context.DMVendor.Where(x => x.Vendor_isActive == true && x.Vendor_isDeleted == false).OrderBy(x=> x.Vendor_Name).Select(q => new { q.Vendor_ID, q.Vendor_Name }),
+            listOfLists.Add(new SelectList(_context.DMVendor.Where(x => x.Vendor_isActive == true && x.Vendor_isDeleted == false).OrderBy(x => x.Vendor_Name).Select(q => new { q.Vendor_ID, q.Vendor_Name }),
                                                 "Vendor_ID", "Vendor_Name"));
 
             listOfLists.Add(new SelectList(_context.DMDept.Where(x => x.Dept_isActive == true && x.Dept_isDeleted == false).OrderBy(x => x.Dept_Name).Select(q => new { q.Dept_ID, q.Dept_Name }),
@@ -14963,7 +15649,8 @@ namespace ExpenseProcessingSystem.Services
         {
             return _context.DMTR.Where(x => x.TR_isActive == true && x.TR_isDeleted == false)
                 .OrderBy(x => x.TR_Tax_Rate)
-                .Select(x => new  DMTRModel {
+                .Select(x => new DMTRModel
+                {
                     TR_ID = x.TR_ID,
                     TR_MasterID = x.TR_MasterID,
                     TR_Tax_Rate = Mizuho.round(x.TR_Tax_Rate * 100, 2),
@@ -15032,9 +15719,9 @@ namespace ExpenseProcessingSystem.Services
             return accountNo.Substring(4, 3);
         }
         //retrieve latest check number.
-        public Dictionary<string,string> getCheckNo()
+        public Dictionary<string, string> getCheckNo()
         {
-            Dictionary<string,string> checkNo = new Dictionary<string, string>();
+            Dictionary<string, string> checkNo = new Dictionary<string, string>();
 
             List<int> expectedStatus = new List<int> {
                     GlobalSystemValues.STATUS_APPROVED,
@@ -15053,7 +15740,7 @@ namespace ExpenseProcessingSystem.Services
             {
                 checkNoModel = _context.DMCheck.OrderBy(x => x.Check_ID).Where(x => x.Check_isActive == true).FirstOrDefault();
             }
-            else if(expense.Expense_CheckId != 0)
+            else if (expense.Expense_CheckId != 0)
             {
                 checkNoModel = _context.DMCheck.Where(x => x.Check_ID == expense.Expense_CheckId).FirstOrDefault();
             }
@@ -15065,7 +15752,7 @@ namespace ExpenseProcessingSystem.Services
             if (checkNoModel == null)
                 return null;
 
-            if(expense != null)
+            if (expense != null)
             {
                 if (int.Parse(checkNoModel.Check_Series_To) > int.Parse(expense.Expense_CheckNo))
                 {
@@ -15090,7 +15777,7 @@ namespace ExpenseProcessingSystem.Services
                 checkNo.Add("check", newCheck.Check_Series_From);
                 checkNo.Add("id", newCheck.Check_ID.ToString());
             }
-            
+
 
             return checkNo;
         }
@@ -15289,12 +15976,12 @@ namespace ExpenseProcessingSystem.Services
         {
             var cddStatus = _context.PrintStatus.Where(x => x.PS_EntryID == entryID && x.PS_EntryDtlID == entryDtlID
                                         && x.PS_Type == type).FirstOrDefault();
-            if(cddStatus != null)
+            if (cddStatus != null)
             {
                 cddStatus.PS_CDD = true;
                 _context.Entry(cddStatus).State = EntityState.Modified;
                 _context.SaveChanges();
-                if(type == GlobalSystemValues.TYPE_LIQ)
+                if (type == GlobalSystemValues.TYPE_LIQ)
                 {
                     updatePrintStatusLiquidationForCLosing(entryID);
                 }
@@ -15312,13 +15999,13 @@ namespace ExpenseProcessingSystem.Services
         public bool UpdateBIR2307PrintingStatus(int entryID)
         {
             var birStatus = _context.PrintStatus.Where(x => x.PS_EntryID == entryID).ToList();
-            foreach(var i in birStatus)
+            foreach (var i in birStatus)
             {
                 i.PS_BIR2307 = true;
                 _context.Entry(i).State = EntityState.Modified;
             }
 
-            if(birStatus != null)
+            if (birStatus != null)
             {
                 _context.SaveChanges();
                 updatePrintStatusForCLosing(entryID);
@@ -15345,12 +16032,13 @@ namespace ExpenseProcessingSystem.Services
             return false;
         }
 
-        public void updatePrintStatusForCLosing(int entryID) {
+        public void updatePrintStatusForCLosing(int entryID)
+        {
             var expPrintStatus = _context.PrintStatus.Where(x => x.PS_EntryID == entryID);
 
             bool updStats = true;
 
-            foreach(var item in expPrintStatus)
+            foreach (var item in expPrintStatus)
             {
                 if (!item.PS_BIR2307 || !item.PS_CDD || !item.PS_Check || !item.PS_LOI || !item.PS_Voucher)
                     updStats = false;
@@ -15361,7 +16049,7 @@ namespace ExpenseProcessingSystem.Services
                 ExpenseEntryModel updItem = _context.ExpenseEntry.FirstOrDefault(x => x.Expense_ID == entryID);
 
                 //Update to For Closing only if status is in For Printing.
-                if(updItem.Expense_Status == GlobalSystemValues.STATUS_FOR_PRINTING)
+                if (updItem.Expense_Status == GlobalSystemValues.STATUS_FOR_PRINTING)
                 {
                     updItem.Expense_Status = GlobalSystemValues.STATUS_FOR_CLOSING;
                     updItem.Expense_Last_Updated = DateTime.Now;
@@ -15386,7 +16074,7 @@ namespace ExpenseProcessingSystem.Services
             {
                 LiquidationEntryDetailModel updItem = _context.LiquidationEntryDetails.FirstOrDefault(x => x.ExpenseEntryModel.Expense_ID == entryID);
                 //Update to For Closing only if status is in For Printing.
-                if(updItem.Liq_Status == GlobalSystemValues.STATUS_FOR_PRINTING)
+                if (updItem.Liq_Status == GlobalSystemValues.STATUS_FOR_PRINTING)
                 {
                     updItem.Liq_Status = GlobalSystemValues.STATUS_FOR_CLOSING;
                     updItem.Liq_LastUpdated_Date = DateTime.Now;
@@ -15439,7 +16127,7 @@ namespace ExpenseProcessingSystem.Services
 
             PettyCashModel model = _context.PettyCash.OrderByDescending(x => x.PC_ID).FirstOrDefault();
 
-            decimal oneK = Mizuho.round(model.PCB_OneThousand * 1000M,2);
+            decimal oneK = Mizuho.round(model.PCB_OneThousand * 1000M, 2);
             decimal fiveH = Mizuho.round(model.PCB_FiveHundred * 500M, 2);
             decimal twoH = Mizuho.round(model.PCB_TwoHundred * 200M, 2);
             decimal oneH = Mizuho.round(model.PCB_OneHundred * 100M, 2);
@@ -15453,7 +16141,7 @@ namespace ExpenseProcessingSystem.Services
             decimal c5 = Mizuho.round(model.PCB_FiveCents * .05M, 2);
             decimal c1 = Mizuho.round(model.PCB_OneCents * .01M, 2);
 
-            decimal total = Mizuho.round(oneK+fiveH+twoH+oneH+fifty+twenty+ten+five+one+c25+c10+c5+c1, 2);
+            decimal total = Mizuho.round(oneK + fiveH + twoH + oneH + fifty + twenty + ten + five + one + c25 + c10 + c5 + c1, 2);
 
             if (total == model.PC_EndBal)
                 return true;
@@ -15494,7 +16182,7 @@ namespace ExpenseProcessingSystem.Services
                     completed++;
             }
 
-            if(completed == (printStatus.Count() - 1))
+            if (completed == (printStatus.Count() - 1))
             {
                 ExpenseEntryModel updItem = _context.ExpenseEntry.Where(x => x.Expense_ID == expenseID).FirstOrDefault();
 
@@ -15530,7 +16218,7 @@ namespace ExpenseProcessingSystem.Services
     {
         public string type { get; set; }
         public int ccy { get; set; }
-        public  decimal amount { get; set; }
+        public decimal amount { get; set; }
         public int vendor { get; set; }
         public int account { get; set; }
         public decimal interate { get; set; }
