@@ -302,6 +302,10 @@
                 "<input class='txtAmorDuration' data-val='true' data-val-required='The duration field is required.' id='EntryCV_" + itemNo + "__duration' name='EntryCV[" + itemNo + "].duration' type='hidden' value='" + duration + "'>" +
                 "<input class='txtAmorAccount' data-val='true' data-val-required='The account field is required.' id='EntryCV_" + itemNo + "__amorAcc' name='EntryCV[" + itemNo + "].amorAcc' type='hidden' value='" + acc + "'>";
             var Year = new Date().getFullYear();
+            //Checks if beginning month is for which year
+            if (begMonth < new Date().getMonth()) {
+                Year += 1;
+            }
             var dvdAmount = roundNumber((grossAmount / duration), 2);
 
             for (var i = 0; i < duration; i++){

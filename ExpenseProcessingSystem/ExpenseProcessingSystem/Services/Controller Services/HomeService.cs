@@ -537,7 +537,7 @@ namespace ExpenseProcessingSystem.Services
                                select new AppHistoryViewModel
                                {
                                    App_Entry_ID = exp.Expense_ID,
-                                   App_Voucher_No = GlobalSystemValues.getApplicationCode(exp.Expense_Type) + "-" + exp.Expense_Date.Year + "-" + exp.Expense_Number.ToString().PadLeft(5, '0'),
+                                   App_Voucher_No = GlobalSystemValues.getApplicationCode(exp.Expense_Type) + "-" + GetSelectedYearMonthOfTerm(exp.Expense_Date.Month, exp.Expense_Date.Year).Year + "-" + exp.Expense_Number.ToString().PadLeft(5, '0'),
                                    App_Maker_ID = exp.Expense_Creator_ID,
                                    App_Approver_ID = exp.Expense_Approver,
                                    App_Verifier_Name_List = new List<string> { exp.Expense_Verifier_1 == 0 ? null : exp.Expense_Verifier_1 + "", exp.Expense_Verifier_2 == 0 ? null : exp.Expense_Verifier_2 + "" },
@@ -558,7 +558,7 @@ namespace ExpenseProcessingSystem.Services
                                                   {
                                                       App_Entry_ID = exp.Expense_ID,
                                                       //AppCode 6 == LIQ
-                                                      App_Voucher_No = GlobalSystemValues.getApplicationCode(6) + "-" + liq.Liq_Created_Date.Year + "-" + exp.Expense_Number.ToString().PadLeft(5, '0'),
+                                                      App_Voucher_No = GlobalSystemValues.getApplicationCode(6) + "-" + GetSelectedYearMonthOfTerm(liq.Liq_Created_Date.Month, liq.Liq_Created_Date.Year).Year + "-" + exp.Expense_Number.ToString().PadLeft(5, '0'),
                                                       App_Maker_ID = liq.Liq_Created_UserID,
                                                       App_Approver_ID = liq.Liq_Approver,
                                                       App_Verifier_Name_List = new List<string> { liq.Liq_Verifier1 == 0 ? null : liq.Liq_Verifier1 + "", liq.Liq_Verifier2 == 0 ? null : liq.Liq_Verifier2 + "" },
@@ -10314,6 +10314,7 @@ namespace ExpenseProcessingSystem.Services
             }
             return startOfTermDate;
         }
+        //month now, year now, true == start, false == end 
         public DateTime GetStartOfFiscal(int month, int year, bool opt)
         {
             int[] firstTermMonths = { 4, 5, 6, 7, 8, 9, 10, 11, 12 };
@@ -10396,7 +10397,7 @@ namespace ExpenseProcessingSystem.Services
                 vnList.Add(new VoucherNoOptions
                 {
                     vchr_ID = x.Expense_ID,
-                    vchr_No = GlobalSystemValues.getApplicationCode(x.Expense_Type) + "-" + x.Expense_Date.Year + "-" + x.Expense_Number.ToString().PadLeft(5, '0'),
+                    vchr_No = GlobalSystemValues.getApplicationCode(x.Expense_Type) + "-" + GetSelectedYearMonthOfTerm(x.Expense_Date.Month, x.Expense_Date.Year).Year + "-" + x.Expense_Number.ToString().PadLeft(5, '0'),
                     vchr_EmployeeName = getVendorName(x.Expense_Payee, x.Expense_Payee_Type),
                     vchr_Status = getStatus(x.Expense_Status)
                 });
@@ -10444,7 +10445,7 @@ namespace ExpenseProcessingSystem.Services
                 vnList.Add(new VoucherNoOptions
                 {
                     vchr_ID = x.Expense_ID,
-                    vchr_No = x.Expense_Date.Year.ToString().Substring(2, 2) + "-" + x.Expense_Number.ToString().PadLeft(5, '0'),
+                    vchr_No = GetSelectedYearMonthOfTerm(x.Expense_Date.Month, x.Expense_Date.Year).Year.ToString().Substring(2, 2) + "-" + x.Expense_Number.ToString().PadLeft(5, '0'),
                     vchr_EmployeeName = getVendorName(x.Expense_Payee, x.Expense_Payee_Type)
                 });
             }
@@ -15669,19 +15670,23 @@ namespace ExpenseProcessingSystem.Services
 
             int transno;
             int maxNumber = 0;
+            //FISCAL YEAR 
+            DateTime now = DateTime.Now;
+            DateTime StartFiscal = GetStartOfFiscal(now.Month, now.Year, true);
+            DateTime EndFiscal = GetStartOfFiscal(now.Month, now.Year, false);
             var maxNumberObj = _context.ExpenseEntry
-                        .Where(y => y.Expense_Date.Year == DateTime.Now.Year && y.Expense_Number != 0 && y.Expense_Type == transType);
+                        .Where(y => (StartFiscal <= y.Expense_Date && y.Expense_Date <= EndFiscal) && y.Expense_Number != 0 && y.Expense_Type == transType);
             do
             {
 
-                if (_context.ExpenseEntry.Where(x => x.Expense_Number != 0 && x.Expense_Type == transType).Count() > 0)
+                if (_context.ExpenseEntry.Where(x => (StartFiscal <= x.Expense_Date && x.Expense_Date <= EndFiscal) && x.Expense_Number != 0 && x.Expense_Type == transType).Count() > 0)
                 {
                     if (maxNumber != _context.ExpenseEntry
-                                        .Where(y => y.Expense_Date.Year == DateTime.Now.Year && y.Expense_Number != 0 && y.Expense_Type == transType)
+                                        .Where(y => (StartFiscal <= y.Expense_Date && y.Expense_Date <= EndFiscal) && y.Expense_Number != 0 && y.Expense_Type == transType)
                                         .Max(y => y.Expense_Number))
                     {
                         maxNumberObj = _context.ExpenseEntry
-                        .Where(y => y.Expense_Date.Year == DateTime.Now.Year && y.Expense_Number != 0 && y.Expense_Type == transType);
+                        .Where(y => (StartFiscal <= y.Expense_Date && y.Expense_Date <= EndFiscal) && y.Expense_Number != 0 && y.Expense_Type == transType);
                     }
 
                     maxNumber = maxNumberObj.Max(y => y.Expense_Number);
@@ -15694,7 +15699,7 @@ namespace ExpenseProcessingSystem.Services
                     return 1;
                 }
             } while (maxNumber != _context.ExpenseEntry
-                                        .Where(y => y.Expense_Date.Year == DateTime.Now.Year && y.Expense_Number != 0 && y.Expense_Type == transType)
+                                        .Where(y => (StartFiscal <= y.Expense_Date && y.Expense_Date <= EndFiscal) && y.Expense_Number != 0 && y.Expense_Type == transType)
                                         .Max(y => y.Expense_Number));
             //_context.Entry<ExpenseEntryModel>(transNoMax).State = EntityState.Detached;
             return transno;
