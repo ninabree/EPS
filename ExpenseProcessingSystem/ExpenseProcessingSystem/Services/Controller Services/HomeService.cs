@@ -3670,7 +3670,7 @@ namespace ExpenseProcessingSystem.Services
                             repAmortVMs.Add(new RepAmortViewModel()
                             {
                                 PA_AmortScheds = amorts.OrderBy(x => DateTime.Parse(x.as_Amort_Name)).ToList(),
-                                PA_VoucherNo = GlobalSystemValues.getApplicationCode(list.ent.Expense_Type) + "-" + list.ent.Expense_Date.Year + "-" + list.ent.Expense_Number.ToString().PadLeft(5, '0'),
+                                PA_VoucherNo = GlobalSystemValues.getApplicationCode(list.ent.Expense_Type) + "-" + GetSelectedYearMonthOfTerm(list.ent.Expense_Date.Month, list.ent.Expense_Date.Year).Year + "-" + list.ent.Expense_Number.ToString().PadLeft(5, '0'),
                                 PA_CheckNo = list.ent.Expense_CheckNo,
                                 PA_RefNo = "",
                                 PA_Value_Date = list.ent.Expense_Last_Updated,
@@ -10375,7 +10375,7 @@ namespace ExpenseProcessingSystem.Services
                 vnList.Add(new VoucherNoOptions
                 {
                     vchr_ID = x.Expense_ID,
-                    vchr_No = GlobalSystemValues.getApplicationCode(x.Expense_Type) + "-" + x.Expense_Date.Year + "-" + x.Expense_Number.ToString().PadLeft(5, '0'),
+                    vchr_No = GlobalSystemValues.getApplicationCode(x.Expense_Type) + "-" + GetSelectedYearMonthOfTerm(x.Expense_Date.Month, x.Expense_Date.Year).Year + "-" + x.Expense_Number.ToString().PadLeft(5, '0'),
                     vchr_EmployeeName = getVendorName(x.Expense_Payee, x.Expense_Payee_Type)
                 });
             }
@@ -10426,7 +10426,7 @@ namespace ExpenseProcessingSystem.Services
                 vnList.Add(new VoucherNoOptions
                 {
                     vchr_ID = x.recs.ent.Expense_ID,
-                    vchr_No = GlobalSystemValues.getApplicationCode(x.recs.ent.Expense_Type) + "-" + x.recs.ent.Expense_Date.Year + "-" + x.recs.ent.Expense_Number.ToString().PadLeft(5, '0'),
+                    vchr_No = GlobalSystemValues.getApplicationCode(x.recs.ent.Expense_Type) + "-" + GetSelectedYearMonthOfTerm(x.recs.ent.Expense_Date.Month, x.recs.ent.Expense_Date.Year).Year + "-" + x.recs.ent.Expense_Number.ToString().PadLeft(5, '0'),
                     vchr_EmployeeName = getVendorName(x.recs.ent.Expense_Payee, x.recs.ent.Expense_Payee_Type),
                     vchr_Status = getStatus(x.recs.ent.Expense_Status)
                 });
