@@ -3520,7 +3520,7 @@ namespace ExpenseProcessingSystem.Services
             if (model.VoucherArray != null)
             {
                 voucherNoList = model.VoucherArray.Split(',').ToList();
-                entryIDs = voucherNoList.Select(x => int.Parse(x)).ToList();
+                entryIDs = voucherNoList.Select(x => int.Parse(x)).OrderBy(x => x).ToList();
                 //sort list
                 entryIDs.Sort();
                 model.VoucherNoList = PopulateVoucherNo(entryIDs);
@@ -3607,7 +3607,7 @@ namespace ExpenseProcessingSystem.Services
             }
             return new ReportLOIViewModel()
             {
-                Rep_DDVNoList = model.VoucherNoList != null ? model.VoucherNoList.Select(x => x.vchr_No).ToList() : voucherNoList,
+                Rep_DDVNoList = model.VoucherNoList != null ? model.VoucherNoList.Select(x => x.vchr_No).OrderBy(x => x).ToList() : voucherNoList,
                 Rep_Amount = (decimal)totalAmount,
                 Rep_AmountInString = stringNum,
                 Rep_LOIAccList = accs,
