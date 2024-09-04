@@ -260,3 +260,5 @@ paket-files/
 __pycache__/
 *.pyc
 /ExpenseProcessingSystem/ExpenseProcessingSystem/wwwroot/ExcelTemplatesTempFolder
+
+ExpenseProcessingSystem_20190715_1449.rar
